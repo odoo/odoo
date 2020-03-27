@@ -131,6 +131,7 @@ var FieldMany2One = AbstractField.extend({
         const canCreate = 'can_create' in this.attrs ? JSON.parse(this.attrs.can_create) : true;
         this.can_create = canCreate && !this.nodeOptions.no_create && !options.noCreate;
         this.can_write = 'can_write' in this.attrs ? JSON.parse(this.attrs.can_write) : true;
+        this.customAction = 'action' in this.attrs ? this.attrs.action : null;
 
         this.nodeOptions = _.defaults(this.nodeOptions, {
             quick_create: true,
@@ -664,22 +665,23 @@ var FieldMany2One = AbstractField.extend({
 
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onClick: function (event) {
-        var self = this;
+    async _onClick(ev) {
         if (this.mode === 'readonly' && !this.noOpen) {
-            event.preventDefault();
-            event.stopPropagation();
-            this._rpc({
-                    model: this.field.relation,
-                    method: 'get_formview_action',
-                    args: [[this.value.res_id]],
-                    context: this.record.getContext(this.recordParams),
-                })
-                .then(function (action) {
-                    self.trigger_up('do_action', {action: action});
-                });
+            ev.preventDefault();
+            ev.stopPropagation();
+            const payload = {};
+            payload.action = await this._rpc({
+                args: [[this.value.res_id]],
+                context: this.record.getContext(this.recordParams),
+                method: this.customAction || 'get_formview_action',
+                model: this.field.relation,
+            });
+            if (this.customAction) {
+                payload.options = { additional_context: this.record.getContext() };
+            }
+            this.trigger_up('do_action', payload);
         }
     },
 

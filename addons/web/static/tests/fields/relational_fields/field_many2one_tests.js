@@ -326,6 +326,59 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test("many2one custom action", async function (assert) {
+            assert.expect(4);
+
+            const form = await createView({
+                arch: `
+                    <form string="Partners">
+                        <sheet>
+                            <group>
+                                <field name="trululu" action="my_custom_action"/>
+                            </group>
+                        </sheet>
+                    </form>`,
+                archs: {
+                    'partner,false,form': `
+                        <form string="Partners">
+                            <field name="display_name"/>
+                        </form>`,
+                },
+                data: this.data,
+                model: 'partner',
+                res_id: 1,
+                View: FormView,
+                viewOptions: { mode: 'edit' },
+                async mockRPC(route, { method }) {
+                    switch (route) {
+                        case '/web/dataset/call_kw/partner/get_formview_id':
+                            assert.step(method);
+                            return false;
+                        case '/web/dataset/call_kw/partner/my_custom_action':
+                            assert.step(method);
+                            return {};
+                        default:
+                            return this._super(...arguments);
+                    }
+                },
+            });
+
+            // Click on many2one external button
+            await testUtils.dom.click(form.el.querySelector('.o_field_widget[name=trululu] .o_external_button'));
+
+            assert.containsOnce(document.body, '.modal .o_field_widget[name=display_name]',
+                "external button should still open the form view in edit mode");
+
+            // Back to readonly and click on many2one (now in link state)
+            await testUtils.dom.click(document.querySelector('.modal .btn-primary'));
+            await testUtils.form.clickDiscard(form);
+            await testUtils.dom.click(form.el.querySelector('.o_field_widget[name=trululu]'));
+
+            assert.verifySteps(['get_formview_id', 'my_custom_action']);
+
+            form.destroy();
+        });
+
         QUnit.test('many2ones in form views with show_address', async function (assert) {
             assert.expect(4);
             var form = await createView({
