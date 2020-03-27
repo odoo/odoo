@@ -242,7 +242,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * Archive the current selection
      *
      * @private
-     * @param {string[]} ids
+     * @param {number[]} ids
      * @param {boolean} archive
      * @returns {Promise}
      */
