@@ -8839,6 +8839,55 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('selection is kept when optional fields are toggled', async function (assert) {
+        assert.expect(7);
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="m2o" optional="hide"/>' +
+                '</tree>',
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.containsN(list, 'th', 2);
+
+        // select a record
+        await testUtils.dom.click(list.$('.o_data_row .o_list_record_selector input:first'));
+
+        assert.containsOnce(list, '.o_list_record_selector input:checked');
+
+        // add an optional field
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
+        assert.containsN(list, 'th', 3);
+
+        assert.containsOnce(list, '.o_list_record_selector input:checked');
+
+        // select all records
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+
+        assert.containsN(list, '.o_list_record_selector input:checked', 5);
+
+        // remove an optional field
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
+        assert.containsN(list, 'th', 2);
+
+        assert.containsN(list, '.o_list_record_selector input:checked', 5);
+
+        list.destroy();
+    });
+
     QUnit.test('change the viewType of the current action', async function (assert) {
         assert.expect(25);
 
