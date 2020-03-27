@@ -989,6 +989,9 @@ var ListRenderer = BasicRenderer.extend({
                     return _.contains(self.selection, $(el).data('id'));
                 });
                 $checked_rows.find('.o_list_record_selector input').prop('checked', true);
+                if ($checked_rows.length === self.$('.o_data_row').length) { // all rows are checked
+                    self.$('thead .o_list_record_selector input').prop('checked', true);
+                }
             }
         });
         return Promise.all([this._super.apply(this, arguments), prom]);
