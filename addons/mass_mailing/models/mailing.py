@@ -249,10 +249,7 @@ class MassMailing(models.Model):
         default = dict(default or {},
                        name=_('%s (copy)') % self.name,
                        contact_list_ids=self.contact_list_ids.ids)
-        res = super(MassMailing, self).copy(default=default)
-        # Re-evaluating the domain
-        res._onchange_model_and_list()
-        return res
+        return super(MassMailing, self).copy(default=default)
 
     def _group_expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]
