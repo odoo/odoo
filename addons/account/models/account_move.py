@@ -2080,6 +2080,8 @@ class AccountMove(models.Model):
         # `user_has_group` won't be bypassed by `sudo()` since it doesn't change the user anymore.
         if not self.env.su and not self.env.user.has_group('account.group_account_invoice'):
             raise AccessError(_("You don't have the access rights to post an invoice."))
+        # Force balance check since nothing prevents another module to create an incorrect entry.
+        self._check_balanced()
         for move in self:
             if not move.line_ids.filtered(lambda line: not line.display_type):
                 raise UserError(_('You need to add a line before posting.'))
