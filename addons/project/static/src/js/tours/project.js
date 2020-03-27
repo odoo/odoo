@@ -7,6 +7,7 @@ var tour = require('web_tour.tour');
 var _t = core._t;
 
 tour.register('project_tour', {
+    sequence: 30,
     url: "/web",
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
