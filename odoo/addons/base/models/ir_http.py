@@ -162,7 +162,10 @@ class IrHttp(models.AbstractModel):
             response.last_modified = wdate
 
             response.set_etag(checksum)
-            response.make_conditional(request.httprequest)
+            response.make_conditional(
+                request.httprequest,
+                max_age=http.STATIC_CACHE_LONG if request.params.get('unique') else 0
+            )
 
             if response.status_code == 304:
                 return response
