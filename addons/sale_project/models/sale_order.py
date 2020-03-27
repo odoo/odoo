@@ -155,19 +155,15 @@ class SaleOrderLine(models.Model):
     def _convert_qty_company_hours(self, dest_company):
         return self.product_uom_qty
 
-    def _timesheet_create_project(self):
-        """ Generate project for the given so line, and link it.
-            :param project: record of project.project in which the task should be created
-            :return task: record of the created task
-        """
-        self.ensure_one()
+    def _timesheet_create_project_prepare_values(self):
+        """Generate project values"""
         account = self.order_id.analytic_account_id
         if not account:
             self.order_id._create_analytic_account(prefix=self.product_id.default_code or None)
             account = self.order_id.analytic_account_id
 
         # create the project or duplicate one
-        values = {
+        return {
             'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,
             'analytic_account_id': account.id,
             'partner_id': self.order_id.partner_id.id,
@@ -176,6 +172,14 @@ class SaleOrderLine(models.Model):
             'active': True,
             'company_id': self.company_id.id,
         }
+
+    def _timesheet_create_project(self):
+        """ Generate project for the given so line, and link it.
+            :param project: record of project.project in which the task should be created
+            :return task: record of the created task
+        """
+        self.ensure_one()
+        values = self._timesheet_create_project_prepare_values()
         if self.product_id.project_template_id:
             values['name'] = "%s - %s" % (values['name'], self.product_id.project_template_id.name)
             project = self.product_id.project_template_id.copy(values)
