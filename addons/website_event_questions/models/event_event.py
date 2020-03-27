@@ -33,6 +33,7 @@ class EventEvent(models.Model):
                 event.question_ids = [(5, 0, 0)] + [
                     (0, 0, {
                         'title': question.title,
+                        'question_type': question.question_type,
                         'sequence': question.sequence,
                         'once_per_order': question.once_per_order,
                     })
