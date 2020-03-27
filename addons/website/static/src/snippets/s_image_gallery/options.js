@@ -212,6 +212,7 @@ options.registry.gallery = options.Class.extend({
             .addClass('o_' + widgetValue);
         this[widgetValue]();
         this.trigger_up('cover_update');
+        this._refreshPublicWidgets();
     },
     /**
      * Displays the images with the standard layout: floating images.
@@ -316,13 +317,32 @@ options.registry.gallery = options.Class.extend({
                     imgs.push(data.$image[0]);
                     break;
             }
+            position = imgs.indexOf(data.$image[0]);
             _.each(imgs, function (img, index) {
                 // Note: there might be more efficient ways to do that but it is
                 // more simple this way and allows compatibility with 10.0 where
                 // indexes were not the same as positions.
                 $(img).attr('data-index', index);
             });
-            this.mode('reset', this.getMode());
+            const currentMode = this.getMode();
+            this.mode('reset', currentMode);
+            if (currentMode === 'slideshow') {
+                const $carousel = this.$target.find('.carousel');
+                $carousel.removeClass('slide');
+                $carousel.carousel(position);
+                this.$target.find('.carousel-indicators li').removeClass('active');
+                this.$target.find('.carousel-indicators li[data-slide-to="' + position + '"]').addClass('active');
+                this.trigger_up('activate_snippet', {
+                    $snippet: this.$target.find('.carousel-item.active img'),
+                    ifInactiveOptions: true,
+                });
+                $carousel.addClass('slide');
+            } else {
+                this.trigger_up('activate_snippet', {
+                    $snippet: data.$image,
+                    ifInactiveOptions: true,
+                });
+            }
         }
     },
 
