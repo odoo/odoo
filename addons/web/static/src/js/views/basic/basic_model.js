@@ -812,6 +812,15 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
+     * Returns the list of res_ids for a given list of local ids.
+     *
+     * @param {string[]} localIds
+     * @returns {integer[]}
+     */
+    localIdsToResIds: function (localIds) {
+        return localIds.map(localId => this.localData[localId].res_id);
+    },
+    /**
      * This helper method is designed to help developpers that want to use a
      * field widget outside of a view.  In that case, we want a way to create
      * data without actually performing a fetch.
@@ -1286,16 +1295,13 @@ var BasicModel = AbstractModel.extend({
     /**
      * Archive the given records
      *
-     * @param {Array} recordIDs local ids of the records to (un)archive
+     * @param {integer[]} resIDs ids of the records to archive
      * @param {string} parentID id of the parent resource to reload
      * @returns {Promise<string>} resolves to the parent id
      */
-    actionArchive: function (recordIDs, parentID) {
+    actionArchive: function (resIDs, parentID) {
         var self = this;
         var parent = this.localData[parentID];
-        var resIDs = _.map(recordIDs, function (recordID) {
-            return self.localData[recordID].res_id;
-        });
         return this._rpc({
                 model: parent.model,
                 method: 'action_archive',
@@ -1318,16 +1324,13 @@ var BasicModel = AbstractModel.extend({
     /**
      * Unarchive the given records
      *
-     * @param {Array} recordIDs local ids of the records to (un)archive
+     * @param {integer[]} resIDs ids of the records to unarchive
      * @param {string} parentID id of the parent resource to reload
      * @returns {Promise<string>} resolves to the parent id
      */
-    actionUnarchive: function (recordIDs, parentID) {
+    actionUnarchive: function (resIDs, parentID) {
         var self = this;
         var parent = this.localData[parentID];
-        var resIDs = _.map(recordIDs, function (recordID) {
-            return self.localData[recordID].res_id;
-        });
         return this._rpc({
                 model: parent.model,
                 method: 'action_unarchive',

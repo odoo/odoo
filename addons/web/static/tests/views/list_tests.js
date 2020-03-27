@@ -2627,6 +2627,113 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('archive all records matching the domain', async function (assert) {
+        assert.expect(6);
+
+        // add active field on foo model and make all records active
+        this.data.foo.fields.active = {string: 'Active', type: 'boolean', default: true};
+        this.data.foo.records.push({id: 5, bar: true, foo: "xxx"});
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            domain: [['bar', '=', true]],
+            mockRPC: function (route, args) {
+                if (args.method === 'action_archive') {
+                    assert.deepEqual(args.args[0], [1, 2, 3, 5]);
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+            services: {
+                notification: NotificationService.extend({
+                    notify: function () {
+                        throw new Error('should not display a notification');
+                    },
+                }),
+            },
+            viewOptions: {
+                hasActionMenus: true,
+            },
+        });
+
+        assert.containsNone(list, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsN(list, 'tbody td.o_list_record_selector', 2, "should have 2 records");
+
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+
+        assert.containsOnce(list, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsOnce(list, '.o_list_selection_box .o_list_select_domain');
+
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, "Archive");
+
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        await testUtils.dom.click($('.modal-footer .btn-primary'));
+
+        list.destroy();
+    });
+
+    QUnit.test('archive all records matching the domain (limit reached)', async function (assert) {
+        assert.expect(8);
+
+        // add active field on foo model and make all records active
+        this.data.foo.fields.active = {string: 'Active', type: 'boolean', default: true};
+        this.data.foo.records.push({id: 5, bar: true, foo: "xxx"});
+        this.data.foo.records.push({id: 6, bar: true, foo: "yyy"});
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            domain: [['bar', '=', true]],
+            mockRPC: function (route, args) {
+                if (args.method === 'action_archive') {
+                    assert.deepEqual(args.args[0], [1, 2, 3, 5]);
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+            services: {
+                notification: NotificationService.extend({
+                    notify: function () {
+                        assert.step('notify');
+                    },
+                }),
+            },
+            session: {
+                active_ids_limit: 4,
+            },
+            viewOptions: {
+                hasActionMenus: true,
+            },
+        });
+
+
+        assert.containsNone(list, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsN(list, 'tbody td.o_list_record_selector', 2, "should have 2 records");
+
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+
+        assert.containsOnce(list, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsOnce(list, '.o_list_selection_box .o_list_select_domain');
+
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, "Archive");
+
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        await testUtils.dom.click($('.modal-footer .btn-primary'));
+
+        assert.verifySteps(['notify']);
+
+        list.destroy();
+    });
+
     QUnit.test('pager (ungrouped and grouped mode), default limit', async function (assert) {
         assert.expect(4);
 
