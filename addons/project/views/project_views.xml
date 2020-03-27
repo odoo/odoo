@@ -505,7 +505,7 @@
                             <field name="legend_done" invisible="1"/>
                         </group>
                         <group>
-                            <field name="project_id" required="1" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
+                            <field name="project_id" action="action_view_tasks" required="1" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
                             <field name="user_id"
                                 class="o_task_user_field"
                                 options='{"no_open": True}' domain="[('share', '=', False)]"/>
