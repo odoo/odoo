@@ -859,6 +859,18 @@
     </div>
 </t>
 
+<t t-name="ListView.selection">
+    <div class="o_list_selection_box">
+        <t t-if="isDomainSelected">All <t t-esc="nbTotal"/> selected</t>
+        <t t-else="">
+            <t t-esc="nbSelected"/> selected
+            <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain">
+                <i class="fa fa-arrow-right"/> Select all <t t-esc="nbTotal"/>
+            </a>
+        </t>
+    </div>
+</t>
+
 <t t-name="ListView.confirmModal">
     <main role="alert">
         <p>

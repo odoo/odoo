@@ -3,7 +3,6 @@ odoo.define('web.ActionMenus', function (require) {
 
     const Context = require('web.Context');
     const DropdownMenu = require('web.DropdownMenu');
-    const pyUtils = require('web.py_utils');
     const Registry = require('web.Registry');
 
     const { Component } = owl;
@@ -95,15 +94,25 @@ odoo.define('web.ActionMenus', function (require) {
          * @param {OwlEvent} ev
          */
         async _executeAction(action) {
-            const activeIdsContext = {
-                active_id: this.props.activeIds[0],
-                active_ids: this.props.activeIds,
-                active_model: this.env.action.res_model,
-                select_all: this.props.selectAll || false,
-            };
-            if (this.props.domain) {
-                activeIdsContext.active_domain = this.props.domain;
+            let activeIds = this.props.activeIds;
+            if (this.props.isDomainSelected) {
+                activeIds = await this.rpc({
+                    model: this.env.action.res_model,
+                    method: 'search',
+                    args: [this.props.domain],
+                    kwargs: {
+                        limit: this.env.session.active_ids_limit,
+                    },
+                });
             }
+            const activeIdsContext = {
+                active_id: activeIds[0],
+                active_ids: activeIds,
+                active_model: this.env.action.res_model,
+                // keep active_domain in context for backward compatibility
+                // reasons, and to allow actions to bypass the active_ids_limit
+                active_domain: this.props.domain,
+            };
 
             const context = new Context(this.props.context, activeIdsContext).eval();
             const result = await this.rpc({
@@ -149,9 +158,10 @@ odoo.define('web.ActionMenus', function (require) {
 
     ActionMenus.components = { DropdownMenu };
     ActionMenus.props = {
-        activeIds: { type: Array, element: [Number|String] }, // virtual IDs are strings.
+        activeIds: { type: Array, element: [Number | String] }, // virtual IDs are strings.
         context: Object,
         domain: { type: Array, optional: 1 },
+        isDomainSelected: { type: Boolean, optional: 1 },
         items: {
             type: Object,
             shape: {
@@ -160,7 +170,6 @@ odoo.define('web.ActionMenus', function (require) {
                 other: { type: Array, optional: 1 },
             },
         },
-        selectAll: { type: Boolean, optional: 1 },
     };
     ActionMenus.template = 'web.ActionMenus';
 

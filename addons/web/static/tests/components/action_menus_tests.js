@@ -105,7 +105,6 @@ odoo.define('web.action_menus_tests', function (require) {
                                 active_id: 23,
                                 active_ids: [23],
                                 active_model: 'hobbit',
-                                select_all: false, // default props
                             };
                             assert.deepEqual(args.context, expectedContext);
                             assert.step('load-action');
@@ -178,7 +177,6 @@ odoo.define('web.action_menus_tests', function (require) {
                                 active_id: 23,
                                 active_ids: [23],
                                 active_model: 'hobbit',
-                                select_all: false, // default props
                             };
                             assert.deepEqual(args.context, expectedContext);
                             assert.step('load-action');
