@@ -223,7 +223,7 @@ odoo.define('web.test.x2many', function (require) {
         extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody tr td:contains(aaa)',
     }, {
         content: "open the many2one to select another user",
-        trigger: '.o_input_dropdown > input',
+        trigger: '.o_field_many2one[name="author"] .o_input_dropdown > input',
         run: 'text Marc',
     }, {
         content: "select another user",
