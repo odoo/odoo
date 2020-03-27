@@ -744,17 +744,14 @@ class expression(object):
                 push((path[1], operator, right), comodel, coalias)
 
             elif len(path) > 1 and field.store and field.type == 'one2many' and field.auto_join:
-                # res_partner.id = res_partner__bank_ids.partner_id
-                coalias, _ = self.query.add_join(
-                    (alias, comodel._table, 'id', field.inverse_name, path[0]),
-                    implicit=False, outer=True,
+                # use a subquery bypassing access rules and business logic
+                domain = [(path[1], operator, right)] + field.get_domain_list(model)
+                query = comodel.with_context(**field.context)._where_calc(domain)
+                subfrom, subwhere, subparams = query.get_sql()
+                subquery = 'SELECT "{}"."{}" FROM {} WHERE {}'.format(
+                    comodel._table, field.inverse_name, subfrom, subwhere,
                 )
-                domain = field.get_domain_list(model)
-                if domain:
-                    push(AND_OPERATOR, comodel, coalias)
-                    for elem in normalize_domain(domain):
-                        push(elem, comodel, coalias)
-                push((path[1], operator, right), comodel, coalias)
+                push(('id', 'inselect', (subquery, subparams)), model, alias, internal=True)
 
             elif len(path) > 1 and field.store and field.auto_join:
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)

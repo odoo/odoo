@@ -38,7 +38,6 @@ class TestAutoJoin(common.TransactionCase):
         self.assertEqual(len(result1), 1)
         self.assertEqual(result1[0]['__count'], 2)
 
-        # TO FIX: the first record is counted twice!
         result2 = model.read_group(domain2, [], [])
         self.assertEqual(len(result2), 1)
-        self.assertEqual(result2[0]['__count'], 3)
+        self.assertEqual(result2[0]['__count'], 2)
