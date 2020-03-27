@@ -617,8 +617,9 @@ class PosSession(models.Model):
 
         tax_ids = order_line.tax_ids_after_fiscal_position\
                     .filtered(lambda t: t.company_id.id == order_line.order_id.company_id.id)
-        price = order_line.price_unit * (1 - (order_line.discount or 0.0) / 100.0)
-        taxes = tax_ids.compute_all(price_unit=price, quantity=order_line.qty, currency=self.currency_id, is_refund=order_line.qty<0).get('taxes', [])
+        sign = -1 if order_line.qty >= 0 else 1
+        price = sign * order_line.price_unit * (1 - (order_line.discount or 0.0) / 100.0)
+        taxes = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=order_line.qty<0).get('taxes', [])
         date_order = order_line.order_id.date_order
         taxes = [{'date_order': date_order, **tax} for tax in taxes]
         return {
@@ -681,11 +682,11 @@ class PosSession(models.Model):
             'name': tax.name,
             'account_id': account_id,
             'move_id': self.move_id.id,
-            'tax_base_amount': base_amount_converted,
+            'tax_base_amount': abs(base_amount_converted),
             'tax_repartition_line_id': repartition_line_id,
             'tag_ids': [(6, 0, tag_ids)],
         }
-        return self._credit_amounts(partial_args, amount, amount_converted)
+        return self._debit_amounts(partial_args, amount, amount_converted)
 
     def _get_stock_expense_vals(self, exp_account, amount, amount_converted):
         partial_args = {'account_id': exp_account.id, 'move_id': self.move_id.id}
