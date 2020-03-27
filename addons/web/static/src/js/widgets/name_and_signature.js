@@ -250,7 +250,8 @@ var NameAndSignature = Widget.extend({
             .empty()
             .jSignature({
                 'decor-color': '#D1D0CE',
-                'background-color': '#FFF',
+                'background-color': 'rgba(255,255,255,0)',
+                'show-stroke': false,
                 'color': this.fontColor,
                 'lineWidth': 2,
                 'width': width,
