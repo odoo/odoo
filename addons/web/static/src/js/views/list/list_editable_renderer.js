@@ -15,6 +15,7 @@ var core = require('web.core');
 var dom = require('web.dom');
 var ListRenderer = require('web.ListRenderer');
 var utils = require('web.utils');
+const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 
 var _t = core._t;
 
@@ -462,6 +463,9 @@ ListRenderer.include({
         }
 
         return Promise.all(defs).then(function () {
+            // mark Owl sub components as mounted
+            WidgetAdapterMixin.on_attach_callback.call(self);
+
             // necessary to trigger resize on fieldtexts
             core.bus.trigger('DOM_updated');
         });
@@ -1553,6 +1557,10 @@ ListRenderer.include({
             return;
         }
         ev.stopPropagation(); // stop the event, the action is done by this renderer
+        if (ev.data.originalEvent && ['next', 'previous'].includes(ev.data.direction)) {
+            ev.data.originalEvent.preventDefault();
+            ev.data.originalEvent.stopPropagation();
+        }
         switch (ev.data.direction) {
             case 'previous':
                 if (this.currentFieldIndex > 0) {

@@ -1065,6 +1065,13 @@ var FormRenderer = BasicRenderer.extend({
      */
     _onNavigationMove: function (ev) {
         ev.stopPropagation();
+        // We prevent the default behaviour and stop the propagation of the
+        // originalEvent when the originalEvent is a tab keydown to not let
+        // the browser do it. The action is done by this renderer.
+        if (ev.data.originalEvent && ['next', 'previous'].includes(ev.data.direction)) {
+            ev.data.originalEvent.preventDefault();
+            ev.data.originalEvent.stopPropagation();
+        }
         var index;
         let target = ev.data.target || ev.target;
         if (target.__owl__) {

@@ -2,10 +2,13 @@ odoo.define('web.CalendarPopover', function (require) {
 "use strict";
 
 var fieldRegistry = require('web.field_registry');
+const fieldRegistryOwl = require('web.field_registry_owl');
+const FieldWrapper = require('web.FieldWrapper');
 var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var Widget = require('web.Widget');
+const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 
-var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
+var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMixin, {
     template: 'CalendarView.event.popover',
     events: {
         'click .o_cw_popover_edit': '_onClickPopoverEdit',
@@ -44,6 +47,25 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
             $field.appendTo(self.$('.o_cw_popover_fields_secondary'));
         });
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        WidgetAdapterMixin.destroy.call(this);
+    },
+    /**
+     * Called each time the widget is attached into the DOM.
+     */
+    on_attach_callback: function () {
+        WidgetAdapterMixin.on_attach_callback.call(this);
+    },
+    /**
+     * Called each time the widget is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        WidgetAdapterMixin.on_detach_callback.call(this);
     },
 
     //--------------------------------------------------------------------------
@@ -129,8 +151,20 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
             var record = self.model.get(recordID);
             _.each(fieldsToGenerate, function (field) {
                 if (field.invisible) return;
-                var FieldClass = fieldRegistry.getAny([field.widget, field.type]);
-                var fieldWidget = new FieldClass(self, field.name, record, self.displayFields[field.name]);
+                let isLegacy = true;
+                let fieldWidget;
+                let FieldClass = fieldRegistryOwl.getAny([field.widget, field.type]);
+                if (FieldClass) {
+                    isLegacy = false;
+                    fieldWidget = new FieldWrapper(this, FieldClass, {
+                        fieldName: field.name,
+                        record,
+                        options: self.displayFields[field.name],
+                    });
+                } else {
+                    FieldClass = fieldRegistry.getAny([field.widget, field.type]);
+                    fieldWidget = new FieldClass(self, field.name, record, self.displayFields[field.name]);
+                }
                 self._registerWidget(recordID, field.name, fieldWidget);
 
                 var $field = $('<li>', {class: 'list-group-item flex-shrink-0 d-flex flex-wrap'});
@@ -139,7 +173,13 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
                 var $fieldContainer = $('<div>', {class: 'flex-grow-1'});
                 $fieldContainer.appendTo($field);
 
-                defs.push(fieldWidget.appendTo($fieldContainer).then(function () {
+                let def;
+                if (isLegacy) {
+                    def = fieldWidget.appendTo($fieldContainer);
+                } else {
+                    def = fieldWidget.mount($fieldContainer[0]);
+                }
+                defs.push(def.then(function () {
                     self.$fieldsList.push($field);
                 }));
             });

@@ -15,6 +15,7 @@ var BasicController = require('web.BasicController');
 var BasicModel = require('web.BasicModel');
 var config = require('web.config');
 var fieldRegistry = require('web.field_registry');
+var fieldRegistryOwl = require('web.field_registry_owl');
 var pyUtils = require('web.py_utils');
 var utils = require('web.utils');
 
@@ -78,7 +79,8 @@ var BasicView = AbstractView.extend({
     _getFieldWidgetClass: function (viewType, field, attrs) {
         var FieldWidget;
         if (attrs.widget) {
-            FieldWidget = fieldRegistry.getAny([viewType + "." + attrs.widget, attrs.widget]);
+            FieldWidget = fieldRegistryOwl.getAny([viewType + "." + attrs.widget, attrs.widget]) ||
+                fieldRegistry.getAny([viewType + "." + attrs.widget, attrs.widget]);
             if (!FieldWidget) {
                 console.warn("Missing widget: ", attrs.widget, " for field", attrs.name, "of type", field.type);
             }
@@ -87,7 +89,9 @@ var BasicView = AbstractView.extend({
             // is not specified in the view
             FieldWidget = fieldRegistry.get('kanban.many2many_tags');
         }
-        return FieldWidget || fieldRegistry.getAny([viewType + "." + field.type, field.type, "abstract"]);
+        return FieldWidget ||
+            fieldRegistryOwl.getAny([viewType + "." + field.type, field.type, "abstract"]) ||
+            fieldRegistry.getAny([viewType + "." + field.type, field.type, "abstract"]);
     },
     /**
      * In some cases, we already have a preloaded record
