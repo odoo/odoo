@@ -20,7 +20,9 @@
                 <p>
                     You just reached a new rank : <strong>${object.rank_id.name}</strong>
                 </p>
-                <p>Continue your work to become a <strong>${object.next_rank_id.name}</strong> !</p>
+                % if object.next_rank_id.name
+                    <p>Continue your work to become a <strong>${object.next_rank_id.name}</strong> !</p>
+                % endif
                 <div style="margin: 16px 0px 16px 0px;">
                     % set gamification_redirection_data = object.get_gamification_redirection_data()
                     % for data in gamification_redirection_data
