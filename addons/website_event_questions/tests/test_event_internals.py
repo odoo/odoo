@@ -23,13 +23,18 @@ class TestEventData(TestEventQuestionCommon):
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
         })
 
+        self.assertEqual(
+            event.question_ids.mapped('question_type'),
+            ['simple_choice', 'simple_choice', 'text_box'])
         self.assertEqual(event.specific_question_ids.title, 'Question1')
         self.assertEqual(
             set(event.specific_question_ids.mapped('answer_ids.name')),
             set(['Q1-Answer1', 'Q1-Answer2']))
-        self.assertEqual(event.general_question_ids.title, 'Question2')
+        self.assertEqual(len(event.general_question_ids), 2)
+        self.assertEqual(event.general_question_ids[0].title, 'Question2')
+        self.assertEqual(event.general_question_ids[1].title, 'Question3')
         self.assertEqual(
-            set(event.general_question_ids.mapped('answer_ids.name')),
+            set(event.general_question_ids[0].mapped('answer_ids.name')),
             set(['Q2-Answer1', 'Q2-Answer2']))
 
     def test_process_attendees_form(self):
@@ -45,20 +50,28 @@ class TestEventData(TestEventQuestionCommon):
             '1-email': 'pixis@gmail.com',
             '1-phone': '+32444444444',
             '1-event_ticket_id': '2',
-            '1-answer_ids-8': '5',
             '2-name': 'Geluchat',
             '2-email': 'geluchat@gmail.com',
             '2-phone': '+32777777777',
             '2-event_ticket_id': '3',
-            '2-answer_ids-8': '9',
-            '0-answer_ids-3': '7',
-            '0-answer_ids-4': '1',
+            'question_answer-1-%s' % self.event_question_1.id: '5',
+            'question_answer-2-%s' % self.event_question_1.id: '9',
+            'question_answer-0-%s' % self.event_question_2.id: '7',
+            'question_answer-0-%s' % self.event_question_3.id: 'Free Text',
         }
 
         with MockRequest(self.env):
             registrations = WebsiteEvent()._process_attendees_form(event, form_details)
 
         self.assertEqual(registrations, [
-            {'name': 'Pixis', 'email': 'pixis@gmail.com', 'phone': '+32444444444', 'event_ticket_id': 2, 'answer_ids': [[4, 5], [4, 7], [4, 1]]},
-            {'name': 'Geluchat', 'email': 'geluchat@gmail.com', 'phone': '+32777777777', 'event_ticket_id': 3, 'answer_ids': [[4, 9], [4, 7], [4, 1]]}
+            {'name': 'Pixis', 'email': 'pixis@gmail.com', 'phone': '+32444444444', 'event_ticket_id': 2,
+            'registration_answer_ids': [
+                (0, 0, {'question_id': self.event_question_1.id, 'value_answer_id': 5}),
+                (0, 0, {'question_id': self.event_question_2.id, 'value_answer_id': 7}),
+                (0, 0, {'question_id': self.event_question_3.id, 'value_text_box': 'Free Text'})]},
+            {'name': 'Geluchat', 'email': 'geluchat@gmail.com', 'phone': '+32777777777', 'event_ticket_id': 3,
+            'registration_answer_ids': [
+                (0, 0, {'question_id': self.event_question_1.id, 'value_answer_id': 9}),
+                (0, 0, {'question_id': self.event_question_2.id, 'value_answer_id': 7}),
+                (0, 0, {'question_id': self.event_question_3.id, 'value_text_box': 'Free Text'})]}
         ])

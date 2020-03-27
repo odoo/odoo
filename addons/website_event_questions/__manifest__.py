@@ -4,7 +4,7 @@
     'name': 'Questions on Events',
     'description': 'Questions on Events',
     'category': 'Marketing',
-    'version': '1.0',
+    'version': '1.1',
     'depends': ['website_event'],
     'data': [
         'views/event_views.xml',
