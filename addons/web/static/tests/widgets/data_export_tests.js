@@ -1,10 +1,10 @@
 odoo.define('web.data_export_tests', function (require) {
 "use strict";
 
+const data = require('web.data');
 const framework = require('web.framework');
 const ListView = require('web.ListView');
 const testUtils = require('web.test_utils');
-const data = require('web.data');
 
 const cpHelpers = testUtils.controlPanel;
 const createView = testUtils.createView;
@@ -12,7 +12,7 @@ const createView = testUtils.createView;
 QUnit.module('widgets', {
     beforeEach: function () {
         this.data = {
-            partner: {
+            'partner': {
                 fields: {
                     foo: {string: "Foo", type: "char"},
                     bar: {string: "Bar", type: "char"},
@@ -40,6 +40,38 @@ QUnit.module('widgets', {
                 records: [],
             },
         };
+
+        this.mockDataExportRPCs = function (route) {
+            if (route === '/web/export/formats') {
+                return Promise.resolve([
+                    {tag: 'csv', label: 'CSV'},
+                    {tag: 'xls', label: 'Excel'},
+                ]);
+            }
+            if (route === '/web/export/get_fields') {
+                return Promise.resolve([
+                    {
+                        field_type: "one2many",
+                        string: "Activities",
+                        required: false,
+                        value: "activity_ids/id",
+                        id: "activity_ids",
+                        params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
+                        relation_field: "res_id",
+                        children: true,
+                    }, {
+                        children: false,
+                        field_type: 'char',
+                        id: "foo",
+                        relation_field: null,
+                        required: false,
+                        string: 'Foo',
+                        value: "foo",
+                    }
+                ]);
+            }
+            return this._super.apply(this, arguments);
+        };
     }
 }, function () {
 
@@ -66,37 +98,7 @@ QUnit.module('widgets', {
             viewOptions: {
                 hasActionMenus: true,
             },
-            mockRPC: function (route) {
-                if (route === '/web/export/formats') {
-                    return Promise.resolve([
-                        {tag: 'csv', label: 'CSV'},
-                        {tag: 'xls', label: 'Excel'},
-                    ]);
-                }
-                if (route === '/web/export/get_fields') {
-                    return Promise.resolve([
-                        {
-                            field_type: "one2many",
-                            string: "Activities",
-                            required: false,
-                            value: "activity_ids/id",
-                            id: "activity_ids",
-                            params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
-                            relation_field: "res_id",
-                            children: true,
-                        }, {
-                            children: false,
-                            field_type: 'char',
-                            id: "foo",
-                            relation_field: null,
-                            required: false,
-                            string: 'Foo',
-                            value: "foo",
-                        }
-                    ]);
-                }
-                return this._super.apply(this, arguments);
-            },
+            mockRPC: this.mockDataExportRPCs,
             session: {
                 get_file: function (params) {
                     assert.step(params.url);
@@ -136,7 +138,7 @@ QUnit.module('widgets', {
 
         var create = data.DataSet.prototype.create;
 
-        data.DataSet.prototype.create = function (data, options) {
+        data.DataSet.prototype.create = function () {
             assert.step('create');
             return Promise.resolve([]);
         };
@@ -149,37 +151,7 @@ QUnit.module('widgets', {
             viewOptions: {
                 hasActionMenus: true,
             },
-            mockRPC: function (route) {
-                if (route === '/web/export/formats') {
-                    return Promise.resolve([
-                        {tag: 'csv', label: 'CSV'},
-                        {tag: 'xls', label: 'Excel'},
-                    ]);
-                }
-                if (route === '/web/export/get_fields') {
-                    return Promise.resolve([
-                        {
-                            field_type: "one2many",
-                            string: "Activities",
-                            required: false,
-                            value: "activity_ids/id",
-                            id: "activity_ids",
-                            params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities"},
-                            relation_field: "res_id",
-                            children: true,
-                        }, {
-                            children: false,
-                            field_type: 'char',
-                            id: "foo",
-                            relation_field: null,
-                            required: false,
-                            string: 'Foo',
-                            value: "foo",
-                        }
-                    ]);
-                }
-                return this._super.apply(this, arguments);
-            },
+            mockRPC: this.mockDataExportRPCs,
         });
 
 
@@ -221,37 +193,7 @@ QUnit.module('widgets', {
             viewOptions: {
                 hasActionMenus: true,
             },
-            mockRPC: function (route) {
-                if (route === '/web/export/formats') {
-                    return Promise.resolve([
-                        {tag: 'csv', label: 'CSV' },
-                        {tag: 'xls', label: 'Excel' },
-                    ]);
-                }
-                if (route === '/web/export/get_fields') {
-                    return Promise.resolve([
-                        {
-                            field_type: "one2many",
-                            string: "Activities",
-                            required: false,
-                            value: "activity_ids/id",
-                            id: "activity_ids",
-                            params: {"model": "mail.activity", "prefix": "activity_ids", "name": "Activities" },
-                            relation_field: "res_id",
-                            children: true,
-                        }, {
-                            children: false,
-                            field_type: 'char',
-                            id: "foo",
-                            relation_field: null,
-                            required: false,
-                            string: 'Foo',
-                            value: "foo",
-                        }
-                    ]);
-                }
-                return this._super.apply(this, arguments);
-            },
+            mockRPC: this.mockDataExportRPCs,
         });
 
 
@@ -291,7 +233,7 @@ QUnit.module('widgets', {
     });
 
     QUnit.test('Direct export list ', async function (assert) {
-        assert.expect(2)
+        assert.expect(2);
 
         let list = await createView({
             View: ListView,
@@ -321,7 +263,7 @@ QUnit.module('widgets', {
                             name: 'bar',
                             label: 'Bar',
                         }]
-                    }, "should be called with correct params")
+                    }, "should be called with correct params");
                     args.complete();
                 },
             },
@@ -336,7 +278,7 @@ QUnit.module('widgets', {
     });
 
     QUnit.test('Direct export grouped list ', async function (assert) {
-        assert.expect(2)
+        assert.expect(2);
 
         let list = await createView({
             View: ListView,
@@ -367,7 +309,7 @@ QUnit.module('widgets', {
                             name: 'bar',
                             label: 'Bar',
                         }]
-                    }, "should be called with correct params")
+                    }, "should be called with correct params");
                     args.complete();
                 },
             },
