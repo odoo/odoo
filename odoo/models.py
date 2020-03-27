@@ -61,6 +61,7 @@ from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
 from .tools.translate import _
 from .tools import date_utils
+from .tools import populate
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
@@ -6159,6 +6160,66 @@ Record ids: %(records)s
             complete path to access it (eg: module/path/to/image.png).
         """
         return 'placeholder.png'
+
+    def _populate_factories(self):
+        """ Return a list of pairs ``(field_name, factory)``, ``factory`` is a function that creates
+        a generator of values (dict of field values).  Its API suggested by::
+
+            # generator yield values by iterating on base_generator and adding a value
+            # for the given field in the dicts yielded by base_generator
+            generator = factory(base_generator, field_name, model_name)
+            # suggested usage
+            for values in generator:
+                model.create(values)
+        """
+        return []
+
+    @property
+    def _populate_sizes(self):
+        """ Return a dict mapping symbolic sizes (``'small'``, ``'medium'``, ``'large'``) to integers,
+        giving the minimal number of records that method ``_populate`` should create.
+        """
+        return {
+            'small': 10,  # minimal representative set
+            'medium': 100,  # average database load
+            'large': 1000, # maxi database load
+        }
+
+    @property
+    def _populate_dependencies(self):
+        return []
+
+    def _populate(self, size):
+        """ Create records to populate this model.
+        
+        :param size: symbolic size for the number of records: ``'small'``, ``'medium'`` or ``'large'``
+        """
+        batch_size = 1000
+        min_size = self._populate_sizes[size]
+
+        record_count = 0
+        create_values = []
+        complete = False
+        field_generators = self._populate_factories()
+        if not field_generators:
+            return self.browse() # maybe create an automatic generator?
+            
+        records_batches = []
+        generator = populate.chain_factories(field_generators, self._name)
+        while record_count <= min_size or not complete:
+            values = next(generator)
+            complete = values.pop('__complete')
+            create_values.append(values)
+            record_count += 1
+            if len(create_values) >= batch_size:
+                _logger.info('Batch: %s/%s', record_count, min_size)
+                records_batches.append(self.create(create_values))
+                create_values = []
+
+        if create_values:
+            records_batches.append(self.create(create_values))
+        return self.concat(*records_batches)
+
 
 collections.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have __reversed__, index or count
