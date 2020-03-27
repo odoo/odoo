@@ -81,6 +81,7 @@ class Http(models.AbstractModel):
             'is_system': request.session.uid and self.env.user._is_system() or False,
             'is_website_user': request.session.uid and self.env.user._is_public() or False,
             'user_id': request.session.uid and self.env.user.id or False,
+            'user_lang': request.session.uid and self.env.user.lang or False,
             'is_frontend': True,
         }
         if request.session.uid:

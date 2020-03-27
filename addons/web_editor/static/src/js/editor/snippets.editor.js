@@ -5,6 +5,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
+const session = require('web.session');
 var Widget = require('web.Widget');
 var options = require('web_editor.snippets.options');
 var Wysiwyg = require('web_editor.wysiwyg');
@@ -1033,7 +1034,7 @@ var SnippetsMenu = Widget.extend({
             method: 'render_template',
             args: [this.options.snippets, {}],
             kwargs: {
-                context: this.options.context,
+                context: Object.assign({lang: session.user_lang}, this.options.context),
             },
         });
         this.cacheSnippetTemplate[this.options.snippets] = this._defLoadSnippets;
