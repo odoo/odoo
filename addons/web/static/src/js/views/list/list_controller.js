@@ -235,28 +235,6 @@ var ListController = BasicController.extend({
         }).then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
     },
     /**
-     * Archive the current selection
-     *
-     * @private
-     * @param {string[]} ids
-     * @param {boolean} archive
-     * @returns {Promise}
-     */
-    _archive: function (ids, archive) {
-        if (ids.length === 0) {
-            return Promise.resolve();
-        }
-        if (archive) {
-            return this.model
-                .actionArchive(ids, this.handle)
-                .then(this.update.bind(this, {}, {reload: false}));
-        } else {
-            return this.model
-                .actionUnarchive(ids, this.handle)
-                .then(this.update.bind(this, {}, {reload: false}));
-        }
-    },
-    /**
      * Assign on the buttons create additionnal behavior to facilitate the work of the users doing input only using the keyboard
      *
      * @param {jQueryElement} $createButton  The create button itself
