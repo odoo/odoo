@@ -331,6 +331,27 @@ class TestSMSPostException(test_mail_full_common.TestSMSCommon, test_mail_full_c
             {'partner': self.partner_3, 'state': 'exception', 'failure_type': 'sms_server'},
         ], self._test_body, messages)
 
+    def test_message_sms_crash_unregistered(self):
+        with self.with_user('employee'), self.mockSMSGateway(sim_error='unregistered'):
+            test_record = self.env['mail.test.sms'].browse(self.test_record.id)
+            messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2).ids)
+
+        self.assertSMSNotification([
+            {'partner': self.partner_1, 'state': 'exception', 'failure_type': 'sms_acc'},
+            {'partner': self.partner_2, 'state': 'exception', 'failure_type': 'sms_acc'},
+        ], self._test_body, messages)
+
+    def test_message_sms_crash_unregistered_single(self):
+        with self.with_user('employee'), self.mockSMSGateway(nbr_t_error={self.partner_2.phone_get_sanitized_number(): 'unregistered'}):
+            test_record = self.env['mail.test.sms'].browse(self.test_record.id)
+            messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2 | self.partner_3).ids)
+
+        self.assertSMSNotification([
+            {'partner': self.partner_1, 'state': 'sent'},
+            {'partner': self.partner_2, 'state': 'exception', 'failure_type': 'sms_acc'},
+            {'partner': self.partner_3, 'state': 'sent'},
+        ], self._test_body, messages)
+
     def test_message_sms_crash_wrong_number(self):
         with self.with_user('employee'), self.mockSMSGateway(sim_error='wrong_number_format'):
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)

@@ -55,4 +55,4 @@ class SmsApi(models.AbstractModel):
         params = {
             'messages': messages
         }
-        return self._contact_iap('/iap/sms/1/send', params)
+        return self._contact_iap('/iap/sms/2/send', params)
