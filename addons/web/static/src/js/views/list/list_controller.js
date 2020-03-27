@@ -24,6 +24,7 @@ var ListController = BasicController.extend({
     buttons_template: 'ListView.buttons',
     events: _.extend({}, BasicController.prototype.events, {
         'click .o_list_export_xlsx': '_onDirectExportData',
+        'click .o_list_select_domain': '_onSelectDomain',
     }),
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         activate_next_widget: '_onActivateNextWidget',
@@ -54,7 +55,8 @@ var ListController = BasicController.extend({
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
         this.fieldChangedPrevented = false;
-        this.selectAll = false;
+        this.isPageSelected = false; // true iff all records of the page are selected
+        this.isDomainSelected = false; // true iff the user selected all records matching the domain
         Object.defineProperty(this, 'mode', {
             get: () => this.renderer.isEditable() ? 'edit' : 'readonly',
             set: () => {},
@@ -128,20 +130,22 @@ var ListController = BasicController.extend({
      */
     renderButtons: function ($node) {
         if (this.noLeaf || !this.hasButtons) {
-            return;
+            this.hasButtons = false;
+            this.$buttons = $('<div>');
+        } else {
+            this.$buttons = $(qweb.render(this.buttons_template, {widget: this}));
+            this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
+            this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));
+            this.$buttons.find('.o_list_button_add').tooltip({
+                delay: {show: 200, hide: 0},
+                title: function () {
+                    return qweb.render('CreateButton.tooltip');
+                },
+                trigger: 'manual',
+            });
+            this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
+            this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
         }
-        this.$buttons = $(qweb.render(this.buttons_template, {widget: this}));
-        this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
-        this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));
-        this.$buttons.find('.o_list_button_add').tooltip({
-            delay: {show: 200, hide: 0},
-            title: function () {
-                return qweb.render('CreateButton.tooltip');
-            },
-            trigger: 'manual',
-        });
-        this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
-        this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
         if ($node) {
             this.$buttons.appendTo($node);
         }
@@ -153,14 +157,19 @@ var ListController = BasicController.extend({
      */
     update: function (params, options) {
         var self = this;
+        let res_ids;
         if (options && options.keepSelection) {
             // filter out removed records from selection
-            var res_ids = this.model.get(this.handle).res_ids;
+            res_ids = this.model.get(this.handle).res_ids;
             this.selectedRecords = _.filter(this.selectedRecords, function (id) {
                 return _.contains(res_ids, self.model.get(id).res_id);
             });
         } else {
             this.selectedRecords = [];
+        }
+        if (this.selectedRecords.length === 0 || this.selectedRecords.length < res_ids.length) {
+            this.isDomainSelected = false;
+            this.isPageSelected = false;
         }
 
         params.selectedRecords = this.selectedRecords;
@@ -174,16 +183,16 @@ var ListController = BasicController.extend({
      * @param {string} mode either 'readonly' or 'edit'
      */
     updateButtons: function (mode) {
-        if (!this.$buttons) {
-            return;
+        if (this.hasButtons) {
+            this.$buttons.toggleClass('o-editing', mode === 'edit');
+            const state = this.model.get(this.handle, {raw: true});
+            if (state.count) {
+                this.$('.o_list_export_xlsx').show();
+            } else {
+                this.$('.o_list_export_xlsx').hide();
+            }
         }
-        this.$buttons.toggleClass('o-editing', mode === 'edit');
-        const state = this.model.get(this.handle, {raw: true});
-        if (state.count) {
-            this.$('.o_list_export_xlsx').show();
-        } else {
-            this.$('.o_list_export_xlsx').hide();
-        }
+        this._updateSelectionBox();
     },
 
     //--------------------------------------------------------------------------
@@ -354,9 +363,9 @@ var ListController = BasicController.extend({
         }
         return Object.assign(props, {
             items: Object.assign({}, this.toolbarActions, { other: otherActionItems }),
-            context: this.model.get(this.handle, { raw: true }).getContext(),
+            context: state.getContext(),
             domain: state.getDomain(),
-            selectAll: this.selectAll,
+            isDomainSelected: this.isDomainSelected,
         });
     },
     /**
@@ -484,7 +493,7 @@ var ListController = BasicController.extend({
      * @private
      */
     _toggleCreateButton: function () {
-        if (this.$buttons) {
+        if (this.hasButtons) {
             var state = this.model.get(this.handle);
             var createHidden = this.renderer.isEditable() && state.groupedBy.length && state.data.length;
             this.$buttons.find('.o_list_button_add').toggleClass('o_hidden', !!createHidden);
@@ -498,6 +507,31 @@ var ListController = BasicController.extend({
         await this._super(...arguments);
         this._toggleCreateButton();
         this.updateButtons('readonly');
+    },
+    /**
+     * When records are selected, a box is displayed in the control panel (next
+     * to the buttons). It indicates the number of selected records, and allows
+     * the user to select the whole domain instead of the current page (when the
+     * page is selected). This function renders and displays this box when at
+     * least one record is selected.
+     *
+     * @private
+     */
+    _updateSelectionBox() {
+        if (this.$selectionBox) {
+            this.$selectionBox.remove();
+            this.$selectionBox = null;
+        }
+        if (this.selectedRecords.length) {
+            const state = this.model.get(this.handle, {raw: true});
+            this.$selectionBox = $(qweb.render('ListView.selection', {
+                isDomainSelected: this.isDomainSelected,
+                isPageSelected: this.isPageSelected,
+                nbSelected: this.selectedRecords.length,
+                nbTotal: state.count,
+            }));
+            this.$selectionBox.appendTo(this.$buttons);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -691,6 +725,15 @@ var ListController = BasicController.extend({
             .guardedCatch(ev.data.onFailure);
     },
     /**
+     * @private
+     */
+    _onSelectDomain: function (ev) {
+        ev.preventDefault();
+        this.isDomainSelected = true;
+        this._updateSelectionBox();
+        this._updateControlPanel();
+    },
+    /**
      * When the current selection changes (by clicking on the checkboxes on the
      * left), we need to display (or hide) the 'sidebar'.
      *
@@ -699,7 +742,9 @@ var ListController = BasicController.extend({
      */
     _onSelectionChanged: function (ev) {
         this.selectedRecords = ev.data.selection;
-        this.selectAll = ev.data.allChecked;
+        this.isPageSelected = ev.data.allChecked;
+        this.isDomainSelected = false;
+        this._updateSelectionBox();
         this._updateControlPanel();
     },
     /**
