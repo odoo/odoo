@@ -67,25 +67,6 @@ var ListController = BasicController.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * Calculate the active domain of the list view. This should be done only
-     * if the header checkbox has been checked. This is done by evaluating the
-     * search results, and then adding the dataset domain (i.e. action domain).
-     *
-     * @todo This is done only for the data export.  The full mechanism is wrong,
-     * this method should be private, most of the code in the sidebar should be
-     * moved to the controller, and we should not use the getParent method...
-     *
-     * @returns {Promise<array[]>} a promise that resolve to the active domain
-     */
-    getActiveDomain: function () {
-        var self = this;
-        if (this.selectAll) {
-            var searchQuery = this._controlPanelModel ? this._controlPanelModel.getQuery() : {};
-            var record = self.model.get(self.handle, {raw: true});
-            return record.getDomain().concat(searchQuery.domain || []);
-        }
-    },
     /*
      * @override
      */
@@ -314,8 +295,9 @@ var ListController = BasicController.extend({
         let state = this.model.get(this.handle);
         let defaultExportFields = this.renderer.columns.filter(field => field.tag === 'field').map(field => field.attrs.name);
         let groupedBy = this.renderer.state.groupedBy;
+        const domain = this.isDomainSelected && state.getDomain();
         return new DataExport(this, state, defaultExportFields, groupedBy,
-            this.getActiveDomain(), this.getSelectedIds());
+            domain, this.getSelectedIds());
     },
     /**
      * Only display the pager when there are data to display.

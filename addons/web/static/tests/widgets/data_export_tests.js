@@ -133,6 +133,62 @@ QUnit.module('widgets', {
         ]);
     });
 
+    QUnit.test('exporting data in list view (multi pages)', async function (assert) {
+        assert.expect(4);
+
+        let expectedData;
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            domain: [['id', '<', 1000]],
+            viewOptions: {
+                hasActionMenus: true,
+            },
+            mockRPC: this.mockDataExportRPCs,
+            session: {
+                get_file: function (params) {
+                    const data = JSON.parse(params.data.data);
+                    assert.deepEqual({ids: data.ids, domain: data.domain}, expectedData);
+                    params.complete();
+                },
+            },
+        });
+
+        // select all records (first page) and export
+        expectedData = {
+            ids: [1, 2],
+            domain: [['id', '<', 1000]],
+        };
+        await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
+
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, 'Export');
+
+        assert.containsOnce(document.body, '.modal');
+
+        await testUtils.dom.click($('.modal span:contains(Export)'));
+        await testUtils.dom.click($('.modal span:contains(Close)'));
+
+        // select all domain and export
+        expectedData = {
+            ids: false,
+            domain: [['id', '<', 1000]],
+        };
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, 'Export');
+
+        assert.containsOnce(document.body, '.modal');
+
+        await testUtils.dom.click($('.modal span:contains(Export)'));
+        await testUtils.dom.click($('.modal span:contains(Close)'));
+
+        list.destroy();
+    });
+
     QUnit.test('saving fields list when exporting data', async function (assert) {
         assert.expect(4);
 
