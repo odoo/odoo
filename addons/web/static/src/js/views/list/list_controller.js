@@ -267,6 +267,39 @@ var ListController = BasicController.extend({
             .then(this._setMode.bind(this, 'readonly', id));
     },
     /**
+     * Deletes records matching the current domain. We limit the number of
+     * deleted records to the 'active_ids_limit' config parameter.
+     *
+     * @private
+     */
+    _deleteRecordsInCurrentDomain: function () {
+        const doIt = async () => {
+            const state = this.model.get(this.handle, {raw: true});
+            const resIds = await this._domainToResIds(state.getDomain(), session.active_ids_limit);
+            await this._rpc({
+                model: this.modelName,
+                method: 'unlink',
+                args: [resIds],
+                context: state.getContext(),
+            });
+            if (resIds.length === session.active_ids_limit) {
+                const msg = _.str.sprintf(
+                    _t("Of the %d records selected, only the first %d have been deleted."),
+                    state.count, resIds.length
+                );
+                this.do_notify(_t('Warning'), msg);
+            }
+            this.reload();
+        };
+        if (this.confirmOnDelete) {
+            Dialog.confirm(this, _t("Are you sure you want to delete these records ?"), {
+                confirm_callback: doIt,
+            });
+        } else {
+            doIt();
+        }
+    },
+    /**
      * To improve performance, list view must not be rerendered if it is asked
      * to discard all its changes. Indeed, only the in-edition row needs to be
      * discarded in that case.
@@ -286,6 +319,24 @@ var ListController = BasicController.extend({
         var self = this;
         return this._super(recordID).then(function () {
             self.updateButtons('readonly');
+        });
+    },
+    /**
+     * Returns the ids of records matching the given domain.
+     *
+     * @private
+     * @param {Array[]} domain
+     * @param {integer} [limit]
+     * @returns {integer[]}
+     */
+    _domainToResIds: function (domain, limit) {
+        return this._rpc({
+            model: this.modelName,
+            method: 'search',
+            args: [domain],
+            kwargs: {
+                limit: limit,
+            },
         });
     },
     /**
@@ -472,14 +523,7 @@ var ListController = BasicController.extend({
         let displayNotif = false;
         const state = this.model.get(this.handle, {raw: true});
         if (this.isDomainSelected) {
-            resIds = await this._rpc({
-                model: this.modelName,
-                method: 'search',
-                args: [state.getDomain()],
-                kwargs: {
-                    limit: session.active_ids_limit,
-                },
-            });
+            resIds = await this._domainToResIds(state.getDomain(), session.active_ids_limit);
             displayNotif = (resIds.length === session.active_ids_limit);
         } else {
             resIds = this.model.localIdsToResIds(this.selectedRecords);
@@ -610,8 +654,12 @@ var ListController = BasicController.extend({
      *
      * @private
      */
-    _onDeleteSelectedRecords: function () {
-        this._deleteRecords(this.selectedRecords);
+    _onDeleteSelectedRecords: async function () {
+        if (this.isDomainSelected) {
+            this._deleteRecordsInCurrentDomain();
+        } else {
+            this._deleteRecords(this.selectedRecords);
+        }
     },
     /**
      * Handler called when the user clicked on the 'Discard' button.
