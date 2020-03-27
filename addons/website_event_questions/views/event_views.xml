@@ -6,24 +6,37 @@
     <field name="model">event.question</field>
     <field name="arch" type="xml">
         <form string="Question">
-            <h1><field name="title" /></h1>
-            <field name="once_per_order"/>
-            <label for="once_per_order"/>
-            <field name="answer_ids">
-                <tree editable="bottom">
-                    <field name="sequence" widget="handle" />
-                    <field name="name"/>
-                </tree>
-            </field>
+            <sheet>
+                <h1><field name="title" /></h1>
+                <group>
+                    <group>
+                        <div colspan="2">
+                            <field name="once_per_order"/>
+                            <label for="once_per_order"/>
+                        </div>
+                        <field name="question_type" widget="radio" options="{'horizontal': true}" />
+                    </group>
+                </group>
+                <notebook attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}">
+                    <page string="Answers" name="answers">
+                        <field name="answer_ids">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle" />
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
         </form>
     </field>
 </record>
 
 <record model="ir.ui.view" id="view_event_answer_simplified_form">
-    <field name="name">event.answer.simplified.form</field>
-    <field name="model">event.answer</field>
+    <field name="name">event.question.answer.simplified.form</field>
+    <field name="model">event.question.answer</field>
     <field name="arch" type="xml">
-        <form string="Question">
+        <form string="Answer">
             <group>
                 <field name="name"/>
             </group>
@@ -45,7 +58,12 @@
                     <label for="use_questions"/>
                     <div class="row mt16" attrs="{'invisible': [('use_questions', '=', False)]}">
                         <div class="col-lg-9">
-                            <field name="question_ids"/>
+                            <field name="question_ids">
+                                <tree>
+                                    <field name="title"/>
+                                    <field name="question_type" />
+                                </tree>
+                            </field>
                         </div>
                     </div>
                 </div>
@@ -67,7 +85,9 @@
                             <field name="sequence" widget="handle" />
                             <field name="title"/>
                             <field name="once_per_order"/>
-                            <field name="answer_ids"/>
+                            <field name="question_type" />
+                            <field name="answer_ids" widget="many2many_tags"
+                                attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}" />
                         </tree>
                     </field>
                 </page>
@@ -81,20 +101,23 @@
     <field name="model">event.registration</field>
     <field name="inherit_id" ref="event.view_event_registration_form" />
     <field name="arch" type="xml">
-        <group name="event" position="inside">
-            <field name="answer_ids" widget="many2many_tags" domain="[('question_id.event_id', '=', event_id)]" options="{'no_create_edit': True}"/>
-        </group>
-    </field>
-</record>
-
-<record model="ir.ui.view" id="view_registration_search_inherit_question">
-    <field name="name">event.registration.search.inherit.question</field>
-    <field name="model">event.registration</field>
-    <field name="inherit_id" ref="event.view_registration_search"/>
-    <field name="arch" type="xml">
-        <search position="inside">
-            <field name="answer_ids" string="Answers"/>
-        </search>
+        <sheet position="inside">
+            <notebook>
+                <page string="Questions" name="questions">
+                    <field name="registration_answer_ids" widget="one2many">
+                        <tree editable="bottom">
+                            <field name="event_id" invisible="1" />
+                            <field name="question_id" domain="[('event_id', '=', event_id)]" options="{'no_create': True}" />
+                            <field name="question_type" />
+                            <field name="value_answer_id"
+                                attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}"
+                                domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
+                            <field name="value_text_box" attrs="{'invisible': [('question_type', '!=', 'text_box')]}" />
+                        </tree>
+                    </field>
+                </page>
+            </notebook>
+        </sheet>
     </field>
 </record>
 
