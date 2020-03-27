@@ -352,9 +352,10 @@ class configmanager(object):
 
             odoo.tools.config.parse_config(sys.argv[1:])
         """
-        self._parse_config(args)
+        opt = self._parse_config(args)
         odoo.netsvc.init_logger()
         odoo.modules.module.initialize_sys_path()
+        return opt
 
     def _parse_config(self, args=None):
         if args is None:
@@ -528,6 +529,8 @@ class configmanager(object):
         conf.server_wide_modules = [
             m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
+
+        return opt
 
     def _is_addons_path(self, path):
         from odoo.modules.module import MANIFEST_NAMES
