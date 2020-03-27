@@ -142,6 +142,18 @@
             </field>
         </record>
 
+        <record id="hr_timesheet_line_my_timesheet_search" model="ir.ui.view">
+            <field name="name">view.search.my.timesheet.menu</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet_line_search"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="employee_id" position="replace"/>
+                <field name="department_id" position="replace"/>
+                <filter name="mine" position="replace"/>
+            </field>
+        </record>
+
         <record id="view_kanban_account_analytic_line" model="ir.ui.view">
             <field name="name">account.analytic.line.kanban</field>
             <field name="model">account.analytic.line</field>
@@ -203,7 +215,7 @@
                 "my_timesheet_display_timer": True,
                 "search_default_week":1,
             }</field>
-            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="search_view_id" ref="hr_timesheet_line_my_timesheet_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Record a new activity
