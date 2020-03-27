@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
         <field name="arch" type="xml">
             <field name="page_ids" position="after">
-                <field name="mobile"/>
+                <field name="mobile" widget="phone"/>
             </field>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
                 <button name="action_send_sms" type="object" class="btn btn-secondary"

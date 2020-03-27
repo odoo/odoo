@@ -1392,7 +1392,7 @@
         </div>
 
         <div class="o_wforum_post_comments pl-3 pl-md-4 border-left">
-            <t t-foreach="object.website_message_ids" t-as="message">
+            <t t-foreach="reversed(object.website_message_ids)" t-as="message">
                 <div t-attf-class="o_wforum_post_comment #{not message_first and 'mt-3'}">
                     <div>
                         <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>

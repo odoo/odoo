@@ -208,7 +208,7 @@ class WebsiteForm(http.Controller):
                     'no_auto_thread': False,
                     'res_id': record.id,
                 }
-                mail_id = request.env['mail.message'].sudo().create(values)
+                mail_id = request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
 
         return record.id
 
