@@ -1197,8 +1197,8 @@ class MailThread(models.AbstractModel):
 
                 mail_message = self.env['mail.message']
                 if email_part:
-                    email = email_part.get_payload()[0]
-                    bounced_message_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
+                    email_payload = email_part.get_payload()[0]
+                    bounced_message_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email_payload, 'Message-Id'))
                     mail_message = MailMessage.sudo().search([('message_id', 'in', bounced_message_id)])
 
                 if partners and mail_message:
@@ -1268,8 +1268,11 @@ class MailThread(models.AbstractModel):
             # check it does not directly contact catchall
             if catchall_alias and all(email_localpart == catchall_alias for email_localpart in email_to_localparts):
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce', email_from, email_to, message_id)
+                msg_copy = email.message_from_bytes(message.as_bytes())
+                msg_copy['to'] = tools.email_split_and_format(email_to)[0]
+                msg_copy['email_from'] = tools.email_split_and_format(email_from)[0]
                 body = self.env.ref('mail.mail_bounce_catchall').render({
-                    'message': message,
+                    'message': msg_copy,
                 }, engine='ir.qweb')
                 self._routing_create_bounce_email(email_from, body, message, reply_to=self.env.user.company_id.email)
                 return []
