@@ -46,7 +46,6 @@ class AccountingSavepointCase(SavepointCase):
         :param company_name: The name of the company.
         :return: A dictionary will be returned containing all relevant accounting data for testing.
         '''
-        chart_template = cls.env.user.company_id.chart_template_id
         company = cls.env['res.company'].create({
             'name': company_name,
             'currency_id': cls.env.user.company_id.currency_id.id,
@@ -55,7 +54,9 @@ class AccountingSavepointCase(SavepointCase):
         cls.env.user.company_ids |= company
         cls.env.user.company_id = company
 
-        chart_template = cls.env['account.chart.template'].browse(chart_template.id)
+        chart_template = cls.env.user.company_id.chart_template_id
+        if cls.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False):
+            chart_template = cls.env.ref('l10n_generic_coa.configurable_chart_template', False)
         chart_template.try_loading()
 
         # The currency could be different after the installation of the chart template.
