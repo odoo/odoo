@@ -93,6 +93,21 @@
     </div>
 </t>
 
+<t t-name="web.CustomCheckbox" owl="1">
+    <div class="custom-control custom-checkbox">
+        <input
+            t-att-id="props.id or _id"
+            type="checkbox"
+            class="custom-control-input"
+            t-att-disabled="props.disabled"
+            t-att-checked="props.value"
+            />
+        <label t-att-for="props.id or _id" class="custom-control-label">
+            <t t-esc="props.text or '&#8203;'"/>
+        </label>
+    </div>
+</t>
+
 <t t-name="web.CustomFileInput" owl="1">
     <span class="o_file_input" aria-atomic="true">
         <span class="o_file_input_trigger" t-on-click.prevent="_onTriggerClicked">
