@@ -12,6 +12,7 @@ var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
 var Dialog = require('web.Dialog');
 var ListConfirmDialog = require('web.ListConfirmDialog');
+var session = require('web.session');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -464,9 +465,33 @@ var ListController = BasicController.extend({
      *
      * @private
      * @param {boolean} archive
+     * @returns {Promise}
      */
-    _toggleArchiveState: function (archive) {
-        this._archive(this.selectedRecords, archive);
+    _toggleArchiveState: async function (archive) {
+        let resIds;
+        let displayNotif = false;
+        const state = this.model.get(this.handle, {raw: true});
+        if (this.isDomainSelected) {
+            resIds = await this._rpc({
+                model: this.modelName,
+                method: 'search',
+                args: [state.getDomain()],
+                kwargs: {
+                    limit: session.active_ids_limit,
+                },
+            });
+            displayNotif = (resIds.length === session.active_ids_limit);
+        } else {
+            resIds = this.model.localIdsToResIds(this.selectedRecords);
+        }
+        await this._archive(resIds, archive);
+        if (displayNotif) {
+            const msg = _.str.sprintf(
+                _t("Of the %d records selected, only the first %d have been archived/unarchived."),
+                state.count, resIds.length
+            );
+            this.do_notify(_t('Warning'), msg);
+        }
     },
     /**
      * Hide the create button in non-empty grouped editable list views, as an

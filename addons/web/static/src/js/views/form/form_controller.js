@@ -652,7 +652,6 @@ var FormController = BasicController.extend({
      */
     _onSave: function (ev) {
         ev.stopPropagation(); // Prevent x2m lines to be auto-saved
-        var self = this;
         this._disableButtons();
         this.saveRecord().then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
     },
@@ -679,7 +678,8 @@ var FormController = BasicController.extend({
      * @param {boolean} archive
      */
     _toggleArchiveState: function (archive) {
-        this._archive([this.handle], archive);
+        const resIds = this.model.localIdsToResIds([this.handle]);
+        this._archive(resIds, archive);
     },
 });
 
