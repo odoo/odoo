@@ -26,13 +26,23 @@ class IrAttachment(models.Model):
     @api.depends('mimetype', 'url', 'name')
     def _compute_image_src(self):
         for attachment in self:
+            # Only add a src for supported images
             if attachment.mimetype not in ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png', 'image/svg+xml']:
                 attachment.image_src = False
+                continue
+
+            if attachment.type == 'url':
+                attachment.image_src = attachment.url
             else:
-                attachment.image_src = attachment.url or '/web/image/%s/%s' % (
-                    attachment.id,
-                    url_quote(attachment.name or ''),
-                )
+                # Adding unique in URLs for cache-control
+                unique = attachment.checksum[:8]
+                if attachment.url:
+                    # For attachments-by-url, unique is used as a cachebuster. They
+                    # currently do not leverage max-age headers.
+                    attachment.image_src = '%s?unique=%s' % (attachment.url, unique)
+                else:
+                    name = url_quote(attachment.name)
+                    attachment.image_src = '/web/image/%s-%s/%s' % (attachment.id, unique, name)
 
     @api.depends('datas')
     def _compute_image_size(self):
