@@ -45,7 +45,7 @@ odoo.define('sale_timesheet.project_overview', function (require) {
 
     var ProjectOverview = qweb.View.extend({
         withSearchBar: true,
-        searchMenuTypes: [],
+        searchMenuTypes: ['filter', 'favorite'],
 
         config: _.extend({}, qweb.View.prototype.config, {
             Controller: Controller,
