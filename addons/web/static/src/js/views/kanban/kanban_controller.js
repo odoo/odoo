@@ -496,7 +496,7 @@ var KanbanController = BasicController.extend({
         var self = this;
         var archive = ev.data.archive;
         var column = ev.target;
-        var recordIds = _.pluck(column.records, 'db_id');
+        var recordIds = _.pluck(column.records, 'id');
         if (recordIds.length) {
             var prom = archive ?
               this.model.actionArchive(recordIds, column.db_id) :
