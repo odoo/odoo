@@ -239,6 +239,25 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         });
     },
     /**
+     * Archive the current selection
+     *
+     * @private
+     * @param {string[]} ids
+     * @param {boolean} archive
+     * @returns {Promise}
+     */
+    _archive: async function (ids, archive) {
+        if (ids.length === 0) {
+            return Promise.resolve();
+        }
+        if (archive) {
+            await this.model.actionArchive(ids, this.handle);
+        } else {
+            await this.model.actionUnarchive(ids, this.handle);
+        }
+        return this.update({}, {reload: false});
+    },
+    /**
      * When the user clicks on a 'action button', this function determines what
      * should happen.
      *
