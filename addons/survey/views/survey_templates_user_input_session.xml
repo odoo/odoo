@@ -112,6 +112,7 @@
                         </div>
                         <div t-elif="show_text_answers" class="p-2 pt-4 o_survey_session_text_answers_container">
                         </div>
+                        <div t-elif="question.is_page and not is_html_empty(question.description)" class="mb-6 o_survey_manage_fontsize_14" t-field="question.description" />
                         <div t-else="" class="mb-6">
                             <h2 class="font-weight-normal mb-3">
                                 <span>Waiting for attendees...</span>
@@ -129,7 +130,10 @@
                 </div>
                 <div class="o_survey_session_leaderboard w-100 flex-column flex-grow-1" style="display: none;">
                     <div class="d-flex">
-                        <h1 class="o_survey_session_leaderboard_title flex-grow-1">Leaderboard</h1>
+                        <h1 class="o_survey_session_leaderboard_title flex-grow-1">
+                            <span t-if="is_last_question">Final Leaderboard</span>
+                            <span t-else="">Leaderboard</span>
+                        </h1>
                         <div t-att-class="'o_survey_leaderboard_buttons font-weight-bold %s' % 'd-none' if not is_last_question else ''">
                             <a href="#" role="button" class="o_survey_session_close btn btn-primary mr-4"><i class="fa fa-close"/> Close</a>
                             <a href="#" role="button" class="o_survey_session_close btn btn-primary" t-att-data-show-results="True"><i class="fa fa-bar-chart"/> Results</a>
