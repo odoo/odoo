@@ -284,7 +284,7 @@
       <field name="sequence">1</field>
       <field name="report_id" ref="tax_report"/>
       <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
-      <field name="formula">LUTAX_471 + LUTAX_021 + LUTAX_037 + LUTAX_455 + LUTAX_456</field>
+      <field name="formula">LUTAX_454 + LUTAX_455 + LUTAX_456</field>
     </record>
 
     <record id="account_tax_report_line_1a_total_sale" model="account.tax.report.line">
@@ -292,7 +292,8 @@
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
         <field name="report_id" ref="tax_report"/>
-        <field name="formula">LUTAX_471 + LUTAX_021 + LUTAX_037</field>
+        <field name="code">LUTAX_454</field>
+        <field name="formula">LUTAX_471 + LUTAX_472</field>
     </record>
 
     <!-- 471 not managed, only 472 is filled in -->
@@ -310,6 +311,7 @@
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_1a_total_sale"/>
         <field name="report_id" ref="tax_report"/>
+        <field name="code">LUTAX_472</field>
         <field name="formula">LUTAX_021 + LUTAX_037</field>
     </record>
 
@@ -496,15 +498,15 @@
       <field name="sequence">3</field>
       <field name="report_id" ref="tax_report"/>
       <field name="parent_id" ref="account_tax_report_line_4_tax_tobe_paid_or_reclaimed"/>
-      <field name="formula">(LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227)-(LUTAX_458+LUTAX_459+LUTAX_460+LUTAX_090+LUTAX_461+LUTAX_092+LUTAX_228+LUTAX_094+LUTAX_095)</field>
+      <field name="formula">LUTAX_103 - LUTAX_102</field>
   </record>
 
-    <!-- Note: this should have same formula as of section `II.H. Total tax due (076)` here above -->
     <record id="account_tax_report_line_4a_total_tax_due" model="account.tax.report.line">
       <field name="name">103 - Total tax due</field>
       <field name="sequence">1</field>
       <field name="report_id" ref="tax_report"/>
       <field name="parent_id" ref="account_tax_report_line_4_tax_tobe_paid_or_reclaimed"/>
+      <field name="code">LUTAX_103</field>
       <field name="formula">LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227</field>
   </record>
 
@@ -548,13 +550,12 @@
       <field name="code">LUTAX_227</field>
     </record>
 
-    <!-- Note: any change in formula here should be reflected in section `IV.A. Total tax due (103)` below -->
     <record id="account_tax_report_line_2h_total_tax_due" model="account.tax.report.line">
       <field name="name">076 - Total tax due</field>
       <field name="sequence">13</field>
       <field name="report_id" ref="tax_report"/>
       <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
-      <field name="formula">LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227</field>
+      <field name="formula">LUTAX_103</field>
     </record>
 
     <record id="account_tax_report_line_2a_breakdown_taxable_turnover_tax" model="account.tax.report.line">
@@ -831,12 +832,11 @@
       <field name="report_id" ref="tax_report"/>
     </record>
 
-    <!-- Note: this should have same formula as of section `III.C. Total input tax deductible (102)` here below -->
     <record id="account_tax_report_line_4a_total_input_tax_deductible" model="account.tax.report.line">
       <field name="name">104 - Total input tax deductible</field>
       <field name="sequence">2</field>
       <field name="parent_id" ref="account_tax_report_line_4_tax_tobe_paid_or_reclaimed"/>
-      <field name="formula">LUTAX_458+LUTAX_459+LUTAX_460+LUTAX_090+LUTAX_461+LUTAX_092+LUTAX_228+LUTAX_094+LUTAX_095</field>
+      <field name="formula">LUTAX_102</field>
       <field name="report_id" ref="tax_report"/>
     </record>
 
@@ -877,11 +877,11 @@
       <field name="report_id" ref="tax_report"/>
     </record>
 
-    <!-- Note: any change in formula here should be reflected in section `IV.B. Total input tax deductible (104)` above -->
     <record id="account_tax_report_line_3c_total_input_tax_deductible" model="account.tax.report.line">
       <field name="name">102 - Total input tax deductible</field>
       <field name="sequence">3</field>
       <field name="parent_id" ref="account_tax_report_line_3_assessment_deducible_tax"/>
+      <field name="code">LUTAX_102</field>
       <field name="formula">LUTAX_458+LUTAX_459+LUTAX_460+LUTAX_090+LUTAX_461+LUTAX_092+LUTAX_228+LUTAX_094+LUTAX_095</field>
       <field name="report_id" ref="tax_report"/>
     </record>
