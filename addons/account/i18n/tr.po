@@ -13,7 +13,6 @@
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2019
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2019
 # Metin Akın <aknmetin@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Buket Şeker <buket_skr@hotmail.com>, 2019
@@ -22,6 +21,7 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2019
 # Yedigen, 2019
 # Ediz Duman <neps1192@gmail.com>, 2019
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
 # 
 msgid ""
@@ -1148,12 +1148,12 @@ msgstr "Vergi Hesabı"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
-msgstr ""
+msgstr "Vergi Grubu Hesabı"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
 msgid "Account Tax Report Line"
-msgstr ""
+msgstr "Vergi Hesabı Bildirim Hattı"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1164,7 +1164,7 @@ msgstr "Hesap Vergi Şablonu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr "TaxCloud Hesabı"
+msgstr "Vergi Bulut Hesabı"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -1292,7 +1292,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_accrual_accounting_wizard__expense_accrual_account
 #: model:ir.model.fields,help:account.field_res_company__expense_accrual_account_id
 msgid "Account used to move the period of an expense"
-msgstr ""
+msgstr "Dönem giderlerini kaydetmek için kullanılan hesap"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -1463,7 +1463,7 @@ msgstr "Aktiviteler"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Etkinlik İstisna Donatımı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_state
@@ -2772,7 +2772,7 @@ msgstr "Kasa Kontrolü"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_expense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
 msgid "Cash Difference Expense Account"
-msgstr ""
+msgstr "Nakit Farkı Gider Hesabı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_income_account_id
@@ -4751,7 +4751,7 @@ msgstr "Hesap Planı Bekliyor"
 #: model:ir.model.fields.selection,name:account.selection__account_accrual_accounting_wizard__account_type__expense
 #, python-format
 msgid "Expense"
-msgstr "Masraf"
+msgstr "Gider"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_expense_categ_id
@@ -4770,13 +4770,13 @@ msgstr "Ürün Şablonunda Gider Hesabı"
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__expense_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__expense_accrual_account_id
 msgid "Expense Accrual Account"
-msgstr ""
+msgstr "Gider Tahakkuk Hesabı"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expenses
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Expenses"
-msgstr "Masraflar"
+msgstr "Giderler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__reference
@@ -5190,7 +5190,7 @@ msgstr "Kayıtları Oluştur"
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Generated Documents"
-msgstr ""
+msgstr "Oluşturulmuş Belgeler"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
@@ -5451,7 +5451,7 @@ msgstr "İkon"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Bir istisna faaliyetini gösteren simge."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -6798,7 +6798,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__internal_group__liability
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Liability"
-msgstr "Borç"
+msgstr "Kaynak"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__nbr_lines
@@ -9075,7 +9075,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
 msgid "Revenue/Expense Account"
-msgstr ""
+msgstr "Gelir/Gider Hesabı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
@@ -9203,7 +9203,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS Ulaştırma hatası"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -11812,7 +11812,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Kayıttaki istisna etkinliğinin türü."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up

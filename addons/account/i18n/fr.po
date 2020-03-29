@@ -32,7 +32,6 @@
 # Fabien Pinckaers <fp@openerp.com>, 2019
 # Damien Bouvy <dbo@odoo.com>, 2019
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2019
-# Laura Piraux <lap@odoo.com>, 2019
 # Florence Lambrechts <fla@odoo.com>, 2019
 # Nicolas Roussey <nro@odoo.com>, 2019
 # Antoine Lorence <antoine.lorence@gmail.com>, 2019
@@ -55,8 +54,10 @@
 # romrik_, 2020
 # lcaodoo <lca@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Jonathan <jcs@odoo.com>, 2020
+# Frédéric GILSON <frederic.gilson@logicasoft.eu>, 2020
+# Laura Piraux <lap@odoo.com>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
 # Priscilla Sanchez <prs@odoo.com>, 2020
 # 
 msgid ""
@@ -718,12 +719,12 @@ msgstr "<span>Prix unitaire</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload Bills</span>"
-msgstr "<span>Importer factures</span>"
+msgstr "<span>Charger des factures</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload Invoices</span>"
-msgstr "<span>Importer factures</span>"
+msgstr "<span>Charger des factures</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2829,7 +2830,7 @@ msgstr "Compte d'attente pour la TVA sur encaissements"
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
 msgid "Cash Box Out"
-msgstr ""
+msgstr "Sortie de caisse"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -4063,7 +4064,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data consistency check"
-msgstr ""
+msgstr "Vérification de la cohérence des données"
 
 #. module: account
 #. openerp-web
@@ -5831,7 +5832,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Inalterability check"
-msgstr ""
+msgstr "Contrôle d'inaltérabilité"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
@@ -7454,6 +7455,8 @@ msgstr "Préfixe du numéro suivant"
 #, python-format
 msgid "No default debit and credit account defined on journal %s (ids: %s)"
 msgstr ""
+"Aucun compte de débit et de crédit par défaut défini sur le journal %s "
+"(ids:%s)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -7901,7 +7904,7 @@ msgstr ""
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Opération non prise en charge"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -9622,7 +9625,7 @@ msgstr ""
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Securisation of %s - %s"
-msgstr ""
+msgstr "Sécurisation de %s - %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__access_token
@@ -9802,7 +9805,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__secure_sequence_id
 msgid "Sequence to use to ensure the securisation of data"
-msgstr ""
+msgstr "Séquence à utiliser pour assurer la sécurisation des données"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -10246,7 +10249,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.cash_box_out_form
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "Take Money In/Out"
-msgstr ""
+msgstr "Sortir/Rentrer de l'argent"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__target_move
@@ -10885,6 +10888,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
+"Le compte est déjà utilisé dans un journal de vente ou d'achat. Cela "
+"signifie que le type de compte ne peut être créditeur ou débiteur."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10893,6 +10898,8 @@ msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
+"Le compte sélectionné sur votre pièce comptable force à fournir une devise "
+"secondaire. Vous devriez enlever la devise secondaire sur le compte."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10942,6 +10949,10 @@ msgid ""
 "field has to be left empty when the amount is expressed in the company "
 "currency."
 msgstr ""
+"Le montant exprimé dans dans la devise secondaire doit être positif quand le"
+" compte est débité et négatif quand le compte est crédité. De plus, le champ"
+" devise doit être laissé vide lorsque le montant est exprimé dans la devise "
+"de la société."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -11481,6 +11492,8 @@ msgid ""
 "The type of the journal's default credit/debit account shouldn't be "
 "'receivable' or 'payable'."
 msgstr ""
+"Le type du compte de crédit/débit par défaut du journal ne devrait pas être "
+"\"débiteur\" ou \"créditeur\"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -11511,6 +11524,8 @@ msgid ""
 "There is more than one receivable/payable account in the concerned invoices."
 " You cannot group payments in that case."
 msgstr ""
+"Il y a plus d'un compte débiteur/créditeur sur la facture en question. Vous "
+"ne pouvez pas grouper les paiements dans cette case."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -11836,6 +11851,8 @@ msgid ""
 "Those options will be selected by default when clicking \"Send &amp; Print\""
 " on invoices"
 msgstr ""
+"Ces options seront sélectionnées par défaut lorsque vous cliquez sur "
+"\"Envoyer et imprimer\" sur les factures"
 
 #. module: account
 #. openerp-web
@@ -11954,7 +11971,7 @@ msgstr "Total des lignes de transaction."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Track costs &amp; revenues by project, department, etc"
-msgstr ""
+msgstr "Suivez les coûts et les revenus par projet, département, etc."
 
 #. module: account
 #. openerp-web
@@ -12818,6 +12835,8 @@ msgid ""
 "You cannot overwrite the values ensuring the inalterability of the "
 "accounting."
 msgstr ""
+"Vous ne pouvez pas écraser les valeurs garantissant l'inaltérabilité de la "
+"comptabilité."
 
 #. module: account
 #: code:addons/account/models/account.py:0
