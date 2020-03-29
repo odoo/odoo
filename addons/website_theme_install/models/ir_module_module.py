@@ -158,6 +158,8 @@ class IrModuleModule(models.Model):
                     imd = self.env['ir.model.data'].search([('model', '=', find._name), ('res_id', '=', find.id)])
                     if imd and imd.noupdate:
                         _logger.info('Noupdate set for %s (%s)' % (find, imd))
+                    elif find._name == 'ir.ui.view' and find.arch_updated:
+                        _logger.info('No update because view %s has user changes' % (find))
                     else:
                         # at update, ignore active field
                         if 'active' in rec_data:
