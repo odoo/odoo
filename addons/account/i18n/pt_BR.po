@@ -278,7 +278,7 @@ msgstr "<em>Fatura Rascunho</em>"
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
 msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Data”/>"
+msgstr "<i class=“fa fa-clock-o” aria-label=“Date” role=“img” title=“Date”/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
@@ -297,7 +297,7 @@ msgid ""
 "title=\"Selection\"/>"
 msgstr ""
 "<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
-"title=\"Seleção”/>"
+"title=\"Seleção\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -325,7 +325,7 @@ msgid ""
 "or received.</p>"
 msgstr ""
 "<p>Você pode controlar a fatura do seu fornecedor, baseado no que você "
-"comprou ou recebeu"
+"comprou ou recebeu </p>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -351,7 +351,7 @@ msgid ""
 msgstr ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
 " aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
-"-md-inline\"> Aguardando o Pagamento"
+"-md-inline\"> Aguardando o Pagamento</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -526,7 +526,7 @@ msgstr "<span role=\"separator\">Visualizar</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in General Ledger</span>"
-msgstr "<span title=\"Balance in Odoo\">Saldo geral</span>"
+msgstr "<span title=\"Balance in Odoo\">Saldo Geral</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -571,7 +571,7 @@ msgstr "<span>Importar Faturas</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Date</span>"
-msgstr "<span>Data Fatura</span>"
+msgstr "<span>Data da Fatura</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -581,7 +581,7 @@ msgstr "<span>Número Fatura</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Journal Entries</span>"
-msgstr "Entradas de Livros"
+msgstr "<span>Entradas do Livro</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -787,10 +787,10 @@ msgid ""
 "                goes out of the cash box."
 msgstr ""
 "Um registro de caixa permite a você gerir entradas em dinheiro em seu\n"
-"diário. Esse recurso oferece uma maneira fácil de acompanhar pagamentos\n"
-"em caixa em uma base diária. Você pode inserir as moedas que estejam em\n"
-"seu caixa, e em seguida, publicar entradas quando o dinheiro vem ou\n"
-"sai do caixa."
+"                diário. Esse recurso oferece uma maneira fácil de acompanhar pagamentos\n"
+"                em caixa em uma base diária. Você pode inserir as moedas que estejam em\n"
+"                seu caixa, e em seguida, publicar entradas quando o dinheiro vem ou\n"
+"                sai do caixa."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1895
@@ -830,7 +830,7 @@ msgid ""
 "                which is either a debit or a credit transaction."
 msgstr ""
 "Uma entrada de diário consiste de vários itens de diário, quer seja\n"
-"uma transação de débito ou uma transação de crédito."
+"                uma transação de débito ou uma transação de crédito."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -839,7 +839,7 @@ msgid ""
 "                related to the day-to-day business."
 msgstr ""
 "Um diário é usado para registrar as transações de todos os dados de contabilidade\n"
-"relacionados com o dia-a-dia."
+"                relacionados com o dia-a-dia."
 
 #. module: account
 #: code:addons/account/models/account_move.py:324
@@ -1835,10 +1835,10 @@ msgid ""
 "                (profit/loss or balance sheet)."
 msgstr ""
 "Um tipo de conta é usada para determinar como uma conta é usada em\n"
-"cada diário. O método do diferimento de um tipo de conta determina\n"
-"o processo para o fechamento anual. Relatórios como o  \n"
-"Balanço Patrimonial e o relatório de Perdas e Ganhos usam a categoria\n"
-"(lucro/perda ou balanço patrimonial)."
+"                cada diário. O método do diferimento de um tipo de conta determina\n"
+"                o processo para o fechamento anual. Relatórios como o  \n"
+"                Balanço Patrimonial e o relatório de Perdas e Ganhos usam a categoria\n"
+"                (lucro/perda ou balanço patrimonial)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -8091,7 +8091,7 @@ msgstr "Período"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_plaid
 msgid "Plaid Connector"
-msgstr "Conector Plaid "
+msgstr "Conector Plaid"
 
 #. module: account
 #: selection:account.invoice,activity_state:0
@@ -9136,11 +9136,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Escolha 'Venda' para diários de faturas de clientes. Escolha 'Compra' para "
-"diários de faturas de fornecedores. Escolha 'Dinheiro' ou 'Banco' para "
-"diários que são usados nos pagamentos de clientes ou fornecedores. Escolha "
-"'Geral' para diários de operações diversas. Escolha 'Situação de "
-"Abertura/Fechamento' para entradas geradas em um novo ano fiscal."
+"Escolha 'Venda' para diários de faturas de clientes. \n"
+"Escolha 'Compra' para diários de faturas de fornecedores. \n"
+"Escolha 'Dinheiro' ou 'Banco' para diários que são usados nos pagamentos de clientes ou fornecedores. \n"
+"Escolha 'Geral' para diários de operações diversas. Escolha 'Situação de Abertura/Fechamento' para entradas geradas em um novo ano fiscal."
 
 #. module: account
 #. openerp-web
@@ -11082,7 +11081,7 @@ msgid ""
 "                a bank statement or an account."
 msgstr ""
 "Aquele que pode ser usado para criar rapidamente itens de diário quando reconciliar\n"
-"um extrato bancário ou uma conta."
+"                um extrato bancário ou uma conta."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
