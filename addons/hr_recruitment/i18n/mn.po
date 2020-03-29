@@ -13,8 +13,9 @@
 # baaska sh <sh.baaskash@gmail.com>, 2019
 # nurbahyt baha <nurbahyt.kh@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
 # Munkhbaatar Gombosuren <muuguu17@gmail.com>, 2020
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
+# Khoschuluu Khuderchuluu <khoschuluu@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-02-13 08:34+0000\n"
 "PO-Revision-Date: 2016-08-05 12:59+0000\n"
-"Last-Translator: Munkhbaatar Gombosuren <muuguu17@gmail.com>, 2020\n"
+"Last-Translator: Khoschuluu Khuderchuluu <khoschuluu@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread messages\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Уншаагүй зурвасууд\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -48,7 +49,7 @@ msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-mobile mr4\" role=\"img\" aria-label=\"Mobile\" title=\"Mobile\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-mobile mr4\" role=\"img\" aria-label=\"Mobile\" title=\"Гар утас\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -63,12 +64,12 @@ msgstr "<span class=\"o_stat_text\">Хөтлөгч</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
 msgid "<span>Folded in Recruitment Pipe: </span>"
-msgstr ""
+msgstr "<span>Бүрдүүлэлтийн сувагт эвхэгдсэн: </span>"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "<strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
-msgstr ""
+msgstr "<strong style=\"font-size: 16px;\">Мэйл гарц ашиглах</strong>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
@@ -341,7 +342,7 @@ msgstr "Ажилбарын төрөл"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Add a new stage in the recruitment process"
-msgstr ""
+msgstr "Сонгон шалгаруулалтын явцад шинэ шатлал нэмэх"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
@@ -356,7 +357,7 @@ msgstr "Ажилчдын ажиллаж буй хаяг"
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Администратор"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_id
@@ -371,7 +372,7 @@ msgstr "Өөр ID"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
 msgid "All Applications"
-msgstr ""
+msgstr "Бүх анкет"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
@@ -384,7 +385,7 @@ msgstr "Горилогч"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Applicant Degree"
-msgstr ""
+msgstr "Боловсролын түвшин"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
@@ -447,6 +448,9 @@ msgid ""
 "            If you install the document management modules, all resumes are indexed automatically,\n"
 "            so that you can easily search through their content."
 msgstr ""
+"Мэйл илгээгдсэн бол ажлын анкет болон CV (хавсралт) автоматаар үүсэх болно.\n"
+"            Баримтын менежмент модуль суусан бол ирсэн анкет бүрийг ангилан\n"
+"            танд хайлт хийхэд дѳхѳм шийдлээр хадаглагдах болно."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -454,12 +458,14 @@ msgid ""
 "Applicants can send resume to this email address,<br/>it will create an "
 "application automatically"
 msgstr ""
+"Ажил горилогч ѳѳрийн анкетыг энэ мэйл хаяг руу илгээх боломжтой.<br/>Мэйл "
+"илгээсэн бол анкетын бүртгэл автоматаар үүснэ."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_count
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_count
 msgid "Application Count"
-msgstr ""
+msgstr "Нийт анкетын тоо"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -469,7 +475,7 @@ msgstr "Өргөдлийн дүгнэлт"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Application email"
-msgstr ""
+msgstr "Бүртгэх мэйл хаяг"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -681,6 +687,7 @@ msgstr "Ажлын байр үүсгэх"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Create some aliases to track where applicants come from"
 msgstr ""
+"Ажил горилогчийн сурвалжийг мѳшгих зорилгоор тэмдэг нэрүүд үүсгэх боломж"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
@@ -832,7 +839,7 @@ msgstr "Докторын зэрэг"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__documents_count
 msgid "Document Count"
-msgstr ""
+msgstr "Нийт баримтын тоо"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__document_ids
@@ -1031,7 +1038,7 @@ msgstr "Ногоон"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Ногоон Канбан Шошго"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__normal
@@ -1041,7 +1048,7 @@ msgstr "Саарал"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "Саарал Канбан Шошго"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1052,7 +1059,7 @@ msgstr "Бүлэглэх"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__hr_responsible_id
 msgid "HR Responsible"
-msgstr ""
+msgstr "ХН ажлын хэсэг хариуцагч"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
@@ -1125,7 +1132,7 @@ msgstr "Анхны Магадлагаа"
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Interview Forms"
-msgstr ""
+msgstr "Судалгааны хуудас"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__is_favorite
@@ -1148,7 +1155,7 @@ msgstr "Ажлын Байр"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
 msgid "Job Applications"
-msgstr ""
+msgstr "Ажилд орох анкетууд"
 
 #. module: hr_recruitment
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
@@ -1190,7 +1197,7 @@ msgstr "Албан Тушаалууд"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Job Posting"
-msgstr ""
+msgstr "Ажлын байрны Зарлал"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
@@ -1215,7 +1222,7 @@ msgstr "Ажлын Эх сурвалжууд"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_blocked
 msgid "Kanban Blocked"
-msgstr ""
+msgstr "Канбан Блоклогдсон"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_normal
@@ -1349,7 +1356,7 @@ msgstr "Гар утас"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "My Applications"
-msgstr ""
+msgstr "Миний анкетууд"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
@@ -1537,7 +1544,7 @@ msgstr "Явагдаж буй"
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Online Posting"
-msgstr ""
+msgstr "Онлайнд байршуулах"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1547,7 +1554,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__hr_responsible_id
 msgid "Person responsible of validating the employee's contracts."
-msgstr ""
+msgstr "Ажилтантай гэрээ байгуулах зэргийг хариуцан ажиллах хэрэглэгч"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_phone
@@ -1572,7 +1579,7 @@ msgstr "Санал болгосон нэмэлт цалин"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish available jobs on your website"
-msgstr ""
+msgstr "Нээлттэй ажлын байрыг веб дээр харуулах шийдэл"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -1628,7 +1635,7 @@ msgstr "ХН бүрдүүлэлтийн явц"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
 msgid "Recruitment Stages"
-msgstr ""
+msgstr "Сонгон шалгаруулалтын шатууд"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
@@ -1643,7 +1650,7 @@ msgstr "Улаан"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Улаан Канбан Шошго"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1861,7 +1868,7 @@ msgstr "ХН бүрдүүлэлтийг эхлүүлэх"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Start recruitment"
-msgstr ""
+msgstr "Сонгон шалгаруулалт эхлүүлэх"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_state
@@ -2016,7 +2023,7 @@ msgstr "Уншаагүй зурвасын тоолуур"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use interview forms during recruitment process"
-msgstr ""
+msgstr "Сонгон шалгаруулалтын явцад судалгааны маягт ашиглах"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
