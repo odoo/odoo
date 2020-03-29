@@ -196,6 +196,11 @@ $o-cw-filter-avatar-size: 20px;
         .fc-agendaDay-view .fc-event {
             padding: 10px;
             font-size: 14px;
+
+            // Try to avoid showing no title for short event
+            &.fc-short {
+                padding-top: 0;
+            }
         }
 
         // ====== Week only

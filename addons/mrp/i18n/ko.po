@@ -3620,7 +3620,7 @@ msgstr "신규 작업 지시 시작"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
 msgid "State"
-msgstr "주/도"
+msgstr "시/도"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__state
@@ -3881,6 +3881,8 @@ msgstr "'%s'에 대한 생산 주문서에 지정된 수량이 없습니다."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
 msgid "The quantity to produce must be positive!"
 msgstr "생산량은 양수입니다!"
 
