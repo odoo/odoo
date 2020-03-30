@@ -758,6 +758,7 @@
                                         <field name="is_rounding_line" invisible="1"/>
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
                                         <field name="account_internal_type" invisible="1"/>
+                                        <field name="account_internal_group" invisible="1"/>
                                         <field name="always_set_currency_id" invisible="1"/>
                                     </tree>
                                     <kanban class="o_kanban_mobile">
@@ -837,6 +838,7 @@
                                         <field name="is_rounding_line" invisible="1"/>
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
                                         <field name="account_internal_type" invisible="1"/>
+                                        <field name="account_internal_group" invisible="1"/>
                                         <field name="always_set_currency_id" invisible="1"/>
                                     </kanban>
                                     <form>
@@ -949,6 +951,16 @@
                                         <field name="country_id" invisible="1"/>
                                         <field name="tax_tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', country_id), ('applicability', '=', 'taxes')]"/>
 
+                                        <!-- Buttons -->
+                                        <button name="action_automatic_entry"
+                                                type="object"
+                                                icon="fa-calendar"
+                                                string="Cut-Off"
+                                                aria-label="Change Period"
+                                                class="float-right"
+                                                attrs="{'invisible': [('account_internal_group', 'not in', ('income', 'expense'))], 'column_invisible': [('parent.move_type', '=', 'entry')]}"
+                                                context="{'hide_automatic_options': 1, 'default_action': 'change_period'}"/>
+
                                         <!-- Others fields -->
                                         <field name="payment_id" invisible="1"/>
 
@@ -976,6 +988,7 @@
                                         <field name="is_rounding_line" invisible="1"/>
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
                                         <field name="account_internal_type" invisible="1"/>
+                                        <field name="account_internal_group" invisible="1"/>
                                     </tree>
                                     <!-- Form view to cover mobile use -->
                                     <form>
@@ -1163,13 +1176,13 @@
             <field name="context">{'search_default_account_id': [active_id]}</field>
         </record>
 
-        <record id="action_accrual_entry" model="ir.actions.server">
-            <field name="name">Create Accrual Entries</field>
+        <record id="action_automatic_entry" model="ir.actions.server">
+            <field name="name">Automatic Entries</field>
             <field name="model_id" ref="account.model_account_move_line"/>
             <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
             <field name="binding_model_id" ref="account.model_account_move_line"/>
             <field name="state">code</field>
-            <field name="code">action = records.action_accrual_entry()</field>
+            <field name="code">action = records.action_automatic_entry()</field>
         </record>
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
@@ -1405,17 +1418,6 @@ if records:
             <field name="state">code</field>
             <field name="code">
                 action = env.company._action_check_hash_integrity()
-            </field>
-        </record>
-
-        <record model="ir.actions.server" id="action_move_transfer_accounts">
-            <field name="name">Transfer Entries</field>
-            <field name="model_id" ref="account.model_account_move_line"/>
-            <field name="binding_model_id" ref="account.model_account_move_line" />
-            <field name="state">code</field>
-            <field name="code">
-if records:
-    action = records.action_transfer_accounts_wizard()
             </field>
         </record>
 

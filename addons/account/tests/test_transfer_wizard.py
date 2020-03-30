@@ -196,12 +196,13 @@ class TestTransferWizard(AccountTestInvoicingCommon):
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids}
-        with Form(self.env['account.transfer.wizard'].with_context(context)) as wizard_form:
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.action = 'change_account'
             wizard_form.destination_account_id = self.receivable_account
             wizard_form.journal_id = self.journal
         wizard = wizard_form.save()
 
-        transfer_move_id = wizard.button_transfer()['res_id']
+        transfer_move_id = wizard.do_action()['res_id']
         transfer_move = self.env['account.move'].browse(transfer_move_id)
 
         payable_transfer = transfer_move.line_ids.filtered(lambda x: x.account_id == self.payable_account)
@@ -221,12 +222,13 @@ class TestTransferWizard(AccountTestInvoicingCommon):
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids}
-        with Form(self.env['account.transfer.wizard'].with_context(context)) as wizard_form:
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.action = 'change_account'
             wizard_form.destination_account_id = self.accounts[4]
             wizard_form.journal_id = self.journal
         wizard = wizard_form.save()
 
-        transfer_move_id = wizard.button_transfer()['res_id']
+        transfer_move_id = wizard.do_action()['res_id']
         transfer_move = self.env['account.move'].browse(transfer_move_id)
 
         groups = {}
@@ -251,12 +253,13 @@ class TestTransferWizard(AccountTestInvoicingCommon):
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids}
-        with Form(self.env['account.transfer.wizard'].with_context(context)) as wizard_form:
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.action = 'change_account'
             wizard_form.destination_account_id = self.test_currency_account
             wizard_form.journal_id = self.journal
         wizard = wizard_form.save()
 
-        transfer_move_id = wizard.button_transfer()['res_id']
+        transfer_move_id = wizard.do_action()['res_id']
         transfer_move = self.env['account.move'].browse(transfer_move_id)
 
         destination_line = transfer_move.line_ids.filtered(lambda x: x.account_id == self.test_currency_account)
@@ -273,12 +276,13 @@ class TestTransferWizard(AccountTestInvoicingCommon):
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids}
-        with Form(self.env['account.transfer.wizard'].with_context(context)) as wizard_form:
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.action = 'change_account'
             wizard_form.destination_account_id = self.receivable_account
             wizard_form.journal_id = self.journal
         wizard = wizard_form.save()
 
-        transfer_move_id = wizard.button_transfer()['res_id']
+        transfer_move_id = wizard.do_action()['res_id']
         transfer_move = self.env['account.move'].browse(transfer_move_id)
 
         destination_lines = transfer_move.line_ids.filtered(lambda x: x.account_id == self.receivable_account)
