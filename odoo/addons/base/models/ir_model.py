@@ -1926,7 +1926,7 @@ class IrModelData(models.Model):
         # column no longer exists. We can therefore completely ignore them. That
         # is why selections are removed after fields: most selections are
         # deleted on cascade by their corresponding field.
-        delete(self.env['ir.model.fields'].browse(field_ids))
+        delete(self.env['ir.model.fields'].browse(field_ids).exists())
         delete(self.env['ir.model.fields.selection'].browse(selection_ids).exists())
         relations = self.env['ir.model.relation'].search([('module', 'in', modules.ids)])
         relations._module_data_uninstall()
