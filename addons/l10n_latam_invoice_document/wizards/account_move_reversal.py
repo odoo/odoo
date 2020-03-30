@@ -11,6 +11,14 @@ class AccountMoveReversal(models.TransientModel):
     l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade', domain="[('id', 'in', l10n_latam_available_document_type_ids)]", compute='_compute_document_type', readonly=False)
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_document_type')
     l10n_latam_document_number = fields.Char(string='Document Number')
+    l10n_latam_manual_document_number = fields.Boolean(compute='_compute_l10n_latam_manual_document_number', string='Manual Number')
+
+    @api.depends('l10n_latam_document_type_id')
+    def _compute_l10n_latam_manual_document_number(self):
+        for rec in self.filtered('move_ids'):
+            move = rec.move_ids[0]
+            if move.journal_id and move.journal_id.l10n_latam_use_documents:
+                rec.l10n_latam_manual_document_number = self.env['account.move']._is_manual_document_number(move.journal_id)
 
     @api.model
     def _reverse_type_map(self, move_type):
@@ -52,7 +60,7 @@ class AccountMoveReversal(models.TransientModel):
         res = super()._prepare_default_reversal(move)
         res.update({
             'l10n_latam_document_type_id': self.l10n_latam_document_type_id.id,
-            'name': self.l10n_latam_document_number,
+            'l10n_latam_document_number': self.l10n_latam_document_number,
         })
         return res
 

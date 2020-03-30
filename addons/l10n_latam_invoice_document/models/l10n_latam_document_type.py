@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import fields, models, api
+from odoo.osv import expression
 
 
 class L10nLatamDocumentType(models.Model):
@@ -43,13 +43,19 @@ class L10nLatamDocumentType(models.Model):
             result.append((rec.id, name))
         return result
 
+    @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = args or []
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            domain = ['|', ('name', 'ilike', name), ('code', 'ilike', name)]
+        ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(ids).name_get()
+
     def _filter_taxes_included(self, taxes):
         """ This method is to be inherited by different localizations and must return filter the given taxes recordset
         returning the taxes to be included on reports of this document type. All taxes are going to be discriminated
         except the one returned by this method. """
         self.ensure_one()
         return self.env['account.tax']
-
-    def _get_document_sequence_vals(self, journal):
-        self.ensure_one()
-        return {'name': '%s - %s' % (journal.name, self.name), 'padding': 8, 'prefix': self.code}
