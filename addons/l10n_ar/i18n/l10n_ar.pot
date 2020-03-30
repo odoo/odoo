@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e\n"
+"Project-Id-Version: Odoo Server 13.3alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-15 13:31+0000\n"
-"PO-Revision-Date: 2020-01-15 13:31+0000\n"
+"POT-Creation-Date: 2020-03-30 18:36+0000\n"
+"PO-Revision-Date: 2020-03-30 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -364,6 +364,14 @@ msgid "CUIT"
 msgstr ""
 
 #. module: l10n_ar
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid ""
+"Can not change the POS number, you can only change the first number for "
+"document type that you are creating in odoo"
+msgstr ""
+
+#. module: l10n_ar
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -428,11 +436,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_res_country
 msgid "Country"
-msgstr ""
-
-#. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_res_company__l10n_ar_country_code
-msgid "Country Code"
 msgstr ""
 
 #. module: l10n_ar
@@ -694,11 +697,6 @@ msgid "Legal Entity VAT"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_ir_sequence__l10n_ar_letter
-msgid "Letter"
-msgstr ""
-
-#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type__l10n_ar_letter
 msgid "Letters"
 msgstr ""
@@ -752,11 +750,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_country__l10n_ar_natural_vat
 msgid "Natural Person VAT"
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_journal_form
-msgid "Next Number"
 msgstr ""
 
 #. module: l10n_ar
@@ -830,6 +823,11 @@ msgid "Other VAT"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__company_partner
+msgid "Partner"
+msgstr ""
+
+#. module: l10n_ar
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid "Please configure the AFIP Responsibility for \"%s\" in order to continue"
@@ -838,7 +836,13 @@ msgstr ""
 #. module: l10n_ar
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
-msgid "Please define a valid AFIP POS number"
+msgid "Please define a valid AFIP POS number (5 digits max)"
+msgstr ""
+
+#. module: l10n_ar
+#: code:addons/l10n_ar/models/account_journal.py:0
+#, python-format
+msgid "Please define an AFIP POS number"
 msgstr ""
 
 #. module: l10n_ar
@@ -882,15 +886,8 @@ msgid "Responsibility Types"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model,name:l10n_ar.model_ir_sequence
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__sequence
-#: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_journal_form
 msgid "Sequence"
-msgstr ""
-
-#. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_sequence_ids
-msgid "Sequences"
 msgstr ""
 
 #. module: l10n_ar
@@ -943,13 +940,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr ""
-
-#. module: l10n_ar
-#: model:ir.model.fields,help:l10n_ar.field_res_company__l10n_ar_country_code
-msgid ""
-"The ISO country code in two chars. \n"
-"You can use this field for quick search."
 msgstr ""
 
 #. module: l10n_ar
