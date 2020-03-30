@@ -86,7 +86,7 @@
                             </strong>
                         </t>
                     </t>
-                    <t t-if="question.is_scored_question">
+                    <t t-elif="question.is_scored_question">
                         <span>Right answer:</span>
                         <strong>
                             <t t-if="question.question_type == 'numerical_box'">
