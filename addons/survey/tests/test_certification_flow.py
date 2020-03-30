@@ -11,29 +11,11 @@ from odoo.tests.common import HttpCase
 
 @tagged('-at_install', 'post_install', 'functional')
 class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
-    def _answer_question(self, question, answer, answer_token, csrf_token, button_submit='next'):
-        # Employee submits the question answer
-        post_data = self._format_submission_data(question, answer, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': button_submit})
-        response = self._access_submit(question.survey_id, answer_token, post_data)
-        self.assertResponse(response, 200)
-
-        # Employee is redirected on next question
-        response = self._access_page(question.survey_id, answer_token)
-        self.assertResponse(response, 200)
-
-    def _format_submission_data(self, question, answer, additional_post_data):
-        post_data = {}
-        post_data['question_id'] = question.id
-        post_data.update(self._prepare_post_data(question, answer, post_data))
-        if question.page_id:
-            post_data['page_id'] = question.page_id.id
-        post_data.update(**additional_post_data)
-        return post_data
 
     def test_flow_certification(self):
         # Step: survey user creates the certification
         # --------------------------------------------------
-        with self.with_user(self.survey_user):
+        with self.with_user('survey_user'):
             certification = self.env['survey.survey'].create({
                 'title': 'User Certification for SO lines',
                 'access_mode': 'public',
@@ -148,7 +130,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
     def test_randomized_certification(self):
         # Step: survey user creates the randomized certification
         # --------------------------------------------------
-        with self.with_user(self.survey_user):
+        with self.with_user('survey_user'):
             certification = self.env['survey.survey'].create({
                 'title': 'User randomized Certification',
                 'questions_layout': 'page_per_section',
