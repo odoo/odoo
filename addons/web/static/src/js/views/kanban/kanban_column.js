@@ -180,6 +180,8 @@ var KanbanColumn = Widget.extend({
         if (this.quickCreateWidget) {
             this.quickCreateWidget.on_attach_callback();
         }
+        // headers are sticky so we need to add margin-top to first record as header height
+        this.$('.o_kanban_record:first').css({ 'margin-top': this.$header.height() });
     },
 
     //--------------------------------------------------------------------------
@@ -212,7 +214,10 @@ var KanbanColumn = Widget.extend({
             formViewRef: this.quickCreateView,
             model: this.modelName,
         });
-        return this.quickCreateWidget.insertAfter(this.$header);
+        return this.quickCreateWidget.insertAfter(this.$header).then(() => {
+            this.quickCreateWidget.$el.css({ 'margin-top': this.$header.height() });
+            this.$('.o_kanban_record:first').css({ 'margin-top': 0 });
+        });
     },
     /**
      * Closes the quick create widget if it isn't dirty.
@@ -265,6 +270,7 @@ var KanbanColumn = Widget.extend({
     _cancelQuickCreate: function () {
         this.quickCreateWidget.destroy();
         this.quickCreateWidget = undefined;
+        this.$('.o_kanban_record:first').css({ 'margin-top': this.$header.height() });
     },
     /**
      * @returns {integer[]} the res_ids of the records in the column
