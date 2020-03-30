@@ -2330,8 +2330,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         move.action_post()
 
-        wizard = self.env['account.accrual.accounting.wizard']\
+        wizard = self.env['account.automatic.entry.wizard']\
             .with_context(active_model='account.move.line', active_ids=move.invoice_line_ids.ids).create({
+            'action': 'change_period',
             'date': '2018-01-01',
             'percentage': 60,
             'journal_id': self.company_data['default_journal_misc'].id,
@@ -2348,7 +2349,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'reconcile': True,
             }).id,
         })
-        wizard_res = wizard.amend_entries()
+        wizard_res = wizard.do_action()
 
         self.assertInvoiceValues(move, [
             {
