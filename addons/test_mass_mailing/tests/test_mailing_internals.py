@@ -3,6 +3,7 @@
 
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
 from odoo.addons.test_mass_mailing.data.mail_test_data import MAIL_TEMPLATE
+from odoo.tests.common import users
 
 
 class TestMailingInternals(TestMassMailCommon):
@@ -74,3 +75,48 @@ class TestMailingInternals(TestMassMailCommon):
         self.assertEqual(mailing.delivered, 3)
         self.assertEqual(mailing.opened, 2)
         self.assertEqual(mailing.replied, 2)
+
+    @users('user_marketing')
+    def test_mailing_trace_utm(self):
+        """ Test mailing UTMs are caught on reply"""
+        self._create_mailing_list()
+        self.test_alias.write({
+            'alias_model_id': self.env['ir.model']._get('mailing.test.utm').id
+        })
+
+        source = self.env['utm.source'].create({'name': 'Source test'})
+        medium = self.env['utm.medium'].create({'name': 'Medium test'})
+        campaign = self.env['utm.campaign'].create({'name': 'Campaign test'})
+        subject = 'MassMailingTestUTM'
+
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'UTMTest',
+            'subject': subject,
+            'body_html': '<p>Hello ${object.name}</p>',
+            'reply_to_mode': 'email',
+            'reply_to': '%s@%s' % (self.test_alias.alias_name, self.test_alias.alias_domain),
+            'keep_archives': True,
+            'mailing_model_id': self.env['ir.model']._get('mailing.list').id,
+            'contact_list_ids': [(4, self.mailing_list_1.id)],
+            'source_id': source.id,
+            'medium_id': medium.id,
+            'campaign_id': campaign.id
+        })
+
+        mailing.action_put_in_queue()
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            mailing._process_mass_mailing_queue()
+
+        traces = self.env['mailing.trace'].search([('model', '=', self.mailing_list_1.contact_ids._name), ('res_id', 'in', self.mailing_list_1.contact_ids.ids)])
+        self.assertEqual(len(traces), 3)
+
+        # simulate response to mailing
+        self.gateway_reply_wrecord(MAIL_TEMPLATE, self.mailing_list_1.contact_ids[0], use_in_reply_to=True)
+        self.gateway_reply_wrecord(MAIL_TEMPLATE, self.mailing_list_1.contact_ids[1], use_in_reply_to=False)
+
+        mailing_test_utms = self.env['mailing.test.utm'].search([('name', '=', 'Re: %s' % subject)])
+        self.assertEqual(len(mailing_test_utms), 2)
+        for test_utm in mailing_test_utms:
+            self.assertEqual(test_utm.campaign_id, campaign)
+            self.assertEqual(test_utm.source_id, source)
+            self.assertEqual(test_utm.medium_id, medium)
