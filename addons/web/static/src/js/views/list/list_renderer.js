@@ -490,6 +490,9 @@ var ListRenderer = BasicRenderer.extend({
             if (!$tbody) {
                 $tbody = $('<tbody>');
             }
+            if(!group.count) {
+                return;
+            }
             $tbody.append(self._renderGroupRow(group, groupLevel));
             if (group.data.length) {
                 result.push($tbody);
