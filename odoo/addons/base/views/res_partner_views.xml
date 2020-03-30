@@ -168,7 +168,7 @@
 
                     <group>
                         <group>
-                            <field name="type" groups="base.group_no_one"/>
+                            <field name="type" groups="base.group_no_one" attrs="{'readonly': [('user_ids', '!=', [])]}"/>
                             <span class="o_form_label o_td_label" name="address_name">
                                 <b attrs="{'invisible': [('type', '!=', 'contact')]}">Company Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'invoice')]}">Invoice Address</b>
