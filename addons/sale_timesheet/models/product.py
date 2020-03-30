@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class ProductTemplate(models.Model):
@@ -18,6 +19,12 @@ class ProductTemplate(models.Model):
     # override domain
     project_id = fields.Many2one(domain="[('billable_type', '=', 'no'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
     project_template_id = fields.Many2one(domain="[('billable_type', '=', 'no'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
+
+    def unlink(self):
+        time_product = self.env.ref('sale_timesheet.time_product')
+        if time_product.product_tmpl_id in self:
+            raise ValidationError(_('This product cannot be archived, nor deleted.'))
+        return super(ProductTemplate, self).unlink()
 
     def _default_visible_expense_policy(self):
         visibility = self.user_has_groups('project.group_project_user')
@@ -66,6 +73,16 @@ class ProductTemplate(models.Model):
         elif self.type == 'consu' and not self.invoice_policy and self.service_policy == 'ordered_timesheet':
             self.invoice_policy = 'order'
         return res
+
+    def write(self, vals):
+        # timesheet product can't be archived
+        # (except in tests)
+        if not self.env.registry.in_test_mode():
+            if 'active' in vals and not vals['active']:
+                time_product = self.env.ref('sale_timesheet.time_product')
+                if time_product.product_tmpl_id in self:
+                        raise ValidationError(_('This product cannot be archived, nor deleted.'))
+        return super(ProductTemplate, self).write(vals)
 
 
 class ProductProduct(models.Model):
