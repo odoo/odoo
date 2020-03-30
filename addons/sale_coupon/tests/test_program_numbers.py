@@ -538,6 +538,97 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(len(generated_coupon), 1, "We should still have only 1 coupon as we now benefit again from the program but no need to create a new one (see next assert)")
         self.assertEqual(generated_coupon.state, 'reserved', "The coupon should be set back to reserved as we had already an expired one, no need to create a new one")
 
+    def test_coupon_rule_minimum_amount(self):
+        """ Ensure coupon with minimum amount rule are correctly
+            applied on orders
+        """
+        order = self.empty_order
+        self.env['sale.order.line'].create({
+            'product_id': self.conferenceChair.id,
+            'name': 'Conference Chair',
+            'product_uom_qty': 10.0,
+            'order_id': order.id,
+        })
+        self.assertEqual(order.amount_total, 165.0, "The order amount is not correct")
+        discount_coupon_program = self.env['sale.coupon.program'].create({
+            'name': '$100 coupon',
+            'program_type': 'coupon_program',
+            'reward_type': 'discount',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 100,
+            'active': True,
+            'discount_apply_on': 'on_order',
+            'rule_minimum_amount': 100.00,
+        })
+        self.env['sale.coupon.generate'].with_context(active_id=discount_coupon_program.id).create({}).generate_coupon()
+        coupon = discount_coupon_program.coupon_ids[0]
+        self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
+            'coupon_code': coupon.code
+        }).process_coupon()
+        self.assertEqual(order.amount_total, 65.0, "The coupon should be correctly applied")
+        order.recompute_coupon_lines()
+        self.assertEqual(order.amount_total, 65.0, "The coupon should not be removed from the order")
+
+    def test_coupon_and_program_discount_fixed_amount(self):
+        """ Ensure coupon and program discount both with
+            minimum amount rule can cohexists without making
+            the order go below 0
+        """
+        order = self.empty_order
+        orderline = self.env['sale.order.line'].create({
+            'product_id': self.conferenceChair.id,
+            'name': 'Conference Chair',
+            'product_uom_qty': 10.0,
+            'order_id': order.id,
+        })
+        self.assertEqual(order.amount_total, 165.0, "The order amount is not correct")
+
+        discount_promotion_program = self.env['sale.coupon.program'].create({
+             'name': '$100 promotion program',
+             'program_type': 'promotion_program',
+             'promo_code_usage': 'code_needed',
+             'promo_code': 'testpromo',
+             'reward_type': 'discount',
+             'discount_type': 'fixed_amount',
+             'discount_fixed_amount': 100,
+             'active': True,
+             'discount_apply_on': 'on_order',
+             'rule_minimum_amount': 100.00,
+        })
+
+        self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
+            'coupon_code': 'testpromo'
+        }).process_coupon()
+        self.assertEqual(order.amount_total, 65.0, "The promotion program should be correctly applied")
+        order.recompute_coupon_lines()
+        self.assertEqual(order.amount_total, 65.0, "The promotion program should not be removed after recomputation")
+
+        discount_coupon_program = self.env['sale.coupon.program'].create({
+            'name': '$100 coupon',
+            'program_type': 'coupon_program',
+            'reward_type': 'discount',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 100,
+            'active': True,
+            'discount_apply_on': 'on_order',
+            'rule_minimum_amount': 100.00,
+        })
+        self.env['sale.coupon.generate'].with_context(active_id=discount_coupon_program.id).create({}).generate_coupon()
+        coupon = discount_coupon_program.coupon_ids[0]
+        with self.assertRaises(UserError):
+            self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
+                'coupon_code': coupon.code
+            }).process_coupon()
+        orderline.write({'product_uom_qty': 15})
+        self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
+            'coupon_code': coupon.code
+        }).process_coupon()
+        self.assertEqual(order.amount_total, 47.5, "The promotion program should now be correctly applied")
+
+        orderline.write({'product_uom_qty': 5})
+        order.recompute_coupon_lines()
+        self.assertEqual(order.amount_total, 82.5, "The promotion programs should have been removed from the order to avoid negative amount")
+
     def test_program_discount_on_multiple_specific_products(self):
         """ Ensure a discount on multiple specific products is correctly computed.
             - Simple: Discount must be applied on all the products set on the promotion
