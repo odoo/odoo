@@ -9,10 +9,6 @@ var _t = core._t;
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = Widget.extend({
-    events: {
-        'click .o_wevent_registration_btn': '_onRegistrationBtnClick',
-    },
-
     /**
      * @override
      */
@@ -74,11 +70,6 @@ var EventRegistrationForm = Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onRegistrationBtnClick: function (ev) {
-        var $btn = $(ev.currentTarget);
-        $btn.toggleClass('btn-primary text-left pl-0 collapsed');
-        $btn.siblings().toggleClass('d-none');
-    },
 });
 
 publicWidget.registry.EventRegistrationFormInstance = publicWidget.Widget.extend({
