@@ -631,15 +631,24 @@ class StockMove(models.Model):
 
         if not next_serial_count:
             next_serial_count = self.next_serial_count
+        lot_names = self._generate_serial_number_names(self.next_serial, next_serial_count)
+        move_lines_commands = self._generate_serial_move_line_commands(lot_names)
+        self.write({'move_line_ids': move_lines_commands})
+        return True
+
+    @api.model
+    def _generate_serial_number_names(self, next_serial, next_serial_count):
+        """Generate a list of consecutive serial number names.
+        """
         # We look if the serial number contains at least one digit.
-        caught_initial_number = regex_findall("\d+", self.next_serial)
+        caught_initial_number = regex_findall("\d+", next_serial)
         if not caught_initial_number:
             raise UserError(_('The serial number must contain at least one digit.'))
         # We base the serie on the last number find in the base serial number.
         initial_number = caught_initial_number[-1]
         padding = len(initial_number)
         # We split the serial number to get the prefix and suffix.
-        splitted = regex_split(initial_number, self.next_serial)
+        splitted = regex_split(initial_number, next_serial)
         # initial_number could appear several times in the SN, e.g. BAV023B00001S00001
         prefix = initial_number.join(splitted[:-1])
         suffix = splitted[-1]
@@ -652,9 +661,7 @@ class StockMove(models.Model):
                 str(initial_number + i).zfill(padding),
                 suffix
             ))
-        move_lines_commands = self._generate_serial_move_line_commands(lot_names)
-        self.write({'move_line_ids': move_lines_commands})
-        return True
+        return lot_names
 
     def _push_apply(self):
         for move in self:

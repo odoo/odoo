@@ -55,6 +55,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         """
         if self.qty_producing <= 0:
             raise UserError(_('You have to produce at least one %s.') % self.product_uom_id.name)
+
         line_values = self._update_workorder_lines()
         for values in line_values['to_create']:
             self.env[self._workorder_line_ids()._name].new(values)
@@ -318,7 +319,6 @@ class MrpAbstractWorkorder(models.AbstractModel):
             if sml:
                 raise UserError(_('This serial number for product %s has already been produced') % self.product_id.name)
 
-
 class MrpAbstractWorkorderLine(models.AbstractModel):
     _name = "mrp.abstract.workorder.line"
     _description = "Abstract model to implement product_produce_line as well as\
@@ -367,7 +367,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
         for line in self:
             line.company_id = line._get_production().company_id
 
-    def _update_move_lines(self):
+    def _update_move_lines(self, lots=False):
         """ update a move line to save the workorder line data"""
         self.ensure_one()
         if self.lot_id:
@@ -396,14 +396,14 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             if float_compare(new_quantity_done, ml.product_uom_qty, precision_rounding=rounding) >= 0:
                 ml.write({
                     'qty_done': new_quantity_done,
-                    'lot_produced_ids': self._get_produced_lots(),
+                    'lot_produced_ids': lots and [(4, lot.id) for lot in lots] or self._get_produced_lots(),
                 })
             else:
                 new_qty_reserved = ml.product_uom_qty - new_quantity_done
                 default = {
                     'product_uom_qty': new_quantity_done,
                     'qty_done': new_quantity_done,
-                    'lot_produced_ids': self._get_produced_lots(),
+                    'lot_produced_ids': lots and [(4, lot.id) for lot in lots] or self._get_produced_lots(),
                 }
                 ml.copy(default=default)
                 ml.with_context(bypass_reservation_update=True).write({

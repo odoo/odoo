@@ -238,6 +238,23 @@ class MrpProduction(models.Model):
     mrp_production_child_count = fields.Integer("Number of generated MO", compute='_compute_mrp_production_child_count')
     mrp_production_source_count = fields.Integer("Number of source MO", compute='_compute_mrp_production_source_count')
 
+    serial_batch_creation = serial_batch_creation = fields.Boolean(compute='_compute_serial_batch_creation', help='True if allow to produce Serial Number tracked product in batch')
+
+    @api.depends('product_id.tracking', 'bom_id', 'routing_id')
+    def _compute_serial_batch_creation(self):
+        # We allow batch creation when all following condition are satisfied:
+        # 1. Produced product is SN tracked
+        # 2. No component is tracked
+        # 3. Bom consumption is strict
+        # 4. Production has no routing
+        # 5. No byproduct
+        components = self.bom_id.bom_line_ids.mapped('product_id')
+        has_tracked_components = any(comp.tracking != 'none' for comp in components)
+        if self.product_id.tracking == 'serial' and not has_tracked_components and self.bom_id.consumption == 'strict' and not self.routing_id and not self.bom_id.byproduct_ids:
+            self.serial_batch_creation = True
+        else:
+            self.serial_batch_creation = False
+
     @api.depends('procurement_group_id.stock_move_ids.created_production_id')
     def _compute_mrp_production_child_count(self):
         for production in self:
@@ -825,6 +842,8 @@ class MrpProduction(models.Model):
         if self.bom_id.type == 'phantom':
             raise UserError(_('You cannot produce a MO with a bom kit product.'))
         action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
+        if self.serial_batch_creation:
+            action['views'] = [(self.env.ref('mrp.view_mrp_product_produce_wizard_batch').id, 'form')]
         return action
 
     def button_plan(self):

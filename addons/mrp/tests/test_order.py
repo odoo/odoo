@@ -5,7 +5,7 @@ from odoo.tests import Form
 from datetime import datetime, timedelta
 
 from odoo.fields import Datetime as Dt
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
@@ -465,7 +465,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(line1['qty_done'], 3, "Wrong quantity done")
         self.assertEqual(line2['qty_to_consume'], 12, "Wrong quantity to consume")
         self.assertEqual(line2['qty_done'], 12, "Wrong quantity done")
-        
+
         product_produce = produce_form.save()
         self.assertEqual(len(product_produce.raw_workorder_line_ids), 2, 'You should have produce lines even the consumed products are not tracked.')
         product_produce.do_produce()
@@ -1052,10 +1052,10 @@ class TestMrpOrder(TestMrpCommon):
         produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': mo1.id,
             'active_ids': [mo1.id],
-        }))
+        }), view='mrp.view_mrp_product_produce_wizard_batch')
+        with produce_form.finished_workorder_line_ids.new() as new_line:
+            new_line.lot_name = 'sn2020'
         product_produce = produce_form.save()
-        product_produce.action_generate_serial()
-        sn = product_produce.finished_lot_id
         product_produce.do_produce()
         mo1.button_mark_done()
 
@@ -1069,10 +1069,11 @@ class TestMrpOrder(TestMrpCommon):
         produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': mo2.id,
             'active_ids': [mo2.id],
-        }))
-        produce_form.finished_lot_id = sn
+        }), view='mrp.view_mrp_product_produce_wizard_batch')
+        with produce_form.finished_workorder_line_ids.new() as new_line:
+            new_line.lot_name = 'sn2020'
         product_produce = produce_form.save()
-        with self.assertRaises(UserError):
+        with self.assertRaises(ValidationError):
             product_produce.do_produce()
 
     def test_product_produce_duplicate_2(self):
@@ -1211,7 +1212,7 @@ class TestMrpOrder(TestMrpCommon):
             line.lot_id = sn
         product_produce = produce_form.save()
         product_produce.do_produce()
-        
+
     def test_product_produce_uom(self):
         """ Produce a finished product tracked by serial number. Set another
         UoM on the bom. The produce wizard should keep the UoM of the product (unit)
@@ -1254,12 +1255,6 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.product_qty = 1
         mo = mo_form.save()
 
-        final_product_lot = self.env['stock.production.lot'].create({
-            'name': 'lot1',
-            'product_id': plastic_laminate.id,
-            'company_id': self.env.company.id,
-        })
-
         mo.action_confirm()
         mo.action_assign()
         self.assertEqual(mo.move_raw_ids.product_qty, 12, '12 units should be reserved.')
@@ -1268,12 +1263,13 @@ class TestMrpOrder(TestMrpCommon):
         produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': mo.id,
             'active_ids': [mo.id],
-        }))
-        produce_form.finished_lot_id = final_product_lot
+        }), view='mrp.view_mrp_product_produce_wizard_batch')
         product_produce = produce_form.save()
-        self.assertEqual(product_produce.qty_producing, 1)
+        self.assertEqual(product_produce.next_serial_count, 12)
         self.assertEqual(product_produce.product_uom_id, unit, 'Should be 1 unit since the tracking is serial.')
-        product_produce.finished_lot_id = final_product_lot.id
+        with produce_form.finished_workorder_line_ids.new() as new_line:
+            new_line.lot_name = 'sn2020'
+        product_produce = produce_form.save()
 
         product_produce.do_produce()
         move_line_raw = mo.move_raw_ids.mapped('move_line_ids').filtered(lambda m: m.qty_done)
