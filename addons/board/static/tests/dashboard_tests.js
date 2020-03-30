@@ -9,7 +9,7 @@ var ListRenderer = require('web.ListRenderer');
 var pyUtils = require('web.py_utils');
 
 const cpHelpers = testUtils.controlPanel;
-var createActionManager = testUtils.createActionManager;
+var createWebClient = testUtils.createWebClient;
 var createView = testUtils.createView;
 
 QUnit.module('Dashboard', {
@@ -699,7 +699,7 @@ QUnit.test('dashboard intercepts custom events triggered by sub controllers', as
     board.destroy();
 });
 
-QUnit.skip('save actions to dashboard', async function (assert) {
+QUnit.test('save actions to dashboard', async function (assert) {
     assert.expect(6);
 
     testUtils.patch(ListController, {
@@ -714,7 +714,7 @@ QUnit.skip('save actions to dashboard', async function (assert) {
 
     this.data['partner'].fields.foo.sortable = true;
 
-    var actionManager = await createActionManager({
+    var webClient = await createWebClient({
         data: this.data,
         archs: {
             'partner,false,list': '<list><field name="foo"/></list>',
@@ -742,26 +742,26 @@ QUnit.skip('save actions to dashboard', async function (assert) {
         }
     });
 
-    await actionManager.doAction({
+    await testUtils.actionManager.doAction({
         id: 1,
         res_model: 'partner',
         type: 'ir.actions.act_window',
         views: [[false, 'list']],
     });
 
-    assert.containsOnce(actionManager, '.o_list_view',
+    assert.containsOnce(webClient, '.o_list_view',
         "should display the list view");
 
     // Sort the list
     await testUtils.dom.click($('.o_column_sortable'));
 
     // Group It
-    await cpHelpers.toggleGroupByMenu(actionManager);
-    await cpHelpers.toggleAddCustomGroup(actionManager);
-    await cpHelpers.applyGroup(actionManager);
+    await cpHelpers.toggleGroupByMenu(webClient);
+    await cpHelpers.toggleAddCustomGroup(webClient);
+    await cpHelpers.applyGroup(webClient);
 
     // add this action to dashboard
-    await cpHelpers.toggleFavoriteMenu(actionManager);
+    await cpHelpers.toggleFavoriteMenu(webClient);
 
     await testUtils.dom.click($('.o_add_to_board > button'));
     await testUtils.fields.editInput($('.o_add_to_board input'), 'a name');
@@ -769,14 +769,14 @@ QUnit.skip('save actions to dashboard', async function (assert) {
 
     testUtils.unpatch(ListController);
 
-    actionManager.destroy();
+    webClient.destroy();
 });
 
-QUnit.skip('save two searches to dashboard', async function (assert) {
+QUnit.test('save two searches to dashboard', async function (assert) {
     // the second search saved should not be influenced by the first
     assert.expect(2);
 
-    var actionManager = await createActionManager({
+    var webClient = await createWebClient({
         data: this.data,
         archs: {
             'partner,false,list': '<list><field name="foo"/></list>',
@@ -800,7 +800,7 @@ QUnit.skip('save two searches to dashboard', async function (assert) {
         },
     });
 
-    await actionManager.doAction({
+    await testUtils.actionManager.doAction({
         id: 1,
         res_model: 'partner',
         type: 'ir.actions.act_window',
@@ -809,33 +809,33 @@ QUnit.skip('save two searches to dashboard', async function (assert) {
 
     var filter_count = 0;
     // Add a first filter
-    await cpHelpers.toggleFilterMenu(actionManager);
-    await cpHelpers.toggleAddCustomFilter(actionManager);
-    await testUtils.fields.editInput(actionManager.el.querySelector('.o_generator_menu_value .o_input'), 'a');
-    await cpHelpers.applyFilter(actionManager);
+    await cpHelpers.toggleFilterMenu(webClient);
+    await cpHelpers.toggleAddCustomFilter(webClient);
+    await testUtils.fields.editInput(webClient.el.querySelector('.o_generator_menu_value .o_input'), 'a');
+    await cpHelpers.applyFilter(webClient);
 
     // Add it to dashboard
-    await cpHelpers.toggleFavoriteMenu(actionManager);
+    await cpHelpers.toggleFavoriteMenu(webClient);
     await testUtils.dom.click($('.o_add_to_board > button'));
     await testUtils.dom.click($('.o_add_to_board div button'));
 
     // Remove it
-    await testUtils.dom.click(actionManager.el.querySelector('.o_facet_remove'));
+    await testUtils.dom.click(webClient.el.querySelector('.o_facet_remove'));
 
     // Add the second filter
-    await cpHelpers.toggleFilterMenu(actionManager);
-    await cpHelpers.toggleAddCustomFilter(actionManager);
-    await testUtils.fields.editInput(actionManager.el.querySelector('.o_generator_menu_value .o_input'), "b");
-    await cpHelpers.applyFilter(actionManager);
+    await cpHelpers.toggleFilterMenu(webClient);
+    await cpHelpers.toggleAddCustomFilter(webClient);
+    await testUtils.fields.editInput(webClient.el.querySelector('.o_generator_menu_value .o_input'), "b");
+    await cpHelpers.applyFilter(webClient);
     // Add it to dashboard
-    await cpHelpers.toggleFavoriteMenu(actionManager);
-    await testUtils.dom.click(actionManager.el.querySelector('.o_add_to_board > button'));
-    await testUtils.dom.click(actionManager.el.querySelector('.o_add_to_board div button'));
+    await cpHelpers.toggleFavoriteMenu(webClient);
+    await testUtils.dom.click(webClient.el.querySelector('.o_add_to_board > button'));
+    await testUtils.dom.click(webClient.el.querySelector('.o_add_to_board div button'));
 
-    actionManager.destroy();
+    webClient.destroy();
 });
 
-QUnit.skip('save a action domain to dashboard', async function (assert) {
+QUnit.test('save a action domain to dashboard', async function (assert) {
     // View domains are to be added to the dashboard domain
     assert.expect(1);
 
@@ -845,7 +845,7 @@ QUnit.skip('save a action domain to dashboard', async function (assert) {
     // The filter domain already contains the view domain, but is always added by dashboard..,
     var expected_domain = ['&', '&', view_domain, view_domain, filter_domain];
 
-    var actionManager = await createActionManager({
+    var webClient = await createWebClient({
         data: this.data,
         archs: {
             'partner,false,list': '<list><field name="foo"/></list>',
@@ -861,7 +861,7 @@ QUnit.skip('save a action domain to dashboard', async function (assert) {
         },
     });
 
-    await actionManager.doAction({
+    await testUtils.actionManager.doAction({
         id: 1,
         res_model: 'partner',
         type: 'ir.actions.act_window',
@@ -870,20 +870,20 @@ QUnit.skip('save a action domain to dashboard', async function (assert) {
     });
 
     // Add a filter
-    await cpHelpers.toggleFilterMenu(actionManager);
-    await cpHelpers.toggleAddCustomFilter(actionManager);
+    await cpHelpers.toggleFilterMenu(webClient);
+    await cpHelpers.toggleAddCustomFilter(webClient);
     await testUtils.fields.editInput(
-        actionManager.el.querySelector('.o_generator_menu_value .o_input'),
+        webClient.el.querySelector('.o_generator_menu_value .o_input'),
         "b"
     );
-    await cpHelpers.applyFilter(actionManager);
+    await cpHelpers.applyFilter(webClient);
     // Add it to dashboard
-    await cpHelpers.toggleFavoriteMenu(actionManager);
-    await testUtils.dom.click(actionManager.el.querySelector('.o_add_to_board > button'));
+    await cpHelpers.toggleFavoriteMenu(webClient);
+    await testUtils.dom.click(webClient.el.querySelector('.o_add_to_board > button'));
     // add
-    await testUtils.dom.click(actionManager.el.querySelector('.o_add_to_board div button'));
+    await testUtils.dom.click(webClient.el.querySelector('.o_add_to_board div button'));
 
-    actionManager.destroy();
+    webClient.destroy();
 });
 
 QUnit.test("Views should be loaded in the user's language", async function (assert) {

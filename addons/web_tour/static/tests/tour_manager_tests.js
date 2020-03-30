@@ -20,7 +20,7 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
      * @param {Object[]} params.tours { {string} name, {Object} option, {Object[]} steps }
      */
     async function createTourManager({ consumed_tours, debug, template, tours }) {
-        const parent = testUtils.createParent({ debug });
+        const parent = await testUtils.createParent({ debug });
         const tourManager = new TourManager(parent, consumed_tours);
         tourManager.running_step_delay = 0;
         for (const { name, options, steps } of tours) {
@@ -39,7 +39,9 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
             // assert that the tour is in the `consumed_tours` param key.
             _isTourConsumed: name => (consumed_tours || []).includes(name),
         });
-        await tourManager._register_all(true);
+        const registerProm = tourManager._register_all(true);
+        owl.Component.env.bus.trigger('web-client-mounted'); // We have known more elegant
+        await registerProm;
         // Wait for possible tooltips to be loaded and appended.
         await testUtils.nextTick();
         return tourManager;

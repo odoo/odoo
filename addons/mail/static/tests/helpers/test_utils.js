@@ -40,9 +40,6 @@ async function createDiscuss(params) {
     };
     await testUtils.mock.addMockEnvironment(parent, params);
 
-    const env = params.env || {};
-    owl.Component.env = makeTestEnvironment(env);
-
     const discuss = new Discuss(parent, params);
 
     // override 'destroy' of discuss so that it calls 'destroy' on the parent
