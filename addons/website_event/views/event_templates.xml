@@ -394,6 +394,8 @@
 </template>
 
 <template id="event_details" name="Event Header">
+    <t t-set="event_oxp20" t-value="request.env.ref('odoo_com.event_oxp20', raise_if_not_found=False)"/>
+    <t t-set="event_oconnect20" t-value="request.env.ref('odoo_com.event_oconnect20', raise_if_not_found=False)"/>
     <t t-call="website_event.layout">
         <div name="event" itemscope="itemscope" itemtype="http://schema.org/Event">
             <t t-call="website.record_cover">
@@ -402,10 +404,13 @@
                 <t t-set="use_size" t-value="True"/>
                 <t t-set="use_text_size" t-value="True"/>
                 <t t-set="use_text_align" t-value="True"/>
-
+                <t t-if="event == event_oconnect20 or event == event_oxp20">
+                    <t t-set="additionnal_classes" t-value="'o_xp20_cover'"/>
+                </t>
                 <div class="container d-flex flex-column flex-grow-1 justify-content-around">
                     <div class="o_wevent_event_title">
                         <span t-if="event.is_participating" class="badge badge-success o_wevent_badge"><i class="fa fa-check mr-2"/>Registered</span>
+                        <t t-if="len(event.event_ticket_ids) &gt; 1"><h3 class="fw_light">Get your tickets for</h3></t>
                         <h1 t-field="event.name" class="o_wevent_event_name" itemprop="name" placeholder="Event Title"/>
                         <h2 t-field="event.subtitle" class="o_wevent_event_subtitle" placeholder="Event Subtitle"/>
                     </div>
@@ -485,7 +490,14 @@
                         <div t-if="event.organizer_id" class="o_wevent_sidebar_block">
                             <h6 class="o_wevent_sidebar_title">Organizer</h6>
                             <h4 t-field="event.organizer_id"/>
-                            <div itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
+                            <!-- If event category is Odoo Experience -->
+                            <t t-if="event.event_type_id.name == 'Odoo Experience'">
+                                <div><i class="fa fa-phone fa-fw" role="img" aria-label="Phone" title="Phone"></i> <span class="o_force_ltr" itemprop="telephone">+32 2 290 34 90</span></div>
+                                <div><i class="fa fa-envelope fa-fw" role="img" aria-label="Email" title="Email"></i> <span itemprop="email">experience@odoo.com</span></div>
+                            </t>
+                            <t t-else="">
+                                <div itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
+                            </t>
                         </div>
                         <!-- Social -->
                         <div class="o_wevent_sidebar_block">
@@ -518,52 +530,6 @@
             </div>
         </section>
     </t>
-</template>
-
-<template id="oxp20_event_details" inherit_id="website_event.event_details">
-    <xpath expr="//t[@t-call='website.record_cover']" position="replace">
-        <t t-set="event_oxp20" t-value="request.env.ref('odoo_com.event_oxp20', raise_if_not_found=False)"/>
-        <t t-if="event.name == 'Odoo Experience 2020'">
-                <t t-call="website.record_cover">
-                    <t t-set="_record" t-value="event"/>
-                    <t t-set="use_filters" t-value="True"/>
-                    <t t-set="use_size" t-value="True"/>
-                    <t t-set="use_text_size" t-value="True"/>
-                    <t t-set="use_text_align" t-value="True"/>
-                    <t t-set="additionnal_classes" t-value="o_xp20_cover"/>
-                    <div class="container d-flex flex-column flex-grow-1 justify-content-around" t-if="event or request.env.user.login =='odo'">
-                        <div class="o_wevent_event_title text-center">
-                            <h3 class="fw_light">Get your tickets for</h3>
-                            <h1 t-field="event.name" class="o_wevent_event_name" itemprop="name" placeholder="Event Title"/>
-                            <h2 t-field="event.subtitle" class="o_wevent_event_subtitle" placeholder="Event Subtitle"/>
-                            <span t-if="event.is_participating" class="badge badge-success o_wevent_badge"><i class="fa fa-check mr-2"/>Registered</span>
-                        </div>
-                    </div>
-                    <div class="container mb-5">
-                        <t t-call="website_event.registration_template"/>
-                    </div>
-                </t>
-        </t>
-        <t t-else="">
-              <t t-call="website.record_cover">
-                    <t t-set="_record" t-value="event"/>
-                    <t t-set="use_filters" t-value="True"/>
-                    <t t-set="use_size" t-value="True"/>
-                    <t t-set="use_text_size" t-value="True"/>
-                    <t t-set="use_text_align" t-value="True"/>
-                    <div class="container d-flex flex-column flex-grow-1 justify-content-around" t-if="event or request.env.user.login =='odo'">
-                        <div class="o_wevent_event_title">
-                            <span t-if="event.is_participating" class="badge badge-success o_wevent_badge"><i class="fa fa-check mr-2"/>Registered</span>
-                            <h1 t-field="event.name" class="o_wevent_event_name" itemprop="name" placeholder="Event Title"/>
-                            <h2 t-field="event.subtitle" class="o_wevent_event_subtitle" placeholder="Event Subtitle"/>
-                        </div>
-                    </div>
-                    <div class="container mb-5">
-                        <t t-call="website_event.registration_template"/>
-                    </div>
-                </t>
-        </t>
-    </xpath>
 </template>
 
 <!-- Event - Registration -->
