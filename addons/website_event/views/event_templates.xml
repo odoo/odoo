@@ -408,7 +408,7 @@
                     <t t-set="additionnal_classes" t-value="'o_xp20_cover'"/>
                 </t>
                 <div class="container d-flex flex-column flex-grow-1 justify-content-around">
-                    <div class="o_wevent_event_title">
+                    <div class="o_wevent_event_title text-center">
                         <span t-if="event.is_participating" class="badge badge-success o_wevent_badge"><i class="fa fa-check mr-2"/>Registered</span>
                         <t t-if="len(event.event_ticket_ids) &gt; 1"><h3 class="fw_light">Get your tickets for</h3></t>
                         <h1 t-field="event.name" class="o_wevent_event_name" itemprop="name" placeholder="Event Title"/>
