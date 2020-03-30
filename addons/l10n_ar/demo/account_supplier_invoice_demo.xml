@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="True">
 
+    <!-- we add l10n_latam_document_number on on a separete line because we need l10n_latam_document_type_id to be auto assigned so that account.move.name can be computed with the _inverse_l10n_latam_document_number -->
+
     <!-- Invoice from gritti support service, auto fiscal position set VAT Not Applicable -->
     <record id="demo_sup_invoice_1" model="account.move">
-        <field name="name">FA-C 0001-00000008</field>
         <field name="partner_id" ref="res_partner_gritti_agrimensura"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -22,7 +23,6 @@
 
     <!-- Invoice from Foreign with vat 21, 27 and 10,5 -->
     <record id="demo_sup_invoice_2" model="account.move">
-        <field name="name">FA-A 0002-00000123</field>
         <field name="partner_id" ref="res_partner_foreign"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -38,7 +38,6 @@
 
     <!-- Invoice from Foreign with vat zero and 21 -->
     <record id="demo_sup_invoice_3" model="account.move">
-        <field name="name">FA-A 0003-00000312</field>
         <field name="partner_id" ref="res_partner_foreign"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -53,7 +52,6 @@
 
     <!-- Invoice to Foreign with vat exempt and 21 -->
     <record id="demo_sup_invoice_4" model="account.move">
-        <field name="name">FA-A 0001-00000200</field>
         <field name="partner_id" ref="res_partner_foreign"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -68,7 +66,6 @@
 
     <!-- Invoice to Foreign with all type of taxes  -->
     <record id="demo_sup_invoice_5" model="account.move">
-        <field name="name">FA-A 0001-00000222</field>
         <field name="partner_id" ref="res_partner_foreign"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -87,7 +84,6 @@
 
     <!-- Service Import to Odoo, fiscal position changes tax not correspond -->
     <record id="demo_sup_invoice_6" model="account.move">
-        <field name="name">FA-I 0001-00000333</field>
         <field name="partner_id" ref="res_partner_odoo"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -101,7 +97,6 @@
 
     <!-- Similar to last one but with line that have tax not correspond with negative amount -->
     <record id="demo_sup_invoice_7" model="account.move">
-        <field name="name">FA-I 0001-00000334</field>
         <field name="partner_id" ref="res_partner_odoo"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -116,7 +111,6 @@
 
     <!-- Import Cleareance -->
     <record id="demo_despacho_1" model="account.move">
-        <field name="name">GA-I 0001-00000605</field>
         <field name="partner_id" ref="l10n_ar.partner_afip"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -220,6 +214,31 @@
         <field name="product_uom_id" ref="uom.product_uom_unit"/>
         <field name="tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
         <field name="account_id" model="account.move.line" eval="obj().env.ref('product.product_category_all').property_account_income_categ_id.id"/>
+    </record>
+
+    <record id="demo_sup_invoice_1" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000008</field>
+    </record>
+    <record id="demo_sup_invoice_2" model="account.move">
+        <field name="l10n_latam_document_number">0002-00000123</field>
+    </record>
+    <record id="demo_sup_invoice_3" model="account.move">
+        <field name="l10n_latam_document_number">0003-00000312</field>
+    </record>
+    <record id="demo_sup_invoice_4" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000200</field>
+    </record>
+    <record id="demo_sup_invoice_5" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000222</field>
+    </record>
+    <record id="demo_sup_invoice_6" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000333</field>
+    </record>
+    <record id="demo_sup_invoice_7" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000334</field>
+    </record>
+    <record id="demo_despacho_1" model="account.move">
+        <field name="l10n_latam_document_number">16052IC04000605L</field>
     </record>
 
     <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
