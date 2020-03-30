@@ -186,10 +186,6 @@ var ColumnQuickCreate = Widget.extend({
             })),
             buttons: [{
                 classes: 'btn-primary float-right',
-                close: true,
-                text: _t('Got it'),
-            }, {
-                classes: 'btn-secondary float-right',
                 text: _t('Use This For My Project'),
                 close: true,
                 click: function () {
@@ -198,6 +194,10 @@ var ColumnQuickCreate = Widget.extend({
                         self.trigger_up('quick_create_add_column', {value: column.toString()});
                     });
                 }
+            }, {
+                classes: 'btn-secondary float-right',
+                close: true,
+                text: _t('Close'),
             }],
             size: "large",
             title: "Kanban Examples",
