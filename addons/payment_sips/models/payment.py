@@ -2,14 +2,17 @@
 
 # Copyright 2015 Eezee-It
 
+import datetime
 import json
 import logging
+import pytz
 import re
 from hashlib import sha256
 
 from werkzeug import urls
 
 from odoo import models, fields, api
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare
 from odoo.tools.translate import _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -185,11 +188,15 @@ class TxSips(models.Model):
     def _sips_form_validate(self, data):
         data = self._sips_data_to_object(data.get('Data'))
         status = data.get('responseCode')
+        date = data.get('transactionDateTime')
+        if date:
+            date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S%z')
+            date = date.astimezone(pytz.utc).replace(tzinfo=None)
+            date = date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         data = {
             'acquirer_reference': data.get('transactionReference'),
             'partner_reference': data.get('customerId'),
-            'date_validate': data.get('transactionDateTime',
-                                      fields.Datetime.now())
+            'date_validate': date or fields.Datetime.now(),
         }
         res = False
         if status in self._sips_valid_tx_status:
