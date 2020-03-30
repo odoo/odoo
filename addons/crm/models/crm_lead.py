@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from psycopg2 import sql, extras
+import threading
+from psycopg2 import sql
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 
@@ -11,7 +12,7 @@ from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
 from odoo.addons.phone_validation.tools import phone_validation
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from . import crm_stage
 
@@ -47,6 +48,11 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'email_cc',
     'website',
     'partner_name']
+
+# Those values have been determined based on benchmark to minimise
+# computation time, number of transaction and transaction time.
+PLS_COMPUTE_BATCH_STEP = 50000  # odoo.models.PREFETCH_MAX = 1000 but larger cluster can speed up global computation
+PLS_UPDATE_BATCH_STEP = 5000
 
 
 class Lead(models.Model):
@@ -1348,10 +1354,20 @@ class Lead(models.Model):
                     s_lead_lost *= value_result['lost'] / total_lost
 
             # 3. Compute Probability to win
-            lead_probabilities[lead_id] = 100 * s_lead_won / (s_lead_won + s_lead_lost)
+            lead_probabilities[lead_id] = round(100 * s_lead_won / (s_lead_won + s_lead_lost), 2)
         return lead_probabilities
 
     def _cron_update_automated_probabilities(self):
+        """ This cron will :
+          - rebuild the lead scoring frequency table
+          - recompute all the automated_probability and align probability if both were aligned
+        """
+        cron_start_date = datetime.now()
+        self._rebuild_pls_frequency_table()
+        self._update_automated_probabilities()
+        _logger.info("Predictive Lead Scoring : Cron duration = %d seconds" % ((datetime.now() - cron_start_date).total_seconds()))
+
+    def _rebuild_pls_frequency_table(self):
         # Clear the frequencies table (in sql to speed up the cron)
         try:
             self.check_access_rights('unlink')
@@ -1374,28 +1390,83 @@ class Lead(models.Model):
         self.env['crm.lead.scoring.frequency'].create(values_to_create)
         _logger.info("Predictive Lead Scoring : crm.lead.scoring.frequency table rebuilt")
 
-        # Recompute all the leads. Won : probability = 100 | Lost : probability = 0 or inactive
-        # Here, inactive won't be returned anyway
-        # Get also all the lead without probability --> These are the new leads. Activate auto probability on them.
-        pls_start_date = self._pls_get_safe_start_date()
-        if pls_start_date:
-            pending_lead_domain = ['&', '&', ('stage_id', '!=', False), ('create_date', '>', pls_start_date),
-                                   '|', ('probability', '=', False), '&', ('probability', '<', 100), ('probability', '>', 0)]
-            leads_to_update = self.env['crm.lead'].search(pending_lead_domain)
-            lead_probabilities = leads_to_update._pls_get_naive_bayes_probabilities(batch_mode=True)
+    def _update_automated_probabilities(self):
+        """ Recompute all the automated_probability (and align probability if both were aligned) for all the leads
+        that are active (not won, nor lost).
 
-            # Update in execute batch to avoid server roundtrips + page_size to 10000 to avoid memory errors
-            # Update both probability and automated_probability if they were equal, else, update only automated_probability
-            sql = """UPDATE crm_lead
+        For performance matter, as there can be a huge amount of leads to recompute, this cron proceed by batch.
+        Each batch is performed into its own transaction, in order to minimise the lock time on the lead table
+        (and to avoid complete lock if there was only 1 transaction that would last for too long -> several minutes).
+        If a concurrent update occurs, it will simply be put in the queue to get the lock.
+        """
+        pls_start_date = self._pls_get_safe_start_date()
+        if not pls_start_date:
+            return
+
+        # 1. Get all the leads to recompute created after pls_start_date that are nor won nor lost
+        # (Won : probability = 100 | Lost : probability = 0 or inactive. Here, inactive won't be returned anyway)
+        # Get also all the lead without probability --> These are the new leads. Activate auto probability on them.
+        pending_lead_domain = [
+            '&',
+                '&',
+                    ('stage_id', '!=', False),
+                    ('create_date', '>', pls_start_date),
+                '|',
+                    ('probability', '=', False),
+                    '&',
+                        ('probability', '<', 100),
+                        ('probability', '>', 0)
+        ]
+        leads_to_update = self.env['crm.lead'].search(pending_lead_domain)
+        leads_to_update_count = len(leads_to_update)
+
+        # 2. Compute by batch to avoid memory error
+        lead_probabilities = {}
+        for i in range(0, leads_to_update_count, PLS_COMPUTE_BATCH_STEP):
+            leads_to_update_part = leads_to_update[i:i + PLS_COMPUTE_BATCH_STEP]
+            lead_probabilities.update(leads_to_update_part._pls_get_naive_bayes_probabilities(batch_mode=True))
+        _logger.info("Predictive Lead Scoring : New automated probabilities computed")
+
+        # 3. Group by new probability to reduce server roundtrips when executing the update
+        probability_leads = defaultdict(list)
+        for lead_id, probability in sorted(lead_probabilities.items()):
+            probability_leads[probability].append(lead_id)
+
+        # 4. Update automated_probability (+ probability if both were equal)
+        update_sql = """UPDATE crm_lead
                         SET automated_probability = %s,
-                            probability = CASE WHEN (ROUND(probability::numeric, 2) = ROUND(automated_probability::numeric, 2) or probability is null)
+                            probability = CASE WHEN (probability = automated_probability OR probability is null)
                                                THEN (%s)
                                                ELSE (probability)
-                                               END
-                        WHERE id = %s"""
-            batch_params = [(lead_probabilities[lead.id], lead_probabilities[lead.id], lead.id) for lead in leads_to_update if lead.id in lead_probabilities]
-            extras.execute_batch(self._cr, sql, batch_params, page_size=10000)
-            _logger.info("Predictive Lead Scoring : all automated probability updated (count: %d)" % (len(leads_to_update)))
+                                          END
+                        WHERE id in %s"""
+
+        # Update by a maximum number of leads at the same time, one batch by transaction :
+        # - avoid memory errors
+        # - avoid blocking the table for too long with a too big transaction
+        transactions_count, transactions_failed_count = 0, 0
+        cron_update_lead_start_date = datetime.now()
+        auto_commit = not getattr(threading.currentThread(), 'testing', False)
+        for probability, probability_lead_ids in probability_leads.items():
+            for lead_ids_current in tools.split_every(PLS_UPDATE_BATCH_STEP, probability_lead_ids):
+                transactions_count += 1
+                try:
+                    self.env.cr.execute(update_sql, (probability, probability, tuple(lead_ids_current)))
+                    # auto-commit except in testing mode
+                    if auto_commit:
+                        self.env.cr.commit()
+                except Exception as e:
+                    _logger.warning("Predictive Lead Scoring : update transaction failed. Error: %s" % e)
+                    transactions_failed_count += 1
+
+        _logger.info(
+            "Predictive Lead Scoring : All automated probabilities updated (%d leads / %d transactions (%d failed) / %d seconds)" % (
+                leads_to_update_count,
+                transactions_count,
+                transactions_failed_count,
+                (datetime.now() - cron_update_lead_start_date).total_seconds(),
+            )
+        )
 
     # ----------------------------
     # Utility Tools for PLS
