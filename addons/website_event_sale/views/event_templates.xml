@@ -23,7 +23,8 @@
         <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda t: not t.is_expired)"/>
         <t t-if="len(event.event_ticket_ids) &gt; 1"> <!-- If some tickets expired and there is only one type left, we keep the same layout -->
             <div class="d-flex align-items-center py-2 pl-3 pr-2 border-bottom">
-                <span t-if="not tickets_available" class="text-danger">
+                <h6 class="text-uppercase text-left py-2 mb-0">Tickets</h6>
+                <span t-if="not tickets_available" class="text-danger ml-auto">
                     <i class="fa fa-ban mr-2"/>Sold Out
                 </span>
                 <div t-if="event.is_participating" class="ml-auto pr-3">
@@ -31,7 +32,6 @@
                         <i class="fa fa-check mr-2"/>Registered
                     </span>
                 </div>
-                <h6 class="text-uppercase text-left py-2 mb-0">Tickets</h6>
             </div>
             <div id="o_wevent_tickets_collapse" class="bg-light pt-3 collapse show">
                 <div t-foreach="tickets" t-as="ticket" class="row pb-3 mx-0">
