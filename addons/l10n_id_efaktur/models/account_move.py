@@ -80,7 +80,7 @@ class AccountMove(models.Model):
             elif record.l10n_id_tax_number[2] not in ('0', '1'):
                 raise UserError(_('The third digit of a tax number must be 0 or 1'))
 
-    def post(self):
+    def _post(self, soft=True):
         """Set E-Faktur number after validation."""
         for move in self:
             if move.l10n_id_need_kode_transaksi:
@@ -96,7 +96,7 @@ class AccountMove(models.Model):
                     if not efaktur:
                         raise ValidationError(_('There is no Efaktur number available.  Please configure the range you get from the government in the e-Faktur menu. '))
                     move.l10n_id_tax_number = '%s0%013d' % (str(move.l10n_id_kode_transaksi), efaktur)
-        return super(AccountMove, self).post()
+        return super()._post(soft)
 
     def reset_efaktur(self):
         """Reset E-Faktur, so it can be use for other invoice."""

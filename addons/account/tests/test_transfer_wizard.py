@@ -122,7 +122,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
                 }),
             ]
         })
-        cls.move_1.post()
+        cls.move_1.action_post()
 
         cls.move_2 = cls.env['account.move'].create({
             'journal_id': cls.journal.id,
@@ -186,7 +186,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
                 }),
             ]
         })
-        cls.move_2.post()
+        cls.move_2.action_post()
 
 
     def test_transfer_wizard_reconcile(self):

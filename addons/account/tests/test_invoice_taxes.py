@@ -101,7 +101,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             (121, self.percent_tax_1_incl),
             (100, self.percent_tax_2),
         ])
-        invoice.post()
+        invoice.action_post()
         self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [
             {'name': self.percent_tax_1.name,       'tax_base_amount': 100, 'price_unit': 21, 'tax_ids': []},
             {'name': self.percent_tax_1_incl.name,  'tax_base_amount': 100, 'price_unit': 21, 'tax_ids': []},
@@ -126,7 +126,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             (121, self.percent_tax_1_incl + self.percent_tax_2),
             (100, self.percent_tax_2),
         ])
-        invoice.post()
+        invoice.action_post()
         self.assertRecordValues(invoice.line_ids.filtered('tax_line_id').sorted(lambda x: x.price_unit), [
             {'name': self.percent_tax_1_incl.name,      'tax_base_amount': 100, 'price_unit': 21,      'tax_ids': [self.percent_tax_2.id]},
             {'name': self.percent_tax_2.name,           'tax_base_amount': 221, 'price_unit': 26.52,   'tax_ids': []},
@@ -150,7 +150,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             (121, self.group_tax),
             (100, self.percent_tax_2),
         ])
-        invoice.post()
+        invoice.action_post()
         self.assertRecordValues(invoice.line_ids.filtered('tax_line_id').sorted(lambda x: x.price_unit), [
             {'name': self.percent_tax_1_incl.name,      'tax_base_amount': 100, 'price_unit': 21,      'tax_ids': [self.percent_tax_2.id]},
             {'name': self.percent_tax_2.name,           'tax_base_amount': 221, 'price_unit': 26.52,   'tax_ids': []},
@@ -224,7 +224,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
         # Test invoice repartition
         invoice = self._create_invoice([(100, tax)], inv_type='out_invoice')
-        invoice.post()
+        invoice.action_post()
 
         self.assertEqual(len(invoice.line_ids), 4, "There should be 4 account move lines created for the invoice: payable, base and 2 tax lines")
         inv_base_line = invoice.line_ids.filtered(lambda x: not x.tax_repartition_line_id and x.account_id.user_type_id.type != 'receivable')
@@ -240,7 +240,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
         # Test refund repartition
         refund = self._create_invoice([(100, tax)], inv_type='out_refund')
-        refund.post()
+        refund.action_post()
 
         self.assertEqual(len(refund.line_ids), 4, "There should be 4 account move lines created for the refund: payable, base and 2 tax lines")
         ref_base_line = refund.line_ids.filtered(lambda x: not x.tax_repartition_line_id and x.account_id.user_type_id.type != 'receivable')

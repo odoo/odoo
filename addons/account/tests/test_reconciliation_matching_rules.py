@@ -126,7 +126,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             invoice_line_form.price_unit = amount
             invoice_line_form.tax_ids.clear()
         invoice = invoice_form.save()
-        invoice.post()
+        invoice.action_post()
         lines = invoice.line_ids
         return lines.filtered(lambda l: l.account_id.user_type_id.type in ('receivable', 'payable'))
 
@@ -420,7 +420,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'credit': 10,
         })
 
-        move.post()
+        move.action_post()
         move_reversed = move._reverse_moves()
 
         self.assertTrue(move_reversed.exists())
@@ -619,7 +619,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        move.post()
+        move.action_post()
 
         move_line_1 = move.line_ids.filtered(lambda line: line.debit == 100.0)
         move_line_2 = move.line_ids.filtered(lambda line: line.debit == 14.0)

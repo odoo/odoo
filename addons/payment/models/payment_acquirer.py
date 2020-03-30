@@ -674,7 +674,7 @@ class PaymentTransaction(models.Model):
         self.payment_id = payment
 
         if self.invoice_ids:
-            self.invoice_ids.filtered(lambda move: move.state == 'draft').post()
+            self.invoice_ids.filtered(lambda move: move.state == 'draft')._post()
 
             (payment.line_ids + self.invoice_ids.line_ids)\
                 .filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled)\
@@ -814,7 +814,7 @@ class PaymentTransaction(models.Model):
     def _reconcile_after_transaction_done(self):
         # Validate invoices automatically upon the transaction is posted.
         invoices = self.mapped('invoice_ids').filtered(lambda inv: inv.state == 'draft')
-        invoices.post()
+        invoices._post()
 
         # Create & Post the payments.
         for trans in self:

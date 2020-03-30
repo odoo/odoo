@@ -88,7 +88,7 @@ class AccountPayment(models.Model):
                 }
             }
         else:
-            self.filtered(lambda r: r.state == 'draft').post()
+            self.filtered(lambda r: r.state == 'draft').action_post()
             return self.do_print_checks()
 
     def action_unmark_sent(self):

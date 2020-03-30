@@ -9,7 +9,7 @@ class AccountMove(models.Model):
 
     edi_document_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'account.move'), ('edi_format_id', '!=', False)])
 
-    def post(self):
+    def _post(self, soft=True):
         # OVERRIDE
         # Generate the electronic documents for the move.
         existing_attachments = self.env['ir.attachment'].search([
@@ -17,11 +17,11 @@ class AccountMove(models.Model):
             ('res_id', 'in', self.ids),
             ('edi_format_id', 'in', self.journal_id.edi_format_ids.ids)])
         existing_attachments.unlink()
-        res = super(AccountMove, self).post()
-        for move in self:
+        posted = super()._post(soft)
+        for move in posted:
             move.journal_id.edi_format_ids._create_ir_attachments(move)
 
-        return res
+        return posted
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):

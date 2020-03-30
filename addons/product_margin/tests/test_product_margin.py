@@ -40,7 +40,7 @@ class TestProductMargin(AccountTestInvoicingCommon):
                 'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 550.0})],
             },
         ])
-        invoices.post()
+        invoices.action_post()
 
         result = ipad._compute_product_margin_fields_values()
 

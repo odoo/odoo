@@ -42,7 +42,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         f.partner_id = po.partner_id
         f.purchase_id = po
         invoice = f.save()
-        invoice.post()
+        invoice.action_post()
         po.flush()
 
         res_product1 = self.env['purchase.report'].search([

@@ -173,7 +173,7 @@ class StockLandedCost(models.Model):
             move_vals['stock_valuation_layer_ids'] = [(6, None, valuation_layer_ids)]
             move = move.create(move_vals)
             cost.write({'state': 'done', 'account_move_id': move.id})
-            move.post()
+            move._post()
 
             if cost.vendor_bill_id and cost.vendor_bill_id.state == 'posted' and cost.company_id.anglo_saxon_accounting:
                 all_amls = cost.vendor_bill_id.line_ids | cost.account_move_id.line_ids

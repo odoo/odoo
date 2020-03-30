@@ -51,7 +51,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'currency_id': cls.currency_data['currency'].id,
             'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 1000.0})],
         })
-        cls.out_invoice_1.post()
+        cls.out_invoice_1.action_post()
         cls.out_invoice_2 = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'date': '2017-01-01',
@@ -60,7 +60,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'currency_id': cls.currency_data['currency'].id,
             'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 2000.0})],
         })
-        (cls.out_invoice_1 + cls.out_invoice_2).post()
+        (cls.out_invoice_1 + cls.out_invoice_2).action_post()
 
         # Vendor bills, in_invoice_1 + in_invoice_2 are sharing the same batch but not in_invoice_3.
         cls.in_invoice_1 = cls.env['account.move'].create({
@@ -85,7 +85,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'currency_id': cls.currency_data['currency'].id,
             'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 3000.0})],
         })
-        (cls.in_invoice_1 + cls.in_invoice_2 + cls.in_invoice_3).post()
+        (cls.in_invoice_1 + cls.in_invoice_2 + cls.in_invoice_3).action_post()
 
     def test_register_payment_single_batch_grouped_keep_open_lower_amount(self):
         ''' Pay 800.0 with 'open' as payment difference handling on two customer invoices (1000 + 2000). '''

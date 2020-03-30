@@ -76,11 +76,11 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         # I confirm the invoice
 
         self.invoice = self.sale_prepaid.invoice_ids
-        self.invoice.post()
+        self.invoice.action_post()
 
         # I pay the invoice.
         self.invoice = self.sale_prepaid.invoice_ids
-        self.invoice.post()
+        self.invoice.action_post()
         self.journal = self.AccountJournal.search([('type', '=', 'cash'), ('company_id', '=', self.sale_prepaid.company_id.id)], limit=1)
 
         register_payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.invoice.ids).create({

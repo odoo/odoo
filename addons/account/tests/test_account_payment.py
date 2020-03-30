@@ -476,7 +476,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         })
 
         payment.action_post()
-        invoice.post()
+        invoice.action_post()
 
         (counterpart_lines + invoice.line_ids.filtered(lambda line: line.account_internal_type == 'receivable'))\
             .reconcile()

@@ -216,7 +216,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(self.so.invoice_status, 'invoiced', 'Sale Stock: so invoice_status should be "invoiced" instead of "%s" after invoicing' % self.so.invoice_status)
         self.assertEqual(len(self.inv_1), 1, 'Sale Stock: only one invoice instead of "%s" should be created' % len(self.inv_1))
         self.assertEqual(self.inv_1.amount_untaxed, self.inv_1.amount_untaxed, 'Sale Stock: amount in SO and invoice should be the same')
-        self.inv_1.post()
+        self.inv_1.action_post()
 
         # Create return picking
         stock_return_picking_form = Form(self.env['stock.return.picking']
@@ -805,7 +805,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
         # create invoice for 3 quantity and post it
         inv_1 = so._create_invoices()
-        inv_1.post()
+        inv_1.action_post()
         self.assertEqual(inv_1.state, 'posted', 'invoice should be in posted state')
 
         pick_2 = so.picking_ids.filtered('backorder_id')

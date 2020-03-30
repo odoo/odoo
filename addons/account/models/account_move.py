@@ -2,11 +2,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
-from odoo.tools import float_is_zero, float_repr, float_compare, date_utils, email_split, email_escape_char, email_re
+from odoo.tools import float_compare, date_utils, email_split, email_re
 from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
-from itertools import groupby
 from itertools import zip_longest
 from hashlib import sha256
 from json import dumps
@@ -14,6 +13,7 @@ from json import dumps
 import ast
 import json
 import re
+import warnings
 
 #forbidden fields
 INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
@@ -228,7 +228,7 @@ class AccountMove(models.Model):
         help="The journal entry from which this tax cash basis journal entry has been created.")
 
     # ==== Auto-post feature fields ====
-    auto_post = fields.Boolean(string='Post Automatically', default=False,
+    auto_post = fields.Boolean(string='Post Automatically', default=False, copy=False,
         help='If this checkbox is ticked, this entry will be automatically posted at its date.')
 
     # ==== Reverse feature fields ====
@@ -2226,7 +2226,7 @@ class AccountMove(models.Model):
 
         # Reconcile moves together to cancel the previous one.
         if cancel:
-            reverse_moves.with_context(move_reverse_cancel=cancel).post()
+            reverse_moves.with_context(move_reverse_cancel=cancel)._post(soft=False)
             for move, reverse_move in zip(self, reverse_moves):
                 accounts = move.mapped('line_ids.account_id') \
                     .filtered(lambda account: account.reconcile or account.internal_type == 'liquidity')
@@ -2288,10 +2288,40 @@ class AccountMove(models.Model):
         return move
 
     def post(self):
+        warnings.warn(
+            "RedirectWarning method 'post()' is a deprecated alias to 'action_post()' or _post()",
+            DeprecationWarning
+        )
+        return self.action_post()
+
+    def _post(self, soft=True):
+        """Post/Validate the documents.
+
+        Posting the documents will give it a number, and check that the document is
+        complete (some fields might not be required if not posted but are required
+        otherwise).
+        If the journal is locked with a hash table, it will be impossible to change
+        some fields afterwards.
+
+        :param soft (bool): if True, future documents are not immediately posted,
+            but are set to be auto posted automatically at the set accounting date.
+            Nothing will be performed on those documents before the accounting date.
+        :return Model<account.move>: the documents that have been posted
+        """
+        if soft:
+            future_moves = self.filtered(lambda move: move.date > fields.Date.today())
+            future_moves.auto_post = True
+            for move in future_moves:
+                msg = _('This move will be posted at the accounting date: %(date)s', date=format_date(self.env, move.date))
+                move.message_post(body=msg)
+            to_post = self - future_moves
+        else:
+            to_post = self
+
         # `user_has_group` won't be bypassed by `sudo()` since it doesn't change the user anymore.
         if not self.env.su and not self.env.user.has_group('account.group_account_invoice'):
             raise AccessError(_("You don't have the access rights to post an invoice."))
-        for move in self:
+        for move in to_post:
             if not move.line_ids.filtered(lambda line: not line.display_type):
                 raise UserError(_('You need to add a line before posting.'))
             if move.auto_post and move.date > fields.Date.today():
@@ -2323,16 +2353,13 @@ class AccountMove(models.Model):
                 move.with_context(check_move_validity=False)._onchange_currency()
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
-        self.mapped('line_ids').create_analytic_lines()
-        self.write({
+        to_post.mapped('line_ids').create_analytic_lines()
+        to_post.write({
             'state': 'posted',
             'posted_before': True,
         })
 
-        for move in self:
-            if move.auto_post and move.date > fields.Date.today():
-                raise UserError(_("This move is configured to be auto-posted on %s", move.date.strftime(get_lang(self.env).date_format)))
-
+        for move in to_post:
             move.message_subscribe([p.id for p in [move.partner_id] if p not in move.sudo().message_partner_ids])
 
             # Compute 'ref' for 'out_invoice'.
@@ -2345,7 +2372,7 @@ class AccountMove(models.Model):
                     to_write['line_ids'].append((1, line.id, {'name': to_write['payment_reference']}))
                 move.write(to_write)
 
-        for move in self:
+        for move in to_post:
             if move.is_sale_document() \
                     and move.journal_id.sale_activity_type_id \
                     and (move.journal_id.sale_activity_user_id or move.invoice_user_id).id not in (self.env.ref('base.user_root').id, False):
@@ -2356,21 +2383,21 @@ class AccountMove(models.Model):
                     user_id=move.journal_id.sale_activity_user_id.id or move.invoice_user_id.id,
                 )
 
-        for move in self:
+        for move in to_post:
             if move.is_sale_document():
                 move.partner_id._increase_rank('customer_rank')
             elif move.is_purchase_document():
                 move.partner_id._increase_rank('supplier_rank')
 
         # Trigger action for paid invoices in amount is zero
-        self.filtered(
+        to_post.filtered(
             lambda m: m.is_invoice(include_receipts=True) and m.currency_id.is_zero(m.amount_total)
         ).action_invoice_paid()
 
         # Force balance check since nothing prevents another module to create an incorrect entry.
         # This is performed at the very end to avoid flushing fields before the whole processing.
-        self._check_balanced()
-        return True
+        to_post._check_balanced()
+        return to_post
 
     def _auto_compute_invoice_reference(self):
         ''' Hook to be overridden to set custom conditions for auto-computed invoice references.
@@ -2389,7 +2416,7 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
-        return self.post()
+        return self._post(soft=False)
 
     def js_assign_outstanding_line(self, line_id):
         ''' Called by the 'payment' widget to reconcile a suggested journal item to the present
@@ -2629,7 +2656,7 @@ class AccountMove(models.Model):
             ('date', '<=', fields.Date.today()),
             ('auto_post', '=', True),
         ])
-        records.post()
+        records._post()
 
     # offer the possibility to duplicate thanks to a button instead of a hidden menu, which is more visible
     def action_duplicate(self):
@@ -4374,7 +4401,7 @@ class AccountMoveLine(models.Model):
                     involved_partials += exchange_diff_partials
                     results['partials'] += exchange_diff_partials
 
-                    exchange_move.post()
+                    exchange_move._post(soft=False)
 
             # ==== Create the full reconcile ====
 
@@ -4477,7 +4504,7 @@ class AccountMoveLine(models.Model):
 
         #post all the writeoff moves at once
         if writeoff_moves:
-            writeoff_moves.post()
+            writeoff_moves._post()
 
         # Return the writeoff move.line which is to be reconciled
         return line_to_reconcile

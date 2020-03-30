@@ -52,7 +52,7 @@ class ISRTest(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id})],
         })
-        invoice_chf.post()
+        invoice_chf.action_post()
         self.assertTrue(self.print_isr(invoice_chf))
 
         invoice_eur = self.env['account.move'].create({
@@ -63,5 +63,5 @@ class ISRTest(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id})],
         })
-        invoice_eur.post()
+        invoice_eur.action_post()
         self.assertFalse(self.print_isr(invoice_eur))

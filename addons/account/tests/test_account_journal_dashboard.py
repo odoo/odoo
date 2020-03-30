@@ -49,7 +49,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         self.assertIn('0.00', dashboard_data['sum_waiting'])
 
         # Check Both
-        invoice.post()
+        invoice.action_post()
 
         dashboard_data = journal.get_journal_dashboard_datas()
         self.assertEqual(dashboard_data['number_draft'], 1)
@@ -59,7 +59,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         self.assertIn('81.72', dashboard_data['sum_waiting'])
 
         # Check waiting payment
-        refund.post()
+        refund.action_post()
 
         dashboard_data = journal.get_journal_dashboard_datas()
         self.assertEqual(dashboard_data['number_draft'], 0)

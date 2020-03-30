@@ -73,11 +73,11 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             with move_form.invoice_line_ids.edit(i) as line_form:
                 line_form.tax_ids.clear()
         self.vendor_bill1 = move_form.save()
-        self.vendor_bill1.post()
+        self.vendor_bill1.action_post()
 
         # create the customer invoice
         self.customer_invoice1 = self.sale_order1._create_invoices()
-        self.customer_invoice1.post()
+        self.customer_invoice1.action_post()
 
         all_amls = self.vendor_bill1.line_ids + self.customer_invoice1.line_ids
         if self.sale_order1.picking_ids.move_lines.account_move_ids:

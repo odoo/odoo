@@ -109,7 +109,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         move_form.partner_id = self.partner_a
         move_form.purchase_id = self.po
         self.invoice = move_form.save()
-        self.invoice.post()
+        self.invoice.action_post()
 
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [5.0, 5.0], 'Purchase: all products should be invoiced"')
 
@@ -145,7 +145,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         with move_form.invoice_line_ids.edit(1) as line_form:
             line_form.quantity = 2.0
         self.invoice = move_form.save()
-        self.invoice.post()
+        self.invoice.action_post()
 
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [3.0, 3.0], 'Purchase: Billed quantity should be 3.0')
 

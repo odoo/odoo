@@ -686,7 +686,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 2.0
         self.invoice = move_form.save()
-        self.invoice.post()
+        self.invoice.action_post()
         aml = self.invoice.line_ids
         aml_expense = aml.filtered(lambda l: l.is_anglo_saxon_line and l.debit > 0)
         aml_output = aml.filtered(lambda l: l.is_anglo_saxon_line and l.credit > 0)

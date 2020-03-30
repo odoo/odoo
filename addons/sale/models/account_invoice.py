@@ -74,18 +74,18 @@ class AccountMove(models.Model):
             })
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
 
-    def post(self):
+    def _post(self, soft=True):
         # OVERRIDE
         # Auto-reconcile the invoice with payments coming from transactions.
         # It's useful when you have a "paid" sale order (using a payment transaction) and you invoice it later.
-        res = super(AccountMove, self).post()
+        posted = super()._post(soft)
 
-        for invoice in self.filtered(lambda move: move.is_invoice()):
+        for invoice in posted.filtered(lambda move: move.is_invoice()):
             payments = invoice.mapped('transaction_ids.payment_id')
             move_lines = payments.line_ids.filtered(lambda line: line.account_internal_type in ('receivable', 'payable') and not line.reconciled)
             for line in move_lines:
                 invoice.js_assign_outstanding_line(line.id)
-        return res
+        return posted
 
     def action_invoice_paid(self):
         # OVERRIDE

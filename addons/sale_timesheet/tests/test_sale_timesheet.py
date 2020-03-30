@@ -145,7 +145,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertFalse(timesheet4.timesheet_invoice_id, "The timesheet4 should not be linked to the invoice, since we are in ordered quantity")
 
         # validate the first invoice
-        invoice1.post()
+        invoice1.action_post()
 
         self.assertEqual(so_line_ordered_global_project.product_uom_qty, invoice_line_1.quantity, "The invoice (ordered) quantity should not change when modifying timesheet")
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice, since we are in ordered quantity")
@@ -289,7 +289,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertFalse(timesheet4.timesheet_invoice_id, "The timesheet4 should not still be linked to the invoice")
 
         # validate the second invoice
-        invoice2.post()
+        invoice2.action_post()
 
         self.assertEqual(timesheet1.timesheet_invoice_id, invoice1, "The timesheet1 should not be linked to the invoice 1, even after validation")
         self.assertEqual(timesheet2.timesheet_invoice_id, invoice2, "The timesheet2 should not be linked to the invoice 1, even after validation")
@@ -372,7 +372,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet2 should not be linked to the invoice, since timesheets are used for time tracking in milestone")
 
         # validate the invoice
-        invoice1.post()
+        invoice1.action_post()
 
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice, even after invoice validation")
         self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet2 should not be linked to the invoice, even after invoice validation")
@@ -488,7 +488,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(so_line_deliver_global_project.qty_invoiced, timesheet1.unit_amount)
 
         # validate invoice
-        invoice.post()
+        invoice.action_post()
 
         wizard.write({
             'date_invoice_timesheet': today - timedelta(days=4)
