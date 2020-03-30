@@ -26,7 +26,7 @@ class Http(models.AbstractModel):
         version_info = odoo.service.common.exp_version()
 
         user_context = request.session.get_context() if request.session.uid else {}
-
+        IrConfigSudo = self.env['ir.config_parameter'].sudo()
         session_info = {
             "uid": request.session.uid,
             "is_system": user._is_system() if request.session.uid else False,
@@ -40,7 +40,8 @@ class Http(models.AbstractModel):
             "partner_display_name": user.partner_id.display_name,
             "company_id": user.company_id.id if request.session.uid else None,  # YTI TODO: Remove this from the user context
             "partner_id": user.partner_id.id if request.session.uid and user.partner_id else None,
-            "web.base.url": self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
+            "web.base.url": IrConfigSudo.get_param('web.base.url', default=''),
+            "active_ids_limit": int(IrConfigSudo.get_param('web.active_ids_limit', default='20000')),
         }
         if self.env.user.has_group('base.group_user'):
             # the following is only useful in the context of a webclient bootstrapping

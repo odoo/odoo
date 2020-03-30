@@ -1251,8 +1251,76 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('selection box is properly displayed (single page)', async function (assert) {
+        assert.expect(11);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box');
+
+        // select a record
+        await testUtils.dom.click(list.$('.o_data_row:first .o_list_record_selector input'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        assert.containsNone(list.$('.o_list_selection_box'), '.o_list_select_domain');
+        assert.strictEqual(list.$('.o_list_selection_box').text().trim(), '1 selected');
+
+        // select all records of first page
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        assert.containsNone(list.$('.o_list_selection_box'), '.o_list_select_domain');
+        assert.strictEqual(list.$('.o_list_selection_box').text().trim(), '4 selected');
+
+        // unselect a record
+        await testUtils.dom.click(list.$('.o_data_row:nth(1) .o_list_record_selector input'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        assert.containsNone(list.$('.o_list_selection_box'), '.o_list_select_domain');
+        assert.strictEqual(list.$('.o_list_selection_box').text().trim(), '3 selected');
+
+        list.destroy();
+    });
+
+    QUnit.test('selection box is properly displayed (multi pages)', async function (assert) {
+        assert.expect(10);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="3"><field name="foo"/><field name="bar"/></tree>',
+        });
+
+        assert.containsN(list, '.o_data_row', 3);
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box');
+
+        // select a record
+        await testUtils.dom.click(list.$('.o_data_row:first .o_list_record_selector input'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        assert.containsNone(list.$('.o_list_selection_box'), '.o_list_select_domain');
+        assert.strictEqual(list.$('.o_list_selection_box').text().trim(), '1 selected');
+
+        // select all records of first page
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        assert.containsOnce(list.$('.o_list_selection_box'), '.o_list_select_domain');
+        assert.strictEqual(list.$('.o_list_selection_box').text().replace(/\s+/g, ' ').trim(),
+            '3 selected Select all 4');
+
+        // select all domain
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        assert.strictEqual(list.$('.o_list_selection_box').text().trim(), 'All 4 selected');
+
+        list.destroy();
+    });
+
     QUnit.test('selection is reset on reload', async function (assert) {
-        assert.expect(5);
+        assert.expect(8);
 
         var list = await createView({
             View: ListView,
@@ -1264,6 +1332,7 @@ QUnit.module('Views', {
                 '</tree>',
         });
 
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box');
         assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32',
             "total should be 32 (no record selected)");
 
@@ -1271,6 +1340,7 @@ QUnit.module('Views', {
         var $firstRowSelector = list.$('tbody .o_list_record_selector input').first();
         testUtils.dom.click($firstRowSelector);
         assert.ok($firstRowSelector.is(':checked'), "first row should be selected");
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
         assert.strictEqual(list.$('tfoot td:nth(2)').text(), '10',
             "total should be 10 (first record selected)");
 
@@ -1279,6 +1349,7 @@ QUnit.module('Views', {
         $firstRowSelector = list.$('tbody .o_list_record_selector input').first();
         assert.notOk($firstRowSelector.is(':checked'),
             "first row should no longer be selected");
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box');
         assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32',
             "total should be 32 (no more record selected)");
 
@@ -1286,7 +1357,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('selection is kept on render without reload', async function (assert) {
-        assert.expect(6);
+        assert.expect(10);
 
         var list = await createView({
             View: ListView,
@@ -1301,17 +1372,20 @@ QUnit.module('Views', {
         });
 
         assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box');
 
         // open blip grouping and check all lines
         await testUtils.dom.click(list.$('.o_group_header:contains("blip (2)")'));
         await testUtils.dom.click(list.$('.o_data_row:first input'));
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
 
         // open yop grouping and verify blip are still checked
         await testUtils.dom.click(list.$('.o_group_header:contains("yop (1)")'));
         assert.containsOnce(list, '.o_data_row input:checked',
             "opening a grouping does not uncheck others");
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
 
         // close and open blip grouping and verify blip are unchecked
         await testUtils.dom.click(list.$('.o_group_header:contains("blip (2)")'));
@@ -1319,6 +1393,7 @@ QUnit.module('Views', {
         assert.containsNone(list, '.o_data_row input:checked',
             "opening and closing a grouping uncheck its elements");
         assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box');
 
         list.destroy();
     });
@@ -2506,6 +2581,107 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('delete all records matching the domain', async function (assert) {
+        assert.expect(6);
+
+        this.data.foo.records.push({id: 5, bar: true, foo: "xxx"});
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            domain: [['bar', '=', true]],
+            mockRPC: function (route, args) {
+                if (args.method === 'unlink') {
+                    assert.deepEqual(args.args[0], [1, 2, 3, 5]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            services: {
+                notification: NotificationService.extend({
+                    notify: function () {
+                        throw new Error('should not display a notification');
+                    },
+                }),
+            },
+            viewOptions: {
+                hasActionMenus: true,
+            },
+        });
+
+        assert.containsNone(list, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsN(list, 'tbody td.o_list_record_selector', 2, "should have 2 records");
+
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+
+        assert.containsOnce(list, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsOnce(list, '.o_list_selection_box .o_list_select_domain');
+
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, "Delete");
+
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        await testUtils.dom.click($('.modal-footer .btn-primary'));
+
+        list.destroy();
+    });
+
+    QUnit.test('delete all records matching the domain (limit reached)', async function (assert) {
+        assert.expect(8);
+
+        this.data.foo.records.push({id: 5, bar: true, foo: "xxx"});
+        this.data.foo.records.push({id: 6, bar: true, foo: "yyy"});
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            domain: [['bar', '=', true]],
+            mockRPC: function (route, args) {
+                if (args.method === 'unlink') {
+                    assert.deepEqual(args.args[0], [1, 2, 3, 5]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            services: {
+                notification: NotificationService.extend({
+                    notify: function () {
+                        assert.step('notify');
+                    },
+                }),
+            },
+            session: {
+                active_ids_limit: 4,
+            },
+            viewOptions: {
+                hasActionMenus: true,
+            },
+        });
+
+
+        assert.containsNone(list, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsN(list, 'tbody td.o_list_record_selector', 2, "should have 2 records");
+
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+
+        assert.containsOnce(list, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsOnce(list, '.o_list_selection_box .o_list_select_domain');
+
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, "Delete");
+
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        await testUtils.dom.click($('.modal-footer .btn-primary'));
+
+        assert.verifySteps(['notify']);
+
+        list.destroy();
+    });
+
     QUnit.test('archiving one record', async function (assert) {
         assert.expect(12);
 
@@ -2549,6 +2725,113 @@ QUnit.module('Views', {
         await testUtils.dom.click($('.modal-footer .btn-primary'));
         assert.containsN(list, 'tbody td.o_list_record_selector', 3, "should have 3 records");
         assert.verifySteps(['/web/dataset/call_kw/foo/action_archive', '/web/dataset/search_read']);
+        list.destroy();
+    });
+
+    QUnit.test('archive all records matching the domain', async function (assert) {
+        assert.expect(6);
+
+        // add active field on foo model and make all records active
+        this.data.foo.fields.active = {string: 'Active', type: 'boolean', default: true};
+        this.data.foo.records.push({id: 5, bar: true, foo: "xxx"});
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            domain: [['bar', '=', true]],
+            mockRPC: function (route, args) {
+                if (args.method === 'action_archive') {
+                    assert.deepEqual(args.args[0], [1, 2, 3, 5]);
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+            services: {
+                notification: NotificationService.extend({
+                    notify: function () {
+                        throw new Error('should not display a notification');
+                    },
+                }),
+            },
+            viewOptions: {
+                hasActionMenus: true,
+            },
+        });
+
+        assert.containsNone(list, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsN(list, 'tbody td.o_list_record_selector', 2, "should have 2 records");
+
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+
+        assert.containsOnce(list, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsOnce(list, '.o_list_selection_box .o_list_select_domain');
+
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, "Archive");
+
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        await testUtils.dom.click($('.modal-footer .btn-primary'));
+
+        list.destroy();
+    });
+
+    QUnit.test('archive all records matching the domain (limit reached)', async function (assert) {
+        assert.expect(8);
+
+        // add active field on foo model and make all records active
+        this.data.foo.fields.active = {string: 'Active', type: 'boolean', default: true};
+        this.data.foo.records.push({id: 5, bar: true, foo: "xxx"});
+        this.data.foo.records.push({id: 6, bar: true, foo: "yyy"});
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            domain: [['bar', '=', true]],
+            mockRPC: function (route, args) {
+                if (args.method === 'action_archive') {
+                    assert.deepEqual(args.args[0], [1, 2, 3, 5]);
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+            services: {
+                notification: NotificationService.extend({
+                    notify: function () {
+                        assert.step('notify');
+                    },
+                }),
+            },
+            session: {
+                active_ids_limit: 4,
+            },
+            viewOptions: {
+                hasActionMenus: true,
+            },
+        });
+
+
+        assert.containsNone(list, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsN(list, 'tbody td.o_list_record_selector', 2, "should have 2 records");
+
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+
+        assert.containsOnce(list, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsOnce(list, '.o_list_selection_box .o_list_select_domain');
+
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, "Archive");
+
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        await testUtils.dom.click($('.modal-footer .btn-primary'));
+
+        assert.verifySteps(['notify']);
+
         list.destroy();
     });
 
@@ -2865,7 +3148,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('list without import button', async function (assert) {
+    QUnit.test('list with group_by_no_leaf flag in context', async function (assert) {
         assert.expect(1);
 
         var list = await createView({
@@ -2878,7 +3161,7 @@ QUnit.module('Views', {
             }
         });
 
-        assert.ok(!list.$buttons, "should not have any buttons");
+        assert.containsNone(list, '.o_list_buttons', "should not have any buttons");
         list.destroy();
     });
 
@@ -4260,7 +4543,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('execute ActionMenus actions with correct params', async function (assert) {
+    QUnit.test('execute ActionMenus actions with correct params (single page)', async function (assert) {
         assert.expect(12);
 
         const list = await createView({
@@ -4320,9 +4603,78 @@ QUnit.module('Views', {
         await cpHelpers.toggleMenuItem(list, "Custom Action");
 
         assert.verifySteps([
-            '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","select_all":true,"active_domain":[]}}',
-            '{"action_id":44,"context":{"active_id":2,"active_ids":[2,3,4],"active_model":"foo","select_all":false,"active_domain":[]}}',
-            '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2],"active_model":"foo","select_all":false,"active_domain":[["bar","=",true]]}}',
+            '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}',
+            '{"action_id":44,"context":{"active_id":2,"active_ids":[2,3,4],"active_model":"foo","active_domain":[]}}',
+            '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2],"active_model":"foo","active_domain":[["bar","=",true]]}}',
+        ]);
+
+        list.destroy();
+    });
+
+    QUnit.test('execute ActionMenus actions with correct params (multi pages)', async function (assert) {
+        assert.expect(13);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            toolbar: {
+                action: [{
+                    id: 44,
+                    name: 'Custom Action',
+                    type: 'ir.actions.server',
+                }],
+                print: [],
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/action/load') {
+                    assert.step(JSON.stringify(args));
+                    return Promise.resolve({});
+                }
+                return this._super(...arguments);
+            },
+            viewOptions: {
+                hasActionMenus: true,
+            },
+        });
+
+        assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsN(list, '.o_data_row', 2);
+
+        // select all records
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        assert.containsN(list, '.o_list_record_selector input:checked', 3);
+        assert.containsOnce(list, '.o_list_selection_box .o_list_select_domain');
+        assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
+
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, "Custom Action");
+
+        // select all domain
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+        assert.containsN(list, '.o_list_record_selector input:checked', 3);
+
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, "Custom Action");
+
+        // add a domain
+        await list.reload({ domain: [['bar', '=', true]] });
+        assert.containsNone(list, '.o_list_selection_box .o_list_select_domain');
+
+        // select all domain
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+        assert.containsN(list, '.o_list_record_selector input:checked', 3);
+        assert.containsNone(list, '.o_list_selection_box .o_list_select_domain');
+
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, "Custom Action");
+
+        assert.verifySteps([
+            '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2],"active_model":"foo","active_domain":[]}}',
+            '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}',
+            '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2,3],"active_model":"foo","active_domain":[["bar","=",true]]}}',
         ]);
 
         list.destroy();
@@ -5985,6 +6337,33 @@ QUnit.module('Views', {
             "the first row should be updated");
         assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "2blip666",
             "the second row should be updated");
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: multi edition when the domain is selected', async function (assert) {
+        assert.expect(1);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree multi_edit="1" limit="2">
+                    <field name="id"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        // select all records, and then select all domain
+        await testUtils.dom.click(list.$('th.o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+
+        // edit a field
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
+
+        assert.ok($('.modal-body').text().includes('This update will only consider the records of the current page.'));
+
         list.destroy();
     });
 
@@ -8456,6 +8835,55 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
         assert.ok(list.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+
+        list.destroy();
+    });
+
+    QUnit.test('selection is kept when optional fields are toggled', async function (assert) {
+        assert.expect(7);
+
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="m2o" optional="hide"/>' +
+                '</tree>',
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.containsN(list, 'th', 2);
+
+        // select a record
+        await testUtils.dom.click(list.$('.o_data_row .o_list_record_selector input:first'));
+
+        assert.containsOnce(list, '.o_list_record_selector input:checked');
+
+        // add an optional field
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
+        assert.containsN(list, 'th', 3);
+
+        assert.containsOnce(list, '.o_list_record_selector input:checked');
+
+        // select all records
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+
+        assert.containsN(list, '.o_list_record_selector input:checked', 5);
+
+        // remove an optional field
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
+        assert.containsN(list, 'th', 2);
+
+        assert.containsN(list, '.o_list_record_selector input:checked', 5);
 
         list.destroy();
     });

@@ -157,7 +157,7 @@ QUnit.module('Views', {
             assert.strictEqual(xpadGroup.count, 1, 'xpad group has one record');
 
             // archive the column 'xphone'
-            var recordIDs = _.pluck(xphoneGroup.data, 'id');
+            var recordIDs = xphoneGroup.data.map(record => record.res_id);
             await model.actionArchive(recordIDs, xphoneGroup.id);
             state = model.get(resultID);
             xphoneGroup = _.findWhere(state.data, {res_id: 37});
