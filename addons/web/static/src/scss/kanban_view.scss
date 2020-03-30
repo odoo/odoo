@@ -418,13 +418,13 @@
         flex: 0 0 auto;
         padding: 0 $o-kanban-group-padding $o-kanban-group-padding $o-kanban-group-padding;
 
-        .o_kanban_header {
+        .o_kanban_header_sticky {
             position: fixed;
             width: $o-kanban-small-record-width;
             z-index: 2;
             background-color: desaturate($gray-100, 100%);
         }
-        .o_kanban_header > .o_kanban_header_title {
+        .o_kanban_header .o_kanban_header_sticky > .o_kanban_header_title {
             @include o-kanban-header-title;
 
             .o_column_title {

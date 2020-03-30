@@ -150,7 +150,7 @@ var KanbanColumn = Widget.extend({
         if (this.barOptions) {
             this.$el.addClass('o_kanban_has_progressbar');
             this.progressBar = new KanbanColumnProgressBar(this, this.barOptions, this.data);
-            defs.push(this.progressBar.appendTo(this.$header));
+            defs.push(this.progressBar.appendTo(this.$header.find('.o_kanban_header_sticky')));
         }
 
         var title = this.folded ? this.title + ' (' + this.data.count + ')' : this.title;
@@ -180,8 +180,7 @@ var KanbanColumn = Widget.extend({
         if (this.quickCreateWidget) {
             this.quickCreateWidget.on_attach_callback();
         }
-        // headers are sticky so we need to add margin-top to first record as header height
-        this.$('.o_kanban_record:first').css({ 'margin-top': this.$header.height() });
+        this.$header.css({ height: this.$header.find('.o_kanban_header_sticky').height() });
     },
 
     //--------------------------------------------------------------------------
@@ -214,10 +213,7 @@ var KanbanColumn = Widget.extend({
             formViewRef: this.quickCreateView,
             model: this.modelName,
         });
-        return this.quickCreateWidget.insertAfter(this.$header).then(() => {
-            this.quickCreateWidget.$el.css({ 'margin-top': this.$header.height() });
-            this.$('.o_kanban_record:first').css({ 'margin-top': 0 });
-        });
+        return this.quickCreateWidget.insertAfter(this.$header);
     },
     /**
      * Closes the quick create widget if it isn't dirty.
@@ -270,7 +266,6 @@ var KanbanColumn = Widget.extend({
     _cancelQuickCreate: function () {
         this.quickCreateWidget.destroy();
         this.quickCreateWidget = undefined;
-        this.$('.o_kanban_record:first').css({ 'margin-top': this.$header.height() });
     },
     /**
      * @returns {integer[]} the res_ids of the records in the column
