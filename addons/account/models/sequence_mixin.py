@@ -71,6 +71,9 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         return "00000000"
 
+    def _get_highest_query(self):
+        return "SELECT {field} FROM {table} {where_string} ORDER BY {field} DESC LIMIT 1 FOR UPDATE"
+
     def _get_last_sequence(self, relaxed=False):
         """Retrieve the previous sequence.
 
@@ -98,7 +101,9 @@ class SequenceMixin(models.AbstractModel):
         if self.id or self.id.origin:
             where_string += " AND id != %(id)s "
             param['id'] = self.id or self.id.origin
-        query = "SELECT {field} FROM {table} {where_string} ORDER BY {field} DESC LIMIT 1 FOR UPDATE".format(table=self._table, where_string=where_string, field=self._sequence_field)
+
+        query = self._get_highest_query().format(table=self._table, where_string=where_string, field=self._sequence_field)
+
         self.flush([self._sequence_field])
         self.env.cr.execute(query, param)
         return (self.env.cr.fetchone() or [None])[0]
