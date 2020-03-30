@@ -466,7 +466,6 @@ class ResPartner(models.Model):
         action = self.env.ref('account.action_move_out_invoice_type').read()[0]
         action['domain'] = [
             ('type', 'in', ('out_invoice', 'out_refund')),
-            ('state', '=', 'posted'),
             ('partner_id', 'child_of', self.id),
         ]
         action['context'] = {'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
