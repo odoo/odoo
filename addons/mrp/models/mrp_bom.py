@@ -127,6 +127,13 @@ class MrpBom(models.Model):
                 raise UserError(_('The quantity to produce must be positive!'))
         return res
 
+    def write(self, values):
+        res = super().write(values)
+        for bom in self:
+            if float_compare(bom.product_qty, 0, precision_rounding=bom.product_uom_id.rounding) <= 0:
+                raise UserError(_('The quantity to produce must be positive!'))
+        return res
+
     @api.model
     def name_create(self, name):
         # prevent to use string as product_tmpl_id
