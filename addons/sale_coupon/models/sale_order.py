@@ -27,7 +27,10 @@ class SaleOrder(models.Model):
         lines = self.env['sale.order.line']
         # Do not count already applied promo_code discount; Do not substract itself
         if self.code_promo_program_id and self.code_promo_program_id.reward_type == 'discount':
-            lines = self.order_line.filtered(lambda l: l.product_id == self.code_promo_program_id.discount_line_product_id)
+            lines |= self.order_line.filtered(lambda l: l.product_id == self.code_promo_program_id.discount_line_product_id)
+        for applied_coupon in self.applied_coupon_ids:
+            if applied_coupon.program_id.reward_type == 'discount':
+                lines |= self.order_line.filtered(lambda l: l.product_id == applied_coupon.program_id.reward_id.discount_line_product_id)
         return lines
 
     def recompute_coupon_lines(self):

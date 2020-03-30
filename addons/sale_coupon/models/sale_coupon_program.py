@@ -191,18 +191,21 @@ class SaleCouponProgram(models.Model):
 
     @api.model
     def _filter_on_mimimum_amount(self, order):
-        untaxed_amount = order.amount_untaxed
-        tax_amount = order.amount_tax
+        reward_lines = order._get_no_effect_on_threshold_lines()
+        filtered_programs = self.env['sale.coupon.program']
+        for program in self:
+            lines = reward_lines.filtered(lambda line: line.product_id == program.discount_line_product_id or line.product_id == program.reward_id.discount_line_product_id)
+            untaxed_amount = sum([line.price_subtotal for line in lines])
+            tax_amount = sum([line.price_tax for line in lines])
+            program_amount = program._compute_program_amount('rule_minimum_amount', order.currency_id)
+            if program.rule_minimum_amount_tax_inclusion == 'tax_included':
+                orig_amount = order.amount_untaxed - untaxed_amount + order.amount_tax - tax_amount
+            elif program.rule_minimum_amount_tax_inclusion == 'tax_excluded':
+                orig_amount = order.amount_untaxed - untaxed_amount
+            if program_amount <= orig_amount:
+                filtered_programs |= program
 
-        # Some lines should not be considered when checking if threshold is met like delivery
-        untaxed_amount -= sum([line.price_subtotal for line in order._get_no_effect_on_threshold_lines()])
-        tax_amount -= sum([line.price_tax for line in order._get_no_effect_on_threshold_lines()])
-
-        return self.filtered(lambda program:
-            program.rule_minimum_amount_tax_inclusion == 'tax_included' and
-            program._compute_program_amount('rule_minimum_amount', order.currency_id) <= untaxed_amount + tax_amount or
-            program.rule_minimum_amount_tax_inclusion == 'tax_excluded' and
-            program._compute_program_amount('rule_minimum_amount', order.currency_id) <= untaxed_amount)
+        return filtered_programs
 
     @api.model
     def _filter_on_validity_dates(self, order):
