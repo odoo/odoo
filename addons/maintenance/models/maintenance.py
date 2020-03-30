@@ -64,8 +64,6 @@ class MaintenanceEquipmentCategory(models.Model):
     @api.model
     def create(self, vals):
         self = self.with_context(alias_model_name='maintenance.request', alias_parent_model_name=self._name)
-        if not vals.get('alias_name'):
-            vals['alias_name'] = vals.get('name')
         category_id = super(MaintenanceEquipmentCategory, self).create(vals)
         category_id.alias_id.write({'alias_parent_thread_id': category_id.id, 'alias_defaults': {'category_id': category_id.id}})
         return category_id
