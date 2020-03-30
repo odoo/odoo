@@ -239,6 +239,25 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         });
     },
     /**
+     * Archive the current selection
+     *
+     * @private
+     * @param {number[]} ids
+     * @param {boolean} archive
+     * @returns {Promise}
+     */
+    _archive: async function (ids, archive) {
+        if (ids.length === 0) {
+            return Promise.resolve();
+        }
+        if (archive) {
+            await this.model.actionArchive(ids, this.handle);
+        } else {
+            await this.model.actionUnarchive(ids, this.handle);
+        }
+        return this.update({}, {reload: false});
+    },
+    /**
      * When the user clicks on a 'action button', this function determines what
      * should happen.
      *
@@ -327,9 +346,10 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 .then(self._onDeletedRecords.bind(self, ids));
         }
         if (this.confirmOnDelete) {
-            Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), {
-                confirm_callback: doIt,
-            });
+            const message = ids.length > 1 ?
+                            _t("Are you sure you want to delete these records?") :
+                            _t("Are you sure you want to delete this record?");
+            Dialog.confirm(this, message, { confirm_callback: doIt });
         } else {
             doIt();
         }

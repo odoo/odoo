@@ -22,6 +22,8 @@ const ListConfirmDialog = Dialog.extend({
      * @param {Widget} parent
      * @param {Object} record edited record with updated value
      * @param {Object} changes changes registered by the list controller
+     * @param {Object} changes isDomainSelected true iff the user selected the
+     *   whole domain
      * @param {string} changes.fieldLabel label of the changed field
      * @param {string} changes.fieldName technical name of the changed field
      * @param {number} changes.nbRecords number of records (total)
