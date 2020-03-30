@@ -1,10 +1,12 @@
 odoo.define('web.search_bar_tests', function (require) {
     "use strict";
 
+    const { Model } = require('web.model');
+    const SearchBar = require('web.SearchBar');
     const testUtils = require('web.test_utils');
 
     const cpHelpers = testUtils.controlPanel;
-    const { createActionManager } = testUtils;
+    const { createActionManager, createComponent } = testUtils;
 
     QUnit.module('Components', {
         beforeEach: function () {
@@ -165,6 +167,55 @@ odoo.define('web.search_bar_tests', function (require) {
                 'The format of the datetime in the facet should be in locale');
 
             actionManager.destroy();
+        });
+
+        QUnit.test("autocomplete menu clickout interactions", async function (assert) {
+            assert.expect(9);
+
+            const fields = this.data.partner.fields;
+            class MockedControlPanelModel extends Model {
+                getFacets() {
+                    return [];
+                }
+                getFiltersOfType() {
+                    return Object.keys(fields).map((fname, index) => Object.assign({
+                        description: fields[fname].string,
+                        fieldName: fname,
+                        fieldType: fields[fname].type,
+                        id: index,
+                    }, fields[fname]));
+                }
+            }
+            const searchBar = await createComponent(SearchBar, {
+                data: this.data,
+                env: { controlPanelModel: new MockedControlPanelModel() },
+                props: { fields },
+            });
+            const input = searchBar.el.querySelector('.o_searchview_input');
+
+            assert.containsNone(searchBar, '.o_searchview_autocomplete');
+
+            await testUtils.controlPanel.editSearch(searchBar, "Hello there");
+
+            assert.strictEqual(input.value, "Hello there", "input value should be updated");
+            assert.containsOnce(searchBar, '.o_searchview_autocomplete');
+
+            await testUtils.dom.triggerEvent(input, 'keydown', { key: 'Escape' });
+
+            assert.strictEqual(input.value, "", "input value should be empty");
+            assert.containsNone(searchBar, '.o_searchview_autocomplete');
+
+            await testUtils.controlPanel.editSearch(searchBar, "General Kenobi");
+
+            assert.strictEqual(input.value, "General Kenobi", "input value should be updated");
+            assert.containsOnce(searchBar, '.o_searchview_autocomplete');
+
+            await testUtils.dom.click(document.body);
+
+            assert.strictEqual(input.value, "", "input value should be empty");
+            assert.containsNone(searchBar, '.o_searchview_autocomplete');
+
+            searchBar.destroy();
         });
 
         QUnit.test('select an autocomplete field', async function (assert) {
@@ -414,13 +465,13 @@ odoo.define('web.search_bar_tests', function (require) {
 
         QUnit.test('open search view autocomplete on paste value using mouse', async function (assert) {
             assert.expect(1);
-    
+
             const actionManager = await createActionManager({
                 actions: this.actions,
                 archs: this.archs,
                 data: this.data,
             });
-    
+
             await actionManager.doAction(1);
             // Simulate paste text through the mouse.
             const searchInput = actionManager.el.querySelector('.o_searchview_input');
@@ -430,7 +481,7 @@ odoo.define('web.search_bar_tests', function (require) {
             await testUtils.nextTick();
             assert.containsOnce(actionManager, '.o_searchview_autocomplete',
                 "should display autocomplete dropdown menu on paste in search view");
-    
+
             actionManager.destroy();
         });
     });

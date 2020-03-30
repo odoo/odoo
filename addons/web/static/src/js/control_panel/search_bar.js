@@ -81,6 +81,8 @@ odoo.define('web.SearchBar', function (require) {
         _closeAutoComplete() {
             this.state.sources = [];
             this.state.focusedItem = 0;
+            this.state.inputValue = "";
+            this.inputRef.el.value = "";
             this.focusOnUpdate();
         }
 
@@ -268,8 +270,6 @@ odoo.define('web.SearchBar', function (require) {
                     operator: source.filterOperator || source.operator,
                 });
             }
-            this.state.inputValue = "";
-            this.inputRef.el.value = "";
             this._closeAutoComplete();
         }
 
