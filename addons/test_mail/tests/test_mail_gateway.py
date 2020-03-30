@@ -77,6 +77,44 @@ class TestMailAlias(TestMailCommon):
         alias = self.env['mail.alias'].with_context(alias_model_name='mail.test').create({'alias_name': 'b4r+_#_R3wl$$'})
         self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
 
+    def test_alias_name_unique(self):
+        alias_model_id = self.env['ir.model']._get('mail.test.gateway').id
+        catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
+        bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
+
+        # test you cannot create aliases matching bounce / catchall
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            self.env['mail.alias'].create({'alias_model_id': alias_model_id, 'alias_name': catchall_alias})
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            self.env['mail.alias'].create({'alias_model_id': alias_model_id, 'alias_name': bounce_alias})
+
+        new_mail_alias = self.env['mail.alias'].create({
+            'alias_model_id': alias_model_id,
+            'alias_name': 'unused.test.alias'
+        })
+
+        # test that re-using catchall and bounce alias raises UserError
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            new_mail_alias.write({
+                'alias_name': catchall_alias
+            })
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            new_mail_alias.write({
+                'alias_name': bounce_alias
+            })
+
+        new_mail_alias.write({'alias_name': 'another.unused.test.alias'})
+
+        # test that duplicating an alias should have blank name
+        copy_new_mail_alias = new_mail_alias.copy()
+        self.assertFalse(copy_new_mail_alias.alias_name)
+
+        # cannot set catchall / bounce to used alias
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            self.env['ir.config_parameter'].sudo().set_param('mail.catchall.alias', new_mail_alias.alias_name)
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', new_mail_alias.alias_name)
+
 
 @tagged('mail_gateway')
 class TestMailgateway(TestMailCommon):
