@@ -8,7 +8,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
     def test_course_certification_failure_flow(self):
         # Step 1: create a simple certification
         # --------------------------------------------------
-        with self.with_user(self.survey_user):
+        with self.with_user('survey_user'):
             certification = self.env['survey.survey'].create({
                 'title': 'Small course certification',
                 'access_mode': 'public',

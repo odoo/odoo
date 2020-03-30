@@ -1,14 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import random
-
-from collections import Counter
-from itertools import product
-from werkzeug import urls
-
 from odoo import _
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.survey.tests import common
 from odoo.tests.common import users
 
