@@ -71,7 +71,8 @@ class PurchaseRequisition(models.Model):
 
     @api.depends('state')
     def _set_state(self):
-        self.state_blanket_order = self.state
+        for requisition in self:
+            requisition.state_blanket_order = requisition.state
 
     @api.onchange('vendor_id')
     def _onchange_vendor(self):
