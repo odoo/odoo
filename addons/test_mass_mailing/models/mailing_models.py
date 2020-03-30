@@ -15,6 +15,15 @@ class MailingSimple(models.Model):
     email_from = fields.Char()
 
 
+class MailingUTM(models.Model):
+    """ Model inheriting from mail.thread and utm.mixin for checking utm of mailing is caught and set on reply """
+    _description = 'Mailing: UTM enabled to test UTM sync with mailing'
+    _name = 'mailing.test.utm'
+    _inherit = ['mail.thread', 'utm.mixin']
+
+    name = fields.Char()
+
+
 class MailingBLacklist(models.Model):
     """ Model using blacklist mechanism for mass mailing features. """
     _description = 'Mailing Blacklist Enabled'
