@@ -358,7 +358,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         move_form.partner_id = order.partner_id
         move_form.purchase_id = order
         move = move_form.save()
-        move.post()
+        move.action_post()
 
         # Check nothing was posted in the price difference account
         price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id), ('move_id', '=', move.id)])

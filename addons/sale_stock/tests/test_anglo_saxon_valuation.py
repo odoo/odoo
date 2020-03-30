@@ -12,9 +12,9 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        
+
         cls.env.user.company_id.anglo_saxon_accounting = True
-        
+
         cls.product = cls.env['product.product'].create({
             'name': 'product',
             'type': 'product',
@@ -101,7 +101,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -145,7 +145,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         with invoice_form.invoice_line_ids.edit(0) as invoice_line:
             invoice_line.quantity = 1
         invoice_form.save()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -175,7 +175,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # invoice 1
         invoice2 = sale_order._create_invoices()
-        invoice2.post()
+        invoice2.action_post()
         amls = invoice2.line_ids
         self.assertEqual(len(amls), 4)
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
@@ -220,7 +220,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -284,7 +284,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         with invoice_form.invoice_line_ids.edit(0) as invoice_line:
             invoice_line.quantity = 1
         invoice_form.save()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -314,7 +314,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # invoice 1
         invoice2 = sale_order._create_invoices()
-        invoice2.post()
+        invoice2.action_post()
         amls = invoice2.line_ids
         self.assertEqual(len(amls), 4)
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
@@ -359,7 +359,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -394,7 +394,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -432,7 +432,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -468,7 +468,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -526,7 +526,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -561,7 +561,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -595,7 +595,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -639,7 +639,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         with invoice_form.invoice_line_ids.edit(0) as invoice_line:
             invoice_line.quantity = 2
         invoice_form.save()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -673,7 +673,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -735,7 +735,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         with invoice_form.invoice_line_ids.edit(0) as invoice_line:
             invoice_line.quantity = 2
         invoice_form.save()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -770,7 +770,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -846,7 +846,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Check the resulting accounting entries
         amls = invoice.line_ids
@@ -915,7 +915,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         sale_order.picking_ids.move_lines.quantity_done = 1
         sale_order.picking_ids.button_validate()
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # sale 6@20, deliver, invoice
         sale_order = self.env['sale.order'].create({
@@ -934,7 +934,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         sale_order.picking_ids.move_lines.quantity_done = 6
         sale_order.picking_ids.button_validate()
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # check the last anglo saxon invoice line
         amls = invoice.line_ids
@@ -983,7 +983,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
-        invoice.post()
+        invoice.action_post()
 
         # Make the second receipt
         in_move_2 = self.env['stock.move'].create({

@@ -10,7 +10,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        
+
         cls.stock_account_product_categ.property_account_creditor_price_difference_categ = cls.company_data['default_account_stock_price_diff']
 
     @classmethod
@@ -65,7 +65,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         self._process_pickings(purchase_order.picking_ids, date=date_po_and_delivery)
 
         invoice = self._create_invoice_for_po(purchase_order, '2018-02-02')
-        invoice.post()
+        invoice.action_post()
         picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
         self.check_reconciliation(invoice, picking)
         # cancel the invoice
@@ -85,7 +85,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         invoice = move_form.save()
 
         # Validate the invoice and refund the goods
-        invoice.post()
+        invoice.action_post()
         self._process_pickings(purchase_order.picking_ids, date='2017-12-24')
         picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
         self.check_reconciliation(invoice, picking)
@@ -130,7 +130,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 3.0
         invoice = move_form.save()
-        invoice.post()
+        invoice.action_post()
         self.check_reconciliation(invoice, picking, full_reconcile=False)
 
         invoice2 = self._create_invoice_for_po(purchase_order, '2017-02-15')
@@ -138,7 +138,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 2.0
         invoice2 = move_form.save()
-        invoice2.post()
+        invoice2.action_post()
         self.check_reconciliation(invoice2, picking, full_reconcile=False)
 
         # We don't need to make the date of processing explicit since the very last rate

@@ -33,7 +33,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
                 (0, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': False,           'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
             ],
         })
-        cls.payment_2016_curr_1.post()
+        cls.payment_2016_curr_1.action_post()
 
         cls.payment_2016_curr_2 = cls.env['account.move'].create({
             'date': '2016-01-01',
@@ -42,7 +42,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
                 (0, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 1550.0,  'currency_id': cls.curr_2.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
             ],
         })
-        cls.payment_2016_curr_2.post()
+        cls.payment_2016_curr_2.action_post()
 
         cls.payment_2017_curr_2 = cls.env['account.move'].create({
             'date': '2017-01-01',
@@ -51,7 +51,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
                 (0, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 950.0,  'currency_id': cls.curr_2.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
             ],
         })
-        cls.payment_2017_curr_2.post()
+        cls.payment_2017_curr_2.action_post()
 
         cls.payment_2016_curr_3 = cls.env['account.move'].create({
             'date': '2016-01-01',
@@ -60,7 +60,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
                 (0, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 3050.0,  'currency_id': cls.curr_3.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
             ],
         })
-        cls.payment_2016_curr_3.post()
+        cls.payment_2016_curr_3.action_post()
 
         cls.payment_2017_curr_3 = cls.env['account.move'].create({
             'date': '2017-01-01',
@@ -69,7 +69,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
                 (0, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 1950.0,  'currency_id': cls.curr_3.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
             ],
         })
-        cls.payment_2017_curr_3.post()
+        cls.payment_2017_curr_3.action_post()
 
     # -------------------------------------------------------------------------
     # HELPERS
@@ -123,7 +123,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'currency_id': self.curr_1.id,
             'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': 2500.0})],
         })
-        out_invoice.post()
+        out_invoice.action_post()
 
         # Vendor bill of 2500.0 in curr_1.
         in_invoice = self.env['account.move'].create({
@@ -134,7 +134,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'currency_id': self.curr_1.id,
             'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': 2500.0})],
         })
-        in_invoice.post()
+        in_invoice.action_post()
 
         expected_amounts = {
             self.payment_2016_curr_1.id: 500.0,
@@ -159,7 +159,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'currency_id': self.curr_2.id,
             'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': 7500.0})],
         })
-        out_invoice.post()
+        out_invoice.action_post()
 
         # Vendor bill of 2500.0 in curr_1.
         in_invoice = self.env['account.move'].create({
@@ -170,7 +170,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'currency_id': self.curr_2.id,
             'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': 7500.0})],
         })
-        in_invoice.post()
+        in_invoice.action_post()
 
         expected_amounts = {
             self.payment_2016_curr_1.id: 1500.0,

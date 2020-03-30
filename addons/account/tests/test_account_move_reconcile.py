@@ -240,7 +240,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 (0, 0, {'debit': 0.0,       'credit': 500.0,    'account_id': account_id}),
             ]
         })
-        move.post()
+        move.action_post()
 
         line_1 = move.line_ids.filtered(lambda line: line.debit == 1000.0)
         line_2 = move.line_ids.filtered(lambda line: line.debit == 200.0)
@@ -344,7 +344,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             }
         ])
 
-        moves.post()
+        moves.action_post()
 
         line_1 = moves.line_ids.filtered(lambda line: line.debit == 1200.0)
         line_2 = moves.line_ids.filtered(lambda line: line.debit == 120.0)
@@ -478,7 +478,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             }
         ])
 
-        moves.post()
+        moves.action_post()
 
         line_1 = moves.line_ids.filtered(lambda line: line.debit == 1200.0)
         line_2 = moves.line_ids.filtered(lambda line: line.debit == 780.0)
@@ -751,7 +751,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (cash_basis_move + payment_move).post()
+        (cash_basis_move + payment_move).action_post()
         
         # Initial amounts by accounts:
         
@@ -968,7 +968,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (cash_basis_move + payment_move).post()
+        (cash_basis_move + payment_move).action_post()
 
         # Initial amounts by accounts:
 
@@ -1186,7 +1186,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (cash_basis_move + payment_move + end_move).post()
+        (cash_basis_move + payment_move + end_move).action_post()
 
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
@@ -1301,7 +1301,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (cash_basis_move + payment_move).post()
+        (cash_basis_move + payment_move).action_post()
 
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
@@ -1399,7 +1399,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (invoice_move + payment_move).post()
+        (invoice_move + payment_move).action_post()
 
         receivable_lines = (invoice_move + payment_move).line_ids\
             .filtered(lambda line: line.account_id == self.extra_receivable_account_1)
@@ -1507,7 +1507,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (invoice_move + refund_move).post()
+        (invoice_move + refund_move).action_post()
 
         receivable_lines = (invoice_move + refund_move).line_ids\
             .filtered(lambda line: line.account_id == self.extra_receivable_account_1)
@@ -1605,7 +1605,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        (invoice_move + payment_move).post()
+        (invoice_move + payment_move).action_post()
 
         receivable_lines = (invoice_move + payment_move).line_ids\
             .filtered(lambda line: line.account_id == self.extra_receivable_account_1)

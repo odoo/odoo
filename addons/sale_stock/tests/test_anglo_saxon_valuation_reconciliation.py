@@ -78,7 +78,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         self._process_pickings(sale_order.picking_ids)
 
         invoice = self._create_invoice_for_so(sale_order, test_product, '2018-02-12')
-        invoice.post()
+        invoice.action_post()
         picking = self.env['stock.picking'].search([('sale_id', '=', sale_order.id)])
         self.check_reconciliation(invoice, picking, operation='sale')
 
@@ -94,7 +94,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         sale_order = self._create_sale(test_product, '2018-01-01')
 
         invoice = self._create_invoice_for_so(sale_order, test_product, '2018-02-03')
-        invoice.post()
+        invoice.action_post()
 
         self._process_pickings(sale_order.picking_ids)
 
@@ -133,11 +133,11 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         picking = self.env['stock.picking'].search([('sale_id', '=', sale_order.id)], order="id asc", limit=1)
 
         invoice = self._create_invoice_for_so(sale_order, test_product, '2018-02-03', quantity=3)
-        invoice.post()
+        invoice.action_post()
         self.check_reconciliation(invoice, picking, full_reconcile=False, operation='sale')
 
         invoice2 = self._create_invoice_for_so(sale_order, test_product, '2018-03-12', quantity=2)
-        invoice2.post()
+        invoice2.action_post()
         self.check_reconciliation(invoice2, picking, full_reconcile=False, operation='sale')
 
         self._process_pickings(sale_order.picking_ids.filtered(lambda x: x.state != 'done'), quantity=3.0)

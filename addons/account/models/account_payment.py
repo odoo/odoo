@@ -717,7 +717,7 @@ class AccountPayment(models.Model):
 
     def action_post(self):
         ''' draft -> posted '''
-        self.move_id.post()
+        self.move_id._post(soft=False)
 
     def action_cancel(self):
         ''' draft -> cancelled '''

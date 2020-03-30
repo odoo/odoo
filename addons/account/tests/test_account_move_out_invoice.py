@@ -1578,7 +1578,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
 
     def test_out_invoice_create_refund(self):
-        self.invoice.post()
+        self.invoice.action_post()
 
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2019-02-01'),
@@ -1682,7 +1682,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form.currency_id = self.currency_data['currency']
         move_form.save()
 
-        self.invoice.post()
+        self.invoice.action_post()
 
         # The currency rate changed from 1/3 to 1/2.
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
@@ -1963,7 +1963,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 ],
             })
 
-            move.post()
+            move.action_post()
 
             self.assertInvoiceValues(move, [
                 {
@@ -2064,7 +2064,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # - As the date changed, the currency rate has changed (1/3 => 1/2).
         move.company_id.tax_lock_date = fields.Date.from_string('2016-12-31')
 
-        move.post()
+        move.action_post()
 
         self.assertInvoiceValues(move, [
             {
@@ -2328,7 +2328,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 }),
             ]
         })
-        move.post()
+        move.action_post()
 
         wizard = self.env['account.accrual.accounting.wizard']\
             .with_context(active_model='account.move.line', active_ids=move.invoice_line_ids.ids).create({

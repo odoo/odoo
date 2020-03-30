@@ -532,7 +532,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
 
         invoice = self.env['account.move'].with_context(default_move_type=type).create(invoice_vals)
         if auto_validate:
-            invoice.post()
+            invoice.action_post()
         return invoice
 
     def create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None):

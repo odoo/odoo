@@ -15,25 +15,25 @@ class InvoiceGetReferenceTest(AccountTestInvoicingCommon):
     def test_get_reference_finnish_invoice(self):
         self.assertFalse(self.invoice.payment_reference)
         self.invoice.journal_id.invoice_reference_model = 'fi'
-        self.invoice.post()
+        self.invoice.action_post()
         self.assertTrue(self.invoice.payment_reference)
 
     def test_get_reference_finnish_partner(self):
         self.assertFalse(self.invoice.payment_reference)
         self.invoice.journal_id.invoice_reference_type = 'partner'
         self.invoice.journal_id.invoice_reference_model = 'fi'
-        self.invoice.post()
+        self.invoice.action_post()
         self.assertTrue(self.invoice.payment_reference)
 
     def test_get_reference_finnish_rf_invoice(self):
         self.assertFalse(self.invoice.payment_reference)
         self.invoice.journal_id.invoice_reference_model = 'fi_rf'
-        self.invoice.post()
+        self.invoice.action_post()
         self.assertTrue(self.invoice.payment_reference)
 
     def test_get_reference_finnish_rf_partner(self):
         self.assertFalse(self.invoice.payment_reference)
         self.invoice.journal_id.invoice_reference_type = 'partner'
         self.invoice.journal_id.invoice_reference_model = 'fi_rf'
-        self.invoice.post()
+        self.invoice.action_post()
         self.assertTrue(self.invoice.payment_reference)

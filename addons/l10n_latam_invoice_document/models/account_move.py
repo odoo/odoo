@@ -118,11 +118,11 @@ class AccountMove(models.Model):
         remaining.l10n_latam_amount_untaxed = False
         remaining.l10n_latam_tax_ids = [(5, 0)]
 
-    def post(self):
+    def _post(self, soft=True):
         for rec in self.filtered(lambda x: x.l10n_latam_use_documents and (not x.name or x.name == '/')):
             if rec.move_type in ('in_receipt', 'out_receipt'):
                 raise UserError(_('We do not accept the usage of document types on receipts yet. '))
-        return super().post()
+        return super()._post(soft)
 
     @api.constrains('name', 'journal_id', 'state')
     def _check_unique_sequence_number(self):
@@ -236,4 +236,3 @@ class AccountMove(models.Model):
             ]
             if rec.search(domain):
                 raise ValidationError(_('Vendor bill number must be unique per vendor and company.'))
-

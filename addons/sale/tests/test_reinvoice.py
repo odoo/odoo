@@ -68,7 +68,7 @@ class TestReInvoice(TestSaleCommon):
             line_form.quantity = 3.0
             line_form.analytic_account_id = self.analytic_account
         invoice_a = move_form.save()
-        invoice_a.post()
+        invoice_a.action_post()
 
         sale_order_line3 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line1 and sol.product_id == self.company_data['product_order_cost'])
         sale_order_line4 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line2 and sol.product_id == self.company_data['product_delivery_cost'])
@@ -96,7 +96,7 @@ class TestReInvoice(TestSaleCommon):
             line_form.quantity = 2.0
             line_form.analytic_account_id = self.analytic_account
         invoice_b = move_form.save()
-        invoice_b.post()
+        invoice_b.action_post()
 
         sale_order_line5 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line1 and sol != sale_order_line3 and sol.product_id == self.company_data['product_order_cost'])
         sale_order_line6 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line2 and sol != sale_order_line4 and sol.product_id == self.company_data['product_delivery_cost'])
@@ -150,7 +150,7 @@ class TestReInvoice(TestSaleCommon):
             line_form.quantity = 3.0
             line_form.analytic_account_id = self.analytic_account
         invoice_a = move_form.save()
-        invoice_a.post()
+        invoice_a.action_post()
 
         sale_order_line3 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line1 and sol.product_id == self.company_data['product_delivery_sales_price'])
         sale_order_line4 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line2 and sol.product_id == self.company_data['product_order_sales_price'])
@@ -178,7 +178,7 @@ class TestReInvoice(TestSaleCommon):
             line_form.quantity = 2.0
             line_form.analytic_account_id = self.analytic_account
         invoice_b = move_form.save()
-        invoice_b.post()
+        invoice_b.action_post()
 
         sale_order_line5 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line1 and sol != sale_order_line3 and sol.product_id == self.company_data['product_delivery_sales_price'])
         sale_order_line6 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line2 and sol != sale_order_line4 and sol.product_id == self.company_data['product_order_sales_price'])
@@ -214,7 +214,7 @@ class TestReInvoice(TestSaleCommon):
             line_form.quantity = 3.0
             line_form.analytic_account_id = self.analytic_account
         invoice_a = move_form.save()
-        invoice_a.post()
+        invoice_a.action_post()
 
         self.assertEqual(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) when validating vendor bill")
         self.assertTrue(invoice_a.mapped('line_ids.analytic_line_ids'), "Analytic lines should be generated")

@@ -75,7 +75,7 @@ class TestSaleToInvoice(TestSaleCommon):
 
     def test_refund_create(self):
         # Validate invoice
-        self.invoice.post()
+        self.invoice.action_post()
 
         # Check quantity to invoice on SO lines
         for line in self.sale_order.order_line:
@@ -135,7 +135,7 @@ class TestSaleToInvoice(TestSaleCommon):
                     self.assertEqual(len(line.invoice_lines), 2, "The line 'ordered service' is invoiced, so it should be linked to 2 invoice lines (invoice and refund)")
 
         # Validate the refund
-        invoice_refund.post()
+        invoice_refund.action_post()
 
         for line in self.sale_order.order_line:
             if line.product_id.invoice_policy == 'delivery':
@@ -169,7 +169,7 @@ class TestSaleToInvoice(TestSaleCommon):
                 line_form.quantity = 4
 
         # Validate invoice
-        self.invoice.post()
+        self.invoice.action_post()
 
         # Check quantity to invoice on SO lines
         for line in self.sale_order.order_line:
@@ -228,7 +228,7 @@ class TestSaleToInvoice(TestSaleCommon):
                 line_form.quantity = 2
 
         # Validate invoice
-        self.invoice.post()
+        self.invoice.action_post()
 
         # Check quantity to invoice on SO lines
         for line in self.sale_order.order_line:
@@ -295,7 +295,7 @@ class TestSaleToInvoice(TestSaleCommon):
         invoice_refund = move_form.save()
 
         # Validate the refund
-        invoice_refund.post()
+        invoice_refund.action_post()
 
         for line in self.sale_order.order_line:
             if line.product_id.invoice_policy == 'delivery':

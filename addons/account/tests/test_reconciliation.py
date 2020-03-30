@@ -26,7 +26,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
                 (0, 0, {'quantity': 1, 'price_unit': 50.0, 'name': 'test'})
             ],
         })
-        move.post()
+        move.action_post()
 
         # Create a bank statement of 40 EURO.
         bank_stmt = self.env['account.bank.statement'].create({
@@ -94,7 +94,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
                 })
             ]
         })
-        invoice.post()
+        invoice.action_post()
         # We create a bank statement with two lines of 1.00 USD each.
         statement = self.env['account.bank.statement'].create({
             'journal_id': self.bank_journal_usd_id,
@@ -175,7 +175,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
                 'line_ids': [(0,0, debit_line_vals), (0, 0, credit_line_vals)]
             }
             move = self.env['account.move'].create(vals)
-            move.post()
+            move.action_post()
             return move.id
         move_list_vals = [
             ('1', -1.83, 0, self.currency_swiss_id),
@@ -241,7 +241,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
                 'line_ids': [(0,0, debit_line_vals), (0, 0, credit_line_vals)]
             }
         move_ids += self.env['account.move'].create(vals)
-        move_ids.post()
+        move_ids.action_post()
 
         account_move_line = move_ids.mapped('line_ids').filtered(lambda l: l.account_id == self.account_rcv)
         writeoff_vals = [{
@@ -312,7 +312,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
                 (0, 0, {'product_id': self.product.id, 'quantity': 1, 'price_unit': 50.0})
             ],
         })
-        (invoice_a + invoice_b).post()
+        (invoice_a + invoice_b).action_post()
 
         # Preparing Payments
         # One partial for invoice_a (fully assigned to it)
@@ -609,7 +609,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
                 (0, 0, {'quantity': 1, 'price_unit': 100.0, 'name': 'product that cost 100'})
             ],
         })
-        invoice_cust_1.post()
+        invoice_cust_1.action_post()
         aml = invoice_cust_1.invoice_line_ids[0]
         self.assertEqual(aml.credit, 50.0)
         #####
@@ -742,7 +742,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'tax_repartition_line_id': self.tax_cash_basis.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
             'tax_base_amount': 100,
         })
-        purchase_move.post()
+        purchase_move.action_post()
 
         reverse_date = fields.Date.today() + timedelta(days=+7)
         revertWidget = self.env['account.move.reversal'].create({
@@ -780,7 +780,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'credit': 11,
             'move_id': general_move1.id,
         })
-        general_move1.post()
+        general_move1.action_post()
         general_move2 = self.env['account.move'].create({
             'name': 'general2',
             'journal_id': self.general_journal.id,
@@ -797,7 +797,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'debit': 10,
             'move_id': general_move2.id,
         })
-        general_move2.post()
+        general_move2.action_post()
         general_move3 = self.env['account.move'].create({
             'name': 'general3',
             'journal_id': self.general_journal.id,
@@ -814,7 +814,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'debit': 1,
             'move_id': general_move3.id,
         })
-        general_move3.post()
+        general_move3.action_post()
         to_reconcile = ((general_move1 + general_move2 + general_move3)
             .mapped('line_ids')
             .filtered(lambda l: l.account_id.id == account_rcv.id))
@@ -866,7 +866,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             ]
         })
 
-        move_balance.post()
+        move_balance.action_post()
         move_balance_receiv = move_balance.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
 
         (inv1_receivable + inv2_receivable + pay_receivable + move_balance_receiv).reconcile()
@@ -934,7 +934,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             ]
         })
 
-        move_balance.post()
+        move_balance.action_post()
         move_balance_receiv = move_balance.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
 
         (inv1_receivable + inv2_receivable + pay_receivable + move_balance_receiv).reconcile()
@@ -1015,7 +1015,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             ]
         })
 
-        move_balance.post()
+        move_balance.action_post()
         move_balance_receiv = move_balance.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
 
         (inv1_receivable + inv2_receivable + pay_receivable + move_balance_receiv).reconcile()
@@ -1331,7 +1331,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
                 (0, False, {'debit': 0.05, 'account_id': self.diff_expense_account.id, 'name': 'Balance WriteOff'}),
             ]
         })
-        move_balance.post()
+        move_balance.action_post()
         move_balance_receiv = move_balance.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
 
         (inv1_receivable + payment_receivable + move_balance_receiv).reconcile()

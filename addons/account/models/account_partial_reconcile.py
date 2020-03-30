@@ -597,7 +597,7 @@ class AccountPartialReconcile(models.Model):
                 moves_to_create.append(move_vals)
 
         moves = self.env['account.move'].create(moves_to_create)
-        moves.post()
+        moves._post(soft=False)
 
         # Reconcile the tax lines being on a reconcile tax basis transfer account.
         for line, move_index, sequence in to_reconcile_after:

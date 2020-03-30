@@ -761,7 +761,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         # You can't set the journal entry in an unconsistent state.
         with self.assertRaises(UserError), self.cr.savepoint():
-            st_line.move_id.post()
+            st_line.move_id.action_post()
 
     def test_statement_line_move_onchange_1(self):
         ''' Test the consistency between the account.bank.statement.line and the generated account.move.lines
@@ -935,7 +935,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
                 ],
             },
         ])
-        test_invoices.post()
+        test_invoices.action_post()
         statement.button_post()
         counterpart_lines = test_invoices.mapped('line_ids').filtered(lambda line: line.account_internal_type in ('receivable', 'payable'))
 
@@ -1198,7 +1198,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
                 }),
             ]
         })
-        test_move.post()
+        test_move.action_post()
 
         test_line_1 = test_move.line_ids.filtered(lambda line: line.account_id == receivable_acc_1)
         test_line_2 = test_move.line_ids.filtered(lambda line: line.account_id == receivable_acc_2)
@@ -1403,7 +1403,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
                 }),
             ]
         })
-        test_move.post()
+        test_move.action_post()
 
         test_line_1 = test_move.line_ids.filtered(lambda line: line.name == 'test line 1')
         test_line_2 = test_move.line_ids.filtered(lambda line: line.name == 'test line 2')
