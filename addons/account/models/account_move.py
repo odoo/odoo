@@ -2991,7 +2991,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.move_id.is_invoice(include_receipts=True):
                 line._onchange_price_subtotal()
-            else:
+            elif not line.move_id.reversed_entry_id:
                 line._recompute_debit_credit_from_amount_currency()
 
     def _recompute_debit_credit_from_amount_currency(self):
