@@ -9,11 +9,10 @@ async function createSwitchCompanyMenu(params) {
     params = params || {};
     var target = params.debug ? document.body :  $('#qunit-fixture');
     var menu = new SwitchCompanyMenu();
-    testUtils.mock.addMockEnvironment(menu, params);
-    await menu.appendTo(target)
-    return menu
+    await testUtils.mock.addMockEnvironment(menu, params);
+    await menu.appendTo(target);
+    return menu;
 }
-
 
 async function initMockCompanyMenu(assert, params) {
     var menu = await createSwitchCompanyMenu({
@@ -24,9 +23,9 @@ async function initMockCompanyMenu(assert, params) {
                 assert.equal(_.intersection(companyIds, params.asserCompanies[0]).length, params.asserCompanies[0].length, params.asserCompanies[1]);
             },
         }
-    })
+    });
     await testUtils.dom.click(menu.$('.dropdown-toggle'));  // open company switcher dropdown
-    return menu
+    return menu;
 }
 
 async function testSwitchCompany(assert, params) {
@@ -51,7 +50,7 @@ QUnit.module('widgets', {
                 allowed_companies: [[1, "Company 1"], [2, "Company 2"], [3, "Company 3"]],
             },
             user_context: { allowed_company_ids: [1, 3] },
-        },
+        };
         this.session_mock_single = {
             user_companies: {
                 current_company: [1, "Company 1"],
@@ -68,13 +67,13 @@ QUnit.module('widgets', {
         QUnit.test("Company switcher basic rendering", async function (assert) {
             assert.expect(6);
             var menu = await createSwitchCompanyMenu({ session: this.session_mock_multi });
-            assert.equal(menu.$('.company_label:contains(Company 1)').length, 1, "it should display Company 1")
-            assert.equal(menu.$('.company_label:contains(Company 2)').length, 1, "it should display Company 2")
-            assert.equal(menu.$('.company_label:contains(Company 3)').length, 1, "it should display Company 3")
+            assert.equal(menu.$('.company_label:contains(Company 1)').length, 1, "it should display Company 1");
+            assert.equal(menu.$('.company_label:contains(Company 2)').length, 1, "it should display Company 2");
+            assert.equal(menu.$('.company_label:contains(Company 3)').length, 1, "it should display Company 3");
 
-            assert.equal(menu.$('div[data-company-id=1] .fa-check-square').length, 1, "Company 1 should be checked")
-            assert.equal(menu.$('div[data-company-id=2] .fa-square-o').length, 1, "Company 2 should not be checked")
-            assert.equal(menu.$('div[data-company-id=3] .fa-check-square').length, 1, "Company 3 should be checked")
+            assert.equal(menu.$('div[data-company-id=1] .fa-check-square').length, 1, "Company 1 should be checked");
+            assert.equal(menu.$('div[data-company-id=2] .fa-square-o').length, 1, "Company 2 should not be checked");
+            assert.equal(menu.$('div[data-company-id=3] .fa-check-square').length, 1, "Company 3 should be checked");
             menu.destroy();
         });
     });

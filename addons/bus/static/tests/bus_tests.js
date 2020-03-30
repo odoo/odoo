@@ -27,7 +27,7 @@ QUnit.module('Bus', {
         var pollPromise = testUtils.makeTestPromise();
 
         var parent = new Widget();
-        testUtils.mock.addMockEnvironment(parent, {
+        await testUtils.mock.addMockEnvironment(parent, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -101,7 +101,7 @@ QUnit.module('Bus', {
 
         var pollPromise = testUtils.makeTestPromise();
         var parent = new Widget();
-        testUtils.mock.addMockEnvironment(parent, {
+        await testUtils.mock.addMockEnvironment(parent, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -142,7 +142,7 @@ QUnit.module('Bus', {
         var pollPromiseMaster = testUtils.makeTestPromise();
 
         var parentMaster = new Widget();
-        testUtils.mock.addMockEnvironment(parentMaster, {
+        await testUtils.mock.addMockEnvironment(parentMaster, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -173,7 +173,7 @@ QUnit.module('Bus', {
         // slave
         await testUtils.nextTick();
         var parentSlave = new Widget();
-        testUtils.mock.addMockEnvironment(parentSlave, {
+        await testUtils.mock.addMockEnvironment(parentSlave, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -220,7 +220,7 @@ QUnit.module('Bus', {
         var pollPromiseMaster = testUtils.makeTestPromise();
 
         var parentMaster = new Widget();
-        testUtils.mock.addMockEnvironment(parentMaster, {
+        await testUtils.mock.addMockEnvironment(parentMaster, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -252,7 +252,7 @@ QUnit.module('Bus', {
         await testUtils.nextTick();
         var parentSlave = new Widget();
         var pollPromiseSlave = testUtils.makeTestPromise();
-        testUtils.mock.addMockEnvironment(parentSlave, {
+        await testUtils.mock.addMockEnvironment(parentSlave, {
             data: {},
             services: {
                 bus_service: BusService,

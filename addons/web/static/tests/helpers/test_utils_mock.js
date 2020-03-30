@@ -350,7 +350,7 @@ async function setMockedOwlEnv(Component, params, mockServer) {
                 delete session[key];
             }
         }
-        _.extend(session, initialSession);
+        Object.assign(session, initialSession);
         if ('config' in params) {
             for (key in config) {
                 delete config[key];
