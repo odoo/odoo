@@ -6340,6 +6340,33 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: multi edition when the domain is selected', async function (assert) {
+        assert.expect(1);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree multi_edit="1" limit="2">
+                    <field name="id"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        // select all records, and then select all domain
+        await testUtils.dom.click(list.$('th.o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+
+        // edit a field
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
+
+        assert.ok($('.modal-body').text().includes('This update will only consider the records of the current page.'));
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view: many2one with readonly modifier', async function (assert) {
         assert.expect(2);
 

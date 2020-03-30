@@ -464,6 +464,7 @@ var ListController = BasicController.extend({
                 };
                 const record = this.model.get(recordId);
                 const dialogChanges = {
+                    isDomainSelected: this.isDomainSelected,
                     fieldLabel: node.attrs.string || record.fields[fieldName].string,
                     fieldName: node.attrs.name,
                     nbRecords: recordIds.length,

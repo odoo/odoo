@@ -874,6 +874,7 @@
 <t t-name="ListView.confirmModal">
     <main role="alert">
         <p>
+            <t t-if="changes.isDomainSelected">This update will only consider the records of the current page.<br/><br/></t>
             <t t-if="changes.nbRecords != changes.nbValidRecords">
                 Among the <t t-raw="changes.nbRecords"/> selected records,
                 <t t-raw="changes.nbValidRecords"/> are valid for this update.<br/>
