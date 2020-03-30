@@ -70,15 +70,42 @@ class PaymentAcquirerStripeSCA(models.Model):
 
     def _create_stripe_session(self, kwargs):
         self.ensure_one()
-        resp = self._stripe_request("checkout/sessions", kwargs)
-        if resp.get("payment_intent") and kwargs.get("client_reference_id"):
-            tx = (
-                self.env["payment.transaction"]
-                .sudo()
-                .search([("reference", "=", kwargs["client_reference_id"])])
-            )
-            tx.stripe_payment_intent = resp["payment_intent"]
-        return resp["id"]
+        resp = self._stripe_request('checkout/sessions', kwargs)
+        tx = False
+        if kwargs.get('client_reference_id'):
+            tx = self.env['payment.transaction'].sudo().search([('reference', '=', kwargs['client_reference_id'])])
+            if resp.get('payment_intent'):
+                tx.stripe_payment_intent = resp['payment_intent']
+
+        error = resp.get("error")
+        if error:
+            _logger.error("Stripe session creation error %s" % error)
+
+            error_msg = (_("Error while creating Stripe session: %s.") % (error.get("message", "No message")))
+
+            error_code = error.get("code")
+            customer_email = kwargs.get("customer_email")
+            if error_code == "email_invalid" and customer_email:
+                error_msg += "<br>" + (_("Please double check that the user email is formatted correctly : '%s'") % customer_email)
+
+            if tx:
+                targets = {tx.invoice_ids, tx.sale_order_ids}
+
+                error_message_details = ""
+                if error_code:
+                    error_message_details += "<br>" + _("Stripe error code: '%s'") % error_code
+                error_message_details += "<br>" + _("See documentation at: %s") % error.get("doc_url", "https://stripe.com/docs/error-codes")
+
+                self.env.cr.rollback()
+                for target in targets:
+                    for order in target:
+                        order.message_post(
+                            body=error_msg + error_message_details,
+                        )
+                self.env.cr.commit()
+
+            raise ValidationError(error_msg.replace("<br>", " "))
+        return resp['id']
 
     def _create_setup_intent(self, kwargs):
         self.ensure_one()
