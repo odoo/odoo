@@ -55,12 +55,12 @@ class AccountMove(models.Model):
             invoice.l10n_it_einvoice_id = einvoice
             invoice.l10n_it_einvoice_name = einvoice.name
 
-    def post(self):
+    def _post(self, soft=True):
         # OVERRIDE
-        super(AccountMove, self).post()
+        posted = super()._post(soft)
 
         # Retrieve invoices to generate the xml.
-        invoices_to_export = self.filtered(lambda move:
+        invoices_to_export = posted.filtered(lambda move:
                 move.company_id.country_id == self.env.ref('base.it') and
                 move.is_sale_document() and
                 move.l10n_it_send_state not in ['sent', 'delivered', 'delivered_accepted'])
@@ -84,6 +84,7 @@ class AccountMove(models.Model):
 
         for invoice in invoices_to_send:
             invoice.send_pec_mail()
+        return posted
 
     def _check_before_xml_exporting(self):
         seller = self.company_id

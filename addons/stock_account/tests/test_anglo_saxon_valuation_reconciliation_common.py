@@ -116,4 +116,4 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
         pickings.mapped('move_lines').write({'date': date})
         pickings.mapped('move_lines.account_move_ids').write({'name': '/', 'state': 'draft'})
         pickings.mapped('move_lines.account_move_ids').write({'date': date})
-        pickings.move_lines.account_move_ids.post()
+        pickings.move_lines.account_move_ids.action_post()

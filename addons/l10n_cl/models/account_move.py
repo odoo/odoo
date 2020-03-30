@@ -89,9 +89,9 @@ class AccountMove(models.Model):
     def _onchange_journal(self):
         self.l10n_latam_document_type_id = False
 
-    def post(self):
+    def _post(self, soft=True):
         self._check_document_types_post()
-        super().post()
+        super()._post(soft)
 
     def _l10n_cl_get_formatted_sequence(self, number=0):
         return "%s %06d" % (self.l10n_latam_document_type_id.doc_code_prefix, number)

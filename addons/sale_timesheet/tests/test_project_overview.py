@@ -54,7 +54,7 @@ class TestSaleProject(TestReporting):
 
         action_invoice = payment.with_context(context).create_invoices()
         invoice = self.env['account.move'].browse(action_invoice['res_id'])
-        invoice.post()
+        invoice.action_post()
 
         # simulate the auto creation of the SO line for expense, like we confirm a vendor bill.
         so_line_expense = self.env['sale.order.line'].create({

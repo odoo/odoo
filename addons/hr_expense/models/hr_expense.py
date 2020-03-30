@@ -208,7 +208,7 @@ class HrExpense(models.Model):
 
         if any(attachment.res_id or attachment.res_model != 'hr.expense' for attachment in attachments):
             raise UserError(_("Invalid attachments!"))
-        
+
         product = self.env['product.product'].search([('can_be_expensed', '=', True)])
         if product:
             product = product.filtered(lambda p: p.default_code == "EXP_GEN") or product[0]
@@ -532,7 +532,7 @@ class HrExpense(models.Model):
 
         # post the moves
         for move in move_group_by_sheet.values():
-            move.post()
+            move._post()
 
         return move_group_by_sheet
 

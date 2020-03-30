@@ -338,10 +338,10 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         self.assertEqual(valuation_aml.debit, 100)
         self.assertEqual(valuation_aml.credit, 0)
 
-        # Create a vebdor bill for the RFQ
+        # Create a vendor bill for the RFQ
         action = rfq.action_create_invoice()
-        vb = self.env['account.move'].search([('id', '=', action['res_id'])])
-        vb.post()
+        vb = self.env['account.move'].browse(action['res_id'])
+        vb.action_post()
 
         input_aml = self._get_stock_input_move_lines()[-1]
         self.assertEqual(input_aml.debit, 100)
@@ -361,7 +361,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         with lcvb.invoice_line_ids.edit(0) as inv_line:
             inv_line.tax_ids.clear()
         lcvb = lcvb.save()
-        lcvb.post()
+        lcvb.action_post()
 
         input_aml = self._get_stock_input_move_lines()[-1]
         self.assertEqual(input_aml.debit, 50)
@@ -434,7 +434,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
             inv_line.price_unit = 50
             inv_line.is_landed_costs_line = True
         vb = vb.save()
-        vb.post()
+        vb.action_post()
 
         action = vb.button_create_landed_costs()
         lc = Form(self.env[action['res_model']].browse(action['res_id']))
@@ -480,8 +480,8 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
 
         # Create a vebdor bill for the RFQ
         action = rfq.action_create_invoice()
-        vb = self.env['account.move'].search([('id', '=', action['res_id'])])
-        vb.post()
+        vb = self.env['account.move'].browse(action['res_id'])
+        vb.action_post()
 
         expense_aml = self._get_expense_move_lines()[-1]
         self.assertEqual(expense_aml.debit, 100)
@@ -502,7 +502,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         with lcvb.invoice_line_ids.edit(0) as inv_line:
             inv_line.tax_ids.clear()
         lcvb = lcvb.save()
-        lcvb.post()
+        lcvb.action_post()
 
         expense_aml = self._get_expense_move_lines()[-1]
         self.assertEqual(expense_aml.debit, 50)
@@ -529,4 +529,3 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
 
         self.assertEqual(self.product1.quantity_svl, 10)
         self.assertEqual(self.product1.value_svl, 150)
-

@@ -46,7 +46,7 @@ class TestMembership(TestMembershipCommon):
             'membership: new membership should be in waiting state')
 
         # the invoice is open -> customer goes to invoiced status
-        invoice.post()
+        invoice.action_post()
         self.assertEqual(
             self.partner_1.membership_state, 'invoiced',
             'membership: after opening the invoice, customer should be in invoiced status')

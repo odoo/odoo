@@ -145,7 +145,7 @@ class AccountMove(models.Model):
                 action = self.env.ref('account.action_account_journal_form')
                 raise RedirectWarning(msg, action.id, _('Go to Journals'))
 
-    def post(self):
+    def _post(self, soft=True):
         ar_invoices = self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and x.l10n_latam_use_documents)
         for rec in ar_invoices:
             rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
@@ -159,9 +159,9 @@ class AccountMove(models.Model):
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_ar_edi
         ar_invoices._check_argentinian_invoice_taxes()
-        res = super().post()
-        self._set_afip_service_dates()
-        return res
+        posted = super()._post(soft)
+        posted._set_afip_service_dates()
+        return posted
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         if not default_values_list:

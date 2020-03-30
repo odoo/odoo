@@ -157,7 +157,7 @@ class TestAccountEdiFacturx(AccountTestEdiCommon):
     def test_facturx(self):
         ''' Test the generated Facturx Edi attachment without any modification of the invoice. '''
 
-        self.invoice.post()
+        self.invoice.action_post()
 
         xml_content = self.facturx_edi_format._export_invoice_to_attachment(self.invoice)['datas']
         current_etree = self.get_xml_tree_from_string(xml_content)
@@ -171,7 +171,7 @@ class TestAccountEdiFacturx(AccountTestEdiCommon):
             'invoice_line_ids': [(1, self.invoice.invoice_line_ids.id, {'tax_ids': [(6, 0, self.tax_group.ids)]})],
         })
 
-        self.invoice.post()
+        self.invoice.action_post()
 
         xml_content = self.facturx_edi_format._export_invoice_to_attachment(self.invoice)['datas']
         current_etree = self.get_xml_tree_from_string(xml_content)

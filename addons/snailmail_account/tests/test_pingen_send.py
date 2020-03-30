@@ -48,7 +48,7 @@ class TestPingenSend(HttpCase):
             })],
         })
 
-        invoice.post()
+        invoice.action_post()
 
         return invoice
 

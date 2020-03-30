@@ -369,7 +369,7 @@ class PosSession(models.Model):
         data = self._create_stock_output_lines(data)
 
         if account_move.line_ids:
-            account_move.post()
+            account_move._post()
 
         data = self._reconcile_account_move_lines(data)
 

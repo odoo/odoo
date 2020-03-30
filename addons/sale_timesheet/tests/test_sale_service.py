@@ -163,7 +163,7 @@ class TestSaleService(TestCommonSaleTimesheet):
 
         # invoice SO, and validate invoice
         invoice = self.sale_order._create_invoices()[0]
-        invoice.post()
+        invoice.action_post()
 
         # make task non billable
         task_serv2.write({'sale_line_id': False})

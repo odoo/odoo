@@ -25,22 +25,22 @@ class AccountMove(models.Model):
             move_vals['line_ids'] = [vals for vals in move_vals['line_ids'] if not vals[2]['is_anglo_saxon_line']]
         return move_vals
 
-    def post(self):
+    def _post(self, soft=True):
         # OVERRIDE
 
         # Don't change anything on moves used to cancel another ones.
         if self._context.get('move_reverse_cancel'):
-            return super(AccountMove, self).post()
+            return super()._post(soft)
 
         # Create additional COGS lines for customer invoices.
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_out_lines_vals())
 
         # Post entries.
-        res = super(AccountMove, self).post()
+        posted = super()._post(soft)
 
         # Reconcile COGS lines in case of anglo-saxon accounting with perpetual valuation.
-        self._stock_account_anglo_saxon_reconcile_valuation()
-        return res
+        posted._stock_account_anglo_saxon_reconcile_valuation()
+        return posted
 
     def button_draft(self):
         res = super(AccountMove, self).button_draft()

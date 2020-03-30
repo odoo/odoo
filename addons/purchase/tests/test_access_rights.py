@@ -66,7 +66,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         purchase_order.action_create_invoice()
         invoice = purchase_order.invoice_ids
         with self.assertRaises(AccessError):
-            invoice.post()
+            invoice.action_post()
 
     def test_read_purchase_order(self):
         """ Check that a purchase user can read all purchase order and 'in' invoices"""
