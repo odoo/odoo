@@ -52,6 +52,8 @@ class PaymentAcquirerStripeSCA(models.Model):
             "AUTHORIZATION": "Bearer %s" % self.sudo().stripe_secret_key,
             "Stripe-Version": "2019-05-16",  # SetupIntent need a specific version
         }
+        if data and data.get("customer_email"):
+            data["customer_email"] = data["customer_email"].strip()
         resp = requests.request(method, url, data=data, headers=headers)
         # Stripe can send 4XX errors for payment failure (not badly-formed requests)
         # check if error `code` is present in 4XX response and raise only if not
