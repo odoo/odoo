@@ -2750,6 +2750,7 @@ class AccountMoveLine(models.Model):
         check_company=True,
         tracking=True)
     account_internal_type = fields.Selection(related='account_id.user_type_id.type', string="Internal Type", readonly=True)
+    account_internal_group = fields.Selection(related='account_id.user_type_id.internal_group', string="Internal Group", readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
     sequence = fields.Integer(default=10)
     name = fields.Text(string='Label', tracking=True)
@@ -4693,8 +4694,8 @@ class AccountMoveLine(models.Model):
         action['domain'] = [('id', 'in', ids)]
         return action
 
-    def action_accrual_entry(self):
-        [action] = self.env.ref('account.account_accrual_accounting_wizard_action').read()
+    def action_automatic_entry(self):
+        [action] = self.env.ref('account.account_automatic_entry_wizard_action').read()
         action['context'] = self.env.context
         return action
 
@@ -4705,20 +4706,6 @@ class AccountMoveLine(models.Model):
             ('full_reconcile_id', '=', False),
             ('statement_line_id', '!=', False),
         ]
-
-    def action_transfer_accounts_wizard(self):
-        wizard = self.env['account.transfer.wizard'].create({})
-
-        return {
-            'name': _("Transfer Entries"),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'account.transfer.wizard',
-            'res_id': wizard.id,
-            'target': 'new',
-            'context': self.env.context,
-        }
 
     def _get_attachment_domains(self):
         self.ensure_one()
