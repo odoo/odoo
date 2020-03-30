@@ -32,3 +32,11 @@ class MassMailTestBlacklist(models.Model):
     umbrella_id = fields.Many2one(
         'mail.test', 'Meta Umbrella Record',
         tracking=True)
+
+class MailingUTM(models.Model):
+    """ Model inheriting from mail.thread and utm.mixin for checking utm of mailing is caught and set on reply """
+    _description = 'Mailing: UTM enabled to test UTM sync with mailing'
+    _name = 'mailing.test.utm'
+    _inherit = ['mail.thread', 'utm.mixin']
+
+    name = fields.Char()
