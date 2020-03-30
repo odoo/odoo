@@ -415,7 +415,7 @@ class PosSession(models.Model):
                 else:
                     invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order.amount_total}, order.date_order)
                 # side loop to gather receivable lines by account for reconciliation
-                for move_line in order.account_move.line_ids.filtered(lambda aml: aml.account_id.internal_type == 'receivable'):
+                for move_line in order.account_move.line_ids.filtered(lambda aml: aml.account_id.internal_type == 'receivable' and not aml.reconciled):
                     order_account_move_receivable_lines[move_line.account_id.id] |= move_line
             else:
                 order_taxes = defaultdict(tax_amounts)
@@ -597,7 +597,9 @@ class PosSession(models.Model):
         for receivable_account_id, amounts in invoice_receivables.items():
             invoice_receivable_vals[receivable_account_id].append(self._get_invoice_receivable_vals(receivable_account_id, amounts['amount'], amounts['amount_converted']))
         for receivable_account_id, vals in invoice_receivable_vals.items():
-            invoice_receivable_lines[receivable_account_id] = MoveLine.create(vals)
+            receivable_line = MoveLine.create(vals)
+            if (not receivable_line.reconciled):
+                invoice_receivable_lines[receivable_account_id] = receivable_line
 
         data.update({'invoice_receivable_lines': invoice_receivable_lines})
         return data
