@@ -149,7 +149,7 @@ var FileWidget = SearchableMediaWidget.extend({
         this.numberOfAttachmentsToDisplay = this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY;
 
         this.options = _.extend({
-            mediaWidth: media && media.clientWidth,
+            mediaWidth: media && media.parentElement && $(media.parentElement).width(),
         }, options || {});
 
         this.attachments = [];
