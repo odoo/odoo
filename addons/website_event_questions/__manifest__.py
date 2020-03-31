@@ -4,12 +4,15 @@
     'name': 'Questions on Events',
     'description': 'Questions on Events',
     'category': 'Marketing',
-    'version': '1.0',
+    'version': '1.1',
     'depends': ['website_event'],
     'data': [
+        'views/assets.xml',
         'views/event_views.xml',
+        'views/event_registration_answer_views.xml',
+        'views/event_registration_views.xml',
+        'views/event_question_views.xml',
         'views/event_templates.xml',
-        'report/report_event_question_view.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [
