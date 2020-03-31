@@ -4,6 +4,11 @@ odoo.define('web_editor.rte.summernote', function (require) {
 var Class = require('web.Class');
 const concurrency = require('web.concurrency');
 var core = require('web.core');
+// Use the top window's core.bus for dialog events so that they take the whole window
+// instead of being confined to an iframe. This means that the event triggered on
+// the bus by summernote in an iframe will be caught by the wysiwyg's SummernoteManager
+// outside the iframe.
+const topBus = window.top.odoo.__DEBUG__.services['web.core'].bus;
 const ColorpickerDialog = require('web.ColorpickerDialog');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 var mixins = require('web.mixins');
@@ -395,7 +400,7 @@ eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, l
     }
 
     var def = new $.Deferred();
-    core.bus.trigger('link_dialog_demand', {
+    topBus.trigger('link_dialog_demand', {
         $editable: $editable,
         linkInfo: linkInfo,
         onSave: function (linkInfo) {
@@ -417,7 +422,7 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     var media = $(r.sc).parents().addBack().filter(function (i, el) {
         return dom.isImg(el);
     })[0];
-    core.bus.trigger('media_dialog_demand', {
+    topBus.trigger('media_dialog_demand', {
         $editable: $editable,
         media: media,
         options: {
@@ -437,7 +442,7 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
 $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
     var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
-    core.bus.trigger('alt_dialog_demand', {
+    topBus.trigger('alt_dialog_demand', {
         $editable: $editable,
         media: $selection.data('target'),
     });
@@ -445,7 +450,7 @@ $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
 $.summernote.pluginEvents.cropImage = function (event, editor, layoutInfo, sorted) {
     var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
-    core.bus.trigger('crop_image_dialog_demand', {
+    topBus.trigger('crop_image_dialog_demand', {
         $editable: $editable,
         media: $selection.data('target'),
     });
@@ -1059,10 +1064,10 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
         mixins.EventDispatcherMixin.init.call(this);
         this.setParent(parent);
 
-        core.bus.on('alt_dialog_demand', this, this._onAltDialogDemand);
-        core.bus.on('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
-        core.bus.on('link_dialog_demand', this, this._onLinkDialogDemand);
-        core.bus.on('media_dialog_demand', this, this._onMediaDialogDemand);
+        topBus.on('alt_dialog_demand', this, this._onAltDialogDemand);
+        topBus.on('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
+        topBus.on('link_dialog_demand', this, this._onLinkDialogDemand);
+        topBus.on('media_dialog_demand', this, this._onMediaDialogDemand);
     },
     /**
      * @override
@@ -1070,10 +1075,10 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
     destroy: function () {
         mixins.EventDispatcherMixin.destroy.call(this);
 
-        core.bus.off('alt_dialog_demand', this, this._onAltDialogDemand);
-        core.bus.off('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
-        core.bus.off('link_dialog_demand', this, this._onLinkDialogDemand);
-        core.bus.off('media_dialog_demand', this, this._onMediaDialogDemand);
+        topBus.off('alt_dialog_demand', this, this._onAltDialogDemand);
+        topBus.off('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
+        topBus.off('link_dialog_demand', this, this._onLinkDialogDemand);
+        topBus.off('media_dialog_demand', this, this._onMediaDialogDemand);
     },
 
     /**
