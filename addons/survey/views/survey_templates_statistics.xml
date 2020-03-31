@@ -3,9 +3,9 @@
 <data>
     <template id="survey_page_statistics" name="Survey: result statistics page">
         <t t-call="survey.layout">
+            <t t-call="survey.survey_button_form_view" />
             <t t-set="page_record_limit" t-value="10"/><!-- Change this record_limit to change number of record  per page-->
             <div class="container o_survey_result">
-                <t t-call="survey.survey_button_form_view" />
                 <t t-call="survey.survey_page_statistics_header" />
                 <t t-call="survey.survey_page_statistics_inner" />
             </div>
@@ -13,7 +13,7 @@
     </template>
 
     <template id="survey_page_statistics_header" name="Survey: result statistics header">
-        <div class="jumbotron mt32">
+        <div class="py-5 mt32">
             <h1>
                 <span t-field="survey.title"/>
                 <span style="font-size:1.5em;"
