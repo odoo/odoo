@@ -119,20 +119,10 @@ class MrpBom(models.Model):
         for line in self.bom_line_ids:
             line.operation_id = False
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super().create(vals_list)
-        for bom in res:
-            if float_compare(bom.product_qty, 0, precision_rounding=bom.product_uom_id.rounding) <= 0:
-                raise UserError(_('The quantity to produce must be positive!'))
-        return res
-
-    def write(self, values):
-        res = super().write(values)
-        for bom in self:
-            if float_compare(bom.product_qty, 0, precision_rounding=bom.product_uom_id.rounding) <= 0:
-                raise UserError(_('The quantity to produce must be positive!'))
-        return res
+    @api.constrains('product_qty', 'product_uom_id')
+    def _check_qty(self):
+        if self.filtered(lambda b: float_compare(b.product_qty, 0, precision_rounding=b.product_uom_id.rounding) <= 0):
+            raise UserError(_('The quantity to produce must be positive!'))
 
     @api.model
     def name_create(self, name):
