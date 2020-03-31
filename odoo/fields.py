@@ -1628,6 +1628,7 @@ class Html(_String):
         'sanitize_style': False,        # whether to sanitize style attributes
         'strip_style': False,           # whether to strip style attributes (removed and therefore not sanitized)
         'strip_classes': False,         # whether to strip classes attributes
+        'sanitize_form': True,          # whether to sanitize forms
     }
 
     def _get_attrs(self, model, name):
@@ -1662,7 +1663,8 @@ class Html(_String):
                 sanitize_attributes=self.sanitize_attributes,
                 sanitize_style=self.sanitize_style,
                 strip_style=self.strip_style,
-                strip_classes=self.strip_classes)
+                strip_classes=self.strip_classes,
+                sanitize_form=self.sanitize_form)
         return value
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1675,7 +1677,8 @@ class Html(_String):
                 sanitize_attributes=self.sanitize_attributes,
                 sanitize_style=self.sanitize_style,
                 strip_style=self.strip_style,
-                strip_classes=self.strip_classes)
+                strip_classes=self.strip_classes,
+                sanitize_form=self.sanitize_form)
         return value
 
 
