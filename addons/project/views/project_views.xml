@@ -16,7 +16,7 @@
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                <search string="Tasks">
-                    <field name="name" string="Task"/>
+                    <field name="name" string="Task" filter_domain="['|', '|', ('name', 'ilike', self), ('user_id', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <field name="tag_ids"/>
                     <field name="user_id"/>
                     <field name="partner_id" operator="child_of"/>
