@@ -267,12 +267,14 @@ QUnit.module('basic_fields', {
         assert.containsOnce(form, '.o_field_boolean input:checked',
         "checkbox should now be checked");
         // blindly press enter again, it should uncheck the checkbox
-        $(document.activeElement).trigger({type: "keydown", which: $.ui.keyCode.ENTER});
+        await testUtils.dom.triggerEvent(document.activeElement, "keydown",
+            {which: $.ui.keyCode.ENTER});
         assert.containsNone(form, '.o_field_boolean input:checked',
         "checkbox should not be checked");
         await testUtils.nextTick();
         // blindly press enter again, it should check the checkbox back
-        $(document.activeElement).trigger({type: "keydown", which: $.ui.keyCode.ENTER});
+        await testUtils.dom.triggerEvent(document.activeElement, "keydown",
+            {which: $.ui.keyCode.ENTER});
         assert.containsOnce(form, '.o_field_boolean input:checked',
             "checkbox should still be checked");
 
@@ -333,6 +335,7 @@ QUnit.module('basic_fields', {
         // the checkbox directly in readonly mode !
         $cell = list.$('tr.o_data_row:has(.custom-checkbox input:not(:checked)) td:not(.o_list_record_selector)').first();
         await testUtils.dom.click($cell.find('.custom-checkbox .custom-control-label'));
+        await testUtils.nextTick();
 
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input').length, 5,
             "should still have 5 checkboxes");

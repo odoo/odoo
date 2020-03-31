@@ -446,6 +446,14 @@ var utils = {
         return (/^\d+(\.\d*)? [^0-9]+$/).test(v);
     },
     /**
+     * Checks if a class is an extension of owl.Component.
+     * 
+     * @param {any} value A class reference
+     */
+    isComponent: function (value) {
+        return value.prototype instanceof owl.Component;
+    },
+    /**
      * Returns whether the given anchor is valid.
      *
      * This test is useful to prevent a crash that would happen if using an invalid
