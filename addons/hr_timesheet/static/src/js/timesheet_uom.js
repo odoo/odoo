@@ -86,32 +86,36 @@ const FieldTimesheetTime = basicFields.FieldFloatTime.extend({
             this.parseOptions.factor = session.timesheet_uom_factor;
         }
     },
-    _render: async function () {
-        this._super.apply(this, arguments);
+    willstart() {
+        const timePromise = this._rpc({
+            model: 'timer.timer',
+            method: 'get_server_time',
+            args: []
+        }).then((time) => {
+            this.serverTime = time;
+        });
+        return Promise.all([
+            this._super(...arguments),
+            timePromise,
+        ]);
+    },
 
+    _render: async function () {
+        await this._super.apply(this, arguments);
         // Check if the timer_start exists and it's not false
         // In other word, when user clicks on play button, this button
         // launches the "action_timer_start".
         if (this.recordData.timer_start && !this.recordData.timer_pause) {
-            const time = await this._rpc({
-                model: 'timer.timer',
-                method: 'get_server_time',
-                args: []
-            });
-            this.time = Timer.createTimer(this.recordData.unit_amount, this.recordData.timer_start, time);
-            return this._startTimeCounter();
-        } else if (this.mode === "edit") {
-            return this._renderEdit();
-        } else if (this.mode === 'readonly') {
-            return this._renderReadonly();
+            this.time = Timer.createTimer(this.recordData.unit_amount, this.recordData.timer_start, this.serverTime);
+            this._startTimeCounter();
         }
     },
     /**
      * @override
      */
     destroy: function () {
-        this._super.apply(this, arguments);
         clearTimeout(this.timer);
+        this._super.apply(this, arguments);
     },
     _startTimeCounter: function () {
         if (this.time) {
