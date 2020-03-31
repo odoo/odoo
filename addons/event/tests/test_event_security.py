@@ -26,7 +26,7 @@ class TestEventSecurity(TestEventCommon):
                 'name': 'TestEvent',
                 'date_begin': datetime.now() + relativedelta(days=-1),
                 'date_end': datetime.now() + relativedelta(days=1),
-                'seats_availability': 'limited',
+                'seats_limited': True,
                 'seats_max': 10,
             })
 

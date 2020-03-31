@@ -213,7 +213,6 @@
                             <!-- Title -->
                             <h5 t-attf-class="card-title mt-2 mb-0 text-truncate #{(not event.website_published) and 'text-danger'}">
                                 <span t-field="event.name" itemprop="name"/>
-                                <div class="badge badge-pill badge-info ml-2 mt-2 pt4 pb4" t-if="event.is_online">Online</div>
                             </h5>
                             <!-- Start Date & Time -->
                             <time itemprop="startDate" t-att-datetime="event.date_begin">
@@ -225,8 +224,7 @@
                                 <small class="text-muted text-truncate">Organizer: <span t-field="event.organizer_id" itemprop="organizer"/></small>
                             </div>
                             <!-- Location -->
-                            <div t-if="not event.is_online" itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
-                            <div t-else="" class="invisible">online</div>
+                            <div itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
                             <div class="mt8 d-flex align-items-center">
                                 <t t-foreach="event.tag_ids" t-as="tag">
                                     <span t-attf-class="badge mr8 #{'badge-primary' if tag in search_tags else 'badge-light'}">
@@ -240,7 +238,7 @@
                     <footer
                             t-attf-class="small align-self-end w-100 #{opt_events_list_cards and 'card-footer' or ((not opt_events_list_columns) and 'border-top mx-4 mt-auto pt-2' or 'border-top py-2')}">
                         <span class="text-danger"
-                            t-if="event.seats_availability == 'limited' and not event.seats_available">
+                            t-if="event.seats_limited and not event.seats_available">
                             Sold Out
                         </span>
                     </footer>
@@ -466,31 +464,24 @@
                             </div>
                         </div>
                         <!-- Location -->
-                        <t t-if="not event.is_online">
-                            <div t-if="event.address_id" class="o_wevent_sidebar_block">
-                                <h6 class="o_wevent_sidebar_title">Location</h6>
-                                <h4 t-field="event.address_id" class="" t-options='{
-                                    "widget": "contact",
-                                    "fields": ["name"]
-                                }'/>
-                                <div itemprop="location" class="mb-2" t-field="event.address_id" t-options='{
-                                    "widget": "contact",
-                                    "fields": ["address"],
-                                    "no_marker": True
-                                }'/>
-                                <div class="mb-3" t-field="event.address_id" t-options='{
-                                    "widget": "contact",
-                                    "fields": ["phone", "mobile", "email"]
-                                }'/>
-                                <i class="fa fa-map-marker fa-fw" role="img"/>
-                                <a t-att-href="event.google_map_link()" target="_blank">Get the direction</a>
-                            </div>
-                        </t>
-                        <t t-else="">
-                            <div class="o_wevent_sidebar_block">
-                                <h6 class="o_wevent_sidebar_title">Online Event</h6>
-                            </div>
-                        </t>
+                        <div t-if="event.address_id" class="o_wevent_sidebar_block">
+                            <h6 class="o_wevent_sidebar_title">Location</h6>
+                            <h4 t-field="event.address_id" class="" t-options='{
+                                "widget": "contact",
+                                "fields": ["name"]
+                            }'/>
+                            <div itemprop="location" class="mb-2" t-field="event.address_id" t-options='{
+                                "widget": "contact",
+                                "fields": ["address"],
+                                "no_marker": True
+                            }'/>
+                            <div class="mb-3" t-field="event.address_id" t-options='{
+                                "widget": "contact",
+                                "fields": ["phone", "mobile", "email"]
+                            }'/>
+                            <i class="fa fa-map-marker fa-fw" role="img"/>
+                            <a t-att-href="event.google_map_link()" target="_blank">Get the direction</a>
+                        </div>
                         <!-- Organizer -->
                         <div t-if="event.organizer_id" class="o_wevent_sidebar_block">
                             <h6 class="o_wevent_sidebar_title">Organizer</h6>
@@ -596,8 +587,8 @@
                                 <select t-if="not ticket.is_expired and ticket.sale_available"
                                     t-attf-name="nb_register-#{ticket.id}"
                                     class="custom-select">
-                                    <t t-set="seats_max_ticket" t-value="(ticket.seats_availability == 'unlimited' or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
-                                    <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                    <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
+                                    <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
                                     <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
                                     <t t-foreach="range(0, seats_max)" t-as="nb">
                                         <option t-esc="nb" t-att-selected="len(ticket) == 0 and nb == 0 and 'selected'"/>
@@ -612,7 +603,7 @@
                     </div>
                     <div class="row no-gutters">
                         <div class="col-md-4 offset-md-8 py-2 pl-md-0 pr-md-2">
-                            <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" disabled="" t-attf-id="#{event.id}">Register<t t-if="event.seats_availability != 'unlimited'">(Available seats: <t t-esc="event.seats_available"/>)</t></button>
+                            <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" disabled="" t-attf-id="#{event.id}">Register<t t-if="event.seats_limited">(Available seats: <t t-esc="event.seats_available"/>)</t></button>
                         </div>
                     </div>
                 </div>
@@ -629,8 +620,8 @@
                                 <span class="text-dark font-weight-bold align-middle pr-2">Qty</span>
                                 <link itemprop="availability" content="http://schema.org/InStock"/>
                                 <select t-att-name="'nb_register-%s' % (tickets.id if tickets else 0)" class="w-auto custom-select">
-                                    <t t-set="seats_max_ticket" t-value="(not tickets or tickets.seats_availability == 'unlimited' or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
-                                    <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                    <t t-set="seats_max_ticket" t-value="(not tickets or not tickets.seats_limited or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
+                                    <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
                                     <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event) if tickets else seats_max_event"/>
                                     <t t-foreach="range(0, seats_max)" t-as="nb">
                                         <option t-esc="nb" t-att-selected="nb == 1 and 'selected'"/>

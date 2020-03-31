@@ -44,8 +44,6 @@ class EventType(models.Model):
         help="Events and registrations will automatically be confirmed "
              "upon creation, easing the flow for simple events.")
     # location
-    is_online = fields.Boolean(
-        'Online Event', help='Online events like webinars do not require a specific location and are hosted online.')
     use_timezone = fields.Boolean('Use Default Timezone')
     default_timezone = fields.Selection(
         _tz_get, string='Timezone', default=lambda self: self.env.user.tz or 'UTC')
@@ -141,10 +139,8 @@ class EventEvent(models.Model):
         string='Maximum Attendees Number',
         compute='_compute_from_event_type', copy=True, readonly=False, store=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
-    seats_availability = fields.Selection(
-        [('unlimited', 'Unlimited'), ('limited', 'Limited')],
-        string='Maximum Attendees', required=True,
-        compute='_compute_seats_availability', copy=True, readonly=False, store=True)
+    seats_limited = fields.Boolean('Maximum Attendees', required=True, compute='_compute_seats_limited',
+                                   copy=True, readonly=False, store=True)
     seats_reserved = fields.Integer(
         string='Reserved Seats',
         store=True, readonly=True, compute='_compute_seats')
@@ -162,8 +158,9 @@ class EventEvent(models.Model):
         compute_sudo=True, readonly=True, compute='_compute_seats')
     # Registration fields
     auto_confirm = fields.Boolean(
-        string='Autoconfirm Registrations',
-        compute='_compute_from_event_type', copy=True, readonly=False, store=True)
+        string='Autoconfirmation',
+        compute='_compute_from_event_type', copy=True, readonly=False, store=True,
+        help = 'Autoconfirm Registrations. Registrations will automatically be confirmed upon creation.')
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
     event_registrations_open = fields.Boolean('Registration open', compute='_compute_event_registrations_open')
     event_ticket_ids = fields.One2many(
@@ -181,13 +178,9 @@ class EventEvent(models.Model):
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
     start_sale_date = fields.Date('Start sale date', compute='_compute_start_sale_date')
     # Location and communication
-    is_online = fields.Boolean(
-        string='Online Event', compute='_compute_from_event_type',
-        copy=True, readonly=False, store=True)
     address_id = fields.Many2one(
-        'res.partner', string='Venue', compute='_compute_address_id',
-        copy=True, readonly=False, store=True, tracking=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
+        tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id',
         copy=True, readonly=False, store=True)
@@ -232,11 +225,11 @@ class EventEvent(models.Model):
             seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
             event.seats_expected = seats_expected
 
-    @api.depends('date_end', 'seats_available', 'seats_availability', 'event_ticket_ids.sale_available')
+    @api.depends('date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available')
     def _compute_event_registrations_open(self):
         for event in self:
             event.event_registrations_open = event.date_end and (event.date_end > fields.Datetime.now()) and \
-                (event.seats_available or event.seats_availability == 'unlimited') and \
+                (event.seats_available or not event.seats_limited) and \
                 (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
 
     @api.depends('stage_id', 'kanban_state')
@@ -302,14 +295,6 @@ class EventEvent(models.Model):
             start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date]
             event.start_sale_date = min(start_dates) if start_dates else False
 
-    @api.depends('is_online')
-    def _compute_address_id(self):
-        for event in self:
-            if event.is_online:
-                event.address_id = False
-            elif not event.address_id:
-                event.address_id = self.env.company.partner_id.id
-
     @api.depends('event_type_id')
     def _compute_date_tz(self):
         for event in self:
@@ -319,7 +304,7 @@ class EventEvent(models.Model):
                 event.date_tz = self.env.user.tz or 'UTC'
 
     @api.depends('event_type_id')
-    def _compute_seats_availability(self):
+    def _compute_seats_limited(self):
         """ Make it separate from ``_compute_from_event_type`` because otherwise
         a value given at create (see create override) would protect all other fields
         depending on event type id from being computed as compute method will be
@@ -327,9 +312,9 @@ class EventEvent(models.Model):
         to compute protected field from re-computation) """
         for event in self:
             if event.event_type_id.seats_max:
-                event.seats_availability = 'limited'
-            if not event.seats_availability:
-                event.seats_availability = 'unlimited'
+                event.seats_limited = True
+            if not event.seats_limited:
+                event.seats_limited = False
 
     @api.depends('event_type_id')
     def _compute_from_event_type(self):
@@ -341,7 +326,6 @@ class EventEvent(models.Model):
         Updated by this method
           * seats_max -> triggers _compute_seats (all seats computation)
           * auto_confirm
-          * is_online -> triggers _compute_address_id (address_id computation)
           * event_mail_ids
           * event_ticket_ids -> triggers _compute_start_sale_date (start_sale_date computation)
         """
@@ -349,8 +333,6 @@ class EventEvent(models.Model):
             if not event.event_type_id:
                 if not event.seats_max:
                     event.seats_max = 0
-                if not event.is_online:
-                    event.is_online = False
                 if not event.event_ticket_ids:
                     event.event_ticket_ids = False
                 continue
@@ -360,8 +342,6 @@ class EventEvent(models.Model):
 
             if event.event_type_id.auto_confirm:
                 event.auto_confirm = event.event_type_id.auto_confirm
-
-            event.is_online = event.event_type_id.is_online
 
             # compute mailing information (force only if activated and mailing defined)
             if event.event_type_id.use_mail_schedule and event.event_type_id.event_type_mail_ids:
@@ -384,9 +364,9 @@ class EventEvent(models.Model):
             if event.event_type_id.tag_ids:
                 event.tag_ids = event.event_type_id.tag_ids
 
-    @api.constrains('seats_max', 'seats_available', 'seats_availability')
+    @api.constrains('seats_max', 'seats_available', 'seats_limited')
     def _check_seats_limit(self):
-        if any(event.seats_availability == 'limited' and event.seats_max and event.seats_available < 0 for event in self):
+        if any(event.seats_limited and event.seats_max and event.seats_available < 0 for event in self):
             raise ValidationError(_('No more available seats.'))
 
     @api.constrains('date_begin', 'date_end')
@@ -412,7 +392,7 @@ class EventEvent(models.Model):
 
     @api.model
     def create(self, vals):
-        # Temporary fix for ``seats_availability`` and ``date_tz`` required fields (see ``_compute_from_event_type``
+        # Temporary fix for ``seats_limited`` and ``date_tz`` required fields (see ``_compute_from_event_type``
         vals.update(self._sync_required_computed(vals))
 
         res = super(EventEvent, self).create(vals)
@@ -433,9 +413,10 @@ class EventEvent(models.Model):
         return super(EventEvent, self).copy(default)
 
     def _sync_required_computed(self, values):
+        # TODO: See if the change to seats_limited affects this ?
         """ Call compute fields in cache to find missing values for required fields
-        (seats_availability and date_tz) in case they are not given in values """
-        missing_fields = list(set(['seats_availability', 'date_tz']).difference(set(values.keys())))
+        (seats_limited and date_tz) in case they are not given in values """
+        missing_fields = list(set(['seats_limited', 'date_tz']).difference(set(values.keys())))
         if missing_fields and values:
             cache_event = self.new(values)
             cache_event._compute_from_event_type()

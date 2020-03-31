@@ -70,12 +70,16 @@ class Event(models.Model):
     @api.model
     def create(self, vals):
         res = super(Event, self).create(vals)
-        res._update_website_menus(vals)
+        res._update_website_menus()
         return res
 
     def write(self, vals):
+        menu_activated = self.filtered(lambda event: event.website_menu)
+        menu_deactivated = self.filtered(lambda event: not event.website_menu)
         res = super(Event, self).write(vals)
-        self._update_website_menus(vals)
+        menu_to_deactivate = menu_activated.filtered(lambda event: not event.website_menu)
+        menu_to_activate = menu_deactivated.filtered(lambda event: event.website_menu)
+        (menu_to_activate | menu_to_deactivate)._update_website_menus()
         return res
 
     def _get_menu_entries(self):
@@ -88,19 +92,19 @@ class Event(models.Model):
             (_('Register'), '/event/%s/register' % slug(self), False),
         ]
 
-    def _update_website_menus(self, vals):
+    def _update_website_menus(self):
         for event in self:
-            if 'website_menu' in vals:
-                if event.menu_id and not event.website_menu:
-                    event.menu_id.unlink()
-                elif event.website_menu and not event.menu_id:
-                    root_menu = self.env['website.menu'].create({'name': event.name, 'website_id': event.website_id.id})
-                    event.menu_id = root_menu
-                    for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
-                        event._create_menu(sequence, name, url, xml_id)
+            if event.menu_id and not event.website_menu:
+                event.menu_id.unlink()
+            elif event.website_menu and not event.menu_id:
+                root_menu = self.env['website.menu'].create({'name': event.name, 'website_id': event.website_id.id})
+                event.menu_id = root_menu
+                for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
+                    event._create_menu(sequence, name, url, xml_id)
 
     def _create_menu(self, sequence, name, url, xml_id):
         if not url:
+            self.env['ir.ui.view'].search([('name', '=', name + ' ' + self.name)]).unlink()
             newpath = self.env['website'].new_page(name + ' ' + self.name, template=xml_id, ispage=False)['url']
             url = "/event/" + slug(self) + "/page/" + newpath[1:]
         menu = self.env['website.menu'].create({

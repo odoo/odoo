@@ -59,20 +59,14 @@ class TestEventData(TestEventCommon):
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
         })
 
-        self.assertFalse(event.is_online)
         self.assertEqual(event.address_id, self.env.user.company_id.partner_id)
         # seats: coming from event type configuration
-        self.assertEqual(event.seats_availability, 'limited')
+        self.assertTrue(event.seats_limited)
         self.assertEqual(event.seats_available, event.event_type_id.seats_max)
         self.assertEqual(event.seats_unconfirmed, 0)
         self.assertEqual(event.seats_reserved, 0)
         self.assertEqual(event.seats_used, 0)
         self.assertEqual(event.seats_expected, 0)
-
-        # set is_online: should reset the address_id field
-        event.update({'is_online': True})
-        self.assertTrue(event.is_online)
-        self.assertFalse(event.address_id)
 
         # create registration in order to check the seats computation
         self.assertTrue(event.auto_confirm)
@@ -117,12 +111,10 @@ class TestEventData(TestEventCommon):
             'name': 'Event Update Type',
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
-            'is_online': True,
         })
         self.assertEqual(event.date_tz, self.env.user.tz)
-        self.assertEqual(event.seats_availability, 'unlimited')
+        self.assertFalse(event.seats_limited)
         self.assertFalse(event.auto_confirm)
-        self.assertTrue(event.is_online)
         self.assertEqual(event.event_mail_ids, self.env['event.mail'])
 
         event_type.write({
@@ -133,10 +125,9 @@ class TestEventData(TestEventCommon):
         })
         event.write({'event_type_id': event_type.id})
         self.assertEqual(event.date_tz, 'Europe/Paris')
-        self.assertEqual(event.seats_availability, 'limited')
+        self.assertTrue(event.seats_limited)
         self.assertEqual(event.seats_max, event_type.seats_max)
         self.assertTrue(event.auto_confirm)
-        self.assertFalse(event.is_online)
         self.assertEqual(event.event_mail_ids.interval_nbr, 1)
         self.assertEqual(event.event_mail_ids.interval_unit, 'days')
         self.assertEqual(event.event_mail_ids.interval_type, 'before_event')
@@ -171,7 +162,7 @@ class TestEventData(TestEventCommon):
         event.write({
             'date_end': datetime.now() + timedelta(days=3),
             'seats_max': 1,
-            'seats_availability': 'limited',
+            'seats_limited': True,
         })
         self.assertEqual(event.seats_available, 0)
         self.assertFalse(event.event_registrations_open)
@@ -255,11 +246,11 @@ class TestEventTicketData(TestEventCommon):
         first_ticket = event.event_ticket_ids.filtered(lambda t: t.name == 'First Ticket')
         second_ticket = event.event_ticket_ids.filtered(lambda t: t.name == 'Second Ticket')
 
-        self.assertEqual(first_ticket.seats_availability, 'limited')
+        self.assertTrue(first_ticket.seats_limited)
         self.assertTrue(first_ticket.sale_available)
         self.assertFalse(first_ticket.is_expired)
 
-        self.assertEqual(second_ticket.seats_availability, 'unlimited')
+        self.assertFalse(second_ticket.seats_limited)
         self.assertTrue(second_ticket.sale_available)
         self.assertFalse(second_ticket.is_expired)
         # sale is ended
