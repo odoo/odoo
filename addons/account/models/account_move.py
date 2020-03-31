@@ -286,6 +286,35 @@ class AccountMove(models.Model):
     inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
     string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True)
 
+    @api.model
+    def _field_will_change(self, record, vals, field_name):
+        if field_name not in vals:
+            return False
+        field = record._fields[field_name]
+        if field.type == 'many2one':
+            return record[field_name].id != vals[field_name]
+        if field.type == 'many2many':
+            current_ids = set(record[field_name].ids)
+            after_write_ids = set(record.new({field_name: vals[field_name]})[field_name].ids)
+            return current_ids != after_write_ids
+        if field.type == 'one2many':
+            return True
+        if field.type == 'monetary' and record[field.currency_field]:
+            return not record[field.currency_field].is_zero(record[field_name] - vals[field_name])
+        if field.type == 'float':
+            record_value = field.convert_to_cache(record[field_name], record)
+            to_write_value = field.convert_to_cache(vals[field_name], record)
+            return record_value != to_write_value
+        return record[field_name] != vals[field_name]
+
+    @api.model
+    def _cleanup_write_orm_values(self, record, vals):
+        cleaned_vals = dict(vals)
+        for field_name, value in vals.items():
+            if not self._field_will_change(record, vals, field_name):
+                del cleaned_vals[field_name]
+        return cleaned_vals
+
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
@@ -3471,15 +3500,15 @@ class AccountMoveLine(models.Model):
                     line.payment_id.state = 'reconciled'
 
             # Check the lock date.
-            if any(field_will_change(line, field_name) for field_name in PROTECTED_FIELDS_LOCK_DATE):
+            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_LOCK_DATE):
                 line.move_id._check_fiscalyear_lock_date()
 
             # Check the tax lock date.
-            if any(field_will_change(line, field_name) for field_name in PROTECTED_FIELDS_TAX_LOCK_DATE):
+            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_TAX_LOCK_DATE):
                 line._check_tax_lock_date()
 
             # Check the reconciliation.
-            if any(field_will_change(line, field_name) for field_name in PROTECTED_FIELDS_RECONCILIATION):
+            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_RECONCILIATION):
                 line._check_reconciliation()
 
             # Check switching receivable / payable accounts.
@@ -3513,8 +3542,6 @@ class AccountMoveLine(models.Model):
                     move_initial_values[line.move_id.id] = {}
                 move_initial_values[line.move_id.id].update({field: line[field]})
 
-        result = super(AccountMoveLine, self).write(vals)
-
         # Create the dict for the message post
         tracking_values = {} # Tracking values to write in the message post
         for move_id, modified_lines in move_initial_values.items():
@@ -3547,7 +3574,14 @@ class AccountMoveLine(models.Model):
                 msg = self._get_tracking_field_string(tracking_values.get(move.id))
                 move.message_post(body=msg) # Write for each concerned move the message in the chatter
 
+        result = True
         for line in self:
+            cleaned_vals = line.move_id._cleanup_write_orm_values(line, vals)
+            if not cleaned_vals:
+                continue
+
+            result |= super(AccountMoveLine, line).write(cleaned_vals)
+
             if not line.move_id.is_invoice(include_receipts=True):
                 continue
 
@@ -3555,7 +3589,7 @@ class AccountMoveLine(models.Model):
             # As we can't express such synchronization as computed fields without cycling, we need to do it both
             # in onchange and in create/write. So, if something changed in accounting [resp. business] fields,
             # business [resp. accounting] fields are recomputed.
-            if any(field in vals for field in ACCOUNTING_FIELDS):
+            if any(field in cleaned_vals for field in ACCOUNTING_FIELDS):
                 balance = line.currency_id and line.amount_currency or line.debit - line.credit
                 price_subtotal = line._get_price_total_and_subtotal().get('price_subtotal', 0.0)
                 to_write = line._get_fields_onchange_balance(
@@ -3567,13 +3601,13 @@ class AccountMoveLine(models.Model):
                     quantity=to_write.get('quantity', line.quantity),
                     discount=to_write.get('discount', line.discount),
                 ))
-                super(AccountMoveLine, line).write(to_write)
-            elif any(field in vals for field in BUSINESS_FIELDS):
+                result |= super(AccountMoveLine, line).write(to_write)
+            elif any(field in cleaned_vals for field in BUSINESS_FIELDS):
                 to_write = line._get_price_total_and_subtotal()
                 to_write.update(line._get_fields_onchange_subtotal(
                     price_subtotal=to_write['price_subtotal'],
                 ))
-                super(AccountMoveLine, line).write(to_write)
+                result |= super(AccountMoveLine, line).write(to_write)
 
         # Check total_debit == total_credit in the related moves.
         if self._context.get('check_move_validity', True):
