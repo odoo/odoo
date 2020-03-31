@@ -5,7 +5,7 @@ var Dialog = require('wysiwyg.widgets.Dialog');
 var AltDialog = require('wysiwyg.widgets.AltDialog');
 var MediaDialog = require('wysiwyg.widgets.MediaDialog');
 var LinkDialog = require('wysiwyg.widgets.LinkDialog');
-var CropImageDialog = require('wysiwyg.widgets.CropImageDialog');
+var ImageCropWidget = require('wysiwyg.widgets.ImageCropWidget');
 const {ColorpickerDialog} = require('web.Colorpicker');
 
 var media = require('wysiwyg.widgets.media');
@@ -15,7 +15,7 @@ return {
     AltDialog: AltDialog,
     MediaDialog: MediaDialog,
     LinkDialog: LinkDialog,
-    CropImageDialog: CropImageDialog,
+    ImageCropWidget: ImageCropWidget,
     ColorpickerDialog: ColorpickerDialog,
 
     MediaWidget: media.MediaWidget,
