@@ -1039,6 +1039,12 @@ class TestFields(common.TransactionCase):
         self.assertEqual(attribute_record.company.foo, 'DEF')
         self.assertEqual(attribute_record.bar, 'DEFDEF')
 
+        # test field related to company_dependent
+        attribute_record.company_foo = 'XYZ'
+        attribute_record.flush()
+        attribute_record.invalidate_cache(fnames=['company_foo'])
+        self.assertEqual(attribute_record.company_foo, 'XYZ')
+
     def test_30_read(self):
         """ test computed fields as returned by read(). """
         discussion = self.env.ref('test_new_api.discussion_0')
