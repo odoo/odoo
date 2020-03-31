@@ -23,9 +23,9 @@
     <!-- Error: void survey -->
     <template id="survey_void_content" name="Survey: void content">
         <t t-call="survey.layout">
+            <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
             <div class="wrap">
                 <div class="container">
-                    <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
                     <div class="jumbotron mt32">
                         <h1><span t-field="survey.title"/> survey is void</h1>
                         <p>Please make sure you have at least one question in your survey. You also need at least one section if you chose the "Page per section" layout.<br />
@@ -74,7 +74,7 @@
     <!-- ============================================================ -->
 
     <template id="survey_button_form_view" name="Survey: back to form view">
-        <div groups="survey.group_survey_manager" t-ignore="true" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
+        <div groups="survey.group_survey_manager" t-ignore="true" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden mb-0">
             <div t-ignore="true" class="text-center">
                 <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><i class="fa fa-fw fa-arrow-right"/><span t-if="answer and answer.test_entry">This is a test survey. </span>Edit Survey.</a>
             </div>

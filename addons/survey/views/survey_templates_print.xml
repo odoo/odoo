@@ -5,10 +5,10 @@
     <template id="survey_page_print" name="Survey: print page">
         <t t-call="survey.layout">
             <t t-set="survey_form_readonly" t-value="true"/>
+            <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
             <div class="wrap">
                 <div class="o_survey_print container">
-                    <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
-                    <div class='jumbotron mt32'>
+                    <div class='py-5 mt32'>
                         <h1><span t-field='survey.title'/></h1>
                         <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
                         <t t-if="review" t-call="survey.survey_button_retake"/>
