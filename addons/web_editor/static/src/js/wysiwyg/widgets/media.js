@@ -2,7 +2,6 @@ odoo.define('wysiwyg.widgets.media', function (require) {
 'use strict';
 
 var concurrency = require('web.concurrency');
-var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
@@ -11,6 +10,7 @@ var ImageOptimizeDialog = require('wysiwyg.widgets.image_optimize_dialog').Image
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 var session = require('web.session');
+const ImageCropWidget = require('wysiwyg.widgets.ImageCropWidget');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -497,19 +497,10 @@ var FileWidget = SearchableMediaWidget.extend({
         }
 
         // Remove crop related attributes
-        if (this.$media.attr('data-aspect-ratio')) {
-            var attrs = ['aspect-ratio', 'x', 'y', 'width', 'height', 'rotate', 'scale-x', 'scale-y'];
-            Object.keys(self.$media.data()).forEach(function (key) {
-                if (_.str.startsWith(key, 'crop:')) {
-                    attrs.push(key);
-                }
-            });
-            this.$media.removeClass('o_cropped_img_to_save');
-            attrs.forEach(attr => {
-                this.$media.removeData(attr);
-                this.$media.removeAttr('data-' + attr);
-            });
-        }
+        ImageCropWidget.prototype.allAttributes.forEach(attr => {
+            delete this.media.dataset[attr];
+        });
+        this.media.classList.remove('o_cropped_img_to_save');
         return this.media;
     },
     /**
