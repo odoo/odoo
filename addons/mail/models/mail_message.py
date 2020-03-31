@@ -970,10 +970,21 @@ class Message(models.Model):
             for notification in filtered_notifications:
                 customer_email_data.append((notification.res_partner_id.id, notification.res_partner_id.display_name, notification.notification_status))
 
+<<<<<<< HEAD
             # Attachments
             main_attachment = self.env['ir.attachment']
             if message_sudo.attachment_ids and message_sudo.res_id and issubclass(self.pool[message_sudo.model], self.pool['mail.thread']):
                 main_attachment = self.env[message_sudo.model].sudo().browse(message_sudo.res_id).message_main_attachment_id
+=======
+            has_access_to_model = message.model and self.env[message.model].check_access_rights('read', raise_exception=False)
+            main_attachment = None
+            if message.attachment_ids and message.res_id and issubclass(self.pool[message.model], self.pool['mail.thread']) and has_access_to_model:
+                try:
+                    main_attachment =  self.env[message.model].browse(message.res_id).message_main_attachment_id
+                except AccessError:
+                    # ignore main attachment if user do not have read access to record
+                    pass
+>>>>>>> 648bc5b0658... temp
             attachment_ids = []
             for attachment in message_sudo.attachment_ids:
                 attachment_ids.append({
