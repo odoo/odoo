@@ -225,27 +225,35 @@ class Web_Editor(http.Controller):
         return removal_blocked_by
 
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
-    def get_image_info(self, image_id=None, xml_id=None):
-        """This route is used from CropImageDialog to get image info.
+    def get_image_info(self, src=''):
+        """This route is used from image crop widget to get image info.
         It is used to display the original image when we crop a previously
         cropped image.
         """
-        if xml_id:
-            record = request.env['ir.attachment'].get_attachment_by_key(xml_id)
-        elif image_id:
-            record = request.env['ir.attachment'].browse(image_id)
-        result = {
-            'mimetype': record.mimetype,
+        id_match = re.search('^/web/image/([^/?]+)', src)
+        attachment = []
+        if id_match:
+            url_segment = id_match.group(1)
+            number_match = re.match('^(\d+)', url_segment)
+            if '.' in url_segment: # xml-id
+                attachment = request.env['ir.http']._xmlid_to_obj(request.env, url_segment)
+            elif number_match: # numeric id
+                attachment = request.env['ir.attachment'].browse(int(number_match.group(1)))
+        else:
+            # Find attachment by url. There can be multiple matches because of default
+            # snippet images referencing the same image in /static/, so we limit to 1
+            attachment = request.env['ir.attachment'].search([('url', '=like', src)], limit=1)
+        if not attachment:
+            return {
+                'attachment': False,
+                'original': False,
+            }
+        return {
+            'attachment': attachment.read(['id'])[0],
+            'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype', 'name'])[0],
         }
-        # If we received the image ID and that image has an associated URL
-        # field, this should be a crop image attachment, so we return the ID
-        # and URL to confirm
-        if image_id and record.url:
-            result['id'] = record.id
-            result['originalSrc'] = record.url
-        return result
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', mimetype=None, original_id=None):
         """Create and return a new attachment."""
         if not name and url:
             name = url.split("/").pop()
@@ -260,6 +268,8 @@ class Web_Editor(http.Controller):
             'public': res_model == 'ir.ui.view',
             'res_id': res_id,
             'res_model': res_model,
+            'mimetype': mimetype,
+            'original_id': original_id,
         }
 
         if data:
@@ -474,3 +484,14 @@ class Web_Editor(http.Controller):
                 and xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
             View = View.sudo()
         return View._render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
+
+    @http.route("/web_editor/crop_attachment", type="json", auth="user", website=True)
+    def crop_attachment(self, res_model=None, res_id=None, name=None, data=None, mimetype=None, original_id=None):
+        """
+        Creates a cropped attachment and returns its image_src to be inserted into the DOM
+        """
+        attachment = self._attachment_create(res_model=res_model, res_id=res_id, name=name, data=data, mimetype=mimetype, original_id=original_id)
+        if attachment.public:
+            return attachment.image_src
+        attachment.generate_access_token()
+        return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
