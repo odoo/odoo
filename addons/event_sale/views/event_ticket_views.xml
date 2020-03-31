@@ -36,6 +36,12 @@
         <field name="model">event.event.ticket</field>
         <field name="inherit_id" ref="event.event_event_ticket_view_tree_from_event"/>
         <field name="arch" type="xml">
+            <field name="start_sale_date" position="attributes">
+                <attribute name="string">Sales Start</attribute>
+            </field>
+            <field name="end_sale_date" position="attributes">
+                <attribute name="string">Sales End</attribute>
+            </field>
             <field name="name" position="after">
                 <field name="product_id" context="{'default_event_ok': 1}"/>
             </field>
