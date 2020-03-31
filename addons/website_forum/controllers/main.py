@@ -555,7 +555,10 @@ class WebsiteForum(WebsiteProfile):
                 forums = post['forum']
             elif post.get('forum_id'):
                 forums = request.env['forum.forum'].browse(int(post['forum_id']))
-                values.update({'edit_button_url_param': 'forum_id=' + str(post['forum_id'])})
+                values.update({
+                    'edit_button_url_param': 'forum_id=%s' %  str(post['forum_id']),
+                    'forum_filtered': forums.name,
+                })
             else:
                 forums = request.env['forum.forum'].search([])
 

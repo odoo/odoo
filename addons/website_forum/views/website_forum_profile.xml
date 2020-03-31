@@ -56,7 +56,10 @@
             <t t-if="forum">
                 <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="questions">
                     <div class="mb32">
-                        <h5 class="border-bottom pb-1">Questions</h5>
+                        <h5 class="border-bottom pb-1">
+                            Questions
+                            <t t-call="website_forum.forum_filter_tag"/>
+                        </h5>
                         <t t-if="questions">
                             <div class="mb4" t-foreach="questions" t-as="question">
                                 <t t-call="website_forum.display_post"/>
@@ -87,7 +90,11 @@
                 </div>
                 <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="answers">
                     <div class="mb32">
-                        <h5 class="border-bottom pb-1">Answers</h5>
+                        <h5 class="border-bottom pb-1">
+                            Answers
+                            <t t-call="website_forum.forum_filter_tag"/>
+                        </h5>
+
                         <t t-if="answers">
                             <div t-foreach="answers" t-as="answer">
                                 <t t-call="website_forum.display_post_answer"/>
@@ -106,12 +113,25 @@
                 </div>
                 <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="activity" t-if="uid == user.id">
                     <div class="mb32">
-                        <h5 class="border-bottom pb-1">Activities</h5>
+                        <h5 class="border-bottom pb-1">
+                            Activities
+                            <t t-call="website_forum.forum_filter_tag"/>
+                        </h5>
                         <t t-call="website_forum.display_activities"/>
                     </div>
                 </div>
             </t>
         </xpath>
+    </template>
+
+    <template id="forum_filter_tag" name="Filtering Forum Tag">
+        <t t-if="forum_filtered">
+            <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-1 ml-4">
+                <i class="fa fa-filter mr-2 text-muted"/>
+                <t t-esc="forum_filtered"/>
+                <a t-attf-href="/profile/user/#{uid}" class="btn border-0 py-1">&#215;</a>
+            </span>
+        </t>
     </template>
 
     <template id="display_activities" name="Forum Profile Activities">
