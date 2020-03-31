@@ -452,6 +452,7 @@ class CompanyDependentAttribute(models.Model):
     _description = 'Test New API Company Attribute'
 
     company = fields.Many2one('test_new_api.company')
+    company_foo = fields.Char(related='company.foo')
     quantity = fields.Integer()
     bar = fields.Char(compute='_compute_bar', store=True)
 
