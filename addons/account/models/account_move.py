@@ -198,7 +198,7 @@ class AccountMove(models.Model):
         help='If this checkbox is ticked, this entry will be automatically posted at its date.')
 
     # ==== Reverse feature fields ====
-    reversed_entry_id = fields.Many2one('account.move', string="Reverse entry", readonly=True, copy=False,
+    reversed_entry_id = fields.Many2one('account.move', string="Reversal of", readonly=True, copy=False,
         check_company=True)
 
     # =========================================================
