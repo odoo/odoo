@@ -48,13 +48,19 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             self._focusOnFirstInput();
             // Init event listener
             if (!self.readonly) {
-                $(document).on('keypress', self._onKeyPress.bind(self));
+                $(document).on('keydown', self._onKeyDown.bind(self));
             }
             if (self.options.sessionInProgress &&
                 (self.options.isStartScreen || self.options.hasAnswered || self.options.isPageDescription)) {
                 self.preventEnterSubmit = true;
             }
             self._initSessionManagement();
+
+            // Needs global selector as progress/navigation are not within the survey form, but need
+            //to be updated at the same time
+            self.$surveyProgress = $('.o_survey_progress_wrapper');
+            self.$surveyNavigation = $('.o_survey_navigation_wrapper');
+            self.$surveyNavigation.find('.o_survey_navigation_submit').on('click', self._onSubmit.bind(self));
         });
     },
 
@@ -65,9 +71,18 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     // Handlers
     // -------------------------------------------------------------------------
 
-    _onKeyPress: function (event) {
-        // If user is answering a textarea, do not handle keyPress
-        if (this.$("textarea").is(":focus")) {
+    /**
+     * Handle keyboard navigation:
+     * - 'enter' or 'arrow-right' => submit form
+     * - 'arrow-left' => submit form (but go back backwards)
+     * - other alphabetical character ('a', 'b', ...)
+     *   Select the related option in the form (if available)
+     *
+     * @param {Event} event
+     */
+    _onKeyDown: function (event) {
+        // If user is answering a text input, do not handle keydown
+        if (this.$("textarea").is(":focus") || this.$('input').is(':focus')) {
             return;
         }
 
@@ -76,12 +91,17 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var letter = String.fromCharCode(keyCode).toUpperCase();
 
         // Handle Start / Next / Submit
-        if (keyCode === 13) {  // Enter : go Next
+        if (keyCode === 13 || keyCode === 39) {  // Enter or arrow-right: go Next
             event.preventDefault();
             if (!this.preventEnterSubmit) {
                 var isFinish = this.$('button[value="finish"]').length !== 0;
                 this._submitForm({isFinish: isFinish});
             }
+        } else if (keyCode === 37) {  // arrow-left: previous (if available)
+            // It's easier to actually click on the button (if in the DOM) as it contains necessary
+            // data that are used in the event handler.
+            // Again, global selector necessary since the navigation is outside of the form.
+            $('.o_survey_navigation_submit[value="previous"]').click();
         } else if (self.options.questionsLayout === 'page_per_question'
                    && letter.match(/[a-z]/i)) {
             var $choiceInput = this.$(`input[data-selection-key=${letter}]`);
@@ -91,6 +111,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 } else {
                     $choiceInput.prop("checked", !$choiceInput.prop("checked")).trigger('change');
                 }
+
                 // Avoid selection key to be typed into the textbox if 'other' is selected by key
                 event.preventDefault();
             }
@@ -99,8 +120,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
     /**
     * Checks, if the 'other' choice is checked. Applies only if the comment count as answer.
-    *   If not checked : Clear the comment textarea and disable it
-    *   If checked : enable the comment textarea and focus on it
+    *   If not checked : Clear the comment textarea, hide and disable it
+    *   If checked : enable the comment textarea, show and focus on it
     *
     * @private
     * @param {Event} event
@@ -114,19 +135,32 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         if ($otherItem.prop('checked') || $commentInput.hasClass('o_survey_comment')) {
             $commentInput.enable();
+            $commentInput.closest('.o_survey_comment_container').removeClass('d-none');
             if ($otherItem.prop('checked')) {
                 $commentInput.focus();
             }
         } else {
             $commentInput.val('');
+            $commentInput.closest('.o_survey_comment_container').addClass('d-none');
             $commentInput.enable(false);
         }
 
         var $matrixBtn = $target.closest('.o_survey_matrix_btn');
         if ($target.attr('type') === 'radio') {
+            var isQuestionComplete = false;
             if ($matrixBtn.length > 0) {
                 $matrixBtn.closest('tr').find('td').removeClass('o_survey_selected');
                 $matrixBtn.addClass('o_survey_selected');
+                if (this.options.questionsLayout === 'page_per_question') {
+                    var subQuestionsIds = $matrixBtn.closest('table').data('subQuestions');
+                    var completedQuestions = [];
+                    subQuestionsIds.forEach(function (id) {
+                        if (self.$('tr#' + id).find('input:checked').length !== 0) {
+                            completedQuestions.push(id);
+                        }
+                    });
+                    isQuestionComplete = completedQuestions.length === subQuestionsIds.length;
+                }
             } else {
                 var previouslySelectedAnswer = $choiceItemGroup.find('label.o_survey_selected');
                 previouslySelectedAnswer.removeClass('o_survey_selected');
@@ -134,6 +168,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 var newlySelectedAnswer = $target.closest('label');
                 if (newlySelectedAnswer.find('input').val() !== previouslySelectedAnswer.find('input').val()) {
                     newlySelectedAnswer.addClass('o_survey_selected');
+                    isQuestionComplete = this.options.questionsLayout === 'page_per_question';
                 }
 
                 // Conditional display
@@ -164,6 +199,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                         this.selectedAnswers.push(parseInt($target.val()));
                     }
                 }
+            }
+            // Submit Form
+            var isLastQuestion = this.$('button[value="finish"]').length !== 0;
+            if (!isLastQuestion && this.options.usersCanGoBack && isQuestionComplete) {
+                this._submitForm({});
             }
         } else {  // $target.attr('type') === 'checkbox'
             if ($matrixBtn.length > 0) {
@@ -234,18 +274,18 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
      * If the trigger is 'next_question', we handle some extra computation to find
      * a suitable "fadeInOutDelay" based on the delay between the time of the question
      * change by the host and the time of reception of the event.
-     * This will allow us to account for a little bit of server lag (up to 2 seconds)
+     * This will allow us to account for a little bit of server lag (up to 1 second)
      * while giving everyone a fair experience on the quiz.
      *
      * e.g 1:
      * - The host switches the question
-     * - We receive the event 500 ms later due to server lag
-     * - -> The fadeInOutDelay will be 750 ms (500ms delay + 750ms * 2 fade in fade out)
+     * - We receive the event 200 ms later due to server lag
+     * - -> The fadeInOutDelay will be 400 ms (200ms delay + 400ms * 2 fade in fade out)
      *
      * e.g 2:
      * - The host switches the question
-     * - We receive the event 1500 ms later due to bigger server lag
-     * - -> The fadeInOutDelay will be 250ms (1500ms delay + 250ms * 2 fade in fade out)
+     * - We receive the event 600 ms later due to bigger server lag
+     * - -> The fadeInOutDelay will be 200ms (600ms delay + 200ms * 2 fade in fade out)
      *
      * @private
      * @param {Array[]} notifications structured as specified by the bus feature
@@ -275,13 +315,15 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 var serverDelayMS = moment.utc().valueOf() - moment.unix(nextPageEvent.question_start).utc().valueOf();
                 if (serverDelayMS < 0) {
                     serverDelayMS = 0;
-                } else if (serverDelayMS > 2000) {
-                    serverDelayMS = 2000;
+                } else if (serverDelayMS > 1000) {
+                    serverDelayMS = 1000;
                 }
-                this.fadeInOutDelay = (2000 - serverDelayMS) / 2;
+                this.fadeInOutDelay = (1000 - serverDelayMS) / 2;
             } else {
                 this.fadeInOutDelay = 400;
             }
+
+            this.$('.o_survey_main_title:visible').fadeOut(400);
 
             this.preventEnterSubmit = false;
             this.readonly = false;
@@ -324,6 +366,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         if (this.options.isStartScreen) {
             route = "/survey/begin";
+            // Hide survey title in 'page_per_question' layout: it takes too much space
+            if (this.options.questionsLayout === 'page_per_question') {
+                this.$('.o_survey_main_title').fadeOut(400);
+            }
         } else {
             var $form = this.$('form');
             var formData = new FormData($form[0]);
@@ -396,7 +442,18 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         if (result && !result.error) {
             this.$(".o_survey_form_content").empty();
-            this.$(".o_survey_form_content").html(result);
+            this.$(".o_survey_form_content").html(result.survey_content);
+
+            if (result.survey_progress && this.$surveyProgress.length !== 0) {
+                this.$surveyProgress.html(result.survey_progress);
+            } else if (options.isFinish && this.$surveyProgress.length !== 0) {
+                this.$surveyProgress.remove();
+            }
+
+            if (result.survey_navigation && this.$surveyNavigation.length !== 0) {
+                this.$surveyNavigation.html(result.survey_navigation);
+                this.$surveyNavigation.find('.o_survey_navigation_submit').on('click', self._onSubmit.bind(self));
+            }
 
             // Hide timer if end screen (if page_per_question in case of conditional questions)
             if (self.options.questionsLayout === 'page_per_question' && this.$('.o_survey_finished').length > 0) {

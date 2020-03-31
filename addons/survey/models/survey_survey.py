@@ -23,6 +23,27 @@ class Survey(models.Model):
     def _get_default_access_token(self):
         return str(uuid.uuid4())
 
+    def _get_default_session_code(self):
+        """ Attempt to generate a session code for our survey.
+        The method will first try to generate 20 codes with 4 digits each and check if any are colliding.
+        If we have at least one non-colliding code, we use it.
+        If all 20 generated codes are colliding, we try with 20 codes of 5 digits,
+        then 6, ... up to 10 digits. """
+
+        for digits_count in range(4, 10):
+            range_lower_bound = 1 * (10 ** (digits_count - 1))
+            range_upper_bound = (range_lower_bound * 10) - 1
+            code_candidates = set([str(random.randint(range_lower_bound, range_upper_bound)) for i in range(20)])
+            colliding_codes = self.sudo().search_read(
+                [('session_code', 'in', list(code_candidates))],
+                ['session_code']
+            )
+            code_candidates -= set([colliding_code['session_code'] for colliding_code in colliding_codes])
+            if code_candidates:
+                return list(code_candidates)[0]
+
+        return False  # could not generate a code
+
     # description
     title = fields.Char('Survey Title', required=True, translate=True)
     color = fields.Integer('Color Index', default=0)
@@ -113,6 +134,9 @@ class Survey(models.Model):
         ('ready', 'Ready'),
         ('in_progress', 'In Progress'),
         ], string="Session State", copy=False)
+    session_code = fields.Char('Session Code', default=lambda self: self._get_default_session_code(), copy=False,
+        help="This code will be used by your attendees to reach your session. Feel free to customize it however you like!")
+    session_link = fields.Char('Session Link', compute='_compute_session_link')
     # live sessions - current question fields
     session_question_id = fields.Many2one('survey.question', string="Current Question", copy=False,
         help="The current question of the survey session.")
@@ -130,6 +154,7 @@ class Survey(models.Model):
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique'),
+        ('session_code_unique', 'unique(session_code)', 'Session code should be unique'),
         ('certification_check', "CHECK( scoring_type!='no_scoring' OR certification=False )",
             'You can only create certifications for surveys that have a scoring mechanism.'),
         ('time_limit_check', "CHECK( (is_time_limited=False) OR (time_limit is not null AND time_limit > 0) )",
@@ -192,10 +217,14 @@ class Survey(models.Model):
         """ We have to loop since our result is dependent of the survey.session_start_time.
         This field is currently used to display the count about a single survey, in the
         context of sessions, so it should not matter too much. """
+
         for survey in self:
             answer_count = 0
             input_count = self.env['survey.user_input'].read_group(
-                [('survey_id', '=', survey.id), ('create_date', '>=', survey.session_start_time)],
+                [('survey_id', '=', survey.id),
+                 ('is_session_answer', '=', True),
+                 ('state', '!=', 'done'),
+                 ('create_date', '>=', survey.session_start_time)],
                 ['create_uid:count'],
                 ['survey_id'],
             )
@@ -223,6 +252,18 @@ class Survey(models.Model):
                 answer_count = input_line_count[0].get('user_input_id', 0)
 
             survey.session_question_answer_count = answer_count
+
+    @api.depends('session_code')
+    def _compute_session_link(self):
+        for survey in self:
+            if survey.session_code:
+                survey.session_link = werkzeug.urls.url_join(
+                    survey.get_base_url(),
+                    '/s/%s' % survey.session_code)
+            else:
+                survey.session_link = werkzeug.urls.url_join(
+                    survey.get_base_url(),
+                    survey.get_start_url())
 
     @api.depends('scoring_type', 'question_and_page_ids.save_as_nickname')
     def _compute_session_show_leaderboard(self):
@@ -404,6 +445,30 @@ class Survey(models.Model):
 
         return questions
 
+    def _can_go_back(self, answer, page_or_question):
+        """ Check if the user can go back to the previous question/page for the currently
+        viewed question/page.
+        Back button needs to be configured on survey and, depending on the layout:
+        - In 'page_per_section', we can go back if we're not on the first page
+        - In 'page_per_question', we can go back if:
+          - It is not a session answer (doesn't make sense to go back in session context)
+          - We are not on the first question
+          - The survey does not have pages OR this is not the first page of the survey
+            (pages are displayed in 'page_per_question' layout when they have a description, see PR#44271)
+        """
+        self.ensure_one()
+
+        if self.users_can_go_back and answer.state == 'in_progress':
+            if self.questions_layout == 'page_per_section' and page_or_question != self.page_ids[0]:
+                return True
+            elif self.questions_layout == 'page_per_question' and \
+                 not answer.is_session_answer and \
+                 page_or_question != answer.predefined_question_ids[0] \
+                 and (not self.page_ids or page_or_question != self.page_ids[0]):
+                return True
+
+        return False
+
     def _has_attempts_left(self, partner, email, invite_token):
         self.ensure_one()
 
@@ -484,7 +549,7 @@ class Survey(models.Model):
             if page_or_question_id == 0:
                 return pages_or_questions[0]
 
-        current_page_index = pages_or_questions.ids.index(next(p.id for p in pages_or_questions if p.id == page_or_question_id))
+        current_page_index = pages_or_questions.ids.index(page_or_question_id)
 
         # Get previous and we are on first page  OR Get Next and we are on last page
         if (go_back and current_page_index == 0) or (not go_back and current_page_index == len(pages_or_questions) - 1):
@@ -516,6 +581,27 @@ class Survey(models.Model):
             return pages_or_questions[current_page_index + (1 if not go_back else -1)]
 
         return Question
+
+    def _is_last_page_or_question(self, user_input, page_or_question):
+        """ This method checks if the given question or page is the last one.
+        This includes conditional questions configuration. If the given question is normally not the last one but
+        every following questions are inactive due to conditional questions configurations (and user choices),
+        the given question will be the last one.
+        For section, we check in each following section if there is an active question.
+        If yes, the given page is not the last one.
+        """
+        pages_or_questions = self._get_pages_or_questions(user_input)
+        current_page_index = pages_or_questions.ids.index(page_or_question.id)
+        next_page_or_question_candidates = pages_or_questions[current_page_index + 1:]
+        if next_page_or_question_candidates:
+            inactive_questions = user_input._get_inactive_conditional_questions()
+            if self.questions_layout == 'page_per_question':
+                return not any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
+            elif self.questions_layout == 'page_per_section':
+                for section in next_page_or_question_candidates:
+                    return not any(next_question not in inactive_questions for next_question in section.question_ids)
+
+        return True
 
     def _get_survey_questions(self, answer=None, page_id=None, question_id=None):
         """ Returns a tuple containing: the survey question and the passed question_id / page_id
@@ -591,18 +677,6 @@ class Survey(models.Model):
             self.sudo().flush(['session_state'])
 
     def _get_session_next_question(self):
-        """ Triggers the next question of the session.
-
-        We artificially add 2 seconds to the 'current_question_start_time' to account for server delay.
-        As the timing can influence the attendees score, we try to be fair with everyone by giving them
-        an extra few seconds before we start counting down.
-
-        Frontend should take the delay into account by displaying the appropriate animations.
-
-        Writing the next question on the survey is sudo'ed to avoid potential access right issues.
-        e.g: a survey user can create a live session from any survey but he can only write
-        on its own survey. """
-
         self.ensure_one()
 
         if not self.question_ids or not self.env.user.has_group('survey.group_survey_user'):

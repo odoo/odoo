@@ -23,6 +23,8 @@ publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
             if (!self.readonly) {
                 $(document).on('keypress', self._onKeyPress.bind(self));
             }
+
+            self.$('input').focus();
         });
     },
 
@@ -48,9 +50,9 @@ publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
     _submitCode: function () {
         var self = this;
         this.$('.o_survey_error').addClass("d-none");
-        var $accessCodeInput = this.$('input#access_code');
+        var $sessionCodeInput = this.$('input#session_code');
         this._rpc({
-            route: `/survey/check_access_code/${$accessCodeInput.val()}`,
+            route: `/survey/check_session_code/${$sessionCodeInput.val()}`,
         }).then(function (response) {
             if (response.survey_url) {
                 window.location = response.survey_url;
