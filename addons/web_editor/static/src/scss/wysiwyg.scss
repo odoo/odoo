@@ -455,3 +455,43 @@ img.o_we_custom_image.mx-auto {
         }
     }
 }
+
+.o_crop_options {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+
+    input[type=radio] {
+        display: none;
+    }
+
+    .btn-group {
+        border-radius: 0.25rem;
+        margin: 0.1rem;
+    }
+
+    button, label {
+        cursor: pointer;
+        padding: 0.2rem 0.3rem;
+        margin: 0;
+        border: none;
+        border-right: 1px solid var(--o-we-bg-color-dark);
+        background-color: var(--o-we-bg-color);
+        color: var(--o-we-color);
+
+        &:hover {
+            background-color: var(--o-we-bg-color-dark);
+        }
+
+        &:first-child {
+            border-top-left-radius: 0.25rem;
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        &:last-child {
+            border-top-right-radius: 0.25rem;
+            border-bottom-right-radius: 0.25rem;
+            border-right: none;
+        }
+    }
+}

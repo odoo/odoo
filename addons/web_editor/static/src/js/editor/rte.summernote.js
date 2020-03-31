@@ -450,7 +450,7 @@ $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
 $.summernote.pluginEvents.cropImage = function (event, editor, layoutInfo, sorted) {
     var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
-    topBus.trigger('crop_image_dialog_demand', {
+    topBus.trigger('crop_image_demand', {
         $editable: $editable,
         media: $selection.data('target'),
     });
@@ -1065,7 +1065,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
         this.setParent(parent);
 
         topBus.on('alt_dialog_demand', this, this._onAltDialogDemand);
-        topBus.on('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
+        topBus.on('crop_image_demand', this, this._onCropImageDemand);
         topBus.on('link_dialog_demand', this, this._onLinkDialogDemand);
         topBus.on('media_dialog_demand', this, this._onMediaDialogDemand);
     },
@@ -1076,7 +1076,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
         mixins.EventDispatcherMixin.destroy.call(this);
 
         topBus.off('alt_dialog_demand', this, this._onAltDialogDemand);
-        topBus.off('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
+        topBus.off('crop_image_demand', this, this._onCropImageDemand);
         topBus.off('link_dialog_demand', this, this._onLinkDialogDemand);
         topBus.off('media_dialog_demand', this, this._onMediaDialogDemand);
     },
@@ -1100,25 +1100,28 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
 
             var datas = $croppedImg.attr('src').split(',')[1];
             let attachmentID = cropID;
+            const name = originalSrc + '.crop';
+            const commonParams = {
+                name: name,
+                datas: datas,
+                mimetype: mimetype,
+                // TODO: use original_id instead. Currently this would require an extra RPC :/
+                url: originalSrc, // To save the original image that was cropped
+            };
             if (!cropID) {
-                var name = originalSrc + '.crop';
                 attachmentID = await this._rpc({
                     model: 'ir.attachment',
                     method: 'create',
-                    args: [{
+                    args: [Object.assign({
                         res_model: resModel,
                         res_id: resID,
-                        name: name,
-                        datas: datas,
-                        mimetype: mimetype,
-                        url: originalSrc, // To save the original image that was cropped
-                    }],
+                    }, commonParams)],
                 });
             } else {
                 await this._rpc({
                     model: 'ir.attachment',
                     method: 'write',
-                    args: [[cropID], {datas: datas}],
+                    args: [[cropID], commonParams],
                 });
             }
             const access_token = await this._rpc({
@@ -1159,30 +1162,24 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
         altDialog.open();
     },
     /**
-     * Called when a demand to open a crop dialog is received on the bus.
+     * Called when a demand to crop an image is received on the bus.
      *
      * @private
      * @param {Object} data
      */
-    _onCropImageDialogDemand: function (data) {
+    _onCropImageDemand: function (data) {
         if (data.__alreadyDone) {
             return;
         }
         data.__alreadyDone = true;
-        var cropImageDialog = new weWidgets.CropImageDialog(this,
+        const ImageCropWidget = require('wysiwyg.widgets.ImageCropWidget');
+        new ImageCropWidget(this,
             _.extend({
                 res_model: data.$editable.data('oe-model'),
                 res_id: data.$editable.data('oe-id'),
             }, data.options || {}),
             data.media
-        );
-        if (data.onSave) {
-            cropImageDialog.on('save', this, data.onSave);
-        }
-        if (data.onCancel) {
-            cropImageDialog.on('cancel', this, data.onCancel);
-        }
-        cropImageDialog.open();
+        ).appendTo(new DocumentFragment());
     },
     /**
      * Called when a demand to open a link dialog is received on the bus.

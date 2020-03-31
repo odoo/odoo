@@ -1,31 +1,27 @@
-odoo.define('wysiwyg.widgets.CropImageDialog', function (require) {
+odoo.define('wysiwyg.widgets.ImageCropWidget', function (require) {
 'use strict';
 
-var core = require('web.core');
-var Dialog = require('wysiwyg.widgets.Dialog');
+const core = require('web.core');
+const qweb = core.qweb;
+const Widget = require('web.Widget');
 
-var _t = core._t;
+const _t = core._t;
 
-/**
- * CropImageDialog widget. Let users crop an image.
- */
-var CropImageDialog = Dialog.extend({
-    template: 'wysiwyg.widgets.crop_image',
-    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/web_editor/static/src/xml/wysiwyg.xml']
-    ),
-    events: _.extend({}, Dialog.prototype.events, {
-        'click .o_crop_options [data-event]': '_onCropOptionClick',
-    }),
+const ImageCropWidget = Widget.extend({
+    xmlDependencies: ['/web_editor/static/src/xml/wysiwyg.xml'],
 
     /**
      * @constructor
      */
-    init: function (parent, options, media) {
-        var self = this;
+    init(parent, options, media) {
+        this._super(...arguments);
         this.media = media;
-        this.$media = $(this.media);
-        var src = this.$media.attr('src').split('?')[0];
+        // Needed for editors in iframes.
+        this.document = media.ownerDocument;
+        this.options = options;
+        this.$media = $(media);
+        const src = this.media.getAttribute('src').split('?')[0];
+        // [0] => template rendering, [1] => data-attribute matching, [2] => passed to cropper
         this.aspectRatioList = [
             [_t("Free"), '0/0', 0],
             ["16:9", '16/9', 16 / 9],
@@ -35,129 +31,133 @@ var CropImageDialog = Dialog.extend({
         ];
         this.imageData = {
             imageSrc: src,
-            originalSrc: this.$media.data('crop:originalSrc') || src, // the original src for cropped DB images will be fetched later
-            mimetype: this.$media.data('crop:mimetype') || (_.str.endsWith(src, '.png') ? 'image/png' : 'image/jpeg'), // the mimetype for DB images will be fetched later
-            aspectRatio: this.$media.data('aspectRatio') || this.aspectRatioList[0][1],
+            // the original src for cropped DB images will be fetched later
+            originalSrc: this.$media.data('crop:originalSrc') || src,
+            // the mimetype for DB images will be fetched later
+            mimetype: this.$media.data('crop:mimetype') || (_.str.endsWith(src, '.png') ? 'image/png' : 'image/jpeg'),
+            aspectRatio: this.$media.data('aspectRatio') || '0/0',
+            // non-external: base64 or relative path that contains the current host. Probably need a more solid check?
             isExternalImage: src.substr(0, 5) !== 'data:' && src[0] !== '/' && src.indexOf(window.location.host) < 0,
+            scaleX: 1,
+            scaleY: 1,
         };
-        this.options = _.extend({
-            title: _t("Crop Image"),
-            buttons: this.imageData.isExternalImage ? [{
-                text: _t("Close"),
-                close: true,
-            }] : [{
-                text: _t("Save"),
-                classes: 'btn-primary',
-                click: this.save,
-            }, {
-                text: _t("Discard"),
-                close: true,
-            }],
-        }, options || {});
-        this._super(parent, this.options);
-        this.trigger_up('getRecordInfo', _.extend(this.options, {
-            callback: function (recordInfo) {
-                _.defaults(self.options, recordInfo);
-            },
-        }));
     },
     /**
      * @override
      */
-    willStart: function () {
-        var self = this;
-        var def = this._super.apply(this, arguments);
+    async willStart() {
+        await this._super.apply(this, arguments);
         if (this.imageData.isExternalImage) {
-            return def;
+            return;
         }
 
-        var defs = [def];
-        var params = {};
-        var isDBImage = false;
-        var matchImageID = this.imageData.imageSrc.match(/^\/web\/image\/(\d+)/);
-        if (matchImageID) {
-            params.image_id = parseInt(matchImageID[1]);
-            isDBImage = true;
+        const imageID = this.imageData.imageSrc.match(/^\/web\/image\/([^/?]+)/);
+        if (!imageID) {
+            return;
+        }
+        let params;
+        if (imageID[1].match(/^\d+$/)) {
+            params = {'image_id': parseInt(imageID[1])};
         } else {
-            var matchXmlID = this.imageData.imageSrc.match(/^\/web\/image\/([^/?]+)/);
-            if (matchXmlID) {
-                params.xml_id = matchXmlID[1];
-                isDBImage = true;
-            }
+            params = {'xml_id': imageID[1]};
         }
-        if (isDBImage) {
-            defs.push(this._rpc({
-                route: '/web_editor/get_image_info',
-                params: params,
-            }).then(function (res) {
-                _.extend(self.imageData, res);
-            }));
-        }
-        return Promise.all(defs);
+        // Get id, mimetype and originalSrc.
+        const imageInfo = await this._rpc({route: '/web_editor/get_image_info', params});
+        Object.assign(this.imageData, imageInfo);
     },
     /**
      * @override
      */
-    start: function () {
-        this.$cropperImage = this.$('.o_cropper_image');
-        if (this.$cropperImage.length) {
-            var data = this.$media.data();
-            var ratio = 0;
-            for (var i = 0; i < this.aspectRatioList.length; i++) {
-                if (this.aspectRatioList[i][1] === data.aspectRatio) {
-                    ratio = this.aspectRatioList[i][2];
-                    break;
-                }
-            }
-            this.$cropperImage.cropper({
-                viewMode: 2,
-                dragMode: 'move',
-                autoCropArea: 1.0,
-                aspectRatio: ratio,
-                data: _.pick(data, 'x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY')
-            });
-        }
-        return this._super.apply(this, arguments);
+    async start() {
+        const _super = this._super.bind(this);
+        const topLevel = this.document.getElementById('wrapwrap') || this.document;
+        const backdrop = this.document.createElement('div');
+        this.backdrop = backdrop;
+        backdrop.style = `
+            background-color: #8888;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1024;
+        `;
+
+        const cropperWrapper = this.document.createElement('div');
+        this.media.setAttribute('src', this.imageData.originalSrc);
+        await new Promise(resolve => this.media.addEventListener('load', resolve, {once: true}));
+        const cropperImage = this.document.createElement('img');
+        cropperImage.setAttribute('src', this.imageData.originalSrc);
+        this.$cropperImage = $(cropperImage);
+        [cropperImage.style.width, cropperImage.style.height] = [this.$media.width() + 'px', this.$media.height() + 'px'];
+        const $buttons = $(qweb.render('wysiwyg.widgets.crop_buttons', {widget: this}));
+
+        cropperWrapper.appendChild(cropperImage);
+        cropperWrapper.appendChild($buttons[0]);
+        backdrop.appendChild(cropperWrapper);
+        topLevel.appendChild(backdrop);
+        cropperWrapper.style.position = 'absolute';
+        $(cropperWrapper).offset(this.$media.offset());
+        [cropperWrapper.style.marginLeft, cropperWrapper.style.marginTop] = [this.$media.css('padding-left'), this.$media.css('padding-top')];
+
+        $buttons.on('click.crop_options', '[data-action]', this._onCropOptionClick.bind(this));
+
+        const data = this.media.dataset;
+        await new Promise(resolve => cropperImage.addEventListener('load', resolve, {once: true}));
+        this.$cropperImage.cropper({
+            viewMode: 2,
+            dragMode: 'move',
+            autoCropArea: 1.0,
+            aspectRatio: parseFloat(data.aspectRatio),
+            data: _.mapObject(_.pick(data, 'x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY'), n => parseFloat(n)),
+            // Can't use 0 because it's falsy and the lib will then use its defaults (200x100)
+            minContainerWidth: 1,
+            minContainerHeight: 1,
+        });
+        core.bus.trigger('deactivate_snippet');
+
+        this._onOutsideClick = this._onOutsideClick.bind(this);
+        // We use capture so that the handler is called before other editor handlers
+        // like save, such that we can restore the src before a save.
+        this.document.addEventListener('click', this._onOutsideClick, {capture: true});
+        return _super(...arguments);
     },
     /**
      * @override
      */
-    destroy: function () {
-        if (this.$cropperImage.length) {
-            this.$cropperImage.cropper('destroy');
-        }
-        this._super.apply(this, arguments);
+    destroy() {
+        this.$cropperImage.cropper('destroy');
+        this.backdrop.remove();
+        this.document.removeEventListener('click', this._onOutsideClick, {capture: true});
+        return this._super(...arguments);
     },
     /**
      * Updates the DOM image with cropped data and associates required
      * information for a potential future save (where required cropped data
      * attachments will be created).
      *
-     * @override
+     * @private
      */
-    save: function () {
-        var self = this;
-        var cropperData = this.$cropperImage.cropper('getData');
-
-        // Mark the media for later creation of required cropped attachments...
-        this.$media.addClass('o_cropped_img_to_save');
-
-        // ... and attach required data
-        this.$media.data('crop:resModel', this.options.res_model);
-        this.$media.data('crop:resID', this.options.res_id);
-        this.$media.data('crop:id', this.imageData.id);
-        this.$media.data('crop:mimetype', this.imageData.mimetype);
-        this.$media.data('crop:originalSrc', this.imageData.originalSrc);
+    _save() {
+        // Mark the media for later creation of required cropped attachments
+        this.media.classList.add('o_cropped_img_to_save');
 
         // Mark the media with the cropping information which is required for
         // a future crop edition
-        this.$media
-            .attr('data-aspect-ratio', this.imageData.aspectRatio)
-            .data('aspectRatio', this.imageData.aspectRatio);
-        _.each(cropperData, function (value, key) {
-            key = _.str.dasherize(key);
-            self.$media.attr('data-' + key, value);
-            self.$media.data(key, value);
+        this.$media.data({
+            'crop:resModel': this.options.res_model,
+            'crop:resID': this.options.res_id,
+            'crop:id': this.imageData.id,
+            'crop:mimetype': this.imageData.mimetype,
+            'crop:originalSrc': this.imageData.originalSrc,
+            'aspectRatio': this.imageData.aspectRatio,
+        });
+
+        this.media.dataset.aspectRatio = this.imageData.aspectRatio;
+        const cropperData = this.$cropperImage.cropper('getData');
+        Object.entries(cropperData).forEach(([key, value]) => {
+            this.media.dataset[key] = value;
+            $(this.media).data(key, value);
         });
 
         // Update the media with base64 source for preview before saving
@@ -165,10 +165,17 @@ var CropImageDialog = Dialog.extend({
             width: cropperData.width,
             height: cropperData.height,
         });
-        this.$media.attr('src', canvas.toDataURL(this.imageData.mimetype));
-
-        this.final_data = this.media;
-        return this._super.apply(this, arguments);
+        this.media.setAttribute('src', canvas.toDataURL(this.imageData.mimetype));
+        this.destroy();
+    },
+    /**
+     * Discards the current crop.
+     *
+     * @private
+     */
+    _discard() {
+        this.media.setAttribute('src', this.imageData.imageSrc);
+        return this.destroy();
     },
 
     //--------------------------------------------------------------------------
@@ -181,31 +188,41 @@ var CropImageDialog = Dialog.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onCropOptionClick: function (ev) {
-        var $option = $(ev.currentTarget);
-        var opt = $option.data('event');
-        var value = $option.data('value');
-        switch (opt) {
+    _onCropOptionClick(ev) {
+        const {action, value, scaleDirection} = ev.currentTarget.dataset;
+        switch (action) {
             case 'ratio':
                 this.$cropperImage.cropper('reset');
-                this.imageData.aspectRatio = $option.data('label');
-                this.$cropperImage.cropper('setAspectRatio', value);
-                break;
+                this.imageData.aspectRatio = value;
+                return this.$cropperImage.cropper('setAspectRatio', value);
             case 'zoom':
             case 'rotate':
             case 'reset':
-                this.$cropperImage.cropper(opt, value);
+                this.$cropperImage.cropper(action, value);
+                this.imageData.scaleX = this.imageData.scaleY = 1;
                 break;
             case 'flip':
-                var direction = value === 'horizontal' ? 'x' : 'y';
-                var scaleAngle = -$option.data(direction);
-                $option.data(direction, scaleAngle);
-                this.$cropperImage.cropper('scale' + direction.toUpperCase(), scaleAngle);
-                break;
+                this.imageData[scaleDirection] *= -1;
+                return this.$cropperImage.cropper(scaleDirection, this.imageData[scaleDirection]);
+            case 'apply':
+                return this._save();
+            case 'discard':
+                return this._discard();
+        }
+    },
+    /**
+     * Discards crop if click outside of the widget.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onOutsideClick(ev) {
+        if (!this.backdrop.contains(ev.target)) {
+            return this._discard();
         }
     },
 });
 
 
-return CropImageDialog;
+return ImageCropWidget;
 });
