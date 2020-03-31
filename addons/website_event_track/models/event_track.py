@@ -80,7 +80,7 @@ class Track(models.Model):
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this track\n"
              " * Green indicates the track is ready to be pulled to the next stage")
-    description = fields.Html(translate=html_translate, sanitize_attributes=False)
+    description = fields.Html(translate=html_translate, sanitize_attributes=False, sanitize_form=False)
     date = fields.Datetime('Track Date')
     date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
     duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")

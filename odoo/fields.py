@@ -1592,6 +1592,7 @@ class Html(_String):
         'sanitize_tags': True,          # whether to sanitize tags (only a white list of attributes is accepted)
         'sanitize_attributes': True,    # whether to sanitize attributes (only a white list of attributes is accepted)
         'sanitize_style': False,        # whether to sanitize style attributes
+        'sanitize_form': True,          # whether to sanitize forms
         'strip_style': False,           # whether to strip style attributes (removed and therefore not sanitized)
         'strip_classes': False,         # whether to strip classes attributes
     }
@@ -1627,6 +1628,7 @@ class Html(_String):
                 sanitize_tags=self.sanitize_tags,
                 sanitize_attributes=self.sanitize_attributes,
                 sanitize_style=self.sanitize_style,
+                sanitize_form=self.sanitize_form,
                 strip_style=self.strip_style,
                 strip_classes=self.strip_classes)
         return value
@@ -1640,6 +1642,7 @@ class Html(_String):
                 sanitize_tags=self.sanitize_tags,
                 sanitize_attributes=self.sanitize_attributes,
                 sanitize_style=self.sanitize_style,
+                sanitize_form=self.sanitize_form,
                 strip_style=self.strip_style,
                 strip_classes=self.strip_classes)
         return value

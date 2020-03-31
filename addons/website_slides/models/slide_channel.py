@@ -87,7 +87,7 @@ class Channel(models.Model):
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True)
     description = fields.Text('Short Description', translate=True)
-    description_html = fields.Html('Description', translate=tools.html_translate, sanitize_attributes=False)
+    description_html = fields.Html('Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
     channel_type = fields.Selection([
         ('documentation', 'Documentation'), ('training', 'Training')],
         string="Course type", default="documentation", required=True)
