@@ -874,6 +874,7 @@ var SnippetsMenu = Widget.extend({
             '.o_we_no_overlay',
             '.ui-autocomplete',
             '.modal .close',
+            '.o_we_crop_widget',
         ].join(', ');
     },
     /**

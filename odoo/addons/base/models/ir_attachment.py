@@ -577,8 +577,3 @@ class IrAttachment(models.Model):
         domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
         fieldNames = ['__last_update', 'datas', 'mimetype'] + (extra_fields or [])
         return self.search_read(domain, fieldNames, order=order, limit=1)
-
-    @api.model
-    def get_attachment_by_key(self, key, extra_domain=None, order=None):
-        domain = [('key', '=', key)] + (extra_domain or [])
-        return self.search(domain, order=order, limit=1)
