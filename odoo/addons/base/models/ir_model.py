@@ -369,9 +369,9 @@ class IrModelFields(models.Model):
 
     name = fields.Char(string='Field Name', default='x_', required=True, index=True)
     complete_name = fields.Char(index=True)
-    model = fields.Char(string='Object Name', required=True, index=True,
+    model = fields.Char(string='Model Name', required=True, index=True,
                         help="The technical name of the model this field belongs to")
-    relation = fields.Char(string='Object Relation',
+    relation = fields.Char(string='Related Model',
                            help="For relationship fields, the technical name of the target model")
     relation_field = fields.Char(help="For one2many fields, the field on the target model that implement the opposite many2one relationship")
     relation_field_id = fields.Many2one('ir.model.fields', compute='_compute_relation_field_id',
@@ -1496,7 +1496,7 @@ class IrModelAccess(models.Model):
 
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
-    model_id = fields.Many2one('ir.model', string='Object', required=True, index=True, ondelete='cascade')
+    model_id = fields.Many2one('ir.model', string='Model', required=True, index=True, ondelete='cascade')
     group_id = fields.Many2one('res.groups', string='Group', ondelete='cascade', index=True)
     perm_read = fields.Boolean(string='Read Access')
     perm_write = fields.Boolean(string='Write Access')
