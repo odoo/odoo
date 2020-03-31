@@ -224,6 +224,9 @@ class AccountAnalyticLine(models.Model):
             if minutes_spent < 1:
                 amount = self.unit_amount
             else:
+                minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
+                rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
+                minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
                 amount = self.unit_amount + minutes_spent * 60 / 3600
             self.write({'unit_amount': amount})
 
