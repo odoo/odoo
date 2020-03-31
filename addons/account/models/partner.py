@@ -510,7 +510,7 @@ class ResPartner(models.Model):
     def _increase_rank(self, field):
         if self.ids and field in ['customer_rank', 'supplier_rank']:
             try:
-                with self.env.cr.savepoint():
+                with self.env.cr.savepoint(flush=False):
                     query = sql.SQL("""
                         SELECT {field} FROM res_partner WHERE ID IN %(partner_ids)s FOR UPDATE NOWAIT;
                         UPDATE res_partner SET {field} = {field} + 1
