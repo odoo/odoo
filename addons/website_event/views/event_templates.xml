@@ -527,7 +527,7 @@
             <i class="fa fa-pencil mr-2" role="img" aria-label="Edit" title="Edit event registration in backend"/><em>Configure Event Tickets</em>
         </a>
     </div>
-    <div t-if="event.start_sale_date and event.start_sale_date &gt; datetime.date.today() or not event.event_registrations_open" class="bg-white mb-5">
+    <div t-if="not event.event_registrations_open" class="bg-white mb-5">
         <div class="alert alert-info mb-0 d-flex justify-content-between align-items-center" role="status">
             <t t-if="event.start_sale_date and event.start_sale_date &gt; datetime.date.today()">
                 <em class="col-md-8">Ticket Sales starting on <t t-esc="event.start_sale_date"/></em>

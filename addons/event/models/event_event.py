@@ -169,7 +169,7 @@ class EventEvent(models.Model):
         compute='_compute_from_event_type', readonly=False, store=True)
     event_registrations_open = fields.Boolean(
         'Registration open', compute='_compute_event_registrations_open',
-        help='Registrations are open if seats are available on event and if tickets are sellable if ticketing is used.')
+        help='Registrations are open if event is not ended, seats are available on event and if tickets are sellable if ticketing is used.')
     start_sale_date = fields.Date(
         'Start sale date', compute='_compute_start_sale_date',
         help='If ticketing is used, this is the lowest starting sale date of tickets.')
@@ -241,16 +241,23 @@ class EventEvent(models.Model):
             seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
             event.seats_expected = seats_expected
 
-    @api.depends('date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available')
+    @api.depends('date_tz', 'start_sale_date', 'date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available')
     def _compute_event_registrations_open(self):
         """ Compute whether people may take registrations for this event
 
+          * event.date_end -> if event is done, registrations are not open anymore;
+          * event.start_sale_date -> lowest start date of tickets (if any; start_sale_date
+            is False if no ticket are defined, see _compute_start_sale_date);
           * any ticket is available for sale (seats available) if any;
           * seats are unlimited or seats are available;
         """
         for event in self:
-            event.event_registrations_open = event.date_end and (event.date_end > fields.Datetime.now()) and \
-                (event.seats_available or not event.seats_limited) and \
+            event = event._set_tz_context()
+            current_datetime = fields.Datetime.context_timestamp(event, fields.Datetime.now())
+            date_end_tz = event.date_end.astimezone(pytz.timezone(event.date_tz or 'UTC')) if event.date_end else False
+            event.event_registrations_open = (event.start_sale_date <= current_datetime.date() if event.start_sale_date else True) and \
+                (date_end_tz >= current_datetime if date_end_tz else True) and \
+                (not event.seats_limited or event.seats_available) and \
                 (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
 
     @api.depends('event_ticket_ids.start_sale_date')
