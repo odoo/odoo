@@ -20,6 +20,9 @@ def _admin_password_warn(uid):
     admin = request.env.ref('base.partner_admin')
     if uid not in admin.user_ids.ids:
         return
+    has_demo = bool(request.env['ir.module.module'].sudo().search_count([('demo', '=', True)]))
+    if has_demo:
+        return
 
     user = request.env(user=uid)['res.users']
     MailChannel = request.env(user=SUPERUSER_ID, context=user.context_get(), su=True)['mail.channel']
