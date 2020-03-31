@@ -87,6 +87,9 @@ class AccountAnalyticLine(models.Model):
         user_map = {employee.user_id.id: employee.id for employee in employees}
 
         for vals in vals_list:
+            # when the name is not provide by the 'Add a line', we set a default one
+            if vals.get('project_id') and not vals.get('name'):
+                vals['name'] = _('/')
             # compute employee only for timesheet lines, makes no sense for other lines
             if not vals.get('employee_id') and vals.get('project_id'):
                 vals['employee_id'] = user_map.get(vals.get('user_id') or default_user_id)
