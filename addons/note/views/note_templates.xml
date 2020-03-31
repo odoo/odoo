@@ -9,8 +9,8 @@
         </xpath>
     </template>
 
-    <template id="qunit_suite" name="note_tests" inherit_id="web.qunit_suite">
-        <xpath expr="//t[@t-set='head']" position="inside">
+    <template id="qunit_suite" name="note_tests" inherit_id="web.qunit_suite_tests">
+        <xpath expr="." position="inside">
             <script type="text/javascript" src="/note/static/tests/systray_activity_menu_tests.js"></script>
         </xpath>
     </template>

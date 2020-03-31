@@ -110,8 +110,8 @@
             </xpath>
         </template>
 
-        <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite">
-            <xpath expr="//t[@t-set='head']" position="inside">
+        <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="." position="inside">
                 <!-- thread window -->
                     <script type="text/javascript" src="/mail/static/tests/thread_window/basic_thread_window_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/thread_window/blank_thread_window_tests.js"></script>
