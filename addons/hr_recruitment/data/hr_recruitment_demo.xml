@@ -423,5 +423,33 @@
         <field name="user_id" ref="base.user_admin"/>
     </record>
 
+    <record model="hr.recruitment.source" id="hr_marketing_source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_marketing"/>
+    </record>
+    <record model="hr.recruitment.source" id="hr_ceo_source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_ceo"/>
+    </record>
+    <record model="hr.recruitment.source" id="hr_cto_source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_cto"/>
+    </record>
+    <record model="hr.recruitment.source" id="hr_developer_source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_developer"/>
+    </record>
+    <record model="hr.recruitment.source" id="hr_consultant_source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_consultant"/>
+    </record>
+    <record model="hr.recruitment.source" id="hr_hrm_source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_hrm"/>
+    </record>
+    <record model="hr.recruitment.source" id="hr_trainee_source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_trainee"/>
+    </record>
   </data>
 </odoo>
