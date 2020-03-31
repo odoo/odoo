@@ -14,11 +14,11 @@
                     <button name="action_result_survey" string="See results" type="object" class="oe_highlight"
                       attrs="{'invisible': ['|', ('state', '=', 'draft'), ('answer_done_count', '&lt;=', 0)]}"/>
                     <button name="action_start_session" string="Create Live Session" type="object"
-                        attrs="{'invisible': ['|', ('session_state', '!=', False), ('state', '=', 'draft')]}" />
+                        attrs="{'invisible': ['|', ('session_state', '!=', False), '|', ('state', '!=', 'open'), ('certification', '=', True)]}" />
                     <button name="action_open_session_manager" string="Open Session Manager" type="object"
                         attrs="{'invisible': ['|', ('session_state', '=', False), ('state', '=', 'draft')]}" />
                     <button name="action_end_session" string="Close Live Session" type="object"
-                        attrs="{'invisible': ['|', ('session_state', '!=', 'in_progress'), ('state', '=', 'draft')]}" />
+                        attrs="{'invisible': ['|', ('session_state', 'not in', ['ready', 'in_progress']), ('state', '=', 'draft')]}" />
                     <button name="action_draft" string="Set to draft" type="object" states="closed"/>
                     <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': ['|', ('state', '=', 'closed'), ('id', '=', False)]}"/>
                     <button name="action_print_survey" string="Print" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
