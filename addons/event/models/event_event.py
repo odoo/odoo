@@ -303,7 +303,7 @@ class EventEvent(models.Model):
         for event in self:
             # Need to localize because it could begin late and finish early in
             # another timezone
-            event = event.with_context(tz=event.date_tz)
+            event = event._set_tz_context()
             begin_tz = fields.Datetime.context_timestamp(event, event.date_begin)
             end_tz = fields.Datetime.context_timestamp(event, event.date_end)
             event.is_one_day = (begin_tz.date() == end_tz.date())
@@ -436,6 +436,10 @@ class EventEvent(models.Model):
             return dict((fname, cache_event[fname]) for fname in missing_fields)
         else:
             return {}
+
+    def _set_tz_context(self):
+        self.ensure_one()
+        return self.with_context(tz=self.date_tz or 'UTC')
 
     def action_set_done(self):
         """
