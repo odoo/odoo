@@ -2395,11 +2395,14 @@ class _Relational(Field):
                 else:
                     return "[('company_id', 'in', [allowed_company_ids[0], False])]"
             else:
+                # when using check_company=True on a field on 'res.company', the
+                # company_id comes from the id of the current record
+                cid = "id" if self.model_name == "res.company" else "company_id"
                 if self.comodel_name == "res.users":
                     # User allowed company ids = user.company_ids
-                    return "['|', (not company_id, '=', True), ('company_ids', 'in', [company_id])]"
+                    return f"['|', (not {cid}, '=', True), ('company_ids', 'in', [{cid}])]"
                 else:
-                    return "[('company_id', 'in', [company_id, False])]"
+                    return f"[('company_id', 'in', [{cid}, False])]"
         return self.domain(env[self.model_name]) if callable(self.domain) else self.domain
 
     def null(self, record):
