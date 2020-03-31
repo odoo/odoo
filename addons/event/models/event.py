@@ -312,8 +312,6 @@ class EventEvent(models.Model):
         res = super(EventEvent, self).create(vals)
         if res.organizer_id:
             res.message_subscribe([res.organizer_id.id])
-        if res.auto_confirm:
-            res.button_confirm()
         return res
 
     def write(self, vals):
