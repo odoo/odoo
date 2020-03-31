@@ -176,8 +176,8 @@ class SendSMS(models.TransientModel):
     def create(self, values):
         # TDE FIXME: currently have to compute manually to avoid required issue, waiting VFE branch
         if not values.get('body') or not values.get('composition_mode'):
-            values_wdef = self._add_missing_default_values(values)
-            cache_composer = self.new(values_wdef)
+            values_wdef = self._add_missing_default_values([values])
+            cache_composer = self.new(values_wdef[0])
             cache_composer._compute_body()
             cache_composer._compute_composition_mode()
             values['body'] = values.get('body') or cache_composer.body

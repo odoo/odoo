@@ -2828,7 +2828,7 @@ class TestPrePostComputes(common.TransactionCase):
     def test_pre_post_create_computes(self):
         Model = self.env["test_new_api.model_advanced_computes"]
 
-        # Ensure automatic assignation of pre_compute=False works
+        # Check automatic assignation of pre_compute=False on pre_compute=True fields
         # 1) dependency on create_date/create_uid/write_date/write_uid
         self.assertFalse(Model._fields.get('create_month').pre_compute)
         # 2) dependency on a pre_compute=False field

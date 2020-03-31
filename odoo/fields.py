@@ -182,14 +182,9 @@ class Field(MetaField('DummyField', (object,), {})):
         .. seealso:: :ref:`Advanced Fields/Compute fields <reference/fields/compute>`
 
     :param bool pre_compute: whether the field should be computed before record insertion
-        in database.  Should be used to specify manually some fields as pre_compute=False
-        when the field HAS to be computed after record insertion.
-        (e.g. statistics fields based on search/read_group), many2one
-        linking to the previous record, ... (default: `True`)
-
-        .. note::
-
-            This has no impact if the model itself is not specified as _pre_compute=True.
+        in database.  Should be used to specify manually some fields as pre_compute=True
+        when the field has to be or could be computed before record insertion.
+        (default: `False`)
 
     :param bool compute_sudo: whether the field should be recomputed as superuser
         to bypass access rights (by default ``True`` for stored fields, ``False``
@@ -328,7 +323,7 @@ class Field(MetaField('DummyField', (object,), {})):
             if not (attrs['store'] and not attrs.get('readonly', True)):
                 attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
-            attrs['pre_compute'] = attrs.get('pre_compute', store)
+            attrs['pre_compute'] = attrs.get('pre_compute', False)
         if attrs.get('related'):
             # by default, related fields are not stored, computed in superuser
             # mode, not copied and readonly
@@ -336,7 +331,7 @@ class Field(MetaField('DummyField', (object,), {})):
             attrs['compute_sudo'] = attrs.get('compute_sudo', attrs.get('related_sudo', True))
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', True)
-            attrs['pre_compute'] = attrs.get('pre_compute', store)
+            attrs['pre_compute'] = attrs.get('pre_compute', False)
         if attrs.get('company_dependent'):
             # by default, company-dependent fields are not stored, not computed
             # in superuser mode and not copied
@@ -644,6 +639,9 @@ class Field(MetaField('DummyField', (object,), {})):
                 if field.type in ('one2many', 'many2many'):
                     for inv_field in Model._field_inverses[field]:
                         yield tuple(field_seq) + (inv_field,)
+                    if self.related:
+                        # related fields depending on x2m should always be post computed.
+                        self.pre_compute=False
 
                 model_name = field.comodel_name
 

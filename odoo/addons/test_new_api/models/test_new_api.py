@@ -104,9 +104,9 @@ class Discussion(models.Model):
             for message in self.important_messages:
                 message.body = 'not last dummy message'
             # add new dummy message
-            message_vals = self.messages._add_missing_default_values({'body': 'dummy message', 'important': True})
-            self.messages |= self.messages.new(message_vals)
-            self.important_messages |= self.messages.new(message_vals)
+            message_vals = self.messages._add_missing_default_values([{'body': 'dummy message', 'important': True}])
+            self.messages |= self.messages.new(message_vals[0])
+            self.important_messages |= self.messages.new(message_vals[0])
 
     @api.onchange('moderator')
     def _onchange_moderator(self):
@@ -1043,19 +1043,18 @@ class SelectionNonStored(models.Model):
 class ModelAdvancedComputes(models.Model):
     _name = 'test_new_api.model_advanced_computes'
     _description = 'model with advanced computes'
-    _pre_compute = True
 
     name1 = fields.Char('First Name')
     name2 = fields.Char('Last Name')
     title = fields.Char('Job Function')
 
-    upper_name_1 = fields.Char(compute="_compute_uppers", store=True)
-    upper_name_2 = fields.Char(compute="_compute_uppers", store=True)
+    upper_name_1 = fields.Char(compute="_compute_uppers", store=True, pre_compute=True)
+    upper_name_2 = fields.Char(compute="_compute_uppers", store=True, pre_compute=True)
 
-    create_month = fields.Integer(compute="_compute_create_month", store=True)
+    create_month = fields.Integer(compute="_compute_create_month", store=True, pre_compute=True)
 
     full_upper_name = fields.Char(compute="_compute_full_upper", pre_compute=False, store=True)
-    full_card_content = fields.Text(compute="_compute_full_card_content", store=True)
+    full_card_content = fields.Text(compute="_compute_full_card_content", store=True, pre_compute=True)
 
     duplicates = fields.Many2many(
         comodel_name='test_new_api.model_advanced_computes',
@@ -1065,8 +1064,8 @@ class ModelAdvancedComputes(models.Model):
     child_ids = fields.One2many("test_new_api.x2m_computes", "parent_id")
     related_ids = fields.Many2many("test_new_api.x2m_computes", relation="advanced_computes_m2m_rel")
 
-    children_value = fields.Float(compute="_compute_children_value", store=True, required=True)
-    related_value = fields.Float(compute="_compute_related_value", store=True, required=True)
+    children_value = fields.Float(compute="_compute_children_value", store=True, required=True, pre_compute=True)
+    related_value = fields.Float(compute="_compute_related_value", store=True, required=True, pre_compute=True)
 
     @api.depends('name1', 'name2')
     def _compute_uppers(self):
@@ -1130,7 +1129,7 @@ class ModelAdvancedComputesX2M(models.Model):
 
     info = fields.Char('Info', default="blabla")
 
-    display_info = fields.Char(compute="_compute_display_info", store=True, required=True)
+    display_info = fields.Char(compute="_compute_display_info", store=True, required=True, pre_compute=True)
 
     parent_id = fields.Many2one("test_new_api.model_advanced_computes")
 
@@ -1150,6 +1149,4 @@ class ModelAdvancedComputesX2M(models.Model):
         for vals in vals_list:
             # Only true because we create all records of this model through x2m on the other model
             assert 'display_info' in vals, "display_info should have been pre-computed"
-        if not self.env.context.get("pre_computed"):
-            raise ValidationError("should have been pre-computed through parent")
         return super().create(vals_list)

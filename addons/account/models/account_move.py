@@ -1669,9 +1669,9 @@ class AccountMove(models.Model):
                 reordered_companies = sorted(allowed_companies, key=lambda cid: cid != journal_company.id)
                 ctx_vals['allowed_company_ids'] = reordered_companies
             self_ctx = self.with_context(**ctx_vals)
-            new_vals = self_ctx._add_missing_default_values(vals)
+            new_vals = self_ctx._add_missing_default_values([vals])
 
-            move = self_ctx.new(new_vals)
+            move = self_ctx.new(new_vals[0])
             new_vals_list.append(move._move_autocomplete_invoice_lines_values())
 
         return new_vals_list
