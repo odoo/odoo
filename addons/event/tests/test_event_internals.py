@@ -157,6 +157,14 @@ class TestEventData(TestEventCommon):
     def test_event_registrable(self):
         """Test if `_compute_event_registrations_open` works properly."""
         event = self.event_0.with_user(self.env.user)
+        event.write({
+            'date_begin': datetime(2020, 1, 30, 8, 0, 0),
+            'date_end': datetime(2020, 1, 31, 8, 0, 0),
+        })
+        self.assertFalse(event.event_registrations_open)
+        event.write({
+            'date_end': datetime(2020, 2, 4, 8, 0, 0),
+        })
         self.assertTrue(event.event_registrations_open)
 
         # ticket without dates boundaries -> ok
