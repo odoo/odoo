@@ -1633,7 +1633,8 @@ options.registry.anchorName = options.Class.extend({
      * @override
      */
     onClone: function () {
-        this.$target.removeAttr('id data-anchor');
+        this.$target.removeAttr('data-anchor');
+        this.$target.filter(':not(.carousel)').removeAttr('id');
     },
 
     //--------------------------------------------------------------------------
