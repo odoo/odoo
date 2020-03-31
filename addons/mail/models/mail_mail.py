@@ -155,11 +155,11 @@ class MailMail(models.Model):
                 ('res_partner_id', 'in', notif_emails.mapped('recipient_ids').ids),
                 ('is_email', '=', True)])
             if mail_sent:
-                notifications.write({
+                notifications.sudo().write({
                     'email_status': 'sent',
                 })
             else:
-                notifications.write({
+                notifications.sudo().write({
                     'email_status': 'exception',
                 })
         if mail_sent:
