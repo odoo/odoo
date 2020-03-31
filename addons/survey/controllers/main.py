@@ -311,10 +311,35 @@ class Survey(http.Controller):
     def _prepare_question_html(self, survey_sudo, answer_sudo, **post):
         """ Survey page navigation is done in AJAX. This function prepare the 'next page' to display in html
         and send back this html to the survey_form widget that will inject it into the page."""
-        data = self._prepare_survey_data(survey_sudo, answer_sudo, **post)
+        survey_data = self._prepare_survey_data(survey_sudo, answer_sudo, **post)
+
+        survey_content = False
         if answer_sudo.state == 'done':
-            return request.env.ref('survey.survey_fill_form_done').render(data)
-        return request.env.ref('survey.survey_fill_form_in_progress').render(data)
+            survey_content = request.env.ref('survey.survey_fill_form_done').render(survey_data)
+        else:
+            survey_content = request.env.ref('survey.survey_fill_form_in_progress').render(survey_data)
+
+        survey_progress = False
+        if answer_sudo.state == 'in_progress' and not survey_data.get('question', request.env['survey.question']).is_page:
+            if survey_sudo.questions_layout == 'page_per_section':
+                page_ids = survey_sudo.page_ids.ids
+                survey_progress = request.env.ref('survey.survey_progression').render({
+                    'survey': survey_sudo,
+                    'page_ids': page_ids,
+                    'page_number': page_ids.index(survey_data['page'].id) + (1 if survey_sudo.progression_mode == 'number' else 0)
+                })
+            elif survey_sudo.questions_layout == 'page_per_question':
+                page_ids = survey_sudo.question_ids.ids
+                survey_progress = request.env.ref('survey.survey_progression').render({
+                    'survey': survey_sudo,
+                    'page_ids': page_ids,
+                    'page_number': page_ids.index(survey_data['question'].id)
+                })
+
+        return {
+            'survey_content': survey_content,
+            'survey_progress': survey_progress
+        }
 
     @http.route('/survey/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_display_page(self, survey_token, answer_token, **post):

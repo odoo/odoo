@@ -55,6 +55,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 self.preventEnterSubmit = true;
             }
             self._initSessionManagement();
+
+            // Needs global selector as the progress is not within the survey form, but needs to be
+            // updated at the same time
+            self.$surveyProgress = $('.o_survey_progress_wrapper');
         });
     },
 
@@ -99,8 +103,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
     /**
     * Checks, if the 'other' choice is checked. Applies only if the comment count as answer.
-    *   If not checked : Clear the comment textarea and disable it
-    *   If checked : enable the comment textarea and focus on it
+    *   If not checked : Clear the comment textarea, hide and disable it
+    *   If checked : enable the comment textarea, show and focus on it
     *
     * @private
     * @param {Event} event
@@ -114,11 +118,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         if ($otherItem.prop('checked') || $commentInput.hasClass('o_survey_comment')) {
             $commentInput.enable();
+            $commentInput.closest('.o_survey_comment_container').removeClass('d-none');
             if ($otherItem.prop('checked')) {
                 $commentInput.focus();
             }
         } else {
             $commentInput.val('');
+            $commentInput.closest('.o_survey_comment_container').addClass('d-none');
             $commentInput.enable(false);
         }
 
@@ -283,6 +289,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 this.fadeInOutDelay = 400;
             }
 
+            this.$('.o_survey_main_title:visible').fadeOut(400);
+
             this.preventEnterSubmit = false;
             this.readonly = false;
             this._nextScreen(
@@ -324,6 +332,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         if (this.options.isStartScreen) {
             route = "/survey/begin";
+            // Hide survey title in 'page_per_question' layout: it takes too much space
+            if (this.options.questionsLayout === 'page_per_question') {
+                this.$('.o_survey_main_title').fadeOut(400);
+            }
         } else {
             var $form = this.$('form');
             var formData = new FormData($form[0]);
@@ -396,7 +408,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         if (result && !result.error) {
             this.$(".o_survey_form_content").empty();
-            this.$(".o_survey_form_content").html(result);
+            this.$(".o_survey_form_content").html(result.survey_content);
+
+            if (result.survey_progress && this.$surveyProgress.length !== 0) {
+                this.$surveyProgress.html(result.survey_progress);
+            } else if (options.isFinish && this.$surveyProgress.length !== 0) {
+                this.$surveyProgress.remove();
+            }
 
             // Hide timer if end screen (if page_per_question in case of conditional questions)
             if (self.options.questionsLayout === 'page_per_question' && this.$('.o_survey_finished').length > 0) {
