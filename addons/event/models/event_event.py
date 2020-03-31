@@ -99,7 +99,7 @@ class EventEvent(models.Model):
 
     name = fields.Char(string='Event', translate=True, required=True)
     note = fields.Text(string='Note')
-    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False)
+    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True,
