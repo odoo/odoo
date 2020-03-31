@@ -100,11 +100,9 @@ class WebsiteEventController(http.Controller):
             current_type = EventType.browse(int(searches['type']))
             domain_search["type"] = [("event_type_id", "=", int(searches["type"]))]
 
-        if searches["country"] != 'all' and searches["country"] != 'online':
+        if searches["country"] != 'all':
             current_country = request.env['res.country'].browse(int(searches['country']))
             domain_search["country"] = ['|', ("country_id", "=", int(searches["country"])), ("country_id", "=", False)]
-        elif searches["country"] == 'online':
-            domain_search["country"] = [("country_id", "=", False)]
 
         def dom_without(without):
             domain = []
@@ -140,8 +138,6 @@ class WebsiteEventController(http.Controller):
         order = 'date_begin'
         if searches.get('date', 'all') == 'old':
             order = 'date_begin desc'
-        if searches["country"] != 'all':   # if we are looking for a specific country
-            order = 'is_online, ' + order  # show physical events first
         order = 'is_published desc, ' + order
         events = Event.search(dom_without("none"), limit=step, offset=pager['offset'], order=order)
 
@@ -300,7 +296,7 @@ class WebsiteEventController(http.Controller):
     def registration_new(self, event, **post):
         tickets = self._process_tickets_form(event, post)
         availability_check = True
-        if event.seats_availability == 'limited':
+        if event.seats_limited:
             ordered_seats = 0
             for ticket in tickets:
                 ordered_seats += ticket['quantity']

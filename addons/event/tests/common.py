@@ -51,7 +51,6 @@ class TestEventCommon(common.SavepointCase):
         cls.event_type_complex = cls.env['event.type'].create({
             'name': 'Update Type',
             'auto_confirm': True,
-            'is_online': False,
             'has_seats_limitation': True,
             'seats_max': 30,
             'use_timezone': True,

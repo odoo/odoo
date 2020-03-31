@@ -43,7 +43,7 @@ class TestEventData(TestEventSaleCommon):
         # synchronize event
         event.write({'event_type_id': event_type.id})
         self.assertEqual(event.event_ticket_ids.name, event.event_type_id.event_type_ticket_ids.name)
-        self.assertEqual(event.event_ticket_ids.seats_availability, 'limited')
+        self.assertTrue(event.event_ticket_ids.seats_limited)
         self.assertEqual(event.event_ticket_ids.seats_max, 5)
         self.assertEqual(event.event_ticket_ids.product_id, self.event_product)
         self.assertEqual(event.event_ticket_ids.price, self.event_product.list_price)
@@ -120,10 +120,10 @@ class TestEventTicketData(TestEventSaleCommon):
         self.assertEqual(second_ticket.price, 8.0)
 
         # default availability
-        self.assertEqual(first_ticket.seats_availability, 'limited')
+        self.assertTrue(first_ticket.seats_limited)
         self.assertTrue(first_ticket.sale_available)
         self.assertFalse(first_ticket.is_expired)
-        self.assertEqual(second_ticket.seats_availability, 'unlimited')
+        self.assertFalse(second_ticket.seats_limited)
         self.assertTrue(second_ticket.sale_available)
         self.assertFalse(second_ticket.is_expired)
 

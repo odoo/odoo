@@ -17,20 +17,6 @@
                         <div class="row mt16 o_settings_container" name="event_type_location">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-                                    <field name="is_online"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="is_online"/>
-                                    <div class="row">
-                                        <div class="col-lg-8 mt16 text-muted">
-                                            Online events like webinars do not require a specific location
-                                            and are hosted online.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
                                     <field name="use_timezone"/>
                                 </div>
                                 <div class="o_setting_right_pane">
@@ -148,7 +134,6 @@
             <field name="arch" type="xml">
                 <search string="Event Templates">
                     <field name="name"/>
-                    <filter string="Online Event" name="online_event" help="Online Event" domain="[('is_online', '=', True)]"/>
                 </search>
             </field>
         </record>
@@ -215,26 +200,10 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Event Name"/>
                             <h1><field name="name" placeholder="e.g. Conference for Architects"/></h1>
-                            <field name="is_online" groups="base.group_no_one"/>
-                            <label for="is_online" string="Online" groups="base.group_no_one"/>
                         </div>
                         <group>
                             <group>
                                 <field name="active" invisible="1"/>
-                                <field name="organizer_id"/>
-                                <field name="address_id"
-                                    attrs="{'invisible': [('is_online', '=', True)]}"
-                                    context="{'show_address': 1}"
-                                    options='{"always_reload": True}'/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="user_id" domain="[('share', '=', False)]"/>
-                            </group>
-                            <group>
-                                <field name="event_type_id" options="{'no_create':True}"/>
-                                <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
-                                <field name="auto_confirm" groups="base.group_no_one"/>
-                            </group>
-                            <group>
                                 <label for="date_begin" string="Date"/>
                                 <div class="o_row">
                                     <field name="date_begin" widget="daterange" nolabel="1" class="oe_inline" options="{'related_end_date': 'date_end'}"/>
@@ -242,19 +211,22 @@
                                     <field name="date_end" widget="daterange" nolabel="1" class="oe_inline" options="{'related_start_date': 'date_begin'}"/>
                                 </div>
                                 <field name="date_tz"/>
+                                <field name="organizer_id"/>
+                                <field name="user_id" domain="[('share', '=', False)]"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="event_type_id" string="Template" options="{'no_create':True}"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                             </group>
                             <group>
-                                <label for="seats_availability"/>
+                                <field name="address_id"
+                                    context="{'show_address': 1}"
+                                    options='{"always_reload": True}'/>
+                                <field name="auto_confirm"/>
+                                <label for="seats_limited" string="Limit Registrations"/>
                                 <div>
-                                    <field name="seats_availability" widget='radio'/>
-                                    <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
-                                        to
-                                    </span>
-                                    <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
+                                    <field name="seats_limited"/>
+                                    <span attrs="{'invisible': [('seats_limited', '=', False)], 'required': [('seats_limited', '=', False)]}">to <field name="seats_max" class="oe_inline"/> Attendees</span>
                                 </div>
-                            </group>
-                            <group class="w-100">
-                                <field name="note" placeholder="Add a note..." nolabel="1"/>
                             </group>
                         </group>
                         <notebook>
@@ -278,10 +250,8 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Description" name="event_description">
-                                <group>
-                                    <field name="description"/>
-                                </group>
+                            <page string="Notes" name="event_notes">
+                                <field name="note" placeholder="Add a note..."/>
                             </page>
                         </notebook>
                     </sheet>
@@ -436,7 +406,6 @@
                     <separator/>
                     <filter string="Upcoming/Running" name="upcoming"
                         domain="[('date_end', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
-                    <filter string="Online Events" name="online_events" help="Online Events" domain="[('is_online', '=', True)]"/>
                     <separator/>
                     <filter string="Start Date" name="start_date" date="date_begin"/>
                     <separator/>
@@ -561,7 +530,7 @@
                                 <field name="event_ticket_id"
                                     domain="[
                                         ('event_id', '=', event_id),
-                                        '|', ('seats_availability', '=', 'unlimited'), ('seats_available', '>', 0)
+                                        '|', ('seats_limited', '=', False), ('seats_available', '>', 0)
                                     ]"
                                     attrs="{'invisible': [('event_id', '=', False)]}"
                                     options="{'no_open': True, 'no_create': True}"/>
