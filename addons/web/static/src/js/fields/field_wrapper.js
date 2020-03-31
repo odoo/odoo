@@ -33,8 +33,6 @@ odoo.define('web.FieldWrapper', function (require) {
             this._data.res_id = record.res_id;
             this._data.model = record.model;
             this._data.mode = options.mode || "readonly";
-            this._data._isValid = true;
-            this._data.lastSetValue = undefined;
             this._data.formatType = this._data.attrs.widget in field_utils.format ?
                                 this._data.attrs.widget :
                                 this._data.field.type;
@@ -43,9 +41,19 @@ odoo.define('web.FieldWrapper', function (require) {
             if (this._data.attrs.decorations) {
                 this._data.resetOnAnyFieldChange = true;
             }
-            for (const key in this._data) {
+
+            for (let key in this._data) {
                 Object.defineProperty(this, key, {
-                    get: () => (this.el ? this.componentRef.comp : this._data)[key],
+                    get: () => {
+                        if (this.el) {
+                            if (key === 'dataPointID') {
+                                return this.componentRef.comp.dataPointId;
+                            } else if (key === 'res_id') {
+                                return this.componentRef.comp.resId;
+                            }
+                        }
+                        return (this.el ? this.componentRef.comp : this._data)[key];
+                    },
                 });
             }
         }
@@ -59,9 +67,6 @@ odoo.define('web.FieldWrapper', function (require) {
         }
         get fieldDependencies() {
             return this.Component.fieldDependencies;
-        }
-        get resetOnAnyFieldChange() {
-            return this.Component.resetOnAnyFieldChange;
         }
         get specialData() {
             return this.Component.specialData;
@@ -80,11 +85,11 @@ odoo.define('web.FieldWrapper', function (require) {
         // Public
         //----------------------------------------------------------------------
 
-        activate(options) {
-            return this.componentRef.comp.activate(options);
+        activate() {
+            return this.componentRef.comp.activate(...arguments);
         }
         commitChanges() {
-            return this.componentRef.comp.commitChanges();
+            return this.componentRef.comp.commitChanges(...arguments);
         }
         getFocusableElement() {
             return $(this.componentRef.comp.focusableElement);
@@ -99,7 +104,7 @@ odoo.define('web.FieldWrapper', function (require) {
             if (this.componentRef.comp) {
                 return this.componentRef.comp.isSet;
             }
-            // because of the willStart, the real field widget may not be
+            // because of the willStart, the real field component may not be
             // instantiated yet when the renderer first asks if it is set
             // (only the wrapper is instantiated), so we instantiate one
             // with the same props, get its 'isSet' status, and destroy it.
@@ -111,14 +116,27 @@ odoo.define('web.FieldWrapper', function (require) {
         isValid() {
             return this.componentRef.comp.isValid;
         }
+        removeInvalidClass() {
+            return this.componentRef.comp.removeInvalidClass(...arguments);
+        }
         reset(record, event) {
             return this.update({record, event});
         }
-        setIDForLabel(id) {
-            return this.componentRef.comp.setIDForLabel(id);
+        setIDForLabel() {
+            return this.componentRef.comp.setIdForLabel(...arguments);
+        }
+        setInvalidClass() {
+            return this.componentRef.comp.setInvalidClass(...arguments);
         }
         updateModifiersValue(modifiers) {
-            return this.componentRef.comp.updateModifiersValue(modifiers);
+            if (this.props.options.attrs) {
+                this.props.options.attrs.modifiersValue = modifiers || {};
+            } else {
+                const viewType = this.props.options.viewType || 'default';
+                const fieldsInfo = this.props.record.fieldsInfo[viewType];
+                fieldsInfo[this.props.fieldName].modifiersValue = modifiers || {};
+            }
+            this.componentRef.comp.props = this.props;
         }
     }
 
