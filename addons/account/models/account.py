@@ -1319,8 +1319,9 @@ class AccountJournal(models.Model):
     def name_get(self):
         res = []
         for journal in self:
-            currency = journal.currency_id or journal.company_id.currency_id
-            name = "%s (%s)" % (journal.name, currency.name)
+            name = journal.name
+            if journal.currency_id and journal.currency_id != journal.company_id.currency_id:
+                name = "%s (%s)" % (name, journal.currency_id.name)
             res += [(journal.id, name)]
         return res
 
