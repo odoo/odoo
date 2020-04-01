@@ -10,10 +10,10 @@ class EventType(models.Model):
 
     website_track = fields.Boolean(
         string='Tracks on Website', compute='_compute_website_menu_data',
-        copy=True, readonly=False, store=True)
+        readonly=False, store=True)
     website_track_proposal = fields.Boolean(
         string='Tracks Proposals on Website', compute='_compute_website_menu_data',
-        copy=True, readonly=False, store=True)
+        readonly=False, store=True)
 
     @api.depends('website_menu')
     def _compute_website_menu_data(self):
@@ -32,10 +32,10 @@ class Event(models.Model):
     sponsor_count = fields.Integer('Sponsor Count', compute='_compute_sponsor_count')
     website_track = fields.Boolean(
         'Tracks on Website', compute='_compute_website_track',
-        copy=True, readonly=False, store=True)
+        readonly=False, store=True)
     website_track_proposal = fields.Boolean(
         'Proposals on Website', compute='_compute_website_track_proposal',
-        copy=True, readonly=False, store=True)
+        readonly=False, store=True)
     track_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Tracks Menus', domain=[('menu_type', '=', 'track')])
     track_proposal_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Proposals Menus', domain=[('menu_type', '=', 'track_proposal')])
     allowed_track_tag_ids = fields.Many2many('event.track.tag', relation='event_allowed_track_tags_rel', string='Available Track Tags')

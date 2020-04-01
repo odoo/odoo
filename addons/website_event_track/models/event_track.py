@@ -45,13 +45,13 @@ class Track(models.Model):
     partner_id = fields.Many2one('res.partner', 'Speaker')
     partner_name = fields.Char(
         string='Name', compute='_compute_partner_info',
-        copy=True, readonly=False, store=True, tracking=10)
+        readonly=False, store=True, tracking=10)
     partner_email = fields.Char(
         string='Email', compute='_compute_partner_info',
-        copy=True, readonly=False, store=True, tracking=20)
+        readonly=False, store=True, tracking=20)
     partner_phone = fields.Char(
         string='Phone', compute='_compute_partner_info',
-        copy=True, readonly=False, store=True, tracking=30)
+        readonly=False, store=True, tracking=30)
     partner_biography = fields.Html(string='Biography')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     stage_id = fields.Many2one(

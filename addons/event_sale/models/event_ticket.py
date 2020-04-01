@@ -14,14 +14,14 @@ class EventTemplateTicket(models.Model):
     def _default_product_id(self):
         return self.env.ref('event_sale.product_product_event', raise_if_not_found=False)
 
-    description = fields.Text(compute='_compute_description', copy=True, readonly=False, store=True)
+    description = fields.Text(compute='_compute_description', readonly=False, store=True)
     # product
     product_id = fields.Many2one(
         'product.product', string='Product', required=True,
         domain=[("event_ok", "=", True)], default=_default_product_id)
     price = fields.Float(
         string='Price', compute='_compute_price',
-        digits='Product Price', copy=True, readonly=False, store=True)
+        digits='Product Price', readonly=False, store=True)
     price_reduce = fields.Float(
         string="Price Reduce", compute="_compute_price_reduce",
         digits='Product Price')

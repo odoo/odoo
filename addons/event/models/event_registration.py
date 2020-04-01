@@ -32,15 +32,15 @@ class EventRegistration(models.Model):
         states={'done': [('readonly', True)]})
     name = fields.Char(
         string='Attendee Name', index=True,
-        compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=10)
-    email = fields.Char(string='Email', compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=11)
-    phone = fields.Char(string='Phone', compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=12)
-    mobile = fields.Char(string='Mobile', compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=13)
+        compute='_compute_contact_info', readonly=False, store=True, tracking=10)
+    email = fields.Char(string='Email', compute='_compute_contact_info', readonly=False, store=True, tracking=11)
+    phone = fields.Char(string='Phone', compute='_compute_contact_info', readonly=False, store=True, tracking=12)
+    mobile = fields.Char(string='Mobile', compute='_compute_contact_info', readonly=False, store=True, tracking=13)
     # organization
     date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.Datetime.now())  # weird crash is directly now
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
-        copy=True, readonly=False, store=True)
+        readonly=False, store=True)
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
     company_id = fields.Many2one(
