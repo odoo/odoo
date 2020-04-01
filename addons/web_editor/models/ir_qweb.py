@@ -359,16 +359,18 @@ class Image(models.AbstractModel):
 
         url_object = urls.url_parse(url)
         if url_object.path.startswith('/web/image'):
-            # url might be /web/image/<model>/<id>[_<checksum>]/<field>[/<width>x<height>]
             fragments = url_object.path.split('/')
             query = url_object.decode_query()
-            if fragments[3].isdigit():
+            url_id = fragments[3].split('-')[0]
+            # ir.attachment image urls: /web/image/<id>[-<checksum>][/...]
+            if url_id.isdigit():
                 model = 'ir.attachment'
-                oid = fragments[3]
+                oid = url_id
                 field = 'datas'
+            # url of binary field on model: /web/image/<model>/<id>/<field>[/...]
             else:
                 model = query.get('model', fragments[3])
-                oid = query.get('id', fragments[4].split('_')[0])
+                oid = query.get('id', fragments[4])
                 field = query.get('field', fragments[5])
             item = self.env[model].browse(int(oid))
             return item[field]
