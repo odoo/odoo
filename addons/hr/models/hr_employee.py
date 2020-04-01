@@ -84,7 +84,7 @@ class HrEmployeePrivate(models.Model):
         ('bachelor', 'Bachelor'),
         ('master', 'Master'),
         ('other', 'Other'),
-    ], 'Certificate Level', default='other', groups="hr.group_hr_user", tracking=True)
+    ], 'Certificate Level', groups="hr.group_hr_user", tracking=True)
     study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char("Emergency Contact", groups="hr.group_hr_user", tracking=True)
