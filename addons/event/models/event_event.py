@@ -168,7 +168,7 @@ class EventEvent(models.Model):
         'event.event.ticket', 'event_id', string='Event Ticket', copy=True,
         compute='_compute_from_event_type', readonly=False, store=True)
     event_registrations_open = fields.Boolean(
-        'Registration open', compute='_compute_event_registrations_open',
+        'Registration open', compute='_compute_event_registrations_open', compute_sudo=True,
         help='Registrations are open if event is not ended, seats are available on event and if tickets are sellable if ticketing is used.')
     start_sale_date = fields.Date(
         'Start sale date', compute='_compute_start_sale_date',
