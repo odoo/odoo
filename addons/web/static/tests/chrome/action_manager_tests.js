@@ -22,7 +22,7 @@ const Widget = require('web.Widget');
 const { createWebClient, nextTick } = testUtils;
 
 const cpHelpers = testUtils.controlPanel;
-const doAction = testUtils.actionManager.doAction;
+const { doAction, loadState }  = testUtils.actionManager;
 
 QUnit.module('ActionManager', {
     beforeEach: function () {
@@ -1827,6 +1827,47 @@ QUnit.module('ActionManager', {
             '/web/dataset/call_kw/partner',
             '/web/dataset/search_read',
         ]);
+        webClient.destroy();
+    });
+
+    QUnit.test('load state different id null', async function (assert) {
+        assert.expect(12);
+
+        this.actions.push({
+            id: 999,
+            name: 'Partner',
+            res_id: 2,
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list'],[666, 'form']],
+        });
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            mockRPC(route, args) {
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            },
+        });
+        await doAction(999, {viewType: 'form'})
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.containsN(webClient, '.breadcrumb-item', 2);
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item.active').text(), 'Second record');
+        assert.verifySteps([
+            '/web/action/load',
+            '/web/dataset/call_kw/partner',
+            '/web/dataset/call_kw/partner/read',
+        ]);
+        await loadState(webClient, {action:999, view_type: 'form'});
+        assert.verifySteps([
+             '/web/dataset/call_kw/partner/default_get',
+        ]);
+        assert.containsOnce(webClient, '.o_form_view.o_form_editable');
+        assert.containsN(webClient, '.breadcrumb-item', 2);
+        assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb-item.active').text(), 'New');
         webClient.destroy();
     });
 
@@ -4860,6 +4901,39 @@ QUnit.module('ActionManager', {
         assert.containsOnce(webClient, '.o_technical_modal .modal-footer button');
 
         webClient.destroy();
+    });
+
+    QUnit.test('buttons of client action in target="new" and transition to MVC action', async function (assert) {
+        assert.expect(4);
+
+        var ClientAction = AbstractAction.extend({
+            renderButtons($target) {
+                const button = document.createElement('button');
+                button.setAttribute('class', 'o_stagger_lee');
+                $target[0].appendChild(button);
+            },
+        });
+        core.action_registry.add('test', ClientAction);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+        });
+        await doAction({
+            tag: 'test',
+            target: 'new',
+            type: 'ir.actions.client',
+        });
+        assert.containsOnce(webClient, '.modal footer button.o_stagger_lee');
+        assert.containsNone(webClient, '.modal footer button[special="save"]');
+        await doAction(25);
+        assert.containsNone(webClient, '.modal footer button.o_stagger_lee');
+        assert.containsOnce(webClient, '.modal footer button[special="save"]');
+
+        webClient.destroy();
+        delete core.action_registry.map.test;
     });
 
     QUnit.test('on_attach_callback is called for actions in target="new"', async function (assert) {

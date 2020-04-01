@@ -303,7 +303,7 @@ class ActionManager extends core.EventBus {
                 break;
             }
         }
-        if (!result) {
+        if (result === undefined) {
             // no suitable plugin or state
             // the caller must handle this
             return null;
