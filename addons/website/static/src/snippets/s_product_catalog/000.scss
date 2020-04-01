@@ -1,0 +1,32 @@
+.s_product_catalog {
+    .s_product_catalog_dish {
+        // Description
+        .s_product_catalog_dish_description {
+            margin: .25rem 0 1rem 0;
+            padding-top: .25rem;
+        }
+        &:last-child {
+            .s_product_catalog_dish_description {
+                margin-bottom: 0;
+            }
+        }
+        // Dot Leaders
+        .s_product_catalog_dish_dot_leaders {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+            &:after {
+                content: '';
+                margin-left: .5rem;
+                flex: 1 0 auto;
+                border-bottom: 1px dotted gray('600');
+            }
+        }
+        // Price
+        .s_product_catalog_dish_price {
+            margin-left: auto;
+            padding-left: .5rem;
+            font-weight: $font-weight-normal;
+        }
+    }
+}

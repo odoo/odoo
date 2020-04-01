@@ -23,8 +23,10 @@ options.registry.ProductCatalog = options.Class.extend({
         if (widgetValue) {
             _.each($dishes, el => {
                 const $description = $(el).find('.s_product_catalog_dish_description');
+                const $name = $(el).find('.s_product_catalog_dish_name');
                 if ($description.length) {
                     $description.removeClass('d-none');
+                    $name.removeClass('s_product_catalog_dish_dot_leaders');
                 } else {
                     const descriptionEl = document.createElement('p');
                     descriptionEl.classList.add('s_product_catalog_dish_description', 'o_default_snippet_text');
@@ -35,10 +37,12 @@ options.registry.ProductCatalog = options.Class.extend({
         } else {
             _.each($dishes, el => {
                 const $description = $(el).find('.s_product_catalog_dish_description');
+                const $name = $(el).find('.s_product_catalog_dish_name');
                 if ($description.hasClass('o_default_snippet_text')) {
                     $description.remove();
                 } else {
                     $description.addClass('d-none');
+                    $name.addClass('s_product_catalog_dish_dot_leaders');
                 }
             });
         }
