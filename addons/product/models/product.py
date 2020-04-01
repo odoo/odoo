@@ -313,7 +313,12 @@ class ProductProduct(models.Model):
                 '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant')]
             product.pricelist_item_count = self.env['product.pricelist.item'].search_count(domain)
 
-    @api.onchange('uom_id', 'uom_po_id')
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
+        if self.uom_id:
+            self.uom_po_id = self.uom_id.id
+
+    @api.onchange('uom_po_id')
     def _onchange_uom(self):
         if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
             self.uom_po_id = self.uom_id

@@ -8,7 +8,7 @@ from PIL import Image
 
 from . import common
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, Form
 
 
 class TestVariantsSearch(TransactionCase):
@@ -921,6 +921,27 @@ class TestVariantsArchive(common.TestProductCommon):
 
         name_searched = self.env['product.template'].name_search(name='cima')
         self.assertIn(template.id, [ng[0] for ng in name_searched])
+
+    def test_uom_update_variant(self):
+        """ Changing the uom on the template do not behave the same
+        as changing on the product product."""
+        units = self.env.ref('uom.product_uom_unit')
+        cm = self.env.ref('uom.product_uom_cm')
+        template = self.env['product.template'].create({
+            'name': 'kardon'
+        })
+
+        template_form = Form(template)
+        template_form.uom_id = cm
+        self.assertEqual(template_form.uom_po_id, cm)
+        template = template_form.save()
+
+        variant_form = Form(template.product_variant_ids)
+        variant_form.uom_id = units
+        self.assertEqual(variant_form.uom_po_id, units)
+        variant = variant_form.save()
+        self.assertEqual(variant.uom_po_id, units)
+        self.assertEqual(template.uom_po_id, units)
 
     def _update_color_vars(self, ptal):
         self.ptal_color = ptal
