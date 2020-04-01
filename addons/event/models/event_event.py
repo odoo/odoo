@@ -37,7 +37,7 @@ class EventType(models.Model):
     has_seats_limitation = fields.Boolean('Limited Seats')
     seats_max = fields.Integer(
         'Maximum Registrations', compute='_compute_default_registration',
-        copy=True, readonly=False, store=True,
+        readonly=False, store=True,
         help="It will select this default maximum value when you choose this event")
     auto_confirm = fields.Boolean(
         'Automatically Confirm Registrations', default=True,
@@ -139,10 +139,10 @@ class EventEvent(models.Model):
     # Seats and computation
     seats_max = fields.Integer(
         string='Maximum Attendees Number',
-        compute='_compute_from_event_type', copy=True, readonly=False, store=True,
+        compute='_compute_from_event_type', readonly=False, store=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
     seats_limited = fields.Boolean('Maximum Attendees', required=True, compute='_compute_seats_limited',
-                                   copy=True, readonly=False, store=True)
+                                   readonly=False, store=True)
     seats_reserved = fields.Integer(
         string='Reserved Seats',
         store=True, readonly=True, compute='_compute_seats')
@@ -160,8 +160,7 @@ class EventEvent(models.Model):
         compute_sudo=True, readonly=True, compute='_compute_seats')
     # Registration fields
     auto_confirm = fields.Boolean(
-        string='Autoconfirmation',
-        compute='_compute_from_event_type', copy=True, readonly=False, store=True,
+        string='Autoconfirmation', compute='_compute_from_event_type', readonly=False, store=True,
         help='Autoconfirm Registrations. Registrations will automatically be confirmed upon creation.')
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
     event_ticket_ids = fields.One2many(
@@ -179,7 +178,7 @@ class EventEvent(models.Model):
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
-        compute='_compute_date_tz', copy=True, readonly=False, store=True)
+        compute='_compute_date_tz', readonly=False, store=True)
     date_begin = fields.Datetime(string='Start Date', required=True, tracking=True)
     date_end = fields.Datetime(string='End Date', required=True, tracking=True)
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
