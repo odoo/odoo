@@ -250,7 +250,10 @@ class StockMove(models.Model):
         moves_to_unlink.sudo().unlink()
         if phantom_moves_vals_list:
             phantom_moves = self.env['stock.move'].create(phantom_moves_vals_list)
-            phantom_moves._adjust_procure_method()
+            extra_moves_vals_list = phantom_moves._adjust_procure_method()
+            if extra_moves_vals_list:
+                extra_moves = self.env['stock.move'].create(extra_moves_vals_list)
+                phantom_moves |= extra_moves
             moves_to_return |= phantom_moves.action_explode()
         return moves_to_return
 
@@ -401,3 +404,21 @@ class StockMove(models.Model):
         else:
             self.quantity_done = new_qty
         return ml_values
+
+    @api.model
+    def _adjust_quantities(self, move_src, move_dest, quantity):
+        super()._adjust_quantities(move_src, move_dest, quantity)
+        # recompute unit factor to split it for the two moves
+        ratio_dest = move_dest['product_uom_qty'] / (move_src.product_uom_qty + move_dest['product_uom_qty'])
+        move_dest.update({
+            'unit_factor': move_src.unit_factor * ratio_dest,
+        })
+        # we need to compute the quantity confirmed on the same MO to be removed from the free qty.
+        if move_src.raw_material_production_id:
+            qty_to_remove = sum(move_src.raw_material_production_id.move_raw_ids.filtered(
+                lambda m: m.product_id == move_src.product_id and
+                m.state == 'confirmed' and
+                m.procure_method == 'make_to_stock'
+            ).mapped('product_qty'))
+            move_dest['product_uom_qty'] -= move_src.product_id.uom_id._compute_quantity(qty_to_remove, move_src.product_uom)
+            move_src.product_uom_qty += move_src.product_id.uom_id._compute_quantity(qty_to_remove, move_src.product_uom)

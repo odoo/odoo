@@ -242,12 +242,25 @@ class StockRule(models.Model):
         for procurement, rule in procurements:
             procure_method = rule.procure_method
             if rule.procure_method == 'mts_else_mto':
-                qty_needed = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
+                quant_uom = procurement.product_id.uom_id
+                qty_needed = procurement.product_uom._compute_quantity(procurement.product_qty, quant_uom)
                 qty_available = forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id]
-                if float_compare(qty_needed, qty_available, precision_rounding=procurement.product_id.uom_id.rounding) <= 0:
+                if float_compare(qty_needed, qty_available, precision_rounding=quant_uom.rounding) <= 0:
                     procure_method = 'make_to_stock'
                     forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
                 else:
+                    # From this procurement, make two moves
+                    #  - one to empty the stock
+                    #  - one to order the remaining quantity
+                    if not float_is_zero(qty_available, precision_rounding=quant_uom.rounding):
+                        # Create the 'make_to_stock' move values
+                        mts_procurement = procurement._replace(product_qty=quant_uom._compute_quantity(qty_available, procurement.product_uom))
+                        forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_available
+                        move_values = rule._get_stock_move_values(*mts_procurement)
+                        move_values['procure_method'] = 'make_to_stock'
+                        moves_values_by_company[procurement.company_id.id].append(move_values)
+                        # Decrease the quantity to order on the 'make_to_order' move
+                        procurement = procurement._replace(product_qty=procurement.product_qty - quant_uom._compute_quantity(qty_available, procurement.product_uom))
                     procure_method = 'make_to_order'
 
             move_values = rule._get_stock_move_values(*procurement)

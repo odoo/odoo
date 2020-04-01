@@ -1611,7 +1611,7 @@ class StockMove(models.Model):
         # - forecasted quantity per location per product
         mtso_products_by_locations = defaultdict(list)
         mtso_needed_qties_by_loc = defaultdict(dict)
-        mtso_free_qties_by_loc = {}
+        mtso_virtual_qties_by_loc = {}
         mtso_moves = self.env['stock.move']
 
         for move in self:
@@ -1639,19 +1639,36 @@ class StockMove(models.Model):
         # Get the forecasted quantity for the `mts_else_mto` moves.
         for location, product_ids in mtso_products_by_locations.items():
             products = self.env['product.product'].browse(product_ids).with_context(location=location.id)
-            mtso_free_qties_by_loc[location] = {product.id: product.free_qty for product in products}
+            mtso_virtual_qties_by_loc[location] = {product.id: product.virtual_available for product in products}
 
         # Now that we have the needed and forecasted quantity per location and per product, we can
-        # choose whether the mtso_moves need to be MTO or MTS.
+        # get the make_to_stock part and eventually make a make_to_order part.
+        mts_move_vals_list = []
         for move in mtso_moves:
             needed_qty = move.product_qty
-            forecasted_qty = mtso_free_qties_by_loc[move.location_id][move.product_id.id]
+            forecasted_qty = max(mtso_virtual_qties_by_loc[move.location_id][move.product_id.id], 0)
             if float_compare(needed_qty, forecasted_qty, precision_rounding=product_id.uom_id.rounding) <= 0:
                 move.procure_method = 'make_to_stock'
-                mtso_free_qties_by_loc[move.location_id][move.product_id.id] -= needed_qty
+                mtso_virtual_qties_by_loc[move.location_id][move.product_id.id] -= needed_qty
             else:
+                if not float_is_zero(forecasted_qty, precision_rounding=product_id.uom_id.rounding):
+                    # Create the 'make_to_stock' move values
+                    mts_move_vals = move.copy_data({
+                        'procure_method': 'make_to_stock',
+                    })[0]
+                    mtso_virtual_qties_by_loc[move.location_id][move.product_id.id] -= forecasted_qty
+                    self._adjust_quantities(move, mts_move_vals, forecasted_qty)
+                    mts_move_vals_list.append(mts_move_vals)
                 move.procure_method = 'make_to_order'
+        return mts_move_vals_list
 
     def _show_details_in_draft(self):
         self.ensure_one()
         return self.state != 'draft' or (self.picking_id.immediate_transfer and self.state == 'draft')
+
+    @api.model
+    def _adjust_quantities(self, move_src, move_dest, quantity):
+        move_dest.update({
+            'product_uom_qty': move_src.product_id.uom_id._compute_quantity(quantity, move_src.product_uom),
+        })
+        move_src.product_uom_qty -= move_dest['product_uom_qty']

@@ -2200,8 +2200,9 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(pushed_move.location_dest_id.id, push_location.id)
 
     def test_mtso_mto(self):
-        """ Run a procurement for 5 products when there are only 4 in stock then
-        check that MTO is applied on the moves when the rule is set to 'mts_else_mto'
+        """ Run a procurement for 5 MTSO products when there are only 4 in stock.
+        Check that MTO is applied on one stock move with quantity = 1. Another
+        stock move with quantity = 4 is also created to empty the stock.
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         warehouse.delivery_steps = 'pick_pack_ship'
@@ -2247,14 +2248,19 @@ class TestRoutes(TestStockCommon):
         picking_ids = self.env['stock.picking'].search([('group_id', '=', pg.id)])
         self.assertEqual(len(picking_ids), 3)
         for picking in picking_ids:
-            # Only the picking from Stock to Pack should be MTS
-            if picking.location_id == warehouse.lot_stock_id:
-                self.assertEqual(picking.move_lines.procure_method, 'make_to_stock')
+            # The picking from Stock to Pack should have 2 moves: one MTS and one MTO
+            if picking.location_id == warehouse.wh_output_stock_loc_id:
+                mts_move = picking.move_lines.filtered(lambda m: m.procure_method == 'make_to_stock')
+                mto_move = picking.move_lines.filtered(lambda m: m.procure_method == 'make_to_order')
+                self.assertEqual(mts_move.product_uom_qty, 4)
+                self.assertEqual(mto_move.product_uom_qty, 1)
             else:
-                self.assertEqual(picking.move_lines.procure_method, 'make_to_order')
-
-            self.assertEqual(len(picking.move_lines), 1)
-            self.assertEqual(picking.move_lines.product_uom_qty, 5, 'The quantity of the move should be the same as on the SO')
+                if picking.location_id == warehouse.lot_stock_id:
+                    self.assertEqual(picking.move_lines.procure_method, 'make_to_stock')
+                else:
+                    self.assertEqual(picking.move_lines.procure_method, 'make_to_order')
+                self.assertEqual(len(picking.move_lines), 1)
+                self.assertEqual(picking.move_lines.product_uom_qty, 1, 'The quantity of the move should be the same as on the SO')
         self.assertEqual(qty_available, 4, 'The 4 products should still be available')
 
     def test_mtso_mts(self):
@@ -2442,8 +2448,12 @@ class TestRoutes(TestStockCommon):
 
         self.assertEqual(move_A.procure_method, 'make_to_stock', 'Move A should be "make_to_stock"')
         self.assertEqual(move_B.procure_method, 'make_to_stock', 'Move A should be "make_to_order"')
-        moves._adjust_procure_method()
+        extra_move_vals = moves._adjust_procure_method()
+        extra_move = self.env['stock.move'].create(extra_move_vals)
+        self.assertEqual(extra_move.procure_method, 'make_to_stock')
+        self.assertEqual(extra_move.product_uom_qty, 3)
         self.assertEqual(move_A.procure_method, 'make_to_stock', 'Move A should be "make_to_stock"')
+        self.assertEqual(move_B.product_uom_qty, 1)
         self.assertEqual(move_B.procure_method, 'make_to_order', 'Move A should be "make_to_order"')
 
     def test_mtso_mto_adjust_02(self):
@@ -2557,10 +2567,15 @@ class TestRoutes(TestStockCommon):
 
         self.assertEqual(move_A1.procure_method, 'make_to_stock', 'Move A1 should be "make_to_stock"')
         self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A2 should be "make_to_stock"')
-        move_A1._action_confirm()
-        moves._adjust_procure_method()
-        self.assertEqual(move_A1.procure_method, 'make_to_order', 'Move A should be "make_to_stock"')
-        self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A should be "make_to_order"')
+        move_A2._action_confirm()
+        extra_move_vals = move_A1._adjust_procure_method()
+        extra_move = self.env['stock.move'].create(extra_move_vals)
+        self.assertEqual(extra_move.procure_method, 'make_to_stock')
+        self.assertEqual(extra_move.product_uom_qty, 1)
+        self.assertEqual(move_A1.procure_method, 'make_to_order', 'Move A should be "make_to_order"')
+        self.assertEqual(move_A1.product_uom_qty, 4)
+        self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A should be "make_to_stock"')
+        self.assertEqual(move_A2.product_uom_qty, 3)
 
     def test_delay_alert_1(self):
         """ On a pick pack ship scenario, enable the delay alert flag on the pack rule. Edit the

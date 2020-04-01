@@ -729,6 +729,21 @@ class MrpProduction(models.Model):
             workorders_to_delete.unlink()
         return super(MrpProduction, self).unlink()
 
+    def copy(self, default=None):
+        res = super().copy(default=default)
+        # group raw moves by bom_line_id by putting all the initial demand in the first one
+        temp = defaultdict(lambda: self.env['stock.move'])
+        for move in res.move_raw_ids:
+            if not move.bom_line_id:
+                continue
+            temp[move.bom_line_id] |= move
+        for boml, moves in temp.items():
+            if len(moves) > 1:
+                moves[0].product_uom_qty += sum(moves[1:].mapped('product_uom_qty'))
+                moves[1:]._action_cancel()
+                moves[1:].unlink()
+        return res
+
     def action_toggle_is_locked(self):
         self.ensure_one()
         self.is_locked = not self.is_locked
@@ -878,9 +893,18 @@ class MrpProduction(models.Model):
         if move:
             old_qty = move[0].product_uom_qty
             if quantity > 0:
-                move[0].write({'product_uom_qty': quantity})
-                move[0]._action_assign()
-                return move[0], old_qty, quantity
+                delta_move = move[0].copy({'product_uom_qty': quantity - old_qty})
+                if move - move[0]:
+                    (move - move[0])._action_cancel()
+                    (move - move[0]).unlink()
+                extra_moves_vals = delta_move._adjust_procure_method()
+                if extra_moves_vals:
+                    extra_moves = self.env['stock.move'].create(extra_moves_vals)
+                    (delta_move | extra_moves)._action_confirm(merge_into=move[0])._action_assign()
+                    return (delta_move | extra_moves), old_qty, quantity
+                else:
+                    delta_move._action_confirm(merge_into=move[0])._action_assign()
+                    return delta_move, old_qty, quantity
             else:
                 if move[0].quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
@@ -954,7 +978,10 @@ class MrpProduction(models.Model):
             additional_moves.write({
                 'group_id': production.procurement_group_id.id,
             })
-            additional_moves._adjust_procure_method()
+            extra_moves_vals_list = additional_moves._adjust_procure_method()
+            if extra_moves_vals_list:
+                extra_moves = self.env['stock.move'].create(extra_moves_vals_list)
+                additional_moves |= extra_moves
             moves_to_confirm |= additional_moves
             additional_byproducts = production.move_finished_ids.filtered(
                 lambda move: move.state == 'draft' and move.additional
@@ -1034,7 +1061,10 @@ class MrpProduction(models.Model):
                 production.consumption = production.bom_id.consumption
             if not production.move_raw_ids:
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
-            production.move_raw_ids._adjust_procure_method()
+            extra_moves_vals_list = production.move_raw_ids._adjust_procure_method()
+            if extra_moves_vals_list:
+                extra_moves = self.env['stock.move'].create(extra_moves_vals_list)
+                production.move_raw_ids |= extra_moves
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()
             production.workorder_ids._action_confirm()
         return True
