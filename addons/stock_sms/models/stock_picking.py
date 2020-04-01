@@ -19,6 +19,8 @@ class Picking(models.Model):
 
     def _check_warn_sms(self):
         warn_sms_pickings = self.browse()
+        if self.env.context.get('skip_sms'):
+            return warn_sms_pickings
         for picking in self:
             is_delivery = picking.company_id.stock_move_sms_validation \
                     and picking.picking_type_id.code == 'outgoing' \

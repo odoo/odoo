@@ -36,6 +36,17 @@ class StockMove(models.Model):
         #rslt += invoices.mapped('reverse_entry_ids')
         return rslt
 
+    def _prepare_procurement_values(self):
+        """ Prepare specific key for moves or other components that will be created from a stock rule
+        comming from a sale order line. This method could be override in order to add other custom key that could
+        be used in move/po creation.
+        """
+        values = super(StockMove, self)._prepare_procurement_values()
+        values.update({
+            'sale_line_id': self.sale_line_id.id,
+        })
+        return values
+
     def _assign_picking_post_process(self, new=False):
         super(StockMove, self)._assign_picking_post_process(new=new)
         if new:
