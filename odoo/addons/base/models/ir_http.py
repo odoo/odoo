@@ -269,7 +269,9 @@ class IrHttp(models.AbstractModel):
             for url, endpoint, routing in cls._generate_routing_rules(mods, converters=cls._get_converters()):
                 xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
                 kw = {k: routing[k] for k in xtra_keys if k in routing}
-                routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw))
+                rule = werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw)
+                rule.merge_slashes = False
+                routing_map.add(rule)
             cls._routing_map[key] = routing_map
         return cls._routing_map[key]
 
