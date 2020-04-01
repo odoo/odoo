@@ -170,6 +170,9 @@ class EventEvent(models.Model):
     event_registrations_open = fields.Boolean(
         'Registration open', compute='_compute_event_registrations_open', compute_sudo=True,
         help='Registrations are open if event is not ended, seats are available on event and if tickets are sellable if ticketing is used.')
+    event_registrations_sold_out = fields.Boolean(
+        'Sold Out', compute='_compute_event_registrations_sold_out', compute_sudo=True,
+        help='Event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out event is sold out.')
     start_sale_date = fields.Date(
         'Start sale date', compute='_compute_start_sale_date',
         help='If ticketing is used, this is the lowest starting sale date of tickets.')
@@ -267,6 +270,18 @@ class EventEvent(models.Model):
         for event in self:
             start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date]
             event.start_sale_date = min(start_dates) if start_dates else False
+
+    @api.depends('event_ticket_ids.sale_available')
+    def _compute_event_registrations_sold_out(self):
+        for event in self:
+            if event.seats_limited and not event.seats_available:
+                event.event_registrations_sold_out = True
+            elif event.event_ticket_ids:
+                event.event_registrations_sold_out = not any(
+                    ticket.seats_available > 0 if ticket.seats_limited else True for ticket in event.event_ticket_ids
+                )
+            else:
+                event.event_registrations_sold_out = False
 
     @api.depends('date_tz', 'date_begin')
     def _compute_date_begin_tz(self):
