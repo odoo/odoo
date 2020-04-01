@@ -52,7 +52,8 @@
                                 <!-- TODO: remove in master -->
                                 <t t-set="colspan" t-value="6"/>
                                 <th name="th_description" class="text-left"><span>Description</span></th>
-                                <th name="th_source" class="d-none text-left"><span>Source Document</span></th>
+                                <!-- TODO: remove in master -->
+                                <th name="th_source" class="d-none text-left" t-if="0"><span>Source Document</span></th>
                                 <th name="th_quantity" class="text-right"><span>Quantity</span></th>
                                 <th name="th_priceunit" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Unit Price</span></th>
                                 <th name="th_price_unit" t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
