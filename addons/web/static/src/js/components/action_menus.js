@@ -109,10 +109,12 @@ odoo.define('web.ActionMenus', function (require) {
                 active_id: activeIds[0],
                 active_ids: activeIds,
                 active_model: this.env.action.res_model,
+            };
+            if (this.props.domain) {
                 // keep active_domain in context for backward compatibility
                 // reasons, and to allow actions to bypass the active_ids_limit
-                active_domain: this.props.domain,
-            };
+                activeIdsContext.active_domain = this.props.domain;
+            }
 
             const context = new Context(this.props.context, activeIdsContext).eval();
             const result = await this.rpc({

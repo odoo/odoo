@@ -1297,7 +1297,7 @@ var MockServer = Class.extend({
     _performRpc: function (route, args) {
         switch (route) {
             case '/web/action/load':
-                return Promise.resolve(this._mockLoadAction(args.kwargs));
+                return Promise.resolve(this._mockLoadAction(args));
 
             case '/web/dataset/search_read':
                 return Promise.resolve(this._mockSearchReadController(args));

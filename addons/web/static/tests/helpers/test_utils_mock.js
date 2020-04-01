@@ -264,10 +264,8 @@ async function addMockEnvironment(widget, params) {
 
     intercept(widget, 'load_action', function (event) {
         mockServer.performRpc('/web/action/load', {
-            kwargs: {
-                action_id: event.data.actionID,
-                additional_context: event.data.context,
-            },
+            action_id: event.data.actionID,
+            additional_context: event.data.context,
         }).then(function (action) {
             event.data.on_success(action);
         });
