@@ -76,7 +76,7 @@
                                                 <table cellspacing="0" cellpadding="0" align="center" border="0" style="width:100%; padding: 20px 0;">
                                                     <tr valign="top">
                                                         <td class="mobile-w-33" width="196" style=" text-align: center;">
-                                                            <span class="font-25" style="color:#282f33;font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;">${data['yesterday'][kpi][kpi]}</span><br>
+                                                            <span class="font-25" style="color:#282f33;font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;">${data['yesterday'][kpi][kpi]}</span><br/>
                                                             <span style="color:#888888;display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Yesterday</span>
                                                             % if data['yesterday'][kpi]['margin'] != 0.0:
                                                                 % if data['yesterday'][kpi]['margin'] is greaterthan(0.0):
@@ -92,7 +92,7 @@
                                                             %endif
                                                         </td>
                                                         <td class="mobile-w-33" width="196" style=" text-align: center;">
-                                                            <span class="font-25" style="color:#282f33;font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;">${data['lastweek'][kpi][kpi]}</span><br>
+                                                            <span class="font-25" style="color:#282f33;font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;">${data['lastweek'][kpi][kpi]}</span><br/>
                                                             <span style="color:#888888;display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Last 7 Days</span>
                                                             % if data['lastweek'][kpi]['margin'] != 0.0:
                                                                 % if data['lastweek'][kpi]['margin'] is greaterthan(0.0):
@@ -108,7 +108,7 @@
                                                             %endif
                                                         </td>
                                                         <td class="mobile-w-33" width="196" style=" text-align: center;">
-                                                            <span class="font-25" style="color:#282f33;font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px">${data['lastmonth'][kpi][kpi]}</span><br>
+                                                            <span class="font-25" style="color:#282f33;font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px">${data['lastmonth'][kpi][kpi]}</span><br/>
                                                             <span style="color:#888888;display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Last 30 Days</span>
                                                             % if data['lastmonth'][kpi]['margin'] != 0.0:
                                                             % if data['lastmonth'][kpi]['margin'] is greaterthan(0.0):
