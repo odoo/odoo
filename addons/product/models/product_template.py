@@ -418,11 +418,19 @@ class ProductTemplate(models.Model):
         return templates
 
     def write(self, vals):
+<<<<<<< HEAD
         if 'uom_id' in vals or 'uom_po_id' in vals:
             uom_id = self.env['uom.uom'].browse(vals.get('uom_id')) or self.uom_id
             uom_po_id = self.env['uom.uom'].browse(vals.get('uom_po_id')) or self.uom_po_id
             if uom_id and uom_po_id and uom_id.category_id != uom_po_id.category_id:
                 vals['uom_po_id'] = uom_id.id
+=======
+        uom = self.env['uom.uom'].browse(vals.get('uom_id')) or self.uom_id
+        uom_po = self.env['uom.uom'].browse(vals.get('uom_po_id')) or self.uom_po_id
+        if uom and uom_po and uom.category_id != uom_po.category_id:
+            vals['uom_po_id'] = uom.id
+
+>>>>>>> 457b94f8967... temp
         res = super(ProductTemplate, self).write(vals)
         if 'attribute_line_ids' in vals or vals.get('active'):
             self._create_variant_ids()
