@@ -596,7 +596,7 @@ class PosSession(models.Model):
         stock_moves = self.env['stock.move'].search([('picking_id', 'in', self.order_ids.filtered(lambda order: not order.is_invoiced).mapped('picking_id').ids)])
         stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
         for account_id in stock_output_lines:
-            ( stock_output_lines[account_id]
+            ( stock_output_lines[account_id].filtered(lambda aml: not aml.reconciled)
             | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
             ).reconcile()
         return data
