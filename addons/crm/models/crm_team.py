@@ -108,9 +108,10 @@ class Team(models.Model):
             for team in self:
                 team.alias_id.write(team.get_alias_values())
         if 'use_leads' in vals or 'use_opportunities' in vals:
-            alias_values = self._synchronize_alias(vals)
-            if alias_values:
-                self.write(alias_values)
+            for team in self:
+                alias_value = team._synchronize_alias(vals)
+                if alias_value:
+                    team.write(alias_value)
         return result
 
     def _synchronize_alias(self, values):
