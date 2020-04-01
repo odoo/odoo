@@ -184,8 +184,8 @@ class ProductTemplate(models.Model):
         Used to compute margins on sale orders.""")
 
     price = fields.Float(
-        'Price', compute='_compute_price', help="Used for display purposes"
-        "takes into account contextual infos", prefetch=False, digits="Product Price")
+        'Price', compute='_compute_price', prefetch=False, digits="Product Price",
+        help="Used for display purposes, takes into account contextual infos")
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume', digits='Volume', store=True)

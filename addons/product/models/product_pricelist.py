@@ -16,11 +16,14 @@ class Pricelist(models.Model):
         return self.env.company.currency_id.id
 
     name = fields.Char('Pricelist Name', required=True, translate=True)
-    active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the pricelist without removing it.")
+    active = fields.Boolean(
+        'Active', default=True,
+        help="If unchecked, it will allow you to hide the pricelist without removing it.")
     item_ids = fields.One2many(
         'product.pricelist.item', 'pricelist_id', 'Pricelist Items',
         copy=True)
-    currency_id = fields.Many2one('res.currency', 'Currency', default=lambda self: self._default_currency_id(), required=True)
+    currency_id = fields.Many2one(
+        'res.currency', 'Currency', default=lambda self: self._default_currency_id(), required=True)
     company_id = fields.Many2one('res.company', 'Company')
 
     sequence = fields.Integer(default=16)
@@ -78,6 +81,7 @@ class Pricelist(models.Model):
     def _compute_price_rule_get_items(self, date, prod_tmpl_ids, prod_ids, categ_ids):
         self.ensure_one()
         # Load all rules
+        # VFE TODO has the flush on the price any sense ? it is a non stored compute...
         self.env['product.pricelist.item'].flush(['price', 'currency_id', 'company_id'])
         self.env.cr.execute(
             """
