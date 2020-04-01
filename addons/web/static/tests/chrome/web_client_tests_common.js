@@ -83,7 +83,17 @@ QUnit.module('WebClient Common', {
             'partner,false,form': `
                 <form>
                     <header><button name="do_something" string="Call button" type="object"/></header>
-                    <sheet><field name="display_name"/></sheet>
+                    <sheet>
+                      <field name="display_name"/>
+                      <notebook>
+                        <page string="red" name="red">
+                            <div id="righthand">Nick</div>
+                         </page>
+                         <page string="hell" name="hell">
+                             <div id="brokeluce">Tom</div>
+                         </page>
+                      </notebook>
+                    </sheet>
                 </form>`,
 
             // search views
@@ -275,6 +285,42 @@ QUnit.module('WebClient Common', {
         targetRect = anchorTarget.getBoundingClientRect();
         await testUtils.dom.click(document.getElementById('the_trigger'));
 
+        webClient.destroy();
+    });
+
+    QUnit.test('can click on form notebook in main action', async function (assert) {
+        assert.expect(4);
+        const webClient = await createWebClient({
+            data: this.data,
+            actions: this.actions,
+            archs: this.archs,
+            menus: this.menus,
+        });
+        await testUtils.actionManager.doAction(11, {resID: 1});
+        assert.isVisible(webClient.el.querySelector('#righthand'));
+        assert.isNotVisible(webClient.el.querySelector('#brokeluce'));
+
+        await testUtils.dom.click(webClient.el.querySelectorAll('a[data-toggle="tab"]')[1]);
+        assert.isNotVisible(webClient.el.querySelector('#righthand'));
+        assert.isVisible(webClient.el.querySelector('#brokeluce'));
+        webClient.destroy();
+    });
+
+    QUnit.test('can click on form notebook in dialog action', async function (assert) {
+        assert.expect(4);
+        const webClient = await createWebClient({
+            data: this.data,
+            actions: this.actions,
+            archs: this.archs,
+            menus: this.menus,
+        });
+        await testUtils.actionManager.doAction(12, {resID: 1});
+        assert.isVisible(webClient.el.querySelector('.modal #righthand'));
+        assert.isNotVisible(webClient.el.querySelector('#brokeluce'));
+
+        await testUtils.dom.click(webClient.el.querySelectorAll('.modal a[data-toggle="tab"]')[1]);
+        assert.isNotVisible(webClient.el.querySelector('#righthand'));
+        assert.isVisible(webClient.el.querySelector('.modal #brokeluce'));
         webClient.destroy();
     });
 })

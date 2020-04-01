@@ -61,6 +61,7 @@ odoo.define('web.ActionAdapter', function (require) {
             return super.shouldUpdate(nextProps);
         }
         async willStart() {
+            let prom;
             if (this.props.Component.prototype instanceof AbstractView) {
                 const action = this.props.action;
                 const viewDescr = action.views.find(view => view.type === action.controller.viewType);
@@ -75,16 +76,17 @@ odoo.define('web.ActionAdapter', function (require) {
                     this.widget.destroy();
                     return;
                 }
-                if (this.inDialog) {
-                    this.env.bus.trigger('legacy-action', this.widget);
-                }
                 this.legacy = 'view';
                 this._reHookControllerMethods();
-                return this.widget._widgetRenderAndInsert(() => {});
+                prom = this.widget._widgetRenderAndInsert(() => {});
             } else if (this.legacy) {
                 this.legacy = 'action';
             }
-            return super.willStart();
+            prom = prom || super.willStart();
+            await prom;
+            if (this.widget && this.inDialog) {
+                this.env.bus.trigger('legacy-action', this.widget);
+            }
         }
 
 
@@ -162,15 +164,19 @@ odoo.define('web.ActionAdapter', function (require) {
             const widget = this.widget;
             const controllerReload = widget.reload;
             this.widget.reload = function() {
+                self.manualReload = true;
                 self.widgetReloadProm = controllerReload.call(widget, ...arguments);
                 return self.widgetReloadProm.then(() => {
-                    self.widgetReloadProm = null;
+                    if (self.manualReload) {
+                        self.widgetReloadProm = null;
+                        self.manualReload = false;
+                    }
                 });
             };
             const controllerUpdate = widget.update;
             this.widget.update = function() {
                 const updateProm = controllerUpdate.call(widget, ...arguments);
-                const manualUpdate = !self.widgetReloadProm;
+                const manualUpdate = !self.manualReload;
                 if (manualUpdate) {
                     self.widgetReloadProm = updateProm;
                 }

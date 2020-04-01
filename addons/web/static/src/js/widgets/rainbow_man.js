@@ -39,7 +39,6 @@ class RainbowMan extends owl.Component {
         const delay = this.constructor.rainbowDelay[fadeout];
         this.delay = typeof delay === 'number' ? delay : false;
         this.img_url = this.props.img_url || '/web/static/src/img/smile.svg';
-        this.message = this.props.message || this.env._t('Well Done!');
     }
     mounted() {
         if (this.delay !== false) {
@@ -53,6 +52,23 @@ class RainbowMan extends owl.Component {
             );
         }
         super.mounted();
+    }
+    /**
+     * Message could be: Jquery / HTMLElement or String
+     * should be String representing HTML tree
+     */
+    get message() {
+        const message = this.props.message;
+        if (message instanceof jQuery) {
+            return message.html();
+        }
+        if (message instanceof Element) {
+            return message.outerHTML;
+        }
+        if (typeof message === 'string') {
+            return message;
+        }
+        return this.env._t('Well Done!');
     }
     _onAnimationEnd(ev) {
         if (this.delay !== false && ev.animationName === 'reward-fading-reverse') {

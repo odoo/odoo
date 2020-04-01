@@ -13,24 +13,15 @@ class Menu extends Component {
         this.menuBrand = owl.hooks.useRef('menuBrand');
         this.menuSections = owl.hooks.useRef('menuSections');
     }
+    get menuAppsEl() {
+        if (!this.el) {return null;}
+        return this.el.getElementsByClassName('o_menu_apps')[0];
+    }
     mounted() {
-        this.$menu_apps = $(this.el.getElementsByClassName('o_menu_apps')[0]);
-        domUtils.initAutoMoreMenu($(this.menuSections.el), {
-            maxWidth: () => {
-                return (
-                    this.el.offsetWidth -
-                    (
-                        this.$menu_apps.outerWidth(true) +
-                        $(this.menuBrand.el).outerWidth(true) +
-                        $(this.systrayMenu.el).outerWidth(true)
-                    )
-                );
-            },
-            sizeClass: 'SM',
-        });
+        this._initAutoMoreMenu();
     }
     patched() {
-        this.env.bus.trigger('resize');
+        this._initAutoMoreMenu();
     }
     get apps() {
         return this.menus.root.children.map(childID => this.menus[childID]);
@@ -42,7 +33,33 @@ class Menu extends Component {
     shouldUpdate(nextProps) {
         return nextProps.menuID !== this.props.menuID;
     }
-
+    _initAutoMoreMenu() {
+        let reInit = false;
+        const candidateAutoMore = this.menuSections.el;
+        if (candidateAutoMore) {
+            if (!this.autoMoreMenu || candidateAutoMore !== this.autoMoreMenu) {
+                this.autoMoreMenu = candidateAutoMore;
+                reInit = true;
+            }
+        }
+        if (reInit) {
+            domUtils.initAutoMoreMenu($(this.autoMoreMenu), {
+                maxWidth: () => {
+                    return (
+                        this.el.offsetWidth -
+                        (
+                            $(this.menuAppsEl).outerWidth(true) +
+                            $(this.menuBrand.el).outerWidth(true) +
+                            $(this.systrayMenu.el).outerWidth(true)
+                        )
+                    );
+                },
+                sizeClass: 'SM',
+            });
+        } else if (this.autoMoreMenu) {
+            this.env.bus.trigger('resize');
+        }
+    }
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------

@@ -225,7 +225,7 @@ class WebClient extends Component {
                 if (actionID) {
                     return this.actionManager.doAction(actionID, {menuID, clear_breadcrumbs: true});
                 } else {
-                    return true;
+                    return 'render';
                 }
             }
         }
@@ -535,7 +535,7 @@ class WebClient extends Component {
         if (!this.ignoreHashchange) {
             const state = this._getUrlState();
             const loaded = await this._loadState(state);
-            if (loaded === true) {
+            if (loaded === 'render') {
                 this.render();
             }
         }
