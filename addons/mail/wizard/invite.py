@@ -27,9 +27,9 @@ class Invite(models.TransientModel):
         if model and res_id:
             document = self.env['ir.model']._get(model).display_name
             title = self.env[model].browse(res_id).display_name
-            msg_fmt = _('%(user_name)s invited you to follow %(document)s document: %(title)s')
+            msg_fmt = _('%(user_name)s has invited you to follow %(document)s document: %(title)s')
         else:
-            msg_fmt = _('%(user_name)s invited you to follow a new document.')
+            msg_fmt = _('%(user_name)s has invited you to follow a new document.')
 
         text = msg_fmt % locals()
         message = html.DIV(
