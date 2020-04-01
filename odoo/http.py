@@ -1268,7 +1268,9 @@ class Root(object):
         _logger.info("Generating nondb routing")
         routing_map = werkzeug.routing.Map(strict_slashes=False, converters=None)
         for url, endpoint, routing in odoo.http._generate_routing_rules([''] + odoo.conf.server_wide_modules, True):
-            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods']))
+            rule = werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'])
+            rule.merge_slashes = False
+            routing_map.add(rule)
         return routing_map
 
     def __call__(self, environ, start_response):
