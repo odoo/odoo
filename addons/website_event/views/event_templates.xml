@@ -237,9 +237,13 @@
                     <!-- Footer -->
                     <footer
                             t-attf-class="small align-self-end w-100 #{opt_events_list_cards and 'card-footer' or ((not opt_events_list_columns) and 'border-top mx-4 mt-auto pt-2' or 'border-top py-2')}">
-                        <span class="text-danger"
-                            t-if="event.seats_limited and not event.seats_available">
-                            Sold Out
+                        <span t-if="not event.event_registrations_open" class="text-danger">
+                            <t t-if="event.event_registrations_sold_out">
+                                Sold Out
+                            </t>
+                            <t t-else="">
+                                Registrations Closed
+                            </t>
                         </span>
                     </footer>
                 </div>
@@ -535,12 +539,12 @@
             </t>
             <t t-else="">
                 <div class="col-md-8">
-                    <em t-if="not sold_out or event.date_end &lt; datetime.datetime.now()">Registrations are <b>closed</b></em>
-                    <em t-else="">Tickets for this Event are <b>Sold Out</b></em>
+                    <em t-if="event.event_registrations_sold_out">Tickets for this Event are <b>Sold Out</b></em>
+                    <em t-else="">Registrations are <b>closed</b></em>
                 </div>
-                <button class="btn btn-danger ml-3 col-md-4 py-2"   disabled="1">
-                    <span t-if="not sold_out or event.date_end &lt; datetime.datetime.now()">Registrations Closed</span>
-                    <span t-else="">Sold Out</span>
+                <button class="btn btn-danger ml-3 col-md-4 py-2" disabled="1">
+                    <span t-if="event.event_registrations_sold_out">Sold Out</span>
+                    <span t-else="">Registrations Closed</span>
                 </button>
             </t>
         </div>
@@ -603,7 +607,9 @@
                     </div>
                     <div class="row no-gutters">
                         <div class="col-md-4 offset-md-8 py-2 pl-md-0 pr-md-2">
-                            <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" disabled="" t-attf-id="#{event.id}">Register<t t-if="event.seats_limited">(Available seats: <t t-esc="event.seats_available"/>)</t></button>
+                            <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" disabled="" t-attf-id="#{event.id}">
+                                Register<t t-if="event.seats_limited"> (Available seats: <t t-esc="event.seats_available"/>)</t>
+                            </button>
                         </div>
                     </div>
                 </div>

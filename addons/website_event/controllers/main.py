@@ -208,7 +208,6 @@ class WebsiteEventController(http.Controller):
         urls = event._get_event_resource_urls()
         values = {
             'event': event,
-            'sold_out': all(not ticket.sale_available and not ticket.is_expired for ticket in event.event_ticket_ids),
             'main_object': event,
             'range': range,
             'google_url': urls.get('google_url'),
