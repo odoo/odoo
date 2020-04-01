@@ -110,17 +110,17 @@ class PosConfig(models.Model):
         default=_default_picking_type_id,
         required=True,
         domain="[('code', '=', 'outgoing'), ('warehouse_id.company_id', '=', company_id)]",
-        ondelete='restrict', check_company=True)
+        ondelete='restrict')
     journal_id = fields.Many2one(
         'account.journal', string='Sales Journal',
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to post sales entries.",
-        default=_default_sale_journal, check_company=True)
+        default=_default_sale_journal)
     invoice_journal_id = fields.Many2one(
         'account.journal', string='Invoice Journal',
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to create invoices.",
-        default=_default_invoice_journal, check_company=True)
+        default=_default_invoice_journal)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
     iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
     iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
@@ -168,13 +168,16 @@ class PosConfig(models.Model):
     pos_session_username = fields.Char(compute='_compute_current_session_user')
     pos_session_state = fields.Char(compute='_compute_current_session_user')
     pos_session_duration = fields.Char(compute='_compute_current_session_user')
-    pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist',
+    pricelist_id = fields.Many2one(
+        "product.pricelist", string="Default Pricelist",
         help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
-    available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists',
+    available_pricelist_ids = fields.Many2many(
+        "product.pricelist", string="Available Pricelists",
         help="Make several pricelists available in the Point of Sale. "
         "You can also apply a pricelist to specific customers from their contact form (in Sales tab). "
         "To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.",
-        check_company=True)
+        check_company=True
+    )
     allowed_pricelist_ids = fields.Many2many(
         'product.pricelist',
         string='Allowed Pricelists',
