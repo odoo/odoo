@@ -3702,6 +3702,49 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('execute a contextual action from a form view', async function (assert) {
+        assert.expect(4);
+
+        const contextualAction = this.actions.find(action => action.id === 8);
+        contextualAction.context = "{}"; // need a context to evaluate
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: async function (route, args) {
+                const res = await this._super(...arguments);
+                if (args.method === 'load_views' && args.model === 'partner') {
+                    assert.strictEqual(args.kwargs.options.toolbar, true,
+                        "should ask for toolbar information");
+                    res.form.toolbar = {
+                        action: [contextualAction],
+                        print: [],
+                    };
+                }
+                return res;
+            },
+            intercepts: {
+                do_action: function (ev) {
+                    actionManager.doAction(ev.data.action, {});
+                },
+            },
+        });
+
+        // execute an action and open a record
+        await actionManager.doAction(3);
+        assert.containsOnce(actionManager, '.o_list_view');
+        await testUtils.dom.click(actionManager.$('.o_data_row:first'));
+        assert.containsOnce(actionManager, '.o_form_view');
+
+        // execute the custom action from the action menu
+        await cpHelpers.toggleActionMenu(actionManager);
+        await cpHelpers.toggleMenuItem(actionManager, "Favorite Ponies");
+        assert.containsOnce(actionManager, '.o_list_view');
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Actions in target="new"');
 
     QUnit.test('can execute act_window actions in target="new"', async function (assert) {
