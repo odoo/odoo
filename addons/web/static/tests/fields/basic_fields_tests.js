@@ -3571,6 +3571,41 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.only('datetime field first setting trigger only one onchange', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.onchanges = {
+            datetime: function () {},
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="datetime"/></form>',
+            res_id: 4,
+            mockRPC: function (route, args) {
+                if (args.method === "onchange") {
+                  assert.step('onchange');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // open datepicker trigger no onchange
+        testUtils.openDatepicker(form.$('.o_datepicker'));
+        assert.strictEqual(form.$('.o_datepicker_input').val(), '', "date field's input should be empty on first click");
+        assert.verifySteps([]);
+
+        // selecting a date trigger one and only one onchange
+        $('.day:contains(22)').click();
+        assert.verifySteps(['onchange']);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMonetary');
 
     QUnit.test('monetary field in form view', function (assert) {

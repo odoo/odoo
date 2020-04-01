@@ -442,6 +442,10 @@ var DateTimePicker = function ($, moment) {
             }
 
             if (this._isValid(targetMoment)) {
+                // Odoo: avoid nonsensical -1 index if we previously _setValue to null
+                if (index === -1) {
+                    index = 0;
+                }
                 this._dates[index] = targetMoment;
                 this._datesFormatted[index] = targetMoment.format('YYYY-MM-DD');
                 this._viewDate = targetMoment.clone();
@@ -567,6 +571,7 @@ var DateTimePicker = function ($, moment) {
                 if (!e.date && !e.oldDate) {
                     return;
                 }
+                if (e.date && e.oldDate && e.date.toString() == e.oldDate.toString()) return;
                 // check _isUTC flag to ensure that we are not comparing apples and oranges
                 var bothUTC = e.date && e.oldDate && e.date._isUTC === e.oldDate._isUTC;
                 if (bothUTC && e.date.isSame(e.oldDate)) {
@@ -785,7 +790,7 @@ var DateTimePicker = function ($, moment) {
         };
 
         DateTimePicker.prototype._getLastPickedDate = function _getLastPickedDate() {
-            return this._dates[this._getLastPickedDateIndex()] || this.getMoment(); // FIXME changed by Odoo
+            return this._dates[this._getLastPickedDateIndex()] || moment.utc(this.getMoment().toString()); // FIXME changed by Odoo
         };
 
         DateTimePicker.prototype._getLastPickedDateIndex = function _getLastPickedDateIndex() {
