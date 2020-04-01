@@ -113,7 +113,7 @@ Finally, to instruct OpenERP to really use the unaccent function, you have to
 start the server specifying the ``--unaccent`` flag.
 
 """
-import collections
+import collections.abc
 
 import logging
 import reprlib
@@ -976,7 +976,7 @@ class expression(object):
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
                         ids2 = [x[0] for x in comodel.name_search(right, domain or [], op2, limit=None)]
-                    elif isinstance(right, collections.Iterable):
+                    elif isinstance(right, collections.abc.Iterable):
                         ids2 = right
                     else:
                         ids2 = [right]
@@ -1036,7 +1036,7 @@ class expression(object):
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
                         ids2 = [x[0] for x in comodel.name_search(right, domain or [], op2, limit=None)]
-                    elif isinstance(right, collections.Iterable):
+                    elif isinstance(right, collections.abc.Iterable):
                         ids2 = right
                     else:
                         ids2 = [right]
