@@ -17,9 +17,6 @@ class MrpBom(models.Model):
     _order = "sequence"
     _check_company_auto = True
 
-    def _get_default_product_uom_id(self):
-        return self.env['uom.uom'].search([], limit=1, order='id').id
-
     code = fields.Char('Reference')
     active = fields.Boolean(
         'Active', default=True,
@@ -44,9 +41,9 @@ class MrpBom(models.Model):
         digits='Unit of Measure', required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
-        default=_get_default_product_uom_id, required=True,
+        required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+    product_uom_category_id = fields.Many2one(related='product_tmpl_id.uom_id.category_id')
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
     routing_id = fields.Many2one(
         'mrp.routing', 'Routing', check_company=True,
@@ -94,16 +91,6 @@ class MrpBom(models.Model):
                             _("The attribute value %s set on product %s does not match the BoM product %s.") %
                             (ptav.display_name, ptav.product_tmpl_id.display_name, bom_line.parent_product_tmpl_id.display_name)
                         )
-
-    @api.onchange('product_uom_id')
-    def onchange_product_uom_id(self):
-        res = {}
-        if not self.product_uom_id or not self.product_tmpl_id:
-            return
-        if self.product_uom_id.category_id.id != self.product_tmpl_id.uom_id.category_id.id:
-            self.product_uom_id = self.product_tmpl_id.uom_id.id
-            res['warning'] = {'title': _('Warning'), 'message': _('The Product Unit of Measure you chose has a different category than in the product form.')}
-        return res
 
     @api.onchange('product_tmpl_id')
     def onchange_product_tmpl_id(self):
@@ -252,9 +239,6 @@ class MrpBomLine(models.Model):
     _description = 'Bill of Material Line'
     _check_company_auto = True
 
-    def _get_default_product_uom_id(self):
-        return self.env['uom.uom'].search([], limit=1, order='id').id
-
     product_id = fields.Many2one( 'product.product', 'Component', required=True, check_company=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=False)
     company_id = fields.Many2one(
@@ -264,10 +248,9 @@ class MrpBomLine(models.Model):
         digits='Product Unit of Measure', required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
-        default=_get_default_product_uom_id,
         required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+    product_uom_category_id = fields.Many2one(related='product_tmpl_id.uom_id.category_id')
     sequence = fields.Integer(
         'Sequence', default=1,
         help="Gives the sequence order when displaying.")
@@ -337,16 +320,6 @@ class MrpBomLine(models.Model):
         """ If the BOM line refers to a BOM, return the ids of the child BOM lines """
         for line in self:
             line.child_line_ids = line.child_bom_id.bom_line_ids.ids
-
-    @api.onchange('product_uom_id')
-    def onchange_product_uom_id(self):
-        res = {}
-        if not self.product_uom_id or not self.product_id:
-            return res
-        if self.product_uom_id.category_id != self.product_id.uom_id.category_id:
-            self.product_uom_id = self.product_id.uom_id.id
-            res['warning'] = {'title': _('Warning'), 'message': _('The Product Unit of Measure you chose has a different category than in the product form.')}
-        return res
 
     @api.onchange('product_id')
     def onchange_product_id(self):
