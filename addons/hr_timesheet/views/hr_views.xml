@@ -16,7 +16,7 @@
     <record id="timesheet_action_view_from_employee_list" model="ir.actions.act_window.view">
         <field name="sequence" eval="5"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="hr_timesheet_line_tree"/>
+        <field name="view_id" ref="timesheet_view_tree_user"/>
         <field name="act_window_id" ref="timesheet_action_from_employee"/>
     </record>
 
@@ -42,7 +42,7 @@
                 </group>
             </xpath>
             <xpath expr="//button[@name='toggle_active']" position="before">
-                <button class="oe_stat_button" type="action" name="%(timesheet_action_from_employee)d" icon="fa-calendar">
+                <button class="oe_stat_button" type="action" name="%(timesheet_action_from_employee)d" icon="fa-calendar"  groups="hr_timesheet.group_hr_timesheet_user">
                     <div class="o_stat_info">
                         <span class="o_stat_text">Timesheets</span>
                     </div>
