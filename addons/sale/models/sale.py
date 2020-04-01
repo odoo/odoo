@@ -382,7 +382,7 @@ class SaleOrder(models.Model):
             values['user_id'] = user_id
 
         if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
-            values['note'] = self.env.company.invoice_terms
+            values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
 
         values['team_id'] = self.env['crm.team']._get_default_team_id(user_id=user_id)
         self.update(values)
