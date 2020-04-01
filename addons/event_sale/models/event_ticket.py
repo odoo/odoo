@@ -17,15 +17,28 @@ class EventTemplateTicket(models.Model):
     description = fields.Text(compute='_compute_description', copy=True, readonly=False, store=True)
     # product
     product_id = fields.Many2one(
-        'product.product', string='Product', required=True, domain=[("event_ok", "=", True)],
-        default=_default_product_id)
-    price = fields.Float(string='Price', digits='Product Price')
+        'product.product', string='Product', required=True,
+        domain=[("event_ok", "=", True)], default=_default_product_id)
+    price = fields.Float(
+        string='Price', compute='_compute_price',
+        digits='Product Price', copy=True, readonly=False, store=True)
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        self.price = self.product_id.list_price or 0
-        if not self.description and self.product_id.description_sale:
-            self.description = self.product_id.description_sale
+    @api.depends('product_id')
+    def _compute_price(self):
+        for ticket in self:
+            if ticket.product_id and ticket.product_id.lst_price:
+                ticket.price = ticket.product_id.lst_price or 0
+            elif not ticket.price:
+                ticket.price = 0
+
+    @api.depends('product_id')
+    def _compute_description(self):
+        for ticket in self:
+            if ticket.product_id and ticket.product_id.description_sale:
+                ticket.description = ticket.product_id.description_sale
+            # initialize, i.e for embedded tree views
+            if not ticket.description:
+                ticket.description = False
 
     def _init_column(self, column_name):
         if column_name != "product_id":

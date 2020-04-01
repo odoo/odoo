@@ -49,14 +49,14 @@ class SaleOrder(models.Model):
         requested_qty = new_qty - old_qty
         if old_qty < new_qty:
             # case: buying tickets for a sold out ticket
-            if ticket and ticket.seats_availability == 'limited' and ticket.seats_available <= 0:
+            if ticket and ticket.seats_limited and ticket.seats_available <= 0:
                 warning = _('Sorry, The %(ticket)s tickets for the %(event)s event are sold out.') % {
                     'ticket': ticket.name,
                     'event': ticket.event_id.name
                 }
                 new_qty = old_qty
             # case: buying tickets, too much attendees
-            elif ticket and ticket.seats_availability == 'limited' and requested_qty > ticket.seats_available:
+            elif ticket and ticket.seats_limited and requested_qty > ticket.seats_available:
                 warning = _('Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event.') % {
                     'remaining_seats': ticket.seats_available,
                     'ticket': ticket.name,
