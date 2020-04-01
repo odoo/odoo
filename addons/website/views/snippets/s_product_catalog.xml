@@ -2,15 +2,16 @@
 <odoo>
 
 <template id="s_product_catalog" name="Product Catalog">
-    <section class="s_product_catalog oe_img_bg oe_custom_bg pt48 pb48"
-             style="background-image: url('/web/image/website.s_product_catalog_default_image');">
+    <section class="s_product_catalog oe_img_bg oe_custom_bg pt48 pb32"
+             style="background-image: url('/web/image/website.s_product_catalog_default_image');"
+             data-vcss="001">
         <div class="container">
             <h2>Menu</h2>
-            <h5>Add a menu description</h5>
+            <p>Add a menu description.</p>
             <div class="row">
-                <div class="col-lg-6 pt24">
+                <div class="col-lg-6 pt16 pb16">
                     <h3>Starter</h3>
-                    <div class="row">
+                    <ul class="list-unstyled my-3">
                         <t t-call="website.s_product_catalog_dish">
                             <t t-set="name">Cheese Onion Rings</t>
                             <t t-set="price">$9.00</t>
@@ -23,11 +24,11 @@
                             <t t-set="name">Beef Carpaccio</t>
                             <t t-set="price">$10.50</t>
                         </t>
-                    </div>
+                    </ul>
                 </div>
-                <div class="col-lg-6 pt24">
+                <div class="col-lg-6 pt16 pb16">
                     <h3>Main Course</h3>
-                    <div class="row">
+                    <ul class="list-unstyled my-3">
                         <t t-call="website.s_product_catalog_dish">
                             <t t-set="name">Filet Mignon 8oz</t>
                             <t t-set="price">$15.50</t>
@@ -40,7 +41,7 @@
                             <t t-set="name">Tuna and Salmon Burger</t>
                             <t t-set="price">$12.00</t>
                         </t>
-                    </div>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -48,25 +49,37 @@
 </template>
 
 <template id="s_product_catalog_dish">
-    <div class="s_product_catalog_dish col-lg-12 pt16" data-name="Product">
-        <div class="s_product_catalog_dish_title d-flex align-items-baseline border-bottom mb8">
-            <h5 t-esc="name"/>
-            <span class="ml-auto pl-3 h5" t-esc="price"/>
-        </div>
-        <p class="s_product_catalog_dish_description">Add a description here</p>
-    </div>
+    <li class="s_product_catalog_dish" data-name="Product">
+        <p class="s_product_catalog_dish_title d-flex align-items-baseline pb-2">
+            <span t-esc="name" class="s_product_catalog_dish_name"/>
+            <span t-esc="price" class="s_product_catalog_dish_price ml-auto pl-2"/>
+        </p>
+        <p class="s_product_catalog_dish_description border-top text-muted pt-1"><i>Add a description here</i></p>
+    </li>
 </template>
 
 <template id="s_product_catalog_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <div data-js="ProductCatalog" data-selector=".s_product_catalog">
             <we-colorpicker string="Separator" data-select-style=""
-                            data-apply-to=".s_product_catalog_dish_title"
-                            data-css-property="border-bottom-color"
-                            data-color-prefix="border-"/>
+                            data-apply-to=".s_product_catalog_dish_description"
+                            data-css-property="border-top-color"
+                            data-color-prefix="border-"
+                            data-dependencies="s_product_catalog_descriptions_opt"/>
             <we-checkbox string="Descriptions" data-toggle-description="true"
-                         data-no-preview="true"/>
+                         data-no-preview="true" data-name="s_product_catalog_descriptions_opt"/>
         </div>
+        <div data-selector=".s_product_catalog_dish"/>
+    </xpath>
+    <xpath expr="//div[@data-js='SnippetMove']" position="attributes">
+        <attribute name="data-selector" add=".s_product_catalog_dish" separator=","/>
+        <attribute name="data-drop-near" add=".s_product_catalog_dish" separator=","/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_product_catalog_css_001" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_product_catalog/001.scss"/>
     </xpath>
 </template>
 
