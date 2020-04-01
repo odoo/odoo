@@ -7,7 +7,7 @@
         <field name="email_from">${('%s' % (object.company_id.partner_id.email_formatted or user.email_formatted))|safe}</field>
         <field name="body_html" type="html">
             <table cellspacing="0" cellpadding="0" align="center" border="0" bgcolor="#eeeeee" style="width:100%; font-family: Arial,Helvetica,Verdana,sans-serif;">
-                <tr class="mobile-hide" bgcolor="#875a7b"><td height="70">&nbsp;</td></tr>
+                <tr class="mobile-hide" bgcolor="#875a7b"><td height="70">&amp;nbsp;</td></tr>
                 <tr bgcolor="#875a7b">
                     <td align="center" valign="top">
                         % set user = ctx.get('user', user)
@@ -158,7 +158,7 @@
                                             <td valign="top">
                                                 <p class="font-16" style="color:#2d2a26;font-size: 18px;line-height: 23px; margin-top: 20px">Run your business from anywhere with <br class="mobile-hide"><b>Odoo Mobile</b>.</p>
                                                 <a href="https://play.google.com/store/apps/details?id=com.odoo.mobile" target="_blank"><img src="https://www.odoo.com/digest/static/src/img/google_play.png" style="display:inline-block;height: 40px; margin-bottom: 5px"></a>
-                                                <span class="mobile-hide">&nbsp;</span>
+                                                <span class="mobile-hide">&amp;nbsp;</span>
                                                 <a href="https://itunes.apple.com/us/app/odoo/id1272543640" target="_blank"><img src="https://www.odoo.com/digest/static/src/img/app_store.png" style="display:inline-block;height: 40px; margin-bottom: 5px"></a>
 
                                             </td>
@@ -179,7 +179,7 @@
                                 <td style="color:#8F8F8F;font-size: 12px; line-height: 30px;">Powered by <a href="https://www.odoo.com" target="_blank" style="color:#875A7B">Odoo</a>.</td>
                             </tr>
                             <tr>
-                                <td height="30">&nbsp;</td>
+                                <td height="30">&amp;nbsp;</td>
                             </tr>
                         </table>
                     </td>
