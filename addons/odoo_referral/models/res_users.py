@@ -8,7 +8,7 @@ import hmac
 import threading
 
 from hashlib import sha1
-from werkzeug import url_encode
+from werkzeug.urls import url_encode
 
 from odoo import api, models, tools
 
