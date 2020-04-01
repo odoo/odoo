@@ -5,7 +5,7 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@id='other_tab']/group[@id='other_tab_group']/group[@name='payments_info_group']" position="after">
+            <xpath expr="//page[@id='other_tab']//group[@name='accounting_info_group']" position="after">
                 <group string="Import/Export India">
                     <field name="l10n_in_import_export" invisible="1"/>
                     <field name="l10n_in_export_type"

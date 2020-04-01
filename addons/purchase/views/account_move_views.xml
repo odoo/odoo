@@ -9,7 +9,9 @@
             <!-- Auto-complete could be done from either a bill either a purchase order -->
             <field name="invoice_vendor_bill_id" position="after">
                 <field name="purchase_id" invisible="1"/>
-                <field name="purchase_vendor_bill_id"
+                <label for="purchase_vendor_bill_id" string="Auto-Complete" class="oe_edit_only"
+                       attrs="{'invisible': ['|', '|', ('state','not in',['draft']), ('state', '=', 'purchase'), ('move_type', '!=', 'in_invoice')]}" />
+                <field name="purchase_vendor_bill_id" nolabel="1"
                        attrs="{'invisible': ['|', '|', ('state','not in',['draft']), ('state', '=', 'purchase'), ('move_type', '!=', 'in_invoice')]}"
                        class="oe_edit_only"
                        domain="[('company_id', '=', company_id), ('partner_id','child_of', [partner_id])]"
@@ -17,6 +19,9 @@
                        context="{'show_total_amount': True}"
                        options="{'no_create': True, 'no_open': True}"/>
             </field>
+            <label name="invoice_vendor_bill_id_label" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </label>
             <field name="invoice_vendor_bill_id" position="attributes">
                 <attribute name="invisible">1</attribute>
             </field>
