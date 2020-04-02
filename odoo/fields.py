@@ -823,11 +823,15 @@ class Field(MetaField('DummyField', (object,), {})):
             # the column is new or it becomes required; initialize its values
             if model._table_has_rows():
                 model._init_column(self.name)
-                # flush values before adding NOT NULL constraint
-                model.flush([self.name])
 
         if self.required and not has_notnull:
-            model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
+            # _init_column may delay computations in post-init phase
+            @model.pool.post_init
+            def add_not_null():
+                # flush values before adding NOT NULL constraint
+                model.flush([self.name])
+                model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
+
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
 
