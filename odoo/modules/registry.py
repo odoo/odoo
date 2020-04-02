@@ -267,6 +267,22 @@ class Registry(Mapping):
         self.registry_invalidated = True
 
     @lazy_property
+    def field_computed(self):
+        """ Return a dict mapping each field to the fields computed by the same method. """
+        computed = {}
+        for Model in self.models.values():
+            groups = defaultdict(list)
+            for field in Model._fields.values():
+                if field.compute:
+                    computed[field] = group = groups[field.compute]
+                    group.append(field)
+            for fields in groups.values():
+                if len({field.compute_sudo for field in fields}) > 1:
+                    _logger.warning("%s: inconsistent 'compute_sudo' for computed fields: %s",
+                                    self._name, ", ".join(field.name for field in fields))
+        return computed
+
+    @lazy_property
     def field_triggers(self):
         # determine field dependencies
         dependencies = {}

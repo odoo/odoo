@@ -2707,7 +2707,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self._add_inherited_fields()
 
         # 4. initialize more field metadata
-        cls._field_computed = {}            # fields computed with the same method
         cls._field_inverses = Collector()   # inverse fields for related fields
 
         cls._setup_done = True
@@ -2762,18 +2761,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             cls._rec_name = None
             field = cls._fields['display_name']
             field.depends = tuple(name for name in field.depends if name != 'x_name')
-
-        # map each field to the fields computed with the same method
-        groups = defaultdict(list)
-        for field in cls._fields.values():
-            if field.compute:
-                cls._field_computed[field] = group = groups[field.compute]
-                group.append(field)
-        for fields in groups.values():
-            compute_sudo = fields[0].compute_sudo
-            if not all(field.compute_sudo == compute_sudo for field in fields):
-                _logger.warning("%s: inconsistent 'compute_sudo' for computed fields: %s",
-                                self._name, ", ".join(field.name for field in fields))
 
     @api.model
     def _setup_complete(self):
@@ -3546,7 +3533,7 @@ Record ids: %(records)s
                     # will automatically invalidate the field from the cache,
                     # forcing its value to be recomputed once dependencies are
                     # up-to-date.
-                    protected.update(self._field_computed.get(field, [field]))
+                    protected.update(self.pool.field_computed.get(field, [field]))
             if fname == 'company_id' or (field.relational and field.check_company):
                 check_company = True
 
@@ -3753,7 +3740,7 @@ Record ids: %(records)s
                     inversed_fields.add(field)
                 # protect non-readonly computed fields against (re)computation
                 if field.compute and not field.readonly:
-                    protected.update(self._field_computed.get(field, [field]))
+                    protected.update(self.pool.field_computed.get(field, [field]))
 
             data_list.append(data)
 
@@ -3955,7 +3942,7 @@ Record ids: %(records)s
 
         if field.store and any(self._ids):
             # check constraints of the fields that have been computed
-            fnames = [f.name for f in self._field_computed[field]]
+            fnames = [f.name for f in self.pool.field_computed[field]]
             self.filtered('id')._validate_fields(fnames)
 
     def _parent_store_create(self):
@@ -5828,7 +5815,7 @@ Record ids: %(records)s
                     # mark the field as computed on missing records, otherwise
                     # they remain forever in the todo list, and lead to an
                     # infinite loop...
-                    for f in recs._field_computed[field]:
+                    for f in recs.pool.field_computed[field]:
                         self.env.remove_to_compute(f, recs - existing)
             else:
                 self.env.cache.invalidate([(field, recs._ids)])
