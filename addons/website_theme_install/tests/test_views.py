@@ -35,6 +35,7 @@ class TestViews(TransactionCase):
             'mode': 'extension',
             'inherit_id': 'ir.ui.view,%s' % main_view.id,
             'arch': '<xpath expr="//body" position="replace"><span>C</span></xpath>',
+            'arch_fs': '/testviews',
             'key': 'test_theme.test_child_view',
         })
         self.env['ir.model.data'].create({
@@ -52,6 +53,13 @@ class TestViews(TransactionCase):
         specific_main_view_children = specific_main_view.inherit_children_ids
         self.assertEqual(specific_main_view_children.name, 'Test Child View', "Ensure theme.ir.ui.view has been loaded as an ir.ui.view into the website..")
         self.assertEqual(specific_main_view_children.website_id, website_1, "..and the website is the correct one.")
+
+        # 4. Keep User changes
+        view_theme_copy = View.search([('key', '=', 'test_theme.test_child_view'), ('website_id', '=', website_1.id)])
+        new_arch = '<xpath expr="//body" position="replace"><span>BATMAN</span></xpath>'
+        view_theme_copy.write({'arch': new_arch})
+        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        self.assertEqual(view_theme_copy.arch, new_arch, "User chnages has been overridden by the theme update")
 
 
 class Crawler(HttpCase):
