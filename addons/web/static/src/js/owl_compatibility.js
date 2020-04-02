@@ -441,11 +441,9 @@ odoo.define('web.OwlCompatibility', function () {
                 // we may not be in the DOM, but actually want to be redrawn
                 // (e.g. we were detached from the DOM, and now we're going to
                 // be re-attached, but we need to be reloaded first). In this
-                // case, we have to fool Owl as it would skip the rendering if
-                // we simply call render.
-                const tmpEl = document.createElement('div');
-                this.el.parentElement.replaceChild(tmpEl, this.el);
-                prom = this.mount(tmpEl, { position: 'self' });
+                // case, we have to call 'mount' as Owl would skip the rendering
+                // if we simply call render.
+                prom = this.mount(...this._mountArgs);
             }
             return prom;
         }
@@ -489,6 +487,22 @@ odoo.define('web.OwlCompatibility', function () {
                 children.set(parent, parentChildren);
             }
             parentChildren.push(this);
+        }
+        /**
+         * Stores mount target and position at first mount. That way, when updating
+         * while out of DOM, we know where and how to remount.
+         * @see update()
+         * @override
+         */
+        async mount(target, options) {
+            if (options && options.position === 'self') {
+                throw new Error(
+                    'Unsupported position: "self" is not allowed for wrapper components. ' +
+                    'Contact the JS Framework team or open an issue if your use case is relevant.'
+                );
+            }
+            this._mountArgs = arguments;
+            return super.mount(...arguments);
         }
     }
     ComponentWrapper.template = xml`<t t-component="Component" t-props="props" t-ref="component"/>`;
