@@ -2437,11 +2437,10 @@ class Many2one(_Relational):
         if not comodel._auto or comodel._table == 'ir_actions':
             return
         # create/update the foreign key, and reflect it in 'ir.model.constraint'
-        process = sql.fix_foreign_key if column else sql.add_foreign_key
-        new = process(model._cr, model._table, self.name, comodel._table, 'id', self.ondelete or 'set null')
-        if new:
-            conname = '%s_%s_fkey' % (model._table, self.name)
-            model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, self._module)
+        model.pool.add_foreign_key(
+            model._table, self.name, comodel._table, 'id', self.ondelete or 'set null',
+            model, self._module
+        )
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
@@ -3268,28 +3267,22 @@ class Many2many(_RelationalMulti):
             """.format(rel=self.relation, id1=self.column1, id2=self.column2)
             cr.execute(query, ['RELATION BETWEEN %s AND %s' % (model._table, comodel._table)])
             _schema.debug("Create table %r: m2m relation between %r and %r", self.relation, model._table, comodel._table)
-            model.pool.post_init(self.update_db_foreign_keys, model)
-            return True
-        elif sql.table_kind(cr, comodel._table) != 'v' and self.ondelete != 'cascade':
-            # Fix foreign key references with ondelete, unless the targets are
-            # SQL views.
-            # This is needed because by default the ondelete of the column1
-            # fkey is set to 'cascade', but the relation on the opposite model
-            # can override it by defining ondelete for its column2 fkey.
-            sql.fix_foreign_key(cr, self.relation, self.column2, comodel._table, 'id', self.ondelete)
+
+        model.pool.post_init(self.update_db_foreign_keys, model)
 
     def update_db_foreign_keys(self, model):
         """ Add the foreign keys corresponding to the field's relation table. """
-        cr = model._cr
         comodel = model.env[self.comodel_name]
-        reflect = model.env['ir.model.constraint']._reflect_constraint
-        # create foreign key references with ondelete, unless the targets are SQL views
-        if sql.table_kind(cr, model._table) != 'v':
-            sql.add_foreign_key(cr, self.relation, self.column1, model._table, 'id', 'cascade')
-            reflect(model, '%s_%s_fkey' % (self.relation, self.column1), 'f', None, self._module)
-        if sql.table_kind(cr, comodel._table) != 'v':
-            sql.add_foreign_key(cr, self.relation, self.column2, comodel._table, 'id', self.ondelete)
-            reflect(model, '%s_%s_fkey' % (self.relation, self.column2), 'f', None, self._module)
+        if model._is_an_ordinary_table():
+            model.pool.add_foreign_key(
+                self.relation, self.column1, model._table, 'id', 'cascade',
+                model, self._module, force=False,
+            )
+        if comodel._is_an_ordinary_table():
+            model.pool.add_foreign_key(
+                self.relation, self.column2, comodel._table, 'id', self.ondelete,
+                model, self._module,
+            )
 
     def read(self, records):
         context = {'active_test': False}
