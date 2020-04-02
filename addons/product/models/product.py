@@ -703,6 +703,10 @@ class ProductPackaging(models.Model):
     product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', index=True)
 
+    _sql_constraints = [
+        ('barcode_uniq', 'unique(barcode)', "Barcodes should be unique across packages!"),
+    ]
+
 
 class SupplierInfo(models.Model):
     _name = "product.supplierinfo"
