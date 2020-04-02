@@ -225,7 +225,7 @@ class ResPartnerBank(models.Model):
         return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
     @api.model
-    def _get_available_qr_methods(self): #TODO OCO ajouter une séquence (pour s'assurer que toujours checké avant SEPA)
+    def _get_available_qr_methods(self):
         rslt = super()._get_available_qr_methods()
         rslt.append(('ch_qr', _("Swiss QR bill"), 10))
         return rslt
