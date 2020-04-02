@@ -406,6 +406,14 @@ var StatementAction = AbstractAction.extend({
     _onValidate: function (event) {
         var self = this;
         var handle = event.target.handle;
+        var reconciling_first = false;
+        var unreconciled_lines = _.filter(this.model.lines, function (line) {
+            return !line.reconciled;
+        });
+        if (unreconciled_lines.length > 0) {
+            reconciling_first = unreconciled_lines[0].handle === handle;
+        }
+
         this.model.validate(handle).then(function (result) {
             self.renderer.update({
                 'valuenow': self.model.valuenow,
@@ -430,7 +438,10 @@ var StatementAction = AbstractAction.extend({
                 var toLoad = self.model.defaultDisplayQty - self.widgets.length;
                 self._loadMore(toLoad);
             }
-            self._openFirstLine();
+
+            if (reconciling_first) {
+                self._openFirstLine();
+            }
         });
     },
 });
