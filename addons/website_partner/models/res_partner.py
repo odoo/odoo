@@ -10,7 +10,7 @@ class WebsiteResPartner(models.Model):
     _inherit = ['res.partner', 'website.seo.metadata', 'website.published.mixin']
 
     website_description = fields.Html('Website Partner Full Description', strip_style=True, translate=html_translate)
-    website_short_description = fields.Text('Website Partner Short Description')
+    website_short_description = fields.Text('Website Partner Short Description', translate=True)
 
     @api.multi
     def _compute_website_url(self):
