@@ -18,6 +18,7 @@ var _t = core._t;
 var RUNNING_TOUR_TIMEOUT = 10000;
 
 var get_step_key = utils.get_step_key;
+var get_debugging_key = utils.get_debugging_key;
 var get_running_key = utils.get_running_key;
 var get_running_delay_key = utils.get_running_delay_key;
 var get_first_visible_element = utils.get_first_visible_element;
@@ -32,7 +33,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this.$body = $('body');
         this.active_tooltips = {};
         this.tours = {};
-        this.consumed_tours = consumed_tours || [];
+        // remove the tours being debug from the list of consumed tours
+        this.consumed_tours = (consumed_tours || []).filter(tourName => {
+            return !local_storage.getItem(get_debugging_key(tourName));
+        });
         this.running_tour = local_storage.getItem(get_running_key());
         this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 0;
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
@@ -133,10 +137,35 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
 
             tour.ready = true;
 
-            if (do_update && (this.running_tour === name || (!this.running_tour && !tour.test && !tour_is_consumed))) {
+            const debuggingTour = local_storage.getItem(get_debugging_key(name));
+            if (debuggingTour ||
+                (do_update && (this.running_tour === name ||
+                              (!this.running_tour && !tour.test && !tour_is_consumed)))) {
                 this._to_next_step(name, 0);
             }
         }).bind(this));
+    },
+    /**
+     * Resets the given tour to its initial step, and prevent it from being
+     * marked as consumed at reload, by the include in tour_disable.js
+     *
+     * @param {string} tourName
+     */
+    reset: function (tourName) {
+        // remove it from the list of consumed tours
+        const index = this.consumed_tours.indexOf(tourName);
+        if (index >= 0) {
+            this.consumed_tours.splice(index, 1);
+        }
+        // mark it as being debugged
+        local_storage.setItem(get_debugging_key(tourName), true);
+        // reset it to the first step
+        const tour = this.tours[tourName];
+        tour.current_step = 0;
+        local_storage.removeItem(get_step_key(tourName));
+        this._to_next_step(tourName, 0);
+        // redirect to its starting point (or /web by default)
+        window.location.href = window.location.origin + (tour.url || '/web');
     },
     run: function (tour_name, step_delay) {
         console.log(_.str.sprintf("Preparing tour %s", tour_name));
@@ -370,6 +399,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));
+        local_storage.removeItem(get_debugging_key(tour_name));
         if (this.running_tour === tour_name) {
             this._stop_running_tour_timeout();
             local_storage.removeItem(get_running_key());
