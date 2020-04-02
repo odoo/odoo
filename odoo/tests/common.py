@@ -770,7 +770,7 @@ class ChromeBrowser():
         self.ws_url = infos['webSocketDebuggerUrl']
         self._logger.info('Chrome headless temporary user profile dir: %s', self.user_data_dir)
 
-    def _json_command(self, command, timeout=3):
+    def _json_command(self, command, timeout=10):
         """
         Inspect dev tools with get
         Available commands:
@@ -795,7 +795,7 @@ class ChromeBrowser():
                 self._logger.error('Chrome crashed at startup')
                 break
             try:
-                r = requests.get(url, timeout=3)
+                r = requests.get(url, timeout=timeout)
                 if r.ok:
                     self._logger.info("Json command result in %s", tries * delay)
                     return r.json()
@@ -809,7 +809,7 @@ class ChromeBrowser():
                 break
         self._logger.error('Could not connect to chrome debugger after %s tries, %ss' % (tries, delay))
         if failure_info:
-            self._logger.info(failure_info)
+            self._logger.error(failure_info)
         raise unittest.SkipTest("Cannot connect to chrome headless")
 
     def _open_websocket(self):
