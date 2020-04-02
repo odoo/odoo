@@ -247,18 +247,19 @@ class AccountMove(models.Model):
                         taxes_vals['taxes'][0]['amount'] += sum([v['amount'] for v in val['taxes']])
 
                 if tax_line:
-                    # Update the existing tax_line.
-                    if balance:
-                        # Update the debit/credit amount according to the new balance.
-                        if taxes_vals.get('taxes'):
-                            amount = taxes_vals['taxes'][0]['amount']
-                            account = _get_tax_account(tax, amount) or line.account_id
-                            tax_line.debit = amount > 0 and amount or 0.0
-                            tax_line.credit = amount < 0 and -amount or 0.0
-                            tax_line.account_id = account
-                    else:
-                        # Reset debit/credit in case of the originator line is temporary set to 0 in both debit/credit.
-                        tax_line.debit = tax_line.credit = 0.0
+                    if len(tax_line) == 1:
+                        # Update the existing tax_line.
+                        if balance:
+                            # Update the debit/credit amount according to the new balance.
+                            if taxes_vals.get('taxes'):
+                                amount = taxes_vals['taxes'][0]['amount']
+                                account = _get_tax_account(tax, amount) or line.account_id
+                                tax_line.debit = amount > 0 and amount or 0.0
+                                tax_line.credit = amount < 0 and -amount or 0.0
+                                tax_line.account_id = account
+                        else:
+                            # Reset debit/credit in case of the originator line is temporary set to 0 in both debit/credit.
+                            tax_line.debit = tax_line.credit = 0.0
                 elif taxes_vals.get('taxes'):
                     # Create a new tax_line.
 
@@ -1672,6 +1673,7 @@ class AccountPartialReconcile(models.Model):
         return {
             'name': line.name,
             'account_id': account_id,
+            'journal_id': new_move.journal_id.id,
             'tax_exigible': True,
             'tax_ids': [(6, 0, [tax])],
             'move_id': new_move.id,
@@ -1739,6 +1741,7 @@ class AccountPartialReconcile(models.Model):
                                 'currency_id': line.currency_id.id,
                                 'move_id': newly_created_move.id,
                                 'partner_id': line.partner_id.id,
+                                'journal_id': newly_created_move.journal_id.id,
                             })
                             # Group by cash basis account and tax
                             self.env['account.move.line'].with_context(check_move_validity=False).create({
@@ -1754,6 +1757,7 @@ class AccountPartialReconcile(models.Model):
                                 'currency_id': line.currency_id.id,
                                 'move_id': newly_created_move.id,
                                 'partner_id': line.partner_id.id,
+                                'journal_id': newly_created_move.journal_id.id,
                             })
                             if line.account_id.reconcile and not line.reconciled:
                                 #setting the account to allow reconciliation will help to fix rounding errors
