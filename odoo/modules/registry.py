@@ -358,6 +358,9 @@ class Registry(Mapping):
              - ``module``: the name of the module being installed/updated, if any;
              - ``update_custom_fields``: whether custom fields should be updated.
         """
+        if not model_names:
+            return
+
         if 'module' in context:
             _logger.info('module %s: creating or updating database tables', context['module'])
         elif context.get('models_to_check', False):
@@ -374,6 +377,11 @@ class Registry(Mapping):
             for model in models:
                 model._auto_init()
                 model.init()
+
+            env['ir.model']._reflect_models(model_names)
+            env['ir.model.fields']._reflect_fields(model_names)
+            env['ir.model.fields.selection']._reflect_selections(model_names)
+            env['ir.model.constraint']._reflect_constraints(model_names)
 
             self._ordinary_tables = None
 
