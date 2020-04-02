@@ -1738,14 +1738,14 @@ const SnippetOptionWidget = Widget.extend({
                 if (params.applyTo) {
                     const $firstSubTarget = this.$(params.applyTo).eq(0);
                     if (!$firstSubTarget.length) {
-                        return;
+                        continue;
                     }
                     obj = createPropertyProxy(this, '$target', $firstSubTarget);
                 }
 
                 const value = await this._computeWidgetState.call(obj, methodName, params);
                 if (value === undefined) {
-                    return;
+                    continue;
                 }
                 const normalizedValue = this._normalizeWidgetValue(value);
                 widget.setValue(normalizedValue, methodName);
