@@ -10,3 +10,4 @@ class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
     sub_products = fields.One2many('mrp.subproduct', 'bom_id', 'Byproducts', copy=True)
+    product_variant_id = fields.Many2one('product.product', related='product_tmpl_id.product_variant_id')
