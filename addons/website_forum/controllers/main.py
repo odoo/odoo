@@ -374,17 +374,19 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
-        if 'post_name' in kwargs and not kwargs.get('post_name').strip():
-            return request.render('http_routing.http_error', {
-                'status_code': _('Bad Request'),
-                'status_message': _('Title should not be empty.')
-            })
-        post_tags = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         vals = {
-            'tag_ids': post_tags,
-            'name': kwargs.get('post_name'),
             'content': kwargs.get('content'),
         }
+
+        if 'post_name' in kwargs:
+            if not kwargs.get('post_name').strip():
+                return request.render('http_routing.http_error', {
+                    'status_code': _('Bad Request'),
+                    'status_message': _('Title should not be empty.')
+                })
+
+            vals['name'] = kwargs.get('post_name')
+        vals['tag_ids'] = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         post.write(vals)
         question = post.parent_id if post.parent_id else post
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
