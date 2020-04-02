@@ -1298,6 +1298,10 @@ exports.PosModel = Backbone.Model.extend({
         const currency = this.currency || { decimals: 2 };
         return `${Number(value.toFixed(currency.decimals || 0))}`;
     },
+
+    disallowLineQuantityChange() {
+        return false;
+    }
 });
 
 /**
