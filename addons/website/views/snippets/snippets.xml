@@ -67,6 +67,7 @@
                 <div class="o_panel_header">Dynamic Content</div>
                 <div class="o_panel_body">
                     <t id="form_form_hook"/>
+                    <t t-snippet="website.s_google_map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_google_map.png"/>
                     <t id="sale_recently_viewed_product_hook"/>
                     <t id="sale_product_search_section_hook"/>
                     <t id="blog_posts_hook"/>
@@ -306,7 +307,7 @@
     <t t-set="only_bg_image_exclude" t-value="''"/>
 
     <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div'"/>
-    <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_color_blocks_2, .s_image_gallery .carousel-item'"/>
+    <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_color_blocks_2, .s_image_gallery .carousel-item, .s_google_map'"/>
 
     <t t-call="web_editor.snippet_options_background_options">
         <t t-set="selector" t-value="both_bg_color_image_selector"/>
