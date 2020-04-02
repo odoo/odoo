@@ -1734,14 +1734,12 @@ class IrModelData(models.Model):
         Return (id, res_model, res_id) or raise ValueError if not found
         """
         module, name = xmlid.split('.', 1)
-        xid = self.sudo().search([('module', '=', module), ('name', '=', name)])
-        if not xid:
+        query = "SELECT id, model, res_id FROM ir_model_data WHERE module=%s AND name=%s"
+        self.env.cr.execute(query, [module, name])
+        result = self.env.cr.fetchone()
+        if not (result and result[2]):
             raise ValueError('External ID not found in the system: %s' % xmlid)
-        # the sql constraints ensure us we have only one result
-        res = xid.read(['model', 'res_id'])[0]
-        if not res['res_id']:
-            raise ValueError('External ID not found in the system: %s' % xmlid)
-        return res['id'], res['model'], res['res_id']
+        return result
 
     @api.model
     def xmlid_to_res_model_res_id(self, xmlid, raise_if_not_found=False):
