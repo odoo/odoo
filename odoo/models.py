@@ -161,7 +161,7 @@ class MetaModel(api.Meta):
             self._module = self._get_addon_name(self.__module__)
 
         # Remember which models to instanciate for this module.
-        if not self._custom:
+        if self._module:
             self.module_to_models[self._module].append(self)
 
         # check for new-api conversion error: leave comma after field definition
