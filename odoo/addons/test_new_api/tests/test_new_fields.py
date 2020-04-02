@@ -2615,6 +2615,7 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
 
     def test_ondelete_unexisting_policy(self):
         class Foo(models.Model):
+            _module = None
             _inherit = self.MODEL_REQUIRED
 
             my_selection = fields.Selection(selection_add=[
@@ -2628,6 +2629,7 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
 
     def test_ondelete_default_no_default(self):
         class Foo(models.Model):
+            _module = None
             _inherit = self.MODEL_BASE
 
             my_selection = fields.Selection(selection_add=[
@@ -2641,6 +2643,7 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
 
     def test_ondelete_required_null_explicit(self):
         class Foo(models.Model):
+            _module = None
             _inherit = self.MODEL_REQUIRED
 
             my_selection = fields.Selection(selection_add=[
@@ -2654,6 +2657,7 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
 
     def test_ondelete_required_null_implicit(self):
         class Foo(models.Model):
+            _module = None
             _inherit = self.MODEL_REQUIRED
 
             my_selection = fields.Selection(selection_add=[
