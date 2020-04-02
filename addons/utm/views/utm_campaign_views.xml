@@ -73,7 +73,7 @@
         <field name="name">utm.campaign.view.kanban</field>
         <field name="model">utm.campaign</field>
         <field name="arch" type="xml">
-            <kanban default_group_by='stage_id' class="o_utm_kanban" on_create="quick_create" quick_create_view="utm.utm_campaign_view_form_quick_create">
+            <kanban default_group_by='stage_id' class="o_utm_kanban" on_create="quick_create" quick_create_view="utm.utm_campaign_view_form_quick_create" examples="utm_campaign">
                 <field name='color'/>
                 <field name='user_id'/>
                 <field name="stage_id"/>
