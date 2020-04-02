@@ -85,28 +85,36 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
         _initSplitLines(order) {
             const splitlines = {};
             for (let line of order.get_orderlines()) {
-                splitlines[line.id] = { quantity: 0 };
+                splitlines[line.id] = { product: line.get_product().id, quantity: 0 };
             }
             return splitlines;
         }
         _splitQuantity(line) {
             const split = this.splitlines[line.id];
-            if (!line.get_unit().is_pos_groupable) {
-                if (split.quantity !== line.get_quantity()) {
-                    split.quantity = line.get_quantity();
-                } else {
-                    split.quantity = 0;
-                }
-            } else {
-                if (split.quantity < line.get_quantity()) {
-                    split.quantity += line.get_unit().is_pos_groupable
-                        ? 1
-                        : line.get_unit().rounding;
-                    if (split.quantity > line.get_quantity()) {
+
+            let totalQuantity = 0;
+
+            this.env.pos.get_order().get_orderlines().forEach(function(orderLine) {
+                if(orderLine.get_product().id === split.product)
+                    totalQuantity += orderLine.get_quantity();
+            });
+
+            if(line.get_quantity() > 0) {
+                if (!line.get_unit().is_pos_groupable) {
+                    if (split.quantity !== line.get_quantity()) {
                         split.quantity = line.get_quantity();
+                    } else {
+                        split.quantity = 0;
                     }
                 } else {
-                    split.quantity = 0;
+                    if (split.quantity < totalQuantity) {
+                        split.quantity += line.get_unit().is_pos_groupable? 1: line.get_unit().rounding;
+                        if (split.quantity > line.get_quantity()) {
+                            split.quantity = line.get_quantity();
+                        }
+                    } else {
+                        split.quantity = 0;
+                    }
                 }
             }
         }
@@ -126,21 +134,46 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
             }
         }
         _isFullPayOrder() {
-            return _.every(this.currentOrder.get_orderlines(), orderLine => {
-                var split = this.splitlines[orderLine.id];
-                return split && split.quantity === orderLine.get_quantity();
+            let order = this.env.pos.get_order();
+            let full = true;
+            let splitlines = this.splitlines;
+            let groupedLines = _.groupBy(order.get_orderlines(), line => line.get_product().id);
+
+            Object.keys(groupedLines).forEach(function (lineId) {
+                var maxQuantity = groupedLines[lineId].reduce(((quantity, line) => quantity + line.get_quantity()), 0);
+                Object.keys(splitlines).forEach(id => {
+                    let split = splitlines[id];
+                    if(split.product === groupedLines[lineId][0].get_product().id)
+                        maxQuantity -= split.quantity;
+                });
+                if(maxQuantity !== 0)
+                    full = false;
             });
+
+            return full;
         }
         _setQuantityOnCurrentOrder() {
+            let order = this.env.pos.get_order();
             for (var id in this.splitlines) {
                 var split = this.splitlines[id];
                 var line = this.currentOrder.get_orderline(parseInt(id));
-                line.set_quantity(
-                    line.get_quantity() - split.quantity,
-                    'do not recompute unit price'
-                );
-                if (Math.abs(line.get_quantity()) < 0.00001) {
-                    this.currentOrder.remove_orderline(line);
+
+                if(!this.props.disallow) {
+                    line.set_quantity(
+                        line.get_quantity() - split.quantity,
+                        'do not recompute unit price'
+                    );
+                    if (Math.abs(line.get_quantity()) < 0.00001) {
+                        this.currentOrder.remove_orderline(line);
+                    }
+                } else {
+                    if(split.quantity) {
+                        let decreaseLine = line.clone();
+                        decreaseLine.order = order;
+                        decreaseLine.noDecrease = true;
+                        decreaseLine.set_quantity(-split.quantity);
+                        order.add_orderline(decreaseLine);
+                    }
                 }
             }
         }

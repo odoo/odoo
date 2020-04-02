@@ -5,15 +5,11 @@ odoo.define('l10n_fr_pos_cert.NumpadWidget', function(require) {
     const Registries = require('point_of_sale.Registries');
 
     const PosFrNumpadWidget = NumpadWidget => class extends NumpadWidget {
-        async changeMode(mode) {
-            if (this.env.pos.is_french_country() && mode === 'price') {
-                await this.showPopup('ErrorPopup', {
-                        title: this.env._t('Module error'),
-                        body: this.env._t('Adjusting the price is not allowed.'),
-                    });
-                return;
+        get hasPriceControlRights() {
+            if (this.env.pos.is_french_country()) {
+                return false;
             } else {
-                super.changeMode(mode);
+                return super.hasPriceControlRights;
             }
         }
     };

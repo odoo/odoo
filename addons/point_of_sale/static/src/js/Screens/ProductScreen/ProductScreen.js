@@ -136,23 +136,22 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             this.numpadMode = mode;
             NumberBuffer.reset();
         }
-        disallowLineQuantityChange() {
-            //This function will check if we should check or not the way we handle the line deletion.
-            //If the localisation prevent the line deletion, this function will return true, following the override in the multiple modules.
-            //By default, we'll always set the quantity according to the buffer input.
-            return false;
-        }
         async _updateSelectedOrderline(event) {
-            if(this.disallowLineQuantityChange()) {
+            if(this.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
                 let order = this.env.pos.get_order();
                 let selectedLine = order.get_selected_orderline();
-                let last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1];
+                let lastId = order.orderlines.last().cid;
                 let currentQuantity = this.env.pos.get_order().get_selected_orderline().get_quantity();
 
-                if(last_id != selectedLine.cid)
+                if(selectedLine.noDecrease) {
+                    this.showPopup('ErrorPopup', {
+                        title: this.env._t('Invalid action'),
+                        body: this.env._t('You are not allowed to change this quantity'),
+                    });
+                    return;
+                }
+                if(lastId != selectedLine.cid)
                     this._showDecreaseQuantityPopup();
-                else if(currentQuantity === 1 && event.detail.buffer < 1)    // Allow to put a value below 1 for the last product entry.
-                    this._setValue(event.detail.buffer);
                 else if(currentQuantity < event.detail.buffer)
                     this._setValue(event.detail.buffer);
                 else if(event.detail.buffer < currentQuantity)
@@ -231,29 +230,25 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         async _showDecreaseQuantityPopup() {
             const { confirmed, payload: inputNumber } = await this.showPopup('NumberPopup', {
                 startingValue: 0,
-                title: this.env._t('Decrease the quantity by'),
+                title: this.env._t('Set the new quantity'),
             });
-            let decreaseQuantity = Math.abs(inputNumber);
-            if (confirmed && decreaseQuantity) {
+            let newQuantity = inputNumber !== ""? Math.abs(inputNumber): null;
+            if (confirmed && newQuantity !== null) {
                 let order = this.env.pos.get_order();
                 let selectedLine = this.env.pos.get_order().get_selected_orderline();
+                let currentQuantity = selectedLine.get_quantity()
 
-                let quantity = 0;
-                order.get_orderlines().forEach(orderLine => {
-                    if(orderLine.get_product().id === selectedLine.get_product().id && orderLine.get_discount() === selectedLine.get_discount())
-                        quantity += orderLine.get_quantity();
-                });
+                if(currentQuantity === 1 && newQuantity > 0)
+                    selectedLine.set_quantity(newQuantity);
+                else if(newQuantity >= currentQuantity)
+                    selectedLine.set_quantity(newQuantity);
+                else {
+                    let newLine = selectedLine.clone();
+                    let decreasedQuantity = currentQuantity - newQuantity
+                    newLine.order = order;
 
-                if(decreaseQuantity > quantity) {
-                    await this.showPopup('ErrorPopup', {
-                        title: this.env._t('Order error'),
-                        body: this.env._t('Not allowed to take back more than was ordered.'),
-                    });
-                } else {
-                    let decreaseLine = selectedLine.clone();
-                    decreaseLine.order = order;
-                    decreaseLine.set_quantity(-decreaseQuantity);
-                    order.add_orderline(decreaseLine);
+                    newLine.set_quantity( - decreasedQuantity);
+                    order.add_orderline(newLine);
                 }
             }
         }
