@@ -261,16 +261,23 @@ class Registry(Mapping):
         for model in models:
             model._setup_fields()
 
+        for model in models:
+            model._setup_complete()
+
+        self.registry_invalidated = True
+
+    @lazy_property
+    def field_triggers(self):
         # determine field dependencies
         dependencies = {}
-        for model in models:
-            if model._abstract:
+        for Model in self.models.values():
+            if Model._abstract:
                 continue
-            for field in model._fields.values():
+            for field in Model._fields.values():
                 # dependencies of custom fields may not exist; ignore that case
                 exceptions = (Exception,) if field.base_field.manual else ()
                 with ignore(*exceptions):
-                    dependencies[field] = set(field.resolve_depends(model))
+                    dependencies[field] = set(field.resolve_depends(self))
 
         # determine transitive dependencies
         def transitive_dependencies(field, seen=[]):
@@ -299,10 +306,7 @@ class Registry(Mapping):
                         tree = tree.setdefault(label, {})
                     tree.setdefault(None, set()).add(field)
 
-        self.field_triggers = triggers
-
-        for model in models:
-            model._setup_complete()
+        return triggers
 
     def post_init(self, func, *args, **kwargs):
         """ Register a function to call at the end of :meth:`~.init_models`. """
