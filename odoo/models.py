@@ -169,7 +169,7 @@ class MetaModel(api.Meta):
             if type(val) is tuple and len(val) == 1 and isinstance(val[0], Field):
                 _logger.error("Trailing comma after field definition: %s.%s", self, key)
             if isinstance(val, Field):
-                val.args = dict(val.args, _module=self._module)
+                val.args['_module'] = self._module
 
     def _get_addon_name(self, full_name):
         # The (OpenERP) module name can be in the ``odoo.addons`` namespace
