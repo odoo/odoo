@@ -113,7 +113,6 @@ class Registry(Mapping):
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
         self._ordinary_tables = None
-        self._post_init_queue = deque()
         self._constraint_queue = deque()
 
         # modules fully loaded (maintained during init phase by `loading` module)
@@ -367,26 +366,33 @@ class Registry(Mapping):
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
 
-        # make sure the queue does not contain some leftover from a former call
-        self._post_init_queue.clear()
-        self._is_install = install
+        try:
+            self._post_init_queue = deque()
+            self._foreign_keys = {}
+            self._is_install = install
 
-        for model in models:
-            model._auto_init()
-            model.init()
+            for model in models:
+                model._auto_init()
+                model.init()
 
-        self._ordinary_tables = None
+            self._ordinary_tables = None
 
-        self.check_indexes(cr, model_names)
+            while self._post_init_queue:
+                func = self._post_init_queue.popleft()
+                func()
 
-        while self._post_init_queue:
-            func = self._post_init_queue.popleft()
-            func()
+            self.check_indexes(cr, model_names)
+            self.check_foreign_keys(cr)
 
-        env['base'].flush()
+            env['base'].flush()
 
-        # make sure all tables are present
-        self.check_tables_exist(cr)
+            # make sure all tables are present
+            self.check_tables_exist(cr)
+
+        finally:
+            del self._post_init_queue
+            del self._foreign_keys
+            del self._is_install
 
     def check_indexes(self, cr, model_names):
         """ Create or drop column indexes for the given models. """
@@ -414,6 +420,52 @@ class Registry(Mapping):
                     _schema.error("Unable to add index for %s", self)
             elif not index and indexname in existing:
                 sql.drop_index(cr, indexname, tablename)
+
+    def add_foreign_key(self, table1, column1, table2, column2, ondelete,
+                        model, module, force=True):
+        """ Specify an expected foreign key. """
+        key = (table1, column1)
+        val = (table2, column2, ondelete, model, module)
+        if force:
+            self._foreign_keys[key] = val
+        else:
+            self._foreign_keys.setdefault(key, val)
+
+    def check_foreign_keys(self, cr):
+        """ Create or update the expected foreign keys. """
+        if not self._foreign_keys:
+            return
+
+        # determine existing foreign keys on the tables
+        query = """
+            SELECT fk.conname, c1.relname, a1.attname, c2.relname, a2.attname, fk.confdeltype
+            FROM pg_constraint AS fk
+            JOIN pg_class AS c1 ON fk.conrelid = c1.oid
+            JOIN pg_class AS c2 ON fk.confrelid = c2.oid
+            JOIN pg_attribute AS a1 ON a1.attrelid = c1.oid AND fk.conkey[1] = a1.attnum
+            JOIN pg_attribute AS a2 ON a2.attrelid = c2.oid AND fk.confkey[1] = a2.attnum
+            WHERE fk.contype = 'f' AND c1.relname IN %s
+        """
+        cr.execute(query, [tuple({table for table, column in self._foreign_keys})])
+        existing = {
+            (table1, column1): (name, table2, column2, deltype)
+            for name, table1, column1, table2, column2, deltype in cr.fetchall()
+        }
+
+        # create or update foreign keys
+        for key, val in self._foreign_keys.items():
+            table1, column1 = key
+            table2, column2, ondelete, model, module = val
+            conname = '%s_%s_fkey' % key
+            deltype = sql._CONFDELTYPES[ondelete.upper()]
+            spec = existing.get(key)
+            if spec is None:
+                sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
+                model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, module)
+            elif spec != (conname, table2, column2, deltype):
+                sql.drop_constraint(cr, table1, spec[0])
+                sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
+                model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, module)
 
     def check_tables_exist(self, cr):
         """
