@@ -32,6 +32,7 @@ fields.Field.__doc__ += """
         :param sparse: the name of the field where the value of this field must
             be stored.
 """
+fields.Field.sparse = None
 
 @monkey_patch(fields.Field)
 def _get_attrs(self, model, name):
@@ -76,10 +77,9 @@ def _inverse_sparse(self, records):
 class Serialized(fields.Field):
     """ Serialized fields provide the storage for sparse fields. """
     type = 'serialized'
-    _slots = {
-        'prefetch': False,              # not prefetched by default
-    }
     column_type = ('text', 'text')
+
+    prefetch = False                    # not prefetched by default
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return self.convert_to_cache(value, record, validate=validate)

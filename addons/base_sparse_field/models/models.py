@@ -44,12 +44,11 @@ class IrModelFields(models.Model):
 
         for field in model._fields.values():
             ser_field_id = None
-            ser_field_name = getattr(field, 'sparse', None)
-            if ser_field_name:
-                if ser_field_name not in fields_data:
+            if field.sparse:
+                if field.sparse not in fields_data:
                     msg = _("Serialization field `%s` not found for sparse field `%s`!")
-                    raise UserError(msg % (ser_field_name, field.name))
-                ser_field_id = fields_data[ser_field_name]['id']
+                    raise UserError(msg % (field.sparse, field.name))
+                ser_field_id = fields_data[field.sparse]['id']
 
             if fields_data[field.name]['serialization_field_id'] != ser_field_id:
                 cr.execute(query, (ser_field_id, model._name, field.name))

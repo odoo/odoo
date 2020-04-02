@@ -15,7 +15,7 @@ import pytz
 import psycopg2
 
 from .tools import (
-    float_repr, float_round, float_compare, float_is_zero, frozendict, html_sanitize, human_size,
+    float_repr, float_round, float_compare, float_is_zero, html_sanitize, human_size,
     pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator,
     image_process, merge_sequences,
 )
@@ -28,7 +28,6 @@ from odoo.exceptions import CacheMiss
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
-EMPTY_DICT = frozendict()
 
 RENAMED_ATTRS = [('select', 'index'), ('digits_compute', 'digits')]
 DEPRECATED_ATTRS = [("oldname", "use an upgrade script instead.")]
@@ -69,21 +68,6 @@ class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
 
-    def __new__(meta, name, bases, attrs):
-        """ Combine the ``_slots`` dict from parent classes, and determine
-        ``__slots__`` for them on the new class.
-        """
-        base_slots = {}
-        for base in reversed(bases):
-            base_slots.update(getattr(base, '_slots', ()))
-
-        slots = dict(base_slots)
-        slots.update(attrs.get('_slots', ()))
-
-        attrs['__slots__'] = set(slots) - set(base_slots)
-        attrs['_slots'] = slots
-        return type.__new__(meta, name, bases, attrs)
-
     def __init__(cls, name, bases, attrs):
         super(MetaField, cls).__init__(name, bases, attrs)
         if not hasattr(cls, 'type'):
@@ -101,7 +85,10 @@ class MetaField(type):
             elif attr.startswith('_description_'):
                 cls.description_attrs.append((attr[13:], attr))
 
+
 _global_seq = iter(itertools.count())
+
+
 class Field(MetaField('DummyField', (object,), {})):
     """The field descriptor contains the field definition, and manages accesses
     and assignments of the corresponding field on records. The following
@@ -215,95 +202,57 @@ class Field(MetaField('DummyField', (object,), {})):
     column_format = '%s'                # placeholder for value in queries
     column_cast_from = ()               # column types that may be cast to this
 
-    _slots = {
-        'args': EMPTY_DICT,             # the parameters given to __init__()
-        '_attrs': EMPTY_DICT,           # the field's non-slot attributes
-        '_module': None,                # the field's module name
-        '_modules': None,               # modules that define this field
-        '_setup_done': None,            # the field's setup state: None, 'base' or 'full'
-        '_sequence': None,              # absolute ordering of the field
+    args = None                         # the parameters given to __init__()
+    _module = None                      # the field's module name
+    _modules = None                     # modules that define this field
+    _setup_done = None                  # the field's setup state: None, 'base' or 'full'
+    _sequence = None                    # absolute ordering of the field
 
-        'automatic': False,             # whether the field is automatically created ("magic" field)
-        'inherited': False,             # whether the field is inherited (_inherits)
-        'inherited_field': None,        # the corresponding inherited field
+    automatic = False                   # whether the field is automatically created ("magic" field)
+    inherited = False                   # whether the field is inherited (_inherits)
+    inherited_field = None              # the corresponding inherited field
 
-        'name': None,                   # name of the field
-        'model_name': None,             # name of the model of this field
-        'comodel_name': None,           # name of the model of values (if relational)
+    name = None                         # name of the field
+    model_name = None                   # name of the model of this field
+    comodel_name = None                 # name of the model of values (if relational)
 
-        'store': True,                  # whether the field is stored in database
-        'index': False,                 # whether the field is indexed in database
-        'manual': False,                # whether the field is a custom field
-        'copy': True,                   # whether the field is copied over by BaseModel.copy()
-        'depends': None,                # collection of field dependencies
-        'depends_context': None,        # collection of context key dependencies
-        'recursive': False,             # whether self depends on itself
-        'compute': None,                # compute(recs) computes field on recs
-        'compute_sudo': False,          # whether field should be recomputed as superuser
-        'inverse': None,                # inverse(recs) inverses field on recs
-        'search': None,                 # search(recs, operator, value) searches on self
-        'related': None,                # sequence of field names, for related fields
-        'company_dependent': False,     # whether ``self`` is company-dependent (property field)
-        'default': None,                # default(recs) returns the default value
+    store = True                        # whether the field is stored in database
+    index = False                       # whether the field is indexed in database
+    manual = False                      # whether the field is a custom field
+    copy = True                         # whether the field is copied over by BaseModel.copy()
+    depends = None                      # collection of field dependencies
+    depends_context = None              # collection of context key dependencies
+    recursive = False                   # whether self depends on itself
+    compute = None                      # compute(recs) computes field on recs
+    compute_sudo = False                # whether field should be recomputed as superuser
+    inverse = None                      # inverse(recs) inverses field on recs
+    search = None                       # search(recs, operator, value) searches on self
+    related = None                      # sequence of field names, for related fields
+    company_dependent = False           # whether ``self`` is company-dependent (property field)
+    default = None                      # default(recs) returns the default value
 
-        'string': None,                 # field label
-        'help': None,                   # field tooltip
-        'readonly': False,              # whether the field is readonly
-        'required': False,              # whether the field is required
-        'states': None,                 # set readonly and required depending on state
-        'groups': None,                 # csv list of group xml ids
-        'change_default': False,        # whether the field may trigger a "user-onchange"
-        'deprecated': None,             # whether the field is deprecated
+    string = None                       # field label
+    help = None                         # field tooltip
+    readonly = False                    # whether the field is readonly
+    required = False                    # whether the field is required
+    states = None                       # set readonly and required depending on state
+    groups = None                       # csv list of group xml ids
+    change_default = False              # whether the field may trigger a "user-onchange"
+    deprecated = None                   # whether the field is deprecated
 
-        'related_field': None,          # corresponding related field
-        'group_operator': None,         # operator for aggregating values
-        'group_expand': None,           # name of method to expand groups in read_group()
-        'prefetch': True,               # whether the field is prefetched
-    }
+    related_field = None                # corresponding related field
+    group_operator = None               # operator for aggregating values
+    group_expand = None                 # name of method to expand groups in read_group()
+    prefetch = True                     # whether the field is prefetched
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
         self._sequence = kwargs['_sequence'] = next(_global_seq)
-        args = {key: val for key, val in kwargs.items() if val is not Default}
-        self.args = args or EMPTY_DICT
-        self._setup_done = None
+        self.args = {key: val for key, val in kwargs.items() if val is not Default}
 
     def new(self, **kwargs):
         """ Return a field of the same type as ``self``, with its own parameters. """
         return type(self)(**kwargs)
-
-    def __getattr__(self, name):
-        """ Access non-slot field attribute. """
-        try:
-            return self._attrs[name]
-        except KeyError:
-            raise AttributeError(name)
-
-    def __setattr__(self, name, value):
-        """ Set slot or non-slot field attribute. """
-        try:
-            object.__setattr__(self, name, value)
-        except AttributeError:
-            if self._attrs:
-                self._attrs[name] = value
-            else:
-                self._attrs = {name: value}     # replace EMPTY_DICT
-
-    def set_all_attrs(self, attrs):
-        """ Set all field attributes at once (with slot defaults). """
-        # optimization: we assign slots only
-        assign = object.__setattr__
-        for key, val in self._slots.items():
-            assign(self, key, attrs.pop(key, val))
-        if attrs:
-            assign(self, '_attrs', attrs)
-
-    def __delattr__(self, name):
-        """ Remove non-slot field attribute. """
-        try:
-            del self._attrs[name]
-        except KeyError:
-            raise AttributeError(name)
 
     def __str__(self):
         return "%s.%s" % (self.model_name, self.name)
@@ -397,7 +346,7 @@ class Field(MetaField('DummyField', (object,), {})):
     def _setup_attrs(self, model, name):
         """ Initialize the field parameter attributes. """
         attrs = self._get_attrs(model, name)
-        self.set_all_attrs(attrs)
+        self.__dict__.update(attrs)
 
         # check for renamed attributes (conversion errors)
         for key1, key2 in RENAMED_ATTRS:
@@ -515,8 +464,8 @@ class Field(MetaField('DummyField', (object,), {})):
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
 
-        for attr, value in field._attrs.items():
-            if attr not in self._attrs:
+        for attr, value in field.__dict__.items():
+            if not hasattr(self, attr):
                 setattr(self, attr, value)
 
         # special case for states: copy it only for inherited fields
@@ -1175,9 +1124,8 @@ class Boolean(Field):
 class Integer(Field):
     type = 'integer'
     column_type = ('int4', 'int4')
-    _slots = {
-        'group_operator': 'sum',
-    }
+
+    group_operator = 'sum'
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return int(value or 0)
@@ -1250,10 +1198,9 @@ class Float(Field):
 
     type = 'float'
     column_cast_from = ('int4', 'numeric', 'float8')
-    _slots = {
-        '_digits': None,                # digits argument passed to class initializer
-        'group_operator': 'sum',
-    }
+
+    _digits = None                      # digits argument passed to class initializer
+    group_operator = 'sum'
 
     def __init__(self, string=Default, digits=Default, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
@@ -1318,10 +1265,9 @@ class Monetary(Field):
     type = 'monetary'
     column_type = ('numeric', 'numeric')
     column_cast_from = ('float8',)
-    _slots = {
-        'currency_field': None,
-        'group_operator': 'sum',
-    }
+
+    currency_field = None
+    group_operator = 'sum'
 
     def __init__(self, string=Default, currency_field=Default, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
@@ -1389,10 +1335,8 @@ class Monetary(Field):
 
 class _String(Field):
     """ Abstract class for string fields. """
-    _slots = {
-        'translate': False,             # whether the field is translated
-        'prefetch': None,
-    }
+    translate = False                   # whether the field is translated
+    prefetch = None
 
     def __init__(self, string=Default, **kwargs):
         # translate is either True, False, or a callable
@@ -1553,10 +1497,9 @@ class Char(_String):
     """
     type = 'char'
     column_cast_from = ('text',)
-    _slots = {
-        'size': None,                   # maximum size of values (deprecated)
-        'trim': True,                   # whether value is trimmed (only by web client)
-    }
+
+    size = None                         # maximum size of values (deprecated)
+    trim = True                         # whether value is trimmed (only by web client)
 
     @property
     def column_type(self):
@@ -1618,15 +1561,14 @@ class Text(_String):
 class Html(_String):
     type = 'html'
     column_type = ('text', 'text')
-    _slots = {
-        'sanitize': True,               # whether value must be sanitized
-        'sanitize_tags': True,          # whether to sanitize tags (only a white list of attributes is accepted)
-        'sanitize_attributes': True,    # whether to sanitize attributes (only a white list of attributes is accepted)
-        'sanitize_style': False,        # whether to sanitize style attributes
-        'sanitize_form': True,          # whether to sanitize forms
-        'strip_style': False,           # whether to strip style attributes (removed and therefore not sanitized)
-        'strip_classes': False,         # whether to strip classes attributes
-    }
+
+    sanitize = True                     # whether value must be sanitized
+    sanitize_tags = True                # whether to sanitize tags (only a white list of attributes is accepted)
+    sanitize_attributes = True          # whether to sanitize attributes (only a white list of attributes is accepted)
+    sanitize_style = False              # whether to sanitize style attributes
+    sanitize_form = True                # whether to sanitize forms
+    strip_style = False                 # whether to strip style attributes (removed and therefore not sanitized)
+    strip_classes = False               # whether to strip classes attributes
 
     def _get_attrs(self, model, name):
         # called by _setup_attrs(), working together with _String._setup_attrs()
@@ -1893,11 +1835,10 @@ _BINARY = memoryview
 
 class Binary(Field):
     type = 'binary'
-    _slots = {
-        'prefetch': False,                  # not prefetched by default
-        'depends_context': ('bin_size',),   # depends on context (content or size)
-        'attachment': True,                 # whether value is stored in attachment
-    }
+
+    prefetch = False                    # not prefetched by default
+    depends_context = ('bin_size',)     # depends on context (content or size)
+    attachment = True                   # whether value is stored in attachment
 
     @property
     def column_type(self):
@@ -2076,11 +2017,9 @@ class Binary(Field):
 
 
 class Image(Binary):
-    _slots = {
-        'max_width': 0,
-        'max_height': 0,
-        'verify_resolution': True,
-    }
+    max_width = 0
+    max_height = 0
+    verify_resolution = True
 
     def create(self, record_values):
         new_record_values = []
@@ -2156,11 +2095,10 @@ class Selection(Field):
     """
     type = 'selection'
     column_type = ('varchar', pg_varchar())
-    _slots = {
-        'selection': None,              # [(value, string), ...], function or method name
-        'validate': True,               # whether validating upon write
-        'ondelete': None,               # {value: policy} (what to do when value is deleted)
-    }
+
+    selection = None            # [(value, string), ...], function or method name
+    validate = True             # whether validating upon write
+    ondelete = None             # {value: policy} (what to do when value is deleted)
 
     def __init__(self, selection=Default, string=Default, **kwargs):
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
@@ -2365,11 +2303,9 @@ class Reference(Selection):
 class _Relational(Field):
     """ Abstract class for relational fields. """
     relational = True
-    _slots = {
-        'domain': [],                   # domain for searching values
-        'context': {},                  # context for searching values
-        'check_company': False,
-    }
+    domain = []                         # domain for searching values
+    context = {}                        # context for searching values
+    check_company = False
 
     def __get__(self, records, owner):
         # base case: do the regular access
@@ -2453,11 +2389,10 @@ class Many2one(_Relational):
     """
     type = 'many2one'
     column_type = ('int4', 'int4')
-    _slots = {
-        'ondelete': None,               # what to do when value is deleted
-        'auto_join': False,             # whether joins are generated upon search
-        'delegate': False,              # whether self implements delegation
-    }
+
+    ondelete = None                     # what to do when value is deleted
+    auto_join = False                   # whether joins are generated upon search
+    delegate = False                    # whether self implements delegation
 
     def __init__(self, comodel_name=Default, string=Default, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
@@ -2668,9 +2603,8 @@ class Many2one(_Relational):
 
 class Many2oneReference(Integer):
     type = 'many2one_reference'
-    _slots = {
-        'model_field': None,
-    }
+
+    model_field = None
 
     _related_model_field = property(attrgetter('model_field'))
 
@@ -2969,12 +2903,11 @@ class One2many(_RelationalMulti):
     the case of related fields or field extensions.
     """
     type = 'one2many'
-    _slots = {
-        'inverse_name': None,           # name of the inverse field
-        'auto_join': False,             # whether joins are generated upon search
-        'limit': None,                  # optional limit to use upon read
-        'copy': False,                  # o2m are not copied by default
-    }
+
+    inverse_name = None                 # name of the inverse field
+    auto_join = False                   # whether joins are generated upon search
+    limit = None                        # optional limit to use upon read
+    copy = False                        # o2m are not copied by default
 
     def __init__(self, comodel_name=Default, inverse_name=Default, string=Default, **kwargs):
         super(One2many, self).__init__(
@@ -3249,15 +3182,14 @@ class Many2many(_RelationalMulti):
     :param int limit: optional limit to use upon read
     """
     type = 'many2many'
-    _slots = {
-        '_explicit': True,              # whether schema is explicitly given
-        'relation': None,               # name of table
-        'column1': None,                # column of table referring to model
-        'column2': None,                # column of table referring to comodel
-        'auto_join': False,             # whether joins are generated upon search
-        'limit': None,                  # optional limit to use upon read
-        'ondelete': None,               # optional ondelete for the column2 fkey
-    }
+
+    _explicit = True                    # whether schema is explicitly given
+    relation = None                     # name of table
+    column1 = None                      # column of table referring to model
+    column2 = None                      # column of table referring to comodel
+    auto_join = False                   # whether joins are generated upon search
+    limit = None                        # optional limit to use upon read
+    ondelete = None                     # optional ondelete for the column2 fkey
 
     def __init__(self, comodel_name=Default, relation=Default, column1=Default,
                  column2=Default, string=Default, **kwargs):
@@ -3656,12 +3588,11 @@ class Id(Field):
     """ Special case for field 'id'. """
     type = 'integer'
     column_type = ('int4', 'int4')
-    _slots = {
-        'string': 'ID',
-        'store': True,
-        'readonly': True,
-        'prefetch': False,
-    }
+
+    string = 'ID'
+    store = True
+    readonly = True
+    prefetch = False
 
     def update_db(self, model, columns):
         pass                            # this column is created with the table
