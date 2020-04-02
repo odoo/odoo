@@ -417,6 +417,12 @@ class Website(Home):
 
         return request.make_response("google-site-verification: %s" % request.website.google_search_console)
 
+    @http.route('/website/google_maps_api_key', type='json', auth='public', website=True)
+    def google_maps_api_key(self):
+        return json.dumps({
+            'google_maps_api_key': request.website.google_maps_api_key or ''
+        })
+
     # ------------------------------------------------------
     # Themes
     # ------------------------------------------------------
