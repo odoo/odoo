@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <div t-name="website.s_google_map_modal">
+        <div class="form-group form-row">
+            <label for="pin_address" class="col-md-3 col-form-label text-right">Address</label>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-building-o"/></div>
+                    </div>
+                    <input type="text" class="form-control" id="pin_address" placeholder="Your address"/>
+                    <input type="hidden" id="placeBk"/>
+                </div>
+            </div>
+            <div class="col-md-9 offset-md-3">
+                <small class="form-text">e.g. De Brouckere, Brussels, Belgium</small>
+            </div>
+        </div>
+        <div class="form-group form-row">
+            <label for="pin_style" class="col-md-3 col-form-label text-right">Marker Style</label>
+            <div class="col-md-9">
+                <select id="pin_style" name="pin_style" class="col-md-5">
+                    <option value="flat">Flat</option>
+                    <option>Default</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</templates>
