@@ -62,6 +62,12 @@ class TestViewsDuringModuleOperation(TransactionCase):
         self.assertTrue(self.env.ref(update_module_view_to_be_t_called.key))
         self.assertTrue(self.env.ref(update_module_base_view.key))
 
+        # the upgrade of the module below instanciates a NEW registry, so we
+        # have to restore the old one in order to perform the cleanups
+        @self.addCleanup
+        def cleanup():
+            self.registry.registries[self.registry.db_name] = self.registry
+
         # Update the module
         test_website_module = self.env['ir.module.module'].search([('name', '=', 'test_website')])
         test_website_module.button_immediate_upgrade()
