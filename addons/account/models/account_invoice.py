@@ -2201,4 +2201,4 @@ class AccountInvoiceTax(models.Model):
 
         @return list
         """
-        return [taxline.tax_id.id]
+        return [taxline.tax_id.id, taxline.account_id.id]
