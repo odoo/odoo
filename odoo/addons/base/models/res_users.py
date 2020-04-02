@@ -211,8 +211,8 @@ class Users(models.Model):
     SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image_1920', 'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
 
     def _default_groups(self):
-        default_user = self.env.ref('base.default_user', raise_if_not_found=False)
-        return (default_user or self.env['res.users']).sudo().groups_id
+        default_user_id = self.env['ir.model.data'].xmlid_to_res_id('base.default_user', raise_if_not_found=False)
+        return self.env['res.users'].browse(default_user_id).sudo().groups_id if default_user_id else []
 
     @api.model
     def _get_default_image(self):
