@@ -32,6 +32,7 @@ var ColumnQuickCreate = Widget.extend({
      */
     init: function (parent, options) {
         this._super.apply(this, arguments);
+        this.applyExamplesText = options.applyExampleText || _t("Use This For My Kanban");
         this.examples = options.examples;
         this.folded = true;
         this.isMobile = false;
@@ -186,7 +187,7 @@ var ColumnQuickCreate = Widget.extend({
             })),
             buttons: [{
                 classes: 'btn-primary float-right',
-                text: _t('Use This For My Project'),
+                text: this.applyExamplesText,
                 close: true,
                 click: function () {
                     const activeExample = self.examples[this.$('.nav-link.active').data("exampleIndex")];
