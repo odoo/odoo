@@ -1044,7 +1044,7 @@ class Field(MetaField('DummyField', (object,), {})):
         if new_ids:
             # new records: no business logic
             new_records = records.browse(new_ids)
-            with records.env.protecting(records._field_computed.get(self, [self]), records):
+            with records.env.protecting(records.pool.field_computed.get(self, [self]), records):
                 new_records.modified([self.name])
                 self.write(new_records, value)
                 if self.relational:
@@ -1071,7 +1071,7 @@ class Field(MetaField('DummyField', (object,), {})):
         env = records.env
         if self.compute_sudo:
             records = records.sudo()
-        fields = records._field_computed[self]
+        fields = records.pool.field_computed[self]
 
         # Just in case the compute method does not assign a value, we already
         # mark the computation as done. This is also necessary if the compute

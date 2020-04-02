@@ -343,7 +343,7 @@ class BaseAutomation(models.Model):
             #
             def _compute_field_value(self, field):
                 # determine fields that may trigger an action
-                stored_fields = [f for f in self._field_computed[field] if f.store]
+                stored_fields = [f for f in self.pool.field_computed[field] if f.store]
                 if not any(stored_fields):
                     return _compute_field_value.origin(self, field)
                 # retrieve the action rules to possibly execute
