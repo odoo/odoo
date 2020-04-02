@@ -1765,6 +1765,7 @@ class AccountPartialReconcile(models.Model):
         return {
             'name': line.name,
             'account_id': account_id,
+            'journal_id': new_move.journal_id.id,
             'tax_exigible': True,
             'tax_ids': [(6, 0, [tax])],
             'move_id': new_move.id,
@@ -1832,6 +1833,7 @@ class AccountPartialReconcile(models.Model):
                                 'currency_id': line.currency_id.id,
                                 'move_id': newly_created_move.id,
                                 'partner_id': line.partner_id.id,
+                                'journal_id': newly_created_move.journal_id.id,
                             })
                             # Group by cash basis account and tax
                             self.env['account.move.line'].with_context(check_move_validity=False).create({
@@ -1847,6 +1849,7 @@ class AccountPartialReconcile(models.Model):
                                 'currency_id': line.currency_id.id,
                                 'move_id': newly_created_move.id,
                                 'partner_id': line.partner_id.id,
+                                'journal_id': newly_created_move.journal_id.id,
                                 'tax_repartition_line_id': line.tax_repartition_line_id.id,
                                 'tax_base_amount': line.tax_base_amount,
                                 'tag_ids': [(6, 0, line.tag_ids.ids)],
