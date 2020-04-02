@@ -594,18 +594,22 @@ class Field(MetaField('DummyField', (object,), {})):
     # Setup of field triggers
     #
 
-    def resolve_depends(self, model):
+    def resolve_depends(self, registry):
         """ Return the dependencies of `self` as a collection of field tuples. """
+        Model0 = registry[self.model_name]
+
         for dotnames in self.depends:
             field_seq = []
-            field_model = model
+            model_name = self.model_name
+
             for index, fname in enumerate(dotnames.split('.')):
-                if model._transient and not field_model._transient:
+                Model = registry[model_name]
+                if Model0._transient and not Model._transient:
                     # modifying fields on regular models should not trigger
                     # recomputations of fields on transient models
                     break
 
-                field = field_model._fields[fname]
+                field = Model._fields[fname]
                 if field is self and index:
                     self.recursive = True
 
@@ -618,10 +622,10 @@ class Field(MetaField('DummyField', (object,), {})):
                     yield tuple(field_seq)
 
                 if field.type in ('one2many', 'many2many'):
-                    for inv_field in field_model._field_inverses[field]:
+                    for inv_field in Model._field_inverses[field]:
                         yield tuple(field_seq) + (inv_field,)
 
-                field_model = model.env.get(field.comodel_name)
+                model_name = field.comodel_name
 
     ############################################################################
     #
