@@ -437,11 +437,12 @@ class Field(MetaField('DummyField', (object,), {})):
             self.related = tuple(self.related.split('.'))
 
         # determine the chain of fields, and make sure they are all set up
-        target = model
+        model_name = self.model_name
         for name in self.related:
-            field = target._fields[name]
-            field.setup_full(target)
-            target = target[name]
+            field = model.pool[model_name]._fields[name]
+            if field._setup_done != 'full':
+                field.setup_full(model.env[model_name])
+            model_name = field.comodel_name
 
         self.related_field = field
 
@@ -468,15 +469,12 @@ class Field(MetaField('DummyField', (object,), {})):
             if not hasattr(self, attr):
                 setattr(self, attr, value)
 
-        # special case for states: copy it only for inherited fields
-        if not self.states and self.inherited:
-            self.states = field.states
-
-        # special case for inherited required fields
-        if self.inherited and field.required:
-            self.required = True
-
+        # special cases of inherited fields
         if self.inherited:
+            if not self.states:
+                self.states = field.states
+            if field.required:
+                self.required = True
             self._modules.update(field._modules)
 
         if field.depends_context:
