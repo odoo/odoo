@@ -2749,7 +2749,7 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
-    QUnit.test('timzeone does not affect calendar with date field', async function (assert) {
+    QUnit.skip('timzeone does not affect calendar with date field', async function (assert) {
         assert.expect(11);
 
         var calendar = await createCalendarView({
