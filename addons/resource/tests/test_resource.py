@@ -375,10 +375,117 @@ class TestCalendar(TestResourceCommon):
         time = self.calendar_jean.plan_days(3000, datetime_tz(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.tz), compute_leaves=False)
         self.assertEqual(time, False)
 
+    def test_closest_time(self):
+        # Calendar:
+        # Tuesdays 8-16
+        # Fridays 8-13 and 16-23
+        dt = datetime_tz(2020, 4, 2, 7, 0, 0, tzinfo=self.john.tz)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt)
+        self.assertFalse(calendar_dt, "It should not return any value for unattended days")
+
+        dt = datetime_tz(2020, 4, 3, 7, 0, 0, tzinfo=self.john.tz)
+        range_start = datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz)
+        range_end = datetime_tz(2020, 4, 3, 19, 0, 0, tzinfo=self.john.tz)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, search_range=(range_start, range_end))
+        self.assertFalse(calendar_dt, "It should not return any value if dt outside of range")
+
+        dt = datetime_tz(2020, 4, 3, 7, 0, 0, tzinfo=self.john.tz)  # before
+        start = datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt)
+        self.assertEqual(calendar_dt, start, "It should return the start of the day")
+
+        dt = datetime_tz(2020, 4, 3, 10, 0, 0, tzinfo=self.john.tz)  # after
+        start = datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt)
+        self.assertEqual(calendar_dt, start, "It should return the start of the closest attendance")
+
+        dt = datetime_tz(2020, 4, 3, 7, 0, 0, tzinfo=self.john.tz)  # before
+        end = datetime_tz(2020, 4, 3, 13, 0, 0, tzinfo=self.john.tz)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, match_end=True)
+        self.assertEqual(calendar_dt, end, "It should return the end of the closest attendance")
+
+        dt = datetime_tz(2020, 4, 3, 14, 0, 0, tzinfo=self.john.tz)  # after
+        end = datetime_tz(2020, 4, 3, 13, 0, 0, tzinfo=self.john.tz)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, match_end=True)
+        self.assertEqual(calendar_dt, end, "It should return the end of the closest attendance")
+
+        dt = datetime_tz(2020, 4, 3, 0, 0, 0, tzinfo=self.john.tz)
+        start = datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt)
+        self.assertEqual(calendar_dt, start, "It should return the start of the closest attendance")
+
+        dt = datetime_tz(2020, 4, 3, 23, 59, 59, tzinfo=self.john.tz)
+        end = datetime_tz(2020, 4, 3, 23, 0, 0, tzinfo=self.john.tz)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, match_end=True)
+        self.assertEqual(calendar_dt, end, "It should return the end of the closest attendance")
+
+        # with a resource specific attendance
+        self.env['resource.calendar.attendance'].create({
+            'name': 'Att4',
+            'calendar_id': self.calendar_john.id,
+            'dayofweek': '4',
+            'hour_from': 5,
+            'hour_to': 6,
+            'resource_id': self.john.resource_id.id,
+        })
+        dt = datetime_tz(2020, 4, 3, 5, 0, 0, tzinfo=self.john.tz)
+        start = datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt)
+        self.assertEqual(calendar_dt, start, "It should not take into account resouce specific attendances")
+
+        dt = datetime_tz(2020, 4, 3, 5, 0, 0, tzinfo=self.john.tz)
+        start = datetime_tz(2020, 4, 3, 5, 0, 0, tzinfo=self.john.tz)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
+        self.assertEqual(calendar_dt, start, "It should have taken john's specific attendances")
+
 
 class TestResMixin(TestResourceCommon):
-    def setUp(self):
-        super(TestResMixin, self).setUp()
+
+    def test_adjust_calendar(self):
+        # Calendar:
+        # Tuesdays 8-16
+        # Fridays 8-13 and 16-23
+        result = self.john._adjust_to_calendar(
+            datetime_tz(2020, 4, 3, 9, 0, 0, tzinfo=self.john.tz),
+            datetime_tz(2020, 4, 3, 14, 0, 0, tzinfo=self.john.tz),
+        )
+        self.assertEqual(result[self.john],(
+            datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz),
+            datetime_tz(2020, 4, 3, 13, 0, 0, tzinfo=self.john.tz),
+        ))
+
+        result = self.john._adjust_to_calendar(
+            datetime_tz(2020, 4, 3, 13, 1, 0, tzinfo=self.john.tz),
+            datetime_tz(2020, 4, 3, 14, 0, 0, tzinfo=self.john.tz),
+        )
+        self.assertEqual(result[self.john],(
+            datetime_tz(2020, 4, 3, 16, 0, 0, tzinfo=self.john.tz),
+            datetime_tz(2020, 4, 3, 23, 0, 0, tzinfo=self.john.tz),
+        ))
+
+        result = self.john._adjust_to_calendar(
+            datetime_tz(2020, 4, 4, 9, 0, 0, tzinfo=self.john.tz),  # both a day without attendance
+            datetime_tz(2020, 4, 4, 14, 0, 0, tzinfo=self.john.tz),
+        )
+        self.assertEqual(result[self.john], (None, None))
+
+        result = self.john._adjust_to_calendar(
+            datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz),
+            datetime_tz(2020, 4, 4, 14, 0, 0, tzinfo=self.john.tz),  # day without attendance
+        )
+        self.assertEqual(result[self.john], (
+            datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz),
+            None,
+        ))
+
+        result = self.john._adjust_to_calendar(
+            datetime_tz(2020, 4, 2, 8, 0, 0, tzinfo=self.john.tz),  # day without attendance
+            datetime_tz(2020, 4, 3, 14, 0, 0, tzinfo=self.john.tz),
+        )
+        self.assertEqual(result[self.john], (
+            None,
+            datetime_tz(2020, 4, 3, 13, 0, 0, tzinfo=self.john.tz),
+        ))
 
     def test_work_days_data(self):
         # Looking at Jean's calendar
