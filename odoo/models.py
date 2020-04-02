@@ -2575,28 +2575,31 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     @api.model
     def _add_inherited_fields(self):
         """ Determine inherited fields. """
-        # determine candidate inherited fields
-        fields = {}
-        for parent_model, parent_field in self._inherits.items():
-            parent = self.env[parent_model]
-            for name, field in parent._fields.items():
+        if not self._inherits:
+            return
+
+        # determine which fields can be inherited
+        to_inherit = {
+            name: (parent_fname, field)
+            for parent_model_name, parent_fname in self._inherits.items()
+            for name, field in self.env[parent_model_name]._fields.items()
+        }
+
+        # add inherited fields that are not redefined locally
+        for name, (parent_fname, field) in to_inherit.items():
+            if name not in self._fields:
                 # inherited fields are implemented as related fields, with the
                 # following specific properties:
                 #  - reading inherited fields should not bypass access rights
                 #  - copy inherited fields iff their original field is copied
-                fields[name] = field.new(
+                self._add_field(name, field.new(
                     inherited=True,
                     inherited_field=field,
-                    related=(parent_field, name),
+                    related=(parent_fname, name),
                     related_sudo=False,
                     copy=field.copy,
                     readonly=field.readonly,
-                )
-
-        # add inherited fields that are not redefined locally
-        for name, field in fields.items():
-            if name not in self._fields:
-                self._add_field(name, field)
+                ))
 
     @api.model
     def _inherits_check(self):
@@ -2628,8 +2631,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """ Prepare the setup of the model. """
         cls = type(self)
         cls._setup_done = False
-        # a model's base structure depends on its mro (without registry classes)
-        cls._model_cache_key = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
+
+        # the classes that define this model's base fields and methods
+        cls._model_classes = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
 
         # reset those attributes on the model's class for _setup_fields() below
         for attr in ('_rec_name', '_active_name'):
@@ -2647,8 +2651,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # 1. determine the proper fields of the model: the fields defined on the
         # class and magic fields, not the inherited or custom ones
-        cls0 = cls.pool.model_cache.get(cls._model_cache_key)
-        if cls0 and cls0._model_cache_key == cls._model_cache_key:
+        cls0 = cls.pool.model_cache.get(cls._model_classes)
+
+        if cls0 and cls0._model_classes == cls._model_classes:
             # cls0 is either a model class from another registry, or cls itself.
             # The point is that it has the same base classes. We retrieve stuff
             # from cls0 to optimize the setup of cls. cls0 is guaranteed to be
@@ -2656,18 +2661,24 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # therefore two registries are never set up at the same time.
 
             # remove fields that are not proper to cls
-            for name in OrderedSet(cls._fields) - cls0._proper_fields:
+            for name in set(cls._fields).difference(cls0._model_fields):
                 delattr(cls, name)
-                cls._fields.pop(name, None)
-            # collect proper fields on cls0, and add them on cls
-            for name in cls0._proper_fields:
-                field = cls0._fields[name]
-                # regular fields are shared, while related fields are setup from scratch
-                if not field.related:
-                    self._add_field(name, field)
-                else:
-                    self._add_field(name, field.new(**field.args))
-            cls._proper_fields = OrderedSet(cls._fields)
+                del cls._fields[name]
+
+            if cls0 is cls:
+                # simply reset up fields
+                for name, field in cls._fields.items():
+                    field.setup_base(self, name)
+            else:
+                # collect proper fields on cls0, and add them on cls
+                for name in cls0._model_fields:
+                    field = cls0._fields[name]
+                    # regular fields are shared, while related fields are setup from scratch
+                    if not field.related:
+                        self._add_field(name, field)
+                    else:
+                        self._add_field(name, field.new(**field.args))
+                cls._model_fields = list(cls._fields)
 
         else:
             # retrieve fields from parent classes, and duplicate them on cls to
@@ -2680,9 +2691,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
                     self._add_field(name, field.new())
             self._add_magic_fields()
-            cls._proper_fields = OrderedSet(cls._fields)
+            cls._model_fields = list(cls._fields)
 
-        cls.pool.model_cache[cls._model_cache_key] = cls
+        cls.pool.model_cache[cls._model_classes] = cls
 
         # 2. add manual fields
         if self.pool._init_modules:
