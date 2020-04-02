@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
-from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
@@ -24,7 +23,13 @@ class ChannelUsersRelation(models.Model):
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
-    def _recompute_completion(self):
+    def _recompute_completion(self, compute_karma_channel_finish=True):
+        """
+        Method to recompute channel completion called when the user has finished a slide or
+        when a user join a course after leaving it.
+        :param compute_karma_channel_finish: add the amount of karma gained when finishing the course.
+                    Is False in the latter case avoid re-adding already gained karma
+        """
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
@@ -44,7 +49,8 @@ class ChannelUsersRelation(models.Model):
             record.completion = 100.0 if record.completed else round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
             if not record.completed and record.completed_slides_count >= record.channel_id.total_slides:
                 record.completed = True
-                partner_karma[record.partner_id.id] += record.channel_id.karma_gen_channel_finish
+                if compute_karma_channel_finish:
+                    partner_karma[record.partner_id.id] += record.channel_id.karma_gen_channel_finish
 
         partner_karma = {partner_id: karma_to_add
                          for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0}
@@ -54,11 +60,18 @@ class ChannelUsersRelation(models.Model):
             for user in users:
                 users.add_karma(partner_karma[user.partner_id.id])
 
-    def unlink(self):
-        """
-        Override unlink method :
-        Remove attendee from a channel, then also remove slide.slide.partner related to.
-        """
+    @api.model
+    def create(self, values):
+        res = super(ChannelUsersRelation, self).create(values)
+        slide_partners = self.env['slide.slide.partner'].sudo().search([
+            ('channel_id', '=', res.channel_id.id),
+            ('partner_id', '=', res.partner_id.id)
+        ])
+        # Recompute completion but don't add karma for completed course as it's always been gained
+        res.filtered(lambda cp: cp.partner_id in slide_partners.partner_id)._recompute_completion(compute_karma_channel_finish=False)
+        return res
+
+    def unlink_cascade(self):
         removed_slide_partner_domain = []
         for channel_partner in self:
             # find all slide link to the channel and the partner
@@ -69,7 +82,7 @@ class ChannelUsersRelation(models.Model):
             ])
         if removed_slide_partner_domain:
             self.env['slide.slide.partner'].search(removed_slide_partner_domain).unlink()
-        return super(ChannelUsersRelation, self).unlink()
+        self.unlink()
 
 
 class Channel(models.Model):
@@ -510,55 +523,15 @@ class Channel(models.Model):
         for channel in self:
             channel._action_add_members(channel.mapped('enroll_group_ids.users.partner_id'))
 
-    def _get_earned_karma(self, partner_ids):
-        """ Compute the number of karma earned by partners on a channel
-        Warning: this count will not be accurate if the configuration has been
-        modified after the completion of a course!
+    def _remove_membership(self, partner_ids, unlink_slide_partners=False):
+        """Unlink (!!!) the relationships between the passed partner_ids and the channels
+        :param partner_ids: partners to remove membership from
+        :param unlink_slide_partners: when true unlink all the related slide.slide.partner (used in website_slides_survey)
         """
-        total_karma = defaultdict(int)
-
-        slide_completed = self.env['slide.slide.partner'].sudo().search([
-            ('partner_id', 'in', partner_ids),
-            ('channel_id', 'in', self.ids),
-            ('completed', '=', True),
-            ('quiz_attempts_count', '>', 0)
-        ])
-        for partner_slide in slide_completed:
-            slide = partner_slide.slide_id
-            if not slide.question_ids:
-                continue
-            gains = [slide.quiz_first_attempt_reward,
-                     slide.quiz_second_attempt_reward,
-                     slide.quiz_third_attempt_reward,
-                     slide.quiz_fourth_attempt_reward]
-            attempts = min(partner_slide.quiz_attempts_count - 1, 3)
-            total_karma[partner_slide.partner_id.id] += gains[attempts]
-
-        channel_completed = self.env['slide.channel.partner'].sudo().search([
-            ('partner_id', 'in', partner_ids),
-            ('channel_id', 'in', self.ids),
-            ('completed', '=', True)
-        ])
-        for partner_channel in channel_completed:
-            channel = partner_channel.channel_id
-            total_karma[partner_channel.partner_id.id] += channel.karma_gen_channel_finish
-
-        return total_karma
-
-    def _remove_membership(self, partner_ids):
-        """ Unlink (!!!) the relationships between the passed partner_ids
-        and the channels and their slides (done in the unlink of slide.channel.partner model).
-        Remove earned karma when completed quizz """
         if not partner_ids:
             raise ValueError("Do not use this method with an empty partner_id recordset")
 
-        earned_karma = self._get_earned_karma(partner_ids)
-        users = self.env['res.users'].sudo().search([
-            ('partner_id', 'in', list(earned_karma)),
-        ])
-        for user in users:
-            if earned_karma[user.partner_id.id]:
-                user.add_karma(-1 * earned_karma[user.partner_id.id])
+        self.message_unsubscribe(partner_ids=partner_ids)
 
         removed_channel_partner_domain = []
         for channel in self:
@@ -570,7 +543,10 @@ class Channel(models.Model):
         self.message_unsubscribe(partner_ids=partner_ids)
 
         if removed_channel_partner_domain:
-            self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
+            if unlink_slide_partners:
+                self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink_cascade()
+            else:
+                self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
 
     def action_view_slides(self):
         action = self.env.ref('website_slides.slide_slide_action').read()[0]

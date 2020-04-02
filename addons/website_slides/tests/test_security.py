@@ -182,8 +182,6 @@ class TestRemoveMembership(common.SlidesCase):
         id_channel_partner = self.channel_partner.id
         self.channel_partner.with_user(self.user_officer).unlink()
         self.assertFalse(self.env['slide.channel.partner'].search([('id', '=', '%d' % id_channel_partner)]))
-        # Slide(s) related to the channel and the partner is unlink too.
-        self.assertFalse(self.env['slide.slide.partner'].search([('id', '=', '%d' % id_slide_partner)]))
 
 
 @tagged('functional')

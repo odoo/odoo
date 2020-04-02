@@ -61,4 +61,4 @@ class SurveyUserInput(models.Model):
                     removed_memberships_per_partner[user_input.partner_id] = removed_memberships
 
                 for partner_id, removed_memberships in removed_memberships_per_partner.items():
-                    removed_memberships._remove_membership(partner_id.ids)
+                    removed_memberships._remove_membership(partner_id.ids, unlink_slide_partners=True)

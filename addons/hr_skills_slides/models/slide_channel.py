@@ -7,8 +7,8 @@ from odoo import fields, models
 class SlideChannelPartner(models.Model):
     _inherit = 'slide.channel.partner'
 
-    def _recompute_completion(self):
-        res = super(SlideChannelPartner, self)._recompute_completion()
+    def _recompute_completion(self, compute_karma_channel_finish=True):
+        res = super(SlideChannelPartner, self)._recompute_completion(compute_karma_channel_finish)
         partner_has_completed = {channel_partner.partner_id.id: channel_partner.channel_id for channel_partner in self}
         employees = self.env['hr.employee'].sudo().search([('user_id.partner_id', 'in', list(partner_has_completed.keys()))])
         for employee in employees:
