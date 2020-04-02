@@ -473,7 +473,8 @@ class Field(MetaField('DummyField', (object,), {})):
         # display_name may depend on context['lang'] (`test_lp1071710`)
         if self.automatic and self.name == 'display_name' and model._rec_name:
             if model._fields[model._rec_name].base_field.translate:
-                self.depends_context += ('lang',)
+                if 'lang' not in self.depends_context:
+                    self.depends_context += ('lang',)
 
     #
     # Setup of related fields
@@ -2897,11 +2898,11 @@ class _RelationalMulti(_Relational):
     def _setup_regular_full(self, model):
         super(_RelationalMulti, self)._setup_regular_full(model)
         if isinstance(self.domain, list):
-            self.depends += tuple(
+            self.depends = tuple(unique(itertools.chain(self.depends, (
                 self.name + '.' + arg[0]
                 for arg in self.domain
                 if isinstance(arg, (tuple, list)) and isinstance(arg[0], str)
-            )
+            ))))
 
     def create(self, record_values):
         """ Write the value of ``self`` on the given records, which have just
