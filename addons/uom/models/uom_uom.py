@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import math
+
 from odoo import api, fields, tools, models, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -39,6 +41,7 @@ class UoM(models.Model):
         'Rounding Precision', default=0.01, digits=0, required=True,
         help="The computed quantity will be a multiple of this value. "
              "Use 1.0 for a Unit of Measure that cannot be further split, such as a piece.")
+    decimal_places = fields.Integer(compute='_compute_decimal_places', store=True)
     active = fields.Boolean('Active', default=True, help="Uncheck the active field to disable a unit of measure without deleting it.")
     uom_type = fields.Selection([
         ('bigger', 'Bigger than the reference Unit of Measure'),
@@ -56,6 +59,14 @@ class UoM(models.Model):
     def _compute_factor_inv(self):
         for uom in self:
             uom.factor_inv = uom.factor and (1.0 / uom.factor) or 0.0
+
+    @api.depends('rounding')
+    def _compute_decimal_places(self):
+        for uom in self:
+            if 0 < uom.rounding < 1:
+                uom.decimal_places = int(math.ceil(math.log10(1/uom.rounding)))
+            else:
+                uom.decimal_places = 0
 
     @api.onchange('uom_type')
     def _onchange_uom_type(self):
