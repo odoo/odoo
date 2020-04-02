@@ -252,6 +252,7 @@ The concerned state is given after each field.
       <record model="ir.actions.server" id="print_instance">
           <field name="name">Res Partner Server Action</field>
           <field name="model_id" ref="model_res_partner"/>
+          <field name="state">code</field>
           <field name="code">
               raise Warning(record.name)
           </field>
@@ -267,6 +268,7 @@ The concerned state is given after each field.
           <record model="ir.actions.server" id="print_instance">
               <field name="name">Res Partner Server Action</field>
               <field name="model_id" ref="model_res_partner"/>
+              <field name="state">code</field>
               <field name="code">
                   if record.some_condition():
                       action = {
