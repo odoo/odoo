@@ -9,6 +9,8 @@ from lxml import html
 from werkzeug import urls
 
 from odoo import tools, models, fields, api, _
+from odoo.exceptions import UserError
+from odoo.osv import expression
 
 URL_MAX_SIZE = 10 * 1024 * 1024
 
@@ -112,40 +114,86 @@ class LinkTracker(models.Model):
 
         return title
 
-    @api.model
-    def create(self, vals):
-        create_vals = vals.copy()
+    @api.constrains('url', 'campaign_id', 'medium_id', 'source_id')
+    def _check_unicity(self):
+        """Check that the link trackers are unique."""
+        # build a query to fetch all needed link trackers at once
+        search_query = expression.OR([
+            expression.AND([
+                [('url', '=', tracker.url)],
+                [('campaign_id', '=', tracker.campaign_id.id)],
+                [('medium_id', '=', tracker.medium_id.id)],
+                [('source_id', '=', tracker.source_id.id)],
+            ])
+            for tracker in self
+        ])
 
-        if 'url' not in create_vals:
-            raise ValueError('URL field required')
-        else:
-            create_vals['url'] = tools.validate_url(vals['url'])
+        # Can not be implemented with a SQL constraint because we want to care about null values.
+        all_link_trackers = self.search(search_query)
+
+        # check for unicity
+        for tracker in self:
+            if all_link_trackers.filtered(
+                lambda l: l.url == tracker.url
+                and l.campaign_id == tracker.campaign_id
+                and l.medium_id == tracker.medium_id
+                and l.source_id == tracker.source_id
+            ) != tracker:
+                raise UserError(_(
+                    'Link Tracker values (URL, campaign, medium and source) must be unique (%s, %s, %s, %s).',
+                    tracker.url,
+                    tracker.campaign_id.name,
+                    tracker.medium_id.name,
+                    tracker.source_id.name,
+                ))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        vals_list = [vals.copy() for vals in vals_list]
+        for vals in vals_list:
+            if 'url' not in vals:
+                raise ValueError(_('Creating a Link Tracker without URL is not possible'))
+
+            vals['url'] = tools.validate_url(vals['url'])
+
+            if not vals.get('title'):
+                vals['title'] = self._get_title_from_url(vals['url'])
+
+            # Prevent the UTMs to be set by the values of UTM cookies
+            for (__, fname, __) in self.env['utm.mixin'].tracking_fields():
+                if fname not in vals:
+                    vals[fname] = False
+
+        links = super(LinkTracker, self).create(vals_list)
+
+        link_tracker_codes = self.env['link.tracker.code']._get_random_code_strings(len(vals_list))
+
+        self.env['link.tracker.code'].sudo().create([
+            {
+                'code': code,
+                'link_id': link.id,
+            } for link, code in zip(links, link_tracker_codes)
+        ])
+
+        return links
+
+    @api.model
+    def search_or_create(self, vals):
+        if 'url' not in vals:
+            raise ValueError(_('Creating a Link Tracker without URL is not possible'))
+        vals['url'] = tools.validate_url(vals['url'])
 
         search_domain = [
             (fname, '=', value)
-            for fname, value in create_vals.items()
+            for fname, value in vals.items()
             if fname in ['url', 'campaign_id', 'medium_id', 'source_id']
         ]
-
         result = self.search(search_domain, limit=1)
 
         if result:
             return result
 
-        if not create_vals.get('title'):
-            create_vals['title'] = self._get_title_from_url(create_vals['url'])
-
-        # Prevent the UTMs to be set by the values of UTM cookies
-        for (key, fname, cook) in self.env['utm.mixin'].tracking_fields():
-            if fname not in create_vals:
-                create_vals[fname] = False
-
-        link = super(LinkTracker, self).create(create_vals)
-
-        code = self.env['link.tracker.code'].get_random_code_string()
-        self.env['link.tracker.code'].sudo().create({'code': code, 'link_id': link.id})
-
-        return link
+        return self.create(vals)
 
     @api.model
     def convert_links(self, html, vals, blacklist=None):
@@ -188,10 +236,6 @@ class LinkTracker(models.Model):
 
         return code_rec.link_id.redirected_url
 
-    _sql_constraints = [
-        ('url_utms_uniq', 'unique (url, campaign_id, medium_id, source_id)', 'The URL and the UTM combination must be unique')
-    ]
-
 
 class LinkTrackerCode(models.Model):
     _name = "link.tracker.code"
@@ -205,15 +249,18 @@ class LinkTrackerCode(models.Model):
     ]
 
     @api.model
-    def get_random_code_string(self):
+    def _get_random_code_strings(self, n=1):
         size = 3
         while True:
-            code_proposition = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(size))
+            code_propositions = [
+                ''.join(random.choices(string.ascii_letters + string.digits, k=size))
+                for __ in range(n)
+            ]
 
-            if self.search([('code', '=', code_proposition)]):
+            if len(set(code_propositions)) != n or self.search([('code', 'in', code_propositions)]):
                 size += 1
             else:
-                return code_proposition
+                return code_propositions
 
 
 class LinkTrackerClick(models.Model):
