@@ -1250,17 +1250,21 @@ class ModuleCategory(models.Model):
 class UsersView(models.Model):
     _inherit = 'res.users'
 
-    @api.model
-    def create(self, values):
-        values = self._remove_reified_groups(values)
-        user = super(UsersView, self).create(values)
-        group_multi_company = self.env.ref('base.group_multi_company', False)
-        if group_multi_company and 'company_ids' in values:
-            if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                user.write({'groups_id': [(3, group_multi_company.id)]})
-            elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                user.write({'groups_id': [(4, group_multi_company.id)]})
-        return user
+    @api.model_create_multi
+    def create(self, vals_list):
+        new_vals_list = []
+        for values in vals_list:
+            new_vals_list.append(self._remove_reified_groups(values))
+        users = super(UsersView, self).create(new_vals_list)
+        group_multi_company_id = self.env['ir.model.data'].xmlid_to_res_id(
+            'base.group_multi_company', raise_if_not_found=False)
+        if group_multi_company_id:
+            for user in users:
+                if len(user.company_ids) <= 1 and group_multi_company_id in user.groups_id.ids:
+                    user.write({'groups_id': [(3, group_multi_company_id)]})
+                elif len(user.company_ids) > 1 and group_multi_company_id in user.groups_id.ids:
+                    user.write({'groups_id': [(4, group_multi_company_id)]})
+        return users
 
     def write(self, values):
         values = self._remove_reified_groups(values)
