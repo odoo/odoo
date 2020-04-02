@@ -7,15 +7,27 @@
             <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
             <field name="arch" type="xml">
              <notebook position="inside">
+<<<<<<< HEAD
                  <page string="Byproducts" attrs="{'invisible': [('type','=','phantom')]}">
                      <field name="sub_products">
                          <tree string="Byproducts"  editable="top">
                              <field name="product_id" domain="[('id', '!=', parent.product_id)]"/>
+=======
+                 <page string="Byproducts">
+                     <field name="product_variant_id" invisible="1"/>
+                     <field name="sub_products" attrs="{'readonly': [('product_tmpl_id', '=', False)]}">
+                         <tree string="Byproducts"  editable="top">
+                             <field name="product_id" domain="[('id', '!=', parent.product_id or parent.product_variant_id)]"/>
+>>>>>>> 4fcd9b68455... temp
                              <field name="product_qty"/>
                              <field name="product_uom_id" groups="uom.group_uom"/>
                          </tree>
                          <form string="Byproducts">
+<<<<<<< HEAD
                              <field name="product_id" domain="[('id', '!=', parent.product_id)]"/>
+=======
+                             <field name="product_id" domain="[('id', '!=', parent.product_id or parent.product_variant_id)]"/>
+>>>>>>> 4fcd9b68455... temp
                              <field name="product_qty"/>
                              <field name="product_uom_id" groups="uom.group_uom"/>
                          </form>
