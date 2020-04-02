@@ -12,7 +12,7 @@ class WebsiteUrl(http.Controller):
     def create_shorten_url(self, **post):
         if 'url' not in post or post['url'] == '':
             return {'error': 'empty_url'}
-        return request.env['link.tracker'].create(post).read()
+        return request.env['link.tracker'].search_or_create(post).read()
 
     @http.route('/r', type='http', auth='user', website=True)
     def shorten_url(self, **post):
