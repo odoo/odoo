@@ -34,6 +34,11 @@ models.PosModel = models.PosModel.extend({
             _super_posmodel.delete_current_order.apply(this, arguments);
         }
     },
+
+    disallowLineQuantityChange() {
+        let result = _super_posmodel.disallowLineQuantityChange();
+        return this.is_french_country() || result;
+    }
 });
 
 
@@ -65,10 +70,10 @@ models.Order = models.Order.extend({
 var orderline_super = models.Orderline.prototype;
 models.Orderline = models.Orderline.extend({
     can_be_merged_with: function(orderline) {
-        var order = this.pos.get_order();
-        var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1];
+        let order = this.pos.get_order();
+        let lastId = order.orderlines.last().cid;
 
-        if(this.pos.is_french_country() && (order.orderlines._byId[last_id].product.id !== orderline.product.id || order.orderlines._byId[last_id].quantity < 0)) {
+        if(this.pos.is_french_country() && (order.orderlines._byId[lastId].product.id !== orderline.product.id || order.orderlines._byId[lastId].quantity < 0)) {
             return false;
         } else {
             return orderline_super.can_be_merged_with.apply(this, arguments);
