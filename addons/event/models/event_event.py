@@ -308,7 +308,7 @@ class EventEvent(models.Model):
         """ Make it separate from ``_compute_from_event_type`` because otherwise
         a value given at create (see create override) would protect all other fields
         depending on event type id from being computed as compute method will be
-        blacklisted during create (see ``_field_computed`` attribute used in create
+        blacklisted during create (see ``registry.field_computed`` attribute used in create
         to compute protected field from re-computation) """
         for event in self:
             if event.event_type_id.seats_max:
