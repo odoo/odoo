@@ -2486,14 +2486,22 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         if self._auto:
             if must_create_table:
-                tools.create_model_table(cr, self._table, self._description)
+                def make_type(field):
+                    return field.column_type[1] + (" NOT NULL" if field.required else "")
+
+                tools.create_model_table(cr, self._table, self._description, [
+                    (name, make_type(field), field.string)
+                    for name, field in self._fields.items()
+                    if name != 'id' and field.store and field.column_type
+                ])
 
             if self._parent_store:
                 if not tools.column_exists(cr, self._table, 'parent_path'):
                     self._create_parent_columns()
                     parent_path_compute = True
 
-            self._check_removed_columns(log=False)
+            if not must_create_table:
+                self._check_removed_columns(log=False)
 
             # update the database schema for fields
             columns = tools.table_columns(cr, self._table)
