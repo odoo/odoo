@@ -275,7 +275,7 @@
                                     <group>
                                         <field name="company_partner_id" invisible="1"/>
                                         <field name="bank_account_id" context="{'default_partner_id': company_partner_id, 'form_view_ref': 'account.view_company_partner_bank_form'}"/>
-                                        <field name="bank_id"/>
+                                        <field name="bank_id" attrs="{'invisible': [('bank_account_id', '=', False)]}"/>
                                     </group>
                                     <group >
                                         <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"  groups="account.group_account_readonly"/>
