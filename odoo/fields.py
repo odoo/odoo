@@ -55,12 +55,13 @@ def resolve_mro(model, name, predicate):
         (the ones that appear in the registry) are ignored.
     """
     result = []
-    for cls in type(model).__mro__:
-        if not getattr(cls, 'pool', None) and name in cls.__dict__:
-            value = cls.__dict__[name]
-            if not predicate(value):
-                break
-            result.append(value)
+    for cls in model._model_classes:
+        value = cls.__dict__.get(name, Default)
+        if value is Default:
+            continue
+        if not predicate(value):
+            break
+        result.append(value)
     return result
 
 
