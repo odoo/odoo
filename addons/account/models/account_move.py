@@ -4221,6 +4221,7 @@ class AccountPartialReconcile(models.Model):
                             'currency_id': line.currency_id.id,
                             'move_id': newly_created_move.id,
                             'partner_id': line.partner_id.id,
+                            'journal_id': newly_created_move.journal_id.id,
                         })
                         # Group by cash basis account and tax
                         self.env['account.move.line'].with_context(check_move_validity=False).create({
@@ -4235,6 +4236,7 @@ class AccountPartialReconcile(models.Model):
                             'currency_id': line.currency_id.id,
                             'move_id': newly_created_move.id,
                             'partner_id': line.partner_id.id,
+                            'journal_id': newly_created_move.journal_id.id,
                             'tax_repartition_line_id': line.tax_repartition_line_id.id,
                             'tax_base_amount': line.tax_base_amount,
                             'tag_ids': [(6, 0, line.tag_ids.ids)],
@@ -4262,6 +4264,7 @@ class AccountPartialReconcile(models.Model):
                                 'currency_id': line.currency_id.id,
                                 'amount_currency': self.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
                                 'partner_id': line.partner_id.id,
+                                'journal_id': newly_created_move.journal_id.id,
                                 'tax_repartition_line_id': line.tax_repartition_line_id.id,
                                 'tax_base_amount': line.tax_base_amount,
                                 'tag_ids': [(6, 0, line.tag_ids.ids)],
@@ -4276,6 +4279,7 @@ class AccountPartialReconcile(models.Model):
                                 'currency_id': line.currency_id.id,
                                 'amount_currency': self.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
                                 'partner_id': line.partner_id.id,
+                                'journal_id': newly_created_move.journal_id.id,
                             })
         if newly_created_move:
             self._set_tax_cash_basis_entry_date(move_date, newly_created_move)
