@@ -780,10 +780,10 @@ class Field(MetaField('DummyField', (object,), {})):
 
         column = columns.get(self.name)
 
-        # create/update the column, not null constraint, indexes
+        # create/update the column, not null constraint; the index will be
+        # managed by registry.check_indexes()
         self.update_db_column(model, column)
         self.update_db_notnull(model, column)
-        self.update_db_index(model, column)
 
         return not column
 
@@ -830,22 +830,6 @@ class Field(MetaField('DummyField', (object,), {})):
             model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
-
-    def update_db_index(self, model, column):
-        """ Add or remove the index corresponding to ``self``.
-
-            :param model: an instance of the field's model
-            :param column: the column's configuration (dict) if it exists, or ``None``
-        """
-        indexname = '%s_%s_index' % (model._table, self.name)
-        if self.index:
-            try:
-                with model._cr.savepoint(flush=False):
-                    sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
-            except psycopg2.OperationalError:
-                _schema.error("Unable to add index for %s", self)
-        else:
-            sql.drop_index(model._cr, indexname, model._table)
 
     ############################################################################
     #

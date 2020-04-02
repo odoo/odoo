@@ -14,11 +14,13 @@ import logging
 import os
 import threading
 
+import psycopg2
+
 import odoo
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (assertion_report, config, existing_tables, ignore,
-                        lazy_classproperty, lazy_property, OrderedSet)
+                        lazy_classproperty, lazy_property, sql, OrderedSet)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -375,6 +377,8 @@ class Registry(Mapping):
 
         self._ordinary_tables = None
 
+        self.check_indexes(cr, model_names)
+
         while self._post_init_queue:
             func = self._post_init_queue.popleft()
             func()
@@ -383,6 +387,33 @@ class Registry(Mapping):
 
         # make sure all tables are present
         self.check_tables_exist(cr)
+
+    def check_indexes(self, cr, model_names):
+        """ Create or drop column indexes for the given models. """
+        expected = [
+            ("%s_%s_index" % (Model._table, field.name), Model._table, field.name, field.index)
+            for model_name in model_names
+            for Model in [self.models[model_name]]
+            if Model._auto and not Model._abstract
+            for field in Model._fields.values()
+            if field.column_type and field.store
+        ]
+        if not expected:
+            return
+
+        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname IN %s",
+                   [tuple(row[0] for row in expected)])
+        existing = {row[0] for row in cr.fetchall()}
+
+        for indexname, tablename, columnname, index in expected:
+            if index and indexname not in existing:
+                try:
+                    with cr.savepoint(flush=False):
+                        sql.create_index(cr, indexname, tablename, ['"%s"' % columnname])
+                except psycopg2.OperationalError:
+                    _schema.error("Unable to add index for %s", self)
+            elif not index and indexname in existing:
+                sql.drop_index(cr, indexname, tablename)
 
     def check_tables_exist(self, cr):
         """
