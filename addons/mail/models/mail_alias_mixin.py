@@ -53,25 +53,24 @@ class AliasMixin(models.AbstractModel):
     def _init_column(self, name):
         """ Create aliases for existing rows. """
         super(AliasMixin, self)._init_column(name)
-        if name != 'alias_id':
-            return
+        if name == 'alias_id':
+            # as 'mail.alias' records refer to 'ir.model' records, create
+            # aliases after the reflection of models
+            self.pool.post_init(self._init_column_alias_id)
 
+    def _init_column_alias_id(self):
         # both self and the alias model must be present in 'ir.model'
-        IM = self.env['ir.model']
-        IM._reflect_model(self)
-        IM._reflect_model(self.env[self.get_alias_model_name({})])
-
         alias_ctx = {
             'alias_model_name': self.get_alias_model_name({}),
             'alias_parent_model_name': self._name,
         }
-        alias_model = self.env['mail.alias'].sudo().with_context(alias_ctx).browse([])
+        alias_model = self.env['mail.alias'].sudo().with_context(alias_ctx)
 
         child_ctx = {
             'active_test': False,       # retrieve all records
             'prefetch_fields': False,   # do not prefetch fields on records
         }
-        child_model = self.sudo().with_context(child_ctx).browse([])
+        child_model = self.sudo().with_context(child_ctx)
 
         for record in child_model.search([('alias_id', '=', False)]):
             # create the alias, and link it to the current record
