@@ -13,7 +13,7 @@
                 </div>
             </t>
         </t>
-        <t t-jquery="t[t-call='OrderReceiptWrappedProductNameLines']" t-operation="after">
+        <t t-jquery="t[t-call='WrappedProductNameLines']" t-operation="after">
             <t t-if="line.l10n_in_hsn_code and pos.company.country.code == 'IN'">
                 <div class="pos-receipt-left-padding">HSN Code: <t t-esc="line.l10n_in_hsn_code"/></div>
             </t>

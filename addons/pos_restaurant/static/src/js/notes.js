@@ -2,14 +2,8 @@ odoo.define('pos_restaurant.notes', function (require) {
 "use strict";
 
 var models = require('point_of_sale.models');
-var screens = require('point_of_sale.screens');
-var core = require('web.core');
-
-var QWeb = core.qweb;
-var _t   = core._t;
 
 var _super_orderline = models.Orderline.prototype;
-
 models.Orderline = models.Orderline.extend({
     initialize: function(attr, options) {
         _super_orderline.initialize.call(this,attr,options);
@@ -45,30 +39,4 @@ models.Orderline = models.Orderline.extend({
     },
 });
 
-var OrderlineNoteButton = screens.ActionButtonWidget.extend({
-    template: 'OrderlineNoteButton',
-    button_click: function(){
-        var line = this.pos.get_order().get_selected_orderline();
-        if (line) {
-            this.gui.show_popup('textarea',{
-                title: _t('Add Note'),
-                value:   line.get_note(),
-                confirm: function(note) {
-                    line.set_note(note);
-                },
-            });
-        }
-    },
-});
-
-screens.define_action_button({
-    'name': 'orderline_note',
-    'widget': OrderlineNoteButton,
-    'condition': function(){
-        return this.pos.config.iface_orderline_notes;
-    },
-});
-return {
-    OrderlineNoteButton: OrderlineNoteButton,
-}
 });

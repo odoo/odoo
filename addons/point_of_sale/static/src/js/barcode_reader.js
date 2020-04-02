@@ -70,10 +70,14 @@ var BarcodeReader = core.Class.extend({
         }
     },
 
+    remove_action_callback: function(action) {
+        this.action_callback[action] = undefined;
+    },
+
     //remove all action callbacks
     reset_action_callbacks: function () {
         for (var action in this.action_callback) {
-            this.action_callback[action] = undefined;
+            this.remove_action_callback(action);
         }
     },
 
