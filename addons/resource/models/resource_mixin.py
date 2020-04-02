@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from dateutil.relativedelta import relativedelta
 from pytz import utc
 
 from odoo import api, fields, models
@@ -106,6 +107,14 @@ class ResourceMixin(models.AbstractModel):
         leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)
 
         return calendar._get_days_data(attendances & leaves, day_total)
+
+    def _adjust_to_calendar(self, start, end):
+        resource_results = self.resource_id._adjust_to_calendar(start, end)
+        # change dict keys from resources to associated records.
+        return {
+            record: resource_results[record.resource_id]
+            for record in self
+        }
 
     def list_work_time_per_day(self, from_datetime, to_datetime, calendar=None, domain=None):
         """

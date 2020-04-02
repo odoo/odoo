@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 import math
+import logging
 from datetime import datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import rrule, DAILY, WEEKLY
@@ -18,6 +19,8 @@ from odoo.tools.float_utils import float_round
 
 from odoo.tools import date_utils, float_utils
 from .resource_mixin import timezone_datetime
+
+_logger = logging.getLogger(__name__)
 
 # Default hour per day value. The one should
 # only be used when the one from the calendar
@@ -457,6 +460,35 @@ class ResourceCalendar(models.Model):
             day_total[start.date()] += (stop - start).total_seconds() / 3600
         return day_total
 
+    def _get_closest_work_time(self, dt, match_end=False, resource=None, search_range=None):
+        """Return the closest work interval boundary within the search range.
+        Consider only starts of intervals unless `match_end` is True. It will then only consider
+        ends of intervals.
+        :param dt: reference datetime
+        :param match_end: wether to search for the begining of an interval or the end.
+        :param search_range: time interval considered. Defaults to the entire day of `dt`
+        :rtype: datetime | None
+        """
+        def interval_dt(interval):
+            return interval[1 if match_end else 0]
+
+        if not search_range:
+            range_start = dt + relativedelta(hour=0, minute=0, second=0)
+            range_end = dt + relativedelta(days=1, hour=0, minute=0, second=0)
+        else:
+            range_start, range_end = search_range
+
+        if not (dt.tzinfo and range_start.tzinfo and range_end.tzinfo):
+            raise ValueError('Provided datetimes needs to be timezoned')
+
+        if not range_start <= dt <= range_end:
+            return None
+        work_intervals = sorted(
+            self._work_intervals(range_start, range_end, resource),
+            key=lambda i: abs(interval_dt(i) - dt),
+        )
+        return interval_dt(work_intervals[0]) if work_intervals else None
+
     # --------------------------------------------------
     # External API
     # --------------------------------------------------
@@ -721,27 +753,40 @@ class ResourceResource(models.Model):
             self.tz = self.user_id.tz
 
     def _get_work_interval(self, start, end):
-        """ Return interval's start datetime for interval closest to start. And interval's end datetime for interval closest to end.
-            If none is found return None
-            Note: this method is used in enterprise (forecast and planning)
+        # Deprecated method. Use `_adjust_to_calendar` instead
+        return self._adjust_to_calendar(start, end)
 
-            :start: datetime
-            :end: datetime
-            :return: (datetime|None, datetime|None)
+    def _adjust_to_calendar(self, start, end):
+        """Adjust the given start and end datetimes to the closest effective hours encoded
+        in the resource calendar. Only attendances in the same day as `start` and `end` are
+        considered (respectively). If no attendance is found during that day, the closest hour
+        is None.
+        e.g. simplified example:
+             given two attendances: 8am-1pm and 2pm-5pm, given start=9am and end=6pm
+             resource._adjust_to_calendar(start, end)
+             >>> {resource: (8am, 5pm)}
+        :return: Closest matching start and end of working periods for each resource
+        :rtype: dict(resource, tuple(datetime | None, datetime | None))
         """
-        start_datetime = timezone_datetime(start)
-        end_datetime = timezone_datetime(end)
-        resource_mapping = {}
+        start, revert_start_tz = make_aware(start)
+        end, revert_end_tz = make_aware(end)
+        result = {}
         for resource in self:
-            work_intervals = sorted(
-                resource.calendar_id._work_intervals(start_datetime, end_datetime, resource),
-                key=lambda x: x[0]
+            calendar_start = resource.calendar_id._get_closest_work_time(start, resource=resource)
+            search_range = None
+            if calendar_start and start.date() == end.date():
+                # Make sure to only search end after start
+                search_range = (
+                    start,
+                    end + relativedelta(days=1, hour=0, minute=0, second=0),
+                )
+            calendar_end = resource.calendar_id._get_closest_work_time(end, match_end=True, resource=resource, search_range=search_range)
+            result[resource] = (
+                calendar_start and revert_start_tz(calendar_start),
+                calendar_end and revert_end_tz(calendar_end),
             )
-            if work_intervals:
-                resource_mapping[resource.id] = (work_intervals[0][0].astimezone(utc), work_intervals[-1][1].astimezone(utc))
-            else:
-                resource_mapping[resource.id] = (None, None)
-        return resource_mapping
+        return result
+
 
     def _get_unavailable_intervals(self, start, end):
         """ Compute the intervals during which employee is unavailable with hour granularity between start and end
