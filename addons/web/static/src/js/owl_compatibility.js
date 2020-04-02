@@ -477,9 +477,8 @@ odoo.define('web.OwlCompatibility', function () {
                 // be re-attached, but we need to be reloaded first). In this
                 // case, we have to fool Owl as it would skip the rendering if
                 // we simply call render.
-                const tmpEl = document.createElement('div');
-                this.el.parentElement.replaceChild(tmpEl, this.el);
-                prom = this.mount(tmpEl, { position: 'self' });
+                this.unmount();
+                prom = this.mount(this._mount_target, { position: this._mount_position });
             }
             return prom;
         }
@@ -523,6 +522,17 @@ odoo.define('web.OwlCompatibility', function () {
                 children.set(parent, parentChildren);
             }
             parentChildren.push(this);
+        }
+        /**
+        * @override
+        * Stores mount target and position at first mount
+        * That way, when updating while out of DOM, we know where and how to remount
+        * See update()
+        */
+        async mount(target, options) {
+            this._mount_target = target;
+            this._mount_position = options && options.position;
+            return super.mount(...arguments);
         }
     }
     ComponentWrapper.template = xml`<t t-component="Component" t-props="props" t-ref="component"/>`;

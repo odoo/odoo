@@ -3403,6 +3403,10 @@
                         if (target.tagName.toLowerCase() !== fiber.vnode.sel) {
                             throw new Error(`Cannot attach '${component.constructor.name}' to target node (not same tag name)`);
                         }
+                        const selfVnodeData = fiber.vnode.data ? {key: fiber.vnode.data.key} : {};
+                        const selfVnode = h(fiber.vnode.sel, selfVnodeData);
+                        selfVnode.elm = target;
+                        target = selfVnode;
                     }
                     else {
                         target = component.__owl__.vnode || document.createElement(fiber.vnode.sel);
