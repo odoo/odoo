@@ -481,12 +481,13 @@ class ResPartner(models.Model):
             vat_number = format_func(vat_number)
         return vat_country.upper() + vat_number
 
-    @api.model
-    def create(self, values):
-        if values.get('vat'):
-            country_id = values.get('country_id')
-            values['vat'] = self._fix_vat_number(values['vat'], country_id)
-        return super(ResPartner, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if values.get('vat'):
+                country_id = values.get('country_id')
+                values['vat'] = self._fix_vat_number(values['vat'], country_id)
+        return super(ResPartner, self).create(vals_list)
 
     def write(self, values):
         if values.get('vat') and len(self.mapped('country_id')) == 1:
