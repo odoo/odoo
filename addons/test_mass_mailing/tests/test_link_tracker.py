@@ -10,7 +10,7 @@ class TestLinkTracker(common.TestMassMailCommon):
     def setUp(self):
         super(TestLinkTracker, self).setUp()
 
-        self.link = self.env['link.tracker'].create({
+        self.link = self.env['link.tracker'].search_or_create({
             'url': 'https://www.example.com'
         })
 
