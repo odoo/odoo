@@ -18,6 +18,7 @@ from lxml.builder import E
 import passlib.context
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.osv import expression
@@ -1085,6 +1086,10 @@ class GroupsView(models.Model):
         """ Modify the view with xmlid ``base.user_groups_view``, which inherits
             the user form view, and introduces the reified group fields.
         """
+        if self._context.get('install_filename') or self._context.get(MODULE_UNINSTALL_FLAG):
+            # skip now; it will be updated once at the end of (un)installation
+            return
+
         # remove the language to avoid translations, it will be handled at the view level
         self = self.with_context(lang=None)
 
