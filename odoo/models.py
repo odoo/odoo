@@ -353,17 +353,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         pass
 
-    def _reflect(self):
-        """ Reflect the model and its fields in the models 'ir.model' and
-        'ir.model.fields'. Also create entries in 'ir.model.data' if the key
-        'module' is passed to the context.
-        """
-        self.env['ir.model']._reflect_model(self)
-        self.env['ir.model.fields']._reflect_model(self)
-        self.env['ir.model.fields.selection']._reflect_model(self)
-        self.env['ir.model.constraint']._reflect_model(self)
-        self.invalidate_cache()
-
     @api.model
     def _add_field(self, name, field):
         """ Add the given ``field`` under the given ``name`` in the class """
@@ -2476,8 +2465,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # values) from prefetching a field for which the corresponding column
         # has not been added in database yet!
         self = self.with_context(prefetch_fields=False)
-
-        self.pool.post_init(self._reflect)
 
         cr = self._cr
         update_custom_fields = self._context.get('update_custom_fields', False)

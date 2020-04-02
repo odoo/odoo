@@ -30,6 +30,7 @@ SAFE_EVAL_BASE = {
     'time': time,
 }
 
+
 def make_compute(text, deps):
     """ Return a compute function from its code body and dependencies. """
     func = lambda self: safe_eval(text, SAFE_EVAL_BASE, {'self': self}, mode="exec")
@@ -37,9 +38,37 @@ def make_compute(text, deps):
     return api.depends(*deps)(func)
 
 
+def mark_modified(records, fnames):
+    """ Mark the given fields as modified on records. """
+    # protect all modified fields, to avoid them being recomputed
+    fields = [records._fields[fname] for fname in fnames]
+    with records.env.protecting(fields, records):
+        records.modified(fnames)
+
+
+def model_xmlid(module, model_name):
+    """ Return the XML id of the given model. """
+    return '%s.model_%s' % (module, model_name.replace('.', '_'))
+
+
+def field_xmlid(module, model_name, field_name):
+    """ Return the XML id of the given field. """
+    return '%s.field_%s__%s' % (module, model_name.replace('.', '_'), field_name)
+
+
+def selection_xmlid(module, model_name, field_name, value):
+    """ Return the XML id of the given selection. """
+    xmodel = model_name.replace('.', '_')
+    xvalue = value.replace('.', '_').replace(' ', '_').lower()
+    return '%s.selection__%s__%s__%s' % (module, xmodel, field_name, xvalue)
+
+
 # generic INSERT and UPDATE queries
 INSERT_QUERY = "INSERT INTO {table} ({cols}) VALUES {rows} RETURNING id"
 UPDATE_QUERY = "UPDATE {table} SET {assignment} WHERE {condition} RETURNING id"
+
+quote = '"{}"'.format
+
 
 def query_insert(cr, table, rows):
     """ Insert rows in a table. ``rows`` is a list of dicts, all with the same
@@ -57,6 +86,7 @@ def query_insert(cr, table, rows):
     cr.execute(query, params)
     return [row[0] for row in cr.fetchall()]
 
+
 def query_update(cr, table, values, selectors):
     """ Update the table with the given values (dict), and use the columns in
         ``selectors`` to select the rows to update.
@@ -68,6 +98,31 @@ def query_update(cr, table, values, selectors):
         condition=" AND ".join('"{0}"=%({0})s'.format(s) for s in selectors),
     )
     cr.execute(query, values)
+    return [row[0] for row in cr.fetchall()]
+
+
+def upsert(cr, table, cols, rows, conflict):
+    """ Insert or update the table with the given rows.
+
+    :param cr: database cursor
+    :param table: table name
+    :param cols: list of column names
+    :param rows: list of tuples, where each tuple value corresponds to a column name
+    :param conflict: list of column names to put into the ON CONFLICT clause
+    :return: the ids of the inserted or updated rows
+    """
+    query = """
+        INSERT INTO {table} ({cols}) VALUES {rows}
+        ON CONFLICT ({conflict}) DO UPDATE SET ({cols}) = ({excluded})
+        RETURNING id
+    """.format(
+        table=quote(table),
+        cols=", ".join(quote(col) for col in cols),
+        rows=", ".join("%s" for row in rows),
+        conflict=", ".join(conflict),
+        excluded=", ".join("EXCLUDED." + quote(col) for col in cols),
+    )
+    cr.execute(query, rows)
     return [row[0] for row in cr.fetchall()]
 
 
@@ -167,12 +222,11 @@ class IrModel(models.Model):
                 model._check_qorder(model.order)  # regex check for the whole clause ('is it valid sql?')
             except UserError as e:
                 raise ValidationError(str(e))
-            stored_fields = model.field_id.filtered('store').mapped('name')
-            if self.env.get(model.model) is None:
-                # model hasn't been init'd yet, which means that some fields are not yet in its
-                # list of fields but will be right after its creation - these fields can be used
-                # for ordering, so let's add them to the list of stored fields manually
-                stored_fields += models.MAGIC_COLUMNS
+            # add MAGIC_COLUMNS to 'stored_fields' in case 'model' has not been
+            # initialized yet, or 'field_id' is not up-to-date in cache
+            stored_fields = set(
+                model.field_id.filtered('store').mapped('name') + models.MAGIC_COLUMNS
+            )
             order_fields = RE_ORDER_FIELDS.findall(model.order)
             for field in order_fields:
                 if field not in stored_fields:
@@ -302,26 +356,49 @@ class IrModel(models.Model):
             'transient': model._transient,
         }
 
-    def _reflect_model(self, model):
-        """ Reflect the given model and return the corresponding record. Also
-            create entries in 'ir.model.data'.
-        """
+    def _reflect_models(self, model_names):
+        """ Reflect the given models. """
+        # determine expected and existing rows
+        rows = [
+            self._reflect_model_params(self.env[model_name])
+            for model_name in model_names
+        ]
+        cols = list(unique(['model'] + list(rows[0])))
+        expected = [tuple(row[col] for col in cols) for row in rows]
+
         cr = self.env.cr
+        query = "SELECT {}, id FROM ir_model WHERE model IN %s".format(
+            ", ".join(quote(col) for col in cols)
+        )
+        cr.execute(query, [tuple(model_names)])
+        model_ids = {}
+        existing = {}
+        for row in cr.fetchall():
+            model_ids[row[0]] = row[-1]
+            existing[row[0]] = row[:-1]
 
-        # create/update the entries in 'ir.model' and 'ir.model.data'
-        params = self._reflect_model_params(model)
-        ids = query_update(cr, self._table, params, ['model'])
-        if not ids:
-            ids = query_insert(cr, self._table, params)
+        # create or update rows
+        rows = [row for row in expected if existing.get(row[0]) != row]
+        if rows:
+            ids = upsert(self.env.cr, self._table, cols, rows, ['model'])
+            for row, id_ in zip(rows, ids):
+                model_ids[row[0]] = id_
+            self.pool.post_init(mark_modified, self.browse(ids), cols)
 
-        record = self.browse(ids)
-        self.pool.post_init(record.modified, set(params) - {'model', 'state'})
+        # update their XML id
+        module = self._context.get('module')
+        if not module:
+            return
 
-        if model._module == self._context.get('module'):
-            # self._module is the name of the module that last extended self
-            xmlid = '%s.model_%s' % (model._module, model._name.replace('.', '_'))
-            self.env['ir.model.data']._update_xmlids([{'xml_id': xmlid, 'record': record}])
-        return record
+        data_list = []
+        for model_name, model_id in model_ids.items():
+            model = self.env[model_name]
+            if model._module == module:
+                # model._module is the name of the module that last extended model
+                xml_id = model_xmlid(module, model_name)
+                record = self.browse(model_id)
+                data_list.append({'xml_id': xml_id, 'record': record})
+        self.env['ir.model.data']._update_xmlids(data_list)
 
     @api.model
     def _instanciate(self, model_data):
@@ -606,15 +683,14 @@ class IrModelFields(models.Model):
         """ Return the (sudoed) `ir.model.fields` record with the given model and name.
         The result may be an empty recordset if the model is not found.
         """
-        field_id = self._get_id(model_name, name) if model_name and name else False
+        field_id = model_name and name and self._get_ids(model_name).get(name)
         return self.sudo().browse(field_id)
 
-    @tools.ormcache('model_name', 'name')
-    def _get_id(self, model_name, name):
-        self.env.cr.execute("SELECT id FROM ir_model_fields WHERE model=%s AND name=%s",
-                            (model_name, name))
-        result = self.env.cr.fetchone()
-        return result and result[0]
+    @tools.ormcache('model_name')
+    def _get_ids(self, model_name):
+        cr = self.env.cr
+        cr.execute("SELECT name, id FROM ir_model_fields WHERE model=%s", [model_name])
+        return dict(cr.fetchall())
 
     def _drop_column(self):
         tables_to_drop = set()
@@ -773,6 +849,9 @@ class IrModelFields(models.Model):
             model_data = self.env['ir.model'].browse(vals['model_id'])
             vals['model'] = model_data.model
 
+        # for self._get_ids() in _update_selection()
+        self.clear_caches()
+
         res = super(IrModelFields, self).create(vals)
 
         if vals.get('state', 'manual') == 'manual':
@@ -878,11 +957,10 @@ class IrModelFields(models.Model):
         cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", [model_name])
         return {row['name']: row for row in cr.dictfetchall()}
 
-    def _reflect_field_params(self, field):
+    def _reflect_field_params(self, field, model_id):
         """ Return the values to write to the database for the given field. """
-        model = self.env['ir.model']._get(field.model_name)
         return {
-            'model_id': model.id,
+            'model_id': model_id,
             'model': field.model_name,
             'name': field.name,
             'field_description': field.string,
@@ -906,75 +984,61 @@ class IrModelFields(models.Model):
             'column2': field.column2 if field.type == 'many2many' else None,
         }
 
-    def _reflect_model(self, model):
-        """ Reflect the given model's fields. """
-        self.clear_caches()
-        by_label = {}
-        for field in model._fields.values():
-            if field.string in by_label:
-                _logger.warning('Two fields (%s, %s) of %s have the same label: %s.',
-                                field.name, by_label[field.string], model, field.string)
-            else:
-                by_label[field.string] = field.name
+    def _reflect_fields(self, model_names):
+        """ Reflect the fields of the given models. """
+        cr = self.env.cr
 
-        cr = self._cr
-        module = self._context.get('module')
-        fields_data = self._existing_field_data(model._name)
-        to_insert = []
-        to_xmlids = []
-        modified_ids = []
-        modified_fnames = []
-        for name, field in model._fields.items():
-            old_vals = fields_data.get(name)
-            new_vals = self._reflect_field_params(field)
-            modified_fnames = new_vals.keys()
-            if old_vals is None:
-                to_insert.append(new_vals)
-            elif any(old_vals[key] != new_vals[key] for key in new_vals):
-                ids = query_update(cr, self._table, new_vals, ['model', 'name'])
-                modified_ids.extend(ids)
-                old_vals.update(new_vals)
-            if module and (module == model._original_module or module in field._modules):
-                # remove this and only keep the else clause if version >= saas-12.4
-                if field.manual:
-                    self.pool.loaded_xmlids.add(
-                        '%s.field_%s__%s' % (module, model._name.replace('.', '_'), name))
+        for model_name in model_names:
+            model = self.env[model_name]
+            by_label = {}
+            for field in model._fields.values():
+                if field.string in by_label:
+                    _logger.warning('Two fields (%s, %s) of %s have the same label: %s.',
+                                    field.name, by_label[field.string], model, field.string)
                 else:
-                    to_xmlids.append(name)
+                    by_label[field.string] = field.name
 
-        if to_insert:
-            # insert missing fields
-            ids = query_insert(cr, self._table, to_insert)
-            modified_ids.extend(ids)
-            self.clear_caches()
+        # determine expected and existing rows
+        rows = []
+        for model_name in model_names:
+            model_id = self.env['ir.model']._get_id(model_name)
+            for field in self.env[model_name]._fields.values():
+                rows.append(self._reflect_field_params(field, model_id))
+        cols = list(unique(['model', 'name'] + list(rows[0])))
+        expected = [tuple(row[col] for col in cols) for row in rows]
 
-        if modified_ids:
-            def mark_modified(records, fnames):
-                # protect all modified fields, to avoid them being recomputed
-                fields = [records._fields[fname] for fname in fnames]
-                with records.env.protecting(fields, records):
-                    records.modified(fnames)
+        query = "SELECT {}, id FROM ir_model_fields WHERE model IN %s".format(
+            ", ".join(quote(col) for col in cols),
+        )
+        cr.execute(query, [tuple(model_names)])
+        field_ids = {}
+        existing = {}
+        for row in cr.fetchall():
+            field_ids[row[:2]] = row[-1]
+            existing[row[:2]] = row[:-1]
 
-            self.pool.post_init(mark_modified, self.browse(modified_ids), modified_fnames)
+        # create or update rows
+        rows = [row for row in expected if existing.get(row[:2]) != row]
+        if rows:
+            ids = upsert(cr, self._table, cols, rows, ['model', 'name'])
+            for row, id_ in zip(rows, ids):
+                field_ids[row[:2]] = id_
+            self.pool.post_init(mark_modified, self.browse(ids), cols)
 
-        if to_xmlids:
-            # create or update their corresponding xml ids
-            fields_data = self._existing_field_data(model._name)
-            prefix = '%s.field_%s__' % (module, model._name.replace('.', '_'))
-            self.env['ir.model.data']._update_xmlids([
-                dict(xml_id=prefix + name, record=self.browse(fields_data[name]['id']))
-                for name in to_xmlids
-            ])
+        # update their XML id
+        module = self._context.get('module')
+        if not module:
+            return
 
-        if not self.pool._init:
-            # remove ir.model.fields that are not in self._fields
-            fields_data = self._existing_field_data(model._name)
-            extra_names = set(fields_data) - set(model._fields)
-            if extra_names:
-                # add key MODULE_UNINSTALL_FLAG in context to (1) force the
-                # removal of the fields and (2) not reload the registry
-                records = self.browse([fields_data.pop(name)['id'] for name in extra_names])
-                records.with_context(**{MODULE_UNINSTALL_FLAG: True}).unlink()
+        data_list = []
+        for (field_model, field_name), field_id in field_ids.items():
+            model = self.env[field_model]
+            field = model._fields.get(field_name)
+            if field and (module == model._original_module or module in field._modules):
+                xml_id = field_xmlid(module, field_model, field_name)
+                record = self.browse(field_id)
+                data_list.append({'xml_id': xml_id, 'record': record})
+        self.env['ir.model.data']._update_xmlids(data_list)
 
     @tools.ormcache()
     def _all_manual_field_data(self):
@@ -1090,48 +1154,71 @@ class IrModelSelection(models.Model):
         """, (field_id,))
         return self._cr.fetchall()
 
-    def _reflect_model(self, model):
-        """ Reflect the given model's fields' selections. """
-        module = self._context.get('module')
-        model_name = model._name.replace('.', '_')
-        xml_id_pattern = '%s.selection__%s__%s__%s'
-        to_xmlids = []
-
-        def make_xml_id(field_name, value):
-            # the field value may contains exotic chars like spaces
-            sanitized_value = value.replace('.', '_').replace(' ', '_').lower()
-            return xml_id_pattern % (module, model_name, field_name, sanitized_value)
-
-        # determine fields to reflect
-        fields_to_reflect = [
+    def _reflect_selections(self, model_names):
+        """ Reflect the selections of the fields of the given models. """
+        fields = [
             field
-            for field in model._fields.values()
+            for model_name in model_names
+            for field_name, field in self.env[model_name]._fields.items()
             if field.type in ('selection', 'reference')
+            if isinstance(field.selection, list)
         ]
+        if not fields:
+            return
 
-        for field in fields_to_reflect:
-            # if selection is callable, make sure the reflection is empty
-            selection = field.selection if isinstance(field.selection, list) else []
-            rows = self._update_selection(model._name, field.name, selection)
+        # determine expected and existing rows
+        IMF = self.env['ir.model.fields']
+        expected = {
+            (field_id, value): (label, index)
+            for field in fields
+            for field_id in [IMF._get_ids(field.model_name)[field.name]]
+            for index, (value, label) in enumerate(field.selection)
+        }
 
-            # prepare update of XML ids below
-            if module:
-                for value, modules in field._selection_modules(model).items():
-                    if module in modules:
-                        to_xmlids.append(dict(
-                            xml_id=make_xml_id(field.name, value),
-                            record=self.browse(rows[value]['id']),
-                        ))
+        cr = self.env.cr
+        query = """
+            SELECT s.field_id, s.value, s.name, s.sequence
+            FROM ir_model_fields_selection s, ir_model_fields f
+            WHERE s.field_id = f.id AND f.model IN %s
+        """
+        cr.execute(query, [tuple(model_names)])
+        existing = {row[:2]: row[2:] for row in cr.fetchall()}
 
-        # create/update XML ids
-        if to_xmlids:
-            self.env['ir.model.data']._update_xmlids(to_xmlids)
+        # create or update rows
+        cols = ['field_id', 'value', 'name', 'sequence']
+        rows = [key + val for key, val in expected.items() if existing.get(key) != val]
+        if rows:
+            ids = upsert(cr, self._table, cols, rows, ['field_id', 'value'])
+            self.pool.post_init(mark_modified, self.browse(ids), cols)
+
+        # update their XML ids
+        module = self._context.get('module')
+        if not module:
+            return
+
+        query = """
+            SELECT f.model, f.name, s.value, s.id
+            FROM ir_model_fields_selection s, ir_model_fields f
+            WHERE s.field_id = f.id AND f.model IN %s
+        """
+        cr.execute(query, [tuple(model_names)])
+        selection_ids = {row[:3]: row[3] for row in cr.fetchall()}
+
+        data_list = []
+        for field in fields:
+            model = self.env[field.model_name]
+            for value, modules in field._selection_modules(model).items():
+                if module in modules:
+                    xml_id = selection_xmlid(module, field.model_name, field.name, value)
+                    record = self.browse(selection_ids[field.model_name, field.name, value])
+                    data_list.append({'xml_id': xml_id, 'record': record})
+        self.env['ir.model.data']._update_xmlids(data_list)
 
     def _update_selection(self, model_name, field_name, selection):
         """ Set the selection of a field to the given list, and return the row
             values of the given selection records.
         """
-        field_id = self.env['ir.model.fields']._get(model_name, field_name).id
+        field_id = self.env['ir.model.fields']._get_ids(model_name)[field_name]
 
         # selection rows {value: row}
         cur_rows = self._existing_selection_data(model_name, field_name)
@@ -1398,6 +1485,11 @@ class IrModelConstraint(models.Model):
                         WHERE id=%s"""
             cr.execute(query, (self.env.uid, type, definition, message, cons_id))
         return self.browse(cons_id)
+
+    def _reflect_constraints(self, model_names):
+        """ Reflect the SQL constraints of the given models. """
+        for model_name in model_names:
+            self._reflect_model(self.env[model_name])
 
     def _reflect_model(self, model):
         """ Reflect the _sql_constraints of the given model. """
