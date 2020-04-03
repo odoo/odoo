@@ -114,30 +114,6 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
 
 _logger = logging.getLogger(__name__)
 
-if hasattr(dis, 'get_instructions'):
-    def _get_opcodes(codeobj):
-        """_get_opcodes(codeobj) -> [opcodes]
-
-        Extract the actual opcodes as an iterator from a code object
-
-        >>> c = compile("[1 + 2, (1,2)]", "", "eval")
-        >>> list(_get_opcodes(c))
-        [100, 100, 23, 100, 100, 102, 103, 83]
-        """
-        return (i.opcode for i in dis.get_instructions(codeobj))
-else:
-    def _get_opcodes(codeobj):
-        i = 0
-        byte_codes = codeobj.co_code
-        while i < len(byte_codes):
-            code = ord(byte_codes[i:i+1])
-            yield code
-
-            if code >= HAVE_ARGUMENT:
-                i += 3
-            else:
-                i += 1
-
 def assert_no_dunder_name(code_obj, expr):
     """ assert_no_dunder_name(code_obj, expr) -> None
 
@@ -181,11 +157,11 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
     """
     assert_no_dunder_name(code_obj, expr)
 
-    # almost twice as fast as a manual iteration + condition when loading
-    # /web according to line_profiler
-    codes = set(_get_opcodes(code_obj)) - allowed_codes
-    if codes:
-        raise ValueError("forbidden opcode(s) in %r: %s" % (expr, ', '.join(opname[x] for x in codes)))
+    # set operations are almost twice as fast as a manual iteration + condition
+    # when loading /web according to line_profiler
+    code_codes = {i.opcode for i in dis.get_instructions(code_obj)}
+    if not allowed_codes >= code_codes:
+        raise ValueError("forbidden opcode(s) in %r: %s" % (expr, ', '.join(opname[x] for x in (code_codes - allowed_codes))))
 
     for const in code_obj.co_consts:
         if isinstance(const, CodeType):
