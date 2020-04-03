@@ -328,6 +328,12 @@ class Survey(models.Model):
         default = dict(default or {}, title=title)
         return super(Survey, self).copy_data(default)
 
+    def toggle_active(self):
+        super(Survey, self).toggle_active()
+        activated = self.filtered(lambda survey: survey.active)
+        activated.mapped('certification_badge_id').action_unarchive()
+        (self - activated).mapped('certification_badge_id').action_archive()
+
     # ------------------------------------------------------------
     # ANSWER MANAGEMENT
     # ------------------------------------------------------------
@@ -946,6 +952,7 @@ class Survey(models.Model):
     # ------------------------------------------------------------
     # GAMIFICATION / BADGES
     # ------------------------------------------------------------
+
     def _prepare_challenge_category(self):
         return 'certification'
 
