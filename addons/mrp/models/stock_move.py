@@ -12,6 +12,7 @@ class StockMoveLine(models.Model):
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
     production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
     lot_produced_ids = fields.Many2many('stock.production.lot', string='Finished Lot/Serial Number', check_company=True)
+    order_finished_lot_ids = fields.Many2many(related="move_id.order_finished_lot_ids")
     done_move = fields.Boolean('Move Done', related='move_id.is_done', readonly=False, store=True)  # TDE FIXME: naming
 
     def create(self, values):
