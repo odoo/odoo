@@ -2692,7 +2692,7 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
-    QUnit.test('timezone does not affect drag and drop', async function (assert) {
+    QUnit.skip('timezone does not affect drag and drop', async function (assert) {
         assert.expect(10);
 
         var calendar = await createCalendarView({
