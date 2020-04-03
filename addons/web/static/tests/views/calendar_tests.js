@@ -2907,7 +2907,7 @@ QUnit.module('Views', {
         await testUtils.nextTick();
 
         // Move event to another day (on 19 december)
-        await testUtils.dragAndDrop(
+        await testUtils.dom.dragAndDrop(
             calendar.$('.fc-event:contains("An event")'),
             calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day-top:eq(1)')
         );
