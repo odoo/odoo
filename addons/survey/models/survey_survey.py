@@ -529,6 +529,9 @@ class Survey(models.Model):
 
         The whole logic is inverted if "go_back" is passed as True.
 
+        As pages with description are considered as potential question to display, we show the page
+        if it contains at least one active question or a description.
+
         :param user_input: user's answers
         :param page_or_question_id: current page or question id
         :param go_back: reverse the logic and get the PREVIOUS question/page
@@ -555,30 +558,31 @@ class Survey(models.Model):
 
         # Conditional Questions Management
         triggering_answer_by_question, triggered_questions_by_answer, selected_answers = user_input._get_conditional_values()
-        if survey.has_conditional_questions and triggered_questions_by_answer:
-            if survey.questions_layout == 'page_per_question':
-                question_candidates = pages_or_questions[0:current_page_index] if go_back \
-                    else pages_or_questions[current_page_index + 1:]
-                for question in question_candidates.sorted(reverse=go_back):
+        inactive_questions = user_input._get_inactive_conditional_questions()
+        if survey.questions_layout == 'page_per_question':
+            question_candidates = pages_or_questions[0:current_page_index] if go_back \
+                else pages_or_questions[current_page_index + 1:]
+            for question in question_candidates.sorted(reverse=go_back):
+                # pages with description are potential questions to display (are part of question_candidates)
+                if question.is_page:
+                    contains_active_question = any(sub_question not in inactive_questions for sub_question in question.question_ids)
+                    is_description_section = not question.question_ids and not is_html_empty(question.description)
+                    if contains_active_question or is_description_section:
+                        return question
+                else:
                     triggering_answer = triggering_answer_by_question.get(question)
                     if not triggering_answer or triggering_answer in selected_answers:
                         # question is visible because not conditioned or conditioned by a selected answer
-                        # -> return it
                         return question
-            elif survey.questions_layout == 'page_per_section':
-                inactive_questions = user_input._get_inactive_conditional_questions()
-                section_candidates = pages_or_questions[0:current_page_index] if go_back \
-                    else pages_or_questions[current_page_index + 1:]
-                for section in section_candidates.sorted(reverse=go_back):
-                    if any(question not in inactive_questions for question in section.question_ids):
-                        # section contains at least one active question
-                        # -> return it
-                        return section
-                return Question
-        else:
-            return pages_or_questions[current_page_index + (1 if not go_back else -1)]
-
-        return Question
+        elif survey.questions_layout == 'page_per_section':
+            section_candidates = pages_or_questions[0:current_page_index] if go_back \
+                else pages_or_questions[current_page_index + 1:]
+            for section in section_candidates.sorted(reverse=go_back):
+                contains_active_question = any(question not in inactive_questions for question in section.question_ids)
+                is_description_section = not section.question_ids and not is_html_empty(section.description)
+                if contains_active_question or is_description_section:
+                    return section
+            return Question
 
     def _is_last_page_or_question(self, user_input, page_or_question):
         """ This method checks if the given question or page is the last one.
