@@ -26,6 +26,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
      */
     start: function () {
         var self = this;
+        this.fadeInOutTime = 500;
         return this._super.apply(this, arguments).then(function () {
             // general survey props
             self.surveyId = self.$el.data('surveyId');
@@ -304,7 +305,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
 
         var resolveFadeOut;
         var fadeOutPromise = new Promise(function (resolve, reject) { resolveFadeOut = resolve; });
-        this.$el.fadeOut(500, function () {
+        this.$el.fadeOut(this.fadeInOutTime, function () {
             resolveFadeOut();
         });
 
@@ -323,7 +324,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
                 var $renderedTemplate = $(results[1]);
                 self.$el.replaceWith($renderedTemplate);
                 self.attachTo($renderedTemplate);
-                self.$el.fadeIn(500, function () {
+                self.$el.fadeIn(self.fadeInOutTime, function () {
                     self._startTimer();
                 });
             } else {
