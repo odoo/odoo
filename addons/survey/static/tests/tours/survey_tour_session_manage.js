@@ -282,8 +282,9 @@ tour.register('test_survey_session_manage_tour', {
             }
         }
 
-        // after 1 second, results are displayed automatically because question timer
-        // runs out
+        // after 1 second, results are displayed automatically because question timer runs out
+        // we add 1 extra second because of the way the timer works:
+        // it only triggers the time_up event 1 second AFTER the delay is passed
         setTimeout(function () {
             chartData = getChartData();
             var firstAnswerData = chartData[0];
@@ -338,7 +339,7 @@ tour.register('test_survey_session_manage_tour', {
             }
 
             nextScreen();
-        }, 1500);
+        }, 2100);
     }
 }, {
     trigger: 'h1:contains("Final Leaderboard")',
