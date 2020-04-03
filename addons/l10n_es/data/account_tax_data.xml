@@ -820,11 +820,29 @@
     <record id="account_tax_template_p_iva0_nd" model="account.tax.template">
         <field name="description">P_IVA0_ND</field>
         <field name="type_tax_use">purchase</field>
-        <field name="name">IVA Soportado no deducible</field>
+        <field name="name">21% IVA Soportado no deducible</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
+    </record>
+    <record id="account_tax_template_p_iva10_nd" model="account.tax.template">
+        <field name="description">P_IVA10_ND</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">10% IVA Soportado no deducible</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="10"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_10"/>
+    </record>
+    <record id="account_tax_template_p_iva4_nd" model="account.tax.template">
+        <field name="description">P_IVA4_ND</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">4% IVA Soportado no deducible</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="4"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_4"/>
     </record>
     <record id="account_tax_template_s_iva4s" model="account.tax.template">
         <field name="description">S_IVA4S</field>
