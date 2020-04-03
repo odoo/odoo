@@ -208,10 +208,8 @@ class WebsiteEventController(http.Controller):
         urls = event._get_event_resource_urls()
         values = {
             'event': event,
-            'sold_out': all(not ticket.sale_available and not ticket.is_expired for ticket in event.event_ticket_ids),
             'main_object': event,
             'range': range,
-            'registrable': event.sudo().event_registrations_open,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url'),
         }

@@ -75,8 +75,9 @@ class EventTicket(models.Model):
     @api.depends('end_sale_date', 'event_id.date_tz')
     def _compute_is_expired(self):
         for ticket in self:
+            ticket = ticket._set_tz_context()
+            current_date = fields.Date.context_today(ticket)
             if ticket.end_sale_date:
-                current_date = fields.Date.context_today(ticket.with_context(tz=ticket._get_ticket_tz()))
                 ticket.is_expired = ticket.end_sale_date < current_date
             else:
                 ticket.is_expired = False
@@ -84,7 +85,8 @@ class EventTicket(models.Model):
     @api.depends('start_sale_date', 'end_sale_date', 'event_id.date_tz', 'seats_available', 'seats_max')
     def _compute_sale_available(self):
         for ticket in self:
-            current_date = fields.Date.context_today(ticket.with_context(tz=ticket._get_ticket_tz()))
+            ticket = ticket._set_tz_context()
+            current_date = fields.Date.context_today(ticket)
             if (ticket.start_sale_date and ticket.start_sale_date > current_date) or \
                     ticket.end_sale_date and ticket.end_sale_date < current_date or \
                     ticket.seats_available <= 0 and ticket.seats_max > 0:
@@ -137,5 +139,6 @@ class EventTicket(models.Model):
         information. """
         return '%s\n%s' % (self.display_name, self.event_id.display_name)
 
-    def _get_ticket_tz(self):
-        return self.event_id.date_tz or self.env.user.tz
+    def _set_tz_context(self):
+        self.ensure_one()
+        return self.with_context(tz=self.event_id.date_tz or 'UTC')
