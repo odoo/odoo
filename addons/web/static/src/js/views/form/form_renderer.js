@@ -608,6 +608,14 @@ var FormRenderer = BasicRenderer.extend({
         if (node.attrs.nolabel !== '1') {
             var $labelTd = this._renderInnerGroupLabel(node);
             $tds = $labelTd.add($tds);
+
+            // apply the oe_(edit|read)_only className on the label as well
+            if (/\boe_edit_only\b/.test(node.attrs.class)) {
+                $tds.addClass('oe_edit_only');
+            }
+            if (/\boe_read_only\b/.test(node.attrs.class)) {
+                $tds.addClass('oe_read_only');
+            }
         }
 
         return $tds;
