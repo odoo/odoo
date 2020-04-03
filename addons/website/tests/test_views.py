@@ -1313,3 +1313,11 @@ class TestThemeViews(common.TransactionCase):
         specific_main_view_children = specific_main_view.inherit_children_ids
         self.assertEqual(specific_main_view_children.name, 'Test Child View', "Ensure theme.ir.ui.view has been loaded as an ir.ui.view into the website..")
         self.assertEqual(specific_main_view_children.website_id, website_1, "..and the website is the correct one.")
+
+        # 4. Keep User arch changes
+        new_arch = '<xpath expr="//body" position="replace"><span>Odoo</span></xpath>'
+        specific_main_view_children.arch = new_arch
+        theme_view.name = 'Test Child View modified'
+        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        self.assertEqual(specific_main_view_children.arch, new_arch, "View arch shouldn't have been overrided on theme update as it was modified by user.")
+        self.assertEqual(specific_main_view_children.name, 'Test Child View modified', "View should receive modification on theme update.")
