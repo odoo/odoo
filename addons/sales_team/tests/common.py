@@ -56,7 +56,14 @@ class TestSalesCommon(TransactionCase):
             'sequence': 5,
             'company_id': False,
             'user_id': cls.user_sales_manager.id,
-            'member_ids': [(4, cls.user_sales_leads.id), (4, cls.user_admin.id)],
+        })
+        cls.sales_team_1_m1 = cls.env['crm.team.member'].create({
+            'user_id': cls.user_sales_leads.id,
+            'crm_team_id': cls.sales_team_1.id,
+        })
+        cls.sales_team_1_m2 = cls.env['crm.team.member'].create({
+            'user_id': cls.user_admin.id,
+            'crm_team_id': cls.sales_team_1.id,
         })
 
 

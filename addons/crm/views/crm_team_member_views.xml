@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sales_team.crm_team_member_view_tree"/>
         <field name="arch" type="xml">
             <field name="user_id" position="after">
-                <field name="maximum_user_leads"/>
+                <field name="assignment_max"/>
                 <field name="lead_month_count"/>
             </field>
         </field>
@@ -18,14 +18,11 @@
         <field name="model">crm.team.member</field>
         <field name="inherit_id" ref="sales_team.crm_team_member_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//li[hasclass('o_salesteam_member_name')]" position="after">
-                <li class="nav-item"><field name="team_user_domain" widget="filters"/></li>
-            </xpath>
-            <xpath expr="//ul[hasclass('o_assignation_body')]" position="after">
-                <div class="o_assignation_leads_count">
-                    <field name="maximum_user_leads" invisible="1"/>
+            <xpath expr="//div[hasclass('oe_kanban_details')]" position="after">
+                <div class="o_member_assignment">
+                    <field name="assignment_max" invisible="1"/>
                     <field name="lead_month_count" widget="gauge"
-                           options="{'max_field': 'maximum_user_leads'}"/>
+                            options="{'max_field': 'assignment_max'}"/>
                 </div>
             </xpath>
         </field>
@@ -36,15 +33,18 @@
         <field name="model">crm.team.member</field>
         <field name="inherit_id" ref="sales_team.crm_team_member_view_form"/>
         <field name="arch" type="xml">
-            <field name="user_id" position="after">
-                <field name="lead_month_count" invisible="1"/>
-            </field>
-            <xpath expr="//group" position="inside">
-                <label for="maximum_user_leads" string="Maximum Leads / 30 days" />
-                <div>
-                    <field name="maximum_user_leads" class="oe_inline"/>
-                </div>
-                <field name="team_user_domain" widget="domain" options="{'model': 'crm.lead'}"/>
+            <xpath expr="//group[@name='member_partner_info']" position="after">
+                <group name="group_assign">
+                    <label for="lead_month_count"/>
+                    <div>
+                        <field name="lead_month_count" class="oe_inline"/>
+                        <span class="oe_inline"> / </span>
+                        <field name="assignment_max" class="oe_inline"/>
+                        <span class="oe_inline"> (max) </span>
+                    </div>
+                    <field name="assignment_domain" string="Domain" widget="domain"
+                        options="{'model': 'crm.lead'}"/>
+                </group>
             </xpath>
         </field>
     </record>
@@ -54,8 +54,8 @@
             <p class="o_view_nocontent_smiling_face">
                 Create a new salesman
             </p><p>
-                Link users to salesteam, set a per 30 days lead capacity for each
-                of them and set filters to auto assign your leads.
+                Link salespersons to sales teams. Set their monthly lead capacity
+                and configure automatic lead assignment.
             </p>
         </field>
     </record>
