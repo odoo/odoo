@@ -416,6 +416,9 @@ registry.sizing = SnippetOption.extend({
         this.$handles.on('mousedown', function (ev) {
             ev.preventDefault();
 
+            // First update size values as some element sizes may not have been
+            // initialized on option start (hidden slides, etc)
+            resizeValues = self._getSize();
             var $handle = $(ev.currentTarget);
 
             var compass = false;

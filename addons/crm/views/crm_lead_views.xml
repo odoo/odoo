@@ -98,7 +98,7 @@
                             </div>
                             <field name="function"/>
                             <field name="phone" widget="phone"/>
-                            <field name="mobile"/>
+                            <field name="mobile" widget="phone"/>
                         </group>
                         <group>
                             <field name="user_id" domain="[('share', '=', False)]"
@@ -159,7 +159,7 @@
                     <field name="city"/>
                     <field name="country_id"/>
                     <field name="email_from"/>
-                    <field name="phone"/>
+                    <field name="phone" class="o_force_ltr"/>
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="team_id"/>

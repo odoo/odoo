@@ -2,8 +2,10 @@
 
 # Copyright 2015 Eezee-It
 
+import datetime
 import json
 import logging
+import pytz
 import re
 import time
 from hashlib import sha256
@@ -74,7 +76,7 @@ class AcquirerSips(models.Model):
         currency_code = CURRENCY_CODES.get(currency.name, False)
         if not currency_code:
             raise ValidationError(_('Currency not supported by Wordline'))
-        amount = int(values['amount'] * 100)
+        amount = round(values['amount'] * 100)
         if self.environment == 'prod':
             # For production environment, key version 2 is required
             merchant_id = getattr(self, 'sips_merchant_id')
@@ -184,10 +186,13 @@ class TxSips(models.Model):
     def _sips_form_validate(self, data):
         data = self._sips_data_to_object(data.get('Data'))
         status = data.get('responseCode')
+        date = data.get('transactionDateTime')
+        if date:
+            date = datetime.datetime.fromisoformat(date)
+            date = date.astimezone(pytz.utc).replace(tzinfo=None)
         data = {
             'acquirer_reference': data.get('transactionReference'),
-            'date': data.get('transactionDateTime',
-                                      fields.Datetime.now())
+            'date': date or fields.Datetime.now(),
         }
         res = False
         if status in self._sips_valid_tx_status:

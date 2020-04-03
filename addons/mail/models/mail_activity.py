@@ -126,7 +126,7 @@ class MailActivity(models.Model):
     activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=True)
     icon = fields.Char('Icon', related='activity_type_id.icon', readonly=True)
     summary = fields.Char('Summary')
-    note = fields.Html('Note')
+    note = fields.Html('Note', sanitize_style=True)
     feedback = fields.Html('Feedback')
     date_deadline = fields.Date('Due Date', index=True, required=True, default=fields.Date.context_today)
     automated = fields.Boolean(

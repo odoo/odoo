@@ -584,7 +584,7 @@
 
 <t t-name="FormSelection">
     <div class="btn-group o_selection" aria-atomic="true">
-        <a href="#" data-toggle="dropdown" aria-label="Dropdown menu" title="Dropdown menu"><span class="o_status"/></a>
+        <a href="#" data-toggle="dropdown" aria-expanded="false" role="button" title="Dropdown menu"><span class="o_status"/></a>
         <div class="dropdown-menu state" role="menu"/>
     </div>
 </t>
@@ -1073,7 +1073,7 @@
             <div t-if="group !== item.groupId" role="separator" class="dropdown-divider" data-removable="1"/>
             <div class="o_menu_item"
                 t-att-data-id="item.itemId">
-                <a role="menuitem" href="#" t-attf-class="dropdown-item#{item.isActive ? ' selected ' : ''}">
+                <a role="menuitemcheckbox" t-att-aria-checked="item.isActive" href="#" t-attf-class="dropdown-item#{item.isActive ? ' selected ' : ''}">
                     <t t-esc="item.description"/>
                     <span t-if="item.isRemovable" t-att-data-id="item.itemId" class="o_trash_button" > <span class="fa fa-trash-o"></span> </span>
                     <span t-if="item.hasOptions" t-att-data-id="item.itemId" class="o_submenu_switcher">
@@ -1086,7 +1086,7 @@
                         <li t-if="subgroup !== option.groupId" role="separator" class="dropdown-divider" data-removable="1"/>
                         <li class="o_item_option"
                             t-att-data-item_id="item.itemId" t-att-data-option_id="option.optionId">
-                            <a role="menuitem" href="#" t-attf-class="dropdown-item#{item.currentOptionId === option.optionId ? ' selected': ''} pl-5"><t t-esc="option.description"/></a>
+                            <a role="menuitemcheckbox" t-att-aria-checked="item.currentOptionId === option.optionId" href="#" t-attf-class="dropdown-item#{item.currentOptionId === option.optionId ? ' selected': ''} pl-5"><t t-esc="option.description"/></a>
                         </li>
                         <t t-set="subgroup" t-value="option.groupId"/>
                     </t>
@@ -1534,7 +1534,7 @@
 <t t-name="UserMenu">
     <li class="o_user_menu">
         <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
-            <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="Avatar"/>
+            <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="User"/>
             <span class="oe_topbar_name"/>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu">
@@ -1554,7 +1554,7 @@
 
 <t t-name="SwitchCompanyMenu">
     <li class="o_switch_company_menu">
-        <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+        <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" title="Dropdown menu">
             <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}"/>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu"/>

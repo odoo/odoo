@@ -11,7 +11,6 @@
 # e2f <projects@e2f.com>, 2018
 # bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Fabien Pinckaers <fp@openerp.com>, 2018
-# Laura Piraux <lap@odoo.com>, 2018
 # 6534c450c77b2549e41c52e2051f5839, 2018
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2018
@@ -39,11 +38,13 @@
 # Herve GUERIN <herve.guerin@auguria.fr>, 2019
 # Florian Hatat, 2019
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
-# Cécile Collart <cco@odoo.com>, 2019
-# Jonathan <jcs@odoo.com>, 2019
 # Alexandra Jubert <aju@odoo.com>, 2020
 # Vincent Luba <vincent@biz-4-africa.com>, 2020
 # romrik_, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Jonathan <jcs@odoo.com>, 2020
+# Priscilla Sanchez <prs@odoo.com>, 2020
+# Laura Piraux <lap@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -51,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: romrik_, 2020\n"
+"Last-Translator: Laura Piraux <lap@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -614,7 +615,7 @@ msgstr "<span>Quantité</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>Référence</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2743,7 +2744,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
 msgid "Cash Box Out"
-msgstr ""
+msgstr "Sortie de caisse"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:212
@@ -4132,7 +4133,7 @@ msgstr "Imposte predefinite usate per l'acquisto del prodotto"
 #: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product."
-msgstr ""
+msgstr "Taxes utilisées par défaut lors de la vente du produit."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7535,7 +7536,7 @@ msgstr "Balance ouverte"
 #. module: account
 #: model:ir.model,name:account.model_account_financial_year_op
 msgid "Opening Balance of Financial Year"
-msgstr ""
+msgstr "Solde initial de l'année fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_date
@@ -9903,7 +9904,7 @@ msgstr "Groupe de taxe"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__force_tax_included
 #, python-format
 msgid "Tax Included in Price"
-msgstr ""
+msgstr "Taxe inclue dans le prix"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__tax_line_ids
@@ -10487,6 +10488,8 @@ msgid ""
 "The currency of the bank statement line must be different than the statement"
 " currency."
 msgstr ""
+"La devise de la ligne du relevé bancaire doit être différente de la devise "
+"du relevé."
 
 #. module: account
 #: code:addons/account/models/account.py:551
@@ -10564,6 +10567,7 @@ msgstr ""
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
+"La position fiscale détermine les taxes / comptes utilisés pour ce contact."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:59
@@ -12304,6 +12308,8 @@ msgid ""
 "You cannot register payments for customer invoices and credit notes at the "
 "same time."
 msgstr ""
+"Vous ne pouvez pas enregistrer des paiements sur les factures clients et des"
+" avoirs en même temps."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:96
@@ -12312,6 +12318,8 @@ msgid ""
 "You cannot register payments for vendor bills and supplier refunds at the "
 "same time."
 msgstr ""
+"Vous ne pouvez pas enregistrer des paiements sur les factures fournisseurs "
+"et des remboursements fournisseurs en même temps."
 
 #. module: account
 #: code:addons/account/models/account.py:644
@@ -12553,7 +12561,7 @@ msgstr "ont été réconciliés automatiquement."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
 msgid "invoice(s) that will not be sent"
-msgstr ""
+msgstr "facture(s) qui ne seront pas envoyées"
 
 #. module: account
 #. openerp-web
@@ -12608,7 +12616,7 @@ msgstr "secondes par transaction."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:319
 #, python-format
 msgid "statement lines"
-msgstr ""
+msgstr "Lignes de relevé"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

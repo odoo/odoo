@@ -37,6 +37,11 @@ class ProductTemplate(models.Model):
              'Delivered Quantity: Invoice quantities delivered to the customer.',
         default='order')
 
+    @api.onchange('sale_ok')
+    def _change_sale_ok(self):
+        if not self.sale_ok:
+            self.expense_policy = 'no'
+
     @api.multi
     def _compute_hide_expense_policy(self):
         hide_expense_policy = self.user_has_groups('!analytic.group_analytic_accounting,!project.group_project_user,!hr_expense.group_hr_expense_user')

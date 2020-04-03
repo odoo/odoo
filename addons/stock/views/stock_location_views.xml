@@ -72,7 +72,7 @@
         <field name="model">stock.location</field>
         <field name="arch" type="xml">
             <search string="Stock Locations">
-                <field name="name" string="Stock Locations"/>
+                <field name="complete_name" string="Stock Locations"/>
                 <filter name="in_location" string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
                 <filter name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
                 <filter name="supplier" string="Vendor" domain="[('usage', '=', 'supplier')]" help="Vendor Locations"/>

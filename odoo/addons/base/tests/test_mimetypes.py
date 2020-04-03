@@ -21,10 +21,6 @@ S8vVzNDLy9EVEQgU1ZHIDIwMDAxMTAyLy9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAwL0NSL
 VEQvc3ZnLTIwMDAxMTAyLmR0ZCI+Cgo8c3ZnIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPgogIDxnIHRyYW5zZm9ybT0idHJ
 hbnNsYXRlKDUwLDUwKSI+CiAgICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjUwIiBzdHlsZT0iZmlsbD
 pyZWQ7IiAvPgogIDwvZz4KCjwvc3ZnPgo="""
-# minimal zip file with an empty `t.txt` file
-ZIP = b"""UEsDBBQACAAIAGFva1AAAAAAAAAAAAAAAAAFACAAdC50eHRVVA0AB5bgaF6W4GheluBoXnV4CwABBOgDAAAE6AMAAA
-MAUEsHCAAAAAACAAAAAAAAAFBLAQIUAxQACAAIAGFva1AAAAAAAgAAAAAAAAAFACAAAAAAAAAAAACkgQAAAAB0LnR4dFVUDQAHlu
-BoXpbgaF6W4GhedXgLAAEE6AMAAAToAwAAUEsFBgAAAAABAAEAUwAAAFUAAAAAAA=="""
 
 
 class test_guess_mimetype(BaseCase):
@@ -72,11 +68,6 @@ class test_guess_mimetype(BaseCase):
         # Tests that whitespace padded SVG are not detected as SVG
         mimetype = guess_mimetype(b"   " + content, default='test')
         self.assertNotIn("svg", mimetype)
-
-    def test_mimetype_zip(self):
-        content = base64.b64decode(ZIP)
-        mimetype = guess_mimetype(content, default='test')
-        self.assertEqual(mimetype, 'application/zip')
 
 
 

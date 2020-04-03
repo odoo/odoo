@@ -100,7 +100,7 @@
                                             It should be different from the work address.
                                         </div>
                                         <field name="emergency_contact"/>
-                                        <field name="emergency_phone"/>
+                                        <field name="emergency_phone" class="o_force_ltr"/>
                                         <field name="km_home_work" groups="hr.group_hr_user"/>
                                     </group>
                                     <group string="Status">
@@ -159,7 +159,7 @@
             <field name="arch" type="xml">
                 <tree string="Employees" decoration-bf="message_needaction==True">
                     <field name="name"/>
-                    <field name="work_phone"/>
+                    <field name="work_phone" class="o_force_ltr"/>
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
@@ -296,7 +296,7 @@
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
-                    <field name="work_phone"/>
+                    <field name="work_phone" class="o_force_ltr"/>
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
