@@ -91,7 +91,7 @@
                         <div class="col-lg-8"><h1 t-esc="question.title"></h1></div>
                         <div class="col-lg-4 text-right d-flex flex-column justify-content-center">
                             <h1 t-if="question.is_time_limited" class="o_survey_timer_container">
-                                <span class="o_survey_timer"/>
+                                <span class="o_survey_timer d-inline-block"/>
                             </h1>
                             <div t-if="show_bar_chart or show_text_answers">
                                 <div class="progress" title="Attendees are answering the question...">

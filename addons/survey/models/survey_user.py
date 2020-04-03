@@ -91,7 +91,7 @@ class SurveyUserInput(models.Model):
                 start_time = user_input.start_datetime
                 time_limit = user_input.survey_id.time_limit
                 user_input.survey_time_limit_reached = user_input.survey_id.is_time_limited and \
-                    fields.Datetime.now() > start_time + relativedelta(minutes=time_limit)
+                    fields.Datetime.now() >= start_time + relativedelta(minutes=time_limit)
             else:
                 user_input.survey_time_limit_reached = False
 
@@ -107,7 +107,7 @@ class SurveyUserInput(models.Model):
                 start_time = user_input.survey_id.session_question_start_time
                 time_limit = user_input.survey_id.session_question_id.time_limit
                 user_input.question_time_limit_reached = user_input.survey_id.session_question_id.is_time_limited and \
-                    fields.Datetime.now() > start_time + relativedelta(seconds=time_limit)
+                    fields.Datetime.now() >= start_time + relativedelta(seconds=time_limit)
             else:
                 user_input.question_time_limit_reached = False
 
