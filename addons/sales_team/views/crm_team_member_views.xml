@@ -45,30 +45,30 @@
         <field name="model">crm.team.member</field>
         <field name="arch" type="xml">
             <kanban quick_create="false"
-                create="true"
-                sample="1">
+                group_create="0"
+                records_draggable="0"
+                sample="1"
+                default_group_by="crm_team_id"
+                class="o_crm_team_member_kanban">
                 <field name="user_id"/>
                 <field name="active"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <t t-set="active" t-value="record.active.raw_value"/>
-                        <t t-set="button_state" t-value="active ? 'o_assignation_button_active' : 'o_assignation_button_inactive'"/>
-                        <div class="o_assignation_kanban_record oe_kanban_global_click pb-0">
-                            <div class="o_kanban_record_top mb-0">
-                                <ul class="nav">
-                                    <li class="nav-item">
-                                        <a type="open" class="nav-link">
-                                            <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" class="o_kanban_image o_image_64_cover" alt="Avatar"/>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <ul class="nav o_assignation_body">
-                                    <li class="nav-item o_salesteam_member_name"><a type="open" class="nav-link"><b><field name="name"/></b></a></li>
-                                    <li class="nav-item o_salesteam_member_crm_team_id w-100"><a type="open" class="nav-link"><field name="crm_team_id"/></a></li>
-                                    <li t-attf-class="nav-item #{button_state}">
-                                        <a type="object" name="toggle_active" t-attf-class="nav-link fa fa-check-square" title="Toggle active"/>
-                                    </li>
-                                </ul>
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="ribbon ribbon-top-right" attrs="{'invisible': [('active', '=', True)]}">
+                                <span class="bg-error">Archived</span>
+                            </div>
+                            <div class="o_kanban_card_content d-flex">
+                                <div>
+                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" class="o_kanban_image o_image_64_cover" alt="Avatar"/>
+                                </div>
+                                <div class="oe_kanban_details d-flex flex-column ml-3">
+                                    <strong class="o_kanban_record_title oe_partner_heading"><field name="user_id"/></strong>
+                                    <a type="open" class="nav-link p-0"><field name="crm_team_id"/></a>
+                                    <div class="d-flex align-items-baseline text-break">
+                                        <i class="fa fa-envelope mr-1" role="img" aria-label="Email" title="Email"/><field name="email"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </t>
@@ -84,7 +84,7 @@
         <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <xpath expr="//li[hasclass('o_salesteam_member_crm_team_id')]" position="replace">
+            <xpath expr="//field[@name='crm_team_id']" position="replace">
             </xpath>
         </field>
     </record>
@@ -95,17 +95,32 @@
         <field name="arch" type="xml">
             <form string="Sales Men">
                 <field name="active" invisible="1"/>
+                <field name="user_in_teams_ids" invisible="1"/>
                 <sheet>
-                    <h1>
-                        <field name="user_id" domain="[('share', '=', False)]"/>
-                    </h1>
-                    <group>
-                        <field name="crm_team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" readonly="context.get('ro_team', False)"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="image_1920" widget='image' class="oe_avatar"
+                        attrs="{'invisible': [('user_id', '=', False)]}"
+                        options='{"preview_image": "image_128"}'/>
+                    <div class="oe_title">
+                        <label for="user_id" class="oe_edit_only"/>
+                        <h1 class="d-flex">
+                            <field name="user_id" class="flex-grow-1"
+                                options="{'no_quick_create': True}"/>
+                        </h1>
+                    </div>
+                    <group name="member_partner_info">
+                        <group name="group_owner">
+                            <field name="crm_team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                        </group>
+                        <group name="group_user">
+                            <field name="company_id" attrs="{'invisible': [('user_id', '=', False)]}"
+                                groups="base.group_multi_company"/>
+                            <field name="email" attrs="{'invisible': [('user_id', '=', False)]}"/>
+                            <field name="mobile" attrs="{'invisible': [('user_id', '=', False)]}"/>
+                            <field name="phone" attrs="{'invisible': [('user_id', '=', False)]}"/>
+                        </group>
                     </group>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
             </form>
         </field>
     </record>
@@ -117,8 +132,7 @@
         <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <field name="crm_team_id" position="replace"/>
-            <xpath expr="//div[hasclass('oe_chatter')]" position="replace"/>
+            <xpath expr="//group[@name='group_owner']" position="replace"/>
         </field>
     </record>
 
@@ -130,7 +144,7 @@
             <p class="o_view_nocontent_smiling_face">
                 Create a new salesman
             </p><p>
-                Link users to salesteam.
+                Link salespersons to sales teams.
             </p>
         </field>
     </record>
