@@ -151,6 +151,7 @@ var KanbanColumn = Widget.extend({
             this.$el.addClass('o_kanban_has_progressbar');
             this.progressBar = new KanbanColumnProgressBar(this, this.barOptions, this.data);
             defs.push(this.progressBar.appendTo(this.$header.find('.o_kanban_header_sticky')));
+            // defs.push(this.progressBar.appendTo(this.$header.find('.o_kanban_header')));
         }
 
         var title = this.folded ? this.title + ' (' + this.data.count + ')' : this.title;
@@ -180,7 +181,17 @@ var KanbanColumn = Widget.extend({
         if (this.quickCreateWidget) {
             this.quickCreateWidget.on_attach_callback();
         }
-        this.$header.css({ height: this.$header.find('.o_kanban_header_sticky').height() });
+        if (!this.folded) {
+            // need to set width to fixed header same as header container
+            this.$header.find('.o_kanban_header_sticky').css({
+                width: this.$header.width(),
+            });
+            // need to set height to header element as it's child is fixed position
+            // and fixed position element are out of DOM flow
+            this.$header.css({ height: this.$header.find('.o_kanban_header_sticky').height() });
+        } else {
+            this.$header.css({ height: this.$header.find('.o_kanban_header_sticky').height() });
+        }
     },
 
     //--------------------------------------------------------------------------
