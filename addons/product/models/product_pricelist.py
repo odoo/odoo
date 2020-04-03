@@ -131,8 +131,7 @@ class Pricelist(models.Model):
         """
         self.ensure_one()
         if not date:
-            date = self._context.get('date') or fields.Date.today()
-        date = fields.Date.to_date(date)  # boundary conditions differ if we have a datetime
+            date = self._context.get('date') or fields.Datetime.now()
         if not uom_id and self._context.get('uom'):
             uom_id = self._context['uom']
         if uom_id:
@@ -448,8 +447,10 @@ class PricelistItem(models.Model):
         readonly=True, related='pricelist_id.currency_id', store=True)
     active = fields.Boolean(
         readonly=True, related="pricelist_id.active", store=True)
-    date_start = fields.Date('Start Date', help="Starting date for the pricelist item validation")
-    date_end = fields.Date('End Date', help="Ending valid for the pricelist item validation")
+    date_start = fields.Datetime('Start Date', help="Starting datetime for the pricelist item validation\n"
+                                                "The displayed value depends on the timezone set in your preferences.")
+    date_end = fields.Datetime('End Date', help="Ending datetime for the pricelist item validation\n"
+                                                "The displayed value depends on the timezone set in your preferences.")
     compute_price = fields.Selection([
         ('fixed', 'Fixed Price'),
         ('percentage', 'Percentage (discount)'),
