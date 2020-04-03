@@ -290,8 +290,9 @@ class ProductTemplate(models.Model):
         pricelist_id_or_name = self.env.context.get('pricelist')
         if isinstance(pricelist_id_or_name, list):
             pricelist_id_or_name = pricelist_id_or_name[0]
-        elif isinstance(pricelist_id_or_name, str):
-            pricelist_name_search = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
+        if isinstance(pricelist_id_or_name, str):
+            pricelist_name_search = self.env['product.pricelist'].name_search(
+                pricelist_id_or_name, operator='=', limit=1)
             if pricelist_name_search:
                 pricelist = self.env['product.pricelist'].browse([pricelist_name_search[0][0]])
         elif isinstance(pricelist_id_or_name, int):
@@ -300,11 +301,10 @@ class ProductTemplate(models.Model):
         target_currency = pricelist.currency_id or self.env['res.currency'].browse(
             self.env.context.get('currency_id', None)
         )
-        uom_id = self.env.context.get('uom_id', False)
         return (
             pricelist,
             self.env.context.get('quantity', 1.0),
-            self.env['uom.uom'].browse(uom_id),
+            self.env['uom.uom'].browse(self.env.context.get('uom_id', False)),
             self.env.context.get('date', fields.Date.context_today(self)),
             target_currency,
         )

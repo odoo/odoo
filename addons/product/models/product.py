@@ -88,7 +88,7 @@ class ProductProduct(models.Model):
         'Price', compute='_compute_price',
         digits='Product Price', help="Used for display purposes"
         "takes into account contextual infos", prefetch=False)
-    # VFE TODO display_currency_id for the price depending on the context.
+    display_currency_id = fields.Many2one("res.currency", compute="_compute_price")
 
     default_code = fields.Char('Internal Reference', index=True)
     code = fields.Char('Reference', compute='_compute_product_code')
@@ -253,6 +253,7 @@ class ProductProduct(models.Model):
 
         for product in self:
             product.price = prices.get(product.id)
+        self.display_currency_id = currency or pricelist.currency_id
 
     @api.depends_context('partner_id')
     def _compute_product_code(self):
