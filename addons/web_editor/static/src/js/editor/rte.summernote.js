@@ -7,6 +7,7 @@ var core = require('web.core');
 const ColorpickerDialog = require('web.ColorpickerDialog');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 var mixins = require('web.mixins');
+const session = require('web.session');
 var fonts = require('wysiwyg.fonts');
 var rte = require('web_editor.rte');
 var ServicesMixin = require('web.ServicesMixin');
