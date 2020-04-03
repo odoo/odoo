@@ -606,6 +606,10 @@ class Users(models.Model):
     def _get_login_domain(self, login):
         return [('login', '=', login)]
 
+    @api.model
+    def _get_login_order(self):
+        return self._order
+
     @classmethod
     def _login(cls, db, login, password):
         if not password:
@@ -615,7 +619,7 @@ class Users(models.Model):
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
                 with self._assert_can_auth():
-                    user = self.search(self._get_login_domain(login))
+                    user = self.search(self._get_login_domain(login), order=self._get_login_order(), limit=1)
                     if not user:
                         raise AccessDenied()
                     user = user.sudo(user.id)
