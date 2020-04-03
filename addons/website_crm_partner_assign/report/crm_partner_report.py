@@ -54,5 +54,5 @@ class CrmPartnerReportAssign(models.Model):
                 FROM
                     res_partner p
                     left join account_invoice_report i
-                        on (i.partner_id=p.id and i.move_type in ('out_invoice','out_refund') and i.state in ('open','in_payment','paid'))
+                        on (i.partner_id=p.id and i.move_type in ('out_invoice','out_refund') and i.state='open')
             )""")
