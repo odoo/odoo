@@ -29,8 +29,8 @@ class TestSaleOrder(TestSaleCommon):
             'email': 'team0user@example.com',
             'login': 'team0user',
             'name': 'User in Team 0',
-            'sale_team_id': cls.crm_team0.id
         })
+        cls.crm_team0.sudo().write({'member_ids': [4, cls.user_in_team.id]})
         cls.user_not_in_team = cls.env['res.users'].sudo().create({
             'email': 'noteamuser@example.com',
             'login': 'noteamuser',

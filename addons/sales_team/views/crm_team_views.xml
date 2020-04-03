@@ -9,8 +9,9 @@
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field name="name"/>
                 <field name="user_id"/>
+                <field name="member_ids"/>
                 <group expand="0" string="Group By...">
-                    <filter string="Team Leader" name="team_leader" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Team Leader" name="team_leader" domain="[]" context="{'group_by': 'user_id'}"/>
                 </group>
             </search>
         </field>
@@ -27,7 +28,8 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Sales Team"/>
                         <h1>
-                            <field class="o_text_overflow" name="name" placeholder="Sales Team name..."/>
+                            <field name="name" placeholder="Customer Success"
+                                class="o_text_overflow"/>
                         </h1>
                         <div name="options_active" />
                     </div>
@@ -42,7 +44,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Assignment" name="assignment">
+                        <page string="Members" name="assignment">
                             <field name="crm_team_member_ids" mode="kanban"
                                 class="w-100"
                                 context="{
@@ -105,8 +107,9 @@
    <record id="crm_team_view_kanban_dashboard" model="ir.ui.view" >
         <field name="name">crm.team.view.kanban.dashboard</field>
         <field name="model">crm.team</field>
+        <field name="priority">10</field>
         <field name="arch" type="xml">
-            <kanban class="oe_background_grey o_kanban_dashboard o_salesteam_kanban" create="0" sample="1">
+            <kanban class="oe_background_grey o_kanban_dashboard o_crm_team_kanban" create="0" sample="1">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="member_ids"/>

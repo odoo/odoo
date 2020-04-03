@@ -12,15 +12,16 @@ class Team(models.Model):
     _inherit = 'crm.team.member'
 
     # assignment
-    team_user_domain = fields.Char('Domain', tracking=True)
-    maximum_user_leads = fields.Integer('Leads Per Month')
+    assignment_domain = fields.Char('Assignment Domain', tracking=True)
+    assignment_max = fields.Integer('Max Leads (last 30 days)')
     lead_month_count = fields.Integer(
-        'Assigned Leads', compute='_compute_lead_month_count',
+        'Leads (30 days)', compute='_compute_lead_month_count',
         help='Lead assigned to this member those last 30 days')
 
+    @api.depends('user_id', 'crm_team_id')
     def _compute_lead_month_count(self):
         for member in self:
-            if member.id:
+            if member.user_id.id and member.crm_team_id.id:
                 limit_date = fields.Datetime.now() - datetime.timedelta(days=30)
                 domain = [('user_id', '=', member.user_id.id),
                           ('team_id', '=', member.crm_team_id.id),
@@ -29,11 +30,11 @@ class Team(models.Model):
             else:
                 member.lead_month_count = 0
 
-    @api.constrains('team_user_domain')
-    def _constrains_team_user_domain(self):
+    @api.constrains('assignment_domain')
+    def _constrains_assignment_domain(self):
         for member in self:
             try:
-                domain = safe_eval.safe_eval(member.team_user_domain or '[]', LEAD_ASSIGN_EVAL_CONTEXT)
+                domain = safe_eval.safe_eval(member.assignment_domain or '[]', LEAD_ASSIGN_EVAL_CONTEXT)
                 self.env['crm.lead'].search(domain, limit=1)
             except Exception:
                 raise exceptions.UserError(_('Team membership assign domain is incorrectly formatted'))

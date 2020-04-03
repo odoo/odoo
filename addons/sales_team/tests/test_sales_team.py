@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sales_team.tests.common import TestSalesCommon
+from odoo.tests.common import users
 
 
 class TestDefaultTeam(TestSalesCommon):
@@ -47,6 +48,7 @@ class TestDefaultTeam(TestSalesCommon):
     def test_default_team_fallback(self):
         """ Test fallback: domain, order """
         self.sales_team_1.member_ids = [(5,)]
+        self.sales_team_1.flush()
 
         with self.with_user('user_sales_leads'):
             team = self.env['crm.team']._get_default_team_id()
