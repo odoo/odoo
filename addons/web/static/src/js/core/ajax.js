@@ -441,7 +441,7 @@ var loadAsset = (function () {
 
     var load = function loadAsset(xmlId, context) {
         if (cache[xmlId]) {
-            return Promise.resolve(cache[xmlId]);
+            return cache[xmlId];
         }
         context = _.extend({}, odoo.session_info.user_context, context);
         var params = {
@@ -454,9 +454,9 @@ var loadAsset = (function () {
             method: 'render_template',
             model: 'ir.ui.view',
         };
-        return rpc('/web/dataset/call_kw/ir.ui.view/render_template', params).then(function (xml) {
+        cache[xmlId] = rpc('/web/dataset/call_kw/ir.ui.view/render_template', params).then(function (xml) {
             var $xml = $(xml);
-            cache[xmlId] = {
+            return {
                 cssLibs: $xml.filter('link[href]:not([type="image/x-icon"])').map(function () {
                     return $(this).attr('href');
                 }).get(),
@@ -470,8 +470,8 @@ var loadAsset = (function () {
                     return $(this).html();
                 }).get(),
             };
-            return cache[xmlId];
         });
+        return cache[xmlId];
     };
 
     return load;
