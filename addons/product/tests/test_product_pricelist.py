@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+
 from odoo.tests.common import TransactionCase
 from odoo.tools import float_compare, test_reports
 
@@ -32,6 +34,12 @@ class TestProductPricelist(TransactionCase):
             'categ_id': self.category_5_id,
             'standard_price': 800.0,
         })
+        self.monitor = self.env['product.product'].create({
+            'name': 'Super nice monitor',
+            'categ_id': self.category_5_id,
+            'list_price': 1000.0,
+        })
+
         self.env['product.supplierinfo'].create([
             {
                 'name': self.res_partner_1.id,
@@ -51,6 +59,12 @@ class TestProductPricelist(TransactionCase):
                 'delay': 3,
                 'min_qty': 3,
                 'price': 785,
+            }, {
+                'name': self.res_partner_4.id,
+                'product_tmpl_id': self.monitor.product_tmpl_id.id,
+                'delay': 3,
+                'min_qty': 3,
+                'price': 100,
             }
         ])
         self.apple_in_ear_headphones = self.env['product.product'].create({
@@ -107,7 +121,16 @@ class TestProductPricelist(TransactionCase):
                 'compute_price': 'formula',
                 'price_discount': 30,
                 'base': 'list_price'
-            })]
+            }), (0, 0, {
+                 'name': 'Fixed on all products',
+                 'applied_on': '1_product',
+                 'product_tmpl_id': self.monitor.product_tmpl_id.id,
+                 'date_start': '2020-04-06 09:00:00',
+                 'date_end': '2020-04-09 12:00:00',
+                 'compute_price': 'formula',
+                 'price_discount': 50,
+                 'base': 'list_price'
+             })]
         })
 
     def test_10_calculation_price_of_products_pricelist(self):
@@ -160,3 +183,22 @@ class TestProductPricelist(TransactionCase):
         partner = self.res_partner_4.with_context(context)
         msg = "Wrong cost price: LCD Monitor if more than 3 Unit.should be 785 instead of %s" % ipad_mini._select_seller(partner_id=partner, quantity=3.0).price
         self.assertEqual(float_compare(ipad_mini._select_seller(partner_id=partner, quantity=3.0).price, 785, precision_digits=2), 0, msg)
+
+        # Check if the pricelist is applied at precise datetime
+        context.update({'quantity': 1, 'date': datetime.strptime('2020-04-05 08:00:00', '%Y-%m-%d %H:%M:%S')})
+        monitor = self.monitor.with_context(context)
+        partner = self.res_partner_4.with_context(context)
+        msg = "Wrong cost price: LCD Monitor. should be 1000 instead of %s" % monitor._select_seller(
+            partner_id=partner, quantity=1.0).price
+        self.assertEqual(
+            float_compare(monitor.price, monitor.lst_price, precision_digits=2), 0,
+            msg)
+        context.update({'quantity': 1, 'date': datetime.strptime('2020-04-06 10:00:00', '%Y-%m-%d %H:%M:%S')})
+        monitor = self.monitor.with_context(context)
+        msg = "Wrong cost price: LCD Monitor. should be 500 instead of %s" % monitor._select_seller(
+            partner_id=partner, quantity=1.0).price
+        self.assertEqual(
+            float_compare(monitor.price, monitor.lst_price/2, precision_digits=2), 0,
+            msg)
+
+
