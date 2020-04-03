@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
-from babel.dates import format_date
-from datetime import date, datetime
-from dateutil.relativedelta import relativedelta
 import json
 
+from babel.dates import format_date
+from datetime import date
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError
 from odoo.release import version
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
 
 class CrmTeam(models.Model):
@@ -38,31 +37,28 @@ class CrmTeam(models.Model):
     name = fields.Char('Sales Team', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=10)
     active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the Sales Team without removing it.")
-    company_id = fields.Many2one('res.company', string='Company',
-                                 default=lambda self: self.env.company, index=True)
+    company_id = fields.Many2one(
+        'res.company', string='Company', index=True,
+        default=lambda self: self.env.company)
     currency_id = fields.Many2one(
-        "res.currency", related='company_id.currency_id',
-        string="Currency", readonly=True)
+        "res.currency", string="Currency",
+        related='company_id.currency_id', readonly=True)
     user_id = fields.Many2one('res.users', string='Team Leader', check_company=True)
+    # memberships
     member_ids = fields.One2many(
-        'res.users', 'sale_team_id', string='Channel Members', check_company=True,
-        domain=[('share', '=', False)],
+        'res.users', 'sale_team_id', string='Channel Members',
+        check_company=True, domain=[('share', '=', False)],
         help="Add members to automatically assign their documents to this sales team. You can only be member of one team.")
+    # UX options
+    color = fields.Integer(string='Color Index', help="The color of the channel")
     favorite_user_ids = fields.Many2many(
         'res.users', 'team_favorite_user_rel', 'team_id', 'user_id',
-        string='Favorite Members',
-        default=_get_default_favorite_user_ids)
+        string='Favorite Members', default=_get_default_favorite_user_ids)
     is_favorite = fields.Boolean(
-        string='Show on dashboard',
-        compute='_compute_is_favorite', inverse='_inverse_is_favorite',
+        string='Show on dashboard', compute='_compute_is_favorite', inverse='_inverse_is_favorite',
         help="Favorite teams to display them in the dashboard and access them easily.")
-    color = fields.Integer(string='Color Index', help="The color of the channel")
     dashboard_button_name = fields.Char(string="Dashboard Button", compute='_compute_dashboard_button_name')
     dashboard_graph_data = fields.Text(compute='_compute_dashboard_graph')
-
-    def _compute_dashboard_graph(self):
-        for team in self:
-            team.dashboard_graph_data = json.dumps(team._get_graph())
 
     def _compute_is_favorite(self):
         for team in self:
@@ -74,6 +70,65 @@ class CrmTeam(models.Model):
         to_fav.write({'favorite_user_ids': [(4, self.env.uid)]})
         (sudoed_self - to_fav).write({'favorite_user_ids': [(3, self.env.uid)]})
         return True
+
+    def _compute_dashboard_button_name(self):
+        """ Sets the adequate dashboard button name depending on the Sales Team's options
+        """
+        for team in self:
+            team.dashboard_button_name = _("Big Pretty Button :)") # placeholder
+
+    def _compute_dashboard_graph(self):
+        for team in self:
+            team.dashboard_graph_data = json.dumps(team._get_dashboard_graph_data())
+
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
+
+    @api.model
+    def create(self, values):
+        team = super(CrmTeam, self.with_context(mail_create_nosubscribe=True)).create(values)
+        if values.get('member_ids'):
+            team._add_members_to_favorites()
+        return team
+
+    def write(self, values):
+        res = super(CrmTeam, self).write(values)
+        if values.get('member_ids'):
+            self._add_members_to_favorites()
+        return res
+
+    def unlink(self):
+        default_teams = [
+            self.env.ref('sales_team.salesteam_website_sales'),
+            self.env.ref('sales_team.pos_sales_team'),
+            self.env.ref('sales_team.ebay_sales_team')
+        ]
+        for team in self:
+            if team in default_teams:
+                raise UserError(_('Cannot delete default team "%s"' % (team.name)))
+        return super(CrmTeam,self).unlink()
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
+
+    def action_primary_channel_button(self):
+        """ Skeleton function to be overloaded It will return the adequate action
+        depending on the Sales Team's options. """
+        return False
+
+    # ------------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------------
+
+    def _add_members_to_favorites(self):
+        for team in self:
+            team.favorite_user_ids = [(4, member.id) for member in team.member_ids]
+
+    # ------------------------------------------------------------
+    # GRAPH
+    # ------------------------------------------------------------
 
     def _graph_get_model(self):
         """ skeleton function defined here because it'll be called by crm and/or sale
@@ -146,7 +201,7 @@ class CrmTeam(models.Model):
         self._cr.execute(query, [self.id, start_date, end_date] + where_clause_params)
         return self.env.cr.dictfetchall()
 
-    def _get_graph(self):
+    def _get_dashboard_graph_data(self):
         def get_week_name(start_date, locale):
             """ Generates a week name (string) from a datetime according to the locale:
                 E.g.: locale    start_date (datetime)      return string
@@ -183,43 +238,3 @@ class CrmTeam(models.Model):
         [graph_title, graph_key] = self._graph_title_and_key()
         color = '#875A7B' if '+e' in version else '#7c7bad'
         return [{'values': values, 'area': True, 'title': graph_title, 'key': graph_key, 'color': color}]
-
-    def _compute_dashboard_button_name(self):
-        """ Sets the adequate dashboard button name depending on the Sales Team's options
-        """
-        for team in self:
-            team.dashboard_button_name = _("Big Pretty Button :)") # placeholder
-
-    def action_primary_channel_button(self):
-        """ skeleton function to be overloaded
-            It will return the adequate action depending on the Sales Team's options
-        """
-        return False
-
-    @api.model
-    def create(self, values):
-        team = super(CrmTeam, self.with_context(mail_create_nosubscribe=True)).create(values)
-        if values.get('member_ids'):
-            team._add_members_to_favorites()
-        return team
-
-    def write(self, values):
-        res = super(CrmTeam, self).write(values)
-        if values.get('member_ids'):
-            self._add_members_to_favorites()
-        return res
-
-    def unlink(self):
-        default_teams = [
-            self.env.ref('sales_team.salesteam_website_sales'),
-            self.env.ref('sales_team.pos_sales_team'),
-            self.env.ref('sales_team.ebay_sales_team')
-        ]
-        for team in self:
-            if team in default_teams:
-                raise UserError(_('Cannot delete default team "%s"' % (team.name)))
-        return super(CrmTeam,self).unlink()
-
-    def _add_members_to_favorites(self):
-        for team in self:
-            team.favorite_user_ids = [(4, member.id) for member in team.member_ids]
