@@ -125,8 +125,7 @@ class Lead2OpportunityPartner(models.TransientModel):
     def _action_merge(self):
         to_merge = self.duplicated_lead_ids
         result_opportunity = to_merge.merge_opportunity(auto_unlink=False)
-        if not result_opportunity.active:
-            result_opportunity.write({'active': True, 'lost_reason': False})
+        result_opportunity.action_unarchive()
 
         if result_opportunity.type == "lead":
             self._convert_and_allocate(result_opportunity, [self.user_id.id], team_id=self.team_id.id)

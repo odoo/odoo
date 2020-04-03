@@ -511,12 +511,6 @@ actual arch.
             default = dict(default or {}, key=new_key)
         return super(View, self).copy(default)
 
-    def toggle(self):
-        """ Switches between enabled and disabled statuses
-        """
-        for view in self:
-            view.write({'active': not view.active})
-
     # default view selection
     @api.model
     def default_view(self, model, view_type):

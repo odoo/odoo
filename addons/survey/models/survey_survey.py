@@ -328,6 +328,12 @@ class Survey(models.Model):
         default = dict(default or {}, title=title)
         return super(Survey, self).copy_data(default)
 
+    def toggle_active(self):
+        super(Survey, self).toggle_active()
+        activated = self.filtered(lambda survey: survey.active)
+        activated.mapped('certification_badge_id').action_unarchive()
+        (self - activated).mapped('certification_badge_id').action_archive()
+
     # ------------------------------------------------------------
     # ANSWER MANAGEMENT
     # ------------------------------------------------------------
@@ -946,6 +952,7 @@ class Survey(models.Model):
     # ------------------------------------------------------------
     # GAMIFICATION / BADGES
     # ------------------------------------------------------------
+
     def _prepare_challenge_category(self):
         return 'certification'
 
@@ -983,9 +990,8 @@ class Survey(models.Model):
     def _handle_certification_badges(self, vals):
         if vals.get('certification_give_badge'):
             # If badge already set on records, reactivate the ones that are not active.
-            surveys_with_badge = self.filtered(lambda survey: survey.certification_badge_id
-                                                                 and not survey.certification_badge_id.active)
-            surveys_with_badge.mapped('certification_badge_id').write({'active': True})
+            surveys_with_badge = self.filtered(lambda survey: survey.certification_badge_id and not survey.certification_badge_id.active)
+            surveys_with_badge.mapped('certification_badge_id').action_unarchive()
             # (re-)create challenge and goal
             for survey in self:
                 survey._create_certification_badge_trigger()
@@ -994,7 +1000,7 @@ class Survey(models.Model):
             badges = self.mapped('certification_badge_id')
             challenges_to_delete = self.env['gamification.challenge'].search([('reward_id', 'in', badges.ids)])
             goals_to_delete = challenges_to_delete.mapped('line_ids').mapped('definition_id')
-            badges.write({'active': False})
+            badges.action_archive()
             # delete all challenges and goals because not needed anymore (challenge lines are deleted in cascade)
             challenges_to_delete.unlink()
             goals_to_delete.unlink()
