@@ -11,7 +11,7 @@
                 <header>
                     <button string="Configure Variants" type="action"
                         name="%(product_attribute_value_action)d"
-                        attrs="{'invisible': [('attribute_line_ids', '&lt;=', 0)]}"
+                        attrs="{'invisible': ['|', ('attribute_line_ids', '&lt;=', 0), ('is_product_variant', '=', True)]}"
                         groups="product.group_product_variant"/>
                 </header>
                 <sheet>
