@@ -980,7 +980,7 @@ class AccountJournal(models.Model):
             draft_moves = self.env['account.move'].search([('journal_id', 'in', self.ids), ('state', '=', 'draft')])
             pending_payments = draft_moves.mapped('line_ids.payment_id')
             pending_payments.mapped('move_line_ids.move_id').post()
-            pending_payments.mapped('reconciled_invoice_ids').filtered(lambda x: x.state == 'in_payment').write({'state': 'paid'})
+            pending_payments.mapped('reconciled_invoice_ids').filtered(lambda x: x.invoice_payment_state == 'in_payment').write({'invoice_payment_state': 'paid'})
         for record in self:
             if record.restrict_mode_hash_table and not record.secure_sequence_id:
                 record._create_secure_sequence(['secure_sequence_id'])
@@ -1357,9 +1357,9 @@ class AccountTax(models.Model):
             JOIN account_tax tax ON tax.id = line.tax_line_id
             WHERE line.tax_line_id IN %s
             AND line.company_id != tax.company_id
-            
+
             UNION ALL
-            
+
             SELECT line.id
             FROM account_move_line_account_tax_rel tax_rel
             JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
