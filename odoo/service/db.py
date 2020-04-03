@@ -115,7 +115,7 @@ def _create_empty_database(name):
         try:
             db = odoo.sql_db.db_connect(name)
             with closing(db.cursor()) as cr:
-                cr.execute("CREATE EXTENSION unaccent")
+                cr.execute("CREATE EXTENSION IF NOT EXISTS unaccent")
                 cr.commit()
         except psycopg2.Error:
             pass
