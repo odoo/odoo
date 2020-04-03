@@ -17,6 +17,7 @@ class StockMoveLine(models.Model):
         help="Informative, not used in matching")
     done_move = fields.Boolean('Move Done', related='move_id.is_done', readonly=False, store=True)  # TDE FIXME: naming
 
+    @api.model_create_multi
     def create(self, values):
         res = super(StockMoveLine, self).create(values)
         for line in res:
