@@ -47,16 +47,10 @@ class Team(models.Model):
         for team in self:
             team.lead_unassigned_count = counts.get(team.id, 0)
 
+    @api.depends('crm_team_member_ids.lead_month_count')
     def _compute_lead_all_assigned_month_count(self):
-        limit_date = datetime.datetime.now() - datetime.timedelta(days=30)
-        leads_data = self.env['crm.lead'].read_group([
-            ('team_id', 'in', self.ids),
-            ('date_open', '>=', fields.Datetime.to_string(limit_date)),
-            ('user_id', '!=', False),
-        ], ['team_id'], ['team_id'])
-        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in leads_data}
         for team in self:
-            team.lead_all_assigned_month_count = counts.get(team.id, 0)
+            team.lead_all_assigned_month_count = sum(s.lead_month_count for s in team.crm_team_member_ids)
 
     def _compute_opportunities_data(self):
         opportunity_data = self.env['crm.lead'].read_group([
