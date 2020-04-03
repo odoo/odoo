@@ -13,12 +13,21 @@ from odoo.tools import mute_logger
 
 class TestEventData(TestEventCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super(TestEventData, cls).setUpClass()
+        cls.patcher = patch('odoo.addons.event.models.event_event.fields.Datetime', wraps=FieldsDatetime)
+        cls.mock_datetime = cls.patcher.start()
+        cls.mock_datetime.now.return_value = datetime(2020, 1, 31, 10, 0, 0)
+        cls.addClassCleanup(cls.patcher.stop)
+
+        cls.event_0.write({
+            'date_begin': datetime(2020, 2, 1, 8, 30, 0),
+            'date_end': datetime(2020, 2, 4, 18, 45, 0),
+        })
+
     @users('user_eventmanager')
     def test_event_date_computation(self):
-        self.patcher = patch('odoo.addons.event.models.event_event.fields.Datetime', wraps=FieldsDatetime)
-        self.mock_datetime = self.patcher.start()
-        self.mock_datetime.now.return_value = datetime(2020, 1, 31, 8, 0, 0)
-
         event = self.event_0.with_user(self.env.user)
         event.write({
             'registration_ids': [(0, 0, {'partner_id': self.customer.id, 'name': 'test_reg'})],
@@ -40,14 +49,25 @@ class TestEventData(TestEventCommon):
         event.date_begin = datetime(2020, 3, 1, 10, 0, 0)
         self.assertEqual(registration.get_date_range_str(), u'on Mar 1, 2020, 11:00:00 AM')
 
+        # Is actually 8:30 to 20:00 in Mexico
         event.write({
-            'date_begin': '2019-11-09 14:30:00',
-            'date_end': '2019-11-10 02:00:00',
+            'date_begin': datetime(2020, 1, 31, 14, 30, 0),
+            'date_end': datetime(2020, 2, 1, 2, 0, 0),
             'date_tz': 'Mexico/General'
         })
         self.assertTrue(event.is_one_day)
 
-        self.patcher.stop()
+    @users('user_eventmanager')
+    def test_event_date_timezone(self):
+        event = self.event_0.with_user(self.env.user)
+        # Is actually 8:30 to 20:00 in Mexico
+        event.write({
+            'date_begin': datetime(2020, 1, 31, 14, 30, 0),
+            'date_end': datetime(2020, 2, 1, 2, 0, 0),
+            'date_tz': 'Mexico/General'
+        })
+        self.assertTrue(event.is_one_day)
+        self.assertFalse(event.is_ongoing)
 
     @users('user_eventmanager')
     def test_event_fields(self):
@@ -137,6 +157,14 @@ class TestEventData(TestEventCommon):
     def test_event_registrable(self):
         """Test if `_compute_event_registrations_open` works properly."""
         event = self.event_0.with_user(self.env.user)
+        event.write({
+            'date_begin': datetime(2020, 1, 30, 8, 0, 0),
+            'date_end': datetime(2020, 1, 31, 8, 0, 0),
+        })
+        self.assertFalse(event.event_registrations_open)
+        event.write({
+            'date_end': datetime(2020, 2, 4, 8, 0, 0),
+        })
         self.assertTrue(event.event_registrations_open)
 
         # ticket without dates boundaries -> ok
@@ -148,8 +176,8 @@ class TestEventData(TestEventCommon):
 
         # even with valid tickets, date limits registrations
         event.write({
-            'date_begin': datetime.now() - timedelta(days=3),
-            'date_end': datetime.now() - timedelta(days=1),
+            'date_begin': datetime(2020, 1, 28, 15, 0, 0),
+            'date_end': datetime(2020, 1, 30, 15, 0, 0),
         })
         self.assertFalse(event.event_registrations_open)
 
@@ -160,7 +188,7 @@ class TestEventData(TestEventCommon):
         })
         registration.action_confirm()
         event.write({
-            'date_end': datetime.now() + timedelta(days=3),
+            'date_end': datetime(2020, 2, 1, 15, 0, 0),
             'seats_max': 1,
             'seats_limited': True,
         })
@@ -173,45 +201,39 @@ class TestEventData(TestEventCommon):
         self.assertTrue(event.event_registrations_open)
 
         # but tickets are expired
-        ticket.write({'end_sale_date': datetime.now() - timedelta(days=2)})
+        ticket.write({'end_sale_date': datetime(2020, 1, 30, 15, 0, 0)})
         self.assertTrue(ticket.is_expired)
         self.assertFalse(event.event_registrations_open)
 
     @users('user_eventmanager')
     def test_event_ongoing(self):
-        self.patcher = patch('odoo.addons.event.models.event_event.fields.Datetime', wraps=FieldsDatetime)
-        self.mock_datetime = self.patcher.start()
-        self.mock_datetime.now.return_value = datetime(2020, 1, 10, 8, 0, 0)
-
         event_1 = self.env['event.event'].create({
             'name': 'Test Event 1',
-            'date_begin': datetime(2020, 1, 10, 8, 0, 0),
-            'date_end': datetime(2020, 1, 13, 18, 0, 0),
+            'date_begin': datetime(2020, 1, 25, 8, 0, 0),
+            'date_end': datetime(2020, 2, 1, 18, 0, 0),
         })
         self.assertTrue(event_1.is_ongoing)
         ongoing_event_ids = self.env['event.event']._search([('is_ongoing', '=', True)])
         self.assertIn(event_1.id, ongoing_event_ids)
 
-        event_1.update({'date_begin': datetime(2020, 1, 10, 9, 0, 0)})
+        event_1.update({'date_begin': datetime(2020, 2, 1, 9, 0, 0)})
         self.assertFalse(event_1.is_ongoing)
         ongoing_event_ids = self.env['event.event']._search([('is_ongoing', '=', True)])
         self.assertNotIn(event_1.id, ongoing_event_ids)
 
         event_2 = self.env['event.event'].create({
             'name': 'Test Event 2',
-            'date_begin': datetime(2020, 1, 7, 8, 0, 0),
-            'date_end': datetime(2020, 1, 10, 8, 0, 0),
+            'date_begin': datetime(2020, 1, 25, 8, 0, 0),
+            'date_end': datetime(2020, 1, 28, 8, 0, 0),
         })
         self.assertFalse(event_2.is_ongoing)
         finished_or_upcoming_event_ids = self.env['event.event']._search([('is_ongoing', '=', False)])
         self.assertIn(event_2.id, finished_or_upcoming_event_ids)
 
-        event_2.update({'date_end': datetime(2020, 1, 10, 8, 0, 1)})
+        event_2.update({'date_end': datetime(2020, 2, 2, 8, 0, 1)})
         self.assertTrue(event_2.is_ongoing)
         finished_or_upcoming_event_ids = self.env['event.event']._search([('is_ongoing', '=', False)])
         self.assertNotIn(event_2.id, finished_or_upcoming_event_ids)
-
-        self.patcher.stop()
 
 
 class TestEventTicketData(TestEventCommon):
