@@ -37,7 +37,7 @@ class EventType(models.Model):
     has_seats_limitation = fields.Boolean('Limited Seats')
     seats_max = fields.Integer(
         'Maximum Registrations', compute='_compute_default_registration',
-        copy=True, readonly=False, store=True,
+        readonly=False, store=True,
         help="It will select this default maximum value when you choose this event")
     auto_confirm = fields.Boolean(
         'Automatically Confirm Registrations', default=True,
@@ -90,6 +90,7 @@ class EventType(models.Model):
             if not template.has_seats_limitation:
                 template.seats_max = 0
 
+
 class EventEvent(models.Model):
     """Event"""
     _name = 'event.event'
@@ -121,7 +122,8 @@ class EventEvent(models.Model):
     event_mail_ids = fields.One2many(
         'event.mail', 'event_id', string='Mail Schedule', copy=True,
         compute='_compute_from_event_type', readonly=False, store=True)
-    tag_ids = fields.Many2many('event.tag', string="Tags", readonly=False,
+    tag_ids = fields.Many2many(
+        'event.tag', string="Tags", readonly=False,
         copy=True, store=True, compute="_compute_from_event_type")
     # Kanban fields
     kanban_state = fields.Selection([('normal', 'In Progress'), ('done', 'Done'), ('blocked', 'Blocked')], default='normal')
@@ -137,10 +139,10 @@ class EventEvent(models.Model):
     # Seats and computation
     seats_max = fields.Integer(
         string='Maximum Attendees Number',
-        compute='_compute_from_event_type', copy=True, readonly=False, store=True,
+        compute='_compute_from_event_type', readonly=False, store=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
     seats_limited = fields.Boolean('Maximum Attendees', required=True, compute='_compute_seats_limited',
-                                   copy=True, readonly=False, store=True)
+                                   readonly=False, store=True)
     seats_reserved = fields.Integer(
         string='Reserved Seats',
         store=True, readonly=True, compute='_compute_seats')
@@ -158,25 +160,31 @@ class EventEvent(models.Model):
         compute_sudo=True, readonly=True, compute='_compute_seats')
     # Registration fields
     auto_confirm = fields.Boolean(
-        string='Autoconfirmation',
-        compute='_compute_from_event_type', copy=True, readonly=False, store=True,
-        help = 'Autoconfirm Registrations. Registrations will automatically be confirmed upon creation.')
+        string='Autoconfirmation', compute='_compute_from_event_type', readonly=False, store=True,
+        help='Autoconfirm Registrations. Registrations will automatically be confirmed upon creation.')
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
-    event_registrations_open = fields.Boolean('Registration open', compute='_compute_event_registrations_open')
     event_ticket_ids = fields.One2many(
         'event.event.ticket', 'event_id', string='Event Ticket', copy=True,
         compute='_compute_from_event_type', readonly=False, store=True)
+    event_registrations_open = fields.Boolean(
+        'Registration open', compute='_compute_event_registrations_open', compute_sudo=True,
+        help='Registrations are open if event is not ended, seats are available on event and if tickets are sellable if ticketing is used.')
+    event_registrations_sold_out = fields.Boolean(
+        'Sold Out', compute='_compute_event_registrations_sold_out', compute_sudo=True,
+        help='Event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out event is sold out.')
+    start_sale_date = fields.Date(
+        'Start sale date', compute='_compute_start_sale_date',
+        help='If ticketing is used, this is the lowest starting sale date of tickets.')
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
-        compute='_compute_date_tz', copy=True, readonly=False, store=True)
+        compute='_compute_date_tz', readonly=False, store=True)
     date_begin = fields.Datetime(string='Start Date', required=True, tracking=True)
     date_end = fields.Datetime(string='End Date', required=True, tracking=True)
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
-    start_sale_date = fields.Date('Start sale date', compute='_compute_start_sale_date')
     # Location and communication
     address_id = fields.Many2one(
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
@@ -190,6 +198,16 @@ class EventEvent(models.Model):
     badge_innerleft = fields.Html(string='Badge Inner Left')
     badge_innerright = fields.Html(string='Badge Inner Right')
     event_logo = fields.Html(string='Event Logo')
+
+    @api.depends('stage_id', 'kanban_state')
+    def _compute_kanban_state_label(self):
+        for event in self:
+            if event.kanban_state == 'normal':
+                event.kanban_state_label = event.stage_id.legend_normal
+            elif event.kanban_state == 'blocked':
+                event.kanban_state_label = event.stage_id.legend_blocked
+            else:
+                event.kanban_state_label = event.stage_id.legend_done
 
     @api.depends('seats_max', 'registration_ids.state')
     def _compute_seats(self):
@@ -225,22 +243,44 @@ class EventEvent(models.Model):
             seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
             event.seats_expected = seats_expected
 
-    @api.depends('date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available')
+    @api.depends('date_tz', 'start_sale_date', 'date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available')
     def _compute_event_registrations_open(self):
+        """ Compute whether people may take registrations for this event
+
+          * event.date_end -> if event is done, registrations are not open anymore;
+          * event.start_sale_date -> lowest start date of tickets (if any; start_sale_date
+            is False if no ticket are defined, see _compute_start_sale_date);
+          * any ticket is available for sale (seats available) if any;
+          * seats are unlimited or seats are available;
+        """
         for event in self:
-            event.event_registrations_open = event.date_end and (event.date_end > fields.Datetime.now()) and \
-                (event.seats_available or not event.seats_limited) and \
+            event = event._set_tz_context()
+            current_datetime = fields.Datetime.context_timestamp(event, fields.Datetime.now())
+            date_end_tz = event.date_end.astimezone(pytz.timezone(event.date_tz or 'UTC')) if event.date_end else False
+            event.event_registrations_open = (event.start_sale_date <= current_datetime.date() if event.start_sale_date else True) and \
+                (date_end_tz >= current_datetime if date_end_tz else True) and \
+                (not event.seats_limited or event.seats_available) and \
                 (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
 
-    @api.depends('stage_id', 'kanban_state')
-    def _compute_kanban_state_label(self):
+    @api.depends('event_ticket_ids.start_sale_date')
+    def _compute_start_sale_date(self):
+        """ Compute the start sale date of an event. Currently lowest starting sale
+        date of tickets if they are used, of False. """
         for event in self:
-            if event.kanban_state == 'normal':
-                event.kanban_state_label = event.stage_id.legend_normal
-            elif event.kanban_state == 'blocked':
-                event.kanban_state_label = event.stage_id.legend_blocked
+            start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date]
+            event.start_sale_date = min(start_dates) if start_dates else False
+
+    @api.depends('event_ticket_ids.sale_available')
+    def _compute_event_registrations_sold_out(self):
+        for event in self:
+            if event.seats_limited and not event.seats_available:
+                event.event_registrations_sold_out = True
+            elif event.event_ticket_ids:
+                event.event_registrations_sold_out = not any(
+                    ticket.seats_available > 0 if ticket.seats_limited else True for ticket in event.event_ticket_ids
+                )
             else:
-                event.kanban_state_label = event.stage_id.legend_done
+                event.event_registrations_sold_out = False
 
     @api.depends('date_tz', 'date_begin')
     def _compute_date_begin_tz(self):
@@ -284,16 +324,10 @@ class EventEvent(models.Model):
         for event in self:
             # Need to localize because it could begin late and finish early in
             # another timezone
-            event = event.with_context(tz=event.date_tz)
+            event = event._set_tz_context()
             begin_tz = fields.Datetime.context_timestamp(event, event.date_begin)
             end_tz = fields.Datetime.context_timestamp(event, event.date_end)
             event.is_one_day = (begin_tz.date() == end_tz.date())
-
-    @api.depends('event_ticket_ids.start_sale_date')
-    def _compute_start_sale_date(self):
-        for event in self:
-            start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date]
-            event.start_sale_date = min(start_dates) if start_dates else False
 
     @api.depends('event_type_id')
     def _compute_date_tz(self):
@@ -423,6 +457,10 @@ class EventEvent(models.Model):
             return dict((fname, cache_event[fname]) for fname in missing_fields)
         else:
             return {}
+
+    def _set_tz_context(self):
+        self.ensure_one()
+        return self.with_context(tz=self.date_tz or 'UTC')
 
     def action_set_done(self):
         """
