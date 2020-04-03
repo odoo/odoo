@@ -103,7 +103,7 @@ class HolidaysRequest(models.Model):
     name = fields.Char('Description')
     state = fields.Selection([
         ('draft', 'To Submit'),
-        ('cancel', 'Cancelled'),
+        ('cancel', 'Cancelled'),  # YTI This state seems to be unused. To remove
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
         ('validate1', 'Second Approval'),
@@ -344,9 +344,9 @@ class HolidaysRequest(models.Model):
 
         tz = self.env.user.tz if self.env.user.tz and not self.request_unit_custom else 'UTC'  # custom -> already in UTC
 
-        self.date_from = timezone(tz).localize(datetime.combine(compensated_request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
-        self.date_to = timezone(tz).localize(datetime.combine(compensated_request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
-
+        date_from = timezone(tz).localize(datetime.combine(compensated_request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
+        date_to = timezone(tz).localize(datetime.combine(compensated_request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
+        self.update({'date_from': date_from, 'date_to': date_to})
         self._onchange_leave_dates()
 
     @api.onchange('request_unit_half')
@@ -891,10 +891,79 @@ class HolidaysRequest(models.Model):
             else:
                 employees = holiday.department_id.member_ids
 
-            if self.env['hr.leave'].search_count([('date_from', '<=', holiday.date_to), ('date_to', '>', holiday.date_from),
-                               ('state', 'not in', ['cancel', 'refuse']), ('holiday_type', '=', 'employee'),
-                               ('employee_id', 'in', employees.ids)]):
-                raise ValidationError(_('You can not have 2 leaves that overlaps on the same day.'))
+            conflicting_leaves = self.env['hr.leave'].with_context(
+                tracking_disable=True,
+                mail_activity_automation_skip=True,
+                leave_fast_create=True
+            ).search([
+                ('date_from', '<=', holiday.date_to),
+                ('date_to', '>', holiday.date_from),
+                ('state', 'not in', ['cancel', 'refuse']),
+                ('holiday_type', '=', 'employee'),
+                ('employee_id', 'in', employees.ids)])
+
+            if conflicting_leaves:
+                # YTI: More complex use cases could be managed in master
+                if holiday.leave_type_request_unit != 'day' or any(l.leave_type_request_unit == 'hour' for l in conflicting_leaves):
+                    raise ValidationError(_('You can not have 2 leaves that overlaps on the same day.'))
+
+                for conflicting_leave in conflicting_leaves:
+                    if conflicting_leave.leave_type_request_unit == 'half_day' and conflicting_leave.request_unit_half:
+                        conflicting_leave.action_refuse()
+                        continue
+                    # Leaves in days
+                    split_leaves = self.env['hr.leave']
+                    target_state = conflicting_leave.state
+                    conflicting_leave.action_refuse()
+                    if conflicting_leave.date_from < holiday.date_from:
+                        before_leave_vals = conflicting_leave.copy_data({
+                            'date_from': conflicting_leave.date_from.date(),
+                            'date_to': holiday.date_from.date() + timedelta(days=-1),
+                        })[0]
+                        before_leave = self.env['hr.leave'].new(before_leave_vals)
+                        before_leave._onchange_request_parameters()
+                        # Could happen for part-time contract, that time off is not necessary
+                        # anymore.
+                        # Imagine you work on monday-wednesday-friday only.
+                        # You take a time off on friday.
+                        # We create a company time off on friday.
+                        # By looking at the last attendance before the company time off
+                        # start date to compute the date_to, you would have a date_from > date_to.
+                        # Just don't create the leave at that time. That's the reason why we use
+                        # new instead of create. As the leave is not actually created yet, the sql
+                        # constraint didn't check date_from < date_to yet.
+                        if before_leave.date_from < before_leave.date_to:
+                            split_leaves |= self.env['hr.leave'].with_context(
+                                tracking_disable=True,
+                                mail_activity_automation_skip=True,
+                                leave_fast_create=True
+                            ).create(before_leave._convert_to_write(before_leave._cache))
+                    if conflicting_leave.date_to > holiday.date_to:
+                        after_leave_vals = conflicting_leave.copy_data({
+                            'date_from': holiday.date_to.date() + timedelta(days=1),
+                            'date_to': conflicting_leave.date_to.date(),
+                        })[0]
+                        after_leave = self.env['hr.leave'].new(after_leave_vals)
+                        after_leave._onchange_request_parameters()
+                        # Could happen for part-time contract, that time off is not necessary
+                        # anymore.
+                        if after_leave.date_from < after_leave.date_to:
+                            split_leaves |= self.env['hr.leave'].with_context(
+                                tracking_disable=True,
+                                mail_activity_automation_skip=True,
+                                leave_fast_create=True
+                            ).create(after_leave._convert_to_write(after_leave._cache))
+                    for split_leave in split_leaves:
+                        if target_state == 'draft':
+                            continue
+                        if target_state == 'confirm':
+                            split_leave.action_confirm()
+                        elif target_state == 'validate1':
+                            split_leave.action_confirm()
+                            split_leave.action_approve()
+                        elif target_state == 'validate':
+                            split_leave.action_confirm()
+                            split_leave.action_validate()
 
             values = [holiday._prepare_holiday_values(employee) for employee in employees]
             leaves = self.env['hr.leave'].with_context(
@@ -914,7 +983,7 @@ class HolidaysRequest(models.Model):
 
     def action_refuse(self):
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-        if any(holiday.state not in ['confirm', 'validate', 'validate1'] for holiday in self):
+        if any(holiday.state not in ['draft', 'confirm', 'validate', 'validate1'] for holiday in self):
             raise UserError(_('Time off request must be confirmed or validated in order to refuse it.'))
 
         validated_holidays = self.filtered(lambda hol: hol.state == 'validate1')
