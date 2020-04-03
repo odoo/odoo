@@ -11,11 +11,12 @@ const Menu = require('web.Menu');
 const RainbowMan = require('web.RainbowMan');
 const LegacyDialog = require('web.Dialog');
 const WarningDialog = require('web.CrashManager').WarningDialog;
+const KeyboardNavigation = require('web.KeyboardNavigation');
 
-const { Component, hooks } = owl;
+const { hooks } = owl;
 const { useRef, useExternalListener } = hooks;
 
-class WebClient extends Component {
+class WebClient extends KeyboardNavigation {
     constructor() {
         super();
         this.LoadingWidget = LoadingWidget;
