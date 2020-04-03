@@ -285,6 +285,8 @@ class ProductTemplate(models.Model):
             template.price = prices.get(template.id, 0.0)
 
     def _get_context_values(self):
+        # VFE do we really want to keep this fucking feature?
+        # Very hacky, very ugly and doesn't seem to work in v13 or master...
         pricelist_id = self.env.context.get('pricelist_id', False)
         pricelist = self.env['product.pricelist'].browse(pricelist_id)
         pricelist_id_or_name = self.env.context.get('pricelist')
