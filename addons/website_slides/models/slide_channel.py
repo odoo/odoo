@@ -87,7 +87,7 @@ class Channel(models.Model):
 
     # description
     name = fields.Char('Name', translate=True, required=True)
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, tracking=100)
     description = fields.Text('Description', translate=True, help="The description that is displayed on top of the course page, just below the title")
     description_short = fields.Text('Short Description', translate=True, help="The description that is displayed on the course card")
     description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
@@ -391,12 +391,20 @@ class Channel(models.Model):
 
         if vals.get('user_id'):
             self._action_add_members(self.env['res.users'].sudo().browse(vals['user_id']).partner_id)
-        if 'active' in vals:
-            # archiving/unarchiving a channel does it on its slides, too
-            self.with_context(active_test=False).mapped('slide_ids').write({'active': vals['active']})
         if 'enroll_group_ids' in vals:
             self._add_groups_members()
 
+        return res
+
+    def toggle_active(self):
+        # archiving/unarchiving a channel does it on its slides, too
+        to_archive = self.filtered(lambda channel: channel.active)
+        to_activate = self.filtered(lambda channel: not channel.active)
+        res = super(Channel, self).toggle_active()
+        if to_archive:
+            to_archive.mapped('slide_ids').action_archive()
+        if to_activate:
+            to_activate.with_context(active_test=False).mapped('slide_ids').action_unarchive()
         return res
 
     @api.returns('mail.message', lambda value: value.id)
