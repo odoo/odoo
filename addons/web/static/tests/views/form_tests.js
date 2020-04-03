@@ -4717,6 +4717,41 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('oe_read_only and oe_edit_only classNames on fields inside groups', async function (assert) {
+        assert.expect(10);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="foo" class="oe_read_only"/>
+                        <field name="bar" class="oe_edit_only"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_readonly',
+            'form should be in readonly mode');
+        assert.isVisible(form.$('.o_field_widget[name=foo]'));
+        assert.isVisible(form.$('label:contains(Foo)'));
+        assert.isNotVisible(form.$('.o_field_widget[name=bar]'));
+        assert.isNotVisible(form.$('label:contains(Bar)'));
+
+        await testUtils.form.clickEdit(form);
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable',
+            'form should be in readonly mode');
+        assert.isNotVisible(form.$('.o_field_widget[name=foo]'));
+        assert.isNotVisible(form.$('label:contains(Foo)'));
+        assert.isVisible(form.$('.o_field_widget[name=bar]'));
+        assert.isVisible(form.$('label:contains(Bar)'));
+
+        form.destroy();
+    });
+
     QUnit.test('oe_read_only className is handled in list views', async function (assert) {
         assert.expect(7);
 
