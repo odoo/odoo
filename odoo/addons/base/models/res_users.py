@@ -357,8 +357,10 @@ class Users(models.Model):
 
     @api.depends('groups_id')
     def _compute_share(self):
-        for user in self:
-            user.share = not user.has_group('base.group_user')
+        user_group_id = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')
+        internal_users = self.filtered_domain([('groups_id', 'in', [user_group_id])])
+        internal_users.share = False
+        (self - internal_users).share = True
 
     def _compute_companies_count(self):
         self.companies_count = self.env['res.company'].sudo().search_count([])
