@@ -4,7 +4,7 @@
 import json
 import logging
 import werkzeug
-from datetime import datetime
+from datetime import datetime, timedelta
 from math import ceil
 
 from odoo import fields, http, SUPERUSER_ID
@@ -44,7 +44,9 @@ class Survey(http.Controller):
         deadline = user_input.deadline
         if deadline:
             dt_deadline = fields.Datetime.from_string(deadline)
-            dt_now = datetime.now()
+            if user_input.appraisal_id:
+                dt_deadline = dt_deadline + timedelta(days=1, seconds=-1)
+            dt_now = fields.Datetime.context_timestamp(user_input,datetime.now()).replace(tzinfo=None)
             if dt_now > dt_deadline:  # survey is not open anymore
                 return request.render("survey.notopen")
         return None
