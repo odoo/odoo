@@ -2,6 +2,7 @@ odoo.define('web_editor.ColorPalette', function (require) {
 'use strict';
 
 const core = require('web.core');
+const session = require('web.session');
 const ColorpickerDialog = require('web.ColorpickerDialog');
 const Dialog = require('web.Dialog');
 const Widget = require('web.Widget');
@@ -50,7 +51,12 @@ const ColorPaletteWidget = Widget.extend({
      * @override
      */
     willStart: async function () {
-        const res = this._super.apply(this, arguments);
+        await this._super(...arguments);
+        if (session.is_website_user) {
+            // Public user using the editor may have a colorpalette but with
+            // the default summernote ones.
+            return;
+        }
         // We can call the colorPalette multiple times but only need 1 rpc
         if (!templatePromise && !qweb.has_template('web_editor.colorpicker')) {
             templatePromise = this._rpc({
@@ -62,7 +68,6 @@ const ColorPaletteWidget = Widget.extend({
             });
         }
         await templatePromise;
-        return res;
     },
     /**
      * @override
@@ -72,7 +77,10 @@ const ColorPaletteWidget = Widget.extend({
 
         const $colorSection = this.$('.o_colorpicker_sections');
         const $wrapper = $colorSection.find('.o_colorpicker_section_tabs');
-        $(qweb.render('web_editor.colorpicker')).appendTo($wrapper);
+        const $clpicker = qweb.has_template('web_editor.colorpicker')
+            ? $(qweb.render('web_editor.colorpicker'))
+            : $(`<colorpicker><div class="o_colorpicker_section" data-name="common"></div></colorpicker>`);
+        $clpicker.appendTo($wrapper);
 
         this.el.querySelectorAll('.o_colorpicker_section').forEach(elem => {
             $(elem).prepend('<div>' + (elem.dataset.display || '') + '</div>');
