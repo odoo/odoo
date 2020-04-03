@@ -103,8 +103,8 @@ var KanbanColumn = Widget.extend({
         }
 
         if (this.recordsDraggable) {
-            this.$el.sortable({
-                connectWith: '.o_kanban_group',
+            this.$('.o_kanban_records').sortable({
+                connectWith: '.o_kanban_group .o_kanban_records',
                 containment: this.draggable ? false : 'parent',
                 revert: 0,
                 delay: 0,
@@ -150,8 +150,7 @@ var KanbanColumn = Widget.extend({
         if (this.barOptions) {
             this.$el.addClass('o_kanban_has_progressbar');
             this.progressBar = new KanbanColumnProgressBar(this, this.barOptions, this.data);
-            defs.push(this.progressBar.appendTo(this.$header.find('.o_kanban_header_sticky')));
-            // defs.push(this.progressBar.appendTo(this.$header.find('.o_kanban_header')));
+            defs.push(this.progressBar.appendTo(this.$header));
         }
 
         var title = this.folded ? this.title + ' (' + this.data.count + ')' : this.title;
@@ -181,16 +180,11 @@ var KanbanColumn = Widget.extend({
         if (this.quickCreateWidget) {
             this.quickCreateWidget.on_attach_callback();
         }
+        this.$('.o_kanban_records').css({ 'margin-top': this.$header.height() });
         if (!this.folded) {
-            // need to set width to fixed header same as header container
-            this.$header.find('.o_kanban_header_sticky').css({
-                width: this.$header.width(),
-            });
-            // need to set height to header element as it's child is fixed position
-            // and fixed position element are out of DOM flow
-            this.$header.css({ height: this.$header.find('.o_kanban_header_sticky').height() });
+            this.$header.css({ width: this.$('.o_kanban_records').width() });
         } else {
-            this.$header.css({ height: this.$header.find('.o_kanban_header_sticky').height() });
+            this.$el.width(this.$header.width());
         }
     },
 
@@ -224,7 +218,7 @@ var KanbanColumn = Widget.extend({
             formViewRef: this.quickCreateView,
             model: this.modelName,
         });
-        return this.quickCreateWidget.insertAfter(this.$header);
+        return this.quickCreateWidget.prependTo(this.$('.o_kanban_records'));
     },
     /**
      * Closes the quick create widget if it isn't dirty.
@@ -259,14 +253,9 @@ var KanbanColumn = Widget.extend({
         var record = new this.KanbanRecord(this, recordState, this.record_options);
         this.records.push(record);
         if (options && options.position === 'before') {
-            return record.insertAfter(this.quickCreateWidget ? this.quickCreateWidget.$el : this.$header);
+            return record.prependTo(this.$('.o_kanban_records'));
         } else {
-            var $load_more = this.$('.o_kanban_load_more');
-            if ($load_more.length) {
-                return record.insertBefore($load_more);
-            } else {
-                return record.appendTo(this.$el);
-            }
+            return record.appendTo(this.$('.o_kanban_records'));
         }
     },
     /**
