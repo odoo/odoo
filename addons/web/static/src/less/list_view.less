@@ -177,6 +177,9 @@
                     max-width: 100%; // Fix a chrome bug where badge would not break on multiple lines
                 }
             }
+            &.o_field_text {
+                resize: none; // Avoid resizing autoresized field
+            }
         }
         > .o_field_translate {
             .o-position-absolute(0, 5px);
