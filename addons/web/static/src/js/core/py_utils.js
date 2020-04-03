@@ -95,9 +95,9 @@ function wrap_context(context) {
         // If you face an issue from here, try to sanitize
         // the context upstream instead
         if (val === null) { continue; }
-        if (val.constructor === Array) {
+        if (val && val.constructor === Array) {
             context[k] = wrapping_list.fromJSON(val);
-        } else if (val.constructor === Object
+        } else if (val && val.constructor === Object
                    && !py.PY_isInstance(val, py.object)) {
             context[k] = wrapping_dict.fromJSON(val);
         }
