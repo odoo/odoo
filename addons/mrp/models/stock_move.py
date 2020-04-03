@@ -14,6 +14,7 @@ class StockMoveLine(models.Model):
     lot_produced_ids = fields.Many2many('stock.production.lot', string='Finished Lot/Serial Number', check_company=True)
     done_move = fields.Boolean('Move Done', related='move_id.is_done', readonly=False, store=True)  # TDE FIXME: naming
 
+    @api.model_create_multi
     def create(self, values):
         res = super(StockMoveLine, self).create(values)
         for line in res:
