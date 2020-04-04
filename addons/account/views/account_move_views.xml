@@ -1167,7 +1167,7 @@
             view_id="account.view_move_line_tax_audit_tree"/>
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'name_groupby':1}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'name_groupby':1, 'create':0}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
