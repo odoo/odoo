@@ -8,7 +8,7 @@
                 <div id="btn_use_pos_discount" position="replace">
                     <div class="row mt16">
                         <label string="Discount Product" for="discount_product_id" class="col-md-3 o_light_label"/>
-                        <field name="discount_product_id" attrs="{'required':[('module_pos_discount','=',True)]}"/>
+                        <field name="discount_product_id" context="{'default_available_in_pos':True}" attrs="{'required':[('module_pos_discount','=',True)]}"/>
                     </div>
                     <div class="row">
                         <label string="Discount %" for="discount_pc" class="col-md-3 o_light_label"/>
