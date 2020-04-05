@@ -16,10 +16,11 @@ class L10nLatamDocumentType(models.Model):
             ('receipt_invoice', 'Receipt Invoice')])
 
     def _get_document_sequence_vals(self, journal):
-        values = super(L10nLatamDocumentType, self)._get_document_sequence_vals(journal)
+        values = {}
         if self.country_id != self.env.ref('base.cl'):
             return values
         values.update({
+            'name': '%s - %s' % (journal.name, self.name),
             'padding': 6,
             'implementation': 'no_gap',
             'l10n_latam_document_type_id': self.id,
