@@ -21,10 +21,6 @@ class product_price_list(models.TransientModel):
         To get the date and print the report
         @return : return report
         """
-        if (not self.env.company.logo):
-            raise UserError(_("You have to set a logo or a layout for your company."))
-        elif (not self.env.company.external_report_layout_id):
-            raise UserError(_("You have to set your reports's header and footer layout."))
 
         datas = {'ids': self.env.context.get('active_ids', [])}
         res = self.read(['price_list', 'qty1', 'qty2', 'qty3', 'qty4', 'qty5'])

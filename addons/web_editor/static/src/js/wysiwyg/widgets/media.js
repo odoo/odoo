@@ -143,7 +143,7 @@ var FileWidget = SearchableMediaWidget.extend({
             firstFilters: [],
             lastFilters: [],
             showQuickUpload: config.isDebug(),
-            mediaWidth: media && media.clientWidth,
+            mediaWidth: media && media.parentElement && $(media.parentElement).width(),
         }, options || {});
 
         this.attachments = [];

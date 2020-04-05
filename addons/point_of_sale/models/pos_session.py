@@ -373,7 +373,7 @@ class PosSession(models.Model):
                 key = order.partner_id.property_account_receivable_id.id
                 invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order._get_amount_receivable()}, order.date_order)
                 # side loop to gather receivable lines by account for reconciliation
-                for move_line in order.account_move.line_ids.filtered(lambda aml: aml.account_id.internal_type == 'receivable'):
+                for move_line in order.account_move.line_ids.filtered(lambda aml: aml.account_id.internal_type == 'receivable' and not aml.reconciled):
                     order_account_move_receivable_lines[move_line.account_id.id] |= move_line
             else:
                 order_taxes = defaultdict(tax_amounts)
@@ -530,7 +530,9 @@ class PosSession(models.Model):
         for receivable_account_id, amounts in invoice_receivables.items():
             invoice_receivable_vals[receivable_account_id].append(self._get_invoice_receivable_vals(receivable_account_id, amounts['amount'], amounts['amount_converted']))
         for receivable_account_id, vals in invoice_receivable_vals.items():
-            invoice_receivable_lines[receivable_account_id] = MoveLine.create(vals)
+            receivable_line = MoveLine.create(vals)
+            if (not receivable_line.reconciled):
+                invoice_receivable_lines[receivable_account_id] = receivable_line
 
         data.update({'invoice_receivable_lines': invoice_receivable_lines})
         return data
@@ -594,7 +596,7 @@ class PosSession(models.Model):
         stock_moves = self.env['stock.move'].search([('picking_id', 'in', self.order_ids.filtered(lambda order: not order.is_invoiced).mapped('picking_id').ids)])
         stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
         for account_id in stock_output_lines:
-            ( stock_output_lines[account_id]
+            ( stock_output_lines[account_id].filtered(lambda aml: not aml.reconciled)
             | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
             ).reconcile()
         return data

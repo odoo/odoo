@@ -178,5 +178,32 @@
         <field name="country_id" ref="base.cl"/>
     </record>
 
+    <record id="tax_report_base_ila_compras" model="account.tax.report.line">
+        <field name="name">Base Retenciones ILA (compras)</field>
+        <field name="tag_name">Base Retenciones ILA (compras)</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_tax_ila_compras" model="account.tax.report.line">
+        <field name="name">Impuesto Ret Sufrida ILA (compras)</field>
+        <field name="tag_name">Retenciones ILA (compras)</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_base_ila_ventas" model="account.tax.report.line">
+        <field name="name">Base Retenciones ILA (ventas)</field>
+        <field name="tag_name">Base Retenciones ILA (ventas)</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_tax_ila_ventas" model="account.tax.report.line">
+        <field name="name">Impuesto Ret Practicadas ILA (ventas)</field>
+        <field name="tag_name">Retenciones ILA (ventas)</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.cl"/>
+    </record>
 
 </odoo>

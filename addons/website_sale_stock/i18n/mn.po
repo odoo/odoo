@@ -70,6 +70,9 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
+"Нөөц харуулах гормын анхны утга нь Нөөц хадгалах төрөлтэй барааг шинээр "
+"үүсгэх үед сонгогдоно. Харин явцдаа нөөцийн байдлаас хамааран энэ утгыг "
+"сольж хэрэглэнэ."
 
 #. module: website_sale_stock
 #. openerp-web
@@ -88,7 +91,7 @@ msgstr "Агуулах"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__inventory_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__inventory_availability
 msgid "Inventory Availability"
-msgstr ""
+msgstr "Нөөцийн хүрэлцээт байдал"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -96,6 +99,7 @@ msgid ""
 "Manage the inventory of your products and display their availability status "
 "on the website."
 msgstr ""
+"Барааны нөөцийн хүрэлцээний төлөв байдлыг үнэлж вебсайт дээр харуулна."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -165,13 +169,15 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
 " for the inconvenience."
 msgstr ""
+"Зарим барааны нөөц хүрэлцэхгүй байгаа учир таны сагс дахь захиалгын тоо "
+"хэмжээ шинэчлэгдсэн. Ийм өөрчлөлт оруулсанд хүлцэл өчье."
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Temporarily out of stock"
-msgstr ""
+msgstr "Нөөц дууссан"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -181,7 +187,7 @@ msgstr "Босго"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Шилжүүлгэ"
+msgstr "Шилжүүлэг"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
@@ -211,7 +217,7 @@ msgstr "Вэбсайт"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website this picking belongs to."
-msgstr ""
+msgstr "Энэ бэлтгэх баримтын хамаарах вебсайт."
 
 #. module: website_sale_stock
 #. openerp-web
@@ -224,7 +230,7 @@ msgstr "Аль хэдийн нэмэгдсэн байна"
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %s products but only %s is available"
-msgstr ""
+msgstr "Та %s бараа хүссэн боловч ердөө %s боломжит нөөцтэй байна"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -239,11 +245,11 @@ msgstr "бүгд"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "available"
-msgstr ""
+msgstr "боломжит"
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
-msgstr ""
+msgstr "таны сагсанд."

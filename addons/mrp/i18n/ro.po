@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
+# Attila Tatár <atta@nvm.ro>, 2020
+# Eugen Ionica <eugen.ionica@gmail.com>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
 # 
 msgid ""
@@ -60,7 +62,7 @@ msgstr "# Listă de materiale"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
 msgid "# BoM Where Used"
-msgstr ""
+msgstr "LM loc utilizare"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workorder_done_count
@@ -332,7 +334,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
-msgstr ""
+msgstr "O Comandă de producție este efectuat sau întrerupt."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -977,6 +979,7 @@ msgstr "Nelansată"
 msgid ""
 "Consume components and build finished products using bills of materials"
 msgstr ""
+"Consumați componente și predați produse finite folosind liste de materiale"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder_line__qty_done
@@ -1056,12 +1059,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "Create a bill of materials"
-msgstr ""
+msgstr "Creați o listă de materiale"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Create a new manufacturing order <br>"
-msgstr ""
+msgstr "Creați o nouă comandă de producție<br>"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -3559,13 +3562,13 @@ msgstr ""
 #: model:product.product,description:mrp.product_product_computer_desk_screw
 #: model:product.template,description:mrp.product_product_computer_desk_screw_product_template
 msgid "Stainless steel screw"
-msgstr ""
+msgstr "Șurub din oțel inoxidabil"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_bolt
 #: model:product.template,description:mrp.product_product_computer_desk_bolt_product_template
 msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
-msgstr ""
+msgstr "Șurub din oțel inoxidabil plin (diam - 5mm, lungime - 10mm)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_start
@@ -3857,6 +3860,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
 msgid "The quantity to produce must be positive!"
 msgstr "Cantitatea de obținut trebuie să fie pozitivă!"
 
