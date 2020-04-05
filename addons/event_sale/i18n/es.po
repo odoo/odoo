@@ -12,16 +12,16 @@
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # Antonio Trueba, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 # José Vicente <txusev@gmail.com>, 2017
 # Sergio Flores <vitavitae1@gmail.com>, 2017
 # Cristian Salamea <ovnicraft@gmail.com>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Jon Perez <jop@odoo.com>, 2019
 # Martin Trigaux, 2020
 # Jesse Garza <jga@odoo.com>, 2020
 # Erick Herrera <erick.herrera@jarsa.com.mx>, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Jon Perez <jop@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-02-13 07:24+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Erick Herrera <erick.herrera@jarsa.com.mx>, 2020\n"
+"Last-Translator: Jon Perez <jop@odoo.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,13 +102,13 @@ msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
 msgstr ""
-"Escoja un ticket de evento y se creará automáticamente un registro para el "
-"mismo."
+"Escoja un tipo de entrada para el evento y se creará automáticamente un "
+"registro para el mismo."
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.event_configurator_action
 msgid "Configure an event"
-msgstr ""
+msgstr "Configurar un evento"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_uid
@@ -139,12 +139,12 @@ msgstr "Nombre a mostrar"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
 msgid "Edit Attendee Details on Sales Confirmation"
-msgstr ""
+msgstr "Editar detalles del asistente en la confirmación de ventas"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "Edit Attendee Line on Sales Confirmation"
-msgstr ""
+msgstr "Editar línea de asistente en confirmación de ventas"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
@@ -167,7 +167,7 @@ msgstr "Evento"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_configurator
 msgid "Event Configurator"
-msgstr ""
+msgstr "Configurador de eventos"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -184,7 +184,7 @@ msgstr "Registro eventos"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_type_ticket
 msgid "Event Template Ticket"
-msgstr ""
+msgstr "Entrada de plantilla de evento"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
@@ -192,12 +192,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
 msgid "Event Ticket"
-msgstr "Ticket del evento"
+msgstr "Entrada para el evento"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
-msgstr "Tickets del evento"
+msgstr "Entradas del evento"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
@@ -230,6 +230,8 @@ msgid ""
 "If checked this product automatically creates an event registration at the "
 "sales order confirmation."
 msgstr ""
+"Si se marca, este producto crea automáticamente un registro de evento en la "
+"confirmación del pedido de ventas."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__is_paid
@@ -241,7 +243,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_product_template__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
 msgid "Is an Event Ticket"
-msgstr "Es un tiquete de evento"
+msgstr "Es una entrada de evento"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_account_move
@@ -427,7 +429,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
 msgid "Ticket Type"
-msgstr "Tipo de vale"
+msgstr "Tipo de entrada"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
