@@ -100,12 +100,15 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Купи Odoo Enterprise и получи повече достачици.\n"
+"                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
-msgstr "<strong>Кариера</strong>"
+msgstr "<strong>Превозвач</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -154,7 +157,7 @@ msgstr "Архивиран"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__available_carrier_ids
 msgid "Available Carriers"
-msgstr ""
+msgstr "Налични превозвачи"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -235,7 +238,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr ""
+msgstr "Дефинирай нов начин за на доставка"
 
 #. module: delivery
 #: model:product.category,name:delivery.product_category_deliveries
@@ -349,7 +352,7 @@ msgstr "Покажете име"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr ""
+msgstr "Покажи линкове за проследяване"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -634,7 +637,7 @@ msgstr "Подробности за опаковката"
 #: code:addons/delivery/wizard/choose_delivery_package.py:60
 #, python-format
 msgid "Package too heavy!"
-msgstr ""
+msgstr "Пакетът е прекалено тежък!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -835,12 +838,14 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
+"Теглото на пакета е по-голямо от позволения максимум за този тип пакети. "
+"Моля изберете друг тип пакет."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:111
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr ""
+msgstr "Няма подходящо правило за доставка."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -868,7 +873,7 @@ msgstr "Този процент ще бъде добавен към цената
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr ""
+msgstr "URL за проследяване"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -998,7 +1003,7 @@ msgstr "Можете да добавите цена за доставка сам
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr ""
+msgstr "Имате няколко линка за проследяване, те са налични в долния панел."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:199
