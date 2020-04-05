@@ -169,7 +169,7 @@ msgstr ""
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Сайн байна уу,\n"
 "                <br/><br/>\n"
-"                <strong>${object.company_id.name}</strong>дах \"<a href=\"${object.job_id.website_url or ''}\" style=\"color:#9A6C8E;\"><strong>${object.job_id.name}</strong></a>\"\n"
+"                <strong>${object.company_id.name}</strong> дах \"<a href=\"${object.job_id.website_url or ''}\" style=\"color:#9A6C8E;\"><strong>${object.job_id.name}</strong></a>\"\n"
 "                ажлын байранд таны ирүүлсэн анкетыг хүлээн авсан болохыг мэдэгдэж байна.\n"
 "                <br/><br/>\n"
 "                Бид удахгүй тантай холбогдох болно.\n"
@@ -1409,7 +1409,7 @@ msgstr "Канбан Блоклогдсон"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_normal
 msgid "Kanban Ongoing"
-msgstr ""
+msgstr "Үргэлжилж буй Канбан"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__kanban_state
@@ -1419,12 +1419,12 @@ msgstr "Канбан Төлөв"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_done
 msgid "Kanban Valid"
-msgstr ""
+msgstr "Хүчин тѳгѳлдѳр Канбан"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues_value
 msgid "Kpi Hr Recruitment New Colleagues Value"
-msgstr ""
+msgstr "Kpi Hr Recruitment New Colleagues Value"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant____last_update
@@ -1576,11 +1576,13 @@ msgid ""
 "New applicants can be generated from incoming emails. You just need to set "
 "email aliases in configuration of job positions.<br>"
 msgstr ""
+"Албан тушаалын бүртгэлийн хэсэгт зохиомол мэйл хаяг тохируулсан бол уг мэйл "
+"хаяг рүү илгээсэн анкетын бүртгэлийг хүлээн авах боломжтой.<br>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
 msgid "Newly Hired"
-msgstr ""
+msgstr "Шинэ ажилтан"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_employee_action_from_department
@@ -1622,7 +1624,7 @@ msgstr "Гарчиг үгүй"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid "No applications yet"
-msgstr ""
+msgstr "Анкетын бүртгэл хараахан алга"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
@@ -1647,7 +1649,7 @@ msgstr "Хавсралтын Тоо"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
 msgid "Number of days to close"
-msgstr ""
+msgstr "Сонгон шалгаруулалтын явцыг хаах хүртэлх ѳдрийн тоо"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error_counter
@@ -1930,7 +1932,7 @@ msgstr "Дараалал"
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Set Email Aliases"
-msgstr ""
+msgstr "Зохиомол мэйл хаяг ашиглах"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
@@ -2153,7 +2155,7 @@ msgstr "Өнөөдрийн Ажилбарууд"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Tooltips"
-msgstr ""
+msgstr "Багажны зөвлөмж"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -2196,6 +2198,9 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies"
 " on Survey app."
 msgstr ""
+"Сонгон шалгаруулалтын явцад ажлын байр бүр дээр судалгааны маягт тохируулах "
+"боломжтой. Маягтыг ажлын байрны дах бүртгэлээс орон тохируулах ба Survey "
+"модиулын нэгэн хэсэг болохыг анхаарна уу"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -2255,6 +2260,8 @@ msgid ""
 "You can define here the labels that will be displayed for the kanban state instead\n"
 "                        of the default labels."
 msgstr ""
+"Канбан харагдац дах үеүүдийн тэмдэглэгээг \n"
+"                        эндээс тохируулах боломжтой."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:450
@@ -2267,7 +2274,7 @@ msgstr "Та энэ горилогчид Горилсон Ажил, Харилц
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "${object.job_id.name | safe} ажлын байрны анкет"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -2278,4 +2285,4 @@ msgstr "ж. Борлуулалтын Менежер"
 #: code:addons/hr_recruitment/models/hr_recruitment.py:295
 #, python-format
 msgid "job applicant"
-msgstr ""
+msgstr "ажлын анкет"
