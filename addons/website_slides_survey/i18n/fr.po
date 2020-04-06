@@ -10,6 +10,7 @@
 # Vallen Delobel <edv@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
+# Laura Piraux <lap@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Julien Goergen <jgo@odoo.com>, 2020\n"
+"Last-Translator: Laura Piraux <lap@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,12 +113,12 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
 msgid "A slide of type 'certification' requires a certification."
-msgstr ""
+msgstr "Un slide de type \"certification\" nécessite une certification."
 
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_certification_preview
 msgid "A slide of type certification cannot be previewed."
-msgstr ""
+msgstr "Un slide de type certification ne peut pas être prévisualisé."
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
@@ -170,7 +171,7 @@ msgstr "Certification"
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__survey_quizz_passed
 msgid "Certification Quizz Passed"
-msgstr ""
+msgstr "Questionnaire de certification réussi."
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__user_input_ids
@@ -180,13 +181,14 @@ msgstr "Les tentatives de la certification"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.o_wss_certification_icon
 msgid "Certification icon"
-msgstr ""
+msgstr "Icône de certification"
 
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/controllers/slides.py:0
 #, python-format
 msgid "Certification slides are completed when the survey is succeeded."
 msgstr ""
+"Les slides de certification sont terminés quand le questionnaire est réussi."
 
 #. module: website_slides_survey
 #: model:ir.actions.act_window,name:website_slides_survey.slide_slide_action_certification
@@ -221,7 +223,7 @@ msgstr "Fichier de l'image de couverture"
 #. module: website_slides_survey
 #: model:slide.slide,name:website_slides_survey.slide_slide_demo_6_0
 msgid "DIY Furniture Certification"
-msgstr ""
+msgstr "Certification Meubles DIY "
 
 #. module: website_slides_survey
 #: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_3
@@ -304,7 +306,7 @@ msgstr "Passer la certification"
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_id
 msgid "Related course slide"
-msgstr ""
+msgstr "Slide de cours connexe"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
@@ -325,7 +327,7 @@ msgstr "Étagères"
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_slide_partner
 msgid "Slide / Partner decorated m2m"
-msgstr ""
+msgstr "Slide / Partner decorated m2m"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_channel
@@ -335,7 +337,7 @@ msgstr "Canal de Diapositive"
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_partner_id
 msgid "Slide membership information for the logged in user"
-msgstr ""
+msgstr "Information d'adhésion du slide pour l'utilisateur connecté"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_slide
@@ -368,7 +370,7 @@ msgstr "Table"
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 #, python-format
 msgid "Test Certification"
-msgstr ""
+msgstr "Certification de test"
 
 #. module: website_slides_survey
 #: model_terms:survey.question,description:website_slides_survey.furniture_certification_page_1
@@ -400,7 +402,7 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
 msgid "The related course slide when there is no membership information"
-msgstr ""
+msgstr "Le slide de cours connexe quand il n'y a pas d'information d'adhésion"
 
 #. module: website_slides_survey
 #: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1
@@ -430,4 +432,4 @@ msgstr "Quel type de bois est le meilleur pour les meubles?"
 #. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
 msgid "You have failed the course: ${object.slide_partner_id.channel_id.name}"
-msgstr ""
+msgstr "Vous avez raté le cours: ${object.slide_partner_id.channel_id.name}"

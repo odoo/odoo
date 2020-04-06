@@ -130,6 +130,8 @@ msgid ""
 "<span class=\"badge badge-primary oe_inline "
 "o_enterprise_label\">Enterprise</span>"
 msgstr ""
+"<span class=\"badge badge-primary oe_inline "
+"o_enterprise_label\">Enterprise</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -161,19 +163,19 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr "יש לציין יומן עבור כל שירות תשלומים מקוון %s."
+msgstr "יש לציין יומן עבור כל ספק שירות תשלומים %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr "שירות תשלומים מקוון נדרש כדי ליצור עסקה."
+msgstr "ספק שירות תשלומים נדרש כדי ליצור עסקה."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction already exists."
-msgstr "עסקת תשלומים כבר קיימת."
+msgstr "עסקת תשלום כבר קיימת."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -203,12 +205,12 @@ msgstr "לא ניתן לקשר עסקה לחשבוניות עם מטבעות ש�
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A transaction can't be linked to invoices having different partners."
-msgstr "לא ניתן לקשר עסקה לחשבוניות שיש בהן שותפים שונים."
+msgstr "לא ניתן לקשר עסקה לחשבוניות שיש בהן לקוחות שונים."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
 msgid "Access Token"
-msgstr "Access Token"
+msgstr "אסימון גישה"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -219,7 +221,7 @@ msgstr "חשבון"
 #. module: payment
 #: model:ir.model,name:payment.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "תבנית תרשים חשבון"
+msgstr "תבנית לוח חשבונות"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -339,7 +341,7 @@ msgstr "בארכיון"
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
-msgstr "עסקה מבוטלת"
+msgstr "האם אתה בטוח שברצונך לבטל את העסקה המורשית? לא ניתן לבטל פעולה זו."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -453,13 +455,13 @@ msgstr "לא ניתן להגדיר את התשלום"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
 msgid "Capture Amount Manually"
-msgstr "לכידת סכום ידנית"
+msgstr "לכוד סכום ידנית"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr "לכידת עסקה"
+msgstr "לכוד עסקה"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
@@ -480,7 +482,7 @@ msgstr "בחר אמצעי תשלום"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Choose your default customer payment method."
-msgstr "בחר את אמצעי התשלום ברירת המחדל של הלקוח שלך."
+msgstr "בחר אמצעי תשלום ברירת מחדל של הלקוח שלך."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -685,7 +687,7 @@ msgstr "תיאור"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__sequence
 msgid "Determine the display order"
-msgstr "הגדרת סדר תצוגה"
+msgstr "הגדר את סדר התצוגה"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
@@ -953,7 +955,7 @@ msgstr "שגיאת שרת פנימית"
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr "נמצא אסימון לא תקף ! אסימון ספק שירות תשלומים מקוון %s != %s"
+msgstr "נמצא אסימון לא תקף ! אסימון ספק שירות תשלומים %s != %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -1219,13 +1221,13 @@ msgstr "ניתן לעבד רק טיוטת עסקה."
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Only draft/authorized transaction can be cancelled."
-msgstr "ניתן לבטל רק עסקת טיוטה / מורשה."
+msgstr "ניתן לבטל רק עסקה בסטטוס טיוטה / מורשית."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Only draft/authorized transaction can be posted."
-msgstr "ניתן לפרסם רק עסקה בטיוטה / מורשית."
+msgstr "ניתן לרשום רק עסקה בסטטוס טיוטה / מורשית."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1253,7 +1255,7 @@ msgstr "אחר"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr "שירות תשלום אחר"
+msgstr "ספק שירות תשלומים אחר"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -1298,7 +1300,7 @@ msgstr "תשלום"
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr "תשלום נקלט"
+msgstr "ספק שירות תשלומים"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
@@ -1718,7 +1720,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "The SEPA QR Code informations are not set correctly."
-msgstr ""
+msgstr "נתוני קוד ה- SEPA QR אינם מוגדרים כראוי."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
