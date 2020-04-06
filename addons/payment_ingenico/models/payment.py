@@ -30,9 +30,9 @@ class PaymentAcquirerOgone(models.Model):
     ], ondelete={'ogone': 'set default'})
     ogone_pspid = fields.Char('PSPID', required_if_provider='ogone', groups='base.group_user')
     ogone_userid = fields.Char('API User ID', required_if_provider='ogone', groups='base.group_user')
-    ogone_password = fields.Char('API User Password', required_if_provider='ogone', groups='base.group_user')
-    ogone_shakey_in = fields.Char('SHA Key IN', size=32, required_if_provider='ogone', groups='base.group_user')
-    ogone_shakey_out = fields.Char('SHA Key OUT', size=32, required_if_provider='ogone', groups='base.group_user')
+    ogone_password = fields.Secret('API User Password', required_if_provider='ogone', groups='base.group_user')
+    ogone_shakey_in = fields.Secret('SHA Key IN', size=32, required_if_provider='ogone', groups='base.group_user')
+    ogone_shakey_out = fields.Secret('SHA Key OUT', size=32, required_if_provider='ogone', groups='base.group_user')
     ogone_alias_usage = fields.Char('Alias Usage', default="Allow saving my payment data",
                                     help="If you want to use Ogone Aliases, this default "
                                     "Alias Usage will be presented to the customer as the "
@@ -75,7 +75,7 @@ class PaymentAcquirerOgone(models.Model):
         """
         assert inout in ('in', 'out')
         assert self.provider == 'ogone'
-        key = getattr(self, 'ogone_shakey_' + inout)
+        key = getattr(self.sudo(), 'ogone_shakey_' + inout)
 
         def filter_key(key):
             if inout == 'in':
@@ -359,7 +359,7 @@ class PaymentTxOgone(models.Model):
         data = {
             'PSPID': account.ogone_pspid,
             'USERID': account.ogone_userid,
-            'PSWD': account.ogone_password,
+            'PSWD': account.sudo().ogone_password,
             'ORDERID': reference,
             'AMOUNT': int(self.amount * 100),
             'CURRENCY': self.currency_id.name,
@@ -415,7 +415,7 @@ class PaymentTxOgone(models.Model):
         data = {
             'PSPID': account.ogone_pspid,
             'USERID': account.ogone_userid,
-            'PSWD': account.ogone_password,
+            'PSWD': account.sudo().ogone_password,
             'ORDERID': reference,
             'AMOUNT': int(self.amount * 100),
             'CURRENCY': self.currency_id.name,
@@ -513,7 +513,7 @@ class PaymentTxOgone(models.Model):
             'PAYID': self.acquirer_reference,
             'PSPID': account.ogone_pspid,
             'USERID': account.ogone_userid,
-            'PSWD': account.ogone_password,
+            'PSWD': account.sudo().ogone_password,
         }
 
         query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % ('prod' if self.acquirer_id.state == 'enabled' else 'test')
@@ -559,7 +559,7 @@ class PaymentToken(models.Model):
                 'REPLY_TYPE': 'XML',
                 'PSPID': acquirer.ogone_pspid,
                 'USERID': acquirer.ogone_userid,
-                'PSWD': acquirer.ogone_password,
+                'PSWD': acquirer.sudo().ogone_password,
                 'PROCESS_MODE': 'CHECKANDPROCESS',
             }
 

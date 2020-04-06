@@ -48,7 +48,7 @@ class AcquirerSips(models.Model):
         ('sips', 'Sips')
     ], ondelete={'sips': 'set default'})
     sips_merchant_id = fields.Char('Merchant ID', help="Used for production only", required_if_provider='sips', groups='base.group_user')
-    sips_secret = fields.Char('Secret Key', size=64, required_if_provider='sips', groups='base.group_user')
+    sips_secret = fields.Secret('Secret Key', size=64, required_if_provider='sips', groups='base.group_user')
     sips_test_url = fields.Char("Test url", required_if_provider='sips', default='https://payment-webinit.simu.sips-atos.com/paymentInit')
     sips_prod_url = fields.Char("Production url", required_if_provider='sips', default='https://payment-webinit.sips-atos.com/paymentInit')
     sips_version = fields.Char("Interface Version", required_if_provider='sips', default='HP_2.3')
@@ -66,7 +66,7 @@ class AcquirerSips(models.Model):
         key = u'002001000000001_KEY1'
 
         if self.state == 'enabled':
-            key = getattr(self, 'sips_secret')
+            key = self.sudo().sips_secret
 
         shasign = sha256((data + key).encode('utf-8'))
         return shasign.hexdigest()

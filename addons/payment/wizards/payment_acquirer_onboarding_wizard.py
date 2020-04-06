@@ -21,9 +21,9 @@ class PaymentWizard(models.TransientModel):
         ('existing_user', 'I have a Paypal account')], string="Paypal User Type", default='new_user')
     paypal_email_account = fields.Char("Email", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_email_account'))
     paypal_seller_account = fields.Char("Merchant Account ID", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_seller_account'))
-    paypal_pdt_token = fields.Char("PDT Identity Token", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_pdt_token'))
+    paypal_pdt_token = fields.Secret("PDT Identity Token", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_pdt_token'))
 
-    stripe_secret_key = fields.Char(default=lambda self: self._get_default_payment_acquirer_onboarding_value('stripe_secret_key'))
+    stripe_secret_key = fields.Secret(default=lambda self: self._get_default_payment_acquirer_onboarding_value('stripe_secret_key'))
     stripe_publishable_key = fields.Char(default=lambda self: self._get_default_payment_acquirer_onboarding_value('stripe_publishable_key'))
 
     manual_name = fields.Char("Method",  default=lambda self: self._get_default_payment_acquirer_onboarding_value('manual_name'))
@@ -115,12 +115,12 @@ class PaymentWizard(models.TransientModel):
                 new_env.ref('payment.payment_acquirer_paypal').write({
                     'paypal_email_account': self.paypal_email_account,
                     'paypal_seller_account': self.paypal_seller_account,
-                    'paypal_pdt_token': self.paypal_pdt_token,
+                    'paypal_pdt_token': self.sudo().paypal_pdt_token,
                     'state': 'enabled',
                 })
             if self.payment_method == 'stripe':
                 new_env.ref('payment.payment_acquirer_stripe').write({
-                    'stripe_secret_key': self.stripe_secret_key,
+                    'stripe_secret_key': self.sudo().stripe_secret_key,
                     'stripe_publishable_key': self.stripe_publishable_key,
                     'state': 'enabled',
                 })

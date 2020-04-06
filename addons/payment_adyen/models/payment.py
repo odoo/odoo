@@ -52,7 +52,7 @@ class AcquirerAdyen(models.Model):
     ], ondelete={'adyen': 'set default'})
     adyen_merchant_account = fields.Char('Merchant Account', required_if_provider='adyen', groups='base.group_user')
     adyen_skin_code = fields.Char('Skin Code', required_if_provider='adyen', groups='base.group_user')
-    adyen_skin_hmac_key = fields.Char('Skin HMAC Key', required_if_provider='adyen', groups='base.group_user')
+    adyen_skin_hmac_key = fields.Secret('Skin HMAC Key', required_if_provider='adyen', groups='base.group_user')
 
     @api.model
     def _adyen_convert_amount(self, amount, currency):
@@ -114,7 +114,7 @@ class AcquirerAdyen(models.Model):
                 'pspReference', 'shopperLocale', 'skinCode',
             ]
 
-        hmac_key = binascii.a2b_hex(self.adyen_skin_hmac_key.encode('ascii'))
+        hmac_key = binascii.a2b_hex(self.sudo().adyen_skin_hmac_key.encode('ascii'))
         raw_values = {k: values.get(k, '') for k in keys if k in values}
         raw_values_ordered = OrderedDict(sorted(raw_values.items(), key=lambda t: t[0]))
 
@@ -145,7 +145,7 @@ class AcquirerAdyen(models.Model):
             return ''
 
         sign = ''.join('%s' % get_value(k) for k in keys).encode('ascii')
-        key = self.adyen_skin_hmac_key.encode('ascii')
+        key = self.sudo().adyen_skin_hmac_key.encode('ascii')
         return base64.b64encode(hmac.new(key, sign, hashlib.sha1).digest())
 
     def adyen_form_generate_values(self, values):
@@ -155,7 +155,7 @@ class AcquirerAdyen(models.Model):
         from dateutil import relativedelta
 
         paymentAmount = self._adyen_convert_amount(values['amount'], values['currency'])
-        if self.provider == 'adyen' and len(self.adyen_skin_hmac_key) == 64:
+        if self.provider == 'adyen' and len(self.sudo().adyen_skin_hmac_key) == 64:
             tmp_date = datetime.datetime.today() + relativedelta.relativedelta(days=1)
 
             values.update({
@@ -225,7 +225,7 @@ class TxAdyen(models.Model):
             raise ValidationError(error_msg)
 
         # verify shasign
-        if len(tx.acquirer_id.adyen_skin_hmac_key) == 64:
+        if len(tx.acquirer_id.sudo().adyen_skin_hmac_key) == 64:
             shasign_check = tx.acquirer_id._adyen_generate_merchant_sig_sha256('out', data)
         else:
             shasign_check = tx.acquirer_id._adyen_generate_merchant_sig('out', data)

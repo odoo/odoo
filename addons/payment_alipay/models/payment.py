@@ -28,7 +28,7 @@ class PaymentAcquirer(models.Model):
     alipay_merchant_partner_id = fields.Char(
         string='Merchant Partner ID', required_if_provider='alipay', groups='base.group_user',
         help='The Merchant Partner ID is used to ensure communications coming from Alipay are valid and secured.')
-    alipay_md5_signature_key = fields.Char(
+    alipay_md5_signature_key = fields.Secret(
         string='MD5 Signature Key', required_if_provider='alipay', groups='base.group_user',
         help="The MD5 private key is the 32-byte string which is composed of English letters and numbers.")
     alipay_seller_email = fields.Char(string='Alipay Seller Email', groups='base.group_user')
@@ -73,7 +73,7 @@ class PaymentAcquirer(models.Model):
         data_to_sign = ["{}={}".format(k, v) for k, v in data_to_sign if k not in ['sign', 'sign_type', 'reference']]
         # And connect rearranged parameters with &
         data_string = '&'.join(data_to_sign)
-        data_string += self.alipay_md5_signature_key
+        data_string += self.sudo().alipay_md5_signature_key
         return md5(data_string.encode('utf-8')).hexdigest()
 
     def _get_alipay_tx_values(self, values):

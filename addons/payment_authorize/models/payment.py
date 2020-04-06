@@ -24,7 +24,7 @@ class PaymentAcquirerAuthorize(models.Model):
     ], ondelete={'authorize': 'set default'})
     authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize', groups='base.group_user')
     authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize', groups='base.group_user')
-    authorize_signature_key = fields.Char(string='API Signature Key', required_if_provider='authorize', groups='base.group_user')
+    authorize_signature_key = fields.Secret(string='API Signature Key', required_if_provider='authorize', groups='base.group_user')
     authorize_client_key = fields.Char(string='API Client Key', groups='base.group_user')
 
     @api.onchange('provider', 'check_validity')
@@ -73,7 +73,7 @@ class PaymentAcquirerAuthorize(models.Model):
             values['x_amount'],
             values['x_currency_code']]).encode('utf-8')
 
-        return hmac.new(bytes.fromhex(self.authorize_signature_key), data, hashlib.sha512).hexdigest().upper()
+        return hmac.new(bytes.fromhex(self.sudo().authorize_signature_key), data, hashlib.sha512).hexdigest().upper()
 
     def authorize_form_generate_values(self, values):
         self.ensure_one()

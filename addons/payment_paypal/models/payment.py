@@ -27,7 +27,7 @@ class AcquirerPaypal(models.Model):
         'Merchant Account ID', groups='base.group_user',
         help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.')
     paypal_use_ipn = fields.Boolean('Use IPN', default=True, help='Paypal Instant Payment Notification', groups='base.group_user')
-    paypal_pdt_token = fields.Char(string='PDT Identity Token', help='Payment Data Transfer allows you to receive notification of successful payments as they are made.', groups='base.group_user')
+    paypal_pdt_token = fields.Secret(string='PDT Identity Token', help='Payment Data Transfer allows you to receive notification of successful payments as they are made.', groups='base.group_user')
     # Default paypal fees
     fees_dom_fixed = fields.Float(default=0.35)
     fees_dom_var = fields.Float(default=3.4)
@@ -191,7 +191,7 @@ class TxPaypal(models.Model):
             'acquirer_reference': data.get('txn_id'),
             'paypal_txn_type': data.get('payment_type'),
         }
-        if not self.acquirer_id.paypal_pdt_token and not self.acquirer_id.paypal_seller_account and status in ['Completed', 'Processed', 'Pending']:
+        if not self.acquirer_id.sudo().paypal_pdt_token and not self.acquirer_id.paypal_seller_account and status in ['Completed', 'Processed', 'Pending']:
             template = self.env.ref('payment_paypal.mail_template_paypal_invite_user_to_configure', False)
             if template:
                 render_template = template._render({

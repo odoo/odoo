@@ -23,7 +23,7 @@ class PaymentAcquirerPayulatam(models.Model):
     ], ondelete={'payulatam': 'set default'})
     payulatam_merchant_id = fields.Char(string="PayU Latam Merchant ID", required_if_provider='payulatam', groups='base.group_user')
     payulatam_account_id = fields.Char(string="PayU Latam Account ID", required_if_provider='payulatam', groups='base.group_user')
-    payulatam_api_key = fields.Char(string="PayU Latam API Key", required_if_provider='payulatam', groups='base.group_user')
+    payulatam_api_key = fields.Secret(string="PayU Latam API Key", required_if_provider='payulatam', groups='base.group_user')
 
     def _get_payulatam_urls(self, environment):
         """ PayUlatam URLs"""
@@ -36,10 +36,10 @@ class PaymentAcquirerPayulatam(models.Model):
             raise Exception("Type must be 'in' or 'out'")
 
         if inout == 'in':
-            data_string = ('~').join((self.payulatam_api_key, self.payulatam_merchant_id, values['referenceCode'],
+            data_string = ('~').join((self.sudo().payulatam_api_key, self.payulatam_merchant_id, values['referenceCode'],
                                       str(values['amount']), values['currency']))
         else:
-            data_string = ('~').join((self.payulatam_api_key, self.payulatam_merchant_id, values['referenceCode'],
+            data_string = ('~').join((self.sudo().payulatam_api_key, self.payulatam_merchant_id, values['referenceCode'],
                                       str(float(values.get('TX_VALUE'))), values['currency'], values.get('transactionState')))
         return md5(data_string.encode('utf-8')).hexdigest()
 

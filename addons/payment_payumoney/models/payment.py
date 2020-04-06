@@ -20,8 +20,8 @@ class PaymentAcquirerPayumoney(models.Model):
     provider = fields.Selection(selection_add=[
         ('payumoney', 'PayUmoney')
     ], ondelete={'payumoney': 'set default'})
-    payumoney_merchant_key = fields.Char(string='Merchant Key', required_if_provider='payumoney', groups='base.group_user')
-    payumoney_merchant_salt = fields.Char(string='Merchant Salt', required_if_provider='payumoney', groups='base.group_user')
+    payumoney_merchant_key = fields.Secret(string='Merchant Key', required_if_provider='payumoney', groups='base.group_user')
+    payumoney_merchant_salt = fields.Secret(string='Merchant Salt', required_if_provider='payumoney', groups='base.group_user')
 
     def _get_payumoney_urls(self, environment):
         """ PayUmoney URLs"""
@@ -45,11 +45,11 @@ class PaymentAcquirerPayumoney(models.Model):
         if inout == 'in':
             keys = "key|txnid|amount|productinfo|firstname|email|udf1|||||||||".split('|')
             sign = ''.join('%s|' % (values.get(k) or '') for k in keys)
-            sign += self.payumoney_merchant_salt or ''
+            sign += self.super().payumoney_merchant_salt or ''
         else:
             keys = "|status||||||||||udf1|email|firstname|productinfo|amount|txnid".split('|')
             sign = ''.join('%s|' % (values.get(k) or '') for k in keys)
-            sign = self.payumoney_merchant_salt + sign + self.payumoney_merchant_key
+            sign = self.super().payumoney_merchant_salt + sign + self.sudo().payumoney_merchant_key
 
         shasign = hashlib.sha512(sign.encode('utf-8')).hexdigest()
         return shasign
@@ -58,7 +58,7 @@ class PaymentAcquirerPayumoney(models.Model):
         self.ensure_one()
         base_url = self.get_base_url()
         payumoney_values = dict(values,
-                                key=self.payumoney_merchant_key,
+                                key=self.super().payumoney_merchant_key,
                                 txnid=values['reference'],
                                 amount=values['amount'],
                                 productinfo=values['reference'],

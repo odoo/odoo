@@ -30,7 +30,7 @@ class AcquirerBuckaroo(models.Model):
         ('buckaroo', 'Buckaroo')
     ], ondelete={'buckaroo': 'set default'})
     brq_websitekey = fields.Char('WebsiteKey', required_if_provider='buckaroo', groups='base.group_user')
-    brq_secretkey = fields.Char('SecretKey', required_if_provider='buckaroo', groups='base.group_user')
+    brq_secretkey = fields.Secret('SecretKey', required_if_provider='buckaroo', groups='base.group_user')
 
     def _get_buckaroo_urls(self, environment):
         """ Buckaroo URLs
@@ -79,7 +79,7 @@ class AcquirerBuckaroo(models.Model):
         else:
             sign = ''.join('%s=%s' % (k, get_value(k)) for k in keys)
         # Add the pre-shared secret key at the end of the signature
-        sign = sign + self.brq_secretkey
+        sign = sign + self.sudo().brq_secretkey
         shasign = sha1(sign.encode('utf-8')).hexdigest()
         return shasign
 

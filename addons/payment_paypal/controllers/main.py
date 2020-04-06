@@ -65,7 +65,7 @@ class PaypalController(http.Controller):
         if pdt_request:
             # this means we are in PDT instead of DPN like before
             # fetch the PDT token
-            post['at'] = tx and tx.acquirer_id.paypal_pdt_token or ''
+            post['at'] = tx and tx.acquirer_id.sudo().paypal_pdt_token or ''
             post['cmd'] = '_notify-synch'  # command is different in PDT than IPN/DPN
         urequest = requests.post(paypal_url, post)
         urequest.raise_for_status()
