@@ -172,6 +172,7 @@ class SendSMS(models.TransientModel):
     # CRUD
     # ------------------------------------------------------------
 
+    @api.model
     def create(self, values):
         # TDE FIXME: currently have to compute manually to avoid required issue, waiting VFE branch
         if not values.get('body') or not values.get('composition_mode'):
