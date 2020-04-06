@@ -13,6 +13,7 @@
         'security/ir.model.access.csv',
         'data/purchase_stock_data.xml',
         'data/mail_data.xml',
+        'views/assets.xml',
         'views/purchase_views.xml',
         'views/stock_views.xml',
         'views/stock_rule_views.xml',
