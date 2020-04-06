@@ -11,6 +11,7 @@ odoo.define('web.test_utils_create', function (require) {
      */
 
     const ActionMenus = require('web.ActionMenus');
+    const concurrency = require('web.concurrency');
     const ControlPanel = require('web.ControlPanel');
     const ControlPanelModel = require('web.ControlPanelModel');
     const customHooks = require('web.custom_hooks');
@@ -125,15 +126,8 @@ odoo.define('web.test_utils_create', function (require) {
      */
     async function createCalendarView(params, options) {
         const calendar = await createView(params);
-        if (options && options.positionalClicks) {
-            const viewElements = [...document.getElementById('qunit-fixture').children];
-            viewElements.forEach(el => document.body.prepend(el));
-
-            const destroy = calendar.destroy;
-            calendar.destroy = () => {
-                viewElements.forEach(el => el.remove());
-                destroy();
-            };
+        if (!options || !options.positionalClicks) {
+            return calendar;
         }
         const viewElements = [...document.getElementById('qunit-fixture').children];
         // prepend reset the scrollTop to zero so we restore it manually
@@ -148,7 +142,7 @@ odoo.define('web.test_utils_create', function (require) {
             viewElements.forEach(el => el.remove());
             destroy();
         };
-        await testUtilsAsync.nextTick();
+        await concurrency.delay(0);
         return calendar;
     }
 
