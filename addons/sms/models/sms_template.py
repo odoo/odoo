@@ -10,24 +10,22 @@ class SMSTemplate(models.Model):
     _inherit = ['mail.render.mixin']
     _description = 'SMS Templates'
 
-    @api.model
-    def default_get(self, fields):
-        res = super(SMSTemplate, self).default_get(fields)
-        if not fields or 'model_id' in fields and not res.get('model_id') and res.get('model'):
-            res['model_id'] = self.env['ir.model']._get(res['model']).id
-        return res
-
     name = fields.Char('Name', translate=True)
     model_id = fields.Many2one(
         'ir.model', string='Applies to', required=True,
         domain=['&', ('is_mail_thread_sms', '=', True), ('transient', '=', False)],
-        help="The type of document this template can be used with", ondelete='cascade')
-    model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
+        help="The type of document this template can be used with", ondelete='cascade', store=True, compute='_compute_model_id', readonly=False)
+    model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True)
     body = fields.Char('Body', translate=True, required=True)
     # Use to create contextual action (same as for email template)
     sidebar_action_id = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
                                         "of the related document model")
+
+    @api.depends('model')
+    def _compute_model_id(self):
+        for record in self:
+            record.model_id = self.env['ir.model']._get(self._context.get('default_model')).id
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
