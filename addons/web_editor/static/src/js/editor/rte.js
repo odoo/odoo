@@ -467,6 +467,7 @@ var RTEWidget = Widget.extend({
         $('.o_editable')
             .destroy()
             .removeClass('o_editable o_is_inline_editable o_editable_date_field_linked o_editable_date_field_format_changed');
+        this.$last = null;
 
         var $dirty = $('.o_dirty');
         $dirty
