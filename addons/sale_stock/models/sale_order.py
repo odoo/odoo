@@ -310,7 +310,7 @@ class SaleOrderLine(models.Model):
         pack = self.product_packaging
         qty = self.product_uom_qty
         q = default_uom._compute_quantity(pack.qty, self.product_uom)
-        if qty and q and (qty % q):
+        if qty and q and round(qty % q, 2):
             newqty = qty - (qty % q) + q
             return {
                 'warning': {
