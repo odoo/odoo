@@ -29,6 +29,21 @@ class UserMenu extends owl.Component {
             id: this.env.session.uid,
         });
     }
+    /**
+     * @private
+     */
+    _onMenuAccount() {
+        this.rpc({route: '/web/session/account'}).then(url => {
+            const action = { type: 'ir.actions.act_url', url };
+            this.env.bus.trigger('do-action', {action});
+        }).guardedCatch(() => {
+            const action = {
+                type: 'ir.actions.act_url',
+                url: 'https://accounts.odoo.com/account'
+            };
+            this.env.bus.trigger('do-action', {action});
+        });
+    }
     _onMenuClicked(ev) {
         ev.preventDefault();
         const menu = ev.target.dataset.menu;
