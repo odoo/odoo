@@ -26,8 +26,7 @@ const MessagingService = AbstractService.extend({
         /**
          * Environment of the messaging store (messaging env. without store)
          */
-        const messagingEnv = Object.create(this.env);
-        Object.assign(messagingEnv, {
+        Object.assign(this.env, {
             autofetchPartnerImStatus: true,
             disableAnimation: false,
             call: (...args) => this.call(...args),
@@ -36,14 +35,12 @@ const MessagingService = AbstractService.extend({
             do_warn: (...args) => this.do_warn(...args),
             entities: undefined,
             isMessagingInitialized() {
-                if (!this.entities) {
-                    return false;
-                }
                 if (!this.messaging) {
                     return false;
                 }
                 return this.messaging.isInitialized;
             },
+            messaging: undefined,
             messagingBus: new EventBus(),
             rpc: (...args) => this._rpc(...args),
             trigger_up: (...args) => this.trigger_up(...args),
@@ -60,29 +57,29 @@ const MessagingService = AbstractService.extend({
         this.env.bus.on(
             'hide_home_menu',
             this,
-            () => messagingEnv.messagingBus.trigger('hide_home_menu')
+            () => this.env.messagingBus.trigger('hide_home_menu')
         );
         this.env.bus.on(
             'show_home_menu',
             this,
-            () => messagingEnv.messagingBus.trigger('show_home_menu')
+            () => this.env.messagingBus.trigger('show_home_menu')
         );
         this.env.bus.on(
             'will_hide_home_menu',
             this,
-            () => messagingEnv.messagingBus.trigger('will_hide_home_menu')
+            () => this.env.messagingBus.trigger('will_hide_home_menu')
         );
         this.env.bus.on(
             'will_show_home_menu',
             this,
-            () => messagingEnv.messagingBus.trigger('will_show_home_menu')
+            () => this.env.messagingBus.trigger('will_show_home_menu')
         );
 
         /**
          * Messaging store
          */
         const store = new Store({
-            env: messagingEnv,
+            env: this.env,
             state: {
                 entities: {},
                 __classEntityObservables: {},
@@ -92,22 +89,20 @@ const MessagingService = AbstractService.extend({
         /**
          * Environment of messaging components (messaging env. with store)
          */
-        Object.assign(messagingEnv, { store });
-
-        this.messagingEnv = messagingEnv;
+        Object.assign(this.env, { store });
     },
     /**
      * @override
      */
     destroy(...args) {
         this._super(...args);
-        this.messagingEnv.messaging = undefined;
+        this.env.messaging = undefined;
         this.env.bus.off('hide_home_menu', this);
         this.env.bus.off('show_home_menu', this);
         this.env.bus.off('will_hide_home_menu', this);
         this.env.bus.off('will_show_home_menu', this);
-        if (this.messagingEnv.entities && this.messagingEnv.entities.Entity) {
-            const { Entity } = this.messagingEnv.entities;
+        if (this.env.entities && this.env.entities.Entity) {
+            const { Entity } = this.env.entities;
             while (Entity.all.length > 0) {
                 Entity.all[0].delete();
             }
@@ -122,7 +117,7 @@ const MessagingService = AbstractService.extend({
      * @returns {Object}
      */
     getEnv() {
-        return this.messagingEnv;
+        return this.env;
     },
 
     //--------------------------------------------------------------------------
@@ -186,28 +181,28 @@ const MessagingService = AbstractService.extend({
          */
         await new Promise(resolve => setTimeout(resolve));
 
-        this.messagingEnv.entities = generateEntities();
+        this.env.entities = generateEntities();
         /**
          * Make environment accessible from Entities. Note that getter is used
          * to prevent recursive data structure.
          */
-        for (const Entity of Object.values(this.messagingEnv.entities)) {
+        for (const Entity of Object.values(this.env.entities)) {
             Object.defineProperty(Entity, 'env', {
-                get: () => this.messagingEnv,
+                get: () => this.env,
             });
         }
         /**
          * Check that all entity relations are correct, notably one relation
          * should have matching reversed relation.
          */
-        checkRelations(this.messagingEnv.entities);
-        for (const Entity of Object.values(this.messagingEnv.entities)) {
+        checkRelations(this.env.entities);
+        for (const Entity of Object.values(this.env.entities)) {
             Entity.init();
         }
 
-        this.messagingEnv.messaging = this.messagingEnv.entities.Messaging.create();
+        this.env.messaging = this.env.entities.Messaging.create();
         messagingCreatedPromiseResolve();
-        await this.messagingEnv.messaging.start();
+        await this.env.messaging.start();
         messagingInitializedPromiseResolve();
     },
 });
