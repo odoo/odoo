@@ -17,40 +17,25 @@ class SlideChannelInvite(models.TransientModel):
     _name = 'slide.channel.invite'
     _description = 'Channel Invitation Wizard'
 
-    @api.model
-    def _default_email_from(self):
-        if self.env.user.email:
-            return formataddr((self.env.user.name, self.env.user.email))
-        raise UserError(_("Unable to post message, please configure the sender's email address."))
-
-    @api.model
-    def _default_author_id(self):
-        return self.env.user.partner_id
-
     # composer content
-    subject = fields.Char('Subject')
-    body = fields.Html('Contents', default='', sanitize_style=True)
+    subject = fields.Char('Subject', compute='_compute_template_values', readonly=False, store=True)
+    body = fields.Html('Contents', default='', sanitize_style=True, compute='_compute_template_values', readonly=False, store=True)
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
     template_id = fields.Many2one(
         'mail.template', 'Use template',
         domain="[('model', '=', 'slide.channel.partner')]")
-    # origin
-    email_from = fields.Char('From', default=_default_email_from)
-    author_id = fields.Many2one(
-        'res.partner', 'Author',
-        ondelete='set null', default=_default_author_id)
     # recipients
     partner_ids = fields.Many2many('res.partner', string='Recipients')
     # slide channel
     channel_id = fields.Many2one('slide.channel', string='Slide channel', required=True)
     channel_url = fields.Char(related="channel_id.website_url", readonly=True)
 
-    @api.onchange('template_id')
-    def _onchange_template_id(self):
-        """ Make the 'subject' and 'body' field match the selected template_id """
-        if self.template_id:
-            self.subject = self.template_id.subject
-            self.body = self.template_id.body_html
+    @api.depends('template_id')
+    def _compute_template_values(self):
+        for invite in self:
+            if invite.template_id:
+                invite.subject = invite.template_id.subject
+                invite.body = invite.template_id.body_html
 
     @api.onchange('partner_ids')
     def _onchange_partner_ids(self):
@@ -81,6 +66,9 @@ class SlideChannelInvite(models.TransientModel):
             email(s), rendering any template patterns on the fly if needed """
         self.ensure_one()
 
+        if not self.env.user.email:
+            raise UserError(_("Unable to post message, please configure the sender's email address."))
+
         mail_values = []
         for partner_id in self.partner_ids:
             slide_channel_partner = self.channel_id._action_add_members(partner_id)
@@ -99,8 +87,8 @@ class SlideChannelInvite(models.TransientModel):
         body = self.env['mail.render.mixin']._render_template(self.body, 'slide.channel.partner', slide_channel_partner.ids, post_process=True)[slide_channel_partner.id]
         # post the message
         mail_values = {
-            'email_from': self.email_from,
-            'author_id': self.author_id.id,
+            'email_from': self.env.user.email_formatted,
+            'author_id': self.env.user.partner_id.id,
             'model': None,
             'res_id': None,
             'subject': subject,
