@@ -192,13 +192,23 @@ class ProductionLot(models.Model):
 
     @api.depends('name')
     def _compute_purchase_order_ids(self):
+        stock_move_line_model = self.env['stock.move.line']
+        read_group_res = stock_move_line_model.read_group(
+            domain=[('lot_id', 'in', self.ids), ('state', '=', 'done'), ('picking_id.location_id.usage', '=', 'supplier')],
+            fields=['lot_id', 'move_id'],
+            groupby=['lot_id', 'move_id'],
+            lazy=False,
+        )
+        stock_move_ids_by_lot = {}
+        for dic in read_group_res:
+            lot_id = dic['lot_id'][0]
+            move_id = dic['move_id'][0]
+            stock_move_ids_by_lot.setdefault(lot_id, set())
+            stock_move_ids_by_lot[lot_id].add(move_id)
+        stock_move_model = self.env['stock.move']
         for lot in self:
-            stock_moves = self.env['stock.move.line'].search([
-                ('lot_id', '=', lot.id),
-                ('state', '=', 'done')
-            ]).mapped('move_id')
-            stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
-                lambda move: move.picking_id.location_id.usage == 'supplier' and move.state == 'done')
+            lot_stock_move_ids = list(stock_move_ids_by_lot.get(lot.id, set()))
+            stock_moves = stock_move_model.browse(lot_stock_move_ids)
             lot.purchase_order_ids = stock_moves.mapped('purchase_line_id.order_id')
             lot.purchase_order_count = len(lot.purchase_order_ids)
 
