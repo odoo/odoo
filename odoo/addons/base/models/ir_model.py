@@ -1974,7 +1974,7 @@ class IrModelData(models.Model):
         for (id, xmlid, model, res_id, noupdate) in self._cr.fetchall():
             if xmlid not in loaded_xmlids:
                 if noupdate:
-                    if model not in ('ir.module.module', 'ir.module.category'):
+                    if model not in ('ir.module.module', 'ir.module.category', 'ir.model'):
                         _logger.warning('xmlid %s (%s(%s)) was removed from code but is noupdate. Manually remove xmlid or record.', xmlid, model, res_id)
                 else:
                     if model in self.env:
