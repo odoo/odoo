@@ -204,7 +204,7 @@ def log_ormcache_stats(sig=None, frame=None):
     me = threading.currentThread()
     me_dbname = getattr(me, 'dbname', 'n/a')
 
-    for dbname, reg in sorted(Registry.registries.items()):
+    for dbname, reg in sorted(Registry.registries.d.items()):
         # set logger prefix to dbname
         me.dbname = dbname
         entries = defaultdict(int)

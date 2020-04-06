@@ -151,14 +151,13 @@ class Registry(Mapping):
         """ Delete the registry linked to a given database. """
         with cls._lock:
             if db_name in cls.registries:
-                cls.registries.pop(db_name)
+                del cls.registries[db_name]
 
     @classmethod
     def delete_all(cls):
         """ Delete all the registries. """
         with cls._lock:
-            for db_name in list(cls.registries.keys()):
-                cls.delete(db_name)
+            cls.registries.clear()
 
     #
     # Mapping abstract methods implementation
