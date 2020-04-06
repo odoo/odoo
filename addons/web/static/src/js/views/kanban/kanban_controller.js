@@ -226,7 +226,10 @@ var KanbanController = BasicController.extend({
             }).then(function () {
                 return self.update({}, {reload: false});
             }).then(function () {
-                self.renderer.quickCreateToggleFold();
+                let quickCreateFolded = self.renderer.quickCreate.folded;
+                if (ev.data.foldQuickCreate ? !quickCreateFolded : quickCreateFolded) {
+                    self.renderer.quickCreateToggleFold();
+                }
                 self.renderer.trigger_up("quick_create_column_created");
             });
         });

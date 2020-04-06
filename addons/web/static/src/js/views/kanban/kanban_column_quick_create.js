@@ -192,7 +192,7 @@ var ColumnQuickCreate = Widget.extend({
                 click: function () {
                     const activeExample = self.examples[this.$('.nav-link.active').data("exampleIndex")];
                     activeExample.columns.forEach(column => {
-                        self.trigger_up('quick_create_add_column', {value: column.toString()});
+                        self.trigger_up('quick_create_add_column', { value: column.toString(), foldQuickCreate: true });
                     });
                 }
             }, {
