@@ -13,40 +13,6 @@ class SendSMS(models.TransientModel):
     _name = 'sms.composer'
     _description = 'Send SMS Wizard'
 
-    # @api.model
-    # def default_get(self, fields):
-    #     result = super(SendSMS, self).default_get(fields)
-
-    #     result['res_model'] = result.get('res_model') or self.env.context.get('active_model')
-    #     result['composition_mode'] = result.get('composition_mode')
-
-    #     # guess the composition mode, if multiples ids => mass composition else comment
-    #     if self.env.context.get('default_composition_mode') and self.env.context.get('default_composition_mode') == "guess":
-    #         if self.env.context.get('active_ids') and len(self.env.context.get('active_ids')) > 1:
-    #             result['composition_mode'] = 'mass'
-    #             result['res_id'] = False
-    #         else:
-    #             result['composition_mode'] = 'comment'
-    #             result['res_ids'] = False
-
-    #     if not result.get('active_domain'):
-    #         result['active_domain'] = repr(self.env.context.get('active_domain', []))
-    #     if not result.get('res_id'):
-    #         if not result.get('res_ids') and self.env.context.get('active_id'):
-    #             result['res_id'] = self.env.context.get('active_id')
-    #     if not result.get('res_ids'):
-    #         if not result.get('res_id') and self.env.context.get('active_ids'):
-    #             result['res_ids'] = repr(self.env.context.get('active_ids'))
-
-    #     if result['res_model']:
-    #         result.update(
-    #             self._get_composer_values(
-    #                 result['composition_mode'], result['res_model'], result.get('res_id'),
-    #                 result.get('body'), result.get('template_id')
-    #             )
-    #         )
-    #     return result
-
     # documents
     composition_mode = fields.Selection([
         ('numbers', 'Send to numbers'),
