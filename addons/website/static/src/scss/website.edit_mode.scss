@@ -150,21 +150,12 @@ table.editorbar-panel {
 }
 
 // s_popup in edit mode
-.editor_has_snippets {
-    .s_popup_main {
-        z-index: 1000 !important;
-        left: $o-we-sidebar-width !important;
-        top: var(--o-we-toolbar-height) !important;
-
-        &.s_popup_fixed {
-            .s_popup_full .s_popup_content {
-               left: $o-we-sidebar-width !important;
-            }
-        }
-        &.s_popup_fixed_top {
-            .s_popup_content {
-                top: var(--o-we-toolbar-height) !important;
-            }
+body.editor_enable.editor_has_snippets {
+    .s_popup .modal {
+        top: var(--o-we-toolbar-height);
+        background-color: transparent;
+        &.fade .modal-dialog {
+            transform: none;
         }
     }
 }
