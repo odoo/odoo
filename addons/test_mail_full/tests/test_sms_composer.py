@@ -497,8 +497,6 @@ class TestSMSComposerMass(test_mail_full_common.TestSMSCommon):
             ).create({
                 'mass_keep_log': False,
             })
-            # Call manually the onchange
-            composer._onchange_template_id()
             self.assertEqual(composer.composition_mode, "comment")
             self.assertEqual(composer.body, "Hello %s ceci est en français." % test_record_2.display_name)
 
@@ -521,8 +519,6 @@ class TestSMSComposerMass(test_mail_full_common.TestSMSCommon):
             ).create({
                 'mass_keep_log': True,
             })
-            # Call manually the onchange
-            composer._onchange_template_id()
             self.assertEqual(composer.composition_mode, "mass")
             # In english because by default but when sinding depending of record
             self.assertEqual(composer.body, "Dear ${object.display_name} this is an SMS.")
