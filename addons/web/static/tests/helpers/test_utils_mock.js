@@ -181,10 +181,8 @@ async function setMockedOwlEnv(Component, params, mockServer) {
         dataManager: Object.assign({
             load_action: (actionID, context) => {
                 return mockServer.performRpc('/web/action/load', {
-                    kwargs: {
-                        action_id: actionID,
-                        additional_context: context,
-                    },
+                    action_id: actionID,
+                    additional_context: context,
                 });
             },
             load_views: (params, options) => {
