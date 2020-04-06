@@ -20,6 +20,7 @@ class ChatWindowHiddenMenu extends Component {
             return {
                 chatWindowVisual: this.env.entities.ChatWindow.visual,
                 device: this.env.messaging.device,
+                isHiddenMenuOpen: this.env.entities.ChatWindow.isHiddenMenuOpen,
                 localeTextDirection: this.env.messaging.locale.textDirection,
             };
         });
