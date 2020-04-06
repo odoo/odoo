@@ -27,20 +27,20 @@ var PopoverWidgetField = AbstractField.extend({
     icon: 'fa-info-circle',
 
     _render: function () {
-        var value = JSON.parse(this.value);
-        if (!value) {
+        this.value = JSON.parse(this.value);
+        if (!this.value) {
             this.$el.html('');
             return;
         }
         this.$el.css('max-width', '17px');
-        this.$el.html(QWeb.render(this.buttonTemplape, _.defaults(value, {color: this.color, icon: this.icon})));
+        this.$el.html(QWeb.render(this.buttonTemplape, _.defaults(this.value, {color: this.color, icon: this.icon})));
         this.$el.find('a').prop('special_click', true);
-        this.$popover = $(QWeb.render(value.popoverTemplate || this.popoverTemplate, value));
+        this.$popover = $(QWeb.render(this.value.popoverTemplate || this.popoverTemplate, this.value));
         this.$el.find('a').popover({
             content: this.$popover,
             html: this.html,
             placement: this.placement,
-            title: value.title || this.title,
+            title: this.value.title || this.title,
             trigger: this.trigger,
             delay: {'show': 0, 'hide': 100},
         });
