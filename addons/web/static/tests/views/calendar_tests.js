@@ -288,6 +288,7 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
         });
+        await testUtils.owlCompatibilityExtraNextTick();
 
         // displays month mode by default
         assert.strictEqual(calendar.$('.o_control_panel .breadcrumb-item').text(),
