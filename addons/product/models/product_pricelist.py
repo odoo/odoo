@@ -311,56 +311,20 @@ class Pricelist(models.Model):
                         # because its pricelist has with_discount as discount_policy.
                         break
 
-                if last_rule:
+                if last_rule.pricelist_id.discount_policy == "without_discount" and last_rule.compute_price == "fixed":
+                    currency = pricelist_kwargs.get('currency') or self.currency_id
+                    product = pricelist_kwargs.get('product')
+                    price_without_discount = product.currency_id._convert(
+                        from_amount=product.lst_price,
+                        to_currency=currency,
+                        company=self.env.company,
+                        date=pricelist_kwargs.get('date'),
+                        round=False,
+                    )
+                else:
                     price_without_discount = last_rule._get_base_price_rules(
                         **pricelist_kwargs)[0]
                     # 0 = price, 1 = sub_rules
-                else:
-                    price_without_discount = price
-
-        return price, price_without_discount
-
-    def _get_detailed_prices(self, **pricelist_kwargs):
-        """Return the price with and without discounts.
-
-        Depends on the discount_policy of the current pricelist and on
-        the chain of pricelist dependencies.
-
-        The price without discount may be the sales_price, the cost price,
-        a fixed price, or even the price given by another pricelist
-        (formula or not).
-
-        :returns: price, price_without_discount
-        :rtype: tuple(float, float)
-        """
-        price = price_without_discount = 0.0
-        if not self or self.discount_policy == 'with_discount':
-            # if not pricelist: use product lst_price instead...
-            price = self.get_product_price(**pricelist_kwargs)
-            price_without_discount = price
-        else:
-            # Price in pricelist currency (== order.currency_id)
-            price, rule_ids = self._get_product_price_rules(**pricelist_kwargs)
-            price_without_discount = price
-
-            if rule_ids:
-                last_rule = self.env['product.pricelist.item']
-                price_without_discount = 0
-                for rule_id in rule_ids:
-                    rule = self.env['product.pricelist.item'].browse(rule_id)
-                    if rule.pricelist_id.discount_policy == 'without_discount':
-                        last_rule = rule
-                    else:
-                        # The price given by rule is the price before discount
-                        # because its pricelist has with_discount as discount_policy.
-                        break
-
-                if last_rule:
-                    price_without_discount = last_rule._get_base_price_rules(
-                        **pricelist_kwargs)[0]
-                    # 0 = price, 1 = sub_rules
-                else:
-                    price_without_discount = price
 
         return price, price_without_discount
 
