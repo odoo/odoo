@@ -399,12 +399,11 @@ class Lead(models.Model):
     def _update_probability(self):
         lead_probabilities = self.sudo()._pls_get_naive_bayes_probabilities()
         for lead in self:
-            if lead.id in lead_probabilities:
-                lead_proba = lead_probabilities[lead.id]
-                proba_vals = {'automated_probability': lead_proba}
-                if lead.active and lead.is_automated_probability:
-                    proba_vals['probability'] = lead_proba
-                super(Lead, lead).write(proba_vals)
+            lead_proba = lead_probabilities.get(lead.id, 0)
+            proba_vals = {'automated_probability': lead_proba}
+            if lead.is_automated_probability:
+                proba_vals = {'probability': lead_proba}
+            super(Lead, lead).write(proba_vals)
         return
 
     def _should_update_probability(self, vals):
