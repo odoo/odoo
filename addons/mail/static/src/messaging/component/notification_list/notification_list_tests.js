@@ -59,60 +59,60 @@ QUnit.module('NotificationList', {
         utilsAfterEach(this);
         if (this.component) {
             this.component.destroy();
+            this.component = undefined;
         }
         if (this.widget) {
             this.widget.destroy();
+            this.widget = undefined;
         }
         this.env = undefined;
         delete components.NotificationList.env;
-    }
+    },
 });
 
 QUnit.test('marked as read thread notifications are ordered by last message date', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records = [
-        {
-            channel_type: 'channel',
-            id: 100,
-            name: "Channel 2019",
-            message_unread_counter: 0,
-        },
-        {
-            channel_type: 'channel',
-            id: 200,
-            name: "Channel 2020",
-            message_unread_counter: 0,
-        }
-    ];
-    this.data['mail.message'].records = [
-        {
-            author_id: [10, "Author A"],
-            body: "<p>Message A</p>",
-            channel_ids: [100],
-            date: "2019-01-01 00:00:00",
-            id: 42,
-            message_type: 'comment',
-            model: 'mail.channel',
-            record_name: 'Channel 2019',
-            res_id: 100,
-        },
-        {
-            author_id: [20, "Author B"],
-            body: "<p>Message B</p>",
-            channel_ids: [200],
-            date: "2020-01-01 00:00:00",
-            id: 43,
-            message_type: 'comment',
-            model: 'mail.channel',
-            record_name: 'Channel 2020',
-            res_id: 200,
-        },
-    ];
+    this.data['mail.channel'].records = [{
+        channel_type: 'channel',
+        id: 100,
+        message_unread_counter: 0,
+        name: "Channel 2019",
+    }, {
+        channel_type: 'channel',
+        id: 200,
+        message_unread_counter: 0,
+        name: "Channel 2020",
+    }];
+    this.data['mail.message'].records = [{
+        author_id: [10, "Author A"],
+        body: "<p>Message A</p>",
+        channel_ids: [100],
+        date: "2019-01-01 00:00:00",
+        id: 42,
+        message_type: 'comment',
+        model: 'mail.channel',
+        record_name: 'Channel 2019',
+        res_id: 100,
+    }, {
+        author_id: [20, "Author B"],
+        body: "<p>Message B</p>",
+        channel_ids: [200],
+        date: "2020-01-01 00:00:00",
+        id: 43,
+        message_type: 'comment',
+        model: 'mail.channel',
+        record_name: 'Channel 2020',
+        res_id: 200,
+    }];
     await this.start();
     await this.createNotificationListComponent({ filter: 'all' });
-    assert.containsN(document.body, '.o_ThreadPreview', 2,
-        "there should be two thread previews");
+    assert.containsN(
+        document.body,
+        '.o_ThreadPreview',
+        2,
+        "there should be two thread previews"
+    );
     const threadPreviewElList = document.querySelectorAll('.o_ThreadPreview');
     assert.strictEqual(
         threadPreviewElList[0].querySelector(':scope .o_ThreadPreview_name').textContent,
@@ -129,48 +129,46 @@ QUnit.test('marked as read thread notifications are ordered by last message date
 QUnit.test('thread notifications are re-ordered on receiving a new message', async function (assert) {
     assert.expect(4);
 
-    this.data['mail.channel'].records = [
-        {
-            channel_type: 'channel',
-            id: 100,
-            name: "Channel 2019",
-            message_unread_counter: 0,
-        },
-        {
-            channel_type: 'channel',
-            id: 200,
-            name: "Channel 2020",
-            message_unread_counter: 0,
-        }
-    ];
-    this.data['mail.message'].records = [
-        {
-            author_id: [10, "Author A"],
-            body: "<p>Message A</p>",
-            channel_ids: [100],
-            date: "2019-01-01 00:00:00",
-            id: 42,
-            message_type: 'comment',
-            model: 'mail.channel',
-            record_name: 'Channel 2019',
-            res_id: 100,
-        },
-        {
-            author_id: [20, "Author B"],
-            body: "<p>Message B</p>",
-            channel_ids: [200],
-            date: "2020-01-01 00:00:00",
-            id: 43,
-            message_type: 'comment',
-            model: 'mail.channel',
-            record_name: 'Channel 2020',
-            res_id: 200,
-        },
-    ];
+    this.data['mail.channel'].records = [{
+        channel_type: 'channel',
+        id: 100,
+        message_unread_counter: 0,
+        name: "Channel 2019",
+    }, {
+        channel_type: 'channel',
+        id: 200,
+        message_unread_counter: 0,
+        name: "Channel 2020",
+    }];
+    this.data['mail.message'].records = [{
+        author_id: [10, "Author A"],
+        body: "<p>Message A</p>",
+        channel_ids: [100],
+        date: "2019-01-01 00:00:00",
+        id: 42,
+        message_type: 'comment',
+        model: 'mail.channel',
+        record_name: 'Channel 2019',
+        res_id: 100,
+    }, {
+        author_id: [20, "Author B"],
+        body: "<p>Message B</p>",
+        channel_ids: [200],
+        date: "2020-01-01 00:00:00",
+        id: 43,
+        message_type: 'comment',
+        model: 'mail.channel',
+        record_name: 'Channel 2020',
+        res_id: 200,
+    }];
     await this.start();
     await this.createNotificationListComponent({ filter: 'all' });
-    assert.containsN(document.body, '.o_ThreadPreview', 2,
-        "there should be two thread previews");
+    assert.containsN(
+        document.body,
+        '.o_ThreadPreview',
+        2,
+        "there should be two thread previews"
+    );
 
     const messageData = {
         author_id: [7, "Demo User"],
@@ -187,8 +185,12 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
         [['my-db', 'mail.channel', 100], messageData]
     ]);
     await afterNextRender();
-    assert.containsN(document.body, '.o_ThreadPreview', 2,
-        "there should still be two thread previews");
+    assert.containsN(
+        document.body,
+        '.o_ThreadPreview',
+        2,
+        "there should still be two thread previews"
+    );
     const threadPreviewElList = document.querySelectorAll('.o_ThreadPreview');
     assert.strictEqual(
         threadPreviewElList[0].querySelector(':scope .o_ThreadPreview_name').textContent,

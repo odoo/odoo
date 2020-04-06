@@ -80,11 +80,11 @@ class NotificationList extends Component {
                 if (t2.lastMessage) {
                     return 1;
                 }
-                return 0;
+                return t1.id < t2.id ? -1 : 1;
             })
             .map(thread => {
                 return {
-                    thread: thread,
+                    thread,
                     type: 'thread',
                     uniqueId: thread.localId,
                 };
