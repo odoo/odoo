@@ -837,8 +837,8 @@ class WebsiteSlides(WebsiteProfile):
             if category_id == 0:
                 category = request.env['slide.slide'].create(self._get_new_slide_category_values(channel, post['category_id'][1]['name']))
                 values['sequence'] = category.sequence + 1
-                category_id = category.id
             else:
+                category = request.env['slide.slide'].browse(category_id)
                 values.update({
                     'sequence': request.env['slide.slide'].browse(post['category_id'][0]).sequence + 1
                 })
@@ -856,7 +856,7 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
 
         # ensure correct ordering by re sequencing slides in front-end (backend should be ok thanks to list view)
-        channel._resequence_slides(slide, category_id)
+        channel._resequence_slides(slide, category)
 
         redirect_url = "/slides/slide/%s" % (slide.id)
         if channel.channel_type == "training" and not slide.slide_type == "webpage":
