@@ -485,6 +485,37 @@
         <record id="purchase_order_tree" model="ir.ui.view">
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
+                      decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="partner_ref" optional="hide"/>
+                    <field name="name" string="Reference" readonly="1"/>
+                    <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
+                    <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="company_id" readonly="1" options="{'no_create': True}"
+                        groups="base.group_multi_company" optional="show"/>
+                    <field name="date_planned" invisible="context.get('quotation_only', False)" optional="show"/>
+                    <field name="user_id" optional="show"/>
+                    <field name="origin" optional="show"/>
+                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary" optional="show"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="state" optional="show"/>
+                    <field name="invoice_status" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Unfortunately we want the purchase kpis table to only show up in some list views,
+             so we have to duplicate code to support both view versions -->
+        <record id="purchase_order_kpis_tree" model="ir.ui.view">
+            <field name="name">purchase.order.inherit.purchase.order.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
                       decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" class="o_purchase_order" js_class="purchase_list_dashboard">
@@ -555,7 +586,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
-            <field name="view_id" ref="purchase_order_tree"/>
+            <field name="view_id" ref="purchase_order_kpis_tree"/>
             <field name="domain">[]</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="context">{'quotation_only': True}</field>
@@ -686,7 +717,7 @@
         <field name="name">Requests for Quotation</field>
         <field name="res_model">purchase.order</field>
         <field name="view_mode">form,tree,kanban,pivot,graph,calendar,activity</field>
-        <field name="view_id" ref="purchase.purchase_order_tree"/>
+        <field name="view_id" ref="purchase.purchase_order_kpis_tree"/>
         <field name="search_view_id" ref="view_purchase_order_filter"/>
         <field name="target">main</field>
         <field name="help" type="html">
