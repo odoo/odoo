@@ -36,6 +36,17 @@ class StockWarehouseOrderpoint(models.Model):
             res['location_id'] = warehouse.lot_stock_id.id
         return res
 
+    @api.model
+    def _domain_product_id(self):
+        domain = "('type', '=', 'product')"
+        if self.env.context.get('active_model') == 'product.template':
+            product_template_id = self.env.context.get('active_id', False)
+            domain = f"('product_tmpl_id', '=', {product_template_id})"
+        elif self.env.context.get('default_product_id', False):
+            product_id = self.env.context.get('default_product_id', False)
+            domain = f"('id', '=', {product_id})"
+        return f"[{domain}, '|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+
     name = fields.Char(
         'Name', copy=False, required=True, readonly=True,
         default=lambda self: self.env['ir.sequence'].next_by_code('stock.orderpoint'))
@@ -54,7 +65,8 @@ class StockWarehouseOrderpoint(models.Model):
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     product_id = fields.Many2one(
         'product.product', 'Product', index=True,
-        domain="[('type', '=', 'product'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='cascade', required=True, check_company=True)
+        domain=lambda self: self._domain_product_id(),
+        ondelete='cascade', required=True, check_company=True)
     product_category_id = fields.Many2one('product.category', name='Product Category', related='product_id.categ_id', store=True)
     product_uom = fields.Many2one(
         'uom.uom', 'Unit of Measure', related='product_id.uom_id')
