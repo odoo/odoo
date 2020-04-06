@@ -18,7 +18,7 @@ class EventEvent(models.Model):
     _inherit = 'event.event'
 
     question_ids = fields.One2many(
-        'event.question', 'event_id', 'Questions', copy=True,
+        'event.question', 'event_id', 'Questions', 
         compute='_compute_from_event_type', readonly=False, store=True)
     general_question_ids = fields.One2many('event.question', 'event_id', 'General Questions',
                                            domain=[('once_per_order', '=', True)])

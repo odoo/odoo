@@ -38,8 +38,7 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     partner_weight = fields.Integer(
-        'Level Weight', compute='_compute_partner_weight',
-        copy=True, readonly=False, store=True, tracking=True,
+        'Level Weight', compute='_compute_partner_weight', readonly=False, store=True, tracking=True,
         help="This should be a numerical value greater than 0 which will decide the contention for this partner to take this lead/opportunity.")
     grade_id = fields.Many2one('res.partner.grade', 'Partner Level', tracking=True)
     grade_sequence = fields.Integer(related='grade_id.sequence', readonly=True, store=True)

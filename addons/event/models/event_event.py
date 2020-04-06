@@ -32,7 +32,7 @@ class EventType(models.Model):
         'event.type.ticket', 'event_type_id',
         string='Tickets', compute='_compute_event_type_ticket_ids',
         readonly=False, store=True)
-    tag_ids = fields.Many2many('event.tag', string="Tags", copy=True)
+    tag_ids = fields.Many2many('event.tag', string="Tags")
     # registration
     has_seats_limitation = fields.Boolean('Limited Seats')
     seats_max = fields.Integer(
@@ -120,11 +120,11 @@ class EventEvent(models.Model):
     event_type_id = fields.Many2one('event.type', string='Template', ondelete='set null')
     color = fields.Integer('Kanban Color Index')
     event_mail_ids = fields.One2many(
-        'event.mail', 'event_id', string='Mail Schedule', copy=True,
+        'event.mail', 'event_id', string='Mail Schedule', 
         compute='_compute_from_event_type', readonly=False, store=True)
     tag_ids = fields.Many2many(
-        'event.tag', string="Tags", readonly=False,
-        copy=True, store=True, compute="_compute_from_event_type")
+        'event.tag', string="Tags", readonly=False, 
+        store=True, compute="_compute_from_event_type")
     # Kanban fields
     kanban_state = fields.Selection([('normal', 'In Progress'), ('done', 'Done'), ('blocked', 'Blocked')], default='normal')
     kanban_state_label = fields.Char(
@@ -164,7 +164,7 @@ class EventEvent(models.Model):
         help='Autoconfirm Registrations. Registrations will automatically be confirmed upon creation.')
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
     event_ticket_ids = fields.One2many(
-        'event.event.ticket', 'event_id', string='Event Ticket', copy=True,
+        'event.event.ticket', 'event_id', string='Event Ticket',
         compute='_compute_from_event_type', readonly=False, store=True)
     event_registrations_open = fields.Boolean(
         'Registration open', compute='_compute_event_registrations_open', compute_sudo=True,
@@ -190,8 +190,7 @@ class EventEvent(models.Model):
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one(
-        'res.country', 'Country', related='address_id.country_id',
-        copy=True, readonly=False, store=True)
+        'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
     # badge fields
     badge_front = fields.Html(string='Badge Front')
     badge_back = fields.Html(string='Badge Back')
