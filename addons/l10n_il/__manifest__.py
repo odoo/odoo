@@ -17,6 +17,7 @@ This module consists:
     'depends': ['account'],
     'data': [
         'data/account_chart_template_data.xml',
+        'data/account_account_tag.xml',
         'data/account.account.template.csv',
         'data/account_data.xml',
         'data/account_tax_template_data.xml',

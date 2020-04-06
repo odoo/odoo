@@ -21,10 +21,10 @@ il_account_101420,101420,Cheques,account.data_account_type_liquidity,FALSE,,il_c
 il_account_101430,101430,Financial Assets,account.data_account_type_liquidity,FALSE,,il_chart_template
 il_account_101440,101440,Petty Cash,account.data_account_type_liquidity,FALSE,,il_chart_template
 il_account_101600,101600,Opening Income Account,account.data_account_type_other_income,FALSE,,il_chart_template
-il_account_101800,101800,VAT - Inputs,account.data_account_type_current_assets,FALSE,,il_chart_template
-il_account_101810,101810,VAT - Fixed Assets,account.data_account_type_current_assets,FALSE,,il_chart_template
+il_account_101800,101800,VAT - Inputs,account.data_account_type_current_assets,FALSE,account_tag_regular_tax_account,il_chart_template
+il_account_101810,101810,VAT - Fixed Assets,account.data_account_type_current_assets,FALSE,account_tag_regular_tax_account,il_chart_template
 il_account_101820,101820,VAT - Import Transactions,account.data_account_type_current_assets,FALSE,,il_chart_template
-il_account_101830,101830,VAT - PA Import Transactions,account.data_account_type_current_assets,FALSE,,il_chart_template
+il_account_101830,101830,VAT - PA Import Transactions,account.data_account_type_current_assets,FALSE,account_tag_regular_tax_account,il_chart_template
 il_account_102000,102000,Non-current assets,account.data_account_type_non_current_assets,FALSE,,il_chart_template
 il_account_102110,102110,Land and buildings depreciation,account.data_account_type_non_current_assets,FALSE,,il_chart_template
 il_account_102120,102120,Machinery and equipment depreciation,account.data_account_type_depreciation,FALSE,,il_chart_template
@@ -34,12 +34,12 @@ il_account_102150,102150,Accumulated depreciation,account.data_account_type_non_
 il_account_102200,102200,Intangible Assets,account.data_account_type_non_current_assets,FALSE,,il_chart_template
 il_account_103000,103000,Prepayments,account.data_account_type_prepayments,FALSE,,il_chart_template
 il_account_111000,111000,Current Liabilities,account.data_account_type_current_liabilities,FALSE,,il_chart_template
-il_account_111100,111100,Account Payable,account.data_account_type_payable,TRUE,,il_chart_template
-il_account_111110,111110,VAT Sales,account.data_account_type_current_liabilities,FALSE,,il_chart_template
-il_account_111120,111120,VAT PA Sales,account.data_account_type_current_liabilities,FALSE,,il_chart_template
-il_account_111200,111200,Income tax withheld - vendors,account.data_account_type_current_liabilities,FALSE,,il_chart_template
+il_account_111100,111100,Account Payable,account.data_account_type_payable,TRUE,account_tag_payable_account,il_chart_template
+il_account_111110,111110,VAT Sales,account.data_account_type_current_liabilities,FALSE,account_tag_regular_tax_account,il_chart_template
+il_account_111120,111120,VAT PA Sales,account.data_account_type_current_liabilities,FALSE,account_tag_regular_tax_account,il_chart_template
+il_account_111200,111200,Income tax withheld - vendors,account.data_account_type_current_liabilities,FALSE,account_tag_retention_tax_account,il_chart_template
 il_account_111210,111210,Income tax withheld - employees,account.data_account_type_current_liabilities,FALSE,,il_chart_template
-il_account_111220,111220,Income tax withheld - dividends,account.data_account_type_current_liabilities,FALSE,,il_chart_template
+il_account_111220,111220,Income tax withheld - dividends,account.data_account_type_current_liabilities,FALSE,account_tag_retention_tax_dividend_account,il_chart_template
 il_account_111300,111300,Reserve and Profit/Loss Account,account.data_account_type_current_liabilities,TRUE,,il_chart_template
 il_account_111400,111400,Credit cards,account.data_account_type_current_liabilities,FALSE,,il_chart_template
 il_account_111450,111450,Short term loans,account.data_account_type_current_liabilities,FALSE,,il_chart_template
