@@ -102,7 +102,7 @@ class SaleOrder(models.Model):
             data = self._compute_line_data_for_template_change(line)
 
             if line.product_id:
-                price, price_without_discount = self.pricelist_id.get_detailed_prices(
+                price, price_without_discount = self.pricelist_id._get_detailed_prices(
                     line.product_id,
                     line.product_uom_qty,
                     line.product_uom_id,
