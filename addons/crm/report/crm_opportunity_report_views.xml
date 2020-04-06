@@ -123,11 +123,9 @@
                 teams of the sales pipeline.</field>
         </record>
         
-        <menuitem id="crm_opportunity_report_menu" 
-            name="Pipeline"
-            parent="crm_menu_report" 
-            action="crm_opportunity_report_action" 
-            sequence="2"/>
+        <record id="crm_opportunity_report_menu" model="ir.ui.menu">
+            <field name="action" ref="crm.crm_opportunity_report_action"/>
+        </record>
 
         <record id="crm_opportunity_report_action_lead" model="ir.actions.act_window">
             <field name="name">Leads Analysis</field>
@@ -142,12 +140,8 @@
             <field name="help">This report analyses the source of your leads.</field>
         </record>
 
-        <menuitem
-            id="crm_opportunity_report_menu_lead"
-            name="Leads"
-            parent="crm_menu_report"
-            action="crm_opportunity_report_action_lead"
-            groups="crm.group_use_lead"
-            sequence="1"/>
+        <record id="crm_opportunity_report_menu_lead" model="ir.ui.menu">
+            <field name="action" ref="crm.crm_opportunity_report_action_lead"/>
+        </record>
 
 </odoo>
