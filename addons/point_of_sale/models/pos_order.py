@@ -597,38 +597,32 @@ class PosOrder(models.Model):
         self.ensure_one()
         self.env['pos.payment'].create(data)
         self.amount_paid = sum(self.payment_ids.mapped('amount'))
+        
+    def _prepare_refund_order_data(self):
+        self.ensure_one()
+        # When a refund is performed, we are creating it in a session having the same config as the original
+        # order. It can be the same session, or if it has been closed the new one that has been opened.
+        current_session = self.session_id.config_id.current_session_id
+        if not current_session:
+            raise UserError(_('To return product(s), you need to open a session in the POS %s') % self.session_id.config_id.display_name)
+        return {
+            'name': self.name + _(' REFUND'),
+            'session_id': current_session.id,
+            'date_order': fields.Datetime.now(),
+            'pos_reference': self.pos_reference,
+            'lines': False,
+            'amount_tax': -self.amount_tax,
+            'amount_total': -self.amount_total,
+            'amount_paid': 0,
+            }
 
     def refund(self):
         """Create a copy of order  for refund order"""
         refund_orders = self.env['pos.order']
         for order in self:
-            # When a refund is performed, we are creating it in a session having the same config as the original
-            # order. It can be the same session, or if it has been closed the new one that has been opened.
-            current_session = order.session_id.config_id.current_session_id
-            if not current_session:
-                raise UserError(_('To return product(s), you need to open a session in the POS %s') % order.session_id.config_id.display_name)
-            refund_order = order.copy({
-                'name': order.name + _(' REFUND'),
-                'session_id': current_session.id,
-                'date_order': fields.Datetime.now(),
-                'pos_reference': order.pos_reference,
-                'lines': False,
-                'amount_tax': -order.amount_tax,
-                'amount_total': -order.amount_total,
-                'amount_paid': 0,
-            })
+            refund_order = order.copy(order._prepare_refund_order_data())
             for line in order.lines:
-                PosOrderLineLot = self.env['pos.pack.operation.lot']
-                for pack_lot in line.pack_lot_ids:
-                    PosOrderLineLot += pack_lot.copy()
-                line.copy({
-                    'name': line.name + _(' REFUND'),
-                    'qty': -line.qty,
-                    'order_id': refund_order.id,
-                    'price_subtotal': -line.price_subtotal,
-                    'price_subtotal_incl': -line.price_subtotal_incl,
-                    'pack_lot_ids': PosOrderLineLot,
-                    })
+                line.copy(line._prepare_refund_data(refund_order))
             refund_orders |= refund_order
 
         return {
@@ -756,6 +750,9 @@ class PosOrderLine(models.Model):
         @return: dictionary of data which is for creating a refund order line from the original line
         @rtype: dict
         """
+        PosOrderLineLot = self.env['pos.pack.operation.lot']
+        for pack_lot in self.pack_lot_ids:
+            PosOrderLineLot += pack_lot.copy()
         return {
             # required=True, copy=False
             'name': self.name + _(' REFUND'),
@@ -763,6 +760,7 @@ class PosOrderLine(models.Model):
             'order_id': refund_order_id.id,
             'price_subtotal': -self.price_subtotal,
             'price_subtotal_incl': -self.price_subtotal_incl,
+            'pack_lot_ids': PosOrderLineLot
             }
 
     @api.model
