@@ -867,7 +867,7 @@ class Task(models.Model):
         groups = [new_group] + groups
 
         for group_name, group_method, group_data in groups:
-            if group_name != 'customer':
+            if group_name != 'portal_customer' or self.project_id.privacy_visibility == 'portal' and group_name != 'customer':
                 group_data['has_button_access'] = True
 
         return groups
