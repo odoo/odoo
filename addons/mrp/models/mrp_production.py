@@ -237,6 +237,8 @@ class MrpProduction(models.Model):
 
     mrp_production_child_count = fields.Integer("Number of generated MO", compute='_compute_mrp_production_child_count')
     mrp_production_source_count = fields.Integer("Number of source MO", compute='_compute_mrp_production_source_count')
+    json_popover_availability = fields.Char('Popover Data JSON (product availability)', compute='_compute_json_popover')
+    show_availability_popover = fields.Boolean(compute='_compute_json_popover')
 
     @api.depends('procurement_group_id.stock_move_ids.created_production_id')
     def _compute_mrp_production_child_count(self):
@@ -279,6 +281,33 @@ class MrpProduction(models.Model):
                     } for late_document in production.move_raw_ids.filtered(lambda m: m.delay_alert_date).move_orig_ids._delay_alert_get_documents()
                 ]
             })
+
+            # Availability popover
+            production.show_availability_popover = False
+            production.json_popover_availability = json.dumps({})
+            if production.state in ('draft', 'done', 'cancel'):
+                continue
+            products = production.move_raw_ids.product_id
+            qty_available_by_product = products.with_context({'location_id': production.location_src_id, 'to_date': production.date_planned_start}).read([
+                'virtual_available'
+            ])
+            qty_available_by_product = {x['id']: x['virtual_available'] for x in qty_available_by_product}
+            qty_by_duplicate_product = defaultdict(float)
+            products_to_warn = set()
+            for move in production.move_raw_ids:
+                if move.product_id.type != 'product':
+                    continue
+                avail_qty = qty_available_by_product[move.product_id.id] - qty_by_duplicate_product[move.product_id]
+                if float_compare(avail_qty, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) < 0:
+                    products_to_warn.add((move.product_id.name, move.product_id.id))
+            if products_to_warn:
+                production.json_popover_availability = json.dumps({
+                    'infos': _("The following products won't be available at scheduled date:"),
+                    'products': list(products_to_warn),
+                    'date': production.date_planned_start.strftime(format='%Y-%m-%d'),
+                    'warehouse': production.location_src_id.get_warehouse().id,
+                })
+                production.show_availability_popover = True
 
     @api.depends('move_raw_ids.state', 'move_finished_ids.state')
     def _compute_confirm_cancel(self):
@@ -1205,7 +1234,7 @@ class MrpProduction(models.Model):
             'res_model': 'mrp.unbuild',
             'view_id': self.env.ref('mrp.mrp_unbuild_form_view_simplified').id,
             'type': 'ir.actions.act_window',
-            'context': {'default_mo_id': self.id, 
+            'context': {'default_mo_id': self.id,
                         'default_company_id': self.company_id.id,
                         'default_location_id': self.location_dest_id.id,
                         'default_location_dest_id': self.location_src_id.id,

@@ -16,4 +16,17 @@
             </t>
          planned on <t t-esc="delay_alert_date"/>.</p>
     </div>
+
+    <div t-name="stock.availabilityPopover">
+        <p t-esc="infos"/>
+        <ul t-if="products">
+            <t t-foreach="products" t-as="p">
+                <li t-esc="p[0]"/>
+            </t>
+        </ul>
+        <button class="text-left btn btn-link action_open_forecast" type="button">
+            <i class="fa fa-fw o_button_icon fa-arrow-right"/>
+            View Forecast
+        </button>
+    </div>
 </templates>

@@ -7,6 +7,7 @@ from ast import literal_eval
 from datetime import date
 from itertools import groupby
 from operator import itemgetter
+from collections import defaultdict
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
@@ -370,6 +371,8 @@ class Picking(models.Model):
     immediate_transfer = fields.Boolean(default=False)
     package_level_ids = fields.One2many('stock.package_level', 'picking_id')
     package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
+    json_popover_availability = fields.Char(compute='_compute_json_popover')
+    show_availability_popover = fields.Boolean(compute='_compute_json_popover')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -424,6 +427,33 @@ class Picking(models.Model):
                     } for late_move in picking.move_lines.filtered(lambda m: m.delay_alert_date).move_orig_ids._delay_alert_get_documents()
                 ]
             })
+
+            # Availability popover
+            picking.show_availability_popover = False
+            picking.json_popover_availability = json.dumps({})
+            if picking.state in ('draft', 'done', 'cancel') or picking.picking_type_code != 'outgoing':
+                continue
+            products = picking.move_lines.product_id
+            qty_available_by_product = products.with_context({'location_id': picking.location_id, 'to_date': picking.scheduled_date}).read([
+                'virtual_available'
+            ])
+            qty_available_by_product = {x['id']: x['virtual_available'] for x in qty_available_by_product}
+            qty_by_duplicate_product = defaultdict(float)
+            products_to_warn = set()
+            for move in picking.move_lines:
+                if move.product_id.type != 'product':
+                    continue
+                avail_qty = qty_available_by_product[move.product_id.id] - qty_by_duplicate_product[move.product_id]
+                if float_compare(avail_qty, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) < 0:
+                    products_to_warn.add((move.product_id.name, move.product_id.id))
+            if products_to_warn:
+                picking.json_popover_availability = json.dumps({
+                    'infos': _("The following products won't be available at scheduled date:"),
+                    'products': list(products_to_warn),
+                    'date': picking.scheduled_date.strftime(format='%Y-%m-%d'),
+                    'warehouse': picking.picking_type_id.warehouse_id.id,
+                })
+                picking.show_availability_popover = True
 
     @api.depends('move_type', 'immediate_transfer', 'move_lines.state', 'move_lines.picking_id')
     def _compute_state(self):

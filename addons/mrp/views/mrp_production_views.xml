@@ -176,7 +176,9 @@
                                     ('state', 'in', ['draft', 'confirmed'])
                                 ]}"/>
                                 <field name="delay_alert_date" invisible="1"/>
+                                <field name="show_availability_popover" invisible="1"/>
                                 <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
+                                <field string=" " name="json_popover_availability" widget="stock_availability_popover" attrs="{'invisible': [('show_availability_popover', '=', False)]}"/>
                             </div>
                             <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="origin"/>

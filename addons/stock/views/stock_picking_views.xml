@@ -303,7 +303,9 @@
                             <div class="o_row">
                             <field name="scheduled_date" attrs="{'required': [('id', '!=', False)]}"/>
                                 <field name="delay_alert_date" invisible="1"/>
+                                <field name="show_availability_popover" invisible="1"/>
                                 <field name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
+                                <field name="json_popover_availability" widget="stock_availability_popover" attrs="{'invisible': [('show_availability_popover', '=', False)]}"/>
                             </div>
                             <field name="date_done" string="Effective Date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             <field name="origin" placeholder="e.g. PO0032"/>
