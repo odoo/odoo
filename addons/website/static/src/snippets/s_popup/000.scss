@@ -14,23 +14,20 @@
         display: block !important;
     }
 
-    $popup-close-size: 1.5rem;
+    $popup-close-size: 2rem;
     .s_popup_close {
-        position: absolute;
-        background: white;
+        @include o-position-absolute(0, 0, auto, auto);
         height: $popup-close-size;
         width: $popup-close-size;
         line-height: $popup-close-size;
-        margin-top: -1 * $popup-close-size / 2;
-        margin-right: -1 * $popup-close-size / 2;
+        margin-top: -$popup-close-size / 2;
+        margin-right: -$popup-close-size / 2;
+        @include o-bg-color(gray('white'));
         border-radius: $popup-close-size / 2;
-        right: 0px;
-        top: 0px;
-        box-shadow: rgba(0,0,0,0.8) 0 0 5px;
+        box-shadow: $box-shadow;
         cursor: pointer;
+        font-size: $popup-close-size * .75;
         text-align: center;
-        z-index: 1;
-        font-size: $popup-close-size;
     }
 
     &.s_popup_center {
@@ -40,18 +37,19 @@
                 max-width: 100%;
                 padding: 0 !important;
                 margin: 0 !important;
-
                 .modal-content {
                     height: 100%;
                     width: 100%;
-                    justify-content: center;
+                     > section {
+                         display: flex;
+                         align-self: center;
+                         height: 100%;
+                         width: 100%;
+                     }
                 }
             }
             .s_popup_close {
-                font-size: 60px;
-                margin: 10px;
-                background: none;
-                box-shadow: none;
+                margin: 1rem;
             }
         }
     }
