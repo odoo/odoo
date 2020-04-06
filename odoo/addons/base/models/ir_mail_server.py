@@ -68,7 +68,7 @@ class IrMailServer(models.Model):
     smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
     smtp_port = fields.Integer(string='SMTP Port', required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
     smtp_user = fields.Char(string='Username', help="Optional username for SMTP authentication", groups='base.group_system')
-    smtp_pass = fields.Char(string='Password', help="Optional password for SMTP authentication", groups='base.group_system')
+    smtp_pass = fields.Secret(string='Password', help="Optional password for SMTP authentication", groups='base.group_system')
     smtp_encryption = fields.Selection([('none', 'None'),
                                         ('starttls', 'TLS (STARTTLS)'),
                                         ('ssl', 'SSL/TLS')],
@@ -164,7 +164,7 @@ class IrMailServer(models.Model):
             smtp_server = mail_server.smtp_host
             smtp_port = mail_server.smtp_port
             smtp_user = mail_server.smtp_user
-            smtp_password = mail_server.smtp_pass
+            smtp_password = mail_server.sudo().smtp_pass
             smtp_encryption = mail_server.smtp_encryption
             smtp_debug = smtp_debug or mail_server.smtp_debug
         else:

@@ -25,7 +25,7 @@ class CompanyLDAP(models.Model):
     ldap_binddn = fields.Char('LDAP binddn',
         help="The user account on the LDAP server that is used to query the directory. "
              "Leave empty to connect anonymously.")
-    ldap_password = fields.Char(string='LDAP password',
+    ldap_password = fields.Secret(string='LDAP password',
         help="The password of the user account on the LDAP server that is used to query the directory.")
     ldap_filter = fields.Char(string='LDAP filter', required=True)
     ldap_base = fields.Char(string='LDAP base', required=True)

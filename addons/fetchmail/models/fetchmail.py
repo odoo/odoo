@@ -45,7 +45,7 @@ class FetchmailServer(models.Model):
                                                     "and attached to each processed message. This will usually double the size of your message database.")
     date = fields.Datetime(string='Last Fetch Date', readonly=True)
     user = fields.Char(string='Username', readonly=True, states={'draft': [('readonly', False)]})
-    password = fields.Char(readonly=True, states={'draft': [('readonly', False)]})
+    password = fields.Secret(readonly=True, states={'draft': [('readonly', False)]})
     object_id = fields.Many2one('ir.model', string="Create a New Record", help="Process each incoming mail as part of a conversation "
                                                                                 "corresponding to this document type. This will create "
                                                                                 "new documents for new conversations, or attach follow-up "
@@ -105,7 +105,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                 connection = IMAP4_SSL(self.server, int(self.port))
             else:
                 connection = IMAP4(self.server, int(self.port))
-            connection.login(self.user, self.password)
+            connection.login(self.user, self.sudo().password)
         elif self.server_type == 'pop':
             if self.is_ssl:
                 connection = POP3_SSL(self.server, int(self.port))
@@ -114,7 +114,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             #TODO: use this to remove only unread messages
             #connection.user("recent:"+server.user)
             connection.user(self.user)
-            connection.pass_(self.password)
+            connection.pass_(self.sudo().password)
         # Add timeout on socket
         connection.sock.settimeout(MAIL_TIMEOUT)
         return connection
