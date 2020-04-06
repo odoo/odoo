@@ -1081,15 +1081,25 @@ class Lead(models.Model):
                 - merge at least 1 opp with anything else (lead or opp) = 1 new opp
             The resulting lead/opportunity will be the most important one (based on its confidence level)
             updated with values from other opportunities to merge.
-            :param user_id : the id of the saleperson. If not given, will be determined by `_merge_data`.
-            :param team : the id of the Sales Team. If not given, will be determined by `_merge_data`.
-            :return crm.lead record resulting of th merge
+
+        :param user_id : the id of the saleperson. If not given, will be determined by `_merge_data`.
+        :param team : the id of the Sales Team. If not given, will be determined by `_merge_data`.
+
+        :return crm.lead record resulting of th merge
         """
+        return self._merge_opportunity(user_id=user_id, team_id=team_id, auto_unlink=auto_unlink)
+
+    def _merge_opportunity(self, user_id=False, team_id=False, auto_unlink=True, max_length=5):
+        """ Private merging method. This one allows to relax rules on record set
+        length allowing to merge more than 5 opportunities at once if requested.
+        This should not be called by action buttons.
+
+        See ``merge_opportunity`` for more details. """
         if len(self.ids) <= 1:
             raise UserError(_('Please select more than one element (lead or opportunity) from the list view.'))
 
-        if len(self.ids) > 5 and not self.env.is_superuser():
-            raise UserError(_("To prevent data loss, Leads and Opportunities can only be merged by groups of 5."))
+        if max_length and len(self.ids) > max_length and not self.env.is_superuser():
+            raise UserError(_("To prevent data loss, Leads and Opportunities can only be merged by groups of %(max_length)s."))
 
         opportunities = self._sort_by_confidence_level(reverse=True)
 

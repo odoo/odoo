@@ -106,6 +106,14 @@
             <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
             <field name="priority">12</field>
             <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <header>
+                        <button name="action_assign_leads" type="object"
+                            string="Assign Leads"
+                            class="oe_highlight"
+                            confirm="This will assign leads to all members. Do you want to proceed?"/>
+                    </header>
+                </xpath>
                 <xpath expr="//div[@name='options_active']" position="inside">
                     <div class="o_row">
                         <span name="opportunities">
@@ -136,6 +144,18 @@
                     <field name="alias_contact"
                         string="Accept Emails From"
                         attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//group[@name='right']" position="attributes">
+                    <attribute name="string">Assignment Rules</attribute>
+                </xpath>
+                <xpath expr="//group[@name='right']" position="inside">
+                    <field name="assignment_domain" widget="domain" string="Domain"
+                        options="{'model': 'crm.lead', 'in_dialog': True}"/>
+                    <label for="lead_all_assigned_month_count" string="Assigned Leads Count"/>
+                    <div>
+                        <field name="lead_all_assigned_month_count" class="oe_inline"/> /
+                        <field name="assignment_max" class="oe_inline"/>
+                    </div>
                 </xpath>
             </field>
         </record>
