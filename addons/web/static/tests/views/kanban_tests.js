@@ -449,7 +449,7 @@ QUnit.module('Views', {
             "column quick create should be enabled when grouped by a many2one field)");
 
         await testUtils.kanban.clickCreate(kanban); // Click on 'Create'
-        assert.hasClass(kanban.$('.o_kanban_group:first() > div:nth(1)'),'o_kanban_quick_create',
+        assert.hasClass(kanban.$('.o_kanban_group:first() .o_kanban_records > div:nth(0)'), 'o_kanban_quick_create',
             "clicking on create should open the quick_create in the first column");
 
         assert.ok(kanban.$('span.o_column_title:contains(hello)').length,
@@ -1656,7 +1656,7 @@ QUnit.module('Views', {
             "there should be 2 records in first column");
 
         await testUtils.kanban.clickCreate(kanban); // Click on 'Create'
-        assert.hasClass(kanban.$('.o_kanban_group:first() > div:nth(1)'),'o_kanban_quick_create',
+        assert.hasClass(kanban.$('.o_kanban_group:first() .o_kanban_records > div:nth(0)'), 'o_kanban_quick_create',
             "clicking on create should open the quick_create in the first column");
 
         await testUtils.kanban.quickCreate(kanban, 'test');
@@ -3057,7 +3057,7 @@ QUnit.module('Views', {
 
         // quick create a record
         await testUtils.kanban.clickCreate(kanban);
-        assert.hasClass(kanban.$('.o_kanban_group:first() > div:nth(1)'),'o_kanban_quick_create',
+        assert.hasClass(kanban.$('.o_kanban_group:first() .o_kanban_records > div:nth(0)'), 'o_kanban_quick_create',
             "clicking on create should open the quick_create in the first column");
         kanban.destroy();
     });
