@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="assets_backend" name="purchase stock assets" inherit_id="web.assets_backend">
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/purchase_stock/static/src/js/tours/purchase_stock.js"></script>
+        </xpath>
+    </template>
+</odoo>
