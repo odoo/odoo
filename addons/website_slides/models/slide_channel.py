@@ -649,8 +649,8 @@ class Channel(models.Model):
         index_of_added_slide = ids_to_resequence.index(slide.id)
         next_category_id = None
         if self.slide_category_ids:
-            force_category_id = force_category.id if force_category else slide.category_id.id
-            index_of_category = self.slide_category_ids.ids.index(force_category_id) if force_category_id else None
+            category_id = force_category or slide.category_id.id
+            index_of_category = self.slide_category_ids.ids.index(category_id) if category_id else None
             if index_of_category is None:
                 next_category_id = self.slide_category_ids.ids[0]
             elif index_of_category < len(self.slide_category_ids.ids) - 1:

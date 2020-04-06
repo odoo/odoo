@@ -93,7 +93,7 @@ class TestSequencing(slides_common.SlidesCase):
         })
         new_category.flush()
         self.channel.invalidate_cache()
-        self.channel._resequence_slides(self.slide_3, force_category=new_category)
+        self.channel._resequence_slides(self.slide_3, force_category=new_category.id)
         self.assertEqual(self.slide.sequence, 1)
         self.assertEqual(new_category.sequence, 2)
         self.assertEqual(self.slide_3.sequence, 3)
