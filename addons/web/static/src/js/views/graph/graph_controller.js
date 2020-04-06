@@ -184,6 +184,10 @@ var GraphController = AbstractController.extend({
             .data('stacked', state.stacked)
             .toggleClass('active', state.stacked)
             .toggleClass('o_hidden', state.mode !== 'bar');
+        this.$buttons
+            .find('.o_graph_button[data-mode="' + state.orderby_mode + '"]')
+            .toggleClass('active', state.orderby)
+            .toggleClass('o_hidden', state.mode == 'pie');
     },
 
     //--------------------------------------------------------------------------
@@ -258,6 +262,8 @@ var GraphController = AbstractController.extend({
                 this.update({ mode: $target.data('mode') });
             } else if ($target.data('mode') === 'stack') {
                 this.update({ stacked: !$target.data('stacked') });
+            } else if (_.contains(['ascending','descending'], $target.data('mode'))) {
+                this.update({ orderby: this.model.chart.orderby == $target.data('mode') ? false : $target.data('mode'), orderby_mode: $target.data('mode')});
             }
         }
     },

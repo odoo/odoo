@@ -115,6 +115,10 @@ return AbstractModel.extend({
         if ('timeRanges' in params) {
             this.chart.timeRanges = params.timeRanges;
         }
+        if ('orderby' in params) {
+            this.chart.orderby = params.orderby;
+            this.chart.orderby_mode = params.orderby_mode;
+        }
 
         this._computeDerivedParams();
 
@@ -191,6 +195,14 @@ return AbstractModel.extend({
         var context = _.extend({fill_temporal: true}, this.chart.context);
 
         var proms = [];
+        var orderBy = [];
+
+        if (this.chart.orderby) {
+            orderBy = _.map(groupBy, function(group) {
+                return {name: group, asc: self.chart.orderby === 'ascending' ? true : false};
+            })
+        }
+
         this.chart.domains.forEach(function (domain, originIndex) {
             proms.push(self._rpc({
                 model: self.modelName,
@@ -199,6 +211,7 @@ return AbstractModel.extend({
                 domain: domain,
                 fields: fields,
                 groupBy: groupBy,
+                orderBy: orderBy,
                 lazy: false,
             }).then(self._processData.bind(self, originIndex)));
         });
