@@ -446,7 +446,7 @@ class PosSession(models.Model):
                     for amount_key, amount in amounts.items():
                         taxes[tax_key][amount_key] += amount
 
-                if self.company_id.anglo_saxon_accounting:
+                if self.company_id.anglo_saxon_accounting and order.picking_ids.ids:
                     # Combine stock lines
                     stock_moves = self.env['stock.move'].search([
                         ('picking_id', 'in', order.picking_ids.ids),
