@@ -1806,7 +1806,7 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
             websiteId: websiteId,
         }));
 
-        const $content = this.$target.find('.s_popup_content');
+        const $content = this.$target.find('.modal-content');
         const selectorsToKeep = [
             '.o_cookies_bar_text_button',
             '.o_cookies_bar_text_policy',
