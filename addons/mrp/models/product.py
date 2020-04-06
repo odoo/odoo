@@ -87,13 +87,20 @@ class ProductProduct(models.Model):
     def get_components(self):
         """ Return the components list ids in case of kit product.
         Return the product itself otherwise"""
-        self.ensure_one()
-        bom_kit = self.env['mrp.bom']._bom_find(product=self, bom_type='phantom')
-        if bom_kit:
-            boms, bom_sub_lines = bom_kit.explode(self, 1)
-            return [bom_line.product_id.id for bom_line, data in bom_sub_lines if bom_line.product_id.type == 'product']
-        else:
-            return super(ProductProduct, self).get_components()
+        components = []
+        non_kit_product = self.env['product.product']
+        for product in self:
+            bom_kit = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
+            if bom_kit:
+                kit_components = self.env['product.product']
+                boms, bom_sub_lines = bom_kit.explode(product, 1)
+                for bom_line, data in bom_sub_lines:
+                    if bom_line.product_id.type == 'product':
+                        kit_components |= bom_line.product_id
+                components += super(ProductProduct, kit_components).get_components()
+            else:
+                non_kit_product |= product
+        return components + super(ProductProduct, non_kit_product).get_components()
 
     def action_used_in_bom(self):
         self.ensure_one()

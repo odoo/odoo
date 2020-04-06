@@ -205,7 +205,6 @@ class Product(models.Model):
         return res
 
     def get_components(self):
-        self.ensure_one()
         return self.ids
 
     def _get_description(self, picking_type_id):
