@@ -103,17 +103,18 @@ class SaleOrder(models.Model):
 
             if line.product_id:
                 price, price_without_discount = self.pricelist_id._get_detailed_prices(
-                    line.product_id,
-                    line.product_uom_qty,
-                    line.product_uom_id,
-                    self.currency_id,
+                    product=line.product_id,
+                    quantity=line.product_uom_qty,
+                    uom=line.product_uom_id,
+                    currency=self.currency_id,
+                    date=self.date_order or fields.Date.today(),
                 )
 
                 discount = 0 if price == price_without_discount else \
                     ((price_without_discount - price) / (price_without_discount or 1.0)) * 100
 
                 data.update({
-                    'price_unit': price,
+                    'price_unit': price_without_discount,
                     'discount': discount,
                     'product_uom_qty': line.product_uom_qty,
                     'product_id': line.product_id.id,
