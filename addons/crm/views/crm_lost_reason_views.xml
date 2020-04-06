@@ -69,9 +69,7 @@
         </field>
     </record>
 
-    <menuitem
-        id="menu_crm_lost_reason"
-        action="crm_lost_reason_action"
-        parent="menu_crm_config_lead"
-        sequence="6"/>
+    <record id="menu_crm_lost_reason" model="ir.ui.menu">
+        <field name="action" ref="crm.crm_lost_reason_action"/>
+    </record>
 </odoo>

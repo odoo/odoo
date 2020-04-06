@@ -15,7 +15,9 @@ class Team(models.Model):
 
     use_leads = fields.Boolean('Leads', help="Check this box to filter and qualify incoming requests as leads before converting them into opportunities and assigning them to a salesperson.")
     use_opportunities = fields.Boolean('Pipeline', default=True, help="Check this box to manage a presales process with opportunities.")
-    alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True, help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")
+    alias_id = fields.Many2one(
+        'mail.alias', string='Alias', ondelete="restrict", required=True,
+        help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")
     # statistics about leads / opportunities / both
     lead_unassigned_count = fields.Integer(
         string='# Unassigned Leads', compute='_compute_lead_unassigned_count')
@@ -118,6 +120,7 @@ class Team(models.Model):
         if not use_leads and not use_opportunities:
             return {'alias_name': False}
         return {}
+
     # ------------------------------------------------------------
     # MESSAGING
     # ------------------------------------------------------------
@@ -162,7 +165,7 @@ class Team(models.Model):
         return action
 
     def _compute_dashboard_button_name(self):
-        super(Team,self)._compute_dashboard_button_name()
+        super(Team, self)._compute_dashboard_button_name()
         team_with_pipelines = self.filtered(lambda el: el.use_opportunities)
         team_with_pipelines.update({'dashboard_button_name': _("Pipeline")})
 
