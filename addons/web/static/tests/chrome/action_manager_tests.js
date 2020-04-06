@@ -4709,7 +4709,7 @@ QUnit.module('ActionManager', {
         const contextualAction = this.actions.find(action => action.id === 8);
         contextualAction.context = "{}"; // need a context to evaluate
 
-        const actionManager = await createActionManager({
+        const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
@@ -4725,25 +4725,22 @@ QUnit.module('ActionManager', {
                 }
                 return res;
             },
-            intercepts: {
-                do_action: function (ev) {
-                    actionManager.doAction(ev.data.action, {});
-                },
-            },
         });
 
         // execute an action and open a record
-        await actionManager.doAction(3);
-        assert.containsOnce(actionManager, '.o_list_view');
-        await testUtils.dom.click(actionManager.$('.o_data_row:first'));
-        assert.containsOnce(actionManager, '.o_form_view');
+        await testUtils.actionManager.doAction(3);
+        assert.containsOnce(webClient, '.o_list_view');
+        await testUtils.dom.click(webClient.$('.o_data_row:first'));
+        await testUtils.owlCompatibilityExtraNextTick();
+        assert.containsOnce(webClient, '.o_form_view');
 
         // execute the custom action from the action menu
-        await cpHelpers.toggleActionMenu(actionManager);
-        await cpHelpers.toggleMenuItem(actionManager, "Favorite Ponies");
-        assert.containsOnce(actionManager, '.o_list_view');
+        await cpHelpers.toggleActionMenu(webClient);
+        await cpHelpers.toggleMenuItem(webClient, "Favorite Ponies");
+        await testUtils.owlCompatibilityExtraNextTick();
+        assert.containsOnce(webClient, '.o_list_view');
 
-        actionManager.destroy();
+        webClient.destroy();
     });
 
     QUnit.module('Actions in target="new"');
