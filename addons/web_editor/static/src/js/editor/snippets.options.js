@@ -4547,11 +4547,6 @@ registry.many2one = SnippetOptionWidget.extend({
      */
     start: function () {
         var self = this;
-        this.trigger_up('getRecordInfo', _.extend(this.options, {
-            callback: function (recordInfo) {
-                _.defaults(self.options, recordInfo);
-            },
-        }));
 
         this.Model = this.$target.data('oe-many2one-model');
         this.ID = +this.$target.data('oe-many2one-id');

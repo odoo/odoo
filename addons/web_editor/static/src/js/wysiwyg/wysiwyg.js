@@ -30,10 +30,8 @@ var Wysiwyg = Widget.extend({
      * @options {integer} [options.recordInfo.res_id]
      * @options {String} [options.recordInfo.data_res_model]
      * @options {integer} [options.recordInfo.data_res_id]
-     *   @see _onGetRecordInfo
      *   @see _getAttachmentsDomain in /wysiwyg/widgets/media.js
      * @options {Object} options.attachments
-     *   @see _onGetRecordInfo
      *   @see _getAttachmentsDomain in /wysiwyg/widgets/media.js (for attachmentIDs)
      * @options {function} options.generateOptions
      *   called with the summernote configuration object used before sending to summernote
