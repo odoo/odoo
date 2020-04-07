@@ -820,8 +820,66 @@ actual arch.
 
         self._postprocess_on_change(model, node)
 
+<<<<<<< HEAD
         name_manager = NameManager(validate, self.env[model])
         self.postprocess(node, [], editable, name_manager)
+=======
+        elif node.tag == 'groupby':
+            # groupby nodes should be considered as nested view because they may
+            # contain fields on the comodel
+            field = Model._fields.get(node.get('name'))
+            if field:
+                if field.type != 'many2one':
+                    self.raise_view_error(_("'groupby' tags can only target many2one (%(field)s)") % dict(field=field.name), view_id)
+                attrs = fields.setdefault(node.get('name'), {})
+                children = False
+                # move all children nodes into a new node <groupby>
+                groupby_node = E.groupby()
+                for child in list(node):
+                    node.remove(child)
+                    groupby_node.append(child)
+                # validate the new node as a nested view, and associate it to the field
+                xarch, xfields = self.with_context(
+                    base_model_name=model,
+                    view_is_editable=False,
+                ).postprocess_and_fields(field.comodel_name, groupby_node, view_id)
+                attrs['views'] = {'groupby': {
+                    'arch': xarch,
+                    'fields': xfields,
+                }}
+
+        elif node.tag in ('form', 'tree'):
+            result = Model.view_header_get(False, node.tag)
+            if result:
+                node.set('string', result)
+            in_tree_view = node.tag == 'tree'
+
+        elif node.tag == 'calendar':
+            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day'):
+                if node.get(additional_field):
+                    fields[node.get(additional_field).split('.', 1)[0]] = {}
+            for f in node:
+                if f.tag == 'filter':
+                    fields[f.get('name')] = {}
+
+        elif node.tag == 'search':
+            searchpanel = [c for c in node if c.tag == 'searchpanel']
+            if searchpanel:
+                self.with_context(
+                    base_model_name=model,
+                    check_field_names=False,  # field validation is a bit more tricky and done apart
+                    check_field_names_original=self.env.context.get('check_field_names'),
+                    view_is_editable=False,
+                ).postprocess_and_fields(model, searchpanel[0], view_id)
+
+        if not self._apply_group(model, node, modifiers, fields):
+            # node must be removed, no need to proceed further with its children
+            return fields
+
+        # The view architeture overrides the python model.
+        # Get the attrs before they are (possibly) deleted by check_group below
+        transfer_node_to_modifiers(node, modifiers, self._context, in_tree_view)
+>>>>>>> a701733428e... temp
 
         name_manager.check_view_fields(self)
         name_manager.update_view_fields()
