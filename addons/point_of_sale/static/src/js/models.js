@@ -1429,7 +1429,7 @@ exports.Orderline = Backbone.Model.extend({
         }
         this.product = options.product;
         this.set_product_lot(this.product);
-        this.set_quantity(1);
+        this.set_quantity(1, "new product");
         this.discount = 0;
         this.discountStr = '0';
         this.selected = false;

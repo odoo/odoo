@@ -58,58 +58,73 @@ models.Order = models.Order.extend({
 var orderline_super = models.Orderline.prototype;
 models.Orderline = models.Orderline.extend({
     set_quantity: function (quantity, keep_price) {
-        var current_quantity = this.get_quantity();
-        var new_quantity = parseFloat(quantity) || 0;
-        if (this.pos.is_french_country() && (new_quantity === 0 || new_quantity < current_quantity) && !this.reward_id) {
-            var quantity_to_decrease = current_quantity - new_quantity;
-            this.pos.gui.show_popup("number", {
-                'title': _t("Decrease the quantity by"),
-                'confirm': function (qty_decrease) {
-                    if (qty_decrease) {
-                        var order = this.pos.get_order();
-                        var selected_orderline = order.get_selected_orderline();
-                        qty_decrease = qty_decrease.replace(_t.database.parameters.decimal_point, '.');
-                        qty_decrease = parseFloat(qty_decrease);
-                        var decimals = this.pos.dp['Product Unit of Measure'];
-                        qty_decrease = round_di(qty_decrease, decimals);
+        var order = this.pos.get_order();
+        var selectedLine = order? order.selected_orderline: null;
 
-                        var current_total_quantity_remaining = selected_orderline.get_quantity();
-                        order.get_orderlines().forEach(function (orderline, index, array) {
-                            if (selected_orderline.id != orderline.id &&
-                                selected_orderline.get_product().id === orderline.get_product().id &&
-                                selected_orderline.get_discount() === orderline.get_discount()) {
-                                current_total_quantity_remaining += orderline.get_quantity();
-                            }
-                        });
+        if (this.pos.is_french_country() && selectedLine) {
+            var currentQuantity = selectedLine.get_quantity();
+            var newQuantity = parseFloat(quantity) || 0;
 
-                        if (qty_decrease > current_total_quantity_remaining) {
-                          this.pos.gui.show_popup("error", {
-                              'title': _t("Order error"),
-                              'body':  _t("Not allowed to take back more than was ordered."),
-                          });
-                        } else {
-                            var decrease_line = selected_orderline.clone();
-                            decrease_line.order = order;
-                            orderline_super.set_quantity.apply(decrease_line, [-qty_decrease]);
-                            order.add_orderline(decrease_line);
-                        }
-                    }
-                }
-            });
+            var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1];
+
+            if(last_id !== selectedLine.cid && keep_price !== "new product")
+                this.showDecreaseQuantityPopup();
+            else if(newQuantity < currentQuantity && currentQuantity !== 1 && keep_price !== "new product")
+                this.showDecreaseQuantityPopup();
+            else if(quantity === "" && last_id === selectedLine.cid)
+                this.showDecreaseQuantityPopup();
+            else
+                orderline_super.set_quantity.apply(this, arguments);
         } else {
             orderline_super.set_quantity.apply(this, arguments);
         }
     },
     can_be_merged_with: function(orderline) {
-            var order = this.pos.get_order();
-            var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1];
+        var order = this.pos.get_order();
+        var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1];
 
-            if(this.pos.is_french_country() && (order.orderlines._byId[last_id].product.id !== orderline.product.id || order.orderlines._byId[last_id].quantity < 0)) {
-                return false;
-            } else {
-                return orderline_super.can_be_merged_with.apply(this, arguments);
-            }
+        if(this.pos.is_french_country() && (order.orderlines._byId[last_id].product.id !== orderline.product.id || order.orderlines._byId[last_id].quantity < 0)) {
+            return false;
+        } else {
+            return orderline_super.can_be_merged_with.apply(this, arguments);
         }
+    },
+    showDecreaseQuantityPopup: function() {
+        this.pos.gui.show_popup("number", {
+            'title': _t("Decrease the quantity by"),
+            'confirm': function (qty_decrease) {
+                if (qty_decrease) {
+                    var order = this.pos.get_order();
+                    var selected_orderline = order.get_selected_orderline();
+                    qty_decrease = qty_decrease.replace(_t.database.parameters.decimal_point, '.');
+                    qty_decrease = parseFloat(qty_decrease);
+                    var decimals = this.pos.dp['Product Unit of Measure'];
+                    qty_decrease = round_di(qty_decrease, decimals);
+
+                    var current_total_quantity_remaining = selected_orderline.get_quantity();
+                    order.get_orderlines().forEach(function (orderline, index, array) {
+                        if (selected_orderline.id != orderline.id &&
+                            selected_orderline.get_product().id === orderline.get_product().id &&
+                            selected_orderline.get_discount() === orderline.get_discount()) {
+                            current_total_quantity_remaining += orderline.get_quantity();
+                        }
+                    });
+
+                    if (qty_decrease > current_total_quantity_remaining) {
+                      this.pos.gui.show_popup("error", {
+                          'title': _t("Order error"),
+                          'body':  _t("Not allowed to take back more than was ordered."),
+                      });
+                    } else {
+                        var decrease_line = selected_orderline.clone();
+                        decrease_line.order = order;
+                        orderline_super.set_quantity.apply(decrease_line, [-qty_decrease]);
+                        order.add_orderline(decrease_line);
+                    }
+                }
+            }
+        });
+    }
 });
 
 
@@ -175,19 +190,6 @@ screens.NumpadWidget.include({
             });
         } else {
            this._super(event);
-        }
-    },
-    clickAppendNewChar: function(event) {
-        if (this.pos.is_french_country()) {
-            var order = this.pos.get_order();
-            var orderline = this.pos.get_order().selected_orderline;
-            var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1];
-
-            if(last_id === orderline.cid && orderline.quantity > 0){
-                this._super(event);
-            }
-        } else {
-            this._super(event);
         }
     },
 });
