@@ -823,7 +823,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
     position: 'bottom',
 },
 ...tour.stepUtils.statusbarButtonsSteps('Check availability', _t("Check availability")),
-...tour.stepUtils.statusbarButtonsSteps('Produce', _t("Produce")),
+...tour.stepUtils.statusbarButtonsSteps('Produce', _t("Produce"), "body.o_web_client:not(.oe_wait)"),
 {
     mobile: false,
     trigger: ".modal-footer .btn-primary:nth-child(3)",
