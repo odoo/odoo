@@ -41,7 +41,7 @@
                             <div class="text-muted" id="allow_billable_setting">
                                 Invoice your time and material from tasks
                             </div>
-                            <field name="timesheet_product_id" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('allow_timesheets', '=', False)], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}"/>
+                            <field name="timesheet_product_id" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('allow_timesheets', '=', False)], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" context="{'default_type': 'service'}"/>
                         </div>
                     </div>
                 </div>

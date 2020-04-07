@@ -49,7 +49,7 @@ class ProjectProject(models.Model):
 
     pad_availability = fields.Selection([
         ('internal', 'Internal Users'),
-        ('portal', 'Portal Users')
+        ('portal', 'Internal Users & Portal Users')
         ], compute='_compute_pad_availability', store=True, readonly=False,
         string='Availability of collaborative pads', required=True, default='internal')
 

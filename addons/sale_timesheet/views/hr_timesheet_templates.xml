@@ -47,8 +47,8 @@
                                             </t>
                                             <t t-if="isinstance(stat_button['name'], list)">
                                                 <div class="oe_inline">
-                                                    <span class="o_stat_value mr-1" t-if="'count' in stat_button">
-                                                        <t t-esc="stat_button['count']"/>
+                                                    <span class="o_stat_value mr-1">
+                                                        <t t-esc="stat_button.get('count')"/>
                                                     </span>
                                                     <span class="o_stat_value">
                                                         <t t-esc="stat_button['name'][0]"/>
@@ -64,7 +64,7 @@
                             </div>
 
                             <div class="o_title">
-                                <h2>Hours recorded and Profitability</h2>
+                                <h2>Recorded Hours and Profitability</h2>
                             </div>
 
                             <t t-set="display_cost" t-value="dashboard['profit']['expense_cost'] != 0.0"/>

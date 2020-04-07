@@ -34,7 +34,7 @@ class Project(models.Model):
     sale_line_employee_ids = fields.One2many('project.sale.line.employee.map', 'project_id', "Sale line/Employee map", copy=False,
         help="Employee/Sale Order Item Mapping:\n Defines to which sales order item an employee's timesheet entry will be linked."
         "By extension, it defines the rate at which an employee's time on the project is billed.")
-    allow_billable = fields.Boolean("Bill from Tasks")
+    allow_billable = fields.Boolean("Bill from Tasks", help="Invoice your time and material from tasks.")
     display_create_order = fields.Boolean(compute='_compute_display_create_order')
     timesheet_product_id = fields.Many2one(
         'product.product', string='Timesheet Product', 

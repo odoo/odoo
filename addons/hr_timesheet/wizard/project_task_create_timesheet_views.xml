@@ -7,15 +7,9 @@
         <field name="arch" type="xml">
             <form string="Save time">
                 <group>
-                    <group>
-                        <field name="task_id" invisible="True"/>
-                        <label for="time_spent"/>
-                        <div class="o_row" >
-                            <field name="time_spent" widget="float_time" required="True"/>
-                            hours
-                        </div>
-                        <field name="description" widget="text" required="True"/>
-                    </group>
+                    <field name="task_id" invisible="True"/>
+                    <field name="time_spent" string="Duration" class="oe_inline" widget="float_time" required="True"/>
+                    <field name="description" widget="text" placeholder="Describe your activity..."/>
                 </group>
                 <footer>
                     <button string="Save" type="object" name="save_timesheet" class="btn btn-primary"/>
