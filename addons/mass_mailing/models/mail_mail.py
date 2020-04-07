@@ -26,8 +26,8 @@ class MailMail(models.Model):
 
     def _get_tracking_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        track_url = werkzeug.urls.url_join(base_url, 'mail/track/%s/blank.gif' % self.id)
-        return '<img src="%s" alt=""/>' % track_url
+        token = tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', self.id)
+        return werkzeug.urls.url_join(base_url, 'mail/track/%s/%s/blank.gif' % (self.id, token))
 
     def _get_unsubscribe_url(self, email_to):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -64,8 +64,11 @@ class MailMail(models.Model):
 
             # generate tracking URL
             tracking_url = self._get_tracking_url()
-            if tracking_url:
-                body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
+            body = tools.append_content_to_html(
+                body,
+                '<img src="%s"/>' % tracking_url,
+                plaintext=False,
+            )
 
         body = self.env['mail.render.mixin']._replace_local_links(body)
 

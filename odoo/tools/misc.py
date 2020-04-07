@@ -8,6 +8,8 @@ Miscellaneous tools used by OpenERP.
 import cProfile
 import collections
 import datetime
+import hmac as hmac_lib
+import hashlib
 import io
 import os
 import pickle as pickle_
@@ -1530,3 +1532,24 @@ def traverse_containers(val, type_):
     elif isinstance(val, collections.abc.Sequence):
         for v in val:
             yield from traverse_containers(v, type_)
+
+
+def hmac(env, scope, message, hash_function=hashlib.sha256):
+    """Compute HMAC with `database.secret` config parameter as key.
+
+    :param env: sudo environment to use for retrieving config parameter
+    :param message: message to authenticate
+    :param scope: scope of the authentication, to have different signature for the same
+        message in different usage
+    :param hash_function: hash function to use for HMAC (default: SHA-256)
+    """
+    if not scope:
+        raise ValueError('Non-empty scope required')
+
+    secret = env['ir.config_parameter'].get_param('database.secret')
+    message = repr((scope, message))
+    return hmac_lib.new(
+        secret.encode(),
+        message.encode(),
+        hash_function,
+    ).hexdigest()
