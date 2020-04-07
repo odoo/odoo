@@ -54,7 +54,7 @@ ControlPanelRenderer.include({
         }
     },
     _renderSearchviewInput: function () {
-        if (!this.withBreadcrumbs || (this.$('.o_toggle_searchview_full').is(':visible') && !this.$('.o_mobile_search').is(':visible'))) {
+        if (!this.withBreadcrumbs || (!this.$('.o_toggle_searchview_full').hasClass('o_hidden') && this.$('.o_mobile_search').hasClass('o_hidden'))) {
             this.$('.o_toggle_searchview_full').toggleClass('btn-secondary', !!this.state.query.length);
             this.searchBar.$el.detach().insertAfter(this.$('.o_mobile_search'));
         } else {
