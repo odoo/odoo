@@ -307,7 +307,7 @@
                                     <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
                                     <field name="privacy_visibility" widget="radio"/>
                                     <field name="allowed_internal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'followers')]}"/>
-                                    <field name="allowed_portal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
+                                    <field name="allowed_portal_user_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
 
                                     <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
@@ -788,7 +788,11 @@
                                         <div class="dropdown-menu" role="menu">
                                             <a t-if="widget.editable" role="menuitem" type="set_cover" data-auto-open="1" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
                                             <a name="%(portal.portal_share_action)d" role="menuitem" type="action" class="dropdown-item">Share</a>
-                                            <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Task</a>
+                                            <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                            <a t-if="widget.editable" role="menuitem" class="dropdown-item" name="toggle_active" type="object">
+                                                <t t-if="record.active.raw_value">Archive</t>
+                                                <t t-if="!record.active.raw_value">Restore</t>
+                                            </a>
                                             <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                             <div role="separator" class="dropdown-divider"></div>
                                             <ul class="oe_kanban_colorpicker" data-field="color"/>
