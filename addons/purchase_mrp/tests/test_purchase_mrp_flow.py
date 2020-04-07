@@ -409,3 +409,33 @@ class TestSaleMrpFlow(TransactionCase):
         # Check the components quantities that backorder_4 should have
         for move in backorder_4.move_lines:
             self.assertEqual(move.product_qty, 1)
+
+    def test_link_po_mo(self):
+        """ check consuming a mto/buy product in a production create a purchase order.
+        Also check the PO and MO are always linked."""
+        route_mto = self.warehouse.mto_pull_id.route_id
+        route_buy = self.warehouse.buy_pull_id.route_id
+        component = self._create_product('Component', self.uom_unit, routes=[route_buy, route_mto])
+        partner = self.env['res.partner'].create({'name': 'My Test Partner'})
+        component.seller_ids = [(0, 0, {'name': partner.id, 'delay': 2})]
+        finished_product = self._create_product('Finished', self.uom_unit)
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [(0, 0, {
+                'product_id': component.id,
+                'product_qty': 1.0,
+            })],
+        })
+
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = finished_product
+        production = production_form.save()
+
+        production.action_confirm()
+        purchase_order_id = production.procurement_group_id.stock_move_ids.created_purchase_line_id.order_id
+        self.assertTrue(purchase_order_id)
+        self.assertTrue(purchase_order_id._get_production_orders())
+        purchase_order_id.button_confirm()
+        self.assertTrue(purchase_order_id._get_production_orders())
