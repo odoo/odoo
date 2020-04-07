@@ -52,14 +52,6 @@ var MediaDialog = Dialog.extend({
             save_text: _t("Add"),
         }, options));
 
-        this.trigger_up('getRecordInfo', {
-            recordInfo: options,
-            type: 'media',
-            callback: function (recordInfo) {
-                _.defaults(options, recordInfo);
-            },
-        });
-
         if (!options.noImages) {
             this.imageWidget = new MediaModules.ImageWidget(this, media, options);
         }
