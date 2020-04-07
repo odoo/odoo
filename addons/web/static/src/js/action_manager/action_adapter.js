@@ -189,7 +189,10 @@ odoo.define('web.ActionAdapter', function (require) {
         }
         _trigger_up(ev) {
             const evType = ev.name;
-            if (!this.inDialog && this.legacy === 'view' && this.widget && (evType === "switch_view" || evType === "execute_action")) {
+            // The legacy implementation forces us to export the current controller's state
+            // any time we are to leave it temporarily, that is, the current controller
+            // will stay in the breadcrumbs
+            if (!this.inDialog && this.legacy === 'view' && this.widget && ['switch_view', 'execute_action', 'do_action'].includes(evType)) {
                 const controllerState = this.widget.exportState();
                 this.env.bus.trigger('legacy-export-state', { controllerState });
             }
