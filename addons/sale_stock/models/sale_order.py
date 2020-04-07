@@ -411,6 +411,8 @@ class SaleOrderLine(models.Model):
                 'message' : _('You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed.'),
             }
             return {'warning': warning_mess}
+        if self.product_packaging:
+            return self._check_package()
         return {}
 
     def _prepare_procurement_values(self, group_id=False):
