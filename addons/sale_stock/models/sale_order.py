@@ -424,10 +424,10 @@ class SaleOrderLine(models.Model):
             'partner_id': self.order_id.partner_shipping_id.id,
             'company_id': self.order_id.company_id,
         })
-        for line in self.filtered("order_id.commitment_date"):
-            date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.order_id.company_id.security_lead)
+        if self.order_id.commitment_date:
+            date_planned = fields.Datetime.from_string(self.order_id.commitment_date) - timedelta(days=self.order_id.company_id.security_lead)
             values.update({
-                'date_planned': fields.Datetime.to_string(date_planned),
+                'date_planned': date_planned,
             })
         return values
 
