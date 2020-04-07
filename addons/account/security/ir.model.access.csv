@@ -1,7 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_account_cash_rounding_readonly,account.cash.rounding,model_account_cash_rounding,account.group_account_readonly,1,0,0,0
 access_account_cash_rounding_uinvoice,account.cash.rounding,model_account_cash_rounding,account.group_account_invoice,1,1,1,1
-access_res_partner_group_account_manager,res_partner group_account_manager,model_res_partner,account.group_account_manager,1,0,0,0
 
 access_account_chart_template,account.chart.template,model_account_chart_template,account.group_account_manager,1,1,1,1
 access_account_fiscal_position_template,account.fiscal.position.template,model_account_fiscal_position_template,account.group_account_manager,1,1,1,1
@@ -35,7 +34,6 @@ access_account_fiscal_position,account.fiscal.position all,model_account_fiscal_
 access_account_fiscal_position_tax,account.fiscal.position.tax all,model_account_fiscal_position_tax,base.group_user,1,0,0,0
 access_account_fiscal_position_account,account.fiscal.position all,model_account_fiscal_position_account,base.group_user,1,0,0,0
 
-access_product_product_account_user,product.product.account.user,product.model_product_product,group_account_readonly,1,0,0,0
 access_product_product_account_manager,product.product.account.manager,product.model_product_product,account.group_account_manager,1,1,1,1
 
 access_account_cashbox,account.bank.statement.cashbox,model_account_bank_statement_cashbox,account.group_account_user,1,1,1,1
@@ -47,8 +45,6 @@ access_account_bank_statement_line_group_invoice,account.bank.statement.line.gro
 access_account_bank_statement,account.bank.statement,model_account_bank_statement,account.group_account_user,1,1,1,1
 access_account_bank_statement_line,account.bank.statement.line,model_account_bank_statement_line,account.group_account_user,1,1,1,1
 
-access_account_move_line_manager,account.move.line manager,model_account_move_line,account.group_account_manager,1,0,0,0
-access_account_move_manager,account.move manager,model_account_move,account.group_account_manager,1,0,0,0
 access_account_move_readonly,account.move readonly,model_account_move,account.group_account_readonly,1,0,0,0
 access_account_move_uinvoice,account.move,model_account_move,account.group_account_invoice,1,1,1,1
 access_account_move_line_readonly,account.move.line readonly,model_account_move_line,account.group_account_readonly,1,0,0,0
@@ -56,7 +52,6 @@ access_account_move_line_uinvoice,account.move.line invoice,model_account_move_l
 access_account_invoice_portal,account.move.portal,account.model_account_move,base.group_portal,1,0,0,0
 access_account_invoice_line_portal,account.move.line.portal,account.model_account_move_line,base.group_portal,1,0,0,0
 
-access_account_analytic_line_manager,account.analytic.line manager,model_account_analytic_line,account.group_account_manager,1,0,0,0
 access_account_analytic_account,account.analytic.account,analytic.model_account_analytic_account,base.group_user,1,0,0,0
 access_account_analytic_line_readonly,account.analytic.line invoice,model_account_analytic_line,account.group_account_readonly,1,0,0,0
 access_account_analytic_line_invoice,account.analytic.line invoice,model_account_analytic_line,account.group_account_invoice,1,1,1,1
@@ -73,32 +68,24 @@ access_account_group,account.group,model_account_group,account.group_account_rea
 access_account_root_manager,account.root,model_account_root,account.group_account_manager,1,0,0,0
 access_account_root,account.root,model_account_root,account.group_account_readonly,1,0,0,0
 access_account_account_manager,account.account,model_account_account,account.group_account_manager,1,1,1,1
-access_account_account,account.account.readonly,model_account_account,account.group_account_readonly,1,0,0,0
 access_account_account_user,account.account user,model_account_account,base.group_user,1,0,0,0
 access_account_account_partner_manager,account.account partner manager,model_account_account,base.group_partner_manager,1,0,0,0
-access_account_account_invoice,account.account invoice,model_account_account,account.group_account_invoice,1,0,0,0
 access_account_account_type_manager,account.account.type,model_account_account_type,account.group_account_manager,1,1,1,1
 access_account_account_type_readonly,account.account.type readonly,model_account_account_type,account.group_account_readonly,1,0,0,0
 access_account_account_type_invoice,account.account.type invoice,model_account_account_type,account.group_account_invoice,1,0,0,0
 
 access_account_tax_internal_user,account.tax internal user,model_account_tax,base.group_user,1,0,0,0
-access_account_tax_readonly,account.tax,model_account_tax,account.group_account_readonly,1,0,0,0
-access_account_tax_invoice,account.tax,model_account_tax,account.group_account_invoice,1,0,0,0
 access_account_tax_manager,account.tax,model_account_tax,account.group_account_manager,1,1,1,1
 access_account_account_tax,account.account.tag,model_account_account_tag,account.group_account_user,1,1,1,1
 access_account_account_tax_readonly,account.account.tag,model_account_account_tag,account.group_account_readonly,1,0,0,0
 access_account_account_tax_user,account.account.tag,model_account_account_tag,account.group_account_invoice,1,0,0,0
 access_account_tax_repartition_line_user,account.tax repartition.line.user,model_account_tax_repartition_line,base.group_user,1,0,0,0
-access_account_tax_repartition_line_readonly,account.tax repartition.line.invoice,model_account_tax_repartition_line,account.group_account_readonly,1,0,0,0
-access_account_tax_repartition_line_invoice,account.tax repartition.line.invoice,model_account_tax_repartition_line,account.group_account_invoice,1,0,0,0
 access_account_tax_repartition_line_manager,account.tax repartition.line.manager,model_account_tax_repartition_line,account.group_account_manager,1,1,1,1
 access_account_tax_report_line_readonly,account.tax.report.line.invoice,model_account_tax_report_line,account.group_account_readonly,1,0,0,0
 access_account_tax_report_line_ac_user,account.tax.report.line.ac.user,model_account_tax_report_line,account.group_account_manager,1,1,1,1
 access_account_tax_report_invoice,account.tax.report.invoice,model_account_tax_report,account.group_account_readonly,1,0,0,0
 access_account_tax_report_ac_user,account.tax.report.ac.user,model_account_tax_report,account.group_account_manager,1,1,1,1
 access_account_tax_group_internal_user,account.tax.group internal user,model_account_tax_group,base.group_user,1,0,0,0
-access_account_tax_group_readonly,account.tax.group,model_account_tax_group,account.group_account_readonly,1,0,0,0
-access_account_tax_group,account.tax.group,model_account_tax_group,account.group_account_invoice,1,0,0,0
 access_account_tax_group_manager,account.tax.group,model_account_tax_group,account.group_account_manager,1,1,1,1
 
 access_account_reconcile_model_readonly,account.reconcile.model.readonly,model_account_reconcile_model,account.group_account_readonly,1,0,0,0
