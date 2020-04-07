@@ -13,13 +13,49 @@ class SendSMS(models.TransientModel):
     _name = 'sms.composer'
     _description = 'Send SMS Wizard'
 
+    @api.model
+    def default_get(self, fields):
+        result = super(SendSMS, self).default_get(fields)
+
+        result['res_model'] = result.get('res_model') or self.env.context.get('active_model')
+
+        if not result.get('active_domain'):
+            result['active_domain'] = repr(self.env.context.get('active_domain', []))
+        if not result.get('res_id'):
+            if not result.get('res_ids') and self.env.context.get('active_id'):
+                result['res_id'] = self.env.context.get('active_id')
+        if not result.get('res_ids'):
+            if not result.get('res_id') and self.env.context.get('active_ids'):
+                result['res_ids'] = repr(self.env.context.get('active_ids'))
+
+        if result['res_model']:
+            result.update(
+                self._get_composer_values(
+                    result['composition_mode'], result['res_model'], result.get('res_id'),
+                    result.get('body'), result.get('template_id')
+                )
+            )
+        return result
+    
+    @api.depends_context('active_ids')
+    def _compute_composition_mode(self):
+        for record in self:
+            record.composition_mode = record.env.get('composition_mode')
+            if self.env.context.get('default_composition_mode') and self.env.context.get('default_composition_mode') == "guess":
+                if record.env.get('active_ids') and len(record.env.context.get('active_ids')) > 1:
+                    record.composition_mode = 'mass'
+                    record.res_id = False
+                else:
+                    record.composition_mode = 'comment'
+                    record.res_ids = False
+
     # documents
     composition_mode = fields.Selection([
         ('numbers', 'Send to numbers'),
         ('comment', 'Post on a document'),
         ('mass', 'Send SMS in batch')],
-        string='Composition Mode', default='comment', required=True, compute='_compute_composition_mode', readonly=False, store=True)
-    res_model = fields.Char('Document Model Name', compute='_compute_res_model', readonly=False, store=True)
+        string='Composition Mode', default='comment', required=True, store=True, readonly=False, compute='_compute_composition_mode')
+    res_model = fields.Char('Document Model Name')
     res_id = fields.Integer('Document ID')
     res_ids = fields.Char('Document IDs')
     res_ids_count = fields.Integer(
@@ -52,39 +88,7 @@ class SendSMS(models.TransientModel):
     sanitized_numbers = fields.Char('Sanitized Number', compute='_compute_sanitized_numbers', compute_sudo=False)
     # content
     template_id = fields.Many2one('sms.template', string='Use Template', domain="[('model', '=', res_model)]")
-    body = fields.Text('Message', required=True, store=True, compute='_compute_body', readonly=False)
-
-    @api.depends('active_domain', 'res_id', 'res_ids')
-    def _compute_composition_mode(self):
-        for record in self:
-            record.composition_mode = record.env.context.get('default_composition_mode')
-            if record.env.context.get('active_ids') and len(record.env.context.get('active_ids')) > 1:
-                record.composition_mode = 'mass'
-                record.res_id = False
-            else:
-                record.composition_mode = 'comment'
-                record.res_ids = False
-            
-            if not record.env.context.get('active_domain'):
-                record.active_domain = repr(record.env.context.get('active_domain', []))
-            if not record.env.context.get('res_id'):
-                if not record.env.context.get('res_ids') and record.env.context.get('active_id'):
-                    record.res_id = record.env.context.get('active_id')
-            if not record.env.context.get('res_ids'):
-                if not record.env.context.get('res_id') and record.env.context.get('active_ids'):
-                    record.res_ids = repr(record.env.context.get('active_ids'))
-
-    @api.depends('composition_mode', 'res_id', 'body', 'template_id')
-    def _compute_res_model(self):
-        for record in self:
-            record.res_model = record.env.context.get('default_res_model')
-            if record.res_model:
-                record.update(
-                    record._get_composer_values(
-                        record['composition_mode'], record['res_model'], record.env.context.get('res_id'),
-                        record.env.context.get('body'), record.env.context.get('template_id')
-                    )
-                )
+    body = fields.Text('Message', required=True)
 
     @api.depends('res_model', 'res_id', 'res_ids', 'active_domain')
     def _compute_recipients_count(self):
@@ -163,13 +167,12 @@ class SendSMS(models.TransientModel):
             else:
                 composer.sanitized_numbers = False
 
-    @api.depends('composition_mode', 'res_model', 'res_id', 'template_id')
-    def _compute_body(self):
-        for record in self:
-            if record.template_id and record.composition_mode == 'comment' and record.res_id:
-                record.body = record.template_id._render_field('body', [record.res_id], compute_lang=True)[record.res_id]
-            elif record.template_id:
-                record.body = record.template_id.body
+    @api.onchange('composition_mode', 'res_model', 'res_id', 'template_id')
+    def _onchange_template_id(self):
+        if self.template_id and self.composition_mode == 'comment' and self.res_id:
+            self.body = self.template_id._render_field('body', [self.res_id], compute_lang=True)[self.res_id]
+        elif self.template_id:
+            self.body = self.template_id.body
 
     # ------------------------------------------------------------
     # Actions
