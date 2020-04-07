@@ -584,7 +584,7 @@ var MockServer = Class.extend({
         }
     },
     /**
-     * Simulate a call to the `search_panel_range` method.
+     * Simulate a call to the `_search_panel_range` method.
      * The `values_range` object being an OrderedDict in python, we use a map to
      * have a close behaviour.
      *

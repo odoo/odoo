@@ -915,7 +915,6 @@ class Module(models.Model):
     @api.model
     def search_panel_select_range(self, field_name, **kwargs):
         if field_name == 'category_id':
-
             domain = [('module_ids', '!=', False)]
 
             excluded_xmlids = [
