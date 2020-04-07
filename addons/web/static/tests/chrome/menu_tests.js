@@ -130,29 +130,42 @@ odoo.define('web.menu_tests', function (require) {
     }, function () {
         QUnit.module('Menu');
 
-        QUnit.test('Systray items: on_attach_callback is called', async function (assert) {
-            assert.expect(3);
+        QUnit.test('Systray on_attach_callback is called, and widget ordered', async function (assert) {
+            assert.expect(7);
 
             // Add some widgets to the systray
             const Widget1 = Widget.extend({
+                tagName: 'w1',
+                sequence: 3,
                 on_attach_callback: () => assert.step('on_attach_callback widget1')
             });
             const Widget2 = Widget.extend({
+                tagName: 'w2',
+                sequence: 1,
                 on_attach_callback: () => assert.step('on_attach_callback widget2')
             });
-
+            const Widget3 = Widget.extend({
+                tagName: 'w3',
+                sequence: 2,
+                on_attach_callback: () => assert.step('on_attach_callback widget3')
+            });
             const webClient = await createWebClient({
                 data: this.data,
                 actions: this.actions,
                 archs: this.archs,
                 menus: this.menus,
-                SystrayItems: [Widget1, Widget2],
+                SystrayItems: [Widget1, Widget2, Widget3],
             });
-
             assert.verifySteps([
                 'on_attach_callback widget2',
+                'on_attach_callback widget3',
                 'on_attach_callback widget1',
             ]);
+            const systrayEL = webClient.el.querySelector('.o_menu_systray');
+            const widgetSystrayItems = systrayEL.children;
+            assert.strictEqual(widgetSystrayItems[0].tagName, 'W1');
+            assert.strictEqual(widgetSystrayItems[1].tagName, 'W3');
+            assert.strictEqual(widgetSystrayItems[2].tagName, 'W2');
 
             webClient.destroy();
         });
