@@ -105,6 +105,13 @@ return Promise.all([
     ajax.loadXML('/web/static/src/xml/debug.xml', core.qweb),
     ajax.loadXML('/web/static/src/xml/dialog.xml', core.qweb),
     ajax.loadXML('/web/static/src/xml/translation_dialog.xml', core.qweb),
+    // TODO remove in master
+    // The following files are added here as a stable fix but they are already
+    // added in the test assets bundles directly in master.
+    ajax.loadCSS('/web/static/lib/daterangepicker/daterangepicker.css'),
+    ajax.loadJS('/web/static/lib/Chart/Chart.js'),
+    ajax.loadJS('/web/static/lib/daterangepicker/daterangepicker.js')
+        .then(() => ajax.loadJS('/web/static/src/js/libs/daterangepicker.js')),
 ]).then(function () {
     setTimeout(function () {
         // jquery autocomplete refines the search in a setTimeout() parameterized

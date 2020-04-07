@@ -274,7 +274,7 @@ class HolidaysAllocation(models.Model):
     def _onchange_type(self):
         if self.holiday_type == 'employee':
             if not self.employee_id:
-                self.employee_id = self.env.user.employee_ids[:1].id
+                self.employee_id = self.env.user.employee_id.id
             self.mode_company_id = False
             self.category_id = False
         elif self.holiday_type == 'company':
@@ -287,7 +287,7 @@ class HolidaysAllocation(models.Model):
             self.mode_company_id = False
             self.category_id = False
             if not self.department_id:
-                self.department_id = self.env.user.employee_ids[:1].department_id.id
+                self.department_id = self.env.user.employee_id.department_id.id
         elif self.holiday_type == 'category':
             self.employee_id = False
             self.mode_company_id = False
