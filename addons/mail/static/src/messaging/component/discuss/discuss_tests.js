@@ -5,7 +5,7 @@ const {
     afterEach: utilsAfterEach,
     afterNextRender,
     beforeEach: utilsBeforeEach,
-    getServices,
+    getMailServices,
     inputFiles,
     pause,
     start: utilsStart,
@@ -1516,9 +1516,6 @@ QUnit.test('inbox messages are never squashed', async function (assert) {
             }
             return this._super(...arguments);
         },
-        session: {
-            partner_id: 3,
-        },
     });
     assert.strictEqual(
         document.querySelectorAll(`
@@ -2418,9 +2415,6 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
             }
             return this._super(...arguments);
         },
-        session: {
-            partner_id: 3,
-        },
     });
     assert.ok(
         document.querySelector(`
@@ -2702,9 +2696,6 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
             }
             return this._super(...arguments);
         },
-        session: {
-            partner_id: 3,
-        },
     });
     assert.strictEqual(
         document.querySelector(`
@@ -2823,9 +2814,6 @@ QUnit.test('starred: unstar all', async function (assert) {
 
             }
             return this._super(...arguments);
-        },
-        session: {
-            partner_id: 3,
         },
     });
     assert.strictEqual(
@@ -3244,9 +3232,6 @@ QUnit.test('post a simple message', async function (assert) {
             }
             return this._super(...arguments);
         },
-        session: {
-            partner_id: 3,
-        },
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_MessageList_empty`).length,
@@ -3325,9 +3310,6 @@ QUnit.test('rendering of inbox message', async function (assert) {
                 }];
             }
             return this._super(...arguments);
-        },
-        session: {
-            partner_id: 44,
         },
     });
     assert.strictEqual(
@@ -3449,9 +3431,6 @@ QUnit.test('receive new needaction messages', async function (assert) {
                 return [];
             }
             return this._super(...arguments);
-        },
-        session: {
-            partner_id: 3,
         },
     });
     assert.ok(
@@ -3646,9 +3625,6 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
             }
             return this._super(...arguments);
         },
-        session: {
-            partner_id: 3,
-        },
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Message').length,
@@ -3813,9 +3789,6 @@ QUnit.skip('load recent messages from thread (already loaded some old messages)'
             }
             return this._super(...arguments);
         },
-        session: {
-            partner_id: 3,
-        },
     });
     assert.verifySteps(
         ['message_fetch:load_inbox'],
@@ -3929,9 +3902,6 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
                 return 3;
             }
             return this._super(...arguments);
-        },
-        session: {
-            partner_id: 3,
         },
     });
     assert.ok(
@@ -4149,7 +4119,7 @@ QUnit.test('receive new channel message: out of odoo focus (notification, channe
             }],
         },
     });
-    const services = getServices();
+    const services = getMailServices();
     services.bus_service = services.bus_service.extend({
         isOdooFocused: () => false,
     });
@@ -4219,7 +4189,7 @@ QUnit.test('receive new channel message: out of odoo focus (notification, chat)'
             }],
         },
     });
-    const services = getServices();
+    const services = getMailServices();
     services.bus_service = services.bus_service.extend({
         isOdooFocused: () => false,
     });
@@ -4296,7 +4266,7 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
             }],
         },
     });
-    const services = getServices();
+    const services = getMailServices();
     services.bus_service = services.bus_service.extend({
         isOdooFocused: () => false,
     });
@@ -5227,9 +5197,6 @@ QUnit.test('moderation: send message in moderated channel', async function (asse
             }
             return this._super(...arguments);
         },
-        session: {
-            partner_id: 13,
-        },
     });
 
     // go to channel 'general'
@@ -5298,11 +5265,7 @@ QUnit.test('moderation: sent message accepted in moderated channel', async funct
         res_id: 20,
     }];
 
-    await this.start({
-        session: {
-            partner_id: 13,
-        },
-    });
+    await this.start();
 
     const channel = document.querySelector(`
         .o_DiscussSidebar_item[data-thread-local-id="${
@@ -5386,11 +5349,7 @@ QUnit.test('moderation: sent message rejected in moderated channel', async funct
         res_id: 20,
     }];
 
-    await this.start({
-        session: {
-            partner_id: 13,
-        },
-    });
+    await this.start();
 
     const channel = document.querySelector(`
         .o_DiscussSidebar_item[data-thread-local-id="${

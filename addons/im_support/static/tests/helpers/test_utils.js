@@ -1,15 +1,15 @@
 odoo.define('im_support.test_utils', function (require) {
 "use strict";
 
-var mailTestUtils = require('mail.testUtils');
+const { MockMailService } = require('mail.messaging.testUtils');
 var supportSession = require('im_support.SupportSession');
 
 var testUtils = require('web.test_utils');
 
 
-mailTestUtils.MockMailService.include({
-    getServices: function () {
-        return _.extend(this._super(), {
+MockMailService.include({
+    getServices: function (...args) {
+        return _.extend(this._super(...args), {
             support_bus_service: this.bus_service(),
         });
     },

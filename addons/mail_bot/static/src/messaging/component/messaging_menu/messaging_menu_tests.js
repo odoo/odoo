@@ -35,14 +35,18 @@ QUnit.test('rendering with OdooBot has a request (default)', async function (ass
     assert.expect(4);
 
     await this.start({
+        env: {
+            window: {
+                Notification: {
+                    permission: 'default',
+                },
+            },
+        },
         async mockRPC(route, args) {
             if (args.method === 'channel_fetch_preview') {
                 return [];
             }
             return this._super(...arguments);
-        },
-        'window.Notification': {
-            permission: 'default',
         },
     });
 
@@ -74,14 +78,18 @@ QUnit.test('rendering without OdooBot has a request (denied)', async function (a
     assert.expect(2);
 
     await this.start({
+        env: {
+            window: {
+                Notification: {
+                    permission: 'denied',
+                },
+            },
+        },
         async mockRPC(route, args) {
             if (args.method === 'channel_fetch_preview') {
                 return [];
             }
             return this._super(...arguments);
-        },
-        'window.Notification': {
-            permission: 'denied',
         },
     });
 
@@ -104,14 +112,18 @@ QUnit.test('rendering without OdooBot has a request (accepted)', async function 
     assert.expect(2);
 
     await this.start({
+        env: {
+            window: {
+                Notification: {
+                    permission: 'granted',
+                },
+            },
+        },
         async mockRPC(route, args) {
             if (args.method === 'channel_fetch_preview') {
                 return [];
             }
             return this._super(...arguments);
-        },
-        'window.Notification': {
-            permission: 'granted',
         },
     });
 
@@ -134,18 +146,22 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
     assert.expect(3);
 
     await this.start({
+        env: {
+            window: {
+                Notification: {
+                    permission: 'default',
+                    async requestPermission() {
+                        this.permission = 'denied';
+                        return this.permission;
+                    },
+                },
+            },
+        },
         async mockRPC(route, args) {
             if (args.method === 'channel_fetch_preview') {
                 return [];
             }
             return this._super(...arguments);
-        },
-        'window.Notification': {
-            permission: 'default',
-            async requestPermission() {
-                this.permission = 'denied';
-                return this.permission;
-            },
         },
     });
 

@@ -47,8 +47,12 @@ QUnit.test('notification_alert widget: display blocked notification alert', asyn
 
     await afterNextRender(async () => {
         await this.start({
-            'window.Notification': {
-                permission: 'denied',
+            env: {
+                window: {
+                    Notification: {
+                        permission: 'denied',
+                    },
+                },
             },
         });
     });
@@ -65,8 +69,12 @@ QUnit.test('notification_alert widget: no notification alert when granted', asyn
 
     await afterNextRender(async () => {
         await this.start({
-            'window.Notification': {
-                permission: 'granted',
+            env: {
+                window: {
+                    Notification: {
+                        permission: 'granted',
+                    },
+                },
             },
         });
     });
@@ -83,8 +91,12 @@ QUnit.test('notification_alert widget: no notification alert when default', asyn
 
     await afterNextRender(async () => {
         await this.start({
-            'window.Notification': {
-                permission: 'default',
+            env: {
+                window: {
+                    Notification: {
+                        permission: 'default',
+                    },
+                },
             },
         });
     });

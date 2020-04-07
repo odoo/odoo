@@ -1,8 +1,7 @@
 odoo.define('snailmail.chatter_snailmail_tests', function (require) {
 "use strict";
 
-const { patchMessagingService } = require('mail.messaging.testUtils');
-var mailTestUtils = require('mail.testUtils');
+const { getMailServices } = require('mail.messaging.testUtils');
 var ThreadWidget = require('mail.widget.Thread');
 
 var FormView = require('web.FormView');
@@ -24,9 +23,7 @@ var getArch = function () {
 QUnit.module('snailmail', {}, function () {
 QUnit.module('Chatter', {
     before: function () {
-        this.services = mailTestUtils.getMailServices();
-        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
-        this.unpatchMessagingService = unpatchMessagingService;
+        this.services = getMailServices({ hasLegacyMail: true });
         this.data = {
             'account.move': {
                 fields: {
@@ -105,7 +102,6 @@ QUnit.module('Chatter', {
     afterEach: function () {
         $('.popover').remove();
         $('.modal').remove();
-        this.unpatchMessagingService();
     }
 });
 

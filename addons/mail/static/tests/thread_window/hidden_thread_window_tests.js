@@ -1,8 +1,7 @@
 odoo.define('mail.hiddenThreadWindowTests', function (require) {
 "use strict";
 
-const { patchMessagingService } = require('mail.messaging.testUtils');
-var mailTestUtils = require('mail.testUtils');
+const { getMailServices } = require('mail.messaging.testUtils');
 
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
@@ -29,9 +28,7 @@ QUnit.module('Hidden', {
                 },
             },
         };
-        this.services = mailTestUtils.getMailServices();
-        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
-        this.unpatchMessagingService = unpatchMessagingService;
+        this.services = getMailServices({ hasLegacyMail: true });
         this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO;
 
         this.createParent = function (params) {
@@ -56,7 +53,6 @@ QUnit.module('Hidden', {
         $target.find('.o_thread_window_dropdown').remove();
         // reset thread window append to body
         this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = 'body';
-        this.unpatchMessagingService();
     },
 });
 

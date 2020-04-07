@@ -472,9 +472,6 @@ QUnit.test('composer text input cleared on message post', async function (assert
             }
             return this._super(...arguments);
         },
-        session: {
-            partner_id: 3,
-        },
     });
     const thread = this.env.entities.Thread.channelFromId(20);
     await this.createComposerComponent(thread.composer);

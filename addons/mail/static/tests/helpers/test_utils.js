@@ -1,16 +1,9 @@
 odoo.define('mail.testUtils', function (require) {
 "use strict";
 
-var BusService = require('bus.BusService');
-
 var Discuss = require('mail.Discuss');
-const MessagingService = require('mail.messaging.service.Messaging');
-var MailService = require('mail.Service');
 
-var AbstractStorageService = require('web.AbstractStorageService');
-var Class = require('web.Class');
 const dom = require('web.dom');
-var RamStorage = require('web.RamStorage');
 const makeTestEnvironment = require('web.test_env');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
@@ -66,52 +59,8 @@ async function createDiscuss(params) {
     return discuss;
 }
 
-
-var MockMailService = Class.extend({
-    bus_service: function () {
-        return BusService.extend({
-            _poll: function () {}, // Do nothing
-            _registerWindowUnload: function () {}, // Do nothing
-            isOdooFocused: function () { return true; },
-            updateOption: function () {},
-        });
-    },
-    mail_service: function () {
-        return MailService;
-    },
-    messaging() {
-        return MessagingService.extend();
-    },
-    local_storage: function () {
-        return AbstractStorageService.extend({
-            storage: new RamStorage(),
-        });
-    },
-    getServices: function () {
-        return {
-            mail_service: this.mail_service(),
-            messaging: this.messaging(),
-            bus_service: this.bus_service(),
-            local_storage: this.local_storage(),
-        };
-    },
-});
-
-/**
- * Returns the list of mail services required by the mail components: a
- * mail_service, and its two dependencies bus_service and local_storage.
- *
- * @return {AbstractService[]} an array of 3 services: mail_service, bus_service
- * and local_storage, in that order
- */
-function getMailServices() {
-    return new MockMailService().getServices();
-}
-
 return {
-    MockMailService: MockMailService,
     createDiscuss: createDiscuss,
-    getMailServices: getMailServices,
 };
 
 });

@@ -38,11 +38,7 @@ QUnit.module('Message', {
 QUnit.test('create', async function (assert) {
     assert.expect(31);
 
-    await this.start({
-        session: {
-            partner_id: 3,
-        },
-    });
+    await this.start();
     assert.notOk(this.env.entities.Partner.fromId(5));
     assert.notOk(this.env.entities.Thread.channelFromId(100));
     assert.notOk(this.env.entities.Attachment.fromId(750));

@@ -6,15 +6,14 @@ odoo.define('im_support.systray_no_support_tests', function (require) {
  * on the webclient when the support is not available.
  */
 
-const { patchMessagingService } = require('mail.messaging.testUtils');
-var mailTestUtils = require('mail.testUtils');
+const { getMailServices, MockMailService } = require('mail.messaging.testUtils');
 var MessagingMenu = require('mail.systray.MessagingMenu');
 
 var testUtils = require('web.test_utils');
 
-mailTestUtils.MockMailService.include({
-    getServices: function () {
-        return _.extend(this._super(), {
+MockMailService.include({
+    getServices: function (...args) {
+        return _.extend(this._super(...args), {
             support_bus_service: this.bus_service(),
         });
     },
@@ -29,12 +28,7 @@ QUnit.module('systray', {
                 fields: {},
             },
         };
-        this.services = mailTestUtils.getMailServices();
-        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
-        this.unpatchMessagingService = unpatchMessagingService;
-    },
-    afterEach() {
-        this.unpatchMessagingService();
+        this.services = getMailServices({ hasLegacyMail: true });
     },
 });
 

@@ -2,7 +2,7 @@ odoo.define('mail.discuss_test', function (require) {
 "use strict";
 
 const Discuss = require('mail.Discuss');
-const { patchMessagingService } = require('mail.messaging.testUtils');
+const { getMailServices } = require('mail.messaging.testUtils');
 var mailTestUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
@@ -91,15 +91,12 @@ QUnit.module('Discuss', {
                 },
             },
         };
-        this.services = mailTestUtils.getMailServices();
-        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
-        this.unpatchMessagingService = unpatchMessagingService;
+        this.services = getMailServices({ hasLegacyMail: true });
     },
     afterEach: function () {
         // unpatch _.debounce and _.throttle
         _.debounce = this.underscoreDebounce;
         _.throttle = this.underscoreThrottle;
-        this.unpatchMessagingService();
     },
 });
 

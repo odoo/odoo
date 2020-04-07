@@ -3,8 +3,7 @@ odoo.define('im_support.systray_tests', function (require) {
 
 var imSupportTestUtils = require('im_support.test_utils');
 
-const { patchMessagingService } = require('mail.messaging.testUtils');
-var mailTestUtils = require('mail.testUtils');
+const { getMailServices } = require('mail.messaging.testUtils');
 var MessagingMenu = require('mail.systray.MessagingMenu');
 
 var testUtils = require('web.test_utils');
@@ -20,18 +19,13 @@ QUnit.module('systray', {
                 fields: {},
             },
         };
-        this.services = mailTestUtils.getMailServices();
-        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
-        this.unpatchMessagingService = unpatchMessagingService;
+        this.services = getMailServices({ hasLegacyMail: true });
 
         this.supportParams = {
             db_uuid: 'some_uuid',
             support_token: 'ABCDEFGHIJ',
             support_origin: 'something.com',
         };
-    },
-    afterEach() {
-        this.unpatchMessagingService();
     },
 });
 

@@ -3,11 +3,13 @@ odoo.define('mail.messaging.testUtils', function (require) {
 
 const BusService = require('bus.BusService');
 
+const { addMessagingToEnv } = require('mail.messaging.messaging_env');
 const ChatWindowService = require('mail.messaging.service.ChatWindow');
 const DialogService = require('mail.messaging.service.Dialog');
 const MessagingService = require('mail.messaging.service.Messaging');
 const DiscussWidget = require('mail.messaging.widget.Discuss');
 const MessagingMenuWidget = require('mail.messaging.widget.MessagingMenu');
+var MailService = require('mail.Service');
 
 const AbstractStorageService = require('web.AbstractStorageService');
 const Class = require('web.Class');
@@ -34,6 +36,7 @@ const MockMailService = Class.extend({
         return BusService.extend({
             _beep() {}, // Do nothing
             _poll() {}, // Do nothing
+            _registerWindowUnload() {}, // Do nothing
             isOdooFocused() {
                 return true;
             },
@@ -59,27 +62,63 @@ const MockMailService = Class.extend({
     local_storage() {
         return AbstractStorageService.extend({ storage: new RamStorage() });
     },
-    messaging() {
-        return MessagingService.extend();
+    mail_service: function () {
+        // TODO FIXME: legacy service to remove before merging messaging
+        return MailService.extend();
+    },
+    /**
+     * @param {Object} [env={}]
+     */
+    messaging(env = {}) {
+        const _t = s => s;
+        _t.database = {
+            parameters: { direction: 'ltr' },
+        };
+        const testEnv = makeTestEnvironment(Object.assign(env, {
+            _t: env._t || _t,
+            session: Object.assign({
+                is_bound: Promise.resolve(),
+                name: 'Admin',
+                partner_display_name: 'Your Company, Admin',
+                partner_id: 3,
+                uid: 2,
+                url: s => s,
+            }, env.session),
+        }));
+        // Avoid waiting on window load in addMessagingToEnv because files are
+        // already loaded when running tests.
+        testEnv.generateEntitiesImmediately = true;
+        addMessagingToEnv(testEnv);
+        // Disable features that would interfere with tests.
+        Object.assign(testEnv, {
+            autofetchPartnerImStatus: false,
+            disableAnimation: true,
+        });
+        return MessagingService.extend({
+            env: testEnv,
+        });
     },
     notification() {
-        return NotificationService;
+        return NotificationService.extend();
     },
     getServices({
+        env = {},
         hasChatWindow = false,
+        hasLegacyMail = false,
         isDebug = false,
-    }) {
+    } = {}) {
         const services = {
             bus_service: this.bus_service(),
             dialog: this.dialog(isDebug),
             local_storage: this.local_storage(),
-            messaging: this.messaging(),
+            messaging: this.messaging(env),
             notification: this.notification(),
         };
+        if (hasLegacyMail) {
+            services.mail_service = this.mail_service();
+        }
         if (hasChatWindow) {
-            Object.assign(services, {
-                chat_window: this.chat_window(isDebug),
-            });
+            services.chat_window = this.chat_window(isDebug);
         }
         return services;
     },
@@ -213,12 +252,14 @@ function _useMessagingMenu(callbacks) {
 
 /**
  * @param {Object} [param0={}]
- * @param {boolean} [hasChatWindow]
- * @param {boolean} [isDebug]
+ * @param {boolean} [param0.env]
+ * @param {boolean} [param0.hasChatWindow]
+ * @param {boolean} [param0.hasLegacyMail]
+ * @param {boolean} [param0.isDebug]
  * @returns {Object}
  */
-function getServices({ hasChatWindow, isDebug } = {}) {
-    return new MockMailService().getServices({ hasChatWindow, isDebug });
+function getMailServices({ env, hasChatWindow, hasLegacyMail, isDebug } = {}) {
+    return new MockMailService().getServices({ env, hasChatWindow, hasLegacyMail, isDebug });
 }
 
 //------------------------------------------------------------------------------
@@ -538,6 +579,7 @@ async function pause() {
  * @param {Object} [param0.discuss={}] makes only sense when `param0.hasDiscuss`
  *   is set: provide data that is passed to discuss widget (= client action) as
  *   2nd positional argument.
+ * @param {Object} [param0.env={}]
  * @param {function} [param0.mockRPC]
  * @param {boolean} [param0.hasChatWindow=false] if set, mount chat window
  *   service.
@@ -546,25 +588,16 @@ async function pause() {
  *   menu.
  * @param {boolean} [param0.hasView=false] if set, use createView to create a
  *   view instead of a generic widget.
- * @param {Object} [param0.messagingEnvExtension]
  * @param {string} [param0.model] makes only sense when `param0.hasView` is set:
  *   the model to use in createView.
  * @param {integer} [param0.res_id] makes only sense when `param0.hasView` is set:
  *   the res_id to use in createView.
  * @param {Object} [param0.services]
- * @param {Object} [param0.session={}]
- * @param {string} [param0.session.name="Admin"]
- * @param {integer} [param0.session.partner_id=3]
- * @param {string} [param0.session.partner_display_name="Your Company, Admin"]
- * @param {integer} [param0.session.uid=2]
  * @param {Object} [param0.View] makes only sense when `param0.hasView` is set:
  *   the View class to use in createView.
  * @param {Object} [param0.viewOptions] makes only sense when `param0.hasView`
  *   is set: the view options to use in createView.
  * @param {boolean} [param0.waitUntilMessagingInitialized=true]
- * @param {integer} [param0.'window.innerHeight']
- * @param {integer} [param0.'window.innerWidth']
- * @param {Object} [param0.'window.Notification']
  * @param {...Object} [param0.kwargs]
  * @returns {Object}
  */
@@ -601,40 +634,19 @@ async function start(param0 = {}) {
         destroy: destroyCallbacks,
         return: returnCallbacks,
     } = callbacks;
-    const { debug = false } = param0;
     const {
-        messagingEnvExtension,
-        services = getServices({ hasChatWindow, debug }),
-        session = {},
-        'window.innerHeight': windowInnerHeight,
-        'window.innerWidth': windowInnerWidth,
-        'window.Notification': windowNotification,
+        debug = false,
+        env,
+    } = param0;
+    const {
+        services = getMailServices({ env, hasChatWindow, debug }),
     } = param0;
     initCallbacks.forEach(callback => callback(param0));
     const kwargs = Object.assign({
         archs: { 'mail.message,false,search': '<search/>' },
         debug,
         services,
-        session,
     }, param0);
-    _.defaults(session, {
-        name: "Admin",
-        partner_id: 3,
-        partner_display_name: "Your Company, Admin",
-        uid: 2,
-    });
-    const {
-        messagingCreatedPromise,
-        messagingInitializedPromise,
-        unpatch: unpatchMessagingService,
-    } = patchMessagingService(services.messaging, {
-        messagingEnvExtension,
-        session,
-        'window.innerHeight': windowInnerHeight,
-        'window.innerWidth': windowInnerWidth,
-        'window.Notification': windowNotification,
-    });
-
     let widget;
     const selector = debug ? 'body' : '#qunit-fixture';
     if (hasView) {
@@ -643,7 +655,6 @@ async function start(param0 = {}) {
             destroy() {
                 this._super(...arguments);
                 destroyCallbacks.forEach(callback => callback({ widget }));
-                unpatchMessagingService();
                 legacyUnpatch(widget);
             }
         });
@@ -658,21 +669,22 @@ async function start(param0 = {}) {
                 delete widget.destroy;
                 destroyCallbacks.forEach(callback => callback({ widget }));
                 parent.destroy();
-                unpatchMessagingService();
             },
         });
     }
-    await messagingCreatedPromise;
+
+    const testEnv = widget.call('messaging', 'getEnv');
+    const result = { env: testEnv, widget };
+
     if (waitUntilMessagingInitialized) {
-        await messagingInitializedPromise;
+        // env key only accessible after MessagingService has started
+        await testEnv.messagingInitializedPromise;
     }
 
     await Promise.all(mountCallbacks.map(callback => callback({ selector, widget })));
     if (hasChatWindow || hasDiscuss || hasMessagingMenu) {
         await afterNextRender();
     }
-    const env = widget.call('messaging', 'getEnv');
-    const result = { env, widget };
     returnCallbacks.forEach(callback => callback(result));
     return result;
 }
@@ -752,81 +764,6 @@ function pasteFiles(el, files) {
     el.dispatchEvent(ev);
 }
 
-/**
- * @param {mail.messaging.service.Messaging} MessagingService
- * @param {Object} [param1={}]
- * @param {Object} [param1.messagingEnvExtension]
- * @param {Object} [param1.session={}]
- * @param {integer} [param1.'window.innerHeight'=1080]
- * @param {integer} [param1.'window.innerWidth'=1920]
- * @param {Object} [param1.'window.Notification']
- * @returns {Object}
- *   - `messagingCreatedPromise`, a promise that is resolved just after
- *     messaging has been created.
- *   - `messagingInitializedPromise`, a promise that is resolved just after
- *     messaging has been initialized.
- *   - `unpatch`, to unpatch messaging service.
- */
-function patchMessagingService(MessagingService, {
-    messagingEnvExtension,
-    session = {},
-    'window.innerHeight': windowInnerHeight,
-    'window.innerWidth': windowInnerWidth,
-    'window.Notification': windowNotification,
-} = {}) {
-    const _t = s => s;
-    _t.database = {
-        parameters: { direction: 'ltr' },
-    };
-    const messagingCreatedPromise = makeTestPromise();
-    const messagingInitializedPromise = makeTestPromise();
-    const env = {
-        _t,
-        session: Object.assign({
-            is_bound: Promise.resolve(),
-            name: 'Admin',
-            partner_display_name: 'Mitchell Admin',
-            partner_id: 3,
-            url: s => s,
-            userId: 2,
-        }, session),
-        window: {},
-    };
-    if (windowInnerHeight) {
-        env.window.innerHeight = windowInnerHeight;
-    }
-    if (windowInnerWidth) {
-        env.window.innerWidth = windowInnerWidth;
-    }
-    if (windowNotification) {
-        env.window.Notification = windowNotification;
-    }
-    legacyPatch(MessagingService, {
-        env: makeTestEnvironment(env),
-        messagingEnvExtension: Object.assign({
-            autofetchPartnerImStatus: false,
-            disableAnimation: true,
-        }, messagingEnvExtension),
-        start(...args) {
-            this._super(...args);
-            // simulate all JS resources have been loaded
-            const {
-                messagingCreatedPromise: createdPromise,
-                messagingInitializedPromise: initializedPromise,
-            } = this._onGlobalLoad();
-            createdPromise.then(() => messagingCreatedPromise.resolve());
-            initializedPromise.then(() => messagingInitializedPromise.resolve());
-        },
-        _listenGlobalWindowLoad() {},
-    });
-    const unpatchMessagingService = () => legacyUnpatch(MessagingService);
-    return {
-        messagingCreatedPromise,
-        messagingInitializedPromise,
-        unpatch: unpatchMessagingService,
-    };
-}
-
 //------------------------------------------------------------------------------
 // Export
 //------------------------------------------------------------------------------
@@ -837,11 +774,11 @@ return {
     beforeEach,
     dragenterFiles,
     dropFiles,
-    getServices,
+    getMailServices,
     inputFiles,
+    MockMailService,
     nextAnimationFrame,
     pasteFiles,
-    patchMessagingService,
     pause,
     start,
 };

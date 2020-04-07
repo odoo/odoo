@@ -24,8 +24,8 @@ function DeviceFactory({ Entity }) {
          * Called when messaging is started.
          */
         start() {
-            // not using this.env.window because it's proxified, and
-            // addEventListener does not work on proxified window
+            // TODO FIXME Not using this.env.window because it's proxified, and
+            // addEventListener does not work on proxified window. task-2234596
             window.addEventListener('resize', this._onResize);
         }
 

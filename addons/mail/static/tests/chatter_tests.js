@@ -1,8 +1,7 @@
 odoo.define('mail.chatter_tests', function (require) {
 "use strict";
 
-const { patchMessagingService } = require('mail.messaging.testUtils');
-var mailTestUtils = require('mail.testUtils');
+const { getMailServices } = require('mail.messaging.testUtils');
 
 var core = require('web.core');
 var FormView = require('web.FormView');
@@ -26,9 +25,7 @@ QUnit.module('Chatter', {
         _.debounce = _.identity;
         _.throttle = _.identity;
 
-        this.services = mailTestUtils.getMailServices();
-        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
-        this.unpatchMessagingService = unpatchMessagingService;
+        this.services = getMailServices();
         this.data = {
             'res.partner': {
                 fields: {
@@ -199,7 +196,6 @@ QUnit.module('Chatter', {
         // unpatch _.debounce and _.throttle
         _.debounce = this.underscoreDebounce;
         _.throttle = this.underscoreThrottle;
-        this.unpatchMessagingService();
     }
 });
 

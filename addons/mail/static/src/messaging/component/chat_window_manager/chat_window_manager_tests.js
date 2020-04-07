@@ -19,10 +19,11 @@ QUnit.module('ChatWindowManager', {
     beforeEach() {
         utilsBeforeEach(this);
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
-                data: this.data,
+            let { env, widget } = await utilsStart(Object.assign({
                 hasChatWindow: true,
                 hasMessagingMenu: true,
+            }, params, {
+                data: this.data,
             }));
             this.env = env;
             this.widget = widget;
@@ -696,8 +697,11 @@ QUnit.test('open 2 different chat windows: enough screen width', async function 
         },
     });
     await this.start({
-        device: {
-            isMobile: false
+        env: {
+            window: {
+                innerHeight: 1080,
+                innerWidth: 1920,
+            },
         },
         async mockRPC(route, args) {
             if (args.method === 'channel_fetch_preview') {
@@ -727,8 +731,6 @@ QUnit.test('open 2 different chat windows: enough screen width', async function 
             }
             return this._super(...arguments);
         },
-        'window.innerHeight': 1080,
-        'window.innerWidth': 1920,
     });
     document.querySelector(`.o_MessagingMenu_toggler`).click();
     await afterNextRender();
@@ -849,8 +851,11 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
         },
     });
     await this.start({
-        device: {
-            isMobile: false
+        env: {
+            window: {
+                innerHeight: 900,
+                innerWidth: 900,
+            },
         },
         async mockRPC(route, args) {
             if (args.method === 'channel_fetch_preview') {
@@ -858,8 +863,6 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
             }
             return this._super(...arguments);
         },
-        'window.innerHeight': 900,
-        'window.innerWidth': 900,
     });
 
     // open, from systray menu, chat windows of channels with Id 1, 2, then 3

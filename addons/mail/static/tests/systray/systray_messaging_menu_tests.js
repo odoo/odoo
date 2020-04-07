@@ -1,10 +1,9 @@
 odoo.define('mail.systray.MessagingMenuTests', function (require) {
 "use strict";
 
-const { patchMessagingService } = require('mail.messaging.testUtils');
+const { getMailServices } = require('mail.messaging.testUtils');
 var DocumentThread = require('mail.model.DocumentThread');
 var MessagingMenu = require('mail.systray.MessagingMenu');
-var mailTestUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
 
@@ -85,15 +84,12 @@ QUnit.module('MessagingMenu', {
                 },
             },
         };
-        this.services = mailTestUtils.getMailServices();
-        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
-        this.unpatchMessagingService = unpatchMessagingService;
+        this.services = getMailServices({ hasLegacyMail: true });
     },
     afterEach: function () {
         // unpatch _.debounce and _.throttle
         _.debounce = this.underscoreDebounce;
         _.throttle = this.underscoreThrottle;
-        this.unpatchMessagingService();
     },
 });
 
@@ -1078,11 +1074,10 @@ QUnit.test('messaging menu widget: click twice preview on slow message_fetch sho
             if (args.method === 'channel_minimize') {
                 // called to detach thread in chat window
                 // simulate longpolling response with new chat window state
-                const channelInfo = {
-                    ...self.data['mail.channel'].records[0],
+                const channelInfo = Object.assign({}, self.data['mail.channel'].records[0],{
                     is_minimized: true,
                     state: 'open',
-                };
+                });
                 const notifications = [ [['myDB', 'res.partner'], channelInfo] ];
                 messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
             }

@@ -1,9 +1,8 @@
 odoo.define('mail.systray.MessagingMenuMailFailureTests', function (require) {
 "use strict";
 
-const { patchMessagingService } = require('mail.messaging.testUtils');
+const { getMailServices } = require('mail.messaging.testUtils');
 var MessagingMenu = require('mail.systray.MessagingMenu');
-var mailTestUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
 
@@ -50,15 +49,12 @@ QUnit.module('MessagingMenu (Mail Failures)', {
             }
         };
 
-        this.services = mailTestUtils.getMailServices();
-        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
-        this.unpatchMessagingService = unpatchMessagingService;
+        this.services = getMailServices({ hasLegacyMail: true });
     },
     afterEach: function () {
         // unpatch _.debounce and _.throttle
         _.debounce = this.underscoreDebounce;
         _.throttle = this.underscoreThrottle;
-        this.unpatchMessagingService();
     },
 });
 

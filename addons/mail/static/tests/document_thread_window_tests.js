@@ -1,8 +1,7 @@
 odoo.define('mail.documentThreadWindowTests', function (require) {
 "use strict";
 
-const { patchMessagingService } = require('mail.messaging.testUtils');
-var mailTestUtils = require('mail.testUtils');
+const { getMailServices } = require('mail.messaging.testUtils');
 var MessagingMenu = require('mail.systray.MessagingMenu');
 
 var testUtils = require('web.test_utils');
@@ -76,12 +75,7 @@ QUnit.module('Document Thread', {
         this.session = {
             partner_id: partnerID, // so that needaction messages are treated as needactions
         };
-        this.services = mailTestUtils.getMailServices();
-        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
-        this.unpatchMessagingService = unpatchMessagingService;
-    },
-    afterEach() {
-        this.unpatchMessagingService();
+        this.services = getMailServices({ hasLegacyMail: true });
     },
 });
 

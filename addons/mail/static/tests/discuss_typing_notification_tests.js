@@ -1,7 +1,7 @@
 odoo.define('mail.discuss_typing_notification_test', function (require) {
 "use strict";
 
-const { patchMessagingService } = require('mail.messaging.testUtils');
+const { getMailServices } = require('mail.messaging.testUtils');
 var Timer = require('mail.model.Timer');
 var CCThrottleFunctionObject = require('mail.model.CCThrottleFunctionObject');
 var mailTestUtils = require('mail.testUtils');
@@ -113,9 +113,7 @@ QUnit.module('Discuss (Typing Notifications)', {
                 }],
             },
         };
-        this.services = mailTestUtils.getMailServices();
-        const { unpatch: unpatchMessagingService } = patchMessagingService(this.services.messaging);
-        this.unpatchMessagingService = unpatchMessagingService;
+        this.services = getMailServices({ hasLegacyMail: true });
 
         /**
          * Simulate that someone typing something (or stops typing)
@@ -145,7 +143,6 @@ QUnit.module('Discuss (Typing Notifications)', {
         // unpatch Timer and CCThrottleFunction to re-enable timers
         // with the Thread Typing Mixin
         this.unpatch();
-        this.unpatchMessagingService();
     },
 });
 
