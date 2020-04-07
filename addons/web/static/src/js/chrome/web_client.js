@@ -324,6 +324,13 @@ class WebClient extends KeyboardNavigation {
         const hash = "#" + hashParts.join("&");
         if (hash !== this._getWindowHash()) {
             this._setWindowHash(hash);
+            // whether or not the Pound character is in the URL
+            // an empty hash will return an empty string
+            // i.e. window hash of '/web' === window hash of '/web#' === [empty string]
+            // but won't trigger the event hashchange !
+            if (hash === '#') {
+                this.ignoreHashchange = false;
+            }
         }
         this._setWindowTitle(this._computeTitle());
     }
