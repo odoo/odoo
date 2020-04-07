@@ -4828,6 +4828,7 @@ QUnit.module('ActionManager', {
 
         // go back to the form view
         await testUtils.dom.click(webClient.$('.o_control_panel .breadcrumb a:first'));
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.containsOnce(webClient, '.o_form_view');
         assert.hasClass(webClient.$('.o_form_view'), 'o_form_readonly');
