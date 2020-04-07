@@ -7,7 +7,6 @@ const {
     beforeEach: utilsBeforeEach,
     getServices,
     inputFiles,
-    nextAnimationFrame,
     pause,
     start: utilsStart,
 } = require('mail.messaging.testUtils');
@@ -1996,14 +1995,10 @@ QUnit.test('new messages separator', async function (assert) {
     );
 
     // scroll to bottom
-    document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollTop =
-        document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollHeight;
-    await afterNextRender();
-    // Because of t-transition animation not being synchronous. We disable the
-    // animation in CSS, but Owl still keeps the DOM longer than we would like.
-    // See https://github.com/odoo/owl/issues/561
-    await nextAnimationFrame();
-    await nextAnimationFrame();
+    await afterNextRender(() => {
+        document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollTop =
+            document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollHeight;
+    });
     assert.strictEqual(
         document.querySelectorAll(`
             .o_Discuss_thread .o_ThreadViewer_messageList .o_MessageList_separatorNewMessages
@@ -2090,10 +2085,9 @@ QUnit.test('restore thread scroll position', async function (assert) {
     );
 
     // scroll to top of channel1
-    document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollTop = 0;
-    // This amount of time should be enough before assuming no messages will appear.
-    await nextAnimationFrame();
-    await nextAnimationFrame();
+    await afterNextRender(() => {
+        document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollTop = 0;
+    });
     assert.strictEqual(
         document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollTop,
         0,

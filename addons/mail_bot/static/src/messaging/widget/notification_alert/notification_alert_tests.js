@@ -3,8 +3,8 @@ odoo.define('mail_bot.messaging.widget.NotificationAlertTests', function (requir
 
 const {
     afterEach: utilsAfterEach,
+    afterNextRender,
     beforeEach: utilsBeforeEach,
-    nextAnimationFrame,
     pause,
     start,
 } = require('mail.messaging.testUtils');
@@ -45,14 +45,14 @@ QUnit.module('NotificationAlert', {
 QUnit.test('notification_alert widget: display blocked notification alert', async function (assert) {
     assert.expect(1);
 
-    await this.start({
-        'window.Notification': {
-            permission: 'denied',
-        },
+    await afterNextRender(async () => {
+        await this.start({
+            'window.Notification': {
+                permission: 'denied',
+            },
+        });
     });
 
-    await nextAnimationFrame();
-    await nextAnimationFrame();
     assert.containsOnce(
         document.body,
         '.o_notification_alert',
@@ -63,14 +63,14 @@ QUnit.test('notification_alert widget: display blocked notification alert', asyn
 QUnit.test('notification_alert widget: no notification alert when granted', async function (assert) {
     assert.expect(1);
 
-    await this.start({
-        'window.Notification': {
-            permission: 'granted',
-        },
+    await afterNextRender(async () => {
+        await this.start({
+            'window.Notification': {
+                permission: 'granted',
+            },
+        });
     });
 
-    await nextAnimationFrame();
-    await nextAnimationFrame();
     assert.containsNone(
         document.body,
         '.o_notification_alert',
@@ -81,14 +81,14 @@ QUnit.test('notification_alert widget: no notification alert when granted', asyn
 QUnit.test('notification_alert widget: no notification alert when default', async function (assert) {
     assert.expect(1);
 
-    await this.start({
-        'window.Notification': {
-            permission: 'default',
-        },
+    await afterNextRender(async () => {
+        await this.start({
+            'window.Notification': {
+                permission: 'default',
+            },
+        });
     });
 
-    await nextAnimationFrame();
-    await nextAnimationFrame();
     assert.containsNone(
         document.body,
         '.o_notification_alert',

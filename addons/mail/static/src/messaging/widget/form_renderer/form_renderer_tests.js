@@ -47,9 +47,10 @@ QUnit.module('FormRenderer', {
         _.debounce = _.identity;
         _.throttle = _.identity;
         this.createView = async (...args) => {
-            const { widget } = await start(...args);
-            this.view = widget;
-            await afterNextRender();
+            await afterNextRender(async () => {
+                const { widget } = await start(...args);
+                this.view = widget;
+            });
         };
     },
     afterEach() {

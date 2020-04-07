@@ -9,7 +9,6 @@ const {
     afterNextRender,
     beforeEach: utilsBeforeEach,
     dragenterFiles,
-    nextAnimationFrame,
     pause,
     start: utilsStart,
 } = require('mail.messaging.testUtils');
@@ -173,24 +172,19 @@ QUnit.test('message list desc order', async function (assert) {
     );
 
     // scroll to bottom
-    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop =
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollHeight;
-    // The following awaits should be afterNextRender but use multiple nextAnimationFrame
-    // instead to know exactly how much time has to be waited for new messages
-    // to appear (used below).
-    await nextAnimationFrame();
-    await nextAnimationFrame();
+    await afterNextRender(() => {
+        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop =
+            document.querySelector(`.o_ThreadViewer_messageList`).scrollHeight;
+    });
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
         60,
         "should have 60 messages after scrolled to bottom"
     );
 
-    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 0;
-    // This amount of time should be enough before assuming no messages will
-    // appear (see above).
-    await nextAnimationFrame();
-    await nextAnimationFrame();
+    await afterNextRender(() => {
+        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 0;
+    });
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
         60,
@@ -266,12 +260,9 @@ QUnit.test('message list asc order', async function (assert) {
     );
 
     // scroll to top
-    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 0;
-    // The following awaits should be afterNextRender but use multiple nextAnimationFrame
-    // instead to know exactly how much time has to be waited for new messages
-    // to appear (used below).
-    await nextAnimationFrame();
-    await nextAnimationFrame();
+    await afterNextRender(() => {
+        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 0;
+    });
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
         60,
@@ -279,12 +270,10 @@ QUnit.test('message list asc order', async function (assert) {
     );
 
     // scroll to bottom
-    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop =
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollHeight;
-    // This amount of time should be enough before assuming no messages will
-    // appear (see above).
-    await nextAnimationFrame();
-    await nextAnimationFrame();
+    await afterNextRender(() => {
+        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop =
+            document.querySelector(`.o_ThreadViewer_messageList`).scrollHeight;
+    });
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
         60,
