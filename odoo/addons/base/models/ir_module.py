@@ -174,6 +174,9 @@ class Module(models.Model):
     @api.depends('name', 'description')
     def _get_desc(self):
         for module in self:
+            if not module.name:
+                module.description_html = False
+                continue
             path = modules.get_module_resource(module.name, 'static/description/index.html')
             if path:
                 with tools.file_open(path, 'rb') as desc_file:
