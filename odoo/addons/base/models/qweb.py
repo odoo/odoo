@@ -234,6 +234,7 @@ class frozendict(dict):
 
 
 class QWeb(object):
+    __slots__ = ()
 
     _void_elements = frozenset([
         'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',

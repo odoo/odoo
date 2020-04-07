@@ -9,7 +9,7 @@ class TestUBL(common.TransactionCase):
         super(TestUBL, self).setUp()
         # Force user Belgium country.
         self.env.user.company_id = self.env['res.company'].create({'name': 'MyCompany'})
-        self.env.user.company_id.country = self.env.ref('base.be')
+        self.env.user.company_id.country_id = self.env.ref('base.be')
         self.env.ref('l10n_be.l10nbe_chart_template').try_loading()
         self.partner_id = self.env['res.partner'].create({'name': 'TestUser', 'vat': 'BE0123456789'})
 

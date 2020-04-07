@@ -1252,7 +1252,7 @@ class AccountBankStatementLine(models.Model):
 
             # Update the payment date to match the current bank statement line's date.
             if counterpart_line.payment_id:
-                counterpart_line.payment_id.payment_date = self.date
+                counterpart_line.payment_id.date = self.date
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS

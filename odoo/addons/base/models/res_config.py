@@ -14,6 +14,8 @@ _logger = logging.getLogger(__name__)
 
 
 class ResConfigModuleInstallationMixin(object):
+    __slots__ = ()
+
     @api.model
     def _install_modules(self, modules):
         """ Install the requested modules.

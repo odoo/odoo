@@ -181,9 +181,6 @@ class TestActivityFlow(TestActivityCommon):
             'datas': 'testtest',
         })
 
-        # Adding the attachments to the activity
-        activity.attachment_ids = attachments
-
         # Checking if the attachment has been forwarded to the message
         # when marking an activity as "Done"
         activity.action_feedback()

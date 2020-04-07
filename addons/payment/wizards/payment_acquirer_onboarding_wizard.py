@@ -31,13 +31,14 @@ class PaymentWizard(models.TransientModel):
     acc_number = fields.Char("Account Number",  default=lambda self: self._get_default_payment_acquirer_onboarding_value('acc_number'))
     manual_post_msg = fields.Html("Payment Instructions")
 
+    _data_fetched = fields.Boolean(store=False)
+
     @api.onchange('journal_name', 'acc_number')
     def _set_manual_post_msg_value(self):
         self.manual_post_msg = _('<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: %s</li><li>Account Holder: %s</li></ul>') %\
                                (self.journal_name or _("Bank") , self.acc_number or _("Account"), self.env.company.name)
 
     _payment_acquirer_onboarding_cache = {}
-    _data_fetched = False
 
     def _get_manual_payment_acquirer(self, env=None):
         if env is None:
