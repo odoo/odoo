@@ -22,7 +22,7 @@ const Widget = require('web.Widget');
 const { createWebClient, nextTick } = testUtils;
 
 const cpHelpers = testUtils.controlPanel;
-const { doAction, loadState }  = testUtils.actionManager;
+const { doAction, loadState } = testUtils.actionManager;
 
 QUnit.module('ActionManager', {
     beforeEach: function () {
@@ -32,13 +32,14 @@ QUnit.module('ActionManager', {
                     foo: {string: "Foo", type: "char"},
                     bar: {string: "Bar", type: "many2one", relation: 'partner'},
                     o2m: {string: "One2Many", type: "one2many", relation: 'partner', relation_field: 'bar'},
+                    m2o: {string: "Many2one", type: "many2one", relation: 'partner'},
                 },
                 records: [
-                    {id: 1, display_name: "First record", foo: "yop", bar: 2, o2m: [2, 3]},
-                    {id: 2, display_name: "Second record", foo: "blip", bar: 1, o2m: [1, 4, 5]},
-                    {id: 3, display_name: "Third record", foo: "gnap", bar: 1, o2m: []},
-                    {id: 4, display_name: "Fourth record", foo: "plop", bar: 2, o2m: []},
-                    {id: 5, display_name: "Fifth record", foo: "zoup", bar: 2, o2m: []},
+                    {id: 1, display_name: "First record", foo: "yop", bar: 2, o2m: [2, 3], m2o: 3},
+                    {id: 2, display_name: "Second record", foo: "blip", bar: 1, o2m: [1, 4, 5], m2o: 3},
+                    {id: 3, display_name: "Third record", foo: "gnap", bar: 1, o2m: [], m2o: 1},
+                    {id: 4, display_name: "Fourth record", foo: "plop", bar: 2, o2m: [], m2o: 1},
+                    {id: 5, display_name: "Fifth record", foo: "zoup", bar: 2, o2m: [], m2o: 1},
                 ],
             },
             pony: {
@@ -4780,6 +4781,57 @@ QUnit.module('ActionManager', {
         await cpHelpers.toggleMenuItem(webClient, "Favorite Ponies");
         await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_list_view');
+
+        webClient.destroy();
+    });
+
+    QUnit.test('go back to action with form view as main view, and res_id', async function (assert) {
+        assert.expect(7);
+
+        this.actions.push({
+            id: 999,
+            name: 'Partner',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            res_id: 2,
+            views: [[44, 'form']],
+        });
+        this.archs['partner,44,form'] = '<form><field name="m2o"/></form>';
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            mockRPC: function (route, args) {
+                if (args.method === "get_formview_action") {
+                    return Promise.resolve({
+                        res_id: 3,
+                        res_model: 'partner',
+                        type: 'ir.actions.act_window',
+                        views: [[false, 'form']],
+                    });
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await doAction(999);
+
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.hasClass(webClient.$('.o_form_view'), 'o_form_readonly');
+        assert.strictEqual(webClient.$('.o_control_panel .breadcrumb-item').text(), 'Second record');
+
+        // push another action in the breadcrumb
+        await testUtils.dom.click($(webClient.el).find('.o_form_uri:contains(Third record)'));
+        await testUtils.owlCompatibilityExtraNextTick();
+        assert.strictEqual(webClient.$('.o_control_panel .breadcrumb-item').text(), 'Second recordThird record');
+
+        // go back to the form view
+        await testUtils.dom.click(webClient.$('.o_control_panel .breadcrumb a:first'));
+
+        assert.containsOnce(webClient, '.o_form_view');
+        assert.hasClass(webClient.$('.o_form_view'), 'o_form_readonly');
+        assert.strictEqual(webClient.$('.o_control_panel .breadcrumb-item').text(), 'Second record');
 
         webClient.destroy();
     });
