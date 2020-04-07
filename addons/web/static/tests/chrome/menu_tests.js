@@ -2,8 +2,6 @@ odoo.define('web.menu_tests', function (require) {
     "use strict";
 
     const testUtils = require('web.test_utils');
-    const Menu = require('web.Menu');
-    const SystrayMenu = require('web.SystrayMenu');
     const Widget = require('web.Widget');
 
     const { createWebClient } = testUtils;
