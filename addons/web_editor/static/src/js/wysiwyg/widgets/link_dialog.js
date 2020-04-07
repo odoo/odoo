@@ -43,13 +43,6 @@ var LinkDialog = Dialog.extend({
             // all btn-* classes anyway.
         ];
 
-        this.trigger_up('getRecordInfo', {
-            recordInfo: this.options,
-            callback: function (recordInfo) {
-                _.defaults(self.options, recordInfo);
-            },
-        });
-
         // data is used in the dialog template.
         this.props = options.props || {};
 

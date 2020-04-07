@@ -30,12 +30,6 @@ var ColorpickerWidget = Widget.extend({
     init: function (parent, options) {
         this._super(...arguments);
         options = options || {};
-        this.trigger_up('getRecordInfo', {
-            recordInfo: options,
-            callback: function (recordInfo) {
-                _.defaults(options, recordInfo);
-            },
-        });
 
         this.pickerFlag = false;
         this.sliderFlag = false;

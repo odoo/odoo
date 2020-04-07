@@ -24,13 +24,6 @@ var AltDialog = Dialog.extend({
             title: _t("Change media description and tooltip")
         }, options));
 
-        this.trigger_up('getRecordInfo', {
-            recordInfo: options,
-            callback: function (recordInfo) {
-                _.defaults(options, recordInfo);
-            },
-        });
-
         this.media = media;
         var allEscQuots = /&quot;/g;
         this.alt = ($(this.media).attr('alt') || "").replace(allEscQuots, '"');
