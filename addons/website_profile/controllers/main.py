@@ -117,7 +117,7 @@ class WebsiteProfile(http.Controller):
     # ---------------------------------------------------
     @http.route('/profile/edit', type='http', auth="user", website=True)
     def view_user_profile_edition(self, **kwargs):
-        user_id = int(kwargs.get('user_id'))
+        user_id = int(kwargs.get('user_id', 0))
         countries = request.env['res.country'].search([])
         if user_id and request.env.user.id != user_id and request.env.user._is_admin():
             user = request.env['res.users'].browse(user_id)
@@ -153,7 +153,7 @@ class WebsiteProfile(http.Controller):
 
     @http.route('/profile/user/save', type='http', auth="user", methods=['POST'], website=True)
     def save_edited_profile(self, **kwargs):
-        user_id = int(kwargs.get('user_id'))
+        user_id = int(kwargs.get('user_id', 0))
         if user_id and request.env.user.id != user_id and request.env.user._is_admin():
             user = request.env['res.users'].browse(user_id)
         else:

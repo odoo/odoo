@@ -2,10 +2,8 @@
 
 # Copyright 2015 Eezee-It
 
-import datetime
 import json
 import logging
-import pytz
 import re
 import time
 from hashlib import sha256
@@ -182,13 +180,10 @@ class TxSips(models.Model):
     def _sips_form_validate(self, data):
         data = self._sips_data_to_object(data.get('Data'))
         status = data.get('responseCode')
-        date = data.get('transactionDateTime')
-        if date:
-            date = datetime.datetime.fromisoformat(date)
-            date = date.astimezone(pytz.utc).replace(tzinfo=None)
         data = {
             'acquirer_reference': data.get('transactionReference'),
-            'date': date or fields.Datetime.now(),
+            'date': data.get('transactionDateTime',
+                                      fields.Datetime.now())
         }
         res = False
         if status in self._sips_valid_tx_status:
