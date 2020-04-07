@@ -1795,9 +1795,9 @@ class AccountInvoiceLine(models.Model):
         company_id = self.company_id or self.env.user.company_id
 
         if self.invoice_id.type in ('out_invoice', 'out_refund'):
-            taxes = self.product_id.taxes_id.filtered(lambda r: r.company_id == company_id) or self.account_id.tax_ids or self.invoice_id.company_id.account_sale_tax_id
+            taxes = self.product_id.taxes_id.filtered(lambda r: r.company_id == company_id) or self.account_id.tax_ids or (not self.product_id and self.invoice_id.company_id.account_sale_tax_id) or self.env['account.tax']
         else:
-            taxes = self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == company_id) or self.account_id.tax_ids or self.invoice_id.company_id.account_purchase_tax_id
+            taxes = self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == company_id) or self.account_id.tax_ids or (not self.product_id and self.invoice_id.company_id.account_purchase_tax_id) or self.env['account.tax']
 
         self.invoice_line_tax_ids = fp_taxes = self.invoice_id.fiscal_position_id.map_tax(taxes, self.product_id, self.invoice_id.partner_id)
 
