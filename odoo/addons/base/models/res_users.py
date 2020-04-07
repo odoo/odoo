@@ -1090,17 +1090,20 @@ class GroupsView(models.Model):
         """ Modify the view with xmlid ``base.user_groups_view``, which inherits
             the user form view, and introduces the reified group fields.
         """
-        if self._context.get('install_filename') or self._context.get(MODULE_UNINSTALL_FLAG):
-            # skip now; it will be updated once at the end of (un)installation
-            return
-
         # remove the language to avoid translations, it will be handled at the view level
         self = self.with_context(lang=None)
 
         # We have to try-catch this, because at first init the view does not
         # exist but we are already creating some basic groups.
         view = self.env.ref('base.user_groups_view', raise_if_not_found=False)
-        if view and view.exists() and view._name == 'ir.ui.view':
+        if not (view and view.exists() and view._name == 'ir.ui.view'):
+            return
+
+        if self._context.get('install_filename') or self._context.get(MODULE_UNINSTALL_FLAG):
+            # use a dummy view during install/upgrade/uninstall
+            xml = E.field(name="groups_id", position="after")
+
+        else:
             group_no_one = view.env.ref('base.group_no_one')
             group_employee = view.env.ref('base.group_user')
             xml1, xml2, xml3 = [], [], []
@@ -1168,13 +1171,14 @@ class GroupsView(models.Model):
                 E.group(*(xml2), col="2", attrs=str(user_type_attrs)),
                 E.group(*(xml3), col="4", attrs=str(user_type_attrs)), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
-            xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
 
-            if xml_content != view.arch:  # avoid useless xml validation if no change
-                new_context = dict(view._context)
-                new_context.pop('install_filename', None)  # don't set arch_fs for this computed view
-                new_context['lang'] = None
-                view.with_context(new_context).write({'arch': xml_content})
+        # serialize and update the view
+        xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
+        if xml_content != view.arch:  # avoid useless xml validation if no change
+            new_context = dict(view._context)
+            new_context.pop('install_filename', None)  # don't set arch_fs for this computed view
+            new_context['lang'] = None
+            view.with_context(new_context).write({'arch': xml_content})
 
     def get_application_groups(self, domain):
         """ Return the non-share groups that satisfy ``domain``. """
