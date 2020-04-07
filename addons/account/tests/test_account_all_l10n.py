@@ -20,6 +20,13 @@ class TestAllL10n(SingleTransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestAllL10n, cls).setUpClass()
+
+        # the installation of l10n_* modules below instanciates a NEW registry, so we
+        # have to restore the old one in order to perform the cleanups
+        @cls.addClassCleanup
+        def cleanup():
+            cls.registry.registries[cls.registry.db_name] = cls.registry
+
         l10n_mods = cls.env['ir.module.module'].search([
             ('name', 'like', 'l10n%'),
             ('state', '=', 'uninstalled'),
