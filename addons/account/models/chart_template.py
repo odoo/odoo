@@ -223,24 +223,26 @@ class AccountChartTemplate(models.Model):
                     res.unlink()
             existing_accounts.unlink()
 
-        company.write({'currency_id': self.currency_id.id,
-                       'anglo_saxon_accounting': self.use_anglo_saxon,
-                       'bank_account_code_prefix': self.bank_account_code_prefix,
-                       'cash_account_code_prefix': self.cash_account_code_prefix,
-                       'transfer_account_code_prefix': self.transfer_account_code_prefix,
-                       'chart_template_id': self.id
-        })
+        values = {
+            'anglo_saxon_accounting': self.use_anglo_saxon,
+            'bank_account_code_prefix': self.bank_account_code_prefix,
+            'cash_account_code_prefix': self.cash_account_code_prefix,
+            'transfer_account_code_prefix': self.transfer_account_code_prefix,
+            'chart_template_id': self.id,
+        }
+        if self != self.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False):
+            values.update({'currency_id': self.currency_id.id})
+            self.currency_id.write({'active': True})
 
-        #set the coa currency to active
-        self.currency_id.write({'active': True})
+        company.write(values)
 
         # When we install the CoA of first company, set the currency to price types and pricelists
         if company.id == 1:
             for reference in ['product.list_price', 'product.standard_price', 'product.list0']:
                 try:
-                    tmp2 = self.env.ref(reference).write({'currency_id': self.currency_id.id})
+                    self.env.ref(reference).write({'currency_id': company.currency_id.id})
                 except ValueError:
-                    pass
+                    _logger.info("Unable to set currency to %s." % reference)
 
         # If the floats for sale/purchase rates have been filled, create templates from them
         self._create_tax_templates_from_rates(company.id, sale_tax_rate, purchase_tax_rate)
