@@ -7,7 +7,7 @@
     'website': 'https://www.odoo.com/page/project-management',
     'category': 'Services/Project',
     'sequence': 10,
-    'summary': 'Organize and schedule your projects ',
+    'summary': 'Organize and plan your projects',
     'depends': [
         'analytic',
         'base_setup',

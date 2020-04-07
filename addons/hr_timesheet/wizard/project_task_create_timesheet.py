@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from datetime import datetime
-from odoo.exceptions import UserError
 
 
 class ProjectTaskCreateTimesheet(models.TransientModel):
@@ -18,9 +17,7 @@ class ProjectTaskCreateTimesheet(models.TransientModel):
 
         active_id = self._context.get('active_id')
         if 'task_id' in fields and active_id:
-            task_id = self.env['project.task'].browse(active_id)
             result['task_id'] = active_id
-            result['description'] = task_id.name
         return result
 
     time_spent = fields.Float('Time', digits=(16, 2))
