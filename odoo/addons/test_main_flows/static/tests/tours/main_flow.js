@@ -490,7 +490,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
     mobile: false,
-    trigger: ".o_kanban_group:eq(2) > .o_kanban_records .o_kanban_record:has(span:contains('the_flow.opportunity'))",
+    trigger: ".o_kanban_group:eq(2) > .o_kanban_record:has(span:contains('the_flow.opportunity'))",
     content: _t("Click on an opportunity to zoom to it."),
     position: "bottom",
 }, {

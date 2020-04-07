@@ -103,8 +103,8 @@ var KanbanColumn = Widget.extend({
         }
 
         if (this.recordsDraggable) {
-            this.$('.o_kanban_records').sortable({
-                connectWith: '.o_kanban_group .o_kanban_records',
+            this.$el.sortable({
+                connectWith: '.o_kanban_group',
                 containment: this.draggable ? false : 'parent',
                 revert: 0,
                 delay: 0,
@@ -180,12 +180,7 @@ var KanbanColumn = Widget.extend({
         if (this.quickCreateWidget) {
             this.quickCreateWidget.on_attach_callback();
         }
-        this.$('.o_kanban_records').css({ 'margin-top': this.$header.height() });
-        if (!this.folded) {
-            this.$header.css({ width: this.$('.o_kanban_records').width() });
-        } else {
-            this.$el.width(this.$header.width());
-        }
+        this._makeHeaderFixed();
     },
 
     //--------------------------------------------------------------------------
@@ -218,7 +213,7 @@ var KanbanColumn = Widget.extend({
             formViewRef: this.quickCreateView,
             model: this.modelName,
         });
-        return this.quickCreateWidget.prependTo(this.$('.o_kanban_records'));
+        return this.quickCreateWidget.insertAfter(this.$header);
     },
     /**
      * Closes the quick create widget if it isn't dirty.
@@ -253,9 +248,14 @@ var KanbanColumn = Widget.extend({
         var record = new this.KanbanRecord(this, recordState, this.record_options);
         this.records.push(record);
         if (options && options.position === 'before') {
-            return record.prependTo(this.$('.o_kanban_records'));
+            return record.insertAfter(this.quickCreateWidget ? this.quickCreateWidget.$el : this.$header);
         } else {
-            return record.appendTo(this.$('.o_kanban_records'));
+            var $load_more = this.$('.o_kanban_load_more');
+            if ($load_more.length) {
+                return record.insertBefore($load_more);
+            } else {
+                return record.appendTo(this.$el);
+            }
         }
     },
     /**
@@ -276,6 +276,19 @@ var KanbanColumn = Widget.extend({
             ids.push($(r).data('record').id);
         });
         return ids;
+    },
+    _makeHeaderFixed() {
+        this.$('.o_kanban_record:first').css({ 'margin-top': this.$header.height() });
+        if (!this.folded) {
+            this.$header.css({ width: this.$el.width() });
+        } else {
+            this.$el.width(this.$header.width());
+        }
+        // temporary select action manager, this is not proper way but we do not have other way for instance
+        const left = this.$('.o_kanban_header').position().left;
+        $('.o_content').on('scroll', () => {
+            this.$('.o_kanban_header').css('left', (left + $('.o_content').scrollLeft() * (-1)) + "px");
+        });
     },
 
     //--------------------------------------------------------------------------

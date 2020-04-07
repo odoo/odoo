@@ -58,6 +58,11 @@ var ColumnQuickCreate = Widget.extend({
         if (!this.folded) {
             this.$input.focus();
         }
+        this.$el.css({ 'min-width': this.$('.o_column_quick_create_fixed').width() });
+        const left = this.$('.o_column_quick_create_fixed').position().left;
+        $('.o_content').on('scroll', () => {
+            this.$('.o_column_quick_create_fixed').css('left', (left + $('.o_content').scrollLeft() * (-1)) + "px");
+        });
     },
 
     //--------------------------------------------------------------------------
