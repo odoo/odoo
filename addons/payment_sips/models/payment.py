@@ -2,7 +2,7 @@
 
 # Copyright 2015 Eezee-It
 
-import datetime
+from dateutil import parser
 import json
 import logging
 import pytz
@@ -190,12 +190,19 @@ class TxSips(models.Model):
         status = data.get('responseCode')
         date = data.get('transactionDateTime')
         if date:
-            date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S%z')
-            date = date.astimezone(pytz.utc).replace(tzinfo=None)
-            date = date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            try:
+                # dateutil.parser 2.5.3 and up should handle dates formatted as
+                # '2020-04-08T05:54:18+02:00', which strptime does not
+                # (+02:00 does not work as %z expects +0200 before Python 3.7)
+                # See odoo/odoo#49160
+                date = parser.parse(date).astimezone(pytz.utc).replace(tzinfo=None)
+            except:
+                # will fallback on now in the write to avoid failing to
+                # register the payment because a provider formats their 
+                # dates badly or because some local library is not behaving
+                date = False
         data = {
             'acquirer_reference': data.get('transactionReference'),
-            'partner_reference': data.get('customerId'),
             'date_validate': date or fields.Datetime.now(),
         }
         res = False
