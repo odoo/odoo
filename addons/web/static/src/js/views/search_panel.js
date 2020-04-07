@@ -737,7 +737,6 @@ const SearchPanel = Widget.extend({
         const filter = this.filters[item.dataset.filterId];
         const group = filter.groups[item.dataset.groupId];
         group.state = group.state === 'checked' ? 'unchecked' : 'checked';
-        group.folded = !group.folded;
         Object.values(group.values).forEach(value => {
             value.checked = group.state === 'checked';
         });
