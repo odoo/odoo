@@ -53,7 +53,7 @@ from . import api
 from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
-from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
+from .tools import frozendict, lazy_classproperty, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
                    groupby, unique
 from .tools.config import config
@@ -150,6 +150,10 @@ class MetaModel(api.Meta):
     """
 
     module_to_models = defaultdict(list)
+
+    def __new__(meta, name, bases, attrs):
+        attrs.setdefault('__slots__', ())
+        return super().__new__(meta, name, bases, attrs)
 
     def __init__(self, name, bases, attrs):
         if not self._register:
@@ -253,6 +257,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     To create a class that should not be instantiated,
     the :attr:`~odoo.models.BaseModel._register` attribute may be set to False.
     """
+    __slots__ = ['env', '_ids', '_prefetch_ids']
 
     _auto = False
     """Whether a database table should be created (default: ``True``).
@@ -5607,7 +5612,7 @@ Record ids: %(records)s
     # Cache and recomputation management
     #
 
-    @lazy_property
+    @property
     def _cache(self):
         """ Return the cache of ``self``, mapping field names to values. """
         return RecordCache(self)
@@ -6226,6 +6231,8 @@ collections.Sequence.register(BaseModel)
 
 class RecordCache(MutableMapping):
     """ A mapping from field names to values, to read and update the cache of a record. """
+    __slots__ = ['_record']
+
     def __init__(self, record):
         assert len(record) == 1, "Unexpected RecordCache(%s)" % record
         self._record = record
