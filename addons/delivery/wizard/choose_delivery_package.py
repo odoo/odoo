@@ -48,7 +48,7 @@ class ChooseDeliveryPackage(models.TransientModel):
 
     def action_put_in_pack(self):
         picking_move_lines = self.picking_id.move_line_ids
-        if not self.picking_id.picking_type_id.show_reserved:
+        if not self.picking_id.picking_type_id.show_reserved and not self.env.context.get('barcode_view'):
             picking_move_lines = self.picking_id.move_line_nosuggest_ids
 
         move_line_ids = picking_move_lines.filtered(lambda ml:
