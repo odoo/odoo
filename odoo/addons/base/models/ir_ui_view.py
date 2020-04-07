@@ -883,6 +883,7 @@ actual arch.
                 self.with_context(
                     base_model_name=model,
                     check_field_names=False,  # field validation is a bit more tricky and done apart
+                    check_field_names_original=self.env.context.get('check_field_names'),
                     view_is_editable=False,
                 ).postprocess_and_fields(model, searchpanel[0], view_id)
 
