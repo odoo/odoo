@@ -2514,7 +2514,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     if not recs:
                         return
                     for field in fields_to_compute:
-                        _logger.info("Storing computed values of %s", field)
+                        _logger.info("Storing computed values of %s.%s", self._name, field)
                         self.env.add_to_compute(recs._fields[field], recs)
 
         if self._auto:
