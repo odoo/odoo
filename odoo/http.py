@@ -1461,10 +1461,11 @@ class Root(object):
                         # - the database version doesnt match the server version
                         # Log the user out and fall back to nodb
                         request.session.logout()
-                        # If requesting /web this will loop
                         if request.httprequest.path == '/web':
-                            result = werkzeug.utils.redirect('/web/database/selector')
+                            # Internal Server Error
+                            raise
                         else:
+                            # If requesting /web this will loop
                             result = _dispatch_nodb()
                     else:
                         result = ir_http._dispatch()
