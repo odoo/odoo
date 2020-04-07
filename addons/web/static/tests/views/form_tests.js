@@ -706,6 +706,57 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('notebook: pages with invisible modifiers', async function (assert) {
+        assert.expect(10);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                    <sheet>
+                        <field name="bar"/>
+                        <notebook>
+                            <page string="First" attrs='{"invisible": [["bar", "=", false]]}'>
+                                <field name="foo"/>
+                            </page>
+                            <page string="Second" attrs='{"invisible": [["bar", "=", true]]}'>
+                                <field name="int_field"/>
+                            </page>
+                            <page string="Third">
+                                <field name="qux"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+
+        assert.containsOnce(form, ".o_notebook .nav .nav-link.active",
+            "There should be only one active tab"
+        );
+        assert.isVisible(form.$(".o_notebook .nav .nav-item:first"));
+        assert.hasClass(form.$(".o_notebook .nav .nav-link:first"), "active");
+
+        assert.isNotVisible(form.$(".o_notebook .nav .nav-item:eq(1)"));
+        assert.doesNotHaveClass(form.$(".o_notebook .nav .nav-link:eq(1)"), "active");
+
+        await testUtils.dom.click(form.$(".o_field_widget[name=bar] input"));
+
+        assert.containsOnce(form, ".o_notebook .nav .nav-link.active",
+            "There should be only one active tab"
+        );
+        assert.isNotVisible(form.$(".o_notebook .nav .nav-item:first"));
+        assert.doesNotHaveClass(form.$(".o_notebook .nav .nav-link:first"), "active");
+
+        assert.isVisible(form.$(".o_notebook .nav .nav-item:eq(1)"));
+        assert.hasClass(form.$(".o_notebook .nav .nav-link:eq(1)"), "active");
+
+        form.destroy();
+    });
+
     QUnit.test('invisible attrs on first notebook page', async function (assert) {
         assert.expect(6);
 
