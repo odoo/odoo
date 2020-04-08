@@ -4,6 +4,7 @@ odoo.define('web.KeyboardNavigation', function (require) {
     const { useListener } = require('web.custom_hooks');
 
     const { Component } = owl;
+    const { useExternalListener } = owl.hooks;
     const { xml } = owl.tags;
 
     /**
@@ -35,6 +36,7 @@ odoo.define('web.KeyboardNavigation', function (require) {
             this._areAccessKeyVisible = false;
             useListener('keydown', this._onKeyDown);
             useListener('keyup', this._onKeyUp);
+            useExternalListener(window, 'blur', this._hideAccessKeyOverlay);
             this._overlays = [];
         }
 
