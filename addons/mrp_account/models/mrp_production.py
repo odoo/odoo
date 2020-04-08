@@ -19,6 +19,9 @@ class MrpProduction(models.Model):
     extra_cost = fields.Float(copy=False, help='Extra cost per produced unit')
     show_valuation = fields.Boolean(compute='_compute_show_valuation')
 
+    total_cost_workcenter = fields.Float("Workcenter Cost", help="Total of workcenter cost for this production")
+    total_cost_service = fields.Float("BoM Service Cost", help="Total of service cost for this bill of material")
+
     def _compute_show_valuation(self):
         for order in self:
             order.show_valuation = any(m.state == 'done' for m in order.move_finished_ids)
@@ -28,18 +31,23 @@ class MrpProduction(models.Model):
         """
         super(MrpProduction, self)._cal_price(consumed_moves)
         work_center_cost = 0
+        total_cost_service = 0
         finished_move = self.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity_done > 0)
         if finished_move:
             finished_move.ensure_one()
+            qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
+            for bom_line_service in self.bom_id.bom_line_ids.filtered(lambda l: l.product_id.type == 'service'):
+                total_cost_service += bom_line_service.product_id.standard_price * qty_done * bom_line_service.product_qty
             for work_order in self.workorder_ids:
                 time_lines = work_order.time_ids.filtered(lambda x: x.date_end and not x.cost_already_recorded)
                 duration = sum(time_lines.mapped('duration'))
                 time_lines.write({'cost_already_recorded': True})
                 work_center_cost += (duration / 60.0) * work_order.workcenter_id.costs_hour
             if finished_move.product_id.cost_method in ('fifo', 'average'):
-                qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
                 extra_cost = self.extra_cost * qty_done
-                finished_move.price_unit = (sum([-m.stock_valuation_layer_ids.value for m in consumed_moves.sudo()]) + work_center_cost + extra_cost) / qty_done
+                finished_move.price_unit = (sum([-m.stock_valuation_layer_ids.value for m in consumed_moves.sudo()]) + work_center_cost + extra_cost + total_cost_service) / qty_done
+        self.total_cost_workcenter = work_center_cost
+        self.total_cost_service = total_cost_service
         return True
 
     def _prepare_wc_analytic_line(self, wc_line):
