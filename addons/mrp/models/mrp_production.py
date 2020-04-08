@@ -456,7 +456,10 @@ class MrpProduction(models.Model):
                 values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
         if not values.get('procurement_group_id'):
             values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id
-        return super(MrpProduction, self).create(values)
+        production = super(MrpProduction, self).create(values)
+        if self.env.context.get('import_file'):
+            production._onchange_move_raw()
+        return production
 
     @api.multi
     def unlink(self):
