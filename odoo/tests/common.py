@@ -529,11 +529,7 @@ class ChromeBrowser():
         self.screenshots_dir = os.path.join(otc['screenshots'], get_db_name(), 'screenshots')
         self.screencasts_dir = None
         if otc['screencasts']:
-            if otc['screencasts'] in ('1', 'true', 't'):
-                self.screencasts_dir = os.path.join(otc['screenshots'], get_db_name(), 'screencasts')
-            else:
-                self.screencasts_dir =os.path.join(otc['screencasts'], get_db_name(), 'screencasts')
-
+            self.screencasts_dir = os.path.join(otc['screencasts'], get_db_name(), 'screencasts')
         self.screencast_frames = []
         os.makedirs(self.screenshots_dir, exist_ok=True)
 
