@@ -128,8 +128,8 @@ odoo.define('uom.UomFieldWidget', function (require) {
             const uom_field = options.uom_field || field.uom_field || 'uom_id';
             if (!uom_id && options.data) {
                 uom_id = options.data[uom_field] && options.data[uom_field].res_id;
-            } else if (!uom_id && options) {
-                uom_id = options[uom_field] && options[uom_field].res_id;
+            } else if (!uom_id && options[uom_field]) {
+                uom_id = options[uom_field].res_id;
             }
             uom = session.uoms[uom_id];
         }
