@@ -567,12 +567,27 @@ class test_m2o(ImporterCase):
         name1 = dict(record1.name_get())[record1.id]
         name2 = dict(record2.name_get())[record2.id]
 
-        result = self.import_(['value'], [
-            # import by name_get
-            [name1],
-            [name1],
-            [name2],
-        ])
+        # preheat the oven
+        for _ in range(5):
+            self.env.cr.execute('SAVEPOINT xxx')
+            self.import_(['value'], [[name1], [name1], [name2]])
+            self.env.cr.execute('ROLLBACK TO SAVEPOINT xxx')
+            self.env.cr.execute('RELEASE SAVEPOINT xxx')
+
+        # 1 x SAVEPOINT model_load
+        # 3 x name_search
+        # 1 x SAVEPOINT
+        # 3 x insert
+        # 1 x RELEASE SAVEPOINT
+        # => 9
+        with self.assertQueryCount(9):
+            result = self.import_(['value'], [
+                # import by name_get
+                [name1],
+                [name1],
+                [name2],
+            ])
+
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 3)
         # correct ids assigned to corresponding records

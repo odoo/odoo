@@ -300,7 +300,7 @@ class IrFieldsConverter(models.AbstractModel):
         """
         # the function 'flush' comes from BaseModel.load(), and forces the
         # creation/update of former records (batch creation)
-        flush = self._context.get('import_flush', lambda arg=None: None)
+        flush = self._context.get('import_flush', lambda **kw: None)
 
         id = None
         warnings = []
@@ -343,13 +343,13 @@ class IrFieldsConverter(models.AbstractModel):
                 xmlid = value
             else:
                 xmlid = "%s.%s" % (self._context.get('_import_current_module', ''), value)
-            flush(xmlid)
+            flush(xml_id=xmlid)
             id = self.env['ir.model.data'].xmlid_to_res_id(xmlid, raise_if_not_found=False) or None
         elif subfield is None:
             field_type = _(u"name")
             if value == '':
                 return False, field_type, warnings
-            flush()
+            flush(model=field.comodel_name)
             ids = RelatedModel.name_search(name=value, operator='=')
             if ids:
                 if len(ids) > 1:
