@@ -462,7 +462,7 @@ class StockMove(models.Model):
             propagated_date_field = 'date_expected'
         elif vals.get('state', '') == 'done' and vals.get('date'):
             propagated_date_field = 'date'
-        if propagated_date_field:
+        if propagated_date_field and not self._context.get('do_not_propagate', False):
             new_date = fields.Datetime.to_datetime(vals.get(propagated_date_field))
             for move in self:
                 move_dest_ids = move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
