@@ -561,17 +561,17 @@ class ProcurementGroup(models.Model):
                 location_data[key]['orderpoints'] += orderpoint
                 location_data[key]['groups'] = self._procurement_from_orderpoint_get_groups([orderpoint.id])
 
-            for location_id, location_data in location_data.items():
-                location_orderpoints = location_data['orderpoints']
+            for location_id, location_res in location_data.items():
+                location_orderpoints = location_res['orderpoints']
                 product_context = dict(self._context, location=location_orderpoints[0].location_id.id)
                 substract_quantity = location_orderpoints._quantity_in_progress()
 
-                for group in location_data['groups']:
+                for group in location_res['groups']:
                     if group.get('from_date'):
                         product_context['from_date'] = group['from_date'].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                     if group['to_date']:
                         product_context['to_date'] = group['to_date'].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-                    product_quantity = location_data['products'].with_context(product_context)._product_available()
+                    product_quantity = location_res['products'].with_context(product_context)._product_available()
                     for orderpoint in location_orderpoints:
                         try:
                             op_product_virtual = product_quantity[orderpoint.product_id.id]['virtual_available']
