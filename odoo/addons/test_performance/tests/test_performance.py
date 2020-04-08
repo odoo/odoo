@@ -5,7 +5,7 @@ from collections import defaultdict
 import json
 
 from odoo.tests.common import TransactionCase, users, warmup
-from odoo.tools import pycompat
+from odoo.tools import pycompat, json_default
 
 
 class TestPerformance(TransactionCase):
@@ -141,4 +141,4 @@ class TestPerformance(TransactionCase):
                 self.assertEqual(res['value'], exp['value'])
         # now serialize to json, which should force evaluation
         with self.assertQueryCount(__system__=1, demo=1):
-            json.dumps(result)
+            json.dumps(result, default=json_default)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, _
 
 class Company(models.Model):
     _inherit = "res.company"
@@ -27,3 +27,8 @@ class Company(models.Model):
             set_param("l10n_ch.isr_preprinted_bank", company.l10n_ch_isr_preprinted_bank)
             set_param("l10n_ch.isr_scan_line_top", company.l10n_ch_isr_scan_line_top)
             set_param("l10n_ch.isr_scan_line_left", company.l10n_ch_isr_scan_line_left)
+
+    def _get_invoice_reference_types(self):
+        """ Overridden to allow using ISR number as payment reference automatically.
+        """
+        return super()._get_invoice_reference_types() + [('ch_isr', _("Swiss ISR Number"))]
