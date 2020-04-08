@@ -160,7 +160,6 @@ class ActionManager extends core.EventBus {
         options.clear_breadcrumbs = action.target === 'main' || options.clear_breadcrumbs;
 
         action = this._preprocessAction(action, options);
-        this.actions[action.jsID] = action;
         return this._handleAction(action, options);
     }
     /**
@@ -310,6 +309,16 @@ class ActionManager extends core.EventBus {
         }
         return result;
     }
+    resetPlugin(actionType) {
+        const OldPlugin = this.constructor.Plugins[actionType];
+        // FIX ME: make sure old instance is unbound from everything
+        const plugin = this.plugins.get(OldPlugin);
+        if (plugin) {
+            plugin.destroy();
+        }
+        this.plugins.delete(OldPlugin);
+        return this._getPlugin(actionType);
+    }
     /**
      * Restores a controller from the controllerStack and removes all
      * controllers stacked over the given controller (called when coming back
@@ -450,6 +459,7 @@ class ActionManager extends core.EventBus {
             dialog,
             onCommit: options && options.onCommit,
             doOwlReload: options && 'doOwlReload' in options ? options.doOwlReload : true,
+            options,
         });
     }
     //--------------------------------------------------------------------------
@@ -595,7 +605,8 @@ class ActionManager extends core.EventBus {
             action.domain = pyUtils.eval('domain', action.domain, action.context);
         }
         action._originalAction = JSON.stringify(action);
-        action.jsID = this._nextID('action');
+        action.jsID = options && options.actionID || this._nextID('action');
+        this.actions[action.jsID] = action;
         return action;
     }
     //--------------------------------------------------------------------------

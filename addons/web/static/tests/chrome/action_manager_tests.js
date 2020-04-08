@@ -5717,6 +5717,79 @@ QUnit.module('ActionManager', {
         webClient.destroy();
     });
 
+    QUnit.test('hashchange does not trigger canberemoved right away', async function (assert) {
+        assert.expect(11);
+
+        var ClientAction = AbstractAction.extend({
+            start() {
+                this.$el.text('Hello World');
+                this.$el.addClass('o_client_action_test');
+            },
+            canBeRemoved(){
+                assert.step('canBeRemoved');
+                return this._super.apply(this, arguments);
+            }
+        });
+        core.action_registry.add('ClientAction', ClientAction);
+
+        var ClientAction2 = AbstractAction.extend({
+            start() {
+                this.$el.text('Hello World');
+                this.$el.addClass('o_client_action_test_2');
+            },
+            canBeRemoved(){
+                assert.step('canBeRemoved_2');
+                return this._super.apply(this, arguments);
+            }
+        });
+        core.action_registry.add('ClientAction2', ClientAction2);
+
+        let _hash = '';
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            webClient: {
+                _getWindowHash() {
+                    return _hash;
+                },
+                _setWindowHash(newHash) {
+                    let willChange;
+                    newHash = newHash === '#' ? '' : newHash;
+                    if (_hash !== newHash) {
+                        willChange = true;
+                    }
+                    assert.step('hashSet');
+                    _hash = newHash;
+                    if (willChange) {
+                        this._onHashchange().then(() => {
+                            assert.step('hashChanged');
+                        });
+                    }
+                }
+            }
+        });
+        assert.verifySteps([]);
+        await doAction(9);
+        assert.verifySteps([
+            'hashSet',
+            'hashChanged',
+        ]);
+        assert.containsOnce(webClient, '.o_client_action_test');
+        assert.verifySteps([]);
+        await doAction('ClientAction2');
+        assert.containsOnce(webClient, '.o_client_action_test_2');
+        assert.verifySteps([
+            'canBeRemoved',
+            'hashSet',
+            'hashChanged',
+        ]);
+        webClient.destroy();
+        delete core.action_registry.map.ClientAction;
+        delete core.action_registry.map.ClientAction2;
+    });
+
     QUnit.test('on_close should be called only once', async function (assert) {
         /**
          * TODO: Improve this test

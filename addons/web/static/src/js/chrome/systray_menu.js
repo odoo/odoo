@@ -15,8 +15,10 @@ class SystrayMenu extends owl.Component {
         super(...arguments);
         this.Items = SystrayMenu.Items.slice();
         this.Items.sort((ItemA, ItemB) => {
-            const seqA = ItemA.prototype.sequence !== undefined ? ItemA.prototype.sequence : 50;
-            const seqB = ItemB.prototype.sequence !== undefined ? ItemB.prototype.sequence : 50;
+            const cA = ItemA.prototype instanceof owl.Component ? ItemA : ItemA.prototype;
+            const cB = ItemB.prototype instanceof owl.Component ? ItemB : ItemB.prototype;
+            const seqA = cA.sequence !== undefined ? cA.sequence : 50;
+            const seqB = cB.sequence !== undefined ? cB.sequence : 50;
             return seqB - seqA;
         });
     }

@@ -20,7 +20,8 @@ class WebClient extends KeyboardNavigation {
     constructor() {
         super();
         this.LoadingWidget = LoadingWidget;
-        useExternalListener(window, 'hashchange', this._onHashchange);
+        //useExternalListener(window, 'hashchange', this._onHashchange);
+        useExternalListener(window, 'popstate', this._onHashchange);
         useListener('click', this._onGenericClick);
 
         this.currentMainComponent = useRef('currentMainComponent');
@@ -100,6 +101,11 @@ class WebClient extends KeyboardNavigation {
         }
         this.renderingInfo = null;
     }
+    async _clearUncommitedChanges() {
+        if (!this.currentDialogComponent.comp && this.currentMainComponent.comp) {
+            await this.currentMainComponent.comp.canBeRemoved();
+        }
+    }
     _computeTitle() {
         const parts = Object.keys(this._titleParts).sort();
         let tmp = "";
@@ -165,23 +171,14 @@ class WebClient extends KeyboardNavigation {
      * @private
      * @returns {Object}
      */
-    _getUrlState() {
-        const hash = this._getWindowHash();
-        const hashParts = hash ? hash.substr(1).split("&") : [];
+    _getUrlState(hash) {
+        hash = hash || this._getWindowHash();
+        hash = hash.startsWith('#') ? hash.substring(1) : hash;
+        const hashParams = new URLSearchParams(hash);
         const state = {};
-        for (const part of hashParts) {
-            const [ key, val ] = part.split('=');
-            let decodedVal;
-            if (val === undefined) {
-                decodedVal = '1';
-            } else if (val) {
-                decodedVal = decodeURI(val);
-            }
-            if (decodedVal) {
-                state[key] = isNaN(decodedVal) ? decodedVal : parseInt(decodedVal, 10);
-            }
+        for (let [key, val] of hashParams.entries()) {
+            state[key] = isNaN(val) ? val : parseInt(val, 10);
         }
-
         return state;
     }
     _getWindowHash() {
@@ -197,8 +194,8 @@ class WebClient extends KeyboardNavigation {
      * @private
      * @returns {Promise<Object>}
      */
-    _loadMenus() {
-        if (!odoo.loadMenusPromise) {
+    _loadMenus(force) {
+        if (!odoo.loadMenusPromise && !force) {
             throw new Error('can we get here? tell aab if so');
         }
         const loadMenusPromise = odoo.loadMenusPromise || odoo.reloadMenus();
@@ -211,6 +208,7 @@ class WebClient extends KeyboardNavigation {
                     app.action = child.action;
                 }
             }
+            this.menus = null;
             this._processMenu(menuData);
             odoo.loadMenusPromise = null;
         });
@@ -221,7 +219,7 @@ class WebClient extends KeyboardNavigation {
             if ('menu_id' in state) {
                 const action = this.menus[state.menu_id].actionID;
                 return this.actionManager.doAction(action, state);
-            } else if (('home' in state || Object.keys(state).filter(key => key !== 'cids').length === 0)) {
+            } else {//if (('home' in state || Object.keys(state).filter(key => key !== 'cids').length === 0)) {
                 const {actionID , menuID} = this._getHomeAction();
                 if (actionID) {
                     return this.actionManager.doAction(actionID, {menuID, clear_breadcrumbs: true});
@@ -266,9 +264,7 @@ class WebClient extends KeyboardNavigation {
         this.actionManager.on('cancel', this, this._cancel);
         this.actionManager.on('update', this, this._onActionManagerUpdated);
         this.actionManager.on('clear-uncommitted-changes', this, async (callBack) => {
-            if (!this.currentDialogComponent.comp && this.currentMainComponent.comp) {
-                await this.currentMainComponent.comp.canBeRemoved();
-            }
+            await this._clearUncommitedChanges();
             callBack();
         });
         this.actionManager.on('controller-cleaned', this, (controllerIds) => {
@@ -285,8 +281,10 @@ class WebClient extends KeyboardNavigation {
         this._titleParts[part] = title;
     }
     _setWindowHash(newHash) {
-        this.ignoreHashchange = true;
-        window.location.hash = newHash;
+        let url = new URL(window.location);
+        url.hash = newHash;
+        url = url.toString();
+        window.history.pushState({ path: url }, '', url);
     }
     _setWindowTitle(title) {
         document.title = title;
@@ -314,23 +312,15 @@ class WebClient extends KeyboardNavigation {
             delete state.title
         }
         this.state = state;
-        const hashParts = Object.keys(state).map(key => {
-            const value = state[key];
-            if (value !== null) {
-                return `${key}=${encodeURI(value)}`;
+        const hashParams = new URLSearchParams();
+        for (const key in state) {
+            if (state[key] !== null) {
+                hashParams.append(key, state[key]);
             }
-            return '';
-        });
-        const hash = "#" + hashParts.join("&");
+        }
+        const hash = "#" + hashParams.toString();
         if (hash !== this._getWindowHash()) {
             this._setWindowHash(hash);
-            // whether or not the Pound character is in the URL
-            // an empty hash will return an empty string
-            // i.e. window hash of '/web' === window hash of '/web#' === [empty string]
-            // but won't trigger the event hashchange !
-            if (hash === '#') {
-                this.ignoreHashchange = false;
-            }
         }
         this._setWindowTitle(this._computeTitle());
     }
@@ -384,12 +374,19 @@ class WebClient extends KeyboardNavigation {
                 this._updateState(state);
             }
         }
-        this.rState = this.renderingInfo;
+        this.rState = this.renderingInfo || this.rState;
         if (this.rState && this.rState.main) {
             this.rState.main.reload = false;
         }
         this.renderingInfo = null;
         this.env.bus.trigger('web-client-updated', this);
+    }
+    _getBreadcrumb({action, controller}) {
+        const component = this.controllerComponentMap.get(controller.jsID);
+        return {
+            controllerID: controller.jsID,
+            title: component && component.title || action.name,
+        };
     }
 
     //--------------------------------------------------------------------------
@@ -408,10 +405,7 @@ class WebClient extends KeyboardNavigation {
                 fullscreen = true;
             }
             const component = this.controllerComponentMap.get(controller.jsID);
-            breadcrumbs.push({
-                controllerID: controller.jsID,
-                title: component && component.title || elm.action.name,
-            });
+            breadcrumbs.push(this._getBreadcrumb(elm));
             controller.viewOptions = controller.viewOptions || {};
             controller.viewOptions.breadcrumbs = breadcrumbs.slice(0, index);
         });
@@ -516,38 +510,42 @@ class WebClient extends KeyboardNavigation {
     _onGenericClick(ev) {
         this._domCleaning();
         const target = ev.target;
-        if (!target.tagName === 'a') {
+        if (target.tagName.toUpperCase() !== 'A') {
             return;
         }
-        var disable_anchor = target.attributes.disable_anchor;
+        const disable_anchor = target.attributes.disable_anchor;
         if (disable_anchor && disable_anchor.value === "true") {
             return;
         }
 
         var href = target.attributes.href;
         if (href) {
-            if (href.value[0] === '#' && href.value.length > 1) {
+            if (href.value[0] === '#') {
+                ev.preventDefault();
+                if (href.value.length === 1) {
+                    return;
+                }
                 let matchingEl = null;
                 try {
                     matchingEl = this.el.querySelector(`.o_content #${href.value.substr(1)}`);
                 } catch (e) {} // Inavlid selector: not an anchor anyway
                 if (matchingEl) {
-                    ev.preventDefault();
                     const {top, left} = matchingEl.getBoundingClientRect();
                     this._scrollTo({top, left});
                 }
             }
         }
     }
-    async _onHashchange() {
-        if (!this.ignoreHashchange) {
-            const state = this._getUrlState();
-            const loaded = await this._loadState(state);
-            if (loaded === 'render') {
-                this.render();
-            }
+    async _onHashchange(ev) {
+        let popped;
+        if ((ev.state && ev.state.path)) {
+            popped = new URL(ev.state.path).hash;
         }
-        this.ignoreHashchange = false;
+        const state = this._getUrlState(popped);
+        const loaded = await this._loadState(state);
+        if (loaded === 'render') {
+            this.render();
+        }
         // TODO: reset oldURL in case of failure?
      }
     /**

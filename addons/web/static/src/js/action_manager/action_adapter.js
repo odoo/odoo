@@ -20,7 +20,8 @@ odoo.define('web.ActionAdapter', function (require) {
                 this.legacy = true;
                 this.widgetReloadProm = null;
             }
-            this.boundController = this.props.action.controller;
+            this.boundAction = this.props.action;
+            this.boundController = this.boundAction.controller;
             this.inDialog = 'inDialog' in this.props;
         }
 

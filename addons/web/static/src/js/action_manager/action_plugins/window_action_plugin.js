@@ -15,6 +15,10 @@ odoo.define('web.WindowActionPlugin', function (require) {
             super(...arguments);
             this.env.bus.on('switch-view', this, this._onSwitchView);
         }
+        destroy() {
+            super.destroy(...arguments);
+            this.env.bus.off('switch-view', this, this._onSwitchView);
+        }
 
         //--------------------------------------------------------------------------
         // Public
@@ -80,7 +84,11 @@ odoo.define('web.WindowActionPlugin', function (require) {
             this._createViewController(action, curView.type, viewOptions, baseControllerParams);
             action.controller.options = options;
             controllers.push(action.controller);
-            this.pushControllers(controllers);
+            let pushOptions;
+            if (options && 'pushOptions' in options) {
+                pushOptions = options.pushOptions;
+            }
+            this.pushControllers(controllers, pushOptions);
         }
         /**
          * @override

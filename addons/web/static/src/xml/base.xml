@@ -5,20 +5,20 @@
 
 <t t-name="web.WebClient" owl="1">
     <t t-set="renderingInfo" t-value="renderingInfo || rState || {}"/>
+    <t t-set='dialog' t-value='renderingInfo.dialog' />
+    <t t-set="main" t-value="renderingInfo.main"/>
     <body class="o_web_client" t-att-class="bodyClass"
           t-on-push-state="_onPushState"
           t-on-set-title-part="_onSetTitlePart"
           t-on-warning="_onDisplayWarning"
           t-on-breadcrumb-clicked.stop="_onBreadcrumbClicked"
-          t-on-execute-action.stop="_onExecuteAction">
+          t-on-execute-action.stop="_onExecuteAction"
+          t-on-open-menu="_onOpenMenu">
         <Menu t-if="!renderingInfo.fullscreen" t-ref="menu"
-            t-on-open-menu="_onOpenMenu"
             menus="menus"
             menuID="renderingInfo.menuID"/>
         <ComponentAdapter Component="LoadingWidget" widgetArgs="[]"/>
 
-        <t t-set='dialog' t-value='renderingInfo.dialog' />
-        <t t-set="main" t-value="renderingInfo.main"/>
         <div class="o_action_manager">
             <!-- fixme: class below totally ignored -->
             <ActionAdapter t-if="main" class="o_action" t-ref="currentMainComponent"
@@ -1570,6 +1570,23 @@
             <t t-raw="0"/>
         </form>
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
+    </div>
+</t>
+
+<t t-name="web.OwlHiddenInputFile" owl="1">
+    <div class="o_hidden_input_file" t-att-style="props.fileUploadStyle" aria-atomic="true">
+        <form class="o_form_binary_form" t-att-target="targetID"
+              method="post" enctype="multipart/form-data" t-att-action="props.fileUploadAction || '/web/binary/upload'"
+              t-ref="formRef">
+            <input type="hidden" name="csrf_token" t-att-value="csrfToken"/>
+            <input type="file" class="o_input_file" name="ufile"
+                   t-att="{'multiple': props.multiUpload ? 'multiple' : null, 'accept': props.acceptedFileExtensions || '*'}"
+                   t-ref="fileInputRef"
+                   t-on-change.stop="_onChangedFile"
+                />
+            <t t-slot="default"/>
+        </form>
+        <iframe t-att-id="targetID" t-att-name="targetID" style="display: none" t-on-load.stop="_onFileLoaded"/>
     </div>
 </t>
 

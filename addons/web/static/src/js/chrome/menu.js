@@ -8,7 +8,6 @@ const SystrayMenu = require('web.SystrayMenu');
 class Menu extends Component {
     constructor() {
         super(...arguments);
-        this.menus = this.props.menus;
         this.systrayMenu = owl.hooks.useRef('systrayMenu');
         this.menuBrand = owl.hooks.useRef('menuBrand');
         this.menuSections = owl.hooks.useRef('menuSections');
@@ -24,11 +23,11 @@ class Menu extends Component {
         this._initAutoMoreMenu();
     }
     get apps() {
-        return this.menus.root.children.map(childID => this.menus[childID]);
+        return this.props.menus.root.children.map(childID => this.props.menus[childID]);
     }
     get currentApp() {
-        const currentAppID = this.props.menuID && this.menus[this.props.menuID].appID;
-        return this.menus[currentAppID];
+        const currentAppID = this.props.menuID && this.props.menus[this.props.menuID].appID;
+        return this.props.menus[currentAppID];
     }
     shouldUpdate(nextProps) {
         return nextProps.menuID !== this.props.menuID;
@@ -44,21 +43,22 @@ class Menu extends Component {
         }
         if (reInit) {
             domUtils.initAutoMoreMenu($(this.autoMoreMenu), {
-                maxWidth: () => {
-                    return (
-                        this.el.offsetWidth -
-                        (
-                            $(this.menuAppsEl).outerWidth(true) +
-                            $(this.menuBrand.el).outerWidth(true) +
-                            $(this.systrayMenu.el).outerWidth(true)
-                        )
-                    );
-                },
+                maxWidth: this._getMaxWidth.bind(this),
                 sizeClass: 'SM',
             });
         } else if (this.autoMoreMenu) {
             this.env.bus.trigger('resize');
         }
+    }
+    _getMaxWidth() {
+        return (
+            this.el.offsetWidth -
+            (
+                ($(this.menuAppsEl).outerWidth(true) || 0) +
+                ($(this.menuBrand.el).outerWidth(true) || 0) +
+                ($(this.systrayMenu.el).outerWidth(true) || 0)
+            )
+        );
     }
     //--------------------------------------------------------------------------
     // Handlers

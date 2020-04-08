@@ -16,6 +16,10 @@ odoo.define('web.ActionAbstractPlugin', function (require) {
             throw new Error(`ActionAbstractPlugin for type ${this.type} doesn't implement executeAction.`);
         }
         loadState(/* state, options */) {}
+        /** Should unbind every listeners on actionManager
+         *  and env.bus at least
+         */
+        destroy() {}
 
         //----------------------------------------------------------------------
         // Getters
