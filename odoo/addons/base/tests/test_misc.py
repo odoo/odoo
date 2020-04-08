@@ -272,7 +272,8 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='medium', lang_code='fr_FR'), '16:30:22')
 
 
-class TestGroupCalls(BaseCase):
+class TestCallbacks(BaseCase):
+
     def test_callbacks(self):
         log = []
 
@@ -286,7 +287,7 @@ class TestGroupCalls(BaseCase):
         def baz():
             log.append("baz")
 
-        callbacks = misc.GroupCalls()
+        callbacks = misc.Callbacks()
         callbacks.add(foo)
         callbacks.add(bar, list)[0].append(1)
         callbacks.add(bar, list)[0].append(2)

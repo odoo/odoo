@@ -95,10 +95,10 @@ class BaseCursor:
     """ Base class for cursors that manages pre/post commit/rollback hooks. """
 
     def __init__(self):
-        self.precommit = tools.GroupCalls()
-        self.postcommit = tools.GroupCalls()
-        self.prerollback = tools.GroupCalls()
-        self.postrollback = tools.GroupCalls()
+        self.precommit = tools.Callbacks()
+        self.postcommit = tools.Callbacks()
+        self.prerollback = tools.Callbacks()
+        self.postrollback = tools.Callbacks()
 
     @contextmanager
     @check

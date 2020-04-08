@@ -1080,33 +1080,39 @@ class LastOrderedSet(OrderedSet):
         OrderedSet.add(self, elem)
 
 
-class GroupCalls:
+class Callbacks:
     """ A collection of callbacks with support for aggregated arguments.  Upon
     call, every registered function is called once with positional arguments.
-    When registering a function, a tuple of positional arguments is returned, so
+    When registering a function, a list of positional arguments is returned, so
     that the caller can modify the arguments in place.  This allows to
     accumulate some data to process once::
 
-        callbacks = GroupCalls()
+        callbacks = Callbacks()
 
         # register print (by default with a list)
-        [args] = callbacks.register(print, list)
-        args.append(42)
+        [args] = callbacks.add(print, list)
+        args.append('foo')
+
+        # register another function, using add as a decorator
+        @callbacks.add
+        def done():
+            print("done")
 
         # add an element to the list to print
-        [args] = callbacks.register(print, list)
-        args.append(43)
+        [args] = callbacks.add(print, list)
+        args.append('bar')
 
-        # print "[42, 43]"
+        # print "['foo', 'bar']", then "done"
         callbacks()
     """
+    __slots__ = ['_func_args']
+
     def __init__(self):
         self._func_args = {}            # {func: args}
 
     def __call__(self):
         """ Call all the registered functions (in first addition order) with
-        their respective arguments.  Only recurrent functions remain registered
-        after the call.
+        their respective arguments, and remove them from ``self``.
         """
         func_args = self._func_args
         while func_args:
@@ -1115,9 +1121,9 @@ class GroupCalls:
             func(*args)
 
     def add(self, func, *types):
-        """ Register the given function, and return the tuple of positional
+        """ Register the given function, and return the list of positional
         arguments to call the function with.  If the function is not registered
-        yet, the list of arguments is made up by invoking the given types.
+        yet, the list of arguments is made up by calling the given types.
         """
         try:
             return self._func_args[func]
@@ -1126,7 +1132,7 @@ class GroupCalls:
             return args
 
     def clear(self):
-        """ Remove all callbacks from self. """
+        """ Remove all callbacks from ``self``. """
         self._func_args.clear()
 
 
