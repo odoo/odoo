@@ -537,13 +537,13 @@ var MockServer = Class.extend({
      * @returns {Object}
      */
     _mockSearchPanelLocalCounters: function (model, fieldName, kwargs) {
-        const countDomain = [
+        const countDomain = Domain.prototype.normalizeArray([
             ...(kwargs.search_domain || []),
             ...(kwargs.category_domain || []),
             ...(kwargs.filter_domain || []),
             ...(kwargs.group_domain  || []),
             [fieldName, '!=', false],
-        ];
+        ]);
         const field = this.data[model].fields[fieldName];
         let getGroupId;
         if (field.type === 'many2one') {
@@ -701,20 +701,20 @@ var MockServer = Class.extend({
         const rangeKwargs = Object.assign({ comodelFieldNames }, kwargs);
         const valuesRange = this._mockSearchPanelRange(model, fieldName, rangeKwargs);
         if (field.type === 'many2many' && !kwargs.disable_counters) {
-            const modelDomain = [
+            const modelDomain = Domain.prototype.normalizeArray([
                 ...(kwargs.search_domain || []),
                 ...(kwargs.category_domain || []),
                 ...(kwargs.filter_domain || []),
                 [fieldName, '!=', false],
-            ];
-            const groupDomains = kwargs.group_domain || [];
+            ]);
+            const groupDomains = kwargs.group_domain || {};
             for (const [id, values] of valuesRange.entries()) {
-                const countDomain = [...modelDomain, [fieldName, 'in', id]];
-                if (groupBy && groupDomains && 'group_id' in values) {
+                let countDomain = Domain.prototype.normalizeArray([...modelDomain, [fieldName, 'in', id]]);
+                if (groupBy && groupDomains && values.group_id) {
                     const extraDomain = groupDomains[values.group_id] || [];
-                    countDomain.push(...extraDomain);
+                    countDomain = Domain.prototype.normalizeArray([...countDomain, ...extraDomain]);
                 }
-                values.count = this._mockSearchCount(model, countDomain);
+                values.count = this._mockSearchCount(model, [countDomain]);
             }
         }
         return [...valuesRange.values()];
