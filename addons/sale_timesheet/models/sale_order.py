@@ -100,6 +100,7 @@ class SaleOrder(models.Model):
         if len(task_projects) == 1 and len(self.tasks_ids) > 1:  # redirect to task of the project (with kanban stage, ...)
             action = self.with_context(active_id=task_projects.id).env.ref(
                 'project.act_project_project_2_project_task_all').read()[0]
+            action['domain'] = [('id', 'in', self.tasks_ids.ids)]
             if action.get('context'):
                 eval_context = self.env['ir.actions.actions']._get_eval_context()
                 eval_context.update({'active_id': task_projects.id})
@@ -109,6 +110,7 @@ class SaleOrder(models.Model):
             action['context'] = {}  # erase default context to avoid default filter
             if len(self.tasks_ids) > 1:  # cross project kanban task
                 action['views'] = [[False, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']]
+                action['domain'] = [('id', 'in', self.tasks_ids.ids)]
             elif len(self.tasks_ids) == 1:  # single task -> form view
                 action['views'] = [(form_view_id, 'form')]
                 action['res_id'] = self.tasks_ids.id
