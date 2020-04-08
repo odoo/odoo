@@ -195,25 +195,14 @@ class AccountInvoice(models.Model):
             partial_field = 'credit_move_id'
 
         for payment in self.payment_move_line_ids:
-            amount = 0
-            amount_currency = 0
-            payment_currency_id = None
-            for partial_rec in payment[matched_field]:
-                if partial_rec[partial_field] in self.move_id.line_ids:
-                    amount += partial_rec.amount
-                    amount_currency += partial_rec.amount_currency
-
-                if payment_currency_id is None and partial_rec.currency_id:
-                    payment_currency_id = partial_rec.currency_id
-                elif payment_currency_id and partial_rec.currency_id and partial_rec.currency_id != payment_currency_id:
-                    payment_currency_id = False
-
-            # get the payment value in invoice currency
-            if payment_currency_id and payment_currency_id == self.currency_id:
-                amount_to_show = amount_currency
-            else:
-                currency = payment.company_id.currency_id
-                amount_to_show = currency._convert(amount, self.currency_id, payment.company_id, payment.date or fields.Date.today())
+            amount_to_show = 0
+            for p in payment[matched_field].filtered(lambda p: p.currency_id and p[partial_field] in self.move_id.line_ids):
+                if self.currency_id == self.company_id.currency_id:
+                    amount_to_show += p.amount
+                else:
+                    amount_to_show += p.currency_id._convert(p.amount_currency, currency_id, self.company_id, p.max_date)
+            for p in payment[matched_field].filtered(lambda p: not p.currency_id and p[partial_field] in self.move_id.line_ids):
+                amount_to_show += p.company_id.currency_id._convert(p.amount, currency_id, self.company_id, self.date)
             if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
                 continue
             payment_ref = payment.move_id.name
