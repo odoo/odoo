@@ -1119,6 +1119,41 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('sort graph rendering', async function (assert) {
+        assert.expect(6);
+
+        var rpcCount = 0;
+        var graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    if (rpcCount === 0) {
+                        assert.deepEqual(args.kwargs.orderby, '', 'orderby should be empty');
+                    } else if (rpcCount === 1) {
+                        assert.deepEqual(args.kwargs.orderby, "product_id DESC", 'orderby should be product_id DESC');
+                    } else if (rpcCount === 2) {
+                        assert.deepEqual(args.kwargs.orderby, "product_id ASC", 'orderby should be product_id ASC');
+                    }
+                    rpcCount++;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.checkLabels(graph, [['xphone'], ['xpad']], 'Initially Lable should be in acceding with ID');
+        await testUtils.dom.click(graph.$buttons.find('button[data-mode="descending"]'));
+        assert.checkLabels(graph, [['xpad'], ['xphone']], 'After click on descending Lable should be in descending with ID');
+        await testUtils.dom.click(graph.$buttons.find('button[data-mode="ascending"]'));
+        assert.checkLabels(graph, [['xphone'], ['xpad']], 'After click on ascending Lable should be in ascending with ID');
+
+        graph.destroy();
+    });
+
     QUnit.module('GraphView: comparison mode', {
         beforeEach: async function () {
             this.data.foo.records[0].date = '2016-12-15';
