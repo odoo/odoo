@@ -10,7 +10,7 @@
         </xpath>
     </template>
 
-    <template id="qunit_suite" inherit_id="web.qunit_suite">
+    <template id="qunit_suite" inherit_id="web.qunit_suite_tests">
         <xpath expr="//script[last()]" position="after">
             <script type="text/javascript" src="/calendar/static/tests/calendar_tests.js"/>
             <script type="text/javascript" src="/calendar/static/tests/systray_activity_menu_tests.js"/>
