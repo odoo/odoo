@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from pytz import timezone, UTC
@@ -8,9 +9,11 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 from odoo.tests.common import Form
+from odoo.tests import tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
+@tagged('leave_requests')
 class TestLeaveRequests(TestHrHolidaysCommon):
 
     def _check_holidays_status(self, holiday_status, ml, lt, rl, vrl):
