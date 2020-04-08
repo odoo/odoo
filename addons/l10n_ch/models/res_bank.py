@@ -193,7 +193,7 @@ class ResPartnerBank(models.Model):
         """
         line_1 = (partner and partner.street or '') + ' ' + (partner and partner.street2 or '')
         line_2 = partner.zip + ' ' + partner.city
-        return line_1[:71], line_2[:71]
+        return line_1[:70], line_2[:70]
 
     def _eligible_for_qr_code(self, qr_method, debtor_partner, currency):
         if qr_method == 'ch_qr':
