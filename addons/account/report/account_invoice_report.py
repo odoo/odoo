@@ -190,7 +190,7 @@ class AccountInvoiceReport(models.Model):
             )
         result = super(AccountInvoiceReport, self).read_group(domain, fields, set(groupby) | {'currency_id'}, offset, limit, orderby, lazy)
         for res in result:
-            if self.env.company.currency_id.id != res['currency_id'][0]:
+            if res.get('currency_id') and self.env.company.currency_id.id != res['currency_id'][0]:
                 for field in {'amount_total', 'price_average', 'price_subtotal', 'residual'} & set(res):
                     res[field] = self.env.company.currency_id.round(res[field] * get_rate(res['currency_id'][0]))
         return result
