@@ -71,9 +71,6 @@ Running the server
     Enable screencasts and specify directory where to write screencasts files.
     The ``ffmpeg`` utility needs to be installed to encode frames into a video
     file. Otherwise frames will be kept instead of the video file.
-    
-    ``1``, ``t`` or ``true`` can be used to use the same directory as the above
-    mentioned ``--screenshots`` option.
 
 .. _reference/cmdline/server/database:
 
