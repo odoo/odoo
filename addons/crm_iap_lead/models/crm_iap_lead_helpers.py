@@ -43,7 +43,7 @@ class CRMHelpers(models.Model):
             # Lead vals from data
             'name': company_data['name'] or company_data['domain'],
             'partner_name': company_data['legal_name'] or company_data['name'],
-            'email_from': ",".join(company_data['email'] or []),
+            'email_from': next(iter(company_data.get('email', [])), ''),
             'phone': company_data['phone'] or (company_data['phone_numbers'] and company_data['phone_numbers'][0]) or '',
             'website': website_url,
             'street': company_data['location'],
