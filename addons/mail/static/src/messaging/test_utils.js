@@ -60,7 +60,7 @@ const MockMailService = Class.extend({
         return AbstractStorageService.extend({ storage: new RamStorage() });
     },
     messaging() {
-        return MessagingService;
+        return MessagingService.extend();
     },
     notification() {
         return NotificationService;
@@ -817,6 +817,7 @@ function patchMessagingService(MessagingService, {
             createdPromise.then(() => messagingCreatedPromise.resolve());
             initializedPromise.then(() => messagingInitializedPromise.resolve());
         },
+        _listenGlobalWindowLoad() {},
     });
     const unpatchMessagingService = () => legacyUnpatch(MessagingService);
     return {

@@ -80,7 +80,7 @@ var MockMailService = Class.extend({
         return MailService;
     },
     messaging() {
-        return MessagingService;
+        return MessagingService.extend();
     },
     local_storage: function () {
         return AbstractStorageService.extend({

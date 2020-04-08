@@ -21,7 +21,9 @@ const MessagingService = AbstractService.extend({
      */
     start() {
         this._super(...arguments);
-        window.addEventListener('load', () => this._onGlobalLoad());
+
+        this._onGlobalLoad = this._onGlobalLoad.bind(this);
+        this._listenGlobalWindowLoad();
 
         /**
          * Environment of the messaging store (messaging env. without store)
@@ -114,6 +116,17 @@ const MessagingService = AbstractService.extend({
      */
     getEnv() {
         return this.env;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _listenGlobalWindowLoad() {
+        window.addEventListener('load', this._onGlobalLoad);
     },
 
     //--------------------------------------------------------------------------
