@@ -336,7 +336,7 @@ Tip.getConsumeEventType = function ($element, run) {
         // this is a heuristic: the element has to be dragged and dropped but it
         // doesn't have class 'ui-draggable-handle', so we check if it has an
         // ui-sortable parent, and if so, we conclude that its event type is 'sort'
-        if ($element.closest('.ui-sortable')) {
+        if ($element.closest('.ui-sortable').length) {
             return 'sort';
         }
     }
