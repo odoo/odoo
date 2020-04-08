@@ -114,17 +114,18 @@ class ResCompany(models.Model):
     def _check_fiscalyear_last_day(self):
         # if the user explicitly chooses the 29th of February we allow it:
         # there is no "fiscalyear_last_year" so we do not know his intentions.
-        if self.fiscalyear_last_day == 29 and self.fiscalyear_last_month == '2':
-            return
+        for rec in self:
+            if rec.fiscalyear_last_day == 29 and rec.fiscalyear_last_month == '2':
+                continue
 
-        if self.account_opening_date:
-            year = self.account_opening_date.year
-        else:
-            year = datetime.now().year
+            if rec.account_opening_date:
+                year = rec.account_opening_date.year
+            else:
+                year = datetime.now().year
 
-        max_day = calendar.monthrange(year, int(self.fiscalyear_last_month))[1]
-        if self.fiscalyear_last_day > max_day:
-            raise ValidationError(_("Invalid fiscal year last day"))
+            max_day = calendar.monthrange(year, int(rec.fiscalyear_last_month))[1]
+            if rec.fiscalyear_last_day > max_day:
+                raise ValidationError(_("Invalid fiscal year last day"))
 
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
