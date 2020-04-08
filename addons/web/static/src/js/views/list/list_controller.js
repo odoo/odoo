@@ -728,7 +728,13 @@ var ListController = BasicController.extend({
      * @private
      */
     _onDirectExportData() {
-        this._getExportDialogWidget().export();
+        // access rights check before exporting data
+        return this._rpc({
+            model: 'ir.exports',
+            method: 'search_read',
+            args: [[], ['id']],
+            limit: 1,
+        }).then(() => this._getExportDialogWidget().export())
     },
     /**
      * Opens the related form view.
