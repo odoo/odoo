@@ -12,7 +12,7 @@
         </xpath>
     </template>
 
-    <template id="qunit_suite" name="hr attendance tests" inherit_id="web.qunit_suite">
+    <template id="qunit_suite" name="hr attendance tests" inherit_id="web.qunit_suite_tests">
         <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
             <script type="text/javascript" src="/hr_attendance/static/tests/hr_attendance_tests.js"></script>
         </xpath>

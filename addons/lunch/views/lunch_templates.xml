@@ -16,15 +16,15 @@
         </xpath>
     </template>
 
-    <template id="qunit_suite" name="lunch tests" inherit_id="web.qunit_suite">
-        <xpath expr="//t[@t-set='head']" position="inside">
+    <template id="qunit_suite" name="lunch tests" inherit_id="web.qunit_suite_tests">
+        <xpath expr="." position="inside">
             <script type="text/javascript" src="/lunch/static/tests/lunch_test_utils.js"></script>
             <script type="text/javascript" src="/lunch/static/tests/lunch_kanban_tests.js"></script>
         </xpath>
     </template>
 
-    <template id="qunit_mobile_suite" name="lunch mobile tests" inherit_id="web.qunit_mobile_suite">
-        <xpath expr="//t[@t-set='head']" position="inside">
+    <template id="qunit_mobile_suite" name="lunch mobile tests" inherit_id="web.qunit_mobile_suite_tests">
+        <xpath expr="." position="inside">
             <script type="text/javascript" src="/lunch/static/tests/lunch_test_utils.js"></script>
             <script type="text/javascript" src="/lunch/static/tests/lunch_kanban_mobile_tests.js"></script>
         </xpath>

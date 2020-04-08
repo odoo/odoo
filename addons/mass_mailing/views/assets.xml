@@ -38,7 +38,7 @@
         <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/css/basic_theme_readonly.css"/>
     </template>
 
-    <template id="qunit_suite" inherit_id="web.qunit_suite">
+    <template id="qunit_suite" inherit_id="web.qunit_suite_tests">
         <xpath expr="." position="inside">
             <script type="text/javascript">
                 odoo.define('mass_mailing.FieldHtml.test', function (require) {
