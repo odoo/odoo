@@ -17,7 +17,7 @@ class DialogManager extends Component {
         super(...args);
         useStore(props => {
             return {
-                Dialog: this.env.entities.Dialog.observable,
+                dialogManager: this.env.messaging.dialogManager,
             };
         });
     }

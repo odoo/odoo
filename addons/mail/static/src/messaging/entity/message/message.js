@@ -232,7 +232,7 @@ function MessageFactory({ Entity }) {
          * @override
          */
         _createInstanceLocalId(data) {
-            return `${this.constructor.localId}_${data.id}`;
+            return `${this.constructor.name}_${data.id}`;
         }
 
         /**
@@ -273,7 +273,7 @@ function MessageFactory({ Entity }) {
                 tracking_value_ids = this.tracking_value_ids || [],
             } = data;
 
-            this._write({
+            Object.assign(this, {
                 body,
                 customer_email_data,
                 customer_email_status,

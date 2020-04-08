@@ -30,7 +30,7 @@ function UserFactory({ Entity }) {
          * @override
          */
         _createInstanceLocalId(data) {
-            return `${this.constructor.localId}_${data.id}`;
+            return `${this.constructor.name}_${data.id}`;
         }
 
         /**
@@ -42,7 +42,7 @@ function UserFactory({ Entity }) {
                 id = this.id,
             } = data;
 
-            this._write({
+            Object.assign(this, {
                 id,
                 model: 'res.user',
             });
@@ -51,7 +51,7 @@ function UserFactory({ Entity }) {
                 if (this.partner) {
                     this.partner.update({ display_name: displayName });
                 } else {
-                    this._write({ _displayName: displayName });
+                    this._displayName = displayName;
                 }
             }
         }

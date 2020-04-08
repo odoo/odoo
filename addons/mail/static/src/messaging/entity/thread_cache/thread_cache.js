@@ -119,7 +119,7 @@ function ThreadCacheFactory({ Entity }) {
                 thread: threadOrLocalId,
             } = data;
             const thread = this.env.entities.Thread.get(threadOrLocalId);
-            return `${this.constructor.localId}_[${thread.localId}]_<${stringifiedDomain}>`;
+            return `${this.constructor.name}_[${thread.localId}]_<${stringifiedDomain}>`;
         }
 
         /**
@@ -191,7 +191,7 @@ function ThreadCacheFactory({ Entity }) {
                 thread: threadOrLocalId,
             } = data;
 
-            this._write({
+            Object.assign(this, {
                 isAllHistoryLoaded,
                 isLoaded,
                 isLoading,

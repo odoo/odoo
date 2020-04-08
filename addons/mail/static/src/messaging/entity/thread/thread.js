@@ -226,7 +226,7 @@ function ThreadFactory({ Entity }) {
             if (discuss.isOpen) {
                 discuss.openNewMessage();
             } else {
-                this.env.entities.ChatWindow.openNewMessage();
+                this.env.messaging.chatWindowManager.openNewMessage();
             }
         }
 
@@ -383,7 +383,7 @@ function ThreadFactory({ Entity }) {
                 }
                 discuss.update({ thread: this });
             } else {
-                this.env.entities.ChatWindow.openThread(this, { mode: chatWindowMode });
+                this.env.messaging.chatWindowManager.openThread(this, { mode: chatWindowMode });
             }
             if (!device.isMobile) {
                 messagingMenu.close();
@@ -466,33 +466,6 @@ function ThreadFactory({ Entity }) {
         /**
          * @override
          */
-        static _update() {
-            if (!this.mailboxFromId('inbox')) {
-                this.create({
-                    id: 'inbox',
-                    model: 'mail.box',
-                    name: this.env._t("Inbox"),
-                });
-            }
-            if (!this.mailboxFromId('starred')) {
-                this.create({
-                    id: 'starred',
-                    model: 'mail.box',
-                    name: this.env._t("Starred"),
-                });
-            }
-            if (!this.mailboxFromId('history')) {
-                this.create({
-                    id: 'history',
-                    model: 'mail.box',
-                    name: this.env._t("History"),
-                });
-            }
-        }
-
-        /**
-         * @override
-         */
         _createInstanceLocalId(data) {
             const { channel_type, id, isTemporary = false, model } = data;
             let threadModel = model;
@@ -500,9 +473,9 @@ function ThreadFactory({ Entity }) {
                 threadModel = 'mail.channel';
             }
             if (isTemporary) {
-                return `${this.constructor.localId}_${id}`;
+                return `${this.constructor.name}_${id}`;
             }
-            return `${this.constructor.localId}_${threadModel}_${id}`;
+            return `${this.constructor.name}_${threadModel}_${id}`;
         }
 
         /**
@@ -563,7 +536,7 @@ function ThreadFactory({ Entity }) {
                 foldState = this.foldState || 'closed';
             }
 
-            this._write({
+            Object.assign(this, {
                 areAttachmentsLoaded,
                 channel_type,
                 correspondent_name,
@@ -594,7 +567,7 @@ function ThreadFactory({ Entity }) {
 
             // chat window
             if (this.foldState !== 'closed' && this.chatWindows.length === 0) {
-                this.env.entities.ChatWindow.create({ thread: this });
+                this.env.messaging.chatWindowManager.openThread(this);
             }
             if (this.foldState === 'closed' && this.chatWindows.length > 0) {
                 for (const chatWindow of this.chatWindows) {

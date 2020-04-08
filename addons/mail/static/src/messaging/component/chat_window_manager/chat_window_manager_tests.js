@@ -667,7 +667,7 @@ QUnit.test('open 2 different chat windows: enough screen width', async function 
     /**
      * computation uses following info:
      * ([mocked] global window width: @see `mail.messaging.component.testUtils:start()` method)
-     * (others: @see ChatWindow.visual)
+     * (others: @see mail.messaging.entity.ChatWindowManager.visual)
      *
      * - chat window width: 325px
      * - start/end/between gap width: 10px/10px/5px
@@ -818,7 +818,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     /**
      * computation uses following info:
      * ([mocked] global window width: 900px)
-     * (others: @see ChatWindow.visual)
+     * (others: @see mail.messaging.entity.ChatWindowManager.visual)
      *
      * - chat window width: 325px
      * - start/end/between gap width: 10px/10px/5px

@@ -121,7 +121,7 @@ class MessagingMenu extends Component {
         // TODO SEB maybe need to move this to a mobile component?
         if (
             this.env.messaging.device.isMobile &&
-            this.env.entities.ChatWindow.hasVisibleChatWindows
+            this.env.messaging.chatWindowManager.hasVisibleChatWindows
         ) {
             return;
         }

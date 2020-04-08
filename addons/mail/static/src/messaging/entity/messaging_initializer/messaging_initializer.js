@@ -42,9 +42,27 @@ function MessagingInitializerFactory({ Entity }) {
         static async _start(messagingInitializer) {
             await this.env.session.is_bound;
 
+            this.env.entities.Thread.create({
+                id: 'inbox',
+                model: 'mail.box',
+                name: this.env._t("Inbox"),
+            });
+            this.env.entities.Thread.create({
+                id: 'starred',
+                model: 'mail.box',
+                name: this.env._t("Starred"),
+            });
+            this.env.entities.Thread.create({
+                id: 'history',
+                model: 'mail.box',
+                name: this.env._t("History"),
+            });
+
             messagingInitializer.messaging.link({
                 attachmentViewer: this.env.entities.AttachmentViewer.create(),
+                chatWindowManager: this.env.entities.ChatWindowManager.create(),
                 device: this.env.entities.Device.create(),
+                dialogManager: this.env.entities.DialogManager.create(),
                 discuss: this.env.entities.Discuss.create(),
                 locale: this.env.entities.Locale.create(),
                 messagingMenu: this.env.entities.MessagingMenu.create(),

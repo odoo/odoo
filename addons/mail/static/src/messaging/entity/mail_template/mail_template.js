@@ -65,7 +65,7 @@ function MailTemplateFactory({ Entity }) {
                 name = this.name,
             } = data;
 
-            this._write({
+            Object.assign(this, {
                 id,
                 name,
             });

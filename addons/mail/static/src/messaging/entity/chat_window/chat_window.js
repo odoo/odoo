@@ -5,98 +5,25 @@ const { registerNewEntity } = require('mail.messaging.entity.core');
 
 function ChatWindowFactory({ Entity }) {
 
-    const BASE_VISUAL = {
-        /**
-         * Amount of visible slots available for chat windows.
-         */
-        availableVisibleSlots: 0,
-        /**
-         * Data related to the hidden menu.
-         */
-        hidden: {
-            /**
-             * List of hidden docked chat windows. Useful to compute counter.
-             * Chat windows are ordered by their `chatWindows` order.
-             */
-            _chatWindows: [],
-            /**
-             * Whether hidden menu is visible or not
-             */
-            isVisible: false,
-            /**
-             * Offset of hidden menu starting point from the starting point
-             * of chat window manager. Makes only sense if it is visible.
-             */
-            offset: 0,
-        },
-        /**
-         * Data related to visible chat windows. Index determine order of
-         * docked chat windows.
-         *
-         * Value:
-         *
-         *  {
-         *      _chatWindow,
-         *      offset,
-         *  }
-         *
-         * Offset is offset of starting point of docked chat window from
-         * starting point of dock chat window manager. Docked chat windows
-         * are ordered by their `chatWindows` order
-         */
-        visible: [],
-    };
-
-
     class ChatWindow extends Entity {
 
         /**
          * @override
          */
-        static create(data) {
-            const chatWindow = super.create(data);
-            this.register(chatWindow);
-            return chatWindow;
-        }
-
-        /**
-         * @override
-         */
         delete() {
-            this.constructor.unregister(this);
+            if (this.manager) {
+                this.manager.unregister(this);
+            }
+            const thread = this.thread;
             super.delete();
-            if (this.thread) {
-                this.thread.updateFoldState('closed');
+            if (thread) {
+                thread.updateFoldState('closed');
             }
         }
 
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
-
-        /**
-         * @static
-         * @returns {mail.messaging.entity.ChatWindow}
-         */
-        static get allOrdered() {
-            return this._ordered.map(_chatWindow => this.get(_chatWindow));
-        }
-
-        /**
-         * @static
-         * @returns {mail.messaging.entity.ChatWindow[]}
-         */
-        static get allOrderedVisible() {
-            return this.visual.visible.map(({ _chatWindow }) => this.get(_chatWindow));
-        }
-
-        /**
-         * @static
-         * @returns {mail.messaging.entity.ChatWindow[]}
-         */
-        static get allOrderedHidden() {
-            return this.visual.hidden._chatWindows.map(_chatWindow => this.get(_chatWindow));
-        }
 
         /**
          * Close all chat windows.
@@ -117,259 +44,6 @@ function ChatWindowFactory({ Entity }) {
          */
         static fromThread(thread) {
             return this.all.find(chatWindow => chatWindow.thread === thread);
-        }
-
-        /**
-         * @static
-         * @returns {boolean}
-         */
-        static get hasHiddenChatWindows() {
-            return this.visual.hidden._chatWindows.length > 0;
-        }
-
-        /**
-         * @static
-         * @returns {boolean}
-         */
-        static get hasVisibleChatWindows() {
-            return this.visual.visible.length > 0;
-        }
-
-        /**
-         * @static
-         * @returns {mail.messaging.entity.ChatWindow|undefined}
-         */
-        static get lastVisible() {
-            const { length: l, [l - 1]: lastVisible } = this.allOrderedVisible;
-            return lastVisible;
-        }
-
-        /**
-         * @static
-         * @returns {mail.messaging.entity.ChatWindow|undefined}
-         */
-        static get newMessage() {
-            return this.all.find(chatWindow => !chatWindow.thread);
-        }
-
-        /**
-         * @static
-         */
-        static openNewMessage() {
-            if (!this.newMessage) {
-                this.create();
-            }
-            this.newMessage.makeVisible();
-            this.newMessage.focus();
-        }
-
-        /**
-         * @static
-         * @param {mail.messaging.entity.Thread} thread
-         * @param {Object} [param1={}]
-         * @param {string} [param1.mode='last_visible']
-         */
-        static openThread(thread, { mode = 'last_visible' } = {}) {
-            if (thread.foldState === 'closed') {
-                thread.updateFoldState('open');
-            }
-            let chatWindow = this.fromThread(thread);
-            if (!chatWindow) {
-                chatWindow = this.create({ thread });
-            }
-            if (mode === 'last_visible' && !chatWindow.isVisible) {
-                chatWindow.makeVisible();
-            }
-            if (mode === 'from_new_message') {
-                const newMessage = this.newMessage;
-                if (!newMessage) {
-                    throw new Error('Cannot open thread in chat window in mode "from_new_message" without any new message chat window');
-                }
-                this.swap(chatWindow, newMessage);
-                newMessage.close();
-            }
-            chatWindow.focus();
-        }
-
-        /**
-         * @static
-         * @param {mail.messaging.entity.ChatWindow} chatWindow
-         */
-        static register(chatWindow) {
-            if (this.allOrdered.includes(chatWindow)) {
-                return;
-            }
-            this.update({
-                _ordered: this._ordered.concat([chatWindow.localId]),
-            });
-        }
-
-        /**
-         * Shift provided chat window to the left on screen.
-         *
-         * @static
-         * @param {mail.messaging.entity.ChatWindow} chatWindow
-         */
-        static shiftLeft(chatWindow) {
-            const chatWindows = this.allOrdered;
-            const index = chatWindows.findIndex(cw => cw === chatWindow);
-            if (index === chatWindows.length - 1) {
-                // already left-most
-                return;
-            }
-            const otherChatWindow = chatWindows[index + 1];
-            const _newOrdered = [...this._ordered];
-            _newOrdered[index] = otherChatWindow.localId;
-            _newOrdered[index + 1] = chatWindow.localId;
-            this.update({ _ordered: _newOrdered });
-            chatWindow.focus();
-        }
-
-        /**
-         * Shift provided chat window to the right on screen.
-         *
-         * @static
-         * @param {mail.messaging.entity.ChatWindow} chatWindow
-         */
-        static shiftRight(chatWindow) {
-            const chatWindows = this.allOrdered;
-            const index = chatWindows.findIndex(cw => cw === chatWindow);
-            if (index === 0) {
-                // already right-most
-                return;
-            }
-            const otherChatWindow = chatWindows[index - 1];
-            const _newOrdered = [...this._ordered];
-            _newOrdered[index] = otherChatWindow.localId;
-            _newOrdered[index - 1] = chatWindow.localId;
-            this.update({ _ordered: _newOrdered });
-            chatWindow.focus();
-        }
-
-        /**
-         * @static
-         * @param {mail.messaging.entity.ChatWindow} chatWindow1
-         * @param {mail.messaging.entity.ChatWindow} chatWindow2
-         */
-        static swap(chatWindow1, chatWindow2) {
-            const ordered = this.allOrdered;
-            const index1 = ordered.findIndex(chatWindow => chatWindow === chatWindow1);
-            const index2 = ordered.findIndex(chatWindow => chatWindow === chatWindow2);
-            if (index1 === -1 || index2 === -1) {
-                return;
-            }
-            const _newOrdered = [...this._ordered];
-            _newOrdered[index1] = chatWindow2.localId;
-            _newOrdered[index2] = chatWindow1.localId;
-            this.update({ _ordered: _newOrdered });
-        }
-
-        /**
-         * @static
-         */
-        static toggleHiddenMenu() {
-            this.update({ isHiddenMenuOpen: !this.isHiddenMenuOpen });
-        }
-
-        /**
-         * @static
-         * @returns {integer}
-         */
-        static get unreadHiddenConversationAmount() {
-            const allHiddenWithThread = this.allOrderedHidden.filter(
-                chatWindow => chatWindow.thread
-            );
-            let amount = 0;
-            for (const chatWindow of allHiddenWithThread) {
-                if (chatWindow.thread.message_unread_counter > 0) {
-                    amount++;
-                }
-            }
-            return amount;
-        }
-
-        /**
-         * @static
-         * @param {mail.messaging.entity.ChatWindow} chatWindow
-         */
-        static unregister(chatWindow) {
-            if (!this.allOrdered.includes(chatWindow)) {
-                return;
-            }
-            this.update({
-                _ordered: this._ordered.filter(
-                    _chatWindow => _chatWindow !== chatWindow.localId
-                ),
-            });
-        }
-
-        /**
-         * @static
-         * @returns {Object}
-         */
-        static get visual() {
-            let visual = JSON.parse(JSON.stringify(BASE_VISUAL));
-            if (!this.env.messaging || !this.env.messaging.isInitialized) {
-                return visual;
-            }
-            const device = this.env.messaging.device;
-            const discuss = this.env.messaging.discuss;
-            const BETWEEN_GAP_WIDTH = 5;
-            const CHAT_WINDOW_WIDTH = 325;
-            const END_GAP_WIDTH = device.isMobile ? 0 : 10;
-            const GLOBAL_WINDOW_WIDTH = device.globalWindowInnerWidth;
-            const HIDDEN_MENU_WIDTH = 200; // max width, including width of dropup list items
-            const START_GAP_WIDTH = device.isMobile ? 0 : 10;
-            const chatWindows = this.allOrdered;
-            if (!device.isMobile && discuss.isOpen) {
-                return visual;
-            }
-            if (!chatWindows.length) {
-                return visual;
-            }
-            const relativeGlobalWindowWidth = GLOBAL_WINDOW_WIDTH - START_GAP_WIDTH - END_GAP_WIDTH;
-            let maxAmountWithoutHidden = Math.floor(
-                relativeGlobalWindowWidth / (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH));
-            let maxAmountWithHidden = Math.floor(
-                (relativeGlobalWindowWidth - HIDDEN_MENU_WIDTH - BETWEEN_GAP_WIDTH) /
-                (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH));
-            if (device.isMobile) {
-                maxAmountWithoutHidden = 1;
-                maxAmountWithHidden = 1;
-            }
-            if (chatWindows.length <= maxAmountWithoutHidden) {
-                // all visible
-                for (let i = 0; i < chatWindows.length; i++) {
-                    const _chatWindow = chatWindows[i].localId;
-                    const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
-                    visual.visible.push({ _chatWindow, offset });
-                }
-                visual.availableVisibleSlots = maxAmountWithoutHidden;
-            } else if (maxAmountWithHidden > 0) {
-                // some visible, some hidden
-                for (let i = 0; i < maxAmountWithHidden; i++) {
-                    const _chatWindow = chatWindows[i].localId;
-                    const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
-                    visual.visible.push({ _chatWindow, offset });
-                }
-                if (chatWindows.length > maxAmountWithHidden) {
-                    visual.hidden.isVisible = !device.isMobile;
-                    visual.hidden.offset = visual.visible[maxAmountWithHidden - 1].offset
-                        + CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH;
-                }
-                for (let j = maxAmountWithHidden; j < chatWindows.length; j++) {
-                    visual.hidden._chatWindows.push(chatWindows[j].localId);
-                }
-                visual.availableVisibleSlots = maxAmountWithHidden;
-            } else {
-                // all hidden
-                visual.hidden.isVisible = !device.isMobile;
-                visual.hidden.offset = START_GAP_WIDTH;
-                visual.hidden._chatWindows.concat(chatWindows.map(chatWindow => chatWindow.localId));
-                console.warn('cannot display any visible chat windows (screen is too small)');
-                visual.availableVisibleSlots = 0;
-            }
-            return visual;
         }
 
         /**
@@ -410,7 +84,7 @@ function ChatWindowFactory({ Entity }) {
          * @returns {boolean}
          */
         get hasShiftLeft() {
-            const index = this.constructor.allOrderedVisible.findIndex(visible => visible === this);
+            const index = this.manager.allOrderedVisible.findIndex(visible => visible === this);
             if (index === -1) {
                 return false;
             }
@@ -421,7 +95,7 @@ function ChatWindowFactory({ Entity }) {
          * @returns {boolean}
          */
         get hasShiftRight() {
-            const allVisible = this.constructor.allOrderedVisible;
+            const allVisible = this.manager.allOrderedVisible;
             const index = allVisible.findIndex(visible => visible === this);
             if (index === -1) {
                 return false;
@@ -444,8 +118,8 @@ function ChatWindowFactory({ Entity }) {
          * Assume that this chat window was hidden before-hand
          */
         makeVisible() {
-            const lastVisible = this.constructor.lastVisible;
-            this.constructor.swap(this, lastVisible);
+            const lastVisible = this.manager.lastVisible;
+            this.manager.swap(this, lastVisible);
         }
 
         /**
@@ -462,14 +136,14 @@ function ChatWindowFactory({ Entity }) {
          * Shift provided chat window to the left on screen.
          */
         shiftLeft() {
-            this.constructor.shiftLeft(this);
+            this.manager.shiftLeft(this);
         }
 
         /**
          * Shift this chat window to the right on screen.
          */
         shiftRight() {
-            this.constructor.shiftRight(this);
+            this.manager.shiftRight(this);
         }
 
         /**
@@ -491,7 +165,7 @@ function ChatWindowFactory({ Entity }) {
          * @returns {integer}
          */
         get visibleOffset() {
-            const visible = this.constructor.visual.visible;
+            const visible = this.manager.visual.visible;
             const index = visible.findIndex(visible => visible._chatWindow === this.localId);
             if (index === -1) {
                 return 0;
@@ -504,34 +178,6 @@ function ChatWindowFactory({ Entity }) {
         //----------------------------------------------------------------------
 
         /**
-         * @override
-         */
-        static _getListOfClassAttributeNames() {
-            return super._getListOfClassAttributeNames().concat([
-                '_ordered',
-                'isHiddenMenuOpen',
-            ]);
-        }
-
-        /**
-         * @override
-         */
-        static _update(data) {
-            const {
-                /**
-                 * List of ordered chat windows (list of local ids)
-                 */
-                _ordered = this._ordered || [],
-                isHiddenMenuOpen = this.isHiddenMenuOpen || false,
-            } = data;
-
-            this._write({
-                _ordered,
-                isHiddenMenuOpen,
-            });
-        }
-
-        /**
          * Cycles to the next possible visible and unfolded chat window starting
          * from the `currentChatWindow`, following the natural order based on the
          * current text direction, and with the possibility to `reverse` based on
@@ -542,7 +188,7 @@ function ChatWindowFactory({ Entity }) {
          * @param {boolean} [param0.reverse=false]
          */
         _cycleNextVisibleUnfoldedChatWindow({ reverse = false } = {}) {
-            const orderedVisible = this.constructor.allOrderedVisible;
+            const orderedVisible = this.manager.allOrderedVisible;
             if (orderedVisible.length <= 1) {
                 return;
             }
@@ -594,6 +240,7 @@ function ChatWindowFactory({ Entity }) {
                  * visual clue.
                  */
                 isFocused = this.isFocused || false,
+                manager,
                 thread: threadOrLocalId,
                 /**
                  * If set, this is the scroll top position of the thread of this
@@ -604,9 +251,10 @@ function ChatWindowFactory({ Entity }) {
 
             const thread = this.env.entities.Thread.get(threadOrLocalId);
 
+            const prevManager = this.manager;
             const prevThread = this.thread;
 
-            this._write({
+            Object.assign(this, {
                 /**
                  * Note: this value only make sense for chat window not linked
                  * to a thread. State of chat window of a thread is entirely
@@ -624,6 +272,13 @@ function ChatWindowFactory({ Entity }) {
                 threadInitialScrollTop,
             });
 
+            // manager
+            if (manager && this.manager !== manager) {
+                manager.register(this);
+                if (prevManager) {
+                    prevManager.unregister(this);
+                }
+            }
             // thread
             if (thread && this.thread !== thread) {
                 if (!this.threadViewer) {
@@ -634,7 +289,7 @@ function ChatWindowFactory({ Entity }) {
                 if (prevThread) {
                     prevThread.updateFoldState('closed');
                 }
-                this._write({ threadInitialScrollTop: undefined });
+                this.threadInitialScrollTop = undefined;
             }
         }
 
@@ -642,6 +297,11 @@ function ChatWindowFactory({ Entity }) {
 
     Object.assign(ChatWindow, {
         relations: Object.assign({}, Entity.relations, {
+            manager: {
+                inverse: 'chatWindows',
+                to: 'ChatWindowManager',
+                type: 'many2one',
+            },
             threadViewer: {
                 inverse: 'chatWindow',
                 to: 'ThreadViewer',

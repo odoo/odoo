@@ -42,7 +42,7 @@ function AttachmentViewerFactory({ Entity }) {
                 this.link({ attachments });
             }
 
-           this._write({
+            Object.assign(this, {
                 angle,
                 isImageLoading,
                 scale,

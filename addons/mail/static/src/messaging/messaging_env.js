@@ -24,7 +24,6 @@ function addMessagingToEnv(env) {
         env,
         state: {
             entities: {},
-            __classEntityObservables: {},
         },
     });
     /**
@@ -100,9 +99,6 @@ function _addMessagingEntities(env) {
      * should have matching reversed relation.
      */
     checkRelations(env.entities);
-    for (const Entity of Object.values(env.entities)) {
-        Entity.init();
-    }
     /**
      * Create the messaging singleton entity.
      */

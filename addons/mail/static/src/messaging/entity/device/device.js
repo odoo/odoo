@@ -44,7 +44,7 @@ function DeviceFactory({ Entity }) {
          * @override
          */
         _update() {
-            this._write({
+            Object.assign(this, {
                 globalWindowInnerHeight: this.env.window.innerHeight,
                 globalWindowInnerWidth: this.env.window.innerWidth,
                 isMobile: this.env.device.isMobile,

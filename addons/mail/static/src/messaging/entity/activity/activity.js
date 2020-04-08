@@ -109,7 +109,7 @@ function ActivityFactory({ Entity }) {
                 ] = [],
             } = data;
 
-            this._write({
+            Object.assign(this, {
                 canWrite,
                 category,
                 dateCreate,

@@ -169,7 +169,7 @@ function PartnerFactory({ Entity }) {
          * @override
          */
         _createInstanceLocalId(data) {
-            return `${this.constructor.localId}_${data.id}`;
+            return `${this.constructor.name}_${data.id}`;
         }
 
         /**
@@ -185,7 +185,7 @@ function PartnerFactory({ Entity }) {
                 userId,
             } = data;
 
-            this._write({
+            Object.assign(this, {
                 display_name,
                 email,
                 id,

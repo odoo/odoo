@@ -4,10 +4,10 @@
     <t t-name="mail.messaging.component.ChatWindowManager" owl="1">
         <div class="o_ChatWindowManager">
             <!-- Note: DOM elements are ordered from left to right -->
-            <t t-if="env.entities.ChatWindow.hasHiddenChatWindows">
+            <t t-if="env.messaging.chatWindowManager.hasHiddenChatWindows">
                 <ChatWindowHiddenMenu class="o_ChatWindowManager_hiddenMenu"/>
             </t>
-            <t t-foreach="env.entities.ChatWindow.allOrderedVisible" t-as="chatWindow" t-key="chatWindow.localId">
+            <t t-foreach="env.messaging.chatWindowManager.allOrderedVisible" t-as="chatWindow" t-key="chatWindow.localId">
                 <ChatWindow
                     chatWindowLocalId="chatWindow.localId"
                     hasCloseAsBackButton="env.messaging.device.isMobile"

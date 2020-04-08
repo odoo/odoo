@@ -147,7 +147,7 @@ function ChatterFactory({ Entity }) {
                 this.link({ threadViewer });
             }
 
-            this._write({
+            Object.assign(this, {
                 activityIds,
                 context,
                 followerIds,

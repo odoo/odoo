@@ -52,7 +52,7 @@ function AttachmentFactory({ Entity }) {
             if (!attachments.includes(attachment)) {
                 return;
             }
-            this.env.entities.Dialog.open('AttachmentViewer', { attachment, attachments });
+            this.env.messaging.dialogManager.open('AttachmentViewer', { attachment, attachments });
         }
 
         /**
@@ -179,9 +179,9 @@ function AttachmentFactory({ Entity }) {
         _createInstanceLocalId(data) {
             const { id, isTemporary = false } = data;
             if (isTemporary) {
-                return `${this.constructor.localId}_${nextTemporaryId}`;
+                return `${this.constructor.name}_${nextTemporaryId}`;
             }
-            return `${this.constructor.localId}_${id}`;
+            return `${this.constructor.name}_${id}`;
         }
 
         /**
@@ -200,7 +200,7 @@ function AttachmentFactory({ Entity }) {
                 size,
             } = data;
 
-            this._write({
+            Object.assign(this, {
                 filename,
                 id,
                 isTemporary,

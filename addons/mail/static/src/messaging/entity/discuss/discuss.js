@@ -211,10 +211,10 @@ function DiscussFactory({ Entity }) {
                 this.link({ threadViewer });
             }
             if (!this.isOpen) {
-                this._write({ isOpen: false });
+                this.isOpen = false;
             }
             if (!this.activeMobileNavbarTabId) {
-                this._write({ activeMobileNavbarTabId: 'mailbox' });
+                this.activeMobileNavbarTabId = 'mailbox';
             }
 
             const wasOpen = this.isOpen;
@@ -277,7 +277,7 @@ function DiscussFactory({ Entity }) {
                 threadStringifiedDomain,
             } = data;
 
-            this._write({
+            Object.assign(this, {
                 activeMobileNavbarTabId: activeMobileNavbarTabId
                     ? activeMobileNavbarTabId
                     : this.activeMobileNavbarTabId,
@@ -301,7 +301,7 @@ function DiscussFactory({ Entity }) {
             if (threadOrLocalId) {
                 const thread = this.env.entities.Thread.get(threadOrLocalId);
                 this.threadViewer.update({ thread });
-                this._write({ initActiveId: this.constructor.threadToActiveId(thread.model) });
+                this.initActiveId = this.constructor.threadToActiveId(thread.model);
             } else if (
                 prevActiveMobileNavbarTabId !== this.activeMobileNavbarTabId &&
                 this.activeMobileNavbarTabId === 'mailbox' &&
@@ -312,7 +312,7 @@ function DiscussFactory({ Entity }) {
 
             if (wasOpen !== this.isOpen) {
                 if (!this.isOpen) {
-                    this._write({
+                    Object.assign(this, {
                         addingChannelValue: "",
                         initActiveId: this.defaultInitActiveId,
                         isAddingChannel: false,

@@ -236,7 +236,7 @@ function ComposerFactory({ Entity }) {
                 textInputCursorEnd = this.textInputCursorEnd || 0,
             } = data;
 
-            this._write({
+            Object.assign(this, {
                 textInputContent,
                 textInputCursorStart,
                 textInputCursorEnd,

@@ -18,7 +18,7 @@ class ChatWindowManager extends Component {
         super(...args);
         useStore(props => {
             return {
-                chatWindowVisual: this.env.entities.ChatWindow.visual,
+                chatWindowManagerVisual: this.env.messaging.chatWindowManager.visual,
                 device: this.env.messaging.device,
             };
         });

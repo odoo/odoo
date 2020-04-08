@@ -88,7 +88,7 @@ function MessagingMenuFactory({ Entity }) {
                 isOpen = this.isOpen || false,
             } = data;
 
-            this._write({
+            Object.assign(this, {
                 activeTabId,
                 /**
                  * FIXME: using static method so that patch is applied on class

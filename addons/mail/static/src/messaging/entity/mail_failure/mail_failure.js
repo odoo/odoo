@@ -15,7 +15,7 @@ function MailFailureFactory({ Entity }) {
          * @override
          */
         _update(data) {
-            this._write(data);
+            Object.assign(this, data);
         }
 
     }

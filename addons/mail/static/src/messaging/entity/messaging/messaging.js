@@ -115,7 +115,8 @@ function MessagingFactory({ Entity }) {
                 isInitialized = this.isInitialized || false,
                 outOfFocusUnreadMessageCounter = this.outOfFocusUnreadMessageCounter || 0,
             } = data;
-            this._write({
+
+            Object.assign(this, {
                 cannedReponses,
                 commands,
                 isInitialized,
@@ -164,6 +165,12 @@ function MessagingFactory({ Entity }) {
                 to: 'AttachmentViewer',
                 type: 'one2one',
             },
+            chatWindowManager: {
+                inverse: 'messaging',
+                isCausal: true,
+                to: 'ChatWindowManager',
+                type: 'one2one',
+            },
             currentPartner: {
                 inverse: 'currentPartnerMessaging',
                 to: 'Partner',
@@ -173,6 +180,12 @@ function MessagingFactory({ Entity }) {
                 inverse: 'messaging',
                 isCausal: true,
                 to: 'Device',
+                type: 'one2one',
+            },
+            dialogManager: {
+                inverse: 'messaging',
+                isCausal: true,
+                to: 'DialogManager',
                 type: 'one2one',
             },
             discuss: {

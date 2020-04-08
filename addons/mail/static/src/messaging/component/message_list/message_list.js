@@ -220,7 +220,9 @@ class MessageList extends Component {
         const refs = this._getRefs();
         const ascOrderedMessageRefs = Object.entries(refs)
             .filter(([refId, ref]) => (
-                    refId.includes(this.env.entities.Message.localId) &&
+                    // Message refs have message local id as ref id, and message
+                    // local ids contain name of entity class Message.
+                    refId.includes(this.env.entities.Message.name) &&
                     // Component that should be destroyed but haven't just yet.
                     ref.message
                 )

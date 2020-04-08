@@ -18,9 +18,9 @@ class ChatWindowHiddenMenu extends Component {
         super(...args);
         useStore(props => {
             return {
-                chatWindowVisual: this.env.entities.ChatWindow.visual,
+                chatWindowManagerVisual: this.env.messaging.chatWindowManager.visual,
                 device: this.env.messaging.device,
-                isHiddenMenuOpen: this.env.entities.ChatWindow.isHiddenMenuOpen,
+                isHiddenMenuOpen: this.env.messaging.chatWindowManager.isHiddenMenuOpen,
                 localeTextDirection: this.env.messaging.locale.textDirection,
             };
         });
@@ -73,7 +73,7 @@ class ChatWindowHiddenMenu extends Component {
         const textDirection = this.env.messaging.locale.textDirection;
         const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
         const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
-        const offset = this.env.entities.ChatWindow.visual.hidden.offset;
+        const offset = this.env.messaging.chatWindowManager.visual.hidden.offset;
         this.el.style[offsetFrom] = `${offset}px`;
         this.el.style[oppositeFrom] = 'auto';
     }
@@ -93,7 +93,7 @@ class ChatWindowHiddenMenu extends Component {
         if (this.el.contains(ev.target)) {
             return;
         }
-        this.env.entities.ChatWindow.closeHiddenMenu();
+        this.env.messaging.chatWindowManager.closeHiddenMenu();
     }
 
     /**
@@ -102,7 +102,7 @@ class ChatWindowHiddenMenu extends Component {
      */
     _onClickToggle(ev) {
         ev.stopPropagation();
-        this.env.entities.ChatWindow.toggleHiddenMenu();
+        this.env.messaging.chatWindowManager.toggleHiddenMenu();
     }
 
     /**
@@ -113,7 +113,7 @@ class ChatWindowHiddenMenu extends Component {
      */
     _onClickedChatWindow(ev) {
         ev.detail.chatWindow.makeVisible();
-        this.env.entities.ChatWindow.closeHiddenMenu();
+        this.env.messaging.chatWindowManager.closeHiddenMenu();
     }
 
 }

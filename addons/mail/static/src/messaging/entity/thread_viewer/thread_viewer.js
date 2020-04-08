@@ -184,7 +184,7 @@ function ThreadViewerFactory({ Entity }) {
 
             const prevThreadCache = this.threadCache;
 
-            this._write({
+            Object.assign(this, {
                 componentHintList,
                 stringifiedDomain,
                 threadCacheInitialScrollPositions,
@@ -208,9 +208,7 @@ function ThreadViewerFactory({ Entity }) {
          */
         _writeComponentHint(hintType, hintData) {
             const hint = this._makeComponentHint(hintType, hintData);
-            this._write({
-                componentHintList: this.componentHintList.concat([hint]),
-            });
+            this.componentHintList = this.componentHintList.concat([hint]);
         }
 
     }

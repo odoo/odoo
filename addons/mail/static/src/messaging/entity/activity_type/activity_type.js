@@ -20,7 +20,7 @@ function ActivityTypeFactory({ Entity }) {
                 id = this.id,
             } = data;
 
-            this._write({
+            Object.assign(this, {
                 displayName,
                 id,
             });
