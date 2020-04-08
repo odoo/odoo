@@ -563,6 +563,7 @@ class ProcurementGroup(models.Model):
             if use_new_cursor:
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))
+<<<<<<< HEAD
             orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch)
             orderpoints_exceptions = []
             while orderpoints_batch:
@@ -592,6 +593,46 @@ class ProcurementGroup(models.Model):
                                 qty += orderpoint.qty_multiple - remainder
 
                             if float_compare(qty, 0.0, precision_rounding=orderpoint.product_uom.rounding) < 0:
+=======
+            OrderPoint = self.env['stock.warehouse.orderpoint']
+
+            orderpoints = OrderPoint.browse(orderpoints_noprefetch[:1000])
+            orderpoints_noprefetch = orderpoints_noprefetch[1000:]
+
+            # Calculate groups that can be executed together
+            location_data = OrderedDict()
+
+            def makedefault():
+                return {
+                    'products': self.env['product.product'],
+                    'orderpoints': self.env['stock.warehouse.orderpoint'],
+                    'groups': []
+                }
+
+            for orderpoint in orderpoints:
+                key = self._procurement_from_orderpoint_get_grouping_key([orderpoint.id])
+                if not location_data.get(key):
+                    location_data[key] = makedefault()
+                location_data[key]['products'] += orderpoint.product_id
+                location_data[key]['orderpoints'] += orderpoint
+                location_data[key]['groups'] = self._procurement_from_orderpoint_get_groups([orderpoint.id])
+
+            for location_id, location_res in location_data.items():
+                location_orderpoints = location_res['orderpoints']
+                product_context = dict(self._context, location=location_orderpoints[0].location_id.id)
+                substract_quantity = location_orderpoints._quantity_in_progress()
+
+                for group in location_res['groups']:
+                    if group.get('from_date'):
+                        product_context['from_date'] = group['from_date'].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                    if group['to_date']:
+                        product_context['to_date'] = group['to_date'].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                    product_quantity = location_res['products'].with_context(product_context)._product_available()
+                    for orderpoint in location_orderpoints:
+                        try:
+                            op_product_virtual = product_quantity[orderpoint.product_id.id]['virtual_available']
+                            if op_product_virtual is None:
+>>>>>>> f43033f0d75... temp
                                 continue
 
                             qty -= substract_quantity[orderpoint.id]
