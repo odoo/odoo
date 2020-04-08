@@ -181,17 +181,16 @@ var Tip = Widget.extend({
     _bind_anchor_events: function () {
         this.consume_event = Tip.getConsumeEventType(this.$anchor, this.info.run);
         this.$consumeEventAnchor = this.$anchor;
-        // jQuery-ui draggable triggers 'drag' events on the .ui-draggable element,
-        // but the tip is attached to the .ui-draggable-handle element which may
-        // be one of its children (or the element itself)
         if (this.consume_event === "drag") {
+            // jQuery-ui draggable triggers 'drag' events on the .ui-draggable element,
+            // but the tip is attached to the .ui-draggable-handle element which may
+            // be one of its children (or the element itself)
             this.$consumeEventAnchor = this.$anchor.closest('.ui-draggable');
         } else if (this.consume_event.includes('apply.daterangepicker')) {
             this.$consumeEventAnchor = this.$anchor.parent().children('.o_field_date_range');
-        }
-        // when an element is dragged inside a sortable container (with classname
-        // 'ui-sortable'), jQuery triggers the 'sort' event on the container
-        if (this.consume_event === "sort") {
+        } else if (this.consume_event === "sort") {
+            // when an element is dragged inside a sortable container (with classname
+            // 'ui-sortable'), jQuery triggers the 'sort' event on the container
             this.$consumeEventAnchor = this.$anchor.closest('.ui-sortable');
         }
         this.$consumeEventAnchor.on(this.consume_event + ".anchor", (function (e) {
@@ -341,7 +340,7 @@ Tip.getConsumeEventType = function ($element, run) {
         // this is a heuristic: the element has to be dragged and dropped but it
         // doesn't have class 'ui-draggable-handle', so we check if it has an
         // ui-sortable parent, and if so, we conclude that its event type is 'sort'
-        if ($element.closest('.ui-sortable')) {
+        if ($element.closest('.ui-sortable').length) {
             return 'sort';
         }
     }
