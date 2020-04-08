@@ -84,6 +84,11 @@ class ResUsers(models.Model):
                 return login
             except (SignupError, UserError):
                 raise access_denied_exception
+                
+    def write(self, vals):
+        if 'active' in vals and not vals['active']:
+            vals.update({'oauth_uid': False, 'oauth_access_token': False})
+        return super(ResUsers, self).write(vals)
 
     @api.model
     def auth_oauth(self, provider, params):
