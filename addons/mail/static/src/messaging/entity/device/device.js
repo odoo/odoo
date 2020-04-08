@@ -7,8 +7,33 @@ function DeviceFactory({ Entity }) {
 
     class Device extends Entity {
 
+        /**
+         * @override
+         */
+        static create() {
+            const entity = super.create();
+            entity._onResize = _.debounce(() => entity.update(), 100);
+            return entity;
+        }
+
+        //----------------------------------------------------------------------
+        // Public
+        //----------------------------------------------------------------------
+
+        /**
+         * Called when messaging is started.
+         */
         start() {
-            this.env.window.addEventListener('resize', _.debounce(() => this.update()), 100);
+            // not using this.env.window because it's proxified, and
+            // addEventListener does not work on proxified window
+            window.addEventListener('resize', this._onResize);
+        }
+
+        /**
+         * Called when messaging is stopped.
+         */
+        stop() {
+            window.removeEventListener('resize', this._onResize);
         }
 
         //----------------------------------------------------------------------

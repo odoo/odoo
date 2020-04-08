@@ -21,24 +21,29 @@ function MessagingFactory({ Entity }) {
 
             return messaging;
         }
-        /**
-         * @override
-         */
-        static delete() {
-            this.env.call('bus_service', 'off', 'window_focus', null, this._handleGlobalWindowFocus);
-            super.delete();
-        }
 
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
 
+        /**
+         * Start messaging and related entities.
+         */
         async start() {
             this._handleGlobalWindowFocus = this._handleGlobalWindowFocus.bind(this);
             this.env.call('bus_service', 'on', 'window_focus', null, this._handleGlobalWindowFocus);
             await this.initializer.start();
             this.notificationHandler.start();
             this.update({ isInitialized: true });
+        }
+
+        /**
+         * Stop messaging and related entities.
+         */
+        stop() {
+            this.env.call('bus_service', 'off', 'window_focus', null, this._handleGlobalWindowFocus);
+            this.initializer.stop();
+            this.notificationHandler.stop();
         }
 
         /**

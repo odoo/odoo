@@ -22,6 +22,14 @@ function MessagingNotificationHandlerFactory({ Entity }) {
             this.env.call('bus_service', 'startPolling');
         }
 
+        /**
+         * Called when messaging becomes stopped.
+         */
+        stop() {
+            this.env.call('bus_service', 'off', 'notification');
+            this.env.call('bus_service', 'stopPolling');
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------

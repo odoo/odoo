@@ -96,16 +96,12 @@ const MessagingService = AbstractService.extend({
      */
     destroy(...args) {
         this._super(...args);
-        this.env.messaging = undefined;
         this.env.bus.off('hide_home_menu', this);
         this.env.bus.off('show_home_menu', this);
         this.env.bus.off('will_hide_home_menu', this);
         this.env.bus.off('will_show_home_menu', this);
-        if (this.env.entities && this.env.entities.Entity) {
-            const { Entity } = this.env.entities;
-            while (Entity.all.length > 0) {
-                Entity.all[0].delete();
-            }
+        if (this.env.messaging) {
+            this.env.messaging.stop();
         }
     },
 

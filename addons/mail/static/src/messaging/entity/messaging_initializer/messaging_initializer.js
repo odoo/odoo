@@ -19,6 +19,15 @@ function MessagingInitializerFactory({ Entity }) {
             await this.constructor._start(this);
         }
 
+        /**
+         * Called when messaging is stopped.
+         */
+        stop() {
+            if (this.messaging.device) {
+                this.messaging.device.stop();
+            }
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
@@ -42,6 +51,7 @@ function MessagingInitializerFactory({ Entity }) {
             });
 
             const device = this.env.messaging.device;
+            device.start();
             const context = Object.assign({
                 isMobile: device.isMobile,
             }, this.env.session.user_context);
