@@ -51,7 +51,7 @@
     <template id="survey_page_fill" name="Survey: main page (take survey)">
         <t t-call="survey.layout">
             <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
-            <div class="wrap o_survey_wrap d-flex align-items-center">
+            <div class="wrap o_survey_wrap d-flex">
                 <div class="container o_survey_form d-flex flex-column mb-5">
 
                     <t t-call="survey.survey_fill_header" />
@@ -65,11 +65,11 @@
         <div class="o_survey_nav pt16 mb-2">
             <div class="container m-0 p-0">
                 <div class="row">
-                    <div  class="col-lg-8">
+                    <div  class="col-10">
                         <h1 t-if="answer.state == 'new' or survey.questions_layout != 'page_per_question'"
-                            t-esc="survey.title" class="o_survey_main_title"></h1>
+                            t-esc="survey.title" class="o_survey_main_title pt-4"></h1>
                     </div>
-                    <div class="o_survey_timer col-lg-4">
+                    <div class="o_survey_timer col-2 pt-4">
                         <h1 class="o_survey_timer_container timer text-right">
                         </h1>
                     </div>
@@ -85,7 +85,7 @@
     <template id="survey_fill_form" name="Survey: main page content">
         <t t-set="survey_form_readonly" t-value="answer.state == 'done'"/>
         <form role="form" method="post" t-att-name="survey.id"
-                class="d-flex flex-grow-1"
+                class="d-flex flex-grow-1 align-items-center"
                 t-att-data-answer-token="answer.access_token"
                 t-att-data-survey-token="survey.access_token"
                 t-att-data-users-can-go-back="survey.users_can_go_back"
