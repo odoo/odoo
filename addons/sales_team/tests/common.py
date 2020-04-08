@@ -10,6 +10,7 @@ class TestSalesCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestSalesCommon, cls).setUpClass()
+        cls.env['ir.config_parameter'].set_param('sales_team.membership_multi', False)
 
         # Salesmen organization
         # ------------------------------------------------------------
@@ -27,6 +28,7 @@ class TestSalesCommon(TransactionCase):
         # data----------------9999-----??
 
         cls.company_main = cls.env.user.company_id
+        cls.user_admin = cls.env.ref('base.user_admin')
         cls.user_sales_manager = mail_new_test_user(
             cls.env, login='user_sales_manager',
             name='Martin Sales Manager', email='crm_manager@test.example.com',
