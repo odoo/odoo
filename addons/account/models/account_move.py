@@ -927,7 +927,9 @@ class AccountMoveLine(models.Model):
                 # in that secondary currency in the partial reconciliation. That allows the exchange difference entry
                 # to be created, in case it is needed. It also allows to compute the amount residual in foreign currency.
                 currency = debit_move.currency_id or credit_move.currency_id
-                currency_date = debit_move.currency_id and credit_move.date or debit_move.date
+                # /!\ NOTE: We need to be consistent with value that is computed at the APR record.
+                # Hence, so far currency_date is to be equal to max_date in APR.
+                currency_date = max(credit_move.date, debit_move.date)
                 amount_reconcile_currency = company_currency._convert(amount_reconcile, currency, debit_move.company_id, currency_date)
                 currency = currency.id
 
