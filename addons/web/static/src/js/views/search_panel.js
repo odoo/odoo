@@ -46,7 +46,7 @@ function _processSearchPanelNode(node, fields) {
             color: childNode.attrs.color,
             description: childNode.attrs.string || fields[fieldName].string,
             enableCounters: !!pyUtils.py_eval(childNode.attrs.enable_counters || '0'),
-            expand: fields[fieldName].type === 'many2one' ? !!pyUtils.py_eval(childNode.attrs.expand || '1') : true,
+            expand: !!pyUtils.py_eval(childNode.attrs.expand || '1'),
             fieldName,
             icon: childNode.attrs.icon,
             id: sectionId,
@@ -54,8 +54,8 @@ function _processSearchPanelNode(node, fields) {
             type,
         };
         if (section.type === 'category') {
-            section.hierarchize = section.expand && !!pyUtils.py_eval(childNode.attrs.hierarchize || '1');
             section.icon = section.icon || 'fa-folder';
+            section.hierarchize = !!pyUtils.py_eval(childNode.attrs.hierarchize || '1');
         } else if (section.type === 'filter') {
             section.domain = childNode.attrs.domain || '[]';
             section.groupBy = childNode.attrs.groupby;
@@ -426,6 +426,7 @@ const SearchPanel = Widget.extend({
         const categoryDomain = this._getCategoryDomain();
         const proms = [];
         for (const filter of Object.values(this.filters)) {
+            const { enableCounters, expand, groupBy } = filter;
             const prom = this._rpc({
                 method: 'search_panel_select_multi_range',
                 model: this.model,
@@ -433,10 +434,10 @@ const SearchPanel = Widget.extend({
                 kwargs: {
                     category_domain: categoryDomain,
                     comodel_domain: Domain.prototype.stringToArray(filter.domain, evalContext),
-                    enable_counters: filter.enableCounters,
+                    enable_counters: enableCounters,
                     filter_domain: this._getFilterDomain(filter.id),
-                    expand: filter.expand,
-                    group_by: filter.groupBy || false,
+                    expand,
+                    group_by: groupBy || false,
                     group_domain: this._getGroupDomain(filter),
                     search_domain: this.searchDomain,
                 },

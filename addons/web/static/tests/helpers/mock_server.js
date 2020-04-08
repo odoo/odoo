@@ -609,7 +609,9 @@ var MockServer = Class.extend({
             for (const record of records) {
                 record.count = localCounters[record.id] || 0;
                 Object.values(fieldNames).forEach(fn => fn(record));
-                valuesRange.set(record.id, record);
+                if (field.type === 'many2many' || kwargs.expand || record.count) {
+                    valuesRange.set(record.id, record);
+                }
             }
             return valuesRange;
         }
@@ -617,7 +619,9 @@ var MockServer = Class.extend({
             const valuesRange = new Map();
             const selection = this.data[model].fields[fieldName].selection;
             for (const [id, display_name] of selection) {
-                valuesRange.set(id, { id, display_name, count: localCounters[id] || 0 });
+                if (kwargs.expand || localCounters[id]) {
+                    valuesRange.set(id, { id, display_name, count: localCounters[id] || 0 });
+                }
             }
             return valuesRange;
         }
@@ -678,6 +682,7 @@ var MockServer = Class.extend({
         }
         const comodelFieldNames = {};
         const groupBy = kwargs.group_by || false;
+        const hierarchize = kwargs.hierarchize !== false;
         if (groupBy && field.type !== 'selection') {
             const groupByField = this.data[field.relation].fields[groupBy];
             let groupIdName;
@@ -694,7 +699,11 @@ var MockServer = Class.extend({
             comodelFieldNames[groupBy] = record => {
                 const value = record[groupBy];
                 const [group_id, group_name] = groupIdName(value);
-                Object.assign(record, { group_id, group_name });
+                if (hierarchize) {
+                    Object.assign(record, { group_id, group_name });
+                } else {
+                    record.display_name = [group_name, record.display_name].join(' > ');
+                }
                 delete record[groupBy];
             };
         }
@@ -715,6 +724,9 @@ var MockServer = Class.extend({
                     countDomain = Domain.prototype.normalizeArray([...countDomain, ...extraDomain]);
                 }
                 values.count = this._mockSearchCount(model, [countDomain]);
+                if (!kwargs.expand && !values.count) {
+                    valuesRange.delete(values.id);
+                }
             }
         }
         return [...valuesRange.values()];
