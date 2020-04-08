@@ -48,10 +48,14 @@ class CrmTeam(models.Model):
         related='company_id.currency_id', readonly=True)
     user_id = fields.Many2one('res.users', string='Team Leader', check_company=True)
     # memberships
+    is_membership_multi = fields.Boolean(
+        'Multiple Memberships Allowed', compute='_compute_is_membership_multi',
+        help='If True, users may belong to several sales teams. Otherwise membership is limited to a single sales team.')
     member_ids = fields.Many2many(
         'res.users', string='Salespersons', check_company=True, domain=[('share', '=', False)],
         compute='_compute_member_ids', inverse='_inverse_member_ids', search='_search_member_ids',
         help="Users assigned to this team.")
+    member_warning = fields.Text('Membership Issue Warning', compute='_compute_member_warning')
     crm_team_member_ids = fields.One2many(
         'crm.team.member', 'crm_team_id', string='Sales Team Members',
         help="Add members to automatically assign their documents to this sales team.")
@@ -68,6 +72,11 @@ class CrmTeam(models.Model):
         help="Favorite teams to display them in the dashboard and access them easily.")
     dashboard_button_name = fields.Char(string="Dashboard Button", compute='_compute_dashboard_button_name')
     dashboard_graph_data = fields.Text(compute='_compute_dashboard_graph')
+
+    @api.depends('sequence')  # TDE FIXME: force compute in new mode
+    def _compute_is_membership_multi(self):
+        multi_enabled = self.env['ir.config_parameter'].sudo().get_param('sales_team.membership_multi', False)
+        self.is_membership_multi = multi_enabled
 
     @api.depends('crm_team_member_ids.active')
     def _compute_member_ids(self):
@@ -88,6 +97,35 @@ class CrmTeam(models.Model):
             # activate or deactivate other memberships depending on members
             for membership in memberships:
                 membership.active = membership.user_id in users_current
+
+    @api.depends('is_membership_multi', 'member_ids')
+    def _compute_member_warning(self):
+        """ Display a warning message to warn user they are about to archive
+        other memberships. Only valid in mono-membership mode and take into
+        account only active memberships as we may keep several archived
+        memberships. """
+        self.member_warning = False
+        if all(team.is_membership_multi for team in self):
+            return
+        # done in a loop, but to be used in form view only -> not optimized
+        for team in self:
+            member_warning = False
+            other_memberships = self.env['crm.team.member'].search([
+                ('crm_team_id', '!=', team.id if team.ids else False),  # handle NewID
+                ('user_id', 'in', team.member_ids.ids)
+            ])
+            if other_memberships and len(other_memberships) == 1:
+                member_warning = _("Adding %(user_name)s in this team would remove him/her from its current team %(team_name)s.",
+                                   user_name=other_memberships.user_id.name,
+                                   team_name=other_memberships.crm_team_id.name
+                                  )
+            elif other_memberships:
+                member_warning = _("Adding %(user_names)s in this team would remove them from their current teams (%(team_names)s).",
+                                   user_names=", ".join(other_memberships.mapped('user_id.name')),
+                                   team_names=", ".join(other_memberships.mapped('crm_team_id.name'))
+                                  )
+            if member_warning:
+                team.member_warning = member_warning + " " + _("To add a Salesperson into multiple Teams, activate the Multi-Team option in settings.")
 
     def _search_member_ids(self, operator, value):
         return [('crm_team_member_ids.user_id', operator, value)]
