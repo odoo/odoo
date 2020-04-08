@@ -1,0 +1,188 @@
+Module mrp: useless ACLs
+	 mrp.access_mrp_bom: Group mrp.group_mrp_user implies group stock.group_stock_user having rule mrp.access_mrp_bom_stockuser, loaded before and giving as much or more rights.
+	 mrp.access_res_partner: Group mrp.group_mrp_user implies group base.group_user having rule base.access_res_partner_group_user, loaded before and giving as much or more rights.
+	 mrp.access_stock_production_lot_user: Group mrp.group_mrp_user implies group stock.group_stock_user having rule stock.access_stock_production_lot_user, loaded before and giving as much or more rights.
+	 mrp.access_product_product_user: Group mrp.group_mrp_user implies group stock.group_stock_user having rule stock.access_product_product_stock_user, loaded before and giving as much or more rights.
+	 mrp.access_product_template_user: Group mrp.group_mrp_user implies group stock.group_stock_user having rule stock.access_product_template_stock_user, loaded before and giving as much or more rights.
+	 mrp.access_mrp_production_manager: Group mrp.group_mrp_manager implies group mrp.group_mrp_user having rule mrp.access_mrp_production, loaded before and giving as much or more rights.
+	 mrp.access_stock_picking_mrp_manager: Group mrp.group_mrp_manager implies group mrp.group_mrp_user having rule mrp.access_stock_picking_mrp_worker, loaded before and giving as much or more rights.
+	 mrp.access_stock_picking_mrp_worker: Group mrp.group_mrp_user implies group stock.group_stock_user having rule stock.access_stock_picking_user, loaded before and giving as much or more rights.
+	 mrp.access_mrp_unbuild_manager: Group mrp.group_mrp_manager implies group mrp.group_mrp_user having rule mrp.access_mrp_unbuild, loaded before and giving as much or more rights.
+	 mrp.access_mrp_workorder_mrp_manager: Group mrp.group_mrp_manager implies group mrp.group_mrp_user having rule mrp.access_mrp_workorder_mrp_user, loaded before and giving as much or more rights.
+	 mrp.access_mrp_bom_line: Group mrp.group_mrp_user implies group stock.group_stock_user having rule mrp.access_mrp_bom_line_stockuser, loaded before and giving as much or more rights.
+	 mrp.access_stock_location_mrp_worker: Group mrp.group_mrp_user implies group base.group_user having rule stock.access_stock_location_user, loaded before and giving as much or more rights.
+	 mrp.access_stock_warehouse_orderpoint_user: Group mrp.group_mrp_user implies group stock.group_stock_user having rule stock.access_stock_warehouse_orderpoint, loaded before and giving as much or more rights.
+	 mrp.access_uom_uom_user: Group mrp.group_mrp_user implies group base.group_user having rule uom.access_uom_uom_user, loaded before and giving as much or more rights.
+	 mrp.access_uom_category: Group mrp.group_mrp_user implies group base.group_user having rule uom.access_uom_category_user, loaded before and giving as much or more rights.
+	 mrp.access_mrp_document_mrp_manager: Group mrp.group_mrp_manager implies group mrp.group_mrp_user having rule mrp.access_mrp_document_mrp_user, loaded before and giving as much or more rights.
+	 mrp.access_resource_calendar_leaves_manager: Group mrp.group_mrp_manager implies group mrp.group_mrp_user having rule mrp.access_resource_calendar_leaves_user, loaded before and giving as much or more rights.
+	 mrp.access_resource_calendar_leaves_user: Group mrp.group_mrp_user implies group base.group_user having rule resource.access_resource_calendar_leaves_user, loaded before and giving as much or more rights.
+	 mrp.access_resource_calendar_manufacturinguser: Group mrp.group_mrp_user implies group base.group_user having rule resource.access_resource_calendar_user, loaded before and giving as much or more rights.
+	 mrp.access_resource_resource: Group mrp.group_mrp_user implies group base.group_user having rule resource.access_resource_resource_all, loaded before and giving as much or more rights.
+	 mrp.access_stock_move_mrp_manager: Group mrp.group_mrp_manager implies group mrp.group_mrp_user having rule mrp.access_stock_move_mrp_worker, loaded before and giving as much or more rights.
+	 mrp.access_stock_move_mrp_worker: Group mrp.group_mrp_user implies group stock.group_stock_user having rule stock.access_stock_move_user, loaded before and giving as much or more rights.
+	 mrp.access_product_supplierinfo_manager: Group mrp.group_mrp_manager implies group mrp.group_mrp_user having rule mrp.access_product_supplierinfo_user, loaded before and giving as much or more rights.
+	 mrp.access_stock_warehouse: Group mrp.group_mrp_user implies group base.group_user having rule stock.access_stock_warehouse_user, loaded before and giving as much or more rights.
+	 mrp.access_resource_calendar_attendance_manager: Group mrp.group_mrp_manager implies group mrp.group_mrp_user having rule mrp.access_resource_calendar_attendance_mrp_user, loaded before and giving as much or more rights.
+	 mrp.access_mrp_workorder_line_mrp_manager: Group mrp.group_mrp_manager implies group mrp.group_mrp_user having rule mrp.access_mrp_workorder_line_mrp_user, loaded before and giving as much or more rights.
+Module crm: useless ACLs
+	 crm.access_calendar_event_manager: Group sales_team.group_sale_manager implies group base.group_user having rule calendar.access_calendar_event_all_employee, loaded before and giving as much or more rights.
+	 crm.access_calendar_event: Group sales_team.group_sale_salesman implies group base.group_user having rule calendar.access_calendar_event_all_employee, loaded before and giving as much or more rights.
+	 crm.access_calendar_event_type_sale_user: Group base.group_user implies group base.group_user having rule calendar.access_calendar_event_type_all, loaded before and giving as much or more rights.
+	 crm.access_calendar_event_type_sale_salesman: Group sales_team.group_sale_salesman implies group base.group_user having rule calendar.access_calendar_event_type_all, loaded before and giving as much or more rights.
+	 crm.access_crm_lost_reason_salesman: Group sales_team.group_sale_salesman implies group base.group_user having rule crm.access_crm_lost_reason_user, loaded before and giving as much or more rights.
+	 crm.access_res_partner_category_manager: Group sales_team.group_sale_manager implies group sales_team.group_sale_salesman having rule crm.access_res_partner_category, loaded before and giving as much or more rights.
+Module hr_holidays: useless ACLs
+	 hr_holidays.access_calendar_event_hr_user: Group hr_holidays.group_hr_holidays_user implies group base.group_user having rule calendar.access_calendar_event_all_employee, loaded before and giving as much or more rights.
+	 hr_holidays.access_hr_holidays_manager_request: Group hr_holidays.group_hr_holidays_manager implies group hr_holidays.group_hr_holidays_user having rule hr_holidays.access_hr_holidays_user_request, loaded before and giving as much or more rights.
+	 hr_holidays.access_hr_holidays_user_request: Group hr_holidays.group_hr_holidays_user implies group base.group_user having rule hr_holidays.access_hr_holidays_employee_request, loaded before and giving as much or more rights.
+	 hr_holidays.access_hr_holidays_manager_allocation: Group hr_holidays.group_hr_holidays_manager implies group hr_holidays.group_hr_holidays_user having rule hr_holidays.access_hr_holidays_user_allocation, loaded before and giving as much or more rights.
+	 hr_holidays.access_hr_holidays_user_allocation: Group hr_holidays.group_hr_holidays_user implies group base.group_user having rule hr_holidays.access_hr_holidays_employee_allocation, loaded before and giving as much or more rights.
+	 hr_holidays.access_calendar_attendee_hr_user: Group hr_holidays.group_hr_holidays_user implies group base.group_user having rule calendar.access_calendar_attendee_employee, loaded before and giving as much or more rights.
+	 hr_holidays.access_resource_calendar_leaves_user: Group hr_holidays.group_hr_holidays_user implies group base.group_user having rule resource.access_resource_calendar_leaves_user, loaded before and giving as much or more rights.
+	 hr_holidays.access_hr_holidays_status_user: Group hr_holidays.group_hr_holidays_user implies group base.group_user having rule hr_holidays.access_hr_holidays_status_employee, loaded before and giving as much or more rights.
+Module hr_recruitment: useless ACLs
+	 hr_recruitment.access_calendar_event_hruser: Group hr_recruitment.group_hr_recruitment_user implies group base.group_user having rule calendar.access_calendar_event_all_employee, loaded before and giving as much or more rights.
+Module sale: useless ACLs
+	 sale.access_product_group_res_partner_sale_manager: Group sales_team.group_sale_manager implies group sales_team.group_sale_manager having rule sales_team.access_res_partner_sale_manager, loaded before and giving as much or more rights.
+	 sale.access_account_move_manager: Group sales_team.group_sale_manager implies group sales_team.group_sale_salesman having rule sale.access_account_move_salesman, loaded before and giving as much or more rights.
+	 sale.access_product_product_sale_user: Group sales_team.group_sale_salesman implies group base.group_user having rule product.access_product_product_employee, loaded before and giving as much or more rights.
+	 sale.access_product_template_sale_user: Group sales_team.group_sale_salesman implies group base.group_user having rule product.access_product_template_user, loaded before and giving as much or more rights.
+	 sale.access_sale_order_accountant: Group account.group_account_user implies group account.group_account_invoice having rule sale.access_sale_order_invoicing_payments, loaded before and giving as much or more rights.
+	 sale.access_account_account_sale_manager: Group sales_team.group_sale_manager implies group sales_team.group_sale_salesman having rule sale.access_account_account_salesman, loaded before and giving as much or more rights.
+	 sale.access_account_account_salesman: Group sales_team.group_sale_salesman implies group base.group_user having rule account.access_account_account_user, loaded before and giving as much or more rights.
+	 sale.access_account_payment_term_salesman: Group sales_team.group_sale_salesman implies group base.group_user having rule account.access_account_payment_term_partner_manager, loaded before and giving as much or more rights.
+	 sale.access_product_pricelist_sale_user: Group sales_team.group_sale_salesman implies group base.group_user having rule product.access_product_pricelist_user, loaded before and giving as much or more rights.
+	 sale.access_uom_uom_user: Group sales_team.group_sale_salesman implies group base.group_user having rule uom.access_uom_uom_user, loaded before and giving as much or more rights.
+	 sale.access_sale_order_line_accountant: Group account.group_account_user implies group account.group_account_invoice having rule sale.access_sale_order_line_invoicing_payments, loaded before and giving as much or more rights.
+	 sale.access_product_supplierinfo_user: Group sales_team.group_sale_salesman implies group base.group_user having rule product.access_product_supplierinfo_user, loaded before and giving as much or more rights.
+	 sale.access_account_tax_sale_manager: Group sales_team.group_sale_salesman implies group base.group_user having rule account.access_account_tax_internal_user, loaded before and giving as much or more rights.
+	 sale.access_account_tax_user: Group sales_team.group_sale_salesman implies group base.group_user having rule account.access_account_tax_internal_user, loaded before and giving as much or more rights.
+	 sale.access_account_tax_group_sale_manager: Group sales_team.group_sale_salesman implies group base.group_user having rule account.access_account_tax_group_internal_user, loaded before and giving as much or more rights.
+Module account: useless ACLs
+	 account.access_res_partner_group_account_manager: Group account.group_account_manager implies group base.group_user having rule base.access_res_partner_group_user, loaded before and giving as much or more rights.
+	 account.access_account_move_manager: Group account.group_account_manager implies group account.group_account_invoice having rule account.access_account_move_uinvoice, loaded before and giving as much or more rights.
+	 account.access_product_product_account_user: Group account.group_account_readonly implies group base.group_user having rule product.access_product_product_employee, loaded before and giving as much or more rights.
+	 account.access_account_account_invoice: Group account.group_account_invoice implies group base.group_user having rule account.access_account_account_user, loaded before and giving as much or more rights.
+	 account.access_account_account: Group account.group_account_readonly implies group base.group_user having rule account.access_account_account_user, loaded before and giving as much or more rights.
+	 account.access_account_analytic_line_manager: Group account.group_account_manager implies group account.group_account_invoice having rule account.access_account_analytic_line_invoice, loaded before and giving as much or more rights.
+	 account.access_account_move_line_manager: Group account.group_account_manager implies group account.group_account_invoice having rule account.access_account_move_line_uinvoice, loaded before and giving as much or more rights.
+	 account.access_account_tax_invoice: Group account.group_account_invoice implies group base.group_user having rule account.access_account_tax_internal_user, loaded before and giving as much or more rights.
+	 account.access_account_tax_readonly: Group account.group_account_readonly implies group base.group_user having rule account.access_account_tax_internal_user, loaded before and giving as much or more rights.
+	 account.access_account_tax_group: Group account.group_account_invoice implies group base.group_user having rule account.access_account_tax_group_internal_user, loaded before and giving as much or more rights.
+	 account.access_account_tax_group_readonly: Group account.group_account_readonly implies group base.group_user having rule account.access_account_tax_group_internal_user, loaded before and giving as much or more rights.
+	 account.access_account_tax_repartition_line_invoice: Group account.group_account_invoice implies group base.group_user having rule account.access_account_tax_repartition_line_user, loaded before and giving as much or more rights.
+	 account.access_account_tax_repartition_line_readonly: Group account.group_account_readonly implies group base.group_user having rule account.access_account_tax_repartition_line_user, loaded before and giving as much or more rights.
+Module project: useless ACLs
+	 project.access_partner_task_user: Group project.group_project_user implies group base.group_user having rule base.access_res_partner_group_user, loaded before and giving as much or more rights.
+	 project.access_project_project: Group project.group_project_user implies group base.group_user having rule project.access_project_user, loaded before and giving as much or more rights.
+	 project.access_mail_alias: Group project.group_project_manager implies group base.group_user having rule mail.access_mail_alias_user, loaded before and giving as much or more rights.
+	 project.access_resource_calendar_leaves_user: Group project.group_project_user implies group base.group_user having rule resource.access_resource_calendar_leaves_user, loaded before and giving as much or more rights.
+	 project.access_resource_calendar: Group project.group_project_user implies group base.group_user having rule resource.access_resource_calendar_user, loaded before and giving as much or more rights.
+	 project.access_project_task_type_project_user: Group project.group_project_user implies group base.group_user having rule project.access_project_task_type_user, loaded before and giving as much or more rights.
+	 project.access_resource_calendar_attendance: Group project.group_project_user implies group base.group_user having rule resource.access_resource_calendar_attendance_user, loaded before and giving as much or more rights.
+Module purchase: useless ACLs
+	 purchase.access_res_partner_purchase_user: Group purchase.group_purchase_user implies group base.group_user having rule base.access_res_partner_group_user, loaded before and giving as much or more rights.
+	 purchase.access_account_journal_manager: Group purchase.group_purchase_manager implies group purchase.group_purchase_user having rule purchase.access_account_journal, loaded before and giving as much or more rights.
+	 purchase.access_product_product_purchase_user: Group purchase.group_purchase_user implies group base.group_user having rule product.access_product_product_employee, loaded before and giving as much or more rights.
+	 purchase.access_product_template_purchase_user: Group purchase.group_purchase_user implies group base.group_user having rule product.access_product_template_user, loaded before and giving as much or more rights.
+	 purchase.access_purchase_order_manager: Group purchase.group_purchase_manager implies group purchase.group_purchase_user having rule purchase.access_purchase_order, loaded before and giving as much or more rights.
+	 purchase.access_account_account_purchase_manager: Group purchase.group_purchase_manager implies group base.group_user having rule account.access_account_account_user, loaded before and giving as much or more rights.
+	 purchase.access_account_fiscal_position_purchase_user: Group purchase.group_purchase_user implies group base.group_user having rule account.access_account_fiscal_position, loaded before and giving as much or more rights.
+	 purchase.access_purchase_order_line_manager: Group purchase.group_purchase_manager implies group purchase.group_purchase_user having rule purchase.access_purchase_order_line, loaded before and giving as much or more rights.
+	 purchase.access_report_purchase_order: Group purchase.group_purchase_manager implies group purchase.group_purchase_user having rule purchase.access_report_purchase_order_user, loaded before and giving as much or more rights.
+	 purchase.access_account_tax_purchase_user_manager: Group purchase.group_purchase_manager implies group purchase.group_purchase_user having rule purchase.access_account_tax_purchase_user, loaded before and giving as much or more rights.
+	 purchase.access_account_tax_purchase_user: Group purchase.group_purchase_user implies group base.group_user having rule account.access_account_tax_internal_user, loaded before and giving as much or more rights.
+Module hr_expense: useless ACLs
+	 hr_expense.access_hr_expense_manager: Group hr_expense.group_hr_expense_manager implies group hr_expense.group_hr_expense_team_approver having rule hr_expense.access_hr_expense_user, loaded before and giving as much or more rights.
+	 hr_expense.access_hr_expense_user: Group hr_expense.group_hr_expense_team_approver implies group base.group_user having rule hr_expense.access_hr_expense_employee, loaded before and giving as much or more rights.
+	 hr_expense.access_hr_expense_sheet_manager: Group hr_expense.group_hr_expense_manager implies group hr_expense.group_hr_expense_team_approver having rule hr_expense.access_hr_expense_sheet_user, loaded before and giving as much or more rights.
+	 hr_expense.access_hr_expense_sheet_user: Group hr_expense.group_hr_expense_team_approver implies group base.group_user having rule hr_expense.access_hr_expense_sheet_employee, loaded before and giving as much or more rights.
+Module repair: useless ACLs
+	 repair.access_stock_production_lot_user: Group stock.group_stock_user implies group stock.group_stock_user having rule stock.access_stock_production_lot_user, loaded before and giving as much or more rights.
+	 repair.access_account_tax_user: Group stock.group_stock_user implies group base.group_user having rule account.access_account_tax_internal_user, loaded before and giving as much or more rights.
+Module stock: useless ACLs
+	 stock.access_product_product_stock_user: Group stock.group_stock_user implies group base.group_user having rule product.access_product_product_employee, loaded before and giving as much or more rights.
+	 stock.access_product_template_stock_user: Group stock.group_stock_user implies group base.group_user having rule product.access_product_template_user, loaded before and giving as much or more rights.
+	 stock.access_stock_picking_manager: Group stock.group_stock_manager implies group stock.group_stock_user having rule stock.access_stock_picking_user, loaded before and giving as much or more rights.
+	 stock.access_barcode_nomenclature_stock_user: Group stock.group_stock_user implies group base.group_user having rule barcodes.access_barcode_nomenclature_user, loaded before and giving as much or more rights.
+	 stock.access_barcode_rule_stock_user: Group stock.group_stock_user implies group base.group_user having rule barcodes.access_barcode_rule_user, loaded before and giving as much or more rights.
+	 stock.access_stock_quant_package_stock_manager: Group stock.group_stock_manager implies group stock.group_stock_user having rule stock.access_stock_quant_package_stock_user, loaded before and giving as much or more rights.
+	 stock.access_stock_picking_type_user: Group stock.group_stock_user implies group base.group_user having rule stock.access_stock_picking_type_all, loaded before and giving as much or more rights.
+	 stock.access_stock_move_line_manager: Group stock.group_stock_manager implies group stock.group_stock_user having rule stock.access_stock_move_line_user, loaded before and giving as much or more rights.
+	 stock.access_stock_move_line_user: Group stock.group_stock_user implies group base.group_user having rule stock.access_stock_move_line_all, loaded before and giving as much or more rights.
+     # WTF base.group_user has rights to modify a stock move line?
+	 stock.access_stock_quant_manager: Group stock.group_stock_manager implies group stock.group_stock_user having rule stock.access_stock_quant_user, loaded before and giving as much or more rights.
+	 stock.access_stock_quant_user: Group stock.group_stock_user implies group base.group_user having rule stock.access_stock_quant_all, loaded before and giving as much or more rights.
+	 stock.access_stock_package_level_stock_manager: Group stock.group_stock_manager implies group stock.group_stock_user having rule stock.access_stock_package_level_stock_user, loaded before and giving as much or more rights.
+	 stock.access_stock_rule_user: Group stock.group_stock_user implies group base.group_user having rule stock.access_stock_rule_internal, loaded before and giving as much or more rights.
+Module hr_timesheet: useless ACLs
+	 hr_timesheet.access_project_project: Group hr_timesheet.group_hr_timesheet_user implies group base.group_user having rule project.access_project_user, loaded before and giving as much or more rights.
+	 hr_timesheet.access_uom_uom_hr_timesheet: Group hr_timesheet.group_hr_timesheet_user implies group base.group_user having rule uom.access_uom_uom_user, loaded before and giving as much or more rights.
+Module purchase_requisition: useless ACLs
+	 purchase_requisition.access_purchase_requisition_manager: Group purchase.group_purchase_manager implies group purchase.group_purchase_user having rule purchase_requisition.access_purchase_requisition, loaded before and giving as much or more rights.
+	 purchase_requisition.access_purchase_requisition_line_manager: Group purchase.group_purchase_manager implies group purchase.group_purchase_user having rule purchase_requisition.access_purchase_requisition_line_purchase_user, loaded before and giving as much or more rights.
+Module sale_mrp: useless ACLs
+	 sale_mrp.access_sale_order_manufacturing_user: Group mrp.group_mrp_user implies group stock.group_stock_user having rule sale_stock.access_sale_order_stock_worker, loaded before and giving as much or more rights.
+	 sale_mrp.access_sale_order_line_manufacturing_user: Group mrp.group_mrp_user implies group stock.group_stock_user having rule sale_stock.access_sale_order_line_stock_worker, loaded before and giving as much or more rights.
+Module sales_team: useless ACLs
+	 sales_team.access_crm_team_user: Group sales_team.group_sale_salesman implies group base.group_user having rule sales_team.access_crm_team, loaded before and giving as much or more rights.
+Module survey: useless ACLs
+	 survey.access_survey_survey_manager: Group survey.group_survey_manager implies group survey.group_survey_user having rule survey.access_survey_survey_user, loaded before and giving as much or more rights.
+	 survey.access_survey_question_answer_survey_manager: Group survey.group_survey_manager implies group survey.group_survey_user having rule survey.access_survey_question_answer_survey_user, loaded before and giving as much or more rights.
+	 survey.access_survey_question_survey_manager: Group survey.group_survey_manager implies group survey.group_survey_user having rule survey.access_survey_question_survey_user, loaded before and giving as much or more rights.
+	 survey.access_survey_user_input_survey_manager: Group survey.group_survey_manager implies group survey.group_survey_user having rule survey.access_survey_user_input_survey_user, loaded before and giving as much or more rights.
+	 survey.access_survey_user_input_line_survey_manager: Group survey.group_survey_manager implies group survey.group_survey_user having rule survey.access_survey_user_input_line_survey_user, loaded before and giving as much or more rights.
+Module purchase_stock: useless ACLs
+	 purchase_stock.access_stock_picking_purchase_user_manager: Group purchase.group_purchase_manager implies group purchase.group_purchase_user having rule purchase_stock.access_stock_picking_purchase_user, loaded before and giving as much or more rights.
+	 purchase_stock.access_stock_location_purchase_user_manager: Group purchase.group_purchase_manager implies group purchase.group_purchase_user having rule purchase_stock.access_stock_location_purchase_user, loaded before and giving as much or more rights.
+	 purchase_stock.access_stock_location_purchase_user: Group purchase.group_purchase_user implies group base.group_user having rule stock.access_stock_location_user, loaded before and giving as much or more rights.
+	 purchase_stock.access_stock_warehouse_orderpoint_manager: Group purchase.group_purchase_manager implies group purchase.group_purchase_user having rule purchase_stock.access_stock_warehouse_orderpoint_user, loaded before and giving as much or more rights.
+	 purchase_stock.access_stock_warehouse_purchase_user_manager: Group purchase.group_purchase_manager implies group purchase.group_purchase_user having rule purchase_stock.access_stock_warehouse_purchase_user, loaded before and giving as much or more rights.
+	 purchase_stock.access_stock_warehouse_purchase_user: Group purchase.group_purchase_user implies group base.group_user having rule stock.access_stock_warehouse_user, loaded before and giving as much or more rights.
+Module stock_account: useless ACLs
+	 stock_account.access_account_account_stock_manager: Group stock.group_stock_manager implies group base.group_user having rule account.access_account_account_user, loaded before and giving as much or more rights.
+Module calendar: useless ACLs
+	 calendar.access_calendar_contacts: Group base.group_system implies group base.group_user having rule calendar.access_calendar_contacts_all, loaded before and giving as much or more rights.
+Module base: useless ACLs
+	 base.access_ir_default_group_system: Group base.group_system implies group base.group_user having rule base.access_ir_default_group_user, loaded before and giving as much or more rights.
+	 base.access_ir_filter_erp_manager: Group base.group_erp_manager implies group base.group_user having rule base.access_ir_filter_user, loaded before and giving as much or more rights.
+	 base.access_reset_view_arch_wizard_group_system: Group base.group_system implies group base.group_erp_manager having rule base.access_reset_view_arch_wizard, loaded before and giving as much or more rights.
+	 base.access_ir_translation_group_system: Group base.group_system implies group base.group_user having rule base.access_ir_translation_all, loaded before and giving as much or more rights.
+Module mail: useless ACLs
+	 mail.access_mail_alias_system: Group base.group_system implies group base.group_user having rule mail.access_mail_alias_user, loaded before and giving as much or more rights.
+Module event: useless ACLs
+	 event.access_event_stage_manager: Group event.group_event_manager implies group event.group_event_user having rule event.access_event_stage_user, loaded before and giving as much or more rights.
+Module point_of_sale: useless ACLs
+	 point_of_sale.access_stock_location_manager: Group point_of_sale.group_pos_manager implies group base.group_user having rule stock.access_stock_location_user, loaded before and giving as much or more rights.
+	 point_of_sale.access_stock_warehouse_manager: Group point_of_sale.group_pos_manager implies group point_of_sale.group_pos_user having rule point_of_sale.access_stock_warehouse_pos_user, loaded before and giving as much or more rights.
+Module sale_stock: useless ACLs
+	 sale_stock.access_stock_location_sale_manager: Group sales_team.group_sale_manager implies group sales_team.group_sale_salesman having rule sale_stock.access_stock_location_user, loaded before and giving as much or more rights.
+	 sale_stock.access_stock_location_user: Group sales_team.group_sale_salesman implies group base.group_user having rule stock.access_stock_location_user, loaded before and giving as much or more rights.
+	 sale_stock.access_stock_rule: Group sales_team.group_sale_salesman implies group base.group_user having rule stock.access_stock_rule_internal, loaded before and giving as much or more rights. 
+	 sale_stock.access_stock_warehouse_user: Group sales_team.group_sale_salesman implies group base.group_user having rule stock.access_stock_warehouse_user, loaded before and giving as much or more rights.
+Module website_livechat: useless ACLs
+	 website_livechat.access_im_livechat_channel_public: Rule im_livechat.access_livechat_channel is loaded before and gives as much or more rights.
+Module lunch: useless ACLs
+	 lunch.lunch_alert_manager: Group lunch.group_lunch_manager implies group lunch.group_lunch_user having rule lunch.lunch_alert_user, loaded before and giving as much or more rights.
+	 lunch.order_manager: Group lunch.group_lunch_manager implies group lunch.group_lunch_user having rule lunch.order_user, loaded before and giving as much or more rights.
+Module mass_mailing: useless ACLs
+	 mass_mailing.access_mailing_trace_mm_user: Group mass_mailing.group_mass_mailing_user implies group base.group_user having rule mass_mailing.access_mailing_trace_user, loaded before and giving as much or more rights.
+	 mass_mailing.access_utm_source: Group mass_mailing.group_mass_mailing_user implies group base.group_user having rule utm.access_utm_source_user, loaded before and giving as much or more rights.
+Module website_crm_partner_assign: useless ACLs
+	 website_crm_partner_assign.access_res_partner_grade_invoicing_payment: Group account.group_account_invoice implies group base.group_user having rule website_crm_partner_assign.access_res_partner_grade_employee, loaded before and giving as much or more rights.
+	 website_crm_partner_assign.access_res_partner_grade_invoicing_payment_readonly: Group account.group_account_readonly implies group base.group_user having rule website_crm_partner_assign.access_res_partner_grade_employee, loaded before and giving as much or more rights.
+Module payment: useless ACLs
+	 payment.payment_method_system: Group base.group_system implies group base.group_user having rule payment.payment_method_user, loaded before and giving as much or more rights.
+Module website_sale: useless ACLs
+	 website_sale.access_product_image_sale: Group sales_team.group_sale_manager implies group website.group_website_publisher having rule website_sale.access_product_image_publisher, loaded before and giving as much or more rights.
+Module resource: useless ACLs
+	 resource.access_resource_calendar_leaves: Group base.group_system implies group base.group_user having rule resource.access_resource_calendar_leaves_user, loaded before and giving as much or more rights.
+	 resource.access_resource_resource: Group base.group_system implies group base.group_user having rule resource.access_resource_resource_all, loaded before and giving as much or more rights.
+Module hr_contract: useless ACLs
+	 hr_contract.access_hr_resource_manager: Group hr.group_hr_manager implies group hr.group_hr_user having rule hr.access_hr_employee_resource_user, loaded before and giving as much or more rights.
+Module hr_skills: useless ACLs
+	 hr_skills.access_hr_resume_line: Group hr.group_hr_user implies group base.group_user having rule hr_skills.access_hr_resume_line_employee, loaded before and giving as much or more rights.
+	 hr_skills.access_hr_employee_skill: Group hr.group_hr_user implies group base.group_user having rule hr_skills.access_hr_employee_skill_employee, loaded before and giving as much or more rights.
+Module website: useless ACLs
+	 website.access_website_track_system: Group base.group_system implies group website.group_website_designer having rule website.access_website_track_designer, loaded before and giving as much or more rights.
