@@ -201,6 +201,26 @@ class AccountInvoiceReport(models.Model):
             self._table, self._select(), self._from(), self._where(), self._group_by()
         ))
 
+<<<<<<< HEAD
+=======
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        @lru_cache(maxsize=32)  # cache to prevent a SQL query for each data point
+        def get_rate(currency_id):
+            return self.env['res.currency']._get_conversion_rate(
+                self.env['res.currency'].browse(currency_id),
+                self.env.company.currency_id,
+                self.env.company,
+                self._fields['invoice_date'].today()
+            )
+        result = super(AccountInvoiceReport, self).read_group(domain, fields, set(groupby) | {'currency_id'}, offset, limit, orderby, lazy)
+        for res in result:
+            if res.get('currency_id') and self.env.company.currency_id.id != res['currency_id'][0]:
+                for field in {'amount_total', 'price_average', 'price_subtotal', 'residual'} & set(res):
+                    res[field] = self.env.company.currency_id.round(res[field] * get_rate(res['currency_id'][0]))
+        return result
+
+>>>>>>> d86abe3293f... temp
 
 class ReportInvoiceWithPayment(models.AbstractModel):
     _name = 'report.account.report_invoice_with_payments'
