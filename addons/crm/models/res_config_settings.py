@@ -9,6 +9,7 @@ class ResConfigSettings(models.TransientModel):
 
     group_use_lead = fields.Boolean(string="Leads", implied_group='crm.group_use_lead')
     group_use_recurring_revenues = fields.Boolean(string="Recurring Revenues", implied_group='crm.group_use_recurring_revenues')
+    is_membership_multi = fields.Boolean(string='Multi Teams', config_parameter='sales_team.membership_multi')
     module_crm_iap_lead = fields.Boolean("Generate new leads based on their country, industries, size, etc.")
     module_crm_iap_lead_website = fields.Boolean("Create Leads/Opportunities from your website's traffic")
     module_crm_iap_lead_enrich = fields.Boolean("Enrich your leads automatically with company data based on their email address.")
