@@ -9,7 +9,7 @@ from itertools import groupby
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import date_utils, float_round, float_is_zero, format_datetime
+from odoo.tools import date_utils, float_compare, float_round, float_is_zero, format_datetime
 
 
 class MrpProduction(models.Model):
@@ -392,13 +392,19 @@ class MrpProduction(models.Model):
             elif all(move.state == 'cancel' for move in production.move_raw_ids):
                 production.state = 'cancel'
             elif all(move.state in ['cancel', 'done'] for move in production.move_raw_ids):
-                production.state = 'done'
+                if (
+                    production.bom_id.consumption == 'flexible'
+                    and float_compare(production.qty_produced, production.product_qty, precision_rounding=production.product_uom_id.rounding) == -1
+                ):
+                    production.state = 'progress'
+                else:
+                    production.state = 'done'
             elif production.move_finished_ids.filtered(lambda m: m.state not in ('cancel', 'done') and m.product_id.id == production.product_id.id)\
                  and (production.qty_produced >= production.product_qty)\
                  and (not production.routing_id or all(wo_state in ('cancel', 'done') for wo_state in production.workorder_ids.mapped('state'))):
                 production.state = 'to_close'
             elif production.workorder_ids and any(wo_state in ('progress') for wo_state in production.workorder_ids.mapped('state'))\
-                 or production.qty_produced > 0 and production.qty_produced < production.product_uom_qty:
+                 or production.qty_produced > 0 and production.qty_produced < production.product_qty:
                 production.state = 'progress'
             elif production.workorder_ids:
                 production.state = 'planned'
@@ -407,10 +413,9 @@ class MrpProduction(models.Model):
 
             # Compute reservation state
             # State where the reservation does not matter.
-            if production.state in ('draft', 'done', 'cancel'):
-                production.reservation_state = False
+            production.reservation_state = False
             # Compute reservation state according to its component's moves.
-            else:
+            if production.state not in ('draft', 'done', 'cancel'):
                 relevant_move_state = production.move_raw_ids._get_relevant_state_among_moves()
                 if relevant_move_state == 'partially_available':
                     if production.routing_id and production.routing_id.operation_ids and production.bom_id.ready_to_produce == 'asap':
