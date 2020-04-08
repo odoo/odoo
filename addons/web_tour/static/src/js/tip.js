@@ -11,8 +11,8 @@ var Tip = Widget.extend({
     xmlDependencies: ['/web_tour/static/src/xml/tip.xml'],
     events: {
         click: '_onTipClicked',
-        mouseenter: "_to_info_mode",
-        mouseleave: "_to_bubble_mode",
+        mouseenter: '_onMouseEnter',
+        mouseleave: '_onMouseLeave',
     },
     /**
      * @param {Widget} parent
@@ -199,8 +199,8 @@ var Tip = Widget.extend({
                 this._unbind_anchor_events();
             }
         }).bind(this));
-        this.$anchor.on('mouseenter.anchor', this._to_info_mode.bind(this));
-        this.$anchor.on('mouseleave.anchor', this._to_bubble_mode.bind(this));
+        this.$anchor.on('mouseenter.anchor', () => this._to_info_mode());
+        this.$anchor.on('mouseleave.anchor', () => this._to_bubble_mode());
     },
     _unbind_anchor_events: function () {
         this.$anchor.off(".anchor");
@@ -301,6 +301,18 @@ var Tip = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onMouseEnter: function () {
+        this._to_info_mode();
+    },
+    /**
+     * @private
+     */
+    _onMouseLeave: function () {
+        this._to_bubble_mode();
+    },
     /**
      * On touch devices, closes the tip when clicked.
      *
