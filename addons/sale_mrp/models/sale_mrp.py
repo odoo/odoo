@@ -97,10 +97,35 @@ class SaleOrderLine(models.Model):
         # We don't try to be too smart and keep a simple approach: we compare the quantity before
         # and after update, and return the difference. We don't take into account what was already
         # sent, or any other exceptional case.
+<<<<<<< HEAD
         bom = self.env['mrp.bom']._bom_find(product=self.product_id, bom_type='phantom')
         if bom and 'previous_product_uom_qty' in self.env.context:
             return previous_product_uom_qty and previous_product_uom_qty.get(self.id, 0.0)
         return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
+=======
+        bom = self.env['mrp.bom']._bom_find(product=self.product_id)
+        if bom and bom.type == 'phantom' and 'previous_product_uom_qty' in self.env.context:
+            return self.env.context['previous_product_uom_qty'].get(self.id, 0.0)
+        return super(SaleOrderLine, self)._get_qty_procurement()
+
+    @api.multi
+    @api.depends('product_id', 'move_ids.state')
+    def _compute_qty_delivered_method(self):
+        lines = self.env['sale.order.line']
+        for line in self:
+            bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id)
+            if bom and bom.type == 'phantom' and line.order_id.state == 'sale':
+                bom_delivered = all(
+                    [
+                        move.state == "done"
+                        for move in line.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != "cancel")
+                    ]
+                )
+                if not bom_delivered:
+                    line.qty_delivered_method = 'manual'
+                    lines |= line
+        super(SaleOrderLine, self - lines)._compute_qty_delivered_method()
+>>>>>>> 186f9d50ed0... temp
 
 
 class AccountInvoiceLine(models.Model):
