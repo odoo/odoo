@@ -25,11 +25,12 @@ class UserError(Exception):
     state of a record. Semantically comparable to the generic 400 HTTP status codes.
     """
 
-    def __init__(self, message):
+    def __init__(self, message, title=None):
         """
         :param message: exception message and frontend modal content
+        :param title: frontend modal title, default is the error class name
         """
-        super().__init__(message)
+        super().__init__(message, title)
 
     @property
     def name(self):
@@ -74,8 +75,8 @@ class AccessDenied(UserError):
         When you try to log with a wrong password.
     """
 
-    def __init__(self, message="Access Denied"):
-        super().__init__(message)
+    def __init__(self, message="Access Denied", title=None):
+        super().__init__(message, title)
         self.with_traceback(None)
         self.__cause__ = None
         self.traceback = ('', '', '')

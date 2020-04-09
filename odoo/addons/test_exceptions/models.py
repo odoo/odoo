@@ -38,6 +38,9 @@ class m(models.Model):
     def generate_validation_error(self):
         raise odoo.exceptions.ValidationError('description')
 
+    def generate_user_error_with_title(self):
+        raise odoo.exceptions.UserError('description', title="Very wrong")
+
     def generate_redirect_warning_safe_eval(self):
         self.generate_safe_eval(self.generate_redirect_warning)
 
@@ -61,6 +64,9 @@ class m(models.Model):
 
     def generate_validation_error_safe_eval(self):
         self.generate_safe_eval(self.generate_validation_error)
+
+    def generate_user_error_with_title_safe_eval(self):
+        self.generate_safe_eval(self.generate_user_error_with_title)
 
     def generate_safe_eval(self, f):
         globals_dict = { 'generate': f }

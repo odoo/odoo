@@ -221,7 +221,7 @@ var CrashManager = AbstractService.extend({
             error = _.extend({}, error, {
                 data: _.extend({}, error.data, {
                     message: error.data.arguments[0],
-                    title: this.odooExceptionTitleMap[error.data.name],
+                    title: error.data.arguments[1] || this.odooExceptionTitleMap[error.data.name],
                 }),
             });
             this.show_warning(error);
