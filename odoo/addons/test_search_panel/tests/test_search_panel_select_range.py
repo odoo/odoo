@@ -48,7 +48,10 @@ class TestSelectRange(odoo.tests.TransactionCase):
         r1_id, _, r3_id, _ = records.ids
 
         # counters
-        result = self.SourceModel.search_panel_select_range('folder_id')
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            enable_counters=True,
+        )
         self.assertEqual(
             result['values'],
             [
@@ -66,6 +69,7 @@ class TestSelectRange(odoo.tests.TransactionCase):
         # counters and search domain
         result = self.SourceModel.search_panel_select_range(
             'folder_id',
+            enable_counters=True,
             search_domain=[['id', 'in', [r1_id, r3_id]]],
         )
         self.assertEqual(
@@ -83,10 +87,7 @@ class TestSelectRange(odoo.tests.TransactionCase):
         )
 
         # no counters
-        result = self.SourceModel.search_panel_select_range(
-            'folder_id',
-            disable_counters=True,
-        )
+        result = self.SourceModel.search_panel_select_range('folder_id')
         self.assertEqual(
             result['values'],
             [
@@ -104,7 +105,6 @@ class TestSelectRange(odoo.tests.TransactionCase):
         # no counters and search domain
         result = self.SourceModel.search_panel_select_range(
             'folder_id',
-            disable_counters=True,
             search_domain=[['id', 'in', [r1_id, r3_id]]],
         )
         self.assertEqual(
@@ -162,7 +162,10 @@ class TestSelectRange(odoo.tests.TransactionCase):
         ])
 
         # counters
-        result = self.SourceModel.search_panel_select_range('folder_id')
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            enable_counters=True,
+        )
         self.assertEqual(
             result['values'],
             [
@@ -220,7 +223,10 @@ class TestSelectRange(odoo.tests.TransactionCase):
         r1_id, _, r3_id, _ = records.ids
 
         # counters
-        result = self.SourceModel.search_panel_select_range('categ_id')
+        result = self.SourceModel.search_panel_select_range(
+            'categ_id',
+            enable_counters=True,
+        )
         self.assertEqual(
             result['values'],
             [
@@ -233,6 +239,7 @@ class TestSelectRange(odoo.tests.TransactionCase):
         # counters and search domain
         result = self.SourceModel.search_panel_select_range(
             'categ_id',
+            enable_counters=True,
             search_domain=[['id', 'in', [r1_id, r3_id]]],
         )
         self.assertEqual(
@@ -245,10 +252,7 @@ class TestSelectRange(odoo.tests.TransactionCase):
         )
 
         # no counters
-        result = self.SourceModel.search_panel_select_range(
-            'categ_id',
-            disable_counters=True,
-        )
+        result = self.SourceModel.search_panel_select_range('categ_id')
         self.assertEqual(
             result['values'],
             [
@@ -261,7 +265,6 @@ class TestSelectRange(odoo.tests.TransactionCase):
         # no counters and search domain
         result = self.SourceModel.search_panel_select_range(
             'categ_id',
-            disable_counters=True,
             search_domain=[['id', 'in', [r1_id, r3_id]]],
         )
         self.assertEqual(
@@ -297,7 +300,10 @@ class TestSelectRange(odoo.tests.TransactionCase):
         r1_id, _ = records.ids
 
         # counters
-        result = self.SourceModel.search_panel_select_range('state')
+        result = self.SourceModel.search_panel_select_range(
+            'state',
+            enable_counters=True,
+        )
         self.assertEqual(
             result['values'],
             [
@@ -307,10 +313,7 @@ class TestSelectRange(odoo.tests.TransactionCase):
         )
 
         # no counters
-        result = self.SourceModel.search_panel_select_range(
-            'state',
-            disable_counters=True,
-        )
+        result = self.SourceModel.search_panel_select_range('state')
         self.assertEqual(
             result['values'],
             [
@@ -322,6 +325,7 @@ class TestSelectRange(odoo.tests.TransactionCase):
         # counters and search domain
         result = self.SourceModel.search_panel_select_range(
             'state',
+            enable_counters=True,
             search_domain=[['id', '=', r1_id]],
         )
         self.assertEqual(
@@ -335,7 +339,6 @@ class TestSelectRange(odoo.tests.TransactionCase):
         # no counters and search domain
         result = self.SourceModel.search_panel_select_range(
             'state',
-            disable_counters=True,
             search_domain=[['id', '=', r1_id]],
         )
         self.assertEqual(

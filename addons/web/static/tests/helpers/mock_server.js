@@ -627,7 +627,7 @@ var MockServer = Class.extend({
     _mockSearchPanelRange: function (model, fieldName, kwargs = {}) {
         const field = this.data[model].fields[fieldName];
         let localCounters = {};
-        if (field.type !== 'many2many' && !kwargs.disable_counters) {
+        if (field.type !== 'many2many' && kwargs.enable_counters) {
             localCounters = this._mockSearchPanelLocalCounters(model, fieldName, kwargs);
         }
         if (['many2one', 'many2many'].includes(field.type)) {
@@ -690,7 +690,7 @@ var MockServer = Class.extend({
         }
         const rangeKwargs = Object.assign({ comodelFieldNames }, kwargs);
         const valuesRange = this._mockSearchPanelRange(model, fieldName, rangeKwargs);
-        if (parentName && !kwargs.disable_counters) {
+        if (parentName && kwargs.enable_counters) {
             this._mockSearchPanelGlobalCounters(valuesRange, parentName);
         }
         return {
@@ -748,7 +748,7 @@ var MockServer = Class.extend({
         }
         const rangeKwargs = Object.assign({ comodelFieldNames }, kwargs);
         const valuesRange = this._mockSearchPanelRange(model, fieldName, rangeKwargs);
-        if (field.type === 'many2many' && !kwargs.disable_counters) {
+        if (field.type === 'many2many' && kwargs.enable_counters) {
             const modelDomain = Domain.prototype.normalizeArray([
                 ...(kwargs.search_domain || []),
                 ...(kwargs.category_domain || []),

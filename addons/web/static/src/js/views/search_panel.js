@@ -44,7 +44,7 @@ function _processSearchPanelNode(node, fields) {
         const section = {
             color: childNode.attrs.color,
             description: childNode.attrs.string || fields[fieldName].string,
-            disableCounters: !!pyUtils.py_eval(childNode.attrs.disable_counters || '0'),
+            enableCounters: !!pyUtils.py_eval(childNode.attrs.enable_counters || '0'),
             fieldName: fieldName,
             icon: childNode.attrs.icon,
             id: sectionId,
@@ -390,14 +390,14 @@ const SearchPanel = Widget.extend({
         const proms = [];
         for (const category of Object.values(this.categories)) {
             const field = this.fields[category.fieldName];
-            if (force || !category.disableCounters) {
+            if (force || category.enableCounters) {
                 const prom = this._rpc({
                     method: 'search_panel_select_range',
                     model: this.model,
                     args: [category.fieldName],
                     kwargs: {
                         category_domain: this._getCategoryDomain(category.id),
-                        disable_counters: category.disableCounters,
+                        enable_counters: category.enableCounters,
                         search_domain: this.searchDomain,
                     },
                 }).then(({ parent_field, values }) => {
@@ -433,7 +433,7 @@ const SearchPanel = Widget.extend({
                 kwargs: {
                     category_domain: categoryDomain,
                     comodel_domain: Domain.prototype.stringToArray(filter.domain, evalContext),
-                    disable_counters: filter.disableCounters,
+                    enable_counters: filter.enableCounters,
                     filter_domain: this._getFilterDomain(filter.id),
                     group_by: filter.groupBy || false,
                     group_domain: this._getGroupDomain(filter),
@@ -535,10 +535,10 @@ const SearchPanel = Widget.extend({
      * @returns {(Array{}|Array[]|undefined)}
      */
     _getGroupDomain(filter) {
-        const { fieldName, groups, disableCounters } = filter;
+        const { fieldName, groups, enableCounters } = filter;
         const { type: fieldType } = this.fields[fieldName];
 
-        if (disableCounters || !groups) {
+        if (!enableCounters || !groups) {
             switch (fieldType) {
                 case 'many2one': return [];
                 case 'many2many': return {};
