@@ -16,7 +16,7 @@ var Widget = require('web.Widget');
  */
 var createViewer = function (params) {
     var parent = new Widget();
-    var viewer = new DocumentViewer(parent, params.attachments, params.attachmentID);
+    var viewer = new DocumentViewer(parent, params.attachments, params.attachmentID, params.saveRotateImage);
 
     var mockRPC = function (route) {
         if (route === '/web/static/lib/pdfjs/web/viewer.html?file=/web/content/1?model%3Dir.attachment') {
@@ -28,7 +28,7 @@ var createViewer = function (params) {
         if (route === '/web/content/4?model=ir.attachment') {
             return Promise.resolve();
         }
-        if (route === '/web/image/6?unique=1&signature=999&model=ir.attachment') {
+        if (route === '/web/image/6?unique=undefined&signature=999&model=ir.attachment') {
             return Promise.resolve();
         }
     };
@@ -166,7 +166,7 @@ QUnit.module('DocumentViewer', {
 
         assert.strictEqual(viewer.$(".o_image_caption:contains('image.jpg')").length, 1,
             "the viewer be on the right attachment");
-        assert.containsOnce(viewer, 'img[data-src="/web/image/6?unique=1&signature=999&model=ir.attachment"]',
+        assert.containsOnce(viewer, 'img[data-src="/web/image/6?unique=undefined&signature=999&model=ir.attachment"]',
             "there should be a video player");
 
         viewer.destroy();
@@ -222,6 +222,33 @@ QUnit.module('DocumentViewer', {
             "there should be a fileType 'youtu'");
         assert.strictEqual(this.attachments[1].youtube, 'FYqW0Gdwbzk',
             "there should be a youtube token");
+
+        viewer.destroy();
+    });
+    QUnit.test('save rotate image', async function (assert) {
+        assert.expect(3);
+
+        var viewer = await createViewer({
+            attachmentID: 6,
+            attachments: this.attachments,
+            saveRotateImage: true,
+            mockRPC: function (route, args) {
+                if (args.method === "rotate_image") {
+                    assert.strictEqual(args.kwargs.angle, 90, "Image should be rotate to 90 Degree");
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(viewer.$(".o_image_caption:contains('image.jpg')").length, 1,
+            "the viewer be on the right attachment");
+        assert.containsOnce(viewer, 'img[data-src="/web/image/6?unique=undefined&signature=999&model=ir.attachment"]',
+            "there should be a image in viewer");
+
+        await testUtils.dom.click(viewer.$('.o_rotate'));
+
+        await testUtils.dom.click(viewer.$('.o_close_btn'));
 
         viewer.destroy();
     });
