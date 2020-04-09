@@ -63,9 +63,10 @@ class MrpProduction(models.Model):
 
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain="[('bom_ids', '!=', False), ('bom_ids.active', '=', True), ('bom_ids.type', '=', 'normal'), ('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="[('id', 'in', allowed_product_ids)]",
         readonly=True, required=True, check_company=True,
         states={'draft': [('readonly', False)]})
+    allowed_product_ids = fields.Many2many('product.product', compute='_compute_allowed_product_ids')
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
         'Quantity To Produce',
@@ -237,6 +238,22 @@ class MrpProduction(models.Model):
 
     mrp_production_child_count = fields.Integer("Number of generated MO", compute='_compute_mrp_production_child_count')
     mrp_production_source_count = fields.Integer("Number of source MO", compute='_compute_mrp_production_source_count')
+
+    @api.depends('product_id', 'bom_id', 'company_id')
+    def _compute_allowed_product_ids(self):
+        for production in self:
+            product_domain = [
+                ('type', 'in', ['product', 'consu']),
+                '|',
+                    ('company_id', '=', False),
+                    ('company_id', '=', production.company_id.id)
+            ]
+            if production.bom_id:
+                if production.bom_id.product_id:
+                    product_domain += [('id', '=', production.bom_id.product_id.id)]
+                else:
+                    product_domain += [('id', 'in', production.bom_id.product_tmpl_id.product_variant_ids.ids)]
+            production.allowed_product_ids = self.env['product.product'].search(product_domain)
 
     @api.depends('procurement_group_id.stock_move_ids.created_production_id')
     def _compute_mrp_production_child_count(self):
@@ -485,8 +502,10 @@ class MrpProduction(models.Model):
 
     @api.onchange('bom_id')
     def _onchange_bom_id(self):
+        if not self.product_id and self.bom_id:
+            self.product_id = self.bom_id.product_id or self.bom_id.product_tmpl_id.product_variant_ids[0]
         self.product_qty = self.bom_id.product_qty
-        self.product_uom_id = self.bom_id.product_uom_id.id
+        self.product_uom_id = self.bom_id and self.bom_id.product_uom_id.id or self.product_id.uom_id.id
         self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
         self.picking_type_id = self.bom_id.picking_type_id or self.picking_type_id
 
@@ -801,7 +820,10 @@ class MrpProduction(models.Model):
     def action_confirm(self):
         self._check_company()
         for production in self:
-            production.consumption = production.bom_id.consumption
+            if not production.bom_id:
+                production.consumption = 'flexible'
+            else:
+                production.consumption = production.bom_id.consumption
             if not production.move_raw_ids:
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
             production._generate_finished_moves()
