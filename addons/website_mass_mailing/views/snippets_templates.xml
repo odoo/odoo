@@ -35,15 +35,13 @@
 </template>
 
 <template id="s_newsletter_block" name="Newsletter block">
-    <section class="s_newsletter_block pt64 pb64 oe_img_bg" style="background-image: url('/web/image/website.library_image_17');">
+    <section class="s_newsletter_block bg-200 pt32 pb32">
         <div class="container">
             <div class="row">
-                <div class="col-lg-7 offset-lg-5 pt32 pb32 bg-white-75">
-                    <div class="text-center">
-                        <h1 class="text-uppercase font-weight-bold">Always First.</h1>
-                        <p>Be the first to find out all the latest news, products and trends.</p>
-                        <t t-call="website_mass_mailing.s_newsletter_subscribe_form"/>
-                    </div>
+                <div class="col-lg-8 offset-lg-2 pt24 pb24">
+                    <h2>Always First.</h2>
+                    <p>Be the first to find out all the latest news, products and trends.</p>
+                    <t t-call="website_mass_mailing.s_newsletter_subscribe_form"/>
                 </div>
             </div>
         </div>
