@@ -48,7 +48,10 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         r1_id, r2_id, _, _ = records.ids
 
         # counters
-        result = self.SourceModel.search_panel_select_multi_range('tag_id')
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_id',
+            enable_counters=True,
+        )
         self.assertEqual(
             result,
             [
@@ -61,6 +64,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # counters and search domain
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_id',
+            enable_counters=True,
             search_domain=[['id', 'in', [r1_id, r2_id]]],
         )
         self.assertEqual(
@@ -73,10 +77,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         )
 
         # no counters
-        result = self.SourceModel.search_panel_select_multi_range(
-            'tag_id',
-            disable_counters=True,
-        )
+        result = self.SourceModel.search_panel_select_multi_range('tag_id')
         self.assertEqual(
             result,
             [
@@ -86,10 +87,8 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ],
         )
 
-        # no counters and search domain
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_id',
-            disable_counters=True,
             search_domain=[['id', 'in', [r1_id, r2_id]]],
         )
         self.assertEqual(
@@ -101,10 +100,10 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
-        # many2one group_by
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_id',
-            group_by='folder_id'
+            enable_counters=True,
+            group_by='folder_id',
         )
         self.assertEqual(
             result,
@@ -121,6 +120,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # selection group_by
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_id',
+            enable_counters=True,
             group_by='status'
         )
         self.assertEqual(
@@ -138,6 +138,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # other group_by
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_id',
+            enable_counters=True,
             group_by='color'
         )
         self.assertEqual(
@@ -189,7 +190,10 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         r1_id, r2_id, _, _ = records.ids
 
         # counters
-        result = self.SourceModel.search_panel_select_multi_range('tag_ids')
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            enable_counters=True,
+        )
         self.assertEqual(
             result,
             [
@@ -202,6 +206,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # counters and search domain
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
+            enable_counters=True,
             search_domain=[['id', 'in', [r1_id, r2_id]]],
         )
         self.assertEqual(
@@ -214,10 +219,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         )
 
         # no counters
-        result = self.SourceModel.search_panel_select_multi_range(
-            'tag_ids',
-            disable_counters=True,
-        )
+        result = self.SourceModel.search_panel_select_multi_range('tag_ids')
         self.assertEqual(
             result,
             [
@@ -230,7 +232,6 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # no counters and search domain
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
-            disable_counters=True,
             search_domain=[['id', 'in', [r1_id, r2_id]]],
         )
         self.assertEqual(
@@ -245,6 +246,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # many2one group_by
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
+            enable_counters=True,
             group_by='folder_id'
         )
         self.assertEqual(
@@ -262,6 +264,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # selection group_by
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
+            enable_counters=True,
             group_by='status'
         )
         self.assertEqual(
@@ -279,6 +282,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # other group_by
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
+            enable_counters=True,
             group_by='color'
         )
         self.assertEqual(
@@ -296,6 +300,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # group_domain and many2one groupby
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
+            enable_counters=True,
             group_by='folder_id',
             group_domain={
                 json.dumps(f1_id): [('tag_ids', 'in', [t1_id]), ],
@@ -318,6 +323,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # group_domain and other group_by
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
+            enable_counters=True,
             group_by='color',
             group_domain={
                 json.dumps(False): [('tag_ids', 'in', [t1_id]), ],
@@ -357,7 +363,10 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         r1_id, _ = records.ids
 
         # counters
-        result = self.SourceModel.search_panel_select_multi_range('state')
+        result = self.SourceModel.search_panel_select_multi_range(
+            'state',
+            enable_counters=True,
+        )
         self.assertEqual(
             result,
             [
@@ -369,7 +378,6 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # no counters
         result = self.SourceModel.search_panel_select_multi_range(
             'state',
-            disable_counters=True,
         )
         self.assertEqual(
             result,
@@ -382,6 +390,7 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # counters and search domain
         result = self.SourceModel.search_panel_select_multi_range(
             'state',
+            enable_counters=True,
             search_domain=[['id', '=', r1_id]],
         )
         self.assertEqual(
@@ -395,7 +404,6 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
         # no counters and search domain
         result = self.SourceModel.search_panel_select_multi_range(
             'state',
-            disable_counters=True,
             search_domain=[['id', '=', r1_id]],
         )
         self.assertEqual(
