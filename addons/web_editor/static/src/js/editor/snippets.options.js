@@ -3151,6 +3151,131 @@ registry.SnippetSave = SnippetOptionWidget.extend({
     },
 });
 
+registry.ImageOptimize = SnippetOptionWidget.extend({
+    events: {
+        'change input[data-name=image_quality_opt]': '_onQualityInput',
+    },
+
+    /**
+     * @override
+     */
+    init() {
+        this.width = 256;
+        this.quality = 100;
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async willStart() {
+        const _super = this._super.bind(this);
+        await this._loadImageData();
+        return _super(...arguments);
+    },
+    /**
+     * @override
+     */
+    start() {
+        this._onImageChanged = this._onImageChanged.bind(this);
+        this.$target.on('content_changed.ImageOptimize', this._onImageChanged);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this.$target.off('content_changed.ImageOptimize');
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    updateUI() {
+        this.$quality = this.$el.find('input[type=range]');
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    selectWidth(previewMode, widgetValue, params) {
+        this.width = widgetValue;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        switch (methodName) {
+            case 'selectWidth':
+                return this.width;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        const $select = $(uiFragment.querySelector('we-select[data-name=width_select_opt]'));
+        const availableWidths = this._computeAvailableWidths();
+        availableWidths.forEach(width => {
+            $select.append(`<we-button data-select-width="${width.value}">${width.label}</we-button>`);
+        });
+        uiFragment.querySelector('input[data-name=image_quality_opt]').setAttribute('value', this.quality);
+    },
+    /**
+    * @override
+    */
+    _computeVisibility() {
+        return !!this.original;
+    },
+    /**
+     * @private
+     */
+    _computeAvailableWidths() {
+        return [{value: 256, label: '256px'}, {value: 512, label: '512px'}];
+    },
+    /**
+     * @private
+     */
+    async _loadImageData() {
+        const {attachment, original} = await this._rpc({
+            route: '/web_editor/attachment/get_original',
+            params: {
+                src: this.$target[0].getAttribute('src').split(/[?#]/)[0],
+            }
+        });
+        this.original = original;
+        this.attachment = attachment;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onQualityInput(ev) {
+        this.quality = parseInt(ev.target.value);
+    },
+    /**
+     * @private
+     */
+    async _onImageChanged(ev) {
+        await this._loadImageData();
+        await this._rerenderXML();
+    },
+});
+
 
 return {
     SnippetOptionWidget: SnippetOptionWidget,

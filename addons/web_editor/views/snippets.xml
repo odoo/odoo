@@ -46,6 +46,16 @@
 
     <div data-selector=".s_hr"
          data-drop-near="p, h1, h2, h3, blockquote, .s_hr"/>
+
+    <div data-js="ImageOptimize"  data-selector="img">
+         <we-select string="Width" data-name="width_select_opt" data-no-preview="true">
+             <!-- Will be filled in JS -->
+         </we-select>
+         <!-- Currently, this is the only input of type range used by an option so it doesn't have its own widget -->
+         <we-row string="Quality">
+             <input type="range" class="custom-range" data-name="image_quality_opt"/>
+         </we-row>
+    </div>
 </template>
 
 <!-- default block -->

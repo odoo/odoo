@@ -223,6 +223,37 @@ class Web_Editor(http.Controller):
         if attachments_to_remove:
             attachments_to_remove.unlink()
         return removal_blocked_by
+        
+    @http.route('/web_editor/attachment/get_original', type='json', auth='user', methods=['POST'], website=True)
+    def get_original_attachment(self, src=None):
+        id_match = re.search('^/web/image/([^/?]+)', src)
+        attachment = []
+        if id_match:
+            number_match = re.match('^(\d+)', id_match.group(1))
+            # Numeric id
+            if number_match:
+                attachment = request.env['ir.attachment'].browse([int(number_match.group(1))])
+            # xml-id
+            else:
+                import logging; _logger = logging.getLogger(__name__)
+                _logger.error('XML ID: %s', id_match.group(1))
+                attachment = request.env['ir.attachment'].get_attachment_by_key(id_match.group(1))
+                _logger.error('found attachments: %s', attachment)
+        else:
+            # Find attachment by url. There can be multiple matches, which makes this brittle.
+            # TODO: improve this
+            attachment = request.env['ir.attachment'].search([('url', '=like', src)], limit=1)
+        if len(attachment):
+            return {
+                'attachment': {
+                    'id': attachment.id,
+                },
+                'original': (attachment.original_id or attachment).read(['id', 'url'])[0],
+            }
+        return {
+            'attachment': {},
+            'original': {},
+        }
 
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
     def get_image_info(self, image_id=None, xml_id=None):

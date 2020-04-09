@@ -51,19 +51,14 @@ const ImageCropWidget = Widget.extend({
             return;
         }
 
-        const imageID = this.imageData.imageSrc.match(/^\/web\/image\/([^/?]+)/);
-        if (!imageID) {
-            return;
-        }
-        let params;
-        if (imageID[1].match(/^\d+$/)) {
-            params = {'image_id': parseInt(imageID[1])};
-        } else {
-            params = {'xml_id': imageID[1]};
-        }
         // Get id, mimetype and originalSrc.
-        const imageInfo = await this._rpc({route: '/web_editor/get_image_info', params});
-        Object.assign(this.imageData, imageInfo);
+        const {attachment, original} = await this._rpc({
+            route: '/web_editor/attachment/get_original',
+            params: {
+                src: this.imageData.imageSrc
+            }
+        });
+        Object.assign(this.imageData, {id: attachment.id, originalSrc: original.url});
     },
     /**
      * @override
