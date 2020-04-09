@@ -507,3 +507,33 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
             self.assertEqual(lead.type, 'opportunity')
             assigned_user = self.assign_users[idx % len(self.assign_users)]
             self.assertEqual(lead.user_id, assigned_user)
+
+    def test_mass_convert_with_duplicated_selected(self):
+        """
+        We duplicate a lead, then we select both leads (first one and the duplicated)
+        and we convert them to an opportunity with the option "Apply de-duplication".
+        """
+        lead_1 = self.env['crm.lead'].create({
+            'name': 'Lead 1',
+            'type': 'lead',
+            'stage_id': False,
+            # create a new partner, so we are sure that only those 2 leads
+            # have this partner
+            'partner_id': self.env['res.partner'].sudo().create({'name': 'New partner'}).id,
+        })
+        lead_2 = lead_1.copy()
+
+        self.assertEqual(lead_1.email_from, lead_2.email_from)
+
+        mass_convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
+            'active_model': 'crm.lead',
+            'active_ids': (lead_1 | lead_2).ids,
+        }).create({
+            'name': 'convert',
+            'deduplicate': True,
+        })
+
+        self.assertEqual(mass_convert.lead_tomerge_ids, (lead_1 | lead_2))
+        self.assertEqual(mass_convert.duplicated_lead_ids, (lead_1 | lead_2))
+        mass_convert.action_mass_convert()
+        self.assertEqual(len((lead_1 | lead_2).exists()), 1)
