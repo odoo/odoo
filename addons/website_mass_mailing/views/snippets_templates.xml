@@ -37,15 +37,13 @@
 </template>
 
 <template id="s_newsletter_block" name="Newsletter block">
-    <section class="s_newsletter_block pt64 pb64 oe_img_bg" style="background-image: url('/web/image/website.library_image_17');">
+    <section class="s_newsletter_block bg-200 pt32 pb32">
         <div class="container">
             <div class="row">
-                <div class="col-lg-7 offset-lg-5 pt32 pb32 bg-white-75">
-                    <div class="text-center">
-                        <h1 class="text-uppercase font-weight-bold">Always First.</h1>
-                        <p>Be the first to find out all the latest news, products and trends.</p>
-                        <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"/>
-                    </div>
+                <div class="col-lg-8 offset-lg-2 pt24 pb24">
+                    <h2>Always First.</h2>
+                    <p>Be the first to find out all the latest news, products, and trends.</p>
+                    <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"/>
                 </div>
             </div>
         </div>
@@ -56,11 +54,27 @@
     <div class="o_newsletter_popup o_snippet_invisible" data-list-id="0"/>
 </template>
 
+<template id="s_newsletter_subscribe_popup_content" name="Newsletter Popup Content">
+    <section class="s_text_block oe_img_bg pt88 pb64" data-snippet="s_text_block"
+             style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 0 100%;">
+        <div class="container s_allow_columns">
+            <h1 style="text-align: center;">Always <b>First</b>.</h1>
+            <p style="text-align: center;">Be the first to find out all the latest news,<br/> products, and trends.</p>
+        </div>
+    </section>
+    <section class="s_text_block" data-snippet="s_text_block">
+        <div class="container">
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-8 offset-lg-2 pt32 pb32">
+                    <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 <template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
     <xpath expr="//*[@t-set='so_snippet_addition_selector']" position="inside">, .o_newsletter_popup</xpath>
-    <xpath expr="//*[@id='row_valign_snippet_option']" position="attributes">
-        <attribute name="data-selector" separator="," add=".s_newsletter_block"/>
-    </xpath>
     <xpath expr="//div" position="after">
         <t t-set="selector" t-value="'.js_subscribe'"/>
         <div data-js="mailing_list_subscribe"
