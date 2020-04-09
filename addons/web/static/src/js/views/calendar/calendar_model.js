@@ -533,7 +533,8 @@ return AbstractModel.extend({
                 model: filter.write_model,
                 method: 'search_read',
                 domain: [["user_id", "=", session.uid]],
-                fields: [filter.write_field],
+                fields: [filter.write_field, "active"],
+                context: {"active_test": false},
             })
             .then(function (res) {
                 var records = _.map(res, function (record) {
@@ -545,7 +546,7 @@ return AbstractModel.extend({
                         'id': record.id,
                         'value': value,
                         'label': formater(_value, field),
-                        'active': !f || f.active,
+                        'active': !f && record.active || f && f.active,
                     };
                 });
                 records.sort(function (f1,f2) {
