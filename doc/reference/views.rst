@@ -1981,7 +1981,7 @@ Possible children elements of the search view are:
 
   * ``color``: determines the icon color
 
-  * ``disable_counters``: default is false. If set to true the counters won't be computed.
+  * ``enable_counters``: default is false. If set to true the record counters will be computed.
 
     This feature has been implemented in case performances would be too bad.
 

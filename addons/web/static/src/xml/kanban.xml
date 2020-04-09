@@ -243,11 +243,11 @@
         <t t-set="value" t-value="category.values[valueId]"/>
         <li class="o_search_panel_category_value border-0 list-group-item" t-att-data-id="value.id" t-att-data-category-id="category.id">
             <header t-att-class="'list-group-item-action' + (value.id === category.activeValueId ? ' active' : '')">
-                <label t-att-for="value.display_name" t-attf-class="o_search_panel_label mb0{{ category.disableCounters ? '' : ' o_with_counters' }}">
+                <label t-att-for="value.display_name" t-attf-class="o_search_panel_label mb0{{ category.enableCounters ? ' o_with_counters' : '' }}">
                     <span class="o_search_panel_label_title"><t t-esc="value.display_name"/></span>
                     <i t-if="value.childrenIds.length" t-attf-class="o_toggle_fold fa fa-fw fa-caret-{{ value.folded ? 'right' : 'down' }}"/>
                 </label>
-                <span t-if="!category.disableCounters and value.count > 0"
+                <span t-if="category.enableCounters and value.count > 0"
                     class="text-muted ml-2 small"
                     t-esc="value.count"
                 />
@@ -284,7 +284,7 @@
         <div class="custom-control custom-checkbox">
             <t t-set="inputId" t-value="_.uniqueId('input_')"/>
             <input type="checkbox" t-att-id="inputId" t-att-checked="group.state === 'checked' ? 'checked' : undefined" class="custom-control-input"/>
-            <label t-att-for="inputId" t-attf-class="o_search_panel_label custom-control-label{{ group.disableCounters ? '' : ' o_with_counters' }}" t-att-title="group.tooltip">
+            <label t-att-for="inputId" t-attf-class="o_search_panel_label custom-control-label{{ group.enableCounters ? ' o_with_counters' : '' }}" t-att-title="group.tooltip">
                 <span class="o_search_panel_label_title">
                     <span t-if="group.hex_color" t-attf-style="color: {{ group.hex_color }};">●</span>
                     <t t-esc="group.name"/>
@@ -316,7 +316,7 @@
             <input type="checkbox" t-att-id="inputId" t-att-checked="value.checked ? 'checked' : undefined" class="custom-control-input"/>
             <label t-att-for="inputId" class="o_search_panel_label custom-control-label" t-att-title="group &amp;&amp; group.tooltip">
                 <span class="o_search_panel_label_title" t-esc="value.display_name"/>
-                <span t-if="!filter.disableCounters and value.count > 0"
+                <span t-if="filter.enableCounters and value.count > 0"
                     class="text-muted ml-2 small"
                     t-esc="value.count"
                 />

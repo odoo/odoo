@@ -83,8 +83,8 @@ QUnit.module('Views', {
             'partner,false,search':
                 `<search>
                     <searchpanel>
-                        <field name="company_id"/>
-                        <field select="multi" name="category_id"/>
+                        <field name="company_id" enable_counters="1"/>
+                        <field name="category_id" select="multi" enable_counters="1"/>
                     </searchpanel>
                 </search>`,
         };
@@ -126,8 +126,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id"/>
-                            <field select="multi" name="category_id"/>
+                            <field name="company_id" enable_counters="1"/>
+                            <field name="category_id" select="multi" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -186,8 +186,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id" icon="fa-car" color="blue"/>
-                            <field select="multi" name="state" icon="fa-star" color="#000"/>
+                            <field name="company_id" icon="fa-car" color="blue" enable_counters="1"/>
+                            <field name="state" select="multi" icon="fa-star" color="#000" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -224,8 +224,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id"/>
-                            <field select="multi" invisible="1" name="state"/>
+                            <field name="company_id" enable_counters="1"/>
+                            <field name="state" select="multi" invisible="1" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -267,9 +267,9 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id"/>
-                            <field select="multi" name="category_id"/>
-                            <field name="state"/>
+                            <field name="company_id" enable_counters="1"/>
+                            <field name="category_id" select="multi" enable_counters="1"/>
+                            <field name="state" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             }
@@ -308,8 +308,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id"/>
-                            <field name="state"/>
+                            <field name="company_id" enable_counters="1"/>
+                            <field name="state" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -356,7 +356,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id"/>
+                            <field name="company_id" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -419,7 +419,12 @@ QUnit.module('Views', {
                     </templates>
                 </kanban>`,
             archs: {
-                'partner,false,search': `<search><searchpanel><field name="state"/></searchpanel></search>`,
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="state" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -492,7 +497,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <seasrch>
                         <searchpanel>
-                            <field name="company_id"/>
+                            <field name="company_id" enable_counters="1"/>
                         </searchpanel>
                     </seasrch>`,
             },
@@ -553,7 +558,12 @@ QUnit.module('Views', {
                     </templates>
                 </kanban>`,
             archs: {
-                'partner,false,search': `<search><searchpanel><field name="company_id"/></searchpanel></search>`,
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
@@ -610,7 +620,12 @@ QUnit.module('Views', {
                   </templates>
                 </kanban>`,
             archs: {
-                'partner,false,search': `<search><searchpanel><field name="company_id"/></searchpanel></search>`,
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
             },
             mockRPC: async function (route, args) {
                 if (route === '/web/dataset/call_kw/partner/search_panel_select_range') {
@@ -659,8 +674,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id"/>
-                            <field name="state"/>
+                            <field name="company_id" enable_counters="1"/>
+                            <field name="state" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -731,7 +746,12 @@ QUnit.module('Views', {
                     </templates>
                 </kanban>`,
             archs: {
-                'partner,false,search': `<search><searchpanel><field name="company_id"/></searchpanel></search>`,
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -814,7 +834,12 @@ QUnit.module('Views', {
                     </templates>
                 </kanban>`,
             archs: {
-                'partner,false,search': `<search><searchpanel><field name="category_id"/></searchpanel></search>`,
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="category_id" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -862,7 +887,12 @@ QUnit.module('Views', {
                     </templates>
                 </kanban>`,
             archs: {
-                'partner,false,search': `<search><searchpanel><field name="company_id"/></searchpanel></search>`,
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -910,7 +940,12 @@ QUnit.module('Views', {
                     </templates>
                 </kanban>`,
             archs: {
-                'partner,false,search': `<search><searchpanel><field name="company_id"/></searchpanel></search>`,
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
             },
         });
 
@@ -957,7 +992,12 @@ QUnit.module('Views', {
                     </templates>
                 </kanban>`,
             archs: {
-                'partner,false,search': `<search><searchpanel><field name="company_id"/></searchpanel></search>`,
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
             },
             domain: [['bar', '=', true]],
         });
@@ -1040,8 +1080,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="state"/>
-                            <field select="multi" name="company_id"/>
+                            <field name="state" enable_counters="1"/>
+                            <field name="company_id" select="multi" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1119,7 +1159,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field select="multi" name="company_id"/>
+                            <field name="company_id" select="multi" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1183,7 +1223,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field select="multi" name="company_id"/>
+                            <field name="company_id" select="multi" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1290,7 +1330,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field select="multi" name="state"/>
+                            <field name="state" select="multi" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1382,8 +1422,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="state" disable_counters="1"/>
-                            <field select="multi" name="company_id"/>
+                            <field name="state"/>
+                            <field name="company_id" select="multi" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1450,8 +1490,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="category_id" disable_counters="1"/>
-                            <field select="multi" name="company_id"/>
+                            <field name="category_id"/>
+                            <field name="company_id" select="multi" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1521,8 +1561,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="state"/>
-                            <field name="company_id" disable_counters="1"/>
+                            <field name="state" enable_counters="1"/>
+                            <field name="company_id"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1623,7 +1663,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="state" disable_counters="1"/>
+                            <field name="state"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1733,7 +1773,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field select="multi" name="company_id" groupby="category_id"/>
+                            <field name="company_id" select="multi" groupby="category_id" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1840,7 +1880,7 @@ QUnit.module('Views', {
                         search_domain: [],
                         comodel_domain: [['parent_id', '=', false]],
                         group_domain: [],
-                        disable_counters: false,
+                        enable_counters: true,
                     });
                 }
                 return result;
@@ -1860,7 +1900,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field select="multi" name="company_id" domain="[('parent_id','=',False)]"/>
+                            <field name="company_id" select="multi" domain="[('parent_id','=',False)]" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1897,7 +1937,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field select="multi" name="company_id" groupby="category_id"/>
+                            <field name="company_id" select="multi" groupby="category_id" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1976,8 +2016,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="category_id"/>
-                            <field select="multi" name="company_id" domain="[['category_id', '=', category_id]]"/>
+                            <field name="category_id" enable_counters="1"/>
+                            <field name="company_id" select="multi" domain="[['category_id', '=', category_id]]" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -2046,8 +2086,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field select="multi" name="company_id"/>
-                            <field select="multi" name="state"/>
+                            <field name="company_id" select="multi" enable_counters="1"/>
+                            <field name="state" select="multi" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -2096,7 +2136,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field select="multi" name="company_id"/>
+                            <field name="company_id" select="multi" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -2138,7 +2178,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field select="multi" name="company_id" groupby="category_id"/>
+                            <field name="company_id" select="multi" groupby="category_id" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -2184,8 +2224,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id"/>
-                            <field select="multi" name="category_id"/>
+                            <field name="company_id" enable_counters="1"/>
+                            <field name="category_id" select="multi" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -2232,8 +2272,8 @@ QUnit.module('Views', {
         this.archs['partner,false,search'] =
             `<search>
                 <searchpanel view_types="kanban,pivot">
-                    <field name="company_id"/>
-                    <field select="multi" name="category_id"/>
+                    <field name="company_id" enable_counters="1"/>
+                    <field name="category_id" select="multi" enable_counters="1"/>
                 </searchpanel>
             </search>`;
 
@@ -2541,7 +2581,7 @@ QUnit.module('Views', {
                     `<search>
                         <field name="name"/>
                         <searchpanel>
-                            <field name="category_id"/>
+                            <field name="category_id" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
             },
