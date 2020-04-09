@@ -395,12 +395,12 @@ class ResPartner(models.Model):
         string="Account Payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the payable account for the current partner",
-        required=True)
+        required=lambda env: env.company.chart_template_id)
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Receivable",
         domain="[('internal_type', '=', 'receivable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the receivable account for the current partner",
-        required=True)
+        required=lambda env: env.company.chart_template_id)
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
         domain="[('company_id', 'in', [company_id or current_company_id, False])]",
