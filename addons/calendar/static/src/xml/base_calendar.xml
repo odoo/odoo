@@ -6,6 +6,18 @@
         </t>
     </t>
 
+    <div t-name="calendar.RecurrentEventUpdate">
+        <div class="form-check o_radio_item">
+            <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" checked="true" value="self_only" id="self_only"/>
+            <label class="form-check-label o_form_label" for="self_only">This event</label>
+        </div>
+
+        <div class="form-check o_radio_item">
+            <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" value="future_events" id="future_events"/>
+            <label class="form-check-label o_form_label" for="future_events">This and following events</label>
+        </div>
+    </div>
+
     <t t-extend="mail.systray.ActivityMenu.Previews">
         <t t-jquery="div.o_preview_title" t-operation="after">
             <div t-if="activity and activity.type == 'meeting'">
