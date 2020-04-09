@@ -39,7 +39,13 @@
               support_origin: 'https://something.com'
             };
           </script>
-          <t t-call="web.js_tests_assets"/>
+          <t t-call-assets="web.assets_common" t-js="false"/>
+          <t t-call-assets="web.assets_backend" t-js="false"/>
+          <t t-call-assets="web.assets_common" t-css="false"/>
+          <t t-call-assets="web.assets_backend" t-css="false"/>
+
+          <t t-call-assets="web.tests_assets" t-js="false"/>
+          <t t-call-assets="web.tests_assets" t-css="false"/>
 
           <script type="text/javascript" src="/im_support/static/tests/helpers/test_utils.js"></script>
           <script type="text/javascript" src="/im_support/static/tests/systray_tests.js"></script>

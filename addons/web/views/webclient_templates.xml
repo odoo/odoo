@@ -591,16 +591,8 @@
         </t>
     </template>
 
-    <template id="web.css_tests_assets">
+    <template id="web.tests_assets">
         <link type="text/css" rel="stylesheet" href="/web/static/lib/daterangepicker/daterangepicker.css"/>
-    </template>
-
-    <template id="web.js_tests_assets">
-        <t t-call-assets="web.assets_common" t-js="false"/>
-        <t t-call-assets="web.assets_backend" t-js="false"/>
-        <t t-call-assets="web.assets_common" t-css="false"/>
-        <t t-call-assets="web.assets_backend" t-css="false"/>
-
         <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.9.1.css"/>
         <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.9.1.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
@@ -670,6 +662,13 @@
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="title">Web Tests</t>
             <t t-set="head">
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
+
+                <t t-call-assets="web.tests_assets" t-js="false"/>
+                <t t-call-assets="web.tests_assets" t-css="false"/>
                 <t t-call-assets="web.qunit_suite_tests" t-js="false"/>
                 <t t-call-assets="web.qunit_suite_tests" t-css="false"/>
             </t>
@@ -679,9 +678,6 @@
     </template>
 
     <template id="web.qunit_suite_tests">
-        <t t-call="web.css_tests_assets"/>
-        <t t-call="web.js_tests_assets"/>
-
         <script type="text/javascript" src="/base/static/tests/base_settings_tests.js"></script>
 
         <script type="text/javascript" src="/web/static/tests/qweb_tests.js"></script>
@@ -773,6 +769,13 @@
             <t t-set="title">Web Mobile Tests</t>
             <t t-set="head">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
+
+                <t t-call-assets="web.tests_assets" t-js="false"/>
+                <t t-call-assets="web.tests_assets" t-css="false"/>
                 <t t-call-assets="web.qunit_mobile_suite_tests" t-js="false"/>
                 <t t-call-assets="web.qunit_mobile_suite_tests" t-css="false"/>
             </t>
@@ -782,7 +785,6 @@
     </template>
 
     <template id="web.qunit_mobile_suite_tests">
-        <t t-call="web.js_tests_assets"/>
         <script type="text/javascript" src="/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js"></script>
         <script type="text/javascript" src="/web/static/tests/fields/basic_fields_mobile_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/fields/relational_fields_mobile_tests.js"></script>
