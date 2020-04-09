@@ -72,8 +72,8 @@
         </div>
     </xpath>
 
-    <xpath expr="//div[@id='snippet_options']" position="inside">
-        <t t-call="mass_mailing.snippet_options"/>
+    <xpath expr="//div[@id='snippet_options']/t" position="attributes">
+        <attribute name="t-call">mass_mailing.snippet_options</attribute>
     </xpath>
 </template>
 
