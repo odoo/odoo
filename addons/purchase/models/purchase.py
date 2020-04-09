@@ -163,7 +163,7 @@ class PurchaseOrder(models.Model):
     def _compute_expected_date(self):
         """ expected_date = the earliest date_planned across all order lines. """
         for order in self:
-            dates_list = order.order_line.mapped('date_planned')
+            dates_list = order.order_line.filtered(lambda x: not x.display_type).mapped('date_planned')
             order.expected_date = fields.Datetime.to_string(min(dates_list)) if dates_list else False
 
     @api.depends('name', 'partner_ref')
