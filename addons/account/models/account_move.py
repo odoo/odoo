@@ -3651,7 +3651,8 @@ class AccountMoveLine(models.Model):
 
             if cash_basis:
                 tmp_set = debit_move | credit_move
-                cash_basis_percentage_before_rec.update(tmp_set._get_matched_percentage())
+                tmp_percentage = tmp_set._get_matched_percentage()
+                cash_basis_percentage_before_rec.update({id:0.0 for id in tmp_percentage.keys()} if self.env.context.get('pay_all', False) else tmp_percentage)
 
             to_create.append({
                 'debit_move_id': debit_move.id,
@@ -4236,7 +4237,7 @@ class AccountPartialReconcile(models.Model):
             if move_date < move.date:
                 move_date = move.date
             percentage_before = percentage_before_rec[move.id]
-            percentage_after = move.line_ids[0]._get_matched_percentage()[move.id]
+            percentage_after = 1.0 if self.env.context.get('pay_all', False) else move.line_ids[0]._get_matched_percentage()[move.id]
             # update the percentage before as the move can be part of
             # multiple partial reconciliations
             percentage_before_rec[move.id] = percentage_after

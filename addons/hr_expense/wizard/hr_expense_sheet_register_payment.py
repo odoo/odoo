@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from werkzeug import url_encode
+from odoo.tools.float_utils import float_compare
 
 
 class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
@@ -109,7 +110,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
         context = dict(self._context or {})
         active_ids = context.get('active_ids', [])
         expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
-
+        pay_all = float_compare(self.amount, expense_sheet.total_amount, precision_rounding=expense_sheet.currency_id.rounding) == 0
         # Create payment and post it
         payment = self.env['account.payment'].create(self._get_payment_vals())
         payment.post()
@@ -123,6 +124,6 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
         for line in payment.move_line_ids + expense_sheet.account_move_id.line_ids:
             if line.account_id.internal_type == 'payable' and not line.reconciled:
                 account_move_lines_to_reconcile |= line
-        account_move_lines_to_reconcile.reconcile()
+        account_move_lines_to_reconcile.with_context(pay_all=pay_all).reconcile()
 
         return {'type': 'ir.actions.act_window_close'}
