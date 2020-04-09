@@ -36,9 +36,9 @@ class TestPopulateModel(models.Model):
         ]
         def generate_dependant(iterator, *args):
             dependants_generator = populate.chain_factories(dependant_factories, self._name)
-            for values in dependants_generator:
-                dependant_values = next(iterator)
-                yield {**values, **dependant_values, '__complete': values['__complete'] and dependant_values['__complete']}
+            for dependant_values in dependants_generator:
+                values = next(iterator)
+                yield {**dependant_values, **values, '__complete': values['__complete'] and dependant_values['__complete']}
 
         def get_name(values=None, counter=0, **kwargs):
             active = 'active' if values['active'] else 'inactive'
