@@ -113,9 +113,9 @@ class ProductProduct(models.Model):
                 WITH currency_rate AS ({})
                 SELECT
                     SUM(l.price_unit / (CASE COALESCE(cr.rate, 0) WHEN 0 THEN 1.0 ELSE cr.rate END) * l.quantity) / NULLIF(SUM(l.quantity),0) AS avg_unit_price,
-                    SUM(l.quantity) AS num_qty,
-                    SUM(l.balance) AS total,
-                    SUM(l.quantity * pt.list_price) AS sale_expected
+                    SUM(l.quantity * (CASE WHEN i.type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS num_qty,
+                    SUM(ABS(l.balance) * (CASE WHEN i.type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS total,
+                    SUM(l.quantity * pt.list_price * (CASE WHEN i.type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS sale_expected
                 FROM account_move_line l
                 LEFT JOIN account_move i ON (l.move_id = i.id)
                 LEFT JOIN product_product product ON (product.id=l.product_id)
@@ -134,17 +134,17 @@ class ProductProduct(models.Model):
                 AND l.display_type IS NULL
                 AND l.exclude_from_invoice_tab = false
                 """.format(self.env['res.currency']._select_companies_rates())
-            invoice_types = ('out_invoice', 'in_refund')
+            invoice_types = ('out_invoice', 'out_refund')
             self.env.cr.execute(sqlstr, (val.id, states, invoice_payment_states, invoice_types, date_from, date_to, company_id))
             result = self.env.cr.fetchall()[0]
             res[val.id]['sale_avg_price'] = result[0] and result[0] or 0.0
             res[val.id]['sale_num_invoiced'] = result[1] and result[1] or 0.0
-            res[val.id]['turnover'] = result[2] and -result[2] or 0.0
+            res[val.id]['turnover'] = result[2] and result[2] or 0.0
             res[val.id]['sale_expected'] = result[3] and result[3] or 0.0
             res[val.id]['sales_gap'] = res[val.id]['sale_expected'] - res[val.id]['turnover']
             ctx = self.env.context.copy()
             ctx['force_company'] = company_id
-            invoice_types = ('in_invoice', 'out_refund')
+            invoice_types = ('in_invoice', 'in_refund')
             self.env.cr.execute(sqlstr, (val.id, states, invoice_payment_states, invoice_types, date_from, date_to, company_id))
             result = self.env.cr.fetchall()[0]
             res[val.id]['purchase_avg_price'] = result[0] and result[0] or 0.0
