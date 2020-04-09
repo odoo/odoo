@@ -41,11 +41,12 @@ class MrpUnbuild(models.Model):
             ('company_id', '=', False)
         ]
 """,
-        required=True, states={'done': [('readonly', True)]}, check_company=True)
+        states={'done': [('readonly', True)]}, check_company=True)
     mo_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
         domain="[('id', 'in', allowed_mo_ids)]",
         states={'done': [('readonly', True)]}, check_company=True)
+    mo_bom_id = fields.Many2one('mrp.bom', 'Bill of Material used on the Production Order', related='mo_id.bom_id')
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
         domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True,
