@@ -279,8 +279,10 @@
                                     </div>
                                     <div class="col-4">
                                         <div class="oe_kanban_bottom_right">
-                                            <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
-                                            <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value" class="oe_kanban_avatar o_image_24_cover float-right"/>
+                                            <img t-if="record.user_id.raw_value"
+                                                t-att-title="record.user_id.value"
+                                                t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
+                                                t-att-alt="record.user_id.value" class="oe_kanban_avatar o_image_24_cover float-right"/>
                                         </div>
                                     </div>
                                 </div>
@@ -690,8 +692,10 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                         <field name="kanban_state" widget="state_selection" groups="base.group_user" invisible="context.get('fsm_mode', False)"/>
-                                        <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
-                                        <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value" class="oe_kanban_avatar"/>
+                                        <img t-if="record.user_id.raw_value"
+                                             t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
+                                             t-att-title="record.user_id.value"
+                                             t-att-alt="record.user_id.value" class="oe_kanban_avatar"/>
                                     </div>
                                 </div>
                             </div>
