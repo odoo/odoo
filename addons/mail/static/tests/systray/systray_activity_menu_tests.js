@@ -1,15 +1,15 @@
 odoo.define('mail.systray.ActivityMenuTests', function (require) {
 "use strict";
 
+const { getMailServices } = require('mail.messaging.testUtils');
 var ActivityMenu = require('mail.systray.ActivityMenu');
-var mailTestUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('ActivityMenu', {
     beforeEach: function () {
-        this.services = mailTestUtils.getMailServices();
+        this.services = getMailServices({ hasLegacyMail: true });
         this.data = {
             'mail.activity.menu': {
                 fields: {
@@ -52,7 +52,7 @@ QUnit.module('ActivityMenu', {
                         today_count: 1,
                         overdue_count: 1,
                         total_count: 3,
-                        actions : [{
+                        actions: [{
                             icon: "fa-clock-o",
                             name: "summary",
                         }],
@@ -70,14 +70,15 @@ QUnit.module('ActivityMenu', {
                             name: "summary",
                             action_xmlid: "mail.mail_activity_type_view_tree",
                         }],
-                    }],
-                },
-            };
-            this.session = {
-                uid: 10,
-            };
-        }
-    });
+                    }
+                ],
+            },
+        };
+        this.session = {
+            uid: 10,
+        };
+    },
+});
 
 QUnit.test('activity menu widget: menu with no records', async function (assert) {
     assert.expect(1);

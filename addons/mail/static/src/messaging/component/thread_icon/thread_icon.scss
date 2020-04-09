@@ -1,0 +1,66 @@
+
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ThreadIcon {
+    display: flex;
+    width: 13px;
+    justify-content: center;
+}
+
+.o_ThreadIcon_typing {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.o_ThreadIcon_typingDot {
+    display: inline-block;
+    flex: 0 0 auto;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ThreadIcon_away {
+    color: theme-color('warning');
+}
+
+.o_ThreadIcon_online {
+    color: $o-enterprise-primary-color;
+}
+
+.o_ThreadIcon_typingDot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: gray('500');
+}
+
+// ------------------------------------------------------------------
+// Animation
+// ------------------------------------------------------------------
+
+.o_ThreadIcon_typingDot {
+    animation: o_ThreadIcon_typingDotAnimation 1.5s linear infinite;
+
+    &:nth-child(2) {
+        animation-delay: -1.35s;
+    }
+
+    &:nth-child(3) {
+        animation-delay: -1.2s;
+    }
+}
+
+@keyframes o_ThreadIcon_typingDotAnimation {
+    0%, 40%, 100% {
+        transform: initial;
+    }
+    20% {
+        transform: translateY(-5px);
+    }
+}

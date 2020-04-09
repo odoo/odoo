@@ -1,0 +1,336 @@
+odoo.define('mail.messaging.component.ChatWindow', function (require) {
+'use strict';
+
+const components = {
+    AutocompleteInput: require('mail.messaging.component.AutocompleteInput'),
+    ChatWindowHeader: require('mail.messaging.component.ChatWindowHeader'),
+    ThreadViewer: require('mail.messaging.component.ThreadViewer'),
+};
+const useStore = require('mail.messaging.component_hook.useStore');
+
+const { Component } = owl;
+const { useRef } = owl.hooks;
+
+class ChatWindow extends Component {
+
+    /**
+     * @override
+     */
+    constructor(...args) {
+        super(...args);
+        useStore(props => {
+            return {
+                chatWindow: this.env.entities.ChatWindow.get(props.chatWindowLocalId),
+                isDeviceMobile: this.env.messaging.device.isMobile,
+                localeTextDirection: this.env.messaging.locale.textDirection,
+            };
+        });
+        /**
+         * Reference of the autocomplete input (new_message chat window only).
+         * Useful when focusing this chat window, which consists of focusing
+         * this input.
+         */
+        this._inputRef = useRef('input');
+        /**
+         * Reference of thread in the chat window (chat window with thread
+         * only). Useful when focusing this chat window, which consists of
+         * focusing this thread. Will likely focus the composer of thread, if
+         * it has one!
+         */
+        this._threadRef = useRef('thread');
+
+        // the following are passed as props to children
+        this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
+        this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
+    }
+
+    mounted() {
+        this.env.messagingBus.on('will_hide_home_menu', this, this._onWillHideHomeMenu.bind(this));
+        this.env.messagingBus.on('will_show_home_menu', this, this._onWillShowHomeMenu.bind(this));
+        this._update();
+    }
+
+    patched() {
+        this._update();
+    }
+
+    willUnmount() {
+        this.env.messagingBus.off('will_hide_home_menu', this, this._onWillHideHomeMenu.bind(this));
+        this.env.messagingBus.off('will_show_home_menu', this, this._onWillShowHomeMenu.bind(this));
+    }
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @returns {mail.messaging.entity.ChatWindow}
+     */
+    get chatWindow() {
+        return this.env.entities.ChatWindow.get(this.props.chatWindowLocalId);
+    }
+
+    /**
+     * Get the content of placeholder for the autocomplete input of
+     * 'new_message' chat window.
+     *
+     * @returns {string}
+     */
+    get newMessageFormInputPlaceholder() {
+        return this.env._t("Search user...");
+    }
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Apply visual position of the chat window.
+     *
+     * @private
+     */
+    _applyVisibleOffset() {
+        const textDirection = this.env.messaging.locale.textDirection;
+        const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
+        const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
+        this.el.style[offsetFrom] = this.chatWindow.visibleOffset + 'px';
+        this.el.style[oppositeFrom] = 'auto';
+    }
+
+    /**
+     * Focus this chat window.
+     *
+     * @private
+     */
+    _focus() {
+        this.chatWindow.update({ isFocused: true });
+        if (!this.chatWindow.thread) {
+            this._inputRef.comp.focus();
+        } else {
+            this._threadRef.comp.focus();
+        }
+    }
+
+    /**
+     * Save the scroll positions of the chat window in the store.
+     * This is useful in order to remount chat windows and keep previous
+     * scroll positions. This is necessary because when toggling on/off
+     * home menu, the chat windows have to be remade from scratch.
+     *
+     * @private
+     */
+    _saveThreadScrollTop() {
+        this.chatWindow.update({
+            threadInitialScrollTop: this._threadRef.comp.getScrollTop(),
+        });
+    }
+
+    /**
+     * @private
+     */
+    _update() {
+        if (this.chatWindow.doIsFocus) {
+            this._focus();
+            this.chatWindow.update({ doIsFocus: false });
+        }
+        if (this.props.isDocked) {
+            this._applyVisibleOffset();
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when selecting an item in the autocomplete input of the
+     * 'new_message' chat window.
+     *
+     * @private
+     * @param {Event} ev
+     * @param {Object} ui
+     * @param {Object} ui.item
+     * @param {integer} ui.item.id
+     */
+    _onAutocompleteSelect(ev, ui) {
+        const partnerId = ui.item.id;
+        const partner = this.env.entities.Partner.fromId(partnerId);
+        const chat = partner.directPartnerThread;
+        if (chat) {
+            chat.open({ chatWindowMode: 'from_new_message' });
+        } else {
+            this.env.entities.Thread.createChannel({
+                autoselect: true,
+                autoselectChatWindowMode: 'from_new_message',
+                partnerId,
+                type: 'chat',
+            });
+        }
+    }
+
+    /**
+     * Called when typing in the autocomplete input of the 'new_message' chat
+     * window.
+     *
+     * @private
+     * @param {Object} req
+     * @param {string} req.term
+     * @param {function} res
+     */
+    _onAutocompleteSource(req, res) {
+        this.env.entities.Partner.imSearch({
+            callback: (partners) => {
+                const suggestions = partners.map(partner => {
+                    return {
+                        id: partner.id,
+                        value: partner.nameOrDisplayName,
+                        label: partner.nameOrDisplayName,
+                    };
+                });
+                res(_.sortBy(suggestions, 'label'));
+            },
+            keyword: _.escape(req.term),
+            limit: 10,
+        });
+    }
+
+    /**
+     * Handle focus of the chat window based on position of click. The click on
+     * chat window that folds it should NOT set focus on this chat window.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClick(ev) {
+        ev.stopPropagation();
+        const chatWindow = this.chatWindow;
+        if (chatWindow.isFocused && !chatWindow.isFolded) {
+            return;
+        }
+        if (chatWindow.isFolded) {
+            chatWindow.update({ isFocused: true });
+        } else {
+            chatWindow.focus();
+        }
+    }
+
+    /**
+     * Called when clicking on header of chat window. Usually folds the chat
+     * window.
+     *
+     * @private
+     * @param {CustomEvent} ev
+     */
+    _onClickedHeader(ev) {
+        ev.stopPropagation();
+        if (this.env.messaging.device.isMobile) {
+            return;
+        }
+        this.chatWindow.toggleFold();
+    }
+
+    /**
+     * Called when an element in the thread becomes focused.
+     *
+     * @private
+     * @param {FocusEvent} ev
+     */
+    _onFocusinThread(ev) {
+        ev.stopPropagation();
+        this.chatWindow.update({ isFocused: true });
+    }
+
+    /**
+     * Focus out the chat window.
+     *
+     * @private
+     */
+    _onFocusout() {
+        this.chatWindow.update({ isFocused: false });
+        if (!this.chatWindow.thread) {
+            this._inputRef.comp.focusout();
+        } else {
+            this._threadRef.comp.focusout();
+        }
+    }
+
+    /**
+     * @private
+     * @param {KeyboardEvent} ev
+     */
+    _onKeydown(ev) {
+        /**
+         * Prevent auto-focus of fuzzy search in the home menu.
+         * Useful in order to allow copy/paste content inside chat window with
+         * CTRL-C & CTRL-V when on the home menu.
+         */
+        ev.stopPropagation();
+        switch (ev.key) {
+            case 'Tab':
+                ev.preventDefault();
+                if (ev.shiftKey) {
+                    this.chatWindow.focusPreviousVisibleUnfoldedChatWindow();
+                } else {
+                    this.chatWindow.focusNextVisibleUnfoldedChatWindow();
+                }
+                break;
+            case 'Escape':
+                ev.preventDefault();
+                this.chatWindow.close();
+                break;
+        }
+    }
+
+    /**
+     * Save the scroll positions of the chat window in the store.
+     * This is useful in order to remount chat windows and keep previous
+     * scroll positions. This is necessary because when toggling on/off
+     * home menu, the chat windows have to be remade from scratch.
+     *
+     * @private
+     */
+    async _onWillHideHomeMenu() {
+        if (!this.chatWindow.thread) {
+            return;
+        }
+        this._saveThreadScrollTop();
+    }
+
+    /**
+     * Save the scroll positions of the chat window in the store.
+     * This is useful in order to remount chat windows and keep previous
+     * scroll positions. This is necessary because when toggling on/off
+     * home menu, the chat windows have to be remade from scratch.
+     *
+     * @private
+     */
+    async _onWillShowHomeMenu() {
+        if (!this.chatWindow.thread) {
+            return;
+        }
+        this._saveThreadScrollTop();
+    }
+
+}
+
+Object.assign(ChatWindow, {
+    components,
+    defaultProps: {
+        hasCloseAsBackButton: false,
+        isDocked: false,
+        isExpandable: false,
+        isFullscreen: false,
+    },
+    props: {
+        chatWindowLocalId: String,
+        hasCloseAsBackButton: Boolean,
+        isDocked: Boolean,
+        isExpandable: Boolean,
+        isFullscreen: Boolean,
+    },
+    template: 'mail.messaging.component.ChatWindow',
+});
+
+return ChatWindow;
+
+});

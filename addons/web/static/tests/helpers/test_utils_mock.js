@@ -52,6 +52,9 @@ function _observe(widget) {
  */
 function removeSrcAttribute(el, widget) {
     var nodes;
+    if (el.nodeName === "#comment") {
+        return;
+    }
     if (el.nodeName === 'IMG' || el.nodeName === 'IFRAME') {
         nodes = [el];
     } else {

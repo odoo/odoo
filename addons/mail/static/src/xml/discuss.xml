@@ -24,10 +24,7 @@
     <!--
         @param {string|integer} activeThreadID
         @param {mail.model.Channel[]} channels
-        @param {boolean} isMyselfModerator
         @param {mail.model.Mailbox} inbox
-        @param {mail.model.Mailbox} starred
-        @param {mail.model.Mailbox|undefined} moderation set if current user is moderator
         @param {boolean} displayQuickSearch
         @param {Object} options
     -->
@@ -49,10 +46,7 @@
 
     <!--
         @param {string|integer} activeThreadID
-        @param {boolean} isMyselfModerator
         @param {mail.model.Mailbox} inbox
-        @param {mail.model.Mailbox} starred
-        @param {mail.model.Mailbox|undefined} moderation set if current user is moderator
     -->
     <t t-name="mail.discuss.SidebarMailboxes">
         <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID === 'mailbox_inbox') ? 'o_active': ''}"
@@ -61,21 +55,9 @@
             <t t-set="counter" t-value="inbox.getMailboxCounter()"/>
             <t t-call="mail.discuss.SidebarCounter"/>
         </div>
-        <div t-attf-class="o_mail_discuss_title_main o_mail_mailbox_title_starred o_mail_discuss_item #{(activeThreadID === 'mailbox_starred') ? 'o_active': ''}"
-                data-thread-id="mailbox_starred">
-            <span class="o_thread_name"><i class="fa fa-star-o mr8"/>Starred</span>
-            <t t-set="counter" t-value="starred.getMailboxCounter()"/>
-            <t t-call="mail.discuss.SidebarCounter"/>
-        </div>
         <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID === 'mailbox_history') ? 'o_active': ''}"
             data-thread-id="mailbox_history">
             <span class="o_thread_name"><i class="fa fa-history mr8"/>History</span>
-        </div>
-        <div t-if="isMyselfModerator" t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID == 'mailbox_moderation') ? 'o_active': ''}"
-                data-thread-id="mailbox_moderation">
-            <span class="o_thread_name"> <i class="fa fa-envelope mr8"/>Moderation Queue</span>
-            <t t-set="counter" t-value="moderation.getMailboxCounter()"/>
-            <t t-call="mail.discuss.SidebarCounter"/>
         </div>
     </t>
 
@@ -87,7 +69,6 @@
         <t t-set="type" t-value="'multi_user_channel'"/>
         <t t-call="mail.discuss.SidebarTitle">
             <t t-set="title">Channels</t>
-            <t t-set="icon" t-value="fa-users"/>
         </t>
         <t t-call="mail.discuss.SidebarItems">
             <t t-set="displayHash" t-value="true"/>
@@ -97,7 +78,6 @@
         <t t-set="type" t-value="'dm_chat'"/>
         <t t-call="mail.discuss.SidebarTitle">
             <t t-set="title">Direct Messages</t>
-            <t t-set="icon" t-value="fa-user"/>
         </t>
         <t t-call="mail.discuss.SidebarItems">
             <t t-set="displayStatus" t-value="true"/>
@@ -216,15 +196,8 @@
     <t t-name="mail.discuss.ControlButtons">
         <div>
             <button type="button" class="btn btn-primary o_mail_discuss_button_invite d-none d-md-inline-block" title="Invite people">Invite</button>
-            <button type="button" class="btn btn-secondary o_mail_discuss_button_mark_all_read d-none d-md-inline-block" title="Mark all as read">Mark all read</button>
-            <button type="button" class="btn btn-secondary o_mail_discuss_button_unstar_all" title="Unstar all messages">Unstar all</button>
             <button type="button" class="btn btn-secondary o_mail_discuss_button_dm_chat o_hidden d-md-none" title="New Message">New Message</button>
             <button t-if="!disableAddThread" type="button" class="btn btn-secondary o_mail_discuss_button_multi_user_channel d-block d-md-none" title="New Channel">New Channel</button>
-            <button type="button" class="btn btn-secondary o_hidden o_mail_discuss_button_select_all" title="Select all messages to moderate">Select All</button>
-            <button type="button" class="btn btn-secondary o_hidden o_mail_discuss_button_unselect_all" title="Unselect all messages to moderate">Unselect All</button>
-            <button type="button" data-decision="accept" class="btn btn-secondary o_mail_discuss_button_moderate_all" title="Accept selected messages">Accept</button>
-            <button type="button" data-decision="reject" class="btn btn-secondary o_mail_discuss_button_moderate_all" title="Reject selected messages">Reject</button>
-            <button type="button" data-decision="discard" class="btn btn-secondary o_mail_discuss_button_moderate_all" title="Discard selected messages">Discard</button>
         </div>
     </t>
 
@@ -238,20 +211,12 @@
         <input type="text" class="o_input o_mail_discuss_rename_channel_input"/>
     </div>
 
-    <div t-name="mail.ModeratorRejectMessageDialog">
-        <input class="form-control" type="text" id="message_title" placeholder="Subject" value="Message Rejected"/>
-        <textarea class="form-control mt16" id="reject_message" placeholder="Mail Body">Your message was rejected by moderator.</textarea>
-    </div>
-
     <!-- Mobile templates -->
     <t t-name="mail.discuss_mobile">
         <div class="o_mail_discuss">
             <div class="o_mail_discuss_mobile_mailboxes_buttons">
                 <button type="button" class="btn btn-primary d-inline d-md-none o_mailbox_inbox_item" title="Inbox" data-type="mailbox_inbox">
                     Inbox
-                </button>
-                <button type="button" class="btn btn-secondary d-inline d-md-none o_mailbox_inbox_item" title="Starred" data-type="mailbox_starred">
-                    Starred
                 </button>
                 <button type="button" class="btn btn-secondary d-inline d-md-none o_mailbox_inbox_item" title="History" data-type="mailbox_history">
                     History

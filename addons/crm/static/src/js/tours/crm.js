@@ -63,7 +63,7 @@ tour.register('crm_tour', {
         actions.auto(".o_kanban_record .oe_kanban_action[data-type=edit]");
     },
 }, {
-    trigger: ".o_lead_opportunity_form .o_chatter_button_new_message",
+    trigger: ".o_lead_opportunity_form .o_ChatterTopbar_buttonSendMessage",
     content: _t('<p><b>Send messages</b> to your prospect and get replies automatically attached to this opportunity.</p><p class="mb0">Type <i>\'@\'</i> to mention people - it\'s like cc-ing on emails.</p>'),
     position: "bottom"
 }, {

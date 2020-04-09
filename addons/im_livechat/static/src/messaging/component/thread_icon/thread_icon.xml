@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.messaging.component.ThreadIcon" t-inherit-mode="extension">
+        <xpath expr="//*[@name='rootCondition']" position="inside">
+            <t t-elif="thread.channel_type === 'livechat'">
+                <!-- TODO FIXME add typing icon -->
+                <div class="fa fa-comments" title="Livechat"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

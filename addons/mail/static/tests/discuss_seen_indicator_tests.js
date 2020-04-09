@@ -1,7 +1,9 @@
 odoo.define('mail.discuss_seen_indicator_tests', function (require) {
 "use strict";
 
+const { getMailServices } = require('mail.messaging.testUtils');
 var mailTestUtils = require('mail.testUtils');
+
 var testUtils = require('web.test_utils');
 
 var createDiscuss = mailTestUtils.createDiscuss;
@@ -29,17 +31,9 @@ QUnit.module('Discuss (Seen Indicator)', {
                         type: 'many2many',
                         relation: 'mail.channel',
                     },
-                    starred: {
-                        string: "Starred",
-                        type: 'boolean',
-                    },
                     needaction: {
                         string: "Need Action",
                         type: 'boolean',
-                    },
-                    starred_partner_ids: {
-                        string: "partner ids",
-                        type: 'integer',
                     },
                     model: {
                         string: "Related Document model",
@@ -52,7 +46,7 @@ QUnit.module('Discuss (Seen Indicator)', {
                 },
             },
         };
-        this.services = mailTestUtils.getMailServices();
+        this.services = getMailServices({ hasLegacyMail: true });
 
         /**
          * Simulate that someone received message on channel

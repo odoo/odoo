@@ -1,6 +1,7 @@
 odoo.define('mail.discuss_typing_notification_test', function (require) {
 "use strict";
 
+const { getMailServices } = require('mail.messaging.testUtils');
 var Timer = require('mail.model.Timer');
 var CCThrottleFunctionObject = require('mail.model.CCThrottleFunctionObject');
 var mailTestUtils = require('mail.testUtils');
@@ -82,17 +83,9 @@ QUnit.module('Discuss (Typing Notifications)', {
                         type: 'many2many',
                         relation: 'mail.channel',
                     },
-                    starred: {
-                        string: "Starred",
-                        type: 'boolean',
-                    },
                     needaction: {
                         string: "Need Action",
                         type: 'boolean',
-                    },
-                    starred_partner_ids: {
-                        string: "partner ids",
-                        type: 'integer',
                     },
                     model: {
                         string: "Related Document model",
@@ -120,7 +113,7 @@ QUnit.module('Discuss (Typing Notifications)', {
                 }],
             },
         };
-        this.services = mailTestUtils.getMailServices();
+        this.services = getMailServices({ hasLegacyMail: true });
 
         /**
          * Simulate that someone typing something (or stops typing)
@@ -150,7 +143,7 @@ QUnit.module('Discuss (Typing Notifications)', {
         // unpatch Timer and CCThrottleFunction to re-enable timers
         // with the Thread Typing Mixin
         this.unpatch();
-    }
+    },
 });
 
 QUnit.test('notify is typing', async function (assert) {

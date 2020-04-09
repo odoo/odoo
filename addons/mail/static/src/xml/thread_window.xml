@@ -6,17 +6,12 @@
     -->
     <t t-name="mail.ThreadWindow" t-extend="mail.AbstractThreadWindow">
         <t t-jquery=".o_thread_window_header" t-operation="after">
-            <t t-if="widget.hasThread()">
-                <t t-if="widget.getThread().hasOutOfOffice()">
-                    <t t-call="mail.thread.OutOfOffice">
-                        <t t-set="thread" t-value="widget.getThread()"/>
-                    </t>
-                </t>
+            <t t-if="!widget.hasThread()">
+                <div class="o_thread_search_input">
+                    <span> To: </span>
+                    <input type="text" placeholder="User name"/>
+                </div>
             </t>
-            <div t-else="" class="o_thread_search_input">
-                <span> To: </span>
-                <input type="text" placeholder="User name"/>
-            </div>
         </t>
     </t>
 

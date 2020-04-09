@@ -1,0 +1,52 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ChatterTopbar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.o_ChatterTopbar_buttonAttachmentsCountLoader {
+    margin-left: 2px;
+}
+
+.o_ChatterTopbar_buttonCount {
+    padding-left: 0.25rem;
+}
+
+.o_ChatterTopbar_buttonFollowers {
+    display: flex;
+    align-items: center;
+}
+
+.o_ChatterTopbar_buttonSendMessage {
+    padding: 0 16px;
+    border-left: none;
+}
+
+.o_ChatterTopbar_followers {
+    display: flex;
+}
+
+.o_ChatterTopbar_rightSection {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ChatterTopbar {
+
+    .o-active {
+        color: $o-brand-odoo;
+        background-color: lighten(gray('300'), 7%);
+        border-color: gray('300');
+        border-bottom-color: transparent;
+        border-top-color: transparent;
+    }
+}

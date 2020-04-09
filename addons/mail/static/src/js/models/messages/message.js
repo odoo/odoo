@@ -29,16 +29,12 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @param {string} [data.email_from]
      * @param {string} [data.info]
      * @param {string} [data.model]
-     * @param {string} [data.moderation_status='accepted']
      * @param {string} [data.module_icon]
      * @param {Array} [data.needaction_partner_ids = []]
      * @param {Array} [data.history_partner_ids = []]
      * @param {string} [data.record_name]
      * @param {integer} [data.res_id]
-     * @param {Array} [data.starred_partner_ids = []]
      * @param {string} [data.subject]
-     * @param {string} [data.subtype_description]
-     * @param {Object[]} [data.tracking_value_ids]
      * @param {Object[]} emojis
      */
     init: function (parent, data, emojis) {
@@ -51,9 +47,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
 
         this._processBody(emojis);
         this._processMailboxes();
-        this._processModeration();
         this._processDocumentThread();
-        this._processTrackingValues();
     },
 
     //--------------------------------------------------------------------------
@@ -65,16 +59,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     addCustomerEmailData: function (data) {
         this._customerEmailData.push(data);
-    },
-    /**
-     * @override
-     * @return {string|undefined}
-     */
-    getAuthorImStatus: function () {
-        if (!this.hasAuthor()) {
-            return undefined;
-        }
-        return this.call('mail_service', 'getImStatus', { partnerID: this.getAuthorID() });
     },
     /**
      * Get the name of the author of this message
@@ -278,13 +262,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         return this._subject;
     },
     /**
-     * @override
-     * @return {string}
-     */
-    getSubtypeDescription: function () {
-        return this._subtypeDescription;
-    },
-    /**
      * Get the list of thread IDs that this message is linked to
      * If this message is not linked to a thread, returns 'undefined'
      *
@@ -292,19 +269,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     getThreadIDs: function () {
         return this._threadIDs;
-    },
-    /**
-     * Get the tracking values of this message
-     * If this message has no tracking values, returns 'undefined'
-     *
-     * @override
-     * @return {Object[]|undefined}
-     */
-    getTrackingValues: function () {
-        if (!this.hasTrackingValues()) {
-            return undefined;
-        }
-        return this._trackingValueIDs;
     },
     /**
      * @override
@@ -340,22 +304,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         return !!(this._subject);
     },
     /**
-     * @override
-     * @return {boolean}
-     */
-    hasSubtypeDescription: function () {
-        return !!(this._subtypeDescription);
-    },
-    /**
-     * State whether this message contains some tracking values
-     *
-     * @override
-     * @return {boolean}
-     */
-    hasTrackingValues: function () {
-        return !!(this._trackingValueIDs && (this._trackingValueIDs.length > 0));
-    },
-    /**
      * State whether this message is linked to a document thread (not channel)
      *
      * Usually, if this is true, then this message comes from a document thread,
@@ -380,24 +328,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         return this._isMyselfAuthor();
     },
     /**
-     * States whether the current message needs moderation in general.
-     *
-     * @override
-     * @returns {boolean}
-     */
-    needsModeration: function () {
-        return this._moderationStatus === 'pending_moderation';
-    },
-    /**
-     * States whether the current message needs moderation by the current user.
-     * Such a message should be in the moderation mailbox.
-     *
-     * @returns {boolean}
-     */
-    needsModerationByUser: function () {
-        return _.contains(this._threadIDs, 'mailbox_moderation');
-    },
-    /**
      * State whether this message is needaction
      *
      * @override
@@ -405,15 +335,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     isNeedaction: function () {
         return _.contains(this._threadIDs, 'mailbox_inbox');
-    },
-    /**
-     * State whether this message is starred
-     *
-     * @override
-     * @returns {boolean}
-     */
-    isStarred: function () {
-        return _.contains(this._threadIDs, 'mailbox_starred');
     },
     /**
      * State whether this message is a system notification
@@ -444,43 +365,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         this._threadIDs = _.without(this._threadIDs, threadID);
     },
     /**
-     * Update the moderation status of the message, so that it is now accepted
-     * or rejected. When the message is accepted, it may be linked to more
-     * threads, which is the case for relay channels on moderated channels.
-     *
-     * @param {string} newModerationStatus ['accepted', 'rejected']
-     * @param {Object} [options]
-     * @param {Object} [options.additionalThreadIDs] contains additional thread
-     *   IDs to be registered on the message.
-     */
-    setModerationStatus: function (newModerationStatus, options) {
-        var self = this;
-        if (newModerationStatus === this._moderationStatus) {
-            return;
-        }
-        this._moderationStatus = newModerationStatus;
-        if (newModerationStatus === 'accepted' && options) {
-            _.each(options.additionalThreadIDs, function (threadID) {
-                self._addThread(threadID);
-            });
-        }
-        this._warnMessageModerated();
-    },
-    /**
-     * Set whether the message is starred or not.
-     * If it is starred, the message is moved to the "Starred" mailbox.
-     * Note that this function only applies it locally, the server is not aware
-     *
-     * @param {boolean} starred if set, the message is starred
-     */
-    setStarred: function (starred) {
-        if (starred) {
-            this._addThread('mailbox_starred');
-        } else {
-            this.removeThread('mailbox_starred');
-        }
-    },
-    /**
      * State whether this message should display the subject
      *
      * @return {boolean}
@@ -504,25 +388,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         return this._super.apply(this, arguments) && !this._isOdoobotAuthor();
     },
     /**
-     * Toggle the star status of the message
-     *
-     * It relies on the star status of the message from the date of the server.
-     * The star status is updated from a 'toggle_star' notification on the
-     * longpoll bus
-     *
-     * @see {mail.Manager.Notification} for the receipt of 'toggle_star'
-     *   notification after this rpc.
-     *
-     * @return {Promise}
-     */
-    toggleStarStatus: function () {
-        return this._rpc({
-                model: 'mail.message',
-                method: 'toggle_message_starred',
-                args: [[this._id]],
-            });
-    },
-    /**
      * Update the customer email status
      *
      * @param {string} newCustomerEmailStatus
@@ -538,7 +403,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
     /**
      * Register a thread to the message
      * Useful when you mark a message as 'to do'.
-     * This message will be available in 'Starred' mailbox.
      *
      * @private
      * @param  {string|integer} threadID
@@ -646,88 +510,8 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         if (_.contains(this._needactionPartnerIDs, session.partner_id)) {
             this._setNeedaction(true);
         }
-        if (_.contains(this._starredPartnerIDs, session.partner_id)) {
-            this.setStarred(true);
-        }
         if (_.contains(this._historyPartnerIDs, session.partner_id)) {
             this._setHistory(true);
-        }
-        if (
-            this.originatesFromChannel() &&
-            _.contains(
-                this.call('mail_service', 'getModeratedChannelIDs'),
-                this.getOriginChannelID()
-            ) &&
-            this.needsModeration()
-        ) {
-            this._setModeratedByUser(true);
-        }
-    },
-    /**
-     * Do some extra processing at message init, related to the
-     * moderated status of the message.
-     *
-     * If the message needs moderation, it is not yet linked to the
-     * moderated channel server-side. Therefore, it is not registered
-     * in the list of threadIDs, as it is built on server-side information
-     * at message initialisation (using data.channel_ids).
-     *
-     * Since the web client uses the list of thread IDs to show visually the
-     * message in a thread, we should hack the response of the server so that
-     * it assumes the message really belongs to this thread.
-     *
-     * @private
-     */
-    _processModeration: function () {
-        if (this.needsModeration()) {
-            // the message is not linked to the moderated channel on the
-            // server, therefore this message has not this channel in
-            // channel_ids. Here, just to show this message in the channel
-            // visually, it links this message to the channel
-            this._threadIDs.push(this.getOriginChannelID());
-        }
-    },
-    /**
-     * Process the tracking values on message creation, which
-     * basically format date to the local only once by message
-     *
-     * Cannot be done in preprocess, since it alter the original value
-     *
-     * @private
-     */
-    _processTrackingValues: function () {
-        if (this.hasTrackingValues()) {
-            _.each(this.getTrackingValues(), function (trackingValue) {
-                if (trackingValue.field_type === 'datetime') {
-                    if (trackingValue.old_value) {
-                        trackingValue.old_value =
-                            moment
-                                .utc(trackingValue.old_value)
-                                .local()
-                                .format('LLL');
-                    }
-                    if (trackingValue.new_value) {
-                        trackingValue.new_value =
-                            moment
-                                .utc(trackingValue.new_value)
-                                .local()
-                                .format('LLL');
-                    }
-                } else if (trackingValue.field_type === 'date') {
-                    if (trackingValue.old_value) {
-                        trackingValue.old_value =
-                            moment(trackingValue.old_value)
-                                .local()
-                                .format('LL');
-                    }
-                    if (trackingValue.new_value) {
-                        trackingValue.new_value =
-                            moment(trackingValue.new_value)
-                                .local()
-                                .format('LL');
-                    }
-                }
-            });
         }
     },
     /**
@@ -740,18 +524,14 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @param {string} [data.email_from]
      * @param {string} [data.info]
      * @param {string} [data.model]
-     * @param {string} [data.moderation_status='accepted']
      * @param {string} [data.module_icon]
      * @param {Array} [data.needaction_partner_ids = []]
      * @param {Array} [data.history_partner_ids = []]
      * @param {string} [data.record_name]
      * @param {integer} [data.res_id]
-     * @param {Array} [data.starred_partner_ids = []]
      * @param {string} [data.subject]
-     * @param {string} [data.subtype_description]
-     * @param {Object[]} [data.tracking_value_ids]
      */
-    _setInitialData: function (data){
+    _setInitialData: function (data) {
         this._customerEmailData = data.customer_email_data || [];
         this._customerEmailStatus = data.customer_email_status;
         this._documentModel = data.model;
@@ -762,14 +542,9 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         this._isNote = data.is_note;
         this._moduleIcon = data.module_icon;
         this._needactionPartnerIDs = data.needaction_partner_ids || [];
-        this._starredPartnerIDs = data.starred_partner_ids || [];
         this._historyPartnerIDs = data.history_partner_ids || [];
         this._subject = data.subject;
-        this._subtypeDescription = data.subtype_description;
         this._threadIDs = data.channel_ids || [];
-        this._trackingValueIDs = data.tracking_value_ids;
-
-        this._moderationStatus = data.moderation_status || 'accepted';
     },
     /*
      * Set whether the message is history or not.
@@ -787,22 +562,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         }
     },
     /**
-     * Set whether the message is moderated by current user or not.
-     * If it is moderated by the current user, the message is moved to the
-     * "Moderation" mailbox. Note that this function only applies it locally,
-     * the server is not aware
-     *
-     * @private
-     * @param {boolean} moderated if set, the message is moderated by user
-     */
-    _setModeratedByUser: function (moderated) {
-        if (moderated) {
-            this._addThread('mailbox_moderation');
-        } else {
-            this.removeThread('mailbox_moderation');
-        }
-    },
-    /**
      * Set whether the message is needaction or not.
      * If it is needaction, the message is moved to the "Inbox" mailbox.
      * Note that this function only applies it locally, the server is not aware
@@ -817,24 +576,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
             this.removeThread('mailbox_inbox');
         }
     },
-    /**
-     * @private
-     */
-    _warnMessageModerated: function () {
-        var mailBus = this.call('mail_service', 'getMailBus');
-        if (this.needsModerationByUser()) {
-            this._setModeratedByUser(false);
-            var moderationBox = this.call('mail_service', 'getMailbox', 'moderation');
-            moderationBox.decrementMailboxCounter();
-            moderationBox.removeMessage(this.getID());
-            mailBus.trigger('update_moderation_counter');
-        }
-        if (this._moderationStatus !== 'accepted') {
-            this.call('mail_service', 'removeMessageFromThreads', this);
-        }
-        mailBus.trigger('update_message', this);
-    },
-
 });
 
 return Message;

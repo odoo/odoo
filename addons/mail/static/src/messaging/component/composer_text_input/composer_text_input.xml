@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.messaging.component.ComposerTextInput" owl="1">
+        <div class="o_ComposerTextInput">
+            <t t-if="composer">
+                <textarea class="o_ComposerTextInput_textarea" t-esc="composer.textInputContent" placeholder="Write something..." t-on-keydown="_onKeydownTextarea" t-on-input="_onInputTextarea" t-ref="textarea" />
+            </t>
+        </div>
+    </t>
+
+    <!--
+        @param {boolean} isMobile
+        @param {Object} item
+        @param {Object} item.original data related to mentioned canned response
+        @param {string} item.original.source source of the mentioned canned response
+        @param {string} item.original.substitution substitution string of the mentioned canned response
+    -->
+    <t t-name="mail.messaging.component.ComposerTextInput.CannedMentionMenuItem" owl="1">
+        <div class="o_ComposerTextInput_mentionMenuItem" t-att-class="{ 'o-mobile': isMobile }" t-att-title="item.original.source">
+            <t t-esc="item.original.source"/> <span class="o_extra"><t t-esc="item.original.substitution"/></span>
+        </div>
+    </t>
+
+    <!--
+        @param {boolean} isMobile
+        @param {Object} item
+        @param {string} item.string name of the mentioned channel
+    -->
+    <t t-name="mail.messaging.component.ComposerTextInput.ChannelMentionMenuItem" owl="1">
+        <div class="o_ComposerTextInput_mentionMenuItem" t-att-class="{ 'o-mobile': isMobile }">
+            <t t-esc="item.string"/>
+        </div>
+    </t>
+
+    <!--
+        Attributes 'data-oe-id' and 'data-oe-model' are considered safe by html_sanitizer.
+        @param {Object} item
+        @param {Object} item.original data related to mentioned channel
+        @param {integer} item.original.id id of the mentioned channel
+        @param {string} item.original.name name of the mentioned channel
+    -->
+    <t t-name="mail.messaging.component.ComposerTextInput.ChannelMentionSelectItem" owl="1">
+        <a href="#" class="o_mention" contenteditable="false" data-oe-model="mail.channel" t-att-data-oe-id="item.original.id">#<t t-esc="item.original.name"/></a>
+    </t>
+
+    <!--
+        @param {boolean} isMobile
+        @param {Object} item
+        @param {Object} item.original data related to mentioned command
+        @param {string} item.original.help help string of the mentioned command
+        @param {string} item.original.name name of the mentioned command
+    -->
+    <t t-name="mail.messaging.component.ComposerTextInput.CommandMentionMenuItem" owl="1">
+        <div class="o_ComposerTextInput_mentionMenuItem" t-att-class="{ 'o-mobile': isMobile }" t-att-title="item.original.name">
+            <t t-esc="item.original.name"/> <span class="o_extra"><t t-esc="item.original.help"/></span>
+        </div>
+    </t>
+
+    <!--
+        @param {boolean} isMobile
+        @param {Object} item
+        @param {Object} item.original data related to mentioned partner
+        @param {string} item.original.email email of the mentioned partner
+        @param {string} partnerName name of the mentioned partner
+    -->
+    <t t-name="mail.messaging.component.ComposerTextInput.PartnerMentionMenuItem" owl="1">
+        <div class="o_ComposerTextInput_mentionMenuItem" t-att-class="{ 'o-mobile': isMobile }" t-attf-title="{{ partnerName }}{{ item.original.email ? ('&lt;' + item.original.email + '&gt;') : ''}}">
+            <t t-if="item.original.im_status">
+                <t t-call="mail.messaging.component.PartnerImStatusIcon">
+                    <t t-set="partner" t-value="item.original"/>
+                </t>
+            </t><t t-esc="partnerName"/><t t-if="item.original.email"> <t t-esc="item.original.email"/><span class="o_extra"><t t-esc="'&lt;' + item.original.email + '&gt;'"/></span></t>
+        </div>
+    </t>
+
+    <!--
+        Attributes 'data-oe-id' and 'data-oe-model' are considered safe by html_sanitizer.
+        @param {Object} item
+        @param {Object} item.original data related to mentioned partner
+        @param {integer} item.original.id id of the mentioned partner
+        @param {string} partnerName name of the mentioned partner
+    -->
+    <t t-name="mail.messaging.component.ComposerTextInput.PartnerMentionSelectItem" owl="1">
+        <a href="#" class="o_mention" contenteditable="false" data-oe-model="res.partner" t-att-data-oe-id="item.original.id">@<t t-esc="partnerName"/></a>
+    </t>
+
+</templates>

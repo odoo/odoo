@@ -91,8 +91,6 @@ MailManager.include({
      * @private
      * @param {Object} messageData
      * @param {integer[]} messageData.channel_ids channel IDs of this message
-     *   (note that 'pending moderation' messages in moderated channels do not
-     *   have the moderated channels in this array).
      */
     _handleChannelMessageNotification: function (messageData) {
         var self = this;
@@ -362,57 +360,10 @@ MailManager.include({
                     channel.decrementNeedactionCounter(data.message_ids.length, 0);
                 }
             });
-        } else {
-            // if no channel_ids specified, this is a 'mark all read' in inbox
-            _.each(this.getChannels(), function (channel) {
-                channel.resetNeedactionCounter();
-            });
         }
         var inbox = this.getMailbox('inbox');
         inbox.decrementMailboxCounter(data.message_ids.length);
         this._mailBus.trigger('update_needaction', inbox.getMailboxCounter());
-    },
-    /**
-     * On receiving a message made by the current user, on a moderated channel,
-     * which is pending moderation.
-     *
-     * @private
-     * @param {Object} data
-     * @param {Object} data.message server-side data of the message
-     */
-    _handlePartnerMessageAuthorNotification: function (data) {
-        this.addMessage(data.message);
-    },
-    /**
-     * Notification to delete several messages locally
-     * Useful when a pending moderation message has been rejected, so that
-     * this message should not be displayed anymore.
-     *
-     * @private
-     * @param {Object} data
-     * @param {Object[]} [data.message_ids] IDs of messages to delete locally.
-     */
-    _handlePartnerMessageDeletionNotification: function (data) {
-        var self = this;
-        _.each(data.message_ids, function (messageID) {
-            var message = self.getMessage(messageID);
-            if (message) {
-                message.setModerationStatus('rejected');
-            }
-        });
-    },
-    /**
-     * On receiving a message pending moderation, and current user is moderator
-     * of such message.
-     *
-     * @param {Object} data notification data
-     * @param {Object} data.message data of message
-     */
-    _handlePartnerMessageModeratorNotification: function (data) {
-        var self = this;
-        this.addMessage(data.message).then(function () {
-            self._mailBus.trigger('update_moderation_counter');
-        });
     },
     /**
      * On receiving a notification that is specific to a user
@@ -424,16 +375,8 @@ MailManager.include({
     _handlePartnerNotification: function (data) {
         if (data.info === 'unsubscribe') {
             this._handlePartnerUnsubscribeNotification(data);
-        } else if (data.type === 'toggle_star') {
-            this._handlePartnerToggleStarNotification(data);
         } else if (data.type === 'mark_as_read') {
             this._handlePartnerMarkAsReadNotification(data);
-        } else if (data.type === 'moderator') {
-            this._handlePartnerMessageModeratorNotification(data);
-        } else if (data.type === 'author') {
-            this._handlePartnerMessageAuthorNotification(data);
-        } else if (data.type === 'deletion') {
-            this._handlePartnerMessageDeletionNotification(data);
         } else if (data.info === 'transient_message') {
             this._handlePartnerTransientMessageNotification(data);
         } else if (data.type === 'activity_updated') {
@@ -452,49 +395,6 @@ MailManager.include({
         } else {
             this._handlePartnerChannelNotification(data);
         }
-    },
-    /**
-     * On toggling on or off the star status of one or several messages.
-     * As the information is stored server-side, the web client must adapt
-     * itself from server's data on the messages.
-     *
-     * @private
-     * @param {Object} data
-     * @param {integer[]} data.message_ids IDs of messages that have a change
-     *   of their starred status.
-     * @param {boolean} data.starred states whether the messages with id in
-     *   `data.message_ids` have become either starred or unstarred
-     */
-    _handlePartnerToggleStarNotification: function (data) {
-        var self = this;
-        var starred = this.getMailbox('starred');
-        _.each(data.message_ids, function (messageID) {
-            var message = _.find(self._messages, function (msg) {
-                return msg.getID() === messageID;
-            });
-            if (message) {
-                message.setStarred(data.starred);
-                if (!message.isStarred()) {
-                    self._removeMessageFromThread('mailbox_starred', message);
-                } else {
-                    self._addMessageToThreads(message, []);
-                    var channelStarred = self.getMailbox('starred');
-                    channelStarred.invalidateCaches();
-                }
-                self._mailBus.trigger('update_message', message);
-            }
-        });
-
-        if (data.starred) {
-            // increase starred counter if message is marked as star
-            starred.incrementMailboxCounter(data.message_ids.length);
-        } else {
-            // decrease starred counter if message is remove from starred
-            // if unstar_all then it will set to 0.
-            starred.decrementMailboxCounter(data.message_ids.length);
-        }
-
-        this._mailBus.trigger('update_starred', starred.getMailboxCounter());
     },
     /**
      * On receiving a transient message, i.e. a message which does not come from
@@ -601,8 +501,9 @@ MailManager.include({
      */
     _onNotification: function (notifs) {
         var self = this;
-        notifs = this._filterNotificationsOnUnsubscribe(notifs);
-        _.each(notifs, function (notif) {
+        let notifications = JSON.parse(JSON.stringify(notifs));
+        notifications = this._filterNotificationsOnUnsubscribe(notifications);
+        _.each(notifications, function (notif) {
             var model = notif[0][1];
             if (model === 'ir.needaction') {
                 self._handleNeedactionNotification(notif[1]);

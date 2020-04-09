@@ -66,6 +66,16 @@ odoo.define('web.test_env', async function (require) {
                     throw new Error(`No method to perform RPC`);
                 },
             }, env.session),
+            window: Object.assign({
+                innerHeight: 1080,
+                innerWidth: 1920,
+                Notification: {
+                    permission: 'denied',
+                    async requestPermission() {
+                        return this.permission;
+                    },
+                },
+            }, env.window),
         };
         testEnv = Object.assign(env, defaultEnv);
         return testEnv;

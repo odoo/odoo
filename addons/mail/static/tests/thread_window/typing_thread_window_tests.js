@@ -1,7 +1,7 @@
 odoo.define('mail.typingThreadWindowTests', function (require) {
 "use strict";
 
-var mailTestUtils = require('mail.testUtils');
+const { getMailServices } = require('mail.messaging.testUtils');
 
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
@@ -28,7 +28,7 @@ QUnit.module('Typing', {
                 },
             },
         };
-        this.services = mailTestUtils.getMailServices();
+        this.services = getMailServices({ hasLegacyMail: true });
         this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO;
 
         /**

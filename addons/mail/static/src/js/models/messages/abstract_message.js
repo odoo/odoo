@@ -261,26 +261,7 @@ var AbstractMessage =  Class.extend({
      * @return {boolean}
      */
     isEmpty: function () {
-        return !this.hasTrackingValues() &&
-        !this.hasAttachments() &&
-        !this.getBody();
-    },
-    /**
-     * By default, messages do not have any subtype description
-     *
-     * @return {boolean}
-     */
-    hasSubtypeDescription: function () {
-        return false;
-    },
-    /**
-     * State whether this message contains some tracking values
-     * By default, messages do not have any tracking values.
-     *
-     * @return {boolean}
-     */
-    hasTrackingValues: function () {
-        return false;
+        return !this.hasAttachments() && !this.getBody();
     },
     /**
      * State whether this message is a discussion
@@ -333,15 +314,6 @@ var AbstractMessage =  Class.extend({
         return this._isNotification;
     },
     /**
-     * State whether this message is starred
-     * By default, messages are not starred.
-     *
-     * @return {boolean}
-     */
-    isStarred: function () {
-        return false;
-    },
-    /**
      * State whether this message is a system notification
      * By default, messages are not system notifications
      *
@@ -349,15 +321,6 @@ var AbstractMessage =  Class.extend({
      * @return {boolean}
      */
     isSystemNotification: function () {
-        return false;
-    },
-    /**
-     * States whether the current message needs moderation in general.
-     * By default, messages do not require any moderation.
-     *
-     * @returns {boolean}
-     */
-    needsModeration: function () {
         return false;
     },
     /**

@@ -1,8 +1,8 @@
 odoo.define('mail.systray.MessagingMenuMailFailureTests', function (require) {
 "use strict";
 
+const { getMailServices } = require('mail.messaging.testUtils');
 var MessagingMenu = require('mail.systray.MessagingMenu');
-var mailTestUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
 
@@ -32,10 +32,6 @@ QUnit.module('MessagingMenu (Mail Failures)', {
                         type: 'many2many',
                         relation: 'mail.channel',
                     },
-                    starred: {
-                        string: "Starred",
-                        type: 'boolean',
-                    },
                     needaction: {
                       string: "Need Action",
                       type: 'boolean',
@@ -45,10 +41,6 @@ QUnit.module('MessagingMenu (Mail Failures)', {
                         type: 'one2many',
                         relation: 'res.partner',
                     },
-                    starred_partner_ids: {
-                      string: "partner ids",
-                      type: 'integer',
-                    }
                 },
                 records: [],
             },
@@ -57,13 +49,13 @@ QUnit.module('MessagingMenu (Mail Failures)', {
             }
         };
 
-        this.services = mailTestUtils.getMailServices();
+        this.services = getMailServices({ hasLegacyMail: true });
     },
     afterEach: function () {
         // unpatch _.debounce and _.throttle
         _.debounce = this.underscoreDebounce;
         _.throttle = this.underscoreThrottle;
-    }
+    },
 });
 
 QUnit.test('preview of mail failure', async function (assert) {

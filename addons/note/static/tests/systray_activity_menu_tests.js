@@ -1,8 +1,8 @@
 odoo.define('note.systray.ActivityMenuTests', function (require) {
 "use strict";
 
+const { getMailServices } = require('mail.messaging.testUtils');
 var ActivityMenu = require('mail.systray.ActivityMenu');
-var mailTestUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
 
@@ -10,7 +10,7 @@ QUnit.module('note', {}, function () {
 
 QUnit.module("ActivityMenu", {
     beforeEach: function () {
-        this.services = mailTestUtils.getMailServices();
+        this.services = getMailServices({ hasLegacyMail: true });
         this.data = {
             'mail.activity.menu': {
                 fields: {
@@ -31,7 +31,7 @@ QUnit.module("ActivityMenu", {
                 records: [],
             }
         };
-    }
+    },
 });
 
 QUnit.test('note activity menu widget: create note from activity menu', async function (assert) {

@@ -43,19 +43,31 @@
 
         <script type="text/javascript" id="loading-script" t-raw="init">
             odoo.define('web.web_client', function (require) {
-                var WebClient = require('web.AbstractWebClient');
-                var web_client = new WebClient();
+                const WebClient = require('web.AbstractWebClient');
+                const env = require('web.env');
+                const session = require('web.session');
+                const webClient = new WebClient();
 
-                web_client._title_changed = function() {};
-                web_client.show_application = function() {
-                    return web_client.action_manager.do_action("pos.ui");
+                webClient._title_changed = function() {};
+                webClient.show_application = function() {
+                    return webClient.action_manager.do_action("pos.ui");
                 };
 
-                $(function () {
-                    web_client.setElement($(document.body));
-                    web_client.start();
-                });
-                return web_client;
+                /**
+                * Add the owl templates to the environment and start the web client.
+                */
+                async function startWebClient() {
+                    await session.is_bound;
+                    env.qweb.addTemplates(session.owlTemplates);
+
+                    await owl.utils.whenReady();
+                    webClient.setElement($(document.body));
+                    webClient.start();
+                }
+
+                startWebClient();
+
+                return webClient;
             });
         </script>
     </head>

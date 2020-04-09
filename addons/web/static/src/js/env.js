@@ -150,5 +150,6 @@ odoo.define("web.env", function (require) {
             unblockUI,
         }),
         session,
+        window: window,
     };
 });

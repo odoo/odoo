@@ -13,7 +13,6 @@
         @param {mail.model.AbstractThread} thread
         @param {Object} options
         @param {boolean} [options.displayEmptyThread]
-        @param {boolean} [options.displayModerationCommands]
         @param {boolean} [options.displayNoMatchFound]
         @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
     -->
@@ -133,17 +132,9 @@
             <div class="o_thread_title">Congratulations, your inbox is empty</div>
             <div>New messages appear here.</div>
         </t>
-        <t t-if="thread.getID() === 'mailbox_starred'">
-            <div class="o_thread_title">No starred messages</div>
-            <div>You can mark any message as 'starred', and it shows up in this mailbox.</div>
-        </t>
         <t t-if="thread.getID() === 'mailbox_history'">
             <div class="o_thread_title o_neutral_face_icon">No history messages</div>
             <div>Messages marked as read will appear in the history.</div>
-        </t>
-        <t t-if="thread.getID() === 'mailbox_moderation'">
-            <div class="o_thread_title">You have no message to moderate</div>
-            <div>Pending moderation messages appear here.</div>
         </t>
     </div>
 
@@ -255,8 +246,6 @@
         @param {boolean} [options.displayDocumentLinks]
         @param {boolean} [options.displayEmailIcons]
         @param {boolean} [options.displayMarkAsRead]
-        @param {boolean} [options.displayModerationCommands] when set, display the moderation commands on
-          the message. This includes the moderation checkboxes (needs a control panel such as in Discuss app).
         @param {boolean} [options.displayReplyIcons]
         @param {boolean} [options.displayStars]
         @param {boolean} [options.displaySubjectsOnMessages]
@@ -291,14 +280,10 @@
                 <span t-if="!displayAuthorMessages[message.getID()]" t-att-title="message.getDate().format(dateFormat)" class="o_thread_message_side_date">
                     <t t-esc="message.getDate().format('hh:mm')"/>
                 </span>
-                <i t-if="!displayAuthorMessages[message.getID()] and options.displayStars and message.getType() !== 'notification'"
-                    t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
-                    t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as todo"/>
                 <t t-if="!displayAuthorMessages[message.getID()] and thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
             </div>
             <div class="o_thread_message_core">
                 <p t-if="displayAuthorMessages[message.getID()]" class="o_mail_info text-muted">
-                    <input t-if="message.needsModeration() and message.needsModerationByUser() and options.displayModerationCommands" type="checkbox" class="moderation_checkbox" t-att-data-message-id="message.getID()"/>
                     <t t-if="message.isNote()">
                         Note by
                     </t>
@@ -334,29 +319,16 @@
                     </span>
                     <span t-attf-class="o_thread_icons">
                         <t t-if="thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
-                        <i t-if="options.displayStars and !message.isSystemNotification() and !message.needsModeration()"
-                            t-att-class="'fa fa-lg o_thread_icon o_thread_message_star ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
-                            t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as Todo"/>
                        <i t-if="message.isLinkedToDocumentThread() and options.displayReplyIcons"
                            class="fa fa-reply o_thread_icon o_thread_message_reply"
                            t-att-data-message-id="message.getID()" title="Reply" role="img" aria-label="Reply"/>
                         <i t-if="message.isNeedaction() and options.displayMarkAsRead"
                            class="fa fa-check o_thread_icon o_thread_message_needaction"
                            t-att-data-message-id="message.getID()" title="Mark as Read" role="img" aria-label="Mark as Read"/>
-
-                        <t t-if="message.needsModeration() and message.originatesFromChannel()">
-                            <t t-call="mail.MessageModeration"/>
-                        </t>
                     </span>
                 </p>
                 <div class="o_thread_message_content">
                     <t t-raw="message.getBody()"/>
-                    <t t-if="message.hasTrackingValues()">
-                        <t t-if="message.hasSubtypeDescription()">
-                            <p><t t-esc="message.getSubtypeDescription()"/></p>
-                        </t>
-                        <t t-call="mail.widget.Thread.MessageTracking"/>
-                    </t>
                     <p t-if="options.displaySubjectOnMessages and message.shouldDisplaySubject()" class="o_mail_subject">Subject: <t t-esc="message.getSubject()"/></p>
                     <t t-if="message.hasAttachments()">
                         <div t-if="message.hasImageAttachments()" class="o_attachments_previews">
@@ -464,59 +436,10 @@
         </div>
     </t>
 
-    <!--
-        @param {mail.model.Message} message
-        @param {Object} options
-        @param {boolean} [options.displayModerationCommands]
-    -->
-    <t t-name="mail.MessageModeration">
-        <i t-if="message.isMyselfAuthor()" class="text-danger" title="Your message is pending moderation"><b>Pending moderation</b></i>
-        <t t-elif="message.needsModerationByUser()">
-            <t t-if="options.displayModerationCommands" t-call="mail.MessageModerationDecision"/>
-            <i t-else="" class="text-danger" title="Open Channel in Discuss to moderate"><b>Pending moderation</b></i>
-        </t>
-    </t>
-
-    <!--
-        @param {mail.model.Message} message
-    -->
-    <t t-name="mail.MessageModerationDecision">
-        <i class="o_thread_icon ml4 o_thread_message_moderation text-success"
-           t-att-data-message-id="message.getID()" data-decision="accept" title="Accept"><b>Accept |</b></i>
-        <i class="o_thread_icon ml4 o_thread_message_moderation text-danger"
-           t-att-data-message-id="message.getID()" data-decision="reject" title="Remove message with explanation"><b>Reject |</b></i>
-        <i class="o_thread_icon ml4 o_thread_message_moderation text-danger"
-           t-att-data-message-id="message.getID()" data-decision="discard" title="Remove message without explanation"><b>Discard |</b></i>
-        <i class="o_thread_icon ml4 o_thread_message_moderation text-success"
-           t-att-data-message-id="message.getID()" data-decision="allow" title="Add this email address to white list of people"><b>Always Allow |</b></i>
-        <i class="o_thread_icon ml4 o_thread_message_moderation text-danger"
-           t-att-data-message-id="message.getID()" data-decision="ban" title="Ban this email address"><b>Ban</b></i>
-    </t>
-
     <t t-name="mail.MessagesSeparator">
         <div class="o_thread_new_messages_separator">
             <span class="o_thread_separator_label">New messages</span>
         </div>
-    </t>
-
-    <!--
-        @param {mail.model.Message} message
-    -->
-    <t t-name="mail.widget.Thread.MessageTracking">
-        <ul class="o_mail_thread_message_tracking">
-            <t t-foreach='message.getTrackingValues()' t-as='value'>
-                <li>
-                    <t t-esc="value.changed_field"/>:
-                    <t t-if="value.old_value">
-                        <span> <t t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/> </span>
-                        <span t-if="value.old_value !== value.new_value" class="fa fa-long-arrow-right" role="img" aria-label="Changed" title="Changed"/>
-                    </t>
-                    <span t-if="value.old_value !== value.new_value">
-                        <t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>
-                    </span>
-                </li>
-            </t>
-        </ul>
     </t>
 
     <!--

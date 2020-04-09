@@ -37,15 +37,12 @@ var ThreadWidget = Widget.extend({
         'click .o_attachment_view': '_onAttachmentView',
         'click .o_attachment_delete_cross': '_onDeleteAttachment',
         'click .o_thread_message_needaction': '_onClickMessageNeedaction',
-        'click .o_thread_message_star': '_onClickMessageStar',
         'click .o_thread_message_reply': '_onClickMessageReply',
         'click .oe_mail_expand': '_onClickMailExpand',
         'click .o_thread_message': '_onClickMessage',
         'click': '_onClick',
         'click .o_thread_message_email_exception': '_onClickEmailException',
         'click .o_thread_message_email_bounce': '_onClickEmailException',
-        'click .o_thread_message_moderation': '_onClickMessageModeration',
-        'change .moderation_checkbox': '_onChangeModerationCheckbox',
     },
 
     /**
@@ -61,7 +58,6 @@ var ThreadWidget = Widget.extend({
         this._enabledOptions = _.defaults(options || {}, {
             displayOrder: ORDER.ASC,
             displayMarkAsRead: true,
-            displayModerationCommands: false,
             displayStars: true,
             displayDocumentLinks: true,
             displayAvatars: true,
@@ -75,7 +71,6 @@ var ThreadWidget = Widget.extend({
         this._disabledOptions = {
             displayOrder: this._enabledOptions.displayOrder,
             displayMarkAsRead: false,
-            displayModerationCommands: false,
             displayStars: false,
             displayDocumentLinks: false,
             displayAvatars: this._enabledOptions.displayAvatars,
@@ -314,15 +309,6 @@ var ThreadWidget = Widget.extend({
         } else {
             this.scrollToBottom();
         }
-    },
-    /**
-     * Toggle all the moderation checkboxes in the thread
-     *
-     * @param {boolean} checked if true, check the boxes,
-     *      otherwise uncheck them.
-     */
-    toggleModerationCheckboxes: function (checked) {
-        this.$('.moderation_checkbox').prop('checked', checked);
     },
     /**
      * Unselect the selected message
@@ -565,13 +551,6 @@ var ThreadWidget = Widget.extend({
     },
     /**
      * @private
-     * @param {MouseEvent} ev
-     */
-    _onChangeModerationCheckbox: function (ev) {
-        this.trigger_up('update_moderation_buttons');
-    },
-    /**
-     * @private
      */
     _onClick: function () {
         if (this._selectedMessageID) {
@@ -624,27 +603,6 @@ var ThreadWidget = Widget.extend({
             .addClass('o_thread_selected_message');
         this.trigger('select_message', this._selectedMessageID);
         ev.stopPropagation();
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickMessageStar: function (ev) {
-        var messageID = $(ev.currentTarget).data('message-id');
-        this.trigger('toggle_star_status', messageID);
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickMessageModeration: function (ev) {
-        var $button = $(ev.currentTarget);
-        var messageID = $button.data('message-id');
-        var decision = $button.data('decision');
-        this.trigger_up('message_moderation', {
-            messageID: messageID,
-            decision: decision,
-        });
     },
     /**
      * @private

@@ -1,7 +1,7 @@
 odoo.define('mail.documentThreadWindowTests', function (require) {
 "use strict";
 
-var mailTestUtils = require('mail.testUtils');
+const { getMailServices } = require('mail.messaging.testUtils');
 var MessagingMenu = require('mail.systray.MessagingMenu');
 
 var testUtils = require('web.test_utils');
@@ -28,10 +28,6 @@ QUnit.module('Document Thread', {
                         type: 'many2many',
                         relation: 'mail.channel',
                     },
-                    starred: {
-                        string: "Starred",
-                        type: 'boolean',
-                    },
                     needaction: {
                       string: "Need Action",
                       type: 'boolean',
@@ -41,10 +37,6 @@ QUnit.module('Document Thread', {
                         type: 'one2many',
                         relation: 'res.partner',
                     },
-                    starred_partner_ids: {
-                      string: "partner ids",
-                      type: 'integer',
-                    }
                 },
                 records: [{
                     id: 1,
@@ -83,7 +75,7 @@ QUnit.module('Document Thread', {
         this.session = {
             partner_id: partnerID, // so that needaction messages are treated as needactions
         };
-        this.services = mailTestUtils.getMailServices();
+        this.services = getMailServices({ hasLegacyMail: true });
     },
 });
 
