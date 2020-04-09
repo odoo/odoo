@@ -67,7 +67,12 @@ class SaleOrderLine(models.Model):
         for line in self:
             bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id)
             if bom and bom.type == 'phantom' and line.order_id.state == 'sale':
-                bom_delivered = all([move.state == 'done' for move in line.move_ids])
+                bom_delivered = all(
+                    [
+                        move.state == "done"
+                        for move in line.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != "cancel")
+                    ]
+                )
                 if not bom_delivered:
                     line.qty_delivered_method = 'manual'
                     lines |= line
