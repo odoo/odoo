@@ -41,6 +41,7 @@ BaseSettingController.include({
 });
 
 const WebsiteCookiesbarField = FieldBoolean.extend({
+    supportedFieldTypes: ['boolean'],
     xmlDependencies: ['/website/static/src/xml/website.res_config_settings.xml'],
 
     _onChange: function () {
