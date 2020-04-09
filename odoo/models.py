@@ -1971,7 +1971,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # such as 2006-01-01 being formatted as "January 2005" in some locales.
                 # Cfr: http://babel.pocoo.org/en/latest/dates.html#date-fields
                 'hour': 'hh:00 dd MMM',
-                'day': 'dd MMM yyyy', # yyyy = normal year
+                'day': 'yyyy-MM-dd', # yyyy = normal year
                 'week': "'W'w YYYY",  # w YYYY = ISO week-year
                 'month': 'MMMM yyyy',
                 'quarter': 'QQQ yyyy',
@@ -2278,7 +2278,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for field in many2onefields:
             ids_set = {d[field] for d in data if d[field]}
             m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
-            data_dict = dict(lazy_name_get(m2o_records.sudo()))
+            if not self.env.context:
+                data_dict = dict( m2o_records.sudo().name_get() )
+            else:
+                data_dict = dict(lazy_name_get(m2o_records.sudo()))
+            
             for d in data:
                 d[field] = (d[field], data_dict[d[field]]) if d[field] else False
 
