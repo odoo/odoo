@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="calendar_event_view_calendar" model="ir.ui.view">
+        <field name="name">calendar.event.view.calendar.inherit</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_calendar"/>
+        <field name="arch" type="xml">
+            <xpath expr="//calendar" position="attributes">
+                <attribute name="js_class">google_sync_calendar</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

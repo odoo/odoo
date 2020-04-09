@@ -45,10 +45,10 @@ class CalendarEvent(models.Model):
 
     opportunity_id = fields.Many2one('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]")
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
-        event = super(CalendarEvent, self).create(vals)
-
-        if event.opportunity_id and not event.activity_ids:
-            event.opportunity_id.log_meeting(event.name, event.start, event.duration)
-        return event
+        events = super(CalendarEvent, self).create(vals)
+        for event in events:
+            if event.opportunity_id and not event.activity_ids:
+                event.opportunity_id.log_meeting(event.name, event.start, event.duration)
+        return events

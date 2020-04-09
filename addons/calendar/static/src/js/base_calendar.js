@@ -10,7 +10,6 @@ var WebClient = require('web.WebClient');
 
 var FieldMany2ManyTags = relationalFields.FieldMany2ManyTags;
 
-
 var CalendarNotification = Notification.extend({
     template: "CalendarNotification",
     xmlDependencies: (Notification.prototype.xmlDependencies || [])
