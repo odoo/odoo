@@ -10,6 +10,7 @@ var core = require('web.core');
 var Domain = require('web.Domain');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
+const FieldWrapper = require('web.FieldWrapper');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
@@ -316,8 +317,22 @@ var KanbanRecord = Widget.extend({
             attrs[key] = value;
         });
         var options = _.extend({}, this.options, { attrs: attrs });
-        var widget = new Widget(this, field_name, this.state, options);
-        var def = widget.replace($field);
+        let widget;
+        let def;
+        if (utils.isComponent(Widget)) {
+            widget = new FieldWrapper(this, Widget, {
+                fieldName: field_name,
+                record: this.state,
+                options: options,
+            });
+            def = widget.mount(document.createDocumentFragment())
+                .then(() => {
+                    $field.replaceWith(widget.$el);
+                });
+        } else {
+            widget = new Widget(this, field_name, this.state, options);
+            def = widget.replace($field);
+        }
         this.defs.push(def);
         def.then(function () {
             self._setFieldDisplay(widget.$el, field_name);

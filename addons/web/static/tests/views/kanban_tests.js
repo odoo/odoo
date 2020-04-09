@@ -6019,6 +6019,29 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test('kanban view with boolean widget', async function (assert) {
+        assert.expect(1);
+
+        const kanban = await testUtils.createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="bar" widget="boolean"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        assert.containsOnce(kanban.el.querySelector('.o_kanban_record'),
+            'div.custom-checkbox.o_field_boolean');
+        kanban.destroy();
+    });
 });
 
 });
