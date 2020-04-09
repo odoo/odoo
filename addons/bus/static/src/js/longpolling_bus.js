@@ -191,7 +191,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
             self._pollRpc = false;
             // no error popup if request is interrupted or fails for any reason
             result.event.preventDefault();
-            if (result.message && result.message.message === "XmlHttpRequestError abort") {
+            if (result.message === "XmlHttpRequestError abort") {
                 self._poll();
             } else {
                 // random delay to avoid massive longpolling
