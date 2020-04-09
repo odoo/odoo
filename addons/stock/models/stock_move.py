@@ -306,11 +306,13 @@ class StockMove(models.Model):
         for d in data:
             rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
 
+        # In case we are in an onchange, move.id is a NewId, not an integer. Therefore, there is no
+        # match in the rec dictionary. By using move.ids[0] we get the correct integer value.
         for move in self:
             uom = move.product_uom
             move.quantity_done = sum(
                 self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
-                for line_uom_id, qty in rec.get(move.id, [])
+                for line_uom_id, qty in rec.get(move.ids[0] if move.ids else move.id, [])
             )
 
     def _quantity_done_set(self):
