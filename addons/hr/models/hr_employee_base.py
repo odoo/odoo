@@ -114,9 +114,3 @@ class HrEmployeeBase(models.AbstractModel):
     def _compute_parent_id(self):
         for employee in self.filtered('department_id.manager_id'):
             employee.parent_id = employee.department_id.manager_id
-
-    def _get_placeholder_filename(self, field=None):
-        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
-        if field in image_fields and not self:
-            return 'base/static/img/user-slash.png'
-        return super()._get_placeholder_filename(field=field)
