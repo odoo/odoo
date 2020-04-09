@@ -5,6 +5,7 @@ from . import controllers
 from . import models
 from . import wizard
 from . import report
+from . import populate
 
 from odoo import api, SUPERUSER_ID
 
