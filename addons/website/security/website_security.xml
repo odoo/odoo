@@ -15,9 +15,6 @@
         <field name="category_id" ref="base.module_category_website_website"/>
     </record>
 
-    <record id="base.default_user" model="res.users">
-        <field name="groups_id" eval="[(4, ref('group_website_designer'))]"/>
-    </record>
     <!-- FIXME: groups on existing users should probably be updated when implied_ids is, or existing users don't get the relevant implied groups on module installation... -->
     <record id="base.user_admin" model="res.users">
         <field name="groups_id" eval="[(4, ref('website.group_website_designer'))]"/>
@@ -28,6 +25,10 @@
     </record>
 
     <data noupdate="1">
+
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4, ref('group_website_designer'))]"/>
+        </record>
 
     <record id="website_menu" model="ir.rule">
         <field name="name">Website menu: group_ids</field>

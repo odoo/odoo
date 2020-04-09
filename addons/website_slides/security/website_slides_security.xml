@@ -16,15 +16,16 @@
             <field name="implied_ids" eval="[(4, ref('group_website_slides_officer'))]"/>
         </record>
 
-        <record id="base.default_user" model="res.users">
-            <field name="groups_id" eval="[(4,ref('group_website_slides_manager'))]"/>
-        </record>
-
         <record id="base.group_system" model="res.groups">
             <field name="implied_ids" eval="[(4, ref('group_website_slides_manager'))]"/>
         </record>
 
         <data noupdate="1">
+
+            <record id="base.default_user" model="res.users">
+                <field name="groups_id" eval="[(4,ref('group_website_slides_manager'))]"/>
+            </record>
+
         <!-- CHANNEL -->
         <record id="rule_slide_channel_global" model="ir.rule">
             <field name="name">Channel: always visible (sub rules exist)</field>
