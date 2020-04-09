@@ -500,7 +500,7 @@
                 <button string="Approve" name="action_approve" type="object"
                     icon="fa-check text-success"
                     states="confirm"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <button string="Validate" name="action_validate" type="object"
                     icon="fa-check text-success"
                     states="validate1"
@@ -543,18 +543,6 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
         </field>
-    </record>
-
-    <record id="action_hr_holidays_dashboard" model="ir.actions.act_window">
-        <field name="name">All Time Off</field>
-        <field name="res_model">hr.leave</field>
-        <field name="view_mode">calendar,tree,form</field>
-        <field name="context">{
-            'form_view_ref': 'hr_holidays.hr_leave_view_form_manager',
-        }</field>
-        <field name="domain">[('holiday_type','=','employee'), ('state', '!=', 'refuse')]</field>
-        <field name="search_view_id" ref="view_hr_holidays_filter"/>
-        <field name="view_id" />
     </record>
 
     <record id="hr_leave_action_new_request" model="ir.actions.act_window">
@@ -662,11 +650,10 @@
         <field name="res_model">hr.leave</field>
         <field name="view_mode">tree,kanban,form,calendar,activity</field>
         <field name="context">{
-            'search_default_managed_people':1,
             'search_default_my_team_leaves':1,
             'search_default_approve':1}
         </field>
-        <field name="domain">[]</field>
+        <field name="domain">[('employee_id.leave_manager_id', '=', uid)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new time off request

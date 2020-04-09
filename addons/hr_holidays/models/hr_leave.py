@@ -128,6 +128,7 @@ class HolidaysRequest(models.Model):
         domain=[('valid', '=', True)])
     validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.leave_validation_type', readonly=False)
     # HR data
+
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, readonly=True, ondelete="restrict",
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, tracking=True)
@@ -826,7 +827,7 @@ class HolidaysRequest(models.Model):
         holidays._create_resource_leave()
         for holiday in holidays.filtered(lambda l: l.holiday_status_id.create_calendar_meeting):
             meeting_values = holiday._prepare_holidays_meeting_values()
-            meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
+            meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True, active_model=self._name).create(meeting_values)
             holiday.write({'meeting_id': meeting.id})
 
     def _prepare_holidays_meeting_values(self):
