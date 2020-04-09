@@ -15,8 +15,9 @@ class WebsiteForm(WebsiteForm):
             geoip_state_code = request.session.get('geoip', {}).get('region')
             if geoip_country_code and geoip_state_code:
                 State = request.env['res.country.state']
-                request.params['state_id'] = State.search([('code', '=', geoip_state_code), ('country_id.code', '=', geoip_country_code)]).id
-
+                state_id = State.search([('code', '=', geoip_state_code), ('country_id.code', '=', geoip_country_code)]).id
+                if state_id:
+                    request.params['state_id'] = state_id
         return super(WebsiteForm, self).website_form(model_name, **kwargs)
 
     def insert_record(self, request, model, values, custom, meta=None):
