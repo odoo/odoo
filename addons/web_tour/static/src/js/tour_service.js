@@ -10,6 +10,8 @@ var TourManager = require('web_tour.TourManager');
 if (config.device.isMobile) {
     return Promise.reject();
 }
+const untrackedClassnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overlay"];
+
 /**
  * @namespace
  * @property {Object} active_tooltips
@@ -36,25 +38,105 @@ return session.is_bound.then(function () {
         var consumed_tours = session.is_frontend ? results[0] : session.web_tours;
         var tour_manager = new TourManager(rootWidget, consumed_tours);
 
-        // Use a MutationObserver to detect DOM changes
-        var untracked_classnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overlay"];
-        var check_tooltip = _.debounce(function (records) {
-            var update = _.some(records, function (record) {
-                return !(is_untracked(record.target) ||
-                    _.some(record.addedNodes, is_untracked) ||
-                    _.some(record.removedNodes, is_untracked));
+        function _isTrackedNode(node) {
+            if (node.classList) {
+                return !untrackedClassnames
+                    .some(className => node.classList.contains(className));
+            }
+            return true;
+        }
 
-                function is_untracked(node) {
-                    var record_class = node.className;
-                    return (_.isString(record_class) &&
-                        _.intersection(record_class.split(' '), untracked_classnames).length !== 0);
+        const classSplitRegex = /\s+/g;
+        const tooltipParentRegex = /\bo_tooltip_parent\b/;
+        let currentMutations = [];
+        function _processMutations() {
+            const hasTrackedMutation = currentMutations.some(mutation => {
+                // First check if the mutation applied on an element we do not
+                // track (like the tour tips themself).
+                if (!_isTrackedNode(mutation.target)) {
+                    return false;
                 }
+
+                if (mutation.type === 'childList') {
+                    // If it is a modification to the DOM hierarchy, only
+                    // consider the addition/removal of tracked nodes.
+                    for (const nodes of [mutation.addedNodes, mutation.removedNodes]) {
+                        for (const node of nodes) {
+                            if (!_isTrackedNode(node)) {
+                                return false;
+                            }
+                        }
+                    }
+                } else if (mutation.type === 'attributes') {
+                    // Get old and new value of the attribute. Note: as we
+                    // compute the new value after a setTimeout, this might not
+                    // actually be the new value for that particular mutation
+                    // record but this is the one after all mutations. This is
+                    // normally not an issue: e.g. "a" -> "a b" -> "a" will be
+                    // seen as "a" -> "a" (not "a b") + "a b" -> "a" but we
+                    // only need to detect *one* tracked mutation to know we
+                    // have to update tips anyway.
+                    const oldV = mutation.oldValue ? mutation.oldValue.trim() : '';
+                    const newV = (mutation.target.getAttribute(mutation.attributeName) || '').trim();
+
+                    // Not sure why but this occurs, especially on ID change
+                    // (probably some strange jQuery behavior, see below).
+                    // Also sometimes, a class is just considered changed while
+                    // it just loses the spaces around the class names.
+                    if (oldV === newV) {
+                        return false;
+                    }
+
+                    if (mutation.attributeName === 'id') {
+                        // Check if this is not an ID change done by jQuery for
+                        // performance reasons.
+                        return !(oldV.includes('sizzle') || newV.includes('sizzle'));
+                    } else if (mutation.attributeName === 'class') {
+                        // Check if the change is *only* about receiving or
+                        // losing the 'o_tooltip_parent' class, which is linked
+                        // to the tour service system. We have to check the
+                        // potential addition of another class as we compute
+                        // the new value after a setTimeout. So this case:
+                        // 'a' -> 'a b' -> 'a b o_tooltip_parent' produces 2
+                        // mutation records but will be seen here as
+                        // 1) 'a' -> 'a b o_tooltip_parent'
+                        // 2) 'a b' -> 'a b o_tooltip_parent'
+                        const hadClass = tooltipParentRegex.test(oldV);
+                        const newClasses = mutation.target.classList;
+                        const hasClass = newClasses.contains('o_tooltip_parent');
+                        return !(hadClass !== hasClass
+                            && Math.abs(oldV.split(classSplitRegex).length - newClasses.length) === 1);
+                    }
+                }
+
+                return true;
             });
-            if (update) { // ignore mutations which concern the tooltips
+
+            // Either all the mutations have been ignored or one was detected as
+            // tracked and will trigger a tour manager update.
+            currentMutations = [];
+
+            // Update the tour manager if required.
+            if (hasTrackedMutation) {
                 tour_manager.update();
             }
-        }, 500);
-        var observer = new MutationObserver(check_tooltip);
+        }
+
+        // Use a MutationObserver to detect DOM changes. When a mutation occurs,
+        // only add it to the list of mutations to process and delay the
+        // mutation processing. We have to record them all and not in a
+        // debounced way otherwise we may ignore tracked ones in a serie of
+        // 10 tracked mutations followed by an untracked one. Most of them
+        // will trigger a tip check anyway so, most of the time, processing the
+        // first ones will be enough to ensure that a tip update has to be done.
+        let mutationTimer;
+        const observer = new MutationObserver(mutations => {
+            clearTimeout(mutationTimer);
+            currentMutations.push(...mutations);
+            mutationTimer = setTimeout(() => _processMutations(), 500);
+        });
+
+        // Now that the observer is configured, we have to start it when needed.
         var start_service = (function () {
             return function (observe) {
                 return new Promise(function (resolve, reject) {
@@ -64,6 +146,7 @@ return session.is_bound.then(function () {
                                 attributes: true,
                                 childList: true,
                                 subtree: true,
+                                attributeOldValue: true,
                             });
                         }
                         resolve();
