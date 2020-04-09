@@ -344,14 +344,13 @@ class SurveyQuestion(models.Model):
             if question.is_page:
                 question.page_id = None
             else:
-                question.page_id = next(
-                    (iter(question
-                        .survey_id
-                        .question_and_page_ids
-                        .filtered(lambda q: q.is_page and q.sequence < question.sequence)
-                        .sorted(reverse=True))),
-                    None
-                )
+                page = None
+                for q in question.survey_id.question_and_page_ids.sorted():
+                    if q == question:
+                        break
+                    if q.is_page:
+                        page = q
+                question.page_id = page
 
     def _index(self):
         """We would normally just use the 'sequence' field of questions BUT, if the pages and questions are
