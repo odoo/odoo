@@ -757,7 +757,7 @@ var VideoDialog = Widget.extend({
                 '<div class="media_iframe_video" data-oe-expression="' + this.$content.attr('src') + '">'+
                     '<div class="css_editable_mode_display">&nbsp;</div>'+
                     '<div class="media_iframe_video_size" contenteditable="false">&nbsp;</div>'+
-                    '<iframe src="' + this.$content.attr('src') + '" frameborder="0" contenteditable="false"></iframe>'+
+                    '<iframe src="' + this.$content.attr('src') + '" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>'+
                 '</div>'
             );
             $(this.media).replaceWith($content);
