@@ -22,6 +22,11 @@ class ResUsers(models.Model):
     _sql_constraints = [
         ('uniq_users_oauth_provider_oauth_uid', 'unique(oauth_provider_id, oauth_uid)', 'OAuth UID must be unique per provider'),
     ]
+    
+    def write(self, vals):
+        if 'active' in vals and not vals['active']:
+            vals.update({'oauth_uid': False, 'oauth_access_token': False})
+        return super(ResUsers, self).write(vals)
 
     @api.model
     def _auth_oauth_rpc(self, endpoint, access_token):
