@@ -914,6 +914,7 @@ class StockMove(models.Model):
         else:
             location_dest = self.location_dest_id._get_putaway_strategy(self.product_id)
         move_line_vals = {
+            'picking_id': self.picking_id.id,
             'location_dest_id': location_dest.id or self.location_dest_id.id,
             'location_id': self.location_id.id,
             'product_id': self.product_id.id,
