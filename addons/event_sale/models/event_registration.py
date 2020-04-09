@@ -48,7 +48,7 @@ class EventRegistration(models.Model):
                     self.env['sale.order.line'].browse(vals['sale_order_line_id'])
                 )
                 vals.update(so_line_vals)
-        registrations = super(EventRegistration, self).create(vals)
+        registrations = super(EventRegistration, self).create(vals_list)
         for registration in registrations:
             if registration.sale_order_id:
                 registration.message_post_with_view(
