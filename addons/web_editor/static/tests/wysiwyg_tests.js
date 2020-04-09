@@ -4062,7 +4062,7 @@ QUnit.test('Video', function (assert) {
                     await _insertVideo(wysiwyg, assert, 'https://www.youtube.com/watch?v=xxxxxxxxxxx', true);
                 },
                 test: {
-                    content: '<p><br></p><div class="media_iframe_video" data-oe-expression="about:blank"><div class="css_editable_mode_display">&nbsp;</div><div class="media_iframe_video_size">&nbsp;</div><iframe src="about:blank" frameborder="0"></iframe></div><p><br></p>',
+                    content: '<p><br></p><div class="media_iframe_video" data-oe-expression="about:blank"><div class="css_editable_mode_display">&nbsp;</div><div class="media_iframe_video_size">&nbsp;</div><iframe src="about:blank" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div><p><br></p>',
                     check: async function () {
                         assert.strictEqual($('.note-video-popover').css('display'), 'block', testName + ' (popover)');
                     },
@@ -4078,7 +4078,7 @@ QUnit.test('Video', function (assert) {
                 },
                 test: {
                     content: '<breakable><unbreakable><breakable><p>tata</p></breakable>' +
-                        '<div class="media_iframe_video" data-oe-expression="about:blank"><div class="css_editable_mode_display">&nbsp;</div><div class="media_iframe_video_size">&nbsp;</div><iframe src="about:blank" frameborder="0"></iframe></div>' +
+                        '<div class="media_iframe_video" data-oe-expression="about:blank"><div class="css_editable_mode_display">&nbsp;</div><div class="media_iframe_video_size">&nbsp;</div><iframe src="about:blank" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>' +
                         '<breakable><p> yoyo</p></breakable></unbreakable></breakable>',
                     check: async function () {
                         assert.strictEqual($('.note-video-popover').css('display'), 'block', testName + ' (popover)');
@@ -4112,7 +4112,7 @@ QUnit.test('Video', function (assert) {
                     await _insertVideo(wysiwyg, assert, 'https://www.youtube.com/watch?v=xxxxxxxxxxx');
                 },
                 test: {
-                    content: '<p><br></p><div class="media_iframe_video pull-left" data-oe-expression="about:blank"><div class="css_editable_mode_display">&nbsp;</div><div class="media_iframe_video_size">&nbsp;</div><iframe src="about:blank" frameborder="0"></iframe></div><p><br></p>',
+                    content: '<p><br></p><div class="media_iframe_video pull-left" data-oe-expression="about:blank"><div class="css_editable_mode_display">&nbsp;</div><div class="media_iframe_video_size">&nbsp;</div><iframe src="about:blank" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div><p><br></p>',
                     check: async function () {
                         await testUtils.dom.triggerEvents($('.note-image-popover .note-float .note-icon-align-center'), ['mousedown', 'click']);
                         await testUtils.dom.triggerEvents($('.note-image-popover .note-float .note-icon-align-left'), ['mousedown', 'click']);
@@ -4131,7 +4131,7 @@ QUnit.test('Video', function (assert) {
                 test: {
                     check: async function () {
                         assert.deepEqual(wysiwyg.getValue(),
-                            '<p><br></p><div class="media_iframe_video" data-oe-expression="about:blank"><div class="css_editable_mode_display">&nbsp;</div><div class="media_iframe_video_size">&nbsp;</div><iframe src="about:blank" frameborder="0"></iframe></div><p><br></p>',
+                            '<p><br></p><div class="media_iframe_video" data-oe-expression="about:blank"><div class="css_editable_mode_display">&nbsp;</div><div class="media_iframe_video_size">&nbsp;</div><iframe src="about:blank" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div><p><br></p>',
                             testName);
                     },
                 },
@@ -4140,7 +4140,7 @@ QUnit.test('Video', function (assert) {
             {
                 name: "replace video by pictogram",
                 async: true,
-                content: '<p><br></p><div class="media_iframe_video" data-oe-expression="about:blank"><div class="css_editable_mode_display">&nbsp;</div><div class="media_iframe_video_size">&nbsp;</div><iframe src="about:blank" frameborder="0"></iframe></div><p><br></p>',
+                content: '<p><br></p><div class="media_iframe_video" data-oe-expression="about:blank"><div class="css_editable_mode_display">&nbsp;</div><div class="media_iframe_video_size">&nbsp;</div><iframe src="about:blank" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div><p><br></p>',
                 start: "div->0",
                 do: async function () {
                     await _insertPictogram('fa-glass');
@@ -4156,7 +4156,7 @@ QUnit.test('Video', function (assert) {
             {
                 name: "replace video by pictogram (2)",
                 async: true,
-                content: '<p>aaa</p><div class="media_iframe_video" data-oe-expression="about:blank"><div class="css_editable_mode_display">&nbsp;</div><div class="media_iframe_video_size">&nbsp;</div><iframe src="about:blank" frameborder="0"></iframe></div><p>bbb</p>',
+                content: '<p>aaa</p><div class="media_iframe_video" data-oe-expression="about:blank"><div class="css_editable_mode_display">&nbsp;</div><div class="media_iframe_video_size">&nbsp;</div><iframe src="about:blank" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div><p>bbb</p>',
                 start: "div->0",
                 do: async function () {
                     await _insertPictogram('fa-glass');
