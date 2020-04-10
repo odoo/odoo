@@ -15,9 +15,6 @@ const DiscussWidget = AbstractAction.extend({
     loadControlPanel: true,
     withSearchBar: true,
     searchMenuTypes: ['filter', 'favorite'],
-    custom_events: {
-        search: '_onSearch',
-    },
     /**
      * @override {web.AbstractAction}
      * @param {web.ActionManager} parent

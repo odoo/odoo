@@ -5,6 +5,7 @@ const components = {
     ThreadViewer: require('mail.messaging.component.ThreadViewer'),
 };
 
+const { str_to_datetime } = require('web.time');
 const { patch } = require('web.utils');
 
 patch(components.ThreadViewer, 'hr_holidays.messaging.component.ThreadViewer', {
@@ -27,7 +28,7 @@ patch(components.ThreadViewer, 'hr_holidays.messaging.component.ThreadViewer', {
             return "";
         }
         const currentDate = new Date();
-        const date = new Date(this.threadViewer.thread.directPartner.out_of_office_date_end);
+        const date = str_to_datetime(this.threadViewer.thread.directPartner.out_of_office_date_end);
         const options = { day: 'numeric', month: 'short' };
         if (currentDate.getFullYear() !== date.getFullYear()) {
             options.year = 'numeric';

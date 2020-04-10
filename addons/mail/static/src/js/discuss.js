@@ -172,7 +172,6 @@ var Discuss = AbstractAction.extend({
     contentTemplate: 'mail.discuss',
     custom_events: _.extend({}, AbstractAction.prototype.custom_events, {
         discard_extended_composer: '_onDiscardExtendedComposer',
-        search: '_onSearch',
     }),
     events: {
         'click .o_mail_sidebar_title .o_add': '_onAddThread',
@@ -734,7 +733,6 @@ var Discuss = AbstractAction.extend({
      * @returns {Promise}
      */
     _setThread: async function (threadID) {
-
         // Store scroll position and composer state of the previous thread
         this._storeThreadState();
 
