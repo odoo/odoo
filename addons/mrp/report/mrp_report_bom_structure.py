@@ -108,7 +108,9 @@ class ReportBomStructure(models.AbstractModel):
         else:
             product = bom.product_tmpl_id
             attachments = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', product.id)])
-        operations = self._get_operation_line(bom.routing_id, float_round(bom_quantity / bom.product_qty, precision_rounding=1, rounding_method='UP'), 0)
+        operations = []
+        if bom.product_qty > 0:
+            operations = self._get_operation_line(bom.routing_id, float_round(bom_quantity / bom.product_qty, precision_rounding=1, rounding_method='UP'), 0)
         lines = {
             'bom': bom,
             'bom_qty': bom_quantity,
