@@ -14,7 +14,6 @@
             <field name="arch" type="xml">
                 <footer position="replace"/>
                 <h1 position="replace"/>
-                <widget name="notification_alert" position="replace"/>
                 <xpath expr="//field[@name='image_1920']" position="replace"/>
                 <xpath expr="//field[@name='company_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -38,16 +37,12 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="res_users_view_form_simple_modif"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='odoobot_state']" position="attributes">
-                    <attribute name="attrs">{'readonly': [('can_edit', '=', False)]}</attribute>
-                </xpath>
                 <form position="replace">
                 <form create="false" js_class="hr_employee_profile_form">
                     <field name="hr_presence_state" invisible="1"/>
                     <header>
                         <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
                     </header>
-                    <widget name="notification_alert" class="mb-0"/>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button
