@@ -50,7 +50,7 @@ const DiscussWidget = AbstractAction.extend({
         // control panel attributes
         this.action = action;
         this.actionManager = parent;
-        this.controlPanelParams.modelName = 'mail.message';
+        this.controlPanelModelConfig.modelName = 'mail.message';
         this.discuss = undefined;
         this.options = options;
 
@@ -239,22 +239,6 @@ const DiscussWidget = AbstractAction.extend({
                 .find('.o_mobile_new_message')
                 .addClass('o_hidden');
         }
-        if (this.env.messaging.device.isMobile) {
-            this._setTitle(this.env._t("Discuss"));
-        } else {
-            let title;
-            if (this.discuss.thread) {
-                const prefix =
-                    this.discuss.thread.channel_type === 'channel' &&
-                    this.discuss.thread.public !== 'private'
-                    ? '#'
-                    : '';
-                title = `${prefix}${this.discuss.thread.displayName}`;
-            } else {
-                title = this.env._t("Discuss");
-            }
-            this._setTitle(title);
-        }
         // Select All & Unselect All
         const $selectAll = this.$buttons.find('.o_widget_Discuss_controlPanelButtonSelectAll');
         const $unselectAll = this.$buttons.find('.o_widget_Discuss_controlPanelButtonUnselectAll');
@@ -285,10 +269,23 @@ const DiscussWidget = AbstractAction.extend({
             $moderationButtons.addClass('o_hidden');
         }
 
+        let title;
+        if (this.env.messaging.device.isMobile || !this.discuss.thread) {
+            title = this.env._t("Discuss");
+        } else {
+            const prefix =
+                this.discuss.thread.channel_type === 'channel' &&
+                this.discuss.thread.public !== 'private'
+                ? '#'
+                : '';
+            title = `${prefix}${this.discuss.thread.displayName}`;
+        }
+
         this.updateControlPanel({
             cp_content: {
                 $buttons: this.$buttons,
             },
+            title,
         });
     },
 
