@@ -9,7 +9,7 @@
                 <separator string="Conversion Options"/>
                 <group>
                     <field name="name" class="oe_inline" widget="radio"/>
-                    <field name="deduplicate" class="oe_inline"/>
+                    <field name="deduplicate" class="oe_inline" attrs="{'invisible': [('name', '=', 'merge')]}"/>
                 </group>
                 <group string="Assign these opportunities to">
                     <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
