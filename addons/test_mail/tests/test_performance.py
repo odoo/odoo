@@ -286,7 +286,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             }).create({})
             composer.onchange_template_id_wrapper()
 
-        with self.assertQueryCount(__system__=39, emp=44):
+        with self.assertQueryCount(__system__=40, emp=45):
             composer.send_mail()
 
         # remove created partner to ensure tests are the same each run
