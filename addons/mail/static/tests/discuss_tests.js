@@ -563,7 +563,7 @@ QUnit.test('@ mention with special chars', async function (assert) {
             if (args.method === 'message_post') {
                 assert.deepEqual(args.kwargs.partner_ids, [1],
                     "mentioned partners are sent to server"
-                )
+                );
                 var data = {
                     author_id: ["42", "Me"],
                     body: args.kwargs.body,
@@ -619,7 +619,7 @@ QUnit.test('@ mention with special chars', async function (assert) {
     $input.val("@");
     $input.trigger('keyup');
     await testUtils.nextTick();
-    var $mention = discuss.$('.o_mention_proposition');
+    $mention = discuss.$('.o_mention_proposition');
     assert.strictEqual($mention.find('.o_mention_name').text(),
         '\u0405pëciãlUser<&>"`\' \u30C4',
         "first partner mention should still display the correct partner name");
@@ -791,7 +791,7 @@ QUnit.test('no crash focusout emoji button', async function (assert) {
         params: {},
         data: this.data,
         services: this.services,
-    })
+    });
 
     var $general = discuss.$('.o_mail_discuss_sidebar')
         .find('.o_mail_discuss_item[data-thread-id=1]');
@@ -970,7 +970,7 @@ QUnit.test('convert emoji sources to unicodes on message_post', async function (
             }
             return this._super.apply(this, arguments);
         },
-    })
+    });
 
     objectDiscuss= discuss;
 
@@ -1012,7 +1012,7 @@ QUnit.test('drag and drop file in composer [REQUIRE NON-INCOGNITO WINDOW]', asyn
         params: {},
         data: this.data,
         services: this.services,
-    })
+    });
 
     var $general = discuss.$('.o_mail_discuss_sidebar')
                     .find('.o_mail_discuss_item[data-thread-id=1]');
@@ -1148,7 +1148,7 @@ QUnit.test('reply to message from inbox', async function (assert) {
             }
             return this._super.apply(this, arguments);
         },
-    })
+    });
     assert.strictEqual(discuss.$('.o_mail_discuss_item.o_active').data('thread-id'),
         'mailbox_inbox',
         "Inbox should be selected by default");
@@ -1223,7 +1223,7 @@ QUnit.test('discard replying to message from inbox', async function (assert) {
             }
             return this._super.apply(this, arguments);
         },
-    })
+    });
 
     await testUtils.dom.click(discuss.$('.o_thread_message_reply'));
     assert.containsOnce(discuss, '.o_thread_selected_message',
@@ -1493,7 +1493,7 @@ QUnit.test('custom-named DM conversation', async function (assert) {
         data: this.data,
         services: this.services,
         session: { partner_id: 3 },
-    })
+    });
 
     var $dm = discuss.$('.o_mail_discuss_item[data-thread-id=1]');
     assert.isVisible($dm, "should display DM in the discuss sidebar");
