@@ -648,7 +648,7 @@ class PosSession(models.Model):
         # reconcile invoice receivable lines
         for account_id in order_account_move_receivable_lines:
             ( order_account_move_receivable_lines[account_id]
-            | invoice_receivable_lines[account_id]
+            | invoice_receivable_lines.get(account_id, self.env['account.move.line'])
             ).reconcile()
 
         # reconcile stock output lines
