@@ -207,11 +207,14 @@ class Task(models.Model):
     def action_timer_stop(self):
         # timer was either running or paused
         if self.user_timer_id.timer_start and self.display_timesheet_timer:
-            minutes_spent = super().action_timer_stop()
+            minutes_spent = self.user_timer_id._get_minutes_spent()
+            is_timer_running = self.is_timer_running
+            if is_timer_running:
+                self.action_timer_pause()
             minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
             rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
             minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
-            return self._action_create_timesheet(minutes_spent * 60 / 3600)
+            return self.with_context(is_timer_pause=not is_timer_running)._action_create_timesheet(minutes_spent * 60 / 3600)
         return False
 
     def _action_create_timesheet(self, time_spent):

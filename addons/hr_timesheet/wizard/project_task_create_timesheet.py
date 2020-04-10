@@ -41,4 +41,10 @@ class ProjectTaskCreateTimesheet(models.TransientModel):
             'timer_pause': False,
             'timesheet_timer_last_stop': fields.datetime.now(),
         })
+        self.task_id.user_timer_id.unlink()
         return self.env['account.analytic.line'].create(values)
+
+    def action_timer_resume(self):
+        if self.env.context.get('is_timer_pause'):
+            return False
+        self.task_id.action_timer_resume()

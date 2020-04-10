@@ -12,6 +12,9 @@ var TimerFieldWidget = AbstractField.extend({
      * @private
      */
     isSet: function () {
+        if (this.record.data.display_timer_pause) {
+            clearInterval(this.timer);
+        }
         return true;
     },
     /**
