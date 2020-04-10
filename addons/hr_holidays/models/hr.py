@@ -92,7 +92,7 @@ class Employee(models.Model):
         """
         self._cr.execute("""
             SELECT
-                sum(h.number_of_days) AS days,
+                COALESCE(sum(h.number_of_days), 0) AS days,
                 h.employee_id
             FROM
                 (
