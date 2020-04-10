@@ -276,7 +276,14 @@ class GoogleCalendar(models.AbstractModel):
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         url = "/calendar/v3/calendars/%s/events/%s" % ('primary', event_id)
 
-        return self.env['google.service']._do_request(url, params, headers, type='DELETE')
+        try:
+            response = self.env['google.service']._do_request(url, params, headers, type='DELETE')
+        except requests.HTTPError as e:
+            # For some unknown reason Google can also return a 403 response when the event is already cancelled.
+            if e.response.status_code != 403:
+                raise e
+            _logger.info("Could not delete Google event %s" % event_id)
+        return response
 
     def get_calendar_primary_id(self):
         """ In google calendar, you can have multiple calendar. But only one is
@@ -371,7 +378,12 @@ class GoogleCalendar(models.AbstractModel):
         data['sequence'] = google_event.get('sequence', 0)
         data_json = json.dumps(data)
 
-        status, content, ask_time = self.env['google.service']._do_request(url, data_json, headers, type='PATCH')
+        try:
+            status, content, ask_time = self.env['google.service']._do_request(url, data_json, headers, type='PATCH')
+        except requests.HTTPError as e:
+            if e.response.status_code != 403:
+                raise e
+            _logger.info("Could not update Google event %s" % google_event['id'])
 
         update_date = datetime.strptime(content['updated'], "%Y-%m-%dT%H:%M:%S.%fz")
         oe_event.write({'oe_update_date': update_date})
@@ -879,7 +891,7 @@ class GoogleCalendar(models.AbstractModel):
                             recs.delete_an_event(current_event[0])
                         except requests.exceptions.HTTPError as e:
                             if e.response.status_code in (401, 410,):
-                                pass
+                                _logger.info("Google event %s already deleted or never created" % current_event[0])
                             else:
                                 raise e
                     elif actSrc == 'OE':
