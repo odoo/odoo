@@ -138,6 +138,45 @@
             </field>
         </record>
 
+        <!-- simplified version of unbuild form for unbuild button via manufacturing order,
+             expects required fields to be filled in via 'default_' values -->
+        <record id="mrp_unbuild_form_view_simplified" model="ir.ui.view">
+            <field name="name">mrp.unbuild.form.simplified</field>
+            <field name="model">mrp.unbuild</field>
+            <field name="arch" type="xml">
+                <form string="Unbuild Order">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="state" invisible="1"/>
+                                <field name="product_id" invisible="1"/>
+                                <field name="bom_id" invisible="1"/>
+                                <label for="product_qty"/>
+                                <div class="o_row">
+                                    <field name="product_qty" attrs="{'readonly': [('has_tracking', '=', 'serial')]}"/>
+                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': [('mo_id', '!=', False)]}" force_save="1"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="mo_id" invisible="1"/>
+                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                                <field name="has_tracking" invisible="1"/>
+                                <field name="allowed_mo_ids" invisible="1"/>
+                                <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
+                                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer class="oe_edit_only">
+                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight"/>
+                        <button string="Discard" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
         <record id="mrp_unbuild_tree_view" model="ir.ui.view">
             <field name="name">mrp.unbuild.tree</field>
             <field name="model">mrp.unbuild</field>
