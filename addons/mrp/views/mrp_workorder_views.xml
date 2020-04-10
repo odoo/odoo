@@ -224,10 +224,11 @@
                         </tree>
                     </field>
                 </page>
-                <page string="Work Instruction" name="workorder_page_work_instruction" attrs="{'invisible': [('worksheet', '=', False),('worksheet_google_slide', '=', False)]}">
+                <page string="Work Instruction" name="workorder_page_work_instruction" attrs="{'invisible': [('worksheet', '=', False), ('worksheet_google_slide', '=', False), ('operation_note', '=', False)]}">
                     <field name="worksheet_type" invisible="1"/>
-                    <field name="worksheet_google_slide" widget="embed_viewer" attrs="{'invisible': [('worksheet_type', '=', 'pdf')]}"/>
-                    <field name="worksheet" widget="pdf_viewer" attrs="{'invisible': [('worksheet_type', '=', 'google_slide')]}"/>
+                    <field name="worksheet" widget="pdf_viewer" attrs="{'invisible': [('worksheet_type', '!=', 'pdf')]}"/>
+                    <field name="worksheet_google_slide" widget="embed_viewer" attrs="{'invisible': [('worksheet_type', '!=', 'google_slide')]}"/>
+                    <field name="operation_note" attrs="{'invisible': [('worksheet_type', '!=', 'text')]}"/>
                 </page>
                 </notebook>
             </sheet>
