@@ -635,8 +635,9 @@ class StockMove(models.Model):
         padding = len(initial_number)
         # We split the serial number to get the prefix and suffix.
         splitted = regex_split(initial_number, self.next_serial)
-        prefix = splitted[0]
-        suffix = splitted[1]
+        # initial_number could appear several times in the SN, e.g. BAV023B00001S00001
+        prefix = initial_number.join(splitted[:-1])
+        suffix = splitted[-1]
         initial_number = int(initial_number)
 
         lot_names = []
