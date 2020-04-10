@@ -671,7 +671,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Inventory Ove
     position: "bottom"
 }, {
     mobile: true,
-    trigger: ".o_menu_sections a:contains('Product')",
+    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_product_in_config_stock']",
     content: _t("Click on Product Section"),
     position: "bottom"
 }, {

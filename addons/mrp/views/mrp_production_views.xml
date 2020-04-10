@@ -124,7 +124,7 @@
                                     <button type="action"
                                         name="%(mrp.action_change_production_qty)d"
                                         context="{'default_mo_id': id}"
-                                        string="Update" class="oe_link" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False), ('bom_id', '=', False)]}"/>
+                                        string="Update" class="oe_link pt-0" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False), ('bom_id', '=', False)]}"/>
                                 </div>
                             </div>
                             <field name="bom_id"
@@ -336,9 +336,8 @@
                     <filter string="Waiting for Component" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
                     <filter string="Component Available" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
-                    <filter string="Late" name="late" help="Production started late"
-                        domain="['&amp;', ('date_deadline', '&lt;', current_date), ('state', '=', 'confirmed')]"/>
-                    <filter string="Planning Issues" name="delay_alert_date" domain="[('delay_alert_date', '!=', False)]"/>
+                    <filter string="Planning Issues" name="planning_issues" help="Late MO or Late delivery of components"
+                        domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('date_deadline', '&lt;', current_date), ('state', '=', 'confirmed')]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -374,7 +373,7 @@
               <p class="o_view_nocontent_smiling_face">
                 Create a new manufacturing order <br/>
               </p><p>
-                Consume components and build finished products using bills of materials
+                Consume <a name="%(product.product_template_action)d" type='action' tabindex="-1">components</a> and build finished products using <a name="%(mrp_bom_form_action)d" type='action' tabindex="-1">bills of materials</a>
               </p>
             </field>
         </record>
