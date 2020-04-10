@@ -498,7 +498,12 @@ var FileWidget = SearchableMediaWidget.extend({
 
         // Remove crop related attributes
         if (this.$media.attr('data-aspect-ratio')) {
-            var attrs = ['aspect-ratio', 'x', 'y', 'width', 'height', 'rotate', 'scale-x', 'scale-y', 'crop:originalSrc'];
+            var attrs = ['aspect-ratio', 'x', 'y', 'width', 'height', 'rotate', 'scale-x', 'scale-y'];
+            Object.keys(self.$media.data()).forEach(function (key) {
+                if (_.str.startsWith(key, 'crop:')) {
+                    attrs.push(key);
+                }
+            });
             this.$media.removeClass('o_cropped_img_to_save');
             attrs.forEach(attr => {
                 this.$media.removeData(attr);
