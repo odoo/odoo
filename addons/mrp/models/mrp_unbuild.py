@@ -96,8 +96,10 @@ class MrpUnbuild(models.Model):
     def _onchange_company_id(self):
         if self.company_id:
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
-            self.location_id = warehouse.lot_stock_id
-            self.location_dest_id = warehouse.lot_stock_id
+            if self.location_id.company_id != self.company_id:
+                self.location_id = warehouse.lot_stock_id
+            if self.location_dest_id.company_id != self.company_id:
+                self.location_dest_id = warehouse.lot_stock_id
         else:
             self.location_id = False
             self.location_dest_id = False
