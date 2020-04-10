@@ -426,7 +426,7 @@ class MrpProduction(models.Model):
             already_reserved = order.is_locked and order.state not in ('done', 'cancel') and order.mapped('move_raw_ids.move_line_ids')
             any_quantity_done = any([m.quantity_done > 0 for m in order.move_raw_ids])
             order.unreserve_visible = not any_quantity_done and already_reserved
-            order.reserve_visible = order.state in ('confirmed', 'planned') and any(move.state == 'confirmed' for move in order.move_raw_ids)
+            order.reserve_visible = order.state in ('confirmed', 'planned') and any(move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids)
 
     @api.depends('move_finished_ids.quantity_done', 'move_finished_ids.state', 'is_locked')
     def _compute_post_visible(self):
