@@ -154,12 +154,7 @@
                             <field name="duration_expected" widget="float_time" class="oe_inline"/>
                             minutes
                         </div>
-                        <label for="duration"/>
-                        <div>
-                            <button style="pointer-events: none;" class="oe_inline badge badge-secondary">
-                                <field name="duration" widget="mrp_time_counter" help="Time the currently logged user spent on this workorder."/>
-                            </button>
-                        </div>
+                        <field name="duration" widget="mrp_time_counter" help="Time the currently logged user spent on this workorder."/>
                     </group>
                     <group>
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
