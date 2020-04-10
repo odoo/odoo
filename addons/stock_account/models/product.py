@@ -588,6 +588,8 @@ class ProductProduct(models.Model):
         :rtype: float
         """
         self.ensure_one()
+        if not qty_to_invoice:
+            return 0.0
 
         candidates = stock_moves\
             .sudo()\

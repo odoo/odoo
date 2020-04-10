@@ -6,7 +6,7 @@
                 <t t-else="">Invoices &amp; Bills</t>
             </li>
             <li t-if="invoice" class="breadcrumb-item active">
-                <t t-esc="invoice.name" t-if="invoice.name"/>
+                <t t-esc="invoice.name" t-if="invoice.name != '/'"/>
                 <t t-else=""><em>Draft Invoice</em></t>
             </li>
         </xpath>
@@ -47,17 +47,17 @@
                     <tr>
                         <td>
                             <a t-att-href="invoice.get_portal_url()" t-att-title="invoice.name">
-                                <t t-esc="invoice.name" t-if="invoice.name"/>
+                                <t t-esc="invoice.name" t-if="invoice.name != '/'"/>
                                 <em t-else="">Draft Invoice</em>
                             </a>
                         </td>
                         <td><span t-field="invoice.invoice_date"/></td>
                         <td class='d-none d-md-table-cell'><span t-field="invoice.invoice_date_due"/></td>
                         <td class="tx_status">
-                            <t t-if="invoice.state == 'open'">
+                            <t t-if="invoice.state == 'posted' and invoice.invoice_payment_state != 'paid'">
                                 <span class="badge badge-pill badge-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
                             </t>
-                            <t t-if="invoice.state == 'paid'">
+                            <t t-if="invoice.state == 'posted' and invoice.invoice_payment_state == 'paid'">
                                 <span class="badge badge-pill badge-success"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="d-none d-md-inline"> Paid</span></span>
                             </t>
                             <t t-if="invoice.state == 'cancel'">
@@ -89,7 +89,7 @@
                             <b t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>
                             <b t-else="1" t-field="invoice.amount_total"/>
                         </h2>
-                        <div class="small" t-if="invoice.state != 'paid' and invoice.type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>
+                        <div class="small" t-if="invoice.invoice_payment_state != 'paid' and invoice.type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>
                     </t>
 
                     <t t-set="entries">
