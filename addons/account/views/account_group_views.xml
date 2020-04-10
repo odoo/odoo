@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_group_form" model="ir.ui.view">
+            <field name="name">account.group.form</field>
+            <field name="model">account.group</field>
+            <field name="arch" type="xml">
+                <form string="Account Group">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <label for="code_prefix_start" string="Code Prefix"/>
+                        <div>
+                            From <field name="code_prefix_start" class="oe_inline"/> to <field name="code_prefix_end" class="oe_inline"/>
+                        </div>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_group_search" model="ir.ui.view">
+            <field name="name">account.group.search</field>
+            <field name="model">account.group</field>
+            <field name="arch" type="xml">
+                <search string="Account groups">
+                    <field name="name"
+                           filter_domain="['|', ('code_prefix_start', '=like', str(self) + '%'), ('name', 'ilike', self)]"
+                           string="Account group"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_account_group_tree" model="ir.ui.view">
+            <field name="name">account.group.tree</field>
+            <field name="model">account.group</field>
+            <field name="arch" type="xml">
+                <tree string="Account Group">
+                    <field name="code_prefix_start"/>
+                    <field name="code_prefix_end"/>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_account_group_tree" model="ir.actions.act_window">
+            <field name="name">Account Groups</field>
+            <field name="res_model">account.group</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_group_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new account group
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
