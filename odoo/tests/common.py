@@ -1117,10 +1117,12 @@ class ChromeBrowser():
             return '[%s]' % ', '.join(
                 repr(p['value']) if p['type'] == 'string' else str(p['value'])
                 for p in arg.get('preview', {}).get('properties', [])
+                if re.match(r'\d+', p['name'])
             )
         # all that's left is type=object, subtype=None aka custom or
         # non-standard objects, print as TypeName(param=val, ...), sadly because
         # of the way Odoo widgets are created they all appear as Class(...)
+        # nb: preview properties are *not* recursive, the value is *all* we get
         return '%s(%s)' % (
             arg.get('className') or 'object',
             ', '.join(
