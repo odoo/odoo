@@ -643,6 +643,10 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     extra_trigger: ".o_statusbar_status .btn-primary:contains('Sales Order')",
     content: _t("<p>Save this quotation</p>"),
     position: "bottom"
+}, {
+    trigger: ".o_form_button_edit",
+    auto: true,
+    run() {},
 // Reordering rule
 }, {
     edition: "enterprise",
