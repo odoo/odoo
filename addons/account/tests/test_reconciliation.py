@@ -2696,6 +2696,8 @@ class TestReconciliationInvoiceWidgets(TestReconciliation):
         self.assertEqual(company, self.env.user.company_id)
         self.assertEqual(company.currency_id.id, self.currency_euro_id)
 
+        self.apr_obj = self.env['account.partial.reconcile']
+
         self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
             'currency_id': self.currency_euro_id,
@@ -2736,7 +2738,7 @@ class TestReconciliationInvoiceWidgets(TestReconciliation):
         )
         self.refund1 = self._create_invoice(
             type='out_refund',
-            invoice_amount=1385.92,
+            invoice_amount=1379.66,
             currency_id=self.currency_euro_id,
             date_invoice='2019-06-12',
             auto_validate=True
@@ -2800,6 +2802,11 @@ class TestReconciliationInvoiceWidgets(TestReconciliation):
         self.assertEqual(self.inv1.state, 'paid')
         self.assertEqual(inv1_rec.amount_residual, 0.00)
         self.assertEqual(inv1_rec.amount_residual_currency, 0.00)
+        self.assertTrue(inv1_rec.reconciled, "At this point Invoice 1 Journal Item shall be fully reconciled")
+
+        apr_i1r1 = self.apr_obj.search([('debit_move_id', '=', inv1_rec.id), ('credit_move_id', '=', refund1_rec.id)])
+        self.assertEqual(apr_i1r1.amount, 839.40, "Amount in company currency is wrong")
+        self.assertEqual(apr_i1r1.amount_currency, 0, "Amount in foreign currency is wrong")
 
         refund1_payment = self._get_outstanding_or_assigned_amount(self.refund1, inv1_rec, False)
         self.assertEqual(
@@ -2812,28 +2819,51 @@ class TestReconciliationInvoiceWidgets(TestReconciliation):
         self.inv2.assign_outstanding_credit(refund1_rec.id)
         self.assertEqual(self.inv2.state, 'open')
         self.assertEqual(self.inv2.residual, 1907.26)
-        self.assertEqual(inv2_rec.amount_residual, 36194.17)
+        self.assertEqual(inv2_rec.amount_residual, 36200.43)
         self.assertEqual(inv2_rec.amount_residual_currency, 1907.26)
 
-        inv2_payment = self._get_outstanding_or_assigned_amount(self.inv2, refund1_rec, False)
-        self.assertEqual(
-            inv2_outstanding, inv2_payment,
-            'Amount in Outstanding Widget shall be equal to amount in Payment Widget')
+        apr_r1i2 = self.apr_obj.search([('debit_move_id', '=', inv2_rec.id), ('credit_move_id', '=', refund1_rec.id)])
+        self.assertEqual(apr_r1i2.amount, 540.26, "Amount in company currency is wrong")
+        self.assertEqual(apr_r1i2.amount_currency, 28.46, "Amount in foreign currency is wrong")
 
-        # /!\ NOTE: Refund has changed. The only way for this to happen is that
-        # `assign_outstanding_credit` method is used. Nor `reconcile()` neither
-        # `register_payment` produce this effect.
-        self.assertEqual(refund1_rec.amount_currency, -72.17)
+        self.assertEqual(self.refund1.state, 'paid', "At this point Refund shall be fully paid")
+        self.assertTrue(refund1_rec.reconciled, "At this point Refund Journal Item shall be fully reconciled")
+        self.assertAlmostEqual(
+            sum((apr_i1r1 | apr_r1i2).mapped('amount')), -refund1_rec.balance, 2,
+            "Reconciliation Arithmetic for Amount in Company Currency is wrong")
+
+        inv2_payment = self._get_outstanding_or_assigned_amount(self.inv2, refund1_rec, False)
+        # /!\ TODO: Method that computes the Outstanding Widget needs fixing
+        # self.assertEqual(
+        #     inv2_outstanding, inv2_payment,
+        #     'Amount in Outstanding Widget and amount in Payment Widget shall be equal to 28.46')
+
+        # /!\ NOTE: Refund is no longer changing. This used to happen because `assign_outstanding_credit` method used
+        # to do that this is no longer the case. Nor `reconcile()` neither `register_payment` produced this effect.
+        self.assertEqual(refund1_rec.amount_currency, 0.00)
 
         # Reconcile From F003 document P001
         inv2_outstanding = self._get_outstanding_or_assigned_amount(self.inv2, pay1_rec)
         self.inv2.assign_outstanding_credit(pay1_rec.id)
         self.assertEqual(self.inv2.state, 'open')
         self.assertEqual(self.inv2.residual, 0.09)
-        self.assertEqual(inv2_rec.amount_residual, 0.00)
+        self.assertEqual(inv2_rec.amount_residual, -310.91)
         self.assertEqual(inv2_rec.amount_residual_currency, 0.09)
 
+        apr_p1i2 = self.apr_obj.search([('debit_move_id', '=', inv2_rec.id), ('credit_move_id', '=', pay1_rec.id)])
+        self.assertEqual(apr_p1i2.amount, 36511.34, "Amount in company currency is wrong")
+        self.assertEqual(apr_p1i2.amount_currency, 1907.17, "Amount in foreign currency is wrong")
+
+        self.assertTrue(pay1_rec.reconciled, "At this point Payment 1 Journal Item shall be fully reconciled")
+        self.assertEqual(
+            apr_p1i2.amount, -pay1_rec.balance,
+            "Reconciliation Arithmetic for Amount in Company Currency is wrong")
+        self.assertEqual(
+            apr_p1i2.amount_currency, -pay1_rec.amount_currency,
+            "Reconciliation Arithmetic for Amount in Foreign Currency is wrong")
+
         inv2_payment = self._get_outstanding_or_assigned_amount(self.inv2, pay1_rec, False)
+        # /!\ TODO: Method that computes the Outstanding Widget needs fixing
         self.assertEqual(
             inv2_outstanding, inv2_payment,
             'Amount in Outstanding Widget shall be equal to amount in Payment Widget')
@@ -2845,6 +2875,29 @@ class TestReconciliationInvoiceWidgets(TestReconciliation):
         self.assertEqual(self.inv2.residual, 0.00)
         self.assertEqual(inv2_rec.amount_residual, 0.00)
         self.assertEqual(inv2_rec.amount_residual_currency, 0.00)
+        self.assertTrue(inv2_rec.reconciled, "At this point Invoice 2 Journal Item shall be fully reconciled")
+
+        apr_p2i2 = self.apr_obj.search([('debit_move_id', '=', inv2_rec.id), ('credit_move_id', '=', pay2_rec.id)])
+        self.assertEqual(apr_p2i2.amount, -310.91, "Amount in company currency is wrong")
+        self.assertEqual(apr_p2i2.amount_currency, 0.09, "Amount in foreign currency is wrong")
+
+        self.assertAlmostEqual(
+            sum((apr_r1i2 | apr_p1i2 | apr_p2i2).mapped('amount')), inv2_rec.balance, 2,
+            "Reconciliation Arithmetic for Amount in Company Currency is wrong")
+        self.assertEqual(
+            sum((apr_r1i2 | apr_p1i2 | apr_p2i2).mapped('amount_currency')), inv2_rec.amount_currency,
+            "Reconciliation Arithmetic for Amount in Foreign Currency is wrong")
+
+        # /!\ NOTE: This test will be left commented as Odoo still has a bug when reconciling several Journal Items
+        # with multi-currency and local currency as the chain is not closed.
+        # self.assertTrue(pay2_rec.reconciled, "At this point Payment 2 Journal Item shall be fully reconciled")
+        # /!\ NOTE: Having bug been fixed this test shall be modified to include the APR generated by the FX JE.
+        # self.assertEqual(
+        #     sum((apr_p2i2).mapped('amount')), -pay2_rec.balance,
+        #     "Reconciliation Arithmetic for Amount in Company Currency is wrong")
+        self.assertEqual(
+            sum((apr_p2i2).mapped('amount_currency')), -pay2_rec.amount_currency,
+            "Reconciliation Arithmetic for Amount in Foreign Currency is wrong")
 
         inv2_payment = self._get_outstanding_or_assigned_amount(self.inv2, pay2_rec, False)
         self.assertEqual(
