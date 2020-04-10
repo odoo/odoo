@@ -902,12 +902,25 @@ class AccountMoveLine(models.Model):
                     (-credit_move.amount_residual_currency, -credit_move.amount_residual))
                 amount_reconcile = temp_amount_residual_currency
             else:
-                # /!\ NOTE: This does not make too much sense but in order to
-                # keep the logic of the code pretty much the same @hbto is
-                # leaving it like this
-                temp_amount_residual, temp_amount_residual_currency = min(
-                    (debit_move.amount_residual, debit_move.amount_residual_currency),
-                    (-credit_move.amount_residual, -credit_move.amount_residual_currency))
+                # /!\ NOTE: This allow to have predictability in the partial reconciliations. By having the virtual
+                # value of the amount_residual converted to the max_date of the foreign currency.
+                if bool(debit_move.currency_id) != bool(credit_move.currency_id):
+                    currency = debit_move.currency_id or credit_move.currency_id
+                    currency_date = max(credit_move.date, debit_move.date)
+                    if not debit_move.currency_id:
+                        temp_amount_residual_currency = company_currency._convert(debit_move.amount_residual, currency, debit_move.company_id, currency_date)
+                        temp_amount_residual_currency, temp_amount_residual = min(
+                            (temp_amount_residual_currency, debit_move.amount_residual),
+                            (-credit_move.amount_residual_currency, -credit_move.amount_residual))
+                    elif not credit_move.currency_id:
+                        temp_amount_residual_currency = company_currency._convert(credit_move.amount_residual, currency, credit_move.company_id, currency_date)
+                        temp_amount_residual_currency, temp_amount_residual = min(
+                            (debit_move.amount_residual_currency, debit_move.amount_residual),
+                            (-temp_amount_residual_currency, -credit_move.amount_residual))
+                else:
+                    temp_amount_residual, temp_amount_residual_currency = min(
+                        (debit_move.amount_residual, debit_move.amount_residual_currency),
+                        (-credit_move.amount_residual, -credit_move.amount_residual_currency))
                 amount_reconcile = temp_amount_residual
 
             dc_vals[(debit_move.id, credit_move.id)] = (debit_move, credit_move, temp_amount_residual_currency)
@@ -927,10 +940,15 @@ class AccountMoveLine(models.Model):
             else:
                 credit_moves[0].amount_residual += temp_amount_residual
                 credit_moves[0].amount_residual_currency += temp_amount_residual_currency
+
+            # /!\ NOTE: This code section can be moved upwards in a later time to avoid redundancy of code.
             #Check for the currency and amount_currency we can set
             currency = False
             amount_reconcile_currency = 0
             if field == 'amount_residual_currency':
+                # /!\ WARNING: This could be not that good as reconciliation could happen between two currencies
+                # different than company's currency. @hbto will come later here. Thought this could take a longer time
+                # and more fields would be needed.
                 currency = credit_move.currency_id.id
                 amount_reconcile_currency = temp_amount_residual_currency
                 amount_reconcile = temp_amount_residual
@@ -942,7 +960,7 @@ class AccountMoveLine(models.Model):
                 # /!\ NOTE: We need to be consistent with value that is computed at the APR record.
                 # Hence, so far currency_date is to be equal to max_date in APR.
                 currency_date = max(credit_move.date, debit_move.date)
-                amount_reconcile_currency = company_currency._convert(amount_reconcile, currency, debit_move.company_id, currency_date)
+                amount_reconcile_currency = temp_amount_residual_currency
                 currency = currency.id
 
             if cash_basis:
