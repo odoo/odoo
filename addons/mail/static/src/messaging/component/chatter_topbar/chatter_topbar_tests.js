@@ -23,13 +23,9 @@ QUnit.module('ChatterTopbar', {
         this.createChatterTopbarComponent = async (chatter, otherProps) => {
             const ChatterTopBarComponent = components.ChatterTopBar;
             ChatterTopBarComponent.env = this.env;
-            const defaultProps = {
-                isComposerLog: false,
-                isComposerVisible: false
-            };
             this.component = new ChatterTopBarComponent(
                 null,
-                Object.assign({ chatterLocalId: chatter.localId }, defaultProps, otherProps)
+                Object.assign({ chatterLocalId: chatter.localId }, otherProps)
             );
             await this.component.mount(this.widget.el);
         };

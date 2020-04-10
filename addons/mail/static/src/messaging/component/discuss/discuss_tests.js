@@ -2581,7 +2581,7 @@ QUnit.test('basic control panel rendering', async function (assert) {
     await this.start();
     assert.strictEqual(
         document.querySelector(`
-            .o_widget_Discuss > .o_cp_controller > .o_control_panel .breadcrumb
+            .o_widget_Discuss .o_control_panel .breadcrumb
         `).textContent,
         "Inbox",
         "display inbox in the breadcrumb"
@@ -2604,7 +2604,7 @@ QUnit.test('basic control panel rendering', async function (assert) {
     await afterNextRender();
     assert.strictEqual(
         document.querySelector(`
-            .o_widget_Discuss > .o_cp_controller > .o_control_panel .breadcrumb
+            .o_widget_Discuss .o_control_panel .breadcrumb
         `).textContent,
         "Starred",
         "display starred in the breadcrumb"
@@ -2627,7 +2627,7 @@ QUnit.test('basic control panel rendering', async function (assert) {
     await afterNextRender();
     assert.strictEqual(
         document.querySelector(`
-            .o_widget_Discuss > .o_cp_controller > .o_control_panel .breadcrumb
+            .o_widget_Discuss .o_control_panel .breadcrumb
         `).textContent,
         "#General",
         "display general in the breadcrumb"

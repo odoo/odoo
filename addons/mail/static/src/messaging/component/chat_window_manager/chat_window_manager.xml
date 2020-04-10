@@ -12,7 +12,7 @@
                     chatWindowLocalId="chatWindow.localId"
                     hasCloseAsBackButton="env.messaging.device.isMobile"
                     isDocked="!env.messaging.device.isMobile"
-                    isExpandable="!env.messaging.device.isMobile and chatWindow.thread"
+                    isExpandable="!env.messaging.device.isMobile and !!chatWindow.thread"
                     isFullscreen="env.messaging.device.isMobile"
                 />
             </t>
