@@ -7,8 +7,8 @@ var mixins = require('web.mixins');
 // use a fake localStorage in RAM if the native localStorage is unavailable
 // (e.g. private browsing in Safari)
 var storage;
-var localStorage = window.localStorage;
 try {
+    var localStorage = window.localStorage;
     var uid = new Date();
     localStorage.setItem(uid, uid);
     localStorage.removeItem(uid);
