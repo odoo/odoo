@@ -85,7 +85,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
 
     def action_mass_convert(self):
         self.ensure_one()
-        if self.name == 'convert' and self.deduplicate:
+        if self.name == 'convert' and self.deduplicate or self.name == 'merge':
             merged_lead_ids = set()
             remaining_lead_ids = set()
             for lead in self.lead_tomerge_ids:
@@ -102,7 +102,11 @@ class Lead2OpportunityMassConvert(models.TransientModel):
             active_ids = set(self._context.get('active_ids', {}))
             active_ids = (active_ids - merged_lead_ids) | remaining_lead_ids
 
+            if self.name == 'merge':
+                return self.env['crm.lead'].browse(list(active_ids)[0]).redirect_lead_opportunity_view()
+
             self = self.with_context(active_ids=list(active_ids))  # only update active_ids when there are set
+
         return self.action_apply()
 
     def _convert_handle_partner(self, lead, action, partner_id):

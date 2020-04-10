@@ -141,3 +141,33 @@ class TestLeadMerge(TestLeadConvertMassCommon):
         # self.assertEqual(merge_opportunity.team_id, self.sales_team_1)
         # TDE FIXME: BUT team_id is computed after checking stage, based on wizard's team_id
         self.assertEqual(merge_opportunity.stage_id, self.stage_team_convert_1)
+
+    @users('user_sales_manager')
+    def test_lead_merge_in_mass(self):
+        lead_1 = self.env['crm.lead'].create({
+            'name': 'Lead 1',
+            'type': 'lead',
+            'partner_id': self.env['res.partner'].sudo().create({'name': 'New partner'}).id,
+        })
+        lead_1_bis = lead_1.copy()
+
+        lead_2 = self.env['crm.lead'].create({
+            'name': 'Lead 2',
+            'type': 'lead',
+            'partner_id': self.env['res.partner'].sudo().create({'name': 'New partner'}).id,
+        })
+        lead_2_bis = lead_2.copy()
+
+        self.assertEqual(lead_1.email_from, lead_1_bis.email_from)
+        self.assertEqual(lead_2.email_from, lead_2_bis.email_from)
+
+        mass_convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
+            'active_model': 'crm.lead',
+            'active_ids': (lead_1 | lead_2).ids,
+        }).create({
+            'name': 'merge',
+        })
+
+        mass_convert.action_mass_convert()
+        self.assertIn((lead_1 | lead_1_bis).exists(), [lead_1, lead_1_bis])
+        self.assertIn((lead_2 | lead_2_bis).exists(), [lead_2, lead_2_bis])
