@@ -588,7 +588,8 @@ class Survey(models.Model):
         """ This method checks if the given question or page is the last one.
         This includes conditional questions configuration. If the given question is normally not the last one but
         every following questions are inactive due to conditional questions configurations (and user choices),
-        the given question will be the last one.
+        the given question will be the last one, except if the given question is conditioning at least
+        one of the following questions.
         For section, we check in each following section if there is an active question.
         If yes, the given page is not the last one.
         """
@@ -597,11 +598,24 @@ class Survey(models.Model):
         next_page_or_question_candidates = pages_or_questions[current_page_index + 1:]
         if next_page_or_question_candidates:
             inactive_questions = user_input._get_inactive_conditional_questions()
+            triggering_answer_by_question, triggered_questions_by_answer, selected_answers = user_input._get_conditional_values()
             if self.questions_layout == 'page_per_question':
-                return not any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
+                next_active_question = any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
+                is_triggering_question = any(triggering_answer in triggered_questions_by_answer.keys() for triggering_answer in page_or_question.suggested_answer_ids)
+                return not(next_active_question or is_triggering_question)
             elif self.questions_layout == 'page_per_section':
+                is_triggering_section = False
+                for question in page_or_question.question_ids:
+                    if any(triggering_answer in triggered_questions_by_answer.keys() for triggering_answer in
+                           question.suggested_answer_ids):
+                        is_triggering_section = True
+                        break
+                next_active_question = False
                 for section in next_page_or_question_candidates:
-                    return not any(next_question not in inactive_questions for next_question in section.question_ids)
+                    next_active_question = any(next_question not in inactive_questions for next_question in section.question_ids)
+                    if next_active_question:
+                        break
+                return not(next_active_question or is_triggering_section)
 
         return True
 
