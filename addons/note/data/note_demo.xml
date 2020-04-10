@@ -31,8 +31,11 @@
 
     <record id="note_5" model="note.note">
       <field name="memo"><![CDATA[<p><b>Shop for family dinner</b></p>
-      <p>* stuffed turkey</p>
-      <p>* wine</p>]]>
+    <p><br/></p>
+    <ul class="o_checklist">
+     <li id="checklist-id-1"><p>stuffed turkey</p></li>
+     <li id="checklist-id-2"><p>wine</p></li>
+    </ul>]]>
       </field>
       <field name="user_id" ref="base.user_demo"/>
     </record>
@@ -49,21 +52,16 @@
 
     <record id="note_8" model="note.note">
       <field name="memo"><![CDATA[<p><b>New computer specs</b></p>
-      <p><br/></p>
-      <p>* Motherboard
-      according to processor
-      </p><p>* Processor
-      need to decide
-      </p><p>* Graphic card
-      with great performance for games !
-      </p><p>* Hard drive
-      big, for lot of internet backups
-      </p><p>* Tower
-      silent, better when watching films
-      </p><p>* Blueray drive ?
-      is it interesting yet ?
-      </p><p>* Screen
-      a big one, full of pixels, of course !</p>]]>
+     <p><br/></p>
+     <ul class="o_checklist">
+     <li id="checklist-id-1"><p>Motherboard according to processor </p></li>
+     <li id="checklist-id-2"><p>Processor need to decide </p></li>
+     <li id="checklist-id-3"><p>Graphic card with great performance for games ! </p></li>
+     <li id="checklist-id-4"><p>Hard drive big, for lot of internet backups </p></li>
+     <li id="checklist-id-5"><p>Tower silent, better when watching films </p></li>
+     <li id="checklist-id-6"><p>Blueray drive ? is it interesting yet ? </p></li>
+     <li id="checklist-id-7"><p>Screen a big one, full of pixels, of course !</p></li>
+    </ul>]]>
       </field>
       <field name="stage_id" ref="note_stage_03"/>
       <field name="color">3</field>
