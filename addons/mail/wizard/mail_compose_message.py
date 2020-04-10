@@ -406,6 +406,16 @@ class MailComposer(models.TransientModel):
 
         return {'value': values}
 
+
+    def action_reset_mail_template(self):
+        self.ensure_one()
+        if self.template_id:
+            for record in self:
+                model = self.env['ir.model']._get(record.model or 'mail.message')
+                record.write({'template_id': self.template_id})
+                record.onchange_template_id_wrapper()
+                return _reopen(self, record.id, record.model, context=self._context)
+
     def save_as_template(self):
         """ hit save as template button: current form value will be a new
             template attached to the current document. """
