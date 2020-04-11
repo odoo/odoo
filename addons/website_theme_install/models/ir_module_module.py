@@ -147,7 +147,12 @@ class IrModuleModule(models.Model):
                     _logger.info('Record queued: %s' % rec.display_name)
                     continue
 
-                find = rec.with_context(active_test=False).mapped('copy_ids').filtered(lambda m: m.website_id == website)
+                _context = {
+                    'active_test': False,
+                }
+                if model_name == 'ir.ui.view' and rec_data.get('arch_fs'):
+                    _context['install_filename'] = rec_data['arch_fs']
+                find = rec.with_context(**_context).mapped('copy_ids').filtered(lambda m: m.website_id == website)
 
                 # special case for attachment
                 # if module B override attachment from dependence A, we update it
