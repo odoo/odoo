@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 
 
 class FleetVehicleModel(models.Model):
@@ -14,8 +14,9 @@ class FleetVehicleModel(models.Model):
     vendors = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors')
     manager_id = fields.Many2one('res.users', 'Fleet Manager', default=lambda self: self.env.uid,
                                  domain=lambda self: [('groups_id', 'in', self.env.ref('fleet.fleet_group_manager').id)])
-    image_128 = fields.Image(related='brand_id.image_128', readonly=False)
+    image_128 = fields.Image(related='brand_id.image_128', readonly=True)
     active = fields.Boolean(default=True)
+    vehicle_type = fields.Selection([('car', 'Car'), ('bike', 'Bike')], default='car', required=True)
 
     @api.depends('name', 'brand_id')
     def name_get(self):

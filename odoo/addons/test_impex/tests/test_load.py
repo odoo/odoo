@@ -400,6 +400,20 @@ class test_required_string_field(ImporterCase):
             u"Missing required value for the field 'Value' (value)")])
         self.assertIs(result['ids'], False)
 
+    @mute_logger('odoo.sql_db', 'odoo.models')
+    def test_ignore_excess_messages(self):
+        result = self.import_(['const'], [[str(n)] for n in range(100)])
+        self.assertIs(result['ids'], False)
+        self.assertEqual(len(result['messages']), 11)
+        for m in result['messages'][:-1]:
+            self.assertEqual(m['type'], 'error')
+            self.assertEqual(m['message'], u"Missing required value for the field 'Value' (value)")
+        last = result['messages'][-1]
+        self.assertEqual(last['type'], 'warning')
+        self.assertEqual(
+            last['message'],
+            u"Found more than 10 errors and more than one error per 10 records, interrupted to avoid showing too many errors."
+        )
 
 class test_text(ImporterCase):
     model_name = 'export.text'
@@ -873,6 +887,14 @@ class test_o2m(ImporterCase):
             values(b.value.sorted(), 'str'),
             'this is the rhythm'.split())
 
+    def test_subfields_fail_by_implicit_id(self):
+        result = self.import_(['value/parent_id'], [['noxidforthat']])
+        self.assertEqual(result['messages'], [message(
+            u"No matching record found for name 'noxidforthat' in field 'Value/Parent'",
+            moreinfo=moreaction(res_model='export.one2many')
+            )])
+        self.assertIs(result['ids'], False)
+
     def test_link_inline(self):
         """ m2m-style specification for o2ms
         """
@@ -1058,6 +1080,18 @@ class test_realworld(SavepointCaseWithUserDemo):
         self.assertFalse(len(b[1].child.sorted()[1].child1))
         self.assertEqual([child.value for child in b[1].child.sorted()[1].child2],
                          [12])
+
+    def test_o2m_subfields_fail_by_implicit_id(self):
+        self.env['ir.model.data'].clear_caches()
+        Model = self.env['export.one2many.recursive']
+        result = Model.load(
+            ['child/child1/parent_id'],
+            [['5'],],
+        )
+        self.assertEqual(result['messages'], [message(
+            u"No matching record found for name '5' in field 'Child/Child1/Parent'", field='child',
+            moreinfo=moreaction(res_model='export.one2many.multiple'))])
+        self.assertIs(result['ids'], False)
 
 
 class test_date(ImporterCase):

@@ -13,12 +13,21 @@ from odoo.tools import mute_logger
 
 class TestEventData(TestEventCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super(TestEventData, cls).setUpClass()
+        cls.patcher = patch('odoo.addons.event.models.event_event.fields.Datetime', wraps=FieldsDatetime)
+        cls.mock_datetime = cls.patcher.start()
+        cls.mock_datetime.now.return_value = datetime(2020, 1, 31, 10, 0, 0)
+        cls.addClassCleanup(cls.patcher.stop)
+
+        cls.event_0.write({
+            'date_begin': datetime(2020, 2, 1, 8, 30, 0),
+            'date_end': datetime(2020, 2, 4, 18, 45, 0),
+        })
+
     @users('user_eventmanager')
     def test_event_date_computation(self):
-        self.patcher = patch('odoo.addons.event.models.event_event.fields.Datetime', wraps=FieldsDatetime)
-        self.mock_datetime = self.patcher.start()
-        self.mock_datetime.now.return_value = datetime(2020, 1, 31, 8, 0, 0)
-
         event = self.event_0.with_user(self.env.user)
         event.write({
             'registration_ids': [(0, 0, {'partner_id': self.customer.id, 'name': 'test_reg'})],
@@ -40,14 +49,25 @@ class TestEventData(TestEventCommon):
         event.date_begin = datetime(2020, 3, 1, 10, 0, 0)
         self.assertEqual(registration.get_date_range_str(), u'on Mar 1, 2020, 11:00:00 AM')
 
+        # Is actually 8:30 to 20:00 in Mexico
         event.write({
-            'date_begin': '2019-11-09 14:30:00',
-            'date_end': '2019-11-10 02:00:00',
+            'date_begin': datetime(2020, 1, 31, 14, 30, 0),
+            'date_end': datetime(2020, 2, 1, 2, 0, 0),
             'date_tz': 'Mexico/General'
         })
         self.assertTrue(event.is_one_day)
 
-        self.patcher.stop()
+    @users('user_eventmanager')
+    def test_event_date_timezone(self):
+        event = self.event_0.with_user(self.env.user)
+        # Is actually 8:30 to 20:00 in Mexico
+        event.write({
+            'date_begin': datetime(2020, 1, 31, 14, 30, 0),
+            'date_end': datetime(2020, 2, 1, 2, 0, 0),
+            'date_tz': 'Mexico/General'
+        })
+        self.assertTrue(event.is_one_day)
+        self.assertFalse(event.is_ongoing)
 
     @users('user_eventmanager')
     def test_event_fields(self):
@@ -58,22 +78,15 @@ class TestEventData(TestEventCommon):
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
         })
-        event._onchange_type()
-        self.assertFalse(event.is_online)
+
         self.assertEqual(event.address_id, self.env.user.company_id.partner_id)
         # seats: coming from event type configuration
-        self.assertEqual(event.seats_availability, 'limited')
-        self.assertEqual(event.seats_available, event.event_type_id.default_registration_max)
+        self.assertTrue(event.seats_limited)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max)
         self.assertEqual(event.seats_unconfirmed, 0)
         self.assertEqual(event.seats_reserved, 0)
         self.assertEqual(event.seats_used, 0)
         self.assertEqual(event.seats_expected, 0)
-
-        # set is_online: should reset the address_id field
-        event.update({'is_online': True})
-        event._onchange_is_online()
-        self.assertTrue(event.is_online)
-        self.assertFalse(event.address_id)
 
         # create registration in order to check the seats computation
         self.assertTrue(event.auto_confirm)
@@ -93,7 +106,7 @@ class TestEventData(TestEventCommon):
             'name': 'reg_done',
         })
         reg_done.write({'state': 'done'})
-        self.assertEqual(event.seats_available, event.event_type_id.default_registration_max - 6)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max - 6)
         self.assertEqual(event.seats_unconfirmed, 1)
         self.assertEqual(event.seats_reserved, 5)
         self.assertEqual(event.seats_used, 1)
@@ -112,30 +125,16 @@ class TestEventData(TestEventCommon):
         event_type.write({
             'use_mail_schedule': False,
         })
-        # Event type does not use mail schedule but data is kept for compatibility and avoid recreating them
-        self.assertEqual(len(event_type.event_type_mail_ids), 2)
+        self.assertEqual(event_type.event_type_mail_ids, self.env['event.type.mail'])
 
         event = self.env['event.event'].create({
             'name': 'Event Update Type',
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
-            'auto_confirm': False,
-            'is_online': True,
         })
         self.assertEqual(event.date_tz, self.env.user.tz)
-        self.assertEqual(event.seats_availability, 'unlimited')
+        self.assertFalse(event.seats_limited)
         self.assertFalse(event.auto_confirm)
-        self.assertTrue(event.is_online)
-        self.assertEqual(event.event_mail_ids, self.env['event.mail'])
-
-        event.update({'event_type_id': event_type.id})
-        event._onchange_type()
-        self.assertEqual(event.date_tz, 'Europe/Paris')
-        self.assertEqual(event.seats_availability, 'limited')
-        self.assertEqual(event.seats_min, event_type.default_registration_min)
-        self.assertEqual(event.seats_max, event_type.default_registration_max)
-        self.assertTrue(event.auto_confirm)
-        self.assertFalse(event.is_online)
         self.assertEqual(event.event_mail_ids, self.env['event.mail'])
 
         event_type.write({
@@ -144,7 +143,11 @@ class TestEventData(TestEventCommon):
                 'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
                 'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
         })
-        event._onchange_type()
+        event.write({'event_type_id': event_type.id})
+        self.assertEqual(event.date_tz, 'Europe/Paris')
+        self.assertTrue(event.seats_limited)
+        self.assertEqual(event.seats_max, event_type.seats_max)
+        self.assertTrue(event.auto_confirm)
         self.assertEqual(event.event_mail_ids.interval_nbr, 1)
         self.assertEqual(event.event_mail_ids.interval_unit, 'days')
         self.assertEqual(event.event_mail_ids.interval_type, 'before_event')
@@ -154,6 +157,14 @@ class TestEventData(TestEventCommon):
     def test_event_registrable(self):
         """Test if `_compute_event_registrations_open` works properly."""
         event = self.event_0.with_user(self.env.user)
+        event.write({
+            'date_begin': datetime(2020, 1, 30, 8, 0, 0),
+            'date_end': datetime(2020, 1, 31, 8, 0, 0),
+        })
+        self.assertFalse(event.event_registrations_open)
+        event.write({
+            'date_end': datetime(2020, 2, 4, 8, 0, 0),
+        })
         self.assertTrue(event.event_registrations_open)
 
         # ticket without dates boundaries -> ok
@@ -165,8 +176,8 @@ class TestEventData(TestEventCommon):
 
         # even with valid tickets, date limits registrations
         event.write({
-            'date_begin': datetime.now() - timedelta(days=3),
-            'date_end': datetime.now() - timedelta(days=1),
+            'date_begin': datetime(2020, 1, 28, 15, 0, 0),
+            'date_end': datetime(2020, 1, 30, 15, 0, 0),
         })
         self.assertFalse(event.event_registrations_open)
 
@@ -177,9 +188,9 @@ class TestEventData(TestEventCommon):
         })
         registration.action_confirm()
         event.write({
-            'date_end': datetime.now() + timedelta(days=3),
+            'date_end': datetime(2020, 2, 1, 15, 0, 0),
             'seats_max': 1,
-            'seats_availability': 'limited',
+            'seats_limited': True,
         })
         self.assertEqual(event.seats_available, 0)
         self.assertFalse(event.event_registrations_open)
@@ -190,9 +201,39 @@ class TestEventData(TestEventCommon):
         self.assertTrue(event.event_registrations_open)
 
         # but tickets are expired
-        ticket.write({'end_sale_date': datetime.now() - timedelta(days=2)})
+        ticket.write({'end_sale_date': datetime(2020, 1, 30, 15, 0, 0)})
         self.assertTrue(ticket.is_expired)
         self.assertFalse(event.event_registrations_open)
+
+    @users('user_eventmanager')
+    def test_event_ongoing(self):
+        event_1 = self.env['event.event'].create({
+            'name': 'Test Event 1',
+            'date_begin': datetime(2020, 1, 25, 8, 0, 0),
+            'date_end': datetime(2020, 2, 1, 18, 0, 0),
+        })
+        self.assertTrue(event_1.is_ongoing)
+        ongoing_event_ids = self.env['event.event']._search([('is_ongoing', '=', True)])
+        self.assertIn(event_1.id, ongoing_event_ids)
+
+        event_1.update({'date_begin': datetime(2020, 2, 1, 9, 0, 0)})
+        self.assertFalse(event_1.is_ongoing)
+        ongoing_event_ids = self.env['event.event']._search([('is_ongoing', '=', True)])
+        self.assertNotIn(event_1.id, ongoing_event_ids)
+
+        event_2 = self.env['event.event'].create({
+            'name': 'Test Event 2',
+            'date_begin': datetime(2020, 1, 25, 8, 0, 0),
+            'date_end': datetime(2020, 1, 28, 8, 0, 0),
+        })
+        self.assertFalse(event_2.is_ongoing)
+        finished_or_upcoming_event_ids = self.env['event.event']._search([('is_ongoing', '=', False)])
+        self.assertIn(event_2.id, finished_or_upcoming_event_ids)
+
+        event_2.update({'date_end': datetime(2020, 2, 2, 8, 0, 1)})
+        self.assertTrue(event_2.is_ongoing)
+        finished_or_upcoming_event_ids = self.env['event.event']._search([('is_ongoing', '=', False)])
+        self.assertNotIn(event_2.id, finished_or_upcoming_event_ids)
 
 
 class TestEventTicketData(TestEventCommon):
@@ -227,11 +268,11 @@ class TestEventTicketData(TestEventCommon):
         first_ticket = event.event_ticket_ids.filtered(lambda t: t.name == 'First Ticket')
         second_ticket = event.event_ticket_ids.filtered(lambda t: t.name == 'Second Ticket')
 
-        self.assertEqual(first_ticket.seats_availability, 'limited')
+        self.assertTrue(first_ticket.seats_limited)
         self.assertTrue(first_ticket.sale_available)
         self.assertFalse(first_ticket.is_expired)
 
-        self.assertEqual(second_ticket.seats_availability, 'unlimited')
+        self.assertFalse(second_ticket.seats_limited)
         self.assertTrue(second_ticket.sale_available)
         self.assertFalse(second_ticket.is_expired)
         # sale is ended
@@ -259,22 +300,17 @@ class TestEventTypeData(TestEventCommon):
         event_type = self.env['event.type'].create({
             'name': 'Testing fields computation',
             'has_seats_limitation': True,
-            'default_registration_min': 5,
-            'default_registration_max': 30,
+            'seats_max': 30,
             'use_ticket': True,
         })
-        event_type._onchange_has_seats_limitation()
         self.assertTrue(event_type.has_seats_limitation)
-        self.assertEqual(event_type.default_registration_min, 5)
-        self.assertEqual(event_type.default_registration_max, 30)
+        self.assertEqual(event_type.seats_max, 30)
         self.assertEqual(event_type.event_type_ticket_ids.mapped('name'), ['Registration'])
 
         # reset seats limitation
         event_type.write({'has_seats_limitation': False})
-        event_type._onchange_has_seats_limitation()
         self.assertFalse(event_type.has_seats_limitation)
-        self.assertEqual(event_type.default_registration_min, 0)
-        self.assertEqual(event_type.default_registration_max, 0)
+        self.assertEqual(event_type.seats_max, 0)
 
         # reset tickets
         event_type.write({'use_ticket': False})

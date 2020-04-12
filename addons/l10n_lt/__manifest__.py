@@ -19,7 +19,7 @@
     'license': 'LGPL-3',
     'author': "Focusate",
     'website': "http://www.focusate.eu",
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'depends': [
         'l10n_multilang',
     ],
@@ -35,6 +35,9 @@
         # Try Loading COA for Current Company
         'data/account_chart_template_load.xml',
         'data/menuitem_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
     'post_init_hook': 'load_translations',
     'installable': True,

@@ -4,7 +4,7 @@
 {
     'name': 'Turkey - Accounting',
     'version': '1.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.
 ==========================================================
@@ -25,5 +25,8 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
         'data/account_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_chart_template_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
 }

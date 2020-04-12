@@ -153,9 +153,9 @@ class Goal(models.Model):
              "to generate goals with a value in this field.")
     start_date = fields.Date("Start Date", default=fields.Date.today)
     end_date = fields.Date("End Date")  # no start and end = always active
-    target_goal = fields.Float('To Reach', required=True, tracking=True)
+    target_goal = fields.Float('To Reach', required=True)
 # no goal = global index
-    current = fields.Float("Current Value", required=True, default=0, tracking=True)
+    current = fields.Float("Current Value", required=True, default=0)
     completeness = fields.Float("Completeness", compute='_get_completion')
     state = fields.Selection([
         ('draft', "Draft"),
@@ -163,7 +163,7 @@ class Goal(models.Model):
         ('reached', "Reached"),
         ('failed', "Failed"),
         ('canceled', "Canceled"),
-    ], default='draft', string='State', required=True, tracking=True)
+    ], default='draft', string='State', required=True)
     to_update = fields.Boolean('To update')
     closed = fields.Boolean('Closed goal', help="These goals will not be recomputed.")
 
@@ -179,9 +179,9 @@ class Goal(models.Model):
              "case of non-manual goal or goal not linked to a challenge.")
 
     definition_description = fields.Text("Definition Description", related='definition_id.description', readonly=True)
-    definition_condition = fields.Selection("Definition Condition", related='definition_id.condition', readonly=True)
+    definition_condition = fields.Selection(string="Definition Condition", related='definition_id.condition', readonly=True)
     definition_suffix = fields.Char("Suffix", related='definition_id.full_suffix', readonly=True)
-    definition_display = fields.Selection("Display Mode", related='definition_id.display_mode', readonly=True)
+    definition_display = fields.Selection(string="Display Mode", related='definition_id.display_mode', readonly=True)
 
     @api.depends('current', 'target_goal', 'definition_id.condition')
     def _get_completion(self):
@@ -213,10 +213,7 @@ class Goal(models.Model):
             return {}
 
         # generate a reminder report
-        template = self.env.ref('gamification.email_template_goal_reminder')\
-                           .get_email_template(self.id)
-        body_html = self.env['mail.template'].with_context(template._context)\
-            ._render_template(template.body_html, 'gamification.goal', self.id)
+        body_html = self.env.ref('gamification.email_template_goal_reminder')._render_field('body_html', self.ids, compute_lang=True)[self.id]
         self.message_notify(
             body=body_html,
             partner_ids=[self.user_id.partner_id.id],

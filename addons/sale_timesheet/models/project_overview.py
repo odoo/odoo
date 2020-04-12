@@ -481,7 +481,7 @@ class Project(models.Model):
 
                 invoice_ids = self.env['sale.order'].search_read([('id', 'in', sale_orders.ids)], ['invoice_ids'])
                 invoice_ids = list(itertools.chain(*[i['invoice_ids'] for i in invoice_ids]))
-                invoice_ids = self.env['account.move'].search_read([('id', 'in', invoice_ids), ('type', '=', 'out_invoice')], ['id'])
+                invoice_ids = self.env['account.move'].search_read([('id', 'in', invoice_ids), ('move_type', '=', 'out_invoice')], ['id'])
                 invoice_ids = list(map(lambda x: x['id'], invoice_ids))
 
                 if invoice_ids:
@@ -491,7 +491,7 @@ class Project(models.Model):
                         'icon': 'fa fa-pencil-square-o',
                         'action': _to_action_data(
                             action=self.env.ref('account.action_move_out_invoice_type'),
-                            domain=[('id', 'in', invoice_ids), ('type', '=', 'out_invoice')],
+                            domain=[('id', 'in', invoice_ids), ('move_type', '=', 'out_invoice')],
                             context={'create': False, 'delete': False}
                         )
                     })

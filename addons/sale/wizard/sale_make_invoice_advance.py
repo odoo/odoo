@@ -66,12 +66,14 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.onchange('advance_payment_method')
     def onchange_advance_payment_method(self):
         if self.advance_payment_method == 'percentage':
-            return {'value': {'amount': 0}}
+            amount = self.default_get(['amount']).get('amount')
+            return {'value': {'amount': amount}}
         return {}
 
     def _prepare_invoice_values(self, order, name, amount, so_line):
         invoice_vals = {
-            'type': 'out_invoice',
+            'ref': order.client_order_ref,
+            'move_type': 'out_invoice',
             'invoice_origin': order.name,
             'invoice_user_id': order.user_id.id,
             'narration': order.note,
@@ -79,9 +81,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'fiscal_position_id': (order.fiscal_position_id or order.fiscal_position_id.get_fiscal_position(order.partner_id.id)).id,
             'partner_shipping_id': order.partner_shipping_id.id,
             'currency_id': order.pricelist_id.currency_id.id,
-            'invoice_payment_ref': order.client_order_ref,
+            'payment_reference': order.reference,
             'invoice_payment_term_id': order.payment_term_id.id,
-            'invoice_partner_bank_id': order.company_id.partner_id.bank_ids[:1].id,
+            'partner_bank_id': order.company_id.partner_id.bank_ids[:1].id,
             'team_id': order.team_id.id,
             'campaign_id': order.campaign_id.id,
             'medium_id': order.medium_id.id,

@@ -46,7 +46,7 @@ options.registry.gallery = options.Class.extend({
             }
         });
 
-        if (this.$('.container:first > *:not(div)').length) {
+        if (this.$('> div:first-child > *:not(div)').length) {
             self.mode(null, self.getMode());
         }
 
@@ -56,9 +56,13 @@ options.registry.gallery = options.Class.extend({
      * @override
      */
     onBuilt: function () {
-        var uuid = new Date().getTime();
-        this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
-        this.$target.find('[data-target]').attr('data-target', '#slideshow_' + uuid);
+        this._adaptNavigationIDs();
+    },
+    /**
+     * @override
+     */
+    onClone: function () {
+        this._adaptNavigationIDs();
     },
     /**
      * @override
@@ -79,7 +83,7 @@ options.registry.gallery = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addImages: function (previewMode) {
-        var $container = this.$('.container:first');
+        var $container = this.$('> div:first-child');
         var dialog = new weWidgets.MediaDialog(this, {multiImages: true, onlyImages: true, mediaWidth: 1920});
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
@@ -90,6 +94,7 @@ options.registry.gallery = options.Class.extend({
                         class: 'img img-fluid',
                         src: attachments[i].image_src,
                         'data-index': ++index,
+                        alt: attachments[i].description || '',
                     }).appendTo($container);
                 }
                 this.mode('reset', this.getMode());
@@ -190,7 +195,7 @@ options.registry.gallery = options.Class.extend({
                     $lowest = $col;
                 }
             });
-            $lowest.append(imgs.pop());
+            $lowest.append(imgs.shift());
         }
     },
     /**
@@ -201,10 +206,10 @@ options.registry.gallery = options.Class.extend({
     mode: function (previewMode, widgetValue, params) {
         widgetValue = widgetValue || 'slideshow'; // FIXME should not be needed
         this.$target.css('height', '');
-        this[widgetValue]();
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
             .addClass('o_' + widgetValue);
+        this[widgetValue]();
         this.trigger_up('cover_update');
     },
     /**
@@ -250,12 +255,13 @@ options.registry.gallery = options.Class.extend({
      */
     slideshow: function () {
         var imgStyle = this.$el.find('.active[data-styling]').data('styling') || '';
-        var urls = _.map(this._getImages(), function (img) {
-            return $(img).attr('src');
-        });
+        var images = _.map(this._getImages(), img => ({
+            src: img.getAttribute('src'),
+            alt: img.getAttribute('alt'),
+        }));
         var currentInterval = this.$target.find('.carousel:first').attr('data-interval');
         var params = {
-            srcs: urls,
+            images: images,
             index: 0,
             title: "",
             interval: currentInterval || this.$target.data('interval') || 0,
@@ -331,6 +337,21 @@ options.registry.gallery = options.Class.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _adaptNavigationIDs: function () {
+        var uuid = new Date().getTime();
+        this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
+        _.each(this.$target.find('[data-slide], [data-slide-to]'), function (el) {
+            var $el = $(el);
+            if ($el.attr('data-target')) {
+                $el.attr('data-target', '#slideshow_' + uuid);
+            } else if ($el.attr('href')) {
+                $el.attr('href', '#slideshow_' + uuid);
+            }
+        });
+    },
     /**
      * @override
      */
@@ -410,7 +431,7 @@ options.registry.gallery = options.Class.extend({
      * @returns {jQuery} the main container of the snippet
      */
     _replaceContent: function ($content) {
-        var $container = this.$('.container:first');
+        var $container = this.$('> div:first-child');
         $container.empty().append($content);
         return $container;
     },

@@ -40,7 +40,7 @@ Izvori podataka:
 """,
     "version": "13.0",
     "author": "OpenERP Croatian Community",
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
 
     'depends': [
         'account',
@@ -55,6 +55,9 @@ Izvori podataka:
         'data/account_tax_template_data.xml',
         'data/account_tax_fiscal_position_data.xml',
         'data/account_chart_template_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
     "active": False,
 }

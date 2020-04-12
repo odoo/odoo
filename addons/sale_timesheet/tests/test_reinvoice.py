@@ -86,7 +86,7 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
             'employee_id': self.employee_user.id,
         })
 
-        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = self.partner_customer_usd
         with move_form.line_ids.new() as line_form:
             line_form.product_id = self.product_ordered_cost
@@ -121,7 +121,7 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
         self.assertEqual(sale_order_line4.qty_delivered_method, 'analytic', "Delivered quantity of 'expense' SO line should be computed by analytic amount")
 
         # create second invoice lines and validate it
-        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = self.partner_customer_usd
         with move_form.line_ids.new() as line_form:
             line_form.product_id = self.product_ordered_cost
@@ -185,7 +185,7 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
         })
 
         # create invoice lines and validate it
-        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = self.partner_customer_usd
         with move_form.line_ids.new() as line_form:
             line_form.product_id = self.product_deliver_sales_price
@@ -220,7 +220,7 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
         self.assertEqual(sale_order_line4.qty_delivered_method, 'analytic', "Delivered quantity of 'expense' SO line 4 should be computed by analytic amount")
 
         # create second invoice lines and validate it
-        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = self.partner_customer_usd
         with move_form.line_ids.new() as line_form:
             line_form.product_id = self.product_deliver_sales_price
@@ -260,7 +260,7 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it
-        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = self.partner_customer_usd
         with move_form.line_ids.new() as line_form:
             line_form.product_id = self.product_no_expense

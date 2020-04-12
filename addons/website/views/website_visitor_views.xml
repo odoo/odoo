@@ -202,10 +202,11 @@
                     </div>
                     <group id="general_info">
                         <group string="Visitor Informations">
+                            <field name="active" invisible="1"/>
                             <field name="is_connected" invisible="1"/>
                             <field name="partner_id"/>
                             <field name="email"/>
-                            <field name="mobile"/>
+                            <field name="mobile" class="o_force_ltr"/>
                             <field name="country_id" attrs="{'invisible': [('country_id', '=', False)]}"/>
                             <field name="lang_id"/>
                         </group>

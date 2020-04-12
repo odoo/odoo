@@ -11,15 +11,20 @@ class AccountReconcileModelLine(models.Model):
     _name = 'account.reconcile.model.line'
     _description = 'Rules for the reconciliation model'
     _order = 'sequence, id'
+    _check_company_auto = True
 
     model_id = fields.Many2one('account.reconcile.model', readonly=True)
     match_total_amount = fields.Boolean(related='model_id.match_total_amount')
     match_total_amount_param = fields.Float(related='model_id.match_total_amount_param')
     rule_type = fields.Selection(related='model_id.rule_type')
-    company_id = fields.Many2one(related='model_id.company_id')
+    company_id = fields.Many2one(related='model_id.company_id', store=True, default=lambda self: self.env.company)
     sequence = fields.Integer(required=True, default=10)
-    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)], required=True)
-    journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
+    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
+        required=True, check_company=True)
+    journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade',
+        domain="[('type', '=', 'general'), ('company_id', '=', company_id)]",
+        help="This field is ignored in a bank statement reconciliation.", check_company=True)
     label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
@@ -33,9 +38,9 @@ class AccountReconcileModelLine(models.Model):
     * Percentage: Percentage of the balance, between 0 and 100.
     * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.
     * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\d,]+)""")
-    tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict')
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags',
+    tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict', check_company=True)
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', check_company=True)
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', check_company=True,
                                         relation='account_reconcile_model_analytic_tag_rel')
 
     @api.onchange('tax_ids')
@@ -84,11 +89,15 @@ class AccountReconcileModel(models.Model):
     _name = 'account.reconcile.model'
     _description = 'Preset to create journal entries during a invoices and payments matching'
     _order = 'sequence, id'
+    _check_company_auto = True
 
     # Base fields.
     name = fields.Char(string='Name', required=True)
     sequence = fields.Integer(required=True, default=10)
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string='Company', required=True, readonly=True,
+        default=lambda self: self.env.company)
 
     rule_type = fields.Selection(selection=[
         ('writeoff_button', 'Manually create a write-off on clicked button.'),
@@ -101,7 +110,8 @@ class AccountReconcileModel(models.Model):
 
     # ===== Conditions =====
     match_journal_ids = fields.Many2many('account.journal', string='Journals',
-        domain="[('type', 'in', ('bank', 'cash'))]",
+        domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]",
+        check_company=True,
         help='The reconciliation model will only be available from the selected journals.')
     match_nature = fields.Selection(selection=[
         ('amount_received', 'Amount Received'),
@@ -208,10 +218,9 @@ class AccountReconcileModel(models.Model):
         :return: A list of dict representing move.lines to be created corresponding to the tax.
         '''
         self.ensure_one()
-        balance = base_line_dict['debit'] - base_line_dict['credit']
-        currency = base_line_dict.get('currency_id') and self.env['res.currency'].browse(base_line_dict['currency_id'])
+        balance = base_line_dict['balance']
 
-        res = tax.compute_all(balance, currency=currency)
+        res = tax.compute_all(balance)
 
         new_aml_dicts = []
         for tax_res in res['taxes']:
@@ -221,27 +230,26 @@ class AccountReconcileModel(models.Model):
                 'account_id': tax_res['account_id'] or base_line_dict['account_id'],
                 'name': tax_res['name'],
                 'partner_id': base_line_dict.get('partner_id'),
-                'debit': tax_res['amount'] > 0 and tax_res['amount'] or 0,
-                'credit': tax_res['amount'] < 0 and -tax_res['amount'] or 0,
+                'balance': tax_res['amount'],
                 'analytic_account_id': tax.analytic and base_line_dict['analytic_account_id'],
                 'analytic_tag_ids': tax.analytic and base_line_dict['analytic_tag_ids'],
                 'tax_exigible': tax_res['tax_exigibility'],
                 'tax_repartition_line_id': tax_res['tax_repartition_line_id'],
                 'tax_ids': [(6, 0, tax_res['tax_ids'])],
-                'tag_ids': [(6, 0, tax_res['tag_ids'])],
+                'tax_tag_ids': [(6, 0, tax_res['tag_ids'])],
+                'currency_id': False,
                 'reconcile_model_id': self.id,
             })
 
             # Handle price included taxes.
-            base_line_dict['debit'] = tax_res['base'] > 0 and tax_res['base'] or base_line_dict['debit']
-            base_line_dict['credit'] = tax_res['base'] < 0 and -tax_res['base'] or base_line_dict['credit']
-        base_line_dict['tag_ids'] = [(6, 0, res['base_tags'])]
+            base_line_dict['balance'] = tax_res['base']
+        base_line_dict['tax_tag_ids'] = [(6, 0, res['base_tags'])]
         return new_aml_dicts
 
-    def _get_write_off_move_lines_dict(self, st_line, move_lines=None, residual_balance=None):
+    def _get_write_off_move_lines_dict(self, st_line, residual_balance):
         ''' Get move.lines dict (to be passed to the create()) corresponding to the reconciliation model's write-off lines.
-        :param st_line:     An account.bank.statement.line record.(possibly empty, if performing manual reconciliation)
-        :param move_lines:  An account.move.line recordset.
+        :param st_line:             An account.bank.statement.line record.(possibly empty, if performing manual reconciliation)
+        :param residual_balance:    The residual balance of the statement line.
         :return: A list of dict representing move.lines to be created corresponding to the write-off lines.
         '''
         self.ensure_one()
@@ -249,42 +257,39 @@ class AccountReconcileModel(models.Model):
         if self.rule_type == 'invoice_matching' and (not self.match_total_amount or (self.match_total_amount_param == 100)):
             return []
 
-        line_residual = st_line.currency_id and st_line.amount_currency or st_line.amount
-        line_currency = st_line.currency_id or st_line.journal_id.currency_id or self.company_id.currency_id
+        lines_vals_list = []
 
-        total_residual = move_lines and sum(aml.currency_id and aml.amount_residual_currency or aml.amount_residual for aml in move_lines) or 0.0
-
-        balance = total_residual - line_residual
-
-        new_aml_dicts = []
-        if residual_balance is None:
-            residual_balance = balance
         for line in self.line_ids:
-            if not line.account_id or float_is_zero(residual_balance, precision_rounding=line_currency.rounding):
-                continue
+
+            if not line.account_id or st_line.company_currency_id.is_zero(residual_balance):
+                return []
 
             if line.amount_type == 'percentage':
-                line_balance = residual_balance * (line.amount / 100.0)
+                balance = residual_balance * (line.amount / 100.0)
             elif line.amount_type == "regex":
-                match = re.search(line.amount_string, st_line.name)
+                match = re.search(line.amount_string, st_line.payment_ref)
                 if match:
-                    line_balance = copysign(float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.')) * (1 if balance > 0.0 else -1), balance)
+                    sign = 1 if residual_balance > 0.0 else -1
+                    extracted_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.'))
+                    balance = copysign(extracted_balance * sign, residual_balance)
                 else:
-                    line_balance = 0
+                    balance = 0
             else:
-                line_balance = line.amount * (1 if residual_balance > 0.0 else -1)
+                balance = line.amount * (1 if residual_balance > 0.0 else -1)
+
             writeoff_line = {
-                'name': line.label or st_line.name,
+                'name': line.label or st_line.payment_ref,
+                'balance': balance,
                 'account_id': line.account_id.id,
+                'currency_id': False,
                 'analytic_account_id': line.analytic_account_id.id,
                 'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
-                'debit': line_balance > 0 and line_balance or 0,
-                'credit': line_balance < 0 and -line_balance or 0,
                 'reconcile_model_id': self.id,
             }
-            new_aml_dicts.append(writeoff_line)
+            lines_vals_list.append(writeoff_line)
 
-            residual_balance -= line_balance
+            residual_balance -= balance
+
             if line.tax_ids:
                 writeoff_line['tax_ids'] = [(6, None, line.tax_ids.ids)]
                 tax = line.tax_ids
@@ -292,63 +297,59 @@ class AccountReconcileModel(models.Model):
                 # only allow to set the force_tax_included field if we have one tax selected
                 if line.force_tax_included:
                     tax = tax[0].with_context(force_price_include=True)
-                new_aml_dicts += self._get_taxes_move_lines_dict(tax, writeoff_line)
+                lines_vals_list += self._get_taxes_move_lines_dict(tax, writeoff_line)
 
-        return new_aml_dicts
+        return lines_vals_list
 
-    def _prepare_reconciliation(self, st_line, move_lines=None, partner=None):
-        ''' Reconcile the statement line with some move lines using this reconciliation model.
-        :param st_line:     An account.bank.statement.line record.
-        :param move_lines:  An account.move.line recordset.
-        :param partner_id:  An optional res.partner record. If not set, st_line.partner_id will be used.
-        :return:            Counterpart account.moves.
+    def _prepare_reconciliation(self, st_line, aml_ids=[], partner=None):
+        ''' Prepare the reconciliation of the statement line with some counterpart line but
+        also with some auto-generated write-off lines.
+
+        The complexity of this method comes from the fact the reconciliation will be soft meaning
+        it will be done only if the reconciliation will not trigger an error.
+        For example, the reconciliation will be skipped if we need to create an open balance but we
+        don't have a partner to get the receivable/payable account.
+
+        This method works in two major steps. First, simulate the reconciliation of the account.move.line.
+        Then, add some write-off lines depending the rule's fields.
+
+        :param st_line: An account.bank.statement.line record.
+        :param aml_ids: The ids of some account.move.line to reconcile.
+        :param partner: An optional res.partner record. If not specified, fallback on the statement line's partner.
+        :return: A list of dictionary to be passed to the account.bank.statement.line's 'reconcile' method.
         '''
         self.ensure_one()
+        liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
 
-        # Create counterpart_aml_dicts + payment_aml_rec.
-        counterpart_aml_dicts = []
-        payment_aml_rec = self.env['account.move.line']
-        if move_lines:
-            for aml in move_lines:
-                if aml.account_id.internal_type == 'liquidity':
-                    payment_aml_rec |= aml
-                else:
-                    amount = aml.currency_id and aml.amount_residual_currency or aml.amount_residual
-                    counterpart_aml_dicts.append({
-                        'name': aml.name if aml.name != '/' else aml.move_id.name,
-                        'debit': amount < 0 and -amount or 0,
-                        'credit': amount > 0 and amount or 0,
-                        'move_line': aml,
-                    })
+        if st_line.to_check:
+            residual_balance = -liquidity_lines.balance
+        elif suspense_lines.account_id.reconcile:
+            residual_balance = sum(suspense_lines.mapped('amount_residual'))
+        else:
+            residual_balance = sum(suspense_lines.mapped('balance'))
 
-        # Create new_aml_dicts.
-        new_aml_dicts = self._get_write_off_move_lines_dict(st_line, move_lines=move_lines)
+        partner = partner or st_line.partner_id
+        lines_vals_list = [{'id': aml_id} for aml_id in aml_ids]
+        reconciliation_overview, open_balance_vals = st_line._prepare_reconciliation(lines_vals_list)
 
-        line_residual = st_line.currency_id and st_line.amount_currency or st_line.amount
-        line_currency = st_line.currency_id or st_line.journal_id.currency_id or st_line.company_id.currency_id
-        total_residual = move_lines and sum(aml.currency_id and aml.amount_residual_currency or aml.amount_residual for aml in move_lines) or 0.0
-        total_residual -= sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
+        for reconciliation_vals in reconciliation_overview:
+            residual_balance -= reconciliation_vals['line_vals']['debit'] - reconciliation_vals['line_vals']['credit']
 
-        # Create open_balance_dict
-        open_balance_dict = None
-        if float_compare(line_residual, total_residual, precision_rounding=line_currency.rounding) != 0:
-            if not partner and not st_line.partner_id:
-                open_balance_dict = False
+        writeoff_vals_list = self._get_write_off_move_lines_dict(st_line, residual_balance)
+
+        for line_vals in writeoff_vals_list:
+            residual_balance -= st_line.company_currency_id.round(line_vals['balance'])
+
+        # Check we have enough information to create an open balance.
+        if not st_line.company_currency_id.is_zero(residual_balance):
+            if st_line.amount > 0:
+                open_balance_account = partner.property_account_receivable_id
             else:
-                balance = total_residual - line_residual
-                partner = partner or st_line.partner_id
-                open_balance_dict = {
-                    'name': '%s : %s' % (st_line.name, _('Open Balance')),
-                    'account_id': balance < 0 and partner.property_account_payable_id.id or partner.property_account_receivable_id.id,
-                    'debit': balance > 0 and balance or 0,
-                    'credit': balance < 0 and -balance or 0,
-                }
-        return {
-           'counterpart_aml_dicts': counterpart_aml_dicts,
-           'payment_aml_rec': payment_aml_rec,
-           'new_aml_dicts': new_aml_dicts,
-           'open_balance_dict': open_balance_dict
-        }
+                open_balance_account = partner.property_account_payable_id
+            if not open_balance_account:
+                return []
+
+        return lines_vals_list + writeoff_vals_list
 
     ####################################################
     # RECONCILIATION CRITERIA
@@ -359,7 +360,7 @@ class AccountReconcileModel(models.Model):
         rule = self
         # Filter on journals.
         if rule.match_journal_ids:
-            query += ' AND st_line.journal_id IN %s'
+            query += ' AND st_line_move.journal_id IN %s'
             params += [tuple(rule.match_journal_ids.ids)]
 
         # Filter on amount nature.
@@ -383,15 +384,15 @@ class AccountReconcileModel(models.Model):
                 params += [rule.match_amount_min, rule.match_amount_max]
 
         # Filter on label, note and transaction_type
-        for field, column in [('label', 'name'), ('note', 'note'), ('transaction_type', 'transaction_type')]:
+        for table, field, column in [('st_line', 'label', 'payment_ref'), ('st_line_move', 'note', 'narration'), ('st_line', 'transaction_type', 'transaction_type')]:
             if rule['match_' + field] == 'contains':
-                query += ' AND st_line.{} ILIKE %s'.format(column)
+                query += ' AND {}.{} ILIKE %s'.format(table, column)
                 params += ['%%%s%%' % rule['match_' + field + '_param']]
             elif rule['match_' + field] == 'not_contains':
-                query += ' AND st_line.{} NOT ILIKE %s'.format(column)
+                query += ' AND {}.{} NOT ILIKE %s'.format(table, column)
                 params += ['%%%s%%' % rule['match_' + field + '_param']]
             elif rule['match_' + field] == 'match_regex':
-                query += ' AND st_line.{} ~* %s'.format(column)
+                query += ' AND {}.{} ~* %s'.format(table, column)
                 params += [rule['match_' + field + '_param']]
 
         # Filter on partners.
@@ -468,11 +469,11 @@ class AccountReconcileModel(models.Model):
                     substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
                     AND
                         regexp_split_to_array(substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                        && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+                        && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
                 )
                 OR
                     regexp_split_to_array(substring(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
                 OR
                 (
                     move.ref IS NOT NULL
@@ -480,24 +481,25 @@ class AccountReconcileModel(models.Model):
                     substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
                     AND
                         regexp_split_to_array(substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                        && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+                        && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
                 )                                   AS communication_flag,
-                -- Determine a matching or not with the statement line communication using the move.invoice_payment_ref.
+                -- Determine a matching or not with the statement line communication using the move.payment_reference.
                 (
-                    move.invoice_payment_ref IS NOT NULL
+                    move.payment_reference IS NOT NULL
                     AND
-                    regexp_replace(move.invoice_payment_ref, '\s+', '', 'g') = regexp_replace(st_line.name, '\s+', '', 'g')
+                    regexp_replace(move.payment_reference, '\s+', '', 'g') = regexp_replace(st_line.payment_ref, '\s+', '', 'g')
                 )                                   AS payment_reference_flag
             FROM account_bank_statement_line st_line
-            LEFT JOIN account_journal journal       ON journal.id = st_line.journal_id
+            JOIN account_move st_line_move          ON st_line_move.id = st_line.move_id
+            JOIN account_journal journal            ON journal.id = st_line_move.journal_id
             LEFT JOIN jnl_precision                 ON jnl_precision.journal_id = journal.id
-            LEFT JOIN res_company company           ON company.id = st_line.company_id
+            JOIN res_company company                ON company.id = st_line_move.company_id
             LEFT JOIN partners_table line_partner   ON line_partner.line_id = st_line.id
             , account_move_line aml
             LEFT JOIN account_move move             ON move.id = aml.move_id AND move.state = 'posted'
             LEFT JOIN account_account account       ON account.id = aml.account_id
             WHERE st_line.id IN %s
-                AND aml.company_id = st_line.company_id
+                AND aml.company_id = st_line_move.company_id
                 AND move.state = 'posted'
                 AND (
                         -- the field match_partner of the rule might enforce the second part of
@@ -524,7 +526,7 @@ class AccountReconcileModel(models.Model):
                     (
                         line_partner.partner_id = 0
                         AND
-                        substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                        substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
                         AND
                         (
                             (
@@ -533,11 +535,11 @@ class AccountReconcileModel(models.Model):
                                 substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
                                 AND
                                     regexp_split_to_array(substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+                                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
                             )
                             OR
                                 regexp_split_to_array(substring(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                                && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+                                && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
                             OR
                             (
                                 move.ref IS NOT NULL
@@ -545,41 +547,24 @@ class AccountReconcileModel(models.Model):
                                 substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
                                 AND
                                     regexp_split_to_array(substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+                                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
                             )
                             OR
                             (
-                                move.invoice_payment_ref IS NOT NULL
+                                move.payment_reference IS NOT NULL
                                 AND
-                                regexp_replace(move.invoice_payment_ref, '\s+', '', 'g') = regexp_replace(st_line.name, '\s+', '', 'g')
+                                regexp_replace(move.payment_reference, '\s+', '', 'g') = regexp_replace(st_line.payment_ref, '\s+', '', 'g')
                             )
                         )
                     )
                 )
-                AND
-                (
-                    (
-                    -- blue lines appearance conditions
-                    aml.account_id IN (journal.default_credit_account_id, journal.default_debit_account_id)
-                    AND aml.statement_id IS NULL
-                    AND (
-                        company.account_bank_reconciliation_start IS NULL
-                        OR
-                        aml.date > company.account_bank_reconciliation_start
-                        )
-                    )
-                    OR
-                    (
-                    -- black lines appearance conditions
-                    account.reconcile IS TRUE
-                    AND aml.reconciled IS FALSE
-                    )
-                )
+                AND account.reconcile IS TRUE
+                AND aml.reconciled IS FALSE
             '''
             # Filter on the same currency.
             if rule.match_same_currency:
                 query += '''
-                    AND COALESCE(st_line.currency_id, journal.currency_id, company.currency_id) = COALESCE(aml.currency_id, company.currency_id)
+                    AND COALESCE(st_line.foreign_currency_id, st_line_move.currency_id) = COALESCE(aml.currency_id, company.currency_id)
                 '''
 
             params = [rule.sequence, rule.id, tuple(st_lines.ids)]
@@ -615,9 +600,10 @@ class AccountReconcileModel(models.Model):
                     %s                                  AS model_id,
                     st_line.id                          AS id
                 FROM account_bank_statement_line st_line
-                LEFT JOIN account_journal journal       ON journal.id = st_line.journal_id
+                JOIN account_move st_line_move          ON st_line_move.id = st_line.move_id
+                LEFT JOIN account_journal journal       ON journal.id = st_line_move.journal_id
                 LEFT JOIN jnl_precision                 ON jnl_precision.journal_id = journal.id
-                LEFT JOIN res_company company           ON company.id = st_line.company_id
+                LEFT JOIN res_company company           ON company.id = st_line_move.company_id
                 LEFT JOIN partners_table line_partner   ON line_partner.line_id = st_line.id
                 WHERE st_line.id IN %s
             '''
@@ -793,30 +779,20 @@ class AccountReconcileModel(models.Model):
                         # Create write-off lines.
                         move_lines = self.env['account.move.line'].browse(results[line.id]['aml_ids'])
                         partner = partner_map and partner_map.get(line.id) and self.env['res.partner'].browse(partner_map[line.id])
-                        reconciliation_results = model._prepare_reconciliation(line, move_lines, partner=partner)
+                        lines_vals_list = model._prepare_reconciliation(line, aml_ids=results[line.id]['aml_ids'], partner=partner)
 
-                        # A write-off must be applied.
-                        if reconciliation_results['new_aml_dicts']:
+                        # A write-off must be applied since there is some 'new' lines to propose.
+                        if not lines_vals_list or any(not line_vals.get('id') for line_vals in lines_vals_list):
                             results[line.id]['status'] = 'write_off'
 
                         # Process auto-reconciliation.
-                        if (first_batch_candidates or second_batch_candidates) and model.auto_reconcile:
-                            # An open balance is needed but no partner has been found.
-                            if reconciliation_results['open_balance_dict'] is False:
-                                break
-
-                            new_aml_dicts = reconciliation_results['new_aml_dicts']
-                            if reconciliation_results['open_balance_dict']:
-                                new_aml_dicts.append(reconciliation_results['open_balance_dict'])
+                        if lines_vals_list and (first_batch_candidates or second_batch_candidates) and model.auto_reconcile:
                             if not line.partner_id and partner:
                                 line.partner_id = partner
-                            counterpart_moves = line.process_reconciliation(
-                                counterpart_aml_dicts=reconciliation_results['counterpart_aml_dicts'],
-                                payment_aml_rec=reconciliation_results['payment_aml_rec'],
-                                new_aml_dicts=new_aml_dicts,
-                            )
+                            line.reconcile(lines_vals_list)
+
                             results[line.id]['status'] = 'reconciled'
-                            results[line.id]['reconciled_lines'] = counterpart_moves.mapped('line_ids')
+                            results[line.id]['reconciled_lines'] = line.line_ids
 
                             # The reconciled move lines are no longer candidates for another rule.
                             reconciled_amls_ids.update(move_lines.ids)
@@ -830,26 +806,18 @@ class AccountReconcileModel(models.Model):
 
                     # Create write-off lines.
                     partner = partner_map and partner_map.get(line.id) and self.env['res.partner'].browse(partner_map[line.id])
-                    reconciliation_results = model._prepare_reconciliation(line, partner=partner)
+                    lines_vals_list = model._prepare_reconciliation(line, partner=partner)
 
-                    # An open balance is needed but no partner has been found.
-                    if reconciliation_results['open_balance_dict'] is False:
+                    if not lines_vals_list:
                         break
 
                     # Process auto-reconciliation.
                     if model.auto_reconcile:
-                        new_aml_dicts = reconciliation_results['new_aml_dicts']
-                        if reconciliation_results['open_balance_dict']:
-                            new_aml_dicts.append(reconciliation_results['open_balance_dict'])
                         if not line.partner_id and partner:
                             line.partner_id = partner
-                        counterpart_moves = line.process_reconciliation(
-                            counterpart_aml_dicts=reconciliation_results['counterpart_aml_dicts'],
-                            payment_aml_rec=reconciliation_results['payment_aml_rec'],
-                            new_aml_dicts=new_aml_dicts,
-                        )
+                        line.reconcile(lines_vals_list)
                         results[line.id]['status'] = 'reconciled'
-                        results[line.id]['reconciled_lines'] = counterpart_moves.mapped('line_ids')
+                        results[line.id]['reconciled_lines'] = line.line_ids
 
                     # Break models loop.
                     break

@@ -114,7 +114,10 @@ class Location(models.Model):
                     raise UserError(_('You still have some product in locations %s') %
                         (','.join(children_quants.mapped('location_id.name'))))
                 else:
-                    super(Location, children_location - self).with_context(do_not_check_quant=True).write(values)
+                    super(Location, children_location - self).with_context(do_not_check_quant=True).write({
+                        'active': values['active'],
+                    })
+
         return super(Location, self).write(values)
 
     @api.model
@@ -157,7 +160,7 @@ class Location(models.Model):
 
     def should_bypass_reservation(self):
         self.ensure_one()
-        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location
+        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location or (self.usage == 'transit' and not self.company_id)
 
 
 class Route(models.Model):

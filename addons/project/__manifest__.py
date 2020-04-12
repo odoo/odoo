@@ -5,7 +5,7 @@
     'name': 'Project',
     'version': '1.1',
     'website': 'https://www.odoo.com/page/project-management',
-    'category': 'Operations/Project',
+    'category': 'Services/Project',
     'sequence': 10,
     'summary': 'Organize and schedule your projects ',
     'depends': [
@@ -37,6 +37,7 @@
         'data/digest_data.xml',
         'data/project_mail_template_data.xml',
         'data/project_data.xml',
+        'wizard/project_delete_wizard_views.xml',
     ],
     'demo': ['data/project_demo.xml'],
     'test': [

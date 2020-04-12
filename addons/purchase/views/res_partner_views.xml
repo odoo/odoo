@@ -50,8 +50,8 @@
             <field name="name">Vendor Bills</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,form,graph</field>
-            <field name="domain">[('type','in',('in_invoice', 'in_refund'))]</field>
-            <field name="context">{'search_default_partner_id': active_id, 'default_type': 'in_invoice', 'default_partner_id': active_id}</field>
+            <field name="domain">[('move_type','in',('in_invoice', 'in_refund'))]</field>
+            <field name="context">{'search_default_partner_id': active_id, 'default_move_type': 'in_invoice', 'default_partner_id': active_id}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Record a new vendor bill

@@ -5,35 +5,37 @@ odoo.define('web.custom_hooks', function () {
     const { onMounted, onPatched, onWillUnmount } = hooks;
 
     /**
-     * Returns a function which purpose is to focus the given selector on the next
-     * repaint (mount or patch). Its default selector is the first element having
-     * an `autofocus' attribute. Text selection will be set at the end of the value
-     * if the target is a text element. The action is lost if no element was found.
-     *
-     * @returns {Function}
+     * Focus a given selector as soon as it appears in the DOM and if it was not
+     * displayed before. If the selected target is an input|textarea, set the selection
+     * at the end.
+     * @param {Object} [params]
+     * @param {string} [params.selector='autofocus'] default: select the first element
+     *                 with an `autofocus` attribute.
+     * @returns {Function} function that forces the focus on the next update if visible.
      */
-    function useFocusOnUpdate() {
-        const component = Component.current;
-        component.__willFocus = null;
-
-        function _focusSelector() {
-            if (component.__willFocus) {
-                const target = component.el.querySelector(component.__willFocus);
-                if (target) {
-                    target.focus();
-                    if (['INPUT', 'TEXTAREA'].includes(target.tagName)) {
-                        target.selectionStart = target.selectionEnd = target.value.length;
-                    }
+    function useAutofocus(params = {}) {
+        const comp = Component.current;
+        // Prevent autofocus in mobile
+        if (comp.env.device.isMobile) {
+            return () => {};
+        }
+        const selector = params.selector || '[autofocus]';
+        let target = null;
+        function autofocus() {
+            const prevTarget = target;
+            target = comp.el.querySelector(selector);
+            if (target && target !== prevTarget) {
+                target.focus();
+                if (['INPUT', 'TEXTAREA'].includes(target.tagName)) {
+                    target.selectionStart = target.selectionEnd = target.value.length;
                 }
-                component.__willFocus = null;
             }
         }
+        onMounted(autofocus);
+        onPatched(autofocus);
 
-        onMounted(_focusSelector);
-        onPatched(_focusSelector);
-
-        return function focusOnUpdate(selector = '[autofocus]') {
-            component.__willFocus = selector;
+        return function focusOnUpdate() {
+            target = null;
         };
     }
 
@@ -66,13 +68,16 @@ odoo.define('web.custom_hooks', function () {
      * @param {string} eventName the name of the event
      * @param {string} [querySelector] a JS native selector for event delegation
      * @param {function} handler the event handler (will be bound to the component)
+     * @param {Object} [addEventListenerOptions] to be passed to addEventListener as options.
+     *    Useful for listening in the capture phase
      */
-    function useListener(eventName, querySelector, handler) {
-        if (arguments.length === 2) {
+    function useListener(eventName, querySelector, handler, addEventListenerOptions) {
+        if (typeof arguments[1] !== 'string') {
             querySelector = null;
             handler = arguments[1];
+            addEventListenerOptions = arguments[2];
         }
-        if (!(typeof handler === 'function')) {
+        if (typeof handler !== 'function') {
             throw new Error('The handler must be a function');
         }
 
@@ -99,15 +104,15 @@ odoo.define('web.custom_hooks', function () {
             boundHandler = handler.bind(comp);
         }
         onMounted(function () {
-            comp.el.addEventListener(eventName, boundHandler);
+            comp.el.addEventListener(eventName, boundHandler, addEventListenerOptions);
         });
         onWillUnmount(function () {
-            comp.el.removeEventListener(eventName, boundHandler);
+            comp.el.removeEventListener(eventName, boundHandler, addEventListenerOptions);
         });
     }
 
     return {
-        useFocusOnUpdate,
+        useAutofocus,
         useListener,
     };
 });

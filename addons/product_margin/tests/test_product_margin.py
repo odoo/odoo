@@ -12,7 +12,7 @@ class TestProductMargin(AccountTestCommon):
     def create_account_invoice(self, invoice_type, partner, product, quantity=0.0, price_unit=0.0):
         """ Create an invoice as in a view by triggering its onchange methods"""
 
-        invoice_form = Form(self.env['account.move'].with_context(default_type=invoice_type))
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type=invoice_type))
         invoice_form.partner_id = partner
         with invoice_form.invoice_line_ids.new() as line:
             line.product_id = product

@@ -23,9 +23,9 @@
     <!-- Error: void survey -->
     <template id="survey_void_content" name="Survey: void content">
         <t t-call="survey.layout">
+            <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
             <div class="wrap">
                 <div class="container">
-                    <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
                     <div class="jumbotron mt32">
                         <h1><span t-field="survey.title"/> survey is void</h1>
                         <p>Please make sure you have at least one question in your survey. You also need at least one section if you chose the "Page per section" layout.<br />
@@ -74,7 +74,7 @@
     <!-- ============================================================ -->
 
     <template id="survey_button_form_view" name="Survey: back to form view">
-        <div groups="survey.group_survey_manager" t-ignore="true" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
+        <div groups="survey.group_survey_manager" t-ignore="true" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden mb-0">
             <div t-ignore="true" class="text-center">
                 <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><i class="fa fa-fw fa-arrow-right"/><span t-if="answer and answer.test_entry">This is a test survey. </span>Edit Survey.</a>
             </div>
@@ -101,12 +101,10 @@
         </div>
     </template>
 
-    <!-- Survey Home page - Access Code
-    Mainly used in 'session mode' to give an easy access to the survey through the '/s' route. -->
-    <template id="survey_access_code" name="Survey: Access Code page">
+    <!-- Survey Home page - Session Code
+    Used in 'session mode' to give an easy access to the survey through the '/s' route. -->
+    <template id="survey_session_code" name="Survey: Access Code page">
         <t t-call="survey.layout">
-            <t t-set="no_header" t-value="True" />
-            <t t-set="no_footer" t-value="True" />
             <div class="wrap o_survey_wrap pb16 d-flex">
                 <div class="container o_survey_quick_access d-flex flex-column">
                     <div class="d-flex flex-grow-1 align-items-center">
@@ -116,7 +114,7 @@
                             </div>
                             <div class="row">
                             <div class="offset-md-4 col-md-4 text-center">
-                                <input id="access_code" type="text" placeholder="ABC123"
+                                <input id="session_code" type="text" placeholder="4812"
                                        class="form-control o_survey_question_text_box font-weight-bold bg-transparent text-primary text-center rounded-0 p-2 w-100"/>
                             </div>
                             <div class="col-3 text-center o_survey_error text-danger d-none pt-2" role="alert">
@@ -134,6 +132,17 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <template id="survey_navigation" name="Survey: Navigation">
+        <button t-if="can_go_back"
+            type="submit" class="btn p-0 shadow-none o_survey_navigation_submit" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">
+            <i class="border-left fa fa-chevron-left p-2" />
+        </button>
+        <button t-if="survey and survey.questions_layout in ['page_per_question', 'page_per_section'] and answer and answer.state != 'done' and not answer.is_session_answer"
+            type="submit" class="btn p-0 shadow-none o_survey_navigation_submit" t-att-value="'next' if not survey_last else 'finish'">
+            <i class="border-left fa fa-chevron-right p-2" />
+        </button>
     </template>
 
 </data>

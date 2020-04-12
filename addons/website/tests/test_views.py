@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-try:
-    from itertools import zip_longest
-except ImportError:
-    from itertools import izip_longest as zip_longest
-
 import unittest
+from itertools import zip_longest
 from lxml import etree as ET, html
 from lxml.html import builder as h
 
@@ -896,6 +892,54 @@ class TestCowViewSaving(common.TransactionCase):
         # 5  | Extension   |  , extended content   |     1      |     4    |  website.extension_view
         # 3  | Extension 2 |  , extended content 2 |     1      |     5    |  website.extension_view_2
 
+    def test_cow_extension_with_install(self):
+        View = self.env['ir.ui.view']
+        # Base
+        v1 = View.create({
+            'name': 'Base',
+            'type': 'qweb',
+            'arch': '<div>base content</div>',
+            'key': 'website.base_view_v1',
+        }).with_context(load_all_views=True)
+        self.env['ir.model.data'].create({
+            'module': 'website',
+            'name': 'base_view_v1',
+            'model': v1._name,
+            'res_id': v1.id,
+        })
+
+        # Extension
+        v2 = View.create({
+            'name': 'Extension',
+            'mode': 'extension',
+            'inherit_id': v1.id,
+            'arch': '<div position="inside"><ooo>extended content</ooo></div>',
+            'key': 'website.extension_view_v2',
+        })
+        self.env['ir.model.data'].create({
+            'module': 'website',
+            'name': 'extension_view_v2',
+            'model': v2._name,
+            'res_id': v2.id,
+        })
+
+        # multiwebsite specific
+        v1.with_context(website_id=1).write({'name': 'Extension Specific'})
+
+        original_pool_init = View.pool._init
+        View.pool._init = True
+
+        try:
+            # Simulate module install
+            View._load_records([dict(xml_id='website.extension2_view', values={
+                'name': ' ---',
+                'mode': 'extension',
+                'inherit_id': v1.id,
+                'arch': '<ooo position="replace"><p>EXTENSION</p></ooo>',
+                'key': 'website.extension2_view',
+            })])
+        finally:
+            View.pool._init = original_pool_init
 
 @tagged('-at_install', 'post_install')
 class Crawler(HttpCase):
@@ -1265,3 +1309,11 @@ class TestThemeViews(common.TransactionCase):
         specific_main_view_children = specific_main_view.inherit_children_ids
         self.assertEqual(specific_main_view_children.name, 'Test Child View', "Ensure theme.ir.ui.view has been loaded as an ir.ui.view into the website..")
         self.assertEqual(specific_main_view_children.website_id, website_1, "..and the website is the correct one.")
+
+        # 4. Keep User arch changes
+        new_arch = '<xpath expr="//body" position="replace"><span>Odoo</span></xpath>'
+        specific_main_view_children.arch = new_arch
+        theme_view.name = 'Test Child View modified'
+        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        self.assertEqual(specific_main_view_children.arch, new_arch, "View arch shouldn't have been overrided on theme update as it was modified by user.")
+        self.assertEqual(specific_main_view_children.name, 'Test Child View modified', "View should receive modification on theme update.")

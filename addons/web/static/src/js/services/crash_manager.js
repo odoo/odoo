@@ -87,6 +87,13 @@ var CrashManager = AbstractService.extend({
         var self = this;
         active = true;
         this.isConnected = true;
+        this.odooExceptionTitleMap = {
+            'odoo.exceptions.AccessDenied': _lt("Access Denied"),
+            'odoo.exceptions.AccessError': _lt("Access Error"),
+            'odoo.exceptions.MissingError': _lt("Missing Record"),
+            'odoo.exceptions.UserError': _lt("User Error"),
+            'odoo.exceptions.ValidationError': _lt("Validation Error"),
+        };
 
         this._super.apply(this, arguments);
 
@@ -180,70 +187,35 @@ var CrashManager = AbstractService.extend({
     rpc_error: function(error) {
         // Some qunit tests produces errors before the DOM is set.
         // This produces an error loop as the modal/toast has no DOM to attach to.
-        if (!document.body) {
-            return;
-        }
-        var map_title = {
-            access_denied: _lt("Access Denied"),
-            access_error: _lt("Access Error"),
-            except_orm: _lt("Global Business Error"),
-            missing_error: _lt("Missing Record"),
-            user_error: _lt("User Error"),
-            validation_error: _lt("Validation Error"),
-            warning: _lt("Warning"),
-        };
-        if (!active) {
-            return;
-        }
-        if (this.connection_lost) {
-            return;
-        }
+        if (!document.body || !active || this.connection_lost) return;
+
+        // Connection lost error
         if (error.code === -32098) {
             this.handleLostConnection();
             return;
         }
+
+        // Special exception handlers, see crash_registry bellow
         var handler = core.crash_registry.get(error.data.name, true);
         if (handler) {
             new (handler)(this, error).display();
             return;
         }
-        if (_.has(map_title, error.data.exception_type)) {
-            if (error.data.exception_type === 'except_orm') {
-                if (error.data.arguments[1]) {
-                    error = _.extend({}, error,
-                                {
-                                    data: _.extend({}, error.data,
-                                        {
-                                            message: error.data.arguments[1],
-                                            title: error.data.arguments[0] !== 'Warning' ? error.data.arguments[0] : '',
-                                        })
-                                });
-                }
-                else {
-                    error = _.extend({}, error,
-                                {
-                                    data: _.extend({}, error.data,
-                                        {
-                                            message: error.data.arguments[0],
-                                            title:  '',
-                                        })
-                                });
-                }
-            }
-            else {
-                error = _.extend({}, error,
-                            {
-                                data: _.extend({}, error.data,
-                                    {
-                                        message: error.data.arguments[0],
-                                        title: map_title[error.data.exception_type] !== 'Warning' ? map_title[error.data.exception_type] : '',
-                                    })
-                            });
-            }
+
+        // Odoo custom exception: UserError, AccessError, ...
+        if (_.has(this.odooExceptionTitleMap, error.data.name)) {
+            error = _.extend({}, error, {
+                data: _.extend({}, error.data, {
+                    message: error.data.arguments[0],
+                    title: this.odooExceptionTitleMap[error.data.name],
+                }),
+            });
             this.show_warning(error);
-        } else {
-            this.show_error(error);
+            return;
         }
+
+        // Any other Python exception
+        this.show_error(error);
     },
     show_warning: function (error, options) {
         if (!active) {
@@ -357,17 +329,17 @@ var RedirectWarningHandler = Widget.extend(ExceptionHandler, {
     display: function() {
         var self = this;
         var error = this.error;
+        var additional_context = _.extend({}, this.context, error.data.arguments[3]);
 
         new WarningDialog(this, {
             title: _.str.capitalize(error.type) || _t("Odoo Warning"),
             buttons: [
                 {text: error.data.arguments[2], classes : "btn-primary", click: function() {
-                    $.bbq.pushState({
-                        'action': error.data.arguments[1],
-                        'cids': $.bbq.getState().cids,
-                    }, 2);
-                    self.destroy();
-                    location.reload();
+                    self.do_action(
+                        error.data.arguments[1],
+                        {
+                            additional_context: additional_context,
+                        });
                 }},
                 {text: _t("Cancel"), click: function() { self.destroy(); }, close: true}
             ]

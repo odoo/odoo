@@ -125,7 +125,7 @@ class Partner(models.Model):
                 raise UserError(_("Partner doesn't have an address to make the invoice."))
 
             invoice_vals_list.append({
-                'type': 'out_invoice',
+                'move_type': 'out_invoice',
                 'partner_id': partner.id,
                 'invoice_line_ids': [
                     (0, None, {'product_id': product.id, 'quantity': 1, 'price_unit': amount, 'tax_ids': [(6, 0, product.taxes_id.ids)]})

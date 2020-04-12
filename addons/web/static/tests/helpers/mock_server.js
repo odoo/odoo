@@ -1094,6 +1094,20 @@ var MockServer = Class.extend({
         return true;
     },
     /**
+     * Simulate a 'search' operation
+     *
+     * @private
+     * @param {string} model
+     * @param {Array} args
+     * @param {Object} kwargs
+     * @param {integer} [kwargs.limit]
+     * @returns {integer[]}
+     */
+    _mockSearch: function (model, args, kwargs) {
+        const limit = kwargs.limit || Number.MAX_VALUE;
+        return this._getRecords(model, args[0]).map(r => r.id).slice(0, limit);
+    },
+    /**
      * Simulate a 'search_count' operation
      *
      * @private
@@ -1283,7 +1297,7 @@ var MockServer = Class.extend({
     _performRpc: function (route, args) {
         switch (route) {
             case '/web/action/load':
-                return Promise.resolve(this._mockLoadAction(args.kwargs));
+                return Promise.resolve(this._mockLoadAction(args));
 
             case '/web/dataset/search_read':
                 return Promise.resolve(this._mockSearchReadController(args));
@@ -1339,6 +1353,9 @@ var MockServer = Class.extend({
 
             case 'read_progress_bar':
                 return Promise.resolve(this._mockReadProgressBar(args.model, args.kwargs));
+
+            case 'search':
+                return Promise.resolve(this._mockSearch(args.model, args.args, args.kwargs));
 
             case 'search_count':
                 return Promise.resolve(this._mockSearchCount(args.model, args.args));

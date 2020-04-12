@@ -85,24 +85,43 @@ odoo.define('web.PivotController', function (require) {
          * add listeners on it.
          * Set this.$buttons with the produced jQuery element
          *
+         * @override
          * @param {jQuery} [$node] a jQuery node where the rendered buttons should
          *   be inserted. $node may be undefined, in which case the PivotView
          *   does nothing
          */
         renderButtons: function ($node) {
+            const context = {
+                measures: Object.entries(this.measures)
+                    .filter(x => x[0] !== '__count')
+                    .sort((a, b) => a[1].string.toLowerCase() > b[1].string.toLowerCase() ? 1 : -1),
+            };
+            this.$buttons = $(QWeb.render('PivotView.buttons', context));
+            this.$buttons.click(this._onButtonClick.bind(this));
+            this.$buttons.find('button').tooltip();
             if ($node) {
-                const context = {
-                    measures: Object.entries(this.measures)
-                        .filter(x => x[0] !== '__count')
-                        .sort((a, b) => a[1].string.toLowerCase() > b[1].string.toLowerCase() ? 1 : -1),
-                };
-                this.$buttons = $(QWeb.render('PivotView.buttons', context));
-                this.$buttons.click(this._onButtonClick.bind(this));
-                this.$buttons.find('button').tooltip();
-
                 this.$buttons.appendTo($node);
-                this._updateButtons();
             }
+        },
+        /**
+         * @override
+         */
+        updateButtons: function () {
+            if (!this.$buttons) {
+                return;
+            }
+            const state = this.model.get({ raw: true });
+            Object.entries(this.measures).forEach(elt => {
+                const name = elt[0];
+                const isSelected = state.measures.includes(name);
+                this.$buttons.find('.dropdown-item[data-field="' + name + '"]')
+                    .toggleClass('selected', isSelected);
+
+            });
+            const noDataDisplayed = !state.hasData || !state.measures.length;
+            this.$buttons.find('.o_pivot_flip_button').prop('disabled', noDataDisplayed);
+            this.$buttons.find('.o_pivot_expand_button').prop('disabled', noDataDisplayed);
+            this.$buttons.find('.o_pivot_download').prop('disabled', noDataDisplayed);
         },
 
         //--------------------------------------------------------------------------
@@ -130,34 +149,6 @@ odoo.define('web.PivotController', function (require) {
                 complete: framework.unblockUI,
                 error: (error) => this.call('crash_manager', 'rpc_error', error),
             });
-        },
-        /**
-         * @override
-         * @private
-         */
-        _update: function () {
-            this._updateButtons();
-            return this._super.apply(this, arguments);
-        },
-        /**
-         * @private
-         */
-        _updateButtons: function () {
-            if (!this.$buttons) {
-                return;
-            }
-            const state = this.model.get({ raw: true });
-            Object.entries(this.measures).forEach(elt => {
-                const name = elt[0];
-                const isSelected = state.measures.includes(name);
-                this.$buttons.find('.dropdown-item[data-field="' + name + '"]')
-                    .toggleClass('selected', isSelected);
-
-            });
-            const noDataDisplayed = !state.hasData || !state.measures.length;
-            this.$buttons.find('.o_pivot_flip_button').prop('disabled', noDataDisplayed);
-            this.$buttons.find('.o_pivot_expand_button').prop('disabled', noDataDisplayed);
-            this.$buttons.find('.o_pivot_download').prop('disabled', noDataDisplayed);
         },
 
         //--------------------------------------------------------------------------

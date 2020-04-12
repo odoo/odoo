@@ -5,7 +5,7 @@
 {
     'name': 'Task Logs',
     'version': '1.0',
-    'category': 'Operations/Timesheets',
+    'category': 'Services/Timesheets',
     'sequence': 23,
     'summary': 'Track employee time on tasks',
     'description': """

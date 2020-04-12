@@ -96,6 +96,11 @@ var Chatter = Widget.extend({
      */
     start: function () {
         this._$topbar = this.$('.o_chatter_topbar');
+        if(!this._disableAttachmentBox) {
+            this.$('.o_topbar_right_area').append(QWeb.render('mail.chatter.Attachment.Button', {
+                count: this.record.data.message_attachment_count || 0,
+            }));
+        }
         // render and append the buttons
         this._$topbar.prepend(this._renderButtons());
         // start and append the widgets
@@ -455,8 +460,6 @@ var Chatter = Widget.extend({
             logNoteButton: this.hasLogButton,
             scheduleActivityButton: !!this.fields.activity,
             isMobile: config.device.isMobile,
-            disableAttachmentBox: this._disableAttachmentBox,
-            count: this.record.data.message_attachment_count || 0,
         });
     },
     /**

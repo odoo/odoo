@@ -3,8 +3,11 @@
     <data>
         <template id="assets_backend" name="HR Expense Assets assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <script type="text/javascript" src="/hr_expense/static/src/js/documents_upload.js"/>
+                <script type="text/javascript" src="/hr_expense/static/src/js/expense_views.js"/>
                 <script type="text/javascript" src="/hr_expense/static/src/js/upload_mixin.js"/>
+            </xpath>
+            <xpath expr="link[last()]" position="after">
+                <link rel="stylesheet" type="text/scss" href="/hr_expense/static/src/scss/hr_expense.scss"/>
             </xpath>
         </template>
         <template id="assets_tests" name="HR Expense Assets Tests" inherit_id="web.assets_tests">

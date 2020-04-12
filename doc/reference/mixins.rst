@@ -904,7 +904,7 @@ usually the way to go:
         <field name="website_published" widget="website_button"/>
     </button>
 
-In the frontend, some security checks are needed to avoid showing 'Edition'
+In the frontend, some security checks are needed to avoid showing 'Editing'
 buttons to website visitors:
 
 .. code-block:: xml

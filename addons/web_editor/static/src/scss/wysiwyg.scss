@@ -198,6 +198,16 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     }
 }
 
+.o_we_horizontal_collapse {
+    width: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+.o_we_transition_ease {
+    transition: all ease 0.35s;
+}
+
 // MODALS
 body .modal {
 
@@ -210,19 +220,14 @@ body .modal {
                 min-height: 300px;
             }
 
-            .o_we_images .o_existing_attachment_cell {
-                // give enough space for the hover buttons
-                min-width: 64px;
-                img {
-                    // prevent url images from being too big
-                    max-width: 256px;
-                    max-height: 192px;
-                }
+            .o_we_images > .o_existing_attachment_cell img {
+                max-width: 100%;
+                background-image: url("/web_editor/static/src/img/transparent.png");
             }
 
             .o_existing_attachment_cell {
                 cursor: pointer;
-                list-style: none;
+                margin: 1px;
 
                 .o_existing_attachment_optimize, .o_existing_attachment_remove {
                     background-color: scale-color($card-border-color, $alpha: -50%);
@@ -260,10 +265,15 @@ body .modal {
             }
 
             .o_we_attachment_selected {
-                &.o_we_attachment_highlight, .o_we_attachment_highlight, &.font-icons-icon {
-                    border-color: $o-brand-primary;
-                    box-shadow: 0px 0px 2px 2px $o-brand-primary;
-                }
+                border-color: $o-brand-primary;
+                box-shadow: 0px 0px 2px 2px $o-brand-primary;
+            }
+
+            .o_we_attachment_optimized .badge {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                margin: 2px;
             }
 
             .font-icons-icons {

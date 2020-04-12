@@ -37,7 +37,6 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                 <group expand="0" string="Group By">
-                    <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <filter name="group_category" string="Category" context="{'group_by':'category_id'}"/>
                     <filter name="group_second_approver_id" string="Validator" context="{'group_by':'second_approver_id'}"/>
@@ -92,8 +91,11 @@
                             <field name="allocation_type" invisible="1" widget="radio"/>
 
                             <field name="number_of_days" invisible="1"/>
-                            <label for="number_of_days" string="Duration" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
-                            <div attrs="{'invisible': [('allocation_type', '=', 'accrual')]}">
+                            <div class="o_td_label">
+                                <label for="number_of_days" string="Duration" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
+                                <label for="number_of_days" string="Extra days" attrs="{'invisible': [('allocation_type', '!=', 'accrual')]}"/>
+                            </div>
+                            <div>
                                 <field name="number_of_days_display" class="oe_inline" nolabel="1"
                                     attrs="{'readonly': ['|', ('type_request_unit', '=', 'hour'), ('state', 'not in', ('draft', 'confirm'))], 'invisible': [('type_request_unit', '=', 'hour')]}"/>
                                 <field name="number_of_hours_display" class="oe_inline" nolabel="1"
@@ -150,7 +152,7 @@
                     attrs="{'required': [('holiday_type', '=', 'department')], 'invisible': [('holiday_type', '!=', 'department')]}"/>
             </xpath>
             <xpath expr="//field[@name='department_id']" position="after">
-                <field name="mode_company_id" groups="hr_holidays.group_hr_holidays_user"
+                <field name="mode_company_id" string="Company" groups="hr_holidays.group_hr_holidays_user"
                     attrs="{'required': [('holiday_type', '=', 'company')], 'invisible': [('holiday_type', '!=', 'company')]}"/>
             </xpath>
             <xpath expr="//field[@name='allocation_type']" position="attributes">

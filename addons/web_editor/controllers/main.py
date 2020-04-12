@@ -173,7 +173,16 @@ class Web_Editor(http.Controller):
         if attachment.type == 'url':
             raise UserError(_("You cannot change the quality, the width or the name of an URL attachment."))
         if copy:
+            original = attachment
             attachment = attachment.copy()
+            attachment.original_id = original
+            # Uniquify url by adding a path segment with the id before the name
+            if attachment.url:
+                url_fragments = attachment.url.split('/')
+                url_fragments.insert(-1, str(attachment.id))
+                attachment.url = '/'.join(url_fragments)
+        elif attachment.original_id:
+            attachment.datas = attachment.original_id.datas
         data = {}
         if name:
             data['name'] = name
@@ -450,3 +459,21 @@ class Web_Editor(http.Controller):
                 be found
         """
         request.env['web_editor.assets'].reset_asset(url, bundle_xmlid)
+
+    @http.route("/web_editor/public_render_template", type="json", auth="public", website=True)
+    def public_render_template(self, args):
+        # args[0]: xml id of the template to render
+        # args[1]: optional dict of rendering values, only trusted keys are supported
+        len_args = len(args)
+        assert len_args >= 1 and len_args <= 2, 'Need a xmlID and potential rendering values to render a template'
+
+        trusted_value_keys = ('debug',)
+
+        xmlid = args[0]
+        values = len_args > 1 and args[1] or {}
+
+        View = request.env['ir.ui.view']
+        if request.env.user._is_public() \
+                and xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
+            View = View.sudo()
+        return View.render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})

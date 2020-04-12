@@ -14,7 +14,7 @@ class ResPartnerGrade(models.Model):
     active = fields.Boolean('Active', default=lambda *args: 1)
     name = fields.Char('Level Name', translate=True)
     partner_weight = fields.Integer('Level Weight', default=1,
-        help="Gives the probability to assign a lead to this partner. (0 means no assignation.)")
+        help="Gives the probability to assign a lead to this partner. (0 means no assignment.)")
 
     def _compute_website_url(self):
         super(ResPartnerGrade, self)._compute_website_url()
@@ -37,7 +37,9 @@ class ResPartnerActivation(models.Model):
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    partner_weight = fields.Integer('Level Weight', default=0, tracking=True,
+    partner_weight = fields.Integer(
+        'Level Weight', compute='_compute_partner_weight',
+        copy=True, readonly=False, store=True, tracking=True,
         help="This should be a numerical value greater than 0 which will decide the contention for this partner to take this lead/opportunity.")
     grade_id = fields.Many2one('res.partner.grade', 'Partner Level', tracking=True)
     grade_sequence = fields.Integer(related='grade_id.sequence', readonly=True, store=True)
@@ -60,7 +62,7 @@ class ResPartner(models.Model):
         for partner in self:
             partner.implemented_count = len(partner.implemented_partner_ids.filtered('website_published'))
 
-    @api.onchange('grade_id')
-    def _onchange_grade_id(self):
-        grade = self.grade_id
-        self.partner_weight = grade.partner_weight if grade else 0
+    @api.depends('grade_id.partner_weight')
+    def _compute_partner_weight(self):
+        for partner in self:
+            partner.partner_weight = partner.grade_id.partner_weight if partner.grade_id else 0

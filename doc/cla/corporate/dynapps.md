@@ -17,3 +17,4 @@ Kurt Schmitz kurt.schmitz@dynapps.be https://github.com/kurt-schmitz
 Rod Schouteden rod.schouteden@dynapps.be https://github.com/schout-it
 Eric Lembregts eric.lembregts@dynapps.be https://github.com/lembregtse
 Pieter Paulussen pieter.paulussen@dynapps.be https://github.com/PieterPaulussen (up to 2019-10-01)
+Bart Van Bossche bart.vanbossche@dynapps.be https://github.com/bartvanbossche-dynapps

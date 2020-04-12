@@ -124,9 +124,6 @@
     <xpath expr="//header" position="attributes">
         <attribute name="data-name">Header</attribute>
     </xpath>
-    <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
-        <a class="navbar-brand" href="/" t-if="website" t-field="website.name">My Website</a>
-    </xpath>
     <xpath expr="//header//ul[@id='top_menu']" position="attributes">
         <attribute name="class" separator=" " add="o_menu_loading"/>
     </xpath>
@@ -184,6 +181,21 @@
     </xpath>
 </template>
 
+<template id="custom_code_layout" name="Custom Code Layout" inherit_id="website.layout" priority="55">
+    <xpath expr="//head" position="inside">
+        <t t-raw="website.custom_code_head"/>
+    </xpath>
+    <xpath expr="//body" position="inside">
+        <t t-raw="website.custom_code_footer"/>
+    </xpath>
+</template>
+
+<template id="website_name" inherit_id="website.layout" name="Website Name" active="False">
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
+        <a class="navbar-brand" href="/">My Website</a>
+    </xpath>
+</template>
+
 <template id="brand_promotion" inherit_id="web.brand_promotion" name="Brand Promotion">
     <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
         <t t-call="web.brand_promotion_message">
@@ -195,6 +207,35 @@
     </xpath>
 </template>
 
+<!-- Navbar templates -->
+<template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Logo Hamburger" active="False">
+    <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
+        <attribute name="class" remove="navbar-expand-md" separator=" "/>
+    </xpath>
+    <xpath expr="//header//button[hasclass('navbar-toggler')]" position="replace">
+        <div class="o_navbar_toggler_container">$0</div>
+    </xpath>
+</template>
+
+<template id="template_header_navbar_text_center" inherit_id="website.layout" name="Template Header Navbar Text Center" active="False">
+    <xpath expr="//header//ul[hasclass('nav')]" position="attributes">
+        <attribute name="class" remove="text-right" add="text-center" separator=" "/>
+    </xpath>
+</template>
+
+<template id="template_header_hamburger_left" inherit_id="website.layout" name="Template Header Hamburger" active="False">
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="before">
+        <div class="o_navbar_toggler_container o_not_editable"></div>
+    </xpath>
+    <xpath expr="//div[hasclass('o_navbar_toggler_container')]" position="inside">
+        <xpath expr="//header//button[hasclass('navbar-toggler')]" position="move"/>
+    </xpath>
+    <xpath expr="//header//ul[hasclass('nav')]" position="attributes">
+        <attribute name="class" remove="text-right" add="text-left" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Navbar options -->
 <template id="layout_logo_show" inherit_id="website.layout" name="Show Logo">
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a href="/" class="navbar-brand logo">
@@ -203,15 +244,45 @@
     </xpath>
 </template>
 
-<template id="affix_top_menu" inherit_id="website.layout" name="Fixed Top Menu">
+<template id="header_visibility_standard" inherit_id="website.layout" name="Header Visibility Standard">
     <xpath expr="//header" position="attributes">
-        <attribute name="t-attf-class" add="#{'o_affix_enabled'}" separator=" "/>
+        <attribute name="t-attf-class" add="o_header_standard o_top_fixed_element" separator=" "/>
+    </xpath>
+</template>
+
+<template id="header_visibility_fixed" inherit_id="website.layout" name="Header Visibility Fixed" active="False">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="o_header_fixed o_top_fixed_element" separator=" "/>
+    </xpath>
+</template>
+
+<template id="header_visibility_disappears" inherit_id="website.layout" name="Header Visibility Disappears" active="False">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="o_header_disappears o_top_fixed_element" separator=" "/>
+    </xpath>
+</template>
+
+<template id="header_visibility_fade_out" inherit_id="website.layout" name="Header Visibility Fade Out" active="False">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="o_header_fade_out o_top_fixed_element" separator=" "/>
     </xpath>
 </template>
 
 <template id="no_autohide_menu" inherit_id="website.layout" active="False">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="#{'o_no_autohide_menu'}" separator=" "/>
+    </xpath>
+</template>
+
+<template id="header_shadow" inherit_id="website.layout" name="Header Shadow" active="False">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="shadow" separator=" "/>
+    </xpath>
+</template>
+
+<template id="header_hoverable_dropdown" inherit_id="website.layout" name="Header Hoverable Dropdown" active="False">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="o_hoverable_dropdown" separator=" "/>
     </xpath>
 </template>
 
@@ -224,6 +295,7 @@
     </xpath>
 </template>
 
+<!-- Footer templates -->
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
@@ -240,32 +312,199 @@
                             <h5>Connect with us</h5>
                             <ul class="list-unstyled">
                                 <li><a href="/contactus">Contact us</a></li>
-                                <li><i class="fa fa-phone"/> <span class="o_force_ltr" t-field="res_company.phone"/></li>
-                                <li><i class="fa fa-envelope"/>  <span t-field="res_company.email"/></li>
+                                <li><i class="fa fa-phone fa-fw"/> <span class="o_force_ltr"><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></span></li>
+                                <li><i class="fa fa-envelope fa-fw"/>  <span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
                             </ul>
-                            <p>
-                                <a t-if="website.social_facebook" t-att-href="website.social_facebook" class="btn btn-sm btn-link"><i class="fa fa-2x fa-facebook-square"/></a>
-                                <a t-if="website.social_twitter" t-att-href="website.social_twitter" class="btn btn-sm btn-link"><i class="fa fa-2x fa-twitter"/></a>
-                                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" class="btn btn-sm btn-link"><i class="fa fa-2x fa-linkedin"/></a>
-                                <a t-if="website.social_youtube" t-att-href="website.social_youtube" class="btn btn-sm btn-link"><i class="fa fa-2x fa-youtube-play"/></a>
-                                <a t-if="website.social_github" t-att-href="website.social_github" class="btn btn-sm btn-link"><i class="fa fa-2x fa-github"/></a>
-                                <a t-if="website.social_instagram" t-att-href="website.social_instagram" class="btn btn-sm btn-link"><i class="fa fa-2x fa-instagram"/></a>
+                            <p class="o_footer_social_media_links">
+                                <a href="/website/social/facebook" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-facebook-square"/></a>
+                                <a href="/website/social/twitter" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-twitter"/></a>
+                                <a href="/website/social/linkedin" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-linkedin"/></a>
+                                <a href="/website/social/youtube" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-youtube-play"/></a>
+                                <a href="/website/social/github" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-github"/></a>
+                                <a href="/website/social/instagram" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-instagram"/></a>
                             </p>
                         </div>
                         <div class="col-lg-4">
-                            <h5>
-                                <span t-field="res_company.name"/>
-                                <small> - <a href="/aboutus">About us</a></small>
-                            </h5>
-                            <p>
+                            <div class="o_footer_about_us">
+                                <h5>
+                                    <span>YourCompany</span>
+                                    <small> - <a href="/aboutus">About us</a></small>
+                                </h5>
+                                <p>
+                                    We are a team of passionate people whose goal is to improve everyone's
+                                    life through disruptive products. We build great products to solve your
+                                    business problems.
+                                </p>
+                                <p>
+                                    Our products are designed for small to medium size companies willing to optimize
+                                    their performance.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<!-- Logo - About us (below)-->
+<template id="template_footer_logo_about_us_below" inherit_id="website.layout" name="Template Footer Logo About Us Below" active="False">
+    <xpath expr="//div[@id='footer']" position="replace">
+        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+            <section class="s_text_block pt16 pb8">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5 o_footer_logo">
+                            <a href="/" class="footer-brand logo">
+                                <img src="website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="o_footer_about_us">
+                                <h5>
+                                    <span>YourCompany</span>
+                                    <small> - <a href="/aboutus">About us</a></small>
+                                </h5>
+                                <p>
+                                    We are a team of passionate people whose goal is to improve everyone's
+                                    life through disruptive products. We build great products to solve your
+                                    business problems.
+                                </p>
+                                <p>
+                                    Our products are designed for small to medium size companies willing to optimize
+                                    their performance.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 text-lg-right">
+                            <p class="o_footer_social_media_links text-lg-right">
+                                <a href="/website/social/facebook" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-facebook-square"/></a>
+                                <a href="/website/social/twitter" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-twitter"/></a>
+                                <a href="/website/social/linkedin" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-linkedin"/></a>
+                                <a href="/website/social/youtube" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-youtube-play"/></a>
+                                <a href="/website/social/github" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-github"/></a>
+                                <a href="/website/social/instagram" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-instagram"/></a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<!-- Links - Address - Logo-->
+<template id="template_footer_links_address_logo" inherit_id="website.layout" name="Template Footer Links Address Logo" active="False">
+    <xpath expr="//div[@id='footer']" position="replace">
+        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+            <section class="s_text_block pt16 pb8">
+                <div class="container">
+                    <p class="o_footer_social_media_links">
+                        <a href="/website/social/facebook" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-facebook-square"/></a>
+                        <a href="/website/social/twitter" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-twitter"/></a>
+                        <a href="/website/social/linkedin" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-linkedin"/></a>
+                        <a href="/website/social/youtube" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-youtube-play"/></a>
+                        <a href="/website/social/github" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-github"/></a>
+                        <a href="/website/social/instagram" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-instagram"/></a>
+                    </p>
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><a href="/">Home</a></li>
+                        <li class="list-inline-item"><a href="/contactus">Contact us</a></li>
+                        <li class="list-inline-item"><a href="/aboutus">About us</a></li>
+                    </ul>
+                    <div class="o_footer_address">
+                        250 Executive Park Blvd, Suite 3400<br/>San Francisco CA 94134<br/>United States
+                    </div>
+                    <div class="row">
+                        <div class="offset-md-3 col-md-6 o_footer_logo">
+                            <a href="/" class="footer-brand logo">
+                                <img src="website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<!-- Website name - Logo - (below) Links - About us-->
+<template id="template_footer_name_logo_links_about_us" inherit_id="website.layout" name="Template Footer Name Logo Links About us" active="False">
+    <xpath expr="//div[@id='footer']" position="replace">
+        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+            <section class="s_text_block pt16 pb8">
+                <div class="container">
+                    <div class="row mt-2 mb-4">
+                        <div class="col-lg-6 mb-3 mb-lg-0">
+                            <h3><a href="/" class="text-decoration-none">YourCompany</a></h3>
+                        </div>
+                        <div class="col-lg-6 o_footer_logo text-center text-lg-right">
+                            <a href="/" class="footer-brand logo">
+                                <img src="website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <ul class="list-inline">
+                                <li class="list-inline-item"><a href="/">Home</a></li>
+                                <li class="list-inline-item"><a href="/contactus">Contact us</a></li>
+                                <li class="list-inline-item"><a href="/aboutus">About us</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6 text-lg-right">
+                            <p class="text-lg-right">
                                 We are a team of passionate people whose goal is to improve everyone's
                                 life through disruptive products. We build great products to solve your
-                                business problems.
+                                business problems. Our products are designed for small to medium size
+                                companies willing to optimize their performance.
                             </p>
-                            <p>
-                                Our products are designed for small to medium size companies willing to optimize
-                                their performance.
-                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<!-- Logo only-->
+<template id="template_footer_logo_only" inherit_id="website.layout" name="Template Footer Logo Only" active="False">
+    <xpath expr="//div[@id='footer']" position="replace">
+        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+            <section class="s_text_block pt16 pb8">
+                <div class="container">
+                    <div class="row">
+                        <div class="offset-md-3 col-md-6 o_footer_logo text-center my-3">
+                            <a href="/" class="footer-brand logo">
+                                <img src="website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<!-- Address - Logo (below)-->
+<template id="template_footer_address_logo" inherit_id="website.layout" name="Template Footer Address Logo" active="False">
+    <xpath expr="//div[@id='footer']" position="replace">
+        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+            <section class="s_text_block pt16 pb8 text-center">
+                <div class="container">
+                    <div class="m-4">
+                        YourCompany, 250 Executive Park Blvd, Suite 3400,<br/>
+                        San Francisco CA 94134, United States<br/>
+                        <a href="tel:+1 (650) 691-3277">+1 (650) 691-3277</a> - <a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a>
+                    </div>
+                    <div class="row">
+                        <div class="offset-lg-3 col-lg-6 o_footer_logo my-4">
+                            <a href="/" class="footer-brand logo">
+                                <img src="website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
+                            </a>
                         </div>
                     </div>
                 </div>

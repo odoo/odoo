@@ -205,6 +205,7 @@ class MrpProduction(models.Model):
     procurement_group_id = fields.Many2one(
         'procurement.group', 'Procurement Group',
         copy=False)
+    product_description_variants = fields.Char('Custom Description')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint')
     propagate_cancel = fields.Boolean(
         'Propagate cancel and split',
@@ -222,7 +223,7 @@ class MrpProduction(models.Model):
                                 readonly=True, states={'draft': [('readonly', False)]}, default='1')
     is_locked = fields.Boolean('Is Locked', default=True, copy=False)
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
-    production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production', readonly=False)  # FIXME sle: probably wrong if document in another company
+    production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production', readonly=False, related_sudo=False)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     confirm_cancel = fields.Boolean(compute='_compute_confirm_cancel')
@@ -425,7 +426,7 @@ class MrpProduction(models.Model):
             already_reserved = order.is_locked and order.state not in ('done', 'cancel') and order.mapped('move_raw_ids.move_line_ids')
             any_quantity_done = any([m.quantity_done > 0 for m in order.move_raw_ids])
             order.unreserve_visible = not any_quantity_done and already_reserved
-            order.reserve_visible = order.state in ('confirmed', 'planned') and any(move.state == 'confirmed' for move in order.move_raw_ids)
+            order.reserve_visible = order.state in ('confirmed', 'planned') and any(move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids)
 
     @api.depends('move_finished_ids.quantity_done', 'move_finished_ids.state', 'is_locked')
     def _compute_post_visible(self):
@@ -560,6 +561,10 @@ class MrpProduction(models.Model):
         if not values.get('procurement_group_id'):
             values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id
         production = super(MrpProduction, self).create(values)
+        production.move_raw_ids.write({
+            'group_id': production.procurement_group_id.id,
+            'reference': production.name,  # set reference when MO name is different than 'New'
+        })
         # Trigger move_raw creation when importing a file
         if 'import_file' in self.env.context:
             production._onchange_move_raw()
@@ -684,7 +689,6 @@ class MrpProduction(models.Model):
         move = self.move_raw_ids.filtered(lambda x: x.bom_line_id.id == bom_line.id and x.state not in ('done', 'cancel'))
         if move:
             old_qty = move[0].product_uom_qty
-            remaining_qty = move[0].raw_material_production_id.product_qty - move[0].raw_material_production_id.qty_produced
             if quantity > 0:
                 move[0].write({'product_uom_qty': quantity})
                 move[0]._action_assign()
@@ -739,7 +743,16 @@ class MrpProduction(models.Model):
         for production in self:
             if production.state in ('done', 'cancel'):
                 continue
-            moves_to_confirm |= (production.move_raw_ids | production.move_finished_ids).filtered(
+            additional_moves = production.move_raw_ids.filtered(
+                lambda move: move.state == 'draft' and move.additional
+            )
+            additional_moves.write({
+                'group_id': production.procurement_group_id.id,
+                'reference': production.name,  # set reference when MO name is different than 'New'
+            })
+            additional_moves._adjust_procure_method()
+            moves_to_confirm |= additional_moves
+            moves_to_confirm |= production.move_finished_ids.filtered(
                 lambda move: move.state == 'draft' and move.additional
             )
         if moves_to_confirm:
@@ -791,11 +804,6 @@ class MrpProduction(models.Model):
             production.consumption = production.bom_id.consumption
             if not production.move_raw_ids:
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
-            for move_raw in production.move_raw_ids:
-                move_raw.write({
-                    'group_id': production.procurement_group_id.id,
-                    'reference': production.name,  # set reference when MO name is different than 'New'
-                })
             production._generate_finished_moves()
             production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()

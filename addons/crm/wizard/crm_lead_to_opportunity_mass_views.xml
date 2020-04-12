@@ -5,6 +5,7 @@
         <field name="model">crm.lead2opportunity.partner.mass</field>
         <field name="arch" type="xml">
             <form string="Convert to Opportunity">
+                <field name="lead_tomerge_ids" invisible="1"/>
                 <separator string="Conversion Options"/>
                 <group>
                     <field name="name" class="oe_inline" widget="radio"/>
@@ -13,19 +14,18 @@
                 <group string="Assign these opportunities to">
                     <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                     <field name="user_ids" widget="many2many_tags" domain="[('share', '=', False)]"/>
-                     <field name="force_assignation"/>
+                    <field name="force_assignment"/>
                 </group>
-                <label for="opportunity_ids" string="Leads with existing duplicates (for information)" help="Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found" attrs="{'invisible': [('deduplicate', '=', False)]}"/>
+                <label for="duplicated_lead_ids" string="Leads with existing duplicates (for information)" help="Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found" attrs="{'invisible': [('deduplicate', '=', False)]}"/>
                 <group attrs="{'invisible': [('deduplicate', '=', False)]}">
-                    <field name="opportunity_ids" colspan="4" nolabel="1" readonly="1">
+                    <field name="duplicated_lead_ids" colspan="4" nolabel="1" readonly="1">
                         <tree create="false" delete="false">
-                            <field name="create_date"/>
+                            <field name="create_date" widget="date"/>
                             <field name="name"/>
                             <field name="type"/>
                             <field name="contact_name"/>
                             <field name="country_id" invisible="context.get('invisible_country', True)"/>
                             <field name="email_from"/>
-                            <field name="phone"/>
                             <field name="stage_id"/>
                             <field name="user_id"/>
                             <field name="team_id"/>
@@ -43,7 +43,7 @@
                     </group>
                 </group>
                 <footer>
-                    <button name="mass_convert" string="Convert to Opportunities" type="object" class="btn-primary"/>
+                    <button string="Convert to Opportunities" name="action_mass_convert" type="object" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
@@ -56,7 +56,7 @@
         res_model="crm.lead2opportunity.partner.mass"
         binding_model="crm.lead" binding_views="list"
         view_mode="form" target="new"
-        context="{'mass_convert' : True}"
+        context="{}"
         view_id="view_crm_lead2opportunity_partner_mass"
     />
 </odoo>

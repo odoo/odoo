@@ -1,66 +1,66 @@
 odoo.define('website.content.menu', function (require) {
 'use strict';
 
+const config = require('web.config');
 var dom = require('web.dom');
 var publicWidget = require('web.public.widget');
 var wUtils = require('website.utils');
+var animations = require('website.content.snippets.animation');
 
-publicWidget.registry.affixMenu = publicWidget.Widget.extend({
-    selector: 'header.o_affix_enabled',
+const BaseAnimatedHeader = animations.Animation.extend({
+    disabledInEditableMode: false,
+    effects: [{
+        startEvents: 'scroll',
+        update: '_updateHeaderOnScroll',
+    }, {
+        startEvents: 'resize',
+        update: '_updateHeaderOnResize',
+    }],
 
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super(...arguments);
+        this.fixedHeader = false;
+        this.scrolledPoint = 0;
+        this.hasScrolled = false;
+    },
     /**
      * @override
      */
     start: function () {
-        var def = this._super.apply(this, arguments);
+        this.$main = this.$el.next('main');
+        this.isOverlayHeader = !!this.$el.closest('.o_header_overlay, .o_header_overlay_theme').length;
+        this.$dropdowns = this.$el.find('.dropdown, .dropdown-menu');
+        this.$navbarCollapses = this.$el.find('.navbar-collapse');
 
-        var self = this;
-        this.$headerClone = this.$target.clone().addClass('o_header_affix affix o_top_fixed_element').removeClass('o_affix_enabled').removeAttr('id');
-        this.$headerClone.insertAfter(this.$target);
-        this.$headers = this.$target.add(this.$headerClone);
-        this.$dropdowns = this.$headers.find('.dropdown');
-        this.$dropdownMenus = this.$headers.find('.dropdown-menu');
-        this.$navbarCollapses = this.$headers.find('.navbar-collapse');
-
-        this._adaptDefaultOffset();
-        wUtils.onceAllImagesLoaded(this.$headerClone).then(function () {
-            self._adaptDefaultOffset();
-        });
-
-        // Handle events for the collapse menus
-        _.each(this.$headerClone.find('[data-toggle="collapse"]'), function (el) {
-            var $source = $(el);
-            var targetIDSelector = $source.attr('data-target');
-            var $target = self.$headerClone.find(targetIDSelector);
-            $source.attr('data-target', targetIDSelector + '_clone');
-            $target.attr('id', targetIDSelector.substr(1) + '_clone');
-        });
-        // While scrolling through navbar menus, body should not be scrolled with it
-        this.$headerClone.find('div.navbar-collapse').on('show.bs.collapse', function () {
-            $(document.body).addClass('overflow-hidden');
-        }).on('hide.bs.collapse', function () {
+        // While scrolling through navbar menus on medium devices, body should not be scrolled with it
+        this.$navbarCollapses.on('show.bs.collapse.BaseAnimatedHeader', function () {
+            if (config.device.size_class <= config.device.SIZES.SM) {
+                $(document.body).addClass('overflow-hidden');
+            }
+        }).on('hide.bs.collapse.BaseAnimatedHeader', function () {
             $(document.body).removeClass('overflow-hidden');
         });
 
-        // Window Handlers
-        $(window).on('resize.affixMenu scroll.affixMenu', _.throttle(this._onWindowUpdate.bind(this), 200));
-        setTimeout(this._onWindowUpdate.bind(this), 0); // setTimeout to allow override with advanced stuff... see themes
+        // We can rely on transitionend which is well supported but not on
+        // transitionstart, so we listen to a custom odoo event.
+        this._transitionCount = 0;
+        this.$el.on('odoo-transitionstart.BaseAnimatedHeader', () => this._updateMainPaddingTopLoop(1));
+        this.$el.on('transitionend.BaseAnimatedHeader', () => this._updateMainPaddingTopLoop(-1));
 
-        return def.then(function () {
-            self.trigger_up('widgets_start_request', {
-                $target: self.$headerClone,
-            });
-        });
+        return this._super(...arguments);
     },
     /**
      * @override
      */
     destroy: function () {
-        if (this.$headerClone) {
-            this.$headerClone.remove();
-            $(window).off('.affixMenu');
-        }
-        this._super.apply(this, arguments);
+        this._toggleFixedHeader(false);
+        this.$el.removeClass('o_header_affixed o_header_is_scrolled o_header_no_transition');
+        this.$navbarCollapses.off('.BaseAnimatedHeader');
+        this.$el.off('.BaseAnimatedHeader');
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -69,16 +69,41 @@ publicWidget.registry.affixMenu = publicWidget.Widget.extend({
 
     /**
      * @private
+     * @param {boolean} [useFixed=true]
      */
-    _adaptDefaultOffset: function () {
-        var bottom = this.$target.offset().top + this._getHeaderHeight();
-        this.$headerClone.css('margin-top', Math.min(-200, -bottom) + 'px');
+    _toggleFixedHeader: function (useFixed = true) {
+        this.fixedHeader = useFixed;
+        this.el.classList.toggle('o_header_affixed', useFixed);
+        this._updateMainPaddingTop();
     },
     /**
      * @private
      */
-    _getHeaderHeight: function () {
-        return this.$headerClone.outerHeight();
+    _updateMainPaddingTop: function () {
+        this.headerHeight = this.$el.outerHeight();
+        if (this.isOverlayHeader) {
+            return;
+        }
+        const headerSize = this.el.classList.contains('o_header_affixed');
+        this.$main.css('padding-top', headerSize ? this.headerHeight : '');
+    },
+    /**
+     * @private
+     * @param {integer} [addCount=0]
+     */
+    _updateMainPaddingTopLoop: function (addCount = 0) {
+        this._updateMainPaddingTop();
+
+        this._transitionCount += addCount;
+        this._transitionCount = Math.max(0, this._transitionCount);
+
+        // The normal case would be to have the transitionend event to be
+        // fired but we cannot rely on it, so we use a timeout as fallback.
+        clearTimeout(this._paddingLoopTimer);
+        if (this._transitionCount > 0) {
+            window.requestAnimationFrame(() => this._updateMainPaddingTopLoop());
+            this._paddingLoopTimer = setTimeout(() => this._updateMainPaddingTopLoop(-1), 500);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -86,31 +111,232 @@ publicWidget.registry.affixMenu = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when the window is resized or scrolled -> updates affix status and
-     * automatically closes submenus.
+     * Called when the window is scrolled
      *
      * @private
+     * @param {integer} scroll
      */
-    _onWindowUpdate: function () {
+    _updateHeaderOnScroll: function (scroll) {
+        // Disable css transition if refresh with scrollTop > 0
+        if (!this.hasScrolled) {
+            this.hasScrolled = true;
+            if (scroll > 0) {
+                this.$el.addClass('o_header_no_transition');
+            }
+        } else {
+            this.$el.removeClass('o_header_no_transition');
+        }
+
+        // Indicates the page is scrolled, the logo size is changed.
+        const headerIsScrolled = (scroll > this.scrolledPoint);
+        if (this.headerIsScrolled !== headerIsScrolled) {
+            this.el.classList.toggle('o_header_is_scrolled', headerIsScrolled);
+            this.$el.trigger('odoo-transitionstart');
+            this.headerIsScrolled = headerIsScrolled;
+        }
+
+        // Reset opened menus
         if (this.$navbarCollapses.hasClass('show')) {
             return;
         }
-
-        var wOffset = $(window).scrollTop();
-        var hOffset = this.$target.scrollTop();
-        this.$headerClone.toggleClass('affixed', wOffset > (hOffset + 300));
-
-        // Reset opened menus
-        this.$dropdowns.add(this.$dropdownMenus).removeClass('show');
+        this.$dropdowns.removeClass('show');
         this.$navbarCollapses.removeClass('show').attr('aria-expanded', false);
+    },
+    /**
+     * Called when the window is resized
+     *
+     * @private
+     */
+    _updateHeaderOnResize: function () {
+        if (document.body.classList.contains('overflow-hidden')
+                && config.device.size_class > config.device.SIZES.SM) {
+            document.body.classList.remove('overflow-hidden');
+            this.$el.find('.navbar-collapse').removeClass('show');
+        }
+    },
+});
+
+publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
+    selector: 'header.o_header_standard:not(.o_header_sidebar)',
+
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super(...arguments);
+        this.fixedHeaderShow = false;
+        this.scrolledPoint = 300;
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.headerHeight = this.$el.outerHeight();
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the window is scrolled
+     *
+     * @private
+     * @param {integer} scroll
+     */
+    _updateHeaderOnScroll: function (scroll) {
+        this._super(...arguments);
+
+        const mainPosScrolled = (scroll > this.headerHeight);
+        const reachPosScrolled = (scroll > this.scrolledPoint);
+
+        // Switch between static/fixed position of the header
+        if (this.fixedHeader !== mainPosScrolled) {
+            this.$el.css('transform', mainPosScrolled ? 'translate(0, -100%)' : '');
+            void this.$el[0].offsetWidth; // Force a paint refresh
+            this._toggleFixedHeader(mainPosScrolled);
+        }
+        // Show/hide header
+        if (this.fixedHeaderShow !== reachPosScrolled) {
+            this.$el.css('transform', reachPosScrolled ? '' : 'translate(0, -100%)');
+            this.fixedHeaderShow = reachPosScrolled;
+        }
+    },
+});
+
+publicWidget.registry.FixedHeader = BaseAnimatedHeader.extend({
+    selector: 'header.o_header_fixed',
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _updateHeaderOnScroll: function (scroll) {
+        this._super(...arguments);
+        // Need to be 'unfixed' when the window is not scrolled so that the
+        // transparent menu option still works.
+        if (scroll > this.scrolledPoint) {
+            if (!this.$el.hasClass('o_header_affixed')) {
+                this._toggleFixedHeader(true);
+            }
+        } else {
+            this._toggleFixedHeader(false);
+        }
+    },
+});
+
+const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
+    /**
+     * @override
+     */
+    init: function () {
+        this._super(...arguments);
+        this.scrollingDownwards = true;
+        this.hiddenHeader = false;
+        this.position = 0;
+        this.checkPoint = 0;
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._showHeader();
+        this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @abstract
+     */
+    _hideHeader: function () {},
+    /**
+     * @private
+     */
+    _showHeader: function () {},
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _updateHeaderOnScroll: function (scroll) {
+        this._super(...arguments);
+
+        const scrollingDownwards = (scroll > this.position);
+        if (scrollingDownwards !== this.scrollingDownwards) {
+            this.checkPoint = scroll;
+        }
+
+        if (scrollingDownwards) {
+            if (!this.hiddenHeader && scroll - this.checkPoint > 200) {
+                this.hiddenHeader = true;
+                this._hideHeader();
+            }
+        } else {
+            if (this.hiddenHeader && scroll - this.checkPoint < -100) {
+                this.hiddenHeader = false;
+                this._showHeader();
+            }
+        }
+
+        this.scrollingDownwards = scrollingDownwards;
+        this.position = scroll;
+    },
+});
+
+publicWidget.registry.DisappearingHeader = BaseDisappearingHeader.extend({
+    selector: 'header.o_header_disappears',
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _hideHeader: function () {
+        this.$el.css('transform', 'translate(0, -100%)');
+    },
+    /**
+     * @override
+     */
+    _showHeader: function () {
+        this.$el.css('transform', '');
+    },
+});
+
+publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
+    selector: 'header.o_header_fade_out',
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _hideHeader: function () {
+        this.$el.stop(false, true).fadeOut();
+    },
+    /**
+     * @override
+     */
+    _showHeader: function () {
+        this.$el.stop(false, true).fadeIn();
     },
 });
 
 /**
  * Auto adapt the header layout so that elements are not wrapped on a new line.
- *
- * Note: this works well with the affixMenu... by chance (autohideMenu is called
- * after alphabetically).
  */
 publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
     selector: 'header #top_menu',
@@ -225,13 +451,86 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
         // If can't open in the current direction because it would overflow the
         // window, change the direction. But if the other direction would do the
         // same, change back the direction.
-        for (var i = 0 ; i < 2 ; i++) {
+        for (var i = 0; i < 2; i++) {
             if (!this._checkOpening(alignment, liOffset, liWidth, menuWidth, windowWidth)) {
                 alignment = (alignment === 'left' ? 'right' : 'left');
             }
         }
 
         $menu.addClass('dropdown-menu-' + alignment);
+    },
+});
+
+publicWidget.registry.hoverableDropdown = animations.Animation.extend({
+    selector: 'header.o_hoverable_dropdown',
+    disabledInEditableMode: false,
+    effects: [{
+        startEvents: 'resize',
+        update: '_dropdownHover',
+    }],
+    events: {
+        'mouseenter .dropdown:not(.position-static)': '_onMouseEnter',
+        'mouseleave .dropdown:not(.position-static)': '_onMouseLeave',
+    },
+
+    /**
+     * @override
+     */
+    start: function () {
+        this.$dropdownMenus = this.$el.find('.dropdown-menu');
+        this.$dropdownToggles = this.$el.find('.dropdown-toggle');
+        this._dropdownHover();
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _dropdownHover: function () {
+        if (config.device.size_class > config.device.SIZES.SM) {
+            this.$dropdownMenus.css('margin-top', '0');
+            this.$dropdownMenus.css('top', 'unset');
+        } else {
+            this.$dropdownMenus.css('margin-top', '');
+            this.$dropdownMenus.css('top', '');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onMouseEnter: function (ev) {
+        if (config.device.size_class <= config.device.SIZES.SM) {
+            return;
+        }
+
+        const $dropdown = $(ev.currentTarget);
+        $dropdown.addClass('show');
+        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'true');
+        $dropdown.find(this.$dropdownMenus).addClass('show');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onMouseLeave: function (ev) {
+        if (config.device.size_class <= config.device.SIZES.SM) {
+            return;
+        }
+
+        const $dropdown = $(ev.currentTarget);
+        $dropdown.removeClass('show');
+        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'false');
+        $dropdown.find(this.$dropdownMenus).removeClass('show');
     },
 });
 });

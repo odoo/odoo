@@ -6,7 +6,7 @@ var tour = require('web_tour.tour');
 tour.register('sale_matrix_tour', {
     url: "/web",
     test: true,
-}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
 }, {
     trigger: ".o_list_button_add",
@@ -53,6 +53,7 @@ tour.register('sale_matrix_tour', {
     run: 'click' // Edit Sales Order.
 }, {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    extra_trigger: '.o_form_editable',
     run: 'click'
 }, {
     trigger: '.o_edit_product_configuration',

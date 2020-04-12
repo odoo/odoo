@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.misc import format_date, formatLang
 
 from collections import defaultdict
 
@@ -43,9 +44,20 @@ class AccountTransferWizard(models.TransientModel):
     @api.depends('destination_account_id')
     def _compute_aml_preview_data(self):
         for record in self:
-            record.aml_preview_data = json.dumps(self._get_lines_to_create_dict())
+            record.aml_preview_data = json.dumps({
+                'groups_vals': [self.env['account.move']._move_dict_to_preview_vals(self._get_move_to_create_dict(), record.company_id.currency_id)],
+                'options': {
+                    'columns': [
+                        {'field': 'account_id', 'label': _('Account')},
+                        {'field': 'name', 'label': _('Label')},
+                        {'field': 'partner_id', 'label': _('Partner')},
+                        {'field': 'debit', 'label': _('Debit'), 'class': 'text-right text-nowrap'},
+                        {'field': 'credit', 'label': _('Credit'), 'class': 'text-right text-nowrap'},
+                    ],
+                },
+            })
 
-    def _get_lines_to_create_dict(self):
+    def _get_move_to_create_dict(self):
         line_vals = []
 
         # Group data from selected move lines
@@ -77,9 +89,7 @@ class AccountTransferWizard(models.TransientModel):
                     'debit': counterpart_vals['balance'] > 0 and self.company_id.currency_id.round(counterpart_vals['balance']) or 0,
                     'credit': counterpart_vals['balance'] < 0 and self.company_id.currency_id.round(-counterpart_vals['balance']) or 0,
                     'account_id': self.destination_account_id.id,
-                    'preview-account': self.destination_account_id and self.destination_account_id.name_get()[0][1] or _('Destination Account'),
                     'partner_id': counterpart_partner.id or None,
-                    'preview-partner': counterpart_partner and counterpart_partner.name or None,
                     'amount_currency': counterpart_currency and counterpart_currency.round((counterpart_vals['balance'] < 0 and -1 or 1) * abs(counterpart_vals['amount_currency'])) or 0,
                     'currency_id': counterpart_currency.id or None,
                 })
@@ -94,31 +104,20 @@ class AccountTransferWizard(models.TransientModel):
                     'debit': account_balance < 0 and self.company_id.currency_id.round(-account_balance) or 0,
                     'credit': account_balance > 0 and self.company_id.currency_id.round(account_balance) or 0,
                     'account_id': account.id,
-                    'preview-account': account.name_get()[0][1],
                     'partner_id': partner.id or None,
-                    'preview-partner': partner and partner.name or None,
                     'currency_id': currency.id or None,
                     'amount_currency': (account_balance > 0 and -1 or 1) * abs(account_amount_currency),
                 })
 
-        return line_vals
-
-    def button_transfer(self):
-        all_lines_dict = self._get_lines_to_create_dict()
-
-        orm_line_commands = []
-        for line_dict in all_lines_dict:
-            del line_dict['preview-account']
-            del line_dict['preview-partner']
-            orm_line_commands.append((0, 0, line_dict))
-
-        new_move = self.env['account.move'].create({
+        return {
             'journal_id': self.journal_id.id,
             'date': self.date,
-            'ref': _("Transfer entry to %s") % self.destination_account_id.display_name,
-            'line_ids': orm_line_commands,
-        })
+            'ref': self.destination_account_id.display_name and _("Transfer entry to %s") % self.destination_account_id.display_name or '',
+            'line_ids': [(0, 0, line) for line in line_vals],
+        }
 
+    def button_transfer(self):
+        new_move = self.env['account.move'].create(self._get_move_to_create_dict())
         new_move.post()
 
         # Group lines

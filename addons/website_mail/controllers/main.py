@@ -38,7 +38,21 @@ class WebsiteMail(http.Controller):
             return True
 
     @http.route(['/website_mail/is_follower'], type='json', auth="public", website=True)
-    def is_follower(self, model, res_id, **post):
+    def is_follower(self, records, **post):
+        """ Given a list of `models` containing a list of res_ids, return
+            the res_ids for which the user is follower and some practical info.
+
+            :param records: dict of models containing record IDS, eg: {
+                    'res.model': [1, 2, 3..],
+                    'res.model2': [1, 2, 3..],
+                    ..
+                }
+
+            :returns: [
+                    {'is_user': True/False, 'email': 'admin@yourcompany.example.com'},
+                    {'res.model': [1, 2], 'res.model2': [1]}
+                ]
+        """
         user = request.env.user
         partner = None
         public_user = request.website.user_id
@@ -47,17 +61,19 @@ class WebsiteMail(http.Controller):
         elif request.session.get('partner_id'):
             partner = request.env['res.partner'].sudo().browse(request.session.get('partner_id'))
 
-        values = {
+        res = {}
+        if partner:
+            for model in records:
+                mail_followers_ids = request.env['mail.followers'].sudo().read_group([
+                    ('res_model', '=', model),
+                    ('res_id', 'in', records[model]),
+                    ('partner_id', '=', partner.id)
+                ], ['res_id', 'follow_count:count(id)'], ['res_id'])
+                # `read_group` will filter out the ones without count result
+                for m in mail_followers_ids:
+                    res.setdefault(model, []).append(m['res_id'])
+
+        return [{
             'is_user': user != public_user,
             'email': partner.email if partner else "",
-            'is_follower': False,
-        }
-
-        record_sudo = request.env[model].sudo().browse(int(res_id))
-        if partner and record_sudo.exists():
-            values['is_follower'] = bool(request.env['mail.followers'].sudo().search_count([
-                ('res_model', '=', model),
-                ('res_id', '=', record_sudo.id),
-                ('partner_id', '=', partner.id)
-            ]))
-        return values
+        }, res]

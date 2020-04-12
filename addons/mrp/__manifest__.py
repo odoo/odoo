@@ -40,11 +40,12 @@
         'report/report_stock_rule.xml',
         'report/mrp_zebra_production_templates.xml',
     ],
-    'qweb': ['static/src/xml/mrp.xml'],
+    'qweb': ['static/src/xml/*.xml'],
     'demo': [
         'data/mrp_demo.xml',
     ],
     'test': [],
     'application': True,
     'post_init_hook': '_create_warehouse_data',
+    'uninstall_hook': 'uninstall_hook',
 }

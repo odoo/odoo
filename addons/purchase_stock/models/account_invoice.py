@@ -37,9 +37,10 @@ class AccountMove(models.Model):
         lines_vals_list = []
 
         for move in self:
-            if move.type not in ('in_invoice', 'in_refund', 'in_receipt') or not move.company_id.anglo_saxon_accounting:
+            if move.move_type not in ('in_invoice', 'in_refund', 'in_receipt') or not move.company_id.anglo_saxon_accounting:
                 continue
 
+            move = move.with_company(move.company_id)
             for line in move.invoice_line_ids.filtered(lambda line: line.product_id.type == 'product' and line.product_id.valuation == 'real_time'):
 
                 # Filter out lines being not eligible for price difference.
@@ -61,7 +62,7 @@ class AccountMove(models.Model):
                         ('state', '=', 'done'),
                         ('product_qty', '!=', 0.0),
                     ])
-                    if move.type == 'in_refund':
+                    if move.move_type == 'in_refund':
                         valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_out())
                     else:
                         valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_in())
@@ -73,8 +74,9 @@ class AccountMove(models.Model):
                             # In case val_stock_move is a return move, its valuation entries have been made with the
                             # currency rate corresponding to the original stock move
                             valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date
-                            layers_qty = sum(val_stock_move.mapped('stock_valuation_layer_ids.quantity'))
-                            layers_values = sum(val_stock_move.mapped('stock_valuation_layer_ids.value'))
+                            svl = val_stock_move.mapped('stock_valuation_layer_ids').filtered(lambda l: l.quantity)
+                            layers_qty = sum(svl.mapped('quantity'))
+                            layers_values = sum(svl.mapped('value'))
                             valuation_price_unit_total += line.company_currency_id._convert(
                                 layers_values, move.currency_id,
                                 move.company_id, valuation_date, round=False,
@@ -110,7 +112,7 @@ class AccountMove(models.Model):
                 price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
                 if line.tax_ids:
                     price_unit = line.tax_ids.compute_all(
-                        price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.type == 'in_refund')['total_excluded']
+                        price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund')['total_excluded']
 
                 if float_compare(valuation_price_unit, price_unit, precision_digits=invoice_cur_prec) != 0 \
                         and float_compare(line['price_unit'], line.price_unit, precision_digits=invoice_cur_prec) == 0:
@@ -160,6 +162,8 @@ class AccountMove(models.Model):
     def post(self):
         # OVERRIDE
         # Create additional price difference lines for vendor bills.
+        if self._context.get('move_reverse_cancel'):
+            return super(AccountMove, self).post()
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_in_lines_vals())
         return super(AccountMove, self).post()
 
@@ -167,8 +171,8 @@ class AccountMove(models.Model):
         """ Overridden from stock_account.
         Returns the stock moves associated to this invoice."""
         rslt = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
-        for invoice in self.filtered(lambda x: x.type == 'in_invoice'):
+        for invoice in self.filtered(lambda x: x.move_type == 'in_invoice'):
             rslt += invoice.mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'supplier')
-        for invoice in self.filtered(lambda x: x.type == 'in_refund'):
+        for invoice in self.filtered(lambda x: x.move_type == 'in_refund'):
             rslt += invoice.mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'supplier')
         return rslt

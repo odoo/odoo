@@ -14,6 +14,7 @@ class IrAttachment(models.Model):
     image_src = fields.Char(compute='_compute_image_src')
     image_width = fields.Integer(compute='_compute_image_size')
     image_height = fields.Integer(compute='_compute_image_size')
+    original_id = fields.Many2one('ir.attachment', string="Original (unoptimized, unresized) attachment")
 
     def _compute_local_url(self):
         for attachment in self:
@@ -25,13 +26,23 @@ class IrAttachment(models.Model):
     @api.depends('mimetype', 'url', 'name')
     def _compute_image_src(self):
         for attachment in self:
+            # Only add a src for supported images
             if attachment.mimetype not in ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png', 'image/svg+xml']:
                 attachment.image_src = False
+                continue
+
+            if attachment.type == 'url':
+                attachment.image_src = attachment.url
             else:
-                attachment.image_src = attachment.url or '/web/image/%s/%s' % (
-                    attachment.id,
-                    url_quote(attachment.name or ''),
-                )
+                # Adding unique in URLs for cache-control
+                unique = attachment.checksum[:8]
+                if attachment.url:
+                    # For attachments-by-url, unique is used as a cachebuster. They
+                    # currently do not leverage max-age headers.
+                    attachment.image_src = '%s?unique=%s' % (attachment.url, unique)
+                else:
+                    name = url_quote(attachment.name)
+                    attachment.image_src = '/web/image/%s-%s/%s' % (attachment.id, unique, name)
 
     @api.depends('datas')
     def _compute_image_size(self):
@@ -47,4 +58,4 @@ class IrAttachment(models.Model):
     def _get_media_info(self):
         """Return a dict with the values that we need on the media dialog."""
         self.ensure_one()
-        return self.read(['id', 'name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height'])[0]
+        return self._read_format(['id', 'name', 'description', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'original_id'])[0]

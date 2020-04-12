@@ -250,7 +250,7 @@
                                         'readonly': [('state', 'not in', ('draft', 'confirm'))],
                                         'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]
                                     }"/>
-                                <field name="request_date_from_period" class="oe_inline oe_edit_only"
+                                <field name="request_date_from_period" class="oe_inline"
                                     string="In"
                                     options="{'horizontal': True}"
                                     attrs="{
@@ -359,7 +359,23 @@
             <calendar js_class="time_off_calendar" string="Time Off Request" form_view_id="%(hr_holidays.hr_leave_view_form_dashboard)d" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" show_unusual_days="True" color="employee_id" hide_time="True">
                 <field name="display_name"/>
                 <field name="employee_id" filters="1" invisible="1"/>
+                <field name="state" invisible="1"/>
             </calendar>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_form_dashboard_new_time_off" model="ir.ui.view">
+        <field name="name">hr.leave.view.form.dashboard.new.time.off</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_dashboard"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <footer>
+                    <button string="Save" special="save" class="oe_highlight" />
+                    <button string="Discard" special="cancel" />
+                </footer>
+            </xpath>
         </field>
     </record>
 
@@ -391,7 +407,7 @@
                         'required': [('holiday_type', '=', 'employee')],
                         'invisible': [('holiday_type', '!=', 'employee')]
                         }"/>
-                    <field name="mode_company_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                    <field name="mode_company_id" string="Company" groups="hr_holidays.group_hr_holidays_user" attrs="{
                         'required': [('holiday_type', '=', 'company')],
                         'invisible': [('holiday_type', '!=', 'company')]
                         }"/>
@@ -417,7 +433,7 @@
         <field name="name">hr.leave.view.calendar</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <calendar string="Time Off Request" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" color="employee_id">
+            <calendar js_class="time_off_calendar_all" string="Time Off Request" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" color="employee_id">
                 <field name="display_name"/>
                 <field name="employee_id" filters="1" invisible="1"/>
             </calendar>
@@ -588,7 +604,7 @@
     <record id="hr_leave_action_my_request_view_form" model="ir.actions.act_window.view">
         <field name="view_mode">form</field>
         <field name="act_window_id" ref="hr_leave_action_my_request"/>
-        <field name="view_id" ref="hr_leave_view_form_dashboard"/>
+        <field name="view_id" ref="hr_leave_view_form_dashboard_new_time_off"/>
     </record>
 
     <record id="hr_leave_action_my" model="ir.actions.act_window">
@@ -627,7 +643,13 @@
         <field name="res_model">hr.leave</field>
         <field name="binding_model_id" eval="False"/>
         <field name="view_mode">tree,kanban,form,calendar,activity</field>
-        <field name="context">{'form_view_ref': 'hr_holidays.hr_leave_view_form_manager'}</field>
+        <field name="context">{}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree'}),
+            (0, 0, {'view_mode': 'kanban'}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('hr_holidays.hr_leave_view_form_manager')}),
+            (0, 0, {'view_mode': 'calendar'}),
+            (0, 0, {'view_mode': 'activity'})]"/>
         <field name="domain">[]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

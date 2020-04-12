@@ -11,7 +11,7 @@
 Ukraine - Chart of accounts.
 ============================
     """,
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'depends': ['account'],
     'data': [
         'data/account_chart_template.xml',
@@ -20,5 +20,8 @@ Ukraine - Chart of accounts.
         'data/account_tax_group_data.xml',
         'data/account_tax_template.xml',
         'data/account_chart_template_config.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
 }

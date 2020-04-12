@@ -127,7 +127,7 @@ class Slide(models.Model):
 
     # description
     name = fields.Char('Title', required=True, translate=True)
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, tracking=100)
     sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
     description = fields.Text('Description', translate=True)
@@ -172,10 +172,10 @@ class Slide(models.Model):
     slide_resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide")
     slide_resource_downloadable = fields.Boolean('Allow Download', default=False, help="Allow the user to download the content of the slide.")
     mime_type = fields.Char('Mime-type')
-    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True)
+    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True, sanitize_form=False)
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
-    date_published = fields.Datetime('Publish Date', readonly=True, tracking=True)
+    date_published = fields.Datetime('Publish Date', readonly=True, tracking=1)
     likes = fields.Integer('Likes', compute='_compute_user_info', store=True, compute_sudo=False)
     dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True, compute_sudo=False)
     user_vote = fields.Integer('User vote', compute='_compute_user_info', compute_sudo=False)
@@ -183,7 +183,7 @@ class Slide(models.Model):
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
-    public_views = fields.Integer('# of Public Views')
+    public_views = fields.Integer('# of Public Views', copy=False)
     total_views = fields.Integer("Views", default="0", compute='_compute_total', store=True)
     # comments
     comments_count = fields.Integer('Number of comments', compute="_compute_comments_count")
@@ -457,6 +457,11 @@ class Slide(models.Model):
         rec.sequence = 0
         return rec
 
+    def unlink(self):
+        if self.question_ids and self.channel_id.channel_partner_ids:
+            raise UserError(_("People already took this quiz. To keep course progression it should not be deleted."))
+        super(Slide, self).unlink()
+
     # ---------------------------------------------------------
     # Mail/Rating
     # ---------------------------------------------------------
@@ -499,8 +504,8 @@ class Slide(models.Model):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
-            html_body = publish_template.with_context(base_url=base_url)._render_template(publish_template.body_html, 'slide.slide', slide.id)
-            subject = publish_template._render_template(publish_template.subject, 'slide.slide', slide.id)
+            html_body = publish_template.with_context(base_url=base_url)._render_field('body_html', slide.ids)[slide.id]
+            subject = publish_template._render_field('subject', slide.ids)[slide.id]
             slide.channel_id.with_context(mail_create_nosubscribe=True).message_post(
                 subject=subject,
                 body=html_body,

@@ -19,6 +19,9 @@ class Project(models.Model):
                 result['timesheet_product_id'] = default_product.id
         return result
 
+    def _default_timesheet_product_id(self):
+        return self.env.ref('sale_timesheet.time_product', False)
+
     billable_type = fields.Selection([
         ('task_rate', 'At Task Rate'),
         ('employee_rate', 'At Employee Rate'),
@@ -40,7 +43,8 @@ class Project(models.Model):
             ('invoice_policy', '=', 'delivery'),
             ('service_type', '=', 'timesheet'),
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""",
-        help='Select a Service product with which you would like to bill your time spent on tasks.')
+        help='Select a Service product with which you would like to bill your time spent on tasks.',
+        default=_default_timesheet_product_id)
 
     _sql_constraints = [
         ('timesheet_product_required_if_billable_and_timesheets', "CHECK((allow_billable = 't' AND allow_timesheets = 't' AND timesheet_product_id IS NOT NULL) OR (allow_billable = 'f') OR (allow_timesheets = 'f'))", 'The timesheet product is required when the task can be billed and timesheets are allowed.'),
@@ -49,6 +53,7 @@ class Project(models.Model):
     @api.depends('billable_type', 'allow_billable', 'sale_order_id', 'partner_id')
     def _compute_display_create_order(self):
         for project in self:
+            project._compute_billable_type()
             show = True
             if not project.partner_id or project.billable_type != 'no' or project.allow_billable or project.sale_order_id:
                 show = False
@@ -160,7 +165,8 @@ class ProjectTask(models.Model):
     _inherit = "project.task"
 
     # override sale_order_id and make it computed stored field instead of regular field.
-    sale_order_id = fields.Many2one(compute='_compute_sale_order_id', store=True, readonly=False)
+    sale_order_id = fields.Many2one(compute='_compute_sale_order_id', store=True, readonly=False,
+    domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
     analytic_account_id = fields.Many2one('account.analytic.account', related='sale_order_id.analytic_account_id')
     billable_type = fields.Selection([
         ('task_rate', 'At Task Rate'),

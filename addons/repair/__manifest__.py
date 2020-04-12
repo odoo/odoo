@@ -6,7 +6,7 @@
     'name': 'Repairs',
     'version': '1.0',
     'sequence': 200,
-    'category': 'Manufacturing/Manufacturing',
+    'category': 'Inventory/Inventory',
     'summary': 'Repair damaged products',
     'description': """
 The aim is to have a complete module to manage all products repairs.
@@ -25,7 +25,6 @@ The following topics are covered by this module:
     'data': [
         'security/ir.model.access.csv',
         'security/repair_security.xml',
-        'wizard/repair_cancel_views.xml',
         'wizard/repair_make_invoice_views.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',
         'views/repair_views.xml',

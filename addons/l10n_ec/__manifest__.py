@@ -6,7 +6,7 @@
 {
     'name': 'Ecuador - Accounting',
     'version': '1.1',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 This is the base module to manage the accounting chart for Ecuador in Odoo.
 ==============================================================================
@@ -25,5 +25,8 @@ Accounting chart and localization for Ecuador.
         'data/account_data.xml',
         'data/account_tax_data.xml',
         'data/account_chart_template_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
 }

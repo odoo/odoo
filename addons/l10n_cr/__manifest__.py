@@ -38,7 +38,7 @@
     'url': 'https://github.com/CLEARCORP/odoo-costa-rica',
     'author': 'ClearCorp S.A.',
     'website': 'http://clearcorp.co.cr',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 Chart of accounts for Costa Rica.
 =================================
@@ -61,5 +61,8 @@ please go to http://translations.launchpad.net/openerp-costa-rica.
         'data/account_chart_template_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_chart_template_configure_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
 }

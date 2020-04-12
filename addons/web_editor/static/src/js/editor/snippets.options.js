@@ -18,6 +18,8 @@ var _t = core._t;
  * @param {string} [title]
  * @param {Object} [options]
  * @param {string[]} [options.classes]
+ * @param {string} [options.tooltip]
+ * @param {string} [options.placeholder]
  * @param {Object} [options.dataAttributes]
  * @returns {HTMLElement} - the original 'el' argument
  */
@@ -34,6 +36,9 @@ function _addTitleAndAllowedAttributes(el, title, options) {
     }
     if (options && options.tooltip) {
         tooltipEl.title = options.tooltip;
+    }
+    if (options && options.placeholder) {
+        el.setAttribute('placeholder', options.placeholder);
     }
     if (options && options.dataAttributes) {
         for (const key in options.dataAttributes) {
@@ -750,7 +755,7 @@ const InputUserValueWidget = UserValueWidget.extend({
 
         this.inputEl = document.createElement('input');
         this.inputEl.setAttribute('type', 'text');
-        this.inputEl.setAttribute('placeholder', this.el.dataset.placeholder || '');
+        this.inputEl.setAttribute('placeholder', this.el.getAttribute('placeholder') || '');
         this.inputEl.classList.toggle('text-left', !unit);
         this.inputEl.classList.toggle('text-right', !!unit);
         this.containerEl.appendChild(this.inputEl);
@@ -1019,13 +1024,24 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (typeof this._previewColor === 'string') {
             return this._previewColor;
         }
-        return this._super(...arguments);
+        let value = this._super(...arguments);
+        if (value && this.options.dataAttributes.hasOwnProperty('cssCompatible') &&
+            !ColorpickerDialog.isCSSColor(value)) {
+            value = `var(--${value})`;
+        }
+        return value;
     },
     /**
      * @override
      */
     isContainer: function () {
         return false;
+    },
+    /**
+     * @override
+     */
+    isActive: function () {
+        return !weUtils.areCssValuesEqual(this._value, 'rgba(0, 0, 0, 0)');
     },
 
     //--------------------------------------------------------------------------
@@ -1133,7 +1149,6 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
     start: async function () {
         await this._super(...arguments);
         const allowedSelector = this.el.dataset.allowVideos;
-        this.firstFilters = (this.el.dataset.firstFilters || '').split(',').filter(s => s !== '');
         this.allowVideos = allowedSelector ? this.$target.is(allowedSelector) : false;
 
         this.editImageButton = document.createElement('we-button');
@@ -1190,7 +1205,6 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
             isForBgVideo: true,
             res_model: $editable.data('oe-model'),
             res_id: $editable.data('oe-id'),
-            firstFilters: this.firstFilters,
         }, dummyEl).open();
         mediaDialog.on('save', this, data => {
             if (data.bgVideoSrc) {
@@ -1251,7 +1265,6 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
             defaultDate: moment().format(),
             icons: {
                 close: 'fa fa-check primary',
-                today: 'far fa-calendar-check',
             },
             locale: moment.locale(),
             format: time.getLangDatetimeFormat(),
@@ -1522,18 +1535,22 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise|undefined}
      */
     selectDataAttribute: function (previewMode, widgetValue, params) {
-        const dataName = params.attributeName;
-        if (dataName) {
-            if (params.saveUnit && !params.withUnit) {
-                // Values that come with an unit are saved without unit as
-                // data-attribute unless told otherwise.
-                widgetValue = widgetValue.split(params.saveUnit).join('');
-            }
-            this.$target[0].dataset[dataName] = widgetValue;
-        }
-        if (params.extraClass) {
-            this.$target.toggleClass(params.extraClass, params.defaultValue !== widgetValue);
-        }
+        const value = this._selectAttributeHelper(widgetValue, params);
+        this.$target[0].dataset[params.attributeName] = value;
+    },
+    /**
+     * Default option method which allows to select a value and set it on the
+     * associated snippet as an attribute. The name of the attribute is
+     * given by the attributeName parameter.
+     *
+     * @param {boolean} previewMode - @see this.selectClass
+     * @param {string} widgetValue
+     * @param {Object} params
+     * @returns {Promise|undefined}
+     */
+    selectAttribute: function (previewMode, widgetValue, params) {
+        const value = this._selectAttributeHelper(widgetValue, params);
+        this.$target[0].setAttribute(params.attributeName, value);
     },
     /**
      * Default option method which allows to select a value and set it on the
@@ -1594,7 +1611,9 @@ const SnippetOptionWidget = Widget.extend({
             widgetValue = `var(--${widgetValue})`;
         }
 
-        const values = widgetValue.split(/\s+/g);
+        // replacing ', ' by ',' to prevent attributes with internal space separators from being split:
+        // eg: "rgba(55, 12, 47, 1.9) 47px" should be split as ["rgba(55,12,47,1.9)", "47px"]
+        const values = widgetValue.replace(/,\s/g, ',').split(/\s+/g);
         while (values.length < cssProps.length) {
             switch (values.length) {
                 case 1:
@@ -1712,26 +1731,25 @@ const SnippetOptionWidget = Widget.extend({
         const proms = this._userValueWidgets.map(async widget => {
             // Update widget value (for each method)
             const methodsNames = widget.getMethodsNames();
-            const proms = methodsNames.map(async methodName => {
+            for (const methodName of methodsNames) {
                 const params = widget.getMethodsParams(methodName);
 
                 let obj = this;
                 if (params.applyTo) {
                     const $firstSubTarget = this.$(params.applyTo).eq(0);
                     if (!$firstSubTarget.length) {
-                        return;
+                        continue;
                     }
                     obj = createPropertyProxy(this, '$target', $firstSubTarget);
                 }
 
                 const value = await this._computeWidgetState.call(obj, methodName, params);
                 if (value === undefined) {
-                    return;
+                    continue;
                 }
                 const normalizedValue = this._normalizeWidgetValue(value);
                 widget.setValue(normalizedValue, methodName);
-            });
-            await Promise.all(proms);
+            }
 
             // Refresh the UI of all widgets (after all the current values they
             // hold have been updated).
@@ -1838,13 +1856,20 @@ const SnippetOptionWidget = Widget.extend({
                 });
                 return activeClassNames;
             }
+            case 'selectAttribute':
             case 'selectDataAttribute': {
-                const dataName = params.attributeName;
-                let dataValue = (this.$target[0].dataset[dataName] || '').trim();
-                if (params.saveUnit && !params.withUnit) {
-                    dataValue = dataValue.split(/\s+/g).map(v => v + params.saveUnit).join(' ');
+                const attrName = params.attributeName;
+                let attrValue;
+                if (methodName === 'selectAttribute') {
+                    attrValue = this.$target[0].getAttribute(attrName);
+                } else if (methodName === 'selectDataAttribute') {
+                    attrValue = this.$target[0].dataset[attrName];
                 }
-                return dataValue || params.attributeDefaultValue || '';
+                attrValue = (attrValue || '').trim();
+                if (params.saveUnit && !params.withUnit) {
+                    attrValue = attrValue.split(/\s+/g).map(v => v + params.saveUnit).join(' ');
+                }
+                return attrValue || params.attributeDefaultValue || '';
             }
             case 'selectStyle': {
                 if (params.colorPrefix && params.colorNames) {
@@ -1858,7 +1883,15 @@ const SnippetOptionWidget = Widget.extend({
                 const styles = window.getComputedStyle(this.$target[0]);
                 const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
                 const cssValues = cssProps.map(cssProp => {
-                    return styles[cssProp].trim();
+                    let value = styles[cssProp].trim();
+                    if (cssProp === 'box-shadow') {
+                        const inset = value.includes('inset');
+                        let values = value.replace(/,\s/g, ',').replace('inset', '').trim().split(/\s+/g);
+                        const color = values.find(s => !s.match(/^\d/));
+                        values = values.join(' ').replace(color, '').trim();
+                        value = `${color} ${values}${inset ? ' inset' : ''}`;
+                    }
+                    return value;
                 });
                 if (cssValues.length === 4 && weUtils.areCssValuesEqual(cssValues[3], cssValues[1], params.cssProperty, this.$target)) {
                     cssValues.pop();
@@ -1894,6 +1927,7 @@ const SnippetOptionWidget = Widget.extend({
                 classes: el.classList,
                 dataAttributes: el.dataset,
                 tooltip: el.title,
+                placeholder: el.getAttribute('placeholder'),
                 childNodes: [...el.childNodes],
             },
         };
@@ -2069,6 +2103,27 @@ const SnippetOptionWidget = Widget.extend({
             }
         }
     },
+    /**
+     * Used to handle attribute or data attribute value change
+     *
+     * @param {string} value
+     * @param {Object} params
+     * @returns {string|undefined}
+     */
+    _selectAttributeHelper(value, params) {
+        if (!params.attributeName) {
+            throw new Error('Attribute name missing');
+        }
+        if (params.saveUnit && !params.withUnit) {
+            // Values that come with an unit are saved without unit as
+            // data-attribute unless told otherwise.
+            value = value.split(params.saveUnit).join('');
+        }
+        if (params.extraClass) {
+            this.$target.toggleClass(params.extraClass, params.defaultValue !== value);
+        }
+        return value;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2181,6 +2236,9 @@ registry.sizing = SnippetOptionWidget.extend({
         this.$handles.on('mousedown', function (ev) {
             ev.preventDefault();
 
+            // First update size values as some element sizes may not have been
+            // initialized on option start (hidden slides, etc)
+            resizeValues = self._getSize();
             var $handle = $(ev.currentTarget);
 
             var compass = false;
@@ -2569,7 +2627,7 @@ registry.background = SnippetOptionWidget.extend({
      * @returns {Promise}
      */
     _onSaveMediaDialog: async function (data) {
-        await this._setCustomBackground(data.src);
+        await this._setCustomBackground($(data).attr('src'));
     },
 });
 
@@ -2717,6 +2775,9 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             width: `${this.$target.innerWidth()}px`,
             height: `${this.$target.innerHeight()}px`,
         });
+
+        const topPos = (parseInt(this.$overlay.css('top')) - parseInt(this.$overlayContent.css('top')));
+        this.$overlayContent.find('.o_we_overlay_buttons').css('top', `${topPos}px`);
     },
     /**
      * Toggles the overlay's display and renders a background clone inside of it.

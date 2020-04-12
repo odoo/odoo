@@ -52,7 +52,7 @@ class AccountMove(models.Model):
         res = super(AccountMove, self)._onchange_partner_id()
 
         # Recompute 'narration' based on 'company.invoice_terms'.
-        if self.type == 'out_invoice':
+        if self.move_type == 'out_invoice':
             self.narration = self.company_id.with_context(lang=self.partner_id.lang).invoice_terms
 
         return res
@@ -82,7 +82,7 @@ class AccountMove(models.Model):
 
         for invoice in self.filtered(lambda move: move.is_invoice()):
             payments = invoice.mapped('transaction_ids.payment_id')
-            move_lines = payments.mapped('move_line_ids').filtered(lambda line: not line.reconciled and line.credit > 0.0)
+            move_lines = payments.line_ids.filtered(lambda line: line.account_internal_type in ('receivable', 'payable') and not line.reconciled)
             for line in move_lines:
                 invoice.js_assign_outstanding_line(line.id)
         return res

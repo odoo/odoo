@@ -21,9 +21,9 @@
 
             <script type="text/javascript" src="/account/static/src/js/account_payment_field.js"></script>
             <script type="text/javascript" src="/account/static/src/js/account_resequence_field.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/grouped_view_widget.js"></script>
             <script type="text/javascript" src="/account/static/src/js/mail_activity.js"></script>
             <script type="text/javascript" src="/account/static/src/js/tax_group.js"></script>
-            <script type="text/javascript" src="/account/static/src/js/aml_preview.js"></script>
 
             <script type="text/javascript" src="/account/static/src/js/bank_statement.js"></script>
             <script type="text/javascript" src="/account/static/src/js/section_and_note_fields_backend.js"></script>
@@ -46,7 +46,7 @@
         </xpath>
     </template>
 
-    <template id="qunit_suite" name="account tests" inherit_id="web.qunit_suite">
+    <template id="qunit_suite" name="account tests" inherit_id="web.qunit_suite_tests">
         <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
             <script type="text/javascript" src="/account/static/tests/account_payment_field_tests.js"></script>
             <script type="text/javascript" src="/account/static/tests/section_and_note_tests.js"></script>

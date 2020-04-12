@@ -29,8 +29,7 @@ class SMSTemplatePreview(models.TransientModel):
             result['resource_ref'] = '%s,%s' % (sms_template.model_id.model, res.id)
         return result
 
-    sms_template_id = fields.Many2one('sms.template') # NOTE This should probably be required
-
+    sms_template_id = fields.Many2one('sms.template', required=True, ondelete='cascade')
     lang = fields.Selection(_selection_languages, string='Template Preview Language')
     model_id = fields.Many2one('ir.model', related="sms_template_id.model_id")
     body = fields.Char('Body', compute='_compute_sms_template_fields')
@@ -45,6 +44,7 @@ class SMSTemplatePreview(models.TransientModel):
     @api.depends('lang', 'resource_ref')
     def _compute_sms_template_fields(self):
         for wizard in self:
-            # Update body depending of the resource_ref
-            sms_template = wizard.sms_template_id.with_context(lang=wizard.lang)
-            wizard.body = sms_template._render_template(sms_template.body, sms_template.model, wizard.resource_ref.id) if wizard.resource_ref else sms_template.body
+            if wizard.sms_template_id and wizard.resource_ref:
+                wizard.body = wizard.sms_template_id._render_field('body', [wizard.resource_ref.id], set_lang=wizard.lang)[wizard.resource_ref.id]
+            else:
+                wizard.body = wizard.sms_template_id.body

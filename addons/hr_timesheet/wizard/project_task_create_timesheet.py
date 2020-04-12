@@ -23,7 +23,7 @@ class ProjectTaskCreateTimesheet(models.TransientModel):
             result['description'] = task_id.name
         return result
 
-    time_spent = fields.Float('Time', precision_digits=2)
+    time_spent = fields.Float('Time', digits=(16, 2))
     description = fields.Char('Description')
     task_id = fields.Many2one('project.task', "Task", help="Task for which we are creating a sales order", required=True)
 

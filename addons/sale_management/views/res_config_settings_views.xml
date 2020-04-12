@@ -14,13 +14,14 @@
                     </div>
                     <div class="o_setting_right_pane">
                         <label for="group_sale_order_template"/>
+                        <a href="https://www.odoo.com/documentation/user/13.0/sales/send_quotations/quote_template.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                         <div class="text-muted">
                             Create standardized offers with default products
                         </div>
                         <div class="content-group" attrs="{'invisible': [('group_sale_order_template', '=', False)]}">
                             <div class="mt16">
-                                <label for="default_sale_order_template_id" class="o_light_label"/>
-                                <field name="default_sale_order_template_id" class="oe_inline"/>
+                                <label for="company_so_template_id" class="o_light_label"/>
+                                <field name="company_so_template_id" class="oe_inline"/>
                             </div>
                             <div class="mt8">
                                 <button name="%(sale_management.sale_order_template_action)d" icon="fa-arrow-right" type="action" string="Quotation Templates" class="btn-link"/>

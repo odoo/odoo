@@ -57,11 +57,11 @@
                         </div>
                         <div>
                             <field name="active" invisible="1"/>
-                            <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
                         </div>
                         <notebook colspan="4">
                             <page name="content" string="Content">
-                                <field name="slide_ids" colspan="4" nolabel="1" widget="slide_category_one2many" mode="tree,kanban" context="{'default_channel_id': active_id}">
+                                <field name="slide_ids" colspan="4" nolabel="1" widget="slide_category_one2many" mode="tree,kanban" context="{'default_channel_id': active_id, 'form_view_ref' : 'website_slides.view_slide_slide_form_wo_channel_id'}">
                                      <tree decoration-bf="is_category" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="name"/>
@@ -88,7 +88,7 @@
                                 <group>
                                     <group name="course" string="Course">
                                         <field string="Type" name="channel_type" widget="radio"/>
-                                        <field name="user_id"/>
+                                        <field name="user_id" domain="[('share', '=', False)]"/>
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                     </group>
                                     <group name="access_rights" string="Access Rights">

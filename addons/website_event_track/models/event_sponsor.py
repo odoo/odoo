@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 
 class SponsorType(models.Model):
@@ -27,10 +27,16 @@ class Sponsor(models.Model):
     partner_email = fields.Char('Email', related='partner_id.email')
     partner_phone = fields.Char('Phone', related='partner_id.phone')
     partner_mobile = fields.Char('Mobile', related='partner_id.mobile')
-    url = fields.Char('Sponsor Website')
+    url = fields.Char('Sponsor Website', compute='_compute_url', readonly=False, store=True)
     sequence = fields.Integer('Sequence')
     image_128 = fields.Image(
         string="Logo", related='partner_id.image_128', store=True, readonly=False)
+    active = fields.Boolean(default=True)
+
+    @api.depends('partner_id')
+    def _compute_url(self):
+        for sponsor in self:
+            sponsor.url = sponsor.partner_id.website
 
     def _message_get_suggested_recipients(self):
         recipients = super(Sponsor, self)._message_get_suggested_recipients()

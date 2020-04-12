@@ -138,10 +138,7 @@
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='mail_server_id']" position="attributes">
-                <attribute name="attrs">{
-                    'invisible': [('mailing_type', '!=', 'mail')],
-                    'readonly': [('state', 'in', ('sending', 'done'))]}
-                </attribute>
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
         </field>
     </record>

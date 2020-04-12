@@ -1,43 +1,5 @@
 <?xml version="1.0"?>
 <odoo>
-        <!--
-            crm.lead.tag views
-        -->
-        <record id="crm_lead_tag_form" model="ir.ui.view">
-            <field name="name">crm.lead.tag.form</field>
-            <field name="model">crm.lead.tag</field>
-            <field name="arch" type="xml">
-                <form string="Lead Tags">
-                    <sheet>
-                        <div class="oe_title">
-                            <div class="oe_edit_only">
-                                <label for="name"/>
-                            </div>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                        </div>
-                        <group>
-                            <group>
-                                <field name="color" required="True"/>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="crm_lead_tag_tree" model="ir.ui.view">
-            <field name="name">crm.lead.tag.tree</field>
-            <field name="model">crm.lead.tag</field>
-            <field name="arch" type="xml">
-                <tree string="Lead Tags" editable="bottom">
-                    <field name="name"/>
-                    <field name="color" groups="base.group_no_one"/>
-                </tree>
-            </field>
-        </record>
-
         <record id="crm_lead_view_form" model="ir.ui.view">
             <field name="name">crm.lead.form</field>
             <field name="model">crm.lead</field>
@@ -90,14 +52,16 @@
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <span class="oe_edit_only o_pls_probability">
+                                    <div class="oe_edit_only d-flex align-items-center">
                                         <label for="probability"/>
                                         <button class="btn btn-link" name="action_set_automated_probability" type="object"
                                                 attrs="{'invisible': [('is_automated_probability', '=', True)]}">
                                             <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
                                         </button>
-                                        <small class="oe_grey" attrs="{'invisible': [('is_automated_probability', '=', True)]}"><field name="automated_probability"/> %% (Estimated by Odoo)</small>
-                                        </span>
+                                        <small class="oe_grey h6 mb0" attrs="{'invisible': [('is_automated_probability', '=', True)]}">
+                                            <field class="mb0" name="automated_probability"/> %% (Estimated by Odoo)
+                                        </small>
+                                    </div>
                                     <div id="probability" class="o_row d-flex">
                                         <field name="is_automated_probability" invisible="1"/>
                                         <field name="probability" widget="float" class="oe_inline"/>
@@ -166,20 +130,33 @@
                                 />
                                 <field name="is_blacklisted" invisible="1"/>
                                 <field name="partner_is_blacklisted" invisible="1"/>
+                                <field name="phone_blacklisted" invisible="1"/>
+                                <field name="mobile_blacklisted" invisible="1"/>
                                 <field name="email_state" invisible="1"/>
                                 <field name="phone_state" invisible="1"/>
                                 <label for="email_from" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
-                                    <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
-                                        aria-label="Blacklisted" attrs="{'invisible': ['|', ('is_blacklisted', '=', False), ('partner_address_email', '!=', False)]}" groups="base.group_user"/>
+                                    <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
+                                        title="This email is blacklisted for mass mailings. Click to unblacklist."
+                                        type="object" context="{'default_email': email_from}" groups="base.group_user"
+                                        attrs="{'invisible': ['|', ('is_blacklisted', '=', False), ('partner_address_email', '!=', False)]}"/>
                                     <field name="email_from"
                                         attrs="{'invisible': [('partner_address_email', '!=', False)]}" string="Email" widget="email"/>
-                                    <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
-                                        aria-label="Blacklisted" attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}" groups="base.group_user"/>
+                                    <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
+                                        title="This email is blacklisted for mass mailings. Click to unblacklist."
+                                        type="object" context="{'default_email': partner_address_email}" groups="base.group_user"
+                                        attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}"/>
                                     <field name="partner_address_email"
                                         attrs="{'invisible': [('partner_address_email', '=', False)]}" widget="email" string="Email"/>
                                 </div>
-                                <field name="phone" widget="phone"/>
+                                <label for="phone" class="oe_inline"/>
+                                <div class="o_row o_row_readonly">
+                                    <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
+                                        title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+                                        type="object" context="{'default_phone': phone}" groups="base.group_user"
+                                        attrs="{'invisible': [('phone_blacklisted', '=', False)]}"/>
+                                    <field name="phone" widget="phone"/>
+                                </div>
                             </group>
                             <group name="lead_info" attrs="{'invisible': [('type', '=', 'opportunity')]}">
                                 <label for="contact_name"/>
@@ -192,14 +169,37 @@
                                 <field name="phone_state" invisible="1"/>
                                 <label for="email_from" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
-                                    <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
-                                        aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}" groups="base.group_user"/>
-                                    <field name="email_from" widget="email"/>
+                                    <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
+                                        title="This email is blacklisted for mass mailings. Click to unblacklist."
+                                        type="object" context="{'default_email': email_from}" groups="base.group_user"
+                                        attrs="{'invisible': ['|', ('is_blacklisted', '=', False), ('partner_address_email', '!=', False)]}"/>
+                                    <field name="email_from"
+                                        attrs="{'invisible': [('partner_address_email', '!=', False)]}" string="Email" widget="email"/>
+                                    <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
+                                        title="This email is blacklisted for mass mailings. Click to unblacklist."
+                                        type="object" context="{'default_email': partner_address_email}" groups="base.group_user"
+                                        attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}"/>
+                                    <field name="partner_address_email"
+                                        attrs="{'invisible': [('partner_address_email', '=', False)]}" widget="email" string="Email"/>
                                 </div>
                                 <field name="email_cc" groups="base.group_no_one"/>
                                 <field name="function"/>
-                                <field name="phone" widget="phone"/>
-                                <field name="mobile" widget="phone"/>
+                                <label for="phone" class="oe_inline"/>
+                                <div class="o_row o_row_readonly">
+                                    <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
+                                        title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+                                        type="object" context="{'default_phone': phone}" groups="base.group_user"
+                                        attrs="{'invisible': [('phone_blacklisted', '=', False)]}"/>
+                                    <field name="phone" widget="phone"/>
+                                </div>
+                                <label for="mobile" class="oe_inline"/>
+                                <div class="o_row o_row_readonly">
+                                    <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
+                                        title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+                                        type="object" context="{'default_phone': mobile}" groups="base.group_user"
+                                        attrs="{'invisible': [('mobile_blacklisted', '=', False)]}"/>
+                                    <field name="mobile" widget="phone" string="Mobile"/>
+                                </div>
                             </group>
                             <group attrs="{'invisible': [('type', '=', 'lead')]}">
                                 <field name="date_deadline"/>
@@ -208,7 +208,7 @@
                             </group>
                             <group>
                                 <field name="user_id" domain="[('share', '=', False)]"
-                                    context="{'team_id': team_id}"/>
+                                    context="{'default_sales_team_id': team_id}"/>
                                 <field name="team_id" widget="selection"
                                     domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
                                 <field name="type" invisible="1"/>
@@ -244,7 +244,6 @@
                                     <group string="Analysis">
                                         <field name="date_open"/>
                                         <field name="date_closed"/>
-                                        <field name="probability"/>
                                     </group>
                                 </group>
                             </page>
@@ -271,7 +270,14 @@
                                             <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                         </div>
                                         <field name="function"/>
-                                        <field name="mobile" widget="phone"/>
+                                        <label for="mobile" class="oe_inline"/>
+                                        <div class="o_row o_row_readonly">
+                                            <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
+                                                title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+                                                type="object" context="{'default_phone': mobile}" groups="base.group_user"
+                                                attrs="{'invisible': [('mobile_blacklisted', '=', False)]}"/>
+                                            <field name="mobile" widget="phone"/>
+                                        </div>
                                     </group>
                                     <group string="Marketing">
                                         <field name="campaign_id" />
@@ -318,7 +324,7 @@
                     <field name="contact_name" optional="hide"/>
                     <field name="partner_name" optional="hide"/>
                     <field name="email_from" optional="show"/>
-                    <field name="phone" optional="show"/>
+                    <field name="phone" optional="show" class="o_force_ltr"/>
                     <field name="city" optional="show"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
@@ -596,7 +602,7 @@
                     <field name="name" string="Opportunity"/>
                     <field name="partner_id" string="Customer" optional="show"/>
                     <field name="email_from" optional="show"/>
-                    <field name="phone" optional="show"/>
+                    <field name="phone" class="o_force_ltr" optional="show"/>
                     <field name="city" optional="show"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
@@ -641,24 +647,8 @@
                     <field name="create_date" interval="month" type="row"/>
                     <field name="stage_id" type="col"/>
                     <field name="planned_revenue" type="measure"/>
+                    <field name="color" invisible="1"/>
                 </pivot>
-            </field>
-        </record>
-
-        <record id="crm_lead_view_tree_activity" model="ir.ui.view">
-            <field name="name">crm.lead.tree.opportunity.next.activity</field>
-            <field name="model">crm.lead</field>
-            <field name="arch" type="xml">
-                <tree string="Next Activities" decoration-danger="activity_date_deadline and (activity_date_deadline &lt; current_date)">
-                    <field name="name"/>
-                    <field name="partner_id"/>
-                    <field name="activity_date_deadline"/>
-                    <field name="activity_type_id"/>
-                    <field name="activity_summary"/>
-                    <field name="stage_id" required="1"/>
-                    <field name="planned_revenue"/>
-                    <field name="date_deadline"/>
-                </tree>
             </field>
         </record>
 
@@ -970,24 +960,10 @@ if record:
             name="CRM"
             action="action_your_pipeline"/>
 
-        <!-- Configuration/Lead & Opporotunities/Lead Tags Menu -->
-        <record id="crm_lead_tag_action" model="ir.actions.act_window">
-            <field name="name">Tags</field>
-            <field name="res_model">crm.lead.tag</field>
-            <field name="view_id" ref="crm_lead_tag_tree"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create new tags for your opportunities
-              </p><p>
-                Create tags that fit your business (product structure, sales type, etc.) to better manage and track your opportunities.
-              </p>
-            </field>
-        </record>
-
         <menuitem
             id="menu_crm_lead_categ"
             name="Tags"
-            action="crm_lead_tag_action"
+            action="sales_team.sales_team_crm_tag_action"
             parent="menu_crm_config_lead"
             sequence="1"/>
 </odoo>

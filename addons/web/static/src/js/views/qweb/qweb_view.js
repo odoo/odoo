@@ -91,16 +91,21 @@ var Renderer = AbstractRenderer.extend({
 var Controller = AbstractController.extend({
     events: _.extend({}, AbstractController.prototype.events, {
         'click [type="toggle"]': '_onLazyToggle',
+        'click [type="action"]' : '_onActionClicked',
     }),
 
     init: function () {
         this._super.apply(this, arguments);
-        this._$buttons = $('<nav>').on('click', '[type="action"]', this.proxy('_onActionClicked'));
     },
 
+    /**
+     * @override
+     */
     renderButtons: function ($node) {
-        this._super($node);
-        $node.append(this._$buttons);
+        this.$buttons = $('<nav/>');
+        if ($node) {
+            $node.append(this.$buttons);
+        }
     },
     _update: function () {
         var self = this;
@@ -108,7 +113,7 @@ var Controller = AbstractController.extend({
             // move control panel buttons from the view to the control panel
             // area
             var $cp_buttons = self.renderer.$('nav.o_qweb_cp_buttons');
-            $cp_buttons.children().appendTo(self._$buttons.empty());
+            $cp_buttons.children().appendTo(self.$buttons.empty());
             $cp_buttons.remove();
         });
     },

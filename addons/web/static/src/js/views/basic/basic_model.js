@@ -214,21 +214,63 @@ var BasicModel = AbstractModel.extend({
      * It is useful for the cases where a record element is shared between
      * various views, such as a one2many with a tree and a form view.
      *
-     * @param {string} recordID a valid element ID
+     * @param {string} datapointID a valid element ID (of type 'list' or 'record')
      * @param {Object} viewInfo
      * @param {Object} viewInfo.fields
-     * @param {Object} viewInfo.fieldsInfo
+     * @param {Object} viewInfo.fieldInfo
+     * @param {string} viewInfo.viewType
+     * @returns {Promise} resolved when the fieldInfo have been set on the given
+     *   datapoint and all its children, and all rawChanges have been applied
      */
-    addFieldsInfo: function (recordID, viewInfo) {
-        var record = this.localData[recordID];
-        record.fields = _.extend({}, record.fields, viewInfo.fields);
-        // complete the given fieldsInfo with the fields of the main view, so
+    addFieldsInfo: function (dataPointID, viewInfo) {
+        var dataPoint = this.localData[dataPointID];
+        dataPoint.fields = _.extend({}, dataPoint.fields, viewInfo.fields);
+        // complete the given fieldInfo with the fields of the main view, so
         // that those field will be reloaded if a reload is triggered by the
         // secondary view
-        var fieldsInfo = _.mapObject(viewInfo.fieldsInfo, function (fieldsInfo) {
-            return _.defaults({}, fieldsInfo, record.fieldsInfo[record.viewType]);
+        dataPoint.fieldsInfo = dataPoint.fieldsInfo || {};
+        const mainFieldInfo = dataPoint.fieldsInfo[dataPoint[viewInfo.viewType]];
+        dataPoint.fieldsInfo[viewInfo.viewType] = _.defaults({}, viewInfo.fieldInfo, mainFieldInfo);
+
+        // Some fields in the new fields info might not be in the previous one,
+        // so we might have stored changes for them (e.g. coming from onchange
+        // RPCs), that we haven't been able to process earlier (because those
+        // fields were unknown at that time). So we now try to process them.
+        return this.applyRawChanges(dataPointID, viewInfo.viewType).then(() => {
+            const proms = [];
+            const fieldInfo = dataPoint.fieldsInfo[viewInfo.viewType];
+            // recursively apply the new field info on sub datapoints
+            if (dataPoint.type === 'list') {
+                // case 'list': on all datapoints in the list
+                Object.values(dataPoint._cache).forEach(subDataPointID => {
+                    proms.push(this.addFieldsInfo(subDataPointID, {
+                        fields: dataPoint.fields,
+                        fieldInfo: dataPoint.fieldsInfo[viewInfo.viewType],
+                        viewType: viewInfo.viewType,
+                    }));
+                });
+            } else {
+                // case 'record': on datapoints of all x2many fields
+                const values = _.extend({}, dataPoint.data, dataPoint._changes);
+                Object.keys(fieldInfo).forEach(fieldName => {
+                    const fieldType = dataPoint.fields[fieldName].type;
+                    if (fieldType === 'one2many' || fieldType === 'many2many') {
+                        const mode = fieldInfo[fieldName].mode;
+                        const views = fieldInfo[fieldName].views;
+                        const x2mDataPointID = values[fieldName];
+                        if (views[mode] && x2mDataPointID) {
+                            proms.push(this.addFieldsInfo(x2mDataPointID, {
+                                fields: views[mode].fields,
+                                fieldInfo: views[mode].fieldsInfo[mode],
+                                viewType: mode,
+                            }));
+                        }
+                    }
+                });
+            }
+            return Promise.all(proms);
         });
-        record.fieldsInfo = _.extend({}, record.fieldsInfo, fieldsInfo);
+
     },
     /**
      * Add and process default values for a given record. Those values are
@@ -770,6 +812,15 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
+     * Returns the list of res_ids for a given list of local ids.
+     *
+     * @param {string[]} localIds
+     * @returns {integer[]}
+     */
+    localIdsToResIds: function (localIds) {
+        return localIds.map(localId => this.localData[localId].res_id);
+    },
+    /**
      * This helper method is designed to help developpers that want to use a
      * field widget outside of a view.  In that case, we want a way to create
      * data without actually performing a fetch.
@@ -1244,16 +1295,13 @@ var BasicModel = AbstractModel.extend({
     /**
      * Archive the given records
      *
-     * @param {Array} recordIDs local ids of the records to (un)archive
+     * @param {integer[]} resIDs ids of the records to archive
      * @param {string} parentID id of the parent resource to reload
      * @returns {Promise<string>} resolves to the parent id
      */
-    actionArchive: function (recordIDs, parentID) {
+    actionArchive: function (resIDs, parentID) {
         var self = this;
         var parent = this.localData[parentID];
-        var resIDs = _.map(recordIDs, function (recordID) {
-            return self.localData[recordID].res_id;
-        });
         return this._rpc({
                 model: parent.model,
                 method: 'action_archive',
@@ -1276,16 +1324,13 @@ var BasicModel = AbstractModel.extend({
     /**
      * Unarchive the given records
      *
-     * @param {Array} recordIDs local ids of the records to (un)archive
+     * @param {integer[]} resIDs ids of the records to unarchive
      * @param {string} parentID id of the parent resource to reload
      * @returns {Promise<string>} resolves to the parent id
      */
-    actionUnarchive: function (recordIDs, parentID) {
+    actionUnarchive: function (resIDs, parentID) {
         var self = this;
         var parent = this.localData[parentID];
-        var resIDs = _.map(recordIDs, function (recordID) {
-            return self.localData[recordID].res_id;
-        });
         return this._rpc({
                 model: parent.model,
                 method: 'action_unarchive',
@@ -1955,7 +2000,7 @@ var BasicModel = AbstractModel.extend({
             case 'UPDATE':
                 list._changes.push({operation: 'UPDATE', id: command.id});
                 if (command.data) {
-                    defs.push(this._applyChange(command.id, command.data));
+                    defs.push(this._applyChange(command.id, command.data, { viewType: view.type }));
                 }
                 break;
             case 'FORGET':
@@ -2389,7 +2434,7 @@ var BasicModel = AbstractModel.extend({
                 model: record.model,
                 method: 'read',
                 args: [[record.res_id], fieldNames],
-                context: _.extend({}, record.getContext(), {bin_size: true}),
+                context: _.extend({bin_size: true}, record.getContext()),
             })
             .then(function (result) {
                 if (result.length === 0) {
@@ -2475,7 +2520,7 @@ var BasicModel = AbstractModel.extend({
                             display_name: el[1],
                         },
                         modelName: model,
-                        parentID: parent,
+                        parentID: parent.id,
                     });
                     parent.data[fieldName] = referenceDp.id;
                 });
@@ -3327,6 +3372,21 @@ var BasicModel = AbstractModel.extend({
                                 }
                             } else {
                                 // the subrecord is new, so create it
+
+                                // we may have received values from an onchange for fields that are
+                                // not in the view, and that we don't even know, as we don't have the
+                                // fields_get of models of related fields. We save those values
+                                // anyway, but for many2ones, we have to extract the id from the pair
+                                // [id, display_name]
+                                const rawChangesEntries = Object.entries(relRecord._rawChanges);
+                                for (const [fieldName, value] of rawChangesEntries) {
+                                    const isMany2OneValue = Array.isArray(value) &&
+                                                            value.length === 2 &&
+                                                            Number.isInteger(value[0]) &&
+                                                            typeof value[1] === 'string';
+                                    changes[fieldName] = isMany2OneValue ? value[0] : value;
+                                }
+
                                 commands[fieldName].push(x2ManyCommands.create(relRecord.ref, changes));
                             }
                         }
@@ -3735,8 +3795,8 @@ var BasicModel = AbstractModel.extend({
      * @returns {boolean}
      */
     _isFieldProtected: function (record, fieldName, viewType) {
-        var fieldInfo = record.fieldsInfo &&
-                        (record.fieldsInfo[viewType || record.viewType][fieldName]);
+        viewType = viewType || record.viewType;
+        var fieldInfo = viewType && record.fieldsInfo && record.fieldsInfo[viewType][fieldName];
         if (fieldInfo) {
             var rawModifiers = fieldInfo.modifiers || {};
             var modifiers = this._evalModifiers(record, _.pick(rawModifiers, 'readonly'));
@@ -3909,7 +3969,7 @@ var BasicModel = AbstractModel.extend({
             groupsOffset: 0,
             id: _.uniqueId(params.modelName + '_'),
             isOpen: params.isOpen,
-            limit: type === 'record' ? 1 : params.limit,
+            limit: type === 'record' ? 1 : (params.limit || Number.MAX_SAFE_INTEGER),
             loadMoreOffset: 0,
             model: params.modelName,
             offset: params.offset || (type === 'record' ? _.indexOf(res_ids, res_id) : 0),
@@ -4304,8 +4364,12 @@ var BasicModel = AbstractModel.extend({
         var fields = view ? view.fields : fieldInfo.relatedFields;
         var viewType = view ? view.type : fieldInfo.viewType;
 
+        // remove default_* keys from parent context to avoid issue of same field name in x2m
+        var parentContext = _.omit(record.context, function (val, key) {
+            return _.str.startsWith(key, 'default_');
+        });
         var x2manyList = self._makeDataPoint({
-            context: record.context,
+            context: parentContext,
             fieldsInfo: fieldsInfo,
             fields: fields,
             limit: fieldInfo.limit,
@@ -4741,7 +4805,7 @@ var BasicModel = AbstractModel.extend({
             element.context = options.context;
         }
         if (options.orderedBy !== undefined) {
-            element.orderedBy = options.orderedBy || element.orderedBy;
+            element.orderedBy = (options.orderedBy.length && options.orderedBy) || element.orderedBy;
         }
         if (options.domain !== undefined) {
             element.domain = options.domain;

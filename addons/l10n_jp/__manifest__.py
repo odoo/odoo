@@ -6,7 +6,7 @@
 {
     'name': 'Japan - Accounting',
     'version': '2.2',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 
 Overview:
@@ -39,5 +39,8 @@ circumstances, you might not need to use those at all.
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
         'data/account_chart_template_configure_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
 }

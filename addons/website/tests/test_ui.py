@@ -86,19 +86,19 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslate(odoo.tests.HttpCase):
     def test_admin_tour_rte_translator(self):
+        fr_BE = self.env.ref('base.lang_fr_BE')
+        fr_BE.active = True
+        self.env.ref('website.default_website').language_ids |= fr_BE
         self.start_tour("/", 'rte_translator', login='admin', timeout=120)
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
-    def test_01_public_homepage(self):
-        self.browser_js("/", "console.log('test successful')", "'website.content.snippets.animation' in odoo.__DEBUG__.services")
-
-    def test_02_admin_tour_banner(self):
+    def test_01_admin_tour_banner(self):
         self.start_tour("/", 'banner', login='admin', step_delay=100)
 
-    def test_03_restricted_editor(self):
+    def test_02_restricted_editor(self):
         self.restricted_editor = self.env['res.users'].create({
             'name': 'Restricted Editor',
             'login': 'restricted',
@@ -110,8 +110,19 @@ class TestUi(odoo.tests.HttpCase):
         })
         self.start_tour("/", 'restricted_editor', login='restricted')
 
-    def test_04_backend_dashboard(self):
+    def test_03_backend_dashboard(self):
         self.start_tour("/", 'backend_dashboard', login='admin')
+
+    def test_04_website_navbar_menu(self):
+        website = self.env['website'].search([], limit=1)
+        self.env['website.menu'].create({
+            'name': 'Test Tour Menu',
+            'url': '/test-tour-menu',
+            'parent_id': website.menu_id.id,
+            'sequence': 0,
+            'website_id': website.id,
+        })
+        self.start_tour("/", 'website_navbar_menu')
 
     def test_05_specific_website_editor(self):
         website_default = self.env['website'].search([], limit=1)
@@ -130,3 +141,14 @@ class TestUi(odoo.tests.HttpCase):
         })
         self.start_tour("/?fw=%s" % website_default.id, "generic_website_editor", login='admin')
         self.start_tour("/?fw=%s" % new_website.id, "specific_website_editor", login='admin')
+
+    def test_06_public_user_editor(self):
+        website_default = self.env['website'].search([], limit=1)
+        website_default.homepage_id.arch = """
+            <t name="Homepage" t-name="website.homepage">
+                <t t-call="website.layout">
+                    <textarea class="o_public_user_editor_test_textarea o_wysiwyg_loader"/>
+                </t>
+            </t>
+        """
+        self.start_tour("/", "public_user_editor", login=None)

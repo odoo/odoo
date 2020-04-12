@@ -12,7 +12,7 @@ class TimerTimer(models.Model):
     timer_pause = fields.Datetime("Timer Last Pause")
     is_timer_running = fields.Boolean(compute="_compute_is_timer_running")
     res_model = fields.Char(required=True)
-    res_id = fields.Char(required=True)
+    res_id = fields.Integer(required=True)
     user_id = fields.Many2one('res.users')
 
     _sql_constraints = [(

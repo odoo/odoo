@@ -16,7 +16,7 @@ Note: The Schedule VI has been revised by MCA and is applicable for all Balance 
 31st March, 2011. The Format has done away with earlier two options of format of Balance
 Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
   """,
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'depends': [
         'account_tax_python',
     ],
@@ -47,9 +47,10 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'data/account_chart_template_data.xml'
     ],
     'demo': [
-        'data/res_partner_demo.xml',
-        'data/product_demo.xml',
-        'data/account_payment_demo.xml',
-        'data/account_invoice_demo.xml'
-    ]
+        'demo/res_partner_demo.xml',
+        'demo/product_demo.xml',
+        'demo/account_payment_demo.xml',
+        'demo/account_invoice_demo.xml',
+        'demo/demo_company.xml',
+    ],
 }

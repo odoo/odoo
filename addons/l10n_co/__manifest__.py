@@ -11,7 +11,7 @@
 {
     'name': 'Colombian - Accounting',
     'version': '0.8',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': 'Colombian Accounting and Tax Preconfiguration',
     'author': 'David Arnold (XOE Solutions)',
     'website': 'https://xoe.solutions',
@@ -26,5 +26,8 @@
         'data/account_tax_template.xml',
         'data/account_chart_template_configure_data.xml',
         'views/res_partner.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
 }

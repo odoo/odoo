@@ -3,7 +3,7 @@
 
 {
     'name': 'Google Users',
-    'category': 'Tools',
+    'category': 'Hidden/Tools',
     'description': """
 The module adds google user in res user.
 ========================================

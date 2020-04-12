@@ -28,7 +28,7 @@
                                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
                                     </div>
-                                    <field name="phone"/>
+                                    <field name="phone" class="o_force_ltr"/>
                                     <field name="email"/>
                                     <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                                 </group>
@@ -84,7 +84,7 @@
                                     <div t-if="record.email.value" class="col-6 text-center">
                                         <field name="email"/>
                                     </div>
-                                    <div t-if="record.phone.value" class="col-6 text-center">
+                                    <div t-if="record.phone.value" class="col-6 text-center o_force_ltr">
                                         <field name="phone"/>
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@
                                         <strong>Email:</strong>
                                         <field name="email"/>
                                     </div>
-                                    <div t-if="record.phone.value">
+                                    <div t-if="record.phone.value" class="o_force_ltr">
                                         <strong>Phone:</strong>
                                         <field name="phone"/>
                                     </div>
@@ -103,13 +103,6 @@
                     </templates>
                 </kanban>
             </field>
-        </record>
-        <record id="company_normal_action_tree" model="ir.actions.act_window">
-            <field name="name">Companies</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.company</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('id','=',active_id)]</field>
         </record>
         <record id="action_res_company_form" model="ir.actions.act_window">
             <field name="name">Companies</field>

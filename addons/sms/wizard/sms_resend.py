@@ -12,11 +12,8 @@ class SMSRecipient(models.TransientModel):
     sms_resend_id = fields.Many2one('sms.resend', required=True)
     notification_id = fields.Many2one('mail.notification', required=True, ondelete='cascade')
     resend = fields.Boolean(string="Resend", default=True)
-    failure_type = fields.Selection([
-        ('sms_number_missing', 'Missing Number'),
-        ('sms_number_format', 'Wrong Number Format'),
-        ('sms_credit', 'Insufficient Credit'),
-        ('sms_server', 'Server Error')], related='notification_id.failure_type', related_sudo=True, readonly=True)
+    failure_type = fields.Selection(
+        related='notification_id.failure_type', related_sudo=True, readonly=True)
     partner_id = fields.Many2one('res.partner', 'Partner', related='notification_id.res_partner_id', readonly=True)
     partner_name = fields.Char('Recipient', readonly='True')
     sms_number = fields.Char('Number')

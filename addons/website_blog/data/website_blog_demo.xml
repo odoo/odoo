@@ -34,6 +34,7 @@
             <field name="name">Sierra Tarahumara</field>
             <field name="subtitle">An exciting mix of relaxation, culture, history, wildlife and hiking.</field>
             <field name="blog_id" ref="blog_blog_1"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
@@ -69,6 +70,7 @@
             <field name="name">Maui helicopter tours</field>
             <field name="subtitle">A great way to discover hidden places</field>
             <field name="blog_id" ref="blog_blog_1"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_2')])]"/>
@@ -116,8 +118,9 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="name">How to choose the right hotel</field>
             <field name="subtitle">Facts you should bear in mind.</field>
             <field name="blog_id" ref="blog_blog_1"/>
+            <field name="author_id" ref="base.partner_demo"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_3.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
             <field name="content"><![CDATA[
@@ -167,8 +170,9 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="name">How To Look Up</field>
             <field name="subtitle">Be aware of this thing called “astronomy”</field>
             <field name="blog_id" ref="blog_blog_2"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_5')])]"/>
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_4.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "text_align_class": "text-center", "opacity": "0.2"}</field>
             <field name="content"><![CDATA[
@@ -207,8 +211,9 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="name">What If They Let You Run The Hubble</field>
             <field name="subtitle">The beauty of astronomy is that anybody can do it.</field>
             <field name="blog_id" ref="blog_blog_2"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_4'), ref('blog_tag_5')])]"/>
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_5.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "text_align_class": "text-center", "opacity": "0.2"}</field>
             <field name="content"><![CDATA[
@@ -250,8 +255,9 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="name">Buying A Telescope</field>
             <field name="subtitle">Before you make your first purchase…</field>
             <field name="blog_id" ref="blog_blog_2"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_3'), ref('blog_tag_4')])]"/>
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_6.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "text_align_class": "text-center", "opacity": "0.2"}</field>
             <field name="content"><![CDATA[
@@ -291,8 +297,9 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="name">Beyond The Eye</field>
             <field name="subtitle">Becoming part of the society of devoted amateur astronomers.</field>
             <field name="blog_id" ref="blog_blog_2"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_5')])]"/>
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_7.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
             <field name="content"><![CDATA[
@@ -328,6 +335,69 @@ Naturally, as you grow in your love of astronomy, you will find many celestial b
 <p>Becoming part of the society of devoted amateur astronomers will give you access to these organized efforts to reach new levels in our ability to study the Earth’s moon. And it will give you peers and friends who share your passion for astronomy and who can share their experience and areas of expertise as you seek to find where you might look next in the huge night sky, at the moon and beyond it in your quest for knowledge about the seemingly endless universe above us. </p>
 ]]>
             </field>
+        </record>
+
+        <record id="blog_comment_1" model="mail.message">
+            <field name="body">Beautiful! I plan to go there next holidays.</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_1"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo_portal"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="blog_comment_2" model="mail.message">
+            <field name="body">Hi! How long did you stay there?</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_1"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="blog_comment_3" model="mail.message">
+            <field name="body">I'll follow your instructions next time! It will save myself from a weird place like last time :D</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_3"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="blog_comment_4" model="mail.message">
+            <field name="body">Can't wait to buy a telescope!</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_5"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="blog_comment_5" model="mail.message">
+            <field name="body">Light pollution can be really annoying when you want to observe the sky. The best places are far from cities. That's why I like to go camping.</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_5"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo_portal"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="blog_comment_6" model="mail.message">
+            <field name="body">Great article! Do you have any good addresses to buy a telescope? Thanks!</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_6"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="blog_comment_7" model="mail.message">
+            <field name="body">Great article. I learned so much about astronomy and the moon. How can I contact you to discuss about my experience?</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_7"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
         </record>
     </data>
 </odoo>

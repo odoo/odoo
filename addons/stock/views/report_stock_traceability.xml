@@ -18,7 +18,7 @@
                 <t t-set="column" t-value="0" />
                 <t t-foreach="a['columns']" t-as="c">
                     <t t-set="column" t-value="column + 1" />
-                      <td t-att-data-id="a.get('id')" t-att-data-model="a['model']" t-att-data-model_id="a['model_id']" t-att-class="tdclass" t-att-data-level="a['level']">
+                    <td t-att-data-id="a.get('id')" t-att-data-model="a['model']" t-att-data-model_id="a['model_id']" t-att-class="tdclass" t-att-data-level="a['level']">
                         <t t-if="column == 1">
                             <t t-if="a.get('unfoldable') and not a.get('is_used')">
                                 <span t-att-data-id="a['id']" class="o_stock_reports_unfoldable o_stock_reports_caret_icon"><i class="fa fa-fw fa-caret-right" role="img" aria-label="Unfold" title="Unfold"></i></span>
@@ -29,16 +29,15 @@
                         </t>
                         <t t-if="a['reference'] == c">
                             <span t-if="c" t-att-class="spanclass">
-                                <a t-att-data-active-id="a['res_id']" t-att-data-res-model="a['res_model']" class="o_stock_reports_web_action" href="#"><t t-raw="c" /></a>
+                                <a t-att-data-active-id="a['res_id']" t-att-data-res-model="a['res_model']" class="o_stock_reports_web_action" href="#"><t t-esc="c" /></a>
                             </span>
                         </t>
                         <t t-elif="a['lot_name'] == c">
                             <span>
-                                <a class="o_stock_report_lot_action" href="#"><t t-raw="c"/></a>
+                                <a class="o_stock_report_lot_action" href="#"><t t-esc="c"/></a>
                             </span>
-                        </t>
-                        <t t-else="">
-                                <t t-raw="c"/>
+                        </t><t t-else="">
+                            <t t-esc="c"/>
                         </t>
                     </td>
                 </t>
@@ -124,7 +123,7 @@
                                             <span t-att-style="space_td"></span>
                                         </t>
                                         <span>
-                                            <t t-raw="c" />
+                                            <t t-esc="c" />
                                         </span>
                                     </td>
                                 </t>

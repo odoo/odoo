@@ -20,6 +20,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="po_order_approval"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/purchase/purchases/rfq/approvals.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                 <div class="text-muted">
                                     Request managers to approve orders above a minimum amount
@@ -38,8 +39,9 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="lock_confirmed_po"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/purchase/purchases/rfq/lock_orders.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
-                                    Automatically lock confirmed orders to prevent edition
+                                    Automatically lock confirmed orders to prevent editing
                                 </div>
                             </div>
                         </div>
@@ -49,6 +51,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="group_warning_purchase" string="Warnings"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/purchase/purchases/rfq/warning.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Get warnings in orders for products or vendors
                                 </div>
@@ -62,6 +65,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_purchase_requisition"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/purchase/purchases/tender/call_for_tender.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Manage your purchase agreements (call for tenders, blanket orders)
                                 </div>
@@ -77,6 +81,7 @@
                             <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">
                                 <label for="default_purchase_method"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/purchase/purchases/rfq/bills.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Quantities billed by vendors
                                 </div>
@@ -95,6 +100,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_account_3way_match"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/purchase/purchases/rfq/3_way_matching.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Make sure you only pay bills for which you received the goods you ordered
                                 </div>
@@ -103,6 +109,23 @@
                     </div>
                     <h2>Products</h2>
                     <div class="row mt16 o_settings_container" name="matrix_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="variant_options">
+                            <div class="o_setting_left_pane">
+                                <field name="group_product_variant"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_product_variant"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/sales/products_prices/products/variants.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                <div class="text-muted">
+                                    Purchase variants of a product using attributes (size, color, etc.)
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('group_product_variant','=',False)]}">
+                                    <div class="mt8">
+                                        <button name="%(product.attribute_action)d" icon="fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12 col-lg-6 o_setting_box"
                             id="product_matrix"
                             title="If installed, the product variants will be added to purchase orders through a grid entry.">

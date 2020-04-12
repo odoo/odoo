@@ -6,7 +6,7 @@
 {
     'name': 'Ethiopia - Accounting',
     'version': '2.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 Base Module for Ethiopian Localization
 ======================================
@@ -30,5 +30,8 @@ This is the latest Ethiopian Odoo localization and consists of:
         'data/account_tax_report_data.xml',
         'data/account_tax_data.xml',
         'data/account_chart_template_configure_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
 }

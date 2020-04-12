@@ -9,7 +9,6 @@ import pprint
 
 from odoo import api, exceptions, fields, models, _, SUPERUSER_ID
 from odoo.tools import consteq, float_round, image_process, ustr
-from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
@@ -61,6 +60,9 @@ class PaymentAcquirer(models.Model):
     _name = 'payment.acquirer'
     _description = 'Payment Acquirer'
     _order = 'module_state, state, sequence, name'
+
+    def _valid_field_parameter(self, field, name):
+        return name == 'required_if_provider' or super()._valid_field_parameter(field, name)
 
     def _get_default_view_template_id(self):
         return self.env.ref('payment.default_acquirer_button', raise_if_not_found=False)
@@ -150,11 +152,11 @@ class PaymentAcquirer(models.Model):
     fees_dom_var = fields.Float('Variable domestic fees (in percents)')
     fees_int_fixed = fields.Float('Fixed international fees')
     fees_int_var = fields.Float('Variable international fees (in percents)')
-    qr_code = fields.Boolean('Use SEPA QR Code')
+    qr_code = fields.Boolean('Enable QR Codes', help="Enable the use of QR-codes for payments made on this provider.")
 
     # TDE FIXME: remove that brol
     module_id = fields.Many2one('ir.module.module', string='Corresponding Module')
-    module_state = fields.Selection(selection=ir_module.STATES, string='Installation State', related='module_id.state', store=True)
+    module_state = fields.Selection(string='Installation State', related='module_id.state', store=True)
     module_to_buy = fields.Boolean(string='Odoo Enterprise Module', related='module_id.to_buy', readonly=True, store=False)
 
     image_128 = fields.Image("Image", max_width=128, max_height=128)
@@ -597,7 +599,7 @@ class PaymentTransaction(models.Model):
                             help='Internal reference of the TX')
     acquirer_reference = fields.Char(string='Acquirer Reference', readonly=True, help='Reference of the TX as stored in the acquirer database')
     # duplicate partner / transaction data to store the values at transaction time
-    partner_id = fields.Many2one('res.partner', 'Customer', tracking=True)
+    partner_id = fields.Many2one('res.partner', 'Customer')
     partner_name = fields.Char('Partner Name')
     partner_lang = fields.Selection(_lang_get, 'Language', default=lambda self: self.env.lang)
     partner_email = fields.Char('Email')
@@ -625,7 +627,7 @@ class PaymentTransaction(models.Model):
     payment_id = fields.Many2one('account.payment', string='Payment', readonly=True)
     invoice_ids = fields.Many2many('account.move', 'account_invoice_transaction_rel', 'transaction_id', 'invoice_id',
         string='Invoices', copy=False, readonly=True,
-        domain=[('type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))])
+        domain=[('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))])
     invoice_ids_nbr = fields.Integer(compute='_compute_invoice_ids_nbr', string='# of Invoices')
 
     _sql_constraints = [
@@ -637,22 +639,42 @@ class PaymentTransaction(models.Model):
         for trans in self:
             trans.invoice_ids_nbr = len(trans.invoice_ids)
 
-    def _prepare_account_payment_vals(self):
+    def _create_payment(self, add_payment_vals={}):
+        ''' Create an account.payment record for the current payment.transaction.
+        If the transaction is linked to some invoices, the reconciliation will be done automatically.
+        :param add_payment_vals:    Optional additional values to be passed to the account.payment.create method.
+        :return:                    An account.payment record.
+        '''
         self.ensure_one()
-        return {
+
+        payment_vals = {
             'amount': self.amount,
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'partner_type': 'customer',
-            'invoice_ids': [(6, 0, self.invoice_ids.ids)],
             'journal_id': self.acquirer_id.journal_id.id,
             'company_id': self.acquirer_id.company_id.id,
             'payment_method_id': self.env.ref('payment.account_payment_method_electronic_in').id,
             'payment_token_id': self.payment_token_id and self.payment_token_id.id or None,
             'payment_transaction_id': self.id,
-            'communication': self.reference,
+            'ref': self.reference,
+            **add_payment_vals,
         }
+        payment = self.env['account.payment'].create(payment_vals)
+        payment.action_post()
+
+        # Track the payment to make a one2one.
+        self.payment_id = payment
+
+        if self.invoice_ids:
+            self.invoice_ids.filtered(lambda move: move.state == 'draft').post()
+
+            (payment.line_ids + self.invoice_ids.line_ids)\
+                .filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled)\
+                .reconcile()
+
+        return payment
 
     def get_last_transaction(self):
         transactions = self.filtered(lambda t: t.state != 'draft')
@@ -789,21 +811,11 @@ class PaymentTransaction(models.Model):
         invoices.post()
 
         # Create & Post the payments.
-        payments = defaultdict(lambda: self.env['account.payment'])
         for trans in self:
             if trans.payment_id:
-                payments[trans.acquirer_id.company_id.id] += trans.payment_id
                 continue
 
-            payment_vals = trans._prepare_account_payment_vals()
-            payment = self.env['account.payment'].create(payment_vals)
-            payments[trans.acquirer_id.company_id.id] += payment
-
-            # Track the payment to make a one2one.
-            trans.payment_id = payment
-
-        for company in payments:
-            payments[company].with_company(company).with_context(company_id=company).post()
+            trans._create_payment()
 
     def _set_transaction_cancel(self):
         '''Move the transaction's payment to the cancel state(e.g. Paypal).'''
@@ -866,8 +878,8 @@ class PaymentTransaction(models.Model):
     @api.model
     def _compute_reference_prefix(self, values):
         if values and values.get('invoice_ids'):
-            many_list = self.resolve_2many_commands('invoice_ids', values['invoice_ids'], fields=['name'])
-            return ','.join(dic['name'] for dic in many_list)
+            invoices = self.new({'invoice_ids': values['invoice_ids']}).invoice_ids
+            return ','.join(invoices.mapped('name'))
         return None
 
     @api.model

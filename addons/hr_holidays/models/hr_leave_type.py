@@ -63,6 +63,9 @@ class HolidaysType(models.Model):
     virtual_remaining_leaves = fields.Float(
         compute='_compute_leaves', search='_search_virtual_remaining_leaves', string='Virtual Remaining Time Off',
         help='Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting Approval')
+    virtual_leaves_taken = fields.Float(
+        compute='_compute_leaves', string='Virtual Time Off Already Taken',
+        help='Sum of validated and non validated time off requests.')
     group_days_allocation = fields.Float(
         compute='_compute_group_days_allocation', string='Days Allocated')
     group_days_leave = fields.Float(
@@ -187,7 +190,7 @@ class HolidaysType(models.Model):
 
     def get_days(self, employee_id):
         # need to use `dict` constructor to create a dict per id
-        result = dict((id, dict(max_leaves=0, leaves_taken=0, remaining_leaves=0, virtual_remaining_leaves=0)) for id in self.ids)
+        result = dict((id, dict(max_leaves=0, leaves_taken=0, remaining_leaves=0, virtual_remaining_leaves=0, virtual_leaves_taken=0)) for id in self.ids)
 
         requests = self.env['hr.leave'].search([
             ('employee_id', '=', employee_id),
@@ -206,6 +209,9 @@ class HolidaysType(models.Model):
             status_dict['virtual_remaining_leaves'] -= (request.number_of_hours_display
                                                     if request.leave_type_request_unit == 'hour'
                                                     else request.number_of_days)
+            status_dict['virtual_leaves_taken'] += (request.number_of_hours_display
+                                                if request.leave_type_request_unit == 'hour'
+                                                else request.number_of_days)
             if request.state == 'validate':
                 status_dict['leaves_taken'] += (request.number_of_hours_display
                                             if request.leave_type_request_unit == 'hour'
@@ -240,8 +246,9 @@ class HolidaysType(models.Model):
                     'virtual_remaining_leaves': ('%.2f' % lt.virtual_remaining_leaves).rstrip('0').rstrip('.'),
                     'max_leaves': ('%.2f' % lt.max_leaves).rstrip('0').rstrip('.'),
                     'leaves_taken': ('%.2f' % lt.leaves_taken).rstrip('0').rstrip('.'),
+                    'virtual_leaves_taken': ('%.2f' % lt.virtual_leaves_taken).rstrip('0').rstrip('.'),
                     'request_unit': lt.request_unit,
-                }, lt.allocation_type)
+                }, lt.allocation_type, lt.validity_stop)
             for lt in leave_types]
 
     def _get_contextual_employee_id(self):
@@ -266,6 +273,7 @@ class HolidaysType(models.Model):
             holiday_status.leaves_taken = result.get('leaves_taken', 0)
             holiday_status.remaining_leaves = result.get('remaining_leaves', 0)
             holiday_status.virtual_remaining_leaves = result.get('virtual_remaining_leaves', 0)
+            holiday_status.virtual_leaves_taken = result.get('virtual_leaves_taken', 0)
 
     def _compute_group_days_allocation(self):
         domain = [

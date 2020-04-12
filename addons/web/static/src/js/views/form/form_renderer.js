@@ -49,9 +49,6 @@ var FormRenderer = BasicRenderer.extend({
      */
     on_attach_callback: function () {
         this._isInDom = true;
-        _.forEach(this.allFieldWidgets, function (widgets){
-            _.invoke(widgets, 'on_attach_callback');
-        });
         this._super.apply(this, arguments);
     },
     /**
@@ -611,6 +608,14 @@ var FormRenderer = BasicRenderer.extend({
         if (node.attrs.nolabel !== '1') {
             var $labelTd = this._renderInnerGroupLabel(node);
             $tds = $labelTd.add($tds);
+
+            // apply the oe_(edit|read)_only className on the label as well
+            if (/\boe_edit_only\b/.test(node.attrs.class)) {
+                $tds.addClass('oe_edit_only');
+            }
+            if (/\boe_read_only\b/.test(node.attrs.class)) {
+                $tds.addClass('oe_read_only');
+            }
         }
 
         return $tds;
@@ -820,6 +825,13 @@ var FormRenderer = BasicRenderer.extend({
             for: this._getIDForLabel(fieldName),
             text: text,
         });
+        const field = this.state.fields[fieldName];
+        if (field && field.company_dependent) {
+            $result.append($('<span>', {
+                class: 'fa fa-sm fa-building-o ml-2',
+                title: _t("Values set here are company-specific"),
+            }));
+        }
         if (node.tag === 'label') {
             this._handleAttributes($result, node);
         }
@@ -1061,6 +1073,13 @@ var FormRenderer = BasicRenderer.extend({
      */
     _onNavigationMove: function (ev) {
         ev.stopPropagation();
+        // We prevent the default behaviour and stop the propagation of the
+        // originalEvent when the originalEvent is a tab keydown to not let
+        // the browser do it. The action is done by this renderer.
+        if (ev.data.originalEvent && ['next', 'previous'].includes(ev.data.direction)) {
+            ev.data.originalEvent.preventDefault();
+            ev.data.originalEvent.stopPropagation();
+        }
         var index;
         let target = ev.data.target || ev.target;
         if (target.__owl__) {

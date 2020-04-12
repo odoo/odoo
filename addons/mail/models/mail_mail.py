@@ -52,7 +52,7 @@ class MailMail(models.Model):
     ], 'Status', readonly=True, copy=False, default='outgoing')
     auto_delete = fields.Boolean(
         'Auto Delete',
-        help="Permanently delete this email after sending it, to save space")
+        help="This option permanently removes any track of email after send, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
     failure_reason = fields.Text(
         'Failure Reason', readonly=1,
         help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.")
@@ -416,10 +416,8 @@ class MailMail(models.Model):
                         if isinstance(e, UnicodeEncodeError):
                             value = "Invalid text: %s" % e.object
                         else:
-                            # get the args of the original error, wrap into a value and throw a MailDeliveryException
-                            # that is an except_orm, with name and value as arguments
                             value = '. '.join(e.args)
-                        raise MailDeliveryException(_("Mail Delivery Failed"), value)
+                        raise MailDeliveryException(value)
                     raise
 
             if auto_commit is True:

@@ -90,7 +90,8 @@ class AuthorizeAPI():
                             'city': partner.city,
                             'state': partner.state_id.name or None,
                             'zip': partner.zip or '',
-                            'country': partner.country_id.name or None
+                            'country': partner.country_id.name or None,
+                            'phoneNumber': partner.phone or '',
                         },
                         'payment': {
                             'opaqueData': {
@@ -301,8 +302,8 @@ class AuthorizeAPI():
                 },
                 'transactionRequest': {
                     'transactionType': 'priorAuthCaptureTransaction',
+                    'amount': str(amount),
                     'refTransId': transaction_id,
-                    'amount': str(amount)
                 }
             }
         }

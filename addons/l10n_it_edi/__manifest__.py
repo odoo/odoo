@@ -12,7 +12,7 @@
     'description': """
 E-invoice implementation
     """,
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'website': 'http://www.odoo.com/',
     'data': [
         'security/ir.model.access.csv',

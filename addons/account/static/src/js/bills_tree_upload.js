@@ -101,7 +101,7 @@ odoo.define('account.dashboard.kanban', function (require) {
         }),
         /**
          * We override _onUpload (from the upload bill mixin) to pass default_journal_id
-         * and default_type in context.
+         * and default_move_type in context.
          *
          * @override
          */
@@ -109,9 +109,9 @@ odoo.define('account.dashboard.kanban', function (require) {
             var kanbanRecord = $(event.currentTarget).closest('.o_kanban_record').data('record');
             this.initialState.context['default_journal_id'] = kanbanRecord.id;
             if ($(event.currentTarget).attr('journal_type') == 'sale') {
-                this.initialState.context['default_type'] = 'out_invoice'
+                this.initialState.context['default_move_type'] = 'out_invoice'
             } else if ($(event.currentTarget).attr('journal_type') == 'purchase') {
-                this.initialState.context['default_type'] = 'in_invoice'
+                this.initialState.context['default_move_type'] = 'in_invoice'
             }
             UploadBillMixin._onUpload.apply(this, arguments);
         }

@@ -153,7 +153,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
     # register, instantiate and initialize models for each modules
     t0 = time.time()
-    t0_sql = odoo.sql_db.sql_counter
+    loading_extra_query_count = odoo.sql_db.sql_counter
+    loading_cursor_query_count = cr.sql_log_count
 
     models_updated = set()
 
@@ -164,13 +165,20 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
         if skip_modules and module_name in skip_modules:
             continue
 
-        _logger.debug('loading module %s (%d/%d)', module_name, index, module_count)
+        module_t0 = time.time()
+        module_cursor_query_count = cr.sql_log_count
+        module_extra_query_count = odoo.sql_db.sql_counter
 
         needs_update = (
             hasattr(package, "init")
             or hasattr(package, "update")
             or package.state in ("to install", "to upgrade")
         )
+        module_log_level = logging.DEBUG
+        if needs_update:
+            module_log_level = logging.INFO
+        _logger.log(module_log_level, 'Loading module %s (%d/%d)', module_name, index, module_count)
+
         if needs_update:
             if package.name != 'base':
                 registry.setup_models(cr)
@@ -276,7 +284,17 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
         if package.name is not None:
             registry._init_modules.add(package.name)
 
-    _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
+        _logger.log(module_log_level, "Module %s loaded in %.2fs, %s queries (+%s extra)",
+                    module_name,
+                    time.time() - module_t0,
+                    cr.sql_log_count - module_cursor_query_count,
+                    odoo.sql_db.sql_counter - module_extra_query_count)  # extra queries: testes, notify, any other closed cursor
+
+    _logger.runbot("%s modules loaded in %.2fs, %s queries (+%s extra)",
+                   len(graph),
+                   time.time() - t0,
+                   cr.sql_log_count - loading_cursor_query_count,
+                   odoo.sql_db.sql_counter - loading_extra_query_count)  # extra queries: testes, notify, any other closed cursor
 
     return loaded_modules, processed_modules
 
@@ -338,7 +356,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             odoo.modules.db.initialize(cr)
             update_module = True # process auto-installed modules
             tools.config["init"]["all"] = 1
-            tools.config['update']['all'] = 1
             if not tools.config['without_demo']:
                 tools.config["demo"]['all'] = 1
 
@@ -422,12 +439,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     ['to install'], force, status, report,
                     loaded_modules, update_module, models_to_check)
 
-        # check modules states
-        cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade', 'to remove')")
+        # check that new module dependencies have been properly installed after a migration/upgrade
+        cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade')")
         module_list = [name for (name,) in cr.fetchall()]
         if module_list:
             _logger.error("Some modules have inconsistent states, some dependencies may be missing: %s", sorted(module_list))
 
+        # check that all installed modules have been loaded by the registry after a migration/upgrade
         cr.execute("SELECT name from ir_module_module WHERE state = 'installed' and name != 'studio_customization'")
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
         if module_list:
@@ -458,7 +476,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 if model in registry:
                     env[model]._check_removed_columns(log=True)
                 elif _logger.isEnabledFor(logging.INFO):    # more an info that a warning...
-                    _logger.log(25, "Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)", model)
+                    _logger.runbot("Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)", model)
 
             # Cleanup orphan records
             env['ir.model.data']._process_end(processed_modules)
@@ -509,6 +527,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # STEP 6: verify custom views on every model
         if update_module:
             env = api.Environment(cr, SUPERUSER_ID, {})
+            env['res.groups']._update_user_groups_view()
             View = env['ir.ui.view']
             for model in registry:
                 try:

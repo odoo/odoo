@@ -22,7 +22,10 @@ class AccountFiscalPosition(models.Model):
     name = fields.Char(string='Fiscal Position', required=True)
     active = fields.Boolean(default=True,
         help="By unchecking the active field, you may hide a fiscal position without deleting it.")
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True)
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string='Company', required=True, readonly=True,
+        default=lambda self: self.env.company)
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
     note = fields.Text('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
@@ -119,7 +122,7 @@ class AccountFiscalPosition(models.Model):
         base_domain = [
             ('auto_apply', '=', True),
             ('vat_required', '=', vat_required),
-            ('company_id', '=', self.env.company.id),
+            ('company_id', 'in', [self.env.company.id, False]),
         ]
         null_state_dom = state_domain = [('state_ids', '=', False)]
         null_zip_dom = zip_domain = [('zip_from', '=', False), ('zip_to', '=', False)]
@@ -191,11 +194,13 @@ class AccountFiscalPositionTax(models.Model):
     _name = 'account.fiscal.position.tax'
     _description = 'Tax Mapping of Fiscal Position'
     _rec_name = 'position_id'
+    _check_company_auto = True
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
-    tax_src_id = fields.Many2one('account.tax', string='Tax on Product', required=True)
-    tax_dest_id = fields.Many2one('account.tax', string='Tax to Apply')
+    company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
+    tax_src_id = fields.Many2one('account.tax', string='Tax on Product', required=True, check_company=True)
+    tax_dest_id = fields.Many2one('account.tax', string='Tax to Apply', check_company=True)
 
     _sql_constraints = [
         ('tax_src_dest_uniq',
@@ -208,13 +213,17 @@ class AccountFiscalPositionAccount(models.Model):
     _name = 'account.fiscal.position.account'
     _description = 'Accounts Mapping of Fiscal Position'
     _rec_name = 'position_id'
+    _check_company_auto = True
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
+    company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
     account_src_id = fields.Many2one('account.account', string='Account on Product',
-        domain=[('deprecated', '=', False)], required=True)
+        check_company=True, required=True,
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
     account_dest_id = fields.Many2one('account.account', string='Account to Use Instead',
-        domain=[('deprecated', '=', False)], required=True)
+        check_company=True, required=True,
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
 
     _sql_constraints = [
         ('account_src_dest_uniq',
@@ -311,7 +320,7 @@ class ResPartner(models.Model):
         # generate where clause to include multicompany rules
         where_query = account_invoice_report._where_calc([
             ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']),
-            ('type', 'in', ('out_invoice', 'out_refund'))
+            ('move_type', 'in', ('out_invoice', 'out_refund'))
         ])
         account_invoice_report._apply_ir_rules(where_query, 'read')
         from_clause, where_clause, where_clause_params = where_query.get_sql()
@@ -390,26 +399,28 @@ class ResPartner(models.Model):
         groups='account.group_account_invoice,account.group_account_readonly')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency", help='Utility field to express amount currency')
-    journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items", type="integer")
+    journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
-        domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
+        domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
         help="This account will be used instead of the default one as the payable account for the current partner",
         required=True)
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Receivable",
-        domain="[('internal_type', '=', 'receivable'), ('deprecated', '=', False)]",
+        domain="[('internal_type', '=', 'receivable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
         help="This account will be used instead of the default one as the receivable account for the current partner",
         required=True)
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
-        domain="[('company_id', 'in', [company_id or current_company_id, False])]",
+        domain="[('company_id', '=', current_company_id)]",
         help="The fiscal position determines the taxes/accounts used for this contact.")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
+        domain="[('company_id', 'in', [current_company_id, False])]",
         help="This payment term will be used instead of the default one for sales orders and customer invoices")
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Vendor Payment Terms',
+        domain="[('company_id', 'in', [current_company_id, False])]",
         help="This payment term will be used instead of the default one for purchase orders and vendor bills")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
@@ -465,11 +476,10 @@ class ResPartner(models.Model):
         self.ensure_one()
         action = self.env.ref('account.action_move_out_invoice_type').read()[0]
         action['domain'] = [
-            ('type', 'in', ('out_invoice', 'out_refund')),
-            ('state', '=', 'posted'),
+            ('move_type', 'in', ('out_invoice', 'out_refund')),
             ('partner_id', 'child_of', self.id),
         ]
-        action['context'] = {'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
+        action['context'] = {'default_move_type':'out_invoice', 'move_type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
         return action
 
     def can_edit_vat(self):
@@ -478,7 +488,7 @@ class ResPartner(models.Model):
         if not can_edit_vat:
             return can_edit_vat
         has_invoice = self.env['account.move'].search([
-            ('type', 'in', ['out_invoice', 'out_refund']),
+            ('move_type', 'in', ['out_invoice', 'out_refund']),
             ('partner_id', 'child_of', self.commercial_partner_id.id),
             ('state', '=', 'posted')
         ], limit=1)

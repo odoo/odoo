@@ -4,7 +4,7 @@
 {
     'name': 'Ireland - Accounting',
     'version': '1.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
     This module is for all the Irish SMEs who would like to setup their accounting quickly. The module provides:
 
@@ -20,5 +20,8 @@
         'data/account.chart.template.csv',
         'data/account_tax_data.xml',
         'data/account_chart_template_configuration_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
 }

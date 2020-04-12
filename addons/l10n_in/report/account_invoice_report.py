@@ -126,7 +126,7 @@ class L10nInAccountInvoiceReport(models.Model):
                 am.amount_total AS total,
                 am.journal_id,
                 aj.company_id,
-                am.type AS move_type,
+                am.move_type AS move_type,
                 am.reversed_entry_id AS reversed_entry_id,
                 p.vat AS partner_vat,
                 CASE WHEN rp.vat IS NULL THEN '' ELSE rp.vat END AS ecommerce_vat,
@@ -140,7 +140,7 @@ class L10nInAccountInvoiceReport(models.Model):
                     THEN concat(cps.l10n_in_tin,'-',cps.name)
                     ELSE ''
                     END) AS place_of_supply,
-                (CASE WHEN am.type in ('out_refund', 'in_refund') and refund_am.date <= to_date('2017-07-01', 'YYYY-MM-DD')
+                (CASE WHEN am.move_type in ('out_refund', 'in_refund') and refund_am.date <= to_date('2017-07-01', 'YYYY-MM-DD')
                     THEN 'Y'
                     ELSE 'N'
                     END) as is_pre_gst,
@@ -187,9 +187,9 @@ class L10nInAccountInvoiceReport(models.Model):
                     WHEN am.l10n_in_export_type = 'sez_without_igst'
                     THEN 'SEZ without IGST payment'
                     END) AS b2b_type,
-                (CASE WHEN am.type = 'out_refund'
+                (CASE WHEN am.move_type = 'out_refund'
                     THEN 'C'
-                    WHEN am.type = 'in_refund'
+                    WHEN am.move_type = 'in_refund'
                     THEN 'D'
                     ELSE ''
                     END) as refund_invoice_type,
@@ -232,7 +232,7 @@ class L10nInAccountInvoiceReport(models.Model):
                     THEN NULL
                     ELSE (CASE WHEN aml.tax_base_amount <> 0 THEN aml.tax_base_amount ELSE NULL END)
                     END AS price_total,
-                (CASE WHEN aj.type = 'sale' AND (am.type IS NULL OR am.type != 'out_refund') THEN -1 ELSE 1 END) AS amount_sign,
+                (CASE WHEN aj.type = 'sale' AND (am.move_type IS NULL OR am.move_type != 'out_refund') THEN -1 ELSE 1 END) AS amount_sign,
                 (CASE WHEN atr.parent_tax IS NOT NULL THEN atr.parent_tax
                     ELSE at.id END) AS tax_id,
                 (CASE WHEN atr.parent_tax IS NOT NULL THEN parent_at.amount
@@ -246,7 +246,7 @@ class L10nInAccountInvoiceReport(models.Model):
                 JOIN account_move am ON am.id = aml.move_id
                 JOIN account_journal aj ON aj.id = am.journal_id
                 JOIN res_company c ON c.id = aj.company_id
-                JOIN account_tax at ON at.id = aml.tax_line_id
+                LEFT JOIN account_tax at ON at.id = aml.tax_line_id
                 JOIN account_account_tag_account_move_line_rel aat_aml_rel ON aat_aml_rel.account_move_line_id = aml.id
                 JOIN account_account_tag aat ON aat.id = aat_aml_rel.account_account_tag_id
                 JOIN account_tax_report_line_tags_rel tag_rep_ln ON aat.id = tag_rep_ln.account_account_tag_id
@@ -264,7 +264,7 @@ class L10nInAccountInvoiceReport(models.Model):
     def _where(self):
         return """
                 WHERE am.state = 'posted'
-                    AND tag_rep_ln.account_tax_report_line_id in (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('tax_report_line_igst','tax_report_line_cgst','tax_report_line_sgst'))
+                    AND tag_rep_ln.account_tax_report_line_id in (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('tax_report_line_igst','tax_report_line_cgst','tax_report_line_sgst','tax_report_line_zero_rated'))
         """
 
     def _group_by(self):

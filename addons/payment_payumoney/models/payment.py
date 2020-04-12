@@ -17,7 +17,9 @@ _logger = logging.getLogger(__name__)
 class PaymentAcquirerPayumoney(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('payumoney', 'PayUmoney')])
+    provider = fields.Selection(selection_add=[
+        ('payumoney', 'PayUmoney')
+    ], ondelete={'payumoney': 'set default'})
     payumoney_merchant_key = fields.Char(string='Merchant Key', required_if_provider='payumoney', groups='base.group_user')
     payumoney_merchant_salt = fields.Char(string='Merchant Salt', required_if_provider='payumoney', groups='base.group_user')
 

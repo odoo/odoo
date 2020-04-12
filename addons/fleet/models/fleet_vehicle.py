@@ -39,14 +39,14 @@ class FleetVehicle(models.Model):
             self.manager_id = None
 
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
-    log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignation Logs')
+    log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignment Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
     log_contracts = fields.One2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts')
     contract_count = fields.Integer(compute="_compute_count_all", string='Contract Count')
     service_count = fields.Integer(compute="_compute_count_all", string='Services')
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
     history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
-    next_assignation_date = fields.Date('Assignation Date', help='This is the date at which the car will be available, if not set it means available instantly')
+    next_assignation_date = fields.Date('Assignment Date', help='This is the date at which the car will be available, if not set it means available instantly')
     acquisition_date = fields.Date('Immatriculation Date', required=False,
         default=fields.Date.today, help='Date when the vehicle has been immatriculated')
     first_contract_date = fields.Date(string="First Contract Date", default=fields.Date.today)
@@ -78,18 +78,18 @@ class FleetVehicle(models.Model):
     horsepower_tax = fields.Float('Horsepower Taxation')
     power = fields.Integer('Power', help='Power in kW of the vehicle')
     co2 = fields.Float('CO2 Emissions', help='CO2 emissions of the vehicle')
-    image_128 = fields.Image(related='model_id.image_128', readonly=False)
+    image_128 = fields.Image(related='model_id.image_128', readonly=True)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
-        string='Has Contracts to renew', multi='contract_info')
+        string='Has Contracts to renew')
     contract_renewal_overdue = fields.Boolean(compute='_compute_contract_reminder', search='_search_get_overdue_contract_reminder',
-        string='Has Contracts Overdue', multi='contract_info')
-    contract_renewal_name = fields.Text(compute='_compute_contract_reminder', string='Name of contract to renew soon', multi='contract_info')
-    contract_renewal_total = fields.Text(compute='_compute_contract_reminder', string='Total of contracts due or overdue minus one',
-        multi='contract_info')
+        string='Has Contracts Overdue')
+    contract_renewal_name = fields.Text(compute='_compute_contract_reminder', string='Name of contract to renew soon')
+    contract_renewal_total = fields.Text(compute='_compute_contract_reminder', string='Total of contracts due or overdue minus one')
     car_value = fields.Float(string="Catalog Value (VAT Incl.)", help='Value of the bought vehicle')
-    net_car_value = fields.Float(string="Purchase Value", help="Purchase Value of the car")
+    net_car_value = fields.Float(string="Purchase Value", help="Purchase value of the vehicle")
     residual_value = fields.Float()
     plan_to_change_car = fields.Boolean(related='driver_id.plan_to_change_car', store=True, readonly=False)
+    vehicle_type = fields.Selection(related='model_id.vehicle_type')
 
     @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
@@ -205,7 +205,7 @@ class FleetVehicle(models.Model):
             res.create_driver_history(vals['driver_id'])
         if 'future_driver_id' in vals and vals['future_driver_id']:
             future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
-            future_driver.write({'plan_to_change_car': True})
+            future_driver.sudo().write({'plan_to_change_car': True})
         return res
 
     def write(self, vals):
@@ -215,7 +215,7 @@ class FleetVehicle(models.Model):
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
             future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
-            future_driver.write({'plan_to_change_car': True})
+            future_driver.sudo().write({'plan_to_change_car': True})
 
         res = super(FleetVehicle, self).write(vals)
         if 'active' in vals and not vals['active']:
@@ -238,6 +238,7 @@ class FleetVehicle(models.Model):
             })
 
     def action_accept_driver_change(self):
+        self._close_driver_history()
         # Find all the vehicles for which the driver is the future_driver_id
         # remove their driver_id and close their history using current date
         vehicles = self.search([('driver_id', 'in', self.mapped('future_driver_id').ids)])
@@ -245,7 +246,7 @@ class FleetVehicle(models.Model):
         vehicles._close_driver_history()
 
         for vehicle in self:
-            vehicle.future_driver_id.write({'plan_to_change_car': False})
+            vehicle.future_driver_id.sudo().write({'plan_to_change_car': False})
             vehicle.driver_id = vehicle.future_driver_id
             vehicle.future_driver_id = False
 
@@ -306,7 +307,7 @@ class FleetVehicle(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Assignation Logs',
+            'name': 'Assignment Logs',
             'view_mode': 'tree',
             'res_model': 'fleet.vehicle.assignation.log',
             'domain': [('vehicle_id', '=', self.id)],

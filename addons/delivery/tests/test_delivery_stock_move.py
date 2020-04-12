@@ -19,10 +19,12 @@ class StockMoveInvoice(AccountTestCommon):
         self.product_cable_management_box = self.env['product.product'].create({
             'name': 'Another product to deliver',
             'weight': 1.0,
+            'invoice_policy': 'order',
         })
         self.product_uom_unit = self.env.ref('uom.product_uom_unit')
         self.product_delivery_normal = self.env['product.product'].create({
             'name': 'Normal Delivery Charges',
+            'invoice_policy': 'order',
             'type': 'service',
             'list_price': 10.0,
             'categ_id': self.env.ref('delivery.product_category_deliveries').id,
@@ -79,10 +81,10 @@ class StockMoveInvoice(AccountTestCommon):
         self.invoice.post()
         self.journal = self.AccountJournal.search([('type', '=', 'cash'), ('company_id', '=', self.sale_prepaid.company_id.id)], limit=1)
 
-        register_payments = self.env['account.payment.register'].with_context(active_ids=self.invoice.ids).create({
+        register_payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.invoice.ids).create({
             'journal_id': self.journal.id,
         })
-        register_payments.create_payments()
+        register_payments._create_payments()
 
         # Check the SO after paying the invoice
         self.assertNotEqual(self.sale_prepaid.invoice_count, 0, 'order not invoiced')

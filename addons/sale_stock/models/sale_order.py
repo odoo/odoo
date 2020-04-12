@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import logging
 from datetime import datetime, timedelta
 from collections import defaultdict
 
@@ -9,13 +10,17 @@ from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
 from odoo.exceptions import UserError
 
+_logger = logging.getLogger(__name__)
+
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     @api.model
     def _default_warehouse_id(self):
-        return self.user_id._get_default_warehouse_id()
+        # !!! Any change to the default value may have to be repercuted
+        # on _init_column() below.
+        return self.env.user._get_default_warehouse_id()
 
     incoterm = fields.Many2one(
         'account.incoterms', 'Incoterm',
@@ -41,6 +46,27 @@ class SaleOrder(models.Model):
                                           "the order lines.")
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     show_json_popover = fields.Boolean('Has late picking', compute='_compute_json_popover')
+
+    def _init_column(self, column_name):
+        """ Ensure the default warehouse_id is correctly assigned
+
+        At column initialization, the ir.model.fields for res.users.property_warehouse_id isn't created,
+        which means trying to read the property field to get the default value will crash.
+        We therefore enforce the default here, without going through
+        the default function on the warehouse_id field.
+        """
+        if column_name != "warehouse_id":
+            return super(SaleOrder, self)._init_column(column_name)
+        field = self._fields[column_name]
+        default = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        value = field.convert_to_write(default, self)
+        value = field.convert_to_column(value, self)
+        if value is not None:
+            _logger.debug("Table '%s': setting default value of new column %s to %r",
+                self._table, column_name, value)
+            query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
+                self._table, column_name, field.column_format, column_name)
+            self._cr.execute(query, (value,))
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
@@ -93,6 +119,7 @@ class SaleOrder(models.Model):
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
                 if to_log:
                     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
+                    documents = {k:v for k, v in documents.items() if k[0].state != 'cancel'}
                     order._log_decrease_ordered_quantity(documents)
         return res
 
@@ -251,7 +278,7 @@ class SaleOrderLine(models.Model):
             else:
                 line.display_qty_widget = False
 
-    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'order_id.warehouse_id', 'order_id.commitment_date')
+    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'order_id.warehouse_id', 'order_id.commitment_date')
     def _compute_qty_at_date(self):
         """ Compute the quantity forecasted of product at delivery date. There are
         two cases:
@@ -262,6 +289,7 @@ class SaleOrderLine(models.Model):
         grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
         # We first loop over the SO lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
+        now = fields.Datetime.now()
         for line in self:
             if not line.display_qty_widget:
                 continue
@@ -269,7 +297,7 @@ class SaleOrderLine(models.Model):
             if line.order_id.commitment_date:
                 date = line.order_id.commitment_date
             else:
-                confirm_date = line.order_id.date_order if line.order_id.state in ['sale', 'done'] else datetime.now()
+                confirm_date = line.order_id.date_order if line.order_id.state in ['sale', 'done'] else now
                 date = confirm_date + timedelta(days=line.customer_lead or 0.0)
             grouped_lines[(line.warehouse_id.id, date)] |= line
 
@@ -290,6 +318,10 @@ class SaleOrderLine(models.Model):
                 line.qty_available_today = qty_available_today - qty_processed_per_product[line.product_id.id]
                 line.free_qty_today = free_qty_today - qty_processed_per_product[line.product_id.id]
                 line.virtual_available_at_date = virtual_available_at_date - qty_processed_per_product[line.product_id.id]
+                if line.product_uom and line.product_id.uom_id and line.product_uom != line.product_id.uom_id:
+                    line.qty_available_today = line.product_id.uom_id._compute_quantity(line.qty_available_today, line.product_uom)
+                    line.free_qty_today = line.product_id.uom_id._compute_quantity(line.free_qty_today, line.product_uom)
+                    line.virtual_available_at_date = line.product_id.uom_id._compute_quantity(line.virtual_available_at_date, line.product_uom)
                 qty_processed_per_product[line.product_id.id] += line.product_uom_qty
             treated |= lines
         remaining = (self - treated)
@@ -444,6 +476,7 @@ class SaleOrderLine(models.Model):
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
+            'product_description_variants': self._get_sale_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
         })
         for line in self.filtered("order_id.commitment_date"):
@@ -496,6 +529,7 @@ class SaleOrderLine(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         procurements = []
         for line in self:
+            line = line.with_company(line.company_id)
             if line.state != 'sale' or not line.product_id.type in ('consu','product'):
                 continue
             qty = line._get_qty_procurement(previous_product_uom_qty)
@@ -536,7 +570,7 @@ class SaleOrderLine(models.Model):
         pack = self.product_packaging
         qty = self.product_uom_qty
         q = default_uom._compute_quantity(pack.qty, self.product_uom)
-        if qty and q and (qty % q):
+        if qty and q and round(qty % q, 2):
             newqty = qty - (qty % q) + q
             return {
                 'warning': {

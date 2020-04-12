@@ -69,30 +69,5 @@
             </field>
         </record>
 
-        <menuitem
-            name="Analytic Items"
-            parent="account.menu_finance_entries_management"
-            action="analytic.account_analytic_line_action_entries"
-            id="menu_action_analytic_lines_tree"
-            sequence="35"
-            groups="analytic.group_analytic_accounting"/>
-        <menuitem action="analytic.action_account_analytic_account_form" id="account_analytic_def_account"
-            parent="menu_analytic_accounting"
-            groups="analytic.group_analytic_accounting" sequence="0"/>
-
-        <menuitem
-            id="account_analytic_tag_menu"
-            name="Analytic Tags"
-            parent="menu_analytic_accounting"
-            action="analytic.account_analytic_tag_action"
-            groups="analytic.group_analytic_tags"/>
-
-        <menuitem
-            id="account_analytic_group_menu"
-            name="Analytic Account Groups"
-            parent="menu_analytic_accounting"
-            action="analytic.account_analytic_group_action"
-            groups="analytic.group_analytic_accounting"/>
-
     </data>
 </odoo>

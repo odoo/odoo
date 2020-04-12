@@ -110,6 +110,18 @@ msgid "%s on %s: %.2f hours on %s"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:643
+#, python-format
+msgid "%s on Time Off : %.2f day(s)"
+msgstr "%s on Time Off : %.2f day(s)"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:643
+#, python-format
+msgid "%s on Time Off : %.2f hour(s)"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "&lt;/td&gt;"
 msgstr ""
@@ -1261,6 +1273,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Duration"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "Extra days"
 msgstr ""
 
 #. module: hr_holidays
@@ -2793,15 +2811,13 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
 msgid ""
-"UX field allowing to see and modify the allocation duration, computed in "
-"days."
+"If Accrual Allocation: Number of days allocated in addition to the ones you will get via the accrual' system."
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
 msgid ""
-"UX field allowing to see and modify the allocation duration, computed in "
-"hours."
+"If Accrual Allocation: Number of hours allocated in addition to the ones you will get via the accrual' system."
 msgstr ""
 
 #. module: hr_holidays

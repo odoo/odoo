@@ -505,6 +505,14 @@ class ComputeOnchange(models.Model):
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', store=True)
     baz = fields.Char(compute='_compute_baz', store=True, readonly=False)
+    line_ids = fields.One2many(
+        'test_new_api.compute.onchange.line', 'record_id',
+        compute='_compute_line_ids', store=True, readonly=False
+    )
+    tag_ids = fields.Many2many(
+        'test_new_api.multi.tag',
+        compute='_compute_tag_ids', store=True, readonly=False,
+    )
 
     @api.depends('foo')
     def _compute_bar(self):
@@ -516,6 +524,36 @@ class ComputeOnchange(models.Model):
         for record in self:
             if record.active:
                 record.baz = record.foo
+
+    @api.depends('foo')
+    def _compute_line_ids(self):
+        for record in self:
+            if not record.foo:
+                continue
+            if any(line.foo == record.foo for line in record.line_ids):
+                continue
+            # add a line with the same value as 'foo'
+            record.line_ids = [(0, 0, {'foo': record.foo})]
+
+    @api.depends('foo')
+    def _compute_tag_ids(self):
+        Tag = self.env['test_new_api.multi.tag']
+        for record in self:
+            if record.foo:
+                record.tag_ids = Tag.search([('name', '=', record.foo)])
+
+    def copy(self, default=None):
+        default = dict(default or {}, foo="%s (copy)" % (self.foo or ""))
+        return super().copy(default)
+
+
+class ComputeOnchangeLine(models.Model):
+    _name = 'test_new_api.compute.onchange.line'
+    _description = "Line-like model for test_new_api.compute.onchange"
+
+    foo = fields.Char()
+    record_id = fields.Many2one('test_new_api.compute.onchange',
+                                required=True, ondelete='cascade')
 
 
 class ModelBinary(models.Model):
@@ -796,12 +834,18 @@ class ModelChildM2o(models.Model):
     parent_id = fields.Many2one('test_new_api.model_parent_m2o', ondelete='cascade')
     size1 = fields.Integer(compute='_compute_sizes', store=True)
     size2 = fields.Integer(compute='_compute_sizes', store=True)
+    cost = fields.Integer(compute='_compute_cost', store=True, readonly=False)
 
     @api.depends('parent_id.name')
     def _compute_sizes(self):
         for record in self:
             record.size1 = len(self.parent_id.name)
             record.size2 = len(self.parent_id.name)
+
+    @api.depends('name')
+    def _compute_cost(self):
+        for record in self:
+            record.cost = len(record.name)
 
     def write(self, vals):
         res = super(ModelChildM2o, self).write(vals)
@@ -816,3 +860,134 @@ class ModelParentM2o(models.Model):
 
     name = fields.Char('Name')
     child_ids = fields.One2many('test_new_api.model_child_m2o', 'parent_id', string="Children")
+    cost = fields.Integer(compute='_compute_cost', store=True)
+
+    @api.depends('child_ids.cost')
+    def _compute_cost(self):
+        for record in self:
+            record.cost = sum(child.cost for child in record.child_ids)
+
+
+class Country(models.Model):
+    _name = 'test_new_api.country'
+    _description = 'Country, ordered by name'
+    _order = 'name, id'
+
+    name = fields.Char()
+
+
+class City(models.Model):
+    _name = 'test_new_api.city'
+    _description = 'City, ordered by country then name'
+    _order = 'country_id, name, id'
+
+    name = fields.Char()
+    country_id = fields.Many2one('test_new_api.country')
+
+# abstract model with a selection field
+class StateMixin(models.AbstractModel):
+    _name = 'test_new_api.state_mixin'
+    _description = 'Dummy state mixin model'
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+        ('done', 'Done'),
+    ])
+
+
+class SelectionBase(models.Model):
+    _name = 'test_new_api.model_selection_base'
+    _description = "Model with a base selection field"
+
+    my_selection = fields.Selection([
+        ('foo', "Foo"),
+        ('bar', "Bar"),
+    ])
+
+
+class SelectionBaseNullExplicit(models.Model):
+    _inherit = 'test_new_api.model_selection_base'
+    _description = "Model with a selection field extension with ondelete null"
+
+    my_selection = fields.Selection(selection_add=[
+        ('quux', "Quux"),
+    ], ondelete={'quux': 'set null'})
+
+
+class SelectionBaseNullImplicit(models.Model):
+    _inherit = 'test_new_api.model_selection_base'
+    _description = "Model with a selection field extension without ondelete"
+
+    my_selection = fields.Selection(selection_add=[
+        ('ham', "Ham"),
+    ])
+
+
+class SelectionRequired(models.Model):
+    _name = 'test_new_api.model_selection_required'
+    _description = "Model with a required selection field"
+
+    active = fields.Boolean(default=True)
+    my_selection = fields.Selection([
+        ('foo', "Foo"),
+        ('bar', "Bar"),
+    ], required=True, default='foo')
+
+
+class SelectionRequiredDefault(models.Model):
+    _inherit = 'test_new_api.model_selection_required'
+    _description = "Model with a selection field extension with ondelete default"
+
+    my_selection = fields.Selection(selection_add=[
+        ('baz', "Baz"),
+    ], ondelete={'baz': 'set default'})
+
+
+class SelectionRequiredCascade(models.Model):
+    _inherit = 'test_new_api.model_selection_required'
+    _description = "Model with a selection field extension with ondelete cascade"
+
+    my_selection = fields.Selection(selection_add=[
+        ('eggs', "Eggs"),
+    ], ondelete={'eggs': 'cascade'})
+
+
+class SelectionRequiredLiteral(models.Model):
+    _inherit = 'test_new_api.model_selection_required'
+    _description = "Model with a selection field extension with ondelete set <option>"
+
+    my_selection = fields.Selection(selection_add=[
+        ('bacon', "Bacon"),
+    ], ondelete={'bacon': lambda r: r.write({'my_selection': 'bar'})})
+
+
+class SelectionRequiredMultiple(models.Model):
+    _inherit = 'test_new_api.model_selection_required'
+    _description = "Model with a selection field extension with multiple ondelete policies"
+
+    my_selection = fields.Selection(selection_add=[
+        ('pikachu', "Pikachu"),
+        ('eevee', "Eevee"),
+    ], ondelete={'pikachu': 'set default', 'eevee': lambda r: r.write({'my_selection': 'bar'})})
+
+
+class SelectionRequiredCallback(models.Model):
+    _inherit = 'test_new_api.model_selection_required'
+    _description = "Model with a selection field extension with ondelete callback"
+
+    my_selection = fields.Selection(selection_add=[
+        ('knickers', "Oh la la"),
+    ], ondelete={
+        'knickers': lambda recs: recs.write({'active': False, 'my_selection': 'foo'}),
+    })
+
+
+class SelectionNonStored(models.Model):
+    _name = 'test_new_api.model_selection_non_stored'
+    _description = "Model with non-stored selection field"
+
+    my_selection = fields.Selection([
+        ('foo', "Foo"),
+        ('bar', "Bar"),
+    ], store=False)

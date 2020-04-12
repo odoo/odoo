@@ -177,3 +177,9 @@ else:
         ms = magic.open(magic.MAGIC_MIME_TYPE)
         ms.load()
         guess_mimetype = lambda bin_data, default=None: ms.buffer(bin_data)
+
+def neuter_mimetype(mimetype, user):
+    wrong_type = 'ht' in mimetype or 'xml' in mimetype or 'svg' in mimetype
+    if wrong_type and not user._is_system():
+        return 'text/plain'
+    return mimetype

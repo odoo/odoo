@@ -23,7 +23,7 @@
               </p><p>
                 Work Centers allow you to create and manage manufacturing
                 units. They consist of workers and/or machines, which are
-                considered as units for task assignation as well as capacity
+                considered as units for task assignment as well as capacity
                 and planning forecast.
               </p>
             </field>
@@ -502,20 +502,6 @@
             <search string="Operations">
                 <field name="name"/>
             </search>
-        </field>
-    </record>
-
-
-    <record model="ir.actions.act_window" id="mrp_workcenter_productivity_loss_action">
-        <field name="name">Productivity Losses</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mrp.workcenter.productivity.loss</field>
-        <field name="view_mode">tree,kanban,form</field>
-        <field name="domain">[('manual', '=', 'True')]</field>
-        <field name="help" type="html">
-          <p class="o_view_nocontent_empty_folder">
-            No productivity loss defined
-          </p>
         </field>
     </record>
 

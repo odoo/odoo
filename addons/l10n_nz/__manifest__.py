@@ -6,7 +6,7 @@
 {
     'name': 'New Zealand - Accounting',
     'version': '1.1',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 New Zealand Accounting Module
 =============================
@@ -31,4 +31,7 @@ Also:
              'data/account_chart_template_configure_data.xml',
              'data/res_currency_data.xml',
              ],
+     'demo': [
+         'demo/demo_company.xml',
+     ],
 }

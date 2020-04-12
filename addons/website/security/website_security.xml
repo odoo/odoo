@@ -27,6 +27,8 @@
         <field name="implied_ids" eval="[(4, ref('website.group_website_designer'))]"/>
     </record>
 
+    <data noupdate="1">
+
     <record id="website_menu" model="ir.rule">
         <field name="name">Website menu: group_ids</field>
         <field name="model_id" ref="model_website_menu"/>
@@ -73,7 +75,7 @@
     <record id="view_rule_visibility_public" model="ir.rule">
         <field name="name">Website View Visibility Public</field>
         <field name="model_id" ref="base.model_ir_ui_view"/>
-        <field name="domain_force">[('type', '=', 'qweb'), ('visibility', 'in', ('public', False))]</field>
+        <field name="domain_force">['|', ('type', '!=', 'qweb'), ('visibility', 'in', ('public', False))]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
@@ -83,11 +85,13 @@
     <record id="view_rule_visibility_connected" model="ir.rule">
         <field name="name">Website View Visibility Connected</field>
         <field name="model_id" ref="base.model_ir_ui_view"/>
-        <field name="domain_force">[('type', '=', 'qweb'), ('visibility', 'in', ('public', 'connected', False))]</field>
+        <field name="domain_force">['|', ('type', '!=', 'qweb'), ('visibility', 'in', ('public', 'connected', False))]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
+
+    </data>
 </odoo>

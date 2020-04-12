@@ -67,7 +67,6 @@ class WebsiteVisitorTests(tests.HttpCase):
         })
         partner_demo = self.env.ref('base.partner_demo')
         old_visitor.partner_id = partner_demo.id
-        partner_demo.visitor_ids = [(6, 0, [old_visitor.id])]  # TODO DBE : Remove this line in Master (13.1) after visitor_ids field declaration master fix
         self.assertEqual(partner_demo.visitor_ids.id, old_visitor.id, "The partner visitor should be set correctly.")
 
         # archive old visitor

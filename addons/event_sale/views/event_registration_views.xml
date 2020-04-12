@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="event.view_event_registration_tree" />
         <field name="arch" type="xml">
             <field name="event_id" position="after">
-                <field name="origin"/>
+                <field name="sale_order_id"/>
             </field>
         </field>
     </record>
@@ -38,16 +38,10 @@
                 <field name="is_paid" invisible="1"/>
                 <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('is_paid', '=', False)]}"/>
             </xpath>
-            <group name="event" position="after">
+            <group name="utm_link" position="before">
                 <group string="Origin" groups="base.group_no_one">
                     <field name="sale_order_id"/>
-                    <field name="origin" attrs="{'invisible': [('sale_order_id', '!=', False)]}"/>
                     <field name="sale_order_line_id" readonly="1" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>
-                </group>
-                <group string="Marketing" name="utm_link" groups="base.group_no_one">
-                    <field name="campaign_id"/>
-                    <field name="medium_id"/>
-                    <field name="source_id"/>
                 </group>
             </group>
         </field>

@@ -21,25 +21,10 @@ except ImportError:
 
 class EventType(models.Model):
     _name = 'event.type'
-    _description = 'Event Category'
+    _description = 'Event Template'
     _order = 'sequence, id'
 
-    @api.model
-    def _get_default_event_type_mail_ids(self):
-        return [(0, 0, {
-            'notification_type': 'mail',
-            'interval_unit': 'now',
-            'interval_type': 'after_sub',
-            'template_id': self.env.ref('event.event_subscription').id,
-        }), (0, 0, {
-            'notification_type': 'mail',
-            'interval_nbr': 10,
-            'interval_unit': 'days',
-            'interval_type': 'before_event',
-            'template_id': self.env.ref('event.event_reminder').id,
-        })]
-
-    name = fields.Char('Event Category', required=True, translate=True)
+    name = fields.Char('Event Template', required=True, translate=True)
     sequence = fields.Integer()
     # tickets
     use_ticket = fields.Boolean('Ticketing')
@@ -47,21 +32,18 @@ class EventType(models.Model):
         'event.type.ticket', 'event_type_id',
         string='Tickets', compute='_compute_event_type_ticket_ids',
         readonly=False, store=True)
+    tag_ids = fields.Many2many('event.tag', string="Tags", copy=True)
     # registration
     has_seats_limitation = fields.Boolean('Limited Seats')
-    default_registration_min = fields.Integer(
-        'Minimum Registrations', default=0,
-        help="It will select this default minimum value when you choose this event")
-    default_registration_max = fields.Integer(
-        'Maximum Registrations', default=0,
+    seats_max = fields.Integer(
+        'Maximum Registrations', compute='_compute_default_registration',
+        readonly=False, store=True,
         help="It will select this default maximum value when you choose this event")
     auto_confirm = fields.Boolean(
         'Automatically Confirm Registrations', default=True,
         help="Events and registrations will automatically be confirmed "
              "upon creation, easing the flow for simple events.")
     # location
-    is_online = fields.Boolean(
-        'Online Event', help='Online events like webinars do not require a specific location and are hosted online.')
     use_timezone = fields.Boolean('Use Default Timezone')
     default_timezone = fields.Selection(
         _tz_get, string='Timezone', default=lambda self: self.env.user.tz or 'UTC')
@@ -69,9 +51,28 @@ class EventType(models.Model):
     use_mail_schedule = fields.Boolean(
         'Automatically Send Emails', default=True)
     event_type_mail_ids = fields.One2many(
-        'event.type.mail', 'event_type_id', string='Mail Schedule',
-        copy=False,
-        default=lambda self: self._get_default_event_type_mail_ids())
+        'event.type.mail', 'event_type_id',
+        string='Mail Schedule', compute='_compute_event_type_mail_ids',
+        readonly=False, store=True)
+
+    @api.depends('use_mail_schedule')
+    def _compute_event_type_mail_ids(self):
+        for template in self:
+            if not template.use_mail_schedule:
+                template.event_type_mail_ids = [(5, 0)]
+            elif not template.event_type_mail_ids:
+                template.event_type_mail_ids = [(0, 0, {
+                    'notification_type': 'mail',
+                    'interval_unit': 'now',
+                    'interval_type': 'after_sub',
+                    'template_id': self.env.ref('event.event_subscription').id,
+                }), (0, 0, {
+                    'notification_type': 'mail',
+                    'interval_nbr': 10,
+                    'interval_unit': 'days',
+                    'interval_type': 'before_event',
+                    'template_id': self.env.ref('event.event_reminder').id,
+                })]
 
     @api.depends('use_ticket')
     def _compute_event_type_ticket_ids(self):
@@ -83,11 +84,11 @@ class EventType(models.Model):
                     'name': _('Registration'),
                 })]
 
-    @api.onchange('has_seats_limitation')
-    def _onchange_has_seats_limitation(self):
-        if not self.has_seats_limitation:
-            self.default_registration_min = 0
-            self.default_registration_max = 0
+    @api.depends('has_seats_limitation')
+    def _compute_default_registration(self):
+        for template in self:
+            if not template.has_seats_limitation:
+                template.seats_max = 0
 
 
 class EventEvent(models.Model):
@@ -103,7 +104,7 @@ class EventEvent(models.Model):
 
     name = fields.Char(string='Event', translate=True, required=True)
     note = fields.Text(string='Note')
-    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False)
+    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True,
@@ -116,12 +117,19 @@ class EventEvent(models.Model):
         'res.partner', string='Organizer', tracking=True,
         default=lambda self: self.env.company.partner_id,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    event_type_id = fields.Many2one('event.type', string='Category', ondelete='set null')
+    event_type_id = fields.Many2one('event.type', string='Template', ondelete='set null')
     color = fields.Integer('Kanban Color Index')
-    event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', copy=True)
+    event_mail_ids = fields.One2many(
+        'event.mail', 'event_id', string='Mail Schedule', copy=True,
+        compute='_compute_from_event_type', readonly=False, store=True)
+    tag_ids = fields.Many2many(
+        'event.tag', string="Tags", readonly=False,
+        copy=True, store=True, compute="_compute_from_event_type")
     # Kanban fields
-    kanban_state = fields.Selection([('normal', 'In Progress'), ('done', 'Done'), ('blocked', 'Blocked')])
-    kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True, store=True)
+    kanban_state = fields.Selection([('normal', 'In Progress'), ('done', 'Done'), ('blocked', 'Blocked')], default='normal')
+    kanban_state_label = fields.Char(
+        string='Kanban State Label', compute='_compute_kanban_state_label',
+        store=True, tracking=True)
     stage_id = fields.Many2one(
         'event.stage', ondelete='restrict', default=_get_default_stage_id,
         group_expand='_read_group_stage_ids', tracking=True)
@@ -131,13 +139,10 @@ class EventEvent(models.Model):
     # Seats and computation
     seats_max = fields.Integer(
         string='Maximum Attendees Number',
+        compute='_compute_from_event_type', readonly=False, store=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
-    seats_availability = fields.Selection(
-        [('unlimited', 'Unlimited'), ('limited', 'Limited')],
-        'Maximum Attendees', required=True, default='unlimited')
-    seats_min = fields.Integer(
-        string='Minimum Attendees',
-        help="For each event you can define a minimum reserved seats (number of attendees), if it does not reach the mentioned registrations the event can not be confirmed (keep 0 to ignore this rule)")
+    seats_limited = fields.Boolean('Maximum Attendees', required=True, compute='_compute_seats_limited',
+                                   readonly=False, store=True)
     seats_reserved = fields.Integer(
         string='Reserved Seats',
         store=True, readonly=True, compute='_compute_seats')
@@ -154,72 +159,45 @@ class EventEvent(models.Model):
         string='Number of Expected Attendees',
         compute_sudo=True, readonly=True, compute='_compute_seats')
     # Registration fields
-    auto_confirm = fields.Boolean(string='Autoconfirm Registrations')
+    auto_confirm = fields.Boolean(
+        string='Autoconfirmation', compute='_compute_from_event_type', readonly=False, store=True,
+        help='Autoconfirm Registrations. Registrations will automatically be confirmed upon creation.')
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
-    event_registrations_open = fields.Boolean('Registration open', compute='_compute_event_registrations_open')
     event_ticket_ids = fields.One2many(
-        'event.event.ticket', 'event_id', string='Event Ticket',
-        copy=True)
+        'event.event.ticket', 'event_id', string='Event Ticket', copy=True,
+        compute='_compute_from_event_type', readonly=False, store=True)
+    event_registrations_open = fields.Boolean(
+        'Registration open', compute='_compute_event_registrations_open', compute_sudo=True,
+        help='Registrations are open if event is not ended, seats are available on event and if tickets are sellable if ticketing is used.')
+    event_registrations_sold_out = fields.Boolean(
+        'Sold Out', compute='_compute_event_registrations_sold_out', compute_sudo=True,
+        help='Event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out event is sold out.')
+    start_sale_date = fields.Date(
+        'Start sale date', compute='_compute_start_sale_date',
+        help='If ticketing is used, this is the lowest starting sale date of tickets.')
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
-        default=lambda self: self.env.user.tz or 'UTC')
+        compute='_compute_date_tz', readonly=False, store=True)
     date_begin = fields.Datetime(string='Start Date', required=True, tracking=True)
     date_end = fields.Datetime(string='End Date', required=True, tracking=True)
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
-    start_sale_date = fields.Date('Start sale date', compute='_compute_start_sale_date')
     # Location and communication
-    is_online = fields.Boolean('Online Event')
     address_id = fields.Many2one(
-        'res.partner', string='Venue', tracking=True,
-        default=lambda self: self.env.company.partner_id,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True, readonly=False)
+        'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
+        tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    country_id = fields.Many2one(
+        'res.country', 'Country', related='address_id.country_id',
+        copy=True, readonly=False, store=True)
     # badge fields
     badge_front = fields.Html(string='Badge Front')
     badge_back = fields.Html(string='Badge Back')
     badge_innerleft = fields.Html(string='Badge Inner Left')
     badge_innerright = fields.Html(string='Badge Inner Right')
     event_logo = fields.Html(string='Event Logo')
-
-    @api.depends('seats_max', 'registration_ids.state')
-    def _compute_seats(self):
-        """ Determine reserved, available, reserved but unconfirmed and used seats. """
-        # initialize fields to 0
-        for event in self:
-            event.seats_unconfirmed = event.seats_reserved = event.seats_used = event.seats_available = 0
-        # aggregate registrations by event and by state
-        if self.ids:
-            state_field = {
-                'draft': 'seats_unconfirmed',
-                'open': 'seats_reserved',
-                'done': 'seats_used',
-            }
-            query = """ SELECT event_id, state, count(event_id)
-                        FROM event_registration
-                        WHERE event_id IN %s AND state IN ('draft', 'open', 'done')
-                        GROUP BY event_id, state
-                    """
-            self.env['event.registration'].flush(['event_id', 'state'])
-            self._cr.execute(query, (tuple(self.ids),))
-            for event_id, state, num in self._cr.fetchall():
-                event = self.browse(event_id)
-                event[state_field[state]] += num
-        # compute seats_available
-        for event in self:
-            if event.seats_max > 0:
-                event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
-            event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
-
-    @api.depends('date_end', 'seats_available', 'seats_availability', 'event_ticket_ids.sale_available')
-    def _compute_event_registrations_open(self):
-        for event in self:
-            event.event_registrations_open = event.date_end and (event.date_end > fields.Datetime.now()) and \
-                (event.seats_available or event.seats_availability == 'unlimited') and \
-                (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
@@ -230,6 +208,79 @@ class EventEvent(models.Model):
                 event.kanban_state_label = event.stage_id.legend_blocked
             else:
                 event.kanban_state_label = event.stage_id.legend_done
+
+    @api.depends('seats_max', 'registration_ids.state')
+    def _compute_seats(self):
+        """ Determine reserved, available, reserved but unconfirmed and used seats. """
+        # initialize fields to 0
+        for event in self:
+            event.seats_unconfirmed = event.seats_reserved = event.seats_used = event.seats_available = 0
+        # aggregate registrations by event and by state
+        state_field = {
+            'draft': 'seats_unconfirmed',
+            'open': 'seats_reserved',
+            'done': 'seats_used',
+        }
+        base_vals = dict((fname, 0) for fname in state_field.values())
+        results = dict((event_id, dict(base_vals)) for event_id in self.ids)
+        if self.ids:
+            query = """ SELECT event_id, state, count(event_id)
+                        FROM event_registration
+                        WHERE event_id IN %s AND state IN ('draft', 'open', 'done')
+                        GROUP BY event_id, state
+                    """
+            self.env['event.registration'].flush(['event_id', 'state'])
+            self._cr.execute(query, (tuple(self.ids),))
+            res = self._cr.fetchall()
+            for event_id, state, num in res:
+                results[event_id][state_field[state]] += num
+
+        # compute seats_available
+        for event in self:
+            event.update(results.get(event._origin.id or event.id, base_vals))
+            if event.seats_max > 0:
+                event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
+            seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
+            event.seats_expected = seats_expected
+
+    @api.depends('date_tz', 'start_sale_date', 'date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available')
+    def _compute_event_registrations_open(self):
+        """ Compute whether people may take registrations for this event
+
+          * event.date_end -> if event is done, registrations are not open anymore;
+          * event.start_sale_date -> lowest start date of tickets (if any; start_sale_date
+            is False if no ticket are defined, see _compute_start_sale_date);
+          * any ticket is available for sale (seats available) if any;
+          * seats are unlimited or seats are available;
+        """
+        for event in self:
+            event = event._set_tz_context()
+            current_datetime = fields.Datetime.context_timestamp(event, fields.Datetime.now())
+            date_end_tz = event.date_end.astimezone(pytz.timezone(event.date_tz or 'UTC')) if event.date_end else False
+            event.event_registrations_open = (event.start_sale_date <= current_datetime.date() if event.start_sale_date else True) and \
+                (date_end_tz >= current_datetime if date_end_tz else True) and \
+                (not event.seats_limited or event.seats_available) and \
+                (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
+
+    @api.depends('event_ticket_ids.start_sale_date')
+    def _compute_start_sale_date(self):
+        """ Compute the start sale date of an event. Currently lowest starting sale
+        date of tickets if they are used, of False. """
+        for event in self:
+            start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date]
+            event.start_sale_date = min(start_dates) if start_dates else False
+
+    @api.depends('event_ticket_ids.sale_available')
+    def _compute_event_registrations_sold_out(self):
+        for event in self:
+            if event.seats_limited and not event.seats_available:
+                event.event_registrations_sold_out = True
+            elif event.event_ticket_ids:
+                event.event_registrations_sold_out = not any(
+                    ticket.seats_available > 0 if ticket.seats_limited else True for ticket in event.event_ticket_ids
+                )
+            else:
+                event.event_registrations_sold_out = False
 
     @api.depends('date_tz', 'date_begin')
     def _compute_date_begin_tz(self):
@@ -273,66 +324,83 @@ class EventEvent(models.Model):
         for event in self:
             # Need to localize because it could begin late and finish early in
             # another timezone
-            event = event.with_context(tz=event.date_tz)
+            event = event._set_tz_context()
             begin_tz = fields.Datetime.context_timestamp(event, event.date_begin)
             end_tz = fields.Datetime.context_timestamp(event, event.date_end)
             event.is_one_day = (begin_tz.date() == end_tz.date())
 
-    @api.depends('event_ticket_ids.start_sale_date')
-    def _compute_start_sale_date(self):
+    @api.depends('event_type_id')
+    def _compute_date_tz(self):
         for event in self:
-            start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date]
-            event.start_sale_date = min(start_dates) if start_dates else False
+            if event.event_type_id.use_timezone:
+                event.date_tz = event.event_type_id.default_timezone
+            if not event.date_tz:
+                event.date_tz = self.env.user.tz or 'UTC'
 
-    @api.onchange('is_online')
-    def _onchange_is_online(self):
-        if self.is_online:
-            self.address_id = False
+    @api.depends('event_type_id')
+    def _compute_seats_limited(self):
+        """ Make it separate from ``_compute_from_event_type`` because otherwise
+        a value given at create (see create override) would protect all other fields
+        depending on event type id from being computed as compute method will be
+        blacklisted during create (see ``registry.field_computed`` attribute used in create
+        to compute protected field from re-computation) """
+        for event in self:
+            if event.event_type_id.seats_max:
+                event.seats_limited = True
+            if not event.seats_limited:
+                event.seats_limited = False
 
-    @api.onchange('event_type_id')
-    def _onchange_type(self):
-        if self.event_type_id:
-            self.seats_min = self.event_type_id.default_registration_min
-            self.seats_max = self.event_type_id.default_registration_max
-            if self.event_type_id.default_registration_max:
-                self.seats_availability = 'limited'
+    @api.depends('event_type_id')
+    def _compute_from_event_type(self):
+        """ Update event configuration from its event type. Depends are set only
+        on event_type_id itself, not its sub fields. Indeed purpose is to emulate
+        an onchange: if event type is changed, update event configuration. Changing
+        event type content itself should not trigger this method.
 
-            if self.event_type_id.auto_confirm:
-                self.auto_confirm = self.event_type_id.auto_confirm
+        Updated by this method
+          * seats_max -> triggers _compute_seats (all seats computation)
+          * auto_confirm
+          * event_mail_ids
+          * event_ticket_ids -> triggers _compute_start_sale_date (start_sale_date computation)
+        """
+        for event in self:
+            if not event.event_type_id:
+                if not event.seats_max:
+                    event.seats_max = 0
+                if not event.event_ticket_ids:
+                    event.event_ticket_ids = False
+                continue
 
-            if self.event_type_id.use_timezone:
-                self.date_tz = self.event_type_id.default_timezone
+            if event.event_type_id.seats_max:
+                event.seats_max = event.event_type_id.seats_max
 
-            self.is_online = self.event_type_id.is_online
+            if event.event_type_id.auto_confirm:
+                event.auto_confirm = event.event_type_id.auto_confirm
 
-            if self.event_type_id.use_mail_schedule and self.event_type_id.event_type_mail_ids:
-                self.event_mail_ids = [(5, 0, 0)] + [
+            # compute mailing information (force only if activated and mailing defined)
+            if event.event_type_id.use_mail_schedule and event.event_type_id.event_type_mail_ids:
+                event.event_mail_ids = [(5, 0, 0)] + [
                     (0, 0, {
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
                         for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
                         })
-                    for line in self.event_type_id.event_type_mail_ids]
+                    for line in event.event_type_id.event_type_mail_ids]
 
-            # compute tickets information
-            if self.event_type_id.use_ticket:
-                all_ticket_values = []
-                for ticket in self.event_type_id.event_type_ticket_ids:
-                    ticket_vals = dict(
-                        (attribute_name, ticket[attribute_name] if not isinstance(ticket[attribute_name], models.BaseModel) else ticket[attribute_name].id)
+            # compute tickets information (force only if activated and tickets defined)
+            if event.event_type_id.use_ticket and event.event_type_id.event_type_ticket_ids:
+                event.event_ticket_ids = [(5, 0, 0)] + [
+                    (0, 0, {
+                        attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
                         for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
-                    )
-                    all_ticket_values.append(ticket_vals)
+                        })
+                    for line in event.event_type_id.event_type_ticket_ids]
 
-                self.event_ticket_ids = [(5, 0, 0)] + [(0, 0, item) for item in all_ticket_values]
+            if event.event_type_id.tag_ids:
+                event.tag_ids = event.event_type_id.tag_ids
 
-    @api.constrains('seats_min', 'seats_max', 'seats_availability')
-    def _check_seats_min_max(self):
-        if any(event.seats_availability == 'limited' and event.seats_min > event.seats_max for event in self):
-            raise ValidationError(_('Maximum attendees number should be greater than minimum attendees number.'))
-
-    @api.constrains('seats_max', 'seats_available')
+    @api.constrains('seats_max', 'seats_available', 'seats_limited')
     def _check_seats_limit(self):
-        if any(event.seats_availability == 'limited' and event.seats_max and event.seats_available < 0 for event in self):
+        if any(event.seats_limited and event.seats_max and event.seats_available < 0 for event in self):
             raise ValidationError(_('No more available seats.'))
 
     @api.constrains('date_begin', 'date_end')
@@ -358,6 +426,9 @@ class EventEvent(models.Model):
 
     @api.model
     def create(self, vals):
+        # Temporary fix for ``seats_limited`` and ``date_tz`` required fields (see ``_compute_from_event_type``
+        vals.update(self._sync_required_computed(vals))
+
         res = super(EventEvent, self).create(vals)
         if res.organizer_id:
             res.message_subscribe([res.organizer_id.id])
@@ -374,6 +445,22 @@ class EventEvent(models.Model):
         self.ensure_one()
         default = dict(default or {}, name=_("%s (copy)") % (self.name))
         return super(EventEvent, self).copy(default)
+
+    def _sync_required_computed(self, values):
+        # TODO: See if the change to seats_limited affects this ?
+        """ Call compute fields in cache to find missing values for required fields
+        (seats_limited and date_tz) in case they are not given in values """
+        missing_fields = list(set(['seats_limited', 'date_tz']).difference(set(values.keys())))
+        if missing_fields and values:
+            cache_event = self.new(values)
+            cache_event._compute_from_event_type()
+            return dict((fname, cache_event[fname]) for fname in missing_fields)
+        else:
+            return {}
+
+    def _set_tz_context(self):
+        self.ensure_one()
+        return self.with_context(tz=self.date_tz or 'UTC')
 
     def action_set_done(self):
         """

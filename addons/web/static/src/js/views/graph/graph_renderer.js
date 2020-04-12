@@ -68,6 +68,7 @@ return AbstractRenderer.extend({
         this.isEmbedded = params.isEmbedded || false;
         this.title = params.title || '';
         this.fields = params.fields || {};
+        this.disableLinking = params.disableLinking;
 
         this.chart = null;
         this.chartId = _.uniqueId('chart');
@@ -134,6 +135,7 @@ return AbstractRenderer.extend({
      * @param {Object} tooltipModel see chartjs documentation
      */
     _customTooltip: function (tooltipModel) {
+        this.$el.css({ cursor: 'default' });
         if (this.$tooltip) {
             this.$tooltip.remove();
         }
@@ -142,6 +144,10 @@ return AbstractRenderer.extend({
         }
         if (tooltipModel.dataPoints.length === 0) {
             return;
+        }
+
+        if (this._isRedirectionEnabled()) {
+            this.$el.css({ cursor: 'pointer' });
         }
 
         const chartArea = this.chart.chartArea;
@@ -462,9 +468,9 @@ return AbstractRenderer.extend({
                 xAxes: [{
                     type: 'category',
                     scaleLabel: {
-                        display: this.state.groupBy.length && !this.isEmbedded,
-                        labelString: this.state.groupBy.length ?
-                            this.fields[this.state.groupBy[0].split(':')[0]].string : '',
+                        display: this.state.processedGroupBy.length && !this.isEmbedded,
+                        labelString: this.state.processedGroupBy.length ?
+                            this.fields[this.state.processedGroupBy[0].split(':')[0]].string : '',
                     },
                     ticks: {
                         // don't use bind:  callback is called with 'index' as second parameter
@@ -506,14 +512,14 @@ return AbstractRenderer.extend({
         var boxColor;
         if (this.state.mode === 'bar') {
             label = this._relabelling(label, dataset.originIndex);
-            if (this.state.groupBy.length > 1 || this.state.origins.length > 1) {
+            if (this.state.processedGroupBy.length > 1 || this.state.origins.length > 1) {
                 label = label + "/" + dataset.label;
             }
             value = this._formatValue(item.yLabel);
             boxColor = dataset.backgroundColor;
         } else if (this.state.mode === 'line') {
             label = this._relabelling(label, dataset.originIndex);
-            if (this.state.groupBy.length > 1 || this.state.origins.length > 1) {
+            if (this.state.processedGroupBy.length > 1 || this.state.origins.length > 1) {
                 label = label + "/" + dataset.label;
             }
             value = this._formatValue(item.yLabel);
@@ -579,6 +585,17 @@ return AbstractRenderer.extend({
         return tooltipOptions;
     },
     /**
+     * Returns true iff the current graph can be clicked on to redirect to the
+     * list of records.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isRedirectionEnabled: function () {
+        return !this.disableLinking &&
+               (this.state.mode === 'bar' || this.state.mode === 'pie');
+    },
+    /**
      * Return the first index of the array list where label can be found
      * or -1.
      *
@@ -622,12 +639,18 @@ return AbstractRenderer.extend({
     _prepareData: function (dataPoints) {
         var self = this;
 
+        var labelMap = {};
         var labels = dataPoints.reduce(
             function (acc, dataPt) {
                 var label = self._getLabel(dataPt);
-                var index = self._indexOf(acc, label);
-                if (index === -1) {
+                var labelKey = dataPt.resId + ':' + JSON.stringify(label);
+                var index = labelMap[labelKey];
+                if (index === undefined) {
+                    labelMap[labelKey] = dataPt.labelIndex = acc.length;
                     acc.push(label);
+                }
+                else{
+                    dataPt.labelIndex = index;
                 }
                 return acc;
             },
@@ -636,9 +659,11 @@ return AbstractRenderer.extend({
 
         var newDataset = function (datasetLabel, originIndex) {
             var data = new Array(self._getDatasetDataLength(originIndex, labels.length)).fill(0);
+            const domain = new Array(self._getDatasetDataLength(originIndex, labels.length)).fill([]);
             return {
                 label: datasetLabel,
                 data: data,
+                domain: domain,
                 originIndex: originIndex,
             };
         };
@@ -650,9 +675,9 @@ return AbstractRenderer.extend({
                 if (!(datasetLabel in acc)) {
                     acc[datasetLabel] = newDataset(datasetLabel, dataPt.originIndex);
                 }
-                var label = self._getLabel(dataPt);
-                var labelIndex = self._indexOf(labels, label);
+                var labelIndex = dataPt.labelIndex;
                 acc[datasetLabel].data[labelIndex] = dataPt.value;
+                acc[datasetLabel].domain[labelIndex] = dataPt.domain;
                 return acc;
             },
             {}
@@ -677,13 +702,17 @@ return AbstractRenderer.extend({
      * @returns {Object} the chart options used for the current mode
      */
     _prepareOptions: function (datasetsCount) {
-        return {
+        const options = {
             maintainAspectRatio: false,
             scales: this._getScaleOptions(),
             legend: this._getLegendOptions(datasetsCount),
             tooltips: this._getTooltipOptions(),
             elements: this._getElementOptions(),
         };
+        if (this._isRedirectionEnabled()) {
+            options.onClick = this._onGraphClicked.bind(this);
+        }
+        return options;
     },
     /**
      * Determine how to relabel a label according to a given origin.
@@ -811,7 +840,7 @@ return AbstractRenderer.extend({
         // prepare data
         var data = this._prepareData(dataPoints);
         data.datasets.forEach(function (dataset, index) {
-            if (self.state.groupBy.length <= 1 && self.state.origins.length > 1) {
+            if (self.state.processedGroupBy.length <= 1 && self.state.origins.length > 1) {
                 if (dataset.originIndex === 0) {
                     dataset.fill = 'origin';
                     dataset.backgroundColor = hexToRGBA(COLORS[0], 0.4);
@@ -982,6 +1011,23 @@ return AbstractRenderer.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onGraphClicked: function (ev) {
+        const activeElement = this.chart.getElementAtEvent(ev);
+        if (activeElement.length === 0) {
+            return;
+        }
+        const domain = this.chart.data.datasets[activeElement[0]._datasetIndex].domain;
+        if (!domain) {
+            return; // empty dataset
+        }
+        this.trigger_up('open_view', {
+            domain: domain[activeElement[0]._index],
+        });
+    },
     /**
      * If the text of a legend item has been shortened and the user mouse over
      * that item (actually the event type is mousemove), a tooltip with the item

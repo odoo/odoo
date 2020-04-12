@@ -9,6 +9,7 @@ from odoo.exceptions import AccessDenied, AccessError
 
 class CrmLead(models.Model):
     _inherit = "crm.lead"
+
     partner_latitude = fields.Float('Geo Latitude', digits=(16, 5))
     partner_longitude = fields.Float('Geo Longitude', digits=(16, 5))
     partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Partner this case has been forwarded/assigned to.", index=True)
@@ -18,22 +19,22 @@ class CrmLead(models.Model):
         'lead_id',
         'partner_id',
         string='Partner not interested')
-    date_assign = fields.Date('Partner Assignation Date', help="Last date this case was forwarded/assigned to a partner")
+    date_partner_assign = fields.Date(
+        'Partner Assignment Date', compute='_compute_date_partner_assign',
+        copy=True, readonly=False, store=True,
+        help="Last date this case was forwarded/assigned to a partner")
 
     def _merge_data(self, fields):
         fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_assign']
         return super(CrmLead, self)._merge_data(fields)
 
     @api.onchange("partner_assigned_id")
-    def onchange_assign_id(self):
-        """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab
-        """
-        partner_assigned = self.partner_assigned_id
-        if not partner_assigned:
-            self.date_assign = False
-        else:
-            self.date_assign = fields.Date.context_today(self)
-            self.user_id = partner_assigned.user_id
+    def _compute_date_partner_assign(self):
+        for lead in self:
+            if not lead.partner_assigned_id:
+                lead.date_partner_assign = False
+            else:
+                lead.date_assign = fields.Date.context_today(lead)
 
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
@@ -64,9 +65,8 @@ class CrmLead(models.Model):
             lead.assign_geo_localize(lead.partner_latitude, lead.partner_longitude)
             partner = self.env['res.partner'].browse(partner_id)
             if partner.user_id:
-                lead.allocate_salesman(partner.user_id.ids, team_id=partner.team_id.id)
-            values = {'date_assign': fields.Date.context_today(lead), 'partner_assigned_id': partner_id}
-            lead.write(values)
+                lead.handle_salesmen_assignment(partner.user_id.ids, team_id=partner.team_id.id)
+            lead.write({'partner_assigned_id': partner_id})
         return res
 
     def assign_geo_localize(self, latitude=False, longitude=False):

@@ -2,10 +2,13 @@ odoo.define('web.CalendarPopover', function (require) {
 "use strict";
 
 var fieldRegistry = require('web.field_registry');
+const fieldRegistryOwl = require('web.field_registry_owl');
+const FieldWrapper = require('web.FieldWrapper');
 var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var Widget = require('web.Widget');
+const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 
-var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
+var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMixin, {
     template: 'CalendarView.event.popover',
     events: {
         'click .o_cw_popover_edit': '_onClickPopoverEdit',
@@ -27,7 +30,7 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
         this.fields = eventInfo.fields;
         this.event = eventInfo.event;
         this.modelName = eventInfo.modelName;
-        this.canDelete = eventInfo.canDelete;
+        this._canDelete = eventInfo.canDelete;
     },
     /**
      * @override
@@ -45,6 +48,48 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
         });
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        WidgetAdapterMixin.destroy.call(this);
+    },
+    /**
+     * Called each time the widget is attached into the DOM.
+     */
+    on_attach_callback: function () {
+        WidgetAdapterMixin.on_attach_callback.call(this);
+    },
+    /**
+     * Called each time the widget is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        WidgetAdapterMixin.on_detach_callback.call(this);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @return {boolean}
+     */
+    isEventDeletable() {
+        return this._canDelete;;
+    },
+    /**
+     * @return {boolean}
+     */
+    isEventDetailsVisible() {
+        return true;
+    },
+    /**
+     * @return {boolean}
+     */
+    isEventEditable() {
+        return true;
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -59,16 +104,25 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
     _processFields: function () {
         var self = this;
         var fieldsToGenerate = [];
-        _.each(this.displayFields, function (displayFieldInfo, fieldName) {
+        var fields = _.keys(this.displayFields);
+        for (var i=0; i<fields.length; i++) {
+            var fieldName = fields[i];
+            var displayFieldInfo = self.displayFields[fieldName] || {attrs: {invisible: 1}};
             var fieldInfo = self.fields[fieldName];
             var field = {
                 name: fieldName,
                 string: displayFieldInfo.attrs.string || fieldInfo.string,
-                value: self.event.record[fieldName],
+                value: self.event.extendedProps.record[fieldName],
                 type: fieldInfo.type,
             };
             if (field.type === 'selection') {
                 field.selection = fieldInfo.selection;
+            }
+            if (field.type === 'monetary') {
+                var currencyField = field.currency_field || 'currency_id';
+                if (!fields.includes(currencyField) && _.has(self.event.record, currencyField)) {
+                    fields.push(currencyField);
+                }
             }
             if (fieldInfo.relation) {
                 field.relation = fieldInfo.relation;
@@ -88,7 +142,7 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
                 }];
             }
             fieldsToGenerate.push(field);
-        });
+        };
 
         this.$fieldsList = [];
         return this.model.makeRecord(this.modelName, fieldsToGenerate).then(function (recordID) {
@@ -96,8 +150,21 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
 
             var record = self.model.get(recordID);
             _.each(fieldsToGenerate, function (field) {
-                var FieldClass = fieldRegistry.getAny([field.widget, field.type]);
-                var fieldWidget = new FieldClass(self, field.name, record, self.displayFields[field.name]);
+                if (field.invisible) return;
+                let isLegacy = true;
+                let fieldWidget;
+                let FieldClass = fieldRegistryOwl.getAny([field.widget, field.type]);
+                if (FieldClass) {
+                    isLegacy = false;
+                    fieldWidget = new FieldWrapper(this, FieldClass, {
+                        fieldName: field.name,
+                        record,
+                        options: self.displayFields[field.name],
+                    });
+                } else {
+                    FieldClass = fieldRegistry.getAny([field.widget, field.type]);
+                    fieldWidget = new FieldClass(self, field.name, record, self.displayFields[field.name]);
+                }
                 self._registerWidget(recordID, field.name, fieldWidget);
 
                 var $field = $('<li>', {class: 'list-group-item flex-shrink-0 d-flex flex-wrap'});
@@ -106,7 +173,13 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
                 var $fieldContainer = $('<div>', {class: 'flex-grow-1'});
                 $fieldContainer.appendTo($field);
 
-                defs.push(fieldWidget.appendTo($fieldContainer).then(function () {
+                let def;
+                if (isLegacy) {
+                    def = fieldWidget.appendTo($fieldContainer);
+                } else {
+                    def = fieldWidget.mount($fieldContainer[0]);
+                }
+                defs.push(def.then(function () {
                     self.$fieldsList.push($field);
                 }));
             });
@@ -126,7 +199,7 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
         ev.preventDefault();
         this.trigger_up('edit_event', {
             id: this.event.id,
-            title: this.event.record.display_name,
+            title: this.event.extendedProps.record.display_name,
         });
     },
     /**

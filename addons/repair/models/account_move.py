@@ -8,6 +8,10 @@ class AccountMove(models.Model):
 
     repair_ids = fields.One2many('repair.order', 'invoice_id', readonly=True, copy=False)
 
+    def unlink(self):
+        self.repair_ids.filtered(lambda repair: repair.state != 'cancel').state = '2binvoiced'
+        return super().unlink()
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

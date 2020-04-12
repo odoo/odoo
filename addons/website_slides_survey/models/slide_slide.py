@@ -38,7 +38,9 @@ class SlidePartnerRelation(models.Model):
 class Slide(models.Model):
     _inherit = 'slide.slide'
 
-    slide_type = fields.Selection(selection_add=[('certification', 'Certification')])
+    slide_type = fields.Selection(selection_add=[
+        ('certification', 'Certification')
+    ], ondelete={'certification': 'set default'})
     survey_id = fields.Many2one('survey.survey', 'Certification')
     nbr_certification = fields.Integer("Number of Certifications", compute='_compute_slides_statistics', store=True)
 

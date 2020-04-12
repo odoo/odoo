@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+    <!-- Res Partner that will be used as locations for events -->
+    <record id="res_partner_location_0" model="res.partner">
+        <field name="name">Reno Airfield</field>
+        <field name="is_company">1</field>
+        <field name="street">1235 Columbia Hill Rd</field>
+        <field name="city">Reno</field>
+        <field name="state_id" ref='base.state_us_23'/>
+        <field name="zip">89508</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+
+    <record id="res_partner_location_1" model="res.partner">
+        <field name="name">Wembley Stadium</field>
+        <field name="is_company">1</field>
+        <field name="street">Wembley HA9 0WS</field>
+        <field name="city">London</field>
+        <field name="state_id" ref='base.state_uk117'/>
+        <field name="country_id" ref="base.uk"/>
+    </record>
+
+    <record id="res_partner_location_2" model="res.partner">
+        <field name="name">Los Angeles Convention Center</field>
+        <field name="is_company">1</field>
+        <field name="street">1201 S Figueroa St</field>
+        <field name="city">Los Angeles</field>
+        <field name="state_id" ref='base.state_us_5'/>
+        <field name="zip">90015</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+
+    </data>
+</odoo>

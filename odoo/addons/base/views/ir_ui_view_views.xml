@@ -12,7 +12,7 @@
                             <field name="type"/>
                             <field name="model"/>
                             <field name="priority"/>
-                            <field name="active"/>
+                            <field name="active" widget="boolean_toggle"/>
                         </group>
                         <group groups="base.group_no_one">
                             <field name="field_parent"/>
@@ -22,6 +22,10 @@
                             <field name="xml_id"/>
                         </group>
                     </group>
+                    <div class="oe_edit_only alert alert-info" role="alert">
+                        Be aware that editing the architecture of a standard view is not advised, since the changes will be overwritten during future module updates.<br/>
+                        We recommend applying modifications to standard views through inherited views or customization with Odoo Studio.
+                    </div>
                     <notebook>
                         <page string="Architecture" name="architecture">
                             <button type="object" name="open_translations"
@@ -80,7 +84,7 @@
                     <filter string="Active" name="active" domain="[('active', '=',True)]"/>
                     <filter string="Inactive" name="inactive" domain="[('active', '=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Object" name="object" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Model" name="object" domain="[]" context="{'group_by':'model'}"/>
                         <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Inherit" name="inherit" domain="[]" context="{'group_by':'inherit_id'}"/>
                     </group>
@@ -106,18 +110,24 @@
             <field name="arch" type="xml">
                 <form string="Reset View Architecture">
                     <group>
-                        <field name="view_id" invisible="1"/>
-                        <field name="view_name"/>
-                        <field name="reset_mode" widget="radio"/>
+                        <group>
+                            <field name="has_diff" invisible="1"/>
+                            <field name="view_id" invisible="1"/>
+                            <field name="view_name"/>
+                            <field name="compare_view_id" attrs="{'invisible': [('reset_mode', '!=', 'other_view')]}" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="reset_mode" widget="radio"/>
+                        </group>
                     </group>
                     <field name="arch_diff" attrs="{'invisible': [('arch_diff', '=', False)]}"/>
-                    <div class="text-warning mb4 mt16" attrs="{'invisible': [('arch_diff', '!=', False)]}">
-                        <span attrs="{'invisible': [('reset_mode', '=', 'hard')]}">This view has no previous version.</span>
-                        <span attrs="{'invisible': [('reset_mode', '=', 'soft')]}">This view is not coming from a file.</span>
+                    <div class="alert alert-warning my-2" role="alert" attrs="{'invisible': [('arch_diff', '!=', False)]}">
+                        <span attrs="{'invisible': [('reset_mode', '!=', 'soft')]}">This view has no previous version.</span>
+                        <span attrs="{'invisible': [('reset_mode', '!=', 'hard')]}">This view is not coming from a file.</span>
+                        <span attrs="{'invisible': [('reset_mode', '!=', 'other_view')]}">You need two views to compare.</span>
                     </div>
                     <footer>
-                        <button string="Reset View" name="reset_view_button" type="object" class="btn-primary" attrs="{'invisible': [('arch_diff', '=', False)]}"/>
-                        <button string="Reset View" name="reset_view_button" type="object" class="btn-primary" disabled="disabled" attrs="{'invisible': [('arch_diff', '!=', False)]}"/>
+                        <button string="Reset View" name="reset_view_button" type="object" class="btn-primary" attrs="{'invisible': [('has_diff', '=', False)]}"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
@@ -125,8 +135,8 @@
         </record>
 
         <act_window id="reset_view_arch_wizard_action"
-            name="Reset View Architecture"
-            binding_model="ir.ui.view" binding_views="form"
+            name="Compare/Reset"
+            binding_model="ir.ui.view" binding_views="form,list"
             res_model="reset.view.arch.wizard"
             view_mode="form"
             target="new"/>

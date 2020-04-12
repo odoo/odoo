@@ -21,7 +21,7 @@
 
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='name']" position="after">
                 <field name="product_type" invisible="1"/>
-                <field name="is_landed_costs_line" string="Landed Costs" attrs="{'readonly': [('product_type', '!=', 'service')], 'column_invisible': [('parent.type', '!=', 'in_invoice')]}" optional="show"/>
+                <field name="is_landed_costs_line" string="Landed Costs" attrs="{'readonly': [('product_type', '!=', 'service')], 'column_invisible': [('parent.move_type', '!=', 'in_invoice')]}" optional="show"/>
             </xpath>
 
             <xpath expr="//field[@name='line_ids']/tree/field[@name='name']" position="after">

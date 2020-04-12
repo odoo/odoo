@@ -87,6 +87,9 @@ class AccountAnalyticLine(models.Model):
         user_map = {employee.user_id.id: employee.id for employee in employees}
 
         for vals in vals_list:
+            # when the name is not provide by the 'Add a line', we set a default one
+            if vals.get('project_id') and not vals.get('name'):
+                vals['name'] = _('/')
             # compute employee only for timesheet lines, makes no sense for other lines
             if not vals.get('employee_id') and vals.get('project_id'):
                 vals['employee_id'] = user_map.get(vals.get('user_id') or default_user_id)
@@ -199,7 +202,7 @@ class AccountAnalyticLine(models.Model):
     def _compute_display_timer(self):
         uom_hour = self.env.ref('uom.product_uom_hour')
         for analytic_line in self:
-            analytic_line.display_timer = analytic_line.encoding_uom_id == uom_hour and analytic_line.project_id.allow_timesheet_timer
+            analytic_line.display_timer = analytic_line.encoding_uom_id == uom_hour
 
     def action_timer_start(self):
         """ Start a timer if it isn't already started and the
@@ -224,6 +227,9 @@ class AccountAnalyticLine(models.Model):
             if minutes_spent < 1:
                 amount = self.unit_amount
             else:
+                minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
+                rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
+                minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
                 amount = self.unit_amount + minutes_spent * 60 / 3600
             self.write({'unit_amount': amount})
 

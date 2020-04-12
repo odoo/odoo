@@ -3,42 +3,24 @@
 
 <t t-extend="wysiwyg.widgets.file">
     <t t-jquery=".o_we_existing_attachments" t-operation="after">
-        <div class="unsplash_img_container"></div>
+        <div class="unsplash_error"></div>
+    </t>
+</t>
+<t t-extend="wysiwyg.widgets.image.existing.attachments">
+    <t t-jquery="t[t-call]" t-operation="replace">
+        <t t-if="typeof(attachment.id) === 'number'">
+            <t t-call="wysiwyg.widgets.image.existing.attachment"/>
+        </t>
+        <t t-else="">
+            <t t-call="web_unsplash.dialog.image.content"/>
+        </t>
     </t>
 </t>
 
-<t t-name="web_unsplash.dialog.media.search_icon" t-extend="">
-    <div class="dropdown">
-        <button type="button" class="btn btn-primary dropdown-toggle o_we_search_icon" data-toggle="dropdown">
-            <i class="fa fa-search"/>
-            <span/>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right">
-            <button class="dropdown-item o_search_an_image" type="button">
-                Search among my images for:
-                <div class="font-weight-bold o_search_value_input"></div>
-            </button>
-            <button class="dropdown-item o_search_from_unsplash" type="button">
-                Search from Unsplash for:
-                <div class="font-weight-bold o_search_value_input"></div>
-            </button>
-        </div>
-    </div>
-</t>
-
 <t t-name="web_unsplash.dialog.image.content">
-    <div class="row mt16">
-        <div class="col-sm-2 o_unsplash_img_cell text-center" t-as="img" t-foreach="records">
-            <div class="o_image o_webimage text-center" t-att-data-imgid="img.id" t-att-data-url="img.urls.regular" t-att-data-download-url="img.links.download_location">
-                <img class="img-fluid" t-att-src="img.urls.thumb"/>
-            </div>
-            <div class="author_name"><a t-att-href="img.user.links.html" target="_blank"><t t-esc="img.user.name"/></a></div>
-        </div>
-    </div>
-    <div class="row mt16" t-if="records.length == 0">
-        <div class="m-auto text-muted not-found">
-            <i class="fa fa-camera mr8"/> Photos not found
-        </div>
+    <div class="o_existing_attachment_cell o_unsplash_attachment_cell position-relative align-items-center justify-content-center bg-light" t-att-data-imgid="attachment.id" t-att-data-id="attachment.id" t-att-data-url="attachment.urls.regular" t-att-data-download-url="attachment.links.download_location" t-att-data-description="attachment.alt_description">
+        <img class="img img-fluid o_we_attachment_highlight" t-att-src="attachment.url" t-att-alt="attachment.alt_description" style="max-height: 100%;"/>
+        <a class="o_we_unplash_author" t-att-href="attachment.user.links.html" target="_blank" t-esc="attachment.user.name" t-att-title="attachment.user.name"/>
     </div>
 </t>
 

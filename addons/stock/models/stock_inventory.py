@@ -133,7 +133,7 @@ class Inventory(models.Model):
         # tde todo: clean after _generate_moves
         for inventory in self.filtered(lambda x: x.state not in ('done','cancel')):
             # first remove the existing stock moves linked to this inventory
-            inventory.mapped('move_ids').unlink()
+            inventory.with_context(prefetch_fields=False).mapped('move_ids').unlink()
             inventory.line_ids._generate_moves()
 
     def action_cancel_draft(self):
@@ -224,8 +224,9 @@ class Inventory(models.Model):
 
         domain = [('company_id', '=', self.company_id.id),
                   ('quantity', '!=', '0'),
-                  ('product_id.active', '=', True),
                   ('location_id', 'in', locations_ids)]
+        if self.prefill_counted_quantity == 'zero':
+            domain.append(('product_id.active', '=', True))
 
         if self.product_ids:
             domain = expression.AND([domain, [('product_id', 'in', self.product_ids.ids)]])
@@ -327,7 +328,7 @@ class InventoryLine(models.Model):
                 return "[('type', '=', 'product'), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('id', 'in', %s)]" % inventory.product_ids.ids
         return "[('type', '=', 'product'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"
 
-    is_editable = fields.Boolean(help="Technical field to restrict the edition.")
+    is_editable = fields.Boolean(help="Technical field to restrict editing.")
     inventory_id = fields.Many2one(
         'stock.inventory', 'Inventory', check_company=True,
         index=True, ondelete='cascade')
@@ -341,6 +342,7 @@ class InventoryLine(models.Model):
         required=True, readonly=True)
     product_qty = fields.Float(
         'Counted Quantity',
+        readonly=True, states={'confirm': [('readonly', False)]},
         digits='Product Unit of Measure', default=0)
     categ_id = fields.Many2one(related='product_id.categ_id', store=True)
     location_id = fields.Many2one(
@@ -357,7 +359,7 @@ class InventoryLine(models.Model):
     company_id = fields.Many2one(
         'res.company', 'Company', related='inventory_id.company_id',
         index=True, readonly=True, store=True)
-    state = fields.Selection('Status', related='inventory_id.state')
+    state = fields.Selection(string='Status', related='inventory_id.state')
     theoretical_qty = fields.Float(
         'Theoretical Quantity',
         digits='Product Unit of Measure', readonly=True)
@@ -369,7 +371,7 @@ class InventoryLine(models.Model):
         help="Last date at which the On Hand Quantity has been computed.")
     outdated = fields.Boolean(string='Quantity outdated',
         compute='_compute_outdated', search='_search_outdated')
-    product_tracking = fields.Selection('Tracking', related='product_id.tracking', readonly=True)
+    product_tracking = fields.Selection(string='Tracking', related='product_id.tracking', readonly=True)
 
     @api.depends('product_qty', 'theoretical_qty')
     def _compute_difference(self):

@@ -34,11 +34,11 @@ datetime field. This field is updated everytime ``stage_id`` is updated.
 ``project.task.report`` model also uses the ``date_last_stage_update`` field.
 This allows to group and analyse the time spend in the various stages.
 
-Open / Assignation date
+Open / Assignment date
 +++++++++++++++++++++++
 
 The ``date_open`` field meaning has been updated. It is now set when the ``user_id``
-(responsible) is set. It is therefore the assignation date.
+(responsible) is set. It is therefore the assignment date.
 
 Subtypes
 ++++++++

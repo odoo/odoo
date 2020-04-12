@@ -5,6 +5,11 @@
         <record id="base.user_demo" model="res.users">
             <field eval="[(4, ref('group_stock_user'))]" name="groups_id"/>
         </record>
+         <record id="lot_product_27" model="stock.production.lot">
+            <field name="name">0000000000029</field>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
 
 
         <!-- Resource: stock.inventory -->
@@ -21,105 +26,113 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">16.0</field>
-            <field name="location_id" ref="stock_location_14"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_14" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">16.0</field>
-            <field name="location_id" ref="stock_location_14"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_2" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_7"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">18.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_3" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_6"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">500.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_4" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_9"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">22.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_5" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_10"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">8.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_6" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_11"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">26.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_6b" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_11b"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">30.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_7" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">45.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_7b" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_4b"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">50.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_7c" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_4c"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">55.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_7d" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_4d"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">60.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_11" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">10.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_12" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_13"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">2.0</field>
-            <field name="location_id" ref="stock_location_components"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_inventory_line_13" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_27"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">80.0</field>
-             <field name="location_id" ref="stock_location_components"/>
+            <field name="prod_lot_id" ref="lot_product_27"/>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+        <record id="stock_inventory_line_14" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">60.0</field>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
 
         <function model="stock.inventory" name="_action_start">
@@ -172,11 +185,20 @@
             <field name="name">My Company (San Francisco)</field>
         </record>
 
+        <!-- Rename auto-created Chicago Warehouse -->
+        <function model="stock.warehouse" name="write">
+            <value model="stock.warehouse" search="[('company_id', '=', obj().env.ref('stock.res_company_1').id)]"/>
+            <value eval="{
+                'name': 'Chicago 1',
+                'code': 'CHIC1',
+            }"/>
+        </function>
+
         <record id="stock_warehouse_shop0" model="stock.warehouse">
-            <field name="name">Chicago Warehouse</field>
+            <field name="name">Chicago 2</field>
             <field name="partner_id" ref="res_partner_address_41"/>
             <field name="company_id" ref="res_company_1"/>
-            <field name="code">Chic</field>
+            <field name="code">CHIC2</field>
         </record>
 
         <record id="product.consu_delivery_03" model="product.product">
@@ -191,6 +213,33 @@
         <record id="product.product_order_01" model="product.product">
             <field name="type">product</field>
         </record>
+
+        <!-- Inventory for Chicago Warehouse -->
+            <record id="stock_inventory_chic_0" model="stock.inventory">
+                <field name="name">Starting Inventory</field>
+                <field name="company_id" ref="stock.res_company_1"/>
+            </record>
+
+            <record id="stock_inventory_line_1" model="stock.inventory.line">
+                <field name="product_id" ref="product.product_product_6"/>
+                <field name="product_uom_id" ref="uom.product_uom_unit"/>
+                <field name="inventory_id" ref="stock_inventory_chic_0"/>
+                <field name="product_qty">100.0</field>
+                <field name="location_id" model="stock.location"
+                       eval="obj().env['stock.location'].search([
+                            ('company_id', '=', obj().env.ref('stock.res_company_1').id),
+                            ('location_id', '!=', False),
+                            ('child_ids', '=', False),
+                       ], limit=1)"
+                />
+            </record>
+
+            <function model="stock.inventory" name="_action_start">
+                <function eval="[[('state','=','draft'),('id', '=', ref('stock_inventory_chic_0'))]]" model="stock.inventory" name="search"/>
+            </function>
+            <function model="stock.inventory" name="action_validate">
+                <function eval="[[('state','=','confirm'),('id', '=', ref('stock_inventory_chic_0'))]]" model="stock.inventory" name="search"/>
+            </function>
 
         <!-- Activate Lots options as demo data depends on it -->
         <record id="base.group_user" model="res.groups">

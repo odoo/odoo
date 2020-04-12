@@ -15,6 +15,7 @@ class PurchaseOrder(models.Model):
         if not self.requisition_id:
             return
 
+        self = self.with_company(self.company_id)
         requisition = self.requisition_id
         if self.partner_id:
             partner = self.partner_id

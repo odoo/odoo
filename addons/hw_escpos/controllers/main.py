@@ -18,10 +18,7 @@ try:
 except ImportError:
     escpos = printer = None
 
-try:
-    from queue import Queue
-except ImportError:
-    from Queue import Queue # pylint: disable=deprecated-module
+from queue import Queue
 from threading import Thread, Lock
 
 try:
@@ -31,8 +28,6 @@ except ImportError:
 
 from odoo import http, _
 from odoo.addons.hw_proxy.controllers import main as hw_proxy
-
-from uuid import getnode as get_mac
 
 _logger = logging.getLogger(__name__)
 

@@ -615,3 +615,17 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(warehouse.int_type_id.active)
         self.assertTrue(warehouse.pick_type_id.active)
         self.assertTrue(warehouse.pack_type_id.active)
+
+    def test_edit_warehouse_1(self):
+        wh = Form(self.env['stock.warehouse'])
+        wh.name = "Chicago"
+        wh.code = "chic"
+        warehouse = wh.save()
+        self.assertEqual(warehouse.int_type_id.barcode, 'CHIC-INTERNAL')
+        self.assertEqual(warehouse.int_type_id.sequence_id.prefix, 'chic/INT/')
+
+        wh = Form(warehouse)
+        wh.code = 'CH'
+        wh.save()
+        self.assertEqual(warehouse.int_type_id.barcode, 'CH-INTERNAL')
+        self.assertEqual(warehouse.int_type_id.sequence_id.prefix, 'CH/INT/')

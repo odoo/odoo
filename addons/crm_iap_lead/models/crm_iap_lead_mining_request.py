@@ -40,7 +40,7 @@ class CRMLeadMiningRequest(models.Model):
     lead_type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], string='Type', required=True, default=_default_lead_type)
     team_id = fields.Many2one('crm.team', string='Sales Team', domain="[('use_opportunities', '=', True)]")
     user_id = fields.Many2one('res.users', string='Salesperson')
-    tag_ids = fields.Many2many('crm.lead.tag', string='Tags')
+    tag_ids = fields.Many2many('crm.tag', string='Tags')
     lead_ids = fields.One2many('crm.lead', 'lead_mining_request_id', string='Generated Lead / Opportunity')
     leads_count = fields.Integer(compute='_compute_leads_count', string='Number of Generated Leads')
 

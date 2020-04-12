@@ -68,41 +68,89 @@ SAMPLES = [
     ('ryu+giga-Sushi@aizubange.fukushima.jp', '', 'ryu+giga-Sushi@aizubange.fukushima.jp'),
     ('Raoul chirurgiens-dentistes.fr', 'Raoul chirurgiens-dentistes.fr', ''),
     (" Raoul O'hara  <!@historicalsociety.museum>", "Raoul O'hara", '!@historicalsociety.museum'),
+    ('Raoul Grosbedon <raoul@CHIRURGIENS-dentistes.fr> ', 'Raoul Grosbedon', 'raoul@CHIRURGIENS-dentistes.fr'),
+    ('Raoul megaraoul@chirurgiens-dentistes.fr', 'Raoul', 'megaraoul@chirurgiens-dentistes.fr'),
 ]
 
+
 class TestBase(TransactionCase):
+
+    def _check_find_or_create(self, test_string, expected_name, expected_email, check_partner=False, should_create=False):
+        partner = self.env['res.partner'].find_or_create(test_string)
+        if should_create and check_partner:
+            self.assertTrue(partner.id > check_partner.id, 'find_or_create failed - should have found existing')
+        elif check_partner:
+            self.assertEqual(partner, check_partner, 'find_or_create failed - should have found existing')
+        self.assertEqual(partner.name, expected_name)
+        self.assertEqual(partner.email or '', expected_email)
+        return partner
 
     def test_00_res_partner_name_create(self):
         res_partner = self.env['res.partner']
         parse = res_partner._parse_partner_name
         for text, name, mail in SAMPLES:
-            self.assertEqual((name, mail), parse(text), 'Partner name parsing failed')
+            self.assertEqual((name, mail.lower()), parse(text))
             partner_id, dummy = res_partner.name_create(text)
             partner = res_partner.browse(partner_id)
-            self.assertEqual(name or mail, partner.name, 'Partner name incorrect')
-            self.assertEqual(mail or False, partner.email, 'Partner email incorrect')
+            self.assertEqual(name or mail.lower(), partner.name)
+            self.assertEqual(mail.lower() or False, partner.email)
+
+        # name_create supports default_email fallback
+        partner = self.env['res.partner'].browse(
+            self.env['res.partner'].with_context(
+                default_email='John.Wick@example.com'
+            ).name_create('"Raoulette Vachette" <Raoul@Grosbedon.fr>')[0]
+        )
+        self.assertEqual(partner.name, 'Raoulette Vachette')
+        self.assertEqual(partner.email, 'raoul@grosbedon.fr')
+
+        partner = self.env['res.partner'].browse(
+            self.env['res.partner'].with_context(
+                default_email='John.Wick@example.com'
+            ).name_create('Raoulette Vachette')[0]
+        )
+        self.assertEqual(partner.name, 'Raoulette Vachette')
+        self.assertEqual(partner.email, 'John.Wick@example.com')
 
     def test_10_res_partner_find_or_create(self):
         res_partner = self.env['res.partner']
 
-        email = SAMPLES[0][0]
-        partner_id, dummy = res_partner.name_create(email)
-        found_id = res_partner.find_or_create(email)
-        self.assertEqual(partner_id, found_id, 'find_or_create failed')
-        self.assertEqual(SAMPLES[0][1], res_partner.browse([found_id]).name, 'Partner name is incorrect')
+        partner = res_partner.browse(res_partner.name_create(SAMPLES[0][0])[0])
+        self._check_find_or_create(
+            SAMPLES[0][0], SAMPLES[0][1], SAMPLES[0][2],
+            check_partner=partner, should_create=False
+        )
 
-        partner_id2, dummy2 = res_partner.name_create('sarah.john@connor.com')
-        found_id2 = res_partner.find_or_create('john@connor.com')
-        self.assertNotEqual(partner_id2, found_id2, 'john@connor.com match sarah.john@connor.com')
-        self.assertEqual('john@connor.com', res_partner.browse([found_id2]).name, 'Partner name is incorrect')
+        partner_2 = res_partner.browse(res_partner.name_create('sarah.john@connor.com')[0])
+        found_2 = self._check_find_or_create(
+            'john@connor.com', 'john@connor.com', 'john@connor.com',
+            check_partner=partner_2, should_create=True
+        )
 
-        new_id = res_partner.find_or_create(SAMPLES[1][0])
-        self.assertTrue(new_id > partner_id, 'find_or_create failed - should have created new one')
-        self.assertEqual(SAMPLES[1][2], res_partner.browse([new_id]).name, 'Partner name is incorrect')
+        new = self._check_find_or_create(
+            SAMPLES[1][0], SAMPLES[1][2].lower(), SAMPLES[1][2].lower(),
+            check_partner=found_2, should_create=True
+        )
 
-        new_id2 = res_partner.find_or_create(SAMPLES[2][0])
-        self.assertTrue(new_id2 > new_id, 'find_or_create failed - should have created new one again')
-        self.assertEqual(SAMPLES[2][1], res_partner.browse([new_id2]).name, 'Partner name is incorrect')
+        new2 = self._check_find_or_create(
+            SAMPLES[2][0], SAMPLES[2][1], SAMPLES[2][2],
+            check_partner=new, should_create=True
+        )
+
+        new3 = self._check_find_or_create(
+            SAMPLES[3][0], SAMPLES[3][1], SAMPLES[3][2],
+            check_partner=new2, should_create=True
+        )
+
+        new4 = self._check_find_or_create(
+            SAMPLES[4][0], SAMPLES[0][1], SAMPLES[0][2],
+            check_partner=partner, should_create=False
+        )
+
+        new5 = self._check_find_or_create(
+            SAMPLES[5][0], SAMPLES[5][1], SAMPLES[5][2],
+            check_partner=new4, should_create=True
+        )
 
     def test_15_res_partner_name_search(self):
         res_partner = self.env['res.partner']

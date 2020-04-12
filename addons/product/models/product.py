@@ -5,7 +5,7 @@ import logging
 import re
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
 
@@ -60,6 +60,11 @@ class ProductCategory(models.Model):
     @api.model
     def name_create(self, name):
         return self.create({'name': name}).name_get()[0]
+
+    def unlink(self):
+        main_category = self.env.ref('product.product_category_all')
+        if main_category in self:
+            raise UserError(_("You cannot delete this product category, it is the default generic category."))
 
 
 class ProductProduct(models.Model):
@@ -215,8 +220,7 @@ class ProductProduct(models.Model):
             product.combination_indices = product.product_template_attribute_value_ids._ids2str()
 
     def _compute_is_product_variant(self):
-        for product in self:
-            product.is_product_variant = True
+        self.is_product_variant = True
 
     @api.depends_context('pricelist', 'partner', 'quantity', 'uom', 'date', 'no_variant_attributes_price_extra')
     def _compute_product_price(self):
@@ -679,7 +683,7 @@ class ProductProduct(models.Model):
 
     def toggle_active(self):
         """ Archiving related product.template if there is only one active product.product """
-        with_one_active = self.filtered(lambda product: len(product.product_tmpl_id.product_variant_ids) == 1)
+        with_one_active = self.filtered(lambda product: len(product.product_tmpl_id.with_context(active_test=False).product_variant_ids) == 1)
         for product in with_one_active:
             product.product_tmpl_id.toggle_active()
         return super(ProductProduct, self - with_one_active).toggle_active()
@@ -722,7 +726,7 @@ class SupplierInfo(models.Model):
         related='product_tmpl_id.uom_po_id',
         help="This comes from the product form.")
     min_qty = fields.Float(
-        'Quantity', default=0.0, required=True,
+        'Quantity', default=0.0, required=True, digits="Product Unit Of Measure",
         help="The quantity to purchase from this vendor to benefit from the price, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
     price = fields.Float(
         'Price', default=0.0, digits='Product Price',

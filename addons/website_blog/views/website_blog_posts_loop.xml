@@ -131,7 +131,7 @@ according to the enabled options.
                             </div>
                         </t>
                         <!-- Add 'unpublished' badge -->
-                        <span t-if="not blog_post.website_published" class="bg-danger small py-1 px-2 position-absolute" style="top:0; right:0">unpublished</span>
+                        <span t-if="not blog_post.website_published" class="bg-danger small py-1 px-2 position-absolute o_not_editable" style="top:0; right:0">unpublished</span>
                     </article>
                 </div>
                 <!-- List-View Design, add <hr> after post -->
@@ -161,8 +161,8 @@ according to the enabled options.
         <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between mx-n2 #{opt_blog_list_view and 'flex-grow-0 w-auto mw-100' or 'flex-grow-1' }">
             <time t-field="blog_post.post_date" class="text-nowrap font-weight-bold px-2" t-options='{"format": "MMM d, yyyy"}'/>
             <div t-if="opt_posts_loop_show_stats" class="px-2">
-                <b class="text-nowrap"><i class="fa fa-comment text-muted mr-1"/><t t-esc="len(blog_post.message_ids)"/></b>
-                <b class="text-nowrap pl-2"><i class="fa fa-binoculars text-muted mr-1"/><t t-esc="blog_post.visits"/></b>
+                <b class="text-nowrap" title="Comments"><i class="fa fa-comment text-muted mr-1"/><t t-esc="len(blog_post.message_ids)"/></b>
+                <b class="text-nowrap pl-2" title="Views"><i class="fa fa-binoculars text-muted mr-1"/><t t-esc="blog_post.visits"/></b>
             </div>
             <b t-if="posts_list_show_parent_blog" class="text-nowrap text-truncate px-2">
                 <i class="fa fa-folder-open text-muted"/>

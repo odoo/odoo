@@ -4,7 +4,7 @@
     'name': "Course Certifications",
     'summary': 'Add certification capabilities to your courses',
     'description': """This module lets you use the full power of certifications within your courses.""",
-    'category': 'Hidden',
+    'category': 'Website/eLearning',
     'version': '1.0',
     'depends': ['website_slides', 'survey'],
     'installable': True,

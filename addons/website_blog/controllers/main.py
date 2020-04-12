@@ -69,10 +69,11 @@ class WebsiteBlog(http.Controller):
 
         active_tag_ids = tags and [unslug(tag)[1] for tag in tags.split(',')] or []
         if active_tag_ids:
-            fixed_tag_slug = ",".join(slug(t) for t in request.env['blog.tag'].browse(active_tag_ids))
+            fixed_tag_slug = ",".join(slug(t) for t in request.env['blog.tag'].browse(active_tag_ids).exists())
             if fixed_tag_slug != tags:
-                return request.redirect(request.httprequest.full_path.replace("/tag/%s/" % tags, "/tag/%s/" % fixed_tag_slug, 1), 301)
-
+                new_url = request.httprequest.full_path.replace("/tag/%s" % tags, "/tag/%s" % fixed_tag_slug, 1)
+                if new_url != request.httprequest.full_path:  # check that really replaced and avoid loop
+                    return request.redirect(new_url, 301)
             domain += [('tag_ids', 'in', active_tag_ids)]
 
         if request.env.user.has_group('website.group_website_designer'):
@@ -157,6 +158,10 @@ class WebsiteBlog(http.Controller):
 
         values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page)
 
+        # in case of a redirection need by `_prepare_blog_values` we follow it
+        if isinstance(values, werkzeug.wrappers.Response):
+            return values
+
         if blog:
             values['main_object'] = blog
             values['edit_in_backend'] = True
@@ -177,7 +182,7 @@ class WebsiteBlog(http.Controller):
         return r
 
     @http.route([
-        '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog[0])]"):blog_post>''',
+        '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
     ], type='http', auth="public", website=True, sitemap=True)
     def blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
@@ -296,6 +301,11 @@ class WebsiteBlog(http.Controller):
 
     @http.route(['/blog/render_latest_posts'], type='json', auth='public', website=True)
     def render_latest_posts(self, template, domain, limit=None, order='published_date desc'):
-        domain = expression.AND([domain, request.website.website_domain()])
-        posts = request.env['blog.post'].search(domain, limit=limit, order=order)
+        dom = expression.AND([
+            [('website_published', '=', True), ('post_date', '<=', fields.Datetime.now())],
+            request.website.website_domain()
+        ])
+        if domain:
+            dom = expression.AND([dom, domain])
+        posts = request.env['blog.post'].search(dom, limit=limit, order=order)
         return request.website.viewref(template).render({'posts': posts})

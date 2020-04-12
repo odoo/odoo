@@ -209,7 +209,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         so.action_confirm()
         so._create_analytic_account()
 
-        inv = self.env['account.move'].with_context(default_type='in_invoice').create({
+        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
             'partner_id': self.partner_customer_usd.id,
             'invoice_line_ids': [
                 (0, 0, {
@@ -277,6 +277,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         user_demo = self.env['res.users'].create({
             'login': 'zizizmyuser',
             'password': 'zizizmyuser',
+            'email': 'test@test.com',
             'partner_id': self.env['res.partner'].create({'name': 'Zizizmypartner'}).id,
             'company_ids': [(6, False, [company_1.id])],
             'company_id': company_1.id,
@@ -285,6 +286,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
                 self.env.ref('base.group_partner_manager').id,
                 self.env.ref('sales_team.group_sale_manager').id])]})
 
+        user_demo.company_ids = (company_1 | company_2).ids
         so_partner = self.env['res.partner'].create({'name': 'SO Partner'})
         so_partner.write({
             'property_account_position_id': False,
@@ -304,7 +306,9 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
         product_shared = self.env['product.template'].create({
             'name': 'shared product',
+            'invoice_policy': 'order',
             'taxes_id': [(6, False, [tax_company_1.id, tax_company_2.id])],
+            'property_account_income_id': self.account_receivable.id,
         })
 
         so_1 = self.env['sale.order'].with_user(user_demo.id).create({
@@ -317,6 +321,13 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
         self.assertEqual(set(so_1.order_line.tax_id.ids), set([tax_company_1.id]),
             'Only taxes from the right company are put by default')
+        so_1.action_confirm()
+        # i'm not interested in groups/acls, but in the multi-company flow only
+        # the sudo is there for that and does not impact the invoice that gets created
+        # the goal here is to invoice in company 1 (because the order is in company 1) while being
+        # 'mainly' in company 2 (through the context), the invoice should be in company 1
+        inv=so_1.sudo().with_context(allowed_company_ids=[company_2.id, company_1.id])._create_invoices()
+        self.assertEqual(inv.company_id, company_1, 'invoices should be created in the company of the SO, not the main company of the context')
 
     def test_group_invoice(self):
         """ Test that invoicing multiple sales order for the same customer works. """
@@ -335,3 +346,26 @@ class TestSaleOrder(TestCommonSaleNoChart):
         res = wiz.create_invoices()
         # Check that exactly 2 invoices are generated
         self.assertEqual(len(res['domain'][0][2]),2, "Grouping invoicing 3 orders for the same partner with 2 currencies should create exactly 2 invoices")
+
+    def test_so_note_to_invoice(self):
+        """Test that notes from SO are pushed into invoices"""
+
+        sol_note = self.env['sale.order.line'].create({
+            'name': 'This is a note',
+            'display_type': 'line_note',
+            'product_id': False,
+            'product_uom_qty': 0,
+            'product_uom': False,
+            'price_unit': 0,
+            'order_id': self.sale_order.id,
+            'tax_id': False,
+        })
+
+        # confirm quotation
+        self.sale_order.action_confirm()
+
+        # create invoice
+        invoice = self.sale_order._create_invoices()
+
+        # check note from SO has been pushed in invoice
+        self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'line_note')), 1, 'Note SO line should have been pushed to the invoice')

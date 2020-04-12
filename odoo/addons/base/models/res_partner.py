@@ -137,10 +137,15 @@ class Partner(models.Model):
 
     @api.model
     def default_get(self, default_fields):
-        """Add the company of the parent as default if we are creating a child partner."""
+        """Add the company of the parent as default if we are creating a child partner.
+        Also take the parent lang by default if any, otherwise, fallback to default DB lang."""
         values = super().default_get(default_fields)
+        parent = self.env["res.partner"]
         if 'parent_id' in default_fields and values.get('parent_id'):
-            values['company_id'] = self.browse(values.get('parent_id')).company_id.id
+            parent = self.browse(values.get('parent_id'))
+            values['company_id'] = parent.company_id.id
+        if 'lang' in default_fields:
+            values['lang'] = values.get('lang') or parent.lang or self.env.lang
         return values
 
     name = fields.Char(index=True)
@@ -151,7 +156,7 @@ class Partner(models.Model):
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
     child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
     ref = fields.Char(string='Reference', index=True)
-    lang = fields.Selection(_lang_get, string='Language', default=lambda self: self.env.lang,
+    lang = fields.Selection(_lang_get, string='Language',
                             help="All the emails and documents sent to this contact will be translated in this language.")
     active_lang_count = fields.Integer(compute='_compute_active_lang_count')
     tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
@@ -219,6 +224,7 @@ class Partner(models.Model):
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
     company_name = fields.Char('Company Name')
+    barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
@@ -375,6 +381,11 @@ class Partner(models.Model):
     def onchange_company_type(self):
         self.is_company = (self.company_type == 'company')
 
+    @api.constrains('barcode')
+    def _check_barcode_unicity(self):
+        if self.env['res.partner'].search_count([('barcode', '=', self.barcode)]) > 1:
+            raise ValidationError('An other user already has this barcode')
+
     def _update_fields_values(self, fields):
         """ Returns dict of write() values for synchronizing ``fields`` """
         values = {}
@@ -429,8 +440,9 @@ class Partner(models.Model):
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
             child._commercial_sync_to_children()
+        res = sync_children.write(sync_vals)
         sync_children._compute_commercial_partner()
-        return sync_children.write(sync_vals)
+        return res
 
     def _fields_sync(self, values):
         """ Sync commercial fields and address fields from company and to children after create/update,
@@ -646,16 +658,33 @@ class Partner(models.Model):
             res.append((partner.id, name))
         return res
 
-    def _parse_partner_name(self, text, context=None):
-        """ Supported syntax:
-            - 'Raoul <raoul@grosbedon.fr>': will find name and email address
-            - otherwise: default, everything is set as the name """
-        emails = tools.email_split(text.replace(' ', ','))
-        if emails:
-            email = emails[0]
-            name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
+    def _parse_partner_name(self, text):
+        """ Parse partner name (given by text) in order to find a name and an
+        email. Supported syntax:
+
+          * Raoul <raoul@grosbedon.fr>
+          * "Raoul le Grand" <raoul@grosbedon.fr>
+          * Raoul raoul@grosbedon.fr (strange fault tolerant support from df40926d2a57c101a3e2d221ecfd08fbb4fea30e)
+
+        Otherwise: default, everything is set as the name. Starting from 13.3
+        returned email will be normalized to have a coherent encoding.
+         """
+        name, email = '', ''
+        split_results = tools.email_split_tuples(text)
+        if split_results:
+            name, email = split_results[0]
+
+        if email and not name:
+            fallback_emails = tools.email_split(text.replace(' ', ','))
+            if fallback_emails:
+                email = fallback_emails[0]
+                name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
+
+        if email:
+            email = tools.email_normalize(email)
         else:
             name, email = text, ''
+
         return name, email
 
     @api.model
@@ -669,9 +698,11 @@ class Partner(models.Model):
         name, email = self._parse_partner_name(name)
         if self._context.get('force_email') and not email:
             raise UserError(_("Couldn't create contact without email address!"))
-        if not name and email:
-            name = email
-        partner = self.create({self._rec_name: name or email, 'email': email or self.env.context.get('default_email', False)})
+
+        create_values = {self._rec_name: name or email}
+        if email:  # keep default_email in context
+            create_values['email'] = email
+        partner = self.create(create_values)
         return partner.name_get()[0]
 
     @api.model
@@ -751,22 +782,30 @@ class Partner(models.Model):
         return super(Partner, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.model
-    def find_or_create(self, email):
+    def find_or_create(self, email, assert_valid_email=False):
         """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
-            to create one
+        to create a new one.
 
-            :param str email: email-like string, which should contain at least one email,
-                e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
-        assert email, 'an email is required for find_or_create to work'
-        emails = tools.email_split(email)
-        name_emails = tools.email_split_and_format(email)
-        if emails:
-            email = emails[0]
-            name_email = name_emails[0]
-        else:
-            name_email = email
-        partners = self.search([('email', '=ilike', email)], limit=1)
-        return partners.id or self.name_create(name_email)[0]
+        :param str email: email-like string, which should contain at least one email,
+            e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``
+        :param boolean assert_valid_email: raise if no valid email is found
+        :return: newly created record
+        """
+        if not email:
+            raise ValueError(_('An email is required for find_or_create to work'))
+
+        parsed_name, parsed_email = self._parse_partner_name(email)
+        if not parsed_email and assert_valid_email:
+            raise ValueError(_('A valid email is required for find_or_create to work properly.'))
+
+        partners = self.search([('email', '=ilike', parsed_email)], limit=1)
+        if partners:
+            return partners
+
+        create_values = {self._rec_name: parsed_name or parsed_email}
+        if parsed_email:  # keep default_email in context
+            create_values['email'] = parsed_email
+        return self.create(create_values)
 
     def _get_gravatar_image(self, email):
         email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()

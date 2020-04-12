@@ -25,23 +25,6 @@
         </field>
     </record>
 
-    <record id="mrp_workorder_delta_report" model="ir.actions.act_window">
-        <field name="name">Work Orders Deviation</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mrp.workorder</field>
-        <field name="view_mode">graph,pivot,tree,form,gantt,calendar</field>
-        <field name="context">{'search_default_workcenter_id': active_id}</field>
-        <field name="domain">[]</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-              No data to display
-            </p><p>
-              You will get here statistics about the
-              work orders duration related to this routing.
-            </p>
-        </field>
-    </record>
-
     <record id="action_mrp_routing_time" model="ir.actions.act_window">
         <field name="name">Work Orders</field>
         <field name="type">ir.actions.act_window</field>
@@ -92,7 +75,8 @@
                 <field name="state"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="json_popover" widget="mrp_workorder_popover" string=" "/>
+                <field name="show_json_popover" invisible="1"/>
+                <field name="json_popover" widget="mrp_workorder_popover" string=" " attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
             </tree>
         </field>
     </record>
@@ -154,7 +138,8 @@
                             <field name="date_planned_start" class="mr8 oe_inline" required="True"/>
                             <strong class="mr8 oe_inline">to</strong>
                             <field name="date_planned_finished" class="oe_inline" required="True"/>
-                            <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2"/>
+                            <field name="show_json_popover" invisible="1"/>
+                            <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
                         </div>
                         <label for="date_start" string="Effective Date" attrs="{'invisible': [('date_start', '=', False)]}"/>
                         <div class="o_row" attrs="{'invisible': [('date_start', '=', False)]}">
@@ -379,6 +364,7 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <gantt class="o_mrp_workorder_gantt" date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" default_group_by="workcenter_id" create="0"
+                delete="0"
                 progress="progress" plan="0"
                 decoration-danger="'text-danger' in json_popover"
                 decoration-success="state == 'done'"

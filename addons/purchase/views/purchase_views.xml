@@ -24,19 +24,31 @@
 
         <menuitem
             id="menu_product_in_config_purchase" name="Products"
-            parent="menu_purchase_config" sequence="30" groups="base.group_no_one"/>
+            parent="menu_purchase_config" sequence="30"/>
+
+        <record model="ir.ui.menu" id="menu_product_in_config_purchase">
+            <field name="groups_id" eval="False"/>
+        </record>
+
+        <menuitem id="menu_product_attribute_action"
+            action="product.attribute_action" name="Product Attributes"
+            parent="purchase.menu_product_in_config_purchase"  groups="product.group_product_variant" sequence="1"/>
 
         <menuitem
             action="product.product_category_action_form" id="menu_product_category_config_purchase"
-            parent="purchase.menu_product_in_config_purchase" sequence="1" />
+            parent="purchase.menu_product_in_config_purchase" sequence="3" />
 
-        <menuitem
-             action="uom.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
-             parent="purchase.menu_product_in_config_purchase" sequence="10" />
+         <menuitem
+            id="menu_unit_of_measure_in_config_purchase" name="Units of Measures"
+            parent="menu_purchase_config" sequence="40" groups="uom.group_uom" />
 
         <menuitem
               action="uom.product_uom_form_action" id="menu_purchase_uom_form_action"
-              parent="purchase.menu_product_in_config_purchase" sequence="5"/>
+              parent="purchase.menu_unit_of_measure_in_config_purchase" sequence="5" groups="uom.group_uom"/>
+
+        <menuitem
+             action="uom.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
+             parent="purchase.menu_unit_of_measure_in_config_purchase" sequence="10" groups="uom.group_uom"/>
 
     <!-- Products Control Menu -->
     <menuitem id="menu_purchase_products" name="Products" parent="purchase.menu_purchase_root" sequence="5"/>
@@ -87,8 +99,8 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="date_planned" color="partner_id" hide_time="true" event_limit="5">
-                    <field name="name"/>
+                <calendar string="Calendar View" date_start="date_calendar_start" color="partner_id" hide_time="true" event_limit="5" create="false">
+                    <field name="currency_id" invisible="1"/>
                     <field name="partner_ref"/>
                     <field name="amount_total" widget="monetary"/>
                     <field name="partner_id" filters="1"/>
@@ -126,12 +138,12 @@
                     <button name="print_quotation" string="Print RFQ" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
                     <button name="button_confirm" type="object" states="sent" string="Confirm Order" class="oe_highlight" id="bid_confirm"/>
                     <button name="button_approve" type="object" states='to approve' string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
-                    <button name="action_view_invoice" string="Create Bill" type="object" class="oe_highlight" context="{'create_bill':True}" attrs="{'invisible': ['|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'in', ('no', 'invoiced'))]}"/>
+                    <button name="action_create_invoice" string="Create Bill" type="object" class="oe_highlight" context="{'create_bill':True}" attrs="{'invisible': ['|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'in', ('no', 'invoiced'))]}"/>
                     <button name="action_rfq_send" states="sent" string="Re-Send by Email" type="object" context="{'send_rfq':True}"/>
                     <button name="print_quotation" string="Print RFQ" type="object" states="sent" groups="base.group_user"/>
                     <button name="button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
                     <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
-                    <button name="action_view_invoice" string="Create Bill" type="object" context="{'create_bill':True}" attrs="{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'not in', ('no', 'invoiced')), ('order_line', '=', [])]}"/>
+                    <button name="action_create_invoice" string="Create Bill" type="object" context="{'create_bill':True}" attrs="{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'not in', ('no', 'invoiced')), ('order_line', '=', [])]}"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
                     <button name="button_done" type="object" string="Lock" states="purchase"/>
@@ -197,7 +209,7 @@
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text"/>
-                                    <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)], 'readonly': [('parent.date_planned', '!=', False)]}"/>
+                                    <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)]}"/>
                                     <field name="account_analytic_id" optional="hide" context="{'default_partner_id':parent.partner_id}" groups="analytic.group_analytic_accounting" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="analytic_tag_ids" optional="hide" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="product_qty"/>
@@ -330,12 +342,13 @@
                             <group>
                                 <group name="planning">
                                     <label for="date_planned"/>
-                                    <div>
-                                        <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
+                                    <div name="date_planned_div" class="o_row">
+                                        <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve', 'purchase'))]}"/>
+                                        <span class="text-muted">Expected: <field name="expected_date" widget="date"/></span>
                                     </div>
                                 </group>
                                 <group name="other_info">
-                                    <field name="user_id"/>
+                                    <field name="user_id" domain="[('share', '=', False)]"/>
                                     <field name="invoice_status" attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'to approve', 'cancel'))]}"/>
                                     <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}" options="{'no_create': True}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
@@ -370,6 +383,9 @@
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
                     <separator/>
                     <filter name="order_date" string="Order Date" date="date_order"/>
+                    <filter name="draft_rfqs" string="Draft RFQs" domain="[('state', '=', 'draft')]"/>
+                    <filter name="waiting_rfqs" string="Waiting RFQs" domain="[('state', '=', 'sent'), ('date_order', '&gt;=', datetime.datetime.now())]"/>
+                    <filter name="late_rfqs" string="Late RFQs" domain="[('state', '=', 'sent'), ('date_order', '&lt;', datetime.datetime.now())]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -432,13 +448,13 @@
             <field name="name">purchase.order.kanban</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" js_class="purchase_kanban_dashboard">
                     <field name="name"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" readonly="1"/>
                     <field name="amount_total"/>
                     <field name="state"/>
                     <field name="date_order"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" readonly="1"/>
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
@@ -471,7 +487,7 @@
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
                 <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
-                      decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" class="o_purchase_order">
+                      decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" class="o_purchase_order" js_class="purchase_list_dashboard">
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1"/>
@@ -487,7 +503,7 @@
                     <field name="amount_total" sum="Total amount" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state" optional="show"/>
-                    <field name="invoice_status" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
+                    <field name="invoice_status" optional="hide"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
@@ -534,14 +550,6 @@
             </field>
         </record>
 
-        <record id="purchase_order_action_generic" model="ir.actions.act_window">
-            <field name="name">Purchase Orders</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">purchase.order</field>
-            <field name="domain">[]</field>
-            <field name="view_id" ref="purchase_order_form"/>
-        </record>
-
         <record id="purchase_rfq" model="ir.actions.act_window">
             <field name="name">Requests for Quotation</field>
             <field name="type">ir.actions.act_window</field>
@@ -555,8 +563,8 @@
               <p class="o_view_nocontent_smiling_face">
                 Create a request for quotation
               </p><p>
-                The quotation contains the history of the discussion
-                you had with your vendor.
+                The requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.
+                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders.
               </p>
             </field>
         </record>
@@ -575,9 +583,9 @@
             <field name="context">{}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a quotation
+                Create a purchase order
               </p><p>
-                It will be converted into a purchase order.
+                Once you ordered your products to your supplier, confirm your request for quotation and it will turn into a purchase order.
               </p>
             </field>
         </record>
@@ -659,4 +667,48 @@
                 </search>
             </field>
         </record>
+
+    <record id="action_purchase_batch_bills" model="ir.actions.server">
+        <field name="name">Create Vendor Bills</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name='groups_id' eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_create_invoice()
+        </field>
+    </record>
+    
+    <!-- Dashboard action buttons -->
+    <!-- Dashboard action buttons: End in List view -->
+    <record id="purchase_action_dashboard_list" model="ir.actions.act_window">
+        <field name="name">Requests for Quotation</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">form,tree,kanban,pivot,graph,calendar,activity</field>
+        <field name="view_id" ref="purchase.purchase_order_tree"/>
+        <field name="search_view_id" ref="view_purchase_order_filter"/>
+        <field name="target">main</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No RFQs to display
+            </p>
+        </field>
+    </record>
+
+    <!-- Dashboard action buttons: End in Kanban view-->
+    <record id="purchase_action_dashboard_kanban" model="ir.actions.act_window">
+        <field name="name">Requests for Quotation</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">form,tree,kanban,pivot,graph,calendar,activity</field>
+        <field name="view_id" ref="purchase.view_purchase_order_kanban"/>
+        <field name="search_view_id" ref="view_purchase_order_filter"/>
+        <field name="target">main</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No RFQs to display
+            </p>
+        </field>
+    </record>
+
 </odoo>

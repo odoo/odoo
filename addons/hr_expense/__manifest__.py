@@ -5,7 +5,7 @@
 {
     'name': 'Expenses',
     'version': '2.0',
-    'category': 'Accounting/Expenses',
+    'category': 'Human Resources/Expenses',
     'sequence': 95,
     'summary': 'Submit, validate and reinvoice employee expenses',
     'description': """
@@ -46,6 +46,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'demo': ['data/hr_expense_demo.xml'],
     'qweb': [
         "static/src/xml/documents_upload_views.xml",
+        "static/src/xml/expense_dashboard.xml",
     ],
     'installable': True,
     'application': True,

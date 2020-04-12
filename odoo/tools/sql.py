@@ -48,11 +48,24 @@ def table_kind(cr, tablename):
     cr.execute(query, (tablename,))
     return cr.fetchone()[0] if cr.rowcount else None
 
-def create_model_table(cr, tablename, comment=None):
+def create_model_table(cr, tablename, comment=None, columns=()):
     """ Create the table for a model. """
-    cr.execute('CREATE TABLE "{}" (id SERIAL NOT NULL, PRIMARY KEY(id))'.format(tablename))
+    colspecs = ['id SERIAL NOT NULL'] + [
+        '"{}" {}'.format(columnname, columntype)
+        for columnname, columntype, columncomment in columns
+    ]
+    cr.execute('CREATE TABLE "{}" ({}, PRIMARY KEY(id))'.format(tablename, ", ".join(colspecs)))
+
+    queries, params = [], []
     if comment:
-        cr.execute('COMMENT ON TABLE "{}" IS %s'.format(tablename), (comment,))
+        queries.append('COMMENT ON TABLE "{}" IS %s'.format(tablename))
+        params.append(comment)
+    for columnname, columntype, columncomment in columns:
+        queries.append('COMMENT ON COLUMN "{}"."{}" IS %s'.format(tablename, columnname))
+        params.append(columncomment)
+    if queries:
+        cr.execute("; ".join(queries), params)
+
     _schema.debug("Table %r: created", tablename)
 
 def table_columns(cr, tablename):

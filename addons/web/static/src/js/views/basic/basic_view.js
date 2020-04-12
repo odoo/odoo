@@ -15,6 +15,7 @@ var BasicController = require('web.BasicController');
 var BasicModel = require('web.BasicModel');
 var config = require('web.config');
 var fieldRegistry = require('web.field_registry');
+var fieldRegistryOwl = require('web.field_registry_owl');
 var pyUtils = require('web.py_utils');
 var utils = require('web.utils');
 
@@ -78,7 +79,8 @@ var BasicView = AbstractView.extend({
     _getFieldWidgetClass: function (viewType, field, attrs) {
         var FieldWidget;
         if (attrs.widget) {
-            FieldWidget = fieldRegistry.getAny([viewType + "." + attrs.widget, attrs.widget]);
+            FieldWidget = fieldRegistryOwl.getAny([viewType + "." + attrs.widget, attrs.widget]) ||
+                fieldRegistry.getAny([viewType + "." + attrs.widget, attrs.widget]);
             if (!FieldWidget) {
                 console.warn("Missing widget: ", attrs.widget, " for field", attrs.name, "of type", field.type);
             }
@@ -87,7 +89,9 @@ var BasicView = AbstractView.extend({
             // is not specified in the view
             FieldWidget = fieldRegistry.get('kanban.many2many_tags');
         }
-        return FieldWidget || fieldRegistry.getAny([viewType + "." + field.type, field.type, "abstract"]);
+        return FieldWidget ||
+            fieldRegistryOwl.getAny([viewType + "." + field.type, field.type, "abstract"]) ||
+            fieldRegistry.getAny([viewType + "." + field.type, field.type, "abstract"]);
     },
     /**
      * In some cases, we already have a preloaded record
@@ -96,14 +100,15 @@ var BasicView = AbstractView.extend({
      * @private
      * @returns {Promise}
      */
-    _loadData: function (model) {
+    _loadData: async function (model) {
         if (this.recordID) {
             // Add the fieldsInfo of the current view to the given recordID,
             // as it will be shared between two views, and it must be able to
             // handle changes on fields that are only on this view.
-            model.addFieldsInfo(this.recordID, {
+            await model.addFieldsInfo(this.recordID, {
                 fields: this.fields,
-                fieldsInfo: this.fieldsInfo,
+                fieldInfo: this.fieldsInfo[this.viewType],
+                viewType: this.viewType,
             });
 
             var record = model.get(this.recordID);
@@ -119,7 +124,7 @@ var BasicView = AbstractView.extend({
             // in the form view (e.g. if field is a many2many list in the form
             // view, or if it is displayed by a widget requiring specialData).
             // So when this happens, F is added to the list of fieldNames to fetch.
-            _.each(viewFields, function (name) {
+            _.each(viewFields, (name) => {
                 if (!_.contains(fieldNames, name)) {
                     var fieldType = record.fields[name].type;
                     var fieldInfo = fieldsInfo[name];
@@ -140,10 +145,11 @@ var BasicView = AbstractView.extend({
                         if (!('fieldsInfo' in record.data[name])) {
                             fieldNames.push(name);
                         } else {
-                            var fieldViews = fieldInfo.views || fieldInfo.fieldsInfo || {};
-                            var fieldViewTypes = Object.keys(fieldViews);
-                            var recordViewTypes = Object.keys(record.data[name].fieldsInfo);
-                            if (_.difference(fieldViewTypes, recordViewTypes).length) {
+                            var x2mFieldInfo = record.fieldsInfo[this.viewType][name];
+                            var viewType = x2mFieldInfo.viewType || x2mFieldInfo.mode;
+                            var knownFields = Object.keys(record.data[name].fieldsInfo[record.data[name].viewType] || {});
+                            var newFields = Object.keys(record.data[name].fieldsInfo[viewType]);
+                            if (_.difference(newFields, knownFields).length) {
                                 fieldNames.push(name);
                             }
 
@@ -154,6 +160,7 @@ var BasicView = AbstractView.extend({
                                 // the same fields (ex: tags in list and list in
                                 // form) so we need to merge the fieldsInfo to
                                 // avoid losing the initial fields (display_name)
+                                var fieldViews = fieldInfo.views || fieldInfo.fieldsInfo || {};
                                 var defaultFieldInfo = record.data[name].fieldsInfo.default;
                                 _.each(fieldViews, function (fieldView) {
                                     _.each(fieldView.fieldsInfo, function (x2mFieldInfo) {
@@ -176,25 +183,18 @@ var BasicView = AbstractView.extend({
 
             var def;
             if (fieldNames.length) {
-                // Some fields in the new view weren't in the previous one, so
-                // we might have stored changes for them (e.g. coming from
-                // onchange RPCs), that we haven't been able to process earlier
-                // (because those fields were unknow at that time). So we ask
-                // the model to process them.
-                def = model.applyRawChanges(record.id, viewType).then(function () {
-                    if (model.isNew(record.id)) {
-                        return model.applyDefaultValues(record.id, {}, {
-                            fieldNames: fieldNames,
-                            viewType: viewType,
-                        });
-                    } else {
-                        return model.reload(record.id, {
-                            fieldNames: fieldNames,
-                            keepChanges: true,
-                            viewType: viewType,
-                        });
-                    }
-                });
+                if (model.isNew(record.id)) {
+                    def = model.applyDefaultValues(record.id, {}, {
+                        fieldNames: fieldNames,
+                        viewType: viewType,
+                    });
+                } else {
+                    def = model.reload(record.id, {
+                        fieldNames: fieldNames,
+                        keepChanges: true,
+                        viewType: viewType,
+                    });
+                }
             }
             return Promise.resolve(def).then(function () {
                 return model.get(record.id);

@@ -128,12 +128,16 @@
 <template id="forum_nav_header">
     <div class="navbar navbar-expand-sm navbar-light">
         <div class="container flex-wrap flex-md-nowrap">
-            <a t-if="request.website.forums_count > 1" class="btn btn-light border mr-2" href="/forum/" title="All forums">
-                <i class="fa fa-chevron-left mr-1"/>All Forums
+            <a t-if="back_button_url" class="btn btn-light border mr-2" t-attf-href="#{back_button_url}" title="Back">
+                <i class="fa fa-chevron-left mr-1"/>Back
             </a>
-
             <!-- Desktop -->
             <ul class="navbar-nav mr-auto d-none d-lg-flex">
+                <li class="nav-item">
+                    <a t-if="request.website.forums_count > 1" class="nav-link" href="/forum/" title="All forums">
+                        All Forums
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a t-attf-href="/forum/#{ slug(forum) }" t-attf-class="nav-link #{question_count and 'active'}">Topics</a>
                 </li>
@@ -490,7 +494,7 @@
             data-toggle="tooltip"
             data-trigger="hover"
             title="My profile">
-            <img class="rounded-circle mr-1" t-att-src="website.image_url(user, 'image_128', '30x30')" alt="Avatar"/>
+            <img class="o_forum_avatar rounded-circle mr-1" t-att-src="website.image_url(user, 'image_128', '30x30')" alt="Avatar"/>
             <div>
                 <h6 class="my-0" t-esc="user_id.name"/>
                 <small class="text-muted font-weight-bold"><t t-esc="user_id.karma"/>xp</small>
@@ -574,7 +578,7 @@
                     </span>
                     <span t-if="my" t-attf-class="w-100 w-md-auto mb-2 mb-md-0 border rounded pl-2 d-inline-flex align-items-center justify-content-between #{search and 'ml-md-2'}">
                         <div>
-                            <img t-if="uid" class="rounded-circle mr-1" t-att-src="website.image_url(user, 'image_128', '16x16')" alt="Avatar"/>
+                            <img t-if="uid" class="o_forum_avatar rounded-circle mr-1" t-att-src="website.image_url(user, 'image_128', '16x16')" alt="Avatar"/>
                             <span t-if="my == 'favourites'"> My <b>Favourites</b></span>
                             <span t-elif="my == 'followed'"> I'm <b>Following</b></span>
                             <span t-elif="my == 'mine'"> My <b>Questions</b></span>
@@ -720,7 +724,7 @@
                     <div t-elif="my == 'mine'" class="alert border">You have no questions in this forum (yet).</div>
                 </t>
 
-                <div t-elif="filters == 'unanswered'" class="alert alert-info">Amazing! There are not answered questions!</div>
+                <div t-elif="filters == 'unanswered'" class="alert alert-info">Amazing! There are no unanswered questions left!</div>
                 <div t-elif="no_filters and not search and not tag and not my" class="alert alert-info">
                     <b>This forum is empty.</b><br/>
                     Be the first one asking a question
@@ -922,7 +926,7 @@
 <!-- Edition: post an answer -->
 <template id="post_answer">
     <div class="d-flex align-items-center mt-5 mb-2">
-        <img t-if="uid" t-attf-class="rounded-circle mr-2" t-att-src="website.image_url(user, 'image_128', '24x24')" alt="Avatar"/>
+        <img t-if="uid" t-attf-class="o_forum_avatar rounded-circle mr-2" t-att-src="website.image_url(user, 'image_128', '24x24')" alt="Avatar"/>
         <h4 class="my-0">Your Answer</h4>
     </div>
     <t t-if="request.params.get('nocontent')">
@@ -1206,6 +1210,7 @@
                         <t t-set="helper_accept">Mark as Best Answer</t>
                         <t t-set="helper_decline">Unmark as Best Answer</t>
                         <a t-if="question.can_answer and question.forum_id.mode == 'questions'" t-attf-class="o_wforum_validate_toggler fa-stack mt-2 #{not answer.can_accept and 'karma_required'}"
+                           href="#"
                            t-attf-data-karma="#{answer.karma_accept}"
                            t-att-data-helper-accept="helper_accept"
                            t-att-data-helper-decline="helper_decline"
@@ -1386,7 +1391,7 @@
         </div>
 
         <div class="o_wforum_post_comments pl-3 pl-md-4 border-left">
-            <t t-foreach="object.website_message_ids" t-as="message">
+            <t t-foreach="reversed(object.website_message_ids)" t-as="message">
                 <div t-attf-class="o_wforum_post_comment #{not message_first and 'mt-3'}">
                     <div>
                         <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
@@ -1603,7 +1608,11 @@
 
 <!-- User Navbar -->
 <template id="user_navbar_inherit_website_forum" inherit_id="website.user_navbar">
-    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_forum']" position="replace">
+    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_forum']" position="attributes">
+        <attribute name="name"/>
+        <attribute name="t-att-data-module-id"/>
+        <attribute name="t-att-data-module-shortdesc"/>
+        <attribute name="groups">website.group_website_designer</attribute>
     </xpath>
 </template>
 

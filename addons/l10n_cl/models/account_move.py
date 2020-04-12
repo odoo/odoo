@@ -18,7 +18,7 @@ class AccountMove(models.Model):
         domain = super()._get_l10n_latam_documents_domain()
         if (self.journal_id.l10n_latam_use_documents and
                 self.journal_id.company_id.country_id == self.env.ref('base.cl')):
-            if self.type in ['in_invoice', 'in_refund']:
+            if self.move_type in ['in_invoice', 'in_refund']:
                 if self.partner_id.l10n_cl_sii_taxpayer_type == '2':
                     domain += [('code', '=', '71')]
                 return domain
@@ -28,7 +28,7 @@ class AccountMove(models.Model):
                 domain += [('code', 'in', ['35', '38', '39', '41', '56', '61'])]
         return domain
 
-    @api.constrains('type', 'l10n_latam_document_type_id')
+    @api.constrains('move_type', 'l10n_latam_document_type_id')
     def _check_invoice_type_document_type(self):
         super()._check_invoice_type_document_type()
         for rec in self.filtered(lambda r: r.company_id.country_id == self.env.ref(

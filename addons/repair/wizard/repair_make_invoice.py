@@ -29,6 +29,6 @@ class MakeInvoice(models.TransientModel):
             'res_model': 'account.move',
             'view_id': False,
             'views': [(self.env.ref('account.view_move_tree').id, 'tree'), (self.env.ref('account.view_move_form').id, 'form')],
-            'context': "{'type':'out_invoice'}",
+            'context': "{'move_type':'out_invoice'}",
             'type': 'ir.actions.act_window'
         }

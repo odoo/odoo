@@ -32,9 +32,7 @@ var _t = core._t;
 
 var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
     dependencies: ['notification'],
-    events: _.extend({}, KeyboardNavigationMixin.events, {
-        'click .o_search_options .dropdown-menu': '_onClickDropDownMenu',
-    }),
+    events: _.extend({}, KeyboardNavigationMixin.events),
     custom_events: {
         call_service: '_onCallService',
         clear_uncommitted_changes: function (e) {
@@ -355,16 +353,6 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         const service = this.env.services[payload.service];
         const result = service[payload.method].apply(service, args);
         payload.callback(result);
-    },
-    /**
-     * When clicking inside a dropdown to modify search options
-     * prevents the bootstrap dropdown to close on itself
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onClickDropDownMenu: function (ev) {
-        ev.stopPropagation();
     },
     /**
      * Whenever the connection is lost, we need to notify the user.

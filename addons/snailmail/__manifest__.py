@@ -5,7 +5,7 @@
 Allows users to send documents by post
 =====================================================
         """,
-    'category': 'Tools',
+    'category': 'Hidden/Tools',
     'version': '0.1',
     'depends': ['iap', 'mail'],
     'data': [

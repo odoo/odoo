@@ -69,7 +69,6 @@
     <record id="crm_activity_report_rule_multi_company" model="ir.rule">
         <field name="name">CRM Lead Multi-Company</field>
         <field name="model_id" ref="model_crm_activity_report"/>
-        <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 

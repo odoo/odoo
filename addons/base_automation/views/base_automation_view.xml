@@ -14,13 +14,6 @@
                 </xpath>
                 <xpath expr="//button[@name='run']" position="replace">
                 </xpath>
-                <xpath expr="//field[@name='model_id']" position='attributes'>
-                    <attribute name="options">{'no_create': True}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='crud_model_id']" position='attributes'>
-                    <attribute name="string">Target Model</attribute>
-                    <attribute name="options">{'no_create': True}</attribute>
-                </xpath>
                 <xpath expr="//field[@name='partner_ids']" position='attributes'>
                     <attribute name="options">{'no_create': True}</attribute>
                 </xpath>
@@ -30,23 +23,11 @@
                 <xpath expr="//field[@name='template_id']" position='attributes'>
                     <attribute name="context">{'default_model_id': model_id}</attribute>
                 </xpath>
-                <xpath expr="//field[@name='col1']" position='attributes'>
-                    <attribute name="options">{'no_create':True'}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='resource_ref']" position='attributes'>
-                    <attribute name="options">{'hide_model': True, 'no_create' : True}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='value']" position='attributes'>
-                    <attribute name="attrs">{'readonly': ['|', ('evaluation_type', '=', 'reference'), ('col1', '=', False)]}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='link_field_id']" position='attributes'>
-                    <attribute name="string">Link Field</attribute>
-                </xpath>
                 <xpath expr="//page[@name='security']" position='attributes'>
                     <attribute name='invisible'>1</attribute>
                 </xpath>
                 <xpath expr="//group[@name='action_content']" position="inside">
-                    <field name="active"/>
+                    <field name="active" widget="boolean_toggle"/>
                     <field name="trigger"/>
                     <field name="trigger_field_ids" domain="[('model_id', '=', model_id)]" attrs="{'invisible': [('trigger', 'not in', ['on_write', 'on_create_or_write'])]}" widget="many2many_tags"/>
                     <field name="on_change_field_ids" string="Trigger Fields" domain="[('model_id', '=', model_id)]"
@@ -129,8 +110,8 @@
             </xpath>
         </template>
 
-        <template id="qunit_suite" name="base_automation_tests" inherit_id="web.qunit_suite">
-            <xpath expr="//t[@t-set='head']" position="inside">
+        <template id="qunit_suite" name="base_automation_tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="." position="inside">
                 <script type="text/javascript" src="/base_automation/static/tests/base_automation_error_dialog.js"/>
             </xpath>
         </template>

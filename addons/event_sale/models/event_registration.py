@@ -9,14 +9,30 @@ class EventRegistration(models.Model):
     _inherit = 'event.registration'
 
     is_paid = fields.Boolean('Is Paid')
-    # in addition to origin generic fields, add real relational fields to correctly
-    # handle attendees linked to sales orders and their lines
-    # TDE FIXME: maybe add an onchange on sale_order_id + origin
+    # TDE FIXME: maybe add an onchange on sale_order_id
     sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade')
-    campaign_id = fields.Many2one('utm.campaign', 'Campaign', related="sale_order_id.campaign_id", store=True)
-    source_id = fields.Many2one('utm.source', 'Source', related="sale_order_id.source_id", store=True)
-    medium_id = fields.Many2one('utm.medium', 'Medium', related="sale_order_id.medium_id", store=True)
+    utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False, store=True)
+    utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False, store=True)
+    utm_medium_id = fields.Many2one(compute='_compute_utm_medium_id', readonly=False, store=True)
+
+    @api.depends('sale_order_id')
+    def _compute_utm_campaign_id(self):
+        for registration in self:
+            if registration.sale_order_id.campaign_id:
+                registration.utm_campaign_id = registration.sale_order_id.campaign_id
+
+    @api.depends('sale_order_id')
+    def _compute_utm_source_id(self):
+        for registration in self:
+            if registration.sale_order_id.source_id:
+                registration.utm_source_id = registration.sale_order_id.source_id
+
+    @api.depends('sale_order_id')
+    def _compute_utm_medium_id(self):
+        for registration in self:
+            if registration.sale_order_id.medium_id:
+                registration.utm_medium_id = registration.sale_order_id.medium_id
 
     def action_view_sale_order(self):
         action = self.env.ref('sale.action_orders').read()[0]
@@ -24,20 +40,22 @@ class EventRegistration(models.Model):
         action['res_id'] = self.sale_order_id.id
         return action
 
-    @api.model
-    def create(self, vals):
-        if vals.get('sale_order_line_id'):
-            so_line_vals = self._synchronize_so_line_values(
-                self.env['sale.order.line'].browse(vals['sale_order_line_id'])
-            )
-            vals.update(so_line_vals)
-        res = super(EventRegistration, self).create(vals)
-        if res.origin or res.sale_order_id:
-            res.message_post_with_view(
-                'mail.message_origin_link',
-                values={'self': res, 'origin': res.sale_order_id},
-                subtype_id=self.env.ref('mail.mt_note').id)
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('sale_order_line_id'):
+                so_line_vals = self._synchronize_so_line_values(
+                    self.env['sale.order.line'].browse(vals['sale_order_line_id'])
+                )
+                vals.update(so_line_vals)
+        registrations = super(EventRegistration, self).create(vals_list)
+        for registration in registrations:
+            if registration.sale_order_id:
+                registration.message_post_with_view(
+                    'mail.message_origin_link',
+                    values={'self': registration, 'origin': registration.sale_order_id},
+                    subtype_id=self.env.ref('mail.mt_note').id)
+        return registrations
 
     def write(self, vals):
         if vals.get('sale_order_line_id'):
@@ -59,7 +77,6 @@ class EventRegistration(models.Model):
                 'partner_id': so_line.order_id.partner_id.id,
                 'event_id': so_line.event_id.id,
                 'event_ticket_id': so_line.event_ticket_id.id,
-                'origin': so_line.order_id.name,
                 'sale_order_id': so_line.order_id.id,
                 'sale_order_line_id': so_line.id,
             }
@@ -73,13 +90,12 @@ class EventRegistration(models.Model):
                 'old_ticket_name': registration.event_ticket_id.name,
                 'new_ticket_name': new_event_ticket.name
             }
-            user_id = registration.event_id.user_id.id or \
-                      registration.sale_order_id.user_id.id or \
-                      fallback_user_id
-            registration.sale_order_id.activity_schedule_with_view('mail.mail_activity_data_warning',
-                 user_id=user_id,
-                 views_or_xmlid='event_sale.event_ticket_id_change_exception',
-                 render_context=render_context)
+            user_id = registration.event_id.user_id.id or registration.sale_order_id.user_id.id or fallback_user_id
+            registration.sale_order_id.activity_schedule_with_view(
+                'mail.mail_activity_data_warning',
+                user_id=user_id,
+                views_or_xmlid='event_sale.event_ticket_id_change_exception',
+                render_context=render_context)
 
     def _action_set_paid(self):
         self.write({'is_paid': True})

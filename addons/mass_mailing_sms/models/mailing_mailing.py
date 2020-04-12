@@ -21,7 +21,9 @@ class Mailing(models.Model):
         return res
 
     # mailing options
-    mailing_type = fields.Selection(selection_add=[('sms', 'SMS')])
+    mailing_type = fields.Selection(selection_add=[
+        ('sms', 'SMS')
+    ], ondelete={'sms': 'set default'})
     # sms options
     body_plaintext = fields.Text('SMS Body', compute='_compute_body_plaintext', store=True, readonly=False)
     sms_template_id = fields.Many2one('sms.template', string='SMS Template', ondelete='set null')
@@ -217,7 +219,7 @@ class Mailing(models.Model):
 
     def _get_default_mailing_domain(self):
         mailing_domain = super(Mailing, self)._get_default_mailing_domain()
-        if self.mailing_type == 'sms' and 'phone_blacklisted' in self.env[self.mailing_model_name]._fields:
-            mailing_domain = expression.AND([mailing_domain, [('phone_blacklisted', '=', False)]])
+        if self.mailing_type == 'sms' and 'phone_sanitized_blacklisted' in self.env[self.mailing_model_name]._fields:
+            mailing_domain = expression.AND([mailing_domain, [('phone_sanitized_blacklisted', '=', False)]])
 
         return mailing_domain

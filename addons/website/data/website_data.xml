@@ -25,7 +25,7 @@
                     <t t-call="website.layout">
                         <div id="wrap">
                             <div class="oe_structure">
-                                <section class="s_title pt24 pb24">
+                                <section class="s_title pt24 pb24" data-vcss="001">
                                     <div class="container">
                                         <h1>Contact us</h1>
                                     </div>
@@ -73,7 +73,7 @@
                     <t t-call="website.layout">
                         <div id="wrap">
                             <div class="oe_structure">
-                                <section class="s_title pt24 pb24">
+                                <section class="s_title pt24 pb24" data-vcss="001">
                                     <div class="container">
                                         <h1 class="text-center">About us</h1>
                                         <h3 class="text-muted text-center">Great products for great people</h3>
@@ -94,7 +94,7 @@
                                                 </p>
                                             </div>
                                             <div class="col-lg-6 pt16 pb16">
-                                                <img src="/website/static/src/img/library/business_conference.jpg" class="img img-fluid shadow" alt="Our Team"/>
+                                                <img src="/website/static/src/img/library/business_conference.jpg" class="img img-fluid shadow" alt=""/>
                                             </div>
                                         </div>
                                     </div>
@@ -278,7 +278,7 @@
             <field name="domain"></field>
             <field name="company_id" ref="base.main_company"/>
             <field name="user_id" ref="base.public_user"/>
-            <field name="homepage_id" ref="homepage_page"/>
+            <!-- Correct homepage will be set during bootstraping -->
         </record>
 
         <!-- Open website on install -->
@@ -601,6 +601,24 @@
             <field name="type">url</field>
             <field name="url">/website/static/src/img/snippets_demo/s_text_image.jpg</field>
         </record>
+        <record id="website.s_three_columns_default_image_1" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_three_columns_default_image_1.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/web/image/website.library_image_11</field>
+        </record>
+        <record id="website.s_three_columns_default_image_2" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_three_columns_default_image_2.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/web/image/website.library_image_13</field>
+        </record>
+        <record id="website.s_three_columns_default_image_3" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_three_columns_default_image_3.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/web/image/website.library_image_07</field>
+        </record>
         <record id="website.s_carousel_default_image_1" model="ir.attachment">
             <field name="public" eval="True"/>
             <field name="name">s_carousel_default_image_1.jpg</field>
@@ -667,6 +685,12 @@
             <field name="type">url</field>
             <field name="url">/website/static/src/img/snippets_demo/s_references_5.png</field>
         </record>
+        <record id="website.s_reference_default_image_6" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_reference_default_image_6.png</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_references_6.png</field>
+        </record>
         <record id="website.s_company_team_image_1" model="ir.attachment">
             <field name="public" eval="True"/>
             <field name="name">s_company_team_image_1.png</field>
@@ -702,6 +726,12 @@
             <field name="name">s_product_catalog_default_image.jpg</field>
             <field name="type">url</field>
             <field name="url">/website/static/src/img/snippets_demo/s_product_catalog.jpg</field>
+        </record>
+        <record id="website.s_blockquote_default_image" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_blockquote_default_image.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/s_team_member_2.png</field>
         </record>
     </data>
     <data>

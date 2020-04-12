@@ -51,7 +51,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         rslt = self.env['account.move'].create({
             'partner_id': self.test_partner.id,
             'currency_id': self.currency_two.id,
-            'type': 'out_invoice',
+            'move_type': 'out_invoice',
             'invoice_date': date,
             'invoice_line_ids': [(0, 0, {
                 'name': 'test line',

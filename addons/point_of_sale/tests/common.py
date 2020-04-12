@@ -31,9 +31,9 @@ class TestPointOfSaleCommon(StockAccountTestCommon):
             'company_id': cls.company_id})
         cls.company.write({
             'anglo_saxon_accounting': coa.use_anglo_saxon,
-            'bank_account_code_prefix': coa.bank_account_code_prefix,
-            'cash_account_code_prefix': coa.cash_account_code_prefix,
-            'transfer_account_code_prefix': coa.transfer_account_code_prefix,
+            'bank_account_code_prefix': 'test' + coa.bank_account_code_prefix,
+            'cash_account_code_prefix': 'test' + coa.cash_account_code_prefix,
+            'transfer_account_code_prefix': 'test' + coa.transfer_account_code_prefix,
             'chart_template_id': coa.id,})
         cls.product3 = cls.env['product.product'].create({
             'name': 'Product 3',
@@ -139,8 +139,8 @@ class TestPointOfSaleCommon(StockAccountTestCommon):
             {'taxes_id': [(6, 0, [account_tax_05_incl.id, account_tax_05_incl_chicago.id])]})
 
         # Set account_id in the generated repartition lines. Automatically, nothing is set.
-        invoice_rep_lines = (account_tax_05_incl | account_tax_05_incl_chicago | account_tax_10_incl).mapped('invoice_repartition_line_ids')
-        refund_rep_lines = (account_tax_05_incl | account_tax_05_incl_chicago | account_tax_10_incl).mapped('refund_repartition_line_ids')
+        invoice_rep_lines = (account_tax_05_incl | account_tax_10_incl).mapped('invoice_repartition_line_ids')
+        refund_rep_lines = (account_tax_05_incl | account_tax_10_incl).mapped('refund_repartition_line_ids')
 
         # Expense account, should just be something else than receivable/payable
         (invoice_rep_lines | refund_rep_lines).write({'account_id': cls.a_expense.id})

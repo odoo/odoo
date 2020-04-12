@@ -2,7 +2,7 @@
 <odoo>
     <template id="frontend_layout" name="Main Frontend Layout" inherit_id="web.frontend_layout">
         <xpath expr="//div[@id='wrapwrap']" position="attributes">
-            <attribute name="t-attf-class" add="#{request.env['res.lang'].search([('code', '=', request.env.lang)]).direction == 'rtl' and 'o_rtl' or ''}" separator=" "/>
+            <attribute name="t-attf-class" add="#{request.env['res.lang']._lang_get(request.env.lang).direction == 'rtl' and 'o_rtl' or ''}" separator=" "/>
             <attribute name="t-attf-class" add="#{'o_portal' if is_portal else ''}" separator=" "/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']/header/img" position="replace">
@@ -12,7 +12,7 @@
                         <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
                     </a>
                     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_collapse">
-                        <span class="navbar-toggler-icon"/>
+                        <span class="navbar-toggler-icon o_not_editable"/>
                     </button>
                     <div class="collapse navbar-collapse" id="top_menu_collapse">
                         <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->

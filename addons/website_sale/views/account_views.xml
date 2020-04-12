@@ -6,7 +6,7 @@
         <field name="view_mode">tree,form</field>
         <field name="domain">[('team_id.website_ids', '!=', False)]</field>
         <field name="view_id" ref="account.view_invoice_tree"/>
-        <field name="context">{'type':'out_invoice'}</field>
+        <field name="context">{'move_type':'out_invoice'}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
     </record>
 

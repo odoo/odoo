@@ -12,7 +12,7 @@ var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
 var Dialog = require('web.Dialog');
 var ListConfirmDialog = require('web.ListConfirmDialog');
-var Sidebar = require('web.Sidebar');
+var session = require('web.session');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -25,6 +25,7 @@ var ListController = BasicController.extend({
     buttons_template: 'ListView.buttons',
     events: _.extend({}, BasicController.prototype.events, {
         'click .o_list_export_xlsx': '_onDirectExportData',
+        'click .o_list_select_domain': '_onSelectDomain',
     }),
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         activate_next_widget: '_onActivateNextWidget',
@@ -42,19 +43,24 @@ var ListController = BasicController.extend({
      * @override
      * @param {Object} params
      * @param {boolean} params.editable
-     * @param {boolean} params.hasSidebar
+     * @param {boolean} params.hasActionMenus
      * @param {Object} params.toolbarActions
      * @param {boolean} params.noLeaf
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
-        this.hasSidebar = params.hasSidebar;
+        this.hasActionMenus = params.hasActionMenus;
         this.toolbarActions = params.toolbarActions || {};
         this.editable = params.editable;
         this.noLeaf = params.noLeaf;
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
         this.fieldChangedPrevented = false;
+        this.isPageSelected = false; // true iff all records of the page are selected
+        this.isDomainSelected = false; // true iff the user selected all records matching the domain
+        session.user_has_group('base.group_allow_export').then(has_group => {
+            this.isExportEnable = has_group;
+        });
         Object.defineProperty(this, 'mode', {
             get: () => this.renderer.isEditable() ? 'edit' : 'readonly',
             set: () => {},
@@ -65,25 +71,6 @@ var ListController = BasicController.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * Calculate the active domain of the list view. This should be done only
-     * if the header checkbox has been checked. This is done by evaluating the
-     * search results, and then adding the dataset domain (i.e. action domain).
-     *
-     * @todo This is done only for the data export.  The full mechanism is wrong,
-     * this method should be private, most of the code in the sidebar should be
-     * moved to the controller, and we should not use the getParent method...
-     *
-     * @returns {Promise<array[]>} a promise that resolve to the active domain
-     */
-    getActiveDomain: function () {
-        var self = this;
-        if (this.$('thead .o_list_record_selector input').prop('checked')) {
-            var searchQuery = this._controlPanel ? this._controlPanel.getSearchQuery() : {};
-            var record = self.model.get(self.handle, {raw: true});
-            return record.getDomain().concat(searchQuery.domain || []);
-        }
-    },
     /*
      * @override
      */
@@ -125,13 +112,14 @@ var ListController = BasicController.extend({
      * induce the leaving of the current row.
      *
      * @override
-     * @param {jQuery} $node
      */
     renderButtons: function ($node) {
-        if (!this.noLeaf && this.hasButtons) {
+        if (this.noLeaf || !this.hasButtons) {
+            this.hasButtons = false;
+            this.$buttons = $('<div>');
+        } else {
             this.$buttons = $(qweb.render(this.buttons_template, {widget: this}));
             this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
-
             this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));
             this.$buttons.find('.o_list_button_add').tooltip({
                 delay: {show: 200, hide: 0},
@@ -142,57 +130,10 @@ var ListController = BasicController.extend({
             });
             this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
+        }
+        if ($node) {
             this.$buttons.appendTo($node);
         }
-    },
-    /**
-     * Render the sidebar (the 'action' menu in the control panel, right of the
-     * main buttons)
-     *
-     * @param {jQuery Node} $node
-     * @returns {Promise}
-     */
-    renderSidebar: function ($node) {
-        var self = this;
-        if (this.hasSidebar) {
-            var other = [{
-                label: _t("Export"),
-                callback: this._onExportData.bind(this)
-            }];
-            if (this.archiveEnabled) {
-                other.push({
-                    label: _t("Archive"),
-                    callback: function () {
-                        Dialog.confirm(self, _t("Are you sure that you want to archive all the selected records?"), {
-                            confirm_callback: self._toggleArchiveState.bind(self, true),
-                        });
-                    }
-                });
-                other.push({
-                    label: _t("Unarchive"),
-                    callback: this._toggleArchiveState.bind(this, false)
-                });
-            }
-            if (this.is_action_enabled('delete')) {
-                other.push({
-                    label: _t('Delete'),
-                    callback: this._onDeleteSelectedRecords.bind(this)
-                });
-            }
-            this.sidebar = new Sidebar(this, {
-                editable: this.is_action_enabled('edit'),
-                env: {
-                    context: this.model.get(this.handle, {raw: true}).getContext(),
-                    activeIds: this.getSelectedIds(),
-                    model: this.modelName,
-                },
-                actions: _.extend(this.toolbarActions, {other: other}),
-            });
-            return this.sidebar.appendTo($node).then(function() {
-                self._toggleSidebar();
-            });
-        }
-        return Promise.resolve();
     },
     /**
      * Overrides to update the list of selected records
@@ -201,18 +142,42 @@ var ListController = BasicController.extend({
      */
     update: function (params, options) {
         var self = this;
+        let res_ids;
         if (options && options.keepSelection) {
             // filter out removed records from selection
-            var res_ids = this.model.get(this.handle).res_ids;
+            res_ids = this.model.get(this.handle).res_ids;
             this.selectedRecords = _.filter(this.selectedRecords, function (id) {
                 return _.contains(res_ids, self.model.get(id).res_id);
             });
         } else {
             this.selectedRecords = [];
         }
+        if (this.selectedRecords.length === 0 || this.selectedRecords.length < res_ids.length) {
+            this.isDomainSelected = false;
+            this.isPageSelected = false;
+        }
 
         params.selectedRecords = this.selectedRecords;
         return this._super.apply(this, arguments);
+    },
+    /**
+     * This helper simply makes sure that the control panel buttons matches the
+     * current mode.
+     *
+     * @override
+     * @param {string} mode either 'readonly' or 'edit'
+     */
+    updateButtons: function (mode) {
+        if (this.hasButtons) {
+            this.$buttons.toggleClass('o-editing', mode === 'edit');
+            const state = this.model.get(this.handle, {raw: true});
+            if (state.count) {
+                this.$('.o_list_export_xlsx').show();
+            } else {
+                this.$('.o_list_export_xlsx').hide();
+            }
+        }
+        this._updateSelectionBox();
     },
 
     //--------------------------------------------------------------------------
@@ -233,7 +198,7 @@ var ListController = BasicController.extend({
         if ((recordID || this.handle) !== this.handle) {
             var state = this.model.get(this.handle);
             this.renderer.removeLine(state, recordID);
-            this._updatePager();
+            this._updatePaging(state);
         }
     },
     /**
@@ -257,30 +222,11 @@ var ListController = BasicController.extend({
             self.renderer.updateState(state, {keepWidths: true})
                 .then(function () {
                     self.renderer.editRecord(recordID);
-                }).then(self._updatePager.bind(self));
+                })
+                .then(() => {
+                    self._updatePaging(state);
+                });
         }).then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
-    },
-    /**
-     * Archive the current selection
-     *
-     * @private
-     * @param {string[]} ids
-     * @param {boolean} archive
-     * @returns {Promise}
-     */
-    _archive: function (ids, archive) {
-        if (ids.length === 0) {
-            return Promise.resolve();
-        }
-        if (archive) {
-            return this.model
-                .actionArchive(ids, this.handle)
-                .then(this.update.bind(this, {}, {reload: false}));
-        } else {
-            return this.model
-                .actionUnarchive(ids, this.handle)
-                .then(this.update.bind(this, {}, {reload: false}));
-        }
     },
     /**
      * Assign on the buttons create additionnal behavior to facilitate the work of the users doing input only using the keyboard
@@ -324,6 +270,39 @@ var ListController = BasicController.extend({
             .then(this._setMode.bind(this, 'readonly', id));
     },
     /**
+     * Deletes records matching the current domain. We limit the number of
+     * deleted records to the 'active_ids_limit' config parameter.
+     *
+     * @private
+     */
+    _deleteRecordsInCurrentDomain: function () {
+        const doIt = async () => {
+            const state = this.model.get(this.handle, {raw: true});
+            const resIds = await this._domainToResIds(state.getDomain(), session.active_ids_limit);
+            await this._rpc({
+                model: this.modelName,
+                method: 'unlink',
+                args: [resIds],
+                context: state.getContext(),
+            });
+            if (resIds.length === session.active_ids_limit) {
+                const msg = _.str.sprintf(
+                    _t("Of the %d records selected, only the first %d have been deleted."),
+                    state.count, resIds.length
+                );
+                this.do_notify(_t('Warning'), msg);
+            }
+            this.reload();
+        };
+        if (this.confirmOnDelete) {
+            Dialog.confirm(this, _t("Are you sure you want to delete these records ?"), {
+                confirm_callback: doIt,
+            });
+        } else {
+            doIt();
+        }
+    },
+    /**
      * To improve performance, list view must not be rerendered if it is asked
      * to discard all its changes. Indeed, only the in-edition row needs to be
      * discarded in that case.
@@ -342,7 +321,25 @@ var ListController = BasicController.extend({
         }
         var self = this;
         return this._super(recordID).then(function () {
-            self._updateButtons('readonly');
+            self.updateButtons('readonly');
+        });
+    },
+    /**
+     * Returns the ids of records matching the given domain.
+     *
+     * @private
+     * @param {Array[]} domain
+     * @param {integer} [limit]
+     * @returns {integer[]}
+     */
+    _domainToResIds: function (domain, limit) {
+        return this._rpc({
+            model: this.modelName,
+            method: 'search',
+            args: [domain],
+            kwargs: {
+                limit: limit,
+            },
         });
     },
     /**
@@ -353,20 +350,9 @@ var ListController = BasicController.extend({
         let state = this.model.get(this.handle);
         let defaultExportFields = this.renderer.columns.filter(field => field.tag === 'field').map(field => field.attrs.name);
         let groupedBy = this.renderer.state.groupedBy;
+        const domain = this.isDomainSelected && state.getDomain();
         return new DataExport(this, state, defaultExportFields, groupedBy,
-            this.getActiveDomain(), this.getSelectedIds());
-    },
-    /**
-     * @override
-     * @private
-     */
-    _getSidebarEnv: function () {
-        var env = this._super.apply(this, arguments);
-        var record = this.model.get(this.handle);
-        return _.extend(env, {
-            domain: record.getDomain(),
-            selectAll: !!this.$('thead .o_list_record_selector input').prop('checked'),
-        });
+            domain, this.getSelectedIds());
     },
     /**
      * Only display the pager when there are data to display.
@@ -374,9 +360,53 @@ var ListController = BasicController.extend({
      * @override
      * @private
      */
-    _isPagerVisible: function () {
-        var state = this.model.get(this.handle, {raw: true});
-        return !!state.count;
+    _getPagingInfo: function (state) {
+        if (!state.count) {
+            return null;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     * @private
+     */
+    _getActionMenuItems: function (state) {
+        if (!this.hasActionMenus || !this.selectedRecords.length) {
+            return null;
+        }
+        const props = this._super(...arguments);
+        const otherActionItems = [];
+        if (this.isExportEnable) {
+            otherActionItems.push({
+                description: _t("Export"),
+                callback: () => this._onExportData()
+            });
+        }
+        if (this.archiveEnabled) {
+            otherActionItems.push({
+                description: _t("Archive"),
+                callback: () => {
+                    Dialog.confirm(this, _t("Are you sure that you want to archive all the selected records?"), {
+                        confirm_callback: () => this._toggleArchiveState(true),
+                    });
+                }
+            }, {
+                description: _t("Unarchive"),
+                callback: () => this._toggleArchiveState(false)
+            });
+        }
+        if (this.activeActions.delete) {
+            otherActionItems.push({
+                description: _t("Delete"),
+                callback: () => this._onDeleteSelectedRecords()
+            });
+        }
+        return Object.assign(props, {
+            items: Object.assign({}, this.toolbarActions, { other: otherActionItems }),
+            context: state.getContext(),
+            domain: state.getDomain(),
+            isDomainSelected: this.isDomainSelected,
+        });
     },
     /**
      * Saves multiple records at once. This method is called by the _onFieldChanged method
@@ -406,7 +436,7 @@ var ListController = BasicController.extend({
             const saveRecords = () => {
                 this.model.saveRecords(this.handle, recordId, validRecordIds, fieldName)
                     .then(async () => {
-                        this._updateButtons('readonly');
+                        this.updateButtons('readonly');
                         const state = this.model.get(this.handle);
                         // We need to check the current multi-editable state here
                         // in case the selection is changed. If there are changes
@@ -440,6 +470,7 @@ var ListController = BasicController.extend({
                 };
                 const record = this.model.get(recordId);
                 const dialogChanges = {
+                    isDomainSelected: this.isDomainSelected,
                     fieldLabel: node.attrs.string || record.fields[fieldName].string,
                     fieldName: node.attrs.name,
                     nbRecords: recordIds.length,
@@ -481,7 +512,7 @@ var ListController = BasicController.extend({
      */
     _setMode: function (mode, recordID) {
         if ((recordID || this.handle) !== this.handle) {
-            this._updateButtons(mode);
+            this.updateButtons(mode);
             return this.renderer.setRowMode(recordID, mode);
         } else {
             return this._super.apply(this, arguments);
@@ -492,9 +523,26 @@ var ListController = BasicController.extend({
      *
      * @private
      * @param {boolean} archive
+     * @returns {Promise}
      */
-    _toggleArchiveState: function (archive) {
-        this._archive(this.selectedRecords, archive);
+    _toggleArchiveState: async function (archive) {
+        let resIds;
+        let displayNotif = false;
+        const state = this.model.get(this.handle, {raw: true});
+        if (this.isDomainSelected) {
+            resIds = await this._domainToResIds(state.getDomain(), session.active_ids_limit);
+            displayNotif = (resIds.length === session.active_ids_limit);
+        } else {
+            resIds = this.model.localIdsToResIds(this.selectedRecords);
+        }
+        await this._archive(resIds, archive);
+        if (displayNotif) {
+            const msg = _.str.sprintf(
+                _t("Of the %d records selected, only the first %d have been archived/unarchived."),
+                state.count, resIds.length
+            );
+            this.do_notify(_t('Warning'), msg);
+        }
     },
     /**
      * Hide the create button in non-empty grouped editable list views, as an
@@ -503,46 +551,44 @@ var ListController = BasicController.extend({
      * @private
      */
     _toggleCreateButton: function () {
-        if (this.$buttons) {
+        if (this.hasButtons) {
             var state = this.model.get(this.handle);
             var createHidden = this.renderer.isEditable() && state.groupedBy.length && state.data.length;
             this.$buttons.find('.o_list_button_add').toggleClass('o_hidden', !!createHidden);
         }
     },
     /**
-     * Display the sidebar (the 'action' menu in the control panel) if we have
-     * some selected records.
-     */
-    _toggleSidebar: function () {
-        if (this.sidebar) {
-            this.sidebar.do_toggle(this.selectedRecords.length > 0);
-        }
-    },
-    /**
      * @override
      * @returns {Promise}
      */
-    _update: function () {
-        return this._super.apply(this, arguments)
-            .then(this._toggleSidebar.bind(this))
-            .then(this._toggleCreateButton.bind(this))
-            .then(this._updateButtons.bind(this, 'readonly'));
+    _update: async function () {
+        await this._super(...arguments);
+        this._toggleCreateButton();
+        this.updateButtons('readonly');
     },
     /**
-     * This helper simply makes sure that the control panel buttons matches the
-     * current mode.
+     * When records are selected, a box is displayed in the control panel (next
+     * to the buttons). It indicates the number of selected records, and allows
+     * the user to select the whole domain instead of the current page (when the
+     * page is selected). This function renders and displays this box when at
+     * least one record is selected.
      *
-     * @param {string} mode either 'readonly' or 'edit'
+     * @private
      */
-    _updateButtons: function (mode) {
-        if (this.$buttons) {
-            this.$buttons.toggleClass('o-editing', mode === 'edit');
+    _updateSelectionBox() {
+        if (this.$selectionBox) {
+            this.$selectionBox.remove();
+            this.$selectionBox = null;
+        }
+        if (this.selectedRecords.length) {
             const state = this.model.get(this.handle, {raw: true});
-            if (state.count) {
-                this.$('.o_list_export_xlsx').show();
-            } else {
-                this.$('.o_list_export_xlsx').hide();
-            }
+            this.$selectionBox = $(qweb.render('ListView.selection', {
+                isDomainSelected: this.isDomainSelected,
+                isPageSelected: this.isPageSelected,
+                nbSelected: this.selectedRecords.length,
+                nbTotal: state.count,
+            }));
+            this.$selectionBox.appendTo(this.$buttons);
         }
     },
 
@@ -615,8 +661,12 @@ var ListController = BasicController.extend({
      *
      * @private
      */
-    _onDeleteSelectedRecords: function () {
-        this._deleteRecords(this.selectedRecords);
+    _onDeleteSelectedRecords: async function () {
+        if (this.isDomainSelected) {
+            this._deleteRecordsInCurrentDomain();
+        } else {
+            this._deleteRecords(this.selectedRecords);
+        }
     },
     /**
      * Handler called when the user clicked on the 'Discard' button.
@@ -678,7 +728,13 @@ var ListController = BasicController.extend({
      * @private
      */
     _onDirectExportData() {
-        this._getExportDialogWidget().export();
+        // access rights check before exporting data
+        return this._rpc({
+            model: 'ir.exports',
+            method: 'search_read',
+            args: [[], ['id']],
+            limit: 1,
+        }).then(() => this._getExportDialogWidget().export())
     },
     /**
      * Opens the related form view.
@@ -737,6 +793,15 @@ var ListController = BasicController.extend({
             .guardedCatch(ev.data.onFailure);
     },
     /**
+     * @private
+     */
+    _onSelectDomain: function (ev) {
+        ev.preventDefault();
+        this.isDomainSelected = true;
+        this._updateSelectionBox();
+        this._updateControlPanel();
+    },
+    /**
      * When the current selection changes (by clicking on the checkboxes on the
      * left), we need to display (or hide) the 'sidebar'.
      *
@@ -745,7 +810,10 @@ var ListController = BasicController.extend({
      */
     _onSelectionChanged: function (ev) {
         this.selectedRecords = ev.data.selection;
-        this._toggleSidebar();
+        this.isPageSelected = ev.data.allChecked;
+        this.isDomainSelected = false;
+        this._updateSelectionBox();
+        this._updateControlPanel();
     },
     /**
      * If the record is set as dirty while in multiple record edition,
@@ -780,12 +848,12 @@ var ListController = BasicController.extend({
      */
     _onToggleColumnOrder: function (ev) {
         ev.stopPropagation();
-        var data = this.model.get(this.handle);
-        if (!data.groupedBy) {
-            this.pager.updateState({current_min: 1});
+        var state = this.model.get(this.handle);
+        if (!state.groupedBy) {
+            this._updatePaging(state, { currentMinimum: 1 });
         }
         var self = this;
-        this.model.setSort(data.id, ev.data.name).then(function () {
+        this.model.setSort(state.id, ev.data.name).then(function () {
             self.update({});
         });
     },

@@ -119,7 +119,7 @@
                             <field name="is_published" widget="website_redirect_button"/>
                         </div>
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <field name="kanban_state" widget="state_selection" class="ml-3"/>
+                        <field name="kanban_state" widget="state_selection" class="ml-3 float-right"/>
                         <field name="image" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -140,7 +140,7 @@
                             </group>
                             <group>
                                 <field name="company_id" invisible="1"/>
-                                <field name="user_id"/>
+                                <field name="user_id" domain="[('share', '=', False)]"/>
                                 <field name="event_id"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
@@ -151,7 +151,7 @@
                                     <field name="partner_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                                     <field name="partner_name"/>
                                     <field name="partner_email"/>
-                                    <field name="partner_phone"/>
+                                    <field name="partner_phone" class="o_force_ltr"/>
                                     <field name="partner_biography"/>
                                 </group>
                             </page>
@@ -197,7 +197,6 @@
             <field name="name">Event Tracks</field>
             <field name="res_model">event.track</field>
             <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
-            <field name="context">{'search_default_location': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                   Add a new track
@@ -211,7 +210,7 @@
             <field name="res_model">event.track</field>
             <field name="name">Event Tracks</field>
             <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
-            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'search_default_location': 1}</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Add a new track

@@ -21,7 +21,7 @@ class ResConfigSettings(models.TransientModel):
         ('order', 'Invoice what is ordered'),
         ('delivery', 'Invoice what is delivered')
         ], 'Invoicing Policy',
-        default='order',
+        default='delivery',
         default_model='product.template')
     deposit_default_product_id = fields.Many2one(
         'product.product',

@@ -38,7 +38,11 @@ class PriceRule(models.Model):
 class ProviderGrid(models.Model):
     _inherit = 'delivery.carrier'
 
-    delivery_type = fields.Selection(selection_add=[('base_on_rule', 'Based on Rules')])
+    delivery_type = fields.Selection(selection_add=[
+        ('base_on_rule', 'Based on Rules'),
+        ], ondelete={'base_on_rule': lambda recs: recs.write({
+            'delivery_type': 'fixed', 'fixed_price': 0,
+        })})
     price_rule_ids = fields.One2many('delivery.price.rule', 'carrier_id', 'Pricing Rules', copy=True)
 
     def base_on_rule_rate_shipment(self, order):
@@ -54,7 +58,7 @@ class ProviderGrid(models.Model):
         except UserError as e:
             return {'success': False,
                     'price': 0.0,
-                    'error_message': e.name,
+                    'error_message': e.args[0],
                     'warning_message': False}
         if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
             price_unit = order.company_id.currency_id._convert(
@@ -67,6 +71,8 @@ class ProviderGrid(models.Model):
 
     def _get_price_available(self, order):
         self.ensure_one()
+        self = self.sudo()
+        order = order.sudo()
         total = weight = volume = quantity = 0
         total_delivery = 0.0
         for line in order.order_line:

@@ -31,7 +31,7 @@ class MailChannel(models.Model):
             for message in self.channel_message_ids.sorted('id')
         )
         utm_source = self.env.ref('crm_livechat.utm_source_livechat', raise_if_not_found=False)
-        lead = self.env['crm.lead'].create({
+        return self.env['crm.lead'].create({
             'name': html2plaintext(key[5:]),
             'partner_id': channel_partners.partner_id.id,
             'user_id': None,
@@ -40,5 +40,3 @@ class MailChannel(models.Model):
             'referred': partner.name,
             'source_id': utm_source and utm_source.id,
         })
-        lead._onchange_partner_id()
-        return lead

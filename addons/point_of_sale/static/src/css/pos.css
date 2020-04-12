@@ -1506,6 +1506,7 @@ td {
         /* avoid black background if backgrounds are printed */
         background: initial;
     }
+    .o_notification_manager,
     .oe_leftbar,
     .oe_loading,
     .pos .pos-topheader, 
@@ -1513,7 +1514,8 @@ td {
     .pos .keyboard_frame,
     .pos .receipt-screen header,
     .pos .receipt-screen .top-content,
-    .pos .receipt-screen .centered-content .button {
+    .pos .receipt-screen .centered-content .button,
+    .pos .receipt-screen .centered-content .print_invoice {
         display: none !important;
     }
     .pos,
@@ -1567,6 +1569,9 @@ td {
         display: none !important;
     }
     .o_chat_window {
+        display: none !important;
+    }
+    .blockUI {
         display: none !important;
     }
 }

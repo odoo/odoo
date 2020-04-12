@@ -3,7 +3,7 @@
     <data noupdate="1">
         <!-- ==== Invoice Demo 1 with attachment ==== -->
         <record id="demo_invoice_1" model="account.move">
-            <field name="type">out_invoice</field>
+            <field name="move_type">out_invoice</field>
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="invoice_user_id" ref="base.user_demo"/>
             <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -16,18 +16,18 @@
 
         <!-- ==== Invoice Demo 2 ==== -->
         <record id="demo_invoice_2" model="account.move">
-            <field name="type">out_invoice</field>
+            <field name="move_type">out_invoice</field>
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="invoice_date" eval="time.strftime('%Y-%m')+'-08'"/>
             <field name="invoice_line_ids" eval="[
                 (0, 0, {'product_id': ref('product.consu_delivery_03'), 'price_unit': 50.0, 'quantity': 5}),
-                (0, 0, {'product_id': ref('product.consu_delivery_01'), 'price_unit': 25.0, 'quantity': 20}),
+
             ]"/>
         </record>
 
         <!-- ==== Invoice Demo 3 ==== -->
         <record id="demo_invoice_3" model="account.move">
-            <field name="type">out_invoice</field>
+            <field name="move_type">out_invoice</field>
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="invoice_date" eval="time.strftime('%Y-%m')+'-08'"/>
             <field name="invoice_line_ids" eval="[
@@ -38,10 +38,11 @@
 
         <!-- ==== Invoice Demo 4 - Create an invoice that will generate a followup ==== -->
         <record id="demo_invoice_followup" model="account.move">
-            <field name="type">out_invoice</field>
+            <field name="move_type">out_invoice</field>
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="invoice_user_id" ref="base.user_demo"/>
             <field name="invoice_payment_term_id" ref="account.account_payment_term_immediate"/>
+
             <field name="invoice_date" eval="(datetime.today() + timedelta(days=-15)).strftime('%Y-%m-%d')"/>
             <field name="invoice_line_ids" eval="[
                 (0, 0, {'product_id': ref('product.consu_delivery_02'), 'price_unit': 642.0, 'quantity': 5}),
@@ -51,7 +52,7 @@
 
         <!-- ==== Invoice Demo 5 - Draft Vendor Bill ==== -->
         <record id="demo_invoice_5" model="account.move">
-            <field name="type">in_invoice</field>
+            <field name="move_type">in_invoice</field>
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="invoice_user_id" ref="base.user_demo"/>
             <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
@@ -64,14 +65,14 @@
 
         <!-- ==== Invoice Demo 6 - Draft Vendor Bill for OCR ==== -->
 
-        <record id="demo_invoice_extract" model="account.move" context="{'default_type': 'in_invoice'}">
-            <field name="type">in_invoice</field>
+        <record id="demo_invoice_extract" model="account.move" context="{'default_move_type': 'in_invoice'}">
+            <field name="move_type">in_invoice</field>
             <field name="invoice_user_id" ref="base.user_demo"/>
         </record>
 
         <!-- ==== Invoice Demo 7 - Posted vendor bill ==== -->
         <record id="demo_invoice_equipment_purchase" model="account.move">
-            <field name="type">in_invoice</field>
+            <field name="move_type">in_invoice</field>
             <field name="ref">INV/2018/0057</field>
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="invoice_date">2018-09-17</field>

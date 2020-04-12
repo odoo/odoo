@@ -14,6 +14,7 @@
                        <div class="oe_title">
                            <h1 class= "oe_read_only">
                              <field name="code" placeholder="code"/> - <field name="name" placeholder="name"/>
+                             <field name="company_id" invisible="1"/>
                            </h1>
                            <div class="oe_inline oe_edit_only">
                              <label for="code"/>
@@ -54,7 +55,9 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type_id"/>
-                    <field name="reconcile" widget="boolean_toggle"/>
+                    <field name="internal_type" invisible="1"/>
+                    <field name="internal_group" invisible="1"/>
+                    <field name="reconcile" widget="boolean_toggle" attrs="{'invisible': ['|', ('internal_type','=','liquidity'), ('internal_group', '=', 'off_balance')]}"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tags"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags"/>
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
@@ -142,8 +145,6 @@
             </field>
             <field name="context">{'search_default_activeacc': True}</field>
         </record>
-
-        <menuitem action="action_account_form" id="menu_action_account_form" parent="account.account_account_menu" groups="account.group_account_readonly" sequence="1"/>
 
         <record id="action_duplicate_account" model="ir.actions.server">
             <field name="name">Duplicate</field>
@@ -274,7 +275,7 @@
                                     <group>
                                         <field name="company_partner_id" invisible="1"/>
                                         <field name="bank_account_id" context="{'default_partner_id': company_partner_id, 'form_view_ref': 'account.view_company_partner_bank_form'}"/>
-                                        <field name="bank_id"/>
+                                        <field name="bank_id" attrs="{'invisible': [('bank_account_id', '=', False)]}"/>
                                     </group>
                                     <group >
                                         <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"  groups="account.group_account_readonly"/>
@@ -288,8 +289,22 @@
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                                     </group>
                                     <group>
-                                        <field name="default_debit_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" groups="account.group_account_readonly"/>
-                                        <field name="default_credit_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" groups="account.group_account_readonly"/>
+                                        <field name="id" invisible="1"/>
+                                        <field name="default_debit_account_id" options="{'no_create': True}"
+                                               attrs="{'required': [('id', '!=', False), ('type', 'in', ('bank', 'cash'))]}"
+                                               groups="account.group_account_readonly"/>
+                                        <field name="default_credit_account_id" options="{'no_create': True}"
+                                               attrs="{'required': [('id', '!=', False), ('type', 'in', ('bank', 'cash'))]}"
+                                               groups="account.group_account_readonly"/>
+                                        <field name="payment_debit_account_id" options="{'no_create': True}"
+                                               attrs="{'required': [('id', '!=', False), ('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
+                                               groups="account.group_account_readonly"/>
+                                        <field name="payment_credit_account_id" options="{'no_create': True}"
+                                               attrs="{'required': [('id', '!=', False), ('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
+                                               groups="account.group_account_readonly"/>
+                                        <field name="suspense_account_id" options="{'no_create': True}"
+                                               attrs="{'required': [('id', '!=', False), ('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
+                                               groups="account.group_account_readonly"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
                                 </group>
@@ -312,16 +327,17 @@
                                             <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button"><i class="fa fa-fw o_button_icon fa-arrow-right"/> Configure Email Servers</a>
                                         </div>
                                     </group>
-                                    <group string="Posting" name="column_posting" groups="account.group_account_readonly" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
-                                        <field name="profit_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
-                                        <field name="loss_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
-                                        <field name="post_at" widget="radio" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
+                                    <group string="Posting" name="column_posting" groups="account.group_account_readonly" attrs="{'invisible': [('type', '!=', 'cash')]}">
+                                        <field name="profit_account_id" options="{'no_create': True}"/>
+                                        <field name="loss_account_id" options="{'no_create': True}"/>
                                     </group>
                                     <group string="Control-Access" groups="account.group_account_manager">
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
                                         <field name="type_control_ids" widget="many2many_tags"/>
                                         <field name="account_control_ids" widget="many2many_tags"/>
-                                        <field name="restrict_mode_hash_table" groups="account.group_account_readonly"/>
+                                        <field name="restrict_mode_hash_table"
+                                               attrs="{'invisible': [('type', 'in', ('bank', 'cash'))]}"
+                                               groups="account.group_account_readonly"/>
                                     </group>
                                     <group string="Payment Method Types" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
@@ -367,8 +383,6 @@ action = model.setting_init_bank_account_action()
             </field>
         </record>
 
-        <menuitem action="action_new_bank_setting" id="menu_action_account_bank_journal_form" parent="root_payment_menu" groups="account.group_account_manager" sequence="1"/>
-
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Journals</field>
             <field name="res_model">account.journal</field>
@@ -386,7 +400,6 @@ action = model.setting_init_bank_account_action()
               </p>
             </field>
         </record>
-        <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="account_invoicing_menu" sequence="5" groups="account.group_account_manager"/>
 
         <record id="action_account_journal_group_list" model="ir.actions.act_window">
             <field name="name">Journal Groups</field>
@@ -399,7 +412,6 @@ action = model.setting_init_bank_account_action()
               </p>
             </field>
         </record>
-        <menuitem action="action_account_journal_group_list" id="menu_action_account_journal_group_list" parent="account_account_menu" sequence="2" groups="account.group_account_manager"/>
 
         <!-- Tags -->
         <record id="account_tag_view_form" model="ir.ui.view">
@@ -575,23 +587,31 @@ action = model.setting_init_bank_account_action()
             <field name="arch" type="xml">
                 <form string="Bank Statement">
                 <header>
-                    <field name="all_lines_reconciled" invisible="1" />
-                    <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
-                    <button name="button_reopen" states="confirm" string="Reset to New" type="object"/>
+                    <button string="Post" states="open" class="oe_highlight"
+                            name="button_post" type="object"/>
+                    <button string="Validate" class="oe_highlight"
+                            name="button_validate_or_action" type="object"
+                            attrs="{'invisible':['|', '|', ('all_lines_reconciled', '=', False), ('line_ids','=',[]), ('state', '!=', 'posted')]}"/>
+                    <button string="Reset to New"
+                            name="button_reopen" type="object"
+                            attrs="{'invisible': [('state', '=', 'open')]}"/>
                     <button name="%(action_cash_box_out)d" string="Take Money In/Out" type="action" class="oe_highlight" attrs="{'invisible': [('journal_type','!=','cash')]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,posted,confirm"/>
                 </header>
                 <div class="alert alert-warning" role="alert" attrs="{'invisible': ['|', ('previous_statement_id', '=', False), ('is_valid_balance_start', '=', True)]}">
                     The starting balance <b>doesn't match</b> with the ending balance of the previous bank statement.
                 </div>
                 <sheet>
+                    <!-- Invisible fields -->
+                    <field name="all_lines_reconciled" invisible="1" />
+                    <field name="move_line_count" invisible="1"/>
+
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="button_journal_entries"
                                 string="Journal Entries" type="object"
-                                attrs="{'invisible':[('move_line_count','=', 0)]}" icon="fa-bars" />
-                        <field name="move_line_count" invisible="1"/>
-
+                                attrs="{'invisible':[('move_line_count','=', 0)]}" icon="fa-bars"/>
                     </div>
+
                     <div class="oe_title oe_inline">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -604,19 +624,20 @@ action = model.setting_init_bank_account_action()
                             <field name="cashbox_start_id" invisible="1"/>
                             <field name="cashbox_end_id" invisible="1"/>
                             <field name="journal_id" domain="[('type', '=', journal_type)]" attrs="{'readonly': [('move_line_count','!=', 0)]}" widget="selection"/>
-                            <field name="date" options="{'datepicker': {'warn_future': true}}" />
-                            <field name="accounting_date" groups="base.group_no_one"/>
+                            <field name="date"
+                                   attrs="{'readonly': [('state', '!=', 'open')]}"
+                                   options="{'datepicker': {'warn_future': true}}"/>
                             <field name='company_id' options="{'no_create': True}" groups="base.group_multi_company" />
                             <field name="currency_id" invisible="1"/>
                         </group><group>
                             <label for="balance_start"/>
                             <div>
-                                <field class="oe_inline" name="balance_start"/>
+                                <field name="balance_start" class="oe_inline" attrs="{'readonly': [('state', '!=', 'open')]}"/>
                                 <button name="open_cashbox_id" attrs="{'invisible': ['|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'start'}"/>
                             </div>
                             <label for="balance_end_real"/>
                             <div>
-                                <field class="oe_inline" name="balance_end_real"/>
+                                <field name="balance_end_real" class="oe_inline" attrs="{'readonly': [('state', '!=', 'open')]}"/>
                                 <button name="open_cashbox_id" attrs="{'invisible': ['|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'close'}"/>
                             </div>
                         </group>
@@ -624,25 +645,44 @@ action = model.setting_init_bank_account_action()
 
                     <notebook>
                         <page string="Transactions" name="statement_line_ids">
-                            <field name="line_ids" context="{'date':date}">
-                                <tree editable="bottom" string="Statement lines" decoration-muted="journal_entry_ids" limit="500">
-                                    <field name="sequence"  widget="handle"/>
-                                    <field name="journal_entry_ids" invisible="1"/>
-                                    <field name="date" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="name" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="partner_id" domain="['|',('parent_id','=',False),('is_company','=',True)]"
-                                        attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }" groups="base.group_no_one"/>
-                                    <field name="transaction_type" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }" optional="hidden"/>
-                                    <field name="note" optional="hidden"/>
-                                    <field name="amount" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="journal_currency_id" invisible="1"/>
-                                    <field name="bank_account_id" invisible="1" />
-                                    <field name="account_number" optional="hidden"/>
-                                    <field name="amount_currency" optional="hidden"/>
-                                    <field name="currency_id" optional="hidden"/>
+                            <field name="line_ids"
+                                   attrs="{'readonly': [('state', '!=', 'open')]}"
+                                   context="{'default_date': date, 'default_journal_id': journal_id}">
+                                <tree string="Statement lines"
+                                      editable="bottom"
+                                      decoration-muted="is_reconciled"
+                                      limit="500">
+
+                                    <!-- Invisible fields -->
+                                    <field name="company_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
-                                    <button name="button_cancel_reconciliation" attrs="{'invisible': ['|',('journal_entry_ids', '=', []), ('state', '=', 'confirm')]}" string="Revert reconciliation" type="object" icon="fa-undo"/>
+                                    <field name="is_reconciled" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="partner_bank_id" invisible="1"/>
+
+                                    <!-- Visible fields -->
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="date"
+                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
+                                    <field name="payment_ref"/>
+                                    <field name="partner_id"
+                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"
+                                           domain="['|', ('parent_id','=', False), ('is_company','=',True)]"/>
+                                    <field name="ref" optional="hidden"/>
+                                    <field name="transaction_type" optional="hidden"/>
+                                    <field name="narration" string="Notes" optional="hidden"/>
+                                    <field name="amount"
+                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
+                                    <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"
+                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
+                                    <field name="account_number" optional="hidden"/>
+                                    <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"
+                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
+
+                                    <!-- Buttons -->
+                                    <button name="button_undo_reconciliation" type="object"
+                                            attrs="{'invisible': [('is_reconciled', '=', False)]}"
+                                            string="Revert reconciliation" icon="fa-undo"/>
                                 </tree>
                             </field>
                         </page>
@@ -702,12 +742,12 @@ action = model.setting_init_bank_account_action()
             <field name="model">account.bank.statement.line</field>
             <field name="arch" type="xml">
                 <search string="Search Bank Statements Line">
-                    <field name="name"/>
+                    <field name="payment_ref"/>
                     <field name="statement_id"/>
                     <field name="partner_id"/>
                     <field name="date"/>
                     <field name="journal_id" domain="[('type', 'in', ('bank', 'cash'))]" />
-                    <field name="note"/>
+                    <field name="narration" string="Notes"/>
                     <field name="transaction_type"/>
                 </search>
             </field>
@@ -718,20 +758,27 @@ action = model.setting_init_bank_account_action()
             <field name="model">account.bank.statement.line</field>
             <field name="priority">8</field>
             <field name="arch" type="xml">
-            <form string="Statement Line" create="false">
-                <group col="4">
-                    <field name="statement_id"/>
-                    <field name="date"/>
-                    <field name="name"/>
-                    <field name="ref"/>
-                    <field name="partner_id"/>
-                    <field name="amount"/>
-                    <field name="journal_currency_id" invisible="1"/>
-                    <field name="sequence"/>
-                    <field name="note"/>
-                    <field name="transaction_type"/>
-                </group>
-            </form>
+                <form string="Statement Line" create="false">
+                    <sheet>
+                        <group col="4">
+                            <!-- Invisible fields -->
+                            <field name="state" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+
+                            <!-- Displayed fields -->
+                            <field name="statement_id"/>
+                            <field name="date"/>
+                            <field name="payment_ref"/>
+                            <field name="ref"/>
+                            <field name="partner_id"/>
+                            <field name="amount"/>
+                            <field name="sequence"/>
+                            <field name="narration" string="Notes"/>
+                            <field name="transaction_type"/>
+                            <field name="move_id"/>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
         <record id="view_bank_statement_line_tree" model="ir.ui.view">
@@ -740,17 +787,21 @@ action = model.setting_init_bank_account_action()
             <field name="priority">8</field>
             <field name="arch" type="xml">
                 <tree string="Statement lines" create="false">
+                    <!-- Invisible fields -->
+                    <field name="state" invisible="1"/>
                     <field name="sequence" readonly="1" invisible="1"/>
-                    <field name="statement_id" />
+                    <field name="company_id" invisible="1"/>
                     <field name="journal_id" invisible="1" />
+
+                    <!-- Displayed fields -->
+                    <field name="statement_id" />
                     <field name="date"/>
-                    <field name="name"/>
+                    <field name="payment_ref"/>
                     <field name="ref" groups="base.group_no_one"/>
                     <field name="partner_id"/>
                     <field name="amount"/>
                     <field name="transaction_type" optional="hidden"/>
-                    <field name="note" optional="hidden"/>
-                    <field name="journal_currency_id" invisible="1"/>
+                    <field name="narration" optional="hidden"/>
                 </tree>
             </field>
         </record>
@@ -767,7 +818,7 @@ action = model.setting_init_bank_account_action()
                 A bank statement line is a financial transaction on a bank account
               </p><p>
                 Odoo allows you to reconcile a statement line directly with
-                the related sale or puchase invoice(s).
+                the related sale or purchase invoice(s).
               </p>
             </field>
         </record>
@@ -884,14 +935,14 @@ action = model.setting_init_bank_account_action()
                                <field name="show_decimal_separator" invisible="1"/>
                                <field name="decimal_separator" attrs="{'invisible': [('show_decimal_separator', '=', False)]}" groups="base.group_no_one"/>
                            </group>
-                            <field name="line_ids" default="{'default_model_id': self}" nolabel="1">
+                            <field name="line_ids" default="{'default_model_id': self, 'default_company_id': self.company_id}" nolabel="1">
                                 <tree editable="bottom">
                                     <field name="account_id"/>
                                     <field name="amount_type"/>
-                                    <field name="journal_id" domain="[('type', '=', 'general'), ('company_id', '=', company_id)]" attrs="{'column_invisible': [('parent.rule_type', '!=', 'writeoff_button')]}"/>
+                                    <field name="journal_id" attrs="{'column_invisible': [('parent.rule_type', '!=', 'writeoff_button')]}"/>
                                     <field name="amount_string"/>
                                     <field name="tax_ids" widget="many2many_tags"/>
-                                    <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_tags"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_tags"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="show_force_tax_included" invisible="1"/>
                                     <field name="force_tax_included" attrs="{'invisible': [('show_force_tax_included', '=', False)]}" widget="boolean_toggle"/>
@@ -979,15 +1030,6 @@ action = model.setting_init_bank_account_action()
               </p>
             </field>
         </record>
-        <menuitem id="action_account_reconcile_model_menu" parent="account.account_account_menu"
-                action="account.action_account_reconcile_model" sequence="4" />
-
-        <menuitem
-            id="account_report_folder"
-            name="Reporting"
-            parent="account_account_menu"
-            groups="account.group_account_readonly"
-            sequence="4"/>
 
         <!-- Account Types -->
         <record id="view_account_type_search" model="ir.ui.view">
@@ -1071,8 +1113,9 @@ action = model.setting_init_bank_account_action()
                     <field name="sequence" widget="handle"/>
                     <field name="factor_percent" attrs="{'invisible': [('repartition_type', '=', 'base')]}"/>
                     <field name="repartition_type"/>
-                    <field name="account_id" attrs="{'invisible': [('repartition_type', '=', 'base')]}" options="{'no_create': True}" domain="[('internal_type', 'not in', ('receivable', 'payable'))]"/>
+                    <field name="account_id" attrs="{'invisible': [('repartition_type', '=', 'base')]}" options="{'no_create': True}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('applicability', '=', 'taxes'), ('country_id', '=', country_id)]"/>
+                    <field name="use_in_tax_closing" optional="hidden" />
                     <field name="country_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                 </tree>
@@ -1156,7 +1199,7 @@ action = model.setting_init_bank_account_action()
                         <group>
                             <field name="name"/>
                             <field name="amount_type"/>
-                            <field name="active"/>
+                            <field name="active" widget="boolean_toggle"/>
                         </group>
                         <group>
                             <field name="type_tax_use"/>
@@ -1223,7 +1266,6 @@ action = model.setting_init_bank_account_action()
               </p>
             </field>
         </record>
-        <menuitem action="action_tax_form" id="menu_action_tax_form" parent="account_invoicing_menu" sequence="2"/>
 
         <!-- Tax group -->
         <record id="view_tax_group_tree" model="ir.ui.view">
@@ -1397,8 +1439,6 @@ action = model.setting_init_bank_account_action()
             <field name="search_view_id" ref="view_payment_term_search"/>
         </record>
 
-        <menuitem action="action_payment_term_form"
-            id="menu_action_payment_term_form" parent="account_invoicing_menu" sequence="1"/>
 
         <!-- Account Templates -->
 
@@ -1734,10 +1774,6 @@ action = model.setting_init_bank_account_action()
             </field>
         </record>
 
-        <menuitem id="menu_account_customer" name="Customers"
-            parent="account.menu_finance_receivables"
-            action="res_partner_action_customer" sequence="110"/>
-
         <record id="product_template_view_tree" model="ir.ui.view">
             <field name="name">product.template.tree</field>
             <field name="model">product.template</field>
@@ -1780,14 +1816,6 @@ action = model.setting_init_bank_account_action()
                 </p>
             </field>
         </record>
-
-        <menuitem id="product_product_menu_sellable" name="Products" action="product_product_action_sellable" parent="account.menu_finance_receivables" sequence="100"/>
-
-        <menuitem id="product_product_menu_purchasable" name="Products" action="product_product_action_purchasable" parent="account.menu_finance_payables" sequence="100"/>
-
-        <menuitem id="menu_account_supplier" name="Vendors"
-            parent="account.menu_finance_payables"
-            action="base.action_partner_supplier_form" sequence="200"/>
 
         <record id="view_account_group_form" model="ir.ui.view">
             <field name="name">account.group.form</field>

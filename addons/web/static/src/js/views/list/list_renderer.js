@@ -2,6 +2,7 @@ odoo.define('web.ListRenderer', function (require) {
 "use strict";
 
 var BasicRenderer = require('web.BasicRenderer');
+const { ComponentWrapper } = require('web.OwlCompatibility');
 var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
@@ -83,6 +84,7 @@ var ListRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
+
     /**
      * Order to focus to be given to the content of the current view
      * @override
@@ -352,7 +354,10 @@ var ListRenderer = BasicRenderer.extend({
                 if (!formatFunc) {
                     formatFunc = field_utils.format[field.type];
                 }
-                var formattedValue = formatFunc(value, field, { escape: true });
+                var formattedValue = formatFunc(value, field, {
+                    escape: true,
+                    digits: column.attrs.digits ? JSON.parse(column.attrs.digits) : undefined,
+                });
                 $cell.addClass('o_list_number').attr('title', help).html(formattedValue);
             }
             return $cell;
@@ -568,41 +573,6 @@ var ListRenderer = BasicRenderer.extend({
         return $buttons;
     },
     /**
-     * Renders the pager for a given group
-     *
-     * @private
-     * @param {Object} group
-     * @returns {jQueryElement} the pager's $el
-     */
-    _renderGroupPager: function (group) {
-        var pager = new Pager(this, group.count, group.offset + 1, group.limit);
-        pager.on('pager_changed', this, function (newState) {
-            var self = this;
-            pager.disable();
-            this.trigger_up('load', {
-                id: group.id,
-                limit: newState.limit,
-                offset: newState.current_min - 1,
-                on_success: function (reloadedGroup) {
-                    _.extend(group, reloadedGroup);
-                    self._renderView();
-                },
-                on_fail: pager.enable.bind(pager),
-            });
-        });
-        // register the pager so that it can be destroyed on next rendering
-        this.pagers.push(pager);
-
-        var pagerProm = pager._widgetRenderAndInsert(function () {}); // start the pager
-        this.defs.push(pagerProm);
-        var $el = $('<div>');
-        pagerProm.then(function () {
-            $el.replaceWith(pager.$el);
-        });
-
-        return $el;
-    },
-    /**
      * Render the row that represent a group
      *
      * @private
@@ -667,9 +637,8 @@ var ListRenderer = BasicRenderer.extend({
         $th.attr('colspan', colspanBeforeAggregate);
 
         if (group.isOpen && !group.groupedBy.length && (group.count > group.data.length)) {
-            var $pager = this._renderGroupPager(group);
-            var $lastCell = cells[cells.length - 1];
-            $lastCell.append($pager);
+            const lastCell = cells[cells.length - 1][0];
+            this._renderGroupPager(group, lastCell);
         }
         if (group.isOpen && this.groupbys[groupBy]) {
             var $buttons = this._renderGroupButtons(group, this.groupbys[groupBy]);
@@ -707,6 +676,30 @@ var ListRenderer = BasicRenderer.extend({
             });
             return [$('<tbody>').append($records)];
         }
+    },
+    /**
+     * Renders the pager for a given group
+     *
+     * @private
+     * @param {Object} group
+     * @param {HTMLElement} target
+     */
+    _renderGroupPager: function (group, target) {
+        const currentMinimum = group.offset + 1;
+        const limit = group.limit;
+        const size = group.count;
+        if (!this._shouldRenderPager(currentMinimum, limit, size)) {
+            return;
+        }
+        const pager = new ComponentWrapper(this, Pager, { currentMinimum, limit, size });
+        const pagerMounting = pager.mount(target).then(() => {
+            // Event binding is done here to get the related group and wrapper.
+            pager.el.addEventListener('pager-changed', ev => this._onPagerChanged(ev, group));
+            // Prevent pager clicks to toggle the group.
+            pager.el.addEventListener('click', ev => ev.stopPropagation());
+        });
+        this.defs.push(pagerMounting);
+        this.pagers.push(pager);
     },
     /**
      * Render all groups in the view.  We assume that the view is in grouped
@@ -934,7 +927,7 @@ var ListRenderer = BasicRenderer.extend({
     _renderView: function () {
         var self = this;
 
-        var oldPagers = this.pagers;
+        const oldPagers = this.pagers;
         this.pagers = [];
 
         // display the no content helper if there is no data to display
@@ -942,7 +935,7 @@ var ListRenderer = BasicRenderer.extend({
         this.$el.toggleClass('o_list_view', !displayNoContentHelper);
         if (displayNoContentHelper) {
             // destroy the previously instantiated pagers, if any
-            _.invoke(oldPagers, 'destroy');
+            oldPagers.forEach(pager => pager.destroy());
 
             this.$el.removeClass('table-responsive');
             this.$el.html(this._renderNoContentHelper());
@@ -968,16 +961,22 @@ var ListRenderer = BasicRenderer.extend({
             $table.append(this._renderBody());
             $table.append(this._renderFooter());
         }
+        const tableWrapper = Object.assign(document.createElement('div'), {
+            className: 'table-responsive',
+        });
+        tableWrapper.appendChild($table[0]);
         delete this.defs;
 
-        var prom = Promise.all(defs).then(function () {
+        var prom = Promise.all(defs).then(() => {
             // destroy the previously instantiated pagers, if any
-            _.invoke(oldPagers, 'destroy');
+            oldPagers.forEach(pager => pager.destroy());
 
-            self.$el.html($('<div>', {
-                class: 'table-responsive',
-                html: $table
-            }));
+            // Append the table to the main element
+            self.el.innerHTML = "";
+            dom.append(self.el, tableWrapper, {
+                callbacks: [{ widget: this }],
+                in_DOM: document.body.contains(self.el),
+            });
 
             if (self.optionalColumns.length) {
                 self.$el.addClass('o_list_optional_columns');
@@ -990,6 +989,9 @@ var ListRenderer = BasicRenderer.extend({
                     return _.contains(self.selection, $(el).data('id'));
                 });
                 $checked_rows.find('.o_list_record_selector input').prop('checked', true);
+                if ($checked_rows.length === self.$('.o_data_row').length) { // all rows are checked
+                    self.$('thead .o_list_record_selector input').prop('checked', true);
+                }
             }
         });
         return Promise.all([this._super.apply(this, arguments), prom]);
@@ -1011,6 +1013,18 @@ var ListRenderer = BasicRenderer.extend({
             var cssClass = decoration.replace('decoration', 'text');
             $tr.toggleClass(cssClass, py.PY_isTrue(py.evaluate(expr, record.evalContext)));
         });
+    },
+    /**
+     * @private
+     * @returns {boolean}
+     */
+    _shouldRenderPager: function (currentMinimum, limit, size) {
+        if (!limit || !size) {
+            return false;
+        }
+        const maximum = Math.min(currentMinimum + limit - 1, size);
+        const singlePage = (1 === currentMinimum) && (maximum === size);
+        return !singlePage;
     },
     /**
      * Update the footer aggregate values.  This method should be called each
@@ -1043,7 +1057,7 @@ var ListRenderer = BasicRenderer.extend({
             }
         });
         this.$('thead .o_list_record_selector input').prop('checked', allChecked);
-        this.trigger_up('selection_changed', { selection: this.selection });
+        this.trigger_up('selection_changed', { allChecked, selection: this.selection });
         this._updateFooter();
     },
 
@@ -1209,6 +1223,24 @@ var ListRenderer = BasicRenderer.extend({
     },
     /**
      * @private
+     * @param {OwlEvent} ev
+     * @param {Object} group
+     */
+    _onPagerChanged: async function (ev, group) {
+        ev.stopPropagation();
+        const { currentMinimum, limit } = ev.detail;
+        this.trigger_up('load', {
+            id: group.id,
+            limit: limit,
+            offset: currentMinimum - 1,
+            on_success: reloadedGroup => {
+                Object.assign(group, reloadedGroup);
+                this._renderView();
+            },
+        });
+    },
+    /**
+     * @private
      * @param {MouseEvent} ev
      */
     _onRowClicked: function (ev) {
@@ -1243,7 +1275,6 @@ var ListRenderer = BasicRenderer.extend({
      */
     _onToggleGroup: function (ev) {
         ev.preventDefault();
-        ev.stopPropagation();
         var group = $(ev.currentTarget).closest('tr').data('group');
         if (group.count) {
             this.trigger_up('toggle_group', {

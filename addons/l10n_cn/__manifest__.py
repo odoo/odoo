@@ -10,7 +10,7 @@
 {
     'name': 'China - Accounting',
     'version': '1.8',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'author': 'www.openerp-china.org',
     'maintainer': 'jeff@osbzr.com',
     'website': 'http://openerp-china.org',
@@ -41,6 +41,10 @@ State Data/省份数据
         'data/l10n_cn_chart_post_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_chart_template_data.xml',
+        'views/account_move_view.xml'
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
     'post_init_hook': 'load_translations',
 }

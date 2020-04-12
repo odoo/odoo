@@ -347,16 +347,19 @@ var SnippetEditor = Widget.extend({
             customize$Elements: show ? this._customize$Elements : [],
         });
         this._customize$Elements.forEach(($el, i) => {
-            var editor = $el.data('editor');
-            var styles = _.values(editor.styles);
-            _.sortBy(styles, '__order').forEach(style => {
-                if (show) {
-                    style.onFocus();
-                    style.updateUI();
-                } else {
-                    style.onBlur();
-                }
-            });
+            const editor = $el.data('editor');
+            const styles = _.chain(editor.styles).values().sortBy('__order')
+                            .value();
+            // TODO ideally: should account the async parts of updateUI and
+            // allow async parts in onFocus/onBlur.
+            if (show) {
+                // All onFocus before all updateUI as the onFocus of an option
+                // might affect another option (like updating the $target)
+                styles.forEach(style => style.onFocus());
+                styles.forEach(style => style.updateUI());
+            } else {
+                styles.forEach(style => style.onBlur());
+            }
         });
     },
     /**
@@ -386,7 +389,7 @@ var SnippetEditor = Widget.extend({
      * @private
      * @param {boolean} recordUndo
      */
-    clone: function (recordUndo) {
+    clone: async function (recordUndo) {
         this.trigger_up('snippet_will_be_cloned', {$target: this.$target});
 
         var $clone = this.$target.clone(false);
@@ -396,15 +399,18 @@ var SnippetEditor = Widget.extend({
         }
 
         this.$target.after($clone);
-        this.trigger_up('call_for_each_child_snippet', {
-            $snippet: $clone,
-            callback: function (editor, $snippet) {
-                for (var i in editor.styles) {
-                    editor.styles[i].onClone({
-                        isCurrent: ($snippet.is($clone)),
-                    });
-                }
-            },
+        await new Promise(resolve => {
+            this.trigger_up('call_for_each_child_snippet', {
+                $snippet: $clone,
+                callback: function (editor, $snippet) {
+                    for (var i in editor.styles) {
+                        editor.styles[i].onClone({
+                            isCurrent: ($snippet.is($clone)),
+                        });
+                    }
+                    resolve();
+                },
+            });
         });
         this.trigger_up('snippet_cloned', {$target: $clone, $origin: this.$target});
 
@@ -446,7 +452,7 @@ var SnippetEditor = Widget.extend({
                 node.parentNode.removeChild(node);
             }
         });
-        $optionsSection.on('mouseover', this._onOptionsSectionMouseOver.bind(this));
+        $optionsSection.on('mouseenter', this._onOptionsSectionMouseEnter.bind(this));
         $optionsSection.on('mouseleave', this._onOptionsSectionMouseLeave.bind(this));
         $optionsSection.on('click', 'we-title > span', this._onOptionsSectionClick.bind(this));
         $optionsSection.on('click', '.oe_snippet_clone', this._onCloneClick.bind(this));
@@ -657,7 +663,7 @@ var SnippetEditor = Widget.extend({
     /**
      * @private
      */
-    _onOptionsSectionMouseOver: function (ev) {
+    _onOptionsSectionMouseEnter: function (ev) {
         if (!this.$target.is(':visible')) {
             return;
         }
@@ -771,6 +777,7 @@ var SnippetEditor = Widget.extend({
      * @param {Event} ev
      */
     _onUserValueWidgetRequest: function (ev) {
+        ev.stopPropagation();
         for (const key of Object.keys(this.styles)) {
             const widget = this.styles[key].findWidget(ev.data.name);
             if (widget) {
@@ -913,6 +920,9 @@ var SnippetsMenu = Widget.extend({
             });
 
             var $target = $(srcElement);
+            if (!$target.closest('we-button, we-toggler, .o_we_color_preview').length) {
+                this._closeWidgets();
+            }
             if (!$target.closest('body > *').length) {
                 return;
             }
@@ -1925,11 +1935,13 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onCloneSnippet: function (ev) {
+    _onCloneSnippet: async function (ev) {
         ev.stopPropagation();
-        this._createSnippetEditor(ev.data.$snippet).then(editor => {
-            editor.clone();
-        });
+        const editor = await this._createSnippetEditor(ev.data.$snippet);
+        await editor.clone();
+        if (ev.data.onSuccess) {
+            ev.data.onSuccess();
+        }
     },
     /**
      * Called when a child editor asks to deactivate the current snippet
@@ -2103,11 +2115,13 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onRemoveSnippet: function (ev) {
+    _onRemoveSnippet: async function (ev) {
         ev.stopPropagation();
-        this._createSnippetEditor(ev.data.$snippet).then(function (editor) {
-            editor.removeSnippet();
-        });
+        const editor = await this._createSnippetEditor(ev.data.$snippet);
+        await editor.removeSnippet();
+        if (ev.data.onSuccess) {
+            ev.data.onSuccess();
+        }
     },
     /**
      * Saving will destroy all editors since they need to clean their DOM.

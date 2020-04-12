@@ -29,8 +29,6 @@ var RTETranslatorWidget = rte.Class.extend({
                     this._getEscapedElement($el).html()
                 ],
                 context: context,
-            }).catch(function (error) {
-                Dialog.alert(null, error.data.message);
             });
         }
         return this._super($el, context, withLang === undefined ? true : withLang);

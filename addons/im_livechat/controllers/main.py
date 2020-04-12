@@ -158,3 +158,13 @@ class LivechatController(http.Controller):
             ('uuid', '=', uuid)], limit=1)
         if channel:
             channel._email_livechat_transcript(email)
+
+    @http.route('/im_livechat/visitor_leave_session', type='json', auth="public")
+    def visitor_leave_session(self, uuid):
+        """ Called when the livechat visitor leaves the conversation.
+         This will clean the chat request and warn the operator that the conversation is over.
+         This allows also to re-send a new chat request to the visitor, as while the visitor is
+         in conversation with an operator, it's not possible to send the visitor a chat request."""
+        mail_channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)])
+        if mail_channel:
+            mail_channel._close_livechat_session()

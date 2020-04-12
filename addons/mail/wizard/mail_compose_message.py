@@ -137,7 +137,7 @@ class MailComposer(models.TransientModel):
         'wizard_id', 'partner_id', 'Additional Contacts')
     # mass mode options
     notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
-    auto_delete = fields.Boolean('Delete Emails', help='Delete sent emails (mass mailing only)')
+    auto_delete = fields.Boolean('Delete Emails', help='This option permanently removes any track of email after send, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.')
     auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
 
@@ -455,10 +455,10 @@ class MailComposer(models.TransientModel):
             multi_mode = False
             res_ids = [res_ids]
 
-        subjects = self.env['mail.template']._render_template(self.subject, self.model, res_ids)
-        bodies = self.env['mail.template']._render_template(self.body, self.model, res_ids, post_process=True)
-        emails_from = self.env['mail.template']._render_template(self.email_from, self.model, res_ids)
-        replies_to = self.env['mail.template']._render_template(self.reply_to, self.model, res_ids)
+        subjects = self.env['mail.render.mixin']._render_template(self.subject, self.model, res_ids)
+        bodies = self.env['mail.render.mixin']._render_template(self.body, self.model, res_ids, post_process=True)
+        emails_from = self.env['mail.render.mixin']._render_template(self.email_from, self.model, res_ids)
+        replies_to = self.env['mail.render.mixin']._render_template(self.reply_to, self.model, res_ids)
         default_recipients = {}
         if not self.partner_ids:
             records = self.env[self.model].browse(res_ids).sudo()

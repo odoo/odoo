@@ -29,7 +29,7 @@ class TestReInvoice(TestCommonSaleNoChart):
             'analytic_account_id': cls.analytic_account.id,
         })
 
-        cls.AccountMove = cls.env['account.move'].with_context(default_type='in_invoice', mail_notrack=True, mail_create_nolog=True)
+        cls.AccountMove = cls.env['account.move'].with_context(default_move_type='in_invoice', mail_notrack=True, mail_create_nolog=True)
 
     def test_at_cost(self):
         """ Test vendor bill at cost for product based on ordered and delivered quantities. """

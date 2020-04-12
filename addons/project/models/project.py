@@ -5,7 +5,7 @@ import ast
 from datetime import timedelta
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError, ValidationError
+from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
 from odoo.tools.misc import format_date
 
 
@@ -132,6 +132,10 @@ class Project(models.Model):
                     Create a new project</p>''')
             })
             action_data = action.read()[0]
+
+            action_config = self.env.ref('project.open_view_project_all_config', False)
+            if action_config:
+                action_config.sudo().write({'help': action.help})
         # Reload the dashboard
         return action_data
 
@@ -177,7 +181,7 @@ class Project(models.Model):
         string='Members')
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', string='Show Project on dashboard',
         help="Whether this project should be displayed on your dashboard.")
-    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Label used for the tasks of the project.")
+    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Label used for the tasks of the project.", translate=True)
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
@@ -352,6 +356,22 @@ class Project(models.Model):
 
         return res
 
+    def action_unlink(self):
+        wizard = self.env['project.delete.wizard'].create({
+            'project_ids': self.ids
+        })
+
+        return {
+            'name': _('Confirmation'),
+            'view_mode': 'form',
+            'res_model': 'project.delete.wizard',
+            'views': [(self.env.ref('project.project_delete_wizard_form').id, 'form')],
+            'type': 'ir.actions.act_window',
+            'res_id': wizard.id,
+            'target': 'new',
+            'context': self.env.context,
+        }
+
     def unlink(self):
         # Check project is empty
         for project in self.with_context(active_test=False):
@@ -507,9 +527,9 @@ class Task(models.Model):
         domain="[('project_ids', '=', project_id)]", copy=False)
     tag_ids = fields.Many2many('project.tags', string='Tags')
     kanban_state = fields.Selection([
-        ('normal', 'Grey'),
-        ('done', 'Green'),
-        ('blocked', 'Red')], string='Kanban State',
+        ('normal', 'In Progress'),
+        ('done', 'Ready'),
+        ('blocked', 'Blocked')], string='Kanban State',
         copy=False, default='normal', required=True)
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True)
     create_date = fields.Datetime("Created On", readonly=True, index=True)
@@ -525,8 +545,8 @@ class Task(models.Model):
     project_id = fields.Many2one('project.project', string='Project',
         compute='_compute_project_id', store=True, readonly=False,
         index=True, tracking=True, check_company=True, change_default=True)
-    planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',tracking=True)
-    subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
+    planned_hours = fields.Float("Initially Planned Hours", help='Time planned to achieve this task (including its sub-tasks).', tracking=True)
+    subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours', help="Sum of the planned hours of all the sub-tasks linked to this task. Usually less or equal to the initially planned hours of this task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
         default=lambda self: self.env.uid,
@@ -943,6 +963,11 @@ class Task(models.Model):
         return headers
 
     def _message_post_after_hook(self, message, msg_vals):
+        if message.attachment_ids and not self.displayed_image_id:
+            image_attachments = message.attachment_ids.filtered(lambda a: a.mimetype == 'image')
+            if image_attachments:
+                self.displayed_image_id = image_attachments[0]
+
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -958,14 +983,18 @@ class Task(models.Model):
     def action_assign_to_me(self):
         self.write({'user_id': self.env.user.id})
 
-    def _get_all_subtasks(self):
+    # If depth == 1, return only direct children
+    # If depth == 3, return children to third generation
+    # If depth <= 0, return all children without depth limit
+    def _get_all_subtasks(self, depth=0):
         children = self.mapped('child_ids')
         if not children:
             return self.env['project.task']
-        return children + children._get_all_subtasks()
+        if depth == 1:
+            return children
+        return children + children._get_all_subtasks(depth - 1)
+
     def action_open_parent_task(self):
-        if self.sudo().parent_id and self.sudo().parent_id.company_id.id not in self.env.companies.ids:
-            raise UserError(_('The parent task belongs to a company you do not have access to.'))
         return {
             'name': _('Parent Task'),
             'view_mode': 'form',
@@ -976,8 +1005,6 @@ class Task(models.Model):
         }
 
     def action_subtask(self):
-        if self.sudo().subtask_project_id and self.sudo().subtask_project_id.company_id.id not in self.env.companies.ids:
-            raise UserError(_('The subtasks belong to a company you do not have access to.'))
         action = self.env.ref('project.project_task_action_sub_task').read()[0]
 
         # display all subtasks of current task

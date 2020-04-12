@@ -26,7 +26,7 @@ class ValuationReconciliationTestCommon(StockAccountTestCommon):
             self.assertEqual(len(invoice_line), 1, "Only one line should have been written by invoice in stock input account")
             self.assertTrue(valuation_line.reconciled or invoice_line.reconciled, "The valuation and invoice line should have been reconciled together.")
 
-        if invoice.type not in ('out_refund', 'in_refund'):
+        if invoice.move_type not in ('out_refund', 'in_refund'):
             self.assertEqual(len(valuation_line), 1, "Only one line should have been written for stock valuation in stock input account")
 
             if full_reconcile:

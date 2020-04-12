@@ -74,6 +74,10 @@ class MrpBom(models.Model):
         required=True
     )
 
+    _sql_constraints = [
+        ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),
+    ]
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         if self.product_id:
@@ -355,6 +359,8 @@ class MrpBomLine(models.Model):
         them has to be found on the variant.
         """
         self.ensure_one()
+        if product._name == 'product.template':
+            return False
         if self.bom_product_template_attribute_value_ids:
             for ptal, iter_ptav in groupby(self.bom_product_template_attribute_value_ids.sorted('attribute_line_id'), lambda ptav: ptav.attribute_line_id):
                 if not any([ptav in product.product_template_attribute_value_ids for ptav in iter_ptav]):

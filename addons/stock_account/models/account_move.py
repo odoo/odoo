@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models, api, _
+from odoo import fields, models
 
 
 class AccountMove(models.Model):
@@ -110,7 +110,7 @@ class AccountMove(models.Model):
                     continue
 
                 # Compute accounting fields.
-                sign = -1 if move.type == 'out_refund' else 1
+                sign = -1 if move.move_type == 'out_refund' else 1
                 price_unit = line._stock_account_get_anglo_saxon_price_unit()
                 balance = sign * line.quantity * price_unit
 
@@ -125,8 +125,6 @@ class AccountMove(models.Model):
                     'debit': balance < 0.0 and -balance or 0.0,
                     'credit': balance > 0.0 and balance or 0.0,
                     'account_id': debit_interim_account.id,
-                    'analytic_account_id': line.analytic_account_id.id,
-                    'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                     'exclude_from_invoice_tab': True,
                     'is_anglo_saxon_line': True,
                 })

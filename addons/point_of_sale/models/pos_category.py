@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class PosCategory(models.Model):
@@ -28,3 +28,9 @@ class PosCategory(models.Model):
                 cat = cat.parent_id
             return res
         return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self]
+
+    def unlink(self):
+        if self.search_count([('id', 'in', self.ids)]):
+            if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
+                raise UserError(_('You cannot delete a point of sale category while a session is still opened.'))
+        return super(PosCategory, self).unlink()

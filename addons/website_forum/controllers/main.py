@@ -48,15 +48,26 @@ class WebsiteForum(WebsiteProfile):
         return request.render("website_forum.forum_all", {'forums': forums})
 
     @http.route('/forum/new', type='json', auth="user", methods=['POST'], website=True)
-    def forum_create(self, forum_name="New Forum", forum_mode="questions", add_menu=False):
-        forum_id = request.env['forum.forum'].create({'name': forum_name, 'mode': forum_mode})
+    def forum_create(self, forum_name="New Forum", forum_mode="questions", forum_privacy="public", forum_privacy_group=False, add_menu=False):
+        forum = {
+            'name': forum_name,
+            'mode': forum_mode,
+            'privacy': forum_privacy,
+            'website_id': request.website.id,
+        }
+        if forum_privacy == 'private' and forum_privacy_group:
+            forum['authorized_group_id'] = forum_privacy_group
+        forum_id = request.env['forum.forum'].create(forum)
         if add_menu:
-            request.env['website.menu'].create({
+            group = [int(forum_privacy_group)] if forum_privacy == 'private' else [request.env.ref('base.group_portal').id, request.env.ref('base.group_user').id]
+            menu_id = request.env['website.menu'].create({
                 'name': forum_name,
                 'url': "/forum/%s" % slug(forum_id),
                 'parent_id': request.website.menu_id.id,
                 'website_id': request.website.id,
+                'group_ids': [(6, 0, group)]
             })
+            forum_id.menu_id = menu_id
         return "/forum/%s" % slug(forum_id)
 
     def sitemap_forum(env, rule, qs):
@@ -201,7 +212,7 @@ class WebsiteForum(WebsiteProfile):
         except IOError:
             return False
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
+    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
                 type='http', auth="public", website=True, sitemap=True)
     def question(self, forum, question, **post):
         if not forum.active:
@@ -231,6 +242,8 @@ class WebsiteForum(WebsiteProfile):
             'filters': filters,
             'reversed': reversed,
         })
+        if (request.httprequest.referrer or "").startswith(request.httprequest.url_root):
+            values['back_button_url'] = request.httprequest.referrer
         return request.render("website_forum.post_description_full", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='json', auth="user", methods=['POST'], website=True)
@@ -369,17 +382,19 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
-        if 'post_name' in kwargs and not kwargs.get('post_name').strip():
-            return request.render('http_routing.http_error', {
-                'status_code': _('Bad Request'),
-                'status_message': _('Title should not be empty.')
-            })
-        post_tags = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         vals = {
-            'tag_ids': post_tags,
-            'name': kwargs.get('post_name'),
             'content': kwargs.get('content'),
         }
+
+        if 'post_name' in kwargs:
+            if not kwargs.get('post_name').strip():
+                return request.render('http_routing.http_error', {
+                    'status_code': _('Bad Request'),
+                    'status_message': _('Title should not be empty.')
+                })
+
+            vals['name'] = kwargs.get('post_name')
+        vals['tag_ids'] = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         post.write(vals)
         question = post.parent_id if post.parent_id else post
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
@@ -540,7 +555,10 @@ class WebsiteForum(WebsiteProfile):
                 forums = post['forum']
             elif post.get('forum_id'):
                 forums = request.env['forum.forum'].browse(int(post['forum_id']))
-                values.update({'edit_button_url_param': 'forum_id=' + str(post['forum_id'])})
+                values.update({
+                    'edit_button_url_param': 'forum_id=%s' %  str(post['forum_id']),
+                    'forum_filtered': forums.name,
+                })
             else:
                 forums = request.env['forum.forum'].search([])
 

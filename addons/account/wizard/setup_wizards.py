@@ -16,8 +16,7 @@ class FinancialYearOpeningWizard(models.TransientModel):
     opening_date = fields.Date(string='Opening Date', required=True, related='company_id.account_opening_date', help="Date from which the accounting is managed in Odoo. It is the date of the opening entry.", readonly=False)
     fiscalyear_last_day = fields.Integer(related="company_id.fiscalyear_last_day", required=True, readonly=False,
                                          help="The last day of the month will be used if the chosen day doesn't exist.")
-    fiscalyear_last_month = fields.Selection(selection=[(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')],
-                                             related="company_id.fiscalyear_last_month", readonly=False,
+    fiscalyear_last_month = fields.Selection(related="company_id.fiscalyear_last_month", readonly=False,
                                              required=True,
                                              help="The last day of the month will be used if the chosen day doesn't exist.")
 
@@ -68,10 +67,14 @@ class SetupBarBankConfigWizard(models.TransientModel):
     _inherits = {'res.partner.bank': 'res_partner_bank_id'}
     _name = 'account.setup.bank.manual.config'
     _description = 'Bank setup manual config'
+    _check_company_auto = True
 
     res_partner_bank_id = fields.Many2one(comodel_name='res.partner.bank', ondelete='cascade', required=True)
     new_journal_name = fields.Char(default=lambda self: self.linked_journal_id.name, inverse='set_linked_journal_id', required=True, help='Will be used to name the Journal related to this bank account')
-    linked_journal_id = fields.Many2one(string="Journal", comodel_name='account.journal', inverse='set_linked_journal_id', compute="_compute_linked_journal_id")
+    linked_journal_id = fields.Many2one(string="Journal",
+        comodel_name='account.journal', inverse='set_linked_journal_id',
+        compute="_compute_linked_journal_id", check_company=True,
+        domain="[('type','=','bank'), ('bank_account_id', '=', False), ('company_id', '=', company_id)]")
     new_journal_code = fields.Char(string="Code", required=True, default=lambda self: self._onchange_new_journal_code())
     num_journals_without_account = fields.Integer(default=lambda self: self._number_unlinked_journal())
     # field computing the type of the res.patrner.bank. It's behaves the same as a related res_part_bank_id.acc_type
@@ -90,7 +93,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
     def _onchange_new_journal_code(self):
         for record in self:
             if not record.linked_journal_id:
-                record.new_journal_code = self.env['account.journal'].get_next_bank_cash_default_code('bank', self.env.company.id)
+                record.new_journal_code = self.env['account.journal'].get_next_bank_cash_default_code('bank', self.env.company)
             else:
                 record.new_journal_code = self.linked_journal_id.code
 

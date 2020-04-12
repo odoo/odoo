@@ -4,14 +4,11 @@ from __future__ import print_function
 import os.path
 import posixpath
 import re
-try:
-    from urllib.request import url2pathname  # pylint: disable=deprecated-module
-except ImportError:
-    from urllib import url2pathname  # pylint: disable=deprecated-module
 
 from docutils import nodes
 from sphinx import addnodes, util, builders
 from sphinx.locale import admonitionlabels
+from urllib.request import url2pathname
 
 
 def _parents(node):
@@ -60,6 +57,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         self.context = []
         self.section_level = 0
 
+        self.config = self.builder.config
         self.highlightlang = self.highlightlang_base = self.builder.config.highlight_language
         self.highlightopts = getattr(builder.config, 'highlight_options', {})
 

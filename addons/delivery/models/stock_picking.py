@@ -78,7 +78,6 @@ class StockPicking(models.Model):
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
     carrier_id = fields.Many2one("delivery.carrier", string="Carrier", check_company=True)
-    volume = fields.Float(copy=False, digits='Volume')
     weight = fields.Float(compute='_cal_weight', digits='Stock Weight', store=True, help="Total weight of the products in the picking.", compute_sudo=True)
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
@@ -109,6 +108,13 @@ class StockPicking(models.Model):
             else:
                 picking.return_label_ids = False
 
+    def get_multiple_carrier_tracking(self):
+        self.ensure_one()
+        try:
+            return json.loads(self.carrier_tracking_url)
+        except (ValueError, TypeError):
+            return False
+
     @api.depends('move_lines')
     def _cal_weight(self):
         for picking in self:
@@ -135,6 +141,17 @@ class StockPicking(models.Model):
         """
         self.ensure_one()
         view_id = self.env.ref('delivery.choose_delivery_package_view_form').id
+        context = dict(
+            self.env.context,
+            current_package_carrier_type=self.carrier_id.delivery_type,
+            default_picking_id=self.id
+        )
+        # As we pass the `delivery_type` ('fixed' by default) in a key who correspond
+        # to the `package_carrier_type` ('none' to default), we make a conversion.
+        # No need conversion for other carriers as the `delivery_type` and
+        #`package_carrier_type` will be the same in these cases.
+        if context['current_package_carrier_type'] == 'fixed':
+            context['current_package_carrier_type'] = 'none'
         return {
             'name': _('Package Details'),
             'type': 'ir.actions.act_window',
@@ -143,11 +160,7 @@ class StockPicking(models.Model):
             'view_id': view_id,
             'views': [(view_id, 'form')],
             'target': 'new',
-            'context': dict(
-                self.env.context,
-                current_package_carrier_type=self.carrier_id.delivery_type,
-                default_picking_id=self.id
-            ),
+            'context': context,
         }
 
     def send_to_shipper(self):
@@ -165,7 +178,7 @@ class StockPicking(models.Model):
 
     def print_return_label(self):
         self.ensure_one()
-        res = self.carrier_id.get_return_label(self)
+        self.carrier_id.get_return_label(self)
 
     def _add_delivery_cost_to_so(self):
         self.ensure_one()
@@ -214,16 +227,6 @@ class StockPicking(models.Model):
             msg = "Shipment %s cancelled" % picking.carrier_tracking_ref
             picking.message_post(body=msg)
             picking.carrier_tracking_ref = False
-
-    def check_packages_are_identical(self):
-        '''Some shippers require identical packages in the same shipment. This utility checks it.'''
-        self.ensure_one()
-        if self.package_ids:
-            packages = [p.packaging_id for p in self.package_ids]
-            if len(set(packages)) != 1:
-                package_names = ', '.join([str(p.name) for p in packages])
-                raise UserError(_('You are shipping different packaging types in the same shipment.\nPackaging Types: %s' % package_names))
-        return True
 
     def _get_estimated_weight(self):
         self.ensure_one()

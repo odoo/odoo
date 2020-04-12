@@ -82,7 +82,7 @@ QUnit.test('preview of mail failure', async function (assert) {
     }];
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });
@@ -138,7 +138,7 @@ QUnit.test('preview grouped failures by document', async function (assert) {
     }];
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });
@@ -194,7 +194,7 @@ QUnit.test('preview grouped failures by document model', async function (assert)
     }];
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });

@@ -11,7 +11,7 @@ from psycopg2 import OperationalError
 from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import float_compare, float_round, frozendict, html_escape
+from odoo.tools import float_compare, float_is_zero, float_round, frozendict, html_escape
 from odoo.tools.misc import split_every
 
 _logger = logging.getLogger(__name__)
@@ -189,7 +189,10 @@ class StockRule(models.Model):
         else:
             new_move_vals = self._push_prepare_move_copy_values(move, new_date)
             new_move = move.sudo().copy(new_move_vals)
-            move.write({'move_dest_ids': [(4, new_move.id)]})
+            if new_move._should_bypass_reservation():
+                new_move.write({'procure_method': 'make_to_stock'})
+            if not new_move.location_id.should_bypass_reservation():
+                move.write({'move_dest_ids': [(4, new_move.id)]})
             new_move._action_confirm()
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
@@ -206,6 +209,8 @@ class StockRule(models.Model):
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
             'propagate_cancel': self.propagate_cancel,
+            'propagate_date': self.propagate_date,
+            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'warehouse_id': self.warehouse_id.id,
             'delay_alert': self.delay_alert,
             'procure_method': 'make_to_order',
@@ -233,7 +238,7 @@ class StockRule(models.Model):
         forecasted_qties_by_loc = {}
         for location, product_ids in mtso_products_by_locations.items():
             products = self.env['product.product'].browse(product_ids).with_context(location=location.id)
-            forecasted_qties_by_loc[location] = {product.id: product.virtual_available for product in products}
+            forecasted_qties_by_loc[location] = {product.id: product.free_qty for product in products}
 
         # Prepare the move values, adapt the `procure_method` if needed.
         for procurement, rule in procurements:
@@ -253,7 +258,7 @@ class StockRule(models.Model):
 
         for company_id, moves_values in moves_values_by_company.items():
             # create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
-            moves = self.env['stock.move'].sudo().with_company(company_id).create(moves_values)
+            moves = self.env['stock.move'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(moves_values)
             # Since action_confirm launch following procurement_group we should activate it.
             moves._action_confirm()
         return True
@@ -280,9 +285,17 @@ class StockRule(models.Model):
         date_expected = fields.Datetime.to_string(
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
         )
+        picking_description = product_id._get_description(self.picking_type_id)
+        if values.get('product_description_variants'):
+            picking_description += values['product_description_variants']
         # it is possible that we've already got some move done, so check for the done qty and create
         # a new move with the correct qty
         qty_left = product_qty
+
+        move_dest_ids = []
+        if not self.location_id.should_bypass_reservation():
+            move_dest_ids = values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or []
+
         move_values = {
             'name': name[:2000],
             'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_id.company_id.id or company_id.id,
@@ -292,7 +305,7 @@ class StockRule(models.Model):
             'partner_id': self.partner_address_id.id or (values.get('group_id', False) and values['group_id'].partner_id.id) or False,
             'location_id': self.location_src_id.id,
             'location_dest_id': location_id.id,
-            'move_dest_ids': values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or [],
+            'move_dest_ids': move_dest_ids,
             'rule_id': self.id,
             'procure_method': self.procure_method,
             'origin': origin,
@@ -305,7 +318,7 @@ class StockRule(models.Model):
             'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
-            'description_picking': product_id._get_description(self.picking_type_id),
+            'description_picking': picking_description,
             'priority': values.get('priority', "1"),
             'delay_alert': self.delay_alert,
             'orderpoint_id': values.get('orderpoint_id') and values['orderpoint_id'].id,
@@ -399,6 +412,11 @@ class ProcurementGroup(models.Model):
             procurement.values.setdefault('company_id', self.env.company)
             procurement.values.setdefault('priority', '1')
             procurement.values.setdefault('date_planned', fields.Datetime.now())
+            if (
+                procurement.product_id.type not in ('consu', 'product') or
+                float_is_zero(procurement.product_qty, precision_rounding=procurement.product_uom.rounding)
+            ):
+                continue
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
             if not rule:
                 error = _('No rule has been found to replenish "%s" in "%s".\nVerify the routes configuration on the product.') %\

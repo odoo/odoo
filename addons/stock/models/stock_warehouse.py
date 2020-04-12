@@ -132,10 +132,6 @@ class Warehouse(models.Model):
 
         Route = self.env['stock.location.route']
         warehouses = self.with_context(active_test=False)
-
-        if vals.get('code') or vals.get('name'):
-            warehouses._update_name_and_code(vals.get('name'), vals.get('code'))
-
         warehouses._create_missing_locations(vals)
 
         if vals.get('reception_steps'):
@@ -146,8 +142,9 @@ class Warehouse(models.Model):
             warehouses._update_reception_delivery_resupply(vals.get('reception_steps'), vals.get('delivery_steps'))
 
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
-            resupply_whs = self.resolve_2many_commands('resupply_wh_ids', vals['resupply_wh_ids'])
-            new_resupply_whs = self.browse([wh['id'] for wh in resupply_whs])
+            new_resupply_whs = self.new({
+                'resupply_wh_ids': vals['resupply_wh_ids']
+            }).resupply_wh_ids._origin
             old_resupply_whs = {warehouse.id: warehouse.resupply_wh_ids for warehouse in warehouses}
 
         # If another partner assigned
@@ -156,13 +153,17 @@ class Warehouse(models.Model):
 
         res = super(Warehouse, self).write(vals)
 
+        if vals.get('code') or vals.get('name'):
+            warehouses._update_name_and_code(vals.get('name'), vals.get('code'))
+
         for warehouse in warehouses:
             # check if we need to delete and recreate route
             depends = [depend for depends in [value.get('depends', []) for value in warehouse._get_routes_values().values()] for depend in depends]
-            if any(depend in vals for depend in depends):
+            if 'code' in vals or any(depend in vals for depend in depends):
                 picking_type_vals = warehouse._create_or_update_sequences_and_picking_types()
                 if picking_type_vals:
                     warehouse.write(picking_type_vals)
+            if any(depend in vals for depend in depends):
                 route_vals = warehouse._create_or_update_route()
                 if route_vals:
                     warehouse.write(route_vals)
@@ -781,6 +782,9 @@ class Warehouse(models.Model):
                     warehouse.mto_pull_id.write({'name': warehouse.mto_pull_id.name.replace(warehouse.name, new_name, 1)})
         for warehouse in self:
             sequence_data = warehouse._get_sequence_values()
+            # `ir.sequence` write access is limited to system user
+            if self.user_has_groups('stock.group_stock_manager'):
+                warehouse = warehouse.sudo()
             warehouse.in_type_id.sequence_id.write(sequence_data['in_type_id'])
             warehouse.out_type_id.sequence_id.write(sequence_data['out_type_id'])
             warehouse.pack_type_id.sequence_id.write(sequence_data['pack_type_id'])
@@ -804,13 +808,26 @@ class Warehouse(models.Model):
         """
         input_loc, output_loc = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
         return {
-            'in_type_id': {'default_location_dest_id': input_loc.id},
-            'out_type_id': {'default_location_src_id': output_loc.id},
+            'in_type_id': {
+                'default_location_dest_id': input_loc.id,
+                'barcode': self.code.replace(" ", "").upper() + "-RECEIPTS",
+            },
+            'out_type_id': {
+                'default_location_src_id': output_loc.id,
+                'barcode': self.code.replace(" ", "").upper() + "-DELIVERY",
+            },
             'pick_type_id': {
                 'active': self.delivery_steps != 'ship_only',
-                'default_location_dest_id': output_loc.id if self.delivery_steps == 'pick_ship' else self.wh_pack_stock_loc_id.id},
-            'pack_type_id': {'active': self.delivery_steps == 'pick_pack_ship'},
-            'int_type_id': {},
+                'default_location_dest_id': output_loc.id if self.delivery_steps == 'pick_ship' else self.wh_pack_stock_loc_id.id,
+                'barcode': self.code.replace(" ", "").upper() + "-PICK",
+            },
+            'pack_type_id': {
+                'active': self.delivery_steps == 'pick_pack_ship',
+                'barcode': self.code.replace(" ", "").upper() + "-PACK",
+            },
+            'int_type_id': {
+                'barcode': self.code.replace(" ", "").upper() + "-INTERNAL",
+            },
         }
 
     def _get_picking_type_create_values(self, max_sequence):
@@ -828,7 +845,6 @@ class Warehouse(models.Model):
                 'use_existing_lots': False,
                 'default_location_src_id': False,
                 'sequence': max_sequence + 1,
-                'barcode': self.code.replace(" ", "").upper() + "-RECEIPTS",
                 'show_reserved': False,
                 'sequence_code': 'IN',
                 'company_id': self.company_id.id,
@@ -839,7 +855,6 @@ class Warehouse(models.Model):
                 'use_existing_lots': True,
                 'default_location_dest_id': False,
                 'sequence': max_sequence + 5,
-                'barcode': self.code.replace(" ", "").upper() + "-DELIVERY",
                 'sequence_code': 'OUT',
                 'company_id': self.company_id.id,
             }, 'pack_type_id': {
@@ -850,7 +865,6 @@ class Warehouse(models.Model):
                 'default_location_src_id': self.wh_pack_stock_loc_id.id,
                 'default_location_dest_id': output_loc.id,
                 'sequence': max_sequence + 4,
-                'barcode': self.code.replace(" ", "").upper() + "-PACK",
                 'sequence_code': 'PACK',
                 'company_id': self.company_id.id,
             }, 'pick_type_id': {
@@ -860,7 +874,6 @@ class Warehouse(models.Model):
                 'use_existing_lots': True,
                 'default_location_src_id': self.lot_stock_id.id,
                 'sequence': max_sequence + 3,
-                'barcode': self.code.replace(" ", "").upper() + "-PICK",
                 'sequence_code': 'PICK',
                 'company_id': self.company_id.id,
             }, 'int_type_id': {
@@ -872,7 +885,6 @@ class Warehouse(models.Model):
                 'default_location_dest_id': self.lot_stock_id.id,
                 'active': self.reception_steps != 'one_step' or self.delivery_steps != 'ship_only' or self.user_has_groups('stock.group_stock_multi_locations'),
                 'sequence': max_sequence + 2,
-                'barcode': self.code.replace(" ", "").upper() + "-INTERNAL",
                 'sequence_code': 'INT',
                 'company_id': self.company_id.id,
             },

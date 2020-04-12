@@ -20,7 +20,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
     def test_flow_public(self):
         # Step: survey manager creates the survey
         # --------------------------------------------------
-        with self.with_user(self.survey_manager):
+        with self.with_user('survey_manager'):
             survey = self.env['survey.survey'].create({
                 'title': 'Public Survey for Tarte Al Djotte',
                 'access_mode': 'public',

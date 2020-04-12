@@ -36,11 +36,9 @@ class AccountMove(models.Model):
         if not self.purchase_id:
             return
 
-        # Copy partner.
-        self.partner_id = self.purchase_id.partner_id
-        self.fiscal_position_id = self.purchase_id.fiscal_position_id
-        self.invoice_payment_term_id = self.purchase_id.payment_term_id
-        self.currency_id = self.purchase_id.currency_id
+        # Copy data from PO
+        invoice_vals = self.purchase_id._prepare_invoice()
+        self.update(invoice_vals)
 
         # Copy purchase lines.
         po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')
@@ -61,13 +59,34 @@ class AccountMove(models.Model):
         refs = [ref for ref in refs if ref]
         self.ref = ','.join(refs)
 
-        # Compute _invoice_payment_ref.
+        # Compute payment_reference.
         if len(refs) == 1:
-            self._invoice_payment_ref = refs[0]
+            self.payment_reference = refs[0]
 
         self.purchase_id = False
         self._onchange_currency()
-        self.invoice_partner_bank_id = self.bank_partner_id.bank_ids and self.bank_partner_id.bank_ids[0]
+        self.partner_bank_id = self.bank_partner_id.bank_ids and self.bank_partner_id.bank_ids[0]
+
+    @api.onchange('partner_id', 'company_id')
+    def _onchange_partner_id(self):
+        res = super(AccountMove, self)._onchange_partner_id()
+        if not self.env.context.get('default_journal_id') and self.partner_id and\
+                self.move_type in ['in_invoice', 'in_refund'] and\
+                self.currency_id != self.partner_id.property_purchase_currency_id and\
+                self.partner_id.property_purchase_currency_id.id:
+            journal_domain = [
+                ('type', '=', 'purchase'),
+                ('company_id', '=', self.company_id.id),
+                ('currency_id', '=', self.partner_id.property_purchase_currency_id.id),
+            ]
+            default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
+            if default_journal_id:
+                self.journal_id = default_journal_id
+            if self.env.context.get('default_currency_id'):
+                self.currency_id = self.env.context['default_currency_id']
+            if self.partner_id.property_purchase_currency_id:
+                self.currency_id = self.partner_id.property_purchase_currency_id
+        return res
 
     @api.model_create_multi
     def create(self, vals_list):

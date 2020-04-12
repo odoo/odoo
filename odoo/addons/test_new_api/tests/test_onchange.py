@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-try:
-    from unittest.mock import patch
-except ImportError:
-    from mock import patch
+from unittest.mock import patch
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tests import common
@@ -552,6 +549,41 @@ class TestComputeOnchange(common.TransactionCase):
         self.assertEqual(record.bar, "foo")
         self.assertEqual(record.baz, "baz")
 
+    def test_copy(self):
+        Model = self.env['test_new_api.compute.onchange']
+
+        # create tags
+        tag_foo, tag_bar = self.env['test_new_api.multi.tag'].create([
+            {'name': 'foo1'},
+            {'name': 'bar1'},
+        ])
+
+        # compute 'bar', 'baz', 'line_ids' and 'tag_ids'
+        record = Model.create({'active': True, 'foo': "foo1"})
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "foo1")
+        self.assertEqual(record.line_ids.mapped('foo'), ['foo1'])
+        self.assertEqual(record.tag_ids, tag_foo)
+
+        # manually update 'baz' and 'lines' to test copy attribute
+        record.write({
+            'baz': "baz1",
+            'line_ids': [(0, 0, {'foo': 'bar'})],
+            'tag_ids': [(4, tag_bar.id)],
+        })
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "baz1")
+        self.assertEqual(record.line_ids.mapped('foo'), ['foo1', 'bar'])
+        self.assertEqual(record.tag_ids, tag_foo + tag_bar)
+
+        # copy the record, and check results
+        copied = record.copy()
+        self.assertEqual(copied.foo, "foo1 (copy)")   # copied and modified
+        self.assertEqual(copied.bar, "foo1 (copy)")   # computed
+        self.assertEqual(copied.baz, "baz1")          # copied
+        self.assertEqual(record.line_ids.mapped('foo'), ['foo1', 'bar'])  # copied
+        self.assertEqual(record.tag_ids, tag_foo + tag_bar)  # copied
+
     def test_write(self):
         model = self.env['test_new_api.compute.onchange']
         record = model.create({'active': True, 'foo': "foo"})
@@ -678,3 +710,31 @@ class TestComputeOnchange(common.TransactionCase):
         form.foo = "foo6"
         self.assertEqual(form.bar, "foo6")
         self.assertEqual(form.baz, "baz5")
+
+    def test_onchange_one2many(self):
+        record = self.env['test_new_api.model_parent_m2o'].create({
+            'name': 'Family',
+            'child_ids': [
+                (0, 0, {'name': 'W', 'cost': 10}),
+                (0, 0, {'name': 'X', 'cost': 10}),
+                (0, 0, {'name': 'Y'}),
+                (0, 0, {'name': 'Z'}),
+            ],
+        })
+        record.flush()
+        self.assertEqual(record.child_ids.mapped('name'), list('WXYZ'))
+        self.assertEqual(record.cost, 22)
+
+        # modifying a line should not recompute the cost on other lines
+        with common.Form(record) as form:
+            with form.child_ids.edit(1) as line:
+                line.name = 'XXX'
+            self.assertEqual(form.cost, 15)
+
+            with form.child_ids.edit(1) as line:
+                line.cost = 20
+            self.assertEqual(form.cost, 32)
+
+            with form.child_ids.edit(2) as line:
+                line.cost = 30
+            self.assertEqual(form.cost, 61)

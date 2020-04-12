@@ -138,8 +138,8 @@ class PaymentTransaction(models.Model):
     def _compute_reference_prefix(self, values):
         prefix = super(PaymentTransaction, self)._compute_reference_prefix(values)
         if not prefix and values and values.get('sale_order_ids'):
-            many_list = self.resolve_2many_commands('sale_order_ids', values['sale_order_ids'], fields=['name'])
-            return ','.join(dic['name'] for dic in many_list)
+            sale_orders = self.new({'sale_order_ids': values['sale_order_ids']}).sale_order_ids
+            return ','.join(sale_orders.mapped('name'))
         return prefix
 
     def action_view_sales_orders(self):
@@ -164,8 +164,7 @@ class PaymentTransaction(models.Model):
 
     def render_sale_button(self, order, submit_txt=None, render_values=None):
         values = {
-            'partner_id': order.partner_shipping_id.id or order.partner_invoice_id.id,
-            'billing_partner_id': order.partner_invoice_id.id,
+            'partner_id': order.partner_id.id,
         }
         if render_values:
             values.update(render_values)

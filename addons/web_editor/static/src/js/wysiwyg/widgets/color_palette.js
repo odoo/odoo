@@ -2,6 +2,7 @@ odoo.define('web_editor.ColorPalette', function (require) {
 'use strict';
 
 const core = require('web.core');
+const session = require('web.session');
 const ColorpickerDialog = require('web.ColorpickerDialog');
 const Dialog = require('web.Dialog');
 const Widget = require('web.Widget');
@@ -44,17 +45,18 @@ const ColorPaletteWidget = Widget.extend({
             $editable: $(),
         }, options || {});
 
-        if (this.options.selectedColor) {
-            this.selectedColor = ColorpickerDialog.normalizeCSSColor(this.options.selectedColor);
-        }
-
         this.trigger_up('request_editable', {callback: val => this.options.$editable = val});
     },
     /**
      * @override
      */
     willStart: async function () {
-        const res = this._super.apply(this, arguments);
+        await this._super(...arguments);
+        if (session.is_website_user) {
+            // Public user using the editor may have a colorpalette but with
+            // the default summernote ones.
+            return;
+        }
         // We can call the colorPalette multiple times but only need 1 rpc
         if (!templatePromise && !qweb.has_template('web_editor.colorpicker')) {
             templatePromise = this._rpc({
@@ -66,7 +68,6 @@ const ColorPaletteWidget = Widget.extend({
             });
         }
         await templatePromise;
-        return res;
     },
     /**
      * @override
@@ -74,8 +75,12 @@ const ColorPaletteWidget = Widget.extend({
     start: function () {
         const res = this._super.apply(this, arguments);
 
-        const $wrapper = this.$('.o_colorpicker_section_tabs');
-        $(qweb.render('web_editor.colorpicker')).appendTo($wrapper);
+        const $colorSection = this.$('.o_colorpicker_sections');
+        const $wrapper = $colorSection.find('.o_colorpicker_section_tabs');
+        const $clpicker = qweb.has_template('web_editor.colorpicker')
+            ? $(qweb.render('web_editor.colorpicker'))
+            : $(`<colorpicker><div class="o_colorpicker_section" data-name="common"></div></colorpicker>`);
+        $clpicker.appendTo($wrapper);
 
         this.el.querySelectorAll('.o_colorpicker_section').forEach(elem => {
             $(elem).prepend('<div>' + (elem.dataset.display || '') + '</div>');
@@ -88,10 +93,10 @@ const ColorPaletteWidget = Widget.extend({
         // Remove excluded palettes (note: only hide them to still be able
         // to remove their related colors on the DOM target)
         _.each(this.options.excluded, function (exc) {
-            $wrapper.find('[data-name="' + exc + '"]').addClass('d-none');
+            $colorSection.find('[data-name="' + exc + '"]').addClass('d-none');
         });
         if (this.options.excludeSectionOf) {
-            $wrapper.find('[data-name]:has([data-color="' + this.options.excludeSectionOf + '"])').addClass('d-none');
+            $colorSection.find('[data-name]:has([data-color="' + this.options.excludeSectionOf + '"])').addClass('d-none');
         }
 
         // Render common colors
@@ -118,17 +123,24 @@ const ColorPaletteWidget = Widget.extend({
         this.colorToColorNames = {};
         this.el.querySelectorAll('button[data-color]').forEach(elem => {
             const colorName = elem.dataset.color;
-            const color = ColorpickerDialog.normalizeCSSColor(this.style.getPropertyValue('--' + colorName).trim());
             const $color = $(elem);
             $color.addClass('bg-' + colorName);
-            if (this.selectedColor && (this.selectedColor === colorName || this.selectedColor === color)) {
-                $color.addClass('selected');
-            }
             this.colorNames.push(colorName);
             if (!elem.classList.contains('d-none')) {
+                const color = ColorpickerDialog.normalizeCSSColor(this.style.getPropertyValue('--' + colorName).trim());
                 this.colorToColorNames[color] = colorName;
             }
         });
+
+        // Select selected Color
+        if (this.options.selectedColor) {
+            const selectedColor = ColorpickerDialog.normalizeCSSColor(this.options.selectedColor);
+            this.selectedColor = this.colorToColorNames[selectedColor] || selectedColor;
+            const selectedButton = this.el.querySelector(`button[data-color="${this.selectedColor}"], button[style*="background-color:${this.selectedColor};"]`);
+            if (selectedButton) {
+                selectedButton.classList.add('selected');
+            }
+        }
 
         return res;
     },
@@ -168,11 +180,7 @@ const ColorPaletteWidget = Widget.extend({
         if (this.options.excluded.includes('custom')) {
             return;
         }
-        const existingColors = new Set(this.summernoteCustomColorsArray.concat(
-            [...this.el.querySelectorAll('.o_custom_color')].map(el => {
-                return ColorpickerDialog.normalizeCSSColor(el.style.backgroundColor);
-            })
-        ));
+        const existingColors = new Set(this.summernoteCustomColorsArray);
         this.trigger_up('get_custom_colors', {
             onSuccess: (colors) => {
                 colors.forEach(color => {
@@ -220,9 +228,6 @@ const ColorPaletteWidget = Widget.extend({
      * @returns {jQuery}
      */
     _createColorButton: function (color, classes) {
-        if (this.selectedColor === color) { // both colors are already normalized
-            classes.push('selected');
-        }
         return $('<button/>', {
             class: classes.join(' '),
             style: 'background-color:' + color + ';',
@@ -243,6 +248,15 @@ const ColorPaletteWidget = Widget.extend({
             target: buttonEl,
         };
     },
+    /**
+     * Set the selectedColor and inform parents
+     *
+     * @param {Object} colorInfo
+     */
+    _selectColor: function (colorInfo) {
+        this.selectedColor = colorInfo.color = this.colorToColorNames[colorInfo.color] || colorInfo.color;
+        this.trigger_up('color_picked', colorInfo);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -256,11 +270,8 @@ const ColorPaletteWidget = Widget.extend({
      */
     _onColorButtonClick: function (ev) {
         const buttonEl = ev.currentTarget;
-        this.$('button.selected').removeClass('selected');
-        $(buttonEl).addClass('selected');
         const colorInfo = this._getButtonInfo(buttonEl);
-        this.selectedColor = colorInfo.color;
-        this.trigger_up('color_picked', colorInfo);
+        this._selectColor(colorInfo);
     },
     /**
      * Called when a color button is entered.
@@ -299,7 +310,6 @@ const ColorPaletteWidget = Widget.extend({
      * @param {Event} ev
      */
     _onColorResetButtonClick: function (ev) {
-        this.$('button.selected').removeClass('selected');
         this.selectedColor = false;
         this.trigger_up('color_reset', {
             target: ev.target,
@@ -321,11 +331,8 @@ const ColorPaletteWidget = Widget.extend({
             defaultColor: selectedColor,
         });
         colorpicker.on('colorpicker:saved', this, ev => {
-            this.$('button.selected').removeClass('selected');
-            this.selectedColor = this.colorToColorNames[ev.data.cssColor] || ev.data.cssColor;
-            this._addCustomColorButton(this.selectedColor, ['selected']);
-            this.trigger_up('color_picked', {
-                color: this.selectedColor,
+            this._selectColor({
+                color: ev.data.cssColor,
                 target: target,
             });
         });

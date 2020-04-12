@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Events Organization',
-    'version': '1.0',
+    'version': '1.1',
     'website': 'https://www.odoo.com/page/events',
     'category': 'Marketing/Events',
     'summary': 'Trainings, Conferences, Meetings, Exhibitions, Registrations',
@@ -17,7 +17,7 @@ Key Features
 * Manage your Events and Registrations
 * Use emails to automatically confirm and send acknowledgments for any event registration
 """,
-    'depends': ['base_setup', 'mail', 'portal'],
+    'depends': ['base_setup', 'mail', 'portal', 'utm'],
     'data': [
         'security/event_security.xml',
         'security/ir.model.access.csv',
@@ -32,9 +32,11 @@ Key Features
         'views/res_config_settings_views.xml',
         'views/event_templates.xml',
         'views/res_partner_views.xml',
+        'views/event_tag_views.xml'
     ],
     'demo': [
         'data/res_users_demo.xml',
+        'data/res_partner_demo.xml',
         'data/event_demo.xml',
         'data/event_registration_demo.xml',
     ],

@@ -104,15 +104,15 @@ class ProductProduct(models.Model):
 
             #Cost price is calculated afterwards as it is a property
             self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
-            self.env['account.move'].flush(['state', 'payment_state', 'type', 'invoice_date', 'company_id'])
+            self.env['account.move'].flush(['state', 'payment_state', 'move_type', 'invoice_date', 'company_id'])
             self.env['product.template'].flush(['list_price'])
             sqlstr = """
                 WITH currency_rate AS ({})
                 SELECT
                     SUM(l.price_unit / (CASE COALESCE(cr.rate, 0) WHEN 0 THEN 1.0 ELSE cr.rate END) * l.quantity) / NULLIF(SUM(l.quantity),0) AS avg_unit_price,
-                    SUM(l.quantity) AS num_qty,
-                    SUM(l.balance) AS total,
-                    SUM(l.quantity * pt.list_price) AS sale_expected
+                    SUM(l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS num_qty,
+                    SUM(ABS(l.balance) * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS total,
+                    SUM(l.quantity * pt.list_price * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS sale_expected
                 FROM account_move_line l
                 LEFT JOIN account_move i ON (l.move_id = i.id)
                 LEFT JOIN product_product product ON (product.id=l.product_id)
@@ -125,20 +125,21 @@ class ProductProduct(models.Model):
                 WHERE l.product_id = %s
                 AND i.state IN %s
                 AND i.payment_state IN %s
-                AND i.type IN %s
+                AND i.move_type IN %s
                 AND i.invoice_date BETWEEN %s AND  %s
                 AND i.company_id = %s
                 AND l.display_type IS NULL
+                AND l.exclude_from_invoice_tab = false
                 """.format(self.env['res.currency']._select_companies_rates())
-            invoice_types = ('out_invoice', 'in_refund')
+            invoice_types = ('out_invoice', 'out_refund')
             self.env.cr.execute(sqlstr, (val.id, states, payment_states, invoice_types, date_from, date_to, company_id))
             result = self.env.cr.fetchall()[0]
             res[val.id]['sale_avg_price'] = result[0] and result[0] or 0.0
             res[val.id]['sale_num_invoiced'] = result[1] and result[1] or 0.0
-            res[val.id]['turnover'] = result[2] and -result[2] or 0.0
+            res[val.id]['turnover'] = result[2] and result[2] or 0.0
             res[val.id]['sale_expected'] = result[3] and result[3] or 0.0
             res[val.id]['sales_gap'] = res[val.id]['sale_expected'] - res[val.id]['turnover']
-            invoice_types = ('in_invoice', 'out_refund')
+            invoice_types = ('in_invoice', 'in_refund')
             self.env.cr.execute(sqlstr, (val.id, states, payment_states, invoice_types, date_from, date_to, company_id))
             result = self.env.cr.fetchall()[0]
             res[val.id]['purchase_avg_price'] = result[0] and result[0] or 0.0

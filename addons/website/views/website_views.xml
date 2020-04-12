@@ -42,6 +42,15 @@
                                 <field name="default_lang_id" widget="selection" groups="base.group_no_one"/>
                             </group>
                         </div>
+                        <notebook>
+                            <page string="Custom Code" groups="base.group_no_one">
+                                <label for="custom_code_head"/>
+                                <field name="custom_code_head" widget="ace" options="{'mode': 'xml'}"/>
+
+                                <label for="custom_code_footer"/>
+                                <field name="custom_code_footer" widget="ace" options="{'mode': 'xml'}"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -71,6 +80,7 @@
                         <button string="Cancel" class="btn btn-secondary" special="cancel"/>
                     </footer>
                 </xpath>
+                <xpath expr="//notebook" position="replace"/>
             </field>
         </record>
 
@@ -251,7 +261,6 @@
         <!-- ir.ui.view views -->
         <record model="ir.ui.view" id="view_view_form_extend">
             <field name="model">ir.ui.view</field>
-
             <field name="inherit_id" ref="base.view_view_form"/>
             <field name="arch" type="xml">
                 <field name="inherit_id" position="attributes">
@@ -264,7 +273,7 @@
                     <field name="first_page_id" attrs="{'invisible': [('page_ids', '=', [])]}" />
                     <field name="visibility" attrs="{'invisible': [('type', '!=', 'qweb')]}" />
                     <field name="visibility_group" attrs="{'invisible': [('visibility', '!=', 'restricted_group')]}" />
-                    <field name="visibility_password" attrs="{'invisible': [('visibility', '!=', 'password')]}" />
+                    <field name="visibility_password_display" attrs="{'invisible': [('visibility', '!=', 'password')]}" password="True"/>
                 </field>
                 <sheet position="before">
                     <header>
@@ -274,6 +283,7 @@
                 </sheet>
             </field>
         </record>
+
         <record id="view_view_tree_inherit_website" model="ir.ui.view">
             <field name="model">ir.ui.view</field>
             <field name="inherit_id" ref="base.view_view_tree"/>
@@ -283,6 +293,16 @@
                 </field>
                 <field name="xml_id" position="before">
                     <field name="key" groups="website.group_multi_website"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="reset_view_arch_wizard_view" model="ir.ui.view">
+            <field name="model">reset.view.arch.wizard</field>
+            <field name="inherit_id" ref="base.reset_view_arch_wizard_view"/>
+            <field name="arch" type="xml">
+                <field name="compare_view_id" position="attributes">
+                    <attribute name="context">{'display_website': True}</attribute>
                 </field>
             </field>
         </record>

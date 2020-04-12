@@ -53,7 +53,15 @@ class Crawler(HttpCaseWithUserDemo):
             seen.add(url_slug)
 
         _logger.info("%s %s", msg, url)
-        r = self.url_open(url)
+        r = self.url_open(url, allow_redirects=False)
+        if r.status_code in (301, 302):
+            # check local redirect to avoid fetch externals pages
+            new_url = r.headers.get('Location')
+            current_url = r.url
+            if urls.url_parse(new_url).netloc != urls.url_parse(current_url).netloc:
+                return seen
+            r = self.url_open(new_url)
+
         code = r.status_code
         self.assertIn(code, range(200, 300), "%s Fetching %s returned error response (%d)" % (msg, url, code))
 
@@ -85,7 +93,7 @@ class Crawler(HttpCaseWithUserDemo):
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.log(25, "public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration / count, float(sql) / count)
+        _logger.runbot("public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration / count, float(sql) / count)
 
     def test_20_crawl_demo(self):
         t0 = time.time()
@@ -95,7 +103,7 @@ class Crawler(HttpCaseWithUserDemo):
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.log(25, "demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
+        _logger.runbot("demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
 
     def test_30_crawl_admin(self):
         t0 = time.time()
@@ -105,4 +113,4 @@ class Crawler(HttpCaseWithUserDemo):
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.log(25, "admin crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
+        _logger.runbot("admin crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)

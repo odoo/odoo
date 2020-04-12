@@ -123,6 +123,7 @@ class ImLivechatChannel(models.Model):
                 channel_partner_to_add.append((4, visitor_user.partner_id.id))
         return {
             'channel_partner_ids': channel_partner_to_add,
+            'livechat_active': True,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': self.id,
             'anonymous_name': False if user_id else anonymous_name,
@@ -183,9 +184,9 @@ class ImLivechatChannel(models.Model):
             FROM mail_channel c
             LEFT OUTER JOIN mail_message_mail_channel_rel r ON c.id = r.mail_channel_id
             LEFT OUTER JOIN mail_message m ON r.mail_message_id = m.id
-            WHERE m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
-            AND c.channel_type = 'livechat'
+            WHERE c.channel_type = 'livechat' 
             AND c.livechat_operator_id in %s
+            AND m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
             GROUP BY c.livechat_operator_id
             ORDER BY COUNT(DISTINCT c.id) asc""", (tuple(operators.mapped('partner_id').ids),))
         active_channels = self.env.cr.dictfetchall()
@@ -269,7 +270,9 @@ class ImLivechatChannelRule(models.Model):
         """
         def _match(rules):
             for rule in rules:
-                if re.search(rule.regex_url or '', url):
+                # url might not be set because it comes from referer, in that
+                # case match the first rule with no regex_url
+                if re.search(rule.regex_url or '', url or ''):
                     return rule
             return False
         # first, search the country specific rules (the first match is returned)

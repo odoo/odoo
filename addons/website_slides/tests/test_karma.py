@@ -54,9 +54,16 @@ class TestKarmaGain(common.SlidesCase):
         # Finish the Course
         self.slide.with_user(user).action_set_completed()
         self.assertFalse(self.channel.with_user(user).completed)
-        (self.slide_2 | self.slide_3).with_user(user).action_set_completed()
-        self.assertTrue(self.channel.with_user(user).completed)
+        self.slide_2.with_user(user).action_set_completed()
+
+        # answer a quizz question
+        self.slide_3.with_user(user).action_set_viewed(quiz_attempts_inc=True)
+        self.slide_3.with_user(user)._action_set_quiz_done()
+        self.slide_3.with_user(user).action_set_completed()
+        computed_karma += self.slide_3.quiz_first_attempt_reward
         computed_karma += self.channel.karma_gen_channel_finish
+
+        self.assertTrue(self.channel.with_user(user).completed)
         self.assertEqual(user.karma, computed_karma)
 
         # Begin then finish the second Course
@@ -83,6 +90,12 @@ class TestKarmaGain(common.SlidesCase):
         computed_karma -= self.channel.karma_gen_slide_vote
         self.assertEqual(user.karma, computed_karma)
         slide_user.action_dislike()  # dislike again something already disliked should not remove karma again
+        self.assertEqual(user.karma, computed_karma)
+
+        # Leave the finished course
+        self.channel._remove_membership(user.partner_id.ids)
+        computed_karma -= self.channel.karma_gen_channel_finish
+        computed_karma -= self.slide_3.quiz_first_attempt_reward
         self.assertEqual(user.karma, computed_karma)
 
     @mute_logger('odoo.models')

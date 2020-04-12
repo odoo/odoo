@@ -17,7 +17,7 @@ class ServerActions(models.Model):
         ('email', 'Send Email'),
         ('followers', 'Add Followers'),
         ('next_activity', 'Create Next Activity'),
-    ])
+        ], ondelete={'email': 'cascade', 'followers': 'cascade', 'next_activity': 'cascade'})
     # Followers
     partner_ids = fields.Many2many('res.partner', string='Add Followers')
     channel_ids = fields.Many2many('mail.channel', string='Add Channels')
@@ -50,12 +50,6 @@ class ServerActions(models.Model):
     def _onchange_activity_date_deadline_range(self):
         if self.activity_date_deadline_range < 0:
             raise UserError(_("The 'Due Date In' value can't be negative."))
-
-    @api.onchange('template_id')
-    def on_change_template_id(self):
-        """ Render the raw template in the server action fields. """
-        if self.template_id and not self.template_id.email_from:
-            raise UserError(_('Your template should define email_from'))
 
     @api.constrains('state', 'model_id')
     def _check_mail_thread(self):

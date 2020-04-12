@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
+from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
@@ -86,10 +87,10 @@ class Channel(models.Model):
 
     # description
     name = fields.Char('Name', translate=True, required=True)
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, tracking=100)
     description = fields.Text('Description', translate=True, help="The description that is displayed on top of the course page, just below the title")
     description_short = fields.Text('Short Description', translate=True, help="The description that is displayed on the course card")
-    description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False)
+    description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
     channel_type = fields.Selection([
         ('documentation', 'Documentation'), ('training', 'Training')],
         string="Course type", default="documentation", required=True)
@@ -390,12 +391,20 @@ class Channel(models.Model):
 
         if vals.get('user_id'):
             self._action_add_members(self.env['res.users'].sudo().browse(vals['user_id']).partner_id)
-        if 'active' in vals:
-            # archiving/unarchiving a channel does it on its slides, too
-            self.with_context(active_test=False).mapped('slide_ids').write({'active': vals['active']})
         if 'enroll_group_ids' in vals:
             self._add_groups_members()
 
+        return res
+
+    def toggle_active(self):
+        # archiving/unarchiving a channel does it on its slides, too
+        to_archive = self.filtered(lambda channel: channel.active)
+        to_activate = self.filtered(lambda channel: not channel.active)
+        res = super(Channel, self).toggle_active()
+        if to_archive:
+            to_archive.mapped('slide_ids').action_archive()
+        if to_activate:
+            to_activate.with_context(active_test=False).mapped('slide_ids').action_unarchive()
         return res
 
     @api.returns('mail.message', lambda value: value.id)
@@ -501,11 +510,55 @@ class Channel(models.Model):
         for channel in self:
             channel._action_add_members(channel.mapped('enroll_group_ids.users.partner_id'))
 
+    def _get_earned_karma(self, partner_ids):
+        """ Compute the number of karma earned by partners on a channel
+        Warning: this count will not be accurate if the configuration has been
+        modified after the completion of a course!
+        """
+        total_karma = defaultdict(int)
+
+        slide_completed = self.env['slide.slide.partner'].sudo().search([
+            ('partner_id', 'in', partner_ids),
+            ('channel_id', 'in', self.ids),
+            ('completed', '=', True),
+            ('quiz_attempts_count', '>', 0)
+        ])
+        for partner_slide in slide_completed:
+            slide = partner_slide.slide_id
+            if not slide.question_ids:
+                continue
+            gains = [slide.quiz_first_attempt_reward,
+                     slide.quiz_second_attempt_reward,
+                     slide.quiz_third_attempt_reward,
+                     slide.quiz_fourth_attempt_reward]
+            attempts = min(partner_slide.quiz_attempts_count - 1, 3)
+            total_karma[partner_slide.partner_id.id] += gains[attempts]
+
+        channel_completed = self.env['slide.channel.partner'].sudo().search([
+            ('partner_id', 'in', partner_ids),
+            ('channel_id', 'in', self.ids),
+            ('completed', '=', True)
+        ])
+        for partner_channel in channel_completed:
+            channel = partner_channel.channel_id
+            total_karma[partner_channel.partner_id.id] += channel.karma_gen_channel_finish
+
+        return total_karma
+
     def _remove_membership(self, partner_ids):
         """ Unlink (!!!) the relationships between the passed partner_ids
-        and the channels and their slides (done in the unlink of slide.channel.partner model). """
+        and the channels and their slides (done in the unlink of slide.channel.partner model).
+        Remove earned karma when completed quizz """
         if not partner_ids:
             raise ValueError("Do not use this method with an empty partner_id recordset")
+
+        earned_karma = self._get_earned_karma(partner_ids)
+        users = self.env['res.users'].sudo().search([
+            ('partner_id', 'in', list(earned_karma)),
+        ])
+        for user in users:
+            if earned_karma[user.partner_id.id]:
+                user.add_karma(-1 * earned_karma[user.partner_id.id])
 
         removed_channel_partner_domain = []
         for channel in self:
@@ -548,13 +601,26 @@ class Channel(models.Model):
 
     def _get_categorized_slides(self, base_domain, order, force_void=True, limit=False, offset=False):
         """ Return an ordered structure of slides by categories within a given
-        base_domain that must fulfill slides. """
+        base_domain that must fulfill slides. As a course structure is based on
+        its slides sequences, uncategorized slides must have the lowest sequences.
+
+        Example
+          * category 1 (sequence 1), category 2 (sequence 3)
+          * slide 1 (sequence 0), slide 2 (sequence 2)
+          * course structure is: slide 1, category 1, slide 2, category 2
+            * slide 1 is uncategorized,
+            * category 1 has one slide : Slide 2
+            * category 2 is empty.
+
+        Backend and frontend ordering is the same, uncategorized first. It
+        eases resequencing based on DOM / displayed order, notably when
+        drag n drop is involved. """
         self.ensure_one()
         all_categories = self.env['slide.slide'].sudo().search([('channel_id', '=', self.id), ('is_category', '=', True)])
         all_slides = self.env['slide.slide'].sudo().search(base_domain, order=order)
         category_data = []
 
-        # First add all categories by natural order
+        # Prepare all categories by natural order
         for category in all_categories:
             category_slides = all_slides.filtered(lambda slide: slide.category_id == category)
             if not category_slides and not force_void:
@@ -565,24 +631,26 @@ class Channel(models.Model):
                 'total_slides': len(category_slides),
                 'slides': category_slides[(offset or 0):(limit + offset or len(category_slides))],
             })
-        # Then add uncategorized slides
+
+        # Add uncategorized slides in first position
         uncategorized_slides = all_slides.filtered(lambda slide: not slide.category_id)
         if uncategorized_slides or force_void:
-            category_data.append({
+            category_data.insert(0, {
                 'category': False, 'id': False,
                 'name': _('Uncategorized'), 'slug_name': _('Uncategorized'),
                 'total_slides': len(uncategorized_slides),
                 'slides': uncategorized_slides[(offset or 0):(offset + limit or len(uncategorized_slides))],
             })
+
         return category_data
 
-    def _resequence_slides(self, slide):
+    def _resequence_slides(self, slide, force_category=False):
         ids_to_resequence = self.slide_ids.ids
         index_of_added_slide = ids_to_resequence.index(slide.id)
-        category_id = slide.category_id.id
         next_category_id = None
         if self.slide_category_ids:
-            index_of_category = self.slide_category_ids.ids.index(category_id) if category_id else None
+            force_category_id = force_category.id if force_category else slide.category_id.id
+            index_of_category = self.slide_category_ids.ids.index(force_category_id) if force_category_id else None
             if index_of_category is None:
                 next_category_id = self.slide_category_ids.ids[0]
             elif index_of_category < len(self.slide_category_ids.ids) - 1:
@@ -593,7 +661,7 @@ class Channel(models.Model):
             index_of_next_category = ids_to_resequence.index(next_category_id)
             ids_to_resequence.insert(index_of_next_category, added_slide_id)
             for i, record in enumerate(self.env['slide.slide'].browse(ids_to_resequence)):
-                record.write({'sequence': i})
+                record.write({'sequence': i + 1})  # start at 1 to make people scream
         else:
             slide.write({
                 'sequence': self.env['slide.slide'].browse(ids_to_resequence[-1]).sequence + 1

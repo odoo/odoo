@@ -165,27 +165,26 @@ var SearchPanel = Widget.extend({
      * @params {string} viewType the type of the current view (e.g. 'kanban')
      * @returns {Object|undefined}
      */
-    computeSearchPanelParams: function (viewInfo, viewType) {
+    computeSearchPanelParams: function (arch, fields, viewType) {
         var searchPanelSections;
         var classes;
-        if (viewInfo) {
-            var arch = viewUtils.parseArch(viewInfo.arch);
+        if (arch && fields) {
             viewType = viewType === 'list' ? 'tree' : viewType;
-            arch.children.forEach(function (node) {
-                if (node.tag === 'searchpanel') {
-                    var attrs = node.attrs;
-                    var viewTypes = defaultViewTypes;
-                    if (attrs.view_types) {
-                        viewTypes = attrs.view_types.split(',');
-                    }
-                    if (attrs.class) {
-                        classes = attrs.class.split(' ');
-                    }
-                    if (viewTypes.indexOf(viewType) !== -1) {
-                        searchPanelSections = _processSearchPanelNode(node, viewInfo.fields);
-                    }
+            arch  = viewUtils.parseArch(arch);
+            const searchPanelNode = arch.children.find(child => child.tag === 'searchpanel');
+            if (searchPanelNode) {
+                var attrs = searchPanelNode.attrs;
+                var viewTypes = defaultViewTypes;
+                if (attrs.view_types) {
+                    viewTypes = attrs.view_types.split(',');
                 }
-            });
+                if (attrs.class) {
+                    classes = attrs.class.split(' ');
+                }
+                if (viewTypes.includes(viewType)) {
+                    searchPanelSections = _processSearchPanelNode(searchPanelNode, fields);
+                }
+            }
         }
         return {
             sections: searchPanelSections,

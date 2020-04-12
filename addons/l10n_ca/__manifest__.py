@@ -5,7 +5,7 @@
     'name': 'Canada - Accounting',
     'author': 'Savoir-faire Linux',
     'website': 'https://www.savoirfairelinux.com',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 This is the module to manage the Canadian accounting chart in Odoo.
 ===========================================================================================
@@ -49,6 +49,9 @@ position.
         'data/res_company_data.xml',
         'views/res_partner_view.xml',
         'views/report_invoice.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
     'post_init_hook': 'load_translations',
 }

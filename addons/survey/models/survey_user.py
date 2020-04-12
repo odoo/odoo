@@ -40,7 +40,7 @@ class SurveyUserInput(models.Model):
     invite_token = fields.Char('Invite token', readonly=True, copy=False)  # no unique constraint, as it identifies a pool of attempts
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     email = fields.Char('Email', readonly=True)
-    nickname = fields.Char('Nickname', help="Attendee nickname, mainly used to identify him in survey sessions rankings.")
+    nickname = fields.Char('Nickname', help="Attendee nickname, mainly used to identify him in the survey session leaderboard.")
     # questions / answers
     user_input_line_ids = fields.One2many('survey.user_input.line', 'user_input_id', string='Answers', copy=True)
     predefined_question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
@@ -55,13 +55,16 @@ class SurveyUserInput(models.Model):
         ('unique_token', 'UNIQUE (access_token)', 'An access token must be unique!'),
     ]
 
-    @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id')
+    @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id', 'predefined_question_ids.answer_score')
     def _compute_scoring_values(self):
         for user_input in self:
-            total_possible_score = sum([
-                answer_score if answer_score > 0 else 0
-                for answer_score in user_input.predefined_question_ids.mapped('suggested_answer_ids.answer_score')
-            ])
+            # sum(multi-choice question scores) + sum(simple answer_type scores)
+            total_possible_score = 0
+            for question in user_input.predefined_question_ids:
+                if question.question_type in ['simple_choice', 'multiple_choice']:
+                    total_possible_score += sum(score for score in question.mapped('suggested_answer_ids.answer_score') if score > 0)
+                elif question.is_scored_question:
+                    total_possible_score += question.answer_score
 
             if total_possible_score == 0:
                 user_input.scoring_percentage = 0
@@ -88,7 +91,7 @@ class SurveyUserInput(models.Model):
                 start_time = user_input.start_datetime
                 time_limit = user_input.survey_id.time_limit
                 user_input.survey_time_limit_reached = user_input.survey_id.is_time_limited and \
-                    fields.Datetime.now() > start_time + relativedelta(minutes=time_limit)
+                    fields.Datetime.now() >= start_time + relativedelta(minutes=time_limit)
             else:
                 user_input.survey_time_limit_reached = False
 
@@ -104,7 +107,7 @@ class SurveyUserInput(models.Model):
                 start_time = user_input.survey_id.session_question_start_time
                 time_limit = user_input.survey_id.session_question_id.time_limit
                 user_input.question_time_limit_reached = user_input.survey_id.session_question_id.is_time_limited and \
-                    fields.Datetime.now() > start_time + relativedelta(seconds=time_limit)
+                    fields.Datetime.now() >= start_time + relativedelta(seconds=time_limit)
             else:
                 user_input.question_time_limit_reached = False
 
@@ -208,6 +211,9 @@ class SurveyUserInput(models.Model):
                     user_input.survey_id.certification_mail_template_id.send_mail(user_input.id, notif_layout="mail.mail_notification_light")
                 if user_input.survey_id.certification_give_badge:
                     badge_ids.append(user_input.survey_id.certification_badge_id.id)
+
+            # Update predefined_question_id to remove inactive questions
+            user_input.predefined_question_ids -= user_input._get_inactive_conditional_questions()
 
         if badge_ids:
             challenges = Challenge.search([('reward_id', 'in', badge_ids)])
@@ -332,25 +338,17 @@ class SurveyUserInput(models.Model):
             'skipped': 0,
         }) for user_input in self)
 
-        scored_questions = self.mapped('predefined_question_ids').filtered(
-            lambda question: question.question_type in ['simple_choice', 'multiple_choice']
-        )
+        scored_questions = self.mapped('predefined_question_ids').filtered(lambda question: question.is_scored_question)
 
         for question in scored_questions:
-            question_answer_correct = question.suggested_answer_ids.filtered(lambda answer: answer.is_correct)
+            if question.question_type in ['simple_choice', 'multiple_choice']:
+                question_correct_suggested_answers = question.suggested_answer_ids.filtered(lambda answer: answer.is_correct)
             for user_input in self:
-                user_answer_lines_question = user_input.user_input_line_ids.filtered(lambda line: line.question_id == question)
-                user_answer_correct = user_answer_lines_question.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('suggested_answer_id')
-                user_answer_incorrect = user_answer_lines_question.filtered(lambda line: not line.answer_is_correct and not line.skipped)
-
-                if user_answer_correct == question_answer_correct:
-                    res[user_input]['correct'] += 1
-                elif user_answer_correct and user_answer_correct < question_answer_correct:
-                    res[user_input]['partial'] += 1
-                if not user_answer_correct and user_answer_incorrect:
-                    res[user_input]['incorrect'] += 1
-                if not user_answer_correct and not user_answer_incorrect:
-                    res[user_input]['skipped'] += 1
+                user_input_lines = user_input.user_input_line_ids.filtered(lambda line: line.question_id == question)
+                if question.question_type in ['simple_choice', 'multiple_choice']:
+                    res[user_input][self._choice_question_answer_result(user_input_lines, question_correct_suggested_answers)] += 1
+                else:
+                    res[user_input][self._simple_question_answer_result(user_input_lines)] += 1
 
         return [[
             {'text': _("Correct"), 'count': res[user_input]['correct']},
@@ -358,6 +356,110 @@ class SurveyUserInput(models.Model):
             {'text': _("Incorrect"), 'count': res[user_input]['incorrect']},
             {'text': _("Unanswered"), 'count': res[user_input]['skipped']}
         ] for user_input in self]
+
+    def _choice_question_answer_result(self, user_input_lines, question_correct_suggested_answers):
+        correct_user_input_lines = user_input_lines.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('suggested_answer_id')
+        incorrect_user_input_lines = user_input_lines.filtered(lambda line: not line.answer_is_correct and not line.skipped)
+        if correct_user_input_lines == question_correct_suggested_answers:
+            return 'correct'
+        elif correct_user_input_lines and correct_user_input_lines < question_correct_suggested_answers:
+            return 'partial'
+        elif not correct_user_input_lines and incorrect_user_input_lines:
+            return 'incorrect'
+        else:
+            return 'skipped'
+
+    def _simple_question_answer_result(self, user_input_line):
+        if user_input_line.skipped:
+            return 'skipped'
+        elif user_input_line.answer_is_correct:
+            return 'correct'
+        else:
+            return 'incorrect'
+
+    # ------------------------------------------------------------
+    # Conditional Questions Management
+    # ------------------------------------------------------------
+
+    def _get_conditional_values(self):
+        """ For survey containing conditional questions, we need a triggered_questions_by_answer map that contains
+                {key: answer, value: the question that the answer triggers, if selected},
+         The idea is to be able to verify, on every answer check, if this answer is triggering the display
+         of another question.
+         If answer is not in the conditional map:
+            - nothing happens.
+         If the answer is in the conditional map:
+            - If we are in ONE PAGE survey : (handled at CLIENT side)
+                -> display immediately the depending question
+            - If we are in PAGE PER SECTION : (handled at CLIENT side)
+                - If related question is on the same page :
+                    -> display immediately the depending question
+                - If the related question is not on the same page :
+                    -> keep the answers in memory and check at next page load if the depending question is in there and
+                       display it, if so.
+            - If we are in PAGE PER QUESTION : (handled at SERVER side)
+                -> During submit, determine which is the next question to display getting the next question
+                   that is the next in sequence and that is either not triggered by another question's answer, or that
+                   is triggered by an already selected answer.
+         To do all this, we need to return:
+            - list of all selected answers: [answer_id1, answer_id2, ...] (for survey reloading, otherwise, this list is
+              updated at client side)
+            - triggered_questions_by_answer: dict -> for a given answer, list of questions triggered by this answer;
+                Used mainly for dynamic show/hide behaviour at client side
+            - triggering_answer_by_question: dict -> for a given question, the answer that triggers it
+                Used mainly to ease template rendering
+        """
+        triggering_answer_by_question, triggered_questions_by_answer = {}, {}
+        # Ignore conditional configuration if randomised questions selection
+        if self.survey_id.questions_selection != 'random':
+            triggering_answer_by_question, triggered_questions_by_answer = self.survey_id._get_conditional_maps()
+        selected_answers = self._get_selected_suggested_answers()
+
+        return triggering_answer_by_question, triggered_questions_by_answer, selected_answers
+
+    def _get_selected_suggested_answers(self):
+        """
+        For now, only simple and multiple choices question type are handled by the conditional questions feature.
+        Mapping all the suggested answers selected by the user will also include answers from matrix question type,
+        Those ones won't be used.
+        Maybe someday, conditional questions feature will be extended to work with matrix question.
+        :return: all the suggested answer selected by the user.
+        """
+        return self.mapped('user_input_line_ids.suggested_answer_id')
+
+    def _clear_inactive_conditional_answers(self):
+        """
+        Clean eventual answers on conditional questions that should not have been displayed to user.
+        This method is used mainly for page per question survey, a similar method does the same treatment
+        at client side for the other survey layouts.
+        E.g.: if depending answer was uncheck after answering conditional question, we need to clear answers
+              of that conditional question, for two reasons:
+              - ensure correct scoring
+              - if the selected answer triggers another question later in the survey, if the answer is not cleared,
+                a question that should not be displayed to the user will be.
+        
+        TODO DBE: Maybe this can be the only cleaning method, even for section_per_page or one_page where 
+        conditional questions are, for now, cleared in JS directly. But this can be annoying if user typed a long 
+        answer, changed his mind unchecking depending answer and changed again his mind by rechecking the depending 
+        answer -> For now, the long answer will be lost. If we use this as the master cleaning method, 
+        long answer will be cleared only during submit.
+        """
+        inactive_questions = self._get_inactive_conditional_questions()
+
+        # delete user.input.line on question that should not be answered.
+        answers_to_delete = self.user_input_line_ids.filtered(lambda answer: answer.question_id in inactive_questions)
+        answers_to_delete.unlink()
+
+    def _get_inactive_conditional_questions(self):
+        triggering_answer_by_question, triggered_questions_by_answer, selected_answers = self._get_conditional_values()
+
+        # get questions that should not be answered
+        inactive_questions = self.env['survey.question']
+        for answer in triggered_questions_by_answer.keys():
+            if answer not in selected_answers:
+                for question in triggered_questions_by_answer[answer]:
+                    inactive_questions |= question
+        return inactive_questions
 
 
 class SurveyUserInputLine(models.Model):
@@ -390,15 +492,7 @@ class SurveyUserInputLine(models.Model):
     matrix_row_id = fields.Many2one('survey.question.answer', string="Row answer")
     # scoring
     answer_score = fields.Float('Score')
-    answer_is_correct = fields.Boolean('Correct', compute='_compute_answer_is_correct')
-
-    @api.depends('suggested_answer_id', 'question_id')
-    def _compute_answer_is_correct(self):
-        for answer in self:
-            if answer.suggested_answer_id and answer.question_id.question_type in ['simple_choice', 'multiple_choice']:
-                answer.answer_is_correct = answer.suggested_answer_id.is_correct
-            else:
-                answer.answer_is_correct = False
+    answer_is_correct = fields.Boolean('Correct')
 
     @api.constrains('skipped', 'answer_type')
     def _check_answer_type_skipped(self):
@@ -422,53 +516,90 @@ class SurveyUserInputLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            score = self._get_answer_score(vals.get('user_input_id'), vals.get('suggested_answer_id'))
-            if score and not vals.get('answer_score'):
-                vals.update({'answer_score': score})
+            score_vals = self._get_answer_score_values(vals)
+            if not vals.get('answer_score'):
+                vals.update(score_vals)
         return super(SurveyUserInputLine, self).create(vals_list)
 
     def write(self, vals):
-        score = self._get_answer_score(
-            vals.get('user_input_id'),
-            vals.get('suggested_answer_id'),
-            compute_speed_score=False)
-        if score and not vals.get('answer_score'):
-            vals.update({'answer_score': score})
+        score_vals = self._get_answer_score_values(vals, compute_speed_score=False)
+        if not vals.get('answer_score'):
+            vals.update(score_vals)
         return super(SurveyUserInputLine, self).write(vals)
 
     @api.model
-    def _get_answer_score(self, user_input_id, suggested_answer_id, compute_speed_score=True):
-        """ If score depends on the speed of the answer, we need to compute it.
-        If the user answers in less than 2 seconds, he gets 100% of the points.
-        If he answers after that, he gets minimum 50% of the points.
-        The 50 other % are ponderated between the time limit and the time it took him to answer.
+    def _get_answer_score_values(self, vals, compute_speed_score=True):
+        """ Get values for: answer_is_correct and associated answer_score.
 
-        If the score does not depend on the speed, we just return the answer_score field of the
-        suggested survey.question.answer. """
+        Requires vals to contain 'answer_type', 'question_id', and 'user_input_id'.
+        Depending on 'answer_type' additional value of 'suggested_answer_id' may also be
+        required.
 
-        if not suggested_answer_id:
-            return None
+        Calculates whether an answer_is_correct and its score based on 'answer_type' and
+        corresponding question. Handles choice (answer_type == 'suggestion') questions
+        separately from other question types. Each selected choice answer is handled as an
+        individual answer.
 
-        answer = self.env['survey.question.answer'].search([('id', '=', suggested_answer_id)], limit=1)
-        answer_score = answer.answer_score
+        If score depends on the speed of the answer, it is adjusted as follows:
+         - If the user answers in less than 2 seconds, they receive 100% of the possible points.
+         - If user answers after that, they receive 50% of the possible points + the remaining
+            50% scaled by the time limit and time taken to answer [i.e. a minimum of 50% of the
+            possible points is given to all correct answers]
 
-        if compute_speed_score:
+        Example of returned values:
+            * {'answer_is_correct': False, 'answer_score': 0} (default)
+            * {'answer_is_correct': True, 'answer_score': 2.0}
+        """
+        user_input_id = vals.get('user_input_id')
+        answer_type = vals.get('answer_type')
+        question_id = vals.get('question_id')
+        if not question_id:
+            raise ValueError(_('Computing score requires a question in arguments.'))
+        question = self.env['survey.question'].browse(int(question_id))
+
+        # default and non-scored questions
+        answer_is_correct = False
+        answer_score = 0
+
+        # record selected suggested choice answer_score (can be: pos, neg, or 0)
+        if question.question_type in ['simple_choice', 'multiple_choice']:
+            if answer_type == 'suggestion':
+                suggested_answer_id = vals.get('suggested_answer_id')
+                if suggested_answer_id:
+                    question_answer = self.env['survey.question.answer'].browse(int(suggested_answer_id))
+                    answer_score = question_answer.answer_score
+                    answer_is_correct = question_answer.is_correct
+        # for all other scored question cases, record question answer_score (can be: pos or 0)
+        elif question.is_scored_question:
+            answer = vals.get('value_%s' % answer_type)
+            if answer_type == 'numerical_box':
+                answer = float(answer)
+            elif answer_type == 'date':
+                answer = fields.Date.from_string(answer)
+            elif answer_type == 'datetime':
+                answer = fields.Datetime.from_string(answer)
+            if answer and answer == question['answer_%s' % answer_type]:
+                answer_is_correct = True
+                answer_score = question.answer_score
+
+        if compute_speed_score and answer_score > 0:
             user_input = self.env['survey.user_input'].browse(user_input_id)
             session_speed_rating = user_input.exists() and user_input.is_session_answer and user_input.survey_id.session_speed_rating
-            if session_speed_rating and answer.answer_score and answer.answer_score > 0:
+            if session_speed_rating:
                 max_score_delay = 2
-                time_limit = answer.question_id.time_limit
+                time_limit = question.time_limit
                 now = fields.Datetime.now()
                 seconds_to_answer = (now - user_input.survey_id.session_question_start_time).total_seconds()
                 question_remaining_time = time_limit - seconds_to_answer
-                if seconds_to_answer < max_score_delay:  # if answered within the max_score_delay
-                    answer_score = answer.answer_score
-                elif question_remaining_time < 0:  # if no time left
-                    answer_score = answer.answer_score / 2
-                else:
+                # if answered within the max_score_delay => leave score as is
+                if question_remaining_time < 0:  # if no time left
+                    answer_score /= 2
+                elif seconds_to_answer > max_score_delay:
                     time_limit -= max_score_delay  # we remove the max_score_delay to have all possible values
-                    question_remaining_time -= max_score_delay
                     score_proportion = (time_limit - seconds_to_answer) / time_limit
-                    answer_score = (answer.answer_score / 2) * (1 + score_proportion)
+                    answer_score = (answer_score / 2) * (1 + score_proportion)
 
-        return answer_score
+        return {
+            'answer_is_correct': answer_is_correct,
+            'answer_score': answer_score
+        }

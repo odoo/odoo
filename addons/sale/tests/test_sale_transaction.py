@@ -9,6 +9,7 @@ class TestSaleTransaction(AccountTestCommon):
     def setUpClass(cls):
         super(TestSaleTransaction, cls).setUpClass()
         cls.product = cls.env['product.product'].create({
+            'invoice_policy': 'order',
             'name': 'Product A',
         })
         cls.order = cls.env['sale.order'].create({
@@ -47,7 +48,7 @@ class TestSaleTransaction(AccountTestCommon):
         invoice = self.order._create_invoices()
         invoice.post()
 
-        self.assertEqual(invoice.payment_state, 'paid')
+        self.assertTrue(invoice.payment_state in ('in_payment', 'paid'), "Invoice should be paid")
 
     def test_sale_transaction_mismatch(self):
         """Test that a transaction for the incorrect amount does not validate the SO."""

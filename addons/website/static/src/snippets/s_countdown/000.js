@@ -94,7 +94,7 @@ const CountdownWidget = publicWidget.Widget.extend({
      */
     _handleEndCountdownAction: function () {
         if (this.endAction === 'redirect') {
-            const redirectUrl = this.el.dataset.redirectUrl;
+            const redirectUrl = this.el.dataset.redirectUrl || '/';
             if (this.hereBeforeTimerEnds) {
                 // Wait a bit, if the landing page has the same publish date
                 setTimeout(() => window.location = redirectUrl, 500);

@@ -13,7 +13,7 @@
                         <field name="is_blacklisted" invisible="1"/>
                         <label for="contact_id" class="oe_inline"/>
                         <div class="o_row o_row_readonly">
-                            <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
+                            <i class="fa fa-ban text-danger" role="img" title="This email is blacklisted for mass mailings"
                                 aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}" groups="base.group_user"></i>
                             <field name="contact_id"/>
                         </div>
@@ -52,8 +52,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mass_mailing_contact_search">
-        <field name="name">mailing.contact.search</field>
+    <record id="mailing_contact_view_search" model="ir.ui.view">
+        <field name="name">mailing.contact.view.search</field>
         <field name="model">mailing.contact</field>
         <field name="arch" type="xml">
            <search string="Mailing List Contacts">
@@ -84,8 +84,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mass_mailing_contact_tree">
-        <field name="name">mailing.contact.tree</field>
+    <record id="mailing_contact_view_tree" model="ir.ui.view">
+        <field name="name">mailing.contact.view.tree</field>
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -94,15 +94,15 @@
                 <field name="name"/>
                 <field name="company_name"/>
                 <field name="email"/>
-                <field name="message_bounce"/>
+                <field name="is_blacklisted" string="Email Blacklisted"/>
+                <field name="message_bounce" sum="Total Bounces"/>
                 <field name="opt_out" invisible="'default_list_ids' not in context"/>
-                <field name="is_blacklisted"/>
             </tree>
         </field>
     </record>
 
-    <record id="view_mail_mass_mailing_contact_kanban" model="ir.ui.view">
-        <field name="name">mailing.contact.kanban</field>
+    <record id="mailing_contact_view_kanban" model="ir.ui.view">
+        <field name="name">mailing.contact.view.kanban</field>
         <field name="model">mailing.contact</field>
         <field name="arch" type="xml">
             <kanban>
@@ -143,8 +143,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mass_mailing_contact_form">
-        <field name="name">mailing.contact.form</field>
+    <record id="mailing_contact_view_form" model="ir.ui.view">
+        <field name="name">mailing.contact.view.form</field>
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -164,8 +164,10 @@
                         <group>
                             <label for="email" class="oe_inline"/>
                             <div class="o_row o_row_readonly" name="email_details">
-                                <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
-                                    aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}" groups="base.group_user"></i>
+                                 <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
+                                    title="This email is blacklisted for mass mailings. Click to unblacklist."
+                                    type="object" context="{'default_email': email}" groups="base.group_user"
+                                    attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
                                 <field name="email" widget="email"/>
                                 <field name="is_blacklisted" invisible="1"/>
                             </div>
@@ -194,7 +196,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mass_mailing_contact_pivot">
+    <record id="mailing_contact_view_pivot" model="ir.ui.view">
         <field name="name">mailing.contact.pivot</field>
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
@@ -205,8 +207,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mass_mailing_contact_graph">
-        <field name="name">mailing.contact.graph</field>
+    <record id="mailing_contact_view_graph" model="ir.ui.view">
+        <field name="name">mailing.contact.view.graph</field>
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">

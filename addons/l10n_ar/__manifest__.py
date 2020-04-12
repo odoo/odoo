@@ -66,7 +66,7 @@ Master Data:
 * Partners: Consumidor Final and AFIP
 """,
     'author': 'ADHOC SA',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'depends': [
         'l10n_latam_invoice_document',
         'l10n_latam_base',
@@ -98,7 +98,6 @@ Master Data:
         'views/uom_uom_view.xml',
         'views/account_journal_view.xml',
         'views/l10n_latam_document_type_view.xml',
-        'views/ir_sequence_view.xml',
         'views/report_invoice.xml',
         'report/invoice_report_view.xml',
     ],

@@ -693,7 +693,7 @@ class WebsiteSale(http.Controller):
                 partner_id = self._checkout_form_save(mode, post, kw)
                 if mode[1] == 'billing':
                     order.partner_id = partner_id
-                    order.onchange_partner_id()
+                    order.with_context(not_self_saleperson=True).onchange_partner_id()
                     # This is the *only* thing that the front end user will see/edit anyway when choosing billing address
                     order.partner_invoice_id = partner_id
                     if not kw.get('use_same'):
@@ -716,8 +716,8 @@ class WebsiteSale(http.Controller):
             'checkout': values,
             'can_edit_vat': can_edit_vat,
             'country': country,
+            'country_states': country.get_website_sale_states(mode=mode[1]),
             'countries': country.get_website_sale_countries(mode=mode[1]),
-            "states": country.get_website_sale_states(mode=mode[1]),
             'error': errors,
             'callback': kw.get('callback'),
             'only_services': order and order.only_services,

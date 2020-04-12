@@ -9,6 +9,10 @@ function get_running_key() {
     return 'running_tour';
 }
 
+function get_debugging_key(name) {
+    return `debugging_tour_${name}`;
+}
+
 function get_running_delay_key() {
     return get_running_key() + "_delay";
 }
@@ -55,7 +59,7 @@ function get_jquery_element_from_selector(selector) {
 
 
 return {
-
+    get_debugging_key: get_debugging_key,
     'get_step_key': get_step_key,
     'get_running_key': get_running_key,
     'get_running_delay_key': get_running_delay_key,

@@ -2,7 +2,7 @@
 {
     'name': 'test-inherit',
     'version': '0.1',
-    'category': 'Tests',
+    'category': 'Hidden/Tests',
     'description': """A module to verify the inheritance.""",
     'depends': ['base', 'test_new_api'],
     'data': [

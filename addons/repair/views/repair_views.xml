@@ -34,21 +34,22 @@
                    <button name="action_repair_start" attrs="{'invisible': ['&amp;', ('state','!=','confirmed'), '!', '&amp;', ('state','=','ready'), ('invoice_method','=','b4repair')]}"
                     type="object" string="Start Repair" class="oe_highlight"/>
                    <button name="action_repair_end" states="under_repair" type="object" string="End Repair" class="oe_highlight"/>
-                   <button name="action_repair_invoice_create" states="2binvoiced" type="object" string="Create Invoice" class="oe_highlight" groups="account.group_account_invoice"/>
+                   <button name="action_repair_invoice_create" type="object" string="Create Invoice" class="oe_highlight" groups="account.group_account_invoice" attrs="{'invisible': ['|', ('state', '!=', '2binvoiced'), ('invoice_id', '!=', False)]}"/>
                    <button name="action_send_mail" states="draft" string="Send Quotation" type="object"/>
                    <button name="print_repair_order" states="draft" string="Print Quotation" type="object"/>
                    <button name="action_repair_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                   <button name="action_repair_cancel" string="Cancel Repair" type="object" attrs="{'invisible':['|',('invoice_method','!=','none'), ('state', 'not in',('confirmed','2binvoiced','ready','under_repair'))]}"/>
-                   <button name="action_repair_cancel" states="draft" type="object" string="Cancel Repair"/>
+                   <button name="action_repair_cancel" string="Cancel Repair" type="object" confirm="Draft invoices for this order will be cancelled. Do you confirm the action?" attrs="{'invisible':['|', ('state', '=', 'cancel'), ('invoice_state', '!=', 'draft')]}"/>
+                   <button name="action_repair_cancel" string="Cancel Repair" type="object" attrs="{'invisible': ['|', ('state','=', 'cancel',), ('invoice_state', '=', 'draft')]}"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                </header>
                <sheet string="Repairs order">
                     <div class="oe_button_box" name="button_box">
+                        <field name="invoice_id" invisible="1"/>
                         <button name="action_created_invoice"
                             type="object"
                             class="oe_stat_button"
                             icon="fa-pencil-square-o"
-                            attrs="{'invisible': ['|', '|', '&amp;',('invoice_method','=','after_repair'), ('state', '!=', 'done'), ('invoice_method', '=', 'none'), ('state','in',('confirmed','2binvoiced','draft'))]}"
+                            attrs="{'invisible': [('invoice_id', '=', False)]}"
                             groups="account.group_account_invoice">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">1</span>
@@ -62,6 +63,7 @@
                     </h1>
                     <group>
                         <group>
+                            <field name="invoice_state" invisible="1"/>
                             <field name="tracking" invisible="1" attrs="{'readonly': 1}"/>
                             <field name="product_id" />
                             <field name="product_uom_category_id" invisible="1"/>
@@ -73,7 +75,7 @@
                             <field name="lot_id" context="{'default_product_id': product_id, 'default_company_id': company_id}" groups="stock.group_production_lot" attrs="{'required':[('tracking', 'in', ['serial', 'lot'])], 'invisible': [('tracking', 'not in', ['serial', 'lot'])], 'readonly': [('state', '=', 'done')]}"/>
                             <field name="partner_id" widget="res_partner_many2one" attrs="{'required':[('invoice_method','!=','none')]}" context="{'res_partner_search_mode': 'customer', 'show_vat': True}"/>
                             <field name="address_id" groups="sale.group_delivery_invoice_address"/>
-                            <field name="user_id"/>
+                            <field name="user_id" domain="[('share', '=', False)]"/>
                         </group>
                         <group>
                             <field name="location_id" options="{'no_create': True}"/>

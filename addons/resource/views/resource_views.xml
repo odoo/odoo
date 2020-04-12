@@ -34,7 +34,7 @@
                         <field name="name"/>
                         <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                        <field name="active"/>
+                        <field name="active" widget="boolean_toggle"/>
                     </group>
                     <group name="resource_details">
                         <field name="resource_type" />

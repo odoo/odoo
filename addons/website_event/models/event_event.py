@@ -21,6 +21,11 @@ class Event(models.Model):
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.multi.mixin', 'website.cover_properties.mixin']
 
+    def _default_cover_properties(self):
+        res = super()._default_cover_properties()
+        res['opacity'] = '0.4'
+        return res
+
     # description
     subtitle = fields.Char('Event Subtitle', translate=True)
     # registration
@@ -28,9 +33,10 @@ class Event(models.Model):
     # website
     website_published = fields.Boolean(tracking=True)
     website_menu = fields.Boolean(
-        'Dedicated Menu', copy=False,
+        string='Dedicated Menu',
+        compute='_compute_from_event_type', readonly=False, store=True,
         help="Creates menus Introduction, Location and Register on the page "
-             " of the event on the website.")
+             "of the event on the website.")
     menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)
 
     def _compute_is_participating(self):
@@ -50,15 +56,30 @@ class Event(models.Model):
             if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 event.website_url = '/event/%s' % slug(event)
 
-    @api.onchange('event_type_id')
-    def _onchange_type(self):
-        super(Event, self)._onchange_type()
-        if self.event_type_id:
-            self.website_menu = self.event_type_id.website_menu
+    @api.depends('event_type_id')
+    def _compute_from_event_type(self):
+        """ Also ensure a value for website_menu as it is a trigger notably for
+        track related menus. """
+        super(Event, self)._compute_from_event_type()
+        for event in self:
+            if not event.event_type_id and not event.website_menu:
+                event.website_menu = False
+            elif event.event_type_id:
+                event.website_menu = event.event_type_id.website_menu
 
-    def _default_cover_properties(self):
-        res = super()._default_cover_properties()
-        res['opacity'] = '0.4'
+    @api.model
+    def create(self, vals):
+        res = super(Event, self).create(vals)
+        res._update_website_menus()
+        return res
+
+    def write(self, vals):
+        menu_activated = self.filtered(lambda event: event.website_menu)
+        menu_deactivated = self.filtered(lambda event: not event.website_menu)
+        res = super(Event, self).write(vals)
+        menu_to_deactivate = menu_activated.filtered(lambda event: not event.website_menu)
+        menu_to_activate = menu_deactivated.filtered(lambda event: event.website_menu)
+        (menu_to_activate | menu_to_deactivate)._update_website_menus()
         return res
 
     def _get_menu_entries(self):
@@ -71,31 +92,19 @@ class Event(models.Model):
             (_('Register'), '/event/%s/register' % slug(self), False),
         ]
 
-    def _toggle_create_website_menus(self, vals):
+    def _update_website_menus(self):
         for event in self:
-            if 'website_menu' in vals:
-                if event.menu_id and not event.website_menu:
-                    event.menu_id.unlink()
-                elif event.website_menu:
-                    if not event.menu_id:
-                        root_menu = self.env['website.menu'].create({'name': event.name, 'website_id': event.website_id.id})
-                        event.menu_id = root_menu
-                    for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
-                        event._create_menu(sequence, name, url, xml_id)
-
-    @api.model
-    def create(self, vals):
-        res = super(Event, self).create(vals)
-        res._toggle_create_website_menus(vals)
-        return res
-
-    def write(self, vals):
-        res = super(Event, self).write(vals)
-        self._toggle_create_website_menus(vals)
-        return res
+            if event.menu_id and not event.website_menu:
+                event.menu_id.unlink()
+            elif event.website_menu and not event.menu_id:
+                root_menu = self.env['website.menu'].create({'name': event.name, 'website_id': event.website_id.id})
+                event.menu_id = root_menu
+                for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
+                    event._create_menu(sequence, name, url, xml_id)
 
     def _create_menu(self, sequence, name, url, xml_id):
         if not url:
+            self.env['ir.ui.view'].search([('name', '=', name + ' ' + self.name)]).unlink()
             newpath = self.env['website'].new_page(name + ' ' + self.name, template=xml_id, ispage=False)['url']
             url = "/event/" + slug(self) + "/page/" + newpath[1:]
         menu = self.env['website.menu'].create({
@@ -106,12 +115,6 @@ class Event(models.Model):
             'website_id': self.website_id.id,
         })
         return menu
-
-    def google_map_img(self, zoom=8, width=298, height=298):
-        self.ensure_one()
-        if self.address_id:
-            return self.sudo().address_id.google_map_img(zoom=zoom, width=width, height=height)
-        return None
 
     def google_map_link(self, zoom=8):
         self.ensure_one()
@@ -155,7 +158,8 @@ class Event(models.Model):
     def _default_website_meta(self):
         res = super(Event, self)._default_website_meta()
         event_cover_properties = json.loads(self.cover_properties)
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = event_cover_properties.get('background-image', 'none')[4:-1]
+        # background-image might contain single quotes eg `url('/my/url')`
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = event_cover_properties.get('background-image', 'none')[4:-1].strip("'")
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.subtitle
         res['default_twitter']['twitter:card'] = 'summary'

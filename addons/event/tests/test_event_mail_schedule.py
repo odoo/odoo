@@ -22,7 +22,6 @@ class TestMailSchedule(TestEventCommon):
             'auto_confirm': True,
             'date_begin': event_date_begin,
             'date_end': event_date_end,
-            'seats_max': 10,
             'event_mail_ids': [
                 (0, 0, {  # right at subscription
                     'interval_unit': 'now',

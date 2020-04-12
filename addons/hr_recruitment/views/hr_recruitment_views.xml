@@ -117,7 +117,7 @@
                     </group>
                     <group>
                         <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-                        <field name="user_id"/>
+                        <field name="user_id" domain="[('share', '=', False)]"/>
                         <field name="priority" widget="priority"/>
                         <field name="medium_id" groups="base.group_no_one" />
                         <field name="source_id"/>
@@ -163,6 +163,7 @@
               <pivot string="Job Applications">
                 <field name="create_date" type="row"/>
                 <field name="stage_id" type="col"/>
+                <field name="color" invisible="1"/>
             </pivot>
         </field>
     </record>
@@ -305,7 +306,7 @@
                                     </div>
                                 </div>
                                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile" widget ="phone"/><br/></t>
+                                <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile" widget="phone"/><br/></t>
                                 <div class="o_kanban_record_bottom mt4">
                                     <div class="oe_kanban_bottom_left">
                                         <div class="float-left mr4" groups="base.group_user">
@@ -460,7 +461,7 @@
                 </div>
             </xpath>
             <field name="no_of_recruitment" position="after">
-                <field name="user_id"/>
+                <field name="user_id" domain="[('share', '=', False)]"/>
             </field>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"

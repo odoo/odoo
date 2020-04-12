@@ -17,20 +17,6 @@
                         <div class="row mt16 o_settings_container" name="event_type_location">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-                                    <field name="is_online"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="is_online"/>
-                                    <div class="row">
-                                        <div class="col-lg-8 mt16 text-muted">
-                                            Online events like webinars do not require a specific location
-                                            and are hosted online.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
                                     <field name="use_timezone"/>
                                 </div>
                                 <div class="o_setting_right_pane">
@@ -80,14 +66,15 @@
                                     <div class="row">
                                         <div class="col-lg-8 mt16" attrs="{'invisible': [('has_seats_limitation', '=', False)]}">
                                             <div>
-                                                <label for="default_registration_min"/> <field name="default_registration_min"/>
-                                            </div>
-                                            <div>
-                                                <label for="default_registration_max"/> <field name="default_registration_max"/>
+                                                <label for="seats_max"/> <field name="seats_max"/>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" >
+                                <label for="tag_ids" string="Tags"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                             </div>
                         </div>
                         <h2>Attendees</h2>
@@ -134,7 +121,7 @@
             <field name="name">event.type.tree</field>
             <field name="model">event.type</field>
             <field name="arch" type="xml">
-                <tree string="Event Category">
+                <tree string="Event Template">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                 </tree>
@@ -145,15 +132,14 @@
             <field name="name">event.type.search</field>
             <field name="model">event.type</field>
             <field name="arch" type="xml">
-                <search string="Event Categories">
+                <search string="Event Templates">
                     <field name="name"/>
-                    <filter string="Online Event" name="online_event" help="Online Event" domain="[('is_online', '=', True)]"/>
                 </search>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_event_type">
-            <field name="name">Event Categories</field>
+            <field name="name">Event Templates</field>
             <field name="res_model">event.type</field>
         </record>
 
@@ -202,7 +188,7 @@
                                     type="action"
                                     class="oe_stat_button"
                                     icon="fa-users"
-                                    help="Register with this event">
+                                    help="Total Registrations for this Event">
                                 <field name="seats_expected" widget="statinfo" string="Attendees"/>
                             </button>
                         </div>
@@ -210,29 +196,14 @@
                         <field name="legend_normal" invisible="1"/>
                         <field name="legend_done" invisible="1"/>
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <field name="kanban_state" widget="state_selection" class="ml-auto"/>
+                        <field name="kanban_state" widget="state_selection" class="ml-auto float-right"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Event Name"/>
                             <h1><field name="name" placeholder="e.g. Conference for Architects"/></h1>
-                            <field name="is_online" groups="base.group_no_one"/>
-                            <label for="is_online" string="Online" groups="base.group_no_one"/>
                         </div>
                         <group>
                             <group>
                                 <field name="active" invisible="1"/>
-                                <field name="organizer_id"/>
-                                <field name="address_id"
-                                    attrs="{'invisible': [('is_online', '=', True)]}"
-                                    context="{'show_address': 1}"
-                                    options='{"always_reload": True}'/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="user_id"/>
-                            </group>
-                            <group>
-                                <field name="event_type_id" options="{'no_create':True}"/>
-                                <field name="auto_confirm" groups="base.group_no_one"/>
-                            </group>
-                            <group>
                                 <label for="date_begin" string="Date"/>
                                 <div class="o_row">
                                     <field name="date_begin" widget="daterange" nolabel="1" class="oe_inline" options="{'related_end_date': 'date_end'}"/>
@@ -240,20 +211,22 @@
                                     <field name="date_end" widget="daterange" nolabel="1" class="oe_inline" options="{'related_start_date': 'date_begin'}"/>
                                 </div>
                                 <field name="date_tz"/>
+                                <field name="organizer_id"/>
+                                <field name="user_id" domain="[('share', '=', False)]"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="event_type_id" string="Template" options="{'no_create':True}"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                             </group>
                             <group>
-                                <field name="seats_min"/>
-                                <label for="seats_availability"/>
+                                <field name="address_id"
+                                    context="{'show_address': 1}"
+                                    options='{"always_reload": True}'/>
+                                <field name="auto_confirm"/>
+                                <label for="seats_limited" string="Limit Registrations"/>
                                 <div>
-                                    <field name="seats_availability" widget='radio'/>
-                                    <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
-                                        to
-                                    </span>
-                                    <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
+                                    <field name="seats_limited"/>
+                                    <span attrs="{'invisible': [('seats_limited', '=', False)], 'required': [('seats_limited', '=', False)]}">to <field name="seats_max" class="oe_inline"/> Attendees</span>
                                 </div>
-                            </group>
-                            <group class="w-100">
-                                <field name="note" placeholder="Add a note..." nolabel="1"/>
                             </group>
                         </group>
                         <notebook>
@@ -269,7 +242,7 @@
                                     <tree string="Communication" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="notification_type" invisible="1"/>
-                                        <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
+                                        <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}" context="{'default_model': 'event.registration'}"/>
                                         <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
                                         <field name="interval_unit"/>
                                         <field name="interval_type"/>
@@ -277,10 +250,8 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Description" name="event_description">
-                                <group>
-                                    <field name="description"/>
-                                </group>
+                            <page string="Notes" name="event_notes">
+                                <field name="note" placeholder="Add a note..."/>
                             </page>
                         </notebook>
                     </sheet>
@@ -299,18 +270,22 @@
             <field name="arch" type="xml">
                 <tree string="Events"
                     decoration-bf="message_needaction==True"
-                    decoration-danger="(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved)"
+                    decoration-danger="(seats_max and seats_max&lt;seats_reserved)"
                     multi_edit="1">
                     <field name="name"/>
-                    <field name="event_type_id" readonly="1"/>
-                    <field name="date_begin" readonly="1"/>
-                    <field name="date_end" readonly="1"/>
-                    <field name="seats_reserved" sum="Total" readonly="1"/>
-                    <field name="seats_min" readonly="1"/>
-                    <field name="seats_max" invisible="1" readonly="1"/>
+                    <field name="address_id" readonly="1"/>
+                    <field name="organizer_id" readonly="1" optional="hide"/>
                     <field name="user_id" readonly="1"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
+                    <field name="date_begin" readonly="1" widget="date"/>
+                    <field name="date_end" readonly="1" widget="date"/>
+                    <field name="stage_id" readonly="1"/>
+                    <field name="seats_expected" string="Expected Attendees" sum="Total" readonly="1"/>
+                    <field name="seats_used" sum="Total" readonly="1"/>
+                    <field name="seats_max" string="Maximum Seats" sum="Total" readonly="1" optional="hide"/>
+                    <field name="seats_reserved" sum="Total" readonly="1" optional="hide"/>
+                    <field name="seats_unconfirmed" string="Unconfirmed Seats" sum="Total" readonly="1" optional="hide"/>
                     <field name="message_needaction" invisible="1" readonly="1"/>
-                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     <field name="activity_exception_decoration" widget="activity_exception" readonly="1"/>
                 </tree>
             </field>
@@ -379,8 +354,8 @@
                                             </a>
                                             <t t-set="total_seats" t-value="record.seats_reserved.raw_value + record.seats_used.raw_value"/>
                                             <t t-if="total_seats > 0 "><br/>
-                                                <a name="%(event_event_action_pivot)d" type="action">
-                                                    <t t-esc="total_seats"/> Confirmed attendees
+                                                <a class="pl-2" name="%(event_event_action_pivot)d" type="action">
+                                                    <i class="fa fa-level-up fa-rotate-90" title="Confirmed"/><span class="pl-2"><t t-esc="total_seats"/> Confirmed</span>
                                                 </a>
                                             </t>
                                         </h5>
@@ -388,7 +363,7 @@
                                             <div class="float-left"><field name="activity_ids" widget="kanban_activity"/></div>
                                             <field name="kanban_state" widget="state_selection"/>
                                             <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
-                                            <img class="oe_kanban_avatar o_event_fit_20 ml-2" t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
+                                            <img class="oe_kanban_avatar o_event_fit_20 ml-2 rounded-circle" t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
                                                 t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value"/>
                                         </div>
                                     </div>
@@ -431,7 +406,6 @@
                     <separator/>
                     <filter string="Upcoming/Running" name="upcoming"
                         domain="[('date_end', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
-                    <filter string="Online Events" name="online_events" help="Online Events" domain="[('is_online', '=', True)]"/>
                     <separator/>
                     <filter string="Start Date" name="start_date" date="date_begin"/>
                     <separator/>
@@ -446,7 +420,7 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
-                        <filter string="Event Category" name="event_type_id" context="{'group_by': 'event_type_id'}"/>
+                        <filter string="Template" name="event_type_id" context="{'group_by': 'event_type_id'}"/>
                         <filter string="Stage" name="stage_id" context="{'group_by': 'stage_id'}"/>
                         <filter string="Start Date" name="date_begin" domain="[]" context="{'group_by': 'date_begin'}"/>
                     </group>
@@ -461,6 +435,7 @@
                 <pivot string="Event">
                     <field name="name" type="row"/>
                     <field name="seats_reserved" type="measure"/>
+                    <field name="color" invisible="1"/>
                 </pivot>
             </field>
         </record>
@@ -517,7 +492,6 @@
                     <field name="mobile" optional="hide"/>
                     <field name="event_id"/>
                     <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
-                    <field name="origin" optional="hide"/>
                     <field name="state" readonly="0"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="message_needaction" invisible="1"/>
@@ -548,20 +522,25 @@
                                 <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                                 <field name="name"/>
                                 <field name="email"/>
-                                <field name="phone"/>
-                                <field name="mobile"/>
+                                <field name="phone" class="o_force_ltr"/>
+                                <field name="mobile" class="o_force_ltr"/>
                             </group>
                             <group string="Event Information" name="event">
                                 <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True}"/>
                                 <field name="event_ticket_id"
                                     domain="[
                                         ('event_id', '=', event_id),
-                                        '|', ('seats_availability', '=', 'unlimited'), ('seats_available', '>', 0)
+                                        '|', ('seats_limited', '=', False), ('seats_available', '>', 0)
                                     ]"
                                     attrs="{'invisible': [('event_id', '=', False)]}"
                                     options="{'no_open': True, 'no_create': True}"/>
                                 <field name="date_open" groups="base.group_no_one"/>
                                 <field name="date_closed" groups="base.group_no_one"/>
+                            </group>
+                            <group string="Marketing" name="utm_link" groups="base.group_no_one">
+                                <field name="utm_campaign_id"/>
+                                <field name="utm_medium_id"/>
+                                <field name="utm_source_id"/>
                             </group>
                         </group>
                     </sheet>
@@ -648,7 +627,7 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <field name="id" string="Registration ID"/>
-                    <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('origin', 'ilike', self)]"/>
+                    <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self)]"/>
                     <filter string="Ongoing Events" name="filter_is_ongoing" domain="[('event_id.is_ongoing', '=', True)]"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
@@ -728,7 +707,7 @@
                                     <tree string="Registration mail" editable="bottom">
                                         <field name="registration_id"/>
                                         <field name="scheduled_date"/>
-                                        <field name="mail_sent"/>
+                                        <field name="mail_sent" string="Sent"/>
                                     </tree>
                                 </field>
                             </page>
@@ -747,7 +726,7 @@
                     <field name="notification_type" invisible="1"/>
                     <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
                     <field name="scheduled_date"/>
-                    <field name="mail_sent"/>
+                    <field name="mail_sent" string="Sent"/>
                     <field name="done"/>
                 </tree>
             </field>

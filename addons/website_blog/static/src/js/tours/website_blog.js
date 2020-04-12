@@ -8,7 +8,11 @@ odoo.define("website_blog.tour", function (require) {
 
     tour.register("blog", {
         url: "/",
-    }, [tour.STEPS.WEBSITE_NEW_PAGE, {
+    }, [{
+        trigger: '#new-content-menu > a',
+        auto: true,
+        position: 'bottom',
+    }, {
         trigger: "a[data-action=new_blog_post]",
         content: _t("Select this menu item to create a new blog post."),
         position: "bottom",
@@ -31,11 +35,6 @@ odoo.define("website_blog.tour", function (require) {
         trigger: ".o_select_media_dialog .o_existing_attachment_cell:nth(1) img",
         extra_trigger: '.modal:has(.o_existing_attachment_cell:nth(1))',
         content: _t("Choose an image from the library."),
-        position: "top",
-    }, {
-        trigger: ".o_select_media_dialog .modal-footer > .btn-primary",
-        extra_trigger: ".o_existing_attachment_cell.o_we_attachment_selected",
-        content: _t("Click on <b>Save</b> to set the picture as cover."),
         position: "top",
     }, {
         trigger: "#o_wblog_post_content",

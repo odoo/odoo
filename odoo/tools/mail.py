@@ -13,6 +13,7 @@ import time
 
 from email.utils import getaddresses
 from lxml import etree
+from werkzeug import urls
 
 import odoo
 from odoo.loglevels import ustr
@@ -165,7 +166,7 @@ class _Cleaner(clean.Cleaner):
         return super(_Cleaner, self).allow_element(el)
 
 
-def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, strip_style=False, strip_classes=False):
+def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, sanitize_form=True, strip_style=False, strip_classes=False):
     if not src:
         return src
     src = ustr(src, errors='replace')
@@ -183,7 +184,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         'page_structure': True,
         'style': strip_style,              # True = remove style tags/attrs
         'sanitize_style': sanitize_style,  # True = sanitize styling
-        'forms': True,                     # True = remove form tags
+        'forms': sanitize_form,            # True = remove form tags
         'remove_unknown_tags': False,
         'comments': False,
         'processing_instructions': False
@@ -250,9 +251,34 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
 
     return cleaned
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # HTML/Text management
-#----------------------------------------------------------
+# ----------------------------------------------------------
+
+URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
+TEXT_URL_REGEX = r'https?://[a-zA-Z0-9@:%._\+~#=/-]+(?:\?\S+)?'
+
+
+def validate_url(url):
+    if urls.url_parse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
+        return 'http://' + url
+
+    return url
+
+
+def is_html_empty(html_content):
+    """Check if a html content is empty. If there are only formatting tags or
+    a void content return True. Famous use case if a '<p><br></p>' added by
+    some web editor.
+
+    :param str html_content: html content, coming from example from an HTML field
+    :returns: bool, True if no content found or if containing only void formatting tags
+    """
+    if not html_content:
+        return True
+    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i)\s*\>')
+    return not bool(re.sub(tag_re, '', html_content).strip())
+
 
 def html_keep_url(text):
     """ Transform the url into clickable link with <a/> tag """
@@ -265,6 +291,7 @@ def html_keep_url(text):
         idx = item.end()
     final += text[idx:]
     return final
+
 
 def html2plaintext(html, body_id=None, encoding='utf-8'):
     """ From an HTML text, convert the HTML to plain text.
@@ -327,7 +354,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
             html += '\n\n'
         html += ustr('[%s] %s\n') % (i + 1, url)
 
-    return html
+    return html.strip()
 
 def plaintext2html(text, container_tag=False):
     """ Convert plaintext into html. Content of the text is escaped to manage

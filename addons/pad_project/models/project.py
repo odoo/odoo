@@ -11,6 +11,10 @@ class ProjectTask(models.Model):
 
     description_pad = fields.Char('Pad URL', pad_content_field='description', copy=False)
     use_pad = fields.Boolean(related="project_id.use_pads", string="Use collaborative pad", readonly=True)
+    pad_availability = fields.Selection(
+        related="project_id.pad_availability",
+        string="Availability of collaborative pads",
+        readonly=True)
 
     @api.model
     def create(self, vals):
@@ -20,8 +24,37 @@ class ProjectTask(models.Model):
             self = self.with_context(pad_no_create=True)
         return super(ProjectTask, self).create(vals)
 
+    def _use_portal_pad(self):
+        """
+        Indicates if the task configuration requires to provide
+        an access to a portal pad.
+        """
+        self.ensure_one()
+        return self.use_pad and self.pad_availability == 'portal'
+
+    def _get_pad_content(self):
+        """
+        Gets the content of the pad used to edit the task description
+        and returns it.
+        """
+        self.ensure_one()
+        return self.pad_get_content(self.description_pad)
+
 
 class ProjectProject(models.Model):
     _inherit = "project.project"
 
-    use_pads = fields.Boolean("Use collaborative pads", default=True, help="Use collaborative pad for the tasks on this project.")
+    use_pads = fields.Boolean("Use collaborative pads", default=True,
+        help="Use collaborative pad for the tasks on this project.")
+
+    pad_availability = fields.Selection([
+        ('internal', 'Internal Users'),
+        ('portal', 'Portal Users')
+        ], compute='_compute_pad_availability', store=True, readonly=False,
+        string='Availability of collaborative pads', required=True, default='internal')
+
+    @api.depends('use_pads', 'privacy_visibility')
+    def _compute_pad_availability(self):
+        for project in self:
+            if project.privacy_visibility != 'portal' or not project.use_pads:
+                project.pad_availability = 'internal'

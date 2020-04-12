@@ -6,22 +6,16 @@
 from collections import defaultdict
 from datetime import date, datetime, time
 from operator import attrgetter
+from xmlrpc.client import MAXINT
 import itertools
 import logging
 import base64
 import binascii
 import pytz
-
-try:
-    from xmlrpc.client import MAXINT
-except ImportError:
-    #pylint: disable=bad-python3-import
-    from xmlrpclib import MAXINT
-
 import psycopg2
 
 from .tools import (
-    float_repr, float_round, float_compare, float_is_zero, frozendict, html_sanitize, human_size,
+    float_repr, float_round, float_compare, float_is_zero, html_sanitize, human_size,
     pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator,
     image_process, merge_sequences,
 )
@@ -34,10 +28,6 @@ from odoo.exceptions import CacheMiss
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
-EMPTY_DICT = frozendict()
-
-RENAMED_ATTRS = [('select', 'index'), ('digits_compute', 'digits')]
-DEPRECATED_ATTRS = [("oldname", "use an upgrade script instead.")]
 
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
@@ -61,33 +51,19 @@ def resolve_mro(model, name, predicate):
         (the ones that appear in the registry) are ignored.
     """
     result = []
-    for cls in type(model).__mro__:
-        if not getattr(cls, 'pool', None) and name in cls.__dict__:
-            value = cls.__dict__[name]
-            if not predicate(value):
-                break
-            result.append(value)
+    for cls in model._model_classes:
+        value = cls.__dict__.get(name, Default)
+        if value is Default:
+            continue
+        if not predicate(value):
+            break
+        result.append(value)
     return result
 
 
 class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
-
-    def __new__(meta, name, bases, attrs):
-        """ Combine the ``_slots`` dict from parent classes, and determine
-        ``__slots__`` for them on the new class.
-        """
-        base_slots = {}
-        for base in reversed(bases):
-            base_slots.update(getattr(base, '_slots', ()))
-
-        slots = dict(base_slots)
-        slots.update(attrs.get('_slots', ()))
-
-        attrs['__slots__'] = set(slots) - set(base_slots)
-        attrs['_slots'] = slots
-        return type.__new__(meta, name, bases, attrs)
 
     def __init__(cls, name, bases, attrs):
         super(MetaField, cls).__init__(name, bases, attrs)
@@ -106,7 +82,10 @@ class MetaField(type):
             elif attr.startswith('_description_'):
                 cls.description_attrs.append((attr[13:], attr))
 
+
 _global_seq = iter(itertools.count())
+
+
 class Field(MetaField('DummyField', (object,), {})):
     """The field descriptor contains the field definition, and manages accesses
     and assignments of the corresponding field on records. The following
@@ -116,6 +95,8 @@ class Field(MetaField('DummyField', (object,), {})):
         set, the ORM takes the field name in the class (capitalized).
 
     :param str help: the tooltip of the field seen by users
+
+    :param invisible: whether the field is invisible (boolean, by default ``False``)
 
     :param bool readonly: whether the field is readonly (default: ``False``)
 
@@ -220,95 +201,58 @@ class Field(MetaField('DummyField', (object,), {})):
     column_format = '%s'                # placeholder for value in queries
     column_cast_from = ()               # column types that may be cast to this
 
-    _slots = {
-        'args': EMPTY_DICT,             # the parameters given to __init__()
-        '_attrs': EMPTY_DICT,           # the field's non-slot attributes
-        '_module': None,                # the field's module name
-        '_modules': None,               # modules that define this field
-        '_setup_done': None,            # the field's setup state: None, 'base' or 'full'
-        '_sequence': None,              # absolute ordering of the field
+    args = None                         # the parameters given to __init__()
+    _module = None                      # the field's module name
+    _modules = None                     # modules that define this field
+    _setup_done = None                  # the field's setup state: None, 'base' or 'full'
+    _sequence = None                    # absolute ordering of the field
 
-        'automatic': False,             # whether the field is automatically created ("magic" field)
-        'inherited': False,             # whether the field is inherited (_inherits)
-        'inherited_field': None,        # the corresponding inherited field
+    automatic = False                   # whether the field is automatically created ("magic" field)
+    inherited = False                   # whether the field is inherited (_inherits)
+    inherited_field = None              # the corresponding inherited field
 
-        'name': None,                   # name of the field
-        'model_name': None,             # name of the model of this field
-        'comodel_name': None,           # name of the model of values (if relational)
+    name = None                         # name of the field
+    model_name = None                   # name of the model of this field
+    comodel_name = None                 # name of the model of values (if relational)
 
-        'store': True,                  # whether the field is stored in database
-        'index': False,                 # whether the field is indexed in database
-        'manual': False,                # whether the field is a custom field
-        'copy': True,                   # whether the field is copied over by BaseModel.copy()
-        'depends': None,                # collection of field dependencies
-        'depends_context': None,        # collection of context key dependencies
-        'recursive': False,             # whether self depends on itself
-        'compute': None,                # compute(recs) computes field on recs
-        'compute_sudo': False,          # whether field should be recomputed as superuser
-        'inverse': None,                # inverse(recs) inverses field on recs
-        'search': None,                 # search(recs, operator, value) searches on self
-        'related': None,                # sequence of field names, for related fields
-        'company_dependent': False,     # whether ``self`` is company-dependent (property field)
-        'default': None,                # default(recs) returns the default value
+    store = True                        # whether the field is stored in database
+    index = False                       # whether the field is indexed in database
+    manual = False                      # whether the field is a custom field
+    copy = True                         # whether the field is copied over by BaseModel.copy()
+    depends = None                      # collection of field dependencies
+    depends_context = None              # collection of context key dependencies
+    recursive = False                   # whether self depends on itself
+    compute = None                      # compute(recs) computes field on recs
+    compute_sudo = False                # whether field should be recomputed as superuser
+    inverse = None                      # inverse(recs) inverses field on recs
+    search = None                       # search(recs, operator, value) searches on self
+    related = None                      # sequence of field names, for related fields
+    company_dependent = False           # whether ``self`` is company-dependent (property field)
+    default = None                      # default(recs) returns the default value
 
-        'string': None,                 # field label
-        'help': None,                   # field tooltip
-        'readonly': False,              # whether the field is readonly
-        'required': False,              # whether the field is required
-        'states': None,                 # set readonly and required depending on state
-        'groups': None,                 # csv list of group xml ids
-        'change_default': False,        # whether the field may trigger a "user-onchange"
-        'deprecated': None,             # whether the field is deprecated
+    string = None                       # field label
+    help = None                         # field tooltip
+    invisible = False             # whether the field is invisible
+    readonly = False                    # whether the field is readonly
+    required = False                    # whether the field is required
+    states = None                       # set readonly and required depending on state
+    groups = None                       # csv list of group xml ids
+    change_default = False              # whether the field may trigger a "user-onchange"
+    deprecated = None                   # whether the field is deprecated
 
-        'related_field': None,          # corresponding related field
-        'group_operator': None,         # operator for aggregating values
-        'group_expand': None,           # name of method to expand groups in read_group()
-        'prefetch': True,               # whether the field is prefetched
-    }
+    related_field = None                # corresponding related field
+    group_operator = None               # operator for aggregating values
+    group_expand = None                 # name of method to expand groups in read_group()
+    prefetch = True                     # whether the field is prefetched
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
         self._sequence = kwargs['_sequence'] = next(_global_seq)
-        args = {key: val for key, val in kwargs.items() if val is not Default}
-        self.args = args or EMPTY_DICT
-        self._setup_done = None
+        self.args = {key: val for key, val in kwargs.items() if val is not Default}
 
     def new(self, **kwargs):
         """ Return a field of the same type as ``self``, with its own parameters. """
         return type(self)(**kwargs)
-
-    def __getattr__(self, name):
-        """ Access non-slot field attribute. """
-        try:
-            return self._attrs[name]
-        except KeyError:
-            raise AttributeError(name)
-
-    def __setattr__(self, name, value):
-        """ Set slot or non-slot field attribute. """
-        try:
-            object.__setattr__(self, name, value)
-        except AttributeError:
-            if self._attrs:
-                self._attrs[name] = value
-            else:
-                self._attrs = {name: value}     # replace EMPTY_DICT
-
-    def set_all_attrs(self, attrs):
-        """ Set all field attributes at once (with slot defaults). """
-        # optimization: we assign slots only
-        assign = object.__setattr__
-        for key, val in self._slots.items():
-            assign(self, key, attrs.pop(key, val))
-        if attrs:
-            assign(self, '_attrs', attrs)
-
-    def __delattr__(self, name):
-        """ Remove non-slot field attribute. """
-        try:
-            del self._attrs[name]
-        except KeyError:
-            raise AttributeError(name)
 
     def __str__(self):
         return "%s.%s" % (self.model_name, self.name)
@@ -365,10 +309,12 @@ class Field(MetaField('DummyField', (object,), {})):
         # initialize ``self`` with ``attrs``
         if attrs.get('compute'):
             # by default, computed fields are not stored, computed in superuser
-            # mode if stored, not copied and readonly
+            # mode if stored, not copied (unless stored and explicitly not
+            # readonly), and readonly (unless inversible)
             attrs['store'] = store = attrs.get('store', False)
             attrs['compute_sudo'] = attrs.get('compute_sudo', store)
-            attrs['copy'] = attrs.get('copy', False)
+            if not (attrs['store'] and not attrs.get('readonly', True)):
+                attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
         if attrs.get('related'):
             # by default, related fields are not stored, computed in superuser
@@ -399,18 +345,21 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _setup_attrs(self, model, name):
         """ Initialize the field parameter attributes. """
-        attrs = self._get_attrs(model, name)
-        self.set_all_attrs(attrs)
+        # validate extra arguments
+        for key in self.args:
+            # TODO: improve filter as there are attributes on the class which
+            #       are not valid on the field, probably
+            if not (hasattr(self, key) or model._valid_field_parameter(self, key)):
+                _logger.warning(
+                    "Field %s.%s: unknown parameter %r, if this is an actual"
+                    " parameter you may want to override the method"
+                    " _valid_field_parameter on the relevant model in order to"
+                    " allow it",
+                    model._name, name, key
+                )
 
-        # check for renamed attributes (conversion errors)
-        for key1, key2 in RENAMED_ATTRS:
-            if key1 in attrs:
-                _logger.warning("Field %s: parameter %r is no longer supported; use %r instead.",
-                                self, key1, key2)
-        for key, msg in DEPRECATED_ATTRS:
-            if key in attrs:
-                _logger.warning("Field %s: parameter %r is not longer supported; %s",
-                                self, key, msg)
+        attrs = self._get_attrs(model, name)
+        self.__dict__.update(attrs)
 
         # prefetch only stored, column, non-manual and non-deprecated fields
         if not (self.store and self.column_type) or self.manual or self.deprecated:
@@ -477,7 +426,8 @@ class Field(MetaField('DummyField', (object,), {})):
         # display_name may depend on context['lang'] (`test_lp1071710`)
         if self.automatic and self.name == 'display_name' and model._rec_name:
             if model._fields[model._rec_name].base_field.translate:
-                self.depends_context += ('lang',)
+                if 'lang' not in self.depends_context:
+                    self.depends_context += ('lang',)
 
     #
     # Setup of related fields
@@ -490,11 +440,12 @@ class Field(MetaField('DummyField', (object,), {})):
             self.related = tuple(self.related.split('.'))
 
         # determine the chain of fields, and make sure they are all set up
-        target = model
+        model_name = self.model_name
         for name in self.related:
-            field = target._fields[name]
-            field.setup_full(target)
-            target = target[name]
+            field = model.pool[model_name]._fields[name]
+            if field._setup_done != 'full':
+                field.setup_full(model.env[model_name])
+            model_name = field.comodel_name
 
         self.related_field = field
 
@@ -517,19 +468,16 @@ class Field(MetaField('DummyField', (object,), {})):
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
 
-        for attr, value in field._attrs.items():
-            if attr not in self._attrs:
+        for attr, value in field.__dict__.items():
+            if not hasattr(self, attr) and model._valid_field_parameter(self, attr):
                 setattr(self, attr, value)
 
-        # special case for states: copy it only for inherited fields
-        if not self.states and self.inherited:
-            self.states = field.states
-
-        # special case for inherited required fields
-        if self.inherited and field.required:
-            self.required = True
-
+        # special cases of inherited fields
         if self.inherited:
+            if not self.states:
+                self.states = field.states
+            if field.required:
+                self.required = True
             self._modules.update(field._modules)
 
         if field.depends_context:
@@ -649,18 +597,22 @@ class Field(MetaField('DummyField', (object,), {})):
     # Setup of field triggers
     #
 
-    def resolve_depends(self, model):
+    def resolve_depends(self, registry):
         """ Return the dependencies of `self` as a collection of field tuples. """
+        Model0 = registry[self.model_name]
+
         for dotnames in self.depends:
             field_seq = []
-            field_model = model
+            model_name = self.model_name
+
             for index, fname in enumerate(dotnames.split('.')):
-                if model._transient and not field_model._transient:
+                Model = registry[model_name]
+                if Model0._transient and not Model._transient:
                     # modifying fields on regular models should not trigger
                     # recomputations of fields on transient models
                     break
 
-                field = field_model._fields[fname]
+                field = Model._fields[fname]
                 if field is self and index:
                     self.recursive = True
 
@@ -673,10 +625,10 @@ class Field(MetaField('DummyField', (object,), {})):
                     yield tuple(field_seq)
 
                 if field.type in ('one2many', 'many2many'):
-                    for inv_field in field_model._field_inverses[field]:
+                    for inv_field in Model._field_inverses[field]:
                         yield tuple(field_seq) + (inv_field,)
 
-                field_model = model.env.get(field.comodel_name)
+                model_name = field.comodel_name
 
     ############################################################################
     #
@@ -715,7 +667,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     @property
     def _description_sortable(self):
-        return self.store or (self.inherited and self.related_field._description_sortable)
+        return (self.column_type and self.store) or (self.inherited and self.related_field._description_sortable)
 
     def _description_string(self, env):
         if self.string and env.lang:
@@ -831,10 +783,10 @@ class Field(MetaField('DummyField', (object,), {})):
 
         column = columns.get(self.name)
 
-        # create/update the column, not null constraint, indexes
+        # create/update the column, not null constraint; the index will be
+        # managed by registry.check_indexes()
         self.update_db_column(model, column)
         self.update_db_notnull(model, column)
-        self.update_db_index(model, column)
 
         return not column
 
@@ -874,38 +826,28 @@ class Field(MetaField('DummyField', (object,), {})):
             # the column is new or it becomes required; initialize its values
             if model._table_has_rows():
                 model._init_column(self.name)
-                # flush values before adding NOT NULL constraint
-                model.flush([self.name])
 
         if self.required and not has_notnull:
-            model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
+            # _init_column may delay computations in post-init phase
+            @model.pool.post_init
+            def add_not_null():
+                # flush values before adding NOT NULL constraint
+                model.flush([self.name])
+                model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
+
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
 
-    def update_db_index(self, model, column):
-        """ Add or remove the index corresponding to ``self``.
-
-            :param model: an instance of the field's model
-            :param column: the column's configuration (dict) if it exists, or ``None``
-        """
-        indexname = '%s_%s_index' % (model._table, self.name)
-        if self.index:
-            try:
-                with model._cr.savepoint(flush=False):
-                    sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
-            except psycopg2.OperationalError:
-                _schema.error("Unable to add index for %s", self)
-        else:
-            sql.drop_index(model._cr, indexname, model._table)
-
     ############################################################################
     #
-    # Read from/write to database
+    # Alternatively stored fields: if fields don't have a `column_type` (not
+    # stored as regular db columns) they go through a read/create/write
+    # protocol instead
     #
 
     def read(self, records):
         """ Read the value of ``self`` on ``records``, and store it in cache. """
-        return NotImplementedError("Method read() undefined on %s" % self)
+        raise NotImplementedError("Method read() undefined on %s" % self)
 
     def create(self, record_values):
         """ Write the value of ``self`` on the given records, which have just
@@ -979,8 +921,8 @@ class Field(MetaField('DummyField', (object,), {})):
             value = env.cache.get(record, self)
 
         except KeyError:
-            # real record
-            if record.id and self.store:
+            if self.store and record.id:
+                # real record: fetch from database
                 recs = record._in_cache_without(self)
                 try:
                     recs._fetch_field(self)
@@ -993,38 +935,50 @@ class Field(MetaField('DummyField', (object,), {})):
                     ]))
                 value = env.cache.get(record, self)
 
+            elif self.store and record._origin:
+                # new record with origin: fetch from origin
+                value = self.convert_to_cache(record._origin[self.name], record)
+                env.cache.set(record, self, value)
+
             elif self.compute:
+                # non-stored field or new record without origin: compute
                 if env.is_protected(self, record):
                     value = self.convert_to_cache(False, record, validate=False)
                     env.cache.set(record, self, value)
                 else:
-                    recs = record if self.recursive or not record.id else record._in_cache_without(self)
+                    recs = record if self.recursive else record._in_cache_without(self)
                     try:
                         self.compute_value(recs)
                     except AccessError:
                         self.compute_value(record)
                     value = env.cache.get(record, self)
 
-            elif (not record.id) and record._origin:
-                value = self.convert_to_cache(record._origin[self.name], record)
-                env.cache.set(record, self, value)
+            elif self.type == 'many2one' and self.delegate and not record.id:
+                # parent record of a new record: new record, with the same
+                # values as record for the corresponding inherited fields
+                def is_inherited_field(name):
+                    field = record._fields[name]
+                    return field.inherited and field.related[0] == self.name
 
-            elif (not record.id) and self.type == 'many2one' and self.delegate:
-                # special case: parent records are new as well
-                parent = record.env[self.comodel_name].new()
+                parent = record.env[self.comodel_name].new({
+                    name: value
+                    for name, value in record._cache.items()
+                    if is_inherited_field(name)
+                })
                 value = self.convert_to_cache(parent, record)
                 env.cache.set(record, self, value)
 
             else:
+                # non-stored field or stored field on new record: default value
                 value = self.convert_to_cache(False, record, validate=False)
                 env.cache.set(record, self, value)
                 defaults = record.default_get([self.name])
                 if self.name in defaults:
-                    # The null value above is necessary to convert x2many field values.
-                    # For instance, converting [(4, id)] accesses the field's current
-                    # value, then adds the given id. Without an initial value, the
-                    # conversion ends up here to determine the field's value, and this
-                    # generates an infinite recursion.
+                    # The null value above is necessary to convert x2many field
+                    # values. For instance, converting [(4, id)] accesses the
+                    # field's current value, then adds the given id. Without an
+                    # initial value, the conversion ends up here to determine
+                    # the field's value, and generates an infinite recursion.
                     value = self.convert_to_cache(defaults[self.name], record)
                     env.cache.set(record, self, value)
 
@@ -1083,11 +1037,16 @@ class Field(MetaField('DummyField', (object,), {})):
         if new_ids:
             # new records: no business logic
             new_records = records.browse(new_ids)
-            with records.env.protecting(records._field_computed.get(self, [self]), records):
+            with records.env.protecting(records.pool.field_computed.get(self, [self]), records):
                 new_records.modified([self.name])
                 self.write(new_records, value)
                 if self.relational:
                     new_records.modified([self.name])
+
+            if self.inherited:
+                # special case: also assign parent records if they are new
+                parents = records[self.related[0]]
+                parents.filtered(lambda r: not r.id)[self.name] = value
 
         if other_ids:
             # base case: full business logic
@@ -1105,7 +1064,7 @@ class Field(MetaField('DummyField', (object,), {})):
         env = records.env
         if self.compute_sudo:
             records = records.sudo()
-        fields = records._field_computed[self]
+        fields = records.pool.field_computed[self]
 
         # Just in case the compute method does not assign a value, we already
         # mark the computation as done. This is also necessary if the compute
@@ -1144,6 +1103,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
 
 class Boolean(Field):
+    """ Encapsulates a :class:`bool`. """
     type = 'boolean'
     column_type = ('bool', 'bool')
 
@@ -1158,11 +1118,11 @@ class Boolean(Field):
 
 
 class Integer(Field):
+    """ Encapsulates an :class:`int`. """
     type = 'integer'
     column_type = ('int4', 'int4')
-    _slots = {
-        'group_operator': 'sum',
-    }
+
+    group_operator = 'sum'
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return int(value or 0)
@@ -1196,7 +1156,9 @@ class Integer(Field):
 
 
 class Float(Field):
-    """The precision digits are given by the (optional) digits attribute.
+    """ Encapsulates a :class:`float`.
+
+    The precision digits are given by the (optional) ``digits`` attribute.
 
     :param digits: a pair (total, decimal) or a string referencing a
         :class:`~odoo.addons.base.models.decimal_precision.DecimalPrecision` record name.
@@ -1235,10 +1197,9 @@ class Float(Field):
 
     type = 'float'
     column_cast_from = ('int4', 'numeric', 'float8')
-    _slots = {
-        '_digits': None,                # digits argument passed to class initializer
-        'group_operator': 'sum',
-    }
+
+    _digits = None                      # digits argument passed to class initializer
+    group_operator = 'sum'
 
     def __init__(self, string=Default, digits=Default, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
@@ -1295,18 +1256,21 @@ class Float(Field):
 
 
 class Monetary(Field):
-    """ The decimal precision and currency symbol are taken from the attribute
+    """ Encapsulates a :class:`float` expressed in a given
+    :class:`res_currency<odoo.addons.base.models.res_currency.Currency>`.
 
-    :param str currency_field: name of the field holding the currency
+    The decimal precision and currency symbol are taken from the ``currency_field`` attribute.
+
+    :param str currency_field: name of the :class:`Many2one` field
+        holding the :class:`res_currency <odoo.addons.base.models.res_currency.Currency>`
         this monetary field is expressed in (default: `\'currency_id\'`)
     """
     type = 'monetary'
     column_type = ('numeric', 'numeric')
     column_cast_from = ('float8',)
-    _slots = {
-        'currency_field': None,
-        'group_operator': 'sum',
-    }
+
+    currency_field = None
+    group_operator = 'sum'
 
     def __init__(self, string=Default, currency_field=Default, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
@@ -1374,10 +1338,8 @@ class Monetary(Field):
 
 class _String(Field):
     """ Abstract class for string fields. """
-    _slots = {
-        'translate': False,             # whether the field is translated
-        'prefetch': None,
-    }
+    translate = False                   # whether the field is translated
+    prefetch = None
 
     def __init__(self, string=Default, **kwargs):
         # translate is either True, False, or a callable
@@ -1538,10 +1500,9 @@ class Char(_String):
     """
     type = 'char'
     column_cast_from = ('text',)
-    _slots = {
-        'size': None,                   # maximum size of values (deprecated)
-        'trim': True,                   # whether value is trimmed (only by web client)
-    }
+
+    size = None                         # maximum size of values (deprecated)
+    trim = True                         # whether value is trimmed (only by web client)
 
     @property
     def column_type(self):
@@ -1580,7 +1541,7 @@ class Char(_String):
 
 
 class Text(_String):
-    """ Very similar to :class:`~.Char` but used for longer contents, does not
+    """ Very similar to :class:`Char` but used for longer contents, does not
     have a size and usually displayed as a multiline text box.
 
     :param translate: enable the translation of the field's values; use
@@ -1601,16 +1562,28 @@ class Text(_String):
 
 
 class Html(_String):
+    """ Encapsulates an html code content.
+
+    :param bool sanitize: whether value must be sanitized (default: ``True``)
+    :param bool sanitize_tags: whether to sanitize tags
+        (only a white list of attributes is accepted, default: ``True``)
+    :param bool sanitize_attributes: whether to sanitize attributes
+        (only a white list of attributes is accepted, default: ``True``)
+    :param bool sanitize_style: whether to sanitize style attributes (default: ``True``)
+    :param bool strip_style: whether to strip style attributes
+        (removed and therefore not sanitized, default: ``False``)
+    :param bool strip_classes: whether to strip classes attributes (default: ``False``)
+    """
     type = 'html'
     column_type = ('text', 'text')
-    _slots = {
-        'sanitize': True,               # whether value must be sanitized
-        'sanitize_tags': True,          # whether to sanitize tags (only a white list of attributes is accepted)
-        'sanitize_attributes': True,    # whether to sanitize attributes (only a white list of attributes is accepted)
-        'sanitize_style': False,        # whether to sanitize style attributes
-        'strip_style': False,           # whether to strip style attributes (removed and therefore not sanitized)
-        'strip_classes': False,         # whether to strip classes attributes
-    }
+
+    sanitize = True                     # whether value must be sanitized
+    sanitize_tags = True                # whether to sanitize tags (only a white list of attributes is accepted)
+    sanitize_attributes = True          # whether to sanitize attributes (only a white list of attributes is accepted)
+    sanitize_style = False              # whether to sanitize style attributes
+    sanitize_form = True                # whether to sanitize forms
+    strip_style = False                 # whether to strip style attributes (removed and therefore not sanitized)
+    strip_classes = False               # whether to strip classes attributes
 
     def _get_attrs(self, model, name):
         # called by _setup_attrs(), working together with _String._setup_attrs()
@@ -1643,6 +1616,7 @@ class Html(_String):
                 sanitize_tags=self.sanitize_tags,
                 sanitize_attributes=self.sanitize_attributes,
                 sanitize_style=self.sanitize_style,
+                sanitize_form=self.sanitize_form,
                 strip_style=self.strip_style,
                 strip_classes=self.strip_classes)
         return value
@@ -1656,15 +1630,14 @@ class Html(_String):
                 sanitize_tags=self.sanitize_tags,
                 sanitize_attributes=self.sanitize_attributes,
                 sanitize_style=self.sanitize_style,
+                sanitize_form=self.sanitize_form,
                 strip_style=self.strip_style,
                 strip_classes=self.strip_classes)
         return value
 
 
 class Date(Field):
-    """ This field type encapsulates a python date object.
-    :type date:
-    """
+    """ Encapsulates a python :class:`date <datetime.date>` object. """
     type = 'date'
     column_type = ('date', 'date')
     column_cast_from = ('timestamp',)
@@ -1763,9 +1736,7 @@ class Date(Field):
 
 
 class Datetime(Field):
-    """ This field type encapsulates a python datetime object.
-    :type datetime:
-    """
+    """ Encapsulates a python :class:`datetime <datetime.datetime>` object. """
     type = 'datetime'
     column_type = ('timestamp', 'timestamp')
     column_cast_from = ('date',)
@@ -1874,12 +1845,16 @@ _BINARY = memoryview
 
 
 class Binary(Field):
+    """Encapsulates a binary content (e.g. a file).
+
+    :param bool attachment: whether the field should be stored as `ir_attachment`
+        or in a column of the model's table (default: ``True``).
+    """
     type = 'binary'
-    _slots = {
-        'prefetch': False,                  # not prefetched by default
-        'depends_context': ('bin_size',),   # depends on context (content or size)
-        'attachment': True,                 # whether value is stored in attachment
-    }
+
+    prefetch = False                    # not prefetched by default
+    depends_context = ('bin_size',)     # depends on context (content or size)
+    attachment = True                   # whether value is stored in attachment
 
     @property
     def column_type(self):
@@ -1898,8 +1873,17 @@ class Binary(Field):
             return None
         # Detect if the binary content is an SVG for restricting its upload
         # only to system users.
-        if value[:1] in (b'P', 'P'):  # Fast detection of first 6 bits of '<' (0x3C)
-            decoded_value = base64.b64decode(value)
+        magic_bytes = {
+            b'P',  # first 6 bits of '<' (0x3C) b64 encoded
+            b'<',  # plaintext XML tag opening
+        }
+        if isinstance(value, str):
+            value = value.encode()
+        if value[:1] in magic_bytes:
+            try:
+                decoded_value = base64.b64decode(value.translate(None, delete=b'\r\n'), validate=True)
+            except binascii.Error:
+                decoded_value = value
             # Full mimetype detection
             if (guess_mimetype(decoded_value).startswith('image/svg') and
                     not record.env.is_system()):
@@ -1970,8 +1954,10 @@ class Binary(Field):
             ('res_id', 'in', records.ids),
         ]
         # Note: the 'bin_size' flag is handled by the field 'datas' itself
-        data = {att.res_id: att.datas
-                for att in records.env['ir.attachment'].sudo().search(domain)}
+        data = {
+            att.res_id: att.datas
+            for att in records.env['ir.attachment'].sudo().search(domain)
+        }
         cache = records.env.cache
         for record in records:
             cache.set(record, self, data.get(record.id, False))
@@ -2049,11 +2035,17 @@ class Binary(Field):
 
 
 class Image(Binary):
-    _slots = {
-        'max_width': 0,
-        'max_height': 0,
-        'verify_resolution': True,
-    }
+    """Encapsulates an image, extending :class:`Binary`.
+
+    :param int max_width: the maximum width of the image
+    :param int max_height: the maximum height of the image
+    :param bool verify_resolution: whether the image resolution should be verified
+        to ensure it doesn't go over the maximum image resolution (default: ``True``).
+        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+    """
+    max_width = 0
+    max_height = 0
+    verify_resolution = True
 
     def create(self, record_values):
         new_record_values = []
@@ -2089,7 +2081,8 @@ class Image(Binary):
 
 
 class Selection(Field):
-    """
+    """ Encapsulates an exclusive choice between different values.
+
     :param selection: specifies the possible values for this field.
         It is given as either a list of pairs ``(value, label)``, or a model
         method, or a method name.
@@ -2106,15 +2099,33 @@ class Selection(Field):
             > result = [('a', 'A'), ('c', 'C'), ('b', 'B')]
     :type selection_add: list(tuple(str,str))
 
+    :param ondelete: provides a fallback mechanism for any overridden
+        field with a selection_add. It is a dict that maps every option
+        from the selection_add to a fallback action.
+
+        This fallback action will be applied to all records whose
+        selection_add option maps to it.
+
+        The actions can be any of the following:
+            - 'set null' -- the default, all records with this option
+              will have their selection value set to False.
+            - 'cascade' -- all records with this option will be
+              deleted along with the option itself.
+            - 'set default' -- all records with this option will be
+              set to the default of the field definition
+            - <callable> -- a callable whose first and only argument will be
+              the set of records containing the specified Selection option,
+              for custom processing
+
     The attribute ``selection`` is mandatory except in the case of
     ``related`` or extended fields.
     """
     type = 'selection'
     column_type = ('varchar', pg_varchar())
-    _slots = {
-        'selection': None,              # [(value, string), ...], function or method name
-        'validate': True,               # whether validating upon write
-    }
+
+    selection = None            # [(value, string), ...], function or method name
+    validate = True             # whether validating upon write
+    ondelete = None             # {value: policy} (what to do when value is deleted)
 
     def __init__(self, selection=Default, string=Default, **kwargs):
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
@@ -2132,6 +2143,12 @@ class Selection(Field):
         field = self.related_field
         self.selection = lambda model: field._description_selection(model.env)
 
+    def _get_attrs(self, model, name):
+        attrs = super(Selection, self)._get_attrs(model, name)
+        # arguments 'selection' and 'selection_add' are processed below
+        attrs.pop('selection_add', None)
+        return attrs
+
     def _setup_attrs(self, model, name):
         super(Selection, self)._setup_attrs(model, name)
 
@@ -2143,26 +2160,62 @@ class Selection(Field):
             # We cannot use field.selection or field.selection_add here
             # because those attributes are overridden by ``_setup_attrs``.
             if 'selection' in field.args:
+                if self.related:
+                    _logger.warning("%s: selection attribute will be ignored as the field is related", self)
                 selection = field.args['selection']
                 if isinstance(selection, list):
-                    if (
-                        values is not None
-                        and values != [kv[0] for kv in selection]
-                    ):
+                    if values is not None and values != [kv[0] for kv in selection]:
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
                     values = [kv[0] for kv in selection]
                     labels.update(selection)
+                    self.ondelete = {}
                 else:
                     self.selection = selection
+                    self.ondelete = None
 
             if 'selection_add' in field.args:
+                if self.related:
+                    _logger.warning("%s: selection_add attribute will be ignored as the field is related", self)
                 selection_add = field.args['selection_add']
                 assert isinstance(selection_add, list), \
                     "%s: selection_add=%r must be a list" % (self, selection_add)
                 assert values is not None, \
                     "%s: selection_add=%r on non-list selection %r" % (self, selection_add, self.selection)
+
+                ondelete = field.args.get('ondelete') or {}
+                new_values = [kv[0] for kv in selection_add if kv[0] not in values]
+                for key in new_values:
+                    ondelete.setdefault(key, 'set null')
+                if self.required and new_values and 'set null' in ondelete.values():
+                    raise ValueError(
+                        "%r: required selection fields must define an ondelete policy that "
+                        "implements the proper cleanup of the corresponding records upon "
+                        "module uninstallation. Please use one or more of the following "
+                        "policies: 'set default' (if the field has a default defined), 'cascade', "
+                        "or a single-argument callable where the argument is the recordset "
+                        "containing the specified option." % self
+                    )
+
+                # check ondelete values
+                for key, val in ondelete.items():
+                    if callable(val) or val in ('set null', 'cascade'):
+                        continue
+                    if val == 'set default':
+                        assert self.default is not None, (
+                            "%r: ondelete policy of type 'set default' is invalid for this field "
+                            "as it does not define a default! Either define one in the base "
+                            "field, or change the chosen ondelete policy" % self
+                        )
+                        continue
+                    raise ValueError(
+                        "%r: ondelete policy %r for selection value %r is not a valid ondelete "
+                        "policy, please choose one of 'set null', 'set default', 'cascade' or "
+                        "a callable" % (self, val, key)
+                    )
+
                 values = merge_sequences(values, [kv[0] for kv in selection_add])
                 labels.update(kv for kv in selection_add if len(kv) == 2)
+                self.ondelete.update(ondelete)
 
         if values is not None:
             self.selection = [(value, labels[value]) for value in values]
@@ -2239,6 +2292,11 @@ class Selection(Field):
 
 
 class Reference(Selection):
+    """ Pseudo-relational field (no FK in database).
+
+    The field value is stored as a :class:`string <str>` following the pattern
+    ``"res_model.res_id"`` in database.
+    """
     type = 'reference'
 
     @property
@@ -2283,11 +2341,9 @@ class Reference(Selection):
 class _Relational(Field):
     """ Abstract class for relational fields. """
     relational = True
-    _slots = {
-        'domain': [],                   # domain for searching values
-        'context': {},                  # context for searching values
-        'check_company': False,
-    }
+    domain = []                         # domain for searching values
+    context = {}                        # context for searching values
+    check_company = False
 
     def __get__(self, records, owner):
         # base case: do the regular access
@@ -2371,11 +2427,10 @@ class Many2one(_Relational):
     """
     type = 'many2one'
     column_type = ('int4', 'int4')
-    _slots = {
-        'ondelete': None,               # what to do when value is deleted
-        'auto_join': False,             # whether joins are generated upon search
-        'delegate': False,              # whether self implements delegation
-    }
+
+    ondelete = None                     # what to do when value is deleted
+    auto_join = False                   # whether joins are generated upon search
+    delegate = False                    # whether self implements delegation
 
     def __init__(self, comodel_name=Default, string=Default, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
@@ -2434,11 +2489,10 @@ class Many2one(_Relational):
         if not comodel._auto or comodel._table == 'ir_actions':
             return
         # create/update the foreign key, and reflect it in 'ir.model.constraint'
-        process = sql.fix_foreign_key if column else sql.add_foreign_key
-        new = process(model._cr, model._table, self.name, comodel._table, 'id', self.ondelete or 'set null')
-        if new:
-            conname = '%s_%s_fkey' % (model._table, self.name)
-            model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, self._module)
+        model.pool.add_foreign_key(
+            model._table, self.name, comodel._table, 'id', self.ondelete or 'set null',
+            model, self._module
+        )
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
@@ -2585,10 +2639,19 @@ class Many2one(_Relational):
 
 
 class Many2oneReference(Integer):
+    """ Pseudo-relational field (no FK in database).
+
+    The field value is stored as an :class:`integer <int>` id in database.
+
+    Contrary to :class:`Reference` fields, the model has to be specified
+    in a :class:`Char` field, whose name has to be specified in the
+    `model_field` attribute for the current :class:`Many2oneReference` field.
+
+    :param str model_field: name of the :class:`Char` where the model name is stored.
+    """
     type = 'many2one_reference'
-    _slots = {
-        'model_field': None,
-    }
+
+    model_field = None
 
     _related_model_field = property(attrgetter('model_field'))
 
@@ -2817,11 +2880,11 @@ class _RelationalMulti(_Relational):
     def _setup_regular_full(self, model):
         super(_RelationalMulti, self)._setup_regular_full(model)
         if isinstance(self.domain, list):
-            self.depends += tuple(
+            self.depends = tuple(unique(itertools.chain(self.depends, (
                 self.name + '.' + arg[0]
                 for arg in self.domain
                 if isinstance(arg, (tuple, list)) and isinstance(arg[0], str)
-            )
+            ))))
 
     def create(self, record_values):
         """ Write the value of ``self`` on the given records, which have just
@@ -2887,12 +2950,11 @@ class One2many(_RelationalMulti):
     the case of related fields or field extensions.
     """
     type = 'one2many'
-    _slots = {
-        'inverse_name': None,           # name of the inverse field
-        'auto_join': False,             # whether joins are generated upon search
-        'limit': None,                  # optional limit to use upon read
-        'copy': False,                  # o2m are not copied by default
-    }
+
+    inverse_name = None                 # name of the inverse field
+    auto_join = False                   # whether joins are generated upon search
+    limit = None                        # optional limit to use upon read
+    copy = False                        # o2m are not copied by default
 
     def __init__(self, comodel_name=Default, inverse_name=Default, string=Default, **kwargs):
         super(One2many, self).__init__(
@@ -3167,15 +3229,14 @@ class Many2many(_RelationalMulti):
     :param int limit: optional limit to use upon read
     """
     type = 'many2many'
-    _slots = {
-        '_explicit': True,              # whether schema is explicitly given
-        'relation': None,               # name of table
-        'column1': None,                # column of table referring to model
-        'column2': None,                # column of table referring to comodel
-        'auto_join': False,             # whether joins are generated upon search
-        'limit': None,                  # optional limit to use upon read
-        'ondelete': None,               # optional ondelete for the column2 fkey
-    }
+
+    _explicit = True                    # whether schema is explicitly given
+    relation = None                     # name of table
+    column1 = None                      # column of table referring to model
+    column2 = None                      # column of table referring to comodel
+    auto_join = False                   # whether joins are generated upon search
+    limit = None                        # optional limit to use upon read
+    ondelete = None                     # optional ondelete for the column2 fkey
 
     def __init__(self, comodel_name=Default, relation=Default, column1=Default,
                  column2=Default, string=Default, **kwargs):
@@ -3268,28 +3329,22 @@ class Many2many(_RelationalMulti):
             """.format(rel=self.relation, id1=self.column1, id2=self.column2)
             cr.execute(query, ['RELATION BETWEEN %s AND %s' % (model._table, comodel._table)])
             _schema.debug("Create table %r: m2m relation between %r and %r", self.relation, model._table, comodel._table)
-            model.pool.post_init(self.update_db_foreign_keys, model)
-            return True
-        elif sql.table_kind(cr, comodel._table) != 'v' and self.ondelete != 'cascade':
-            # Fix foreign key references with ondelete, unless the targets are
-            # SQL views.
-            # This is needed because by default the ondelete of the column1
-            # fkey is set to 'cascade', but the relation on the opposite model
-            # can override it by defining ondelete for its column2 fkey.
-            sql.fix_foreign_key(cr, self.relation, self.column2, comodel._table, 'id', self.ondelete)
+
+        model.pool.post_init(self.update_db_foreign_keys, model)
 
     def update_db_foreign_keys(self, model):
         """ Add the foreign keys corresponding to the field's relation table. """
-        cr = model._cr
         comodel = model.env[self.comodel_name]
-        reflect = model.env['ir.model.constraint']._reflect_constraint
-        # create foreign key references with ondelete, unless the targets are SQL views
-        if sql.table_kind(cr, model._table) != 'v':
-            sql.add_foreign_key(cr, self.relation, self.column1, model._table, 'id', 'cascade')
-            reflect(model, '%s_%s_fkey' % (self.relation, self.column1), 'f', None, self._module)
-        if sql.table_kind(cr, comodel._table) != 'v':
-            sql.add_foreign_key(cr, self.relation, self.column2, comodel._table, 'id', self.ondelete)
-            reflect(model, '%s_%s_fkey' % (self.relation, self.column2), 'f', None, self._module)
+        if model._is_an_ordinary_table():
+            model.pool.add_foreign_key(
+                self.relation, self.column1, model._table, 'id', 'cascade',
+                model, self._module, force=False,
+            )
+        if comodel._is_an_ordinary_table():
+            model.pool.add_foreign_key(
+                self.relation, self.column2, comodel._table, 'id', self.ondelete,
+                model, self._module,
+            )
 
     def read(self, records):
         context = {'active_test': False}
@@ -3574,12 +3629,11 @@ class Id(Field):
     """ Special case for field 'id'. """
     type = 'integer'
     column_type = ('int4', 'int4')
-    _slots = {
-        'string': 'ID',
-        'store': True,
-        'readonly': True,
-        'prefetch': False,
-    }
+
+    string = 'ID'
+    store = True
+    readonly = True
+    prefetch = False
 
     def update_db(self, model, columns):
         pass                            # this column is created with the table

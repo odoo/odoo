@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from dateutil.relativedelta import relativedelta
+import ast
+import datetime
 
 from odoo import api, fields, models, _
 from odoo.tools.safe_eval import safe_eval
-from odoo.exceptions import ValidationError
 
-import ast
 
 class Team(models.Model):
     _name = 'crm.team'
@@ -17,30 +16,26 @@ class Team(models.Model):
     use_leads = fields.Boolean('Leads', help="Check this box to filter and qualify incoming requests as leads before converting them into opportunities and assigning them to a salesperson.")
     use_opportunities = fields.Boolean('Pipeline', default=True, help="Check this box to manage a presales process with opportunities.")
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True, help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")
-
-    unassigned_leads_count = fields.Integer(
-        compute='_compute_unassigned_leads_count',
-        string='Unassigned Leads')
+    # statistics about leads / opportunities / both
+    lead_unassigned_count = fields.Integer(
+        string='# Unassigned Leads', compute='_compute_lead_unassigned_count')
+    lead_all_assigned_month_count = fields.Integer(
+        string='# Leads/Opps assigned this month', compute='_compute_lead_all_assigned_month_count',
+        help="Number of leads and opportunities assigned this last month.")
     opportunities_count = fields.Integer(
-        compute='_compute_opportunities',
-        string='Number of open opportunities')
-    overdue_opportunities_count = fields.Integer(
-        compute='_compute_overdue_opportunities',
-        string='Number of overdue opportunities')
+        string='# Opportunities', compute='_compute_opportunities_data')
     opportunities_amount = fields.Integer(
-        compute='_compute_opportunities',
-        string='Opportunities Revenues')
-    overdue_opportunities_amount = fields.Integer(
-        compute='_compute_overdue_opportunities',
-        string='Overdue Opportunities Revenues')
+        string='Opportunities Revenues', compute='_compute_opportunities_data')
+    opportunities_overdue_count = fields.Integer(
+        string='# Overdue Opportunities', compute='_compute_opportunities_overdue_data')
+    opportunities_overdue_amount = fields.Integer(
+        string='Overdue Opportunities Revenues', compute='_compute_opportunities_overdue_data',)
+    # alias: improve fields coming from _inherits, use inherited to avoid replacing them
+    alias_user_id = fields.Many2one(
+        'res.users', related='alias_id.alias_user_id', inherited=True,
+        domain=lambda self: [('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman_all_leads').id)])
 
-    # Since we are in a _inherits case, this is not an override
-    # but a plain definition of a field
-    # So we need to reset the property related of that field
-    alias_user_id = fields.Many2one('res.users', related='alias_id.alias_user_id', inherited=True, domain=lambda self: [
-        ('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman_all_leads').id)])
-
-    def _compute_unassigned_leads_count(self):
+    def _compute_lead_unassigned_count(self):
         leads_data = self.env['crm.lead'].read_group([
             ('team_id', 'in', self.ids),
             ('type', '=', 'lead'),
@@ -48,9 +43,20 @@ class Team(models.Model):
         ], ['team_id'], ['team_id'])
         counts = {datum['team_id'][0]: datum['team_id_count'] for datum in leads_data}
         for team in self:
-            team.unassigned_leads_count = counts.get(team.id, 0)
+            team.lead_unassigned_count = counts.get(team.id, 0)
 
-    def _compute_opportunities(self):
+    def _compute_lead_all_assigned_month_count(self):
+        limit_date = datetime.datetime.now() - datetime.timedelta(days=30)
+        leads_data = self.env['crm.lead'].read_group([
+            ('team_id', 'in', self.ids),
+            ('date_open', '>=', fields.Datetime.to_string(limit_date)),
+            ('user_id', '!=', False),
+        ], ['team_id'], ['team_id'])
+        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in leads_data}
+        for team in self:
+            team.lead_all_assigned_month_count = counts.get(team.id, 0)
+
+    def _compute_opportunities_data(self):
         opportunity_data = self.env['crm.lead'].search([
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
@@ -67,7 +73,7 @@ class Team(models.Model):
             team.opportunities_count = counts.get(team.id, 0)
             team.opportunities_amount = amounts.get(team.id, 0)
 
-    def _compute_overdue_opportunities(self):
+    def _compute_opportunities_overdue_data(self):
         opportunity_data = self.env['crm.lead'].read_group([
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
@@ -77,13 +83,44 @@ class Team(models.Model):
         counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
         amounts = {datum['team_id'][0]: (datum['planned_revenue']) for datum in opportunity_data}
         for team in self:
-            team.overdue_opportunities_count = counts.get(team.id, 0)
-            team.overdue_opportunities_amount = amounts.get(team.id, 0)
+            team.opportunities_overdue_count = counts.get(team.id, 0)
+            team.opportunities_overdue_amount = amounts.get(team.id, 0)
 
     @api.onchange('use_leads', 'use_opportunities')
     def _onchange_use_leads_opportunities(self):
         if not self.use_leads and not self.use_opportunities:
             self.alias_name = False
+
+    # ------------------------------------------------------------
+    # ORM
+    # ------------------------------------------------------------
+
+    @api.model
+    def create(self, vals):
+        alias_values = self._synchronize_alias(vals)
+        if alias_values:
+            vals.update(alias_values)
+        return super(Team, self).create(vals)
+
+    def write(self, vals):
+        result = super(Team, self).write(vals)
+        if 'use_leads' in vals or 'alias_defaults' in vals:
+            for team in self:
+                team.alias_id.write(team.get_alias_values())
+        if 'use_leads' in vals or 'use_opportunities' in vals:
+            for team in self:
+                team.write(team._synchronize_alias(vals))
+        return result
+
+    def _synchronize_alias(self, values):
+        use_leads = self.use_leads if self else values.get('use_leads', False)
+        use_opportunities = self.use_opportunities if self else values.get('use_opportunities', True)
+        if not use_leads and not use_opportunities:
+            return {'alias_name': False}
+        return {}
+    # ------------------------------------------------------------
+    # MESSAGING
+    # ------------------------------------------------------------
 
     def get_alias_model_name(self, vals):
         return 'crm.lead'
@@ -96,12 +133,9 @@ class Team(models.Model):
         defaults['team_id'] = self.id
         return values
 
-    def write(self, vals):
-        result = super(Team, self).write(vals)
-        if 'use_leads' in vals or 'alias_defaults' in vals:
-            for team in self:
-                team.alias_id.write(team.get_alias_values())
-        return result
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
 
     #TODO JEM : refactor this stuff with xml action, proper customization,
     @api.model

@@ -247,7 +247,8 @@ class MassMailing(models.Model):
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {},
-                       name=_('%s (copy)') % self.name)
+                       name=_('%s (copy)') % self.name,
+                       contact_list_ids=self.contact_list_ids.ids)
         return super(MassMailing, self).copy(default=default)
 
     def _group_expand_states(self, states, domain, order):
@@ -294,7 +295,7 @@ class MassMailing(models.Model):
         self.write({'state': 'in_queue'})
 
     def action_cancel(self):
-        self.write({'state': 'draft', 'schedule_date': False})
+        self.write({'state': 'draft', 'schedule_date': False, 'next_departure': False})
 
     def action_retry_failed(self):
         failed_mails = self.env['mail.mail'].sudo().search([
@@ -439,7 +440,7 @@ class MassMailing(models.Model):
                   JOIN res_partner p ON (t.partner_id = p.id)
                  WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
             """
-        elif issubclass(type(target), self.pool['mail.address.mixin']):
+        elif issubclass(type(target), self.pool['mail.thread.blacklist']):
             mail_field = 'email_normalized'
         elif 'email_from' in target._fields:
             mail_field = 'email_from'
@@ -557,7 +558,7 @@ class MassMailing(models.Model):
             if mass_mailing.medium_id:
                 vals['medium_id'] = mass_mailing.medium_id.id
 
-            res[mass_mailing.id] = self.env['link.tracker'].convert_links(html, vals, blacklist=['/unsubscribe_from_list'])
+            res[mass_mailing.id] = self._shorten_links(html, vals, blacklist=['/unsubscribe_from_list'])
 
         return res
 

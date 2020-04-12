@@ -8,8 +8,8 @@
             <field name="arch" type="xml">
             <data>
                  <xpath expr="//field[@name='company_registry']" position="after">
-                    <field name="siret"/>
-                    <field name="ape"/>
+                    <field name="siret" attrs="{'invisible': [('country_code', '!=', 'FR')]}"/>
+                    <field name="ape" attrs="{'invisible': [('country_code', '!=', 'FR')]}"/>
                  </xpath>
             </data>
             </field>

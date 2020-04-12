@@ -51,8 +51,15 @@
 
         <menuitem id="menu_sales_config"
             parent="menu_sale_config"
-            sequence="3"
+            sequence="4"
             name="Sales Orders"/>
+
+        <menuitem
+            id="menu_tag_config"
+            name="Tags"
+            parent="sale.menu_sales_config"
+            action="sales_team.sales_team_crm_tag_action"
+            sequence="2"/>
 
         <record id="product_template_action" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -115,6 +122,7 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5">
+                    <field name="currency_id" invisible="1"/>
                     <field name="partner_id" avatar_field="image_128"/>
                     <field name="amount_total" widget="monetary"/>
                     <field name="payment_term_id"/>
@@ -202,6 +210,7 @@
                     <field name="amount_total" sum="Total Tax Included" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="invoice_status" optional="show"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="state" invisible="1"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
@@ -229,6 +238,7 @@
                     <field name="currency_id" invisible="1"/>
                     <field name="state" optional="show"/>
                     <field name="invoice_status" optional="hide"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
@@ -277,7 +287,7 @@
                         attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
                     <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
-                    <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>
+                    <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'not in', ['draft', 'sent','sale']), ('id', '=', False)]}"/>
                     <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
                 </header>
@@ -305,13 +315,13 @@
                             <field name="name" readonly="1"/>
                         </h1>
                     </div>
-                    <group>
-                        <group>
+                    <group name="sale_header">
+                        <group name="partner_details">
                             <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options='{"always_reload": True}'/>
                             <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
                             <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
                         </group>
-                        <group>
+                        <group name="order_details">
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
                             <div class="o_td_label" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
                                 <label for="date_order" string="Quotation Date"/>
@@ -372,6 +382,7 @@
                                             <field name="price_total" invisible="1"/>
                                             <field name="price_tax" invisible="1"/>
                                             <field name="price_subtotal" invisible="1"/>
+                                            <field name="product_uom_readonly" invisible="1"/>
                                             <label for="product_uom_qty"/>
                                             <div class="o_row" name="ordered_qty">
                                                 <field
@@ -383,7 +394,7 @@
                                                     groups="uom.group_uom"
                                                     class="oe_no_button"
                                                     attrs="{
-                                                        'readonly': [('state', 'in', ('sale', 'done', 'cancel'))],
+                                                        'readonly': [('product_uom_readonly', '=', True)],
                                                         'required': [('display_type', '=', False)],
                                                     }"
                                                 />
@@ -523,12 +534,13 @@
                                         optional="show"
                                     />
                                     <field name="qty_to_invoice" invisible="1"/>
+                                    <field name="product_uom_readonly" invisible="1"/>
                                     <field
                                         name="product_uom"
                                         force_save="1"
                                         string="UoM"
                                         attrs="{
-                                            'readonly': [('state', 'in', ('sale','done', 'cancel'))],
+                                            'readonly': [('product_uom_readonly', '=', True)],
                                             'required': [('display_type', '=', False)],
                                         }"
                                         context="{'company_id': parent.company_id}"
@@ -626,7 +638,7 @@
                                     </templates>
                                 </kanban>
                             </field>
-                            <group name="note_group" col="6">
+                            <group name="note_group" col="6" class="mt-2 mt-md-0">
                                 <group colspan="4">
                                     <field name="note" nolabel="1" placeholder="Terms and conditions..."/>
                                 </group>
@@ -644,13 +656,14 @@
                         <page string="Other Info" name="other_information">
                             <group>
                                 <group name="sales_person" string="Sales">
-                                    <field name="user_id"/>
+                                    <field name="user_id" domain="[('share', '=', False)]"/>
                                     <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" options="{'no_create': True}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="require_signature" groups="base.group_no_one"/>
-                                    <field name="require_payment" groups="base.group_no_one"/>
+                                    <field name="require_signature"/>
+                                    <field name="require_payment"/>
                                     <field name="reference" readonly="1" attrs="{'invisible': [('reference', '=', False)]}"/>
                                     <field name="client_order_ref"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                                 </group>
                                 <group name="sale_info" string="Invoicing">
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
@@ -661,7 +674,7 @@
                             <group>
                                 <group name="sale_shipping">
                                     <label for="commitment_date" string="Delivery Date"/>
-                                    <div class="o_row">
+                                    <div name="commitment_date_div" class="o_row">
                                         <field name="commitment_date"/> <span class="text-muted">Expected: <field name="expected_date" widget="date"/></span>
                                     </div>
                                 </group>
@@ -858,6 +871,15 @@
                 or check every order and invoice them one by one.
               </p>
             </field>
+        </record>
+
+        <record id="model_sale_order_action_quotation_sent" model="ir.actions.server">
+            <field name="name">Mark Quotation as Sent</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_quotation_sent()</field>
         </record>
 
         <menuitem id="menu_sale_invoicing"
@@ -1057,6 +1079,26 @@
             </field>
         </record>
 
+        <record id="sale_order_line_view_kanban" model="ir.ui.view">
+            <field name="name">sale.order.line.kanban</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_content oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-12">
+                                    <field name="display_name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="product_form_view_sale_order_button">
             <field name="name">product.product.sale.order</field>
             <field name="model">product.product</field>
@@ -1151,7 +1193,7 @@
             <field name="inherit_id" ref="account.view_invoice_tree"/>
             <field name="arch" type="xml">
                 <field name="invoice_user_id" position="after">
-                    <field name="team_id" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" optional="hide"/>
+                    <field name="team_id" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" optional="hide"/>
                 </field>
             </field>
         </record>
@@ -1166,7 +1208,7 @@
                     <xpath expr="//field[@name='partner_id']" position="after">
                        <field name="partner_shipping_id"
                               groups="sale.group_delivery_invoice_address"
-                              attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                              attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
                    </xpath>
                     <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
                         <attribute name="groups">product.group_discount_per_so_line</attribute>
@@ -1178,7 +1220,7 @@
                         <group string="Marketing"
                                name="utm_link"
                                groups="base.group_no_one"
-                               attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
+                               attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}">
                             <field name="campaign_id"/>
                             <field name="medium_id"/>
                             <field name="source_id"/>
@@ -1251,12 +1293,12 @@
             <field name="view_id" ref="account.view_move_tree"/>
             <field name="domain">[
                 ('state', '=', 'posted'),
-                ('type', 'in', ['out_invoice', 'out_refund'])]</field>
+                ('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
             <field name="context">{
                     'search_default_team_id': [active_id],
                     'default_team_id': active_id,
-                    'default_type':'out_invoice',
-                    'type':'out_invoice',
+                    'default_move_type':'out_invoice',
+                    'move_type':'out_invoice',
                     'journal_type': 'sale',
                 }
             </field>

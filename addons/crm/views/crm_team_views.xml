@@ -123,10 +123,10 @@
                             string="Email Alias" required="0"/>
                         <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
                             <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                            <button  icon="fa-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure domain name" class="btn-link" attrs="{'invisible': [('alias_domain', '!=', False)]}"/>
+                            <button  icon="fa-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="btn-link" attrs="{'invisible': [('alias_domain', '!=', False)]}"/>
                         </div>
                     </div>
-                    <field name="alias_contact" class="oe_inline"
+                    <field name="alias_contact"
                         string="Accept Emails From"
                         attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                     <field name="alias_user_id" string="Assign to"/>
@@ -147,12 +147,6 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="crm_case_tree_view_oppor"/>
             <field name="act_window_id" ref="crm_case_form_view_salesteams_opportunity"/>
-        </record>
-
-        <record id="crm_team_act_tree" model="ir.actions.act_window">
-            <field name="name">Cases by Sales Team</field>
-            <field name="res_model">crm.team</field>
-            <field name="view_id" ref="sales_team.crm_team_view_tree"/>
         </record>
 
         <record id="action_opportunity_form" model="ir.actions.act_window">
@@ -197,11 +191,11 @@
                     </xpath>
 
                     <xpath expr="//t[@name='first_options']" position="after">
-                        <div class="row" t-if="record.unassigned_leads_count.raw_value">
+                        <div class="row" t-if="record.lead_unassigned_count.raw_value">
                             <div class="col-8">
                                 <a name="%(crm_case_form_view_salesteams_lead)d" type="action" context="{'search_default_unassigned_leads': 1}">
-                                    <field name="unassigned_leads_count"/>
-                                    <t t-if="record.unassigned_leads_count.raw_value == 1">Unassigned Lead</t>
+                                    <field name="lead_unassigned_count"/>
+                                    <t t-if="record.lead_unassigned_count.raw_value == 1">Unassigned Lead</t>
                                     <t t-else="">Unassigned Leads</t>
                                 </a>
                             </div>
@@ -218,16 +212,16 @@
                                 <field name="opportunities_amount" widget="monetary"/>
                             </div>
                         </div>
-                        <div class="row" t-if="record.overdue_opportunities_count.raw_value">
+                        <div class="row" t-if="record.opportunities_overdue_count.raw_value">
                             <div class="col-8">
                                 <a name="%(crm_lead_action_team_overdue_opportunity)d" type="action">
-                                    <field name="overdue_opportunities_count"/>
-                                    <t t-if="record.overdue_opportunities_count.raw_value == 1">Overdue Opportunity</t>
+                                    <field name="opportunities_overdue_count"/>
+                                    <t t-if="record.opportunities_overdue_count.raw_value == 1">Overdue Opportunity</t>
                                     <t t-else="">Overdue Opportunities</t>
                                 </a>
                             </div>
                              <div class="col-4 text-right text-truncate">
-                                <field name="overdue_opportunities_amount" widget="monetary"/>
+                                <field name="opportunities_overdue_amount" widget="monetary"/>
                             </div>
                         </div>
                     </xpath>

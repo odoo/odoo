@@ -2,14 +2,14 @@
 <odoo>
 
 <template id="s_countdown" name="Countdown">
-    <section class="s_countdown"
+    <section class="s_countdown pt48 pb48"
         data-display="dhms" data-end-action="nothing" data-size="175"
         t-att-data-end-time="datetime.datetime.now().timestamp() + 228307"
         data-layout="circle" data-layout-background="none"
         data-progress-bar-style="surrounded" data-progress-bar-weight="thin"
         data-text-color="alpha" data-layout-background-color="400" data-progress-bar-color="alpha">
         <div class="container">
-            <div class="s_countdown_canvas_wrapper text-center pt8 pb8"/>
+            <div class="s_countdown_canvas_wrapper text-center"/>
         </div>
     </section>
 </template>
@@ -29,7 +29,7 @@
             <we-checkbox string="Hide countdown at the end" data-dependencies="!no_end_action_opt"
                         data-select-class="hide-countdown"/>
             <we-urlpicker string="URL" data-dependencies="redirect_end_action_opt"
-                        data-select-data-attribute="/my-awesome-page" data-attribute-name="redirectUrl"/>
+                        data-select-data-attribute="" placeholder="e.g. /my-awesome-page" data-attribute-name="redirectUrl"/>
             <we-select string="Size" data-attribute-name="size">
                 <we-button data-select-data-attribute="80">Small</we-button>
                 <we-button data-select-data-attribute="120">Medium</we-button>

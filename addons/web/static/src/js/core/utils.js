@@ -446,6 +446,14 @@ var utils = {
         return (/^\d+(\.\d*)? [^0-9]+$/).test(v);
     },
     /**
+     * Checks if a class is an extension of owl.Component.
+     * 
+     * @param {any} value A class reference
+     */
+    isComponent: function (value) {
+        return value.prototype instanceof owl.Component;
+    },
+    /**
      * Returns whether the given anchor is valid.
      *
      * This test is useful to prevent a crash that would happen if using an invalid
@@ -571,7 +579,15 @@ var utils = {
      * @param {Number} decimals the number of decimals. eg: round_decimals(3.141592,2) -> 3.14
      */
     round_decimals: function (value, decimals) {
-        return utils.round_precision(value, Math.pow(10,-decimals));
+        /**
+         * The following decimals introduce numerical errors:
+         * Math.pow(10, -4) = 0.00009999999999999999
+         * Math.pow(10, -5) = 0.000009999999999999999
+         *
+         * Such errors will propagate in round_precision and lead to inconsistencies between Python
+         * and JavaScript. To avoid this, we parse the scientific notation.
+         */
+        return utils.round_precision(value, parseFloat('1e' + -decimals));
     },
     /**
      * performs a half up rounding with arbitrary precision, correcting for float loss of precision
@@ -627,6 +643,28 @@ var utils = {
             'max-age=' + ttl,
             'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
         ].join(';');
+    },
+    /**
+     * Returns a string formatted using given values.
+     * If the value is an object, its keys will replace `%(key)s` expressions.
+     * If the values are a set of strings, they will replace `%s` expressions.
+     * If no value is given, the string will not be formatted.
+     *
+     * @param {string} string
+     * @param  {(Object|...string)} values
+     */
+    sprintf: function (string, ...values) {
+        if (values.length === 1 && typeof values[0] === 'object') {
+            const valuesDict = values[0];
+            for (const value in valuesDict) {
+                string = string.replace(`%(${value})s`, valuesDict[value]);
+            }
+        } else {
+            for (const value of values) {
+                string = string.replace(/%s/, value);
+            }
+        }
+        return string;
     },
     /**
      * Sort an array in place, keeping the initial order for identical values.
@@ -861,7 +899,9 @@ var utils = {
         return [
             '&',
             ['res_model', '=', 'ir.ui.view'],
-            ['name', 'like', 'assets_']
+            '|',
+            ['name', '=like', '%.assets\_%.css'],
+            ['name', '=like', '%.assets\_%.js'],
         ];
     },
 };

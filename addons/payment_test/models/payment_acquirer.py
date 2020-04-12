@@ -10,7 +10,9 @@ from odoo import api, exceptions, fields, models, _
 class PaymentAcquirerTest(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('test', 'Test')])
+    provider = fields.Selection(selection_add=[
+        ('test', 'Test')
+    ], ondelete={'test': 'set default'})
 
     @api.model
     def create(self, values):

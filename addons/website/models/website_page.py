@@ -58,18 +58,15 @@ class Page(models.Model):
 
         return most_specific_page == page_to_test
 
-    def get_view_identifier(self):
-        """ Get identifier of this page view that may be used to render it """
-        return self.view_id.id
-
     def get_page_properties(self):
         self.ensure_one()
         res = self.read([
             'id', 'name', 'url', 'website_published', 'website_indexed', 'date_publish',
-            'menu_ids', 'is_homepage', 'website_id', 'visibility', 'visibility_password', 'visibility_group'
+            'menu_ids', 'is_homepage', 'website_id', 'visibility', 'visibility_group'
         ])[0]
         if not res['visibility_group']:
             res['visibility_group'] = self.env.ref('base.group_user').name_get()[0]
+        res['visibility_password'] = res['visibility'] == 'password' and self.visibility_password_display or ''
         return res
 
     @api.model
@@ -122,9 +119,11 @@ class Page(models.Model):
             'date_publish': data['date_publish'] or None,
             'is_homepage': data['is_homepage'],
             'visibility': data['visibility'],
-            'visibility_password': data['visibility'] == "password" and data['visibility_password'] or '',
             'visibility_group': data['visibility'] == "restricted_group" and data['visibility_group'],
         }
+        if 'visibility_pwd' in data:
+            w_vals['visibility_password_display'] = data['visibility_pwd'] or ''
+
         page.with_context(no_cow=True).write(w_vals)
 
         # Create redirect if needed

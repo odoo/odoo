@@ -6,7 +6,7 @@
 {
     'name': 'Hungarian - Accounting',
     'version': '2.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 
 Base module for Hungarian localization
@@ -32,5 +32,8 @@ This module consists of:
         'data/res.bank.csv',
         'data/account_chart_template_data.xml',
         'data/account_chart_template_configure_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
 }

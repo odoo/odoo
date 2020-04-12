@@ -47,13 +47,13 @@ class Repair(models.Model):
     default_address_id = fields.Many2one('res.partner', compute='_compute_default_address_id')
     state = fields.Selection([
         ('draft', 'Quotation'),
-        ('cancel', 'Cancelled'),
         ('confirmed', 'Confirmed'),
         ('under_repair', 'Under Repair'),
         ('ready', 'Ready to Repair'),
         ('2binvoiced', 'To be Invoiced'),
         ('invoice_except', 'Invoice Exception'),
-        ('done', 'Repaired')], string='Status',
+        ('done', 'Repaired'),
+        ('cancel', 'Cancelled')], string='Status',
         copy=False, default='draft', readonly=True, tracking=True,
         help="* The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order.\n"
              "* The \'Confirmed\' status is used when a user confirms the repair order.\n"
@@ -89,7 +89,7 @@ class Repair(models.Model):
     invoice_id = fields.Many2one(
         'account.move', 'Invoice',
         copy=False, readonly=True, tracking=True,
-        domain=[('type', '=', 'out_invoice')])
+        domain=[('move_type', '=', 'out_invoice')])
     move_id = fields.Many2one(
         'stock.move', 'Move',
         copy=False, readonly=True, tracking=True, check_company=True,
@@ -110,7 +110,8 @@ class Repair(models.Model):
     amount_untaxed = fields.Float('Untaxed Amount', compute='_amount_untaxed', store=True)
     amount_tax = fields.Float('Taxes', compute='_amount_tax', store=True)
     amount_total = fields.Float('Total', compute='_amount_total', store=True)
-    tracking = fields.Selection('Product Tracking', related="product_id.tracking", readonly=False)
+    tracking = fields.Selection(string='Product Tracking', related="product_id.tracking", readonly=False)
+    invoice_state = fields.Selection(string='Invoice State', related='invoice_id.state')
 
     @api.depends('partner_id')
     def _compute_default_address_id(self):
@@ -172,6 +173,7 @@ class Repair(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
+        self = self.with_company(self.company_id)
         if not self.partner_id:
             self.address_id = False
             self.partner_invoice_id = False
@@ -190,6 +192,14 @@ class Repair(models.Model):
         else:
             self.location_id = False
 
+    def unlink(self):
+        for order in self:
+            if order.state not in ('draft', 'cancel'):
+                raise UserError(_('You can not delete a repair order once it has been confirmed. You must first cancel it.'))
+            if order.state == 'cancel' and order.invoice_id and order.invoice_id.posted_before:
+                raise UserError(_('You can not delete a repair order which is linked to an invoice which has been posted once.'))
+        return super().unlink()
+
     def button_dummy(self):
         # TDE FIXME: this button is very interesting
         return True
@@ -198,7 +208,7 @@ class Repair(models.Model):
         if self.filtered(lambda repair: repair.state != 'cancel'):
             raise UserError(_("Repair must be canceled in order to reset it to draft."))
         self.mapped('operations').write({'state': 'draft'})
-        return self.write({'state': 'draft'})
+        return self.write({'state': 'draft', 'invoice_id': False})
 
     def action_validate(self):
         self.ensure_one()
@@ -250,10 +260,9 @@ class Repair(models.Model):
         return True
 
     def action_repair_cancel(self):
-        if self.filtered(lambda repair: repair.state == 'done'):
-            raise UserError(_("Cannot cancel completed repairs."))
-        if any(repair.invoiced for repair in self):
-            raise UserError(_('The repair order is already invoiced.'))
+        invoice_to_cancel = self.filtered(lambda repair: repair.invoice_id.state == 'draft').invoice_id
+        if invoice_to_cancel:
+            invoice_to_cancel.button_cancel()
         self.mapped('operations').write({'state': 'cancel'})
         return self.write({'state': 'cancel'})
 
@@ -318,7 +327,7 @@ class Repair(models.Model):
             if not group or len(current_invoices_list) == 0:
                 fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=repair.address_id.id)
                 invoice_vals = {
-                    'type': 'out_invoice',
+                    'move_type': 'out_invoice',
                     'partner_id': partner_invoice.id,
                     'currency_id': currency.id,
                     'narration': narration,
@@ -430,7 +439,7 @@ class Repair(models.Model):
         for company_id, invoices_vals_list in invoices_vals_list_per_company.items():
             # VFE TODO remove the default_company_id ctxt key ?
             # Account fallbacks on self.env.company, which is correct with with_company
-            self.env['account.move'].with_company(company_id).with_context(default_company_id=company_id, default_type='out_invoice').create(invoices_vals_list)
+            self.env['account.move'].with_company(company_id).with_context(default_company_id=company_id, default_move_type='out_invoice').create(invoices_vals_list)
 
         repairs.write({'invoiced': True})
         repairs.mapped('operations').filtered(lambda op: op.type == 'add').write({'invoiced': True})
@@ -474,7 +483,7 @@ class Repair(models.Model):
             repair.write({'repaired': True})
             vals = {'state': 'done'}
             vals['move_id'] = repair.action_repair_done().get(repair.id)
-            if not repair.invoiced and repair.invoice_method == 'after_repair':
+            if not repair.invoice_id and repair.invoice_method == 'after_repair':
                 vals['state'] = '2binvoiced'
             repair.write(vals)
         return True
@@ -574,11 +583,10 @@ class RepairLine(models.Model):
 
     name = fields.Text('Description', required=True)
     repair_id = fields.Many2one(
-        'repair.order', 'Repair Order Reference',
+        'repair.order', 'Repair Order Reference', required=True,
         index=True, ondelete='cascade', check_company=True)
     company_id = fields.Many2one(
-        'res.company', 'Company',
-        readonly=True, required=True, index=True)
+        related='repair_id.company_id', store=True, index=True)
     type = fields.Selection([
         ('add', 'Add'),
         ('remove', 'Remove')], 'Type', required=True)
@@ -632,7 +640,7 @@ class RepairLine(models.Model):
             taxes = line.tax_id.compute_all(line.price_unit, line.repair_id.pricelist_id.currency_id, line.product_uom_qty, line.product_id, line.repair_id.partner_id)
             line.price_subtotal = taxes['total_excluded']
 
-    @api.onchange('type', 'repair_id')
+    @api.onchange('type')
     def onchange_operation_type(self):
         """ On change of operation type it sets source location, destination location
         and to invoice field.
@@ -710,14 +718,13 @@ class RepairFee(models.Model):
         'repair.order', 'Repair Order Reference',
         index=True, ondelete='cascade', required=True)
     company_id = fields.Many2one(
-        'res.company', 'Company',
-        readonly=True, required=True, index=True)
+        related="repair_id.company_id", index=True, store=True)
     name = fields.Text('Description', index=True, required=True)
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
         domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
     product_uom_qty = fields.Float('Quantity', digits='Product Unit of Measure', required=True, default=1.0)
-    price_unit = fields.Float('Unit Price', required=True)
+    price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
     product_uom = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', store=True, digits=0)

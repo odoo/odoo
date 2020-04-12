@@ -3,6 +3,8 @@ odoo.define('web.field_many_to_many_tests', function (require) {
 
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
+
+const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
 
 QUnit.module('fields', {}, function () {
@@ -1003,8 +1005,8 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual($('.modal .o_data_row').length, 1,
                 "should contain only one row (gold)");
 
-            await testUtils.fields.triggerKey('press', $('.modal .o_searchview_input'), 's');
-            await testUtils.fields.triggerKeydown($('.modal .o_searchview_input'), 'enter');
+            await cpHelpers.editSearch('.modal', 's');
+            await cpHelpers.validateSearch('.modal');
 
             assert.strictEqual($('.modal .o_data_row').length, 0, "should contain no row");
 
@@ -1502,6 +1504,56 @@ QUnit.module('fields', {}, function () {
                 'autocomplete should contain only one option');
             assert.containsOnce($dropdown2, 'li.o_m2o_dropdown_option:contains(Search More)',
                 'autocomplete option should be Search More');
+
+            form.destroy();
+        });
+
+        QUnit.test('failing many2one quick create in a many2many_tags', async function (assert) {
+            assert.expect(5);
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+                mockRPC(route, args) {
+                    if (args.method === 'name_create') {
+                        return Promise.reject();
+                    }
+                    if (args.method === 'create') {
+                        assert.deepEqual(args.args[0], {
+                            color: 8,
+                            name: 'new partner',
+                        });
+                    }
+                    return this._super.apply(this, arguments);
+                },
+                archs: {
+                    'partner_type,false,form': `
+                        <form>
+                            <field name="name"/>
+                            <field name="color"/>
+                        </form>`,
+                },
+            });
+
+            assert.containsNone(form, '.o_field_many2manytags .badge');
+
+            // try to quick create a record
+            await testUtils.dom.triggerEvent(form.$('.o_field_many2one input'), 'focus');
+            await testUtils.fields.many2one.searchAndClickItem('timmy', {
+                search: 'new partner',
+                item: 'Create'
+            });
+
+            // as the quick create failed, a dialog should be open to 'slow create' the record
+            assert.containsOnce(document.body, '.modal .o_form_view');
+            assert.strictEqual($('.modal .o_field_widget[name=name]').val(), 'new partner');
+
+            await testUtils.fields.editInput($('.modal .o_field_widget[name=color]'), 8);
+            await testUtils.modal.clickButton('Save & Close');
+
+            assert.containsOnce(form, '.o_field_many2manytags .badge');
 
             form.destroy();
         });

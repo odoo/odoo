@@ -39,7 +39,7 @@ publicWidget.registry.websiteSaleValidate = publicWidget.Widget.extend({
                 } else {
                     var $message = $(result.message);
                     var $warning =  $("<i class='fa fa-warning' style='margin-right:10px;'>");
-                    $warning.attr("title", _t("We are waiting the confirmation of the bank or payment provider"));
+                    $warning.attr("title", _t("We are waiting for confirmation from the bank or the payment provider"));
                     $message.find('span:first').prepend($warning);
                     result.message = $message.html();
                 }

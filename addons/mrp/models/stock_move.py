@@ -12,11 +12,9 @@ class StockMoveLine(models.Model):
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
     production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
     lot_produced_ids = fields.Many2many('stock.production.lot', string='Finished Lot/Serial Number', check_company=True)
-    lot_produced_qty = fields.Float(
-        'Quantity Finished Product', digits='Product Unit of Measure',
-        help="Informative, not used in matching")
     done_move = fields.Boolean('Move Done', related='move_id.is_done', readonly=False, store=True)  # TDE FIXME: naming
 
+    @api.model_create_multi
     def create(self, values):
         res = super(StockMoveLine, self).create(values)
         for line in res:
@@ -252,10 +250,25 @@ class StockMove(models.Model):
         res = super(StockMove, self)._should_be_assigned()
         return bool(res and not (self.production_id or self.raw_material_production_id))
 
+    def _should_bypass_reservation(self):
+        res = super(StockMove, self)._should_bypass_reservation()
+        return bool(res and not self.production_id)
+
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
         return keys + (self.created_production_id,)
 
+    @api.model
+    def _prepare_merge_moves_distinct_fields(self):
+        distinct_fields = super()._prepare_merge_moves_distinct_fields()
+        distinct_fields.append('created_production_id')
+        return distinct_fields
+
+    @api.model
+    def _prepare_merge_move_sort_method(self, move):
+        keys_sorted = super()._prepare_merge_move_sort_method(move)
+        keys_sorted.append(move.created_production_id.id)
+        return keys_sorted
 
     def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
         """ Computes the quantity delivered or received when a kit is sold or purchased.

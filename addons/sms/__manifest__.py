@@ -3,7 +3,7 @@
 {
     'name': 'SMS gateway',
     'version': '2.0',
-    'category': 'Tools',
+    'category': 'Hidden/Tools',
     'summary': 'SMS Text Messaging',
     'description': """
 This module gives a framework for SMS text messaging

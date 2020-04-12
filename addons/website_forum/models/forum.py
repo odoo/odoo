@@ -34,6 +34,14 @@ class Forum(models.Model):
         ('discussions', 'Discussions')],
         string='Forum Mode', required=True, default='questions',
         help='Questions mode: only one answer allowed\n Discussions mode: multiple answers allowed')
+    privacy = fields.Selection([
+        ('public', 'Public'),
+        ('connected', 'Signed In'),
+        ('private', 'Some users')],
+        help="Public: Forum is pubic\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group",
+        default='public')
+    authorized_group_id = fields.Many2one('res.groups', 'Authorized Group')
+    menu_id = fields.Many2one('website.menu', 'Menu', copy=False)
     active = fields.Boolean(default=True)
     faq = fields.Html('Guidelines', default=_get_default_faq, translate=html_translate, sanitize=False)
     description = fields.Text('Description', translate=True)
@@ -153,6 +161,20 @@ class Forum(models.Model):
         return super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
 
     def write(self, vals):
+        if 'privacy' in vals:
+            if not vals['privacy']:
+                # The forum is neither public, neither private, remove menu to avoid conflict
+                self.menu_id.unlink()
+            elif vals['privacy'] == 'public':
+                # The forum is public, the menu must be also public
+                vals['authorized_group_id'] = False
+                self.menu_id.write({'group_ids': [(5, 0, 0)]})
+            elif vals['privacy'] == 'connected':
+                vals['authorized_group_id'] = False
+                self.menu_id.write({'group_ids': [(6, 0, [self.env.ref('base.group_portal').id, self.env.ref('base.group_user').id])]})
+        if 'authorized_group_id' in vals and vals['authorized_group_id']:
+            self.menu_id.write({'group_ids': [(6, 0, [vals['authorized_group_id']])]})
+
         res = super(Forum, self).write(vals)
         if 'active' in vals:
             # archiving/unarchiving a forum does it on its posts, too
@@ -462,7 +484,7 @@ class Post(models.Model):
 
         tag_ids = False
         if 'tag_ids' in vals:
-            tag_ids = set(tag.get('id') for tag in self.resolve_2many_commands('tag_ids', vals['tag_ids']))
+            tag_ids = set(self.new({'tag_ids': vals['tag_ids']}).tag_ids.ids)
 
         for post in self:
             if 'state' in vals:
@@ -511,7 +533,7 @@ class Post(models.Model):
 
     def post_notification(self):
         for post in self:
-            tag_partners = post.tag_ids.mapped('message_partner_ids')
+            tag_partners = post.tag_ids.sudo().mapped('message_partner_ids')
 
             if post.state == 'active' and post.parent_id:
                 post.parent_id.message_post_with_view(
@@ -720,7 +742,8 @@ class Post(models.Model):
             'subtype_xmlid': 'mail.mt_comment',
             'date': self.create_date,
         }
-        new_message = question.with_context(mail_create_nosubscribe=True).message_post(**values)
+        # done with the author user to have create_uid correctly set
+        new_message = question.with_user(self_sudo.create_uid.id).with_context(mail_create_nosubscribe=True).message_post(**values)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
         self.sudo().unlink()

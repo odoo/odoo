@@ -316,7 +316,6 @@ QUnit.test('activity view: activity widget', async function (assert) {
         },
     };
 
-    owl.Component.env = testUtils.mock.getMockedOwlEnv(params);
     var activity = await createView(params);
     var today = activity.$('table tbody tr:first td:nth-child(2).today');
     var dropdown = today.find('.dropdown-menu.o_activity');
@@ -391,9 +390,9 @@ QUnit.test('activity view: no group_by_menu and no time_range_menu', async funct
 
     assert.containsN(actionManager, '.o_search_options .o_dropdown button:visible', 2,
         "only two elements should be available in view search");
-    assert.isVisible(actionManager.$('.o_search_options .o_dropdown button.o_filters_menu_button'),
+    assert.isVisible(actionManager.$('.o_search_options .o_dropdown.o_filter_menu > button'),
         "filter should be available in view search");
-    assert.isVisible(actionManager.$('.o_search_options .o_dropdown button.o_favorites_menu_button'),
+    assert.isVisible(actionManager.$('.o_search_options .o_dropdown.o_favorite_menu > button'),
         "favorites should be available in view search");
     actionManager.destroy();
 });

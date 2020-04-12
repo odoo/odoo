@@ -76,7 +76,7 @@ class TestPurchaseOrder(AccountTestCommon):
         self.picking.button_validate()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [5.0, 5.0], 'Purchase: all products should be received"')
 
-        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = self.partner_id
         move_form.purchase_id = self.po
         self.invoice = move_form.save()
@@ -108,7 +108,7 @@ class TestPurchaseOrder(AccountTestCommon):
         self.assertEqual(self.po.order_line.mapped('qty_received'), [5.0, 5.0], 'Purchase: all products should be received"')
 
         #After Receiving all products create vendor bill.
-        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = self.partner_id
         move_form.purchase_id = self.po
         self.invoice = move_form.save()
@@ -138,7 +138,7 @@ class TestPurchaseOrder(AccountTestCommon):
         # Check Received quantity
         self.assertEqual(self.po.order_line[0].qty_received, 3.0, 'Purchase: delivered quantity should be 3.0 instead of "%s" after picking return' % self.po.order_line[0].qty_received)
         #Create vendor bill for refund qty
-        move_form = Form(self.env['account.move'].with_context(default_type='in_refund'))
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_refund'))
         move_form.partner_id = self.partner_id
         move_form.purchase_id = self.po
         self.invoice = move_form.save()

@@ -3,7 +3,7 @@
 {
     'name': 'test-field-converter',
     'version': '0.1',
-    'category': 'Tests',
+    'category': 'Hidden/Tests',
     'description': """Tests of field conversions""",
     'maintainer': 'OpenERP SA',
     'depends': ['base'],

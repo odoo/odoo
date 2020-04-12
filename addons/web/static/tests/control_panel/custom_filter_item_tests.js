@@ -1,0 +1,355 @@
+odoo.define('web.filter_menu_generator_tests', function (require) {
+    "use strict";
+
+    const Domain = require('web.Domain');
+    const CustomFilterItem = require('web.CustomFilterItem');
+    const { Model } = require('web.model');
+    const pyUtils = require('web.py_utils');
+    const testUtils = require('web.test_utils');
+    const session = require('web.session');
+
+    const cpHelpers = testUtils.controlPanel;
+    const { createComponent } = testUtils;
+
+    function patchSession(newSession) {
+        // We have to patch the "legacy" session because field_utils is using it.
+        // TODO: remove it when the field_utils are re-written.
+        const initialSession = session;
+        Object.assign(session, newSession);
+        return function () {
+            Object.assign(session, initialSession);
+        };
+    }
+
+    QUnit.module('Components', {
+        beforeEach: function () {
+            this.fields = {
+                date_field: { name: 'date_field', string: "A date", type: 'date', searchable: true },
+                date_time_field: { name: 'date_time_field', string: "DateTime", type: 'datetime', searchable: true },
+                boolean_field: { name: 'boolean_field', string: "Boolean Field", type: 'boolean', default: true, searchable: true },
+                char_field: { name: 'char_field', string: "Char Field", type: 'char', default: "foo", trim: true, searchable: true },
+                float_field: { name: 'float_field', string: "Floaty McFloatface", type: 'float', searchable: true },
+            };
+        },
+    }, function () {
+
+        QUnit.module('CustomFilterItem');
+
+        QUnit.test('basic rendering', async function (assert) {
+            assert.expect(17);
+
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: {
+                    controlPanelModel: new Model(),
+                },
+            });
+
+            assert.strictEqual(cfi.el.innerText.trim(), "Add Custom Filter");
+            assert.hasClass(cfi.el, 'o_generator_menu');
+            assert.strictEqual(cfi.el.children.length, 1);
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+
+            // Single condition
+            assert.containsOnce(cfi, 'div.o_filter_condition');
+            assert.containsOnce(cfi, 'div.o_filter_condition > select.o_generator_menu_field');
+            assert.containsOnce(cfi, 'div.o_filter_condition > select.o_generator_menu_operator');
+            assert.containsOnce(cfi, 'div.o_filter_condition > span.o_generator_menu_value');
+            assert.containsNone(cfi, 'div.o_filter_condition .o_or_filter');
+            assert.containsNone(cfi, 'div.o_filter_condition .o_generator_menu_delete');
+
+            // no deletion allowed on single condition
+            assert.containsNone(cfi, 'div.o_filter_condition > i.o_generator_menu_delete');
+
+            // Buttons
+            assert.containsOnce(cfi, 'div.o_add_filter_menu');
+            assert.containsOnce(cfi, 'div.o_add_filter_menu > button.o_apply_filter');
+            assert.containsOnce(cfi, 'div.o_add_filter_menu > button.o_add_condition');
+
+            assert.containsOnce(cfi, 'div.o_filter_condition');
+
+            await testUtils.dom.click('button.o_add_condition');
+
+            assert.containsN(cfi, 'div.o_filter_condition', 2);
+            assert.containsOnce(cfi, 'div.o_filter_condition .o_or_filter');
+            assert.containsN(cfi, 'div.o_filter_condition .o_generator_menu_delete', 2);
+
+            cfi.destroy();
+        });
+
+        QUnit.test('adding a simple filter works', async function (assert) {
+            assert.expect(5);
+
+            delete this.fields.date_field;
+            class MockedControlPanelModel extends Model {
+                createNewFilters(preFilters) {
+                    const preFilter = preFilters[0];
+                    assert.strictEqual(preFilter.type, 'filter');
+                    assert.strictEqual(preFilter.description, 'Boolean Field is true');
+                    assert.strictEqual(preFilter.domain, '[["boolean_field","=",True]]');
+                }
+            }
+            const controlPanelModel = new MockedControlPanelModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { controlPanelModel },
+            });
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await cpHelpers.applyFilter(cfi);
+
+            // The only thing visible should be the button 'Add Custome Filter';
+            assert.strictEqual(cfi.el.children.length, 1);
+            assert.containsOnce(cfi, 'button.o_add_custom_filter');
+
+            cfi.destroy();
+        });
+
+        QUnit.test('commit search with an extended proposition with field char does not cause a crash', async function (assert) {
+            assert.expect(6);
+
+            this.fields.many2one_field = { name: 'many2one_field', string: "Trululu", type: "many2one", searchable: true };
+            const expectedDomains = [
+                [['many2one_field', 'ilike', `a`]],
+                [['many2one_field', 'ilike', `"a"`]],
+                [['many2one_field', 'ilike', `'a'`]],
+                [['many2one_field', 'ilike', `'`]],
+                [['many2one_field', 'ilike', `"`]],
+                [['many2one_field', 'ilike', `\\`]],
+            ];
+            const testedValues = [`a`, `"a"`, `'a'`, `'`, `"`, `\\`];
+            class MockedControlPanelModel extends Model {
+                createNewFilters(preFilters) {
+                    const preFilter = preFilters[0];
+                    // this step combine a tokenization/parsing followed by a string formatting
+                    let domain = pyUtils.assembleDomains([preFilter.domain]);
+                    domain = Domain.prototype.stringToArray(domain);
+                    assert.deepEqual(domain, expectedDomains.shift());
+                }
+            }
+            const controlPanelModel = new MockedControlPanelModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { controlPanelModel },
+            });
+
+            async function testValue(value) {
+                // open filter menu generator, select trululu field and enter string `a`, then click apply
+                await cpHelpers.toggleAddCustomFilter(cfi);
+                await testUtils.fields.editSelect(cfi.el.querySelector('select.o_generator_menu_field'), 'many2one_field');
+                await testUtils.fields.editInput(cfi.el.querySelector(
+                    'div.o_filter_condition > span.o_generator_menu_value input'),
+                    value
+                );
+                await cpHelpers.applyFilter(cfi);
+            }
+
+            for (const value of testedValues) {
+                await testValue(value);
+            }
+
+            cfi.destroy();
+        });
+
+        QUnit.test('custom filter datetime with equal operator', async function (assert) {
+            assert.expect(4);
+
+            patchSession({
+                getTZOffset: function () {
+                    return -240;
+                },
+            });
+            class MockedControlPanelModel extends Model {
+                createNewFilters(preFilters) {
+                    const preFilter = preFilters[0];
+                    assert.strictEqual(preFilter.description,
+                        'DateTime is equal to "02/22/2017 11:00:00"',
+                        "description should be in localized format");
+                    assert.deepEqual(preFilter.domain,
+                        '[["date_time_field","=","2017-02-22 15:00:00"]]',
+                        "domain should be in UTC format");
+                }
+            }
+            const controlPanelModel = new MockedControlPanelModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { controlPanelModel },
+            });
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'date_time_field');
+
+            assert.strictEqual(cfi.el.querySelector('.o_generator_menu_field').value, 'date_time_field');
+            assert.strictEqual(cfi.el.querySelector('.o_generator_menu_operator').value, 'between');
+
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_operator'), '=');
+            await testUtils.fields.editSelect(cfi.el.querySelector('div.o_filter_condition > span.o_generator_menu_value input'), '02/22/2017 11:00:00'); // in TZ
+            await cpHelpers.applyFilter(cfi);
+
+            cfi.destroy();
+        });
+
+        QUnit.test('custom filter datetime between operator', async function (assert) {
+            assert.expect(4);
+
+            patchSession({
+                getTZOffset: function () {
+                    return -240;
+                },
+            });
+            class MockedControlPanelModel extends Model {
+                createNewFilters(preFilters) {
+                    const preFilter = preFilters[0];
+                    assert.strictEqual(preFilter.description,
+                        'DateTime is between "02/22/2017 11:00:00 and 02/22/2017 17:00:00"',
+                        "description should be in localized format");
+                    assert.deepEqual(preFilter.domain,
+                        '[["date_time_field",">=","2017-02-22 15:00:00"]' +
+                        ',["date_time_field","<=","2017-02-22 21:00:00"]]',
+                        "domain should be in UTC format");
+                }
+            }
+            const controlPanelModel = new MockedControlPanelModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { controlPanelModel },
+            });
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'date_time_field');
+
+            assert.strictEqual(cfi.el.querySelector('.o_generator_menu_field').value, 'date_time_field');
+            assert.strictEqual(cfi.el.querySelector('.o_generator_menu_operator').value, 'between');
+
+            const valueInputs = cfi.el.querySelectorAll('.o_generator_menu_value .o_input');
+            await testUtils.fields.editSelect(valueInputs[0], '02/22/2017 11:00:00'); // in TZ
+            await testUtils.fields.editSelect(valueInputs[1], '02-22-2017 17:00:00'); // in TZ
+            await cpHelpers.applyFilter(cfi);
+
+            cfi.destroy();
+        });
+
+        QUnit.test('input value parsing', async function (assert) {
+            assert.expect(6);
+
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: {
+                    controlPanelModel: new Model(),
+                },
+            });
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.dom.click('button.o_add_condition');
+
+            const [floatSelect, idSelect] = cfi.el.querySelectorAll('.o_generator_menu_field');
+            await testUtils.fields.editSelect(floatSelect, 'float_field');
+            await testUtils.fields.editSelect(idSelect, 'id');
+
+            const [floatInput, idInput] = cfi.el.querySelectorAll('.o_generator_menu_value .o_input');
+
+            // Default values
+            assert.strictEqual(floatInput.value, "0.0");
+            assert.strictEqual(idInput.value, "0");
+
+            // Float parsing
+            await testUtils.fields.editInput(floatInput, 4.2);
+            assert.strictEqual(floatInput.value, "4.2");
+            await testUtils.fields.editInput(floatInput, "DefinitelyValidFloat");
+            assert.strictEqual(floatInput.value, "4.2");
+
+            // Number parsing
+            await testUtils.fields.editInput(idInput, 4);
+            assert.strictEqual(idInput.value, "4");
+            await testUtils.fields.editInput(idInput, "DefinitelyValidID");
+            assert.strictEqual(idInput.value, "4");
+
+            cfi.destroy();
+        });
+
+        QUnit.test('add custom filter with multiple values', async function (assert) {
+            assert.expect(1);
+
+            class MockedControlPanelModel extends Model {
+                createNewFilters(preFilters) {
+                    const expected = [
+                        {
+                            description: 'A date is equal to "01/09/1997"',
+                            domain: '[["date_field","=","1997-01-09"]]',
+                            type: "filter",
+                        },
+                        {
+                            description: 'Boolean Field is true',
+                            domain: '[["boolean_field","=",True]]',
+                            type: "filter",
+                        },
+                        {
+                            description: 'Floaty McFloatface is equal to "7.2"',
+                            domain: '[["float_field","=",7.2]]',
+                            type: "filter",
+                        },
+                        {
+                            description: 'ID is "9"',
+                            domain: '[["id","=",9]]',
+                            type: "filter",
+                        },
+                    ];
+                    assert.deepEqual(preFilters, expected,
+                        "Conditions should be in the correct order witht the right values.");
+                }
+            }
+            const controlPanelModel = new MockedControlPanelModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { controlPanelModel },
+            });
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.dom.click('button.o_add_condition');
+            await testUtils.dom.click('button.o_add_condition');
+            await testUtils.dom.click('button.o_add_condition');
+            await testUtils.dom.click('button.o_add_condition');
+
+            function getCondition(index, selector) {
+                const condition = cfi.el.querySelectorAll('.o_filter_condition')[index];
+                return condition.querySelector(selector);
+            }
+
+            await testUtils.fields.editSelect(getCondition(0, '.o_generator_menu_field'), 'date_field');
+            await testUtils.fields.editSelect(getCondition(0, '.o_generator_menu_value .o_input'), '01/09/1997');
+
+            await testUtils.fields.editSelect(getCondition(1, '.o_generator_menu_field'), 'boolean_field');
+            await testUtils.fields.editInput(getCondition(1, '.o_generator_menu_operator'), '!=');
+
+            await testUtils.fields.editSelect(getCondition(2, '.o_generator_menu_field'), 'char_field');
+            await testUtils.fields.editInput(getCondition(2, '.o_generator_menu_value .o_input'), "I will be deleted anyway");
+
+            await testUtils.fields.editSelect(getCondition(3, '.o_generator_menu_field'), 'float_field');
+            await testUtils.fields.editInput(getCondition(3, '.o_generator_menu_value .o_input'), 7.2);
+
+            await testUtils.fields.editSelect(getCondition(4, '.o_generator_menu_field'), 'id');
+            await testUtils.fields.editInput(getCondition(4, '.o_generator_menu_value .o_input'), 9);
+
+            await testUtils.dom.click(getCondition(2, '.o_generator_menu_delete'));
+
+            await cpHelpers.applyFilter(cfi);
+
+            cfi.destroy();
+        });
+    });
+});

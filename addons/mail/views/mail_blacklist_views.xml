@@ -16,11 +16,21 @@
         <field name="model">mail.blacklist</field>
         <field name="arch" type="xml">
             <form string="Add Email Blacklist" duplicate="false" edit="false">
+                <header>
+                    <button name="mail_action_blacklist_remove" string="Unblacklist"
+                        type="object" class="oe_highlight" context="{'default_email': email}"
+                        attrs="{'invisible': ['|', ('active', '=', False), ('email', '=', False)]}"/>
+                    <button name="action_add" string="Blacklist"
+                        type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', ('active', '=', True), ('email', '=', False)]}"/>
+                </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
                         <group>
                             <field name="email"/>
-                            <field name="active"/>
+                            <field name="active" readonly="1"/>
+                            <br/>
                         </group>
                     </group>
                 </sheet>
@@ -44,7 +54,7 @@
     </record>
 
     <record id="mail_blacklist_action" model="ir.actions.act_window">
-        <field name="name">Blacklist</field>
+        <field name="name">Blacklisted Email Addresses</field>
         <field name="res_model">mail.blacklist</field>
         <field name="view_id" ref="mail_blacklist_view_tree"/>
         <field name="search_view_id" ref="mail_blacklist_view_search"/>

@@ -3,7 +3,7 @@
 {
     'name': 'Test Full eLearning Flow',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden/Tests',
     'description': """
 This module will test the main certification flow of Odoo.
 It will install the e-learning, survey and e-commerce apps and make a complete

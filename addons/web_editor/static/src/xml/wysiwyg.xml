@@ -45,7 +45,9 @@
         <body id="iframe_target" class="o_in_iframe">
             <div id="web_editor-top-edit"></div>
             <div id="wrapwrap">
-                <div data-oe-model="model" data-oe-type="html" class="o_editable oe_structure"></div>
+                <main>
+                    <div data-oe-model="model" data-oe-type="html" class="o_editable oe_structure"></div>
+                </main>
             </div>
             <script type="text/javascript">
                 odoo.define('web_editor.wysiwyg.iniframe', function (require) {
@@ -140,13 +142,12 @@
                 <button type="button" class="btn btn-primary o_upload_media_button">
                     <t t-esc="uploadText"/>
                 </button>
-                <t t-raw="alternateUpload"/>
             </div>
 
             <div class="input-group align-items-center ml-2">
-                <input type="text" class="form-control o_we_url_input" name="url" t-att-placeholder="urlPlaceholder"/>
+                <input type="text" class="form-control o_we_url_input o_we_horizontal_collapse o_we_transition_ease" name="url" t-att-placeholder="urlPlaceholder"/>
                 <div class="input-group-append align-items-center">
-                    <button type="button" class="btn btn-secondary o_upload_media_url_button" disabled="disabled">
+                    <button type="button" class="btn btn-secondary o_upload_media_url_button">
                         <t t-esc="addText"/>
                     </button>
                     <div class="ml-2">
@@ -156,7 +157,7 @@
                     </div>
                 </div>
             </div>
-
+            <t t-raw="0"/>
             <t t-call="wysiwyg.widgets.media.search"/>
         </div>
     </t>
@@ -165,15 +166,17 @@
         <t t-call="wysiwyg.widgets.file">
             <t t-set="uploadText">Upload an image</t>
             <t t-set="urlPlaceholder">https://www.odoo.com/logo.png</t>
-            <t t-set="addText">Add image</t>
+            <t t-set="addText">Add URL</t>
             <t t-set="searchPlaceholder">Search an image</t>
             <t t-set="urlWarningTitle">The URL does not contain any image. The file will be added in the document section.</t>
-            <t t-if="widget.options.showQuickUpload" t-set="alternateUpload">
-                <button class="btn btn-primary o_we_quick_upload" type="button" title="Quick Upload">
-                    <i class="fa fa-fast-forward"/>
-                    <span class="sr-only">Quick Upload</span>
-                </button>
-            </t>
+            <div class="d-flex justify-content-end flex-grow-1 pr-3">
+                <div t-attf-class="custom-control custom-switch #{__debug__ or 'd-none'}">
+                    <input class="o_we_show_optimized ml-2 custom-control-input" type="checkbox" id="o_we_show_optimized_switch"/>
+                    <label class="custom-control-label" for="o_we_show_optimized_switch">
+                        Show optimized images
+                    </label>
+                </div>
+            </div>
         </t>
     </t>
 
@@ -213,7 +216,7 @@
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">Width</div>
                                     </div>
-                                    <input type="number" class="form-control" id="o_we_width" name="width" aria-describedby="sizeHelp" min="1" t-att-max="widget.attachment.image_width" t-att-value="widget.defaultWidth"/>
+                                    <input type="number" class="form-control" id="o_we_width" name="width" aria-describedby="sizeHelp" min="1" t-att-max="widget.image_width" t-att-value="widget.defaultWidth"/>
                                     <div class="input-group-append">
                                         <div class="input-group-text">px</div>
                                     </div>
@@ -227,7 +230,7 @@
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">Height</div>
                                     </div>
-                                    <input type="number" class="form-control" id="o_we_height" name="height" aria-describedby="sizeHelp" min="1" t-att-max="widget.attachment.image_height" t-att-value="widget.defaultHeight"/>
+                                    <input type="number" class="form-control" id="o_we_height" name="height" aria-describedby="sizeHelp" min="1" t-att-max="widget.image_height" t-att-value="widget.defaultHeight"/>
                                     <div class="input-group-append">
                                         <div class="input-group-text">px</div>
                                     </div>
@@ -284,27 +287,34 @@
     </t>
 
     <t t-name="wysiwyg.widgets.image.existing.attachments">
-        <div class="o_we_existing_attachments o_we_images">
+        <div class="o_we_existing_attachments o_we_images d-flex flex-wrap w-100 justify-content-between align-items-stretch my-0">
             <div t-if="!attachments.length" class="o_nocontent_help">
                 <p class="o_empty_folder_image">No images found.</p>
                 <p class="o_empty_folder_subtitle">You can upload images with the button located in the top left of the screen.</p>
             </div>
-            <ol t-else="" class="d-flex flex-wrap mx-auto my-0 p-2">
+            <t t-else="">
                 <t t-foreach="attachments" t-as="attachment">
                     <t t-call="wysiwyg.widgets.image.existing.attachment"/>
                 </t>
-            </ol>
+                <!-- 20 placeholders is just enough for a 5K screen, change this if ImageWidget.MIN_ROW_HEIGHT changes -->
+                <t t-foreach="20">
+                    <div class="o_we_attachment_placeholder"/>
+                </t>
+            </t>
         </div>
     </t>
 
     <t t-name="wysiwyg.widgets.image.existing.attachment">
-        <li class="o_existing_attachment_cell position-relative m-2" t-att-data-id="attachment.id">
-            <i t-if="!attachment.url" class="fa fa-cog o_existing_attachment_optimize p-2" title="Optimize" role="img" aria-label="Optimize"/>
+        <t t-set="isOptimized" t-value="!!attachment.original_id"/>
+        <div t-attf-class="o_existing_attachment_cell position-relative bg-light #{isOptimized and 'o_we_attachment_optimized d-none'}" t-att-data-id="attachment.id">
+            <i t-if="attachment.type === 'binary'" class="fa fa-cog o_existing_attachment_optimize p-2" title="Optimize" role="img" aria-label="Optimize"/>
             <t t-call="wysiwyg.widgets.file.existing.remove"/>
-            <div t-attf-class="d-flex align-items-center h-100">
-                <img class="img img-fluid o_we_attachment_highlight" t-att-src="attachment.image_src + '?width=256&amp;height=192'" t-att-alt="attachment.name" t-att-title="attachment.name"/>
+            <div t-attf-class="d-flex align-items-center justify-content-center h-100 w-100">
+                <!-- 256 is 2 * ImageWidget.MIN_ROW_HEIGHT, hopefully the highest display width of any image -->
+                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{attachment.image_src}?height=256" t-att-alt="attachment.name" t-att-title="attachment.name"/>
             </div>
-        </li>
+            <span t-if="isOptimized" class="badge badge-success">Optimized</span>
+        </div>
     </t>
 
     <t t-name="wysiwyg.widgets.document.existing.attachments">

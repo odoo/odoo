@@ -50,18 +50,12 @@
                 <field name="currency_id" invisible="1" />
                 <field name="value" />
                 <field name="company_id" groups="base.group_multi_company" />
+                <groupby name="product_id">
+                    <field name="cost_method" invisible="1"/>
+                    <field name="quantity_svl" invisible="1"/>
+                    <button name="action_revaluation" icon="fa-plus" title="Add Manual Valuation" type="object" attrs="{'invisible':['|', ('cost_method', '=', 'standard'), ('quantity_svl', '&lt;=', 0)]}" />
+                </groupby>
             </tree>
-        </field>
-    </record>
-
-    <record id="stock_valuation_layer_search" model="ir.ui.view">
-        <field name="name">stock.valuation.layer.search</field>
-        <field name="model">stock.valuation.layer</field>
-        <field name="arch" type="xml">
-            <search string="Valuation Layer?">
-                <field name="product_id"/>
-                <filter string="Product" name="group_by_product_id" context="{'group_by':'product_id'}"/>
-            </search>
         </field>
     </record>
 
@@ -80,6 +74,24 @@
         </field>
     </record>
 
+    <record id="view_inventory_valuation_search" model="ir.ui.view">
+        <field name="name">Inventory Valuation</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="arch" type="xml">
+            <search string="Inventory Valuation">
+                <field name="product_id"/>
+                <field name="categ_id" />
+                <field name="product_tmpl_id" />
+                <separator/>
+                <group expand='0' string='Group by...'>
+                    <filter string='Product' name="group_by_product_id" context="{'group_by': 'product_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="menu_valuation" name="Inventory Valuation" parent="stock.menu_warehouse_report" sequence="110" action="stock_valuation_layer_action"/>
+
     <record id="stock_valuation_layer_picking" model="ir.ui.view">
         <field name="name">stock.valuation.layer.picking</field>
         <field name="model">stock.picking</field>
@@ -93,4 +105,5 @@
             </xpath>
         </field>
     </record>
+    
 </odoo>

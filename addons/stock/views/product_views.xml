@@ -377,7 +377,7 @@
                     </xpath>
 
                     <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
-                        <field name="responsible_id"/>
+                        <field name="responsible_id" domain="[('share', '=', False)]"/>
                     </xpath>
                 </data>
             </field>

@@ -15,20 +15,19 @@ __all__ = [
 ]
 
 import logging
-from collections import defaultdict, Mapping
+from collections import defaultdict
+from collections.abc import Mapping
 from contextlib import contextmanager
-from copy import deepcopy
 from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
 
-from decorator import decorate, decorator
+from decorator import decorate
 from werkzeug.local import Local, release_local
 
-import odoo
+from .exceptions import CacheMiss
+from .tools import frozendict, classproperty, lazy_property, StackMap
 from .tools.translate import _
-from odoo.tools import frozendict, classproperty, lazy_property, StackMap
-from odoo.exceptions import CacheMiss
 
 _logger = logging.getLogger(__name__)
 
@@ -297,14 +296,6 @@ def model(method):
             def method(self, args):
                 ...
 
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, uid, args, context=context)
-
-        Notice that no ``ids`` are passed to the method in the traditional style.
     """
     if method.__name__ == 'create':
         return model_create_single(method)

@@ -551,11 +551,10 @@ class Challenge(models.Model):
 
         challenge = self
 
-        MailTemplates = self.env['mail.template']
         if challenge.visibility_mode == 'ranking':
             lines_boards = challenge._get_serialized_challenge_lines(restrict_goals=subset_goals)
 
-            body_html = MailTemplates.with_context(challenge_lines=lines_boards)._render_template(challenge.report_template_id.body_html, 'gamification.challenge', challenge.id)
+            body_html = challenge.report_template_id.with_context(challenge_lines=lines_boards)._render_field('body_html', challenge.ids)[challenge.id]
 
             # send to every follower and participant of the challenge
             challenge.message_post(
@@ -576,10 +575,7 @@ class Challenge(models.Model):
                 if not lines:
                     continue
 
-                body_html = MailTemplates.with_user(user).with_context(challenge_lines=lines)._render_template(
-                    challenge.report_template_id.body_html,
-                    'gamification.challenge',
-                    challenge.id)
+                body_html = challenge.report_template_id.with_user(user).with_context(challenge_lines=lines)._render_field('body_html', challenge.ids)[challenge.id]
 
                 # notify message only to users, do not post on the challenge
                 challenge.message_notify(
@@ -790,7 +786,7 @@ class ChallengeLine(models.Model):
     target_goal = fields.Float('Target Value to Reach', required=True)
 
     name = fields.Char("Name", related='definition_id.name', readonly=False)
-    condition = fields.Selection("Condition", related='definition_id.condition', readonly=True)
+    condition = fields.Selection(string="Condition", related='definition_id.condition', readonly=True)
     definition_suffix = fields.Char("Unit", related='definition_id.suffix', readonly=True)
     definition_monetary = fields.Boolean("Monetary", related='definition_id.monetary', readonly=True)
     definition_full_suffix = fields.Char("Suffix", related='definition_id.full_suffix', readonly=True)

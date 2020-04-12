@@ -5,7 +5,10 @@
             <field name="name">Chart Templates</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context" eval="{'search_default_category_id': ref('base.module_category_localization')}"/>
+            <field name="context" eval="{
+                'search_default_category_id': ref('base.module_category_accounting_localizations'),
+                'searchpanel_default_category_id': ref('base.module_category_accounting_localizations'),
+            }"/>
             <field name="search_view_id" ref="base.view_module_filter"/>
         </record>
 
@@ -16,6 +19,7 @@
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <field name="country_code" invisible="1"/>
                     <div class="app_settings_block" data-string="Invoicing" string="Invoicing" data-key="account" groups="account.group_account_manager">
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
@@ -293,6 +297,17 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="show_sale_receipts">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_show_sale_receipts" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane" name="show_sale_receipts_right_pane">
+                                    <label for="group_show_sale_receipts"/>
+                                    <div class="text-muted">
+                                        Active to create sale receipt
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <h2>Customer Payments</h2>
                         <div class="row mt16 o_settings_container" id="pay_invoice_online_setting_container">
@@ -341,15 +356,15 @@
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box"
                                 id="qr_code_invoices"
-                                title="Add an EPC QR code to your invoices so that your customers can pay instantly with their mobile banking application. EPC QR codes are used by many European banks to process SEPA payments.">
+                                title="Add a QR-code to your invoices so that your customers can pay instantly with their mobile banking application.">
                                 <div class="o_setting_left_pane">
-                                    <field name="qr_code" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="qr_code" class="oe_inline"/>
                                 </div>
                                 <div class="o_setting_right_pane" name="qr_code_right_pane">
-                                    <label string="SEPA QR Code" for="qr_code"/>
+                                    <label string="QR Codes" for="qr_code"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
-                                        Add a payment QR code to your invoices
+                                        Add a payment QR-code to your invoices
                                     </div>
                                 </div>
                             </div>
@@ -369,6 +384,17 @@
                                         <div class="text-warning mt16 mb4">
                                             Save this page and come back here to set up the feature.
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="show_purchase_receipts">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_show_purchase_receipts" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane" name="show_purchase_receipts_right_pane">
+                                    <label for="group_show_purchase_receipts"/>
+                                    <div class="text-muted">
+                                        Active to create purchase receipt
                                     </div>
                                 </div>
                             </div>
@@ -406,16 +432,6 @@
                         <t groups="account.group_account_user">
                             <h2>Bank &amp; Cash</h2>
                             <div class="row mt16 o_settings_container" id="bank_cash">
-                                <div class="col-xs-12 col-md-6 o_setting_box">
-                                        <div class="o_setting_left_pane"/>
-                                        <div class="o_setting_right_pane">
-                                            <label for="account_bank_reconciliation_start"/>
-                                            <div class="text-muted">
-                                                The payments which have not been matched with a bank statement will not be shown in bank reconciliation data if they were made before this date
-                                            </div>
-                                            <field name="account_bank_reconciliation_start"/>
-                                        </div>
-                                    </div>
                                 <div class="col-12 col-lg-6 o_setting_box"
                                     id="account_yodlee"
                                     title="Get your bank statements automatically imported every 4 hours, or in one-click, using Yodlee and Plaid services. Once installed, set “Bank Feeds” to “Bank Synchronization” in bank account settings. Then, click “Configure” on the online account to enter your bank credentials.">
@@ -562,7 +578,5 @@
             <field name="context">{'module' : 'account'}</field>
         </record>
 
-        <menuitem id="menu_account_config" name="Settings" parent="menu_finance_configuration"
-            sequence="0" action="action_account_config" groups="base.group_system"/>
     </data>
 </odoo>

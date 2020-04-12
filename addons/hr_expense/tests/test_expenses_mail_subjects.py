@@ -100,5 +100,4 @@ class TestExpenseSubject(TestExpenseCommon):
 
         subject = 'EXP-PHONE 2 foo bar 291.5%s mega knight' % (company_currency.symbol,)
         product, price, currency_id, expense_description = parse_subject(subject, company_currency | alternate_currency)
-        print(price)
         self.assertAlmostEqual(price, 291.5, "Price is not fetched correctly")

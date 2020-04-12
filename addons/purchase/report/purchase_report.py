@@ -5,7 +5,11 @@
 # Please note that these reports are not multi-currency !!!
 #
 
+import re
+
 from odoo import api, fields, models, tools
+from odoo.exceptions import UserError
+from odoo.osv.expression import expression
 
 
 class PurchaseReport(models.Model):
@@ -14,7 +18,7 @@ class PurchaseReport(models.Model):
     _auto = False
     _order = 'date_order desc, price_total desc'
 
-    date_order = fields.Datetime('Order Date', readonly=True, help="Date on which this document has been created")
+    date_order = fields.Datetime('Order Date', readonly=True, help="Depicts the date when the Quotation should be validated and converted into a purchase order.")
     state = fields.Selection([
         ('draft', 'Draft RFQ'),
         ('sent', 'RFQ Sent'),
@@ -22,7 +26,7 @@ class PurchaseReport(models.Model):
         ('purchase', 'Purchase Order'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')
-    ], 'Order Status', readonly=True)
+    ], 'Status', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Vendor', readonly=True)
     date_approve = fields.Datetime('Confirmation Date', readonly=True)
@@ -30,8 +34,12 @@ class PurchaseReport(models.Model):
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
     user_id = fields.Many2one('res.users', 'Purchase Representative', readonly=True)
-    delay = fields.Float('Days to Confirm', digits=(16, 2), readonly=True)
-    delay_pass = fields.Float('Days to Receive', digits=(16, 2), readonly=True)
+    delay = fields.Float('Days to Confirm', digits=(16, 2), readonly=True, help="Amount of time between purchase approval and order by date.")
+    delay_pass = fields.Float('Days to Receive', digits=(16, 2), readonly=True, help="Amount of time between date planned and order by date for each purchase order line.")
+    avg_days_to_purchase = fields.Float(
+        'Average Days to Purchase', digits=(16, 2), readonly=True, store=False,  # needs store=False to prevent showing up as a 'measure' option
+        help="Amount of time between purchase approval and document creation date. Due to a hack needed to calculate this, \
+              every record will show the same average value, therefore only use this as an aggregated value with group_operator=avg")
     price_total = fields.Float('Total', readonly=True)
     price_average = fields.Float('Average Cost', readonly=True, group_operator="avg")
     nbr_lines = fields.Integer('# of Lines', readonly=True)
@@ -147,3 +155,46 @@ class PurchaseReport(models.Model):
                 po.id
         """
         return group_by_str
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """ This is a hack to allow us to correctly calculate the average of PO specific date values since
+            the normal report query result will duplicate PO values across its PO lines during joins and
+            lead to incorrect aggregation values.
+
+            Only the AVG operator is supported for avg_days_to_purchase.
+        """
+        avg_days_to_purchase = next((field for field in fields if re.search(r'\bavg_days_to_purchase\b', field)), False)
+
+        if avg_days_to_purchase:
+            fields.remove(avg_days_to_purchase)
+            if any(field.split(':')[1].split('(')[0] != 'avg' for field in [avg_days_to_purchase] if field):
+                raise UserError("Value: 'avg_days_to_purchase' should only be used to show an average. If you are seeing this message then it is being accessed incorrectly.")
+
+        res = []
+        if fields:
+            res = super(PurchaseReport, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
+        if not res and avg_days_to_purchase:
+            res = [{}]
+
+        if avg_days_to_purchase:
+            query = """ SELECT AVG(days_to_purchase.po_days_to_purchase)::decimal(16,2) AS avg_days_to_purchase
+                          FROM (
+                              SELECT extract(epoch from age(po.date_approve,po.create_date))/(24*60*60) AS po_days_to_purchase
+                              FROM purchase_order po
+                              WHERE po.id IN (
+                                  SELECT order_id
+                                  FROM purchase_report
+                                  WHERE date_approve IS NOT NULL
+                                    AND %s )
+                              ) AS days_to_purchase
+                    """
+
+            where, args = expression(domain + [('company_id', '=', self.env.company.id)], self).to_sql()
+            self.env.cr.execute(query % where, args)
+            res[0].update({
+                '__count': 1,
+                avg_days_to_purchase.split(':')[0]: self.env.cr.fetchall()[0][0],
+            })
+        return res

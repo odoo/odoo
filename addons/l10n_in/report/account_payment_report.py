@@ -65,7 +65,7 @@ class L10nInPaymentReport(models.AbstractModel):
             tax.amount AS tax_rate,
             am.partner_id,
             am.amount_total AS payment_amount,
-            ap.journal_id,
+            am.journal_id,
             aml.currency_id,
             (CASE WHEN ps.l10n_in_tin IS NOT NULL
                 THEN concat(ps.l10n_in_tin,'-',ps.name)
@@ -137,7 +137,7 @@ class AdvancesPaymentReport(models.Model):
     def _select(self):
         select_str = super(AdvancesPaymentReport, self)._select()
         select_str += """,
-            ap.payment_date as date,
+            am.date as date,
             (SELECT sum(amount) FROM account_partial_reconcile AS apr
                 WHERE (apr.credit_move_id = aml.id OR apr.debit_move_id = aml.id)
                 AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date_maturity, 'MM-YYYY'))

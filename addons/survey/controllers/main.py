@@ -13,7 +13,7 @@ from odoo.addons.base.models.ir_ui_view import keep_query
 from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
 from odoo.osv import expression
-from odoo.tools import format_datetime, format_date
+from odoo.tools import format_datetime, format_date, is_html_empty
 
 from odoo.addons.web.controllers.main import Binary
 
@@ -39,16 +39,6 @@ class Survey(http.Controller):
                 ('access_token', '=', answer_token)
             ], limit=1)
         return survey_sudo, answer_sudo
-
-    def _fetch_from_access_code(self, survey_short_token):
-        if survey_short_token and len(survey_short_token) == 6:
-            matching_survey = request.env['survey.survey'].sudo().search([
-                ('state', '=', 'open'),
-                ('access_token', 'like', f'{survey_short_token}%'),
-            ])
-            if len(matching_survey) == 1:
-                return matching_survey
-        return False
 
     def _check_validity(self, survey_token, answer_token, ensure_token=True):
         """ Check survey is open and can be taken. This does not checks for
@@ -151,30 +141,6 @@ class Survey(http.Controller):
         return werkzeug.utils.redirect("/")
 
     # ------------------------------------------------------------
-    # QUICK ACCESS SURVEY ROUTES
-    # ------------------------------------------------------------
-
-    @http.route('/s', type='http', auth='public', website=True, sitemap=False)
-    def survey_access_code(self, **post):
-        """ Renders the survey access code page route.
-        This page allows the user to enter the short code of the survey.
-        It's mainly used in 'session mode' when attendees have to manually type the
-        URL, to ease survey access. """
-        return request.render("survey.survey_access_code")
-
-    @http.route('/s/<string:survey_short_token>', type='http', auth='public', website=True)
-    def survey_start_short(self, survey_short_token):
-        """" Redirects to 'survey_start' route using a shortened link & token.
-        We match the 6 first characters of the token for open surveys.
-        This route is mostly used in survey sessions where we need short links for people to type. """
-
-        survey = self._fetch_from_access_code(survey_short_token)
-        if survey:
-            return werkzeug.utils.redirect("/survey/start/%s" % survey.access_token)
-
-        return werkzeug.utils.redirect("/")
-
-    # ------------------------------------------------------------
     # TEST / RETRY SURVEY ROUTES
     # ------------------------------------------------------------
 
@@ -208,6 +174,7 @@ class Survey(http.Controller):
                 partner=answer_sudo.partner_id,
                 email=answer_sudo.email,
                 invite_token=answer_sudo.invite_token,
+                test_entry=answer_sudo.test_entry,
                 **self._prepare_retry_additional_values(answer_sudo)
             )
         except:
@@ -265,6 +232,7 @@ class Survey(http.Controller):
                 - previous_page_id : come from the breadcrumb or the back button and force the next questions to load
                                      to be the previous ones. """
         data = {
+            'is_html_empty': is_html_empty,
             'survey': survey_sudo,
             'answer': answer_sudo,
             'breadcrumb_pages': [{
@@ -274,6 +242,19 @@ class Survey(http.Controller):
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date)
         }
+        if survey_sudo.questions_layout != 'page_per_question':
+            triggering_answer_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
+            data.update({
+                'triggering_answer_by_question': {
+                    question.id: triggering_answer_by_question[question].id for question in triggering_answer_by_question.keys()
+                    if triggering_answer_by_question[question]
+                },
+                'triggered_questions_by_answer': {
+                    answer.id: triggered_questions_by_answer[answer].ids
+                    for answer in triggered_questions_by_answer.keys()
+                },
+                'selected_answers': selected_answers.ids
+            })
 
         if not answer_sudo.is_session_answer and survey_sudo.is_time_limited and answer_sudo.start_datetime:
             data.update({
@@ -286,38 +267,44 @@ class Survey(http.Controller):
         # Bypass all if page_id is specified (comes from breadcrumb or previous button)
         if 'previous_page_id' in post:
             previous_page_or_question_id = int(post['previous_page_id'])
-            new_previous_id = survey_sudo._previous_page_or_question_id(answer_sudo, previous_page_or_question_id)
+            new_previous_id = survey_sudo._get_next_page_or_question(answer_sudo, previous_page_or_question_id, go_back=True).id
+            page_or_question = request.env['survey.question'].sudo().browse(previous_page_or_question_id)
             data.update({
-                page_or_question_key: request.env['survey.question'].sudo().browse(previous_page_or_question_id),
+                page_or_question_key: page_or_question,
                 'previous_page_id': new_previous_id,
-                'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id.id == new_previous_id)
+                'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id.id == new_previous_id),
+                'can_go_back': survey_sudo._can_go_back(answer_sudo, page_or_question),
             })
             return data
 
         if answer_sudo.state == 'in_progress':
             if answer_sudo.is_session_answer:
-                page_or_question_id, is_last = survey_sudo.session_question_id, False
+                next_page_or_question = survey_sudo.session_question_id
             else:
-                page_or_question_id, is_last = survey_sudo.next_page_or_question(
+                next_page_or_question = survey_sudo._get_next_page_or_question(
                     answer_sudo,
                     answer_sudo.last_displayed_page_id.id if answer_sudo.last_displayed_page_id else 0)
 
-            if answer_sudo.is_session_answer and page_or_question_id.is_time_limited:
+                if next_page_or_question:
+                    data.update({
+                        'survey_last': survey_sudo._is_last_page_or_question(answer_sudo, next_page_or_question)
+                    })
+
+            if answer_sudo.is_session_answer and next_page_or_question.is_time_limited:
                 data.update({
                     'timer_start': survey_sudo.session_question_start_time.isoformat(),
-                    'time_limit_minutes': page_or_question_id.time_limit / 60
+                    'time_limit_minutes': next_page_or_question.time_limit / 60
                 })
 
             data.update({
-                page_or_question_key: page_or_question_id,
-                'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id == page_or_question_id)
+                page_or_question_key: next_page_or_question,
+                'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id == next_page_or_question),
+                'can_go_back': survey_sudo._can_go_back(answer_sudo, next_page_or_question),
             })
             if survey_sudo.questions_layout != 'one_page':
                 data.update({
-                    'previous_page_id': survey_sudo._previous_page_or_question_id(answer_sudo, page_or_question_id.id)
+                    'previous_page_id': survey_sudo._get_next_page_or_question(answer_sudo, next_page_or_question.id, go_back=True).id
                 })
-            if is_last:
-                data.update({'last': True})
         elif answer_sudo.state == 'done' or answer_sudo.survey_time_limit_reached:
             # Display success message
             return self._prepare_survey_finished_values(survey_sudo, answer_sudo)
@@ -327,10 +314,36 @@ class Survey(http.Controller):
     def _prepare_question_html(self, survey_sudo, answer_sudo, **post):
         """ Survey page navigation is done in AJAX. This function prepare the 'next page' to display in html
         and send back this html to the survey_form widget that will inject it into the page."""
-        data = self._prepare_survey_data(survey_sudo, answer_sudo, **post)
+        survey_data = self._prepare_survey_data(survey_sudo, answer_sudo, **post)
+
+        survey_content = False
         if answer_sudo.state == 'done':
-            return request.env.ref('survey.survey_fill_form_done').render(data).decode('UTF-8')
-        return request.env.ref('survey.survey_fill_form_in_progress').render(data).decode('UTF-8')
+            survey_content = request.env.ref('survey.survey_fill_form_done').render(survey_data)
+        else:
+            survey_content = request.env.ref('survey.survey_fill_form_in_progress').render(survey_data)
+
+        survey_progress = False
+        if answer_sudo.state == 'in_progress' and not survey_data.get('question', request.env['survey.question']).is_page:
+            if survey_sudo.questions_layout == 'page_per_section':
+                page_ids = survey_sudo.page_ids.ids
+                survey_progress = request.env.ref('survey.survey_progression').render({
+                    'survey': survey_sudo,
+                    'page_ids': page_ids,
+                    'page_number': page_ids.index(survey_data['page'].id) + (1 if survey_sudo.progression_mode == 'number' else 0)
+                })
+            elif survey_sudo.questions_layout == 'page_per_question':
+                page_ids = survey_sudo.question_ids.ids
+                survey_progress = request.env.ref('survey.survey_progression').render({
+                    'survey': survey_sudo,
+                    'page_ids': page_ids,
+                    'page_number': page_ids.index(survey_data['question'].id)
+                })
+
+        return {
+            'survey_content': survey_content,
+            'survey_progress': survey_progress,
+            'survey_navigation': request.env.ref('survey.survey_navigation').render(survey_data),
+        }
 
     @http.route('/survey/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_display_page(self, survey_token, answer_token, **post):
@@ -443,7 +456,10 @@ class Survey(http.Controller):
 
         errors = {}
         # Prepare answers / comment by question, validate and save answers
+        inactive_questions = request.env['survey.question'] if answer_sudo.is_session_answer else answer_sudo._get_inactive_conditional_questions()
         for question in questions:
+            if question in inactive_questions:  # if question is inactive, skip validation and save
+                continue
             answer, comment = self._extract_comment_from_answers(question, post.get(str(question.id)))
             errors.update(question.validate_question(answer, comment))
             if not errors.get(question.id):
@@ -451,6 +467,9 @@ class Survey(http.Controller):
 
         if errors and not (answer_sudo.survey_time_limit_reached or answer_sudo.question_time_limit_reached):
             return {'error': 'validation', 'fields': errors}
+
+        if not answer_sudo.is_session_answer:
+            answer_sudo._clear_inactive_conditional_answers()
 
         if answer_sudo.survey_time_limit_reached or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()
@@ -460,24 +479,13 @@ class Survey(http.Controller):
         else:
             vals = {'last_displayed_page_id': page_or_question_id}
             if not answer_sudo.is_session_answer:
-                next_page, unused = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id)
-                if next_page is None:
+                next_page = survey_sudo._get_next_page_or_question(answer_sudo, page_or_question_id)
+                if not next_page:
                     answer_sudo._mark_done()
 
             answer_sudo.write(vals)
 
         return self._prepare_question_html(survey_sudo, answer_sudo)
-
-    @http.route('/survey/check_access_code/<string:access_code>', type='json', auth='public', website=True)
-    def survey_access_code_check(self, access_code):
-        """ Checks if the given code is matching a survey access_token.
-        If yes, redirect to /s/code route.
-        If not, return error. The user is invited to type again the code. """
-        survey = self._fetch_from_access_code(access_code)
-        if survey:
-            return {"survey_url": "/survey/start/%s" % survey.access_token}
-
-        return {"error": "survey_wrong"}
 
     def _extract_comment_from_answers(self, question, answers):
         """ Answers is a custom structure depending of the question type
@@ -615,8 +623,8 @@ class Survey(http.Controller):
             'search_finished': post.get('finished') == 'true',
         }
 
-        if survey.session_show_ranking:
-            template_values['ranking'] = survey._prepare_ranking_values()
+        if survey.session_show_leaderboard:
+            template_values['leaderboard'] = survey._prepare_leaderboard_values()
 
         return request.render('survey.survey_page_statistics', template_values)
 

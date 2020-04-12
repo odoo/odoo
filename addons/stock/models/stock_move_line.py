@@ -17,6 +17,7 @@ class StockMoveLine(models.Model):
     picking_id = fields.Many2one(
         'stock.picking', 'Transfer', auto_join=True,
         check_company=True,
+        index=True,
         help='The stock operation where the packing has been made')
     move_id = fields.Many2one(
         'stock.move', 'Stock Move',
@@ -187,7 +188,7 @@ class StockMoveLine(models.Model):
                     vals['move_id'] = new_move.id
         mls = super(StockMoveLine, self).create(vals_list)
 
-        for ml in mls:
+        for ml, vals in zip(mls, vals_list):
             if ml.move_id and \
                     ml.move_id.picking_id and \
                     ml.move_id.picking_id.immediate_transfer and \
@@ -213,7 +214,6 @@ class StockMoveLine(models.Model):
                 next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
                 next_moves._do_unreserve()
                 next_moves._action_assign()
-
         return mls
 
     def write(self, vals):
@@ -347,7 +347,8 @@ class StockMoveLine(models.Model):
         # done stock move should have its `quantity_done` equals to its `product_uom_qty`, and
         # this is what move's `action_done` will do. So, we replicate the behavior here.
         if updates or 'qty_done' in vals:
-            moves = self.filtered(lambda ml: ml.move_id.state == 'done' or ml.move_id.picking_id and ml.move_id.picking_id.immediate_transfer).mapped('move_id')
+            moves = self.filtered(lambda ml: ml.move_id.state == 'done').mapped('move_id')
+            moves |= self.filtered(lambda ml: ml.move_id.state not in ('done', 'cancel') and ml.move_id.picking_id.immediate_transfer and not ml.product_uom_qty).mapped('move_id')
             for move in moves:
                 move.product_uom_qty = move.quantity_done
             next_moves._do_unreserve()
@@ -395,6 +396,8 @@ class StockMoveLine(models.Model):
         # the line. It is mandatory in order to free the reservation and correctly apply
         # `action_done` on the next move lines.
         ml_to_delete = self.env['stock.move.line']
+        ml_to_create_lot = self.env['stock.move.line']
+        tracked_ml_without_lot = self.env['stock.move.line']
         for ml in self:
             # Check here if `ml.qty_done` respects the rounding of `ml.product_uom_id`.
             uom_qty = float_round(ml.qty_done, precision_rounding=ml.product_uom_id.rounding, rounding_method='HALF-UP')
@@ -414,7 +417,8 @@ class StockMoveLine(models.Model):
                             # If a picking type is linked, we may have to create a production lot on
                             # the fly before assigning it to the move line if the user checked both
                             # `use_create_lots` and `use_existing_lots`.
-                            ml._create_and_assign_production_lot()
+                            if ml.lot_name:
+                                ml_to_create_lot |= ml
                         elif not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots:
                             # If the user disabled both `use_create_lots` and `use_existing_lots`
                             # checkboxes on the picking type, he's allowed to enter tracked
@@ -425,12 +429,18 @@ class StockMoveLine(models.Model):
                         # tracked products without a `lot_id`.
                         continue
 
-                    if not ml.lot_id:
-                        raise UserError(_('You need to supply a Lot/Serial number for product %s.') % ml.product_id.display_name)
+                    if not ml.lot_id and ml not in ml_to_create_lot:
+                        tracked_ml_without_lot |= ml
             elif qty_done_float_compared < 0:
                 raise UserError(_('No negative quantities allowed'))
             else:
                 ml_to_delete |= ml
+
+        if tracked_ml_without_lot:
+            raise UserError(_('You need to supply a Lot/Serial Number for product: \n - ') +
+                              '\n - '.join(tracked_ml_without_lot.mapped('product_id.display_name')))
+        ml_to_create_lot._create_and_assign_production_lot()
+
         ml_to_delete.unlink()
 
         (self - ml_to_delete)._check_company()
@@ -480,15 +490,21 @@ class StockMoveLine(models.Model):
         return lines
 
     def _create_and_assign_production_lot(self):
-        """ Creates and assign a new production lot of the move line."""
+        """ Creates and assign new production lots for move lines."""
+        lot_vals = [{
+            'company_id': ml.move_id.company_id.id,
+            'name': ml.lot_name,
+            'product_id': ml.product_id.id,
+        } for ml in self]
+        lots = self.env['stock.production.lot'].create(lot_vals)
+        for ml, lot in zip(self, lots):
+            ml._assign_production_lot(lot)
+
+    def _assign_production_lot(self, lot):
         self.ensure_one()
-        if self.lot_name and not self.lot_id:
-            lot = self.env['stock.production.lot'].create({
-                'company_id': self.move_id.company_id.id,
-                'name': self.lot_name,
-                'product_id': self.product_id.id,
-            })
-            self.write({'lot_id': lot.id})
+        self.write({
+            'lot_id': lot.id
+        })
 
     def _reservation_is_updatable(self, quantity, reserved_quant):
         self.ensure_one()

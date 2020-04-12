@@ -16,7 +16,6 @@ return core.Class.extend({
     _init_cache: function () {
         this._cache = {
             actions: {},
-            fields_views: {},
             filters: {},
             views: {},
         };
@@ -52,7 +51,7 @@ return core.Class.extend({
             }).then(function (action) {
                 self._cache.actions[key] = action.no_cache ? null : self._cache.actions[key];
                 return action;
-            }, this._invalidate.bind(this, this._cache.actions, key));
+            }).guardedCatch(() => this._invalidate('actions', key));
         }
 
         return this._cache.actions[key].then(function (action) {
@@ -68,76 +67,74 @@ return core.Class.extend({
      * @param {String} params.model
      * @param {Object} params.context
      * @param {Array} params.views_descr array of [view_id, view_type]
-     * @param {Object} [options] dictionary of various options:
+     * @param {Object} [options={}] dictionary of various options:
      *     - options.load_filters: whether or not to load the filters,
      *     - options.action_id: the action_id (required to load filters),
      *     - options.toolbar: whether or not a toolbar will be displayed,
      * @return {Promise} resolved with the requested views information
      */
-    load_views: function (params, options) {
-        var self = this;
-
-        var model = params.model;
-        var context = params.context;
-        var views_descr = params.views_descr;
-        var key = this._gen_key(model, views_descr, options || {}, context);
-
-        if (config.isDebug('assets') || !this._cache.views[key]) {
-            // Don't load filters if already in cache
-            var filters_key;
-            if (options.load_filters) {
-                filters_key = this._gen_key(model, options.action_id);
-                options.load_filters = !this._cache.filters[filters_key];
-            }
-
-            this._cache.views[key] = rpc.query({
+    load_views: async function ({ model, context, views_descr } , options = {}) {
+        const viewsKey = this._gen_key(model, views_descr, options, context);
+        const filtersKey = this._gen_key(model, options.action_id);
+        const withFilters = Boolean(options.load_filters);
+        const shouldLoadViews = config.isDebug('assets') || !this._cache.views[viewsKey];
+        const shouldLoadFilters = config.isDebug('assets') || (
+            withFilters && !this._cache.filters[filtersKey]
+        );
+        if (shouldLoadViews) {
+            // Views info should be loaded
+            options.load_filters = shouldLoadFilters;
+            this._cache.views[viewsKey] = rpc.query({
                 args: [],
-                kwargs: {
-                    views: views_descr,
-                    options: options,
-                    context: context,
-                },
-                model: model,
+                kwargs: { context, options, views: views_descr },
+                model,
                 method: 'load_views',
-            }).then(function (result) {
+            }).then(result => {
                 // Freeze the fields dict as it will be shared between views and
                 // no one should edit it
                 utils.deepFreeze(result.fields);
-
-                // Insert views into the fields_views cache
-                _.each(views_descr, function (view_descr) {
-                    var toolbar = options.toolbar && view_descr[1] !== 'search';
-                    var fv_key = self._gen_key(model, view_descr[0], view_descr[1], toolbar, context);
-                    var fvg = result.fields_views[view_descr[1]];
+                for (const [viewId, viewType] of views_descr) {
+                    const fvg = result.fields_views[viewType];
                     fvg.viewFields = fvg.fields;
                     fvg.fields = result.fields;
-                    self._cache.fields_views[fv_key] = Promise.resolve(fvg);
-                });
-
-                // Insert filters, if any, into the filters cache
-                if (result.filters) {
-                    self._cache.filters[filters_key] = Promise.resolve(result.filters);
                 }
 
+                // Insert filters, if any, into the filters cache
+                if (shouldLoadFilters) {
+                    this._cache.filters[filtersKey] = Promise.resolve(result.filters);
+                }
                 return result.fields_views;
-            }, this._invalidate.bind(this, this._cache.views, key));
+            }).guardedCatch(() => this._invalidate('views', viewsKey));
         }
-
-        return this._cache.views[key];
+        const result = await this._cache.views[viewsKey];
+        if (withFilters && result.search) {
+            if (shouldLoadFilters) {
+                await this.load_filters({
+                    actionId: options.action_id,
+                    context,
+                    forceReload: false,
+                    modelName: model,
+                });
+            }
+            result.search.favoriteFilters = await this._cache.filters[filtersKey];
+        }
+        return result;
     },
 
     /**
      * Loads the filters of a given model and optional action id.
      *
      * @param {Object} params
-     * @param {string} params.modelName
+     * @param {number} params.actionId
      * @param {Object} params.context
-     * @param {integer} params.actionId
+     * @param {boolean} [params.forceReload=true] can be set to false to prevent forceReload
+     * @param {string} params.modelName
      * @return {Promise} resolved with the requested filters
      */
     load_filters: function (params) {
-        var key = this._gen_key(params.modelName, params.actionId);
-        if (config.isDebug('assets') || !this._cache.filters[key]) {
+        const key = this._gen_key(params.modelName, params.actionId);
+        const forceReload = params.forceReload !== false && config.isDebug('assets');
+        if (forceReload || !this._cache.filters[key]) {
             this._cache.filters[key] = rpc.query({
                 args: [params.modelName, params.actionId],
                 kwargs: {
@@ -146,7 +143,7 @@ return core.Class.extend({
                 },
                 model: 'ir.filters',
                 method: 'get_filters',
-            }).guardedCatch(this._invalidate.bind(this, this._cache.filters, key));
+            }).guardedCatch(() => this._invalidate('filters', key));
         }
         return this._cache.filters[key];
     },
@@ -158,18 +155,14 @@ return core.Class.extend({
      * @return {Promise} resolved with the id of the created or replaced filter
      */
     create_filter: function (filter) {
-        var self = this;
         return rpc.query({
                 args: [filter],
                 model: 'ir.filters',
                 method: 'create_or_replace',
             })
-            .then(function (filterId) {
-                var key = [
-                    filter.model_id,
-                    filter.action_id || false,
-                ].join(',');
-                self._invalidate(self._cache.filters, key);
+            .then(filterId => {
+                const filtersKey = this._gen_key(filter.model_id, filter.action_id);
+                this._invalidate('filters', filtersKey);
                 return filterId;
             });
     },
@@ -181,15 +174,13 @@ return core.Class.extend({
      * @return {Promise}
      */
     delete_filter: function (filterId) {
-        var self = this;
         return rpc.query({
                 args: [filterId],
                 model: 'ir.filters',
                 method: 'unlink',
             })
-            .then(function () {
-                self._cache.filters = {}; // invalidate cache
-            });
+            // Invalidate the whole cache since we have no idea where the filter came from.
+            .then(() => this._invalidate('filters'));
     },
 
     /**
@@ -205,10 +196,18 @@ return core.Class.extend({
     },
 
     /**
-     * Private function that invalidates a cache entry
+     * Invalidate a cache entry or a whole cache section.
+     *
+     * @private
+     * @param {string} section
+     * @param {string} key
      */
-    _invalidate: function (cache, key) {
-        delete cache[key];
+    _invalidate(section, key) {
+        if (key) {
+            delete this._cache[section][key];
+        } else {
+            this._cache[section] = {};
+        }
     },
 });
 

@@ -184,7 +184,7 @@ class ResourceCalendar(models.Model):
         'resource.calendar.leaves', 'calendar_id', 'Time Off')
     global_leave_ids = fields.One2many(
         'resource.calendar.leaves', 'calendar_id', 'Global Time Off',
-        domain=[('resource_id', '=', False)]
+        domain=[('resource_id', '=', False)], copy=True,
         )
     hours_per_day = fields.Float("Average Hour per Day", default=HOURS_PER_DAY,
                                  help="Average hours per day a resource is supposed to work with this calendar.")
@@ -194,6 +194,15 @@ class ResourceCalendar(models.Model):
         help="This field is used in order to define in which timezone the resources will work.")
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        self.ensure_one()
+        if default is None:
+            default = {}
+        if not default.get('name'):
+            default.update(name=_('%s (copy)') % (self.name))
+        return super(ResourceCalendar, self).copy(default)
 
     @api.depends('two_weeks_calendar')
     def _compute_two_weeks_explanation(self):
@@ -641,7 +650,7 @@ class ResourceResource(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(
-        'Active', default=True, tracking=True,
+        'Active', default=True,
         help="If the active field is set to False, it will allow you to hide the resource record without removing it.")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     resource_type = fields.Selection([

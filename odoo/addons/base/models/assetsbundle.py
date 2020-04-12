@@ -284,7 +284,7 @@ class AssetsBundle(object):
             'res_id': False,
             'type': 'binary',
             'public': True,
-            'datas': base64.b64encode(content.encode('utf8')),
+            'raw': content.encode('utf8'),
         }
         attachment = ira.with_user(SUPERUSER_ID).create(values)
 
@@ -334,39 +334,69 @@ class AssetsBundle(object):
         return attachments
 
     def dialog_message(self, message):
+        """
+        Returns a JS script which shows a warning to the user on page load.
+        TODO: should be refactored to be a base js file whose code is extended
+              by related apps (web/website).
+        """
         return """
             (function (message) {
-                if (window.__assetsBundleErrorSeen) return;
+                'use strict';
+
+                if (window.__assetsBundleErrorSeen) {
+                    return;
+                }
                 window.__assetsBundleErrorSeen = true;
 
-                var loaded = function () {
-                    clearTimeout(loadedTimeout);
-                    var alertTimeout = setTimeout(alert.bind(window, message), 0);
-                    var odoo = window.top.odoo;
-                    if (!odoo || !odoo.define) return;
+                if (document.readyState !== 'loading') {
+                    onDOMContentLoaded();
+                } else {
+                    window.addEventListener('DOMContentLoaded', () => onDOMContentLoaded());
+                }
 
-                    odoo.define("AssetsBundle.ErrorMessage", function (require) {
-                        "use strict";
+                async function onDOMContentLoaded() {
+                    var odoo = window.top.odoo;
+                    if (!odoo || !odoo.define) {
+                        useAlert();
+                        return;
+                    }
+
+                    // Wait for potential JS loading
+                    await new Promise(resolve => {
+                        const noLazyTimeout = setTimeout(() => resolve(), 10); // 10 since need to wait for promise resolutions of odoo.define
+                        odoo.define('AssetsBundle.PotentialLazyLoading', function (require) {
+                            'use strict';
+
+                            const lazyloader = require('web.public.lazyloader');
+
+                            clearTimeout(noLazyTimeout);
+                            lazyloader.allScriptsLoaded.then(() => resolve());
+                        });
+                    });
+
+                    var alertTimeout = setTimeout(useAlert, 10); // 10 since need to wait for promise resolutions of odoo.define
+                    odoo.define('AssetsBundle.ErrorMessage', function (require) {
+                        'use strict';
 
                         require('web.dom_ready');
-                        var core = require("web.core");
-                        var Dialog = require("web.Dialog");
+                        var core = require('web.core');
+                        var Dialog = require('web.Dialog');
 
                         var _t = core._t;
 
                         clearTimeout(alertTimeout);
-
                         new Dialog(null, {
                             title: _t("Style error"),
-                            $content: $("<div/>")
-                                .append($("<p/>", {text: _t("The style compilation failed, see the error below. Your recent actions may be the cause, please try reverting the changes you made.")}))
-                                .append($("<pre/>", {html: message})),
+                            $content: $('<div/>')
+                                .append($('<p/>', {text: _t("The style compilation failed, see the error below. Your recent actions may be the cause, please try reverting the changes you made.")}))
+                                .append($('<pre/>', {html: message})),
                         }).open();
                     });
                 }
 
-                var loadedTimeout = setTimeout(loaded, 5000);
-                document.addEventListener("DOMContentLoaded", loaded);
+                function useAlert() {
+                    window.alert(message);
+                }
             })("%s");
         """ % message.replace('"', '\\"').replace('\n', '&NewLine;')
 
@@ -395,7 +425,7 @@ class AssetsBundle(object):
                         outdated = True
                         break
                     if asset._content is None:
-                        asset._content = attachment.datas and base64.b64decode(attachment.datas).decode('utf8') or ''
+                        asset._content = (attachment.raw or b'').decode('utf8')
                         if not asset._content and attachment.file_size > 0:
                             asset._content = None # file missing, force recompile
 
@@ -448,7 +478,7 @@ class AssetsBundle(object):
                         url = asset.html_url
                         with self.env.cr.savepoint():
                             self.env['ir.attachment'].sudo().create(dict(
-                                datas=base64.b64encode(asset.content.encode('utf8')),
+                                raw=asset.content.encode('utf8'),
                                 mimetype='text/css',
                                 type='binary',
                                 name=fname,

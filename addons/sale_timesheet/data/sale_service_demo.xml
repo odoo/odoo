@@ -147,6 +147,18 @@
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_1')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_2')]]"/>
 
+        <!-- Add project to favorite list of admin -->
+        <function model="project.project" name="write">
+            <value model="project.project" eval="obj().search([('sale_line_id', '=', ref('sale_line_13'))]).ids"/>
+            <value eval="{'favorite_user_ids': [(4, ref('base.user_admin'))]}"/>
+        </function>
+
+        <!-- Assign sale order's task to admin -->
+        <function model="project.task" name="write">
+            <value model="project.task" eval="obj().search([('sale_line_id', '=', ref('sale_line_13'))]).ids"/>
+            <value eval="{'user_id': ref('base.user_admin')}"/>
+        </function>
+
         <!-- Timesheets on sale_order_1 -->
         <record id="timesheet_1" model="account.analytic.line">
             <field name="name">Design</field>
@@ -459,6 +471,7 @@
             <field name="sale_line_id" ref="sale_timesheet.sale_line_13" />
             <field name="sale_order_id" ref="sale_timesheet.sale_order_1" />
             <field name="partner_id" ref="base.res_partner_2" />
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <!-- Timesheet for those tasks -->

@@ -17,31 +17,19 @@ class ProductTemplate(models.Model):
     _description = "Product Template"
     _order = "name"
 
+    @tools.ormcache()
     def _get_default_category_id(self):
-        if self._context.get('categ_id') or self._context.get('default_categ_id'):
-            return self._context.get('categ_id') or self._context.get('default_categ_id')
-        category = self.env.ref('product.product_category_all', raise_if_not_found=False)
-        if not category:
-            category = self.env['product.category'].search([], limit=1)
-        if category:
-            return category.id
-        else:
-            err_msg = _('You must define at least one product category in order to be able to create products.')
-            redir_msg = _('Go to Internal Categories')
-            raise RedirectWarning(err_msg, self.env.ref('product.product_category_action_form').id, redir_msg)
+        # Deletion forbidden (at least through unlink)
+        return self.env.ref('product.product_category_all')
 
+    @tools.ormcache()
     def _get_default_uom_id(self):
-        return self.env["uom.uom"].search([], limit=1, order='id').id
-
-    def _get_default_weight_uom(self):
-        return self._get_weight_uom_name_from_ir_config_parameter()
-
-    def _get_default_volume_uom(self):
-        return self._get_volume_uom_name_from_ir_config_parameter()
+        # Deletion forbidden (at least through unlink)
+        return self.env.ref('uom.product_uom_unit')
 
     def _read_group_categ_id(self, categories, domain, order):
         category_ids = self.env.context.get('default_categ_id')
-        if not category_ids:
+        if not category_ids and self.env.context.get('group_expand'):
             category_ids = categories._search([], order=order, access_rights_uid=SUPERUSER_ID)
         return categories.browse(category_ids)
 
@@ -61,7 +49,6 @@ class ProductTemplate(models.Model):
         help='A storable product is a product for which you manage stock. The Inventory app has to be installed.\n'
              'A consumable product is a product for which stock is not managed.\n'
              'A service is a non-material product you provide.')
-    rental = fields.Boolean('Can be Rent')
     categ_id = fields.Many2one(
         'product.category', 'Product Category',
         change_default=True, default=_get_default_category_id, group_expand='_read_group_categ_id',
@@ -97,11 +84,11 @@ class ProductTemplate(models.Model):
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume', digits='Volume', store=True)
-    volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name', default=_get_default_volume_uom)
+    volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name')
     weight = fields.Float(
         'Weight', compute='_compute_weight', digits='Stock Weight',
         inverse='_set_weight', store=True)
-    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
+    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
 
     sale_ok = fields.Boolean('Can be Sold', default=True)
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
@@ -142,7 +129,7 @@ class ProductTemplate(models.Model):
         '# Product Variants', compute='_compute_product_variant_count')
 
     # related to display product product information if is_product_variant
-    barcode = fields.Char('Barcode', related='product_variant_ids.barcode', readonly=False)
+    barcode = fields.Char('Barcode', compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
     default_code = fields.Char(
         'Internal Reference', compute='_compute_default_code',
         inverse='_set_default_code', store=True)
@@ -183,9 +170,9 @@ class ProductTemplate(models.Model):
         for template in self:
             template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
 
+    @api.depends_context('company')
     def _compute_cost_currency_id(self):
-        for template in self:
-            template.cost_currency_id = self.env.company.currency_id.id
+        self.cost_currency_id = self.env.company.currency_id.id
 
     def _compute_template_price(self):
         prices = self._compute_template_price_no_inverse()
@@ -228,8 +215,11 @@ class ProductTemplate(models.Model):
         else:
             self.write({'list_price': self.price})
 
+    @api.depends_context('company')
     @api.depends('product_variant_ids', 'product_variant_ids.standard_price')
     def _compute_standard_price(self):
+        # Depends on force_company context because standard_price is company_dependent
+        # on the product_product
         unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
         for template in unique_variants:
             template.standard_price = template.product_variant_ids.standard_price
@@ -267,8 +257,22 @@ class ProductTemplate(models.Model):
             template.weight = 0.0
 
     def _compute_is_product_variant(self):
+        self.is_product_variant = False
+
+    @api.depends('product_variant_ids.barcode')
+    def _compute_barcode(self):
+        self.barcode = False
         for template in self:
-            template.is_product_variant = False
+            if len(template.product_variant_ids) == 1:
+                template.barcode = template.product_variant_ids.barcode
+
+    def _search_barcode(self, operator, value):
+        templates = self.with_context(active_test=False).search([('product_variant_ids.barcode', operator, value)])
+        return [('id', 'in', templates.ids)]
+
+    def _set_barcode(self):
+        if len(self.product_variant_ids) == 1:
+            self.product_variant_ids.barcode = self.barcode
 
     @api.model
     def _get_weight_uom_id_from_ir_config_parameter(self):
@@ -322,12 +326,10 @@ class ProductTemplate(models.Model):
         return self._get_volume_uom_id_from_ir_config_parameter().display_name
 
     def _compute_weight_uom_name(self):
-        for template in self:
-            template.weight_uom_name = self._get_weight_uom_name_from_ir_config_parameter()
+        self.weight_uom_name = self._get_weight_uom_name_from_ir_config_parameter()
 
     def _compute_volume_uom_name(self):
-        for template in self:
-            template.volume_uom_name = self._get_volume_uom_name_from_ir_config_parameter()
+        self.volume_uom_name = self._get_volume_uom_name_from_ir_config_parameter()
 
     def _set_weight(self):
         for template in self:
@@ -458,7 +460,12 @@ class ProductTemplate(models.Model):
             args = args if args is not None else []
             products_ns = Product._name_search(name, args+domain, operator=operator, name_get_uid=name_get_uid)
             products = Product.browse([x[0] for x in products_ns])
-            templates |= products.mapped('product_tmpl_id')
+            new_templates = products.mapped('product_tmpl_id')
+            if new_templates & templates:
+                """Product._name_search can bypass the domain we passed (search on supplier info).
+                   If this happens, an infinite loop will occur."""
+                break
+            templates |= new_templates
             current_round_templates = self.browse([])
             if not products:
                 domain_template = args + domain_no_variant + (templates and [('id', 'not in', templates.ids)] or [])

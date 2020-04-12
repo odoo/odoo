@@ -64,7 +64,8 @@ from inspect import currentframe
 def flush_env(cr):
     """ Retrieve and flush an environment corresponding to the given cursor """
     for env in list(Environment.envs):
-        if env.cr is cr:
+        # don't flush() on another cursor or with a RequestUID
+        if env.cr is cr and (isinstance(env.uid, int) or env.uid is None):
             env['base'].flush()
             break
 
@@ -86,10 +87,7 @@ sql_counter = 0
 def check(f, self, *args, **kwargs):
     """ Wrap a cursor method that cannot be called when the cursor is closed. """
     if self._closed:
-        msg = 'Unable to use a closed cursor.'
-        if self.__closer:
-            msg += ' It was closed at %s, line %s' % self.__closer
-        raise psycopg2.OperationalError(msg)
+        raise psycopg2.OperationalError('Unable to use a closed cursor.')
     return f(self, *args, **kwargs)
 
 
@@ -248,7 +246,6 @@ class Cursor(BaseCursor):
             self.__caller = False
         self._closed = False   # real initialisation value
         self.autocommit(False)
-        self.__closer = False
 
         self._default_log_exceptions = True
 
@@ -361,9 +358,6 @@ class Cursor(BaseCursor):
             return
 
         del self.cache
-
-        if self.sql_log:
-            self.__closer = frame_codeinfo(currentframe(), 3)
 
         # simple query count is always computed
         sql_counter += self.sql_log_count

@@ -5,6 +5,8 @@ odoo.define('web.web_client', async function (require) {
     const session = require("web.session");
     const WebClient = require('web.WebClient');
 
+    owl.config.mode = "dev";
+
     const webClient = new WebClient();
 
     await session.is_bound;

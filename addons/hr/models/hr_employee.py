@@ -52,7 +52,7 @@ class HrEmployeePrivate(models.Model):
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other')
-    ], groups="hr.group_hr_user", default="male", tracking=True)
+    ], groups="hr.group_hr_user", tracking=True)
     marital = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
@@ -228,6 +228,7 @@ class HrEmployeePrivate(models.Model):
         vals = dict(
             image_1920=user.image_1920,
             work_email=user.email,
+            user_id=user.id,
         )
         if user.tz:
             vals['tz'] = user.tz

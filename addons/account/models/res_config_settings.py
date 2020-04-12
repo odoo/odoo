@@ -21,10 +21,8 @@ class ResConfigSettings(models.TransientModel):
         domain="[('visible','=', True)]")
     sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False)
     purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id', readonly=False)
-    tax_calculation_rounding_method = fields.Selection([
-        ('round_per_line', 'Round calculation of taxes per line'),
-        ('round_globally', 'Round globally calculation of taxes '),
-        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
+    tax_calculation_rounding_method = fields.Selection(
+        related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
     module_account_accountant = fields.Boolean(string='Accounting')
     group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
         implied_group='analytic.group_analytic_accounting')
@@ -43,6 +41,10 @@ class ResConfigSettings(models.TransientModel):
         "Show line subtotals with taxes (B2C)",
         implied_group='account.group_show_line_subtotals_tax_included',
         group='base.group_portal,base.group_user,base.group_public')
+    group_show_sale_receipts = fields.Boolean(string='Sale Receipt',
+        implied_group='account.group_sale_receipts')
+    group_show_purchase_receipts = fields.Boolean(string='Purchase Receipt',
+        implied_group='account.group_purchase_receipts')
     show_line_subtotals_tax_selection = fields.Selection([
         ('tax_excluded', 'Tax-Excluded'),
         ('tax_included', 'Tax-Included')], string="Line Subtotals Tax Display",
@@ -72,13 +74,8 @@ class ResConfigSettings(models.TransientModel):
     module_snailmail_account = fields.Boolean(string="Snailmail")
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal", readonly=False)
-    account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold",
-        related='company_id.account_bank_reconciliation_start', readonly=False,
-        help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
-               This is useful if you install accounting after having used invoicing for some time and
-               don't want to reconcile all the past payments with bank statements.""")
 
-    qr_code = fields.Boolean(string='Display SEPA QR code', related='company_id.qr_code', readonly=False)
+    qr_code = fields.Boolean(string='Display SEPA QR-code', related='company_id.qr_code', readonly=False)
     invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print', readonly=False)
     invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
@@ -86,6 +83,9 @@ class ResConfigSettings(models.TransientModel):
     use_invoice_terms = fields.Boolean(
         string='Default Terms & Conditions',
         config_parameter='account.use_invoice_terms')
+
+    # Technical field to hide country specific fields from accounting configuration
+    country_code = fields.Char(related='company_id.country_id.code', readonly=True)
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()

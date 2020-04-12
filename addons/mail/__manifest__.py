@@ -3,7 +3,7 @@
 {
     'name': 'Discuss',
     'version': '1.0',
-    'category': 'Discuss',
+    'category': 'Productivity/Discuss',
     'summary': 'Chat, mail gateway and private channels',
     'description': "",
     'website': 'https://www.odoo.com/page/discuss',
@@ -11,6 +11,7 @@
     'data': [
         'views/mail_menus.xml',
         'wizard/invite_view.xml',
+        'wizard/mail_blacklist_remove_view.xml',
         'wizard/mail_compose_message_view.xml',
         'wizard/mail_resend_cancel_views.xml',
         'wizard/mail_resend_message_views.xml',
@@ -40,7 +41,6 @@
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
         'views/mail_blacklist_views.xml',
-        'views/mail_channel_partner_views.xml',
     ],
     'demo': [
         'data/mail_channel_demo.xml',

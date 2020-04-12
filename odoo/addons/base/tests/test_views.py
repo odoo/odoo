@@ -236,6 +236,32 @@ class TestViewInheritance(ViewCase):
                 'arch': self.arch_for('itself', parent=True),
             })
 
+    def test_write_arch(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+
+        v = self.makeView("T", arch='<form string="Foo">Bar</form>')
+        self.env['ir.translation']._upsert_translations([{
+            'type': 'model_terms',
+            'name': 'ir.ui.view,arch_db',
+            'lang': 'fr_FR',
+            'res_id': v.id,
+            'src': 'Foo',
+            'value': 'Fou',
+        }, {
+            'type': 'model_terms',
+            'name': 'ir.ui.view,arch_db',
+            'lang': 'fr_FR',
+            'res_id': v.id,
+            'src': 'Bar',
+            'value': 'Barre',
+        }])
+        self.assertEqual(v.arch, '<form string="Foo">Bar</form>')
+
+        # modify v to discard translations; this should not invalidate 'arch'!
+        v.arch = '<form></form>'
+        self.assertEqual(v.arch, '<form></form>')
+
+
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base
     architecture. IO state parameters (cr, uid, model, context) are used for
@@ -2040,6 +2066,41 @@ class TestViews(ViewCase):
                 'arch': arch % ('', '<field name="noupdate"/><field name="fake_field"/>'),
             })
 
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_check_xml_on_reenable(self):
+        view1 = self.View.create({
+            'name': 'valid _check_xml',
+            'model': 'ir.ui.view',
+            'arch': """
+                <form string="View">
+                    <field name="name"/>
+                </form>
+            """,
+        })
+        view2 = self.View.create({
+            'name': 'valid _check_xml',
+            'model': 'ir.ui.view',
+            'inherit_id': view1.id,
+            'active': False,
+            'arch': """
+                <field name="foo" position="after">
+                    <field name="bar"/>
+                </field>
+            """
+        })
+        with self.assertRaises(ValidationError):
+            view2.active = True
+
+        # Re-enabling the view and correcting it at the same time should not raise the `_check_xml` constraint.
+        view2.write({
+            'active': True,
+            'arch': """
+                <field name="name" position="after">
+                    <span>bar</span>
+                </field>
+            """,
+        })
+
     def test_for_in_label(self):
         self.assertValid('<form><field name="model"/><label for="model"/></form>')
         self.assertInvalid(
@@ -2573,7 +2634,7 @@ class TestOptionalViews(ViewCase):
         """ Change active states of v2 and v3, check that the results
         are as expected
         """
-        self.v2.toggle()
+        self.v2.toggle_active()
         context = {'check_view_ids': self.View.search([]).ids}
         arch = self.v0.with_context(context).read_combined(['arch'])['arch']
         self.assertEqual(
@@ -2584,7 +2645,7 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-        self.v3.toggle()
+        self.v3.toggle_active()
         context = {'check_view_ids': self.View.search([]).ids}
         arch = self.v0.with_context(context).read_combined(['arch'])['arch']
         self.assertEqual(
@@ -2596,7 +2657,7 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-        self.v2.toggle()
+        self.v2.toggle_active()
         context = {'check_view_ids': self.View.search([]).ids}
         arch = self.v0.with_context(context).read_combined(['arch'])['arch']
         self.assertEqual(

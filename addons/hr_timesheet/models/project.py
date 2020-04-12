@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 
 class Project(models.Model):
@@ -17,8 +17,13 @@ class Project(models.Model):
         ]"""
     )
     allow_timesheet_timer = fields.Boolean(
-        'Timesheet Timer', compute='_compute_allow_timesheet_timer', readonly=False, store=True,
-        default=True, help="Use a timer to record timesheets on tasks")
+        'Timesheet Timer',
+        compute='_compute_allow_timesheet_timer',
+        readonly=False,
+        store=True,
+        help="Use a timer to record timesheets on tasks")
+
+    timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
 
     _sql_constraints = [
         ('timer_only_when_timesheet', "CHECK((allow_timesheets = 'f' AND allow_timesheet_timer = 'f') OR (allow_timesheets = 't'))", 'The timesheet timer can only be activated on project allowing timesheets.'),
@@ -78,6 +83,25 @@ class Project(models.Model):
     def _init_data_analytic_account(self):
         self.search([('analytic_account_id', '=', False), ('allow_timesheets', '=', True)])._create_analytic_account()
 
+    def unlink(self):
+        """
+        If some projects to unlink have some timesheets entries, these
+        timesheets entries must be unlinked first.
+        In this case, a warning message is displayed through a RedirectWarning
+        and allows the user to see timesheets entries to unlink.
+        """
+        projects_with_timesheets = self.filtered(lambda p: p.timesheet_ids)
+        if projects_with_timesheets:
+            if len(projects_with_timesheets) > 1:
+                warning_msg = _("These projects have some timesheet entries referencing them. Before removing these projects, you have to remove these timesheet entries.")
+            else:
+                warning_msg = _("This project has some timesheet entries referencing it. Before removing this project, you have to remove these timesheet entries.")
+            raise RedirectWarning(
+                warning_msg, self.env.ref('hr_timesheet.timesheet_action_project').id,
+                _('See timesheet entries'), {'active_ids': projects_with_timesheets.ids})
+        return super(Project, self).unlink()
+
+
 class Task(models.Model):
     _name = "project.task"
     _inherit = ["project.task", "timer.mixin"]
@@ -85,11 +109,11 @@ class Task(models.Model):
     analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active')
     allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
-    effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Computed using the sum of the task work done.")
-    total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
+    effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Time spent on this task, excluding its sub-tasks.")
+    total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Time spent on this task, including its sub-tasks.")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
     overtime = fields.Float(compute='_compute_progress_hours', store=True)
-    subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)")
+    subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
 
     # YTI FIXME: Those field seems quite useless
@@ -168,12 +192,13 @@ class Task(models.Model):
 
     def action_view_subtask_timesheet(self):
         self.ensure_one()
+        tasks = self._get_all_subtasks()
         return {
             'type': 'ir.actions.act_window',
             'name': _('Timesheets'),
             'res_model': 'account.analytic.line',
             'view_mode': 'list,form',
-            'domain': [('project_id', '!=', False), ('task_id', 'in', self.child_ids.ids)],
+            'domain': [('project_id', '!=', False), ('task_id', 'in', tasks.ids)],
         }
 
     def write(self, values):
@@ -228,3 +253,21 @@ class Task(models.Model):
                 'default_time_spent': time_spent,
             },
         }
+
+    def unlink(self):
+        """
+        If some tasks to unlink have some timesheets entries, these
+        timesheets entries must be unlinked first.
+        In this case, a warning message is displayed through a RedirectWarning
+        and allows the user to see timesheets entries to unlink.
+        """
+        tasks_with_timesheets = self.filtered(lambda t: t.timesheet_ids)
+        if tasks_with_timesheets:
+            if len(tasks_with_timesheets) > 1:
+                warning_msg = _("These tasks have some timesheet entries referencing them. Before removing these tasks, you have to remove these timesheet entries.")
+            else:
+                warning_msg = _("This task has some timesheet entries referencing it. Before removing this task, you have to remove these timesheet entries.")
+            raise RedirectWarning(
+                warning_msg, self.env.ref('hr_timesheet.timesheet_action_task').id,
+                _('See timesheet entries'), {'active_ids': tasks_with_timesheets.ids})
+        return super(Task, self).unlink()

@@ -143,7 +143,7 @@ var EditorMenuBar = Widget.extend({
             if (!rte.history.getEditableHasUndo().length) {
                 resolve();
             } else {
-                var confirm = Dialog.confirm(this, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
+                var confirm = Dialog.confirm(this, _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."), {
                     confirm_callback: resolve,
                 });
                 confirm.on('closed', self, reject);
@@ -171,8 +171,7 @@ var EditorMenuBar = Widget.extend({
         if (this.snippetsMenu) {
             await this.snippetsMenu.cleanForSave();
         }
-
-        await this._saveCroppedImages();
+        await this.getParent().saveCroppedImages(this.rte.editable());
         await this.rte.save();
 
         if (reload !== false) {
@@ -224,55 +223,6 @@ var EditorMenuBar = Widget.extend({
             window.location.reload(true);
         }
         return new Promise(function(){});
-    },
-    /**
-     * @private
-     */
-    _saveCroppedImages: function () {
-        var self = this;
-        var defs = _.map(this.rte.editable().find('.o_cropped_img_to_save'), function (croppedImg) {
-            var $croppedImg = $(croppedImg);
-            $croppedImg.removeClass('o_cropped_img_to_save');
-
-            var resModel = $croppedImg.data('crop:resModel');
-            var resID = $croppedImg.data('crop:resID');
-            var cropID = $croppedImg.data('crop:id');
-            var mimetype = $croppedImg.data('crop:mimetype');
-            var originalSrc = $croppedImg.data('crop:originalSrc');
-
-            var datas = $croppedImg.attr('src').split(',')[1];
-
-            if (!cropID) {
-                var name = originalSrc + '.crop';
-                return self._rpc({
-                    model: 'ir.attachment',
-                    method: 'create',
-                    args: [{
-                        res_model: resModel,
-                        res_id: resID,
-                        name: name,
-                        datas: datas,
-                        mimetype: mimetype,
-                        url: originalSrc, // To save the original image that was cropped
-                    }],
-                }).then(function (attachmentID) {
-                    return self._rpc({
-                        model: 'ir.attachment',
-                        method: 'generate_access_token',
-                        args: [[attachmentID]],
-                    }).then(function (access_token) {
-                        $croppedImg.attr('src', '/web/image/' + attachmentID + '?access_token=' + access_token[0]);
-                    });
-                });
-            } else {
-                return self._rpc({
-                    model: 'ir.attachment',
-                    method: 'write',
-                    args: [[cropID], {datas: datas}],
-                });
-            }
-        });
-        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------

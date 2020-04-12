@@ -94,7 +94,7 @@
             <field name="name">project.project.form</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <form string="Project">
+                <form string="Project" delete="0">
                     <header>
                         <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only"/>
                     </header>
@@ -107,7 +107,7 @@
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
                         </button>
-                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('rating_percentage_satisfaction', '=', -1)]}" class="oe_stat_button oe_percent" icon="fa-smile-o" groups="project.group_project_rating">
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_status', '=', 'no'), ('rating_percentage_satisfaction', '=', -1)]}" class="oe_stat_button oe_percent" icon="fa-smile-o" groups="project.group_project_rating">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="rating_percentage_satisfaction" nolabel="1"/>
@@ -135,7 +135,7 @@
                             <group>
                                 <group>
                                     <field name="active" invisible="1"/>
-                                    <field name="user_id" string="Project Manager" attrs="{'readonly':[('active','=',False)]}"/>
+                                    <field name="user_id" string="Project Manager" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]"/>
                                     <field name="partner_id" string="Customer"/>
                                 </group>
                                 <group>
@@ -242,7 +242,7 @@
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_needaction==True" decoration-muted="active == False" string="Projects">
+                <tree decoration-bf="message_needaction==True" decoration-muted="active == False" string="Projects" delete="0">
                     <field name="sequence" optional="show" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
@@ -458,7 +458,7 @@
                 <p class="o_view_nocontent_empty_folder">
                     Create a new project
                 </p><p>
-                    Organize your activities (plan tasks, track issues, invoice timesheets) for internal, personal or customer projects.
+                    Or <a type="action" name="%(project.ir_actions_server_project_sample)d" tabindex="-1">activate a sample project</a> to play with.
                 </p>
             </field>
         </record>
@@ -508,16 +508,12 @@
                             <field name="project_id" required="1" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
                             <field name="user_id"
                                 class="o_task_user_field"
-                                options='{"no_open": True}'/>
+                                options='{"no_open": True}' domain="[('share', '=', False)]"/>
                             <field
                                 name="parent_id"
                                 domain="[('parent_id', '=', False)]"
                                 attrs="{'invisible' : [('allow_subtasks', '=', False)]}"
                             />
-                        </group>
-                        <!-- YTI FIXME: Clean these fake groups -->
-                        <group name="sales_order_group"/>
-                        <group name="dates">
                             <field name="date_deadline"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </group>
@@ -574,6 +570,15 @@
             view_mode="form"
             target="new"
         />
+
+        <record id="unlink_project_action" model="ir.actions.server">
+            <field name="name">Delete</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="binding_model_id" ref="project.model_project_project"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_unlink()</field>
+        </record>
 
         <record id="quick_create_task_form" model="ir.ui.view">
             <field name="name">project.task.form.quick_create</field>
@@ -642,7 +647,7 @@
                                             <span class="fa fa-ellipsis-v"/>
                                         </a>
                                         <div class="dropdown-menu" role="menu">
-                                            <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
+                                            <a t-if="widget.editable" role="menuitem" type="set_cover" data-auto-open="1" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
                                             <a name="%(portal.portal_share_action)d" role="menuitem" type="action" class="dropdown-item">Share</a>
                                             <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Task</a>
                                             <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
@@ -758,6 +763,7 @@
                 <pivot string="Project Tasks">
                     <field name="project_id" type="row"/>
                     <field name="stage_id" type="col"/>
+                    <field name="color" invisible="1"/>
                 </pivot>
             </field>
         </record>
@@ -1033,6 +1039,9 @@
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new tag
+              </p>
+              <p>
+                Tags are perfect to categorize your tasks.
               </p>
             </field>
         </record>

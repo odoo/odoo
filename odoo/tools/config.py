@@ -1,11 +1,7 @@
 #odoo.loggers.handlers. -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-try:
-    import configparser as ConfigParser
-except ImportError:
-    import ConfigParser
-
+import configparser as ConfigParser
 import errno
 import logging
 import optparse
@@ -13,6 +9,7 @@ import glob
 import os
 import sys
 import tempfile
+import warnings
 import odoo
 from os.path import expandvars, expanduser, abspath, realpath
 from .. import release, conf, loglevels
@@ -166,7 +163,7 @@ class configmanager(object):
                          dest='test_enable',
                          help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
-                         help="""Comma separated list of spec to filter which tests to execute. Enable unit tests if set.
+                         help="""Comma-separated list of spec to filter which tests to execute. Enable unit tests if set.
                          A filter spec has the format: [-][tag][/module][:class][.method]
                          The '-' specifies if we want to include or exclude tests matching this spec.
                          The tag will match tags added on a class with a @tagged decorator. By default tag value is 'standard' when not
@@ -198,7 +195,7 @@ class configmanager(object):
         # For backward-compatibility, map the old log levels to something
         # quite close.
         levels = [
-            'info', 'debug_rpc', 'warn', 'test', 'critical',
+            'info', 'debug_rpc', 'warn', 'test', 'critical', 'runbot',
             'debug_sql', 'error', 'debug', 'debug_rpc_answer', 'notset'
         ]
         group.add_option('--log-level', dest='log_level', type='choice',
@@ -284,16 +281,18 @@ class configmanager(object):
                          help="Force a limit on the maximum number of records kept in the virtual "
                               "osv_memory tables. The default is False, which means no count-based limit.",
                          type="int")
-        group.add_option("--osv-memory-age-limit", dest="osv_memory_age_limit", my_default=1.0,
-                         help="Force a limit on the maximum age of records kept in the virtual "
-                              "osv_memory tables. This is a decimal value expressed in hours, "
-                              "and the default is 1 hour.",
+        group.add_option("--transient-age-limit", dest="transient_age_limit", my_default=1.0,
+                         help="Time limit (decimal value in hours) records created with a "
+                              "TransientModel (mosly wizard) are kept in the database. Default to 1 hour.",
+                         type="float")
+        group.add_option("--osv-memory-age-limit", dest="osv_memory_age_limit", my_default=False,
+                         help="Deprecated alias to the transient-age-limit option",
                          type="float")
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
                          help="Maximum number of threads processing concurrently cron jobs (default 2).",
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
-                         help="Use the unaccent function provided by the database when available.")
+                         help="Try to enable the unaccent extension when creating new databases.")
         group.add_option("--geoip-db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLite2-City.mmdb',
                          help="Absolute path to the GeoIP database file.")
         parser.add_option_group(group)
@@ -352,9 +351,11 @@ class configmanager(object):
 
             odoo.tools.config.parse_config(sys.argv[1:])
         """
-        self._parse_config(args)
+        opt = self._parse_config(args)
         odoo.netsvc.init_logger()
+        self._warn_deprecated_options()
         odoo.modules.module.initialize_sys_path()
+        return opt
 
     def _parse_config(self, args=None):
         if args is None:
@@ -384,6 +385,10 @@ class configmanager(object):
         die(not opt.save and opt.config and not os.access(opt.config, os.R_OK),
             "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
             "use -s/--save if you want to generate it"% opt.config)
+
+        die(bool(opt.osv_memory_age_limit) and bool(opt.transient_memory_age_limit),
+            "the osv-memory-count-limit option cannot be used with the "
+            "transient-age-limit option, please only use the latter.")
 
         # place/search the config file on Win32 near the server installation
         # (../etc from the server)
@@ -451,7 +456,7 @@ class configmanager(object):
             'stop_after_init', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
             'test_file', 'test_tags',
-            'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
+            'osv_memory_count_limit', 'osv_memory_age_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',
         ]
@@ -528,6 +533,15 @@ class configmanager(object):
         conf.server_wide_modules = [
             m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
+        return opt
+
+    def _warn_deprecated_options(self):
+        if self.options['osv_memory_age_limit']:
+            warnings.warn(
+                "The osv-memory-age-limit is a deprecated alias to "
+                "the transient-age-limit option, please use the latter.",
+                DeprecationWarning)
+            self.options['transient_age_limit'] = self.options.pop('osv_memory_age_limit')
 
     def _is_addons_path(self, path):
         from odoo.modules.module import MANIFEST_NAMES
@@ -711,7 +725,7 @@ class configmanager(object):
 
     def _normalize(self, path):
         if not path:
-            return path
+            return ''
         return realpath(abspath(expanduser(expandvars(path.strip()))))
 
 

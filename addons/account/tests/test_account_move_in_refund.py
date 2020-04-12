@@ -121,7 +121,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             'journal_id': cls.company_data['default_journal_purchase'].id,
             'date': fields.Date.from_string('2019-01-01'),
             'fiscal_position_id': False,
-            'invoice_payment_ref': '',
+            'payment_reference': '',
             'invoice_payment_term_id': cls.pay_terms_a.id,
             'amount_untaxed': 960.0,
             'amount_tax': 168.0,
@@ -189,8 +189,8 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
     def test_in_refund_line_onchange_business_fields_1(self):
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            # Current price_unit is 1000.
-            # We set quantity = 4, discount = 50%, price_unit = 400 because (4 * 400) * 0.5 = 800.
+            # Current price_unit is 800.
+            # We set quantity = 4, discount = 50%, price_unit = 400. The debit/credit fields don't change because (4 * 400) * 0.5 = 800.
             line_form.quantity = 4
             line_form.discount = 50
             line_form.price_unit = 400
@@ -313,7 +313,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
     def test_in_refund_line_onchange_partner_1(self):
         move_form = Form(self.invoice)
         move_form.partner_id = self.partner_b
-        move_form.invoice_payment_ref = 'turlututu'
+        move_form.payment_reference = 'turlututu'
         move_form.save()
 
         self.assertInvoiceValues(self.invoice, [
@@ -337,6 +337,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 **self.term_line_vals_1,
                 'name': 'turlututu',
                 'partner_id': self.partner_b.id,
+                'account_id': self.partner_b.property_account_payable_id.id,
                 'price_unit': -338.4,
                 'price_subtotal': -338.4,
                 'price_total': -338.4,
@@ -346,6 +347,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 **self.term_line_vals_1,
                 'name': 'turlututu',
                 'partner_id': self.partner_b.id,
+                'account_id': self.partner_b.property_account_payable_id.id,
                 'price_unit': -789.6,
                 'price_subtotal': -789.6,
                 'price_total': -789.6,
@@ -355,7 +357,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'partner_id': self.partner_b.id,
-            'invoice_payment_ref': 'turlututu',
+            'payment_reference': 'turlututu',
             'fiscal_position_id': self.fiscal_pos_a.id,
             'invoice_payment_term_id': self.pay_terms_b.id,
             'amount_untaxed': 960.0,
@@ -416,7 +418,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'partner_id': self.partner_b.id,
-            'invoice_payment_ref': 'turlututu',
+            'payment_reference': 'turlututu',
             'fiscal_position_id': self.fiscal_pos_a.id,
             'invoice_payment_term_id': self.pay_terms_b.id,
             'amount_untaxed': 960.0,
@@ -824,7 +826,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
     def test_in_refund_create_1(self):
         # Test creating an account_move with the least information.
         move = self.env['account.move'].create({
-            'type': 'in_refund',
+            'move_type': 'in_refund',
             'partner_id': self.partner_a.id,
             'invoice_date': fields.Date.from_string('2019-01-01'),
             'currency_id': self.currency_data['currency'].id,
@@ -874,7 +876,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
     def test_in_refund_write_1(self):
         # Test creating an account_move with the least information.
         move = self.env['account.move'].create({
-            'type': 'in_refund',
+            'move_type': 'in_refund',
             'partner_id': self.partner_a.id,
             'invoice_date': fields.Date.from_string('2019-01-01'),
             'currency_id': self.currency_data['currency'].id,

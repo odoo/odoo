@@ -87,7 +87,7 @@ an impact on all view types.
 
 * ``edit`` (``form`` & ``list`` & ``gantt``)
 
-  Disable/enable record edition on the view.
+  Disable/enable record editing on the view.
 
 * ``delete`` (``form`` & ``list``)
 
@@ -777,7 +777,7 @@ system. Available semantic components are:
     dialog, ``cancel`` to close the dialog without saving.
 
 ``field``
-  renders (and allow edition of, possibly) a single field of the current
+  renders (and allow editing of, possibly) a single field of the current
   record. Using several times a field in a form view is supported and the fields
   can receive different values for modifiers 'invisible' and 'readonly'. However,
   the behavior is not guaranteed when several fields exist with different values
@@ -828,7 +828,7 @@ system. Available semantic components are:
   ``context``
     for relational fields only, context to pass when fetching possible values
   ``readonly``
-    display the field in both readonly and edition mode, but never make it
+    display the field in both readonly and edit mode, but never make it
     editable
   ``required``
     generates an error and prevents saving the record if the field doesn't
@@ -939,12 +939,14 @@ take the following attributes:
   name of the field that describes if the task has to be excluded
   from the consolidation
   if set to true it displays a striped zone in the consolidation line
-``create``, ``edit``, ``delete``, ``plan``
+``create``, ``cell_create``, ``edit``, ``delete``, ``plan``
     allows *dis*\ abling the corresponding action in the view by setting the
-    corresponding attribute to ``false``.
+    corresponding attribute to ``false`` (default: ``true``).
 
-    * ``create``: If enabled, a "**+**" button will be displayed
-      while hovering on a time slot to create a new record in that slots.
+    * ``create``: If enabled, an ``Add`` button will be available in the control
+      panel to create records.
+    * ``cell_create``: If enabled and ``create`` enabled, a "**+**" button will be
+      displayed while hovering on a time slot cell to create a new record on that slot.
     * ``edit``: If enabled, the opened records will be in edit mode (thus editable).
     * ``plan``: If enabled and ``edit`` enabled, a "magnifying glass" button will be displayed
       on time slots to plan unassigned records into that time slot.
@@ -1070,6 +1072,8 @@ attributes:
 ``stacked``
   only used for ``bar`` charts. If present and set to ``True``, stacks bars
   within a group
+``disable_linking``
+  set to ``True`` to prevent from redirecting clicks on graph to list view
 
 The only allowed element within a graph view is ``field`` which can have the
 following attributes:
@@ -1329,7 +1333,7 @@ root can have the following attributes:
     .. note:: if the ``edit`` attribute is set to ``false``, the ``editable`` option will be ignored.
 
 ``multi_edit``
-    editable or not editable list can activate the multi-edition feature by defining
+    editable or not editable list can activate the multi-editing feature by defining
     the `multi_edit=1`
 
 ``default_order``

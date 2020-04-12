@@ -58,8 +58,7 @@
         <record id="res_partner_bank_rule" model="ir.rule">
             <field name="name">Partner bank company rule</field>
             <field name="model_id" ref="model_res_partner_bank"/>
-            <field name="global" eval="True"/>
-                <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
         </record>
 
         <record id="res_currency_rate_rule" model="ir.rule">

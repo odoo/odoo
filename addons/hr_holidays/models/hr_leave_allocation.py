@@ -77,10 +77,10 @@ class HolidaysAllocation(models.Model):
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-        help="UX field allowing to see and modify the allocation duration, computed in days.")
+        help="If Accrual Allocation: Number of days allocated in addition to the ones you will get via the accrual' system.")
     number_of_hours_display = fields.Float(
         'Duration (hours)', compute='_compute_number_of_hours_display',
-        help="UX field allowing to see and modify the allocation duration, computed in hours.")
+        help="If Accrual Allocation: Number of hours allocated in addition to the ones you will get via the accrual' system.")
     duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display',
         help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit")
     # details
@@ -92,7 +92,7 @@ class HolidaysAllocation(models.Model):
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False,
         help='This area is automaticly filled by the user who validates the allocation with second level (If allocation type need second validation)')
-    validation_type = fields.Selection('Validation Type', related='holiday_status_id.allocation_validation_type', readonly=True)
+    validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.allocation_validation_type', readonly=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
@@ -109,7 +109,7 @@ class HolidaysAllocation(models.Model):
              "\n- By Department: all employees of the specified department"
              "\n- By Employee Tag: all employees of the specific employee group category")
     mode_company_id = fields.Many2one(
-        'res.company', string='Company', readonly=True,
+        'res.company', string='Company Mode', readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     department_id = fields.Many2one(
         'hr.department', string='Department', readonly=True,
@@ -132,6 +132,7 @@ class HolidaysAllocation(models.Model):
         ('days', 'Days')
         ], string="Unit of time added at each interval", default='hours', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     interval_unit = fields.Selection([
+        ('days', 'Days'),
         ('weeks', 'Weeks'),
         ('months', 'Months'),
         ('years', 'Years')
@@ -169,6 +170,8 @@ class HolidaysAllocation(models.Model):
 
             delta = relativedelta(days=0)
 
+            if holiday.interval_unit == 'days':
+                delta = relativedelta(days=holiday.interval_number)
             if holiday.interval_unit == 'weeks':
                 delta = relativedelta(weeks=holiday.interval_number)
             if holiday.interval_unit == 'months':
@@ -305,7 +308,7 @@ class HolidaysAllocation(models.Model):
     def _onchange_type(self):
         if self.holiday_type == 'employee':
             if not self.employee_id:
-                self.employee_id = self.env.user.employee_ids[:1].id
+                self.employee_id = self.env.user.employee_id.id
             self.mode_company_id = False
             self.category_id = False
         elif self.holiday_type == 'company':
@@ -318,7 +321,7 @@ class HolidaysAllocation(models.Model):
             self.mode_company_id = False
             self.category_id = False
             if not self.department_id:
-                self.department_id = self.env.user.employee_ids[:1].department_id.id
+                self.department_id = self.env.user.employee_id.department_id.id
         elif self.holiday_type == 'category':
             self.employee_id = False
             self.mode_company_id = False
@@ -391,7 +394,7 @@ class HolidaysAllocation(models.Model):
                 today = fields.Date.today()
 
                 if vstop < today:
-                    raise ValidationError(_('You can allocate %s only before %s') % (allocation.holiday_status_id.display_name, allocation.holiday_status_id.validity_stop))
+                    raise ValidationError(_('You can allocate %s only before %s.') % (allocation.holiday_status_id.display_name, allocation.holiday_status_id.validity_stop))
 
     @api.model
     def create(self, values):

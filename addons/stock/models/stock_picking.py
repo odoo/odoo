@@ -315,10 +315,8 @@ class Picking(models.Model):
         'stock.picking.type', 'Operation Type',
         required=True, readonly=True,
         states={'draft': [('readonly', False)]})
-    picking_type_code = fields.Selection([
-        ('incoming', 'Vendors'),
-        ('outgoing', 'Customers'),
-        ('internal', 'Internal')], related='picking_type_id.code',
+    picking_type_code = fields.Selection(
+        related='picking_type_id.code',
         readonly=True)
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs',
         readonly=True)
@@ -427,7 +425,7 @@ class Picking(models.Model):
                 ]
             })
 
-    @api.depends('move_type', 'move_lines.state', 'move_lines.picking_id')
+    @api.depends('move_type', 'immediate_transfer', 'move_lines.state', 'move_lines.picking_id')
     def _compute_state(self):
         ''' State of a picking depends on the state of its related stock.move
         - Draft: only used for "planned pickings"
@@ -452,7 +450,9 @@ class Picking(models.Model):
                 picking.state = 'done'
             else:
                 relevant_move_state = picking.move_lines._get_relevant_state_among_moves()
-                if relevant_move_state == 'partially_available':
+                if picking.immediate_transfer and relevant_move_state not in ('draft', 'cancel', 'done'):
+                    picking.state = 'assigned'
+                elif relevant_move_state == 'partially_available':
                     picking.state = 'assigned'
                 else:
                     picking.state = relevant_move_state
@@ -542,6 +542,7 @@ class Picking(models.Model):
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
         if self.picking_type_id:
+            self = self.with_company(self.company_id)
             if self.picking_type_id.default_location_src_id:
                 location_id = self.picking_type_id.default_location_src_id.id
             elif self.partner_id:
@@ -601,11 +602,24 @@ class Picking(models.Model):
                         move[2]['company_id'] = picking_type.company_id.id
         res = super(Picking, self).create(vals)
         res._autoconfirm_picking()
+
+        # set partner as follower
+        if vals.get('partner_id'):
+            for picking in res.filtered(lambda p: p.location_id.usage == 'supplier' or p.location_dest_id.usage == 'customer'):
+                picking.message_subscribe([vals.get('partner_id')])
+
         return res
 
     def write(self, vals):
         if vals.get('picking_type_id') and self.state != 'draft':
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
+        # set partner as a follower and unfollow old partner
+        if vals.get('partner_id'):
+            for picking in self:
+                if picking.location_id.usage == 'supplier' or picking.location_dest_id.usage == 'customer':
+                    if picking.partner_id:
+                        picking.message_unsubscribe(picking.partner_id.ids)
+                    picking.message_subscribe([vals.get('partner_id')])
         res = super(Picking, self).write(vals)
         if vals.get('signature'):
             for picking in self:
@@ -624,7 +638,7 @@ class Picking(models.Model):
 
     def unlink(self):
         self.mapped('move_lines')._action_cancel()
-        self.mapped('move_lines').unlink() # Checks if moves are not done
+        self.with_context(prefetch_fields=False).mapped('move_lines').unlink()  # Checks if moves are not done
         return super(Picking, self).unlink()
 
     def action_assign_partner(self):
@@ -642,9 +656,6 @@ class Picking(models.Model):
         self.mapped('move_lines')\
             .filtered(lambda move: move.state == 'draft')\
             ._action_confirm()
-        # call `_action_assign` on every confirmed move which location_id bypasses the reservation
-        self.filtered(lambda picking: picking.location_id.usage in ('supplier', 'inventory', 'production') and picking.state == 'confirmed')\
-            .mapped('move_lines')._action_assign()
         return True
 
     def action_assign(self):
@@ -767,6 +778,12 @@ class Picking(models.Model):
             all_in = False
         return all_in
 
+    def _get_entire_pack_location_dest(self, move_line_ids):
+        location_dest_ids = move_line_ids.mapped('location_dest_id')
+        if len(location_dest_ids) > 1:
+            return False
+        return location_dest_ids.id
+
     def _check_entire_pack(self):
         """ This function check if entire packs are moved in the picking"""
         for picking in self:
@@ -780,7 +797,7 @@ class Picking(models.Model):
                             'picking_id': picking.id,
                             'package_id': pack.id,
                             'location_id': pack.location_id.id,
-                            'location_dest_id': picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).mapped('location_dest_id')[:1].id,
+                            'location_dest_id': self._get_entire_pack_location_dest(move_lines_to_pack) or picking.location_dest_id.id,
                             'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
                             'company_id': picking.company_id.id,
                         })
@@ -799,6 +816,8 @@ class Picking(models.Model):
                             'result_package_id': pack.id,
                             'package_level_id': package_level_ids[0].id,
                         })
+                        for pl in package_level_ids:
+                            pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
 
     def do_unreserve(self):
         for picking in self:
@@ -806,6 +825,12 @@ class Picking(models.Model):
             picking.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
 
     def button_validate(self):
+        # Clean-up the context key at validation to avoid forcing the creation of immediate
+        # transfers.
+        ctx = dict(self.env.context)
+        ctx.pop('default_immediate_transfer', None)
+        self = self.with_context(ctx)
+
         # Sanity checks.
         pickings_without_moves = self.browse()
         pickings_without_quantities = self.browse()
@@ -815,6 +840,7 @@ class Picking(models.Model):
             if not picking.move_lines and not picking.move_line_ids:
                 pickings_without_moves |= picking
 
+            picking.message_subscribe([self.env.user.partner_id.id])
             picking_type = picking.picking_type_id
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in picking.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel')))
@@ -837,7 +863,7 @@ class Picking(models.Model):
             if pickings_without_moves:
                 raise UserError(_('Please add some items to move.'))
             if pickings_without_quantities:
-                raise UserError(_('You cannot validate a transfer if no quantities are reserved nor done. To force the transfer, switch in edit mode and encode the done quantities.'))
+                raise UserError(self._get_without_quantities_error_message())
             if pickings_without_lots:
                 raise UserError(_('You need to supply a Lot/Serial number for products %s.') % ', '.join(products_without_lots.mapped('display_name')))
         else:
@@ -885,6 +911,18 @@ class Picking(models.Model):
     def _should_show_transfers(self):
         """Whether the different transfers should be displayed on the pre action done wizards."""
         return len(self) > 1
+
+    def _get_without_quantities_error_message(self):
+        """ Returns the error message raised in validation if no quantities are reserved or done.
+        The purpose of this method is to be overridden in case we want to adapt this message.
+
+        :return: Translated error message
+        :rtype: str
+        """
+        return _(
+            'You cannot validate a transfer if no quantities are reserved nor done. '
+            'To force the transfer, switch in edit mode and encode the done quantities.'
+        )
 
     def _action_generate_backorder_wizard(self, show_transfers=False):
         view = self.env.ref('stock.view_backorder_confirmation')
@@ -951,6 +989,10 @@ class Picking(models.Model):
         if the picking is a planned transfer and one of its move was added after the initial
         call to `action_confirm`. Note that `action_confirm` will only work on draft moves.
         """
+        # Clean-up the context key to avoid forcing the creation of immediate transfers.
+        ctx = dict(self.env.context)
+        ctx.pop('default_immediate_transfer', None)
+        self = self.with_context(ctx)
         for picking in self:
             if picking.state in ('done', 'cancel'):
                 continue
@@ -1235,7 +1277,7 @@ class Picking(models.Model):
                     res = self._put_in_pack(move_line_ids)
                 return res
             else:
-                raise UserError(_("Please add 'Done' qantitites to the picking to create a new pack."))
+                raise UserError(_("Please add 'Done' quantities to the picking to create a new pack."))
 
     def button_scrap(self):
         self.ensure_one()
@@ -1294,4 +1336,3 @@ class Picking(models.Model):
             body=message,
         )
         return True
-

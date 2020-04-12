@@ -7,31 +7,38 @@ from odoo.tools.misc import formatLang, format_date
 
 INV_LINES_PER_STUB = 9
 
-class AccountPaymentRegister(models.TransientModel):
-    _inherit = "account.payment.register"
-
-    def _prepare_payment_vals(self, invoices):
-        res = super(AccountPaymentRegister, self)._prepare_payment_vals(invoices)
-        if self.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
-            currency_id = self.env['res.currency'].browse(res['currency_id'])
-            res.update({
-                'check_amount_in_words': currency_id.amount_to_text(res['amount']),
-            })
-        return res
-
 
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    check_amount_in_words = fields.Char(string="Amount in Words")
-    check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing', readonly=1)
-    check_number = fields.Char(string="Check Number", readonly=True, copy=False,
+    check_amount_in_words = fields.Char(string="Amount in Words", store=True, readonly=False,
+        compute='_compute_check_amount_in_words')
+    check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing')
+    check_number = fields.Char(string="Check Number", store=True, readonly=True,
+        compute='_compute_check_number',
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.")
-    check_number_int = fields.Integer(string="Check Number Integer", store=True, compute='_compute_check_number')
+    check_number_int = fields.Integer(string="Check Number Integer", store=True,
+        compute='_compute_check_number_int')
+
+    @api.depends('payment_method_id', 'currency_id', 'amount')
+    def _compute_check_amount_in_words(self):
+        for pay in self:
+            if pay.currency_id and pay.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
+                pay.check_amount_in_words = pay.currency_id.amount_to_text(pay.amount)
+            else:
+                pay.check_amount_in_words = False
+
+    @api.depends('journal_id')
+    def _compute_check_number(self):
+        for pay in self:
+            if pay.journal_id.check_manual_sequencing:
+                pay.check_number = pay.journal_id.check_sequence_id.number_next_actual
+            else:
+                pay.check_number = False
 
     @api.depends('check_number')
-    def _compute_check_number(self):
+    def _compute_check_number_int(self):
         # store check number as int to avoid doing a lot of checks and transformations
         # when calculating next_check_number
         for record in self:
@@ -42,29 +49,8 @@ class AccountPayment(models.Model):
                 number = 0
             record.check_number_int = number
 
-    @api.onchange('amount', 'currency_id')
-    def _onchange_amount(self):
-        res = super(AccountPayment, self)._onchange_amount()
-        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount) if self.currency_id else ''
-        return res
-
-    @api.onchange('journal_id')
-    def _onchange_journal_id(self):
-        if hasattr(super(AccountPayment, self), '_onchange_journal_id'):
-            super(AccountPayment, self)._onchange_journal_id()
-        if self.journal_id.check_manual_sequencing:
-            self.check_number = self.journal_id.check_sequence_id.number_next_actual
-
-    def _check_communication(self, payment_method_id, communication):
-        super(AccountPayment, self)._check_communication(payment_method_id, communication)
-        if payment_method_id == self.env.ref('account_check_printing.account_payment_method_check').id:
-            if not communication:
-                return
-            if len(communication) > 60:
-                raise ValidationError(_("A check memo cannot exceed 60 characters."))
-
-    def post(self):
-        res = super(AccountPayment, self).post()
+    def action_post(self):
+        res = super(AccountPayment, self).action_post()
         payment_method_check = self.env.ref('account_check_printing.account_payment_method_check')
         for payment in self.filtered(lambda p: p.payment_method_id == payment_method_check and p.check_manual_sequencing):
             sequence = payment.journal_id.check_sequence_id
@@ -105,23 +91,18 @@ class AccountPayment(models.Model):
             self.filtered(lambda r: r.state == 'draft').post()
             return self.do_print_checks()
 
-    def unmark_sent(self):
-        self.write({'state': 'posted'})
+    def action_unmark_sent(self):
+        self.write({'is_move_sent': False})
 
     def do_print_checks(self):
         check_layout = self[0].company_id.account_check_printing_layout
-        if check_layout == 'disabled':
+        if not check_layout or check_layout == 'disabled':
             raise UserError(_("You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."))
         report_action = self.env.ref(check_layout, False)
         if not report_action:
             raise UserError(_("Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."))
-        self.write({'state': 'sent'})
+        self.write({'is_move_sent': True})
         return report_action.report_action(self)
-
-
-    def set_check_amount_in_words(self):
-        for payment in self:
-            payment.check_amount_in_words = payment.currency_id.amount_to_text(payment.amount) if payment.currency_id else ''
 
     #######################
     #CHECK PRINTING METHODS
@@ -133,15 +114,15 @@ class AccountPayment(models.Model):
         multi_stub = self.company_id.account_check_printing_multi_stub
         return {
             'sequence_number': self.check_number if (self.journal_id.check_manual_sequencing and self.check_number != 0) else False,
-            'payment_date': format_date(self.env, self.payment_date),
+            'date': format_date(self.env, self.date),
             'partner_id': self.partner_id,
             'partner_name': self.partner_id.name,
             'currency': self.currency_id,
             'state': self.state,
             'amount': formatLang(self.env, self.amount, currency_obj=self.currency_id) if i == 0 else 'VOID',
             'amount_in_word': self._check_fill_line(self.check_amount_in_words) if i == 0 else 'VOID',
-            'memo': self.communication,
-            'stub_cropped': not multi_stub and len(self.invoice_ids) > INV_LINES_PER_STUB,
+            'memo': self.ref,
+            'stub_cropped': not multi_stub and len(self.move_id._get_reconciled_invoices()) > INV_LINES_PER_STUB,
             # If the payment does not reference an invoice, there is no stub line to display
             'stub_lines': p,
         }
@@ -159,14 +140,14 @@ class AccountPayment(models.Model):
         """ The stub is the summary of paid invoices. It may spill on several pages, in which case only the check on
             first page is valid. This function returns a list of stub lines per page.
         """
-        if len(self.reconciled_invoice_ids) == 0:
+        if len(self.move_id._get_reconciled_invoices()) == 0:
             return None
 
         multi_stub = self.company_id.account_check_printing_multi_stub
 
-        invoices = self.reconciled_invoice_ids.sorted(key=lambda r: r.invoice_date_due)
-        debits = invoices.filtered(lambda r: r.type == 'in_invoice')
-        credits = invoices.filtered(lambda r: r.type == 'in_refund')
+        invoices = self.move_id._get_reconciled_invoices().sorted(key=lambda r: r.invoice_date_due)
+        debits = invoices.filtered(lambda r: r.move_type == 'in_invoice')
+        credits = invoices.filtered(lambda r: r.move_type == 'in_refund')
 
         # Prepare the stub lines
         if not credits:
@@ -200,12 +181,12 @@ class AccountPayment(models.Model):
         """ Return the dict used to display an invoice/refund in the stub
         """
         # Find the account.partial.reconcile which are common to the invoice and the payment
-        if invoice.type in ['in_invoice', 'out_refund']:
+        if invoice.move_type in ['in_invoice', 'out_refund']:
             invoice_sign = 1
-            invoice_payment_reconcile = invoice.line_ids.mapped('matched_debit_ids').filtered(lambda r: r.debit_move_id in self.move_line_ids)
+            invoice_payment_reconcile = invoice.line_ids.mapped('matched_debit_ids').filtered(lambda r: r.debit_move_id in self.line_ids)
         else:
             invoice_sign = -1
-            invoice_payment_reconcile = invoice.line_ids.mapped('matched_credit_ids').filtered(lambda r: r.credit_move_id in self.move_line_ids)
+            invoice_payment_reconcile = invoice.line_ids.mapped('matched_credit_ids').filtered(lambda r: r.credit_move_id in self.line_ids)
 
         if self.currency_id != self.journal_id.company_id.currency_id:
             amount_paid = abs(sum(invoice_payment_reconcile.mapped('amount_currency')))

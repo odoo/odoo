@@ -52,7 +52,7 @@
                         <group name="allocation_validation" string="Allocation Requests">
                             <field name="allocation_type" widget="radio" force_save="1"/>
                             <field name="allocation_validation_type" string="Approval" widget="radio" attrs="{'invisible': [('allocation_type', '!=', 'fixed_allocation')]}"/>
-                            <field name="responsible_id"
+                            <field name="responsible_id" domain="[('share', '=', False)]"
                                 attrs="{
                                 'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('allocation_type', '=', 'no'), ('allocation_validation_type', '=', 'manager')],
                                 'required': ['|', ('leave_validation_type', 'in', ['hr', 'both']), '&amp;', ('allocation_type', 'in', ['fixed_allocation', 'fixed']), ('allocation_validation_type', 'in', ['hr', 'both'])]}"/>

@@ -15,15 +15,15 @@
       </xpath>
     </template>
 
-    <template id="qunit_suite" name="im_support_tests" inherit_id="web.qunit_suite">
-      <xpath expr="//t[@t-set='head']" position="inside">
+    <template id="qunit_suite" name="im_support_tests" inherit_id="web.qunit_suite_tests">
+      <xpath expr="." position="inside">
         <script type="text/javascript" src="/im_support/static/tests/helpers/test_utils.js"></script>
         <script type="text/javascript" src="/im_support/static/tests/systray_no_support_tests.js"></script>
       </xpath>
     </template>
 
-    <template id="qunit_mobile_suite" name="im_support_mobile_tests" inherit_id="web.qunit_mobile_suite">
-      <xpath expr="//t[@t-set='head']" position="inside">
+    <template id="qunit_mobile_suite" name="im_support_mobile_tests" inherit_id="web.qunit_mobile_suite_tests">
+      <xpath expr="." position="inside">
         <script type="text/javascript" src="/im_support/static/tests/helpers/test_utils.js"></script>
       </xpath>
     </template>
@@ -39,7 +39,13 @@
               support_origin: 'https://something.com'
             };
           </script>
-          <t t-call="web.js_tests_assets"/>
+          <t t-call-assets="web.assets_common" t-js="false"/>
+          <t t-call-assets="web.assets_backend" t-js="false"/>
+          <t t-call-assets="web.assets_common" t-css="false"/>
+          <t t-call-assets="web.assets_backend" t-css="false"/>
+
+          <t t-call-assets="web.tests_assets" t-js="false"/>
+          <t t-call-assets="web.tests_assets" t-css="false"/>
 
           <script type="text/javascript" src="/im_support/static/tests/helpers/test_utils.js"></script>
           <script type="text/javascript" src="/im_support/static/tests/systray_tests.js"></script>

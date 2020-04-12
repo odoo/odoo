@@ -491,6 +491,17 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        we-multi we-row > div {
+            flex-wrap: wrap;
+
+            we-select .o_we_user_value_widget > div > we-select-menu {
+                top: 0;
+            }
+            we-row {
+                flex-basis: 100%;
+            }
+        }
+
         //----------------------------------------------------------------------
         // Layout Utils
         //----------------------------------------------------------------------
@@ -861,37 +872,42 @@ body.editor_enable.editor_has_snippets {
                 }
             }
 
-            > .o_overlay_move_options {
+            > .o_overlay_options_wrap {
                 @include o-position-absolute($o-we-handles-offset-to-hide, $left: 50%);
                 transform: translate(-50%, -110%);
-                display: flex;
-                align-items: center;
 
-                > * {
-                    margin: 0 2px;
-                    border: 1px solid $o-we-color-text-normal;
-                    border-radius: 20%;
-                    color: $o-we-color-text-normal;
-                    opacity: 0.5;
-                    transition: opacity 400ms ease 0s;
-                    cursor: pointer;
-
-                    &:hover {
-                        opacity: 1;
+                > div {
+                    display: flex;
+                    align-items: center;
+    
+                    > * {
+                        margin: 0 2px;
+                        border: 1px solid $o-we-color-text-normal;
+                        border-radius: 20%;
+                        color: $o-we-color-text-normal;
+                        opacity: 0.5;
+                        transition: opacity 400ms ease 0s;
+                        cursor: pointer;
+    
+                        &:hover {
+                            opacity: 1;
+                        }
                     }
                 }
             }
 
-            .o_move_handle {
-                padding: 2px 4px;
-                cursor: move;
-
-                &::before, &::after {
-                    content: '\f141';
-                    display: block;
-                    font-family: FontAwesome;
-                    font-size: 0.8em;
-                    line-height: 0.35em;
+            .o_overlay_move_options {
+                .o_move_handle {
+                    padding: 3px 4px;
+                    cursor: move;
+    
+                    &::before, &::after {
+                        content: '\f141';
+                        display: block;
+                        font-family: FontAwesome;
+                        font-size: 0.8em;
+                        line-height: 0.4em;
+                    }
                 }
             }
         }
@@ -952,7 +968,7 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
 
-                .o_overlay_move_options {
+                .o_overlay_options_wrap {
                     display: none;
                 }
             }
@@ -1106,4 +1122,9 @@ body.editor_enable.editor_has_snippets {
 .oe_snippet_body {
     opacity: 0;
     animation: fadeInDownSmall 700ms forwards;
+}
+
+// CONTAINER PREVIEW
+.o_container_preview {
+    outline: 2px dashed $o-we-handles-accent-color;
 }

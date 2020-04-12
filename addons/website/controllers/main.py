@@ -68,6 +68,9 @@ class Website(Home):
 
     @http.route('/', type='http', auth="public", website=True, sitemap=True)
     def index(self, **kw):
+        # prefetch all menus (it will prefetch website.page too)
+        top_menu = request.website.menu_id
+
         homepage = request.website.homepage_id
         if homepage and (homepage.sudo().is_visible or request.env.user.has_group('base.group_user')) and homepage.url != '/':
             return request.env['ir.http'].reroute(homepage.url)
@@ -76,7 +79,6 @@ class Website(Home):
         if website_page:
             return website_page
         else:
-            top_menu = request.website.menu_id
             first_menu = top_menu and top_menu.child_id and top_menu.child_id.filtered(lambda menu: menu.is_visible)
             if first_menu and first_menu[0].url not in ('/', '', '#') and (not (first_menu[0].url.startswith(('/?', '/#', ' ')))):
                 return request.redirect(first_menu[0].url)
@@ -216,6 +218,13 @@ class Website(Home):
         }
         return request.render('website.website_info', values)
 
+    @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
+    def social(self, social, **kwargs):
+        url = getattr(request.website, 'social_%s' % social, False)
+        if not url:
+            raise werkzeug.exceptions.NotFound()
+        return request.redirect(url)
+
     # ------------------------------------------------------
     # Edit
     # ------------------------------------------------------
@@ -292,7 +301,7 @@ class Website(Home):
 
     @http.route('/website/toggle_switchable_view', type='json', auth='user', website=True)
     def toggle_switchable_view(self, view_key):
-        request.website.viewref(view_key).toggle()
+        request.website.viewref(view_key).toggle_active()
 
     @http.route('/website/reset_template', type='http', auth='user', methods=['POST'], website=True, csrf=False)
     def reset_template(self, view_id, mode='soft', redirect='/', **kwargs):
@@ -331,6 +340,18 @@ class Website(Home):
             return []
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
+
+    @http.route(['/website/get_seo_data'], type='json', auth="user", website=True)
+    def get_seo_data(self, res_id, res_model):
+        if not request.env.user.has_group('website.group_website_publisher'):
+            raise werkzeug.exceptions.Forbidden()
+
+        fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
+        if res_model == 'website.page':
+            fields.extend(['website_indexed', 'website_id'])
+        res = request.env[res_model].browse(res_id).read(fields)[0]
+        res['has_social_default_image'] = request.website.has_social_default_image
+        return res
 
     @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False)
     def google_console_search(self, key, **kwargs):
@@ -485,7 +506,10 @@ class WebsiteBinary(http.Controller):
                 kw['unique'] = unique
         return Binary().content_image(**kw)
 
+    # if not icon provided in DOM, browser tries to access /favicon.ico, eg when opening an order pdf
     @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False)
     def favicon(self, **kw):
-        # when opening a pdf in chrome, chrome tries to open the default favicon url
-        return self.content_image(model='website', id=str(request.website.id), field='favicon', **kw)
+        website = request.website
+        response = request.redirect(website.image_url(website, 'favicon'), code=301)
+        response.headers['Cache-Control'] = 'public, max-age=%s' % (365 * 24 * 60)
+        return response

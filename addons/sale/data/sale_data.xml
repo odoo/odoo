@@ -16,5 +16,7 @@
             <field name="key">sale.default_confirmation_template</field>
             <field name="value" ref="sale.mail_template_sale_confirmation"/>
         </record>
+
+        <function model="ir.default" name="set" eval="('product.template', 'invoice_policy', 'delivery')"/>
     </data>
 </odoo>

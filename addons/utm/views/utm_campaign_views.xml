@@ -31,7 +31,7 @@
                     </div>
                     <group id="top-group">
                         <field name="name" string="Campaign Name"/>
-                        <field name="user_id"/>
+                        <field name="user_id" domain="[('share', '=', False)]"/>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                     <notebook>
@@ -77,7 +77,6 @@
                                         <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                     </t>
                                     <div role="separator" class="dropdown-divider"/>
-                                    <div role="separator" class="dropdown-header">Colour</div>
                                     <ul class="oe_kanban_colorpicker" data-field="color"/>
                                 </div>
                             </div>

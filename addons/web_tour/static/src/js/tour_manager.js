@@ -2,9 +2,11 @@ odoo.define('web_tour.TourManager', function(require) {
 "use strict";
 
 var core = require('web.core');
+var config = require('web.config');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
 var utils = require('web_tour.utils');
+var TourStepUtils = require('web_tour.TourStepUtils');
 var RainbowMan = require('web.RainbowMan');
 var RunningTourActionHelper = require('web_tour.RunningTourActionHelper');
 var ServicesMixin = require('web.ServicesMixin');
@@ -16,6 +18,7 @@ var _t = core._t;
 var RUNNING_TOUR_TIMEOUT = 10000;
 
 var get_step_key = utils.get_step_key;
+var get_debugging_key = utils.get_debugging_key;
 var get_running_key = utils.get_running_key;
 var get_running_delay_key = utils.get_running_delay_key;
 var get_first_visible_element = utils.get_first_visible_element;
@@ -30,7 +33,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this.$body = $('body');
         this.active_tooltips = {};
         this.tours = {};
-        this.consumed_tours = consumed_tours || [];
+        // remove the tours being debug from the list of consumed tours
+        this.consumed_tours = (consumed_tours || []).filter(tourName => {
+            return !local_storage.getItem(get_debugging_key(tourName));
+        });
         this.running_tour = local_storage.getItem(get_running_key());
         this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 0;
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
@@ -49,6 +55,9 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      *        the url to load when manually running the tour
      * @param {boolean} [options.rainbowMan=true]
      *        whether or not the rainbowman must be shown at the end of the tour
+     * @param {boolean} [options.sequence=1000]
+     *        priority sequence of the tour (lowest is first, tours with the same
+     *        sequence will be executed in a non deterministic order).
      * @param {Promise} [options.wait_for]
      *        indicates when the tour can be started
      * @param {Object[]} steps - steps' descriptions, each step being an object
@@ -69,6 +78,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             steps: steps,
             url: options.url,
             rainbowMan: options.rainbowMan === undefined ? true : !!options.rainbowMan,
+            sequence: options.sequence || 1000,
             test: options.test,
             wait_for: options.wait_for || Promise.resolve(),
         };
@@ -111,12 +121,13 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _register: function (do_update, tour, name) {
         if (tour.ready) return Promise.resolve();
 
-        var tour_is_consumed = _.contains(this.consumed_tours, name);
+        const tour_is_consumed = this._isTourConsumed(name);
 
         return tour.wait_for.then((function () {
             tour.current_step = parseInt(local_storage.getItem(get_step_key(name))) || 0;
             tour.steps = _.filter(tour.steps, (function (step) {
-                return !step.edition || step.edition === this.edition;
+                return (!step.edition || step.edition === this.edition) &&
+                    (step.mobile === undefined || step.mobile === config.device.isMobile);
             }).bind(this));
 
             if (tour_is_consumed || tour.current_step >= tour.steps.length) {
@@ -126,10 +137,35 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
 
             tour.ready = true;
 
-            if (do_update && (this.running_tour === name || (!this.running_tour && !tour.test && !tour_is_consumed))) {
+            const debuggingTour = local_storage.getItem(get_debugging_key(name));
+            if (debuggingTour ||
+                (do_update && (this.running_tour === name ||
+                              (!this.running_tour && !tour.test && !tour_is_consumed)))) {
                 this._to_next_step(name, 0);
             }
         }).bind(this));
+    },
+    /**
+     * Resets the given tour to its initial step, and prevent it from being
+     * marked as consumed at reload, by the include in tour_disable.js
+     *
+     * @param {string} tourName
+     */
+    reset: function (tourName) {
+        // remove it from the list of consumed tours
+        const index = this.consumed_tours.indexOf(tourName);
+        if (index >= 0) {
+            this.consumed_tours.splice(index, 1);
+        }
+        // mark it as being debugged
+        local_storage.setItem(get_debugging_key(tourName), true);
+        // reset it to the first step
+        const tour = this.tours[tourName];
+        tour.current_step = 0;
+        local_storage.removeItem(get_step_key(tourName));
+        this._to_next_step(tourName, 0);
+        // redirect to its starting point (or /web by default)
+        window.location.href = window.location.origin + (tour.url || '/web');
     },
     run: function (tour_name, step_delay) {
         console.log(_.str.sprintf("Preparing tour %s", tour_name));
@@ -195,7 +231,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 self._check_for_tooltip(self.active_tooltips[tour_name], tour_name);
             });
         } else {
-            for (var tourName in this.active_tooltips) {
+            const sortedTooltips = Object.keys(this.active_tooltips).sort(
+                (a, b) => this.tours[a].sequence - this.tours[b].sequence
+            );
+            for (const tourName of sortedTooltips) {
                 var tip = this.active_tooltips[tourName];
                 var activated = this._check_for_tooltip(tip, tourName);
                 if (activated) {
@@ -339,6 +378,14 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
         this.active_tooltips[tour_name] = tour.steps[tour.current_step];
     },
+    /**
+     * @private
+     * @param {string} tourName
+     * @returns {boolean}
+     */
+    _isTourConsumed(tourName) {
+        return this.consumed_tours.includes(tourName);
+    },
     _consume_tour: function (tour_name, error) {
         delete this.active_tooltips[tour_name];
         //display rainbow at the end of any tour
@@ -352,6 +399,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));
+        local_storage.removeItem(get_debugging_key(tour_name));
         if (this.running_tour === tour_name) {
             this._stop_running_tour_timeout();
             local_storage.removeItem(get_running_key());
@@ -425,30 +473,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             }
         }
     },
-
-    /**
-     * Tour predefined steps
-     */
-    STEPS: {
-        SHOW_APPS_MENU_ITEM: {
-            edition: 'community',
-            trigger: '.o_menu_apps a',
-            auto: true,
-            position: "bottom",
-        },
-
-        TOGGLE_HOME_MENU: {
-            edition: "enterprise",
-            trigger: ".o_main_navbar .o_menu_toggle",
-            content: _t('Click on the <i>Home icon</i> to navigate across apps.'),
-            position: "bottom",
-        },
-
-        WEBSITE_NEW_PAGE: {
-            trigger: "#new-content-menu > a",
-            auto: true,
-            position: "bottom",
-        },
-    },
+    stepUtils: new TourStepUtils(this)
 });
 });

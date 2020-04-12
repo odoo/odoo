@@ -5,53 +5,47 @@
 """
 Miscellaneous tools used by OpenERP.
 """
-from functools import wraps
-import babel
-import babel.dates
-from contextlib import contextmanager
+import cProfile
+import collections
 import datetime
-import math
-import subprocess
 import io
 import os
-
-import collections
-import passlib.utils
 import pickle as pickle_
-import pytz
 import re
 import socket
+import subprocess
 import sys
 import threading
 import time
+import traceback
 import types
 import unicodedata
-import werkzeug.utils
 import zipfile
-from collections import defaultdict, Iterable, Mapping, MutableMapping, MutableSet, OrderedDict
-from itertools import islice, groupby as itergroupby, repeat
-from lxml import etree
-
-from .which import which
-import traceback
+from collections import defaultdict, OrderedDict
+from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
+from contextlib import contextmanager
+from difflib import HtmlDiff
+from functools import wraps
+from itertools import islice, groupby as itergroupby
 from operator import itemgetter
 
-try:
-    # pylint: disable=bad-python3-import
-    import cProfile
-except ImportError:
-    import profile as cProfile
-
-
-from .config import config
-from .cache import *
-from .parse_version import parse_version
-from . import pycompat
+import babel
+import babel.dates
+import passlib.utils
+import pytz
+import werkzeug.utils
+from lxml import etree
 
 import odoo
+import odoo.addons
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
+from . import pycompat
+from .cache import *
+from .config import config
+from .parse_version import parse_version
+from .which import which
 
 _logger = logging.getLogger(__name__)
 
@@ -157,7 +151,6 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 
     @return fileobject if pathinfo is False else (fileobject, filepath)
     """
-    import odoo.modules as addons
     adps = odoo.addons.__path__
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
@@ -205,7 +198,6 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 def _fileopen(path, mode, basedir, pathinfo, basename=None):
     name = os.path.normpath(os.path.normcase(os.path.join(basedir, path)))
 
-    import odoo.modules as addons
     paths = odoo.addons.__path__ + [config['root_path']]
     for addons_path in paths:
         addons_path = os.path.normpath(os.path.normcase(addons_path)) + os.sep
@@ -1470,3 +1462,66 @@ class DotDict(dict):
     def __getattr__(self, attrib):
         val = self.get(attrib)
         return DotDict(val) if type(val) is dict else val
+
+
+def get_diff(data_from, data_to, custom_style=False):
+    """
+    Return, in an HTML table, the diff between two texts.
+
+    :param tuple data_from: tuple(text, name), name will be used as table header
+    :param tuple data_to: tuple(text, name), name will be used as table header
+    :param tuple custom_style: string, style css including <style> tag.
+    :return: a string containing the diff in an HTML table format.
+    """
+    def handle_style(html_diff, custom_style):
+        """ The HtmlDiff lib will add some usefull classes on the DOM to
+        identify elements. Simply append to those classes some BS4 ones.
+        For the table to fit the modal width, some custom style is needed.
+        """
+        to_append = {
+            'diff_header': 'bg-600 text-center align-top px-2',
+            'diff_next': 'd-none',
+            'diff_add': 'bg-success',
+            'diff_chg': 'bg-warning',
+            'diff_sub': 'bg-danger',
+        }
+        for old, new in to_append.items():
+            html_diff = html_diff.replace(old, "%s %s" % (old, new))
+        html_diff = html_diff.replace('nowrap', '')
+        html_diff += custom_style or '''
+            <style>
+                table.diff { width: 100%; }
+                table.diff th.diff_header { width: 50%; }
+                table.diff td.diff_header { white-space: nowrap; }
+                table.diff td { word-break: break-all; }
+            </style>
+        '''
+        return html_diff
+
+    diff = HtmlDiff(tabsize=2).make_table(
+        data_from[0].splitlines(),
+        data_to[0].splitlines(),
+        data_from[1],
+        data_to[1],
+        context=True,  # Show only diff lines, not all the code
+        numlines=3,
+    )
+    return handle_style(diff, custom_style)
+
+
+def traverse_containers(val, type_):
+    """ Yields atoms filtered by specified type_ (or type tuple), traverses
+    through standard containers (non-string mappings or sequences) *unless*
+    they're selected by the type filter
+    """
+    if isinstance(val, type_):
+        yield val
+    elif isinstance(val, (str, bytes)):
+        return
+    elif isinstance(val, Mapping):
+        for k, v in val.items():
+            yield from traverse_containers(k, type_)
+            yield from traverse_containers(v, type_)
+    elif isinstance(val, collections.abc.Sequence):
+        for v in val:
+            yield from traverse_containers(v, type_)

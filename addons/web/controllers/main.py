@@ -660,6 +660,8 @@ class GroupsTreeNode:
         """ Return field names of exported field having a group operator """
         aggregated_field_names = []
         for field_name in self._export_field_names:
+            if field_name == '.id':
+                field_name = 'id'
             if '/' in field_name:
                 # Currently no support of aggregated value for nested record fields
                 # e.g. line_ids/analytic_line_ids/amount
@@ -1196,12 +1198,12 @@ class Session(http.Controller):
         try:
             if request.env['res.users'].change_password(old_password, new_password):
                 return {'new_password':new_password}
-        except UserError as e:
-            msg = e.name
         except AccessDenied as e:
             msg = e.args[0]
             if msg == AccessDenied().args[0]:
                 msg = _('The old password you provided is incorrect, your password was not changed.')
+        except UserError as e:
+            msg = e.args[0]
         return {'title': _('Change Password'), 'error': msg}
 
     @http.route('/web/session/get_lang_list', type='json', auth="none")
@@ -1464,6 +1466,10 @@ class Binary(http.Controller):
                 placeholder_content = Binary.placeholder(image=placeholder_filename)
             else:
                 placeholder_content = Binary.placeholder()
+            # Since we set a placeholder for any missing image, the status must be 200. In case one
+            # wants to configure a specific 404 page (e.g. though nginx), a 404 status will cause
+            # troubles.
+            status = 200
             image_base64 = base64.b64encode(placeholder_content)
 
             if not (width or height):
@@ -1853,7 +1859,7 @@ class ExportFormat(object):
         if not import_compat and groupby:
             groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
             domain = [('id', 'in', ids)] if ids else domain
-            groups_data = Model.read_group(domain, field_names, groupby, lazy=False)
+            groups_data = Model.read_group(domain, [x if x != '.id' else 'id' for x in field_names], groupby, lazy=False)
 
             # read_group(lazy=False) returns a dict only for final groups (with actual data),
             # not for intermediary groups. The full group tree must be re-constructed.
@@ -1985,7 +1991,7 @@ class ReportController(http.Controller):
     # Misc. route utils
     #------------------------------------------------------
     @http.route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="public")
-    def report_barcode(self, type, value, width=600, height=100, humanreadable=0, quiet=1):
+    def report_barcode(self, type, value, width=600, height=100, humanreadable=0, quiet=1, mask=None):
         """Contoller able to render barcode images thanks to reportlab.
         Samples:
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
@@ -1999,10 +2005,13 @@ class ReportController(http.Controller):
         at the bottom of the output image
         :param quiet: Accepted values: 0 (default) or 1. 1 will display white
         margins on left and right.
+        :param mask: The mask code to be used when rendering this QR-code.
+                     Masks allow adding elements on top of the generated image,
+                     such as the Swiss cross in the center of QR-bill codes.
         """
         try:
             barcode = request.env['ir.actions.report'].barcode(type, value, width=width,
-                height=height, humanreadable=humanreadable, quiet=quiet)
+                height=height, humanreadable=humanreadable, quiet=quiet, mask=mask)
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 

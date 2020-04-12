@@ -8,7 +8,7 @@
                         class="btn btn-primary btn-lg"
                         t-att-href="'/slides_survey/slide/get_certification_url?slide_id=%s' %(slide.id)">
                         <i class="fa fa-fw fa-graduation-cap" role="img"/>
-                        <t t-if="slide.channel_id.is_member">Begin Certification</t>
+                        <t t-if="slide.channel_id.is_member and slide.channel_id.active">Begin Certification</t>
                         <t t-else="">Test Certification</t>
                     </a>
                 </div>

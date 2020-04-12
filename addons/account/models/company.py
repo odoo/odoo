@@ -45,6 +45,7 @@ class ResCompany(models.Model):
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
     default_cash_difference_income_account_id = fields.Many2one('account.account', string="Cash Difference Income Account")
     default_cash_difference_expense_account_id = fields.Many2one('account.account', string="Cash Difference Expense Account")
+    account_journal_suspense_account_id = fields.Many2one('account.account', string='Journal Suspense Account')
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
@@ -64,14 +65,11 @@ class ResCompany(models.Model):
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
-    account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold", help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
-                                                                                                       This is useful if you install accounting after having used invoicing for some time and
-                                                                                                       don't want to reconcile all the past payments with bank statements.""")
 
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
-    qr_code = fields.Boolean(string='Display SEPA QR code')
+    qr_code = fields.Boolean(string='Display QR-code on invoices')
 
     invoice_is_email = fields.Boolean('Email by default', default=True)
     invoice_is_print = fields.Boolean('Print by default', default=True)
@@ -107,21 +105,25 @@ class ResCompany(models.Model):
         domain="[('internal_group', '=', 'asset'), ('internal_type', 'not in', ('receivable', 'payable')), ('reconcile', '=', True), ('company_id', '=', id)]")
     accrual_default_journal_id = fields.Many2one('account.journal', help="Journal used by default for moving the period of an entry", domain="[('type', '=', 'general')]")
 
+    # Technical field to hide country specific fields in company form view
+    country_code = fields.Char(related='country_id.code')
+
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):
         # if the user explicitly chooses the 29th of February we allow it:
         # there is no "fiscalyear_last_year" so we do not know his intentions.
-        if self.fiscalyear_last_day == 29 and self.fiscalyear_last_month == '2':
-            return
+        for rec in self:
+            if rec.fiscalyear_last_day == 29 and rec.fiscalyear_last_month == '2':
+                continue
 
-        if self.account_opening_date:
-            year = self.account_opening_date.year
-        else:
-            year = datetime.now().year
+            if rec.account_opening_date:
+                year = rec.account_opening_date.year
+            else:
+                year = datetime.now().year
 
-        max_day = calendar.monthrange(year, int(self.fiscalyear_last_month))[1]
-        if self.fiscalyear_last_day > max_day:
-            raise ValidationError(_("Invalid fiscal year last day"))
+            max_day = calendar.monthrange(year, int(rec.fiscalyear_last_month))[1]
+            if rec.fiscalyear_last_day > max_day:
+                raise ValidationError(_("Invalid fiscal year last day"))
 
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
@@ -451,8 +453,8 @@ class ResCompany(models.Model):
                         "\nPlease go to Configuration > Journals.")
                 raise RedirectWarning(msg, action.id, _("Go to the journal configuration"))
 
-            sample_invoice = self.env['account.move'].with_context(default_type='out_invoice', default_journal_id=journal.id).create({
-                'invoice_payment_ref': _('Sample invoice'),
+            sample_invoice = self.env['account.move'].with_context(default_move_type='out_invoice', default_journal_id=journal.id).create({
+                'payment_reference': _('Sample invoice'),
                 'partner_id': partner.id,
                 'invoice_line_ids': [
                     (0, 0, {

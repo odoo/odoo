@@ -6,7 +6,6 @@ class ResCompany(models.Model):
 
     _inherit = "res.company"
 
-    l10n_ar_country_code = fields.Char(related='country_id.code', string='Country Code')
     l10n_ar_gross_income_number = fields.Char(
         related='partner_id.l10n_ar_gross_income_number', string='Gross Income Number', readonly=False,
         help="This field is required in order to print the invoice report properly")

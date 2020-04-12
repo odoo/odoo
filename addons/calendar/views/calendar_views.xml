@@ -72,7 +72,6 @@
                 <field name="stop" string="End Date"/>
                 <field name="partner_ids" readonly="1"/>
                 <field name="location"/>
-                <field name="state" invisible="True"/>
                 <field name="duration" widget="float_time" readonly="1"/>
                 <field name="message_needaction" invisible="1"/>
             </tree>
@@ -85,6 +84,10 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <form string="Meetings">
+                <div attrs="{'invisible': [('recurrence_id','=',False)]}" class="alert alert-info oe_edit_only" role="status">
+                    <p>Edit recurring event</p>
+                    <field name="recurrence_update" widget="radio"/>
+                </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button string="Document" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
@@ -92,8 +95,6 @@
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="res_model" invisible="1" />
                     <field name="res_id" invisible="1" />
-                    <field name="state" invisible="1"/>
-                    <field name="is_attendee" invisible="1"/>
                     <field name="attendee_status" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <div class="oe_title">
@@ -113,22 +114,14 @@
                     </div>
                     <notebook>
                         <page name="page_details" string="Meeting Details">
-                            <group attrs="{'invisible': [('recurrency','==',False)]}" class="oe_edit_only ">
-                                <p class='alert alert-warning' role="status"> This event is linked to a recurrence...<br/>
-                                    <button type="object" name="action_detach_recurring_event"  string="Update only this instance"  help="Click here to update only this instance and not all recurrences. " class="oe_link"/>
-                                </p>
-                            </group>
                             <group>
                                 <group>
-                                    <field name="start" attrs="{'invisible': True}"/>
-                                    <field name="stop" attrs="{'invisible': True}"/>
-                                    <field name="id" attrs="{'invisible': True}"/>
 
-                                    <field name="start_date" string="Starting at" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}" force_save="1"/>
-                                    <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}" force_save="1"/>
+                                    <field name="start_date" string="Starting at" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)]}" force_save="1"/>
+                                    <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)]}" force_save="1"/>
 
-                                    <field name="start_datetime" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
-                                    <field name="stop_datetime" invisible="1"/>
+                                    <field name="start" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)]}"/>
+                                    <field name="stop" invisible="1"/>
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">
                                         <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
@@ -165,7 +158,7 @@
                                             <div class="o_row">
                                                 <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>
                                                 <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>
-                                                <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date'), ('recurrency', '=', True)]}"/>
+                                                <field name="until" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date'), ('recurrency', '=', True)]}"/>
                                             </div>
                                         </group>
                                         <group attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}" name="weekdays">
@@ -187,7 +180,7 @@
                                                 <field name="byday" string="The"
                                                     attrs="{'required': [('recurrency', '=', True), ('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
                                                             'invisible': [('month_by', '!=', 'day')]}"/>
-                                                <field name="week_list" nolabel="1"
+                                                <field name="weekday" nolabel="1"
                                                     attrs="{'required': [('recurrency', '=', True), ('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
                                                             'invisible': [('month_by', '!=', 'day')]}"/>
                                             </div>
@@ -197,7 +190,7 @@
                                 <group>
                                     <field name="privacy"/>
                                     <field name="show_as"/>
-                                    <field name="recurrent_id" invisible="1" />
+                                    <field name="recurrence_id" invisible="1" />
                                 </group>
                             </group>
                         </page>
@@ -267,6 +260,10 @@
                 <field name="partner_ids" widget="many2many_tags_avatar" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_128"/>
                 <field name="is_highlighted" invisible="1"/>
                 <field name="description"/>
+                <field name="privacy"/>
+                <!-- For recurrence update Dialog -->
+                <field name="recurrency" invisible="1"/>
+                <field name="recurrence_update" invisible="1"/>
             </calendar>
         </field>
     </record>
@@ -282,6 +279,7 @@
                 <field name="user_id"/>
                 <field name="show_as"/>
                 <field name="privacy" string="Privacy"/>
+                <!-- TODO clean this filter and context key -->
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>

@@ -126,7 +126,7 @@ class StockWarehouse(models.Model):
             'manufacture_mto_pull_id': {
                 'depends': ['manufacture_steps', 'manufacture_to_resupply'],
                 'create_values': {
-                    'procure_method': 'make_to_order',
+                    'procure_method': 'mts_else_mto',
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
@@ -256,8 +256,14 @@ class StockWarehouse(models.Model):
     def _get_picking_type_update_values(self):
         data = super(StockWarehouse, self)._get_picking_type_update_values()
         data.update({
-            'pbm_type_id': {'active': self.manufacture_to_resupply and self.manufacture_steps in ('pbm', 'pbm_sam')},
-            'sam_type_id': {'active': self.manufacture_to_resupply and self.manufacture_steps == 'pbm_sam'},
+            'pbm_type_id': {
+                'active': self.manufacture_to_resupply and self.manufacture_steps in ('pbm', 'pbm_sam'),
+                'barcode': self.code.replace(" ", "").upper() + "-PC",
+            },
+            'sam_type_id': {
+                'active': self.manufacture_to_resupply and self.manufacture_steps == 'pbm_sam',
+                'barcode': self.code.replace(" ", "").upper() + "-SFP",
+            },
             'manu_type_id': {
                 'active': self.manufacture_to_resupply,
                 'default_location_src_id': self.manufacture_steps in ('pbm', 'pbm_sam') and self.pbm_loc_id.id or self.lot_stock_id.id,

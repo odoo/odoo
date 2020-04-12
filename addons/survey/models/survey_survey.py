@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 import json
 import random
 import uuid
 import werkzeug
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import AccessError
 from odoo.osv import expression
+from odoo.tools import is_html_empty
 
 
 class Survey(models.Model):
@@ -24,6 +22,27 @@ class Survey(models.Model):
 
     def _get_default_access_token(self):
         return str(uuid.uuid4())
+
+    def _get_default_session_code(self):
+        """ Attempt to generate a session code for our survey.
+        The method will first try to generate 20 codes with 4 digits each and check if any are colliding.
+        If we have at least one non-colliding code, we use it.
+        If all 20 generated codes are colliding, we try with 20 codes of 5 digits,
+        then 6, ... up to 10 digits. """
+
+        for digits_count in range(4, 10):
+            range_lower_bound = 1 * (10 ** (digits_count - 1))
+            range_upper_bound = (range_lower_bound * 10) - 1
+            code_candidates = set([str(random.randint(range_lower_bound, range_upper_bound)) for i in range(20)])
+            colliding_codes = self.sudo().search_read(
+                [('session_code', 'in', list(code_candidates))],
+                ['session_code']
+            )
+            code_candidates -= set([colliding_code['session_code'] for colliding_code in colliding_codes])
+            if code_candidates:
+                return list(code_candidates)[0]
+
+        return False  # could not generate a code
 
     # description
     title = fields.Char('Survey Title', required=True, translate=True)
@@ -83,7 +102,8 @@ class Survey(models.Model):
         string="Scoring", required=True, default='no_scoring')
     scoring_success_min = fields.Float('Success %', default=80.0)
     # attendees context: attempts and time limitation
-    is_attempts_limited = fields.Boolean('Limited number of attempts', help="Check this option if you want to limit the number of attempts per user")
+    is_attempts_limited = fields.Boolean('Limited number of attempts', help="Check this option if you want to limit the number of attempts per user",
+                                         compute="_compute_is_attempts_limited", store=True, readonly=False)
     attempts_limit = fields.Integer('Number of attempts', default=1)
     is_time_limited = fields.Boolean('The survey is limited in time')
     time_limit = fields.Float("Time limit (minutes)")
@@ -114,19 +134,27 @@ class Survey(models.Model):
         ('ready', 'Ready'),
         ('in_progress', 'In Progress'),
         ], string="Session State", copy=False)
+    session_code = fields.Char('Session Code', default=lambda self: self._get_default_session_code(), copy=False,
+        help="This code will be used by your attendees to reach your session. Feel free to customize it however you like!")
+    session_link = fields.Char('Session Link', compute='_compute_session_link')
     # live sessions - current question fields
     session_question_id = fields.Many2one('survey.question', string="Current Question", copy=False,
         help="The current question of the survey session.")
+    session_start_time = fields.Datetime("Current Session Start Time", copy=False)
     session_question_start_time = fields.Datetime("Current Question Start Time", copy=False,
         help="The time at which the current question has started, used to handle the timer for attendees.")
-    session_question_answer_count = fields.Integer("Answers Count", compute='_compute_session_question_answer_count')
+    session_answer_count = fields.Integer("Answers Count", compute='_compute_session_answer_count')
+    session_question_answer_count = fields.Integer("Question Answers Count", compute='_compute_session_question_answer_count')
     # live sessions - settings
-    session_show_ranking = fields.Boolean("Show Session Ranking", compute='_compute_session_show_ranking',
-        help="This mode will display a ranking chart of all attendees.")
+    session_show_leaderboard = fields.Boolean("Show Session Leaderboard", compute='_compute_session_show_leaderboard',
+        help="Whether or not we want to show the attendees leaderboard for this survey.")
     session_speed_rating = fields.Boolean("Reward quick answers", help="Attendees get more points if they answer quickly")
+    # conditional questions management
+    has_conditional_questions = fields.Boolean("Contains conditional questions", compute="_compute_has_conditional_questions")
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique'),
+        ('session_code_unique', 'unique(session_code)', 'Session code should be unique'),
         ('certification_check', "CHECK( scoring_type!='no_scoring' OR certification=False )",
             'You can only create certifications for surveys that have a scoring mechanism.'),
         ('time_limit_check', "CHECK( (is_time_limited=False) OR (time_limit is not null AND time_limit > 0) )",
@@ -176,27 +204,77 @@ class Survey(models.Model):
             survey.page_ids = survey.question_and_page_ids.filtered(lambda question: question.is_page)
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
 
-    @api.depends('session_question_id', 'user_input_ids.user_input_line_ids')
+    @api.depends('question_and_page_ids.is_conditional', 'users_login_required', 'access_mode')
+    def _compute_is_attempts_limited(self):
+        for survey in self:
+            if any(question.is_conditional for question in survey.question_and_page_ids)\
+                    or (survey.access_mode == 'public' and not survey.users_login_required)\
+                    or survey.is_attempts_limited is None:
+                survey.is_attempts_limited = False
+
+    @api.depends('session_start_time', 'user_input_ids')
+    def _compute_session_answer_count(self):
+        """ We have to loop since our result is dependent of the survey.session_start_time.
+        This field is currently used to display the count about a single survey, in the
+        context of sessions, so it should not matter too much. """
+
+        for survey in self:
+            answer_count = 0
+            input_count = self.env['survey.user_input'].read_group(
+                [('survey_id', '=', survey.id),
+                 ('is_session_answer', '=', True),
+                 ('state', '!=', 'done'),
+                 ('create_date', '>=', survey.session_start_time)],
+                ['create_uid:count'],
+                ['survey_id'],
+            )
+            if input_count:
+                answer_count = input_count[0].get('create_uid', 0)
+
+            survey.session_answer_count = answer_count
+
+    @api.depends('session_question_id', 'session_start_time', 'user_input_ids.user_input_line_ids')
     def _compute_session_question_answer_count(self):
-        """ We have to loop since our result is dependent of the survey.session_question_id.
+        """ We have to loop since our result is dependent of the survey.session_question_id and
+        the survey.session_start_time.
         This field is currently used to display the count about a single survey, in the
         context of sessions, so it should not matter too much. """
         for survey in self:
             answer_count = 0
             input_line_count = self.env['survey.user_input.line'].read_group(
-                [('question_id', '=', survey.session_question_id.id), ('survey_id', '=', survey.id)],
+                [('question_id', '=', survey.session_question_id.id),
+                 ('survey_id', '=', survey.id),
+                 ('create_date', '>=', survey.session_start_time)],
                 ['user_input_id:count_distinct'],
                 ['question_id'],
             )
             if input_line_count:
-                answer_count = input_line_count[0].get('user_input_id')
+                answer_count = input_line_count[0].get('user_input_id', 0)
 
             survey.session_question_answer_count = answer_count
 
-    @api.depends('scoring_type')
-    def _compute_session_show_ranking(self):
+    @api.depends('session_code')
+    def _compute_session_link(self):
         for survey in self:
-            survey.session_show_ranking = survey.scoring_type != 'no_scoring'
+            if survey.session_code:
+                survey.session_link = werkzeug.urls.url_join(
+                    survey.get_base_url(),
+                    '/s/%s' % survey.session_code)
+            else:
+                survey.session_link = werkzeug.urls.url_join(
+                    survey.get_base_url(),
+                    survey.get_start_url())
+
+    @api.depends('scoring_type', 'question_and_page_ids.save_as_nickname')
+    def _compute_session_show_leaderboard(self):
+        for survey in self:
+            survey.session_show_leaderboard = survey.scoring_type != 'no_scoring' and \
+                any(question.save_as_nickname for question in survey.question_and_page_ids)
+
+    @api.depends('question_and_page_ids.is_conditional')
+    def _compute_has_conditional_questions(self):
+        for survey in self:
+            survey.has_conditional_questions = any(question.is_conditional for question in survey.question_and_page_ids)
 
     @api.onchange('scoring_success_min')
     def _onchange_scoring_success_min(self):
@@ -208,11 +286,6 @@ class Survey(models.Model):
         if self.scoring_type == 'no_scoring':
             self.certification = False
             self.is_time_limited = False
-
-    @api.onchange('users_login_required', 'access_mode')
-    def _onchange_access_mode(self):
-        if self.access_mode == 'public' and not self.users_login_required:
-            self.is_attempts_limited = False
 
     @api.onchange('attempts_limit')
     def _onchange_attempts_limit(self):
@@ -254,6 +327,12 @@ class Survey(models.Model):
         title = _("%s (copy)") % (self.title)
         default = dict(default or {}, title=title)
         return super(Survey, self).copy_data(default)
+
+    def toggle_active(self):
+        super(Survey, self).toggle_active()
+        activated = self.filtered(lambda survey: survey.active)
+        activated.mapped('certification_badge_id').action_unarchive()
+        (self - activated).mapped('certification_badge_id').action_archive()
 
     # ------------------------------------------------------------
     # ANSWER MANAGEMENT
@@ -372,6 +451,30 @@ class Survey(models.Model):
 
         return questions
 
+    def _can_go_back(self, answer, page_or_question):
+        """ Check if the user can go back to the previous question/page for the currently
+        viewed question/page.
+        Back button needs to be configured on survey and, depending on the layout:
+        - In 'page_per_section', we can go back if we're not on the first page
+        - In 'page_per_question', we can go back if:
+          - It is not a session answer (doesn't make sense to go back in session context)
+          - We are not on the first question
+          - The survey does not have pages OR this is not the first page of the survey
+            (pages are displayed in 'page_per_question' layout when they have a description, see PR#44271)
+        """
+        self.ensure_one()
+
+        if self.users_can_go_back and answer.state == 'in_progress':
+            if self.questions_layout == 'page_per_section' and page_or_question != self.page_ids[0]:
+                return True
+            elif self.questions_layout == 'page_per_question' and \
+                 not answer.is_session_answer and \
+                 page_or_question != answer.predefined_question_ids[0] \
+                 and (not self.page_ids or page_or_question != self.page_ids[0]):
+                return True
+
+        return False
+
     def _has_attempts_left(self, partner, email, invite_token):
         self.ensure_one()
 
@@ -406,64 +509,105 @@ class Survey(models.Model):
 
     @api.model
     def _get_pages_or_questions(self, user_input):
-        if self.questions_layout == 'one_page':
-            return None
-        elif self.questions_layout == 'page_per_question' and self.questions_selection == 'random':
-            return list(enumerate(
-                user_input.predefined_question_ids
-            ))
-        else:
-            return list(enumerate(
-                self.question_ids if self.questions_layout == 'page_per_question' else self.page_ids
-            ))
+        """ Returns the pages or questions (depending on the layout) that will be shown
+        to the user taking the survey.
+        In 'page_per_question' layout, we also want to show pages that have a description. """
 
-    @api.model
-    def _previous_page_or_question_id(self, user_input, page_or_question_id):
-        survey = user_input.survey_id
-        pages_or_questions = survey._get_pages_or_questions(user_input)
+        result = self.env['survey.question']
+        if self.questions_layout == 'page_per_section':
+            result = self.page_ids
+        elif self.questions_layout == 'page_per_question':
+            if self.questions_selection == 'random':
+                result = user_input.predefined_question_ids
+            else:
+                result = self.question_and_page_ids.filtered(
+                    lambda question: not question.is_page or not is_html_empty(question.description))
 
-        current_page_index = pages_or_questions.index(next(p for p in pages_or_questions if p[1].id == page_or_question_id))
-        # is first page
-        if current_page_index == 0:
-            return None
+        return result
 
-        previous_page_id = pages_or_questions[current_page_index - 1][1].id
+    def _get_next_page_or_question(self, user_input, page_or_question_id, go_back=False):
+        """ Generalized logic to retrieve the next question or page to show on the survey.
+        It's based on the page_or_question_id parameter, that is usually the currently displayed question/page.
 
-        return previous_page_id
+        There is a special case when the survey is configured with conditional questions:
+        - for "page_per_question" layout, the next question to display depends on the selected answers and
+          the questions 'hierarchy'.
+        - for "page_per_section" layout, before returning the result, we check that it contains at least a question
+          (all section questions could be disabled based on previously selected answers)
 
-    @api.model
-    def next_page_or_question(self, user_input, page_or_question_id):
-        """ The next page to display to the user, knowing that page_id is the id
-            of the last displayed page.
+        The whole logic is inverted if "go_back" is passed as True.
 
-            If page_id == 0, it will always return the first page of the survey.
-
-            If all the pages have been displayed, it will return None
-
-            .. note::
-                It is assumed here that a careful user will not try to set go_back
-                to True if she knows that the page to display is the first one!
-                (doing this will probably cause a giant worm to eat her house)
+        :param user_input: user's answers
+        :param page_or_question_id: current page or question id
+        :param go_back: reverse the logic and get the PREVIOUS question/page
+        :return: next or previous question/page
         """
 
         survey = user_input.survey_id
-
         pages_or_questions = survey._get_pages_or_questions(user_input)
-        if not pages_or_questions:
-            return (None, False)
+        Question = self.env['survey.question']
 
-        # First page
-        if page_or_question_id == 0:
-            return (pages_or_questions[0][1], len(pages_or_questions) == 1)
+        # Get Next
+        if not go_back:
+            if not pages_or_questions:
+                return Question
+            # First page
+            if page_or_question_id == 0:
+                return pages_or_questions[0]
 
-        current_page_index = pages_or_questions.index(next(p for p in pages_or_questions if p[1].id == page_or_question_id))
+        current_page_index = pages_or_questions.ids.index(page_or_question_id)
 
-        # All the pages have been displayed
-        if current_page_index == len(pages_or_questions) - 1:
-            return (None, False)
+        # Get previous and we are on first page  OR Get Next and we are on last page
+        if (go_back and current_page_index == 0) or (not go_back and current_page_index == len(pages_or_questions) - 1):
+            return Question
+
+        # Conditional Questions Management
+        triggering_answer_by_question, triggered_questions_by_answer, selected_answers = user_input._get_conditional_values()
+        if survey.has_conditional_questions and triggered_questions_by_answer:
+            if survey.questions_layout == 'page_per_question':
+                question_candidates = pages_or_questions[0:current_page_index] if go_back \
+                    else pages_or_questions[current_page_index + 1:]
+                for question in question_candidates.sorted(reverse=go_back):
+                    triggering_answer = triggering_answer_by_question.get(question)
+                    if not triggering_answer or triggering_answer in selected_answers:
+                        # question is visible because not conditioned or conditioned by a selected answer
+                        # -> return it
+                        return question
+            elif survey.questions_layout == 'page_per_section':
+                inactive_questions = user_input._get_inactive_conditional_questions()
+                section_candidates = pages_or_questions[0:current_page_index] if go_back \
+                    else pages_or_questions[current_page_index + 1:]
+                for section in section_candidates.sorted(reverse=go_back):
+                    if any(question not in inactive_questions for question in section.question_ids):
+                        # section contains at least one active question
+                        # -> return it
+                        return section
+                return Question
         else:
-            show_last = current_page_index == len(pages_or_questions) - 2
-            return (pages_or_questions[current_page_index + 1][1], show_last)
+            return pages_or_questions[current_page_index + (1 if not go_back else -1)]
+
+        return Question
+
+    def _is_last_page_or_question(self, user_input, page_or_question):
+        """ This method checks if the given question or page is the last one.
+        This includes conditional questions configuration. If the given question is normally not the last one but
+        every following questions are inactive due to conditional questions configurations (and user choices),
+        the given question will be the last one.
+        For section, we check in each following section if there is an active question.
+        If yes, the given page is not the last one.
+        """
+        pages_or_questions = self._get_pages_or_questions(user_input)
+        current_page_index = pages_or_questions.ids.index(page_or_question.id)
+        next_page_or_question_candidates = pages_or_questions[current_page_index + 1:]
+        if next_page_or_question_candidates:
+            inactive_questions = user_input._get_inactive_conditional_questions()
+            if self.questions_layout == 'page_per_question':
+                return not any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
+            elif self.questions_layout == 'page_per_section':
+                for section in next_page_or_question_candidates:
+                    return not any(next_question not in inactive_questions for next_question in section.question_ids)
+
+        return True
 
     def _get_survey_questions(self, answer=None, page_id=None, question_id=None):
         """ Returns a tuple containing: the survey question and the passed question_id / page_id
@@ -508,6 +652,23 @@ class Survey(models.Model):
         return questions, page_or_question_id
 
     # ------------------------------------------------------------
+    # CONDITIONAL QUESTIONS MANAGEMENT
+    # ------------------------------------------------------------
+
+    def _get_conditional_maps(self):
+        triggering_answer_by_question = {}
+        triggered_questions_by_answer = {}
+        for question in self.question_ids:
+            triggering_answer_by_question[question] = question.is_conditional and question.triggering_answer_id
+
+            if question.is_conditional:
+                if question.triggering_answer_id in triggered_questions_by_answer:
+                    triggered_questions_by_answer[question.triggering_answer_id] |= question
+                else:
+                    triggered_questions_by_answer[question.triggering_answer_id] = question
+        return triggering_answer_by_question, triggered_questions_by_answer
+
+    # ------------------------------------------------------------
     # SESSIONS MANAGEMENT
     # ------------------------------------------------------------
 
@@ -521,53 +682,64 @@ class Survey(models.Model):
             self.sudo().write({'session_state': 'in_progress'})
             self.sudo().flush(['session_state'])
 
-    def _session_trigger_next_question(self):
-        """ Triggers the next question of the session.
-
-        We artificially add 2 seconds to the 'current_question_start_time' to account for server delay.
-        As the timing can influence the attendees score, we try to be fair with everyone by giving them
-        an extra few seconds before we start counting down.
-
-        Frontend should take the delay into account by displaying the appropriate animations.
-
-        Writing the next question on the survey is sudo'ed to avoid potential access right issues.
-        e.g: a survey user can create a live session from any survey but he can only write
-        on its own survey. """
-
+    def _get_session_next_question(self):
         self.ensure_one()
 
         if not self.question_ids or not self.env.user.has_group('survey.group_survey_user'):
             return
 
-        if not self.session_question_id:
-            question = self.question_ids[0]
-        else:
-            questions = list(enumerate(self.question_ids))
-            current_question_index = questions.index(
-                next(question for question in questions if question[1] == self.session_question_id)
-            )
-            if current_question_index < len(self.question_ids) - 1:
-                question = self.question_ids[current_question_index + 1]
-            else:
-                question = self.session_question_id
+        most_voted_answers = self._get_session_most_voted_answers()
+        return self._get_next_page_or_question(
+            most_voted_answers,
+            self.session_question_id.id if self.session_question_id else 0)
 
-        # using datetime.datetime because we want the millis portion
-        now = datetime.datetime.now()
-        self.sudo().write({
-            'session_question_id': question.id,
-            'session_question_start_time': fields.Datetime.now() + relativedelta(seconds=2)
-        })
-        self.env['bus.bus'].sendone(self.access_token, {
-            'question_start': now.timestamp(),
-            'type': 'next_question'
+    def _get_session_most_voted_answers(self):
+        """ In sessions of survey that has conditional questions, as the survey is passed at the same time by
+        many users, we need to extract the most chosen answers, to determine the next questions to display. """
+
+        # get user_inputs from current session
+        current_user_inputs = self.user_input_ids.filtered(lambda input: input.create_date > self.session_start_time)
+        current_user_input_lines = current_user_inputs.mapped('user_input_line_ids').filtered(lambda answer: answer.suggested_answer_id)
+
+        # count the number of vote per answer
+        votes_by_answer = dict.fromkeys(current_user_input_lines.mapped('suggested_answer_id'), 0)
+        for answer in current_user_input_lines:
+            votes_by_answer[answer.suggested_answer_id] += 1
+
+        # extract most voted answer for each question
+        most_voted_answer_by_questions = dict.fromkeys(current_user_input_lines.mapped('question_id'))
+        for question in most_voted_answer_by_questions.keys():
+            for answer in votes_by_answer.keys():
+                if answer.question_id != question:
+                    continue
+                most_voted_answer = most_voted_answer_by_questions[question]
+                if not most_voted_answer or votes_by_answer[most_voted_answer] < votes_by_answer[answer]:
+                    most_voted_answer_by_questions[question] = answer
+
+        # return a fake 'audiance' user_input
+        fake_user_input = self.env['survey.user_input'].new({
+            'survey_id': self.id,
         })
 
-    def _prepare_ranking_values(self):
-        """" The ranking is descending and takes the total of the attendee points up to the current question. """
+        fake_user_input_lines = self.env['survey.user_input.line']
+        for question, answer in most_voted_answer_by_questions.items():
+            fake_user_input_lines |= self.env['survey.user_input.line'].new({
+                'question_id': question.id,
+                'suggested_answer_id': answer.id,
+                'survey_id': self.id,
+                'user_input_id': fake_user_input.id
+            })
+
+        return fake_user_input
+
+    def _prepare_leaderboard_values(self):
+        """" The leaderboard is descending and takes the total of the attendee points up to the current question. """
         self.ensure_one()
 
-        return self.env['survey.user_input'].search([('survey_id', '=', self.id)],
-            limit=25, order="scoring_total desc")
+        return self.env['survey.user_input'].search([
+            ('survey_id', '=', self.id),
+            ('create_date', '>=', self.session_start_time)
+        ], limit=25, order="scoring_total desc")
 
     # ------------------------------------------------------------
     # ACTIONS
@@ -698,6 +870,7 @@ class Survey(models.Model):
         self.ensure_one()
         self.sudo().write({
             'questions_layout': 'page_per_question',
+            'session_start_time': fields.Datetime.now(),
             'session_question_id': None,
             'session_state': 'ready'
         })
@@ -725,14 +898,14 @@ class Survey(models.Model):
         self.env['bus.bus'].sendone(self.access_token, {'type': 'end_session'})
 
     def get_start_url(self):
-        return 'survey/start/%s' % self.access_token
+        return '/survey/start/%s' % self.access_token
 
     def get_start_short_url(self):
         """ See controller method docstring for more details. """
         return '/s/%s' % self.access_token[:6]
 
     def get_print_url(self):
-        return 'survey/print/%s' % self.access_token
+        return '/survey/print/%s' % self.access_token
 
     # ------------------------------------------------------------
     # GRAPH / RESULTS
@@ -779,6 +952,7 @@ class Survey(models.Model):
     # ------------------------------------------------------------
     # GAMIFICATION / BADGES
     # ------------------------------------------------------------
+
     def _prepare_challenge_category(self):
         return 'certification'
 
@@ -816,9 +990,8 @@ class Survey(models.Model):
     def _handle_certification_badges(self, vals):
         if vals.get('certification_give_badge'):
             # If badge already set on records, reactivate the ones that are not active.
-            surveys_with_badge = self.filtered(lambda survey: survey.certification_badge_id
-                                                                 and not survey.certification_badge_id.active)
-            surveys_with_badge.mapped('certification_badge_id').write({'active': True})
+            surveys_with_badge = self.filtered(lambda survey: survey.certification_badge_id and not survey.certification_badge_id.active)
+            surveys_with_badge.mapped('certification_badge_id').action_unarchive()
             # (re-)create challenge and goal
             for survey in self:
                 survey._create_certification_badge_trigger()
@@ -827,7 +1000,7 @@ class Survey(models.Model):
             badges = self.mapped('certification_badge_id')
             challenges_to_delete = self.env['gamification.challenge'].search([('reward_id', 'in', badges.ids)])
             goals_to_delete = challenges_to_delete.mapped('line_ids').mapped('definition_id')
-            badges.write({'active': False})
+            badges.action_archive()
             # delete all challenges and goals because not needed anymore (challenge lines are deleted in cascade)
             challenges_to_delete.unlink()
             goals_to_delete.unlink()

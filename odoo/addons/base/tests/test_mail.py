@@ -9,7 +9,8 @@ import threading
 
 from odoo.tests.common import BaseCase, SavepointCase, TransactionCase
 from odoo.tools import (
-    html_sanitize, append_content_to_html, plaintext2html, email_split,
+    is_html_empty, html_sanitize, append_content_to_html, plaintext2html,
+    email_split,
     misc, formataddr,
 )
 
@@ -103,10 +104,10 @@ class TestSanitizer(BaseCase):
         not_emails = [
             '<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com" type="cite">cat</blockquote>',
             '<img alt="@github-login" class="avatar" src="/web/image/pi" height="36" width="36">']
-        for email in not_emails:
-            sanitized = html_sanitize(email)
-            left_part = email.split('>')[0]  # take only left part, as the sanitizer could add data information on node
-            self.assertNotIn(misc.html_escape(email), sanitized, 'html_sanitize stripped emails of original html')
+        for not_email in not_emails:
+            sanitized = html_sanitize(not_email)
+            left_part = not_email.split('>')[0]  # take only left part, as the sanitizer could add data information on node
+            self.assertNotIn(misc.html_escape(not_email), sanitized, 'html_sanitize stripped emails of original html')
             self.assertIn(left_part, sanitized)
 
     def test_style_parsing(self):
@@ -317,6 +318,19 @@ class TestHtmlTools(BaseCase):
         ]
         for html, content, plaintext_flag, preserve_flag, container_tag, expected in test_samples:
             self.assertEqual(append_content_to_html(html, content, plaintext_flag, preserve_flag, container_tag), expected, 'append_content_to_html is broken')
+
+    def test_is_html_empty(self):
+        void_strings_samples = ['', False, ' ']
+        for content in void_strings_samples:
+            self.assertTrue(is_html_empty(content))
+
+        void_html_samples = ['<p><br></p>', '<p><br> </p>']
+        for content in void_html_samples:
+            self.assertTrue(is_html_empty(content), 'Failed with %s' % content)
+
+        valid_html_samples = ['<p><br>1</p>', '<p>1<br > </p>']
+        for content in valid_html_samples:
+            self.assertFalse(is_html_empty(content))
 
 
 class TestEmailTools(BaseCase):

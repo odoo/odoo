@@ -91,7 +91,8 @@ class Website(models.Model):
     social_linkedin = fields.Char('LinkedIn Account', default=_default_social_linkedin)
     social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
     social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
-    social_default_image = fields.Binary(string="Default Social Share Image", help="If set, replaces the company logo as the default social share image.")
+    social_default_image = fields.Binary(string="Default Social Share Image", help="If set, replaces the website logo as the default social share image.")
+    has_social_default_image = fields.Boolean(compute='_compute_has_social_default_image', store=True)
 
     google_analytics_key = fields.Char('Google Analytics Key')
     google_management_client_id = fields.Char('Google Client ID')
@@ -104,9 +105,11 @@ class Website(models.Model):
     cdn_activated = fields.Boolean('Content Delivery Network (CDN)')
     cdn_url = fields.Char('CDN Base URL', default='')
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
-    partner_id = fields.Many2one(related='user_id.partner_id', relation='res.partner', string='Public Partner', readonly=False)
+    partner_id = fields.Many2one(related='user_id.partner_id', string='Public Partner', readonly=False)
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
     homepage_id = fields.Many2one('website.page', string='Homepage')
+    custom_code_head = fields.Text('Custom <head> code')
+    custom_code_footer = fields.Text('Custom end of <body> code')
 
     robots_txt = fields.Text('Robots.txt', translate=False, groups='website.group_website_designer')
 
@@ -130,10 +133,30 @@ class Website(models.Model):
         if language_ids and self.default_lang_id not in language_ids:
             self.default_lang_id = language_ids[0]
 
-    def _compute_menu(self):
-        Menu = self.env['website.menu']
+    @api.depends('social_default_image')
+    def _compute_has_social_default_image(self):
         for website in self:
-            website.menu_id = Menu.search([('parent_id', '=', False), ('website_id', '=', website.id)], order='id', limit=1).id
+            website.has_social_default_image = bool(website.social_default_image)
+
+    def _compute_menu(self):
+        for website in self:
+            menus = self.env['website.menu'].browse(website._get_menu_ids())
+
+            # use field parent_id (1 query) to determine field child_id (2 queries by level)"
+            for menu in menus:
+                menu._cache['child_id'] = ()
+            for menu in menus:
+                # don't add child menu if parent is forbidden
+                if menu.parent_id and menu.parent_id in menus:
+                    menu.parent_id._cache['child_id'] += (menu.id,)
+            # prefetch every website.page and ir.ui.view at once
+            menus.mapped('is_visible')
+            website.menu_id = menus and menus.filtered(lambda m: not m.parent_id)[0].id or False
+
+    # self.env.uid for ir.rule groups on menu
+    @tools.ormcache('self.env.uid', 'self.id')
+    def _get_menu_ids(self):
+        return self.env['website.menu'].search([('website_id', '=', self.id)]).ids
 
     @api.model
     def create(self, vals):
@@ -163,7 +186,7 @@ class Website(models.Model):
             public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
             if public_user_to_change_websites:
                 company = self.env['res.company'].browse(values['company_id'])
-                super(Website, public_user_to_change_websites).write(dict(values, user_id=company._get_public_user().id))
+                super(Website, public_user_to_change_websites).write(dict(values, user_id=company and company._get_public_user().id))
 
         result = super(Website, self - public_user_to_change_websites).write(values)
         if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
@@ -247,6 +270,8 @@ class Website(models.Model):
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         default_menu = self.env.ref('website.main_menu')
         self.copy_menu_hierarchy(default_menu)
+        home_menu = self.env['website.menu'].search([('website_id', '=', self.id), ('url', '=', '/')])
+        home_menu.page_id = self.homepage_id
 
     def copy_menu_hierarchy(self, top_menu):
         def copy_menu(menu, t_menu):
@@ -780,11 +805,9 @@ class Website(models.Model):
                         if query == FALSE_DOMAIN:
                             continue
 
-                    for value_dict in converter.generate(uid=self.env.uid, dom=query, args=val):
+                    for rec in converter.generate(uid=self.env.uid, dom=query, args=val):
                         newval.append(val.copy())
-                        value_dict[name] = value_dict['loc']
-                        del value_dict['loc']
-                        newval[-1].update(value_dict)
+                        newval[-1].update({name: rec})
                 values = newval
 
             for value in values:
@@ -931,6 +954,18 @@ class Website(models.Model):
         # and canonical url is always quoted, so it is never possible to tell
         # if the current URL is indeed canonical or not.
         return current_url == canonical_url
+
+    @tools.ormcache('self.id')
+    def _get_cached_values(self):
+        self.ensure_one()
+        return {
+            'user_id': self.user_id.id,
+            'company_id': self.company_id.id,
+            'default_lang_id': self.default_lang_id.id,
+        }
+
+    def _get_cached(self, field):
+        return self._get_cached_values()[field]
 
 
 class BaseModel(models.AbstractModel):

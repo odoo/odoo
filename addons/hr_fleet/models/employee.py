@@ -43,3 +43,8 @@ class Employee(models.Model):
             'type': 'ir.actions.act_url',
             'url': '/fleet/print_claim_report/%(employee_id)s' % {'employee_id': self.id},
         }
+
+class EmployeePublic(models.Model):
+    _inherit = 'hr.employee.public'
+
+    mobility_card = fields.Char(readonly=True)

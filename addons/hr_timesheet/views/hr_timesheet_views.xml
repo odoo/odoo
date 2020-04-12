@@ -24,10 +24,10 @@
                 <tree editable="top" string="Timesheet Activities" js_class="timesheet_tree">
                     <field name="date"/>
                     <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
-                    <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
-                    <field name="name" required="0"/>
-                    <field name="is_timer_running" string="Timer" widget="timer_toggle_button" readonly="1" attrs="{ 'invisible': [('display_timer', '=', False)] }" invisible="not context.get('my_timesheet_display_timer')" />
-                    <field name="unit_amount" widget="timesheet_uom" sum="Total" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}"/>
+                    <field name="task_id" optional="show" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
+                    <field name="name" optional="show" required="0"/>
+                    <field name="is_timer_running" string="Timer" optional="show" widget="timer_toggle_button" readonly="1" attrs="{ 'invisible': [('display_timer', '=', False)] }" invisible="not context.get('my_timesheet_display_timer')" />
+                    <field name="unit_amount" optional="show" widget="timesheet_uom" sum="Total" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}"/>
                     <field name="company_id" invisible="1"/>
                     <field name="timer_start" invisible="1"/>
                     <field name="display_timer" invisible="1"/>
@@ -87,7 +87,7 @@
                             <group>
                                 <field name="date"/>
                                 <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
-                                <field name="task_id" widget="task_with_hours"/>
+                                <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                                 <field name="name"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
@@ -241,6 +241,22 @@
             parent="menu_hr_time_tracking"
             action="act_hr_timesheet_line"/>
 
+        <record id="timesheet_action_task" model="ir.actions.act_window">
+            <field name="name">Task's Timesheets</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="domain">[('task_id', 'in', active_ids)]</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="timesheet_view_tree_user"/>
+        </record>
+
+        <record id="timesheet_action_project" model="ir.actions.act_window">
+            <field name="name">Project's Timesheets</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="domain">[('project_id', 'in', active_ids)]</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="timesheet_view_tree_user"/>
+        </record>
+
         <record id="timesheet_action_all" model="ir.actions.act_window">
             <field name="name">All Timesheets</field>
             <field name="res_model">account.analytic.line</field>
@@ -249,7 +265,7 @@
             <field name="context">{
                 'search_default_week':1,
                 'search_default_groupby_employee':1,
-                'search_default_groupby_project':1,
+                'search_default_groupby_project':2,
                 'search_default_groupby_task':1,
             }</field>
             <field name="help" type="html">

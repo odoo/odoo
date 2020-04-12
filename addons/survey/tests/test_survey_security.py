@@ -290,7 +290,7 @@ class TestAccess(common.TestSurveyCommon):
     @users('survey_manager')
     def test_access_answers_survey_manager(self):
         admin = self.env.ref('base.user_admin')
-        with self.with_user(admin):
+        with self.with_user(admin.login):
             survey_other = self.env['survey.survey'].create({'title': 'Other'})
             self.env['survey.question'].create({'title': 'Other', 'sequence': 0, 'is_page': True, 'survey_id': survey_other.id})
             question_other = self.env['survey.question'].create({'title': 'Other Question', 'sequence': 1, 'survey_id': survey_other.id})

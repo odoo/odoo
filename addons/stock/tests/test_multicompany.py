@@ -386,3 +386,213 @@ class TestMultiCompany(SavepointCase):
         })
         with self.assertRaises(UserError):
             move._action_confirm()
+
+    def test_intercom_lot_push(self):
+        """ Create a push rule to transfer products received in inter company
+        transit location to company b. Move a lot product from company a to the
+        transit location. Check the move created by the push rule is not chained
+        with previous move, and no product are reserved from inter-company
+        transit. """
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        intercom_location = self.env.ref('stock.stock_location_inter_wh')
+        intercom_location.write({'active': True})
+
+        product_lot = self.env['product.product'].create({
+            'type': 'product',
+            'tracking': 'lot',
+            'name': 'product lot',
+        })
+
+        picking_type_to_transit = self.env['stock.picking.type'].create({
+            'name': 'To Transit',
+            'sequence_code': 'TRANSIT',
+            'code': 'outgoing',
+            'company_id': self.company_a.id,
+            'warehouse_id': False,
+            'default_location_src_id': self.stock_location_a.id,
+            'default_location_dest_id': intercom_location.id,
+            'sequence_id': self.env['ir.sequence'].create({
+                'code': 'transit',
+                'name': 'transit sequence',
+                'company_id': self.company_a.id,
+            }).id,
+        })
+
+        route = self.env['stock.location.route'].create({
+            'name': 'Push',
+            'company_id': False,
+            'rule_ids': [(0, False, {
+                'name': 'create a move to company b',
+                'company_id': self.company_b.id,
+                'location_src_id': intercom_location.id,
+                'location_id': self.stock_location_b.id,
+                'action': 'push',
+                'auto': 'manual',
+                'picking_type_id': self.warehouse_b.in_type_id.id,
+            })],
+        })
+
+        move_from_supplier = self.env['stock.move'].create({
+            'company_id': self.company_a.id,
+            'name': 'test_from_supplier',
+            'location_id': supplier_location.id,
+            'location_dest_id': self.stock_location_a.id,
+            'product_id': product_lot.id,
+            'product_uom': product_lot.uom_id.id,
+            'product_uom_qty': 1.0,
+            'picking_type_id': self.warehouse_a.in_type_id.id,
+        })
+        move_from_supplier._action_confirm()
+        move_line_1 = move_from_supplier.move_line_ids[0]
+        move_line_1.lot_name = 'lot 1'
+        move_line_1.qty_done = 1.0
+        move_from_supplier._action_done()
+        lot_1 = move_line_1.lot_id
+
+        move_to_transit = self.env['stock.move'].create({
+            'company_id': self.company_a.id,
+            'name': 'test_to_transit',
+            'location_id': self.stock_location_a.id,
+            'location_dest_id': intercom_location.id,
+            'product_id': product_lot.id,
+            'product_uom': product_lot.uom_id.id,
+            'product_uom_qty': 1.0,
+            'picking_type_id': picking_type_to_transit.id,
+            'route_ids': [(4, route.id)],
+        })
+        move_to_transit._action_confirm()
+        move_to_transit._action_assign()
+        move_line_2 = move_to_transit.move_line_ids[0]
+        self.assertTrue(move_line_2.lot_id, move_line_1.lot_id)
+        move_line_2.qty_done = 1.0
+        move_to_transit._action_done()
+
+        move_push = self.env['stock.move'].search([('location_id', '=', intercom_location.id),
+                                                   ('product_id', '=', product_lot.id)])
+        self.assertTrue(move_push, 'No move created from push rules')
+        self.assertEqual(move_push.state, "assigned")
+        self.assertTrue(move_push.move_line_ids, "No move line created for the move")
+        self.assertFalse(move_push in move_to_transit.move_dest_ids,
+                         "Chained move created in transit location")
+        self.assertNotEqual(move_push.move_line_ids.lot_id, move_line_2.lot_id,
+                            "Reserved from transit location")
+        picking_receipt = move_push.picking_id
+        with self.assertRaises(UserError):
+            picking_receipt.button_validate()
+
+        move_line_3 = move_push.move_line_ids[0]
+        move_line_3.lot_name = 'lot 2'
+        move_line_3.qty_done = 1.0
+        picking_receipt.button_validate()
+        lot_2 = move_line_3.lot_id
+        self.assertEqual(lot_1.company_id, self.company_a)
+        self.assertEqual(lot_1.name, 'lot 1')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, intercom_location, lot_1), 1.0)
+        self.assertEqual(lot_2.company_id, self.company_b)
+        self.assertEqual(lot_2.name, 'lot 2')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, self.stock_location_b, lot_2), 1.0)
+
+    def test_intercom_lot_pull(self):
+        """Use warehouse of comany a to resupply warehouse of company b. Check
+        pull rule works correctly in two companies and moves are unchained from
+        inter-company transit location."""
+        customer_location = self.env.ref('stock.stock_location_customers')
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        intercom_location = self.env.ref('stock.stock_location_inter_wh')
+        intercom_location.write({'active': True})
+        partner = self.env['res.partner'].create({'name': 'Deco Addict'})
+        self.warehouse_a.resupply_wh_ids = [(6, 0, [self.warehouse_b.id])]
+        resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', self.warehouse_b.id),
+                                                                  ('supplied_wh_id', '=', self.warehouse_a.id)])
+        self.assertTrue(resupply_route, "Resupply route not found")
+
+        product_lot = self.env['product.product'].create({
+            'type': 'product',
+            'tracking': 'lot',
+            'name': 'product lot',
+            'route_ids': [(4, resupply_route.id), (4, self.env.ref('stock.route_warehouse0_mto').id)],
+        })
+
+        move_sup_to_whb = self.env['stock.move'].create({
+            'company_id': self.company_b.id,
+            'name': 'from_supplier_to_whb',
+            'location_id': supplier_location.id,
+            'location_dest_id': self.warehouse_b.lot_stock_id.id,
+            'product_id': product_lot.id,
+            'product_uom': product_lot.uom_id.id,
+            'product_uom_qty': 1.0,
+            'picking_type_id': self.warehouse_b.in_type_id.id,
+        })
+        move_sup_to_whb._action_confirm()
+        move_line_1 = move_sup_to_whb.move_line_ids[0]
+        move_line_1.lot_name = 'lot b'
+        move_line_1.qty_done = 1.0
+        move_sup_to_whb._action_done()
+        lot_b = move_line_1.lot_id
+
+        picking_out = self.env['stock.picking'].create({
+            'company_id': self.company_a.id,
+            'partner_id': partner.id,
+            'picking_type_id': self.warehouse_a.out_type_id.id,
+            'location_id': self.stock_location_a.id,
+            'location_dest_id': customer_location.id,
+        })
+        move_wha_to_cus = self.env['stock.move'].create({
+            'name': "WH_A to Customer",
+            'product_id': product_lot.id,
+            'product_uom_qty': 1,
+            'product_uom': product_lot.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location_a.id,
+            'location_dest_id': customer_location.id,
+            'warehouse_id': self.warehouse_a.id,
+            'procure_method': 'make_to_order',
+            'company_id': self.company_a.id,
+        })
+        picking_out.action_confirm()
+
+        move_whb_to_transit = self.env['stock.move'].search([('location_id', '=', self.stock_location_b.id),
+                                                             ('product_id', '=', product_lot.id)])
+        move_transit_to_wha = self.env['stock.move'].search([('location_id', '=', intercom_location.id),
+                                                             ('product_id', '=', product_lot.id)])
+        self.assertTrue(move_whb_to_transit, "No move created by pull rule")
+        self.assertTrue(move_transit_to_wha, "No move created by pull rule")
+        self.assertTrue(move_wha_to_cus in move_transit_to_wha.move_dest_ids,
+                        "Moves are not chained")
+        self.assertFalse(move_transit_to_wha in move_whb_to_transit.move_dest_ids,
+                         "Chained move created in transit location")
+        self.assertEqual(move_wha_to_cus.state, "waiting")
+        self.assertEqual(move_transit_to_wha.state, "waiting")
+        self.assertEqual(move_whb_to_transit.state, "confirmed")
+
+        (move_wha_to_cus + move_whb_to_transit + move_transit_to_wha).picking_id.action_assign()
+        self.assertEqual(move_wha_to_cus.state, "waiting")
+        self.assertEqual(move_transit_to_wha.state, "assigned")
+        self.assertEqual(move_whb_to_transit.state, "assigned")
+
+        res_dict = move_whb_to_transit.picking_id.button_validate()
+        self.assertEqual(res_dict.get('res_model'), 'stock.immediate.transfer')
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, intercom_location, lot_b), 1.0)
+        with self.assertRaises(UserError):
+            move_transit_to_wha.picking_id.button_validate()
+
+        move_line_2 = move_transit_to_wha.move_line_ids[0]
+        move_line_2.lot_name = 'lot a'
+        move_line_2.qty_done = 1.0
+        move_transit_to_wha._action_done()
+        lot_a = move_line_2.lot_id
+
+        move_wha_to_cus._action_assign()
+        self.assertEqual(move_wha_to_cus.state, "assigned")
+        res_dict = move_wha_to_cus.picking_id.button_validate()
+        self.assertEqual(res_dict.get('res_model'), 'stock.immediate.transfer')
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, customer_location, lot_a), 1.0)
+
+        self.assertEqual(lot_a.company_id, self.company_a)
+        self.assertEqual(lot_a.name, 'lot a')
+        self.assertEqual(lot_b.company_id, self.company_b)
+        self.assertEqual(lot_b.name, 'lot b')

@@ -5,7 +5,7 @@
     'name': 'Saudi Arabia - Accounting',
     'version': '1.1',
     'author': 'DVIT.ME',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 Odoo Arabic localization for most arabic countries and Saudi Arabia.
 
@@ -20,6 +20,9 @@ In future this module will include some payroll rules for ME .
         'data/account.account.template.csv',
         'data/l10n_sa_chart_data.xml',
         'data/account_chart_template_configure_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
     'post_init_hook': 'load_translations',
 }

@@ -18,6 +18,7 @@ from lxml.builder import E
 import passlib.context
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.osv import expression
@@ -213,9 +214,6 @@ class Users(models.Model):
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
         return (default_user or self.env['res.users']).sudo().groups_id
 
-    def _companies_count(self):
-        return self.env['res.company'].sudo().search_count([])
-
     @api.model
     def _get_default_image(self):
         """ Get a default image when the user is created without image
@@ -249,7 +247,7 @@ class Users(models.Model):
     login_date = fields.Datetime(related='log_ids.create_date', string='Latest authentication', readonly=False)
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
-    companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies", default=_companies_count)
+    companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies")
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
 
     # Special behavior for this field: res.company.search() will only return the companies
@@ -266,11 +264,11 @@ class Users(models.Model):
     email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
 
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
-                                    compute='_compute_accesses_count')
+                                    compute='_compute_accesses_count', compute_sudo=True)
     rules_count = fields.Integer('# Record Rules', help='Number of record rules that apply to the current user',
-                                 compute='_compute_accesses_count')
+                                 compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
-                                  compute='_compute_accesses_count')
+                                  compute='_compute_accesses_count', compute_sudo=True)
     image_1920 = fields.Image(related='partner_id.image_1920', inherited=True, readonly=False, default=_get_default_image)
 
     _sql_constraints = [
@@ -363,9 +361,7 @@ class Users(models.Model):
             user.share = not user.has_group('base.group_user')
 
     def _compute_companies_count(self):
-        companies_count = self._companies_count()
-        for user in self:
-            user.companies_count = companies_count
+        self.companies_count = self.env['res.company'].sudo().search_count([])
 
     @api.depends('tz')
     def _compute_tz_offset(self):
@@ -488,7 +484,10 @@ class Users(models.Model):
     def create(self, vals_list):
         users = super(Users, self).create(vals_list)
         for user in users:
-            user.partner_id.write({'company_id': user.company_id.id, 'active': user.active})
+            # if partner is global we keep it that way
+            if user.partner_id.company_id:
+                user.partner_id.company_id = user.company_id
+            user.partner_id.active = user.active
         return users
 
     def write(self, values):
@@ -613,6 +612,10 @@ class Users(models.Model):
     def _get_login_domain(self, login):
         return [('login', '=', login)]
 
+    @api.model
+    def _get_login_order(self):
+        return self._order
+
     @classmethod
     def _login(cls, db, login, password):
         if not password:
@@ -622,7 +625,7 @@ class Users(models.Model):
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
                 with self._assert_can_auth():
-                    user = self.search(self._get_login_domain(login))
+                    user = self.search(self._get_login_domain(login), order=self._get_login_order(), limit=1)
                     if not user:
                         raise AccessDenied()
                     user = user.with_user(user)
@@ -1093,7 +1096,14 @@ class GroupsView(models.Model):
         # We have to try-catch this, because at first init the view does not
         # exist but we are already creating some basic groups.
         view = self.env.ref('base.user_groups_view', raise_if_not_found=False)
-        if view and view.exists() and view._name == 'ir.ui.view':
+        if not (view and view.exists() and view._name == 'ir.ui.view'):
+            return
+
+        if self._context.get('install_filename') or self._context.get(MODULE_UNINSTALL_FLAG):
+            # use a dummy view during install/upgrade/uninstall
+            xml = E.field(name="groups_id", position="after")
+
+        else:
             group_no_one = view.env.ref('base.group_no_one')
             group_employee = view.env.ref('base.group_user')
             xml1, xml2, xml3 = [], [], []
@@ -1161,13 +1171,14 @@ class GroupsView(models.Model):
                 E.group(*(xml2), col="2", attrs=str(user_type_attrs)),
                 E.group(*(xml3), col="4", attrs=str(user_type_attrs)), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
-            xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
 
-            if xml_content != view.arch:  # avoid useless xml validation if no change
-                new_context = dict(view._context)
-                new_context.pop('install_filename', None)  # don't set arch_fs for this computed view
-                new_context['lang'] = None
-                view.with_context(new_context).write({'arch': xml_content})
+        # serialize and update the view
+        xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
+        if xml_content != view.arch:  # avoid useless xml validation if no change
+            new_context = dict(view._context)
+            new_context.pop('install_filename', None)  # don't set arch_fs for this computed view
+            new_context['lang'] = None
+            view.with_context(new_context).write({'arch': xml_content})
 
     def get_application_groups(self, domain):
         """ Return the non-share groups that satisfy ``domain``. """

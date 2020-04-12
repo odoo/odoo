@@ -19,7 +19,9 @@ _logger = logging.getLogger(__name__)
 class AcquirerPaypal(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('paypal', 'Paypal')])
+    provider = fields.Selection(selection_add=[
+        ('paypal', 'Paypal')
+    ], ondelete={'paypal': 'set default'})
     paypal_email_account = fields.Char('Email', required_if_provider='paypal', groups='base.group_user')
     paypal_seller_account = fields.Char(
         'Merchant Account ID', groups='base.group_user',
@@ -157,7 +159,7 @@ class TxPaypal(models.Model):
             invalid_parameters.append(('txn_id', data.get('txn_id'), self.acquirer_reference))
         # check what is buyed
         if float_compare(float(data.get('mc_gross', '0.0')), (self.amount + self.fees), 2) != 0:
-            invalid_parameters.append(('mc_gross', data.get('mc_gross'), '%.2f' % self.amount + self.fees))  # mc_gross is amount + fees
+            invalid_parameters.append(('mc_gross', data.get('mc_gross'), '%.2f' % (self.amount + self.fees)))  # mc_gross is amount + fees
         if data.get('mc_currency') != self.currency_id.name:
             invalid_parameters.append(('mc_currency', data.get('mc_currency'), self.currency_id.name))
         if 'handling_amount' in data and float_compare(float(data.get('handling_amount')), self.fees, 2) != 0:
@@ -195,7 +197,7 @@ class TxPaypal(models.Model):
                 render_template = template.render({
                     'acquirer': self.acquirer_id,
                 }, engine='ir.qweb')
-                mail_body = self.env['mail.thread']._replace_local_links(render_template)
+                mail_body = self.env['mail.render.mixin']._replace_local_links(render_template)
                 mail_values = {
                     'body_html': mail_body,
                     'subject': _('Add your Paypal account to Odoo'),

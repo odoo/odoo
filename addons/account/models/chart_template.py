@@ -105,6 +105,7 @@ class AccountChartTemplate(models.Model):
         string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account.template',
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    account_journal_suspense_account_id = fields.Many2one('account.account.template', string='Journal Suspense Account')
     default_cash_difference_income_account_id = fields.Many2one('account.account.template', string="Cash Difference Income Account")
     default_cash_difference_expense_account_id = fields.Many2one('account.account.template', string="Cash Difference Expense Account")
     default_pos_receivable_account_id = fields.Many2one('account.account.template', string="PoS receivable account")
@@ -122,14 +123,14 @@ class AccountChartTemplate(models.Model):
     property_advance_tax_payment_account_id = fields.Many2one('account.account.template', string="Advance tax payment account")
 
     @api.model
-    def _prepare_transfer_account_template(self):
+    def _prepare_transfer_account_template(self, prefix=None):
         ''' Prepare values to create the transfer account that is an intermediary account used when moving money
         from a liquidity account to another.
 
         :return:    A dictionary of values to create a new account.account.
         '''
         digits = self.code_digits
-        prefix = self.transfer_account_code_prefix or ''
+        prefix = prefix or self.transfer_account_code_prefix or ''
         # Flatten the hierarchy of chart templates.
         chart_template = self
         chart_templates = self
@@ -153,6 +154,15 @@ class AccountChartTemplate(models.Model):
             'reconcile': True,
             'chart_template_id': self.id,
         }
+
+    @api.model
+    def _create_liquidity_journal_suspense_account(self, company, code_digits):
+        return self.env['account.account'].create({
+            'name': _("Bank Suspense Account"),
+            'code': self.env['account.account']._search_new_account_code(company, code_digits, company.transfer_account_code_prefix or ''),
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': company.id,
+        })
 
     def try_loading(self, company=False):
         """ Installs this chart of accounts for the current company if not chart
@@ -239,7 +249,11 @@ class AccountChartTemplate(models.Model):
         company.write({
             'default_cash_difference_income_account_id': acc_template_ref.get(self.default_cash_difference_income_account_id.id, False),
             'default_cash_difference_expense_account_id': acc_template_ref.get(self.default_cash_difference_expense_account_id.id, False),
+            'account_journal_suspense_account_id': acc_template_ref.get(self.account_journal_suspense_account_id.id),
         })
+
+        if not company.account_journal_suspense_account_id:
+            company.account_journal_suspense_account_id = self._create_liquidity_journal_suspense_account(company, self.code_digits)
 
         # Set default PoS receivable account in company
         default_pos_receivable = self.default_pos_receivable_account_id.id
@@ -333,18 +347,10 @@ class AccountChartTemplate(models.Model):
                 'type': acc['account_type'],
                 'company_id': company.id,
                 'currency_id': acc.get('currency_id', self.env['res.currency']).id,
-                'sequence': 10
+                'sequence': 10,
             })
 
         return bank_journals
-
-    def get_countries_posting_at_bank_rec(self):
-        """ Returns the list of the country codes of the countries for which, by default,
-        payments made on bank journals should be creating draft account.move objects,
-        which get in turn posted when their payment gets reconciled with a bank statement line.
-        This function is an extension hook for localization modules.
-        """
-        return []
 
     @api.model
     def _get_default_bank_journals_data(self):
@@ -983,6 +989,7 @@ class AccountTaxTemplate(models.Model):
 
 # Tax Repartition Line Template
 
+
 class AccountTaxRepartitionLineTemplate(models.Model):
     _name = "account.tax.repartition.line.template"
     _description = "Tax Repartition Line Template"
@@ -993,6 +1000,7 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     invoice_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this repartition on invoices. Mutually exclusive with refund_tax_id")
     refund_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this repartition on refund invoices. Mutually exclusive with invoice_tax_id")
     tag_ids = fields.Many2many(string="Financial Tags", relation='account_tax_repartition_financial_tags', comodel_name='account.account.tag', copy=True, help="Additional tags that will be assigned by this repartition line for use in financial reports")
+    use_in_tax_closing = fields.Boolean(string="Tax Closing Entry")
 
     # These last two fields are helpers used to ease the declaration of account.account.tag objects in XML.
     # They are directly linked to account.tax.report.line objects, which create corresponding + and - tags
@@ -1003,13 +1011,20 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('plus_report_line_ids'):
-            vals['plus_report_line_ids'] =  self._convert_tag_syntax_to_orm(vals['plus_report_line_ids'])
+            vals['plus_report_line_ids'] = self._convert_tag_syntax_to_orm(vals['plus_report_line_ids'])
 
         if vals.get('minus_report_line_ids'):
             vals['minus_report_line_ids'] = self._convert_tag_syntax_to_orm(vals['minus_report_line_ids'])
 
         if vals.get('tag_ids'):
             vals['tag_ids'] = self._convert_tag_syntax_to_orm(vals['tag_ids'])
+
+        if vals.get('use_in_tax_closing') is None:
+            if not vals.get('account_id'):
+                vals['use_in_tax_closing'] = False
+            else:
+                internal_group = self.env['account.account.template'].browse(vals.get('account_id')).user_type_id.internal_group
+                vals['use_in_tax_closing'] = not (internal_group == 'income' or internal_group == 'expense')
 
         return super(AccountTaxRepartitionLineTemplate, self).create(vals)
 
@@ -1051,6 +1066,7 @@ class AccountTaxRepartitionLineTemplate(models.Model):
                 'repartition_type': record.repartition_type,
                 'tag_ids': [(6, 0, tags_to_add.ids)],
                 'company_id': company.id,
+                'use_in_tax_closing': record.use_in_tax_closing
             }))
         return rslt
 

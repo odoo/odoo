@@ -26,6 +26,7 @@ class TestEventSecurity(TestEventCommon):
                 'name': 'TestEvent',
                 'date_begin': datetime.now() + relativedelta(days=-1),
                 'date_end': datetime.now() + relativedelta(days=1),
+                'seats_limited': True,
                 'seats_max': 10,
             })
 
@@ -50,7 +51,6 @@ class TestEventSecurity(TestEventCommon):
                 'name': 'TestEvent',
                 'date_begin': datetime.now() + relativedelta(days=-1),
                 'date_end': datetime.now() + relativedelta(days=1),
-                'seats_max': 10,
             })
 
         with self.assertRaises(AccessError):
@@ -76,18 +76,16 @@ class TestEventSecurity(TestEventCommon):
         })
         event = self.env['event.event'].create({
             'name': 'ManagerEvent',
+            'event_type_id': event_type.id,
             'date_begin': datetime.now() + relativedelta(days=-1),
             'date_end': datetime.now() + relativedelta(days=1),
         })
-        event.update({'event_type_id': event_type.id})
-        event._onchange_type()
-        event.flush()
 
         registration = self.env['event.registration'].create({'event_id': event.id, 'name': 'Myself'})
         registration.write({'name': 'Myself2'})
 
-        stage = self.env.ref('event.event_stage_done')
-        stage.write({'name': 'ManagerEnded'})
+        stage = self.env['event.stage'].create({'name': 'test'})
+        stage.write({'name': 'ManagerTest'})
         event.write({'stage_id': stage.id})
 
         registration.unlink()

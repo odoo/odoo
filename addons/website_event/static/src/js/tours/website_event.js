@@ -8,7 +8,11 @@ odoo.define("website_event.tour", function (require) {
 
     tour.register("event", {
         url: "/",
-    }, [tour.STEPS.WEBSITE_NEW_PAGE, {
+    }, [{
+        trigger: '#new-content-menu > a',
+        auto: true,
+        position: 'bottom',
+    }, {
         trigger: "a[data-action=new_event]",
         content: _t("Click here to create a new event."),
         position: "bottom",

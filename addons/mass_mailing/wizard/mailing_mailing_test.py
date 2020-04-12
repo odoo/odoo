@@ -14,13 +14,17 @@ class TestMassMailing(models.TransientModel):
 
     def send_mail_test(self):
         self.ensure_one()
+        ctx = dict(self.env.context)
+        ctx.pop('default_state', None)
+        self = self.with_context(ctx)
+
         mails_sudo = self.env['mail.mail'].sudo()
         mailing = self.mass_mailing_id
         test_emails = tools.email_split(self.email_to)
         mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout')
         for test_mail in test_emails:
             # Convert links in absolute URLs before the application of the shortener
-            body = self.env['mail.thread']._replace_local_links(mailing.body_html)
+            body = self.env['mail.render.mixin']._replace_local_links(mailing.body_html)
             body = tools.html_sanitize(body, sanitize_attributes=True, sanitize_style=True)
             mail_values = {
                 'email_from': mailing.email_from,

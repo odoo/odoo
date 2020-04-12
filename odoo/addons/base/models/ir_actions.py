@@ -129,6 +129,9 @@ class IrActions(models.Model):
             except (AccessError, MissingError):
                 continue
 
+        # sort actions by their sequence if sequence available
+        if result.get('action'):
+            result['action'] = sorted(result['action'], key=lambda vals: vals.get('sequence', 0))
         return result
 
 
@@ -386,10 +389,10 @@ class IrActionsServer(models.Model):
     child_ids = fields.Many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id',
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
     # Create
-    crud_model_id = fields.Many2one('ir.model', string='Create/Write Target Model',
+    crud_model_id = fields.Many2one('ir.model', string='Target Model',
                                     help="Model for record creation / update. Set this field only to specify a different model than the base model.")
-    crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model', readonly=True)
-    link_field_id = fields.Many2one('ir.model.fields', string='Link using field',
+    crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model Name', readonly=True)
+    link_field_id = fields.Many2one('ir.model.fields', string='Link Field',
                                     help="Provide the field used to link the newly created record "
                                          "on the record used by the server action.")
     fields_lines = fields.One2many('ir.server.object.lines', 'server_id', string='Value Mapping', copy=True)
@@ -505,6 +508,7 @@ class IrActionsServer(models.Model):
             'model': model,
             # Exceptions
             'Warning': odoo.exceptions.Warning,
+            'UserError': odoo.exceptions.UserError,
             # record
             'record': record,
             'records': records,

@@ -32,6 +32,9 @@ def initialize_sys_path():
     Setup the addons path ``odoo.addons.__path__`` with various defaults
     and explicit directories.
     """
+    # if getattr(initialize_sys_path, 'called', False): # only initialize once
+    #    return
+    initialize_sys_path.called = True
 
     # hook odoo.addons on data dir
     dd = os.path.normcase(tools.config.addons_data_dir)
@@ -51,15 +54,11 @@ def initialize_sys_path():
 
     # hook odoo.upgrade on upgrade-path
     from odoo import upgrade
-    for up in tools.config['upgrade_path'].split(','):
+    legacy_upgrade_path = os.path.join(base_path, 'base', 'maintenance', 'migrations')
+    for up in (tools.config['upgrade_path'] or legacy_upgrade_path).split(','):
         up = os.path.normcase(os.path.abspath(tools.ustr(up.strip())))
         if up not in upgrade.__path__:
             upgrade.__path__.append(up)
-
-    # hook odoo.upgrade on legacy odoo/addons/base/maintenance/migrations symlink
-    if not tools.config['upgrade_path']:
-        upgrade.__path__.append(os.path.join(
-            base_path, 'base', 'maintenance', 'migrations'))
 
     # create decrecated module alias from odoo.addons.base.maintenance.migrations to odoo.upgrade
     spec = importlib.machinery.ModuleSpec("odoo.addons.base.maintenance", None, is_package=True)
@@ -358,7 +357,19 @@ def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
     feed unittest.TestLoader.loadTestsFromModule() """
     # Try to import the module
-    modpath = 'odoo.addons.' + module
+    results = _get_tests_modules('odoo.addons', module)
+
+    try:
+        importlib.import_module('odoo.upgrade.%s' % module)
+    except ImportError:
+        pass
+    else:
+        results += _get_tests_modules('odoo.upgrade', module)
+
+    return results
+
+def _get_tests_modules(path, module):
+    modpath = '%s.%s' % (path, module)
     try:
         mod = importlib.import_module('.tests', modpath)
     except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6
@@ -484,18 +495,13 @@ class OdooTestResult(unittest.result.TestResult):
 
 
 class OdooTestRunner(object):
-    """A test runner class that displays results in in logger.
-    Simplified verison of TextTestRunner(
+    """A test runner class that displays results in in logger using OdooTestResult.
+    Simplified verison of TextTestRunner
     """
 
     def run(self, test):
         result = OdooTestResult()
-
-        start_time = time.perf_counter()
         test(result)
-        time_taken = time.perf_counter() - start_time
-        run = result.testsRun
-        _logger.info("Ran %d test%s in %.3fs", run, run != 1 and "s" or "", time_taken)
         return result
 
 current_test = None
@@ -524,8 +530,10 @@ def run_unit_tests(module_name, position='at_install'):
             t0_sql = odoo.sql_db.sql_counter
             _logger.info('%s running tests.', m.__name__)
             result = OdooTestRunner().run(suite)
+            log_level = logging.INFO
             if time.time() - t0 > 5:
-                _logger.log(25, "%s tested in %.2fs, %s queries", m.__name__, time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
+                log_level = logging.RUNBOT
+            _logger.log(log_level, "%s ran %s tests in %.2fs, %s queries", m.__name__, result.testsRun, time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
             if not result.wasSuccessful():
                 r = False
                 _logger.error("Module %s: %d failures, %d errors", module_name, len(result.failures), len(result.errors))

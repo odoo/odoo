@@ -59,7 +59,7 @@ var Wysiwyg = Widget.extend({
      * @override
      **/
     willStart: function () {
-        new SummernoteManager(this);
+        this._summernoteManager = new SummernoteManager(this);
         this.$target = this.$el;
         return this._super();
     },
@@ -151,6 +151,15 @@ var Wysiwyg = Widget.extend({
             this.$target.html(html);
         }
         return Promise.resolve({isDirty:isDirty, html:html});
+    },
+    /**
+     * Create/Update cropped attachments.
+     *
+     * @param {jQuery} $editable
+     * @returns {Promise}
+     */
+    saveCroppedImages: function ($editable) {
+        return this._summernoteManager.saveCroppedImages($editable);
     },
     /**
      * @param {String} value

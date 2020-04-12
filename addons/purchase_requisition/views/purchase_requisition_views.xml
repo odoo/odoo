@@ -133,8 +133,8 @@
                 <group>
                     <group>
                         <field name="is_quantity_copy" invisible='1'/>
-                        <field name="user_id" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
-                        <field name="type_id" attrs="{'readonly': [('state','!=','draft')]}" widget="selection"/>
+                        <field name="user_id" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}" domain="[('share', '=', False)]"/>
+                        <field name="type_id" attrs="{'readonly': [('state','!=','draft')]}"/>
                         <field name="vendor_id" context="{'res_partner_search_mode': 'supplier'}" attrs="{'required': [('is_quantity_copy', '=', 'none')], 'readonly': [('state', 'in', ['ongoing','done'])]}"/>
                         <field name="currency_id" groups="base.group_multi_currency"/>
                     </group>
@@ -150,7 +150,9 @@
                     <page string="Products" name="products">
                         <field name="line_ids">
                             <tree string="Products" editable="bottom">
-                                <field name="product_id" context="{'default_purchase_requisition': 'tenders'}" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                <field name="product_id" context="{'default_purchase_requisition': 'tenders'}"
+                                       domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', '=', '')], 'readonly': [('parent.state', '!=', 'draft')]}"/>
                                 <field name="product_qty"/>
                                 <field name="qty_ordered" optional="show"/>
                                 <field name="product_uom_category_id" invisible="1"/>
@@ -162,7 +164,8 @@
                             </tree>
                             <form string="Products">
                                 <group>
-                                    <field name="product_id" />
+                                    <field name="product_id" context="{'default_purchase_requisition': 'tenders'}"
+                                           domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
                                     <field name="product_qty"/>
                                     <field name="qty_ordered"/>
                                     <field name="product_uom_category_id" invisible="1"/>

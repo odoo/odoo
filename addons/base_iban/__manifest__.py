@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'IBAN Bank Accounts',
-    'category': 'Tools',
+    'category': 'Hidden/Tools',
     'description': """
 This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for it's validity.
 ======================================================================================================================

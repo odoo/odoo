@@ -752,7 +752,9 @@
                                         <div class="s_website_form_rows row s_col_no_bgcolor">
                                             <div class="form-group col-12 s_website_form_field" data-type="char" data-name="Field">
                                                 <div class="row s_col_no_resize s_col_no_bgcolor">
-                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale1">Your Reference</label>
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale1">
+                                                        <span class="s_website_form_label_content">Your Reference</span>
+                                                    </label>
                                                     <div class="col-sm">
                                                         <input id="sale1" type="text" class="form-control s_website_form_input" name="client_order_ref"/>
                                                     </div>
@@ -760,7 +762,9 @@
                                             </div>
                                             <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="text" data-name="Field">
                                                 <div class="row s_col_no_resize s_col_no_bgcolor">
-                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale2">Give us your feedback</label>
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale2">
+                                                        <span class="s_website_form_label_content">Give us your feedback</span>
+                                                    </label>
                                                     <div class="col-sm">
                                                         <textarea id="sale2" class="form-control s_website_form_input" name="Give us your feedback" />
                                                     </div>
@@ -768,7 +772,9 @@
                                             </div>
                                             <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="binary" data-name="Field">
                                                 <div class="row s_col_no_resize s_col_no_bgcolor">
-                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale3">A document to provide</label>
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale3">
+                                                        <span class="s_website_form_label_content">A document to provide</span>
+                                                    </label>
                                                     <div class="col-sm">
                                                         <input id="sale3" type="file" class="form-control-file s_website_form_input" name="a_document" />
                                                     </div>
@@ -996,7 +1002,7 @@
             <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-sm">
                 <tbody>
                     <tr t-foreach="suggested_products" t-as="product">
-                        <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
+                        <t t-set="combination_info" t-value="product._get_combination_info_variant(pricelist=website_sale_order.pricelist_id)"/>
                         <td class='td-img text-center'>
                             <a t-att-href="product.website_url">
                                 <span t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" />
@@ -1241,7 +1247,7 @@
                                         <div class="w-100"/>
                                         <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
                                             <label class="col-form-label" for="country_id">Country</label>
-                                            <select id="country_id" name="country_id" t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}">
+                                            <select id="country_id" name="country_id" t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}" t-att-mode="mode[1]">
                                                 <option value="">Country...</option>
                                                 <t t-foreach="countries" t-as="c">
                                                     <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
@@ -1254,7 +1260,7 @@
                                             <label class="col-form-label" for="state_id">State / Province</label>
                                             <select name="state_id" t-attf-class="form-control #{error.get('state_id') and 'is-invalid' or ''}" data-init="1">
                                                 <option value="">State / Province...</option>
-                                                <t t-foreach="country and country.state_ids or []" t-as="s">
+                                                <t t-foreach="country_states" t-as="s">
                                                     <option t-att-value="s.id" t-att-selected="s.id == ('state_id' in checkout and country and checkout['state_id'] != '' and int(checkout['state_id']))">
                                                         <t t-esc="s.name" />
                                                     </option>
@@ -1625,13 +1631,12 @@
                 <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and order.reference" class="card-body">
                     <b>Communication: </b><span t-esc='order.reference'/>
                 </div>
-                <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.acquirer_id.provider == 'transfer') and (payment_tx_id.currency_id.name == 'EUR')">
-                    <div class="card-body" t-if="payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid">
+
+                <div t-if="payment_tx_id.acquirer_id.qr_code and (payment_tx_id.acquirer_id.provider == 'transfer')">
+                    <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
+                    <div class="card-body" t-if="qr_code">
                         <h3>Or scan me with your banking app.</h3>
-                        <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference)"/>
-                    </div>
-                    <div class="card-body" t-if="payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid == False">
-                        <h3>The SEPA QR Code informations are not set correctly.</h3>
+                        <img class="border border-dark rounded" t-att-src="qr_code"/>
                     </div>
                 </div>
             </div>
@@ -1674,7 +1679,7 @@
         <t t-call="website.layout">
           <div id="wrap">
               <div class="oe_structure" id="oe_structure_website_sale_terms_1">
-                <section class="s_title">
+                <section class="s_title" data-vcss="001">
                   <div class="container">
                     <div class="row">
                       <div class="col-lg-12">

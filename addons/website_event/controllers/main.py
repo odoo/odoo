@@ -5,6 +5,8 @@ import re
 import werkzeug
 from werkzeug.datastructures import OrderedMultiDict
 
+from ast import literal_eval
+from collections import defaultdict
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -12,7 +14,8 @@ from odoo import fields, http, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
-from odoo.tools.misc import get_lang
+from odoo.osv import expression
+from odoo.tools.misc import get_lang, format_date
 
 
 class WebsiteEventController(http.Controller):
@@ -28,41 +31,40 @@ class WebsiteEventController(http.Controller):
 
         searches.setdefault('search', '')
         searches.setdefault('date', 'all')
+        searches.setdefault('tags', '')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
 
         website = request.website
+        today = datetime.today()
 
         def sdn(date):
             return fields.Datetime.to_string(date.replace(hour=23, minute=59, second=59))
 
         def sd(date):
             return fields.Datetime.to_string(date)
-        today = datetime.today()
+
+        def get_month_filter_domain(filter_name, months_delta):
+            first_day_of_the_month = today.replace(day=1)
+            filter_string = _('This month') if months_delta == 0 \
+                else format_date(request.env, value=today + relativedelta(months=months_delta),
+                                 date_format='LLLL', lang_code=get_lang(request.env).code).capitalize()
+            return [filter_name, filter_string, [
+                ("date_end", ">=", sd(first_day_of_the_month + relativedelta(months=months_delta))),
+                ("date_begin", "<", sd(first_day_of_the_month + relativedelta(months=months_delta+1)))],
+                0]
+
         dates = [
-            ['all', _('Next Events'), [("date_end", ">", sd(today))], 0],
+            ['all', _('Upcoming Events'), [("date_end", ">", sd(today))], 0],
             ['today', _('Today'), [
                 ("date_end", ">", sd(today)),
                 ("date_begin", "<", sdn(today))],
                 0],
-            ['week', _('This Week'), [
-                ("date_end", ">=", sd(today + relativedelta(days=-today.weekday()))),
-                ("date_begin", "<", sdn(today + relativedelta(days=6-today.weekday())))],
-                0],
-            ['nextweek', _('Next Week'), [
-                ("date_end", ">=", sd(today + relativedelta(days=7-today.weekday()))),
-                ("date_begin", "<", sdn(today + relativedelta(days=13-today.weekday())))],
-                0],
-            ['month', _('This month'), [
-                ("date_end", ">=", sd(today.replace(day=1))),
-                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=1)).strftime('%Y-%m-%d 00:00:00'))],
-                0],
-            ['nextmonth', _('Next month'), [
-                ("date_end", ">=", sd(today.replace(day=1) + relativedelta(months=1))),
-                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=2)).strftime('%Y-%m-%d 00:00:00'))],
-                0],
+            get_month_filter_domain('month', 0),
+            get_month_filter_domain('nextmonth1', 1),
+            get_month_filter_domain('nextmonth2', 2),
             ['old', _('Past Events'), [
-                ("date_end", "<", today.strftime('%Y-%m-%d 00:00:00'))],
+                ("date_end", "<", sd(today))],
                 0],
         ]
 
@@ -71,6 +73,19 @@ class WebsiteEventController(http.Controller):
 
         if searches['search']:
             domain_search['search'] = [('name', 'ilike', searches['search'])]
+
+        search_tags = self._extract_searched_event_tags(searches)
+        if search_tags:
+            # Example: You filter on age: 10-12 and activity: football.
+            # Doing it this way allows to only get events who are tagged "age: 10-12" AND "activity: football".
+            # Add another tag "age: 12-15" to the search and it would fetch the ones who are tagged:
+            # ("age: 10-12" OR "age: 12-15") AND "activity: football
+            grouped_tags = defaultdict(list)
+            for tag in search_tags:
+                grouped_tags[tag.category_id].append(tag)
+            domain_search['tags'] = []
+            for group in grouped_tags:
+                domain_search['tags'] = expression.AND([domain_search['tags'], [('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])]])
 
         current_date = None
         current_type = None
@@ -85,11 +100,9 @@ class WebsiteEventController(http.Controller):
             current_type = EventType.browse(int(searches['type']))
             domain_search["type"] = [("event_type_id", "=", int(searches["type"]))]
 
-        if searches["country"] != 'all' and searches["country"] != 'online':
+        if searches["country"] != 'all':
             current_country = request.env['res.country'].browse(int(searches['country']))
             domain_search["country"] = ['|', ("country_id", "=", int(searches["country"])), ("country_id", "=", False)]
-        elif searches["country"] == 'online':
-            domain_search["country"] = [("country_id", "=", False)]
 
         def dom_without(without):
             domain = []
@@ -104,11 +117,6 @@ class WebsiteEventController(http.Controller):
                 date[3] = Event.search_count(dom_without('date') + date[2])
 
         domain = dom_without('type')
-        types = Event.read_group(domain, ["id", "event_type_id"], groupby=["event_type_id"], orderby="event_type_id")
-        types.insert(0, {
-            'event_type_id_count': sum([int(type['event_type_id_count']) for type in types]),
-            'event_type_id': ("all", _("All Categories"))
-        })
 
         domain = dom_without('country')
         countries = Event.read_group(domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
@@ -130,8 +138,6 @@ class WebsiteEventController(http.Controller):
         order = 'date_begin'
         if searches.get('date', 'all') == 'old':
             order = 'date_begin desc'
-        if searches["country"] != 'all':   # if we are looking for a specific country
-            order = 'is_online, ' + order  # show physical events first
         order = 'is_published desc, ' + order
         events = Event.search(dom_without("none"), limit=step, offset=pager['offset'], order=order)
 
@@ -143,10 +149,11 @@ class WebsiteEventController(http.Controller):
             'current_type': current_type,
             'event_ids': events,  # event_ids used in website_event_track so we keep name as it is
             'dates': dates,
-            'types': types,
+            'categories': request.env['event.tag.category'].search([]),
             'countries': countries,
             'pager': pager,
             'searches': searches,
+            'search_tags': search_tags,
             'keep': keep,
         }
 
@@ -203,7 +210,6 @@ class WebsiteEventController(http.Controller):
             'event': event,
             'main_object': event,
             'range': range,
-            'registrable': event.sudo().event_registrations_open,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url'),
         }
@@ -287,9 +293,16 @@ class WebsiteEventController(http.Controller):
     @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
     def registration_new(self, event, **post):
         tickets = self._process_tickets_form(event, post)
+        availability_check = True
+        if event.seats_limited:
+            ordered_seats = 0
+            for ticket in tickets:
+                ordered_seats += ticket['quantity']
+            if event.seats_available < ordered_seats:
+                availability_check = False
         if not tickets:
             return False
-        return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
+        return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event, 'availability_check': availability_check})
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
@@ -298,7 +311,6 @@ class WebsiteEventController(http.Controller):
             {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
         """
         registration_fields = request.env['event.registration']._fields
-
         registrations = {}
         global_values = {}
         for key, value in form_details.items():
@@ -306,7 +318,7 @@ class WebsiteEventController(http.Controller):
             if field_name not in registration_fields:
                 continue
             elif isinstance(registration_fields[field_name], (fields.Many2one, fields.Integer)):
-                value = int(value)
+                value = int(value) or False  # 0 is considered as a void many2one aka False
             else:
                 value = value
 
@@ -345,3 +357,15 @@ class WebsiteEventController(http.Controller):
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url')
         })
+
+    def _extract_searched_event_tags(self, searches):
+        tags = request.env['event.tag']
+        if searches.get('tags'):
+            try:
+                tag_ids = literal_eval(searches['tags'])
+            except:
+                pass
+            else:
+                # perform a search to filter on existing / valid tags implicitely
+                tags = request.env['event.tag'].search([('id', 'in', tag_ids)])
+        return tags

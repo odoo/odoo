@@ -7,9 +7,16 @@
         </xpath>
     </template>
 
-    <template id="qunit_suite" name="google_calendar_tests" inherit_id="web.qunit_suite">
-        <xpath expr="//t[@t-set='head']" position="inside">
+    <template id="qunit_suite" name="google_calendar_tests" inherit_id="web.qunit_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/google_calendar/static/tests/mock_server.js" />
             <script type="text/javascript" src="/google_calendar/static/tests/google_calendar_tests.js"></script>
+        </xpath>
+    </template>
+
+    <template id="qunit_mobile_suite" name="mail_mobile_tests" inherit_id="web.qunit_mobile_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/google_calendar/static/tests/mock_server.js" />
         </xpath>
     </template>
 </odoo>

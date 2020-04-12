@@ -61,11 +61,11 @@
 
         <template id="auth_signup.reset_password" name="Reset password">
             <t t-call="web.login_layout">
-                <div t-if="message">
+                <div t-if="message" class="oe_login_form clearfix">
                     <p class="alert alert-success" t-if="message" role="status">
                         <t t-esc="message"/>
                     </p>
-                    <a href="/web/login" class="btn btn-link float-right" role="button">Back to Login</a>
+                    <a href="/web/login" class="btn btn-link btn-sm float-right" role="button">Back to Login</a>
                 </div>
 
                 <form class="oe_reset_password_form" role="form" method="post" t-if="not message">
@@ -91,8 +91,8 @@
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
                     <input type="hidden" name="token" t-att-value="token"/>
                     <div class="clearfix oe_login_buttons">
-                        <div class="d-flex justify-content-between align-items-center small">
-                            <button type="submit" class="btn btn-primary btn-sm">Confirm</button>
+                        <button type="submit" class="btn btn-primary btn-block">Confirm</button>
+                        <div class="d-flex justify-content-between align-items-center small mt-2">
                             <a t-if="not token" t-attf-href="/web/login?{{ keep_query() }}">Back to Login</a>
                             <a t-if="invalid_token" href="/web/login">Back to Login</a>
                         </div>
