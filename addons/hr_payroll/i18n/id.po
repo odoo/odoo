@@ -13,6 +13,7 @@
 # Ryanto The <ry.the77@gmail.com>, 2019
 # Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2019
 # PAS IRVANUS <ipankbiz@gmail.com>, 2019
+# pnyet <david@zeromail.us>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: PAS IRVANUS <ipankbiz@gmail.com>, 2019\n"
+"Last-Translator: pnyet <david@zeromail.us>, 2020\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgstr ""
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Payroll Rules</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Aturan Penggajian</span>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
@@ -65,6 +66,9 @@ msgid ""
 " selected employee(s) based on the dates and credit note specified on "
 "Payslips Run.</span>"
 msgstr ""
+"<span colspan=\"4\" nolabel=\"1\">Alat bantu (wizard) ini akan mengeluarkan "
+"slip gaji utk semua keryawan terpilih berdasarkan tanggal dan catatan kredit"
+" yg ditentukan pada slip gaji berjalan.</span>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -153,6 +157,9 @@ msgid ""
 "            payment of the employees. It can be the social security, the\n"
 "            state or anyone that collect or inject money on payslips."
 msgstr ""
+"Kontribusi terdaftar adalah pihak ketiga yang terdapat didalam komponen gaji"
+" karyawan. Dapat berupa asuransi, pajak negara, atau siapapun yang memungut "
+"atau menambahkan uang kedalam slip gaji."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_account_accountant
@@ -179,7 +186,7 @@ msgstr "Aktif"
 #. module: hr_payroll
 #: model_terms:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid "Add a new contribution register"
-msgstr ""
+msgstr "Daftarkan kontribusi baru"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -199,7 +206,7 @@ msgstr "Semua Aturan Turunan"
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.ALW
 msgid "Allowance"
-msgstr ""
+msgstr "Tunjangan"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
@@ -252,7 +259,7 @@ msgstr "Dasar"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_basic
 msgid "Basic Salary"
-msgstr ""
+msgstr "Gaji Pokok"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_be_hr_payroll
@@ -450,12 +457,12 @@ msgstr "Registrasi Kontribusi"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
 msgid "Conveyance Allowance"
-msgstr ""
+msgstr "Tunjangan Transportasi"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
 msgid "Conveyance Allowance For Gravie"
-msgstr ""
+msgstr "Tunjangan Transportasi Untuk Gravie"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_uid
@@ -514,7 +521,7 @@ msgstr "Sampai Tanggal"
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.DED
 msgid "Deduction"
-msgstr ""
+msgstr "Potongan"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__default_value
@@ -665,13 +672,14 @@ msgstr "Karyawan"
 #: code:addons/hr_payroll/models/hr_salary_rule.py:92
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
-msgstr ""
+msgstr "Salah Anda tidak dapat membuat hirarki Aturan Gaji secara rekursif."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:179
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rules."
 msgstr ""
+"Salah! Anda tidak dapat membuat hirarki Struktur Gaji secara rekursif."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__register_id
@@ -728,7 +736,7 @@ msgstr "Buat Slip Gaji untuk semuar karyawan yang dipilih"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
 msgid "Get 1% of sales"
-msgstr ""
+msgstr "Dapatkan 1% dari penjualan"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:182
@@ -740,7 +748,7 @@ msgstr "Cuti Global"
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
 #: model:hr.salary.rule.category,name:hr_payroll.GROSS
 msgid "Gross"
-msgstr ""
+msgstr "Kotor"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -752,7 +760,7 @@ msgstr "Kelompokkan Menurut"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
 msgid "House Rent Allowance"
-msgstr ""
+msgstr "Tunjangan Sewa Rumah"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__id
@@ -938,7 +946,7 @@ msgstr "Jangkauan Maksimum"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
 msgid "Meal Voucher"
-msgstr ""
+msgstr "Voucher Makan"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_min
@@ -978,7 +986,7 @@ msgstr "Bersih"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_net
 msgid "Net Salary"
-msgstr ""
+msgstr "Gaji Bersih"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:201
@@ -1078,7 +1086,7 @@ msgstr "Penggajian"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
 msgid "Payroll Contribution Register Report"
-msgstr ""
+msgstr "Laporan Penggajian Kontribusi Terdaftar"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -1105,7 +1113,7 @@ msgstr "Slip Gaji"
 #: code:addons/hr_payroll/models/hr_payslip.py:82
 #, python-format
 msgid "Payslip 'Date From' must be earlier 'Date To'."
-msgstr ""
+msgstr "Slip Gaji 'Tanggal Dari' Harus lebih awal dari 'Tanggal Ke'"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
@@ -1124,12 +1132,12 @@ msgstr "Detil Perhitungan Slip Gaji"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__payslip_count
 msgid "Payslip Count"
-msgstr ""
+msgstr "Hitung Slip Gaji"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
 msgid "Payslip Details Report"
-msgstr ""
+msgstr "Laporan Rincian Slip Gaji"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
@@ -1164,7 +1172,7 @@ msgstr "Baris Slip Gaji Menurut Registrasi Kontribusi"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
 msgid "Payslip Lines by Contribution Registers"
-msgstr ""
+msgstr "Baris Slip Gaji berdasarkan Kontribusi Terdaftar"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__name
@@ -1234,12 +1242,12 @@ msgstr "Cetak"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_professionaltax1
 msgid "Professional Tax"
-msgstr ""
+msgstr "Pajak Tenaga Profesional"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
 msgid "Provident Fund"
-msgstr ""
+msgstr "Dana Penghematan"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -1345,7 +1353,7 @@ msgstr "Perhitungan Gaji"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule
 msgid "Salary Rule"
-msgstr ""
+msgstr "Aturan Gaji"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
@@ -1623,7 +1631,7 @@ msgstr ""
 #: code:addons/hr_payroll/models/hr_salary_rule.py:36
 #, python-format
 msgid "You cannot create a recursive salary structure."
-msgstr ""
+msgstr "Anda tidak dapat membuat struktur gaji secara rekursif."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:127
