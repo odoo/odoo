@@ -849,6 +849,7 @@ class AccountTaxTemplate(models.Model):
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4), default=0)
     description = fields.Char(string='Display on Invoices')
+    minimum_base = fields.Float("Minimum document-wide base amount", help="If set, this tax only applies on any given document (eg. invoice) if all it's bases sum up at least to this minimum amount.")
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Subsequent Taxes', default=False,
@@ -904,6 +905,7 @@ class AccountTaxTemplate(models.Model):
             'sequence': self.sequence,
             'amount': self.amount,
             'description': self.description,
+            'minimum_base': self.minimum_base,
             'price_include': self.price_include,
             'include_base_amount': self.include_base_amount,
             'analytic': self.analytic,
