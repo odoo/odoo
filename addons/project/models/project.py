@@ -464,12 +464,20 @@ class Project(models.Model):
         not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
+<<<<<<< HEAD
     def action_view_tasks(self):
         action = self.with_context(active_id=self.id, active_ids=self.ids) \
             .env.ref('project.act_project_project_2_project_task_all') \
             .sudo().read()[0]
         action['display_name'] = self.name
         return action
+=======
+    def open_tasks(self):
+        ctx = dict(self._context)
+        ctx.update({'search_default_project_id': self.id, 'default_project_id': self.id})
+        action = self.env['ir.actions.act_window'].for_xml_id('project', 'act_project_project_2_project_task_all')
+        return dict(action, context=ctx)
+>>>>>>> 0317239f77a... temp
 
     def action_view_account_analytic_line(self):
         """ return the action to see all the analytic lines of the project's analytic account """
