@@ -2791,12 +2791,12 @@ msgstr "Çekme & İtme"
 #. module: mrp
 #: selection:stock.rule,action:0
 msgid "Pull From"
-msgstr ""
+msgstr "Çekme"
 
 #. module: mrp
 #: selection:stock.rule,action:0
 msgid "Push To"
-msgstr ""
+msgstr "İtme"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_quality_control
@@ -3238,6 +3238,8 @@ msgid ""
 "Some of your components are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct components."
 msgstr ""
+"Bazı bileşenleriniz izlenir, doğru bileşenleri almak için bir üretim emri "
+"belirtmeniz gerekir."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:590
@@ -3320,12 +3322,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_type_id
 msgid "Stock After Manufacturing Operation Type"
-msgstr ""
+msgstr "Stok sonrası üretim operasyon türü"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_rule_id
 msgid "Stock After Manufacturing Rule"
-msgstr ""
+msgstr "Stok sonrası üretim kuralı"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
@@ -3350,7 +3352,7 @@ msgstr "Stok Kuralı"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
 msgid "Stock after Manufacturing Location"
-msgstr ""
+msgstr "Stok sonrası üretim konumu"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
@@ -3428,7 +3430,7 @@ msgstr "İş Emri geçici olarak doldurulduğunda, False olan Teknik Alan"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__valid_product_attribute_value_ids
 msgid "Technical compute"
-msgstr ""
+msgstr "Teknik hesaplama"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__is_user_working
@@ -3451,6 +3453,8 @@ msgid ""
 "Technical field used to resolve multiple attachments in a multi-website "
 "environment."
 msgstr ""
+"Çoklu web sitesi ortamında birden çok eki çözmek için kullanılan teknik "
+"alan."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__consumed_less_than_planned
@@ -3624,6 +3628,8 @@ msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
 msgstr ""
+"Bu, ürünün BoM'ına dayalı maliyettir. Ürünü oluşturmak için gereken "
+"bileşenlerin ve işlemlerin maliyetlerinin toplanmasıyla hesaplanır."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4058,7 +4064,7 @@ msgstr "Depo"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr ""
+msgstr "Yetersiz Parçalama Miktarı Uyarısı"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:95 code:addons/mrp/models/mrp_bom.py:290
@@ -4107,6 +4113,10 @@ msgid ""
 " operation type. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
+"Bir tedarik, bir işlem tipi seti olan bir 'üretim' rotasına sahip olduğunda,"
+" o ürün için aynı İşlem Tipi bir Ürün Ağacı kullanarak bir Üretim Siparişi "
+"yaratmaya çalışacaktır. Bu, farklı Ürün Ağaçlarında farklı imalat "
+"siparişlerini tetikleyen tedarik kurallarını tanımlamaya olanak tanır."
 
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
@@ -4126,6 +4136,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a manufacturing order is "
 "created to fulfill the need."
 msgstr ""
+"<b>%s</b>,<br/> ürünlerine ihtiyaç duyulduğunda, ihtiyacı karşılamak için "
+"bir üretim siparişi yaratılır."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_wood_panel
@@ -4397,6 +4409,8 @@ msgstr ""
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
+"Yalnızca benzersiz seri numarasına sahip ürünler %s için 1.0'ı "
+"işleyebilirsiniz."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:143
@@ -4505,7 +4519,7 @@ msgstr ""
 #: code:addons/mrp/wizard/mrp_product_produce.py:78
 #, python-format
 msgid "You need to provide a lot for the finished product."
-msgstr ""
+msgstr "İşlenmiş ürün için bir lot sağlamanız gerekiyor"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:95
@@ -4532,6 +4546,8 @@ msgid ""
 "You will get here statistics about the\n"
 "              work orders duration related to this routing."
 msgstr ""
+"Bu rota ile ilgili iş emri süresine ilişkin istatistikleri burada "
+"bulabilirsiniz."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo

@@ -31,7 +31,6 @@
 # Antoine Lorence <antoine.lorence@gmail.com>, 2019
 # Damien Bouvy <dbo@odoo.com>, 2019
 # Alex T <alt@odoo.com>, 2019
-# Valaeys Stéphane <svalaeys@fiefmanage.ch>, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
 # Martin Trigaux, 2019
@@ -44,6 +43,9 @@
 # Priscilla Sanchez <prs@odoo.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
+# Valaeys Stéphane <svalaeys@fiefmanage.ch>, 2020
+# Sylvain Dubuisson <sylvain@orderly.fr>, 2020
+# Christelle Pinchart <cpi@odoo.com>, 2020
 # Jonathan <jcs@odoo.com>, 2020
 # 
 msgid ""
@@ -1736,13 +1738,13 @@ msgstr "Pourcentage de correspondance des montants"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_max
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_amount_max
 msgid "Amount Max Parameter"
-msgstr ""
+msgstr "Paramètre Montant maximum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_min
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_amount_min
 msgid "Amount Min Parameter"
-msgstr ""
+msgstr "Paramètre montant minimum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_nature
@@ -2170,7 +2172,7 @@ msgstr "Import automatique"
 #: code:addons/account/models/account_move.py:399
 #, python-format
 msgid "Automatic reversal of: %s"
-msgstr "extourne :"
+msgstr "Extourne automatique de : %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -5401,6 +5403,8 @@ msgid ""
 "If this checkbox is ticked, this entry will be automatically reversed at the"
 " reversal date you defined."
 msgstr ""
+"Si cette case est cochée, cette pièce comptable sera automatiquement "
+"extournée à la date indiquée."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7935,7 +7939,7 @@ msgstr "Différence de paiement"
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_difference_handling
 #: model:ir.model.fields,field_description:account.field_account_register_payments__payment_difference_handling
 msgid "Payment Difference Handling"
-msgstr ""
+msgstr "Traitement des écarts de paiement"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment__journal_id
@@ -8576,7 +8580,7 @@ msgstr "Destinataires"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__recompute_tax_line
 msgid "Recompute Tax Line"
-msgstr ""
+msgstr "Recalculer la ligne de taxe"
 
 #. module: account
 #. openerp-web
@@ -9124,7 +9128,7 @@ msgstr "Cherche un modèle de plan de comptes"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr ""
+msgstr "Chercher des positions fiscales"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -10740,6 +10744,8 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
 msgstr ""
+"Le modèle de lettrage ne sera appliqué qu'aux catégories de clients / "
+"fournisseurs sélectionnées."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_ids
@@ -10748,6 +10754,8 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customers/vendors."
 msgstr ""
+"Le modèle de lettrage ne sera appliqué qu'aux clients / fournisseurs "
+"sélectionnés."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_nature
@@ -10769,6 +10777,8 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
 msgstr ""
+"Le modèle de lettrage ne sera appliqué que lorsqu'un client / fournisseur "
+"est défini."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -10777,6 +10787,8 @@ msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
+"Le modèle de lettrage ne sera appliqué que lorsque le montant est plus petit"
+" que, plus grand que, ou entre le(s) montant(s) spécifié(s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -10787,6 +10799,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"Le modèle de lettrage ne sera appliqué que lorsque le libellé :\n"
+"        * Contient : la proposition de libellé doit contenir cette chaine (insensible à la casse).\n"
+"        * Ne contient pas : l'opposé de \"Contient\".\n"
+"        * Match Regex : définissez vos propres expressions régulières."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_journal_ids
@@ -10794,6 +10810,8 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be available from the selected journals."
 msgstr ""
+"Le modèle de lettrage ne sera disponible que depuis les journaux "
+"sélectionnés."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency

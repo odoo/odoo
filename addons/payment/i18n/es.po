@@ -18,6 +18,7 @@
 # Efrem Jimenez <efj@odoo.com>, 2019
 # Carles Antoli <carlesantoli@hotmail.com>, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
+"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,7 +161,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Get my Stripe keys</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\">Obtener mis claves de Stripe </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -286,7 +287,7 @@ msgstr "Ya existe una transacción de pago."
 #: code:addons/payment/models/account_payment.py:57
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "Se requiere un token para crear una nueva transacción de pago."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:657
@@ -1228,12 +1229,14 @@ msgstr ""
 #, python-format
 msgid "Only transactions having the capture status can be captured."
 msgstr ""
+"Solo se pueden capturar transacciones que tengan el estado de captura."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:1025
 #, python-format
 msgid "Only transactions having the capture status can be voided."
 msgstr ""
+"Solo se pueden anular las transacciones que tienen el estado de captura."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1379,7 +1382,7 @@ msgstr "Transacciones de pago"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
 msgid "Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Asistente de incorporación de pago adquirido"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
@@ -1513,7 +1516,7 @@ msgstr "Por favor espere..."
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "Post process payment transactions"
-msgstr ""
+msgstr "Transacciones de pago posteriores al proceso"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1620,7 +1623,7 @@ msgstr "Tarjeta de ahorro Datos soportados"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr ""
+msgstr "Método de pago de incorporación seleccionado"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
@@ -1887,7 +1890,7 @@ msgstr "No se puede contactar con el servidor Odoo."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Use SEPA QR Code"
-msgstr ""
+msgstr "Utilice el código QR de SEPA"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__date
