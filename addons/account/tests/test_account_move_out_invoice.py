@@ -2489,3 +2489,52 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
 
         self.assertEqual(len(invoice.invoice_line_ids), 1)
         self.assertEqual(len(invoice.line_ids), 2)
+
+    def test_out_invoice_recomputation_receivable_lines(self):
+        ''' Test a tricky specific case caused by some framework limitations. Indeed, when
+        saving a record, some fields are written to the records even if the value is the same
+        as the previous one. It could lead to an unbalanced journal entry when the recomputed
+        line is the receivable/payable one.
+
+        For example, the computed price_subtotal are the following:
+        1471.95 / 0.14 = 10513.93
+        906468.18 / 0.14 = 6474772.71
+        1730.84 / 0.14 = 12363.14
+        17.99 / 0.14 = 128.50
+        SUM = 6497778.28
+
+        But when recomputing the receivable line:
+        909688.96 / 0.14 = 6497778.285714286 => 6497778.29
+
+        This recomputation was made because the framework was writing the same 'price_unit'
+        as the previous value leading to a recomputation of the debit/credit.
+        '''
+        self.env['decimal.precision'].search([
+            ('name', '=', self.env['account.move.line']._fields['price_unit']._digits),
+        ]).digits = 5
+
+        self.env['res.currency.rate'].create({
+            'name': '2019-01-01',
+            'rate': 0.14,
+            'currency_id': self.currency_data['currency'].id,
+            'company_id': self.company_data['company'].id,
+        })
+
+        invoice = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.env.ref('account.account_payment_term_immediate').id,
+            'invoice_line_ids': [
+                (0, 0, {'name': 'line1', 'price_unit': 38.73553, 'quantity': 38.0}),
+                (0, 0, {'name': 'line2', 'price_unit': 4083.19000, 'quantity': 222.0}),
+                (0, 0, {'name': 'line3', 'price_unit': 49.45257, 'quantity': 35.0}),
+                (0, 0, {'name': 'line4', 'price_unit': 17.99000, 'quantity': 1.0}),
+            ],
+        })
+
+        # assertNotUnbalancedEntryWhenSaving
+        with Form(invoice) as move_form:
+            move_form.invoice_payment_term_id = self.env.ref('account.account_payment_term_30days')

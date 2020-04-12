@@ -91,6 +91,7 @@ class SaleOrder(models.Model):
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
                 if to_log:
                     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
+                    documents = {k:v for k, v in documents.items() if k[0].state != 'cancel'}
                     order._log_decrease_ordered_quantity(documents)
         return res
 
@@ -224,7 +225,7 @@ class SaleOrderLine(models.Model):
             else:
                 line.display_qty_widget = False
 
-    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'order_id.warehouse_id', 'order_id.commitment_date')
+    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'order_id.warehouse_id', 'order_id.commitment_date')
     def _compute_qty_at_date(self):
         """ Compute the quantity forecasted of product at delivery date. There are
         two cases:
@@ -514,7 +515,7 @@ class SaleOrderLine(models.Model):
         pack = self.product_packaging
         qty = self.product_uom_qty
         q = default_uom._compute_quantity(pack.qty, self.product_uom)
-        if qty and q and (qty % q):
+        if qty and q and round(qty % q, 2):
             newqty = qty - (qty % q) + q
             return {
                 'warning': {

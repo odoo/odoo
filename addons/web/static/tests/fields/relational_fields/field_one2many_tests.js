@@ -6815,8 +6815,8 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('propagate context to sub views', async function (assert) {
-            assert.expect(5);
+        QUnit.test('propagate context to sub views without default_* keys', async function (assert) {
+            assert.expect(7);
 
             var form = await createView({
                 View: FormView,
@@ -6834,9 +6834,23 @@ QUnit.module('fields', {}, function () {
                 mockRPC: function (route, args) {
                     assert.strictEqual(args.kwargs.context.flutter, 'shy',
                         'view context key should be used for every rpcs');
+                    if (args.method === 'default_get') {
+                        if (args.model === 'partner') {
+                            assert.strictEqual(args.kwargs.context.default_flutter, 'why',
+                                "should have default_* values in context for form view RPCs");
+                        } else if (args.model === 'turtle') {
+                            assert.notOk(args.kwargs.context.default_flutter,
+                                "should not have default_* values in context for subview RPCs");
+                        }
+                    }
                     return this._super.apply(this, arguments);
                 },
-                viewOptions: { context: { flutter: 'shy' } },
+                viewOptions: {
+                    context: {
+                        flutter: 'shy',
+                        default_flutter: 'why',
+                    },
+                },
             });
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), 'pinky pie');
