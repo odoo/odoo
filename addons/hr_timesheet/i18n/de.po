@@ -23,6 +23,7 @@
 # Chris Egal <sodaswed@web.de>, 2019
 # Martin Trigaux, 2020
 # Leon Grill <leg@odoo.com>, 2020
+# Kevin Harrings <kha@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-02-13 07:24+0000\n"
 "PO-Revision-Date: 2016-08-05 12:59+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2020\n"
+"Last-Translator: Kevin Harrings <kha@odoo.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +49,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for project:</em>"
 msgstr ""
+"<em class=\"font-weight-normal text-muted\">Stundenzettel für Projekte:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -86,7 +88,7 @@ msgstr "<span class=\"o_stat_text\"/>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "<span> planned hours</span>"
-msgstr ""
+msgstr "<span> geplante Stunden</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -106,7 +108,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Responsible</span>"
-msgstr ""
+msgstr "<span>Verantwortliche</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -310,7 +312,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__progress
 msgid "Display progress of current task."
-msgstr ""
+msgstr "Fortschritte der aktuellen Aufgabe anzeigen."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -343,7 +345,7 @@ msgstr "Mitarbeiter"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__allow_timesheets
 msgid "Enable timesheeting on the project."
-msgstr ""
+msgstr "Stundennachweis für dieses Projekt aktivieren."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
@@ -409,19 +411,19 @@ msgstr "Zuletzt aktualisiert am"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Last month"
-msgstr ""
+msgstr "Letzter Monat"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Last week"
-msgstr ""
+msgstr "Letzte Woche"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Last year"
-msgstr ""
+msgstr "Letztes Jahr"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
@@ -503,7 +505,7 @@ msgstr "Projektzeiteinheit"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
 msgid "Record Time Off"
-msgstr ""
+msgstr "Urlaubstage eintragen"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -513,7 +515,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "Record a new activity"
-msgstr ""
+msgstr "Neue Aktivität eintragen"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours
@@ -571,7 +573,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Set the time unit used to record your timesheets"
-msgstr ""
+msgstr "Zeiteinheit der Stundennachweise einstellen"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -592,7 +594,7 @@ msgstr "Stopp"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Sub-tasks Hours Spent"
-msgstr ""
+msgstr "Geleistete Stunden auf Unteraufgaben"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -607,7 +609,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Synchronize time spent with our web/mobile apps"
-msgstr ""
+msgstr "Geleistete Stunden mit Web-/Mobile-App synchronisieren"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_task
@@ -660,7 +662,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "There are no timesheets."
-msgstr ""
+msgstr "Keine Stundennachweise gefunden."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -681,6 +683,8 @@ msgid ""
 "This task must be part of a project because there are some timesheets linked"
 " to it."
 msgstr ""
+"Diese Aufgabe muss einem Projekt zugeordnet werden da sie mit "
+"Stundennachweise verknüpft ist."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -710,7 +714,7 @@ msgstr ""
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "This year"
-msgstr ""
+msgstr "Dieses Jahr"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_create_timesheet__time_spent
@@ -720,7 +724,7 @@ msgstr "Uhrzeit"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Encoding"
-msgstr ""
+msgstr "Zeit eintragen"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -786,7 +790,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Date"
-msgstr ""
+msgstr "Stundennachweis nach Datum"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -811,17 +815,17 @@ msgstr "Zeiterfassung"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Timesheets By Employee"
-msgstr ""
+msgstr "Stundennachweis nach Mitarbeiter"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 msgid "Timesheets By Project"
-msgstr ""
+msgstr "Stundennachweis nach Projekt"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
 msgid "Timesheets By Task"
-msgstr ""
+msgstr "Stundennachweis nach Aufgabe"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
@@ -928,7 +932,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "for the"
-msgstr ""
+msgstr "für"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_create_timesheet_view_form

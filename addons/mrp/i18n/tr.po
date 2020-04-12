@@ -824,6 +824,7 @@ msgid ""
 "BoM cannot concern product %s and have a line with attributes (%s) at the "
 "same time."
 msgstr ""
+"BoM ürünü %s ve nitelikli (%s) satırları aynı zamanda karıştırılmamalıdır."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -3628,6 +3629,9 @@ msgid ""
 "Some components have been consumed for a lot/serial number that has not been produced. Unlock the MO and click on the components lines to correct it.\n"
 "List of the components:\n"
 msgstr ""
+"Bazı bileşenler üretilmemiş bir lot/seri numarası için tüketildi.\n"
+"MO'nun kilidini açın ve düzeltmek için bileşen satırlarına tıklayın.\n"
+"Bileşenlerin listesi:\n"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -3636,6 +3640,8 @@ msgid ""
 "Some of your byproducts are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct byproducts."
 msgstr ""
+"Bazı yan ürünleriniz izlenir, doğru yan ürünleri almak için bir üretim "
+"emrini belirtmeniz gerekir."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -3644,6 +3650,8 @@ msgid ""
 "Some of your components are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct components."
 msgstr ""
+"Bazı bileşenleriniz izlenir, doğru bileşenleri almak için bir üretim emri "
+"belirtmeniz gerekir."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3651,6 +3659,8 @@ msgid ""
 "Some product moves have already been confirmed, this manufacturing order "
 "can't be completely cancelled. Are you still sure you want to process ?"
 msgstr ""
+"Bazı ürün hareketleri doğrulandı, bu üretim emri iptal edilemez. Hala "
+"işlemek istediğinizden emin misiniz?"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3659,6 +3669,7 @@ msgid ""
 "Some work orders are already done, you cannot unplan this manufacturing "
 "order."
 msgstr ""
+"Bazı iş emirleri tamamlanmış, bu üretim emrinin planını kaldıramazsınız."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3667,6 +3678,7 @@ msgid ""
 "Some work orders have already started, you cannot unplan this manufacturing "
 "order."
 msgstr ""
+"Bazı iş emirleri çoktan başladı, bu üretim emrinin planını kaldıramazsınız."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -3739,12 +3751,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_type_id
 msgid "Stock After Manufacturing Operation Type"
-msgstr ""
+msgstr "Stok sonrası üretim operasyon türü"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_rule_id
 msgid "Stock After Manufacturing Rule"
-msgstr ""
+msgstr "Stok sonrası üretim kuralı"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
@@ -3769,7 +3781,7 @@ msgstr "Stok Kuralı"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
 msgid "Stock after Manufacturing Location"
-msgstr ""
+msgstr "Stok sonrası üretim konumu"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
@@ -3794,7 +3806,7 @@ msgstr "Saklanan Dosya adı"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__strict
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__consumption__strict
 msgid "Strict"
-msgstr ""
+msgstr "Sınır"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -3809,12 +3821,12 @@ msgstr "Alt BoM"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Subcontract the production of some products"
-msgstr ""
+msgstr "Bazı ürünlerin üretimini fason yapın"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
 msgid "Subcontracting"
-msgstr ""
+msgstr "Fason"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__is_done
@@ -3949,6 +3961,8 @@ msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
 msgstr ""
+"İş emrinin planlanan bitiş tarihi planlanan başlangıç tarihinden önce "
+"olamaz, lütfen iş emrini kaydetmek için bunu düzeltin."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
@@ -4059,6 +4073,8 @@ msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
 msgstr ""
+"Bu, ürünün BoM'ına dayalı maliyettir. Ürünü oluşturmak için gereken "
+"bileşenlerin ve işlemlerin maliyetlerinin toplanmasıyla hesaplanır."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4071,6 +4087,8 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                    You can filter on the product to see all the past movements for the product."
 msgstr ""
+"Bu menü, belirli bir üründeki stok operasyonlarının tam izlenebilirliğini sağlar.\n"
+"Ürün için geçmişte yapılan tüm hareketleri görmek için ürün üzerinde filtre uygulayabilirsiniz."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4196,6 +4214,11 @@ msgid ""
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
 msgstr ""
+"Ürünleri imal veya monte edip, bileşenler ve bitmiş ürünlerde kullanmak için \n"
+"üretim işlemlerini gerçekleştirmelisiniz.\n"
+"Üretim işlemlerine genellikle İş Emirleri denir. \n"
+"Çeşitli işlemlerin, mevcut iş yüküne bağlı olarak \n"
+"üretim maliyetleri ve planlama maliyetleri üzerinde değişik etkileri olacaktır."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -4518,7 +4541,7 @@ msgstr "Depo"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr ""
+msgstr "Yetersiz Parçalama Miktarı Uyarısı"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4557,6 +4580,10 @@ msgid ""
 " operation type. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
+"Bir tedarik, bir işlem tipi seti olan bir 'üretim' rotasına sahip olduğunda,"
+" o ürün için aynı İşlem Tipi bir Ürün Ağacı kullanarak bir Üretim Siparişi "
+"yaratmaya çalışacaktır. Bu, farklı Ürün Ağaçlarında farklı imalat "
+"siparişlerini tetikleyen tedarik kurallarını tanımlamaya olanak tanır."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
@@ -4576,6 +4603,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a manufacturing order is "
 "created to fulfill the need."
 msgstr ""
+"<b>%s</b>,<br/> ürünlerine ihtiyaç duyulduğunda, ihtiyacı karşılamak için "
+"bir üretim siparişi yaratılır."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -4669,6 +4698,9 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required components."
 msgstr ""
+"İş Emri Operasyonları, bir ürün üretmek için iş merkezlerinizde izlenmesi "
+"gereken üretim operasyonlarını oluşturmanıza ve yönetmenize izin verir. "
+"Gerekli bileşen tanımları ürün ağaçlarında eklidir."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -4819,6 +4851,10 @@ msgid ""
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
 msgstr ""
+"\"Üretim\" işlem türüne sahip bileşenler için lot veya seri numarası "
+"oluşturmanıza veya düzenlemenize izin verilmez. Bunu değiştirmek için işlem "
+"türüne gidin ve \"Bileşenler için Yeni Lotlar / Seri Numaraları Oluştur\" "
+"kutusunu işaretleyin."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__type
@@ -4856,6 +4892,8 @@ msgstr ""
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
+"Yalnızca benzersiz seri numarasına sahip ürünler %s için 1.0'ı "
+"işleyebilirsiniz."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -4942,7 +4980,7 @@ msgstr "Zaten işlediniz %s. Lütfen daha yüksek bir miktar girin %s "
 msgid ""
 "You have produced %s %s of lot %s in the previous workorder. You are trying "
 "to produce %s in this one"
-msgstr ""
+msgstr "Önceki iş emrinde lot ürettiniz."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4990,7 +5028,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
 #, python-format
 msgid "You need to provide a lot for the finished product."
-msgstr ""
+msgstr "İşlenmiş ürün için bir lot sağlamanız gerekiyor"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -5029,6 +5067,8 @@ msgid ""
 "You will get here statistics about the\n"
 "              work orders duration related to this routing."
 msgstr ""
+"Bu rota ile ilgili iş emri süresine ilişkin istatistikleri burada "
+"bulabilirsiniz."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo

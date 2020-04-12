@@ -618,7 +618,7 @@ msgstr "<span>Încărcăre facturi</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload Invoices</span>"
-msgstr ""
+msgstr "<span>Încărcăre facturi</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1312,7 +1312,7 @@ msgstr "Contabilitate generală"
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 #, python-format
 msgid "Accounting Periods"
-msgstr ""
+msgstr "Perioade contabile"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -2885,6 +2885,8 @@ msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
 msgstr ""
+"Bifează această casetă dacă acest cont permite potrivirea facturilor și "
+"plăților elementelor din jurnal."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
@@ -3675,6 +3677,7 @@ msgstr "Cont credit"
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
 msgstr ""
+"Elementele jurnal de credit care se potrivesc cu acest element de jurnal."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -4096,6 +4099,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 msgid "Define your fiscal years &amp; tax returns periodicity."
 msgstr ""
+"Definiți periodicitatea exercițiilor fiscale și a declarațiilor fiscale."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
@@ -4575,7 +4579,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_year__date_to
 msgid "Ending Date, included in the fiscal year."
-msgstr ""
+msgstr "Data de încheiere, inclusă în anul fiscal."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -4862,14 +4866,14 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 msgid "Fiscal Year End"
-msgstr ""
+msgstr "Sfârșitul anului fiscal"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.actions_account_fiscal_year
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_fiscal_year
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 msgid "Fiscal Years"
-msgstr ""
+msgstr "Anii fiscali"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__fiscal_position_id
@@ -5938,6 +5942,8 @@ msgid ""
 "Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
 " '_draft' or ''}"
 msgstr ""
+"Factura_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
+" '_ciorna' or ''}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -7640,7 +7646,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Originator Tax"
-msgstr ""
+msgstr "Inițiator taxă"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_repartition_line_id
@@ -8748,20 +8754,20 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Repartition for Credit Notes"
-msgstr ""
+msgstr "Repartiție pentru note de credit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_template__invoice_repartition_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Repartition for Invoices"
-msgstr ""
+msgstr "Repartiție pentru facturi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_template__refund_repartition_line_ids
 msgid "Repartition for Refund Invoices"
-msgstr ""
+msgstr "Repartiție pentru facturi de rambursare"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
@@ -10073,7 +10079,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
 #: model:ir.model.fields,field_description:account.field_account_tax_template__type_tax_use
 msgid "Tax Scope"
-msgstr ""
+msgstr "Scop taxă"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_tax_signed
@@ -11805,7 +11811,7 @@ msgstr "Actualizați automat ratele de schimb"
 #: code:addons/account/static/src/xml/bills_tree_upload_views.xml:0
 #, python-format
 msgid "Upload"
-msgstr ""
+msgstr "Încărcare "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -12197,6 +12203,8 @@ msgid ""
 "You can not have an overlap between two fiscal years, please correct the "
 "start and/or end dates of your fiscal years."
 msgstr ""
+"Nu puteți avea o suprapunere între doi ani fiscali, vă rugăm să corectați "
+"datele de început și / sau de încheiere ale exercițiilor dvs. fiscale."
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0

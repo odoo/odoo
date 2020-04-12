@@ -45,6 +45,8 @@ msgid ""
 "'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
+"'Masraflar - %s - %s' % (object.employee_id.name, (object.name).replace('/',"
+" ''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -52,6 +54,8 @@ msgid ""
 "<i class=\"text-muted oe_edit_only\">Use this reference as a subject prefix "
 "when submitting by email.</i>"
 msgstr ""
+"<i class=\"text-muted oe_edit_only\">E-postayla gönderirken bu referansı "
+"konu öneki olarak kullanın.</i>"
 
 #. module: hr_expense
 #. openerp-web
@@ -232,7 +236,7 @@ msgstr "Tüm Masraflar"
 #: code:addons/hr_expense/static/src/js/upload_mixin.js:0
 #, python-format
 msgid "An error occurred during the upload"
-msgstr ""
+msgstr "Yükleme sırasında bir hata oluştu"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__account_id
@@ -243,7 +247,7 @@ msgstr "Masraf hesabı gerekiyor"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "An expense report must contain only lines from the same company."
-msgstr ""
+msgstr "Gider raporu yalnızca aynı şirketten satır içermelidir."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_account_id
@@ -390,7 +394,7 @@ msgstr "Yeni Bir Masraf Oluştur"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Create a new expense product"
-msgstr ""
+msgstr "Yeni bir masraf ürünü oluşturun"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
@@ -404,7 +408,7 @@ msgstr "Yeni Bir Gider Raporu Oluştur."
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Create expenses from incoming emails"
-msgstr ""
+msgstr "Gelen e-postalardan masraflar oluşturma"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -463,12 +467,12 @@ msgstr "Tanım"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__res_company__expense_extract_show_ocr_option_selection__auto_send
 msgid "Digitalize all bills automatically"
-msgstr ""
+msgstr "Tüm faturaları otomatik olarak dijitalleştirin"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__res_company__expense_extract_show_ocr_option_selection__manual_send
 msgid "Digitalize bills on demand only"
-msgstr ""
+msgstr "Yalnızca isteğe bağlı tedarikçi faturalarını dijitalleştirin"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -486,7 +490,7 @@ msgstr "Görünüm Adı"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__res_company__expense_extract_show_ocr_option_selection__no_send
 msgid "Do not digitalize bills"
-msgstr ""
+msgstr "Tedarikçi Faturalarını dijitalleştirmeyin"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -576,7 +580,7 @@ msgstr "Masraf Satırları"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
 msgid "Expense Manager"
-msgstr ""
+msgstr "Masraf Yöneticisi"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -712,7 +716,7 @@ msgstr "Günlük Masraflar"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expenses can be reimbursed in payslips."
-msgstr ""
+msgstr "Masraflar maaş bordrolarında geri ödenebilir."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -805,13 +809,13 @@ msgstr "Genel Bilgi"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generated Expense"
-msgstr ""
+msgstr "Oluşturulan Masraf"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generated Expenses"
-msgstr ""
+msgstr "Oluşturulan Masraf"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -884,12 +888,12 @@ msgstr "Gelen E-postalar"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Invalid attachments!"
-msgstr ""
+msgstr "Ekler geçersiz!"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
 msgid "Is Editable By Current User"
-msgstr ""
+msgstr "Mevcut Kullanıcı Tarafından Düzenlenebilir"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
@@ -1288,7 +1292,7 @@ msgstr "Ürün:"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Product: not found"
-msgstr ""
+msgstr "Ürün: bulunamadı"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_public
@@ -1333,7 +1337,7 @@ msgstr "Ref."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_ref_editable
 msgid "Reference Is Editable By Current User"
-msgstr ""
+msgstr "Referans Mevcut Kullanıcı Tarafından Düzenlenebilir"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -1370,12 +1374,12 @@ msgstr "Ödeme Kaydet"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
-msgstr ""
+msgstr "Maaş bordrosundaki masrafların geri ödenmesi"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse in Payslip"
-msgstr ""
+msgstr "Maaş Bordrosunda Geri Ödeme"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1455,6 +1459,10 @@ msgid ""
 "will automatically be set. Type the expense amount in the mail subject to "
 "set it on the expense too."
 msgstr ""
+"Tek bir tıklamayla masraf oluşturmak için bu e-posta takma adına ekte makbuz"
+" içeren bir e-posta gönderin. Posta konusunun ilk kelimesi ürünün dahili "
+"referansını veya ürün adını içeriyorsa, ilgili ürün otomatik olarak "
+"ayarlanır. Masrafa da ayarlamak için posta konusundaki gider tutarını yazın."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1546,7 +1554,7 @@ msgstr "Vergiler"
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
-msgstr ""
+msgstr "Takım Onayı"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__hide_payment_method
@@ -1589,11 +1597,13 @@ msgid ""
 "The first word of the email subject did not correspond to any product code. "
 "You'll have to set the product manually on the expense."
 msgstr ""
+"E-posta konusunun ilk kelimesi hiçbir ürün koduna karşılık gelmedi. Ürünü "
+"masraflar üzerinden manuel olarak ayarlamanız gerekir."
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
 msgid "The journal must be set on posted expense"
-msgstr ""
+msgstr "Yevmiye kaydedilen masraf üzerinden ayarlanmalıdır"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
@@ -1632,7 +1642,7 @@ msgstr "İşlenecek"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Report"
-msgstr ""
+msgstr "Rapor Et"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
@@ -1708,7 +1718,7 @@ msgstr "Yükle"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Uploaded Attachment"
-msgstr ""
+msgstr "Yüklenen Ek"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_users
@@ -1733,7 +1743,7 @@ msgstr "Ekleri Görüntüle"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "View Expense"
-msgstr ""
+msgstr "Masrafları Görüntüle"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1764,30 +1774,30 @@ msgstr "Web Sitesi iletişim geçmişi"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit the reference of this expense report."
-msgstr ""
+msgstr "Bu masraf raporunun referansını düzenleme yetkiniz yok."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense report."
-msgstr ""
+msgstr "Bu masraf raporunu düzenleme yetkiniz yok."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can not create report without product."
-msgstr ""
+msgstr "Ürün olmadan rapor oluşturamazsınız."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "You can now submit it to the manager from the following link."
-msgstr ""
+msgstr "Şimdi aşağıdaki bağlantıdan yöneticiye gönderebilirsiniz."
 
 #. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_sheet_register_payment.py:0
 #, python-format
 msgid "You can only apply this action from an expense report."
-msgstr ""
+msgstr "Bu işlemi yalnızca bir masraf raporundan uygulayabilirsiniz."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1857,7 +1867,7 @@ msgstr "Masrafınız"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Your expense has been successfully registered."
-msgstr ""
+msgstr "Masrafınız başarıyla kaydedildi."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
