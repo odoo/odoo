@@ -175,7 +175,7 @@ msgstr "<span>Нов</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>PLAN ORDERS</span>"
-msgstr ""
+msgstr "<span>ПЛАНИРАЙ ПОРЪЧКИ</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -257,7 +257,7 @@ msgstr "<strong>Количество</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "<strong>Reason: </strong>"
-msgstr ""
+msgstr "<strong>Причина: </strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -356,7 +356,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
 msgid "Allowed to Unreserve Inventory"
-msgstr ""
+msgstr "Позволено да отрезервира количества"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -514,7 +514,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
 msgid "Bills of Materials"
-msgstr ""
+msgstr "Списъци с материали"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -558,7 +558,7 @@ msgstr "Блокирани часове през последния месец"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
 msgid "BoM Components"
-msgstr ""
+msgstr "Компоненти на списъка с материали"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_bom_line_id
@@ -820,7 +820,7 @@ msgstr "Създайте работни поръчки"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_created_production_id
 msgid "Created Production Order"
-msgstr ""
+msgstr "Създадена производствена поръчка"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_create_uid
@@ -1113,7 +1113,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_finished_move_line_ids
 #: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
 msgid "Finished Product"
-msgstr ""
+msgstr "Готов продукт"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_finished_ids
@@ -1787,7 +1787,7 @@ msgstr "Работен център за Планиране на произво�
 #. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
 msgid "Mrp: Plan Production Orders"
-msgstr ""
+msgstr "Mrp: План на производствени поръчки"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -2786,7 +2786,7 @@ msgstr "Масивното дърво е издръжлив естествен �
 #: model:product.product,description:mrp.product_product_computer_desk
 #: model:product.template,description:mrp.product_product_computer_desk_product_template
 msgid "Solid wood table."
-msgstr ""
+msgstr "Маса от масивна дървесина"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
@@ -3742,6 +3742,8 @@ msgstr "Не можете да променяте приключената ра�
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr ""
+"Не можете да консумирате без да посочите партидата, от която сте "
+"консумирали."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:98
@@ -3775,24 +3777,26 @@ msgid ""
 "You cannot consume the same serial number twice. Please correct the serial "
 "numbers encoded."
 msgstr ""
+"Не можете да консумирате същия сериен номер два пъти. Моля коригирайте "
+"серийния номер."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:130
 #, python-format
 msgid "You cannot produce the same serial number twice."
-msgstr ""
+msgstr "Не можжете да произведете същия сериен номер два пъти."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:93
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr ""
+msgstr "Не можете да разглобите нареждане за производство, което е отменено."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:47
 #, python-format
 msgid "You have already processed %s. Please input a quantity higher than %s "
-msgstr ""
+msgstr "Вече сте обработили %s. Моля, въведете количество по-голямо от %s "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3841,7 +3845,7 @@ msgstr ""
 #: code:addons/mrp/wizard/mrp_product_produce.py:126
 #, python-format
 msgid "You need to provide a lot for the finished product"
-msgstr "Трябва да предоставите доста за крайния продукт"
+msgstr "Трябва да предоставите партида за крайния продукт"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:330
@@ -3899,7 +3903,7 @@ msgstr "mrp.bom.line"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.production_message
 msgid "quantity has been updated."
-msgstr ""
+msgstr "количеството е обновено"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_mrp_bom_cost_report
