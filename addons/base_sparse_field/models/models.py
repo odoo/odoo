@@ -60,7 +60,9 @@ class IrModelFields(models.Model):
         attrs = super(IrModelFields, self)._instanciate_attrs(field_data)
         if field_data.get('serialization_field_id'):
             serialization_record = self.browse(field_data['serialization_field_id'])
-            attrs['sparse'] = serialization_record.name
+            if (hasattr(serialization_record, 'name')
+                and getattr(serialization_record, 'name', False)):
+                attrs['sparse'] = serialization_record.name
         return attrs
 
 
