@@ -6,6 +6,7 @@ import time
 from ast import literal_eval
 from datetime import date
 from itertools import groupby
+from collections import defaultdict
 from operator import itemgetter
 
 from odoo import SUPERUSER_ID, _, api, fields, models
@@ -370,6 +371,7 @@ class Picking(models.Model):
     immediate_transfer = fields.Boolean(default=False)
     package_level_ids = fields.One2many('stock.package_level', 'picking_id')
     package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
+    inventory_ids = fields.One2many('stock.inventory', 'picking_id')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -723,6 +725,11 @@ class Picking(models.Model):
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
         self.write({'date_done': fields.Datetime.now()})
         self._send_confirmation_email()
+
+        # We validate eventual linked inventories after _action_done, as those ones
+        # can imply that the current picking(s) considered done by the ZQC.
+        self.inventory_ids.filtered(lambda i: i.state == 'confirm').action_validate():
+
         return True
 
     def _send_confirmation_email(self):
@@ -906,6 +913,12 @@ class Picking(models.Model):
             pickings_to_backorder = self._check_backorder()
             if pickings_to_backorder:
                 return pickings_to_backorder._action_generate_backorder_wizard(show_transfers=self._should_show_transfers())
+
+        # Zero Quantity Count Wizard
+        if self.env.user.has_group('stock.group_stock_zero_quantity_count') and not self.env.context.get('skip_zqc'):
+            empty_locations = self._check_zqc()
+            if empty_locations:
+                return self._action_generate_zqc_wizard(empty_locations)
         return True
 
     def _should_show_transfers(self):
@@ -950,6 +963,22 @@ class Picking(models.Model):
             'context': dict(self.env.context, default_show_transfers=show_transfers, default_pick_ids=[(4, p.id) for p in self]),
         }
 
+    def _action_generate_zqc_wizard(self, empty_locations):
+        view = self.env.ref('stock.view_zero_quantity_count')
+        return {
+            'name': _('Zero Quantity Cycle Count'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'stock.zero.quantity.count',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'context': dict(*self.env.context, *{
+                'location_ids': [(4, loc.id) for loc in empty_locations],
+                'pick_ids': [(4, p.id) for p in self]
+            },
+            'target': 'new',
+        }
+
     def action_toggle_is_locked(self):
         self.ensure_one()
         self.is_locked = not self.is_locked
@@ -983,6 +1012,34 @@ class Picking(models.Model):
             if all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in picking.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel'))):
                 immediate_pickings |= picking
         return immediate_pickings
+
+    def _check_zqc(self):
+        """ Return the locations that will be emptied out when `self` is processed. """
+        empty_locations = self.env['stock.location']
+
+        # Group move lines per locations
+        ml_per_loc = defaultdict(lambda: self.env['stock.move.line'])
+        for ml in self.move_line_ids:
+            if ml.location_id.usage in ('internal', 'transit'):
+                ml_per_loc[ml.location_id] |= ml
+
+        # Check if locations would be emptied by those movelines
+        for loc, move_line_ids in ml_per_loc.items():
+            quants = self.env['stock.quant'].search([
+                ('location_id', '=', loc.id),
+            ])
+
+            remaining_qties = defaultdict(lambda: 0)
+            for quant in quants:
+                remaining_qties[quant.product_id] += quant.quantity
+            for ml in move_line_ids:
+                remaining_qties[ml.product_id] -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_po_id)
+
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if all([float_is_zero(value, precision_digits=precision) for value in remaining_qties.values()])
+                empty_locations |= loc
+
+        return empty_locations
 
     def _autoconfirm_picking(self):
         """ Automatically run `action_confirm` on `self` if the picking is an immediate transfer or
