@@ -912,14 +912,24 @@ class AccountMoveLine(models.Model):
                         res = amount_residual if float_compare(amount_residual, res, precision_rounding=currency_id.rounding) == 1 else currency_id.round(res)
                         return res
                     currency = debit_move.currency_id or credit_move.currency_id
-                    if not debit_move.currency_id:
+                    if not debit_move.currency_id and not float_is_zero(debit_move.amount_residual, precision_rounding=currency.rounding):
                         virtual_residual_currency = company_currency._convert(debit_move.amount_residual, currency, debit_move.company_id, debit_move.date)
                         temp_amount_residual_currency = min(virtual_residual_currency, -credit_move.amount_residual_currency)
                         temp_amount_residual = virtual_conversion(virtual_residual_currency, temp_amount_residual_currency, debit_move.amount_residual, currency)
-                    elif not credit_move.currency_id:
+                    elif not debit_move.currency_id and float_is_zero(debit_move.amount_residual, precision_rounding=currency.rounding):
+                        temp_amount_residual_currency = company_currency._convert(debit_move.amount_residual, currency, debit_move.company_id, debit_move.date)
+                        temp_amount_residual_currency, temp_amount_residual = min(
+                            (temp_amount_residual_currency, debit_move.amount_residual),
+                            (-credit_move.amount_residual_currency, -credit_move.amount_residual))
+                    elif not credit_move.currency_id and not float_is_zero(credit_move.amount_residual, precision_rounding=currency.rounding):
                         virtual_residual_currency = company_currency._convert(-credit_move.amount_residual, currency, credit_move.company_id, credit_move.date)
                         temp_amount_residual_currency = min(debit_move.amount_residual_currency, virtual_residual_currency)
                         temp_amount_residual = virtual_conversion(virtual_residual_currency, temp_amount_residual_currency, -credit_move.amount_residual, currency)
+                    elif not credit_move.currency_id and float_is_zero(credit_move.amount_residual, precision_rounding=currency.rounding):
+                        temp_amount_residual_currency = company_currency._convert(credit_move.amount_residual, currency, credit_move.company_id, credit_move.date)
+                        temp_amount_residual_currency, temp_amount_residual = min(
+                            (debit_move.amount_residual_currency, debit_move.amount_residual),
+                            (-temp_amount_residual_currency, -credit_move.amount_residual))
                 else:
                     temp_amount_residual, temp_amount_residual_currency = min(
                         (debit_move.amount_residual, debit_move.amount_residual_currency),
