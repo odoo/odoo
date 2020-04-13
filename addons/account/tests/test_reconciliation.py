@@ -2834,6 +2834,9 @@ class TestReconciliationInvoiceWidgets(TestReconciliation):
 
         inv2_payment = self._get_outstanding_or_assigned_amount(self.inv2, refund1_rec, False)
         self.assertEqual(
+            inv2_outstanding, 28.46,
+            'Amount in Outstanding Widget and amount in Payment Widget shall be equal to 28.46')
+        self.assertEqual(
             inv2_outstanding, inv2_payment,
             'Amount in Outstanding Widget and amount in Payment Widget shall be equal to 28.46')
 
@@ -2929,6 +2932,9 @@ class TestReconciliationInvoiceWidgets(TestReconciliation):
 
         inv2_payment = self._get_outstanding_or_assigned_amount(self.inv2, refund1_rec, False)
         self.assertEqual(
+            inv2_outstanding, 28.46,
+            'Amount in Outstanding Widget and amount in Payment Widget shall be equal to 28.46')
+        self.assertEqual(
             inv2_outstanding, inv2_payment,
             'Amount in Outstanding Widget and amount in Payment Widget shall be equal to 28.46')
 
@@ -2969,6 +2975,9 @@ class TestReconciliationInvoiceWidgets(TestReconciliation):
         self.assertEqual(self.refund1.state, 'paid')
 
         refund1_payment = self._get_outstanding_or_assigned_amount(self.refund1, inv2_rec, False)
+        self.assertEqual(
+            refund1_outstanding, 546.52,
+            'Amount in Outstanding Widget and amount in Payment Widget shall be equal to 546.52 for Refund 1')
         self.assertEqual(
             refund1_outstanding, refund1_payment,
             'Amount in Outstanding Widget and amount in Payment Widget shall be equal to 546.52 for Refund 1')
