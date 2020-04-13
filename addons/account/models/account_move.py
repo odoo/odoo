@@ -910,7 +910,7 @@ class AccountMoveLine(models.Model):
                     # temp_amount_residual_currency back to local currency.
                     def virtual_conversion(virtual_residual_currency, temp_residual, amount_residual, currency_id):
                         res = amount_residual * temp_residual / virtual_residual_currency
-                        res = amount_residual if float_compare(amount_residual, res, precision_rounding=currency_id.rounding) == 1 else currency_id.round(res)
+                        res = amount_residual if float_compare(amount_residual, res, precision_rounding=currency_id.rounding) == 0 else currency_id.round(res)
                         return res
                     currency = debit_move.currency_id or credit_move.currency_id
                     if not debit_move.currency_id and not float_is_zero(debit_move.amount_residual, precision_rounding=currency.rounding):
