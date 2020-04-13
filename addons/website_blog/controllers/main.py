@@ -270,7 +270,6 @@ class WebsiteBlog(http.Controller):
             # Increase counter
             blog_post.sudo().write({
                 'visits': blog_post.visits + 1,
-                'write_date': blog_post.write_date,
             })
         return response
 

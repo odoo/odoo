@@ -149,7 +149,7 @@ class BlogPost(models.Model):
     post_date = fields.Datetime('Publishing date', compute='_compute_post_date', inverse='_set_post_date', store=True,
                                 help="The blog post will be visible for your visitors as of this date on the website if it is set as published.")
     create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
-    write_date = fields.Datetime('Last Updated on', index=True, readonly=True)
+    last_update_on = fields.Datetime(index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
     author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)
     visits = fields.Integer('No of Views', copy=False, default=0)
@@ -207,6 +207,8 @@ class BlogPost(models.Model):
             if (published_in_vals and 'published_date' not in vals and
                     (not post.published_date or post.published_date <= fields.Datetime.now())):
                 copy_vals['published_date'] = vals[list(published_in_vals)[0]] and fields.Datetime.now() or False
+            if ('visits' not in vals):
+                copy_vals['last_update_on'] = fields.Datetime.now()
             result &= super(BlogPost, self).write(copy_vals)
         self._check_for_publication(vals)
         return result
@@ -256,7 +258,7 @@ class BlogPost(models.Model):
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.subtitle
         res['default_opengraph']['og:type'] = 'article'
         res['default_opengraph']['article:published_time'] = self.post_date
-        res['default_opengraph']['article:modified_time'] = self.write_date
+        res['default_opengraph']['article:modified_time'] = self.last_update_on
         res['default_opengraph']['article:tag'] = self.tag_ids.mapped('name')
         # background-image might contain single quotes eg `url('/my/url')`
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = json.loads(self.cover_properties).get('background-image', 'none')[4:-1].strip("'")
