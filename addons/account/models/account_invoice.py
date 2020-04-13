@@ -159,6 +159,9 @@ class AccountInvoice(models.Model):
                     # get the outstanding residual value in invoice currency
                     if line.currency_id and line.currency_id == self.currency_id:
                         amount_to_show = abs(line.amount_residual_currency)
+                    elif line.currency_id and line.currency_id != self.currency_id:
+                        amount_in_currency = abs(line.amount_currency) - sum((line.matched_debit_ids | line.matched_credit_ids).mapped('amount_currency'))
+                        amount_to_show = line.currency_id._convert(amount_in_currency, self.currency_id, self.company_id, self.date)
                     else:
                         currency = line.company_id.currency_id
                         amount_to_show = currency._convert(abs(line.amount_residual), self.currency_id, self.company_id, line.date or fields.Date.today())
