@@ -902,12 +902,28 @@ class AccountMoveLine(models.Model):
                     (-credit_move.amount_residual_currency, -credit_move.amount_residual))
                 amount_reconcile = temp_amount_residual_currency
             else:
-                # /!\ NOTE: This does not make too much sense but in order to
-                # keep the logic of the code pretty much the same @hbto is
-                # leaving it like this
-                temp_amount_residual, temp_amount_residual_currency = min(
-                    (debit_move.amount_residual, debit_move.amount_residual_currency),
-                    (-credit_move.amount_residual, -credit_move.amount_residual_currency))
+                # /!\ NOTE: This allow to have predictability in the partial reconciliations. By having the virtual
+                # value of the amount_residual converted to the date of the local currency entry line.
+                if bool(debit_move.currency_id) != bool(credit_move.currency_id):
+                    # /!\ NOTE: This is used to avoid rounding errors when reconverting the
+                    # temp_amount_residual_currency back to local currency.
+                    def virtual_conversion(virtual_residual_currency, temp_residual, amount_residual, currency_id):
+                        res = amount_residual * temp_residual / virtual_residual_currency
+                        res = amount_residual if float_compare(amount_residual, res, precision_rounding=currency_id.rounding) == 1 else currency_id.round(res)
+                        return res
+                    currency = debit_move.currency_id or credit_move.currency_id
+                    if not debit_move.currency_id:
+                        virtual_residual_currency = company_currency._convert(debit_move.amount_residual, currency, debit_move.company_id, debit_move.date)
+                        temp_amount_residual_currency = min(virtual_residual_currency, -credit_move.amount_residual_currency)
+                        temp_amount_residual = virtual_conversion(virtual_residual_currency, temp_amount_residual_currency, debit_move.amount_residual, currency)
+                    elif not credit_move.currency_id:
+                        virtual_residual_currency = company_currency._convert(-credit_move.amount_residual, currency, credit_move.company_id, credit_move.date)
+                        temp_amount_residual_currency = min(debit_move.amount_residual_currency, virtual_residual_currency)
+                        temp_amount_residual = virtual_conversion(virtual_residual_currency, temp_amount_residual_currency, -credit_move.amount_residual, currency)
+                else:
+                    temp_amount_residual, temp_amount_residual_currency = min(
+                        (debit_move.amount_residual, debit_move.amount_residual_currency),
+                        (-credit_move.amount_residual, -credit_move.amount_residual_currency))
                 amount_reconcile = temp_amount_residual
 
             dc_vals[(debit_move.id, credit_move.id)] = (debit_move, credit_move, temp_amount_residual_currency)
@@ -934,16 +950,22 @@ class AccountMoveLine(models.Model):
                 currency = credit_move.currency_id.id
                 amount_reconcile_currency = temp_amount_residual_currency
                 amount_reconcile = temp_amount_residual
-            elif bool(debit_move.currency_id) != bool(credit_move.currency_id):
-                # If only one of debit_move or credit_move has a secondary currency, also record the converted amount
-                # in that secondary currency in the partial reconciliation. That allows the exchange difference entry
-                # to be created, in case it is needed. It also allows to compute the amount residual in foreign currency.
-                currency = debit_move.currency_id or credit_move.currency_id
-                # /!\ NOTE: We need to be consistent with value that is computed at the APR record.
-                # Hence, so far currency_date is to be equal to max_date in APR.
-                currency_date = max(credit_move.date, debit_move.date)
-                amount_reconcile_currency = company_currency._convert(amount_reconcile, currency, debit_move.company_id, currency_date)
-                currency = currency.id
+            else:
+                if bool(debit_move.currency_id) != bool(credit_move.currency_id):
+                    # If only one of debit_move or credit_move has a secondary currency, also record the converted amount
+                    # in that secondary currency in the partial reconciliation. That allows the exchange difference entry
+                    # to be created, in case it is needed. It also allows to compute the amount residual in foreign currency.
+                    currency = debit_move.currency_id or credit_move.currency_id
+                    amount_reconcile_currency = temp_amount_residual_currency
+                    currency = currency.id
+                # /!\ NOTE: Oh Yeah! Kind of weird things happen on this realm. As previously stated this code needs
+                # to be de-duplicated. If there is a chain of two debits, one local another foreign currency, and
+                # credit in foreign currency the previous method to this one will for local reconciliation between the
+                # multi-currency records. This does not imply coherence when doing reconciliation one by one.
+                else:
+                    currency = credit_move.currency_id.id
+                    amount_reconcile_currency = temp_amount_residual_currency
+                    amount_reconcile = temp_amount_residual
 
             if cash_basis:
                 tmp_set = debit_move | credit_move
