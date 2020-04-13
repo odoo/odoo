@@ -2984,11 +2984,11 @@ class TestReconciliationInvoiceWidgets(TestReconciliation):
         self.assertEqual(self.refund1.state, 'paid')
 
         refund1_payment = self._get_outstanding_or_assigned_amount(self.refund1, inv2_rec, False)
-        self.assertEqual(
-            refund1_outstanding, 546.55,
+        self.assertAlmostEqual(
+            refund1_outstanding, 546.55, 2,
             'Amount in Outstanding Widget shall be equal to 546.55 for Refund 1')
-        self.assertEqual(
-            refund1_payment, 546.52,
+        self.assertAlmostEqual(
+            refund1_payment, 546.52, 2,
             'Amount in Payment Widget shall be equal to 546.52 for Refund 1')
         self.assertAlmostEqual(
             refund1_outstanding, refund1_payment, 1,  # Using rounding 1 because of the inaccuracy in rate conversion
