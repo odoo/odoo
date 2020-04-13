@@ -20,9 +20,33 @@
     </record>
 
     <!-- Applicants -->
+    <record id="hr_applicant_list_view" model="ir.ui.view">
+            <field name="name">Applications List</field>
+            <field name="model">hr.applicant</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <tree>
+                  <field name="name" readonly="1"/>
+                  <field name="partner_name"/>
+                  <field name="job_id"/>
+                  <field name="stage_id"/>
+                  <field name="create_date" readonly="1" optional="show"/>
+                  <field name="priority" optional="show"/>
+                  <field name="salary_expected" optional="show"/>
+                  <field name="availability" optional="show"/>
+                  <field name="salary_proposed" optional="hidden"/>
+                  <field name="email_from" readonly="1" optional="hidden"/>
+                  <field name="partner_phone" readonly="1" optional="hidden"/>
+                  <field name="medium_id" optional="hidden"/>
+                  <field name="source_id" readonly="1" optional="hidden"/>
+                  <field name="user_id" optional="hidden"/>
+                </tree>
+            </field>
+        </record>
     <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
+        <field eval="3" name="priority"/>
         <field name="arch" type="xml">
             <tree string="Applicants" decoration-bf="message_needaction==True" multi_edit="1">
                 <field name="message_needaction" invisible="1"/>
@@ -96,6 +120,7 @@
                 <field name="legend_blocked" invisible="1"/>
                 <field name="legend_done" invisible="1"/>
                 <div class="oe_title">
+                    <span class="o_form_label"><field name="name"  readonly="1" nolabel="1"/></span>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <h2 class="o_row">
@@ -201,7 +226,7 @@
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                 <separator/>
-                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <filter string="Archived/Refused" name="inactive" domain="[('active', '=', False)]"/>
                 <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -387,7 +412,7 @@
         <field name="res_model">hr.recruitment.source</field>
         <field name="view_mode">tree</field>
         <field name="domain">[('job_id', '=', active_id)]</field>
-        <field name="context">{'default_job_id': active_id}</field>
+        <field name="context">{'default_job_id': active_id,'default_source_id':3}</field>
         <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create some aliases to track where applicants come from
@@ -857,7 +882,7 @@ action = act
         <field name="name">hr.recruitment.source.tree</field>
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
-            <tree string="Sources of Applicants" editable="top" class="o_recruitment_list">
+            <tree string="Sources of Applicants" editable="top" class="o_recruitment_list width_class">
                 <field name="source_id"/>
                 <button name="create_alias" string="Generate email alias" type="object" icon="fa-repeat text-success" />
                 <field name="email"/>

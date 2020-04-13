@@ -24,6 +24,7 @@
                 <field name="manager_id"/>
                 <field name="state"/>
                 <field name="user_id"/>
+                <field name="hr_responsible_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
@@ -32,7 +33,7 @@
                                     <div class="o_primary col-12">
                                         <span><t t-esc="record.name.value"/></span>
                                     </div>
-                                    <div class="o_kanban_record_subtitle col-12 text-muted">
+                                    <div class="o_kanban_record_subtitle text-muted">
                                         <field name="user_id" />
                                     </div>
                                     <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
@@ -44,7 +45,7 @@
                                     <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                 </div>
                             </div>
-                            <div class="container o_kanban_card_content">
+                            <div t-att-class="'container o_kanban_card_content o_sample_data'">
                                 <t t-if="record.state.raw_value == 'recruit'">
                                     <div class="row">
                                         <div class="col-6">
@@ -54,9 +55,10 @@
                                         </div>
                                         <div class="col-6">
                                             <field name="new_application_count"/> New Applications <br/>
-                                            <field name="no_of_recruitment"/> To Recruit
+                                            <a type="object" name="action_view_job"><field name="no_of_recruitment"/> To Recruit</a>
                                         </div>
                                     </div>
+                                    <t t-call="JournalBodyGraph"/>
                                 </t>
                                 <t t-if="record.state.raw_value == 'open'">
                                     <div class="row">
@@ -69,7 +71,7 @@
                                     <div class="o_recruitment_kanban_box o_kanban_primary_bottom bottom_block" style="padding-left:8px;">
                                         <div class="col-6"></div>
                                         <div class="col-6">
-                                            <a type="action" name="%(action_hr_job_sources)d">Share Trackers</a>
+                                            <a type="object" name="action_hr_job_sources_func">Link Trackers</a>
                                         </div>
                                     </div>
                                 </div>
@@ -89,6 +91,9 @@
                             </div>
                         </div>
                     </t>
+                    <t t-name="JournalBodyGraph">
+                        <field name="kanban_dashboard_graph" t-att-graph_type="'line'" widget="dashboard_graph"/>
+                    </t>
                 </templates>
             </kanban>
         </field>
@@ -101,12 +106,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='department_id']" position="after">
                 <filter string="My Job Positions" name="my_positions" domain="[('user_id', '=', uid)]"/>
-            </xpath>
-            <xpath expr="//group" position="after">
-                <searchpanel>
-                    <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
-                    <field name="user_id" icon="fa-users"/>
-                </searchpanel>
             </xpath>
         </field>
     </record>
