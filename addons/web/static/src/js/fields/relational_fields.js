@@ -19,7 +19,6 @@ var concurrency = require('web.concurrency');
 const ControlPanelX2Many = require('web.ControlPanelX2Many');
 var core = require('web.core');
 var data = require('web.data');
-var Dialog = require('web.Dialog');
 var dialogs = require('web.view_dialogs');
 var dom = require('web.dom');
 const Domain = require('web.Domain');
@@ -32,81 +31,15 @@ var _t = core._t;
 var _lt = core._lt;
 var qweb = core.qweb;
 
-//------------------------------------------------------------------------------
-// Many2one widgets
-//------------------------------------------------------------------------------
-
-var M2ODialog = Dialog.extend({
-    template: "M2ODialog",
-    init: function (parent, name, value) {
-        this.name = name;
-        this.value = value;
-        this._super(parent, {
-            title: _.str.sprintf(_t("Create a %s"), this.name),
-            size: 'medium',
-            buttons: [{
-                text: _t('Create'),
-                classes: 'btn-primary',
-                click: function () {
-                    if (this.$("input").val() !== ''){
-                        this.trigger_up('quick_create', { value: this.$('input').val() });
-                        this.close(true);
-                    } else {
-                        this.$("input").focus();
-                    }
-                },
-            }, {
-                text: _t('Create and edit'),
-                classes: 'btn-primary',
-                close: true,
-                click: function () {
-                    this.trigger_up('search_create_popup', {
-                        view_type: 'form',
-                        value: this.$('input').val(),
-                    });
-                },
-            }, {
-                text: _t('Cancel'),
-                close: true,
-            }],
-        });
-    },
-    start: function () {
-        this.$("p").text(_.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), this.name));
-        this.$("input").val(this.value);
-    },
-    /**
-     * @override
-     * @param {boolean} isSet
-     */
-    close: function (isSet) {
-        this.isSet = isSet;
-        this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        if (!this.isSet) {
-            this.trigger_up('closed_unset');
-        }
-        this._super.apply(this, arguments);
-    },
-});
-
 var FieldMany2One = AbstractField.extend({
     description: _lt("Many2one"),
     supportedFieldTypes: ['many2one'],
     template: 'FieldMany2One',
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
-        'closed_unset': '_onDialogClosedUnset',
         'field_changed': '_onFieldChanged',
-        'quick_create': '_onQuickCreate',
-        'search_create_popup': '_onSearchCreatePopup',
     }),
     events: _.extend({}, AbstractField.prototype.events, {
         'click input': '_onInputClick',
-        'focusout input': '_onInputFocusout',
         'keyup input': '_onInputKeyup',
         'click .o_external_button': '_onExternalButtonClick',
         'click': '_onClick',
@@ -684,16 +617,6 @@ var FieldMany2One = AbstractField.extend({
     },
 
     /**
-     * Reset the input as dialog has been closed without m2o creation.
-     *
-     * @private
-     */
-    _onDialogClosedUnset: function () {
-        this.isDirty = false;
-        this.floating = false;
-        this._render();
-    },
-    /**
      * @private
      */
     _onExternalButtonClick: function () {
@@ -746,14 +669,6 @@ var FieldMany2One = AbstractField.extend({
     },
     /**
      * @private
-     */
-    _onInputFocusout: function () {
-        if (this.can_create && this.floating) {
-            new M2ODialog(this, this.string, this.$input.val()).open();
-        }
-    },
-    /**
-     * @private
      *
      * @param {OdooEvent} ev
      */
@@ -797,21 +712,6 @@ var FieldMany2One = AbstractField.extend({
             ev.stopPropagation();
         }
     },
-    /**
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onQuickCreate: function (event) {
-        this._quickCreate(event.data.value);
-    },
-    /**
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onSearchCreatePopup: function (event) {
-        var data = event.data;
-        this._searchCreatePopup(data.view_type, false, this._createContext(data.value));
-    },
 });
 
 var Many2oneBarcode = FieldMany2One.extend({
@@ -821,10 +721,6 @@ var Many2oneBarcode = FieldMany2One.extend({
 });
 
 var ListFieldMany2One = FieldMany2One.extend({
-    events: _.extend({}, FieldMany2One.prototype.events, {
-        'focusin input': '_onInputFocusin',
-    }),
-
     /**
      * Should never be allowed to be opened while in readonly mode in a list
      *
@@ -838,7 +734,6 @@ var ListFieldMany2One = FieldMany2One.extend({
         // we skipped the setValue, s.t. we can perform it later on if the user
         // didn't select another value
         this.mustSetValue = false;
-        this.m2oDialogFocused = false;
     },
 
     //--------------------------------------------------------------------------
@@ -874,57 +769,11 @@ var ListFieldMany2One = FieldMany2One.extend({
     _renderReadonly: function () {
         this.$el.text(this.m2o_value);
     },
-    /**
-     * @override
-     * @private
-     */
-    _searchCreatePopup: function () {
-        this.m2oDialogFocused = true;
-        return this._super.apply(this, arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _onInputFocusin: function () {
-        this.m2oDialogFocused = false;
-    },
-    /**
-     * In case the focus is lost from a mousedown, we want to prevent the click occuring on the
-     * following mouseup since it might trigger some unwanted list functions.
-     * If it's not the case, we want to remove the added handler on the next mousedown.
-     * @see list_editable_renderer._onWindowClicked()
-     *
-     * Also, in list views, we don't want to try to trigger a fieldChange when the field
-     * is being emptied. Instead, it will be triggered as the user leaves the field
-     * while it is empty.
-     *
-     * @override
-     * @private
-     */
-    _onInputFocusout: function () {
-        if (this.can_create && this.floating) {
-            // In case the focus out is due to a mousedown, we want to prevent the next click
-            var attachedEvents = ['click', 'mousedown'];
-            var stopNextClick = (function (ev) {
-                ev.stopPropagation();
-                attachedEvents.forEach(function (eventName) {
-                    window.removeEventListener(eventName, stopNextClick, true);
-                });
-            }).bind(this);
-            attachedEvents.forEach(function (eventName) {
-                window.addEventListener(eventName, stopNextClick, true);
-            });
-        }
-        this._super.apply(this, arguments);
-        if (!this.m2oDialogFocused && this.$input.val() === "" && this.mustSetValue) {
-            this.reinitialize(false);
-        }
-    },
     /**
      * Prevents the triggering of an immediate _onFieldChanged when emptying the field.
      *
@@ -2487,13 +2336,6 @@ var FieldMany2ManyTags = AbstractField.extend({
             }
         }
         this._super.apply(this, arguments);
-    },
-    /**
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onQuickCreate: function (event) {
-        this._quickCreate(event.data.value);
     },
 });
 
