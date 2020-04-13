@@ -566,9 +566,14 @@ var MailManager =  AbstractService.extend({
                             !config.device.isMobile &&
                             !thread.isDetached()
                         ) {
+                            // Prevent automatical thread window for odoobot
+                            if (thread._name == "OdooBot") {
+                                return prom;
+                            } else {
                             // automatically open thread window
                             // while keeping it unread
                             prom = thread.detach({ passively: true });
+                            }
                         }
                         proms.push(prom);
                         prom.then(function () {
