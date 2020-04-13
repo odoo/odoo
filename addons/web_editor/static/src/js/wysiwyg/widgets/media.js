@@ -293,7 +293,7 @@ var FileWidget = SearchableMediaWidget.extend({
         // if the document is not yet created, do not see the documents of other users
         if (!this.options.res_id) {
             attachedDocumentDomain.unshift('&');
-            attachedDocumentDomain.push(['create_uid', '=', this.options.user_id]);
+            attachedDocumentDomain.push(['create_uid', '=', this.options.user_id || session.uid]);
         }
         if (this.options.data_res_model) {
             var relatedDomain = ['&',
@@ -301,7 +301,7 @@ var FileWidget = SearchableMediaWidget.extend({
                 ['res_id', '=', this.options.data_res_id|0]];
             if (!this.options.data_res_id) {
                 relatedDomain.unshift('&');
-                relatedDomain.push(['create_uid', '=', session.uid]);
+                relatedDomain.push(['create_uid', '=', this.options.user_id || session.uid]);
             }
             domain = domain.concat(['|'], attachedDocumentDomain, relatedDomain);
         } else {

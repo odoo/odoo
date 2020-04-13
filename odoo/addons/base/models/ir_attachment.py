@@ -450,8 +450,9 @@ class IrAttachment(models.Model):
                 # remove all corresponding attachment ids
                 ids.difference_update(itertools.chain(*targets.values()))
                 continue
-            # filter ids according to what access rules permit
-            target_ids = list(targets)
+            # filter ids according to what access rules permit and
+            # removed 0 value of id from the list because of the id does not exist in database
+            target_ids = list(filter(lambda target_id: target_id != 0, targets))
             allowed = self.env[res_model].with_context(active_test=False).search([('id', 'in', target_ids)])
             for res_id in set(target_ids).difference(allowed.ids):
                 ids.difference_update(targets[res_id])
