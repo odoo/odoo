@@ -14,6 +14,7 @@
 # Juan Pablo Mora <jpm@odoo.com>, 2019
 # enjolras <yo@miguelrevilla.com>, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Jesse Garza <jga@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
+"Last-Translator: Jesse Garza <jga@odoo.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -669,7 +670,7 @@ msgstr "Detalles del paquete"
 #: code:addons/delivery/wizard/choose_delivery_package.py:60
 #, python-format
 msgid "Package too heavy!"
-msgstr ""
+msgstr "¡El paquete es demasiado pesado!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -870,12 +871,14 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
+"El peso de su paquete es mayor al peso máximo autorizado para este tipo de "
+"paquete. Por favor elija otro tipo de paquete."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:111
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr ""
+msgstr "No hay una regla de envío que cumpla con estas condiciones."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -904,7 +907,7 @@ msgstr "Este porcentaje se agregará al precio de envío."
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr ""
+msgstr "URL de los rastreadores"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1035,6 +1038,7 @@ msgstr "Solo puede añadir gastos de envío en presupuestos sin confirmar."
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
+"Tiene múltiples enlaces de rastreo, están disponibles en el historial."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:199

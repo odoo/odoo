@@ -114,7 +114,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Shipping Weight</strong>"
-msgstr "<strong>Teža pošiljke</strong>"
+msgstr "<strong>Masa pošiljke</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -147,7 +147,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
-"Znesek naročila za pridobitev brezplačne dostave, izražen v valuti podjetja"
+"Znesek naročila, kjer je upravičena brezplačna dostava, izražen v valuti "
+"družbe"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -456,6 +457,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
+"Če je skupna vrednost naročila (brez dostave) enaka ali nad določenim "
+"zneskom, je kupec lahko upravičen do brezplačne dostave"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:126
@@ -465,6 +468,9 @@ msgid ""
 "The shipping is free because the order amount exceeds %.2f.\n"
 "(The actual shipping cost is: %.2f)"
 msgstr ""
+"Info:\n"
+"Dostava je brezplačna, ker vrednost naročila presega %.2f.\n"
+"(Dejanski strošek dostave je: %.2f)"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -767,13 +773,13 @@ msgstr "Stroški dostave"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__shipping_weight
 msgid "Shipping Weight"
-msgstr "Teža pošiljke"
+msgstr "Masa pošiljke"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr "Teža pošiljke:"
+msgstr "Masa pošiljke:"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -844,7 +850,7 @@ msgstr "Ta dostavna metoda bo uporabljena pri fakturiranju na osnovi odpreme."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "Odstotek, ki bo dodan ceni dostave."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
