@@ -2979,9 +2979,6 @@ class TestReconciliationInvoiceWidgets(TestReconciliation):
         # Reconcile From F003 document F002
         refund1_residual = self.refund1.residual
         refund1_outstanding = self._get_outstanding_or_assigned_amount(self.refund1, inv2_rec)
-        self.assertEqual(
-            refund1_outstanding, 548.28,
-            'Amount in Payment Widget for Refund 1 is incorrect')
 
         self.inv2.assign_outstanding_credit(refund1_rec.id)
         self.assertEqual(self.refund1.state, 'paid')
@@ -2989,9 +2986,12 @@ class TestReconciliationInvoiceWidgets(TestReconciliation):
         refund1_payment = self._get_outstanding_or_assigned_amount(self.refund1, inv2_rec, False)
         self.assertEqual(
             refund1_outstanding, 546.55,
-            'Amount in Outstanding Widget shall be equal to 546.52 for Refund 1')
+            'Amount in Outstanding Widget shall be equal to 546.55 for Refund 1')
+        self.assertEqual(
+            refund1_payment, 546.52,
+            'Amount in Payment Widget shall be equal to 546.52 for Refund 1')
         self.assertAlmostEqual(
-            refund1_outstanding, refund1_payment, 1, # Using rounding 1 because of the inaccuracy in rate conversion
+            refund1_outstanding, refund1_payment, 1,  # Using rounding 1 because of the inaccuracy in rate conversion
             'Amount in Outstanding Widget and amount in Payment Widget shall be equal to 546.52 for Refund 1')
 
         # /!\ NOTE: for transitive property: refund1_outstanding = refund1_payment = refund1_residual
