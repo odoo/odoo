@@ -891,6 +891,7 @@ class AccountMoveLine(models.Model):
         cash_basis_percentage_before_rec = {}
         dc_vals ={}
         while (debit_moves and credit_moves):
+            debit_to_remove = credit_to_remove = self.env['account.move.line']
             debit_move = debit_moves[0]
             credit_move = credit_moves[0]
             company_currency = debit_move.company_id.currency_id
@@ -913,6 +914,7 @@ class AccountMoveLine(models.Model):
                         return res
                     currency = debit_move.currency_id or credit_move.currency_id
                     if not debit_move.currency_id and not float_is_zero(debit_move.amount_residual, precision_rounding=currency.rounding):
+                        debit_to_remove = debit_move
                         virtual_residual_currency = company_currency._convert(debit_move.amount_residual, currency, debit_move.company_id, debit_move.date)
                         temp_amount_residual_currency = min(virtual_residual_currency, -credit_move.amount_residual_currency)
                         temp_amount_residual = virtual_conversion(virtual_residual_currency, temp_amount_residual_currency, debit_move.amount_residual, currency)
@@ -922,6 +924,7 @@ class AccountMoveLine(models.Model):
                             (temp_amount_residual_currency, debit_move.amount_residual),
                             (-credit_move.amount_residual_currency, -credit_move.amount_residual))
                     elif not credit_move.currency_id and not float_is_zero(credit_move.amount_residual, precision_rounding=currency.rounding):
+                        credit_to_remove = credit_move
                         virtual_residual_currency = company_currency._convert(-credit_move.amount_residual, currency, credit_move.company_id, credit_move.date)
                         temp_amount_residual_currency = min(debit_move.amount_residual_currency, virtual_residual_currency)
                         temp_amount_residual = virtual_conversion(virtual_residual_currency, temp_amount_residual_currency, -credit_move.amount_residual, currency)
@@ -947,12 +950,14 @@ class AccountMoveLine(models.Model):
             else:
                 debit_moves[0].amount_residual -= temp_amount_residual
                 debit_moves[0].amount_residual_currency -= temp_amount_residual_currency
+                debit_moves -= debit_to_remove
 
             if amount_reconcile == -credit_move[field]:
                 credit_moves -= credit_move
             else:
                 credit_moves[0].amount_residual += temp_amount_residual
                 credit_moves[0].amount_residual_currency += temp_amount_residual_currency
+                credit_moves -= credit_to_remove
 
             # /!\ NOTE: This code section can be moved upwards in a later time to avoid redundancy of code.
             #Check for the currency and amount_currency we can set
