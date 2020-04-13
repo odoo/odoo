@@ -190,19 +190,23 @@ class AccountInvoice(models.Model):
         if self.type in ('out_invoice', 'in_refund'):
             matched_field = 'matched_debit_ids'
             partial_field = 'debit_move_id'
+            counter_field = 'credit_move_id'
         elif self.type in ('in_invoice', 'out_refund'):
             matched_field = 'matched_credit_ids'
             partial_field = 'credit_move_id'
+            counter_field = 'debit_move_id'
 
         for payment in self.payment_move_line_ids:
             amount_to_show = 0
             for p in payment[matched_field].filtered(lambda p: p.currency_id and p[partial_field] in self.move_id.line_ids):
                 if self.currency_id == self.company_id.currency_id:
                     amount_to_show += p.amount
+                elif self.currency_id != self.company_id.currency_id and self.currency_id == p.currency_id:
+                    amount_to_show += p.amount_currency
                 else:
-                    amount_to_show += p.currency_id._convert(p.amount_currency, currency_id, self.company_id, p.max_date)
+                    amount_to_show += p.currency_id._convert(p.amount_currency, currency_id, self.company_id, p[counter_field].date)
             for p in payment[matched_field].filtered(lambda p: not p.currency_id and p[partial_field] in self.move_id.line_ids):
-                amount_to_show += p.company_id.currency_id._convert(p.amount, currency_id, self.company_id, self.date)
+                amount_to_show += p.company_id.currency_id._convert(p.amount, currency_id, self.company_id, p[counter_field].date)
             if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
                 continue
             payment_ref = payment.move_id.name
