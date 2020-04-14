@@ -9,9 +9,14 @@ class SipsTest(PaymentAcquirerCommon):
     def setUp(self):
         super().setUp()
         self.sips = self.env.ref('payment.payment_acquirer_sips')
+        self.sips.write({
+            'state': 'test',
+            'sips_merchant_id': 'dummy_mid',
+            'sips_secret': 'dummy_secret',
+        })
 
     def test_10_sips_form_render(self):
-        self.assertEqual(self.sips.environment, 'test', 'test without test environment')
+        self.assertEqual(self.sips.state, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
@@ -27,7 +32,7 @@ class SipsTest(PaymentAcquirerCommon):
         self.sips.render('SO404', 100.0, self.currency_euro.id, values=self.buyer_values).decode('utf-8')
 
     def test_20_sips_form_management(self):
-        self.assertEqual(self.sips.environment, 'test', 'test without test environment')
+        self.assertEqual(self.sips.state, 'test', 'test without test environment')
 
         # typical data posted by Sips after client has successfully paid
         sips_post_data = {
@@ -93,7 +98,7 @@ class SipsTest(PaymentAcquirerCommon):
         self.assertEqual(tx.state, 'cancel', 'Sips: erroneous validation did not put tx into error state')
 
     def test_30_sips_badly_formatted_date(self):
-        self.assertEqual(self.sips.environment, 'test', 'test without test environment')
+        self.assertEqual(self.sips.state, 'test', 'test without test environment')
 
         # typical data posted by Sips after client has successfully paid
         bad_date = '2020-04-08T06:15:59+56:00'
