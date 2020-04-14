@@ -11,6 +11,7 @@ odoo.define('web.CrashManager', function (require) {
 
 const AbstractService = require('web.AbstractService');
 var ajax = require('web.ajax');
+const BrowserDetection = require('web.BrowserDetection');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var ErrorDialogRegistry = require('web.ErrorDialogRegistry');
@@ -94,6 +95,7 @@ var CrashManager = AbstractService.extend({
             'odoo.exceptions.UserError': _lt("User Error"),
             'odoo.exceptions.ValidationError': _lt("Validation Error"),
         };
+        this.BrowserDetection = new BrowserDetection();
 
         this._super.apply(this, arguments);
 
@@ -141,7 +143,18 @@ var CrashManager = AbstractService.extend({
         // promise has been rejected due to a crash
         core.bus.on('crash_manager_unhandledrejection', this, function (ev) {
             if (ev.reason && ev.reason instanceof Error) {
-                var traceback = ev.reason.stack;
+                // Error.prototype.stack is non-standard.
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+                // However, most engines provide an implementation.
+                // In particular, Chrome formats the contents of Error.stack
+                // https://v8.dev/docs/stack-trace-api#compatibility
+                let traceback;
+                if (this.BrowserDetection.isBrowserChrome()) {
+                    traceback = ev.reason.stack;
+                } else {
+                    const formattedStackTrace = `${ev.reason.message}\n${ev.reason.stack}`;
+                    traceback = _t(`Error: ${formattedStackTrace}`);
+                }
                 self.show_error({
                     type: _t("Odoo Client Error"),
                     message: '',
