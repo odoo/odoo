@@ -894,7 +894,7 @@ ListRenderer.include({
                 // entire line is left unmodified and we are on the next line.
                 var column = this.columns[this.currentFieldIndex];
                 var lastWidget = this._getLastWidget();
-                if (column.attrs.name === lastWidget.name) {
+                if (lastWidget && column.attrs.name === lastWidget.name) {
                     if (this.currentRow + 1 < this.state.data.length) {
                         this._selectCell(this.currentRow+1, 0, {wrap:false})
                             .fail(this._moveToNextLine.bind(this));
