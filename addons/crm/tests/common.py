@@ -4,8 +4,8 @@
 from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
+from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.fields import Datetime
-from odoo.tests.common import SavepointCase
 
 INCOMING_EMAIL = """Return-Path: {return_path}
 X-Original-To: {to}
@@ -39,43 +39,21 @@ Cheers,
 Somebody."""
 
 
-class TestCrmCommon(SavepointCase, MailCase):
+class TestCrmCommon(TestSalesCommon, MailCase):
 
     @classmethod
     def setUpClass(cls):
         super(TestCrmCommon, cls).setUpClass()
         cls._init_mail_gateway()
 
-        cls.user_sales_manager = mail_new_test_user(
-            cls.env, login='user_sales_manager',
-            name='Martin Sales Manager', email='crm_manager@test.example.com',
-            company_id=cls.env.ref("base.main_company").id,
-            notification_type='inbox',
-            groups='sales_team.group_sale_manager,base.group_partner_manager,crm.group_use_lead',
-        )
-        cls.user_sales_leads = mail_new_test_user(
-            cls.env, login='user_sales_leads',
-            name='Laetitia Sales Leads', email='crm_leads@test.example.com',
-            company_id=cls.env.ref("base.main_company").id,
-            notification_type='inbox',
-            groups='sales_team.group_sale_salesman_all_leads,base.group_partner_manager,crm.group_use_lead',
-        )
-        cls.user_sales_salesman = mail_new_test_user(
-            cls.env, login='user_sales_salesman',
-            name='Orteil Sales Own', email='crm_salesman@test.example.com',
-            company_id=cls.env.ref("base.main_company").id,
-            notification_type='inbox',
-            groups='sales_team.group_sale_salesman,crm.group_use_lead',
-        )
-
-        cls.sales_team_1 = cls.env['crm.team'].create({
-            'name': 'Test Sales Team',
+        cls.sales_team_1.write({
             'alias_name': 'sales.test',
             'use_leads': True,
             'use_opportunities': True,
-            'company_id': False,
-            'user_id': cls.user_sales_manager.id,
-            'member_ids': [(4, cls.user_sales_leads.id), (4, cls.env.ref('base.user_admin').id)],
+        })
+
+        (cls.user_sales_manager | cls.user_sales_leads | cls.user_sales_salesman).write({
+            'groups_id': [(4, cls.env.ref('crm.group_use_lead').id)]
         })
 
         cls.env['crm.stage'].search([]).write({'sequence': 9999})  # ensure search will find test data first
