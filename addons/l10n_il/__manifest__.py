@@ -9,9 +9,10 @@
 This is the latest basic Israelian localisation necessary to run Odoo in Israel:
 ================================================================================
 
-This module consists:
+This module consists of:
  - Generic Israelian chart of accounts
- - Israelian taxes
+ - Israelian taxes and tax report
+ - Fiscal positions for retention / Palestina
  """,
     'website': 'http://www.odoo.com/accounting',
     'depends': ['account'],
@@ -20,6 +21,7 @@ This module consists:
         'data/account_account_tag.xml',
         'data/account.account.template.csv',
         'data/account_data.xml',
+        'data/account_tax_report_data.xml',
         'data/account_tax_template_data.xml',
         'data/fiscal_templates_data.xml',
         'data/account_chart_template_post_data.xml',
