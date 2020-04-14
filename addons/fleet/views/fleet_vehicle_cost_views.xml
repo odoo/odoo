@@ -198,10 +198,16 @@
         <field name="model">fleet.vehicle.log.services</field>
         <field name="arch" type="xml">
             <form string="Services Logs">
+                <field name="active" invisible="1" />
                 <field name="currency_id" invisible="1" />
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group col="2">
                         <group>
+                            <field name="description" />
                             <field name="service_type_id" />
                             <field name="date" />
                             <field name="amount" widget="monetary"/>
@@ -234,14 +240,16 @@
         <field name="name">fleet.vehicle.log.services.tree</field>
         <field name="model">fleet.vehicle.log.services</field>
         <field name="arch" type="xml">
-            <tree string="Services Logs">
-                <field name="date" />
+            <tree string="Services Logs" multi_edit="1">
+                <field name="date" readonly="1" />
+                <field name="description" />
                 <field name="service_type_id" />
-                <field name="vehicle_id" />
-                <field name="purchaser_id"/>
-                <field name="vendor_id" />
+                <field name="vehicle_id" readonly="1" />
+                <field name="purchaser_id" readonly="1"/>
+                <field name="vendor_id" optional="show" />
                 <field name="inv_ref" invisible="1" />
-                <field name="notes" />
+                <field name="notes" optional="show" />
+                <field name="state" readonly="1" />
                 <field name="amount" sum="Total"/>
             </tree>
         </field>
@@ -295,6 +303,8 @@
             <search string="Services Logs" >
                 <field name="vehicle_id"/>
                 <field name="service_type_id"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
             </search>
         </field>
     </record>
