@@ -414,28 +414,26 @@ function MessageFactory({ Entity }) {
 
     }
 
-    Object.assign(Message, {
-        fields: Object.assign({}, Entity.fields, {
-            attachments: many2many('Attachment', {
-                inverse: 'messages',
-            }),
-            author: many2one('Partner', {
-                inverse: 'authorMessages',
-            }),
-            checkedThreadCaches: many2many('ThreadCache', {
-                inverse: 'checkedMessages',
-            }),
-            originThread: many2one('Thread', {
-                inverse: 'originThreadMessages',
-            }),
-            replyingToDiscuss: one2one('Discuss', {
-                inverse: 'replyingToMessage',
-            }),
-            threadCaches: many2many('ThreadCache', {
-                inverse: 'messages',
-            }),
+    Message.fields = {
+        attachments: many2many('Attachment', {
+            inverse: 'messages',
         }),
-    });
+        author: many2one('Partner', {
+            inverse: 'authorMessages',
+        }),
+        checkedThreadCaches: many2many('ThreadCache', {
+            inverse: 'checkedMessages',
+        }),
+        originThread: many2one('Thread', {
+            inverse: 'originThreadMessages',
+        }),
+        replyingToDiscuss: one2one('Discuss', {
+            inverse: 'replyingToMessage',
+        }),
+        threadCaches: many2many('ThreadCache', {
+            inverse: 'messages',
+        }),
+    };
 
     return Message;
 }

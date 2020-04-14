@@ -69,22 +69,20 @@ function DialogFactory({ Entity }) {
 
     }
 
-    Object.assign(Dialog, {
-        fields: Object.assign({}, Entity.fields, {
-            /**
-             * Content of dialog that is directly linked to an entity that models
-             * a UI component, such as AttachmentViewer. These entities must be
-             * created from @see `mail.messaging.entity.DialogManager.open()`.
-             */
-            entity: one2one('Entity', {
-                inverse: 'dialog',
-                isCausal: true,
-            }),
-            manager: many2one('DialogManager', {
-                inverse: 'dialogs',
-            }),
+    Dialog.fields = {
+        /**
+         * Content of dialog that is directly linked to an entity that models
+         * a UI component, such as AttachmentViewer. These entities must be
+         * created from @see `mail.messaging.entity.DialogManager.open()`.
+         */
+        entity: one2one('Entity', {
+            inverse: 'dialog',
+            isCausal: true,
         }),
-    });
+        manager: many2one('DialogManager', {
+            inverse: 'dialogs',
+        }),
+    };
 
     return Dialog;
 }

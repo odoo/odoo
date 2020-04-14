@@ -109,13 +109,11 @@ function MessagingMenuFactory({ Entity }) {
 
     }
 
-    Object.assign(MessagingMenu, {
-        fields: Object.assign({}, Entity.fields, {
-            messaging: one2one('Messaging', {
-                inverse: 'messagingMenu',
-            }),
+    MessagingMenu.fields = {
+        messaging: one2one('Messaging', {
+            inverse: 'messagingMenu',
         }),
-    });
+    };
 
     return MessagingMenu;
 }

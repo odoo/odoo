@@ -614,43 +614,41 @@ function ThreadFactory({ Entity }) {
 
     }
 
-    Object.assign(Thread, {
-        fields: Object.assign({}, Entity.fields, {
-            attachments: many2many('Attachment', {
-                inverse: 'threads',
-            }),
-            caches: one2many('ThreadCache', {
-                inverse: 'thread',
-                isCausal: true,
-            }),
-            composer: one2one('Composer', {
-                inverse: 'thread',
-                isCausal: true,
-            }),
-            directPartner: one2one('Partner', {
-                inverse: 'directPartnerThread',
-            }),
-            members: many2many('Partner', {
-                inverse: 'memberThreads',
-            }),
-            originThreadAttachments: one2many('Attachment', {
-                inverse: 'originThread',
-            }),
-            originThreadMessages: one2many('Message', {
-                inverse: 'originThread',
-            }),
-            renamingDiscuss: many2one('Discuss', {
-                inverse: 'renamingThreads',
-            }),
-            typingMembers: many2many('Partner', {
-                inverse: 'typingMemberThreads',
-            }),
-            viewers: one2many('ThreadViewer', {
-                inverse: 'thread',
-            }),
+    Thread.fields = {
+        attachments: many2many('Attachment', {
+            inverse: 'threads',
         }),
-        moderatedChannelIds: [],
-    });
+        caches: one2many('ThreadCache', {
+            inverse: 'thread',
+            isCausal: true,
+        }),
+        composer: one2one('Composer', {
+            inverse: 'thread',
+            isCausal: true,
+        }),
+        directPartner: one2one('Partner', {
+            inverse: 'directPartnerThread',
+        }),
+        members: many2many('Partner', {
+            inverse: 'memberThreads',
+        }),
+        originThreadAttachments: one2many('Attachment', {
+            inverse: 'originThread',
+        }),
+        originThreadMessages: one2many('Message', {
+            inverse: 'originThread',
+        }),
+        renamingDiscuss: many2one('Discuss', {
+            inverse: 'renamingThreads',
+        }),
+        typingMembers: many2many('Partner', {
+            inverse: 'typingMemberThreads',
+        }),
+        viewers: one2many('ThreadViewer', {
+            inverse: 'thread',
+        }),
+    };
+    Thread.moderatedChannelIds = [];
 
     return Thread;
 }

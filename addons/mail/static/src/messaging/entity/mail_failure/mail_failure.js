@@ -20,9 +20,7 @@ function MailFailureFactory({ Entity }) {
 
     }
 
-    Object.assign(MailFailure, {
-        fields: Object.assign({}, Entity.fields, {}),
-    });
+    MailFailure.fields = {};
 
     return MailFailure;
 }

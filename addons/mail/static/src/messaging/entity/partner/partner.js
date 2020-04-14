@@ -209,31 +209,29 @@ function PartnerFactory({ Entity }) {
 
     }
 
-    Object.assign(Partner, {
-        fields: Object.assign({}, Entity.fields, {
-            authorMessages: one2many('Message', {
-                inverse: 'author',
-            }),
-            currentPartnerMessaging: one2one('Messaging', {
-                inverse: 'currentPartner',
-            }),
-            directPartnerThread: one2one('Thread', {
-                inverse: 'directPartner',
-            }),
-            memberThreads: many2many('Thread', {
-                inverse: 'members',
-            }),
-            partnerRootMessaging: one2one('Messaging', {
-                inverse: 'partnerRoot',
-            }),
-            typingMemberThreads: many2many('Thread', {
-                inverse: 'typingMembers',
-            }),
-            user: one2one('User', {
-                inverse: 'partner',
-            }),
+    Partner.fields = {
+        authorMessages: one2many('Message', {
+            inverse: 'author',
         }),
-    });
+        currentPartnerMessaging: one2one('Messaging', {
+            inverse: 'currentPartner',
+        }),
+        directPartnerThread: one2one('Thread', {
+            inverse: 'directPartner',
+        }),
+        memberThreads: many2many('Thread', {
+            inverse: 'members',
+        }),
+        partnerRootMessaging: one2one('Messaging', {
+            inverse: 'partnerRoot',
+        }),
+        typingMemberThreads: many2many('Thread', {
+            inverse: 'typingMembers',
+        }),
+        user: one2one('User', {
+            inverse: 'partner',
+        }),
+    };
 
     return Partner;
 }

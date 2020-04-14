@@ -219,23 +219,21 @@ function ThreadViewerFactory({ Entity }) {
 
     }
 
-    Object.assign(ThreadViewer, {
-        fields: Object.assign({}, Entity.fields, {
-            chatter: one2one('Chatter', {
-                inverse: 'threadViewer',
-            }),
-            chatWindow: one2one('ChatWindow', {
-                inverse: 'threadViewer',
-                isCausal: true,
-            }),
-            discuss: one2one('Discuss', {
-                inverse: 'threadViewer',
-            }),
-            thread: many2one('Thread', {
-                inverse: 'viewers',
-            }),
+    ThreadViewer.fields = {
+        chatter: one2one('Chatter', {
+            inverse: 'threadViewer',
         }),
-    });
+        chatWindow: one2one('ChatWindow', {
+            inverse: 'threadViewer',
+            isCausal: true,
+        }),
+        discuss: one2one('Discuss', {
+            inverse: 'threadViewer',
+        }),
+        thread: many2one('Thread', {
+            inverse: 'viewers',
+        }),
+    };
 
     return ThreadViewer;
 }

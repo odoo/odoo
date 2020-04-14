@@ -133,6 +133,76 @@ function _getEntryFromEntityName(entityName) {
 
 /**
  * @private
+ * @param {mail.messaging.entity.Entity} Entity class
+ * @param {string} fieldName
+ * @param {Object} field
+ * @return {Array} [inverseFieldName, inverseField]
+ */
+function _inverseRelation(Entity, fieldName, field) {
+    const inverseFieldName = `_inverse_${Entity.name}/${fieldName}`;
+    const relFunc =
+         field.type === 'many2many' ? many2many
+        : field.type === 'many2one' ? one2many
+        : field.type === 'one2many' ? many2one
+        : field.type === 'one2one' ? one2one
+        : undefined;
+    if (!relFunc) {
+        throw new Error(`Cannot compute inverse Relation of "${Entity.name}/${fieldName}".`);
+    }
+    const inverseField = relFunc(Entity.name, { inverse: fieldName });
+    return [inverseFieldName, inverseField];
+}
+
+/**
+ * @private
+ * @param {Object} Entities
+ */
+function _normalizeFields(Entities) {
+    for (const Entity of Object.values(Entities)) {
+        for (const fieldName in Entity.fields) {
+            const field = Entity.fields[fieldName];
+            if (field.fieldType !== 'relation') {
+                continue;
+            }
+            if (field.inverse) {
+                continue;
+            }
+            const RelatedEntity = Entities[field.to];
+            const [inverseFieldName, inverseField] = _inverseRelation(Entity, fieldName, field);
+            Object.assign(Entity, {
+                _virtualFields: Object.assign({}, Entity._virtualFields, {
+                    [fieldName]: Object.assign({}, field, { inverse: inverseFieldName }),
+                }),
+            });
+            Object.assign(RelatedEntity, {
+                _virtualFields: Object.assign({}, RelatedEntity._virtualFields, {
+                    [inverseFieldName]: inverseField,
+                }),
+            });
+        }
+    }
+    for (const Entity of Object.values(Entities)) {
+        Object.assign(Entity, {
+            // backup of originally declared fields
+            _declaredFields: Entity.fields,
+            _fields: Object.assign({}, Entity.fields, Entity._virtualFields),
+            get fields() {
+                const allSelfAndParentedEntityFields = [];
+                let TargetEntity = Entity;
+                while (TargetEntity) {
+                    allSelfAndParentedEntityFields.unshift(TargetEntity._fields);
+                    TargetEntity = TargetEntity.__proto__;
+                }
+                return allSelfAndParentedEntityFields.reduce((acc, field) => {
+                    return Object.assign(acc, field);
+                }, {});
+            },
+        });
+    }
+}
+
+/**
+ * @private
  * @param {string} entityName
  * @param {string} patchName
  * @param {Object} patch
@@ -214,6 +284,11 @@ function generateEntities() {
         generatedNames.push(Entity.name);
         toGenerateNames = toGenerateNames.filter(name => name !== Entity.name);
     }
+    /**
+     * Normalize entity fields definitions. For instance, every relations should
+     * have an inverse, even if auto-generated.
+     */
+    _normalizeFields(Entities);
     /**
      * Check that all entity relations are correct, notably one relation
      * should have matching reversed relation.

@@ -78,13 +78,11 @@ function MailTemplateFactory({ Entity }) {
 
     }
 
-    Object.assign(MailTemplate, {
-        fields: Object.assign({}, Entity.fields, {
-            activities: many2many('Activity', {
-                inverse: 'mailTemplates',
-            }),
+    MailTemplate.fields = {
+        activities: many2many('Activity', {
+            inverse: 'mailTemplates',
         }),
-    });
+    };
 
     return MailTemplate;
 }

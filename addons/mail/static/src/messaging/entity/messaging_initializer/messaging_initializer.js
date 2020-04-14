@@ -303,13 +303,11 @@ function MessagingInitializerFactory({ Entity }) {
 
     }
 
-    Object.assign(MessagingInitializer, {
-        fields: Object.assign({}, Entity.fields, {
-            messaging: one2one('Messaging', {
-                inverse: 'initializer',
-            }),
+    MessagingInitializer.fields = {
+        messaging: one2one('Messaging', {
+            inverse: 'initializer',
         }),
-    });
+    };
 
     return MessagingInitializer;
 }

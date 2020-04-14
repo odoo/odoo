@@ -163,28 +163,26 @@ function ActivityFactory({ Entity }) {
 
     }
 
-    Object.assign(Activity, {
-        fields: Object.assign({}, Entity.fields, {
-            assignee: many2one('User', {
-                inverse: 'activitiesAsAssignee',
-            }),
-            attachments: many2many('Attachment', {
-                inverse: 'activities',
-            }),
-            chatter: many2one('Chatter', {
-                inverse: 'activities',
-            }),
-            creator: many2one('User', {
-                inverse: 'activitiesAsCreator',
-            }),
-            mailTemplates: many2many('MailTemplate', {
-                inverse: 'activities',
-            }),
-            type: many2one('ActivityType', {
-                inverse: 'activities',
-            }),
+    Activity.fields = {
+        assignee: many2one('User', {
+            inverse: 'activitiesAsAssignee',
         }),
-    });
+        attachments: many2many('Attachment', {
+            inverse: 'activities',
+        }),
+        chatter: many2one('Chatter', {
+            inverse: 'activities',
+        }),
+        creator: many2one('User', {
+            inverse: 'activitiesAsCreator',
+        }),
+        mailTemplates: many2many('MailTemplate', {
+            inverse: 'activities',
+        }),
+        type: many2one('ActivityType', {
+            inverse: 'activities',
+        }),
+    };
 
     return Activity;
 }

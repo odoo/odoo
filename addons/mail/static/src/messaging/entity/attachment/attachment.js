@@ -259,31 +259,29 @@ function AttachmentFactory({ Entity }) {
 
     }
 
-    Object.assign(Attachment, {
-        fields: Object.assign({}, Entity.fields, {
-            activeInAttachmentViewer: one2many('AttachmentViewer', {
-                inverse: 'attachment',
-            }),
-            activities: many2many('Activity', {
-                inverse: 'attachments',
-            }),
-            attachmentViewer: many2many('AttachmentViewer', {
-                inverse: 'attachments',
-            }),
-            composers: many2many('Composer', {
-                inverse: 'attachments',
-            }),
-            messages: many2many('Message', {
-                inverse: 'attachments',
-            }),
-            originThread: many2one('Thread', {
-                inverse: 'originThreadAttachments',
-            }),
-            threads: many2many('Thread', {
-                inverse: 'attachments',
-            }),
+    Attachment.fields = {
+        activeInAttachmentViewer: one2many('AttachmentViewer', {
+            inverse: 'attachment',
         }),
-    });
+        activities: many2many('Activity', {
+            inverse: 'attachments',
+        }),
+        attachmentViewer: many2many('AttachmentViewer', {
+            inverse: 'attachments',
+        }),
+        composers: many2many('Composer', {
+            inverse: 'attachments',
+        }),
+        messages: many2many('Message', {
+            inverse: 'attachments',
+        }),
+        originThread: many2one('Thread', {
+            inverse: 'originThreadAttachments',
+        }),
+        threads: many2many('Thread', {
+            inverse: 'attachments',
+        }),
+    };
 
     return Attachment;
 }

@@ -654,35 +654,33 @@ function EntityFactory() {
 
     }
 
-    Object.assign(Entity, {
+    /**
+     * Schema of relations for this entity.
+     *
+     * Format:
+     *
+     *   <relation-name>:
+     *      {
+     *         inverse: Name of inverse relation on related entity.
+     *         isCausal: boolean that determines whether the related entities
+     *                   are deeply connected to existence of current entity.
+     *                   (default: false)
+     *         to: Name of the related entity. Just for documentation sake.
+     *         type: Type of the relation on this entity.
+     *               Either 'one2one', 'one2many', 'many2one' or 'many2many'.
+     *      }
+     */
+    Entity.fields = {
         /**
-         * Schema of relations for this entity.
-         *
-         * Format:
-         *
-         *   <relation-name>:
-         *      {
-         *         inverse: Name of inverse relation on related entity.
-         *         isCausal: boolean that determines whether the related entities
-         *                   are deeply connected to existence of current entity.
-         *                   (default: false)
-         *         to: Name of the related entity. Just for documentation sake.
-         *         type: Type of the relation on this entity.
-         *               Either 'one2one', 'one2many', 'many2one' or 'many2many'.
-         *      }
+         * Related dialog of entity when dialog content is directly linked to
+         * an entity that models a UI component, such as AttachmentViewer. Such
+         * entities must be created from @see `mail.messaging.entity.DialogManager.open()`
          */
-        fields: {
-            /**
-             * Related dialog of entity when dialog content is directly linked to
-             * an entity that models a UI component, such as AttachmentViewer. Such
-             * entities must be created from @see `mail.messaging.entity.DialogManager.open()`
-             */
-            dialog: one2one('Dialog', {
-                inverse: 'entity',
-                isCausal: true,
-            }),
-        },
-    });
+        dialog: one2one('Dialog', {
+            inverse: 'entity',
+            isCausal: true,
+        }),
+    };
 
     return Entity;
 }

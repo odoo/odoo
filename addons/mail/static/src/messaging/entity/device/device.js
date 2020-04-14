@@ -58,13 +58,11 @@ function DeviceFactory({ Entity }) {
 
     }
 
-    Object.assign(Device, {
-        fields: Object.assign({}, Entity.fields, {
-            messaging: one2one('Messaging', {
-                inverse: 'device',
-            }),
+    Device.fields = {
+        messaging: one2one('Messaging', {
+            inverse: 'device',
         }),
-    });
+    };
 
     return Device;
 }

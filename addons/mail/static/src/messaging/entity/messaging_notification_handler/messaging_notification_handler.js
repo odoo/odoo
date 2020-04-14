@@ -516,13 +516,11 @@ function MessagingNotificationHandlerFactory({ Entity }) {
 
     }
 
-    Object.assign(MessagingNotificationHandler, {
-        fields: Object.assign({}, Entity.fields, {
-            messaging: one2one('Messaging', {
-                inverse: 'notificationHandler',
-            }),
+    MessagingNotificationHandler.fields = {
+        messaging: one2one('Messaging', {
+            inverse: 'notificationHandler',
         }),
-    });
+    };
 
     return MessagingNotificationHandler;
 }

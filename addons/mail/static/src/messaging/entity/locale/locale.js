@@ -26,13 +26,11 @@ function LocaleFactory({ Entity }) {
 
     }
 
-    Object.assign(Locale, {
-        fields: Object.assign({}, Entity.fields, {
-            messaging: one2one('Messaging', {
-                inverse: 'locale',
-            }),
+    Locale.fields = {
+        messaging: one2one('Messaging', {
+            inverse: 'locale',
         }),
-    });
+    };
 
     return Locale;
 }

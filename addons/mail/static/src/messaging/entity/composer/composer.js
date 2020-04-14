@@ -251,16 +251,14 @@ function ComposerFactory({ Entity }) {
 
     }
 
-    Object.assign(Composer, {
-        fields: Object.assign({}, Entity.fields, {
-            attachments: many2many('Attachment', {
-                inverse: 'composers',
-            }),
-            thread: one2one('Thread', {
-                inverse: 'composer',
-            }),
+    Composer.fields = {
+        attachments: many2many('Attachment', {
+            inverse: 'composers',
         }),
-    });
+        thread: one2one('Thread', {
+            inverse: 'composer',
+        }),
+    };
 
     return Composer;
 }

@@ -331,23 +331,21 @@ function DiscussFactory({ Entity }) {
 
     }
 
-    Object.assign(Discuss, {
-        fields: Object.assign({}, Entity.fields, {
-            messaging: one2one('Messaging', {
-                inverse: 'discuss',
-            }),
-            renamingThreads: one2many('Thread', {
-                inverse: 'renamingDiscuss',
-            }),
-            replyingToMessage: one2one('Message', {
-                inverse: 'replyingToDiscuss',
-            }),
-            threadViewer: one2one('ThreadViewer', {
-                inverse: 'discuss',
-                isCausal: true,
-            }),
+    Discuss.fields = {
+        messaging: one2one('Messaging', {
+            inverse: 'discuss',
         }),
-    });
+        renamingThreads: one2many('Thread', {
+            inverse: 'renamingDiscuss',
+        }),
+        replyingToMessage: one2one('Message', {
+            inverse: 'replyingToDiscuss',
+        }),
+        threadViewer: one2one('ThreadViewer', {
+            inverse: 'discuss',
+            isCausal: true,
+        }),
+    };
 
     return Discuss;
 }

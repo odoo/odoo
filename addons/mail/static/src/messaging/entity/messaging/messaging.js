@@ -162,52 +162,50 @@ function MessagingFactory({ Entity }) {
 
     }
 
-    Object.assign(Messaging, {
-        fields: Object.assign({}, Entity.fields, {
-            attachmentViewer: one2one('AttachmentViewer', {
-                inverse: 'messaging',
-                isCausal: true,
-            }),
-            chatWindowManager: one2one('ChatWindowManager', {
-                inverse: 'messaging',
-                isCausal: true,
-            }),
-            currentPartner: one2one('Partner', {
-                inverse: 'currentPartnerMessaging',
-            }),
-            device: one2one('Device', {
-                inverse: 'messaging',
-                isCausal: true,
-            }),
-            dialogManager: one2one('DialogManager', {
-                inverse: 'messaging',
-                isCausal: true,
-            }),
-            discuss: one2one('Discuss', {
-                inverse: 'messaging',
-                isCausal: true,
-            }),
-            initializer: one2one('MessagingInitializer', {
-                inverse: 'messaging',
-                isCausal: true,
-            }),
-            locale: one2one('Locale', {
-                inverse: 'messaging',
-                isCausal: true,
-            }),
-            messagingMenu: one2one('MessagingMenu', {
-                inverse: 'messaging',
-                isCausal: true,
-            }),
-            notificationHandler: one2one('MessagingNotificationHandler', {
-                inverse: 'messaging',
-                isCausal: true,
-            }),
-            partnerRoot: one2one('Partner', {
-                inverse: 'partnerRootMessaging',
-            }),
+    Messaging.fields = {
+        attachmentViewer: one2one('AttachmentViewer', {
+            inverse: 'messaging',
+            isCausal: true,
         }),
-    });
+        chatWindowManager: one2one('ChatWindowManager', {
+            inverse: 'messaging',
+            isCausal: true,
+        }),
+        currentPartner: one2one('Partner', {
+            inverse: 'currentPartnerMessaging',
+        }),
+        device: one2one('Device', {
+            inverse: 'messaging',
+            isCausal: true,
+        }),
+        dialogManager: one2one('DialogManager', {
+            inverse: 'messaging',
+            isCausal: true,
+        }),
+        discuss: one2one('Discuss', {
+            inverse: 'messaging',
+            isCausal: true,
+        }),
+        initializer: one2one('MessagingInitializer', {
+            inverse: 'messaging',
+            isCausal: true,
+        }),
+        locale: one2one('Locale', {
+            inverse: 'messaging',
+            isCausal: true,
+        }),
+        messagingMenu: one2one('MessagingMenu', {
+            inverse: 'messaging',
+            isCausal: true,
+        }),
+        notificationHandler: one2one('MessagingNotificationHandler', {
+            inverse: 'messaging',
+            isCausal: true,
+        }),
+        partnerRoot: one2one('Partner', {
+            inverse: 'partnerRootMessaging',
+        }),
+    };
 
     return Messaging;
 }

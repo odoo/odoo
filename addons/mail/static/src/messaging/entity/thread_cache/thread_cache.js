@@ -213,19 +213,17 @@ function ThreadCacheFactory({ Entity }) {
 
     }
 
-    Object.assign(ThreadCache, {
-        fields: Object.assign({}, Entity.fields, {
-            checkedMessages: many2many('Message', {
-                inverse: 'checkedThreadCaches',
-            }),
-            thread: many2one('Thread', {
-                inverse: 'caches',
-            }),
-            messages: many2many('Message', {
-                inverse: 'threadCaches',
-            }),
+    ThreadCache.fields = {
+        checkedMessages: many2many('Message', {
+            inverse: 'checkedThreadCaches',
         }),
-    });
+        thread: many2one('Thread', {
+            inverse: 'caches',
+        }),
+        messages: many2many('Message', {
+            inverse: 'threadCaches',
+        }),
+    };
 
     return ThreadCache;
 }

@@ -33,13 +33,11 @@ function ActivityTypeFactory({ Entity }) {
 
     }
 
-    Object.assign(ActivityType, {
-        fields: Object.assign({}, Entity.fields, {
-            activities: one2many('Activity', {
-                inverse: 'type',
-            }),
+    ActivityType.fields = {
+        activities: one2many('Activity', {
+            inverse: 'type',
         }),
-    });
+    };
 
     return ActivityType;
 }

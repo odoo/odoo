@@ -345,17 +345,15 @@ function ChatWindowManagerFactory({ Entity }) {
 
     }
 
-    Object.assign(ChatWindowManager, {
-        fields: Object.assign({}, Entity.fields, {
-            chatWindows: one2many('ChatWindow', {
-                inverse: 'manager',
-                isCausal: true,
-            }),
-            messaging: one2one('Messaging', {
-                inverse: 'chatWindowManager',
-            }),
+    ChatWindowManager.fields = {
+        chatWindows: one2many('ChatWindow', {
+            inverse: 'manager',
+            isCausal: true,
         }),
-    });
+        messaging: one2one('Messaging', {
+            inverse: 'chatWindowManager',
+        }),
+    };
 
     return ChatWindowManager;
 }

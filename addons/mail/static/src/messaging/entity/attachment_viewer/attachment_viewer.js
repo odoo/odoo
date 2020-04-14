@@ -58,19 +58,17 @@ function AttachmentViewerFactory({ Entity }) {
 
     }
 
-    Object.assign(AttachmentViewer, {
-        fields: Object.assign({}, Entity.fields, {
-            attachment: many2one('Attachment', {
-                inverse: 'activeInAttachmentViewer',
-            }),
-            attachments: many2many('Attachment', {
-                inverse: 'attachmentViewer',
-            }),
-            messaging: one2one('Messaging', {
-                inverse: 'attachmentViewer',
-            }),
+    AttachmentViewer.fields = {
+        attachment: many2one('Attachment', {
+            inverse: 'activeInAttachmentViewer',
         }),
-    });
+        attachments: many2many('Attachment', {
+            inverse: 'attachmentViewer',
+        }),
+        messaging: one2one('Messaging', {
+            inverse: 'attachmentViewer',
+        }),
+    };
 
     return AttachmentViewer;
 }

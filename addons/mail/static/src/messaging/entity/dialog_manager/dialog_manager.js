@@ -83,17 +83,15 @@ function DialogManagerFactory({ Entity }) {
 
     }
 
-    Object.assign(DialogManager, {
-        fields: Object.assign({}, Entity.fields, {
-            dialogs: one2many('Dialog', {
-                inverse: 'manager',
-                isCausal: true,
-            }),
-            messaging: one2one('Messaging', {
-                inverse: 'dialogManager',
-            }),
+    DialogManager.fields = {
+        dialogs: one2many('Dialog', {
+            inverse: 'manager',
+            isCausal: true,
         }),
-    });
+        messaging: one2one('Messaging', {
+            inverse: 'dialogManager',
+        }),
+    };
 
     return DialogManager;
 }

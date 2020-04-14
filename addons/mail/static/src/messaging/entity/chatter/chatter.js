@@ -241,16 +241,14 @@ function ChatterFactory({ Entity }) {
 
     }
 
-    Object.assign(Chatter, {
-        fields: Object.assign({}, Entity.fields, {
-            activities: one2many('Activity', {
-                inverse: 'chatter',
-            }),
-            threadViewer: one2one('ThreadViewer', {
-                inverse: 'chatter',
-            }),
+    Chatter.fields = {
+        activities: one2many('Activity', {
+            inverse: 'chatter',
         }),
-    });
+        threadViewer: one2one('ThreadViewer', {
+            inverse: 'chatter',
+        }),
+    };
 
     return Chatter;
 }

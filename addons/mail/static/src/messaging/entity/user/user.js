@@ -64,19 +64,17 @@ function UserFactory({ Entity }) {
 
     }
 
-    Object.assign(User, {
-        fields: Object.assign({}, Entity.fields, {
-            activitiesAsAssignee: one2many('Activity', {
-                inverse: 'assignee',
-            }),
-            activitiesAsCreator: one2many('Activity', {
-                inverse: 'creator',
-            }),
-            partner: one2one('Partner', {
-                inverse: 'user',
-            }),
+    User.fields = {
+        activitiesAsAssignee: one2many('Activity', {
+            inverse: 'assignee',
         }),
-    });
+        activitiesAsCreator: one2many('Activity', {
+            inverse: 'creator',
+        }),
+        partner: one2one('Partner', {
+            inverse: 'user',
+        }),
+    };
 
     return User;
 }
