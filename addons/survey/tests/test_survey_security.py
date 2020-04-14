@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
+
 from odoo.addons.survey.tests import common
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged
-from odoo.tests.common import users
+from odoo.tests.common import users, HttpCase
 from odoo.tools import mute_logger
 
 
@@ -322,3 +324,41 @@ class TestAccess(common.TestSurveyCommon):
 
         # Unlink: always
         (answer_own | answer_other | self.answer_0).unlink()
+
+
+@tagged('post_install')
+class TestSurveySecurityControllers(common.TestSurveyCommon, HttpCase):
+    def test_survey_start_short(self):
+        # avoid name clash with existing data
+        surveys = self.env['survey.survey'].search([
+            ('state', '=', 'open'),
+            ('session_state', 'in', ['ready', 'in_progress'])
+        ])
+        surveys.write({'state': 'done'})
+        self.survey.write({
+            'state': 'open',
+            'session_state': 'ready',
+            'session_code': '123456',
+            'session_start_time': datetime.datetime.now(),
+            'access_mode': 'public',
+            'users_login_required': False,
+        })
+
+        # right short access token
+        response = self.url_open(f'/s/123456')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('The session will begin automatically when the host starts', response.text)
+
+        # `like` operator injection
+        response = self.url_open(f'/s/______')
+        self.assertFalse(self.survey.title in response.text)
+
+        # right short token, but wrong state
+        self.survey.state = 'draft'
+        response = self.url_open(f'/s/123456')
+        self.assertFalse(self.survey.title in response.text)
+
+        # right short token, but wrong `session_state`
+        self.survey.write({'state': 'open', 'session_state': False})
+        response = self.url_open(f'/s/123456')
+        self.assertFalse(self.survey.title in response.text)
