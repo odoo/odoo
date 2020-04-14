@@ -21,4 +21,5 @@
         'data/event_demo.xml'
     ],
     'application': True,
+    'uninstall_hook': 'uninstall_hook',
 }
