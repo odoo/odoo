@@ -46,6 +46,8 @@ class SaleOrder(models.Model):
                                           "the order lines.")
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     show_json_popover = fields.Boolean('Has late picking', compute='_compute_json_popover')
+    json_popover_availability = fields.Char('Popover Data JSON (product availability)', compute='_compute_json_popover')
+    show_availability_popover = fields.Boolean(compute='_compute_json_popover')
 
     def _init_column(self, column_name):
         """ Ensure the default warehouse_id is correctly assigned
@@ -136,6 +138,33 @@ class SaleOrder(models.Model):
                 ]
             })
             order.show_json_popover = bool(late_stock_picking)
+
+            # Availability popover
+            order.show_availability_popover = False
+            order.json_popover_availability = json.dumps({})
+            if order.state != 'sale':
+                continue
+            products = order.order_line.product_id
+            qty_available_by_product = products.with_context({'warehouse_id': order.warehouse_id, 'to_date': order.expected_date}).read([
+                'virtual_available'
+            ])
+            qty_available_by_product = {x['id']: x['virtual_available'] for x in qty_available_by_product}
+            qty_by_duplicate_product = defaultdict(float)
+            products_to_warn = set()
+            for line in order.order_line:
+                if line.product_id.type != 'product':
+                    continue
+                avail_qty = qty_available_by_product[line.product_id.id] - qty_by_duplicate_product[line.product_id]
+                if float_compare(avail_qty, line.product_uom_qty, precision_rounding=line.product_id.uom_id.rounding) < 0:
+                    products_to_warn.add((line.product_id.name, line.product_id.id))
+            if products_to_warn:
+                order.json_popover_availability = json.dumps({
+                    'infos': _("The following products won't be available at scheduled date:"),
+                    'products': list(products_to_warn),
+                    'date': order.expected_date.strftime(format='%Y-%m-%d'),
+                    'warehouse': order.warehouse_id.id,
+                })
+                order.show_availability_popover = True
 
     def _action_confirm(self):
         self.order_line._action_launch_stock_rule()
