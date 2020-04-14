@@ -379,7 +379,7 @@ class ResCompany(models.Model):
     def _get_asset_style_b64(self):
         template_style = self.env.ref('web.styles_company_report', raise_if_not_found=False)
         if not template_style:
-            return ''
+            return b''
         # One bundle for everyone, so this method
         # necessarily updates the style for every company at once
         company_ids = self.sudo().search([])
