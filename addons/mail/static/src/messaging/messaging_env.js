@@ -1,10 +1,7 @@
 odoo.define('mail.messaging.messaging_env', function (require) {
 'use strict';
 
-const {
-    checkRelations,
-    generateEntities,
-} = require('mail.messaging.entity.core');
+const { generateEntities } = require('mail.messaging.entity.core');
 
 const { Store } = owl;
 const { EventBus } = owl.core;
@@ -94,11 +91,6 @@ function _addMessagingEntities(env) {
             get: () => env,
         });
     }
-    /**
-     * Check that all entity relations are correct, notably one relation
-     * should have matching reversed relation.
-     */
-    checkRelations(env.entities);
     /**
      * Create the messaging singleton entity.
      */

@@ -11,70 +11,10 @@ const registry = {};
 
 /**
  * @private
- * @param {string} entityName
- * @returns {Object}
- */
-function _getEntryFromEntityName(entityName) {
-    if (!registry[entityName]) {
-        registry[entityName] = {
-            dependencies: [],
-            factory: undefined,
-            name: entityName,
-            patches: [],
-        };
-    }
-    return registry[entityName];
-}
-
-/**
- * @private
- * @param {string} entityName
- * @param {string} patchName
- * @param {Object} patch
- * @param {Object} [param3={}]
- * @param {string} [param3.type='instance'] 'instance', 'class' or 'field'
- */
-function _registerPatchEntity(entityName, patchName, patch, { type = 'instance' } = {}) {
-    const entry = _getEntryFromEntityName(entityName);
-    Object.assign(entry, {
-        patches: (entry.patches || []).concat([{
-            name: patchName,
-            patch,
-            type,
-        }]),
-    });
-}
-
-/**
- * Define a relation
- *
- * @private
- * @param {string} entityClassName
- * @param {Object} param1
- * @param {string} [param1.inverse]
- * @param {boolean} [param1.isCausal=false]
- * @param {string} [param1.type]
- * @return {Object}
- */
-function _relation(entityClassName, { inverse, isCausal = false, type }) {
-    return {
-        fieldType: 'relation',
-        isCausal,
-        inverse,
-        to: entityClassName,
-        type,
-    };
-}
-
-//------------------------------------------------------------------------------
-// Public
-//------------------------------------------------------------------------------
-
-/**
  * @param {Object} Entities
  * @throws {Error} in case some relations are not correct
  */
-function checkRelations(Entities) {
+function _checkRelations(Entities) {
     for (const Entity of Object.values(Entities)) {
         for (const fieldName in Entity.fields) {
             const field = Entity.fields[fieldName];
@@ -175,6 +115,67 @@ function checkRelations(Entities) {
 }
 
 /**
+ * @private
+ * @param {string} entityName
+ * @returns {Object}
+ */
+function _getEntryFromEntityName(entityName) {
+    if (!registry[entityName]) {
+        registry[entityName] = {
+            dependencies: [],
+            factory: undefined,
+            name: entityName,
+            patches: [],
+        };
+    }
+    return registry[entityName];
+}
+
+/**
+ * @private
+ * @param {string} entityName
+ * @param {string} patchName
+ * @param {Object} patch
+ * @param {Object} [param3={}]
+ * @param {string} [param3.type='instance'] 'instance', 'class' or 'field'
+ */
+function _registerPatchEntity(entityName, patchName, patch, { type = 'instance' } = {}) {
+    const entry = _getEntryFromEntityName(entityName);
+    Object.assign(entry, {
+        patches: (entry.patches || []).concat([{
+            name: patchName,
+            patch,
+            type,
+        }]),
+    });
+}
+
+/**
+ * Define a relation
+ *
+ * @private
+ * @param {string} entityClassName
+ * @param {Object} param1
+ * @param {string} [param1.inverse]
+ * @param {boolean} [param1.isCausal=false]
+ * @param {string} [param1.type]
+ * @return {Object}
+ */
+function _relation(entityClassName, { inverse, isCausal = false, type }) {
+    return {
+        fieldType: 'relation',
+        isCausal,
+        inverse,
+        to: entityClassName,
+        type,
+    };
+}
+
+//------------------------------------------------------------------------------
+// Public
+//------------------------------------------------------------------------------
+
+/**
  * @returns {Object}
  */
 function generateEntities() {
@@ -213,6 +214,11 @@ function generateEntities() {
         generatedNames.push(Entity.name);
         toGenerateNames = toGenerateNames.filter(name => name !== Entity.name);
     }
+    /**
+     * Check that all entity relations are correct, notably one relation
+     * should have matching reversed relation.
+     */
+    _checkRelations(Entities);
     return Entities;
 }
 
@@ -324,7 +330,6 @@ function registerNewEntity(name, factory, dependencies = []) {
 //------------------------------------------------------------------------------
 
 return {
-    checkRelations,
     fields: {
         many2many,
         many2one,
