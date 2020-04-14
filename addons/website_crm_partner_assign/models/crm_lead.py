@@ -161,18 +161,12 @@ class CrmLead(models.Model):
                     if res:
                         partner_ids = Partner.browse([res['id']])
 
-                total_weight = 0
-                toassign = []
-                for partner in partner_ids:
-                    total_weight += partner.partner_weight
-                    toassign.append((partner.id, total_weight))
+                if partner_ids:
+                    res_partner_ids[lead.id] = random.choices(
+                        partner_ids.ids,
+                        partner_ids.mapped('partner_weight'),
+                    )[0]
 
-                random.shuffle(toassign)  # avoid always giving the leads to the first ones in db natural order!
-                nearest_weight = random.randint(0, total_weight)
-                for partner_id, weight in toassign:
-                    if nearest_weight <= weight:
-                        res_partner_ids[lead.id] = partner_id
-                        break
         return res_partner_ids
 
     def partner_interested(self, comment=False):
