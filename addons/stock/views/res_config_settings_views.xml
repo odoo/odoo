@@ -346,23 +346,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="manage_several_warehouses">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_stock_multi_warehouses"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_stock_multi_warehouses"/>
-                                    <a href="https://www.odoo.com/documentation/user/13.0/inventory/management/warehouses/difference_warehouse_location.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                    <div class="text-muted">
-                                        Manage several warehouses
-                                    </div>
-                                    <div class="content-group">
-                                        <div class="mt8" attrs="{'invisible': [('group_stock_multi_warehouses', '=', False)]}">
-                                            <button name="%(stock.action_warehouse_form)d" icon="fa-arrow-right" type="action" string="Warehouses" class="btn-link"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-12 col-lg-6 o_setting_box"
                                 id="use_own_routes"
                                 title="Add and customize route operations to process product moves in your warehouse(s): e.g. unload &gt; quality control &gt; stock for incoming products, pick &gt; pack &gt; ship for outgoing products. You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).">

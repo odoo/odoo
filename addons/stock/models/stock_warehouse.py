@@ -122,6 +122,9 @@ class Warehouse(models.Model):
         # update partner data if partner assigned
         if vals.get('partner_id'):
             self._update_partner_data(vals['partner_id'], vals.get('company_id'))
+
+        self._check_multiwarehouse_group()
+
         return warehouse
 
     def write(self, vals):
@@ -245,6 +248,23 @@ class Warehouse(models.Model):
                     ])
                     to_disable_route_ids.toggle_active()
         return res
+
+    def unlink(self):
+        res = super().unlink()
+        self._check_multiwarehouse_group()
+        return res
+
+    def _check_multiwarehouse_group(self):
+        cnt_by_company = self.env['stock.warehouse'].sudo().read_group([('active', '=', True)], ['company_id'], groupby=['company_id'])
+        if cnt_by_company:
+            max_cnt = max(cnt_by_company, key=lambda k: k['company_id_count'])
+            group_user = self.env.ref('base.group_user')
+            group_stock_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
+            if max_cnt['company_id_count'] <= 1 and group_stock_multi_warehouses in group_user.implied_ids:
+                group_user.write({'implied_ids': [(3, group_stock_multi_warehouses.id)]})
+                group_stock_multi_warehouses.write({'users': [(3, user.id) for user in group_user.users]})
+            if max_cnt['company_id_count'] > 1 and group_stock_multi_warehouses not in group_user.implied_ids:
+                group_user.write({'implied_ids': [(4, group_stock_multi_warehouses.id), (4, self.env.ref('stock.group_stock_multi_locations').id)]})
 
     @api.model
     def _update_partner_data(self, partner_id, company_id):
