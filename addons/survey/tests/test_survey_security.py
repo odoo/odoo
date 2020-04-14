@@ -327,31 +327,33 @@ class TestAccess(common.TestSurveyCommon):
 @tagged('post_install')
 class TestSurveySecurityControllers(common.TestSurveyCommon, HttpCase):
     def test_survey_start_short(self):
-        # keep only one survey in the database
-        surveys = self.env['survey.survey'].search([])
-        surveys[1:].unlink()
-        survey = surveys[0]
-
-        survey.write({
+        # avoid name clash with existing data
+        surveys = self.env['survey.survey'].search([
+            ('state', '=', 'open'),
+            ('session_state', 'in', ['ready', 'in_progress'])
+        ])
+        self.survey.write({
             'state': 'open',
             'session_state': 'ready',
+            'access_mode': 'public',
+            'users_login_required': False,
         })
 
         # right short access token
-        response = self.url_open(f'/s/{survey.access_token[:6]}')
+        response = self.url_open(f'/s/{self.survey.access_token[:6]}')
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(survey.title in response.text)
+        self.assertIn('The session will begin automatically when the host starts', response.text)
 
         # `like` operator injection
         response = self.url_open(f'/s/______')
-        self.assertFalse(survey.title in response.text)
+        self.assertFalse(self.survey.title in response.text)
 
         # right short token, but wrong state
-        survey.state = 'draft'
-        response = self.url_open(f'/s/{survey.access_token[:6]}')
-        self.assertFalse(survey.title in response.text)
+        self.survey.state = 'draft'
+        response = self.url_open(f'/s/{self.survey.access_token[:6]}')
+        self.assertFalse(self.survey.title in response.text)
 
         # right short token, but wrong `session_state`
-        survey.write({'state': 'open', 'session_state': False})
-        response = self.url_open(f'/s/{survey.access_token[:6]}')
-        self.assertFalse(survey.title in response.text)
+        self.survey.write({'state': 'open', 'session_state': False})
+        response = self.url_open(f'/s/{self.survey.access_token[:6]}')
+        self.assertFalse(self.survey.title in response.text)
