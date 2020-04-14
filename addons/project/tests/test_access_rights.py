@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests.common import new_test_user, users
+from odoo.tests.common import users
 
 
 class TestAccessRights(TestProjectCommon):
@@ -11,8 +12,8 @@ class TestAccessRights(TestProjectCommon):
     def setUp(self):
         super().setUp()
         self.task = self.create_task('Make the world a better place')
-        self.user = new_test_user(self.env, 'Internal user', groups='base.group_user')
-        self.portal = new_test_user(self.env, 'Portal user', groups='base.group_portal')
+        self.user = mail_new_test_user(self.env, 'Internal user', groups='base.group_user')
+        self.portal = mail_new_test_user(self.env, 'Portal user', groups='base.group_portal')
 
     def create_task(self, name, *, with_user=None, **kwargs):
         values = dict(name=name, project_id=self.project_pigs.id, **kwargs)
@@ -66,6 +67,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
 
     @users('Internal user', 'Portal user')
     def test_task_no_read(self):
+        self.task.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
@@ -141,6 +143,7 @@ class TestCRUDVisibilityEmployees(TestAccessRights):
 
     @users('Portal user')
     def test_task_portal_no_read(self):
+        self.task.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
@@ -183,14 +186,14 @@ class TestAllowedUsers(TestAccessRights):
 
     def test_project_specific_permission(self):
         self.project_pigs.allowed_user_ids = self.user
-        john = new_test_user(self.env, 'John')
+        john = mail_new_test_user(self.env, login='John')
         self.task.allowed_user_ids |= john
         self.project_pigs.allowed_user_ids -= self.user
         self.assertIn(john, self.task.allowed_user_ids, "John should still be allowed to read the task")
 
     def test_project_specific_remove_mutliple_tasks(self):
         self.project_pigs.allowed_user_ids = self.user
-        john = new_test_user(self.env, 'John')
+        john = mail_new_test_user(self.env, login='John')
         task = self.create_task('task')
         self.task.allowed_user_ids |= john
         self.project_pigs.allowed_user_ids -= self.user
