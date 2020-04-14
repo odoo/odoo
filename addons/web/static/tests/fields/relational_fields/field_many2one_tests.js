@@ -2183,7 +2183,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('quick create on a many2one', async function (assert) {
-            assert.expect(1);
+            assert.expect(2);
 
             var form = await createView({
                 View: FormView,
@@ -2207,6 +2207,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
             'new partner', ['keyup', 'blur']);
             await testUtils.dom.click($('.modal .modal-footer .btn-primary').first());
+            assert.strictEqual($('.modal .modal-body').text().trim(), "Do you want to create new partner as a new Product?");
 
             form.destroy();
         });

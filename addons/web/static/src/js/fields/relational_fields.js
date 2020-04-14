@@ -42,18 +42,14 @@ var M2ODialog = Dialog.extend({
         this.name = name;
         this.value = value;
         this._super(parent, {
-            title: _.str.sprintf(_t("Create a %s"), this.name),
+            title: _t(`New ${this.name}`),
             size: 'medium',
             buttons: [{
                 text: _t('Create'),
                 classes: 'btn-primary',
+                close: true,
                 click: function () {
-                    if (this.$("input").val() !== ''){
-                        this.trigger_up('quick_create', { value: this.$('input').val() });
-                        this.close(true);
-                    } else {
-                        this.$("input").focus();
-                    }
+                    this.trigger_up('quick_create', { value: this.value });
                 },
             }, {
                 text: _t('Create and edit'),
@@ -62,7 +58,7 @@ var M2ODialog = Dialog.extend({
                 click: function () {
                     this.trigger_up('search_create_popup', {
                         view_type: 'form',
-                        value: this.$('input').val(),
+                        value: this.value,
                     });
                 },
             }, {
@@ -70,10 +66,6 @@ var M2ODialog = Dialog.extend({
                 close: true,
             }],
         });
-    },
-    start: function () {
-        this.$("p").text(_.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), this.name));
-        this.$("input").val(this.value);
     },
     /**
      * @override
