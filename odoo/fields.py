@@ -683,6 +683,14 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def resolve_depends(self, model):
         """ Return the dependencies of `self` as a collection of field tuples. """
+        # ensure related path is resolvable
+        if self.related:
+            target = model
+            for name in self.related:
+                field = target._fields[name]
+                set(field.resolve_depends(target))
+                target = target[name]
+
         for dotnames in self.depends:
             field_seq = []
             field_model = model
