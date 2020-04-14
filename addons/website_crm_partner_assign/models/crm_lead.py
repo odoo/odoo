@@ -169,8 +169,7 @@ class CrmLead(models.Model):
                     total_weight += partner.partner_weight
                     toassign.append((partner.id, total_weight))
 
-                random.shuffle(toassign)  # avoid always giving the leads to the first ones in db natural order!
-                nearest_weight = random.randint(0, total_weight)
+                nearest_weight = random.randint(1, total_weight)
                 for partner_id, weight in toassign:
                     if nearest_weight <= weight:
                         res_partner_ids[lead.id] = partner_id
