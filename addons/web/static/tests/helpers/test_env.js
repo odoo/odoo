@@ -72,6 +72,9 @@ odoo.define('web.test_env', async function (require) {
                     },
                 },
                 getCookie() { },
+                httpRequest() {
+                    return Promise.resolve('');
+                },
                 rpc(params, options) {
                     const query = buildQuery(params);
                     return testEnv.session.rpc(query.route, query.params, options);
