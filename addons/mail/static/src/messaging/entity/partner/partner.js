@@ -1,7 +1,14 @@
 odoo.define('mail.messaging.entity.Partner', function (require) {
 'use strict';
 
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        many2many,
+        one2many,
+        one2one,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 
 const utils = require('web.utils');
 
@@ -203,42 +210,28 @@ function PartnerFactory({ Entity }) {
     }
 
     Object.assign(Partner, {
-        relations: Object.assign({}, Entity.relations, {
-            authorMessages: {
+        fields: Object.assign({}, Entity.fields, {
+            authorMessages: one2many('Message', {
                 inverse: 'author',
-                to: 'Message',
-                type: 'one2many',
-            },
-            currentPartnerMessaging: {
+            }),
+            currentPartnerMessaging: one2one('Messaging', {
                 inverse: 'currentPartner',
-                to: 'Messaging',
-                type: 'one2one',
-            },
-            directPartnerThread: {
+            }),
+            directPartnerThread: one2one('Thread', {
                 inverse: 'directPartner',
-                to: 'Thread',
-                type: 'one2one',
-            },
-            memberThreads: {
+            }),
+            memberThreads: many2many('Thread', {
                 inverse: 'members',
-                to: 'Thread',
-                type: 'many2many',
-            },
-            partnerRootMessaging: {
+            }),
+            partnerRootMessaging: one2one('Messaging', {
                 inverse: 'partnerRoot',
-                to: 'Messaging',
-                type: 'one2one',
-            },
-            typingMemberThreads: {
+            }),
+            typingMemberThreads: many2many('Thread', {
                 inverse: 'typingMembers',
-                to: 'Thread',
-                type: 'many2many',
-            },
-            user: {
+            }),
+            user: one2one('User', {
                 inverse: 'partner',
-                to: 'User',
-                type: 'one2one',
-            },
+            }),
         }),
     });
 

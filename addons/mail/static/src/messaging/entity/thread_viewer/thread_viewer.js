@@ -1,7 +1,13 @@
 odoo.define('mail.messaging.entity.ThreadViewer', function (require) {
 'use strict';
 
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        many2one,
+        one2one,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 
 function ThreadViewerFactory({ Entity }) {
 
@@ -214,28 +220,20 @@ function ThreadViewerFactory({ Entity }) {
     }
 
     Object.assign(ThreadViewer, {
-        relations: Object.assign({}, Entity.relations, {
-            chatter: {
+        fields: Object.assign({}, Entity.fields, {
+            chatter: one2one('Chatter', {
                 inverse: 'threadViewer',
-                to: 'Chatter',
-                type: 'one2one',
-            },
-            chatWindow: {
+            }),
+            chatWindow: one2one('ChatWindow', {
                 inverse: 'threadViewer',
                 isCausal: true,
-                to: 'ChatWindow',
-                type: 'one2one',
-            },
-            discuss: {
+            }),
+            discuss: one2one('Discuss', {
                 inverse: 'threadViewer',
-                to: 'Discuss',
-                type: 'one2one',
-            },
-            thread: {
+            }),
+            thread: many2one('Thread', {
                 inverse: 'viewers',
-                to: 'Thread',
-                type: 'many2one',
-            },
+            }),
         }),
     });
 

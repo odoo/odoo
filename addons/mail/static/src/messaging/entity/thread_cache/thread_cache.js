@@ -1,7 +1,13 @@
 odoo.define('mail.messaging.entity.ThreadCache', function (require) {
 'use strict';
 
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        many2many,
+        many2one,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 
 const MESSAGE_FETCH_LIMIT = 30;
 
@@ -208,22 +214,16 @@ function ThreadCacheFactory({ Entity }) {
     }
 
     Object.assign(ThreadCache, {
-        relations: Object.assign({}, Entity.relations, {
-            checkedMessages: {
+        fields: Object.assign({}, Entity.fields, {
+            checkedMessages: many2many('Message', {
                 inverse: 'checkedThreadCaches',
-                to: 'Message',
-                type: 'many2many',
-            },
-            thread: {
+            }),
+            thread: many2one('Thread', {
                 inverse: 'caches',
-                to: 'Thread',
-                type: 'many2one',
-            },
-            messages: {
+            }),
+            messages: many2many('Message', {
                 inverse: 'threadCaches',
-                to: 'Message',
-                type: 'many2many',
-            },
+            }),
         }),
     });
 

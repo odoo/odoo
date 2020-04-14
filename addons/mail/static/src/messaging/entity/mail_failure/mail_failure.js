@@ -21,7 +21,7 @@ function MailFailureFactory({ Entity }) {
     }
 
     Object.assign(MailFailure, {
-        relations: Object.assign({}, Entity.relations, {}),
+        fields: Object.assign({}, Entity.fields, {}),
     });
 
     return MailFailure;

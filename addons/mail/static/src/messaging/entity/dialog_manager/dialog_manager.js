@@ -1,7 +1,13 @@
 odoo.define('mail.messaging.entity.DialogManager', function (require) {
 'use strict';
 
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        one2many,
+        one2one,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 
 function DialogManagerFactory({ Entity }) {
 
@@ -78,18 +84,14 @@ function DialogManagerFactory({ Entity }) {
     }
 
     Object.assign(DialogManager, {
-        relations: Object.assign({}, Entity.relations, {
-            dialogs: {
+        fields: Object.assign({}, Entity.fields, {
+            dialogs: one2many('Dialog', {
                 inverse: 'manager',
                 isCausal: true,
-                to: 'Dialog',
-                type: 'one2many',
-            },
-            messaging: {
+            }),
+            messaging: one2one('Messaging', {
                 inverse: 'dialogManager',
-                to: 'Messaging',
-                type: 'one2one',
-            },
+            }),
         }),
     });
 

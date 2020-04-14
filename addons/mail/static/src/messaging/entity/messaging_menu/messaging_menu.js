@@ -1,7 +1,12 @@
 odoo.define('mail.messaging.entity.MessagingMenu', function (require) {
 'use strict';
 
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        one2one,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 
 function MessagingMenuFactory({ Entity }) {
 
@@ -105,12 +110,10 @@ function MessagingMenuFactory({ Entity }) {
     }
 
     Object.assign(MessagingMenu, {
-        relations: Object.assign({}, Entity.relations, {
-            messaging: {
+        fields: Object.assign({}, Entity.fields, {
+            messaging: one2one('Messaging', {
                 inverse: 'messagingMenu',
-                to: 'Messaging',
-                type: 'one2one',
-            },
+            }),
         }),
     });
 

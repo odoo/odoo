@@ -1,7 +1,13 @@
 odoo.define('mail.messaging.entity.ChatWindow', function (require) {
 'use strict';
 
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        many2one,
+        one2one,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 
 function ChatWindowFactory({ Entity }) {
 
@@ -296,17 +302,13 @@ function ChatWindowFactory({ Entity }) {
     }
 
     Object.assign(ChatWindow, {
-        relations: Object.assign({}, Entity.relations, {
-            manager: {
+        fields: Object.assign({}, Entity.fields, {
+            manager: many2one('ChatWindowManager', {
                 inverse: 'chatWindows',
-                to: 'ChatWindowManager',
-                type: 'many2one',
-            },
-            threadViewer: {
+            }),
+            threadViewer: one2one('ThreadViewer', {
                 inverse: 'chatWindow',
-                to: 'ThreadViewer',
-                type: 'one2one',
-            },
+            }),
         }),
     });
 

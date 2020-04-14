@@ -32,7 +32,7 @@ function _getEntryFromEntityName(entityName) {
  * @param {string} patchName
  * @param {Object} patch
  * @param {Object} [param3={}]
- * @param {string} [param3.type='instance'] 'instance', 'class' or 'relation'
+ * @param {string} [param3.type='instance'] 'instance', 'class' or 'field'
  */
 function _registerPatchEntity(entityName, patchName, patch, { type = 'instance' } = {}) {
     const entry = _getEntryFromEntityName(entityName);
@@ -45,6 +45,27 @@ function _registerPatchEntity(entityName, patchName, patch, { type = 'instance' 
     });
 }
 
+/**
+ * Define a relation
+ *
+ * @private
+ * @param {string} entityClassName
+ * @param {Object} param1
+ * @param {string} [param1.inverse]
+ * @param {boolean} [param1.isCausal=false]
+ * @param {string} [param1.type]
+ * @return {Object}
+ */
+function _relation(entityClassName, { inverse, isCausal = false, type }) {
+    return {
+        fieldType: 'relation',
+        isCausal,
+        inverse,
+        to: entityClassName,
+        type,
+    };
+}
+
 //------------------------------------------------------------------------------
 // Public
 //------------------------------------------------------------------------------
@@ -55,50 +76,53 @@ function _registerPatchEntity(entityName, patchName, patch, { type = 'instance' 
  */
 function checkRelations(Entities) {
     for (const Entity of Object.values(Entities)) {
-        for (const relationName in Entity.relations) {
-            const relation = Entity.relations[relationName];
-            if (!relation.type) {
+        for (const fieldName in Entity.fields) {
+            const field = Entity.fields[fieldName];
+            if (field.fieldType !== 'relation') {
+                throw new Error(`Field "${Entity.name}/${fieldName}" has unsupported type ${field.fieldType}.`);
+            }
+            if (!field.type) {
                 throw new Error(
-                    `Relation "${Entity.name}/${relationName}" must define a type in "type".`
+                    `Field "${Entity.name}/${fieldName}" must define a relation type in "type".`
                 );
             }
-            if (!(['one2one', 'one2many', 'many2one', 'many2many'].includes(relation.type))) {
+            if (!(['one2one', 'one2many', 'many2one', 'many2many'].includes(field.type))) {
                 throw new Error(
-                    `Relation "${Entity.name}/${relationName}" has invalid type "${relation.type}".`
+                    `Field "${Entity.name}/${fieldName}" has invalid relation type "${field.type}".`
                 );
             }
-            if (!relation.inverse) {
+            if (!field.inverse) {
                 throw new Error(
-                    `Relation "${
+                    `Field "${
                         Entity.name
                     }/${
-                        relationName
+                        fieldName
                     }" must define an inverse relation name in "inverse".`
                 );
             }
-            if (!relation.to) {
+            if (!field.to) {
                 throw new Error(
                     `Relation "${
                         Entity.name
                     }/${
-                        relationName
-                    }" must define an Entity class name in "to".`
+                        fieldName
+                    }" must define an Entity class name in "relationTo" (1st positional parameter of relation field helpers).`
                 );
             }
-            const RelatedEntity = Entities[relation.to];
+            const RelatedEntity = Entities[field.to];
             if (!RelatedEntity) {
                 throw new Error(
-                    `Entity class name of relation "${Entity.name}/${relationName}" does not exist.`
+                    `Entity class name of relation "${Entity.name}/${fieldName}" does not exist.`
                 );
             }
-            const inverseRelation = RelatedEntity.relations[relation.inverse];
-            if (!inverseRelation) {
+            const inverseField = RelatedEntity.fields[field.inverse];
+            if (!inverseField) {
                 throw new Error(
                     `Relation entity class "${
                         Entity.name
                     }/${
-                        relationName
-                    }" has no inverse relation "${RelatedEntity.name}/${relation.inverse}".`
+                        fieldName
+                    }" has no inverse field "${RelatedEntity.name}/${field.inverse}".`
                 );
             }
             const allSelfAndParentNames = [];
@@ -107,42 +131,42 @@ function checkRelations(Entities) {
                 allSelfAndParentNames.push(target.name);
                 target = target.__proto__;
             }
-            if (!allSelfAndParentNames.includes(inverseRelation.to)) {
+            if (!allSelfAndParentNames.includes(inverseField.to)) {
                 throw new Error(
                     `Relation "${
                         Entity.name
                     }/${
-                        relationName
+                        fieldName
                     }" has inverse relation "${
                         RelatedEntity.name
                     }/${
-                        relation.inverse
+                        field.inverse
                     }" misconfigured (currently "${
-                        inverseRelation.to
+                        inverseField.to
                     }", should instead refer to this entity or parented entity: ${
                         allSelfAndParentNames.map(name => `"${name}"`).join(', ')
                     }?)`
                 );
             }
             if (
-                (relation.type === 'many2many' && inverseRelation.type !== 'many2many') ||
-                (relation.type === 'one2one' && inverseRelation.type !== 'one2one') ||
-                (relation.type === 'one2many' && inverseRelation.type !== 'many2one') ||
-                (relation.type === 'many2one' && inverseRelation.type !== 'one2many')
+                (field.type === 'many2many' && inverseField.type !== 'many2many') ||
+                (field.type === 'one2one' && inverseField.type !== 'one2one') ||
+                (field.type === 'one2many' && inverseField.type !== 'many2one') ||
+                (field.type === 'many2one' && inverseField.type !== 'one2many')
             ) {
                 throw new Error(
                     `Mismatch relations types "${
                         Entity.name
                     }/${
-                        relationName
+                        fieldName
                     }" (${
-                        relation.type
+                        field.type
                     }) and "${
                         RelatedEntity.name
                     }/${
-                        relation.inverse
+                        field.inverse
                     }" (${
-                        inverseRelation.type
+                        inverseField.type
                     }).`
                 );
             }
@@ -180,8 +204,8 @@ function generateEntities() {
                 case 'instance':
                     patchInstanceMethods(Entity, patch.name, patch.patch);
                     break;
-                case 'relation':
-                    Object.assign(Entity.relations, patch.patch);
+                case 'field':
+                    Object.assign(Entity.fields, patch.patch);
                     break;
             }
         }
@@ -193,6 +217,50 @@ function generateEntities() {
 }
 
 /**
+ * Define a many2many field
+ *
+ * @param {string} entityClassName
+ * @param {Object} [options]
+ * @return {Object}
+ */
+function many2many(entityClassName, options) {
+    return _relation(entityClassName, Object.assign({}, options, { type: 'many2many' }));
+}
+
+/**
+ * Define a many2one field
+ *
+ * @param {string} entityClassName
+ * @param {Object} [options]
+ * @return {Object}
+ */
+function many2one(entityClassName, options) {
+    return _relation(entityClassName, Object.assign({}, options, { type: 'many2one' }));
+}
+
+/**
+ * Define a one2many field
+ *
+ * @param {string} entityClassName
+ * @param {Object} [options]
+ * @return {Object}
+ */
+function one2many(entityClassName, options) {
+    return _relation(entityClassName, Object.assign({}, options, { type: 'one2many' }));
+}
+
+/**
+ * Define a one2one field
+ *
+ * @param {string} entityClassName
+ * @param {Object} [options]
+ * @return {Object}
+ */
+function one2one(entityClassName, options) {
+    return _relation(entityClassName, Object.assign({}, options, { type: 'one2one' }));
+}
+
+/**
  *
  * @param {string} entityName
  * @param {string} patchName
@@ -200,6 +268,16 @@ function generateEntities() {
  */
 function registerClassPatchEntity(entityName, patchName, patch) {
     _registerPatchEntity(entityName, patchName, patch, { type: 'class' });
+}
+
+/**
+ *
+ * @param {string} entityName
+ * @param {string} patchName
+ * @param {Object} patch
+ */
+function registerFieldPatchEntity(entityName, patchName, patch) {
+    _registerPatchEntity(entityName, patchName, patch, { type: 'field' });
 }
 
 /**
@@ -241,28 +319,23 @@ function registerNewEntity(name, factory, dependencies = []) {
     });
 }
 
-
-/**
- *
- * @param {string} entityName
- * @param {string} patchName
- * @param {Object} patch
- */
-function registerRelationPatchEntity(entityName, patchName, patch) {
-    _registerPatchEntity(entityName, patchName, patch, { type: 'relation' });
-}
-
 //------------------------------------------------------------------------------
 // Export
 //------------------------------------------------------------------------------
 
 return {
     checkRelations,
+    fields: {
+        many2many,
+        many2one,
+        one2many,
+        one2one,
+    },
     generateEntities,
     registerClassPatchEntity,
     registerInstancePatchEntity,
     registerNewEntity,
-    registerRelationPatchEntity,
+    registerFieldPatchEntity,
 };
 
 });

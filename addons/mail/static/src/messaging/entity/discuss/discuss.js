@@ -1,7 +1,13 @@
 odoo.define('mail.messaging.entity.Discuss', function (require) {
 'use strict';
 
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        one2many,
+        one2one,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 
 function DiscussFactory({ Entity }) {
 
@@ -326,28 +332,20 @@ function DiscussFactory({ Entity }) {
     }
 
     Object.assign(Discuss, {
-        relations: Object.assign({}, Entity.relations, {
-            messaging: {
+        fields: Object.assign({}, Entity.fields, {
+            messaging: one2one('Messaging', {
                 inverse: 'discuss',
-                to: 'Messaging',
-                type: 'one2one',
-            },
-            renamingThreads: {
+            }),
+            renamingThreads: one2many('Thread', {
                 inverse: 'renamingDiscuss',
-                to: 'Thread',
-                type: 'one2many',
-            },
-            replyingToMessage: {
+            }),
+            replyingToMessage: one2one('Message', {
                 inverse: 'replyingToDiscuss',
-                to: 'Message',
-                type: 'one2one',
-            },
-            threadViewer: {
+            }),
+            threadViewer: one2one('ThreadViewer', {
                 inverse: 'discuss',
                 isCausal: true,
-                to: 'ThreadViewer',
-                type: 'one2one',
-            },
+            }),
         }),
     });
 

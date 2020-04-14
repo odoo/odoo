@@ -2,7 +2,14 @@ odoo.define('mail.messaging.entity.Message', function (require) {
 'use strict';
 
 const emojis = require('mail.emojis');
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        many2many,
+        many2one,
+        one2one,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 const { addLink, parseAndTransform } = require('mail.utils');
 
 const { str_to_datetime } = require('web.time');
@@ -408,37 +415,25 @@ function MessageFactory({ Entity }) {
     }
 
     Object.assign(Message, {
-        relations: Object.assign({}, Entity.relations, {
-            attachments: {
+        fields: Object.assign({}, Entity.fields, {
+            attachments: many2many('Attachment', {
                 inverse: 'messages',
-                to: 'Attachment',
-                type: 'many2many',
-            },
-            author: {
+            }),
+            author: many2one('Partner', {
                 inverse: 'authorMessages',
-                to: 'Partner',
-                type: 'many2one',
-            },
-            checkedThreadCaches: {
+            }),
+            checkedThreadCaches: many2many('ThreadCache', {
                 inverse: 'checkedMessages',
-                to: 'ThreadCache',
-                type: 'many2many',
-            },
-            originThread: {
+            }),
+            originThread: many2one('Thread', {
                 inverse: 'originThreadMessages',
-                to: 'Thread',
-                type: 'many2one',
-            },
-            replyingToDiscuss: {
+            }),
+            replyingToDiscuss: one2one('Discuss', {
                 inverse: 'replyingToMessage',
-                to: 'Discuss',
-                type: 'one2one',
-            },
-            threadCaches: {
+            }),
+            threadCaches: many2many('ThreadCache', {
                 inverse: 'messages',
-                to: 'ThreadCache',
-                type: 'many2many',
-            },
+            }),
         }),
     });
 

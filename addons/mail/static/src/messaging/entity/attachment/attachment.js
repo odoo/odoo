@@ -1,7 +1,14 @@
 odoo.define('mail.messaging.entity.Attachment', function (require) {
 'use strict';
 
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        many2many,
+        many2one,
+        one2many,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 
 function AttachmentFactory({ Entity }) {
 
@@ -253,42 +260,28 @@ function AttachmentFactory({ Entity }) {
     }
 
     Object.assign(Attachment, {
-        relations: Object.assign({}, Entity.relations, {
-            activeInAttachmentViewer: {
+        fields: Object.assign({}, Entity.fields, {
+            activeInAttachmentViewer: one2many('AttachmentViewer', {
                 inverse: 'attachment',
-                to: 'AttachmentViewer',
-                type: 'one2many',
-            },
-            activities: {
+            }),
+            activities: many2many('Activity', {
                 inverse: 'attachments',
-                to: 'Activity',
-                type: 'many2many',
-            },
-            attachmentViewer: {
+            }),
+            attachmentViewer: many2many('AttachmentViewer', {
                 inverse: 'attachments',
-                to: 'AttachmentViewer',
-                type: 'many2many',
-            },
-            composers: {
+            }),
+            composers: many2many('Composer', {
                 inverse: 'attachments',
-                to: 'Composer',
-                type: 'many2many',
-            },
-            messages: {
+            }),
+            messages: many2many('Message', {
                 inverse: 'attachments',
-                to: 'Message',
-                type: 'many2many',
-            },
-            originThread: {
+            }),
+            originThread: many2one('Thread', {
                 inverse: 'originThreadAttachments',
-                to: 'Thread',
-                type: 'many2one',
-            },
-            threads: {
+            }),
+            threads: many2many('Thread', {
                 inverse: 'attachments',
-                to: 'Thread',
-                type: 'many2many',
-            },
+            }),
         }),
     });
 

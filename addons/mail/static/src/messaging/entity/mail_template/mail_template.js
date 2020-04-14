@@ -1,7 +1,12 @@
 odoo.define('mail.messaging.entity.MailTemplate', function (require) {
 'use strict';
 
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        many2many,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 
 function MailTemplateFactory({ Entity }) {
 
@@ -74,12 +79,10 @@ function MailTemplateFactory({ Entity }) {
     }
 
     Object.assign(MailTemplate, {
-        relations: Object.assign({}, Entity.relations, {
-            activities: {
+        fields: Object.assign({}, Entity.fields, {
+            activities: many2many('Activity', {
                 inverse: 'mailTemplates',
-                to: 'Activity',
-                type: 'many2many',
-            },
+            }),
         }),
     });
 

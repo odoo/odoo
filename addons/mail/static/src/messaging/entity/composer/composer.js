@@ -2,7 +2,13 @@ odoo.define('mail.messaging.entity.Composer', function (require) {
 'use strict';
 
 const emojis = require('mail.emojis');
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        many2many,
+        one2one,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 
 const {
     addLink,
@@ -246,17 +252,13 @@ function ComposerFactory({ Entity }) {
     }
 
     Object.assign(Composer, {
-        relations: Object.assign({}, Entity.relations, {
-            attachments: {
+        fields: Object.assign({}, Entity.fields, {
+            attachments: many2many('Attachment', {
                 inverse: 'composers',
-                to: 'Attachment',
-                type: 'many2many',
-            },
-            thread: {
+            }),
+            thread: one2one('Thread', {
                 inverse: 'composer',
-                to: 'Thread',
-                type: 'one2one',
-            },
+            }),
         }),
     });
 

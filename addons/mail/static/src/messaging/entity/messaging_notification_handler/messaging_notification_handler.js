@@ -1,7 +1,12 @@
 odoo.define('mail.messaging.entity.MessagingNotificationHandler', function (require) {
 'use strict';
 
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        one2one,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
@@ -512,12 +517,10 @@ function MessagingNotificationHandlerFactory({ Entity }) {
     }
 
     Object.assign(MessagingNotificationHandler, {
-        relations: Object.assign({}, Entity.relations, {
-            messaging: {
+        fields: Object.assign({}, Entity.fields, {
+            messaging: one2one('Messaging', {
                 inverse: 'notificationHandler',
-                to: 'Messaging',
-                type: 'one2one',
-            },
+            }),
         }),
     });
 

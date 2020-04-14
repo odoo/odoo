@@ -1,7 +1,12 @@
 odoo.define('mail.messaging.entity.Messaging', function (require) {
 'use strict';
 
-const { registerNewEntity } = require('mail.messaging.entity.core');
+const {
+    fields: {
+        one2one,
+    },
+    registerNewEntity,
+} = require('mail.messaging.entity.core');
 
 function MessagingFactory({ Entity }) {
 
@@ -158,71 +163,49 @@ function MessagingFactory({ Entity }) {
     }
 
     Object.assign(Messaging, {
-        relations: Object.assign({}, Entity.relations, {
-            attachmentViewer: {
+        fields: Object.assign({}, Entity.fields, {
+            attachmentViewer: one2one('AttachmentViewer', {
                 inverse: 'messaging',
                 isCausal: true,
-                to: 'AttachmentViewer',
-                type: 'one2one',
-            },
-            chatWindowManager: {
+            }),
+            chatWindowManager: one2one('ChatWindowManager', {
                 inverse: 'messaging',
                 isCausal: true,
-                to: 'ChatWindowManager',
-                type: 'one2one',
-            },
-            currentPartner: {
+            }),
+            currentPartner: one2one('Partner', {
                 inverse: 'currentPartnerMessaging',
-                to: 'Partner',
-                type: 'one2one',
-            },
-            device: {
+            }),
+            device: one2one('Device', {
                 inverse: 'messaging',
                 isCausal: true,
-                to: 'Device',
-                type: 'one2one',
-            },
-            dialogManager: {
+            }),
+            dialogManager: one2one('DialogManager', {
                 inverse: 'messaging',
                 isCausal: true,
-                to: 'DialogManager',
-                type: 'one2one',
-            },
-            discuss: {
+            }),
+            discuss: one2one('Discuss', {
                 inverse: 'messaging',
                 isCausal: true,
-                to: 'Discuss',
-                type: 'one2one',
-            },
-            initializer: {
+            }),
+            initializer: one2one('MessagingInitializer', {
                 inverse: 'messaging',
                 isCausal: true,
-                to: 'MessagingInitializer',
-                type: 'one2one',
-            },
-            locale: {
+            }),
+            locale: one2one('Locale', {
                 inverse: 'messaging',
                 isCausal: true,
-                to: 'Locale',
-                type: 'one2one',
-            },
-            messagingMenu: {
+            }),
+            messagingMenu: one2one('MessagingMenu', {
                 inverse: 'messaging',
                 isCausal: true,
-                to: 'MessagingMenu',
-                type: 'one2one',
-            },
-            notificationHandler: {
+            }),
+            notificationHandler: one2one('MessagingNotificationHandler', {
                 inverse: 'messaging',
                 isCausal: true,
-                to: 'MessagingNotificationHandler',
-                type: 'one2one',
-            },
-            partnerRoot: {
+            }),
+            partnerRoot: one2one('Partner', {
                 inverse: 'partnerRootMessaging',
-                to: 'Partner',
-                type: 'one2one',
-            },
+            }),
         }),
     });
 
