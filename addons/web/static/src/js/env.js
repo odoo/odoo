@@ -21,25 +21,28 @@ odoo.define("web.env", function (require) {
     }
 
     function httpRequest(route, params = {}, readMethod = 'json') {
-        const formData = new FormData();
-        for (const key in params) {
-            if (key === 'method') {
-                continue;
-            }
-            const value = params[key];
-            if (Array.isArray(value) && value.length) {
-                for (const val of value) {
-                    formData.append(key, val);
+        const info = {
+            method: params.method || 'POST',
+        };
+        if (params.method !== 'GET') {
+            const formData = new FormData();
+            for (const key in params) {
+                if (key === 'method') {
+                    continue;
                 }
-            } else {
-                formData.append(key, value);
+                const value = params[key];
+                if (Array.isArray(value) && value.length) {
+                    for (const val of value) {
+                        formData.append(key, val);
+                    }
+                } else {
+                    formData.append(key, value);
+                }
             }
+            info.body = formData;
         }
 
-        return fetch(route, {
-            method: params.method || 'POST',
-            body: formData,
-        }).then(response => response[readMethod]());
+        return fetch(route, info).then(response => response[readMethod]());
     }
 
     function navigate(url, params) {
