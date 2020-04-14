@@ -2460,6 +2460,16 @@ class AccountMoveLine(models.Model):
     _description = "Journal Item"
     _order = "date desc, move_name desc, id"
 
+
+    @api.model
+    def _default_account(self):
+        journal_id = self._context.get('journal_id') or self._context.get('default_journal_id')
+        if journal_id:
+            journal = self.env['account.journal'].browse(journal_id)
+            if self._context.get('type') in ('out_invoice', 'in_refund'):
+                return journal.default_credit_account_id.id
+            return journal.default_debit_account_id.id
+
     # ==== Business fields ====
     move_id = fields.Many2one('account.move', string='Journal Entry',
         index=True, required=True, readonly=True, auto_join=True, ondelete="cascade",
@@ -2475,6 +2485,7 @@ class AccountMoveLine(models.Model):
         help='Utility field to express amount currency')
     country_id = fields.Many2one(comodel_name='res.country', related='move_id.company_id.country_id')
     account_id = fields.Many2one('account.account', string='Account',
+        default=_default_account,
         index=True, ondelete="cascade",
         domain=[('deprecated', '=', False)])
     account_internal_type = fields.Selection(related='account_id.user_type_id.type', string="Internal Type", store=True, readonly=True)
