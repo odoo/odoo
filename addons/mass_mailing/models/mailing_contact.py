@@ -18,6 +18,14 @@ class MassMailingContactListRel(models.Model):
     list_id = fields.Many2one('mailing.list', string='Mailing List', ondelete='cascade', required=True)
     opt_out = fields.Boolean(string='Opt Out',
                              help='The contact has chosen not to receive mails anymore from this list', default=False)
+    opt_out_reason = fields.Selection(string='Opt Out Reason', selection=[
+        ('never_subscribed', 'I never subscribed to this list'),
+        ('changed_mind', 'I changed my mind'),
+        ('too_many_emails', 'I receive too many emails from this list'),
+        ('irrelevant_content', 'The content of these emails is not relevant to me'),
+        ('other', 'Other'),
+    ])
+    opt_out_custom = fields.Text(string='Opt Out Custom Reason')
     unsubscription_date = fields.Datetime(string='Unsubscription Date')
     message_bounce = fields.Integer(related='contact_id.message_bounce', store=False, readonly=False)
     is_blacklisted = fields.Boolean(related='contact_id.is_blacklisted', store=False, readonly=False)
@@ -34,10 +42,24 @@ class MassMailingContactListRel(models.Model):
         return super(MassMailingContactListRel, self).create(vals)
 
     def write(self, vals):
-        if 'opt_out' in vals:
-            vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
-        return super(MassMailingContactListRel, self).write(vals)
+        for record in self:
+            if 'opt_out_reason' in vals or 'opt_out' in vals:
+                vals['opt_out_reason'] = vals.get('opt_out', record.opt_out) and vals.get('opt_out_reason')
+            if 'opt_out_custom' in vals or 'opt_out' in vals:
+                vals['opt_out_custom'] = vals.get('opt_out', record.opt_out) and vals.get('opt_out_custom')
+            author_id = self.env.user.partner_id.id
+            if 'opt_out' in vals:
+                message = _('The recipient <strong>unsubscribed from %s</strong> mailing list') \
+                        if vals['opt_out'] else _('The recipient <strong>subscribed to %s</strong> mailing list')
+                record.contact_id.sudo().message_post(body=_(message % record.list_id.name), author_id=author_id)
+                vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
 
+            if vals.get('opt_out_reason'):
+                if vals['opt_out_reason'] == 'other':
+                    record.contact_id.sudo().message_post(body=_("Feedback from %s: %s (other)" % (record.contact_id.email, vals['opt_out_custom'])), author_id=author_id)
+                else:
+                    record.contact_id.sudo().message_post(body=_("Feedback from %s: %s" % (record.contact_id.email, dict(record._fields['opt_out_reason']._description_selection(record.env)).get(vals['opt_out_reason']))), author_id=author_id)
+        return super(MassMailingContactListRel, self).write(vals)
 
 class MassMailingContact(models.Model):
     """Model of a contact. This model is different from the partner model

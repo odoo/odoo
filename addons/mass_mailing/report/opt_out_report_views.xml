@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_contact_subscription_report_view_pivot" model="ir.ui.view">
+        <field name="name">mailing.contact.subscription.view.pivot</field>
+        <field name="model">mailing.contact.subscription</field>
+        <field name="arch" type="xml">
+            <pivot string="Opt Out Statistics" disable_linking="True">
+                <field name="list_id" type="row"/>
+                <field name="opt_out_reason" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="mailing_contact_subscription_report_view_graph" model="ir.ui.view">
+        <field name="name">mailing.contact.subscription.view.graph</field>
+        <field name="model">mailing.contact.subscription</field>
+        <field name="arch" type="xml">
+            <graph string="Opt Out Statistics">
+                <field name="list_id"/>
+                <field name="opt_out_reason"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Actions and Menuitems -->
+    <record id="mailing_opt_out_report_action" model="ir.actions.act_window">
+        <field name="name">Opt Out Analysis</field>
+        <field name="res_model">mailing.contact.subscription</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="domain">[('opt_out', '=', True)]</field>
+    </record>
+
+    <menuitem name="Opt Out" id="mass_mailing_opt_out_report" sequence="99"
+        parent="mass_mailing_menu_report"
+        action="mailing_opt_out_report_action"
+        groups="mass_mailing.group_mass_mailing_user"/>
+</odoo>

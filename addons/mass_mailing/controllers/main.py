@@ -26,14 +26,29 @@ class MassMailController(http.Controller):
     @http.route(['/unsubscribe_from_list'], type='http', website=True, multilang=False, auth='public', sitemap=False)
     def unsubscribe_placeholder_link(self, **post):
         """Dummy route so placeholder is not prefixed by language, MUST have multilang=False"""
-        raise werkzeug.exceptions.NotFound()
+        list_ids = request.env['mailing.list'].sudo().search([])
+        return request.render('mass_mailing.page_unsubscribe', {
+                'contacts': True,
+                'list_ids': list_ids,
+                'opt_out_list_ids': [],
+                'opt_out_reasons': request.env['mailing.contact.subscription']._fields['opt_out_reason'].selection,
+                'unsubscribed_list': [],
+                'email': None,
+                'mailing_id': None,
+                'res_id': None,
+                'show_blacklist_button': request.env['ir.config_parameter'].sudo().get_param('mass_mailing.show_blacklist_buttons'),
+                'has_public_list': len(list_ids.filtered(lambda list: list.is_public)) > 0,
+                'demo_mode': True,
+            })
 
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing(self, mailing_id, email=None, res_id=None, token="", **post):
-        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
+        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id).with_user(request.env.ref('base.user_root'))
         if mailing.exists():
             res_id = res_id and int(res_id)
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, str(token)):
+                if request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
+                    return self.unsubscribe_placeholder_link()
                 raise exceptions.AccessDenied()
 
             if mailing.mailing_model_real == 'mailing.contact':
@@ -48,7 +63,7 @@ class MassMailController(http.Controller):
                 opt_out_list_ids = subscription_list_ids.filtered(lambda rel: rel.opt_out).mapped('list_id')
                 opt_in_list_ids = subscription_list_ids.filtered(lambda rel: not rel.opt_out).mapped('list_id')
                 opt_out_list_ids = set([list.id for list in opt_out_list_ids if list not in opt_in_list_ids])
-
+                opt_out_reasons = request.env['mailing.contact.subscription']._fields['opt_out_reason'].selection
                 unique_list_ids = set([list.list_id.id for list in subscription_list_ids])
                 list_ids = request.env['mailing.list'].sudo().browse(unique_list_ids)
                 unsubscribed_list = ', '.join(str(list.name) for list in mailing.contact_list_ids if list.is_public)
@@ -56,11 +71,14 @@ class MassMailController(http.Controller):
                     'contacts': contacts,
                     'list_ids': list_ids,
                     'opt_out_list_ids': opt_out_list_ids,
+                    'opt_out_reasons': opt_out_reasons,
                     'unsubscribed_list': unsubscribed_list,
                     'email': email,
                     'mailing_id': mailing_id,
                     'res_id': res_id,
                     'show_blacklist_button': request.env['ir.config_parameter'].sudo().get_param('mass_mailing.show_blacklist_buttons'),
+                    'has_public_list': len(list_ids.filtered(lambda list: list.is_public)) > 0,
+                    'demo_mode': False,
                 })
             else:
                 opt_in_lists = request.env['mailing.contact.subscription'].sudo().search([
@@ -83,7 +101,7 @@ class MassMailController(http.Controller):
 
     @http.route('/mail/mailing/unsubscribe', type='json', auth='public')
     def unsubscribe(self, mailing_id, opt_in_ids, opt_out_ids, email, res_id, token):
-        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
+        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id).with_user(request.env.ref('base.user_root'))
         if mailing.exists():
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
                 return 'unauthorized'
@@ -161,8 +179,14 @@ class MassMailController(http.Controller):
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
                 return 'unauthorized'
             model = request.env[mailing.mailing_model_real]
-            records = model.sudo().search([('email_normalized', '=', tools.email_normalize(email))])
-            for record in records:
-                record.sudo().message_post(body=_("Feedback from %s: %s" % (email, feedback)))
-            return bool(records)
+            if model._name == 'mailing.contact':
+                records = model.sudo().search([('email_normalized', '=', tools.email_normalize(email))])
+                subscription_ids = records.mapped('subscription_list_ids').filtered(lambda x: x.opt_out and x.list_id.id in mailing.contact_list_ids.ids)
+                subscription_ids.with_user(request.env.ref('base.user_root')).write({
+                    'opt_out_reason': feedback.get('key'),
+                    'opt_out_custom': feedback.get('reason') if feedback.get('key') == 'other' else False
+                })
+                return True
+            else:
+                return 'notImplemented'
         return 'error'
