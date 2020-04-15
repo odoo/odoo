@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <div t-name="Tip" t-attf-class="o_tooltip #{widget.info.position}">
+    <div t-name="Tip" t-attf-class="o_tooltip #{widget.info.position} #{widget.is_anchor_fixed_position ? 'o_tooltip_fixed' : ''}">
         <div class="o_tooltip_overlay"/>
         <div class="o_tooltip_content" t-attf-style="width: #{widget.info.width}px;">
             <t t-raw="widget.info.content"/>
