@@ -52,6 +52,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
         this.fieldName = options.fieldName;
         this.write_model = options.write_model;
         this.write_field = options.write_field;
+        this.no_avatar = options.no_avatar;
         this.avatar_field = options.avatar_field;
         this.avatar_model = options.avatar_model;
         this.filters = options.filters;
@@ -631,6 +632,7 @@ return AbstractRenderer.extend({
             var self = this;
             options.getColor = this.getColor.bind(this);
             options.fields = this.state.fields;
+            options.no_avatar = options.filters.length > 20;
             var filter = new SidebarFilter(self, options);
             prom = filter.appendTo(this.$sidebar).then(function () {
                 // Show filter popover
