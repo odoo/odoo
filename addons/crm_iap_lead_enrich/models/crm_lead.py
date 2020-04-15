@@ -4,7 +4,7 @@
 import datetime
 import logging
 
-from odoo import api, fields, models, tools
+from odoo import _, api, fields, models, tools
 from odoo.addons.iap import InsufficientCreditError
 
 _logger = logging.getLogger(__name__)
@@ -87,8 +87,8 @@ class Lead(models.Model):
                 continue
 
             values = {'iap_enrich_done': True}
-            lead_fields = ['description', 'partner_name', 'reveal_id', 'street', 'city', 'zip']
-            iap_fields = ['description', 'name', 'clearbit_id', 'location', 'city', 'postal_code']
+            lead_fields = ['partner_name', 'reveal_id', 'street', 'city', 'zip']
+            iap_fields = ['name', 'clearbit_id', 'location', 'city', 'postal_code']
             for lead_field, iap_field in zip(lead_fields, iap_fields):
                 if not lead[lead_field] and iap_data.get(iap_field):
                     values[lead_field] = iap_data[iap_field]
@@ -110,28 +110,11 @@ class Lead(models.Model):
                 values['state_id'] = state.id
 
             lead.write(values)
+
+            template_values = iap_data
+            template_values['flavor_text'] = _("Lead enriched based on email address")
             lead.message_post_with_view(
-                'crm_iap_lead_enrich.mail_message_lead_enrich_with_data',
-                values=lead._iap_enrich_get_message_data(iap_data),
+                'partner_autocomplete.enrich_service_information',
+                values=template_values,
                 subtype_id=self.env.ref('mail.mt_note').id
             )
-
-    def _iap_enrich_get_message_data(self, company_data):
-        log_data = {
-            'name': company_data.get('name'),
-            'description': company_data.get('description'),
-            'twitter': company_data.get('twitter'),
-            'logo': company_data.get('logo'),
-            'phone_numbers': company_data.get('phone_numbers'),
-            'facebook': company_data.get('facebook'),
-            'linkedin': company_data.get('linkedin'),
-            'crunchbase': company_data.get('crunchbase'),
-            'tech': [t.replace('_', ' ').title() for t in company_data.get('tech', [])],
-        }
-        timezone = company_data.get('timezone')
-        if timezone:
-            log_data.update({
-                'timezone': timezone.replace('_', ' ').title(),
-                'timezone_url': company_data.get('timezone_url'),
-            })
-        return log_data
