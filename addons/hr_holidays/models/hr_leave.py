@@ -124,17 +124,9 @@ class HolidaysRequest(models.Model):
         domain=[('valid', '=', True)])
     validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type', readonly=False)
     # HR data
-
-    def _employee_id_domain(self):
-        if self.user_has_groups('hr_holidays.group_hr_holidays_user') or self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
-            return []
-        if self.user_has_groups('hr_holidays.group_hr_holidays_responsible'):
-            return [('leave_manager_id', '=', self.env.user.id)]
-        return [('user_id', '=', self.env.user.id)]
-
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, readonly=True, ondelete="restrict",
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, tracking=True, domain=_employee_id_domain)
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, tracking=True)
     department_id = fields.Many2one(
         'hr.department', string='Department', readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
@@ -685,10 +677,9 @@ class HolidaysRequest(models.Model):
             if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
                 return
             current_employee = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.uid)], limit=1)
-            managed_employee_ids = self.env['hr.employee'].sudo().search([('leave_manager_id', '=', self.env.uid)]).ids
             for record in self:
                 emp_id = record._cache.get('employee_id') or False
-                if emp_id != current_employee.id and emp_id not in managed_employee_ids:
+                if emp_id != current_employee.id:
                     try:
                         record._cache['name']
                         record._cache['name'] = '*****'
@@ -790,7 +781,7 @@ class HolidaysRequest(models.Model):
         holidays._create_resource_leave()
         for holiday in holidays.filtered(lambda l: l.holiday_status_id.create_calendar_meeting):
             meeting_values = holiday._prepare_holidays_meeting_values()
-            meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True, active_model=self._name).create(meeting_values)
+            meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
             holiday.write({'meeting_id': meeting.id})
 
     def _prepare_holidays_meeting_values(self):
