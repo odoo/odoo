@@ -9,12 +9,13 @@
 __all__ = [
     'Environment',
     'Meta',
-    'model',
+    'model', 'multi',
     'constrains', 'depends', 'onchange', 'returns',
     'call_kw',
 ]
 
 import logging
+import warnings
 from collections import defaultdict, Mapping
 from contextlib import contextmanager
 from copy import deepcopy
@@ -302,6 +303,29 @@ def model(method):
     if method.__name__ == 'create':
         return model_create_single(method)
     method._api = 'model'
+    return method
+
+
+def multi(method):
+    """ Decorate a record-style method where ``self`` is a recordset. The method
+        typically defines an operation on records. Such a method::
+
+            def method(self, args):
+                ...
+
+        may be called in both record and traditional styles, like::
+
+            # recs = model.browse(cr, uid, ids, context)
+            recs.method(args)
+
+            model.method(cr, uid, ids, args, context=context)
+
+        .. deprecated:: 13.0
+
+            multi is the default scheme, in 13.0+ this decorator is effectively a no-op
+    """
+    warnings.warn("@api.multi is deprecated since it is now the default, please remove it",
+                  DeprecationWarning)
     return method
 
 
