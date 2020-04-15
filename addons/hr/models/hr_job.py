@@ -9,6 +9,7 @@ class Job(models.Model):
     _name = "hr.job"
     _description = "Job Position"
     _inherit = ['mail.thread']
+    _check_company_auto = True
 
     name = fields.Char(string='Job Position', required=True, index=True, translate=True)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees', store=True,
@@ -22,7 +23,8 @@ class Job(models.Model):
     employee_ids = fields.One2many('hr.employee', 'job_id', string='Employees', groups='base.group_user')
     description = fields.Text(string='Job Description')
     requirements = fields.Text('Requirements')
-    department_id = fields.Many2one('hr.department', string='Department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    department_id = fields.Many2one(
+        'hr.department', string='Department', check_company=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     state = fields.Selection([
         ('recruit', 'Recruitment in Progress'),

@@ -12,26 +12,27 @@ class HrEmployeeBase(models.AbstractModel):
     _name = "hr.employee.base"
     _description = "Basic Employee"
     _order = 'name'
+    _check_company_auto = True
 
     name = fields.Char()
     active = fields.Boolean("Active")
     color = fields.Integer('Color Index', default=0)
-    department_id = fields.Many2one('hr.department', 'Department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    job_id = fields.Many2one('hr.job', 'Job Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    department_id = fields.Many2one('hr.department', 'Department', check_company=True)
+    job_id = fields.Many2one('hr.job', 'Job Position', check_company=True)
     job_title = fields.Char("Job Title")
     company_id = fields.Many2one('res.company', 'Company')
-    address_id = fields.Many2one('res.partner', 'Work Address', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    address_id = fields.Many2one('res.partner', 'Work Address', check_company=True)
     work_phone = fields.Char('Work Phone')
     mobile_phone = fields.Char('Work Mobile')
     work_email = fields.Char('Work Email')
     work_location = fields.Char('Work Location')
     user_id = fields.Many2one('res.users')
     resource_id = fields.Many2one('resource.resource')
-    resource_calendar_id = fields.Many2one('resource.calendar', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    parent_id = fields.Many2one('hr.employee', 'Manager', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    resource_calendar_id = fields.Many2one('resource.calendar', check_company=True)
+    parent_id = fields.Many2one('hr.employee', 'Manager', check_company=True)
     coach_id = fields.Many2one(
         'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        check_company=True,
         help='Select the "Employee" who is the coach of this employee.\n'
              'The "Coach" has no specific rights or responsibilities by default.')
     tz = fields.Selection(

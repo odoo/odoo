@@ -13,13 +13,17 @@ class Contract(models.Model):
     _name = 'hr.contract'
     _description = 'Contract'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _check_company_auto = True
 
     name = fields.Char('Contract Reference', required=True)
     active = fields.Boolean(default=True)
     structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type")
-    employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    department_id = fields.Many2one('hr.department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
-    job_id = fields.Many2one('hr.job', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Job Position')
+    employee_id = fields.Many2one(
+        'hr.employee', string='Employee', tracking=True, check_company=True)
+    department_id = fields.Many2one(
+        'hr.department', string="Department", check_company=True)
+    job_id = fields.Many2one(
+        'hr.job', string='Job Position', check_company=True)
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today, tracking=True,
         help="Start date of the contract.")
     date_end = fields.Date('End Date', tracking=True,
@@ -29,7 +33,7 @@ class Contract(models.Model):
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule',
         default=lambda self: self.env.company.resource_calendar_id.id, copy=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        check_company=True)
     wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
     notes = fields.Text('Notes')
     state = fields.Selection([

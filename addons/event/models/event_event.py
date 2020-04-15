@@ -97,6 +97,7 @@ class EventEvent(models.Model):
     _description = 'Event'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_begin'
+    _check_company_auto = True
 
     def _get_default_stage_id(self):
         event_stages = self.env['event.stage'].search([])
@@ -116,7 +117,7 @@ class EventEvent(models.Model):
     organizer_id = fields.Many2one(
         'res.partner', string='Organizer', tracking=True,
         default=lambda self: self.env.company.partner_id,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        check_company=True)
     event_type_id = fields.Many2one('event.type', string='Template', ondelete='set null')
     color = fields.Integer('Kanban Color Index')
     event_mail_ids = fields.One2many(
@@ -188,7 +189,7 @@ class EventEvent(models.Model):
     # Location and communication
     address_id = fields.Many2one(
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
-        tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        tracking=True, check_company=True)
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id',
         copy=True, readonly=False, store=True)

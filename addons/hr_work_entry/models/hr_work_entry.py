@@ -11,10 +11,12 @@ class HrWorkEntry(models.Model):
     _name = 'hr.work.entry'
     _description = 'HR Work Entry'
     _order = 'conflict desc,state,date_start'
+    _check_company_auto = True
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    employee_id = fields.Many2one(
+        'hr.employee', required=True, check_company=True)
     date_start = fields.Datetime(required=True, string='From')
     date_stop = fields.Datetime(string='To')
     duration = fields.Float(compute='_compute_duration', inverse='_inverse_duration', store=True, string="Period")

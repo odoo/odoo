@@ -41,6 +41,7 @@ class PurchaseRequisition(models.Model):
     _description = "Purchase Requisition"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "id desc"
+    _check_company_auto=True
 
     def _get_type_id(self):
         return self.env['purchase.requisition.type'].search([], limit=1)
@@ -164,8 +165,12 @@ class PurchaseRequisitionLine(models.Model):
     _name = "purchase.requisition.line"
     _description = "Purchase Requisition Line"
     _rec_name = 'product_id'
+    _check_company_auto = True
 
-    product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], required=True)
+    product_id = fields.Many2one(
+        'product.product', string='Product', required=True, check_company=True,
+        domain="[('purchase_ok', '=', True), ('company_id', 'in', [False, company_id])]",
+    )
     product_uom_id = fields.Many2one('uom.uom', string='Product Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure')
@@ -173,8 +178,9 @@ class PurchaseRequisitionLine(models.Model):
     price_unit = fields.Float(string='Unit Price', digits='Product Price')
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered Quantities')
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade')
-    company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True, default= lambda self: self.env.company)
-    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    company_id = fields.Many2one(related='requisition_id.company_id', string='Company', store=True)
+    account_analytic_id = fields.Many2one(
+        'account.analytic.account', string='Analytic Account', check_company=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     schedule_date = fields.Date(string='Scheduled Date')
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
