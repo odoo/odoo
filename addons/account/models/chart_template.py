@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
-from odoo.addons.account.models.account import TYPE_TAX_USE
+from odoo.addons.account.models.account_tax import TYPE_TAX_USE
 
 import logging
 
