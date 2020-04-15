@@ -39,16 +39,6 @@ class UserError(Exception):
         return self.args[0]
 
 
-# deprecated due to collision with builtins, kept for compatibility
-class Warning(UserError):
-    def __init__(self, *args, **kwargs):
-        warnings.warn(
-            "Warning is a deprecated alias to UserError and is going to be "
-            "removed in a future version.",
-            DeprecationWarning)
-        super().__init__(*args, **kwargs)
-
-
 class RedirectWarning(Exception):
     """ Warning with a possibility to redirect the user instead of simply
     displaying the warning message.
@@ -126,3 +116,23 @@ class ValidationError(UserError):
 
         When you try to create a new user with a login which already exist in the db.
     """
+
+
+# Deprecated exceptions, only kept for backward compatibility, may be
+# removed in the future *without* any futher notice than the Deprecation
+# Warning.
+
+class except_orm(UserError):
+    def __init__(self, *args, **kwargs):
+        warnings.warn("except_orm is a deprecated alias to UserError.", DeprecationWarning)
+        super().__init__(*args, **kwargs)
+
+class Warning(UserError):
+    def __init__(self, *args, **kwargs):
+        warnings.warn("Warning is a deprecated alias to UserError.", DeprecationWarning)
+        super().__init__(*args, **kwargs)
+
+class QWebException(Exception):
+    def __init__(self, *args, **kwargs):
+        warnings.warn("qweb.QWebException is the exception you are looking for.", DeprecationWarning)
+        super().__init__(*args, **kwargs)
