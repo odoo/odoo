@@ -38,7 +38,7 @@ class Company(models.Model):
         for company in self:
             company = company.with_company(company)
             if not company.leave_timesheet_project_id:
-                project = self.env['project.project'].sudo().create({
+                project = company.env['project.project'].create({
                     'name': _('Internal Project'),
                     'allow_timesheets': True,
                     'active': False,
@@ -48,7 +48,7 @@ class Company(models.Model):
                     'leave_timesheet_project_id': project.id,
                 })
             if not company.leave_timesheet_task_id:
-                task = self.env['project.task'].sudo().create({
+                task = company.env['project.task'].create({
                     'name': _('Time Off'),
                     'project_id': company.leave_timesheet_project_id.id,
                     'active': False,
