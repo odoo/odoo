@@ -17,7 +17,7 @@ from odoo.addons.base.models.ir_mail_server import IrMailServer, MailDeliveryExc
 from odoo.addons.bus.models.bus import ImBus, json_dump
 from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import Message
-from odoo.addons.mail.models.mail_notification import Notification
+from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.tests import common, new_test_user
 from odoo.tools import formataddr, pycompat
 
@@ -284,7 +284,7 @@ class MailCase(MockEmail):
     @contextmanager
     def mock_mail_app(self):
         message_create_origin = Message.create
-        notification_create_origin = Notification.create
+        notification_create_origin = MailNotification.create
         self._init_mock_mail()
 
         def _mail_message_create(model, *args, **kwargs):
@@ -298,7 +298,7 @@ class MailCase(MockEmail):
             return res
 
         with patch.object(Message, 'create', autospec=True, wraps=Message, side_effect=_mail_message_create) as _mail_message_create_mock, \
-                patch.object(Notification, 'create', autospec=True, wraps=Notification, side_effect=_mail_notification_create) as _mail_notification_create_mock:
+                patch.object(MailNotification, 'create', autospec=True, wraps=MailNotification, side_effect=_mail_notification_create) as _mail_notification_create_mock:
             yield
 
     def _init_mock_mail(self):
