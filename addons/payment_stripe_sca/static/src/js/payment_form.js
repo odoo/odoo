@@ -54,14 +54,10 @@ odoo.define('payment_stripe.payment_form', function (require) {
                 route: '/payment/stripe/s2s/create_setup_intent',
                 params: {'acquirer_id': formData.acquirer_id}
             }).then(function(intent_secret){
-                // need to convert between ES6 promises and jQuery 2 deferred \o/
-                return $.Deferred(function(defer) {
-                    stripe.handleCardSetup(intent_secret, card)
-                        .then(function(result) {defer.resolve(result)})
-                    });
+                return stripe.handleCardSetup(intent_secret, card)
             }).then(function(result) {
                 if (result.error) {
-                    return $.Deferred().reject({"message": {"data": { "message": result.error.message}}});
+                    return Promise.reject({"message": {"data": { "message": result.error.message}}})
                 } else {
                     _.extend(formData, {"payment_method": result.setupIntent.payment_method});
                     return rpc.query({
@@ -80,7 +76,7 @@ odoo.define('payment_stripe.payment_form', function (require) {
                     $checkedRadio.val(result.id);
                     self.el.submit();
                 }
-            }).fail(function (error, event) {
+            }).guardedCatch(function (error) {
                 // if the rpc fails, pretty obvious
                 self.enableButton(button);
                 self.displayError(
