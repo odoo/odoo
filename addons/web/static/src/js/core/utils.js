@@ -531,7 +531,7 @@ var utils = {
      * This function is the last resort solution for monkey-patching an
      * ES6 Class, for people that do not control the code defining the Class
      * to patch (e.g. partners), and when that Class isn't patchable already
-     * (i.e. when it doesn't have a 'patch' function, defined by the 'web.PatchMixin').
+     * (i.e. when it doesn't have a 'patch' function, defined by the 'web.patchMixin').
      * 
      * @param {Class} C Class to patch
      * @param {string} patchName
