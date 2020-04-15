@@ -11,7 +11,7 @@ odoo.define('web.tools', function (require) {
 function deprecated(fn, message) {
     return function () {
         console.warn(message || (fn.name + ' is deprecated.'));
-        fn.apply(this, arguments);
+        return fn.apply(this, arguments);
     };
 }
 
