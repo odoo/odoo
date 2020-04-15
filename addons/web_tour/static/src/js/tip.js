@@ -56,6 +56,8 @@ var Tip = Widget.extend({
     attach_to: async function ($anchor) {
         this._setupAnchor($anchor);
 
+        this.is_anchor_fixed_position = this.$anchor.css("position") === "fixed";
+
         // The body never needs to have the o_tooltip_parent class. It is a
         // safe place to put the tip in the DOM at initialization and be able
         // to compute its dimensions and reposition it if required.
@@ -366,10 +368,10 @@ var Tip = Widget.extend({
             return;
         }
 
-        if (this.$el.parent()[0] !== document.body) {
+        if (this.$el.parent()[0] !== this.$el[0].ownerDocument.body) {
             this.$el.detach();
             this.$el.css(offset);
-            this.$el.appendTo(document.body);
+            this.$el.appendTo(this.$el[0].ownerDocument.body);
         }
 
         var mbLeft = 0;
