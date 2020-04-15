@@ -2692,7 +2692,7 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
-    QUnit.skip('timezone does not affect drag and drop', async function (assert) {
+    QUnit.test('timezone does not affect drag and drop', async function (assert) {
         assert.expect(10);
 
         var calendar = await createCalendarView({
@@ -2749,7 +2749,7 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
-    QUnit.skip('timzeone does not affect calendar with date field', async function (assert) {
+    QUnit.test('timzeone does not affect calendar with date field', async function (assert) {
         assert.expect(11);
 
         var calendar = await createCalendarView({
@@ -2819,7 +2819,7 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
-    QUnit.skip("drag and drop on month mode", async function (assert) {
+    QUnit.test("drag and drop on month mode", async function (assert) {
         assert.expect(2);
 
         const calendar = await createCalendarView({
@@ -2861,7 +2861,7 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
-    QUnit.skip("drag and drop on month mode with all_day mapping", async function (assert) {
+    QUnit.test("drag and drop on month mode with all_day mapping", async function (assert) {
         // Same test as before but in calendarEventToRecord (calendar_model.js) there is
         // different condition branching with all_day mapping or not
         assert.expect(2);
@@ -2922,7 +2922,7 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
-    QUnit.skip('drag and drop on month mode with date_start and date_delay', async function (assert) {
+    QUnit.test('drag and drop on month mode with date_start and date_delay', async function (assert) {
         assert.expect(1);
 
         var calendar = await createCalendarView({
