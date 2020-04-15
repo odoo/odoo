@@ -73,8 +73,8 @@ FROM
 LEFT JOIN stock_location l on (l.id=q.location_id)
 LEFT JOIN stock_warehouse wh ON l.parent_path like concat('%/', wh.view_location_id, '/%')
 WHERE
-    l.usage = 'internal' AND
-    wh IS NOT NULL
+    (l.usage = 'internal' AND wh.id IS NOT NULL) OR
+    l.usage = 'transit'
 UNION
 SELECT
     m.id,
