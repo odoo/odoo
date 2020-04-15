@@ -69,13 +69,20 @@ class Intervals(object):
             recses = []
             for value, flag, recs in sorted(_boundaries(intervals, 'start', 'stop')):
                 if flag == 'start':
-                    starts.append(value)
+                    if starts:
+                        append((starts[-1], value, recses[-1]))
+                        starts.append(value + timedelta(seconds=1))
+                    else:
+                        starts.append(value)
                     recses.append(recs)
                 else:
                     start = starts.pop()
-                    if not starts:
-                        append((start, value, recses[0].union(*recses)))
-                        recses.clear()
+                    recses.remove(recs)
+                    append((start, value, recs.union(*recses)))
+                    if starts:
+                        starts.pop(-1)
+                        starts.append(value + timedelta(seconds=1))
+
 
     def __bool__(self):
         return bool(self._items)
