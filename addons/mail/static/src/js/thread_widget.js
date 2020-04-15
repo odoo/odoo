@@ -559,7 +559,7 @@ var ThreadWidget = Widget.extend({
         event.stopPropagation();
         var activeAttachmentID = $(event.currentTarget).data('id');
         if (activeAttachmentID) {
-            var attachmentViewer = new DocumentViewer(this, this.attachments, activeAttachmentID);
+            var attachmentViewer = new DocumentViewer(this, this.attachments, activeAttachmentID, this.isDocumentThread);
             attachmentViewer.appendTo($('body'));
         }
     },

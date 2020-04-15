@@ -368,6 +368,13 @@ var AbstractMessage =  Class.extend({
             return _.contains(attachmentIDs, attachment.id);
         });
     },
+    updateAttachment: function (attachmentID) {
+        _.each(this._attachmentIDs, function (attachment) {
+            if (attachment.id === attachmentID) {
+                attachment.uniqueId = _.uniqueId(attachment.id);
+            }
+        });
+    },
     /**
      * State whether this message should redirect to the author
      * when clicking on the author of this message.

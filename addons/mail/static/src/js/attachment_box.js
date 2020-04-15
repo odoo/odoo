@@ -38,6 +38,7 @@ var AttachmentBox = Widget.extend({
             // required for compatibility with the chatter templates.
             attachment.url = '/web/content/' + attachment.id + '?download=true';
             attachment.filename = attachment.name || _t('unnamed');
+            attachment.uniqueId = _.uniqueId(attachment.id);
         });
         var sortedAttachments = _.partition(attachments, function (att) {
             return att.mimetype && att.mimetype.split('/')[0] === 'image';
@@ -99,7 +100,7 @@ var AttachmentBox = Widget.extend({
         ev.preventDefault();
         var activeAttachmentID = $(ev.currentTarget).data('id');
         if (activeAttachmentID) {
-            var attachmentViewer = new DocumentViewer(this, this.attachmentIDs, activeAttachmentID);
+            var attachmentViewer = new DocumentViewer(this, this.attachmentIDs, activeAttachmentID, true);
             attachmentViewer.appendTo($('body'));
         }
     },

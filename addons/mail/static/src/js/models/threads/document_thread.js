@@ -184,6 +184,11 @@ var DocumentThread = Thread.extend({
             message.removeAttachments(attachmentIDs);
         });
     },
+    updateAttachmentFromMessages: function (attachmentID) {
+        _.each(this.getMessages(), function (message) {
+            message.updateAttachment(attachmentID);
+        });
+    },
     /**
      * Set list of message IDs of this document thread
      *

@@ -52,7 +52,7 @@ var ThreadField = AbstractField.extend({
             var message = self.call('mail_service', 'getMessage', messageID);
             message.toggleStarStatus();
         });
-
+        this._threadWidget.isDocumentThread = this._documentThread ? true : false;
         var def1 = this._threadWidget.appendTo(this.$el);
         var def2 = this._super.apply(this, arguments);
 
@@ -74,6 +74,9 @@ var ThreadField = AbstractField.extend({
      */
     removeAttachments: function (attachmentIDs) {
         this._documentThread.removeAttachmentsFromMessages(attachmentIDs);
+    },
+    updateAttachment: function (attachmentID) {
+        this._documentThread.updateAttachmentFromMessages(attachmentID);
     },
     /**
      * @override

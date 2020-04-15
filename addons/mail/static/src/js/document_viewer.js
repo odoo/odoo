@@ -40,8 +40,9 @@ var DocumentViewer = Widget.extend({
      * @param {Array<Object>} attachments list of attachments
      * @param {integer} activeAttachmentID
      */
-    init: function (parent, attachments, activeAttachmentID) {
+    init: function (parent, attachments, activeAttachmentID, saveRotateImage) {
         this._super.apply(this, arguments);
+        this.saveRotateImage = saveRotateImage;
         this.attachment = _.filter(attachments, function (attachment) {
             var match = attachment.type === 'url' ? attachment.url.match("(youtu|.png|.jpg|.gif)") : attachment.mimetype.match("(image|video|application/pdf|text)");
             if (match) {
@@ -183,7 +184,20 @@ var DocumentViewer = Widget.extend({
      */
     _onClose: function (e) {
         e.preventDefault();
-        this.destroy();
+        var self = this;
+        if (this.saveRotateImage && this.angle && this.angle % 360) {
+            this._rpc({
+                model: this.modelName,
+                method: 'rotate_image',
+                args: [this.activeAttachment.id],
+                kwargs: {angle: this.angle}
+            }).then(function (res) {
+                self.trigger_up('reload_attachment_box', {attachmentId: self.activeAttachment.id, fieldNames: ['message_ids']});
+                self.destroy();
+            });
+        } else {
+            this.destroy();
+        }
     },
     /**
      * When popup close complete destroyed modal even DOM footprint too
