@@ -88,9 +88,6 @@ function DialogManagerFactory({ Entity }) {
             inverse: 'manager',
             isCausal: true,
         }),
-        messaging: one2one('Messaging', {
-            inverse: 'dialogManager',
-        }),
     };
 
     return DialogManager;

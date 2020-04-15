@@ -59,13 +59,8 @@ function AttachmentViewerFactory({ Entity }) {
     }
 
     AttachmentViewer.fields = {
-        attachment: many2one('Attachment', {
-            inverse: 'activeInAttachmentViewer',
-        }),
+        attachment: many2one('Attachment'),
         attachments: many2many('Attachment', {
-            inverse: 'attachmentViewer',
-        }),
-        messaging: one2one('Messaging', {
             inverse: 'attachmentViewer',
         }),
     };

@@ -670,17 +670,7 @@ function EntityFactory() {
      *               Either 'one2one', 'one2many', 'many2one' or 'many2many'.
      *      }
      */
-    Entity.fields = {
-        /**
-         * Related dialog of entity when dialog content is directly linked to
-         * an entity that models a UI component, such as AttachmentViewer. Such
-         * entities must be created from @see `mail.messaging.entity.DialogManager.open()`
-         */
-        dialog: one2one('Dialog', {
-            inverse: 'entity',
-            isCausal: true,
-        }),
-    };
+    Entity.fields = {};
 
     return Entity;
 }

@@ -65,12 +65,6 @@ function UserFactory({ Entity }) {
     }
 
     User.fields = {
-        activitiesAsAssignee: one2many('Activity', {
-            inverse: 'assignee',
-        }),
-        activitiesAsCreator: one2many('Activity', {
-            inverse: 'creator',
-        }),
         partner: one2one('Partner', {
             inverse: 'user',
         }),

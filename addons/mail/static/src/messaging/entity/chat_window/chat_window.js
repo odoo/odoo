@@ -305,9 +305,7 @@ function ChatWindowFactory({ Entity }) {
         manager: many2one('ChatWindowManager', {
             inverse: 'chatWindows',
         }),
-        threadViewer: one2one('ThreadViewer', {
-            inverse: 'chatWindow',
-        }),
+        threadViewer: one2one('ThreadViewer'),
     };
 
     return ChatWindow;

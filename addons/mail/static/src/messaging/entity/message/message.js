@@ -418,18 +418,11 @@ function MessageFactory({ Entity }) {
         attachments: many2many('Attachment', {
             inverse: 'messages',
         }),
-        author: many2one('Partner', {
-            inverse: 'authorMessages',
-        }),
+        author: many2one('Partner'),
         checkedThreadCaches: many2many('ThreadCache', {
             inverse: 'checkedMessages',
         }),
-        originThread: many2one('Thread', {
-            inverse: 'originThreadMessages',
-        }),
-        replyingToDiscuss: one2one('Discuss', {
-            inverse: 'replyingToMessage',
-        }),
+        originThread: many2one('Thread'),
         threadCaches: many2many('ThreadCache', {
             inverse: 'messages',
         }),

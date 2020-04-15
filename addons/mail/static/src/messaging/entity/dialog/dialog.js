@@ -76,7 +76,6 @@ function DialogFactory({ Entity }) {
          * created from @see `mail.messaging.entity.DialogManager.open()`.
          */
         entity: one2one('Entity', {
-            inverse: 'dialog',
             isCausal: true,
         }),
         manager: many2one('DialogManager', {

@@ -164,18 +164,14 @@ function ActivityFactory({ Entity }) {
     }
 
     Activity.fields = {
-        assignee: many2one('User', {
-            inverse: 'activitiesAsAssignee',
-        }),
+        assignee: many2one('User'),
         attachments: many2many('Attachment', {
             inverse: 'activities',
         }),
         chatter: many2one('Chatter', {
             inverse: 'activities',
         }),
-        creator: many2one('User', {
-            inverse: 'activitiesAsCreator',
-        }),
+        creator: many2one('User'),
         mailTemplates: many2many('MailTemplate', {
             inverse: 'activities',
         }),

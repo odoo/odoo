@@ -350,9 +350,6 @@ function ChatWindowManagerFactory({ Entity }) {
             inverse: 'manager',
             isCausal: true,
         }),
-        messaging: one2one('Messaging', {
-            inverse: 'chatWindowManager',
-        }),
     };
 
     return ChatWindowManager;

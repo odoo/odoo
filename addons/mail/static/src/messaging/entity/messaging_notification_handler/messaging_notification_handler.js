@@ -516,11 +516,7 @@ function MessagingNotificationHandlerFactory({ Entity }) {
 
     }
 
-    MessagingNotificationHandler.fields = {
-        messaging: one2one('Messaging', {
-            inverse: 'notificationHandler',
-        }),
-    };
+    MessagingNotificationHandler.fields = {};
 
     return MessagingNotificationHandler;
 }

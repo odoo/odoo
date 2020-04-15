@@ -58,11 +58,7 @@ function DeviceFactory({ Entity }) {
 
     }
 
-    Device.fields = {
-        messaging: one2one('Messaging', {
-            inverse: 'device',
-        }),
-    };
+    Device.fields = {};
 
     return Device;
 }

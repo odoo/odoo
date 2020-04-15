@@ -109,11 +109,7 @@ function MessagingMenuFactory({ Entity }) {
 
     }
 
-    MessagingMenu.fields = {
-        messaging: one2one('Messaging', {
-            inverse: 'messagingMenu',
-        }),
-    };
+    MessagingMenu.fields = {};
 
     return MessagingMenu;
 }

@@ -26,11 +26,7 @@ function LocaleFactory({ Entity }) {
 
     }
 
-    Locale.fields = {
-        messaging: one2one('Messaging', {
-            inverse: 'locale',
-        }),
-    };
+    Locale.fields = {};
 
     return Locale;
 }

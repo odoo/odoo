@@ -435,7 +435,7 @@ function ThreadFactory({ Entity }) {
                     },
                 });
             }
-            this.unlink({ renamingDiscuss: null });
+            this.env.messaging.discuss.unlink({ renamingThreads: this });
             this.update({ custom_channel_name: newName });
         }
 
@@ -635,15 +635,7 @@ function ThreadFactory({ Entity }) {
         originThreadAttachments: one2many('Attachment', {
             inverse: 'originThread',
         }),
-        originThreadMessages: one2many('Message', {
-            inverse: 'originThread',
-        }),
-        renamingDiscuss: many2one('Discuss', {
-            inverse: 'renamingThreads',
-        }),
-        typingMembers: many2many('Partner', {
-            inverse: 'typingMemberThreads',
-        }),
+        typingMembers: many2many('Partner'),
         viewers: one2many('ThreadViewer', {
             inverse: 'thread',
         }),

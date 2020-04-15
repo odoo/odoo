@@ -260,9 +260,6 @@ function AttachmentFactory({ Entity }) {
     }
 
     Attachment.fields = {
-        activeInAttachmentViewer: one2many('AttachmentViewer', {
-            inverse: 'attachment',
-        }),
         activities: many2many('Activity', {
             inverse: 'attachments',
         }),

@@ -245,9 +245,7 @@ function ChatterFactory({ Entity }) {
         activities: one2many('Activity', {
             inverse: 'chatter',
         }),
-        threadViewer: one2one('ThreadViewer', {
-            inverse: 'chatter',
-        }),
+        threadViewer: one2one('ThreadViewer'),
     };
 
     return Chatter;
