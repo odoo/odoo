@@ -388,15 +388,7 @@ class MassMailing(models.Model):
                 ('list_id', 'in', list_ids),
                 ('opt_out', '!=', value)
             ])
-
             opt_out_records.write({'opt_out': value})
-            message = _('The recipient <strong>unsubscribed from %s</strong> mailing list(s)') \
-                if value else _('The recipient <strong>subscribed to %s</strong> mailing list(s)')
-            for record in records:
-                # filter the list_id by record
-                record_lists = opt_out_records.filtered(lambda rec: rec.contact_id.id == record.id)
-                if len(record_lists) > 0:
-                    record.sudo().message_post(body=_(message % ', '.join(str(list.name) for list in record_lists.mapped('list_id'))))
 
     # ------------------------------------------------------
     # Email Sending

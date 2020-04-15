@@ -95,6 +95,21 @@
     </xpath>
 </template>
 
+<template id="page_unsubscribe_website" name="Unsubscribe page website view" inherit_id="mass_mailing.page_unsubscribe">
+    <xpath expr="//t[@t-call='mass_mailing.layout']" position="replace">
+        <t t-call="website.layout">
+            <t t-set="head">
+                <t t-call-assets="mass_mailing.assets_backend"/>
+            </t>
+            <div id="wrap" class="oe_structure">
+                <div class="oe_structure"/>
+                    <t t-call="mass_mailing.unsubscribe"/>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </xpath>
+</template>
+
 <!-- Extend default mass_mailing snippets with website feature -->
 
 <template id="s_mail_block_header_social" inherit_id="mass_mailing.s_mail_block_header_social">
