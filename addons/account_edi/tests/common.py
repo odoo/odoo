@@ -60,7 +60,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         journal_id = self.company_data['default_journal_sale']
         invoice = journal_id.with_context(default_move_type='in_invoice')._create_invoice_from_single_attachment(attachment)
 
-    def assert_generated_file_equal(self, invoice, expected_values, applied_xpath=None):
+    def assert_generated_file_equal(self, invoice, expected_values, applied_xpath=None, ns_prefix=''):
         invoice.action_post()
         invoice.edi_document_ids._process_documents_web_services()  # synchronous are called in post, but there's no CRON in tests for asynchronous
         attachment = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == self.edi_format).attachment_id
@@ -68,7 +68,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         current_etree = self.get_xml_tree_from_string(xml_content)
         expected_etree = self.get_xml_tree_from_string(expected_values)
         if applied_xpath:
-            expected_etree = self.with_applied_xpath(expected_etree, applied_xpath)
+            expected_etree = self.with_applied_xpath(expected_etree, applied_xpath, ns_prefix=ns_prefix)
         self.assertXmlTreeEqual(current_etree, expected_etree)
 
     def _process_documents_web_services(self, moves, formats_to_return=None):

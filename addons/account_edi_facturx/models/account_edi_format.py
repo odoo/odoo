@@ -23,13 +23,6 @@ DEFAULT_FACTURX_DATE_FORMAT = '%Y%m%d'
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
-    def _is_compatible_with_journal(self, journal):
-        self.ensure_one()
-        res = super()._is_compatible_with_journal(journal)
-        if self.code != 'facturx_1_0_05':
-            return res
-        return journal.type == 'sale'
-
     def _post_invoice_edi(self, invoices, test_mode=False):
         self.ensure_one()
         if self.code != 'facturx_1_0_05':

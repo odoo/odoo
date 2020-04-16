@@ -444,13 +444,14 @@ class AccountTestInvoicingCommon(SavepointCase):
             self._turn_node_as_dict_hierarchy(expected_xml_tree),
         )
 
-    def with_applied_xpath(self, xml_tree, xpath):
+    def with_applied_xpath(self, xml_tree, xpath, ns_prefix=''):
         ''' Applies the xpath to the xml_tree passed as parameter.
         :param xml_tree:    An instance of etree.
         :param xpath:       The xpath to apply as a string.
+        :param ns_prefix:   The namespaces prefix used in xpath as a string.
         :return:            The resulting etree after applying the xpaths.
         '''
-        diff_xml_tree = etree.fromstring('<data>%s</data>' % xpath)
+        diff_xml_tree = etree.fromstring('<data %s>%s</data>' % (ns_prefix, xpath))
         return self.env['ir.ui.view'].apply_inheritance_specs(xml_tree, diff_xml_tree)
 
     def get_xml_tree_from_attachment(self, attachment):

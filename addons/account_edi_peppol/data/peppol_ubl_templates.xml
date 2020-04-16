@@ -4,20 +4,18 @@
         <!--
         Render a res.partner record to be added to the UBL xml document.
         -->
-        <template id="export_ubl_invoice_partner">
+        <template id="export_peppol_invoice_partner">
             <cac:Party
                 xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                <cbc:WebsiteURI
-                    t-if="partner.website"
-                    t-esc="partner.website"/>
+                <cbc:EndpointID t-att-schemeID="partner.peppol_endpoint_scheme" t-esc="partner.peppol_endpoint" />
+                <cac:PartyIdentification>
+                    <cbc:ID t-esc="partner.peppol_endpoint"/>
+                </cac:PartyIdentification>
                 <cac:PartyName>
                     <cbc:Name t-esc="partner.name"/>
                 </cac:PartyName>
-                <cac:Language t-if="partner.lang">
-                    <cbc:LocaleCode t-esc="partner.lang"/>
-                </cac:Language>
                 <cac:PostalAddress>
                     <cbc:StreetName
                         t-if="partner.street"
@@ -34,69 +32,73 @@
                     <cbc:CountrySubentity
                         t-if="partner.state_id"
                         t-esc="partner.state_id.name"/>
-                    <cbc:CountrySubentityCode
-                        t-if="partner.state_id"
-                        t-esc="partner.state_id.code"/>
                     <cac:Country
                         t-if="partner.country_id">
                         <cbc:IdentificationCode t-esc="partner.country_id.code"/>
-                        <cbc:Name t-esc="partner.country_id.name"/>
                     </cac:Country>
                 </cac:PostalAddress>
-                <cac:PartyTaxScheme t-if="partner.vat">
-                    <cbc:RegistrationName t-esc="partner.name"/>
-                    <cbc:CompanyID t-esc="partner.vat"/>
+                <cac:PartyTaxScheme>
+                    <cbc:CompanyID t-esc="partner.peppol_endpoint" />
                     <cac:TaxScheme>
-                        <cbc:ID
-                            schemeID="UN/ECE 5153"
-                            schemeAgencyID="6"
-                            >VAT</cbc:ID>
+                        <cbc:ID>VAT</cbc:ID>
                     </cac:TaxScheme>
                 </cac:PartyTaxScheme>
+                <cac:PartyLegalEntity>
+                    <cbc:RegistrationName t-esc="partner.name" />
+                </cac:PartyLegalEntity>
                 <cac:Contact>
                     <cbc:Name t-esc="partner.name"/>
-                    <cbc:Telephone
-                        t-if="partner.phone"
-                        t-esc="partner.phone"/>
-                    <cbc:ElectronicMail
-                        t-if="partner.email"
-                        t-esc="partner.email"/>
-                </cac:Contact>
+                    <cbc:Telephone t-if="partner.phone" t-esc="partner.phone"/>
+                    <cbc:ElectronicMail t-if="partner.email" t-esc="partner.email"/>
+                  </cac:Contact>
             </cac:Party>
         </template>
 
         <!--
         Render an invoice's line to be added to the UBL xml document.
         -->
-        <template id="export_ubl_invoice_line">
+        <template id="export_peppol_invoice_line">
             <cac:InvoiceLine
                 xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                <cbc:ID t-esc="line._origin.id"/>
+                <cbc:ID t-esc="invoice_line_id"/>
+                <t t-set="invoice_line_id" t-value="invoice_line_id + 1"></t>
                 <cbc:Note t-if="line.discount">Discount (<t t-esc='line.discount'/> %)</cbc:Note>
-                <cbc:InvoicedQuantity t-esc="line.quantity"/>
+                <cbc:InvoicedQuantity unitCode="ZZ"><t t-esc="line.quantity"/></cbc:InvoicedQuantity>
                 <cbc:LineExtensionAmount
-                    t-att-currencyID="line.currency_id.name or invoice.currency_id.name"
-                    t-esc="format_monetary(line.price_subtotal)"/>
-                <cac:TaxTotal
-                    t-foreach="line.tax_ids.compute_all(line.price_unit, quantity=line.quantity, product=line.product_id, partner=invoice.partner_id)['taxes']"
-                    t-as="tax">
-                    <cbc:TaxAmount
-                        t-att-currencyID="line.currency_id.name or invoice.currency_id.name"
-                        t-esc="format_monetary(tax['amount'])"/>
-                </cac:TaxTotal>
+                    t-att-currencyID="invoice.currency_id.name"
+                    t-esc="format_monetary(convert_monetary(line.price_subtotal, invoice.currency_id))"/>
                 <cac:Item>
                     <cbc:Description t-esc="line.name.replace('\n', ', ')"/>
                     <cbc:Name t-esc="line.product_id.name"/>
                     <cac:SellersItemIdentification t-if="line.product_id.default_code">
                         <cbc:ID t-esc="line.product_id.default_code"/>
                     </cac:SellersItemIdentification>
+                    <t t-foreach="line.tax_ids" t-as="tax">
+                        <cac:ClassifiedTaxCategory>
+                            <cbc:ID>S</cbc:ID>
+                            <cbc:Percent t-esc="tax.amount" />
+                            <cac:TaxScheme>
+                                <cbc:ID>VAT</cbc:ID>
+                            </cac:TaxScheme>
+                        </cac:ClassifiedTaxCategory>
+                    </t>
+                    <t t-if="not line.tax_ids">
+                        <cac:ClassifiedTaxCategory>
+                            <cbc:ID>Z</cbc:ID>
+                            <cbc:Percent>0</cbc:Percent>
+                            <cac:TaxScheme>
+                                <cbc:ID>VAT</cbc:ID>
+                            </cac:TaxScheme>
+                        </cac:ClassifiedTaxCategory>
+                    </t>
                 </cac:Item>
                 <cac:Price>
                     <cbc:PriceAmount
-                        t-att-currencyID="line.currency_id.name or invoice.currency_id.name"
-                        t-esc="format_monetary(line.price_unit)"/>
+                        t-att-currencyID="invoice.currency_id.name"
+                        t-esc="format_monetary(convert_monetary(line.price_subtotal, invoice.currency_id))"/>
+                    <cbc:BaseQuantity t-esc="line.quantity"/>
                 </cac:Price>
             </cac:InvoiceLine>
         </template>
@@ -104,26 +106,32 @@
         <!--
         Render an invoice to be added to the UBL xml document.
         -->
-        <template id="export_ubl_invoice">
+        <template id="export_peppol_invoice">
             <Invoice
                 xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                <cbc:UBLVersionID t-esc="ubl_version"/>
+                <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
+                <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
                 <cbc:ID t-esc="invoice.name"/>
-                <cbc:IssueDate t-esc="invoice.invoice_date"/>
+                <cbc:IssueDate t-esc="invoice_date"/>
+                <cbc:DueDate t-esc="due_date" />
                 <cbc:InvoiceTypeCode t-esc="type_code"/>
                 <cbc:Note t-esc="invoice.narration"/>
                 <cbc:DocumentCurrencyCode t-esc="invoice.currency_id.name"/>
-                <cac:AccountingSupplierParty t-call="account_edi_ubl.export_ubl_invoice_partner">
+                <cbc:TaxCurrencyCode t-if="invoice.currency_id != invoice.company_currency_id"
+                                     t-esc="invoice.company_currency_id.name"/>
+                <cac:OrderReference t-if="invoice.invoice_origin">
+                    <cbc:ID t-esc="invoice.invoice_origin" />
+                </cac:OrderReference>
+                <cac:AccountingSupplierParty t-call="account_edi_peppol.export_peppol_invoice_partner">
                     <t t-set="partner" t-value="invoice.company_id.partner_id.commercial_partner_id"/>
                 </cac:AccountingSupplierParty>
-                <cac:AccountingCustomerParty t-call="account_edi_ubl.export_ubl_invoice_partner">
+                <cac:AccountingCustomerParty t-call="account_edi_peppol.export_peppol_invoice_partner">
                     <t t-set="partner" t-value="invoice.commercial_partner_id"/>
                 </cac:AccountingCustomerParty>
                 <cac:PaymentMeans>
-                    <cbc:PaymentMeansCode listID="UN/ECE 4461" t-esc="payment_means_code"/>
-                    <cbc:PaymentDueDate t-esc="invoice.invoice_date_due"/>
+                    <cbc:PaymentMeansCode t-esc="payment_means_code"/>
                     <cac:PayeeFinancialAccount t-if="invoice.journal_id.bank_account_id">
                         <cbc:ID schemeName="IBAN" t-esc="invoice.journal_id.bank_account_id.acc_number"/>
                         <cac:FinancialInstitutionBranch t-if="invoice.journal_id.bank_account_id.bank_bic">
@@ -136,10 +144,28 @@
                 <cac:PaymentTerms t-if="invoice.invoice_payment_term_id">
                     <cbc:Note t-esc="invoice.invoice_payment_term_id.name"/>
                 </cac:PaymentTerms>
-                <cac:TaxTotal t-if="not invoice.currency_id.is_zero(invoice.amount_tax)">
+                <cac:TaxTotal>
                     <cbc:TaxAmount
                         t-att-currencyID="invoice.currency_id.name"
-                        t-esc="format_monetary(invoice.amount_tax)"/>
+                        t-esc="format_monetary(tax_total['amount'])"/>
+                    <t t-foreach="tax_total['breakdown']" t-as="tax">
+                        <cac:TaxSubtotal>
+                            <cbc:TaxableAmount t-att-currencyID="invoice.currency_id.name"><t t-esc="format_monetary(tax_value['base'])"/></cbc:TaxableAmount>
+                            <cbc:TaxAmount t-att-currencyID="invoice.currency_id.name"><t t-esc="format_monetary(tax_value['amount'])"/></cbc:TaxAmount>
+                            <cac:TaxCategory>
+                                <cbc:ID t-esc="tax[0]"/>
+                                <cbc:Percent t-esc="tax[1]"/>
+                                <cac:TaxScheme>
+                                    <cbc:ID>VAT</cbc:ID>
+                                </cac:TaxScheme>
+                            </cac:TaxCategory>
+                        </cac:TaxSubtotal>
+                    </t>
+                </cac:TaxTotal>
+                <cac:TaxTotal t-if="invoice.currency_id != invoice.company_currency_id">
+                    <cbc:TaxAmount
+                        t-att-currencyID="invoice.company_currency_id.name"
+                        t-esc="format_monetary(tax_total['amount_seller_currency'])"/>
                 </cac:TaxTotal>
                 <cac:LegalMonetaryTotal>
                     <cbc:LineExtensionAmount
@@ -158,7 +184,8 @@
                         t-att-currencyID="invoice.currency_id.name"
                         t-esc="format_monetary(invoice.amount_residual)"/>
                 </cac:LegalMonetaryTotal>
-                <t t-call="account_edi_ubl.export_ubl_invoice_line"
+                <t t-set="invoice_line_id" t-value="1"/>
+                <t t-call="account_edi_peppol.export_peppol_invoice_line"
                    t-foreach="invoice.invoice_line_ids"
                    t-as="line"/>
             </Invoice>
