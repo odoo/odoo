@@ -14,6 +14,7 @@ var Tip = Widget.extend({
         mouseenter: '_onMouseEnter',
         mouseleave: '_onMouseLeave',
         transitionend: '_onTransitionEnd',
+        'click .btn_consume_event': '_onNextStep',
     },
 
     /**
@@ -57,9 +58,11 @@ var Tip = Widget.extend({
      */
     attach_to: async function ($anchor) {
         this._setupAnchor($anchor);
-
         this.is_anchor_fixed_position = this.$anchor.css("position") === "fixed";
 
+        if (this.info.optional === "true") {
+            this.info.content += "<button class='btn btn-link btn_consume_event'>" + _t('Next Step') + "</button>";
+        }
         // The body never needs to have the o_tooltip_parent class. It is a
         // safe place to put the tip in the DOM at initialization and be able
         // to compute its dimensions and reposition it if required.
@@ -77,6 +80,9 @@ var Tip = Widget.extend({
         this.scrollContentWidth = this.$tooltip_content.outerWidth(true);
         this.scrollContentHeight = this.$tooltip_content.outerHeight(true);
         this.$tooltip_content.html(this.info.content);
+        if (this.info.optional === "true") {
+            this.content_height += this.$tooltip_content.children('button').outerHeight() + 5; // +5 to add a small margin
+        }
         this.$window = $(window);
 
         this.$tooltip_content.css({
@@ -457,6 +463,13 @@ var Tip = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onNextStep: function () {
+        this.trigger("tip_consumed");
+        this._unbind_anchor_events();
+    },
     /**
      * @private
      */
