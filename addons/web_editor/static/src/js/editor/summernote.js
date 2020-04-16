@@ -2307,12 +2307,14 @@ $.summernote.pluginEvents.color = function (event, editor, layoutInfo, sObjColor
   if (foreColor) { $.summernote.pluginEvents.foreColor(event, editor, layoutInfo, foreColor); }
   if (backColor) { $.summernote.pluginEvents.backColor(event, editor, layoutInfo, backColor); }
 };
-$.summernote.pluginEvents.foreColor = function (event, editor, layoutInfo, foreColor) {
+$.summernote.pluginEvents.foreColor = function (event, editor, layoutInfo, foreColor, preview) {
   var $editable = layoutInfo.editable();
   $.summernote.pluginEvents.applyFont(event, editor, layoutInfo, foreColor, null, null);
-  editor.afterCommand($editable);
+  if (!preview) {
+    editor.afterCommand($editable);
+  }
 };
-$.summernote.pluginEvents.backColor = function (event, editor, layoutInfo, backColor) {
+$.summernote.pluginEvents.backColor = function (event, editor, layoutInfo, backColor, preview) {
   var $editable = layoutInfo.editable();
   var r = range.create();
   if (!r) return;
@@ -2328,7 +2330,9 @@ $.summernote.pluginEvents.backColor = function (event, editor, layoutInfo, backC
     return;
   }
   $.summernote.pluginEvents.applyFont(event, editor, layoutInfo, null, backColor, null);
-  editor.afterCommand($editable);
+  if (!preview) {
+    editor.afterCommand($editable);
+  }
 };
 
 options.onCreateLink = function (sLinkUrl) {
