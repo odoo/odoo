@@ -840,39 +840,29 @@
                                         </button>
                                     </div>
                                     <div class="col-6 o_kanban_primary_right">
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <a name="%(hr_equipment_request_action_cal)d" type="action">
-                                                    Scheduled
-                                                </a>
-                                            </div>
-                                            <div class="col-3">
+                                        <div t-if="record.todo_request_count_date.raw_value > 0">
+                                            <a name="%(hr_equipment_request_action_cal)d" type="action">
                                                 <t t-esc="record.todo_request_count_date.value"/>
-                                            </div>
-                                            <div class="col-9">
-                                                <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_high_priority': 1}">
-                                                    Top Priorities
-                                                </a>
-                                            </div>
-                                            <div class="col-3">
+                                                Scheduled
+                                            </a>
+                                        </div>
+                                        <div t-if="record.todo_request_count_high_priority.raw_value > 0">
+                                            <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_high_priority': 1}">
                                                 <t t-esc="record.todo_request_count_high_priority.value"/>
-                                            </div>
-                                            <div class="col-9">
-                                                <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_kanban_state_block': 1}">
-                                                    Blocked
-                                                </a>
-                                            </div>
-                                            <div class="col-3">
+                                                Top Priorities
+                                            </a>
+                                        </div>
+                                        <div t-if="record.todo_request_count_block.raw_value > 0">
+                                            <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_kanban_state_block': 1}">
                                                 <t t-esc="record.todo_request_count_block.value"/>
-                                            </div>
-                                            <div class="col-9">
-                                                <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_unscheduled': 1}">
-                                                    Unscheduled
-                                                </a>
-                                            </div>
-                                            <div class="col-3">
+                                                Blocked
+                                            </a>
+                                        </div>
+                                        <div t-if="record.todo_request_count_unscheduled.raw_value > 0">
+                                            <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_unscheduled': 1}">
                                                 <t t-esc="record.todo_request_count_unscheduled.value"/>
-                                            </div>
+                                                Unscheduled
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -880,7 +870,7 @@
                                 <div class="row">
                                     <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
                                         <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>View</span>
+                                            <span>Requests</span>
                                         </div>
                                         <div role="menuitem">
                                             <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">
@@ -918,8 +908,8 @@
                                     <div class="col-8" role="menuitem" aria-haspopup="true">
                                         <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
                                     </div>
-                                    <div role="menuitem" class="col-4 text-right">
-                                        <a type="edit">Settings</a>
+                                    <div role="menuitem" class="col-4">
+                                        <a type="edit" class="dropdown-item">Configuration</a>
                                     </div>
                                 </div>
                             </div>

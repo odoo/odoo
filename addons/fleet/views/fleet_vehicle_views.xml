@@ -213,9 +213,7 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
-                            <div class="o_kanban_image">
-                                <img t-att-src="kanban_image('fleet.vehicle', 'image_128', record.id.raw_value)" alt="Vehicle"/>
-                            </div>
+                            <div class="o_kanban_image" t-attf-style="background-image:url('#{kanban_image('fleet.vehicle', 'image_128', record.id.raw_value)}')"/>
                             <div class="oe_kanban_details">
                                 <strong class="o_kanban_record_title">
                                     <t t-if="license_plate"><field name="license_plate"/> :</t> <field name="model_id"/>
@@ -234,23 +232,23 @@
                                         <t t-if="record.location.raw_value"><field name="location"/></t>
                                     </li>
                                 </ul>
-                            </div>
-                            <div class="o_kanban_button" t-if="!selection_mode">
-                                <a t-if="record.contract_count.raw_value>0" data-type="object"
-                                   data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a"
-                                   data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
-                                    <field name="contract_count"/>
-                                    Contract(s)
-                                    <span t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value"
-                                        class="fa fa-exclamation-triangle" t-att-style="'color:orange'" role="img" aria-label="Warning: renewal due soon" title="Warning: renewal due soon">
-                                    </span>
-                                     <span t-if="record.contract_renewal_overdue.raw_value"
-                                        class="fa fa-exclamation-triangle" t-att-style="'color:red;'" role="img" aria-label="Attention: renewal overdue" title="Attention: renewal overdue">
-                                    </span>
-                                </a>
-                            </div>
-                            <div class="o_kanban_inline_block" t-if="!selection_mode">
-                                <field name="activity_ids" widget="kanban_activity"/>
+                                <div class="o_kanban_record_bottom" t-if="!selection_mode">
+                                    <div class="oe_kanban_bottom_left">
+                                        <a t-if="record.contract_count.raw_value>0" data-type="object"
+                                           data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a"
+                                           data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
+                                            <field name="contract_count"/>
+                                            Contract(s)
+                                            <span t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value"
+                                                class="fa fa-exclamation-triangle" t-att-style="'color:orange'" role="img" aria-label="Warning: renewal due soon" title="Warning: renewal due soon">
+                                            </span>
+                                             <span t-if="record.contract_renewal_overdue.raw_value"
+                                                class="fa fa-exclamation-triangle" t-att-style="'color:red;'" role="img" aria-label="Attention: renewal overdue" title="Attention: renewal overdue">
+                                            </span>
+                                        </a>
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </t>
