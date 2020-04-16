@@ -123,7 +123,7 @@ var AbstractFieldUpgrade = {
 };
 
 var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
-    supportedFieldTypes: ['boolean'],
+    supportedFieldTypes: [],
     events: _.extend({}, AbstractField.prototype.events, {
         'click input': '_onInputClicked',
     }),

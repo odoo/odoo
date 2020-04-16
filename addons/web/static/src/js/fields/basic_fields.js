@@ -2350,7 +2350,6 @@ var LabelSelection = AbstractField.extend({
 
 var BooleanToggle = FieldBoolean.extend({
     description: _lt("Toggle"),
-    supportedFieldTypes: ['boolean'],
     className: FieldBoolean.prototype.className + ' o_boolean_toggle',
     events: {
         'click': '_onClick'

@@ -10,7 +10,6 @@ const { FieldToggleBoolean } = require("web.basic_fields");
  * views.
  */
 const TimerToggleButton = FieldToggleBoolean.extend({
-    supportedFieldTypes: ['boolean'],
     /**
      * @override
      * @private
