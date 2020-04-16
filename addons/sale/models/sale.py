@@ -254,7 +254,7 @@ class SaleOrder(models.Model):
     def _compute_remaining_validity_days(self):
         for record in self:
             if record.validity_date:
-                record.remaining_validity_days = (record.validity_date - fields.Date.today()).days + 1
+                record.remaining_validity_days = (record.validity_date - fields.Date.context_today(record)).days + 1
             else:
                 record.remaining_validity_days = 0
 
