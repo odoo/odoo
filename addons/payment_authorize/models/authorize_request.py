@@ -226,11 +226,15 @@ class AuthorizeAPI():
                 'x_response_reason_text': response.get('err_msg')
             }
 
-        return {
+        result = {
             'x_response_code': response.get('transactionResponse', {}).get('responseCode'),
             'x_trans_id': response.get('transactionResponse', {}).get('transId'),
             'x_type': 'auth_capture'
         }
+        errors = response.get('transactionResponse', {}).get('errors')
+        if errors:
+            result['x_response_reason_text'] = '\n'.join([e.get('errorText') for e in errors])
+        return result
 
     def authorize(self, token, amount, reference):
         """Authorize a payment for the given amount.
