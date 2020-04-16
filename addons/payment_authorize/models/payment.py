@@ -159,6 +159,7 @@ class TxAuthorize(models.Model):
     _authorize_valid_tx_status = 1
     _authorize_pending_tx_status = 4
     _authorize_cancel_tx_status = 2
+    _authorize_error_tx_status = 3
 
     # --------------------------------------------------
     # FORM RELATED METHODS
@@ -227,13 +228,6 @@ class TxAuthorize(models.Model):
             self.write({'acquirer_reference': data.get('x_trans_id')})
             self._set_transaction_pending()
             return True
-        elif status_code == self._authorize_cancel_tx_status:
-            self.write({
-                'acquirer_reference': data.get('x_trans_id'),
-                'state_message': data.get('x_response_reason_text'),
-            })
-            self._set_transaction_cancel()
-            return True
         else:
             error = data.get('x_response_reason_text')
             _logger.info(error)
@@ -301,18 +295,13 @@ class TxAuthorize(models.Model):
             self.write({'acquirer_reference': tree.get('x_trans_id')})
             self._set_transaction_pending()
             return True
-        elif status_code == self._authorize_cancel_tx_status:
-            self.write({'acquirer_reference': tree.get('x_trans_id')})
-            self._set_transaction_cancel()
-            return True
         else:
             error = tree.get('x_response_reason_text')
             _logger.info(error)
             self.write({
-                'state_message': error,
                 'acquirer_reference': tree.get('x_trans_id'),
             })
-            self._set_transaction_cancel()
+            self._set_transaction_error(msg=error)
             return False
 
 
