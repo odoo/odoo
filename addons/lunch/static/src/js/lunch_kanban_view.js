@@ -24,19 +24,11 @@ var LunchKanbanView = KanbanView.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Injects an additional domain in the search panel
-     *
-     * @private
      * @override
      */
-    _createSearchPanel: function (parent, params) {
-        var self = this;
-        var model = this.getModel(parent);
-        var _super = this._super.bind(this);
-        return model.getLocationDomain().then(function (domain) {
-            self.loadParams.domain = self.loadParams.domain.concat(domain);
-            return _super(parent, params);
-        });
+    _getViewDomain: function (parent) {
+        const model = this.getModel(parent);
+        return model.getLocationDomain();
     },
 });
 
