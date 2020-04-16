@@ -23,12 +23,6 @@ var LunchKanbanModel = KanbanModel.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {integer|false}
-     */
-    getCurrentLocationId: function () {
-        return this.locationId;
-    },
-    /**
      * @return {Promise} resolved with the location domain
      */
     getLocationDomain: function () {
@@ -84,12 +78,11 @@ var LunchKanbanModel = KanbanModel.extend({
      * Builds the domain leaf corresponding to the current user's location
      *
      * @private
-     * @return {Array}
+     * @return {(Array[])|undefined}
      */
     _buildLocationDomainLeaf: function () {
-        var locationId = this.getCurrentLocationId();
-        if (locationId) {
-            return ['is_available_at', 'in', [locationId]];
+        if (this.locationId) {
+            return ['is_available_at', 'in', [this.locationId]];
         }
     },
     _getUserLocation: function () {
