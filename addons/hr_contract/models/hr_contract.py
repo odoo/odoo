@@ -31,8 +31,8 @@ class Contract(models.Model):
     trial_date_end = fields.Date('End of Trial Period',
         help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
-        'resource.calendar', 'Working Schedule',
-        default=lambda self: self.env.company.resource_calendar_id.id, copy=False,
+        'resource.calendar', string='Working Schedule',
+        compute="_compute_resource_calendar_id", store=True, readonly=False, copy=False,
         check_company=True)
     wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
     notes = fields.Text('Notes')
@@ -65,6 +65,11 @@ class Contract(models.Model):
         help='Person responsible for validating the employee\'s contracts.')
     calendar_mismatch = fields.Boolean(compute='_compute_calendar_mismatch')
     first_contract_date = fields.Date(related='employee_id.first_contract_date')
+
+    @api.depends('company_id', 'employee_id')
+    def _compute_resource_calendar_id(self):
+        for contract in self:
+            contract.resource_calendar_id = contract.employee_id.resource_calendar_id or contract.company_id.resource_calendar_id
 
     @api.depends('employee_id.resource_calendar_id', 'resource_calendar_id')
     def _compute_calendar_mismatch(self):
@@ -213,13 +218,13 @@ class Contract(models.Model):
 
         return res
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         contracts = super(Contract, self).create(vals)
-        if vals.get('state') == 'open':
-            contracts._assign_open_contract()
+        contracts.filtered(lambda c: c.state == 'open')._assign_open_contract()
         open_contracts = contracts.filtered(lambda c: c.state == 'open' or c.state == 'draft' and c.kanban_state == 'done')
         # sync contract calendar -> calendar employee
+        # VFE TODO this binz seems strange. At least replace the two filtered by one.
         for contract in open_contracts.filtered(lambda c: c.employee_id and c.resource_calendar_id):
             contract.employee_id.resource_calendar_id = contract.resource_calendar_id
         return contracts
