@@ -82,7 +82,7 @@ class Repair(models.Model):
         copy=True, readonly=True, states={'draft': [('readonly', False)]})
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist',
-        default=lambda self: self.env['product.pricelist'].search([], limit=1).id,
+        default=lambda self: self.env['product.pricelist'].search([('company_id', 'in', [self.env.company.id, False])], limit=1).id,
         help='Pricelist of the selected partner.')
     partner_invoice_id = fields.Many2one('res.partner', 'Invoicing Address')
     invoice_method = fields.Selection([
@@ -177,15 +177,18 @@ class Repair(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
+        company_id = self.company_id.id or self.env.company.id
         if not self.partner_id:
             self.address_id = False
             self.partner_invoice_id = False
-            self.pricelist_id = self.env['product.pricelist'].search([], limit=1).id
+            self.pricelist_id = self.env['product.pricelist'].search([
+                ('company_id', 'in', [company_id, False]),
+            ], limit=1)
         else:
             addresses = self.partner_id.address_get(['delivery', 'invoice', 'contact'])
             self.address_id = addresses['delivery'] or addresses['contact']
             self.partner_invoice_id = addresses['invoice']
-            self.pricelist_id = self.partner_id.property_product_pricelist.id
+            self.pricelist_id = self.partner_id.with_context(force_company=company_id).property_product_pricelist.id
 
     def button_dummy(self):
         # TDE FIXME: this button is very interesting

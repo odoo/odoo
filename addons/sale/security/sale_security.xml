@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="base.group_multi_currency" model="res.groups">
+        <!--
+            Sales multi-currency is based on pricelists, if multi-currency is enabled,
+            enable pricelists.
+        -->
+        <field name="implied_ids" eval="[(4, ref('product.group_product_pricelist'))]"/>
+    </record>
+
      <record id="group_auto_done_setting" model="res.groups">
         <field name="name">Lock Confirmed Sales</field>
         <field name="category_id" ref="base.module_category_hidden"/>
