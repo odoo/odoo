@@ -85,18 +85,16 @@
                             <div class="oe_kanban_details">
                                 <strong class="o_kanban_record_title">
                                     <field name="name"/>
-                                    <small t-if="record.default_code.value">[<field name="default_code"/>]</small>
                                 </strong>
+                                <t t-if="record.default_code.value">[<field name="default_code"/>]</t>
                                 <div t-if="record.product_variant_count.value &gt; 1" groups="product.group_product_variant">
                                     <strong>
                                         <t t-esc="record.product_variant_count.value"/> Variants
                                     </strong>
                                 </div>
-                                <div name="tags"/>
-                                <ul>
-                                    <li>Price: <field name="lst_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"></field></li>
-                                </ul>
-                                <div name="tags"/>
+                                <div name="product_lst_price" class="mt-1">
+                                    Price: <field name="lst_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"></field>
+                                </div>
                             </div>
                         </div>
                     </t>
