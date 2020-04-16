@@ -507,31 +507,32 @@ class Message(models.Model):
         # check read access rights before checking the actual rules on the given ids
         super(Message, self.sudo(access_rights_uid or self._uid)).check_access_rights('read')
 
-        self._cr.execute("""
-            SELECT DISTINCT m.id, m.model, m.res_id, m.author_id,
-                            COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
-                            channel_partner.channel_id as channel_id
-            FROM "%s" m
-            LEFT JOIN "mail_message_res_partner_rel" partner_rel
-            ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
-            LEFT JOIN "mail_message_res_partner_needaction_rel" needaction_rel
-            ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
-            LEFT JOIN "mail_message_mail_channel_rel" channel_rel
-            ON channel_rel.mail_message_id = m.id
-            LEFT JOIN "mail_channel" channel
-            ON channel.id = channel_rel.mail_channel_id
-            LEFT JOIN "mail_channel_partner" channel_partner
-            ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = %%(pid)s
-            WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=pid, ids=ids))
-        for id, rmod, rid, author_id, partner_id, channel_id in self._cr.fetchall():
-            if author_id == pid:
-                author_ids.add(id)
-            elif partner_id == pid:
-                partner_ids.add(id)
-            elif channel_id:
-                channel_ids.add(id)
-            elif rmod and rid:
-                model_ids.setdefault(rmod, {}).setdefault(rid, set()).add(id)
+        for sub_ids in self._cr.split_for_in_conditions(ids):
+            self._cr.execute("""
+                SELECT DISTINCT m.id, m.model, m.res_id, m.author_id,
+                                COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
+                                channel_partner.channel_id as channel_id
+                FROM "%s" m
+                LEFT JOIN "mail_message_res_partner_rel" partner_rel
+                ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
+                LEFT JOIN "mail_message_res_partner_needaction_rel" needaction_rel
+                ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
+                LEFT JOIN "mail_message_mail_channel_rel" channel_rel
+                ON channel_rel.mail_message_id = m.id
+                LEFT JOIN "mail_channel" channel
+                ON channel.id = channel_rel.mail_channel_id
+                LEFT JOIN "mail_channel_partner" channel_partner
+                ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = %%(pid)s
+                WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=pid, ids=list(sub_ids)))
+            for id, rmod, rid, author_id, partner_id, channel_id in self._cr.fetchall():
+                if author_id == pid:
+                    author_ids.add(id)
+                elif partner_id == pid:
+                    partner_ids.add(id)
+                elif channel_id:
+                    channel_ids.add(id)
+                elif rmod and rid:
+                    model_ids.setdefault(rmod, {}).setdefault(rid, set()).add(id)
 
         allowed_ids = self._find_allowed_doc_ids(model_ids)
 
