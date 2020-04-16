@@ -2,11 +2,18 @@
 
 <templates>
 
-     <t t-name="accountJournalDashboardActivity">
-        <t t-foreach="activities" t-as="activity">
+     <div t-name="accountJournalDashboardActivity" class="o_journal_activity_kanban" owl="1">
+        <t t-foreach="info.activities" t-as="activity">
             <div class="row">
                 <div class="col-6 o_mail_activity">
-                    <a href="#" t-att-class="(activity.status == 'late' ? 'o_activity_color_overdue ' : ' ') + (activity.activity_category == 'tax_report' ? 'o_open_vat_report' : 'see_activity')" t-att-data-res-id="activity.res_id" t-att-data-id="activity.id" t-att-data-model="activity.res_model">
+                    <a href="#"
+                        t-if="activity.activity_category != 'tax_report'"
+                        t-att-class="(activity.status == 'late' ? 'o_activity_color_overdue ' : ' ') + 'see_activity'"
+                        t-att-data-res-id="activity.res_id"
+                        t-att-data-id="activity.id"
+                        t-att-data-model="activity.res_model"
+                        t-on-click.prevent="_onOpenActivity"
+                    >
                         <t t-esc="activity.name"/>
                     </a>
                 </div>
@@ -15,7 +22,11 @@
                 </div>
             </div>
         </t>
-        <a t-if="more_activities" class="pull-right see_all_activities" href="#">See all activities</a>
-    </t>
+        <a t-if="info.more_activities"
+            class="pull-right see_all_activities"
+            href="#"
+            t-on-click.prevent="_onOpenAll"
+        >See all activities</a>
+    </div>
 
 </templates>
