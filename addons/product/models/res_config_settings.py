@@ -52,8 +52,8 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange('group_multi_currency')
     def _onchange_group_multi_currency(self):
-        if self.group_product_pricelist and not self.group_sale_pricelist and self.group_multi_currency:
-            self.group_sale_pricelist = True
+        if self.group_multi_currency:
+            self.group_product_pricelist = True
 
     @api.onchange('group_product_pricelist')
     def _onchange_group_sale_pricelist(self):
