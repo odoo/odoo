@@ -135,17 +135,10 @@ class AccountMove(models.Model):
             elif internal_type == 'credit_note' and invoice_type in ['out_invoice', 'in_invoice']:
                 raise ValidationError(_('You can not use a %s document type with a invoice') % (internal_type))
 
-    def get_custom_report_invoice(self):
-        """ method to be inherit by latam localizations that have an custom report instead of
-        'account.report_invoice_document' """
+    def get_custom_report(self, report_xml_id):
+        """ method to be inherit by latam localizations that have an custom invoice reports """
         self.ensure_one()
-        return False
-
-    def get_custom_report_invoice_with_payments(self):
-        """ method to be inherit by latam localizations that have an custom report instead of
-        'account.report_invoice_document_with_payments' """
-        self.ensure_one()
-        return False
+        return report_xml_id
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
