@@ -45,8 +45,9 @@ class AccountTax(models.Model):
         return self.env['account.tax.group'].search([], limit=1)
 
     name = fields.Char(string='Tax Name', required=True)
-    type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Scope', required=True, default="sale",
+    type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale",
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
+    tax_scope = fields.Selection([('service', 'Services'), ('consu', 'Goods')], string="Tax Scope", help="Restrict the use of taxes to a type of product.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')],
         help="""
@@ -93,7 +94,7 @@ class AccountTax(models.Model):
     country_id = fields.Many2one(string='Country', comodel_name='res.country', related='company_id.country_id', help="Technical field used to restrict the domain of account tags for tax repartition lines created for this tax.")
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
+        ('name_company_uniq', 'unique(name, company_id, type_tax_use, tax_scope)', 'Tax names must be unique !'),
     ]
 
     @api.model
@@ -152,7 +153,9 @@ class AccountTax(models.Model):
             if not tax._check_m2m_recursion('children_tax_ids'):
                 raise ValidationError(_("Recursion found for tax '%s'.") % (tax.name,))
             if not all(child.type_tax_use in ('none', tax.type_tax_use) for child in tax.children_tax_ids):
-                raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))\
+                raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))
+            if not all(child.tax_scope == tax.tax_scope for child in tax.children_tax_ids):
+                raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
@@ -185,10 +188,17 @@ class AccountTax(models.Model):
         return super(AccountTax, self).copy(default=default)
 
     def name_get(self):
-        if not self._context.get('append_type_to_tax_name'):
-            return super(AccountTax, self).name_get()
-        tax_type = dict(self._fields['type_tax_use']._description_selection(self.env))
-        return [(tax.id, '%s (%s)' % (tax.name, tax_type.get(tax.type_tax_use))) for tax in self]
+        name_list = []
+        type_tax_use = dict(self._fields['type_tax_use']._description_selection(self.env))
+        tax_scope = dict(self._fields['tax_scope']._description_selection(self.env))
+        for record in self:
+            name = record.name
+            if self._context.get('append_type_to_tax_name'):
+                name += ' (%s)' % type_tax_use.get(record.type_tax_use)
+            if record.tax_scope:
+                name += ' (%s)' % tax_scope.get(record.tax_scope)
+            name_list += [(record.id, name)]
+        return name_list
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
