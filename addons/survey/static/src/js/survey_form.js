@@ -85,6 +85,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         if (this.$("textarea").is(":focus") || this.$('input').is(':focus')) {
             return;
         }
+        // If in session mode and question already answered, do not handle keydown
+        if (this.$('fieldset[disabled="disabled"]').length !== 0) {
+            return;
+        }
 
         var self = this;
         var keyCode = event.keyCode;
