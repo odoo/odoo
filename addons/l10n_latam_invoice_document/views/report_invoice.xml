@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <t t-call="account.report_invoice_document" position="attributes">
+            <attribute name="t-call">#{ o.get_custom_report_invoice() or 'account.report_invoice_document' }</attribute>
+        </t>
+    </template>
+
+    <template id="report_invoice_with_payments" inherit_id="account.report_invoice_with_payments">
+        <t t-call="account.report_invoice_document_with_payments" position="attributes">
+            <attribute name="t-call">#{ o.get_custom_report_invoice_with_payments() or 'account.report_invoice_document_with_payments' }</attribute>
+        </t>
+    </template>
+
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
 
         <xpath expr="//h2" position="attributes">
