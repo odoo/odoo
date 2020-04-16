@@ -80,7 +80,7 @@ class StockPickingBatch(models.Model):
         for batch in self:
             batch.move_ids = batch.picking_ids.move_lines
             batch.move_line_ids = batch.picking_ids.move_line_ids
-            batch.show_check_availability = any(m.state != 'assigned' for m in batch.move_ids)
+            batch.show_check_availability = any(m.state not in ['assigned', 'done'] for m in batch.move_ids)
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_state(self):
@@ -165,7 +165,7 @@ class StockPickingBatch(models.Model):
                     _("Batch Transfer"),
                     picking.batch_id.id,
                     picking.batch_id.name))
-        return self.picking_ids.button_validate()
+        return pickings.button_validate()
 
     def action_assign(self):
         self.ensure_one()
