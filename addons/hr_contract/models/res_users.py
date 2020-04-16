@@ -7,7 +7,6 @@ from odoo import models, fields, api, _
 class User(models.Model):
     _inherit = ['res.users']
 
-    medic_exam = fields.Date(related="employee_id.medic_exam")
     vehicle = fields.Char(related="employee_id.vehicle")
     bank_account_id = fields.Many2one(related="employee_id.bank_account_id")
 
@@ -17,7 +16,6 @@ class User(models.Model):
             on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
         """
         contract_readable_fields = [
-            'medic_exam',
             'vehicle',
             'bank_account_id',
         ]

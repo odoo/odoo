@@ -8,7 +8,6 @@ from odoo.osv import expression
 class Employee(models.Model):
     _inherit = "hr.employee"
 
-    medic_exam = fields.Date(string='Medical Examination Date', groups="hr.group_hr_user")
     vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
     contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts')
     contract_id = fields.Many2one('hr.contract', string='Current Contract',
