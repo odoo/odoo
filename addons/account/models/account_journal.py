@@ -325,8 +325,9 @@ class AccountJournal(models.Model):
         if self.alias_id:
             self.alias_id.write(alias_values)
         else:
-            self.alias_id = self.env['mail.alias'].with_context(alias_model_name='account.move',
-                alias_parent_model_name='account.journal').create(alias_values)
+            alias_values['alias_model_id'] = self.env['ir.model']._get('account.move').id
+            alias_values['alias_parent_model_id'] = self.env['ir.model']._get('account.journal').id
+            self.alias_id = self.env['mail.alias'].create(alias_values)
 
         if vals.get('alias_name'):
             # remove alias_name to avoid useless write on alias

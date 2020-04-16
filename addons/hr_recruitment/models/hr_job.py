@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
+
 from odoo import api, fields, models, _
 
 
@@ -91,16 +93,16 @@ class Job(models.Model):
                 [("job_id", "=", job.id), ("stage_id", "=", job._get_first_stage().id)]
             )
 
-    def get_alias_model_name(self, vals):
-        return 'hr.applicant'
-
-    def get_alias_values(self):
-        values = super(Job, self).get_alias_values()
-        values['alias_defaults'] = {
-            'job_id': self.id,
-            'department_id': self.department_id.id,
-            'company_id': self.department_id.company_id.id if self.department_id else self.company_id.id
-        }
+    def _alias_get_creation_values(self):
+        values = super(Job, self)._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('hr.applicant').id
+        if self.id:
+            values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
+            defaults.update({
+                'job_id': self.id,
+                'department_id': self.department_id.id,
+                'company_id': self.department_id.company_id.id if self.department_id else self.company_id.id,
+            })
         return values
 
     @api.model

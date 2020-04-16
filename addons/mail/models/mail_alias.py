@@ -94,16 +94,8 @@ class Alias(models.Model):
             model ID of the ``model_name`` context value, if provided. Also, it raises
             UserError if given alias name is already assigned.
         """
-        model_name = self._context.get('alias_model_name')
-        parent_model_name = self._context.get('alias_parent_model_name')
         if vals.get('alias_name'):
             vals['alias_name'] = self._clean_and_check_unique(vals.get('alias_name'))
-        if model_name:
-            model = self.env['ir.model']._get(model_name)
-            vals['alias_model_id'] = model.id
-        if parent_model_name:
-            model = self.env['ir.model']._get(parent_model_name)
-            vals['alias_parent_model_id'] = model.id
         return super(Alias, self).create(vals)
 
     def write(self, vals):
