@@ -82,8 +82,9 @@ class Http(models.AbstractModel):
         if not request.session.uid:
             env = api.Environment(request.cr, SUPERUSER_ID, request.context)
             website = env['website'].get_current_website()
-            if website and website.user_id:
-                request.uid = website.user_id.id
+            user_id = website.sudo().with_context(prefetch_fields=False).user_id.id
+            if website and user_id:
+                request.uid = user_id
         if not request.uid:
             super(Http, cls)._auth_method_public()
 
@@ -333,7 +334,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _xmlid_to_obj(cls, env, xmlid):
         website_id = env['website'].get_current_website()
-        if website_id and website_id.theme_id:
+        if website_id and website_id.with_context(prefetch_fields=False).theme_id:
             obj = env['ir.attachment'].search([('key', '=', xmlid), ('website_id', '=', website_id.id)])
             if obj:
                 return obj[0]
