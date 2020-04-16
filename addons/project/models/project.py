@@ -185,7 +185,7 @@ class Project(models.Model):
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
-        default=lambda self: self.env.company.resource_calendar_id.id,
+        compute="_compute_resource_calendar_id", store=True, readonly=False,
         check_company=True,
         help="Timetable working hours to adjust the gantt diagram report")
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
@@ -242,6 +242,11 @@ class Project(models.Model):
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
     ]
+
+    @api.depends('company_id')
+    def _compute_resource_calendar_id(self):
+        for project in self:
+            project.resource_calendar_id = project.company_id.resource_calendar_id
 
     def _compute_allow_subtasks(self):
         subtask_enabled = self.user_has_groups('project.group_subtask_project')
