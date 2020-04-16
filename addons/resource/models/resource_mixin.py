@@ -36,12 +36,22 @@ class ResourceMixin(models.AbstractModel):
     def create(self, values):
         if not values.get('resource_id'):
             resource_vals = {'name': values.get(self._rec_name)}
-            tz = (values.pop('tz', False) or
-                  self.env['resource.calendar'].browse(values.get('resource_calendar_id')).tz)
-            if tz:
-                resource_vals['tz'] = tz
+            if values.get('resource_calendar_id'):
+                calendar_id = values.get('resource_calendar_id')
+                resource_vals['calendar_id'] = calendar_id
+                resource_vals['tz'] = values.pop('tz', False) or\
+                    self.env['resource.calendar'].browse(calendar_id).tz
+            elif values.get('tz'):
+                resource_vals['tz'] = values.pop('tz')
+            if 'company_id' in values:
+                resource_vals['company_id'] = values.get('company_id')
             resource = self.env['resource.resource'].create(resource_vals)
             values['resource_id'] = resource.id
+            # Enforce defaults are not retriggered for those related values
+            # This could lead to conflicting and incoherent values
+            # when records are created in a multi-company environment.
+            values['resource_calendar_id'] = resource.calendar_id.id
+            values['company_id'] = resource.company_id.id
         return super(ResourceMixin, self).create(values)
 
     def copy_data(self, default=None):

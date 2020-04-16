@@ -206,6 +206,7 @@ class HrEmployeePrivate(models.Model):
     def _onchange_company(self):
         address = self.company_id.partner_id.address_get(['default'])
         self.address_id = address['default'] if address else False
+        self.resource_calendar_id = self.company_id.resource_calendar_id
 
     @api.onchange('department_id')
     def _onchange_department(self):

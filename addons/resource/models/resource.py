@@ -639,14 +639,7 @@ class ResourceCalendarAttendance(models.Model):
 class ResourceResource(models.Model):
     _name = "resource.resource"
     _description = "Resources"
-
-    @api.model
-    def default_get(self, fields):
-        res = super(ResourceResource, self).default_get(fields)
-        if not res.get('calendar_id') and res.get('company_id'):
-            company = self.env['res.company'].browse(res['company_id'])
-            res['calendar_id'] = company.resource_calendar_id.id
-        return res
+    _check_company_auto = True
 
     name = fields.Char(required=True)
     active = fields.Boolean(
@@ -664,7 +657,7 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
         default=lambda self: self.env.company.resource_calendar_id,
-        required=True,
+        required=True, check_company=True,
         help="Define the schedule of resource")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
@@ -683,8 +676,8 @@ class ResourceResource(models.Model):
 
     @api.model
     def create(self, values):
-        if values.get('company_id') and not values.get('calendar_id'):
-            values['calendar_id'] = self.env['res.company'].browse(values['company_id']).resource_calendar_id.id
+        if 'company_id' in values and not values.get('calendar_id'):
+            values['calendar_id'] = self._get_calendar_for_company(values.get('company_id'))
         if not values.get('tz'):
             # retrieve timezone on user or calendar
             tz = (self.env['res.users'].browse(values.get('user_id')).tz or
@@ -692,6 +685,24 @@ class ResourceResource(models.Model):
             if tz:
                 values['tz'] = tz
         return super(ResourceResource, self).create(values)
+
+    def write(self, values):
+        if 'company_id' in values and not values.get('calendar_id'):
+            values['calendar_id'] = self._get_calendar_for_company(values.get('company_id'))
+        return super().write(values)
+
+    @api.model
+    def _get_calendar_for_company(self, company_id=False):
+        if company_id:
+            return self.env['res.company'].browse(company_id).resource_calendar_id.id
+        else:
+            calendar = self.env['resource.calendar'].search([('company_id', '=', False)], limit=1)
+            if not calendar:
+                calendar = self.env['resource.calendar'].create({
+                    'name': _('Standard 40 hours/week'),
+                    'company_id': False,
+                })
+            return calendar.id
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
