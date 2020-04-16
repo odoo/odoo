@@ -12,6 +12,8 @@ var ColorpickerWidget = Widget.extend({
     xmlDependencies: ['/web/static/src/xml/colorpicker.xml'],
     template: 'Colorpicker',
     events: {
+        'click': '_onClick',
+        'keypress': '_onKeypress',
         'mousedown .o_color_pick_area': '_onMouseDownPicker',
         'mousedown .o_color_slider': '_onMouseDownSlider',
         'mousedown .o_opacity_slider': '_onMouseDownOpacitySlider',
@@ -39,18 +41,22 @@ var ColorpickerWidget = Widget.extend({
         this.sliderFlag = false;
         this.opacitySliderFlag = false;
         this.colorComponents = {};
+        this.uniqueId = _.uniqueId('colorpicker');
 
-        var self = this;
-        var $body = $(document.body);
-        $body.on('mousemove.colorpicker', _.throttle(function (ev) {
-            self._onMouseMovePicker(ev);
-            self._onMouseMoveSlider(ev);
-            self._onMouseMoveOpacitySlider(ev);
-        }, 10));
-        $body.on('mouseup.colorpicker', _.throttle(function (ev) {
-            self.pickerFlag = false;
-            self.sliderFlag = false;
-            self.opacitySliderFlag = false;
+        // Needs to be bound on document to work in all possible cases.
+        const $document = $(document);
+        $document.on(`mousemove.${this.uniqueId}`, _.throttle((ev) => {
+            this._onMouseMovePicker(ev);
+            this._onMouseMoveSlider(ev);
+            this._onMouseMoveOpacitySlider(ev);
+        }, 50));
+        $document.on(`mouseup.${this.uniqueId}`, _.throttle((ev) => {
+            if (this.pickerFlag || this.sliderFlag || this.opacitySliderFlag) {
+                this._colorSelected();
+            }
+            this.pickerFlag = false;
+            this.sliderFlag = false;
+            this.opacitySliderFlag = false;
         }, 10));
 
         this.options = _.clone(options);
@@ -66,12 +72,17 @@ var ColorpickerWidget = Widget.extend({
         this.$opacitySlider = this.$('.o_opacity_slider');
         this.$opacitySliderPointer = this.$('.o_opacity_pointer');
 
+        const resizeObserver = new window.ResizeObserver(() => {
+            this._updateUI();
+        });
+        resizeObserver.observe(this.el);
+
         var defaultColor = this.options.defaultColor || '#FF0000';
         var rgba = ColorpickerWidget.convertCSSColorToRgba(defaultColor);
         if (rgba) {
             this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
         }
-        this._updateUI();
+        this.previewActive = true;
         return this._super.apply(this, arguments);
     },
     /**
@@ -79,7 +90,7 @@ var ColorpickerWidget = Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        $(document.body).off('.colorpicker');
+        $(document).off(`.${this.uniqueId}`);
     },
 
     //--------------------------------------------------------------------------
@@ -207,6 +218,14 @@ var ColorpickerWidget = Widget.extend({
         this._updateCssColor();
     },
     /**
+     * Trigger an event to annonce that the widget value has changed
+     *
+     * @private
+     */
+    _colorSelected: function () {
+        this.trigger_up('colorpicker_select', this.colorComponents);
+    },
+    /**
      * Updates css color representation.
      *
      * @private
@@ -219,12 +238,35 @@ var ColorpickerWidget = Widget.extend({
         _.extend(this.colorComponents,
             {cssColor: ColorpickerWidget.convertRgbaToCSSColor(r, g, b, a)}
         );
+        if (this.previewActive) {
+            this.trigger_up('colorpicker_preview', this.colorComponents);
+        }
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onKeypress: function (ev) {
+        if (ev.charCode === $.ui.keyCode.ENTER) {
+            if (ev.target.tagName === 'INPUT') {
+                this._onChangeInputs(ev);
+            }
+            ev.preventDefault();
+            this.trigger_up('enter_key_color_colorpicker');
+        }
+    },
+    /**
+     * @param {Event} ev
+     */
+    _onClick: function (ev) {
+        ev.originalEvent.__isColorpickerClick = true;
+        $(ev.target).find('> .o_opacity_pointer, > .o_slider_pointer, > .o_picker_pointer').addBack('.o_opacity_pointer, .o_slider_pointer, .o_picker_pointer').focus();
+    },
     /**
      * Updates color when the user starts clicking on the picker.
      *
@@ -233,6 +275,7 @@ var ColorpickerWidget = Widget.extend({
      */
     _onMouseDownPicker: function (ev) {
         this.pickerFlag = true;
+        ev.preventDefault();
         this._onMouseMovePicker(ev);
     },
     /**
@@ -265,6 +308,7 @@ var ColorpickerWidget = Widget.extend({
      */
     _onMouseDownSlider: function (ev) {
         this.sliderFlag = true;
+        ev.preventDefault();
         this._onMouseMoveSlider(ev);
     },
     /**
@@ -293,6 +337,7 @@ var ColorpickerWidget = Widget.extend({
      */
     _onMouseDownOpacitySlider: function (ev) {
         this.opacitySliderFlag = true;
+        ev.preventDefault();
         this._onMouseMoveOpacitySlider(ev);
     },
     /**
@@ -344,6 +389,7 @@ var ColorpickerWidget = Widget.extend({
                 break;
         }
         this._updateUI();
+        this._colorSelected();
     },
 });
 
@@ -598,7 +644,9 @@ const ColorpickerDialog = Dialog.extend({
      */
     start: function () {
         const proms = [this._super(...arguments)];
-        this.colorPicker = new ColorpickerWidget(this, this.options);
+        this.colorPicker = new ColorpickerWidget(this, _.extend({
+            colorPreview: true,
+        }, this.options));
         proms.push(this.colorPicker.appendTo(this.$el));
         return Promise.all(proms);
     },
