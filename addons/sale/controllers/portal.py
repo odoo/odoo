@@ -161,7 +161,15 @@ class CustomerPortal(CustomerPortal):
             if session_obj_date != now and request.env.user.share and access_token:
                 request.session['view_quote_%s' % order_sudo.id] = now
                 body = _('Quotation viewed by customer %s') % order_sudo.partner_id.name
-                _message_post_helper('sale.order', order_sudo.id, body, token=order_sudo.access_token, message_type='notification', subtype_xmlid="mail.mt_note")
+                _message_post_helper(
+                    "sale.order",
+                    order_sudo.id,
+                    body,
+                    token=order_sudo.access_token,
+                    message_type="notification",
+                    subtype_xmlid="mail.mt_note",
+                    partner_ids=order_sudo.user_id.sudo().partner_id.ids,
+                )
 
         values = {
             'sale_order': order_sudo,
