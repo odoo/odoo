@@ -461,6 +461,19 @@ class SurveyUserInput(models.Model):
                     inactive_questions |= question
         return inactive_questions
 
+    def _get_print_questions(self):
+        """ Get the questions to display : the ones that should have been answered = active questions
+            In case of session, active questions are based on most voted answers
+        :return: active survey.question browse records
+        """
+        survey = self.survey_id
+        if self.is_session_answer:
+            most_voted_answers = survey._get_session_most_voted_answers()
+            inactive_questions = most_voted_answers._get_inactive_conditional_questions()
+        else:
+            inactive_questions = self._get_inactive_conditional_questions()
+        return survey.question_ids - inactive_questions
+
 
 class SurveyUserInputLine(models.Model):
     _name = 'survey.user_input.line'
