@@ -28,17 +28,17 @@ QUnit.module('account', {
     QUnit.test('Reconciliation form field', async function (assert) {
         assert.expect(5);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'account.move',
             data: this.data,
-            arch: '<form>'+
-                '<field name="outstanding_credits_debits_widget" widget="payment"/>'+
-                '<field name="payments_widget" widget="payment"/>'+
-            '</form>',
+            arch: `<form>
+                <field name="outstanding_credits_debits_widget" widget="payment"/>
+                <field name="payments_widget" widget="payment"/>
+            '</form>`,
             res_id: 1,
             mockRPC: function (route, args) {
-                if (args.method === 'js_remove_outstanding_partial') {
+                if (args.method === 'remove_move_reconcile') {
                     assert.deepEqual(args.args, [10, 38], "should call js_remove_outstanding_partial {warning: required focus}");
                     return Promise.resolve();
                 }
@@ -63,20 +63,18 @@ QUnit.module('account', {
         });
 
         assert.strictEqual(form.$('.o_field_widget[name="payments_widget"]').text().replace(/[\s\n\r]+/g, ' '),
-            " Paid on 04/25/2017 $ 555.00 ",
+            "Paid on 04/25/2017$ 555.00",
             "should display payment information");
 
-        form.$('.o_field_widget[name="outstanding_credits_debits_widget"] .outstanding_credit_assign').trigger('click');
+        await testUtils.dom.click(form.$('.o_field_widget[name="outstanding_credits_debits_widget"] .outstanding_credit_assign'));
 
         assert.strictEqual(form.$('.o_field_widget[name="outstanding_credits_debits_widget"]').text().replace(/[\s\n\r]+/g, ' '),
-            " Outstanding credits Add INV/2017/0004 $ 100.00 ",
+            "Outstanding creditsAddINV/2017/0004$ 100.00",
             "should display outstanding information");
 
-        form.$('.o_field_widget[name="payments_widget"] .js_payment_info').trigger('focus');
-        form.$('.popover .js_open_payment').trigger('click');
-
-        form.$('.o_field_widget[name="payments_widget"] .js_payment_info').trigger('focus');
-        form.$('.popover .js_unreconcile_payment').trigger('click');
+        await testUtils.dom.click(form.$('.o_field_widget[name="payments_widget"] .js_payment_info')); //.trigger('click');
+        await testUtils.dom.click($('.o_popover .js_open_payment'));
+        await testUtils.dom.click($('.o_popover .js_unreconcile_payment'));
 
         form.destroy();
     });
