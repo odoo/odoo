@@ -969,7 +969,7 @@ class Meeting(models.Model):
             self.start = self.start_datetime
             # Round the duration (in hours) to the minute to avoid weird situations where the event
             # stops at 4:19:59, later displayed as 4:19.
-            self.stop = start + timedelta(minutes=round(self.duration * 60))
+            self.stop = start + timedelta(minutes=round((self.duration or 1.0) * 60))
             if self.allday:
                 self.stop -= timedelta(seconds=1)
 
