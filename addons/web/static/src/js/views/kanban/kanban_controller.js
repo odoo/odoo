@@ -138,6 +138,15 @@ var KanbanController = BasicController.extend({
         return this.renderer.updateRecord(this.model.get(id));
     },
     /**
+     * Get the domain defined by the view. It is meant to be overridden.
+     *
+     * @private
+     * @returns {Promise<array[]>}
+     */
+    _getViewDomain: function () {
+        return Promise.resolve([]);
+    },
+    /**
      * Only display the pager in the ungrouped case, with data.
      *
      * @override
@@ -261,7 +270,13 @@ var KanbanController = BasicController.extend({
      * @returns {Promise}
      */
     _updateSearchPanel: function () {
-        return this._searchPanel.update({searchDomain: this.controlPanelDomain});
+        var self = this;
+        return this._getViewDomain().then(function (viewDomain) {
+            return self._searchPanel.update({
+                searchDomain: self.controlPanelDomain,
+                viewDomain: viewDomain,
+            });
+        });
     },
 
     //--------------------------------------------------------------------------

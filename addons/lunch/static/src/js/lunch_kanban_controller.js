@@ -114,14 +114,9 @@ var LunchKanbanController = KanbanController.extend({
      * to the searchDomain (coming from the controlPanel).
      *
      * @override
-     * @private
      */
-    _updateSearchPanel: function () {
-        var self = this;
-        this.model.getLocationDomain().then(function (locationDomain) {
-            var domain = self.controlPanelDomain.concat(locationDomain);
-            return self._searchPanel.update({searchDomain: domain});
-        });
+    _getViewDomain: function () {
+        return this.model.getLocationDomain();
     },
 
     //--------------------------------------------------------------------------
