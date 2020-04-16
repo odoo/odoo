@@ -726,9 +726,10 @@ class Survey(models.Model):
                 if not most_voted_answer or votes_by_answer[most_voted_answer] < votes_by_answer[answer]:
                     most_voted_answer_by_questions[question] = answer
 
-        # return a fake 'audiance' user_input
+        # return a fake 'audience' user_input
         fake_user_input = self.env['survey.user_input'].new({
             'survey_id': self.id,
+            'predefined_question_ids': [(6, 0, self._prepare_user_input_predefined_questions().ids)]
         })
 
         fake_user_input_lines = self.env['survey.user_input.line']
