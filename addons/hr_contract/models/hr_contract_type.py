@@ -8,6 +8,7 @@ class HrPayrollStructureType(models.Model):
     _name = 'hr.payroll.structure.type'
     _description = 'Contract Type'
 
+    # THIS MODEL SHOULD BE COMPANY DEPENDENT !
     name = fields.Char('Contract Type')
     default_resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Default Working Hours',
