@@ -19,19 +19,9 @@ class AliasMixin(models.AbstractModel):
 
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True)
 
-    def get_alias_model_name(self, vals):
-        """ Return the model name for the alias. Incoming emails that are not
-            replies to existing records will cause the creation of a new record
-            of this alias model. The value may depend on ``vals``, the dict of
-            values passed to ``create`` when a record of this model is created.
-        """
-        return None
-
-    def get_alias_values(self):
-        """ Return values to create an alias, or to write on the alias after its
-            creation.
-        """
-        return {'alias_parent_thread_id': self.id}
+    # --------------------------------------------------
+    # CRUD
+    # --------------------------------------------------
 
     @api.model
     def create(self, vals):
@@ -78,6 +68,28 @@ class AliasMixin(models.AbstractModel):
             record.with_context(mail_notrack=True).alias_id = alias
             _logger.info('Mail alias created for %s %s (id %s)',
                          record._name, record.display_name, record.id)
+
+    # --------------------------------------------------
+    # MIXIN TOOL OVERRIDE METHODS
+    # --------------------------------------------------
+
+    def get_alias_model_name(self, vals):
+        """ Return the model name for the alias. Incoming emails that are not
+            replies to existing records will cause the creation of a new record
+            of this alias model. The value may depend on ``vals``, the dict of
+            values passed to ``create`` when a record of this model is created.
+        """
+        return None
+
+    def get_alias_values(self):
+        """ Return values to create an alias, or to write on the alias after its
+            creation.
+        """
+        return {'alias_parent_thread_id': self.id}
+
+    # --------------------------------------------------
+    # GATEWAY
+    # --------------------------------------------------
 
     def _alias_check_contact(self, message, message_dict, alias):
         """ Main mixin method that inheriting models may inherit in order
