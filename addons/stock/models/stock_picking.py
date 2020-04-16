@@ -982,7 +982,9 @@ class Picking(models.Model):
                 picking.message_post(
                     body=_('The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has been created.') % (
                         backorder_picking.id, backorder_picking.name))
-                moves_to_backorder.write({'picking_id': backorder_picking.id})
+                # We explicitly write on the picking to properly trigger the recomputation of the state
+                to_write = [(1, m.id, {'picking_id': backorder_picking.id,}) for m in moves_to_backorder]
+                picking.write({'move_lines': to_write})
                 moves_to_backorder.mapped('package_level_id').write({'picking_id':backorder_picking.id})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
                 backorder_picking.action_assign()
