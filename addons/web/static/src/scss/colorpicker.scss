@@ -2,8 +2,8 @@
 .o_colorpicker_widget {
     .o_color_pick_area {
         position: relative;
-        width: 200px;
-        height: 200px;
+        width: 79%;
+        height: 125px;
         background-image: linear-gradient(to bottom, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 100%, 0) 50%, hsla(0, 0%, 0%, 0) 50%, hsl(0, 0%, 0%) 100%),
                           linear-gradient(to right, hsl(0, 0%, 50%) 0%, hsla(0, 0%, 50%, 0) 100%);
         cursor: crosshair;
@@ -18,14 +18,15 @@
     }
     .o_color_slider {
         position: relative;
-        width: 18px;
-        height: 200px;
+        margin-left: 2.5%;
+        width: 4%;
+        height: 125px;
         background: linear-gradient(#F00 0%, #FF0 16.66%, #0F0 33.33%, #0FF 50%, #00F 66.66%, #F0F 83.33%, #F00 100%);
         cursor: pointer;
 
         .o_slider_pointer {
-            @include o-position-absolute($left: -4px);
-            width: 23px;
+            @include o-position-absolute($left: -100%);
+            width: 300%;
             height: 6px;
             border: 1px solid white;
             box-shadow: 0px 0px 2px 1px gray('600');
@@ -33,13 +34,14 @@
     }
     .o_opacity_slider {
         position: relative;
-        width: 18px;
-        height: 200px;
+        margin-left: 5%;
+        width: 4%;
+        height: 125px;
         cursor: pointer;
 
         .o_opacity_pointer {
-            @include o-position-absolute($left: -4px);
-            width: 23px;
+            @include o-position-absolute($left: -100%);
+            width: 300%;
             height: 6px;
             border: 1px solid white;
             box-shadow: 0px 0px 2px 1px gray('600');
@@ -52,34 +54,38 @@
             background-image: url('/web_editor/static/src/img/transparent.png');
         }
     }
+
     .o_color_picker_inputs {
+        padding-top: 3px;
+        font-size: 12px;
         display: flex;
-        flex-direction: column;
-        & > .form-row {
-            flex: 1;
-            .col {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-around;
-            }
-        }
+
         .o_color_preview_parent {
+            height: 20px;
+            width: 30px;
             background-image: url('/web_editor/static/src/img/transparent.png');
-        }
-        .o_color_preview {
-            padding: 0.375rem 1.2rem;
-        }
-        .form-group {
-            margin-bottom: 0.3rem;
-            label {
-                margin-bottom: 0px;
-                font-size: 0.7rem;
-                font-weight: bold;
+            .o_color_preview {
+                height: inherit;
+                display: block;
             }
         }
-        .form-control {
-            height: 24px !important;
-            font-weight: bold;
+        .o_hex_div {
+            width: 38%;
+            display: flex;
+            border: 1px solid;
+            margin-right: 2%;
+        }
+        .o_rgba_div {
+            width: 60%;
+            border: 1px solid;
+            display: flex;
+        }
+        input {
+            width: 100%;
+            border: none;
+            height: 18px;
+            background-color: inherit;
+            color: inherit;
         }
     }
 }

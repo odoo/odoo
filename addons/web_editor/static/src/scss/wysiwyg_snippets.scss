@@ -422,7 +422,7 @@ body.editor_enable.editor_has_snippets {
                 z-index: $zindex-dropdown;
                 border: 1px solid var(--o-we-color);
                 background-color: var(--o-we-bg-color-dark);
-                max-height: 400px;
+                max-height: 600px;
                 overflow-y: auto;
             }
         }
@@ -633,6 +633,7 @@ body.editor_enable.editor_has_snippets {
 
 // SNIPPET OPTIONS
 .colorpicker {
+    padding: 3px;
     .o_colorpicker_sections {
         font-size: 14px;
 
@@ -643,6 +644,20 @@ body.editor_enable.editor_has_snippets {
             margin: 0;
             border: none;
             box-shadow: inset 0 0 0 1px var(--o-we-bg-color-dark);
+
+            &.o_colorpicker_reset {
+                background-color: transparent;
+
+                &::before {
+                    @include o-position-absolute(0, 0, 0, 0);
+                    font-family: FontAwesome !important;
+                    content: "\f00d" !important;// fa-times
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: $o-we-color-danger;
+                }
+            }
         }
 
         .o_colorpicker_section {
@@ -668,7 +683,7 @@ body.editor_enable.editor_has_snippets {
                 }
             }
 
-            &[data-name="transparent_grayscale"], &[data-name="theme"] {
+            &[data-name="transparent_grayscale"], &[data-name="theme"], &[data-name="reset"] {
                 button {
                     @include o-alpha-button-preview;
 
@@ -894,7 +909,7 @@ body.editor_enable.editor_has_snippets {
                 > div {
                     display: flex;
                     align-items: center;
-    
+
                     > * {
                         margin: 0 2px;
                         border: 1px solid $o-we-color-text-normal;
@@ -903,7 +918,7 @@ body.editor_enable.editor_has_snippets {
                         opacity: 0.5;
                         transition: opacity 400ms ease 0s;
                         cursor: pointer;
-    
+
                         &:hover {
                             opacity: 1;
                         }
@@ -915,7 +930,7 @@ body.editor_enable.editor_has_snippets {
                 .o_move_handle {
                     padding: 3px 4px;
                     cursor: move;
-    
+
                     &::before, &::after {
                         content: '\f141';
                         display: block;
