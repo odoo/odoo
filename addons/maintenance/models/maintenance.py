@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import ast
+
 from datetime import date, datetime, timedelta
 
 from odoo import api, fields, models, SUPERUSER_ID, _
@@ -61,29 +63,18 @@ class MaintenanceEquipmentCategory(models.Model):
         for category in self:
             category.maintenance_count = mapped_data.get(category.id, 0)
 
-    @api.model
-    def create(self, vals):
-        self = self.with_context(alias_model_name='maintenance.request', alias_parent_model_name=self._name)
-        category_id = super(MaintenanceEquipmentCategory, self).create(vals)
-        category_id.alias_id.write({'alias_parent_thread_id': category_id.id, 'alias_defaults': {'category_id': category_id.id}})
-        return category_id
-
     def unlink(self):
-        MailAlias = self.env['mail.alias']
         for category in self:
             if category.equipment_ids or category.maintenance_ids:
                 raise UserError(_("You cannot delete an equipment category containing equipments or maintenance requests."))
-            MailAlias += category.alias_id
-        res = super(MaintenanceEquipmentCategory, self).unlink()
-        MailAlias.unlink()
-        return res
+        return super(MaintenanceEquipmentCategory, self).unlink()
 
-    def get_alias_model_name(self, vals):
-        return vals.get('alias_model', 'maintenance.request')
-
-    def get_alias_values(self):
-        values = super(MaintenanceEquipmentCategory, self).get_alias_values()
-        values['alias_defaults'] = {'category_id': self.id}
+    def _alias_get_creation_values(self):
+        values = super(MaintenanceEquipmentCategory, self)._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('maintenance.request').id
+        if self.id:
+            values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
+            defaults['category_id'] = self.id
         return values
 
 
