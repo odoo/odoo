@@ -956,6 +956,7 @@ class Picking(models.Model):
         return True
 
     def _check_backorder(self):
+        prec = self.env["decimal.precision"].precision_get("Product Unit of Measure")
         backorder_pickings = self.browse()
         for picking in self:
             quantity_todo = {}
@@ -972,7 +973,10 @@ class Picking(models.Model):
             for pack in picking.mapped('move_line_ids').filtered(lambda x: x.product_id and not x.move_id):
                 quantity_done.setdefault(pack.product_id.id, 0)
                 quantity_done[pack.product_id.id] += pack.product_uom_id._compute_quantity(pack.qty_done, pack.product_id.uom_id)
-            if any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done):
+            if any(
+                float_compare(quantity_done[x], quantity_todo.get(x, 0), precision_digits=prec,) == -1
+                for x in quantity_done
+            ):
                 backorder_pickings |= picking
         return backorder_pickings
 
