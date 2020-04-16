@@ -514,6 +514,7 @@ class StockMove(models.Model):
     def _push_apply(self):
         # if the move is already chained, there is no need to check push rules
         self = self.filtered(lambda r: not r.move_dest_ids)
+        origin_returned_move_id_moves = self.filtered(lambda r: r.origin_returned_move_id)
         for move in self:
             # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
             # to receive goods without triggering the push rules again (which would duplicate chained operations)
@@ -525,7 +526,7 @@ class StockMove(models.Model):
             else:
                 rules = self.sudo().env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
             # Make sure it is not returning the return
-            if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_id.id):
+            if rules and (move not in origin_returned_move_id_moves or move.origin_returned_move_id.location_dest_id.id != rules.location_id.id):
                 rules._run_push(move)
 
     def _merge_moves_fields(self):
