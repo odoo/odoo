@@ -512,10 +512,9 @@ class StockMove(models.Model):
         return True
 
     def _push_apply(self):
+        # if the move is already chained, there is no need to check push rules
+        self = self.filtered(lambda r: not r.move_dest_ids)
         for move in self:
-            # if the move is already chained, there is no need to check push rules
-            if move.move_dest_ids:
-                continue
             # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
             # to receive goods without triggering the push rules again (which would duplicate chained operations)
             domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
