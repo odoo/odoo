@@ -26,11 +26,16 @@ class AliasMixin(models.AbstractModel):
     @api.model
     def create(self, vals):
         """ Create a record with ``vals``, and create a corresponding alias. """
-        record = super(AliasMixin, self.with_context(
-            alias_model_name=self.get_alias_model_name(vals),
-            alias_parent_model_name=self._name,
-        )).create(vals)
-        record.alias_id.sudo().write(record.get_alias_values())
+        new_alias = not 'alias_id' in vals
+        if new_alias:
+            alias_vals, record_vals = self._alias_filter_fields(vals)
+            alias_vals.update(self._alias_get_creation_values())
+            alias = self.env['mail.alias'].create(alias_vals)
+            record_vals['alias_id'] = alias.id
+
+        record = super(AliasMixin, self).create(record_vals)
+        alias.sudo().write(record._alias_get_creation_values())
+
         return record
 
     def unlink(self):
@@ -50,12 +55,6 @@ class AliasMixin(models.AbstractModel):
 
     def _init_column_alias_id(self):
         # both self and the alias model must be present in 'ir.model'
-        alias_ctx = {
-            'alias_model_name': self.get_alias_model_name({}),
-            'alias_parent_model_name': self._name,
-        }
-        alias_model = self.env['mail.alias'].sudo().with_context(alias_ctx)
-
         child_ctx = {
             'active_test': False,       # retrieve all records
             'prefetch_fields': False,   # do not prefetch fields on records
@@ -64,7 +63,7 @@ class AliasMixin(models.AbstractModel):
 
         for record in child_model.search([('alias_id', '=', False)]):
             # create the alias, and link it to the current record
-            alias = alias_model.create(record.get_alias_values())
+            alias = self.env['mail.alias'].sudo().create(record._alias_get_creation_values())
             record.with_context(mail_notrack=True).alias_id = alias
             _logger.info('Mail alias created for %s %s (id %s)',
                          record._name, record.display_name, record.id)
@@ -73,19 +72,27 @@ class AliasMixin(models.AbstractModel):
     # MIXIN TOOL OVERRIDE METHODS
     # --------------------------------------------------
 
-    def get_alias_model_name(self, vals):
-        """ Return the model name for the alias. Incoming emails that are not
-            replies to existing records will cause the creation of a new record
-            of this alias model. The value may depend on ``vals``, the dict of
-            values passed to ``create`` when a record of this model is created.
-        """
-        return None
-
-    def get_alias_values(self):
+    def _alias_get_creation_values(self):
         """ Return values to create an alias, or to write on the alias after its
             creation.
         """
-        return {'alias_parent_thread_id': self.id}
+        return {
+            'alias_parent_thread_id': self.id if self.id else False,
+            'alias_parent_model_id': self.env['ir.model']._get(self._name).id,
+        }
+
+    def _alias_filter_fields(self, values, filters=False):
+        """ Split the vals dict into two dictionnary of vals, one for alias
+        field and the other for other fields """
+        if not filters:
+            filters = self.env['mail.alias']._fields.keys()
+        alias_values, record_values = {}, {}
+        for fname in values.keys():
+            if fname in filters:
+                alias_values[fname] = values.get(fname)
+            else:
+                record_values[fname] = values.get(fname)
+        return alias_values, record_values
 
     # --------------------------------------------------
     # GATEWAY

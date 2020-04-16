@@ -69,14 +69,6 @@ class Project(models.Model):
     _rating_satisfaction_days = False  # takes all existing ratings
     _check_company_auto = True
 
-    def get_alias_model_name(self, vals):
-        return vals.get('alias_model', 'project.task')
-
-    def get_alias_values(self):
-        values = super(Project, self).get_alias_values()
-        values['alias_defaults'] = {'project_id': self.id}
-        return values
-
     def _compute_attached_docs_count(self):
         Attachment = self.env['ir.attachment']
         for project in self:
@@ -400,6 +392,14 @@ class Project(models.Model):
         """ Unsubscribe from all tasks when unsubscribing from a project """
         self.mapped('tasks').message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
         return super(Project, self).message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
+
+    def _alias_get_creation_values(self):
+        values = super(Project, self)._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('project.task').id
+        if self.id:
+            values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
+            defaults['project_id'] = self.id
+        return values
 
     # ---------------------------------------------------
     #  Actions
