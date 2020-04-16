@@ -1026,17 +1026,17 @@ QUnit.module('Views', {
             '[]',
             '[["bar","=",true]]',
             // 'asustek' checked
-            '[["company_id","in",[3]]]',
             '[["bar","=",true],["company_id","in",[3]]]',
+            '[["company_id","in",[3]]]',
             // 'asustek' and 'agrolait' checked
-            '[["company_id","in",[3,5]]]',
             '[["bar","=",true],["company_id","in",[3,5]]]',
+            '[["company_id","in",[3,5]]]',
             // 'agrolait' checked
-            '[["company_id","in",[5]]]',
             '[["bar","=",true],["company_id","in",[5]]]',
+            '[["company_id","in",[5]]]',
             // nothing checked
-            '[]',
             '[["bar","=",true]]',
+            '[]',
         ]);
 
         kanban.destroy();
@@ -1125,17 +1125,17 @@ QUnit.module('Views', {
             '[]',
             '[["bar","=",true]]',
             // 'asustek' checked
-            '[["state","in",["abc"]]]',
             '[["bar","=",true],["state","in",["abc"]]]',
+            '[["state","in",["abc"]]]',
             // 'asustek' and 'agrolait' checked
-            '[["state","in",["abc","def"]]]',
             '[["bar","=",true],["state","in",["abc","def"]]]',
+            '[["state","in",["abc","def"]]]',
             // 'agrolait' checked
-            '[["state","in",["def"]]]',
             '[["bar","=",true],["state","in",["def"]]]',
+            '[["state","in",["def"]]]',
             // nothing checked
-            '[]',
             '[["bar","=",true]]',
+            '[]',
         ]);
 
         kanban.destroy();
@@ -1185,16 +1185,16 @@ QUnit.module('Views', {
         await kanban.reload({domain: [['id', '<', 5]]});
 
         assert.verifySteps([
-            'search_panel_select_multi_range',
             '/web/dataset/search_read',
+            'search_panel_select_multi_range',
         ]);
 
         // change category value, so the filters should be reloaded
         await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
 
         assert.verifySteps([
-            'search_panel_select_multi_range',
             '/web/dataset/search_read',
+            'search_panel_select_multi_range',
         ]);
 
         kanban.destroy();
@@ -1307,17 +1307,17 @@ QUnit.module('Views', {
             '[]',
             '[["bar","=",true]]',
             // 'asustek' checked
-            '[["company_id","in",[3]]]',
             '[["bar","=",true],["company_id","in",[3]]]',
+            '[["company_id","in",[3]]]',
             // 'asustek' and 'agrolait' checked
-            '[["company_id","in",[3]],["company_id","in",[5]]]',
             '[["bar","=",true],["company_id","in",[3]],["company_id","in",[5]]]',
+            '[["company_id","in",[3]],["company_id","in",[5]]]',
             // 'asustek', 'agrolait' and 'camptocamp' checked
-            '[["company_id","in",[3]],["company_id","in",[5,11]]]',
             '[["bar","=",true],["company_id","in",[3]],["company_id","in",[5,11]]]',
+            '[["company_id","in",[3]],["company_id","in",[5,11]]]',
             // 'asustek' checked
-            '[["company_id","in",[3]]]',
             '[["bar","=",true],["company_id","in",[3]]]',
+            '[["company_id","in",[3]]]',
         ]);
 
         kanban.destroy();

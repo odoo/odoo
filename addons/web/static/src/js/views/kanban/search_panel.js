@@ -31,6 +31,7 @@ var SearchPanel = Widget.extend({
      * @param {string} params.model
      * @param {Object} params.sections
      * @param {Array[]} params.searchDomain domain coming from controlPanel
+     * @param {Array[]} params.viewDomain domain coming from the view (ill advised)
      */
     init: function (parent, params) {
         this._super.apply(this, arguments);
@@ -46,6 +47,7 @@ var SearchPanel = Widget.extend({
         this.fields = params.fields;
         this.model = params.model;
         this.searchDomain = params.searchDomain;
+        this.viewDomain = params.viewDomain;
     },
     /**
      * @override
@@ -82,15 +84,17 @@ var SearchPanel = Widget.extend({
      *
      * @param {Object} params
      * @param {Array[]} params.searchDomain domain coming from controlPanel
+     * @param {Array[]} params.viewDomain domain coming from view
      * @returns {Promise}
      */
     update: function (params) {
-        var currentSearchDomainStr = JSON.stringify(this.searchDomain);
-        var newSearchDomainStr = JSON.stringify(params.searchDomain);
+        var currentDomain = JSON.stringify(this.searchDomain.concat(this.viewDomain));
+        var newDomain = JSON.stringify(params.searchDomain.concat(params.viewDomain));
         var filtersProm;
-        if (this.needReload || (currentSearchDomainStr !== newSearchDomainStr)) {
+        if (this.needReload || (currentDomain !== newDomain)) {
             this.needReload = false;
             this.searchDomain = params.searchDomain;
+            this.viewDomain = params.viewDomain;
             filtersProm = this._fetchFilters();
         }
         return Promise.resolve(filtersProm).then(this._render.bind(this));
@@ -289,7 +293,7 @@ var SearchPanel = Widget.extend({
                     disable_counters: filter.disableCounters,
                     filter_domain: filterDomain,
                     group_by: filter.groupBy || false,
-                    search_domain: self.searchDomain,
+                    search_domain: self.searchDomain.concat(self.viewDomain),
                 },
             }).then(function (values) {
                 self._createFilterTree(filterId, values);

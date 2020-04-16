@@ -150,20 +150,37 @@ var KanbanView = BasicView.extend({
                 defaultValues[match[1]] = self.loadParams.context[key];
             }
         });
+        var searchPanel;
         var controlPanelDomain = this.loadParams.domain;
-        var searchPanel = new this.config.SearchPanel(parent, {
-            defaultValues: defaultValues,
-            fields: this.fields,
-            model: this.loadParams.modelName,
-            searchDomain: controlPanelDomain,
-            sections: this.searchPanelSections,
-        });
-        this.controllerParams.searchPanel = searchPanel;
-        this.controllerParams.controlPanelDomain = controlPanelDomain;
-        return searchPanel.appendTo(document.createDocumentFragment()).then(function () {
-            var searchPanelDomain = searchPanel.getDomain();
-            self.loadParams.domain = controlPanelDomain.concat(searchPanelDomain);
-        });
+        return this._getViewDomain(parent)
+            .then(function (viewDomain) {
+                searchPanel = new self.config.SearchPanel(parent, {
+                    defaultValues: defaultValues,
+                    fields: self.fields,
+                    model: self.loadParams.modelName,
+                    searchDomain: controlPanelDomain,
+                    sections: self.searchPanelSections,
+                    viewDomain: viewDomain,
+                });
+                self.controllerParams.searchPanel = searchPanel;
+                self.controllerParams.controlPanelDomain = controlPanelDomain;
+                return searchPanel.appendTo(document.createDocumentFragment());
+            })
+            .then(function () {
+                var searchPanelDomain = searchPanel.getDomain();
+                self.loadParams.domain = controlPanelDomain.concat(searchPanelDomain);
+            });
+    },
+    /**
+     * Meant to be overridden to give the domain defined by the view. The parent
+     * is given in case other subcomponents need to be retrieved.
+     *
+     * @private
+     * @param {Object} parent
+     * @returns {Promise<array[]>}
+     */
+    _getViewDomain: function (parent) {
+        return Promise.resolve([]);
     },
     /**
      * @private
