@@ -9,6 +9,7 @@
                 <group attrs="{'invisible': [('provider', '!=', 'stripe')]}">
                     <field name="stripe_secret_key" attrs="{'required':[ ('provider', '=', 'stripe'), ('state', '!=', 'disabled')]}" password="True"/>
                     <field name="stripe_publishable_key" attrs="{'required':[ ('provider', '=', 'stripe'), ('state', '!=', 'disabled')]}" password="True"/>
+                    <field name="stripe_webhook_secret" password="True"/>
                 </group>
             </xpath>
             <xpath expr='//group[@name="acquirer_config"]' position='after'>
