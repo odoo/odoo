@@ -67,7 +67,7 @@ class MailComposeMessage(models.TransientModel):
                 if (opt_out_list and mail_to in opt_out_list) or (seen_list and mail_to in seen_list) \
                         or (not mail_to or not email_re.findall(mail_to)):
                     # prevent sending to blocked addresses that were included by mistake
-                    mail_values['state'] = 'cancel'
+                    mail_values['mail_status'] = 'cancel'
                 elif seen_list is not None:
                     seen_list.add(mail_to)
                 trace_vals = {
@@ -78,8 +78,8 @@ class MailComposeMessage(models.TransientModel):
                 }
                 if mail_values.get('body_html') and mass_mail_layout:
                     mail_values['body_html'] = mass_mail_layout.render({'body': mail_values['body_html']}, engine='ir.qweb', minimal_qcontext=True)
-                # propagate ignored state to trace when still-born
-                if mail_values.get('state') == 'cancel':
+                # propagate ignored mail_status to trace when still-born
+                if mail_values.get('mail_status') == 'cancel':
                     trace_vals['ignored'] = fields.Datetime.now()
                 mail_values.update({
                     'mailing_id': mass_mailing.id,

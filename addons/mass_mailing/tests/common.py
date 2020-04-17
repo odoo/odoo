@@ -8,16 +8,16 @@ from odoo.tests.common import SavepointCase
 
 class MassMailCase(MailCase, MockLinkTracker):
 
-    def _find_mail_mail_wemail(self, email_to, state, author=None):
+    def _find_mail_mail_wemail(self, email_to, status, author=None):
         for mail in self._new_mails:
             if author is not None and mail.author_id != author:
                 continue
-            if mail.state != state:
+            if mail.mail_status != status:
                 continue
             if (mail.email_to == email_to and not mail.recipient_ids) or (not mail.email_to and mail.recipient_ids.email) == email_to:
                 break
         else:
-            raise AssertionError('mail.mail not found for email_to %s / state %s in %s' % (email_to, state, repr([m.email_to for m in self._new_mails])))
+            raise AssertionError('mail.mail not found for email_to %s / status %s in %s' % (email_to, status, repr([m.email_to for m in self._new_mails])))
         return mail
 
     def _find_mail_mail_wrecord(self, record):
@@ -28,7 +28,7 @@ class MassMailCase(MailCase, MockLinkTracker):
             raise AssertionError('mail.mail not found for record %s in %s' % (record, repr([m.email_to for m in self._new_mails])))
         return mail
 
-    def assertMailMailWEmails(self, emails, state, content, fields_values=None):
+    def assertMailMailWEmails(self, emails, status, content, fields_values=None):
         """ Will check in self._new_mails to find a sent mail.mail. To use with
         mail gateway mock.
 
@@ -38,11 +38,11 @@ class MassMailCase(MailCase, MockLinkTracker):
         :param fields_values: specific value to check on the mail.mail record;
         """
         for email_to in emails:
-            sent_mail = self._find_mail_mail_wemail(email_to, state)
+            found_mail = self._find_mail_mail_wemail(email_to, status)
             if content:
-                self.assertIn(content, sent_mail.body_html)
+                self.assertIn(content, found_mail.body_html)
             for fname, fvalue in (fields_values or {}).items():
-                self.assertEqual(sent_mail[fname], fvalue)
+                self.assertEqual(found_mail[fname], fvalue)
 
     def assertMailTraces(self, recipients_info, mailing, records, check_mail=True):
         """ Check content of traces.

@@ -857,7 +857,7 @@ class Message(models.Model):
                 'email_from': self.env.user.email_formatted or self.env.company.catchall_formatted,
                 'email_to': msg.email_from,
                 'auto_delete': True,
-                'state': 'outgoing'
+                'mail_status': 'outgoing'
             }
             self.env['mail.mail'].sudo().create(vals)
 

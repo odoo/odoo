@@ -343,7 +343,7 @@ class MailComposer(models.TransientModel):
                 )['attachment_ids']
                 # Filter out the blacklisted records by setting the mail state to cancel -> Used for Mass Mailing stats
                 if res_id in blacklisted_rec_ids:
-                    mail_values['state'] = 'cancel'
+                    mail_values['mail_status'] = 'cancel'
                     # Do not post the mail into the recipient's chatter
                     mail_values['notification'] = False
 

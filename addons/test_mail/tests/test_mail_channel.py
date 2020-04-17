@@ -257,7 +257,7 @@ class TestChannelModeration(TestMailCommon):
         for mail in self._new_mails:
             self.assertEqual(mail.author_id, self.partner_employee)
             self.assertEqual(mail.subject, 'Guidelines of channel %s' % self.channel_1.name)
-            self.assertEqual(mail.state, 'outgoing')
+            self.assertEqual(mail.mail_status, 'outgoing')
             self.assertEqual(mail.email_from, self.user_employee.company_id.catchall_formatted)
         self.assertEqual(self._new_mails.mapped('recipient_ids'), self.partner_employee | self.partner_portal)
 

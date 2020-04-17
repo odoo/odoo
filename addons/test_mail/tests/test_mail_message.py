@@ -504,7 +504,7 @@ class TestMessageModeration(TestMailCommon):
         for mail in self._new_mails:
             self.assertEqual(mail.author_id, self.partner_employee)
             self.assertEqual(mail.subject, 'Title')
-            self.assertEqual(mail.state, 'outgoing')
+            self.assertEqual(mail.mail_status, 'outgoing')
         self.assertEqual(
             set(self._new_mails.mapped('email_to')),
             set([self.msg_c1_admin1.email_from, self.msg_c1_portal.email_from])

@@ -7,10 +7,10 @@
             <field name="arch" type="xml">
                 <form string="Email message">
                     <header>
-                        <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
-                        <button name="mark_outgoing" string="Retry" type="object" states='exception,cancel'/>
-                        <button name="cancel" string="Cancel" type="object" states='outgoing'/>
-                        <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,received,exception,cancel"/>
+                        <button name="send" string="Send Now" type="object" class="oe_highlight" attrs="{'invisible': [('mail_status', '!=', 'outgoing')]}"/>
+                        <button name="mark_outgoing" string="Retry" type="object" attrs="{'invisible': [('mail_status', 'not in', ('error', 'cancel'))]}"/>
+                        <button name="cancel" string="Cancel" type="object" attrs="{'invisible': [('mail_status', '!=', 'outgoing')]}"/>
+                        <field name="mail_status" widget="statusbar"/>
                     </header>
                     <sheet>
                         <field name="mail_message_id" required="0" invisible="1"/>
@@ -18,8 +18,6 @@
                         <h2><field name="subject"/></h2>
                         <div style="vertical-align: top;">
                             by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" readonly="1" class="oe_inline"/>
-                            <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="fa-reply text-warning"
-                                context="{'default_composition_mode':'comment', 'default_parent_id': mail_message_id}" states='received,sent,exception,cancel'/>
                         </div>
                         <group>
                             <field name="email_from"/>
@@ -53,7 +51,7 @@
                             <page string="Attachments" name="attachments">
                                 <field name="attachment_ids"/>
                             </page>
-                            <page string="Failure Reason" name="failure_reason" attrs="{'invisible': [('state', '!=', 'exception')]}">
+                            <page string="Failure Reason" name="failure_reason" attrs="{'invisible': [('mail_status', '!=', 'error')]}">
                                 <field name="failure_reason"/>
                             </page>
                         </notebook>
@@ -66,7 +64,7 @@
             <field name="name">mail.mail.tree</field>
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
-                <tree string="Emails" decoration-muted="state in ('sent', 'cancel')" decoration-info="state=='outgoing'" decoration-danger="state=='exception'">
+                <tree string="Emails" decoration-muted="mail_status in ('sent', 'cancel')" decoration-info="mail_status=='outgoing'" decoration-danger="mail_status=='error'">
                     <field name="date"/>
                     <field name="subject"/>
                     <field name="author_id" string="User"/>
@@ -75,11 +73,11 @@
                     <field name="model" invisible="1"/>
                     <field name="res_id" invisible="1"/>
                     <field name="email_from" invisible="1"/>
-                    <field name="state" invisible="1"/>
+                    <field name="mail_status" invisible="1"/>
                     <field name="message_type" invisible="1"/>
-                    <button name="send" string="Send Now" type="object" icon="fa-paper-plane" states='outgoing'/>
-                    <button name="mark_outgoing" string="Retry" type="object" icon="fa-repeat" states='exception,cancel'/>
-                    <button name="cancel" string="Cancel Email" type="object" icon="fa-times-circle" states='outgoing'/>
+                    <button name="send" string="Send Now" type="object" icon="fa-paper-plane" attrs="{'invisible': [('mail_status', '!=', 'outgoing')]}"/>
+                    <button name="mark_outgoing" string="Retry" type="object" icon="fa-repeat" attrs="{'invisible': [('mail_status', 'not in', ('error', 'cancel'))]}"/>
+                    <button name="cancel" string="Cancel Email" type="object" icon="fa-times-circle" attrs="{'invisible': [('mail_status', '!=', 'outgoing')]}"/>
                 </tree>
             </field>
         </record>
@@ -91,10 +89,9 @@
                 <search string="Email Search">
                     <field name="email_from" filter_domain="['|', '|',('email_from','ilike',self), ('email_to','ilike',self), ('subject','ilike',self)]" string="Email"/>
                     <field name="date"/>
-                    <filter name="received" string="Received" domain="[('state','=','received')]"/>
-                    <filter name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
-                    <filter name="sent" string="Sent" domain="[('state','=','sent')]"/>
-                    <filter name="exception" string="Failed" domain="[('state','=','exception')]"/>
+                    <filter name="outgoing" string="Outgoing" domain="[('mail_status','=','outgoing')]"/>
+                    <filter name="sent" string="Sent" domain="[('mail_status','=','sent')]"/>
+                    <filter name="exception" string="Failed" domain="[('mail_status','=','error')]"/>
                     <separator/>
                     <filter name="type_email" string="Email" domain="[('message_type','=','email')]"/>
                     <filter name="type_comment" string="Comment" domain="[('message_type','=','comment')]"/>
@@ -106,7 +103,7 @@
                         <field name="res_id"/>
                     </group>
                     <group expand="0" string="Group By">
-                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'mail_status'}"/>
                         <filter string="Author" name="author" context="{'group_by':'author_id'}"/>
                         <filter string="Thread" name="thread" domain="[]" context="{'group_by':'message_id'}"/>
                         <filter string="Date" name="month" help="Creation Date" domain="[]" context="{'group_by':'date'}"/>

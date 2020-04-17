@@ -37,7 +37,7 @@ class TestMailMailRace(common.TransactionCase):
         mail = self.env['mail.mail'].sudo().create({
             'body_html': '<p>Test</p>',
             'notification': True,
-            'state': 'outgoing',
+            'mail_status': 'outgoing',
             'recipient_ids': [(4, self.partner.id)]
         })
         message = self.env['mail.message'].create({

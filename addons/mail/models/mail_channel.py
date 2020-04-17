@@ -379,7 +379,7 @@ class Channel(models.Model):
                 'subject': 'Re: %s' % (kwargs.get('subject', '')),
                 'email_to': email,
                 'auto_delete': True,
-                'state': 'outgoing'
+                'mail_status': 'outgoing'
             })
         return message
 

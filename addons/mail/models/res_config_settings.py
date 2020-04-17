@@ -26,7 +26,7 @@ class ResConfigSettings(models.TransientModel):
         res.update(
             fail_counter=self.env['mail.mail'].sudo().search_count([
                 ('date', '>=', previous_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
-                ('state', '=', 'exception')]),
+                ('mail_status', '=', 'error')]),
         )
 
         return res

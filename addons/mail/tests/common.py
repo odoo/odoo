@@ -29,8 +29,7 @@ class MockEmail(common.BaseCase):
 
     Useful reminders
         Mail state: ('outgoing', 'Outgoing'), ('sent', 'Sent'),
-                    ('received', 'Received'), ('exception', 'Delivery Failed'),
-                    ('cancel', 'Cancelled')
+                    ('error', 'Delivery Failed'), ('cancel', 'Canceled')
     """
 
     @contextmanager
@@ -160,12 +159,12 @@ class MockEmail(common.BaseCase):
 
     def assertMailFailed(self, author, recipients, mail_message):
         mail = self._find_mail(author, recipients, mail_message)
-        self.assertEqual(mail.state, 'exception')
+        self.assertEqual(mail.mail_status, 'error')
 
     def assertMailSent(self, author, recipients, mail_message, check_mail_mail=True, **values):
         if check_mail_mail:
             mail = self._find_mail(author, recipients, mail_message)
-            self.assertEqual(mail.state, 'sent')
+            self.assertEqual(mail.mail_status, 'sent')
         for recipient in recipients:
             self.assertSentEmail(author, [recipient], **values)
 

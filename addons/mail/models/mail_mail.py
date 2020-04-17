@@ -43,12 +43,11 @@ class MailMail(models.Model):
     recipient_ids = fields.Many2many('res.partner', string='To (Partners)',
         context={'active_test': False})
     # process
-    state = fields.Selection([
+    mail_status = fields.Selection([
         ('outgoing', 'Outgoing'),
         ('sent', 'Sent'),
-        ('received', 'Received'),
-        ('exception', 'Delivery Failed'),
-        ('cancel', 'Cancelled'),
+        ('error', 'Delivery Failed'),
+        ('cancel', 'Canceled'),
     ], 'Status', readonly=True, copy=False, default='outgoing')
     auto_delete = fields.Boolean(
         'Auto Delete',
@@ -101,10 +100,10 @@ class MailMail(models.Model):
         return super(MailMail, self).default_get(fields)
 
     def mark_outgoing(self):
-        return self.write({'state': 'outgoing'})
+        return self.write({'mail_status': 'outgoing'})
 
     def cancel(self):
-        return self.write({'state': 'cancel'})
+        return self.write({'mail_status': 'cancel'})
 
     @api.model
     def process_email_queue(self, ids=None):
@@ -122,7 +121,7 @@ class MailMail(models.Model):
                                 messages are sent).
         """
         filters = ['&',
-                   ('state', '=', 'outgoing'),
+                   ('mail_status', '=', 'outgoing'),
                    '|',
                    ('scheduled_date', '<', datetime.datetime.now()),
                    ('scheduled_date', '=', False)]
@@ -257,7 +256,7 @@ class MailMail(models.Model):
                     raise MailDeliveryException(_('Unable to connect to SMTP Server'), exc)
                 else:
                     batch = self.browse(batch_ids)
-                    batch.write({'state': 'exception', 'failure_reason': exc})
+                    batch.write({'mail_status': 'error', 'failure_reason': exc})
                     batch._postprocess_sent_message(success_pids=[], failure_type="SMTP")
             else:
                 self.browse(batch_ids)._send(
@@ -281,8 +280,8 @@ class MailMail(models.Model):
             mail = None
             try:
                 mail = self.browse(mail_id)
-                if mail.state != 'outgoing':
-                    if mail.state != 'exception' and mail.auto_delete:
+                if mail.mail_status != 'outgoing':
+                    if mail.mail_status != 'error' and mail.auto_delete:
                         mail.sudo().unlink()
                     continue
 
@@ -327,7 +326,7 @@ class MailMail(models.Model):
                 # would trigger a rollback *after* actually sending the email.
                 # To avoid sending twice the same email, provoke the failure earlier
                 mail.write({
-                    'state': 'exception',
+                    'mail_status': 'error',
                     'failure_reason': _('Error without exception. Probably due do sending an email without computed recipients.'),
                 })
                 # Update notification in a transient exception state to avoid concurrent
@@ -386,9 +385,9 @@ class MailMail(models.Model):
                         else:
                             raise
                 if res:  # mail has been sent at least once, no major exception occured
-                    mail.write({'state': 'sent', 'message_id': res, 'failure_reason': False})
+                    mail.write({'mail_status': 'sent', 'message_id': res, 'failure_reason': False})
                     _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
-                    # /!\ can't use mail.state here, as mail.refresh() will cause an error
+                    # /!\ can't use mail.mail_status here, as mail.refresh() will cause an error
                     # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 mail._postprocess_sent_message(success_pids=success_pids, failure_type=failure_type)
             except MemoryError:
@@ -401,7 +400,7 @@ class MailMail(models.Model):
                 raise
             except (psycopg2.Error, smtplib.SMTPServerDisconnected):
                 # If an error with the database or SMTP session occurs, chances are that the cursor
-                # or SMTP session are unusable, causing further errors when trying to save the state.
+                # or SMTP session are unusable, causing further errors when trying to save the mail_status.
                 _logger.exception(
                     'Exception while processing mail with ID %r and Msg-Id %r.',
                     mail.id, mail.message_id)
@@ -409,7 +408,7 @@ class MailMail(models.Model):
             except Exception as e:
                 failure_reason = tools.ustr(e)
                 _logger.exception('failed sending mail (id: %s) due to %s', mail.id, failure_reason)
-                mail.write({'state': 'exception', 'failure_reason': failure_reason})
+                mail.write({'mail_status': 'error', 'failure_reason': failure_reason})
                 mail._postprocess_sent_message(success_pids=success_pids, failure_reason=failure_reason, failure_type='UNKNOWN')
                 if raise_exception:
                     if isinstance(e, (AssertionError, UnicodeEncodeError)):
