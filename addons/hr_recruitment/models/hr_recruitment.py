@@ -29,6 +29,8 @@ class RecruitmentSource(models.Model):
         for source in self:
             vals = {
                 'alias_parent_thread_id': source.job_id.id,
+                'alias_model_id': self.env['ir.model']._get('hr.applicant').id,
+                'alias_parent_model_id': self.env['ir.model']._get('hr.job').id,
                 'alias_name': "%s+%s" % (source.job_id.alias_name or source.job_id.name, source.name),
                 'alias_defaults': {
                     'job_id': source.job_id.id,
@@ -37,7 +39,7 @@ class RecruitmentSource(models.Model):
                     'source_id': source.source_id.id,
                 },
             }
-            source.alias_id = self.with_context(alias_model_name='hr.applicant', alias_parent_model_name='hr.job').env['mail.alias'].create(vals)
+            source.alias_id = self.env['mail.alias'].create(vals)
             source.name = source.source_id.name
 
 

@@ -101,6 +101,8 @@ class ResConfigSettings(models.TransientModel):
         if alias:
             alias.write({'alias_name': self.crm_alias_prefix})
         else:
-            self.env['mail.alias'].with_context(
-                alias_model_name='crm.lead',
-                alias_parent_model_name='crm.team').create({'alias_name': self.crm_alias_prefix})
+            self.env['mail.alias'].create({
+                'alias_name': self.crm_alias_prefix,
+                'alias_model_id': self.env['ir.model']._get('crm.lead').id,
+                'alias_parent_model_id': self.env['ir.model']._get('crm.team').id,
+            })

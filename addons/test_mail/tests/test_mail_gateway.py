@@ -13,6 +13,7 @@ from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import tagged
+from odoo.tests.common import users
 from odoo.tools import email_split_and_format, formataddr, mute_logger
 
 
@@ -73,8 +74,43 @@ class TestEmailParsing(TestMailCommon):
 @tagged('mail_gateway')
 class TestMailAlias(TestMailCommon):
 
+    @users('employee')
+    def test_alias_creation(self):
+        record = self.env['mail.test'].create({
+            'name': 'Test Record',
+            'alias_name': 'alias.test',
+            'alias_contact': 'followers',
+        })
+        self.assertEqual(record.alias_id.alias_model_id, self.env['ir.model']._get('mail.test'))
+        self.assertEqual(record.alias_id.alias_force_thread_id, record.id)
+        self.assertEqual(record.alias_id.alias_parent_model_id, self.env['ir.model']._get('mail.test'))
+        self.assertEqual(record.alias_id.alias_parent_thread_id, record.id)
+        self.assertEqual(record.alias_id.alias_name, 'alias.test')
+        self.assertEqual(record.alias_id.alias_contact, 'followers')
+
+        record.write({
+            'alias_name': 'better.alias.test',
+            'alias_defaults': "{'default_name': 'defaults'}"
+        })
+        self.assertEqual(record.alias_id.alias_name, 'better.alias.test')
+        self.assertEqual(record.alias_id.alias_defaults, "{'default_name': 'defaults'}")
+
+        with self.assertRaises(exceptions.AccessError):
+            record.write({
+                'alias_force_thread_id': 0,
+            })
+
+        with self.assertRaises(exceptions.AccessError):
+            record.write({
+                'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id,
+            })
+
+
     def test_alias_setup(self):
-        alias = self.env['mail.alias'].with_context(alias_model_name='mail.test').create({'alias_name': 'b4r+_#_R3wl$$'})
+        alias = self.env['mail.alias'].create({
+            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_name': 'b4r+_#_R3wl$$',
+        })
         self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
 
     def test_alias_name_unique(self):
