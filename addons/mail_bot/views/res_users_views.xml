@@ -21,7 +21,7 @@
         <field name="inherit_id" ref="mail.view_users_form_mail"/>
         <field name="arch" type="xml">
             <data>
-                <field name="alias_contact" position="after">
+                <field name="signature" position="before">
                     <field name="odoobot_state" readonly="0" groups="base.group_no_one"/>
                 </field>
             </data>

@@ -97,43 +97,26 @@ class Team(models.Model):
     # ORM
     # ------------------------------------------------------------
 
-    @api.model
-    def create(self, vals):
-        alias_values = self._synchronize_alias(vals)
-        if alias_values:
-            vals.update(alias_values)
-        return super(Team, self).create(vals)
-
     def write(self, vals):
         result = super(Team, self).write(vals)
-        if 'use_leads' in vals or 'alias_defaults' in vals:
-            for team in self:
-                team.alias_id.write(team.get_alias_values())
         if 'use_leads' in vals or 'use_opportunities' in vals:
-            for team in self:
-                team.write(team._synchronize_alias(vals))
+            self.filtered(lambda team: not team.use_leads and not team.use_opportunities).alias_name = False
         return result
-
-    def _synchronize_alias(self, values):
-        use_leads = self.use_leads if self else values.get('use_leads', False)
-        use_opportunities = self.use_opportunities if self else values.get('use_opportunities', True)
-        if not use_leads and not use_opportunities:
-            return {'alias_name': False}
-        return {}
 
     # ------------------------------------------------------------
     # MESSAGING
     # ------------------------------------------------------------
 
-    def get_alias_model_name(self, vals):
-        return 'crm.lead'
-
-    def get_alias_values(self):
-        has_group_use_lead = self.env.user.has_group('crm.group_use_lead')
-        values = super(Team, self).get_alias_values()
-        values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
-        defaults['type'] = 'lead' if has_group_use_lead and self.use_leads else 'opportunity'
-        defaults['team_id'] = self.id
+    def _alias_get_creation_values(self):
+        values = super(Team, self)._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('crm.lead').id
+        if self.id:
+            if not self.use_leads and not self.use_opportunities:
+                values['alias_name'] = False
+            values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
+            has_group_use_lead = self.env.user.has_group('crm.group_use_lead')
+            defaults['type'] = 'lead' if has_group_use_lead and self.use_leads else 'opportunity'
+            defaults['team_id'] = self.id
         return values
 
     # ------------------------------------------------------------

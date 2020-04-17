@@ -35,6 +35,9 @@ class AccountJournal(models.Model):
     def _get_bank_statements_available_sources(self):
         return self.__get_bank_statements_available_sources()
 
+    def _default_alias_domain(self):
+        return self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Short Code', size=5, required=True, help="Shorter name used for display. The journal entries of this journal will also be named using this prefix by default.")
     active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
@@ -140,7 +143,7 @@ class AccountJournal(models.Model):
 
     # alias configuration for journals
     alias_id = fields.Many2one('mail.alias', string='Alias', copy=False)
-    alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
+    alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=_default_alias_domain, compute_sudo=True)
     alias_name = fields.Char('Alias Name', related='alias_id.alias_name', help="It creates draft invoices and bills by sending an email.", readonly=False)
 
     journal_group_ids = fields.Many2many('account.journal.group',
@@ -170,7 +173,7 @@ class AccountJournal(models.Model):
                 journal.suspense_account_id = False
 
     def _compute_alias_domain(self):
-        alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+        alias_domain = self._default_alias_domain()
         for record in self:
             record.alias_domain = alias_domain
 
@@ -306,7 +309,7 @@ class AccountJournal(models.Model):
             accounts = self.search([('bank_account_id', '=', bank_account.id)])
             if accounts <= self:
                 bank_accounts += bank_account
-        self.mapped('alias_id').unlink()
+        self.mapped('alias_id').sudo().unlink()
         ret = super(AccountJournal, self).unlink()
         bank_accounts.unlink()
         return ret
@@ -323,10 +326,11 @@ class AccountJournal(models.Model):
         self.ensure_one()
         alias_values = self._get_alias_values(type=vals.get('type') or self.type, alias_name=vals.get('alias_name'))
         if self.alias_id:
-            self.alias_id.write(alias_values)
+            self.alias_id.sudo().write(alias_values)
         else:
-            self.alias_id = self.env['mail.alias'].with_context(alias_model_name='account.move',
-                alias_parent_model_name='account.journal').create(alias_values)
+            alias_values['alias_model_id'] = self.env['ir.model']._get('account.move').id
+            alias_values['alias_parent_model_id'] = self.env['ir.model']._get('account.journal').id
+            self.alias_id = self.env['mail.alias'].sudo().create(alias_values)
 
         if vals.get('alias_name'):
             # remove alias_name to avoid useless write on alias
