@@ -426,7 +426,6 @@ class MailCase(MockEmail):
 
             # check notifications and prepare assert data
             email_groups = defaultdict(list)
-            bus_groups = {'failure': []}
             mail_groups = {'failure': []}
             for recipient in message_info['notif']:
                 partner, ntype, ngroup, nstatus = recipient['partner'], recipient['type'], recipient.get('group'), recipient.get('status', 'sent')
@@ -449,8 +448,6 @@ class MailCase(MockEmail):
                 self.assertTrue(partner_notif, 'Mail: not found notification for %s (type: %s, state: %s, message: %s)' % (partner, ntype, nstatus, message.id))
 
                 # prepare further asserts
-                if partner and nstatus == 'exception':
-                    bus_groups['failure'].append(partner)
                 if ntype == 'email':
                     if nstatus == 'sent':
                         if ncheck_send:
@@ -468,16 +465,9 @@ class MailCase(MockEmail):
             done_msgs |= message
 
             # check bus notifications that should be sent (hint: message author, multiple notifications)
-            if bus_groups['failure']:
-                self.assertBusNotifications(
-                    [(self.cr.dbname, 'res.partner', message.author_id.id)],
-                    [{'type': 'mail_failure', 'elements': [{
-                      'message_id': message.id,
-                      'failure_type': 'mail',
-                      'notifications': dict(('%s' % p.id, ['exception', p.name]) for p in bus_groups['failure'])}]
-                      }],
-                    check_unique=False
-                    )
+            bus_notifications = message.notification_ids._filtered_for_web_client().filtered(lambda n: n.notification_status == 'exception')
+            if bus_notifications:
+                self.assertMessageBusNotifications(message)
 
             # check emails that should be sent (hint: mail.mail per group, email par recipient)
             for recipients in email_groups.values():
@@ -494,6 +484,18 @@ class MailCase(MockEmail):
 
         return done_msgs, done_notifs
 
+    def assertMessageBusNotifications(self, message):
+        """Asserts that the expected notification updates have been sent on the
+        bus for the given message."""
+        self.assertBusNotifications(
+            [(self.cr.dbname, 'res.partner', message.author_id.id)],
+            [{
+                'type': 'message_notification_update',
+                'elements': message._message_notification_format(),
+            }],
+            check_unique=False
+        )
+
     def assertBusNotifications(self, channels, message_items=None, check_unique=True):
         """ Check bus notifications content. Mandatory and basic check is about
         channels being notified. Content check is optional.
@@ -505,54 +507,29 @@ class MailCase(MockEmail):
         ]
         :param message_items: if given, list of expected message making a valid
           pair (channel, message) to be found in bus.bus, like [
-            {'type': 'sms_update',
-             'elements': [{
+            {'type': 'message_notification_update',
+             'elements': {self.msg.id: {
                 'message_id': self.msg.id,
-                'failure_type': 'sms',
-                'notifications': {'%s' % self.partner_1.id: ['sent', self.partner_1.name], '%s' % self.partner_2.id: ['sent', self.partner_2.name]}
-              }]
+                'message_type': 'sms',
+                'notifications': {...},
+                ...
+              }}
             }, {...}]
         """
-        def check_content(returned_value, expected_value):
-            if isinstance(expected_value, list):
-                done = []
-                for expected_item in expected_value:
-                    for returned_item in returned_value:
-                        if check_content(returned_item, expected_item):
-                            done.append(expected_item)
-                            break
-                    else:
-                        return False
-                return len(done) == len(expected_value)
-            elif isinstance(expected_value, dict):
-                return all(k in returned_value for k in expected_value.keys()) and all(
-                    check_content(returned_value[key], val)
-                    for key, val in expected_value.items()
-                )
-            else:
-                return returned_value == expected_value
-
         bus_notifs = self.env['bus.bus'].sudo().search([('channel', 'in', [json_dump(channel) for channel in channels])])
         if check_unique:
             self.assertEqual(len(bus_notifs), len(channels))
         self.assertEqual(set(bus_notifs.mapped('channel')), set([json_dump(channel) for channel in channels]))
 
-        notif_messages = [json.loads(n.message) for n in bus_notifs]
+        notif_messages = [n.message for n in bus_notifs]
+
         for expected in message_items or []:
             for notification in notif_messages:
-                found_keys, not_found_keys = [], []
-                if not all(k in notification for k in expected.keys()):
-                    continue
-                for expected_key, expected_value in expected.items():
-                    done = check_content(notification[expected_key], expected_value)
-                    if done:
-                        found_keys.append(expected_key)
-                    else:
-                        not_found_keys.append(expected_key)
-                if set(found_keys) == set(expected.keys()):
+                if json_dump(expected) == notification:
                     break
             else:
-                raise AssertionError('Keys %s not found (expected: %s - returned: %s)' % (not_found_keys, repr(expected), repr(notif_messages)))
+                raise AssertionError('No notification was found with the expected value.\nExpected:\n%s\nReturned:\n%s' %
+                    (json_dump(expected), '\n'.join([n for n in notif_messages])))
 
         return bus_notifs
 

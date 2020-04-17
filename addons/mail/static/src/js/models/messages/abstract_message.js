@@ -164,6 +164,34 @@ var AbstractMessage =  Class.extend({
         return _.difference(this.getAttachments(), this.getImageAttachments());
     },
     /**
+     * Gets the class to use as the notification icon.
+     *
+     * @returns {string}
+     */
+    getNotificationIcon() {
+        if (!this.hasNotificationsError()) {
+            return 'fa fa-envelope-o';
+        }
+        return 'fa fa-envelope';
+    },
+    /**
+     * Gets the list of notifications of this message, in no specific order.
+     * By default messages do not have notifications.
+     *
+     * @returns {Object[]}
+     */
+    getNotifications() {
+        return [];
+    },
+    /**
+     * Gets the text to display next to the notification icon.
+     *
+     * @returns {string}
+     */
+    getNotificationText() {
+        return '';
+    },
+    /**
      * Get the time elapsed between sent message and now
      *
      * @return {string}
@@ -199,15 +227,6 @@ var AbstractMessage =  Class.extend({
         return !!(this._serverAuthorID && this._serverAuthorID[0]);
     },
     /**
-     * State whether this message contains some customer email data
-     * By default, messages do not have any customer email data
-     *
-     * @return {boolean}
-     */
-    hasCustomerEmailData: function () {
-        return false;
-    },
-    /**
      * State whether this message has an email of its sender.
      * By default, messages do not have any email of its sender.
      *
@@ -235,6 +254,25 @@ var AbstractMessage =  Class.extend({
         return _.some(this.getAttachments(), function (attachment) {
             return !(attachment.mimetype && attachment.mimetype.split('/')[0] === 'image');
         });
+    },
+    /**
+     * States whether this message has some notifications.
+     *
+     * @returns {boolean}
+     */
+    hasNotifications() {
+        return this.getNotifications().length > 0;
+    },
+    /**
+     * States whether this message has notifications that are in error.
+     *
+     * @returns {boolean}
+     */
+    hasNotificationsError() {
+        return this.getNotifications().some(notif =>
+            notif.notification_status === 'exception' ||
+            notif.notification_status === 'bounce'
+        );
     },
     /**
      * State whether this message originates from a channel.

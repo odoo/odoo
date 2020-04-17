@@ -135,6 +135,7 @@ class SmsSms(models.Model):
                         'failure_type': self.IAP_TO_SMS_STATE[state] if state != 'success' else False,
                         'failure_reason': failure_reason if failure_reason else False,
                     })
+        self.mail_message_id._notify_message_notification_update()
 
         if todelete_sms_ids:
             self.browse(todelete_sms_ids).sudo().unlink()

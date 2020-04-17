@@ -75,14 +75,14 @@ class MailResendMessage(models.TransientModel):
 
                 record._notify_record_by_email(message, {'partners': email_partners_data}, check_existing=True, send_after_commit=False)
 
-            self.mail_message_id._notify_mail_failure_update()
+            self.mail_message_id._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}
 
     def cancel_mail_action(self):
         for wizard in self:
             for notif in wizard.notification_ids:
                 notif.filtered(lambda notif: notif.notification_type == 'email' and notif.notification_status in ('exception', 'bounce')).sudo().write({'notification_status': 'canceled'})
-            wizard.mail_message_id._notify_mail_failure_update()
+            wizard.mail_message_id._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}
 
 
