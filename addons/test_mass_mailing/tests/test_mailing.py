@@ -59,11 +59,11 @@ class TestMassMailing(TestMassMailCommon):
         traces = self.env['mailing.trace'].search([('model', '=', customers._name), ('res_id', 'in', customers.ids)])
         self.assertEqual(len(traces), 3)
         customer0_trace = traces.filtered(lambda t: t.res_id == customers[0].id)
-        self.assertEqual(customer0_trace.state, 'replied')
+        self.assertEqual(customer0_trace.trace_status, 'reply')
         customer1_trace = traces.filtered(lambda t: t.res_id == customers[1].id)
-        self.assertEqual(customer1_trace.state, 'replied')
+        self.assertEqual(customer1_trace.trace_status, 'reply')
         customer2_trace = traces.filtered(lambda t: t.res_id == customers[2].id)
-        self.assertEqual(customer2_trace.state, 'sent')
+        self.assertEqual(customer2_trace.trace_status, 'sent')
 
         # check mailing statistics
         self.assertEqual(mailing.sent, 3)
@@ -245,11 +245,11 @@ class TestMassMailing(TestMassMailCommon):
             [{'email': 'test.record.00@test.example.com'},
              {'email': 'test.record.01@test.example.com'},
              {'email': 'test.record.02@test.example.com'},
-             {'email': 'test.record.03@test.example.com', 'state': 'ignored', 'failure_type': 'mail_bl'},
-             {'email': 'test.record.04@test.example.com', 'state': 'ignored', 'failure_type': 'mail_bl'}],
+             {'email': 'test.record.03@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_bl'},
+             {'email': 'test.record.04@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_bl'}],
             mailing, recipients, check_mail=True
         )
-        self.assertEqual(mailing.ignored, 2)
+        self.assertEqual(mailing.canceled, 2)
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -271,14 +271,14 @@ class TestMassMailing(TestMassMailCommon):
             mailing._process_mass_mailing_queue()
 
         self.assertMailTraces(
-            [{'email': 'test.record.00@test.example.com', 'state': 'ignored', 'failure_type': 'mail_optout'},
-             {'email': 'test.record.01@test.example.com', 'state': 'ignored', 'failure_type': 'mail_optout'},
+            [{'email': 'test.record.00@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_optout'},
+             {'email': 'test.record.01@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_optout'},
              {'email': 'test.record.02@test.example.com'},
              {'email': 'test.record.03@test.example.com'},
-             {'email': 'test.record.04@test.example.com', 'state': 'ignored', 'failure_type': 'mail_bl'}],
+             {'email': 'test.record.04@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_bl'}],
             mailing, recipients, check_mail=True
         )
-        self.assertEqual(mailing.ignored, 3)
+        self.assertEqual(mailing.canceled, 3)
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -331,13 +331,13 @@ class TestMassMailing(TestMassMailCommon):
             mailing._process_mass_mailing_queue()
 
         self.assertMailTraces(
-            [{'email': 'test@test.example.com', 'state': 'sent'},
-             {'email': 'test@test.example.com', 'state': 'ignored', 'failure_type': 'mail_dup'},
+            [{'email': 'test@test.example.com', 'trace_status': 'sent'},
+             {'email': 'test@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_dup'},
              {'email': 'test3@test.example.com'},
              {'email': 'test4@test.example.com'},
-             {'email': 'test5@test.example.com', 'state': 'ignored', 'failure_type': 'mail_optout'}],
+             {'email': 'test5@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_optout'}],
             mailing,
             mailing_contact_1 + mailing_contact_2 + mailing_contact_3 + mailing_contact_4 + mailing_contact_5,
             check_mail=True
         )
-        self.assertEqual(mailing.ignored, 2)
+        self.assertEqual(mailing.canceled, 2)

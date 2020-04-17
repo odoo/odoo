@@ -143,7 +143,7 @@ class MassMailing(models.Model):
     total = fields.Integer(compute="_compute_total")
     scheduled = fields.Integer(compute="_compute_statistics")
     expected = fields.Integer(compute="_compute_statistics")
-    ignored = fields.Integer(compute="_compute_statistics")
+    canceled = fields.Integer(compute="_compute_statistics")
     sent = fields.Integer(compute="_compute_statistics")
     delivered = fields.Integer(compute="_compute_statistics")
     opened = fields.Integer(compute="_compute_statistics")
@@ -203,7 +203,7 @@ class MassMailing(models.Model):
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing """
         for key in (
-            'scheduled', 'expected', 'ignored', 'sent', 'delivered', 'opened',
+            'scheduled', 'expected', 'canceled', 'sent', 'delivered', 'opened',
             'clicked', 'replied', 'bounced', 'failed', 'received_ratio',
             'opened_ratio', 'replied_ratio', 'bounced_ratio',
         ):
@@ -216,15 +216,15 @@ class MassMailing(models.Model):
             SELECT
                 m.id as mailing_id,
                 COUNT(s.id) AS expected,
-                COUNT(CASE WHEN s.sent is not null THEN 1 ELSE null END) AS sent,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is null AND s.bounced is null THEN 1 ELSE null END) AS scheduled,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is not null THEN 1 ELSE null END) AS ignored,
-                COUNT(CASE WHEN s.sent is not null AND s.exception is null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
-                COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
-                COUNT(CASE WHEN s.clicked is not null THEN 1 ELSE null END) AS clicked,
-                COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied,
-                COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced,
-                COUNT(CASE WHEN s.exception is not null THEN 1 ELSE null END) AS failed
+                COUNT(s.sent_datetime) AS sent,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'outgoing') AS scheduled,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'cancel') AS canceled,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status in ('sent', 'open', 'reply')) AS delivered,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status in ('open', 'reply')) AS opened,
+                COUNT(s.links_click_datetime) AS clicked,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'reply') AS replied,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'bounce') AS bounced,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'error') AS failed
             FROM
                 mailing_trace s
             RIGHT JOIN
@@ -236,7 +236,7 @@ class MassMailing(models.Model):
                 m.id
         """, (tuple(self.ids), ))
         for row in self.env.cr.dictfetchall():
-            total = (row['expected'] - row['ignored']) or 1
+            total = (row['expected'] - row['canceled']) or 1
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total
@@ -431,8 +431,8 @@ class MassMailing(models.Model):
     def action_view_traces_scheduled(self):
         return self._action_view_traces_filtered('scheduled')
 
-    def action_view_traces_ignored(self):
-        return self._action_view_traces_filtered('ignored')
+    def action_view_traces_canceled(self):
+        return self._action_view_traces_filtered('canceled')
 
     def action_view_traces_failed(self):
         return self._action_view_traces_filtered('failed')
@@ -460,25 +460,31 @@ class MassMailing(models.Model):
         }
 
     def action_view_opened(self):
-        return self._action_view_documents_filtered('opened')
+        return self._action_view_documents_filtered('open')
 
     def action_view_replied(self):
-        return self._action_view_documents_filtered('replied')
+        return self._action_view_documents_filtered('reply')
 
     def action_view_bounced(self):
-        return self._action_view_documents_filtered('bounced')
+        return self._action_view_documents_filtered('bounce')
 
     def action_view_delivered(self):
         return self._action_view_documents_filtered('delivered')
 
     def _action_view_documents_filtered(self, view_filter):
-        if view_filter in ('opened', 'replied', 'bounced'):
-            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat[view_filter])
-        elif view_filter == ('delivered'):
-            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.sent and not stat.bounced)
+        if view_filter in ('reply', 'bounce'):
+            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status == view_filter)
+        elif view_filter == 'open':
+            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status in ('open', 'reply'))
+        elif view_filter == 'click':
+            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.links_click_datetime)
+        elif view_filter == 'delivered':
+            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status in ('sent', 'open', 'reply'))
+        elif view_filter == 'sent':
+            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.sent_datetime)
         else:
-            opened_stats = self.env['mailing.trace']
-        res_ids = opened_stats.mapped('res_id')
+            found_traces = self.env['mailing.trace']
+        res_ids = found_traces.mapped('res_id')
         model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
         return {
             'name': model_name,
