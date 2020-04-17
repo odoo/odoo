@@ -1301,7 +1301,9 @@ class Monetary(Field):
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
-            currency = record[:1][self.currency_field]
+            # BEWARE: do not prefetch other fields, because 'value' may be in
+            # cache, and would be overridden by the value read from database!
+            currency = record[:1].with_context(prefetch_fields=False)[self.currency_field]
 
         value = float(value or 0.0)
         if currency:
@@ -1314,7 +1316,9 @@ class Monetary(Field):
         if value and validate:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
-            currency = record.sudo()[self.currency_field]
+            # BEWARE: do not prefetch other fields, because 'value' may be in
+            # cache, and would be overridden by the value read from database!
+            currency = record.sudo().with_context(prefetch_fields=False)[self.currency_field]
             if len(currency) > 1:
                 raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
             elif currency:
