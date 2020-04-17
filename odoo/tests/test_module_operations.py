@@ -3,14 +3,16 @@ import argparse
 import logging
 import os
 import sys
+import time
 
 sys.path.append(os.path.abspath(os.path.join(__file__,'../../../')))
 
 import odoo
-from odoo.tools import topological_sort
+from odoo.tools import topological_sort, unique
 from odoo.netsvc import init_logger
+from odoo.tests import standalone_tests
 
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger('test_module_operations')
 
 BLACKLIST = {
     'auth_ldap', 'document_ftp', 'base_gengo', 'website_gengo', 'website_instantclick', 'pad',
@@ -56,6 +58,10 @@ def parse_args():
         help="Comma-separated list of paths to directories containing extra Odoo modules")
     parser.add_argument("--uninstall", "-U", type=str,
         help="Comma-separated list of modules to uninstall/reinstall")
+    parser.add_argument("--standalone", type=str,
+        help="Launch standalone scripts tagged with @standalone. Accepts a list of "
+             "module names or tags separated by commas. 'all' will run all available scripts."
+    )
     return parser.parse_args()
 
 
@@ -107,6 +113,36 @@ def test_uninstall(args):
         install(args.database, module_id, module_name)
 
 
+def test_scripts(args):
+    """ Tries to launch standalone scripts tagged with @post_testing """
+    # load the registry once for script discovery
+    registry = odoo.registry(args.database)
+    for module_name in registry._init_modules:
+        # import tests for loaded modules
+        odoo.modules.module.get_test_modules(module_name)
+
+    # fetch and filter scripts to test
+    funcs = list(unique(
+        func
+        for tag in args.standalone.split(',')
+        for func in standalone_tests[tag]
+    ))
+
+    start_time = time.time()
+    for index, func in enumerate(funcs, start=1):
+        with odoo.api.Environment.manage():
+            with odoo.registry(args.database).cursor() as cr:
+                env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+                _logger.info("Executing standalone script: %s (%d / %d)",
+                             func.__name__, index, len(funcs))
+                try:
+                    func(env)
+                except Exception:
+                    _logger.error("Standalone script %s failed", func.__name__, exc_info=True)
+
+    _logger.info("%d standalone scripts executed in %.2fs" % (len(funcs), time.time() - start_time))
+
+
 if __name__ == '__main__':
     args = parse_args()
 
@@ -121,5 +157,7 @@ if __name__ == '__main__':
 
     if args.uninstall:
         test_uninstall(args)
+    elif args.standalone:
+        test_scripts(args)
     else:
         test_full(args)
