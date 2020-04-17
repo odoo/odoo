@@ -55,7 +55,6 @@ class ResCompany(models.Model):
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
-    tax_cash_basis_journal_id = fields.Many2one('account.journal', string="Cash Basis Journal")
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round per Line'),
         ('round_globally', 'Round Globally'),
@@ -112,6 +111,17 @@ class ResCompany(models.Model):
 
     # Technical field to hide country specific fields in company form view
     country_code = fields.Char(related='country_id.code')
+
+    # Cash basis taxes
+    tax_cash_basis_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string="Cash Basis Journal")
+    account_cash_basis_base_account_id = fields.Many2one(
+        comodel_name='account.account',
+        domain=[('deprecated', '=', False)],
+        string="Base Tax Received Account",
+        help="Account that will be set on lines created in cash basis journal entry and used to keep track of the "
+             "tax base amount.")
 
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):

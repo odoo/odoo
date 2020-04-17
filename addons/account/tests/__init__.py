@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from . import test_account_move_reconcile
+from . import test_account_move_payments_widget
 from . import test_account_move_out_invoice
 from . import test_account_move_out_refund
 from . import test_account_move_in_invoice

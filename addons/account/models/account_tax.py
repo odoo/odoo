@@ -88,12 +88,6 @@ class AccountTax(models.Model):
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
         comodel_name='account.account',
         help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
-    cash_basis_base_account_id = fields.Many2one(
-        'account.account',
-        check_company=True,
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
-        string='Base Tax Received Account',
-        help='Account that will be set on lines created in cash basis journal entry and used to keep track of the tax base amount.')
     invoice_repartition_line_ids = fields.One2many(string="Repartition for Invoices", comodel_name="account.tax.repartition.line", inverse_name="invoice_tax_id", copy=True, help="Repartition when the tax is used on an invoice")
     refund_repartition_line_ids = fields.One2many(string="Repartition for Refund Invoices", comodel_name="account.tax.repartition.line", inverse_name="refund_tax_id", copy=True, help="Repartition when the tax is used on a refund")
     country_id = fields.Many2one(string='Country', comodel_name='res.country', related='company_id.country_id', help="Technical field used to restrict the domain of account tags for tax repartition lines created for this tax.")
