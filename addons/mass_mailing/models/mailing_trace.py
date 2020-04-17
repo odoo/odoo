@@ -16,8 +16,10 @@ class MailingTrace(models.Model):
         'outgoing', 'sent', 'opened', 'replied',
         'error', 'bouce', 'cancel'
       * failure_type
+        # generic
+        'unknown',
         # mass_mailing
-        "SMTP", "RECIPIENT", "BOUNCE", "UNKNOWN", "mail_email_missing"
+        "mail_email_invalid", "mail_smtp", "mail_email_missing"
         # mass mailing mass mode specific codes
         "mail_bl", "mail_optout", "mail_dup"
         # mass_mailing_sms
@@ -86,11 +88,12 @@ class MailingTrace(models.Model):
         ('error', 'Exception'),
         ('cancel', 'Canceled')], string='Status', default='outgoing')
     failure_type = fields.Selection(selection=[
-        ("SMTP", "Connection failed (outgoing mail server problem)"),
-        ("RECIPIENT", "Invalid email address"),
-        ("BOUNCE", "Email address rejected by destination"),
-        ("UNKNOWN", "Unknown error"),
+        # generic
+        ("unknown", "Unknown error"),
+        # mail
+        ("mail_email_invalid", "Invalid email address"),
         ("mail_email_missing", "Missing email address"),
+        ("mail_smtp", "Connection failed (outgoing mail server problem)"),
         # mass mode
         ("mail_bl", "Blacklisted Address"),
         ("mail_optout", "Opted Out"),

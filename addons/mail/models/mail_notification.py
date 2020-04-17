@@ -34,11 +34,12 @@ class MailNotification(models.Model):
     is_read = fields.Boolean('Is Read', index=True)
     read_date = fields.Datetime('Read Date', copy=False)
     failure_type = fields.Selection(selection=[
-        ("SMTP", "Connection failed (outgoing mail server problem)"),
-        ("RECIPIENT", "Invalid email address"),
-        ("BOUNCE", "Email address rejected by destination"),
-        ("UNKNOWN", "Unknown error"),
-        ("mail_email_missing", "Missing email address"),
+        # generic
+        ("unknown", "Unknown error"),
+        # mail
+        ("mail_email_invalid", "Invalid email address"),
+        ("mail_email_missing", "Missing email addresss"),
+        ("mail_smtp", "Connection failed (outgoing mail server problem)"),
         ], string='Failure type')
     failure_reason = fields.Text('Failure reason', copy=False)
 
@@ -74,7 +75,7 @@ class MailNotification(models.Model):
 
     def format_failure_reason(self):
         self.ensure_one()
-        if self.failure_type != 'UNKNOWN':
+        if self.failure_type != 'unknown':
             return dict(type(self).failure_type.selection).get(self.failure_type, _('No Error'))
         else:
             return _("Unknown error") + ": %s" % (self.failure_reason or '')

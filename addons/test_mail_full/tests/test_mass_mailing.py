@@ -64,7 +64,7 @@ class TestMassMailing(TestMailFullCommon):
             # falsy: error (failed mail)
             elif recipient == recipient_falsy_1:
                 recipient_info['trace_status'] = "cancel"
-                recipient_info['failure_type'] = "RECIPIENT"
+                recipient_info['failure_type'] = "mail_email_invalid"
                 recipient_info['email'] = recipient.email_from  # normalized is False but email should be falsymail
             else:
                 email = self._find_sent_mail_wemail(recipient.email_normalized)
