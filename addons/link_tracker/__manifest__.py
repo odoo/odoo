@@ -7,7 +7,7 @@
     'description': """
 Shorten URLs and use them to track clicks and UTMs
 """,
-    'version': '1.0',
+    'version': '1.1',
     'depends': ['utm', 'mail'],
     'data': [
         'views/link_tracker_views.xml',

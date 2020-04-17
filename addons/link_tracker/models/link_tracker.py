@@ -27,15 +27,27 @@ class LinkTracker(models.Model):
 
     # URL info
     url = fields.Char(string='Target URL', required=True)
+    absolute_url = fields.Char("Absolute URL", compute="_compute_absolute_url")
     short_url = fields.Char(string='Tracked URL', compute='_compute_short_url')
     redirected_url = fields.Char(string='Redirected URL', compute='_compute_redirected_url')
     short_url_host = fields.Char(string='Host of the short URL', compute='_compute_short_url_host')
     title = fields.Char(string='Page Title', store=True)
+    label = fields.Char(string='Button label')
     # Tracking
     link_code_ids = fields.One2many('link.tracker.code', 'link_id', string='Codes')
     code = fields.Char(string='Short URL code', compute='_compute_code')
     link_click_ids = fields.One2many('link.tracker.click', 'link_id', string='Clicks')
     count = fields.Integer(string='Number of Clicks', compute='_compute_count', store=True)
+
+    @api.depends("url")
+    def _compute_absolute_url(self):
+        web_base_url = urls.url_parse(self.env['ir.config_parameter'].sudo().get_param('web.base.url'))
+        for tracker in self:
+            url = urls.url_parse(tracker.url)
+            if url.scheme:
+                tracker.absolute_url = tracker.url
+            else:
+                tracker.absolute_url = web_base_url.join(url).to_url()
 
     @api.depends('link_click_ids.link_id')
     def _compute_count(self):
@@ -99,9 +111,11 @@ class LinkTracker(models.Model):
         else:
             create_vals['url'] = tools.validate_url(vals['url'])
 
-        search_domain = []
-        for fname, value in create_vals.items():
-            search_domain.append((fname, '=', value))
+        search_domain = [
+            (fname, '=', value)
+            for fname, value in create_vals.items()
+            if fname in ['url', 'campaign_id', 'medium_id', 'source_id']
+        ]
 
         result = self.search(search_domain, limit=1)
 
