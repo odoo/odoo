@@ -98,12 +98,11 @@ class Contract(models.Model):
             elif self.structure_type_id not in structure_types:
                 self.structure_type_id = False
 
-    # VFE FIXME hr.payroll.structure should be company_dependent
-    # @api.onchange('structure_type_id')
-    # def _onchange_structure_type_id(self):
-    #     if self.structure_type_id.default_resource_calendar_id:
-    #         import pudb; pudb.set_trace();
-    #         self.resource_calendar_id = self.structure_type_id.default_resource_calendar_id
+    @api.onchange('structure_type_id')
+    def _onchange_structure_type_id(self):
+        self = self.with_company(self.company_id)
+        if self.structure_type_id.default_resource_calendar_id:
+            self.resource_calendar_id = self.structure_type_id.default_resource_calendar_id
 
     @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
     def _check_current_contract(self):
