@@ -69,11 +69,14 @@
                                     <td class="mobile-w-75" style="text-align: left;">
                                         <span class="font-16" style="color:#8F8F8F;font-weight:bold;font-size: 20px; line-height: 30px;" t-field="company.name"/>
                                         <br/>
-                                        <span class="font-18" style="color:#282f33;font-weight:bold;font-size: 25px; line-height: 35px; margin-right: 5px;" t-field="object.name"/>
-                                        <span class="d-block font-12" style="color:#8F8F8F;font-size: 15px;"><t t-esc="datetime.today().strftime('%B %d, %Y')"/></span>
+                                        <div class="font-18" style="color:#282f33;font-weight:bold;font-size: 25px; line-height: 35px; margin-right: 5px; display: inline-block; max-width: 500px;word-break: break-all;" t-esc="title"/>
+                                        <div t-if="sub_title" class="font-18" style="color:#282f33;font-weight:bold;font-size: 25px; line-height: 35px; margin-right: 5px; display: inline-block; max-width: 500px;word-break: break-all;" t-esc="sub_title"/>
+                                        <div class="font-12" style="color:#8F8F8F;font-size: 15px;display: inline-block;"><t t-esc="formatted_date"/></div>
                                     </td>
                                     <td valign="top" style="text-align:right;">
-                                        <a href="/web/login" target="_blank" style="display:block;background-color:#875a7b;line-height:40px;text-decoration: none;color: #ffffff;border-radius: 3px;font-size:13px;font-weight:bold;text-align:center;">Connect</a>
+                                        <a t-att-href="top_button_url" target="_blank" style="text-align: center; color: #fff; background-color: #9a5b82; border-radius: 8px; font-size: 15px; padding: 5px 10px;  display: inline-block; text-decoration: none; min-width: 65px;">
+                                            <span t-esc="top_button_label"/>
+                                        </a>
                                     </td>
                                 </tr>
                             </table>
@@ -107,7 +110,7 @@
             <td align="center" valign="top">
                 <table bgcolor="#ffffff" cellspacing="0" cellpadding="0" width="650" align="center" border="0" style="border: 1px solid #eeeeee; border-bottom: none;width: 100%; max-width: 650px; padding:30px 30px">
                     <tr t-foreach="kpi_data" t-as="kpi_info">
-                        <td>
+                        <td t-if="kpi_info.get('kpi_col1') or kpi_info.get('kpi_col2') or kpi_info.get('kpi_col3')">
                             <table cellspacing="0" cellpadding="0" border="0" width="580" align="center" style="width:100%; max-width:580px;">
                                 <tr>
                                     <td align="left" style="border-bottom: 1px solid #eeeeee;">
@@ -122,24 +125,24 @@
                                     <td>
                                         <table cellspacing="0" cellpadding="0" align="center" border="0" style="width:100%; padding: 20px 0;">
                                             <tr valign="top">
-                                                <td class="mobile-w-33" width="196" style=" text-align: center;">
+                                                <td t-if="kpi_info.get('kpi_col1')" class="mobile-w-33" width="196" style=" text-align: center;">
                                                     <t t-call="digest.digest_tool_kpi">
                                                         <t t-set="kpi_value" t-value="kpi_info['kpi_col1']['value']"/>
-                                                        <t t-set="kpi_margin" t-value="kpi_info['kpi_col1']['margin']"/>
+                                                        <t t-set="kpi_margin" t-value="kpi_info['kpi_col1'].get('margin')"/>
                                                         <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col1']['col_subtitle']"/>
                                                     </t>
                                                 </td>
-                                                <td class="mobile-w-33" width="196" style=" text-align: center;">
+                                                <td t-if="kpi_info.get('kpi_col2')" class="mobile-w-33" width="196" style=" text-align: center;">
                                                     <t t-call="digest.digest_tool_kpi">
                                                         <t t-set="kpi_value" t-value="kpi_info['kpi_col2']['value']"/>
-                                                        <t t-set="kpi_margin" t-value="kpi_info['kpi_col2']['margin']"/>
+                                                        <t t-set="kpi_margin" t-value="kpi_info['kpi_col2'].get('margin')"/>
                                                         <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col2']['col_subtitle']"/>
                                                     </t>
                                                 </td>
-                                                <td class="mobile-w-33" width="196" style=" text-align: center;">
+                                                <td t-if="kpi_info.get('kpi_col3')" class="mobile-w-33" width="196" style=" text-align: center;">
                                                     <t t-call="digest.digest_tool_kpi">
                                                         <t t-set="kpi_value" t-value="kpi_info['kpi_col3']['value']"/>
-                                                        <t t-set="kpi_margin" t-value="kpi_info['kpi_col3']['margin']"/>
+                                                        <t t-set="kpi_margin" t-value="kpi_info['kpi_col3'].get('margin')"/>
                                                         <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col3']['col_subtitle']"/>
                                                     </t>
                                                 </td>
@@ -163,6 +166,7 @@
             </td>
         </tr>
     </table>
+    <t t-if="body" t-raw="body"/>
     <table t-if="display_mobile_banner" cellspacing="0" cellpadding="0" align="center" border="0" bgcolor="#eeeeee" style="width:100%; font-family: Arial,Helvetica,Verdana,sans-serif;">
         <tr>
             <td align="center" valign="top">
@@ -228,7 +232,7 @@
 <span style="color:#888888;display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
     <t t-esc="kpi_subtitle"/>
 </span>
-<t t-if="kpi_margin != 0.0">
+<t t-if="kpi_margin">
     <t t-if="kpi_margin &gt; 0.0">
         <div style="background-color:#d5f1e2; border: 1px solid #c4ecd7; margin: 10px auto;width: 67px; line-height:27px; text-decoration: none; color: #17613a; border-radius: 5px; font-size:13px;">
             ▲ <t t-esc="'%.2f' % kpi_margin"/>

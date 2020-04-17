@@ -9,6 +9,7 @@
                 <search string="Links">
                     <field name="url" string="Title and URL" filter_domain="['|', ('title', 'ilike', self), ('url', 'ilike', self)]"/>
                     <field name="title"/>
+                    <field name="label"/>
                     <field name="campaign_id"/>
                     <field name="medium_id"/>
                     <field name="source_id"/>
@@ -38,6 +39,7 @@
                         <group>
                             <group name="url" string="URL">
                                 <field name="title"/>
+                                <field name="label"/>
                                 <field name="url"/>
                                 <field name="short_url"/>
                             </group>
@@ -59,6 +61,7 @@
                 <tree string="Links">
                     <field name="create_date"/>
                     <field name="title"/>
+                    <field name="label"/>
                     <field name="url"/>
                     <field name="short_url" optional="hide"/>
                     <field name="count"/>
