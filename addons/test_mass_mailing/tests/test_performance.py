@@ -50,8 +50,8 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        # runbot needs +101 compared to local (1616)
-        with self.assertQueryCount(__system__=1717, marketing=1717):
+        # runbot needs +101 compared to local (1567)
+        with self.assertQueryCount(__system__=1668, marketing=1668):
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
@@ -90,8 +90,8 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        # runbot needs +125 compared to local (1882)
-        with self.assertQueryCount(__system__=2007, marketing=2007):
+        # runbot needs +125 compared to local (1833)
+        with self.assertQueryCount(__system__=1958, marketing=1958):
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)

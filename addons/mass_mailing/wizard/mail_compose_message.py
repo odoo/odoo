@@ -17,6 +17,7 @@ class MailComposeMessage(models.TransientModel):
         """ Override method that generated the mail content by creating the
         mailing.trace values in the o2m of mail_mail, when doing pure
         email mass mailing. """
+        now = fields.Datetime.now()
         self.ensure_one()
         res = super(MailComposeMessage, self).get_mail_values(res_ids)
         # use only for allowed models in mass mailing
@@ -32,7 +33,7 @@ class MailComposeMessage(models.TransientModel):
                     'state': 'done',
                     'reply_to_mode': self.reply_to_mode,
                     'reply_to': self.reply_to if self.reply_to_mode == 'new' else False,
-                    'sent_date': fields.Datetime.now(),
+                    'sent_date': now,
                     'body_html': self.body,
                     'mailing_model_id': self.env['ir.model']._get(self.model).id,
                     'mailing_domain': self.active_domain,
@@ -98,9 +99,9 @@ class MailComposeMessage(models.TransientModel):
                 }
                 # propagate failed states to trace when still-born
                 if mail_values.get('state') == 'cancel':
-                    trace_vals['ignored'] = fields.Datetime.now()
+                    trace_vals['trace_status'] = 'cancel'
                 elif mail_values.get('state') == 'exception':
-                    trace_vals['exception'] = fields.Datetime.now()
+                    trace_vals['trace_status'] = 'error'
                 if error_code:
                     trace_vals['failure_type'] = error_code
 

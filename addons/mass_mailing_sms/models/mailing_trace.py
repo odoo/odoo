@@ -53,36 +53,3 @@ class MailingTrace(models.Model):
         as it serves as obfuscation when unsubscribing. A valid trio
         code / mailing_id / number will be requested. """
         return ''.join(random.choice(string.ascii_letters + string.digits) for dummy in range(self.CODE_SIZE))
-
-    def _get_records_from_sms(self, sms_sms_ids=None, additional_domain=None):
-        if not self.ids and sms_sms_ids:
-            domain = [('sms_sms_id_int', 'in', sms_sms_ids)]
-        else:
-            domain = [('id', 'in', self.ids)]
-        if additional_domain:
-            domain = expression.AND([domain, additional_domain])
-        return self.search(domain)
-
-    def set_failed(self, failure_type):
-        for trace in self:
-            trace.write({'exception': fields.Datetime.now(), 'failure_type': failure_type})
-
-    def set_sms_sent(self, sms_sms_ids=None):
-        statistics = self._get_records_from_sms(sms_sms_ids, [('sent', '=', False)])
-        statistics.write({'sent': fields.Datetime.now()})
-        return statistics
-
-    def set_sms_clicked(self, sms_sms_ids=None):
-        statistics = self._get_records_from_sms(sms_sms_ids, [('clicked', '=', False)])
-        statistics.write({'clicked': fields.Datetime.now()})
-        return statistics
-
-    def set_sms_ignored(self, sms_sms_ids=None):
-        statistics = self._get_records_from_sms(sms_sms_ids, [('ignored', '=', False)])
-        statistics.write({'ignored': fields.Datetime.now()})
-        return statistics
-
-    def set_sms_exception(self, sms_sms_ids=None):
-        statistics = self._get_records_from_sms(sms_sms_ids, [('exception', '=', False)])
-        statistics.write({'exception': fields.Datetime.now()})
-        return statistics

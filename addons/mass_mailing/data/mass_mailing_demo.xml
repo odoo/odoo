@@ -184,9 +184,11 @@
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_7"/>
             <field name="email">billy.fox45@example.com</field>
-            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="replied" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="trace_status">reply</field>
+            <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="open_datetime" eval="(DateTime.today() - relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="reply_datetime" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="write_date" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
         <record id="mass_mail_1_stat_1" model="mailing.trace">
             <field name="mass_mailing_id" ref="mass_mail_1"/>
@@ -194,9 +196,11 @@
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_13"/>
             <field name="email">kim.snyder96@example.com</field>
-            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="replied" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="trace_status">reply</field>
+            <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="open_datetime" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="reply_datetime" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="write_date" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
         <record id="mass_mail_1_stat_2" model="mailing.trace">
             <field name="mass_mailing_id" ref="mass_mail_1"/>
@@ -204,8 +208,10 @@
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_14"/>
             <field name="email">edith.sanchez68@example.com</field>
-            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="trace_status">open</field>
+            <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="open_datetime" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="write_date" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
         <record id="mass_mail_1_stat_3" model="mailing.trace">
             <field name="mass_mailing_id" ref="mass_mail_1"/>
@@ -213,8 +219,10 @@
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_24"/>
             <field name="email">theodore.gardner36@example.com</field>
-            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="trace_status">open</field>
+            <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="open_datetime" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="write_date" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
         <record id="mass_mail_1_stat_4" model="mailing.trace">
             <field name="mass_mailing_id" ref="mass_mail_1"/>
@@ -222,7 +230,9 @@
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_32"/>
             <field name="email">sandra.neal80@example.com</field>
-            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="trace_status">sent</field>
+            <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="write_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
         <record id="mass_mail_1_stat_5" model="mailing.trace">
             <field name="mass_mailing_id" ref="mass_mail_1"/>
@@ -230,8 +240,8 @@
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_33"/>
             <field name="email">julie.richards84@example.com</field>
-            <field name="sent" eval="False"/>
-            <field name="exception" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="trace_status">error</field>
+            <field name="sent_datetime" eval="False"/>
         </record>
         <record id="mass_mail_1_stat_6" model="mailing.trace">
             <field name="mass_mailing_id" ref="mass_mail_1"/>
@@ -239,8 +249,9 @@
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_34"/>
             <field name="email">travis.mendoza24@example.com</field>
-            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="bounced" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="trace_status">bounce</field>
+            <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="write_date" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
         <record id="mass_mail_1_stat_7" model="mailing.trace">
             <field name="mass_mailing_id" ref="mass_mail_1"/>
@@ -248,8 +259,8 @@
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_34"/>
             <field name="email">travis.mendoza24@example.com</field>
-            <field name="sent" eval="False"/>
-            <field name="ignored" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="trace_status">bounce</field>
+            <field name="sent_datetime" eval="False"/>
         </record>
 
         <!-- Generate some clicks -->

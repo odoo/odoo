@@ -45,25 +45,25 @@ class TestMassMailing(TestMailFullCommon):
             recipient_info = {
                 'email': recipient.email_normalized,
                 'content': 'Hello %s' % recipient.name}
-            # opt-out: ignored (cancel mail)
+            # opt-out: cancel (cancel mail)
             if recipient in recipients[1] | recipients[2]:
-                recipient_info['state'] = 'ignored'
+                recipient_info['trace_status'] = "cancel"
                 recipient_info['failure_type'] = "mail_optout"
-            # blacklisted: ignored (cancel mail)
+            # blacklisted: cancel (cancel mail)
             elif recipient in recipients[3] | recipients[4]:
-                recipient_info['state'] = 'ignored'
+                recipient_info['trace_status'] = "cancel"
                 recipient_info['failure_type'] = "mail_bl"
-            # duplicates: ignored (cancel mail)
+            # duplicates: cancel (cancel mail)
             elif recipient == recipient_dup_1:
-                recipient_info['state'] = 'ignored'
+                recipient_info['trace_status'] = "cancel"
                 recipient_info['failure_type'] = "mail_dup"
             # void: error (failed mail)
             elif recipient == recipient_void_1:
-                recipient_info['state'] = 'ignored'
+                recipient_info['trace_status'] = 'cancel'
                 recipient_info['failure_type'] = "mail_email_missing"
             # falsy: error (failed mail)
             elif recipient == recipient_falsy_1:
-                recipient_info['state'] = 'ignored'
+                recipient_info['trace_status'] = "cancel"
                 recipient_info['failure_type'] = "RECIPIENT"
                 recipient_info['email'] = recipient.email_from  # normalized is False but email should be falsymail
             else:
@@ -118,4 +118,4 @@ class TestMassMailing(TestMailFullCommon):
 
         # sent: 13, 2 bl, 2 opt-out, 3 invalid -> 6 remaining
         # ignored: 2 bl + 2 optout + 2 invalid + 1 duplicate; failed: 0
-        self.assertMailingStatistics(mailing, expected=13, delivered=6, sent=6, ignored=7, failed=0)
+        self.assertMailingStatistics(mailing, expected=13, delivered=6, sent=6, canceled=7, failed=0)
