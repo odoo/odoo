@@ -56,12 +56,13 @@
                         </tbody>
                     </table>
                     <table class="table table-sm mt48" t-if="o.move_line_ids and o.state=='done'" name="stock_move_line_table">
-                        <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" />
+                        <t t-set="has_serial_number" t-value="False"/>
+                        <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" groups="stock.group_lot_on_delivery_slip"/>
                         <thead>
                             <tr>
                                 <th name="th_sml_product"><strong>Product</strong></th>
-                                <t t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">
-                                    <th name="lot_serial">
+                                <t name="lot_serial" t-if="has_serial_number">
+                                    <th>
                                         Lot/Serial Number
                                     </th>
                                 </t>
@@ -69,26 +70,40 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="o.move_line_ids" t-as="move_line">
-                                <td>
-                                    <span t-field="move_line.product_id"/>
-                                    <p t-if="move_line.move_id.description_picking != move_line.product_id.name">
-                                        <span t-field="move_line.move_id.description_picking"/>
-                                    </p>
-                                </td>
-                                <t t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">
-                                    <td t-if="move_line.lot_name">
-                                        <span t-field="move_line.lot_name"/>
+                            <!-- If printing lots/serial numbers => keep products in original lines -->
+                            <t t-if="has_serial_number" name="move_lines_has_serial">
+                                <tr t-foreach="o.move_line_ids" t-as="move_line">
+                                    <td>
+                                        <span t-field="move_line.product_id"/>
+                                        <p t-if="move_line.move_id.description_picking != move_line.product_id.name">
+                                            <span t-field="move_line.move_id.description_picking"/>
+                                        </p>
                                     </td>
-                                    <td t-else="">
-                                        <span t-field="move_line.lot_id.name"/>
+                                    <t t-if="has_serial_number" name="move_line_lot">
+                                        <td><span t-field="move_line.lot_id.name"/></td>
+                                    </t>
+                                    <td class="text-center">
+                                        <span t-field="move_line.qty_done"/>
+                                        <span t-field="move_line.product_uom_id"/>
                                     </td>
-                                </t>
-                                <td class="text-center">
-                                    <span t-field="move_line.qty_done"/>
-                                    <span t-field="move_line.product_uom_id"/>
-                                </td>
-                            </tr>
+                                </tr>
+                            </t>
+                            <!-- If not printing lots/serial numbers => merge lines with same product -->
+                            <t t-else="" name="aggregated_move_lines">
+                                <t t-set="aggregated_lines" t-value="o.move_line_ids._get_aggregated_product_quantities()"/>
+                                <tr t-foreach="aggregated_lines" t-as="line">
+                                    <td>
+                                        <span t-esc="aggregated_lines[line]['name']"/>
+                                        <p t-if="aggregated_lines[line]['description']">
+                                            <span t-esc="aggregated_lines[line]['description']"/>
+                                        </p>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-esc="aggregated_lines[line]['qty_done']"/>
+                                        <span t-esc="aggregated_lines[line]['product_uom']"/>
+                                    </td>
+                                </tr>
+                            </t>
                         </tbody>
                     </table>
                     <t t-set="backorders" t-value="o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))"/>
