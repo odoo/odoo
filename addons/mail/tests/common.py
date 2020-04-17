@@ -233,7 +233,7 @@ class MailCase(MockEmail):
     gateway mock and helpers (see ´´MockEmail´´).
 
     Useful reminders
-        Notif type:  ('inbox', 'Inbox'), ('email', 'Email')
+        Notif type:  ('inbox', 'Inbox'), ('mail', 'Email')
         Notif status: ('ready', 'Ready to Send'), ('sent', 'Sent'),
                       ('bounce', 'Bounced'), ('exception', 'Exception'),
                       ('canceled', 'Canceled')
@@ -447,7 +447,7 @@ class MailCase(MockEmail):
                 self.assertTrue(partner_notif, 'Mail: not found notification for %s (type: %s, state: %s, message: %s)' % (partner, ntype, nstatus, message.id))
 
                 # prepare further asserts
-                if ntype == 'email':
+                if ntype == 'mail':
                     if nstatus == 'sent':
                         if ncheck_send:
                             email_groups[ngroup].append(partner)

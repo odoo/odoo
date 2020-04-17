@@ -21,7 +21,7 @@ class MailNotification(models.Model):
     res_partner_id = fields.Many2one('res.partner', 'Recipient', index=True, ondelete='cascade')
     # status
     notification_type = fields.Selection([
-        ('inbox', 'Inbox'), ('email', 'Email')
+        ('inbox', 'Inbox'), ('mail', 'Email')
         ], string='Notification Type', default='inbox', index=True, required=True)
     notification_status = fields.Selection([
         ('outgoing', 'Outgoing'),
@@ -44,7 +44,7 @@ class MailNotification(models.Model):
     _sql_constraints = [
         # email notification;: partner is required
         ('notification_partner_required',
-         "CHECK(notification_type NOT IN ('email', 'inbox') OR res_partner_id IS NOT NULL)",
+         "CHECK(notification_type NOT IN ('mail', 'inbox') OR res_partner_id IS NOT NULL)",
          'Customer is required for inbox / email notification'),
     ]
 

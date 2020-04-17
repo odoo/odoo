@@ -300,7 +300,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @users('__system__', 'emp')
     @warmup
     def test_message_assignation_email(self):
-        self.user_test.write({'notification_type': 'email'})
+        self.user_test.write({'notification_type': 'mail'})
         record = self.env['mail.test.track'].create({'name': 'Test'})
         with self.assertQueryCount(__system__=39, emp=40):
             record.write({
@@ -429,7 +429,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'login': 'port',
             'email': 'p.p@example.com',
             'signature': '--\nOlivia',
-            'notification_type': 'email',
+            'notification_type': 'mail',
             'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
         })
 
@@ -753,12 +753,12 @@ class TestMailComplexPerformance(BaseMailPerformance):
                 }),
                 (0, 0, {
                     'res_partner_id': self.partners[4].id,
-                    'notification_type': 'email',
+                    'notification_type': 'mail',
                     'notification_status': 'error',
                 }),
                 (0, 0, {
                     'res_partner_id': self.partners[6].id,
-                    'notification_type': 'email',
+                    'notification_type': 'mail',
                     'notification_status': 'error',
                 }),
             ],
@@ -797,7 +797,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
                 }),
                 (0, 0, {
                     'res_partner_id': self.partners[6].id,
-                    'notification_type': 'email',
+                    'notification_type': 'mail',
                     'notification_status': 'error',
                 }),
             ],
@@ -854,7 +854,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
             'name': 'user_follower_email',
             'login': 'user_follower_email',
             'email': 'user_follower_email@example.com',
-            'notification_type': 'email',
+            'notification_type': 'mail',
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
         })
         self.user_follower_inbox = self.env['res.users'].with_context(self._quick_create_ctx).create({
@@ -886,7 +886,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
             'name': 'user_email',
             'login': 'user_email',
             'email': 'user_email@example.com',
-            'notification_type': 'email',
+            'notification_type': 'mail',
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
         })
         self.partner = self.env['res.partner'].with_context(self._quick_create_ctx).create({

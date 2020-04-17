@@ -34,7 +34,7 @@ class TestMailCommon(common.SavepointCase, mail_common.MailCase):
     def _create_portal_user(cls):
         cls.user_portal = mail_new_test_user(
             cls.env, login='portal_test', groups='base.group_portal', company_id=cls.company_admin.id,
-            name='Chell Gladys', notification_type='email')
+            name='Chell Gladys', notification_type='mail')
         cls.partner_portal = cls.user_portal.partner_id
         return cls.user_portal
 

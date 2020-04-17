@@ -18,7 +18,7 @@ class TestEventCommon(common.SavepointCase):
         cls.user_portal = mail_new_test_user(
             cls.env, login='portal_test',
             name='Patrick Portal', email='patrick.portal@test.example.com',
-            notification_type='email', company_id=cls.env.ref("base.main_company").id,
+            notification_type='mail', company_id=cls.env.ref("base.main_company").id,
             groups='base.group_portal')
         cls.user_employee = mail_new_test_user(
             cls.env, login='user_employee',

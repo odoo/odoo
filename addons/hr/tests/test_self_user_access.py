@@ -154,7 +154,7 @@ class TestSelfAccessRights(TestHrCommon):
             {'tz': "Australia/ACT"},
             {'email': "new@example.com"},
             {'signature': "<p>I'm Richard!</p>"},
-            {'notification_type': "email"},
+            {'notification_type': "mail"},
         ]
         for v in vals:
             # should not raise
@@ -168,7 +168,7 @@ class TestSelfAccessRights(TestHrCommon):
             {'tz': "Australia/ACT"},
             {'email': "new@example.com"},
             {'signature': "<p>I'm Richard!</p>"},
-            {'notification_type': "email"},
+            {'notification_type': "mail"},
         ]
         for v in vals:
             with self.assertRaises(AccessError):

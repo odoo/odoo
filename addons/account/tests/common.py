@@ -441,14 +441,14 @@ class AccountTestNoChartCommon(SavepointCaseWithUserDemo):
             'name': 'Tyrion Lannister Employee',
             'login': 'tyrion',
             'email': 'tyrion@example.com',
-            'notification_type': 'email',
+            'notification_type': 'mail',
             'groups_id': [(6, 0, [group_employee.id])],
         })
         cls.user_manager = Users.create({
             'name': 'Daenerys Targaryen Manager',
             'login': 'daenerys',
             'email': 'daenerys@example.com',
-            'notification_type': 'email',
+            'notification_type': 'mail',
             'groups_id': [(6, 0, [group_employee.id])],
         })
         account_values = {
@@ -571,7 +571,7 @@ class AccountTestNoChartCommonMultiCompany(AccountTestNoChartCommon):
             'name': 'Gregor Clegane Employee',
             'login': 'gregor',
             'email': 'gregor@example.com',
-            'notification_type': 'email',
+            'notification_type': 'mail',
             'groups_id': [(6, 0, [group_employee.id])],
             'company_id': cls.company_B.id,
             'company_ids': [cls.company_B.id],
@@ -580,7 +580,7 @@ class AccountTestNoChartCommonMultiCompany(AccountTestNoChartCommon):
             'name': 'Cersei Lannister Manager',
             'login': 'cersei',
             'email': 'cersei@example.com',
-            'notification_type': 'email',
+            'notification_type': 'mail',
             'groups_id': [(6, 0, [group_employee.id])],
             'company_id': cls.company_B.id,
             'company_ids': [cls.company_B.id, cls.env.company.id],

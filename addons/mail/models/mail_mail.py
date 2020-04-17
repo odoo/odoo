@@ -155,7 +155,7 @@ class MailMail(models.Model):
         notif_mails_ids = [mail.id for mail in self if mail.notification]
         if notif_mails_ids:
             notifications = self.env['mail.notification'].search([
-                ('notification_type', '=', 'email'),
+                ('notification_type', '=', 'mail'),
                 ('mail_mail_id', 'in', notif_mails_ids),
                 ('notification_status', 'not in', ('sent', 'cancel'))
             ])
@@ -333,7 +333,7 @@ class MailMail(models.Model):
                 # update in case an email bounces while sending all emails related to current
                 # mail record.
                 notifs = self.env['mail.notification'].search([
-                    ('notification_type', '=', 'email'),
+                    ('notification_type', '=', 'mail'),
                     ('mail_mail_id', 'in', mail.ids),
                     ('notification_status', 'not in', ('sent', 'cancel'))
                 ])

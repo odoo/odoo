@@ -119,10 +119,10 @@ class TestActivityFlow(TestActivityCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_notify_other_user(self):
-        self.user_admin.notification_type = 'email'
+        self.user_admin.notification_type = 'mail'
         rec = self.test_record.with_user(self.user_employee)
         with self.assertSinglePostNotifications(
-                [{'partner': self.partner_admin, 'type': 'email'}],
+                [{'partner': self.partner_admin, 'type': 'mail'}],
                 message_info={'content': 'assigned you an activity', 'subtype': 'mail.mt_note', 'message_type': 'user_notification'}):
             activity = rec.activity_schedule(
                 'test_mail.mail_act_test_todo',
@@ -131,7 +131,7 @@ class TestActivityFlow(TestActivityCommon):
         self.assertEqual(activity.user_id, self.user_admin)
 
     def test_activity_notify_same_user(self):
-        self.user_employee.notification_type = 'email'
+        self.user_employee.notification_type = 'mail'
         rec = self.test_record.with_user(self.user_employee)
         with self.assertNoNotifications():
             activity = rec.activity_schedule(
@@ -142,7 +142,7 @@ class TestActivityFlow(TestActivityCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_dont_notify_no_user_change(self):
-        self.user_employee.notification_type = 'email'
+        self.user_employee.notification_type = 'mail'
         activity = self.test_record.activity_schedule('test_mail.mail_act_test_todo', user_id=self.user_employee.id)
         with self.assertNoNotifications():
             activity.with_user(self.user_admin).write({'user_id': self.user_employee.id})

@@ -41,7 +41,7 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         })
 
         # admin should receive emails
-        cls.user_admin.write({'notification_type': 'email'})
+        cls.user_admin.write({'notification_type': 'mail'})
         # Force the attachments of the template to be in the natural order.
         cls.email_template.invalidate_cache(['attachment_ids'], ids=cls.email_template.ids)
 

@@ -20,7 +20,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         cls._create_portal_user()
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
         cls._reset_mail_context(cls.test_record)
-        cls.user_admin.write({'notification_type': 'email'})
+        cls.user_admin.write({'notification_type': 'mail'})
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_needaction(self):
@@ -33,14 +33,14 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.test_record.message_subscribe([self.partner_1.id])
         with self.assertSinglePostNotifications([
                 {'partner': self.partner_employee, 'type': 'inbox'},
-                {'partner': self.partner_1, 'type': 'email'}], {'content': 'NewBody'}):
+                {'partner': self.partner_1, 'type': 'mail'}], {'content': 'NewBody'}):
             self.test_record.message_post(
                 body='NewBody', message_type='comment', subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.user_employee.partner_id.id])
 
         with self.assertSinglePostNotifications([
-                {'partner': self.partner_1, 'type': 'email'},
-                {'partner': self.partner_portal, 'type': 'email'}], {'content': 'ToPortal'}):
+                {'partner': self.partner_1, 'type': 'mail'},
+                {'partner': self.partner_portal, 'type': 'mail'}], {'content': 'ToPortal'}):
             self.test_record.message_post(
                 body='ToPortal', message_type='comment', subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.partner_portal.id])
@@ -69,9 +69,9 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
 
         with self.assertSinglePostNotifications([
-                {'partner': self.partner_1, 'type': 'email'},
-                {'partner': self.partner_2, 'type': 'email'},
-                {'partner': self.partner_admin, 'type': 'email'}], {'content': _body}, mail_unlink_sent=True):
+                {'partner': self.partner_1, 'type': 'mail'},
+                {'partner': self.partner_2, 'type': 'mail'},
+                {'partner': self.partner_admin, 'type': 'mail'}], {'content': _body}, mail_unlink_sent=True):
             msg = self.test_record.with_user(self.user_employee).message_post(
                 body=_body, subject=_subject,
                 message_type='comment', subtype_xmlid='mail.mt_comment',
@@ -160,7 +160,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertEqual(parent_msg.partner_ids, self.env['res.partner'])
         self.assertNotSentEmail()
 
-        with self.assertPostNotifications([{'content': '<p>Test Answer</p>', 'notif': [{'partner': self.partner_1, 'type': 'email'}]}]):
+        with self.assertPostNotifications([{'content': '<p>Test Answer</p>', 'notif': [{'partner': self.partner_1, 'type': 'mail'}]}]):
             msg = self.test_record.with_user(self.user_employee).message_post(
                 body='<p>Test Answer</p>',
                 message_type='comment', subtype_xmlid='mail.mt_comment',
@@ -189,7 +189,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
 
         with self.assertPostNotifications([{'content': '<p>Test</p>', 'notif': [
             {'partner': self.partner_employee, 'type': 'inbox'},
-            {'partner': self.partner_1, 'type': 'email'}]}
+            {'partner': self.partner_1, 'type': 'mail'}]}
         ]), patch.object(MailTestSimple, 'check_access_rights', return_value=True):
             new_msg = self.test_record.with_user(self.user_portal).message_post(
                 body='<p>Test</p>', subject='Subject',
@@ -279,7 +279,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
             'email_cc': '%s' % email_3,
         })
         # admin should receive emails
-        self.user_admin.write({'notification_type': 'email'})
+        self.user_admin.write({'notification_type': 'mail'})
         # Force the attachments of the template to be in the natural order.
         self.email_template.invalidate_cache(['attachment_ids'], ids=self.email_template.ids)
 

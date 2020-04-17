@@ -152,7 +152,7 @@ SELECT DISTINCT ON(pid, cid) * FROM (
     UNION
     SELECT NULL::int AS pid, channel.id AS cid,
             TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
-            CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
+            CASE WHEN channel.email_send = TRUE THEN 'mail' ELSE 'inbox' END AS notif, NULL AS groups
         FROM mail_channel channel
         WHERE EXISTS (
             SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
@@ -182,7 +182,7 @@ WHERE partner.id IN %s"""
                 query_cid = """
 SELECT NULL::int AS pid, channel.id AS cid,
     TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
-    CASE when channel.email_send = TRUE then 'email' else 'inbox' end AS notif, NULL AS groups
+    CASE when channel.email_send = TRUE then 'mail' else 'inbox' end AS notif, NULL AS groups
 FROM mail_channel channel WHERE channel.id IN %s """
                 params.append(tuple(cids))
             query = ' UNION'.join(x for x in [query_pid, query_cid] if x)

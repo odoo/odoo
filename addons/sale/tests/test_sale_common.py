@@ -18,7 +18,7 @@ class TestSaleCommon(AccountTestCommon):
             'login': 'manager',
             'email': 'a.m@example.com',
             'signature': '--\nAndreww',
-            'notification_type': 'email',
+            'notification_type': 'mail',
             'groups_id': [(6, 0, [group_manager.id, cls.env.ref('base.group_user').id])]
         })
         cls.user = cls.env['res.users'].create({
@@ -26,7 +26,7 @@ class TestSaleCommon(AccountTestCommon):
             'login': 'user',
             'email': 'm.u@example.com',
             'signature': '--\nMark',
-            'notification_type': 'email',
+            'notification_type': 'mail',
             'groups_id': [(6, 0, [group_user.id])]
         })
         # create quotation with differend kinds of products (all possible combinations)

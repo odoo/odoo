@@ -2220,7 +2220,7 @@ class MailThread(models.AbstractModel):
                 # in order to remove notification.
                 for channel in channels.filtered(lambda c: c.email_send):
                     users = channel.channel_partner_ids.mapped('user_ids')
-                    for user in users.filtered(lambda u: u.notification_type == 'email'):
+                    for user in users.filtered(lambda u: u.notification_type == 'mail'):
                         channel.with_user(user).channel_seen()
 
         if bus_notifications:
@@ -2246,7 +2246,7 @@ class MailThread(models.AbstractModel):
         :param send_after_commit: if force_send, tells whether to send emails after
           the transaction has been committed using a post-commit hook;
         """
-        partners_data = [r for r in recipients_data['partners'] if r['notif'] == 'email']
+        partners_data = [r for r in recipients_data['partners'] if r['notif'] == 'mail']
         if not partners_data:
             return True
 
@@ -2320,7 +2320,7 @@ class MailThread(models.AbstractModel):
                     if check_existing:
                         existing_notifications = self.env['mail.notification'].sudo().search([
                             ('mail_message_id', '=', message.id),
-                            ('notification_type', '=', 'email'),
+                            ('notification_type', '=', 'mail'),
                             ('res_partner_id', 'in', tocreate_recipient_ids)
                         ])
                         if existing_notifications:
@@ -2332,7 +2332,7 @@ class MailThread(models.AbstractModel):
                     notif_create_values += [{
                         'mail_message_id': message.id,
                         'res_partner_id': recipient_id,
-                        'notification_type': 'email',
+                        'notification_type': 'mail',
                         'mail_mail_id': email.id,
                         'is_read': True,  # discard Inbox notification
                         'notification_status': 'outgoing',
@@ -2477,12 +2477,12 @@ class MailThread(models.AbstractModel):
                 elif pshare and notif:  # has an user but is shared, is therefore portal
                     recipient_data['partners'].append(dict(pdata, notif=notif, type='portal'))
                 else:  # has no user, is therefore customer
-                    recipient_data['partners'].append(dict(pdata, notif=notif if notif else 'email', type='customer'))
+                    recipient_data['partners'].append(dict(pdata, notif=notif if notif else 'mail', type='customer'))
             elif cid:
                 recipient_data['channels'].append({'id': cid, 'notif': notif, 'type': ctype})
 
         # add partner ids in email channels
-        email_cids = [r['id'] for r in recipient_data['channels'] if r['notif'] == 'email']
+        email_cids = [r['id'] for r in recipient_data['channels'] if r['notif'] == 'mail']
         if email_cids:
             # we are doing a similar search in ocn_client
             # Could be interesting to make everything in a single query.
@@ -2506,7 +2506,7 @@ class MailThread(models.AbstractModel):
             self.env.cr.execute(sql_query, (([email_from], ), (email_cids, ), (exept_partner, )))
             for partner_id in self._cr.fetchall():
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
-                recipient_data['partners'].append({'id': partner_id[0], 'share': True, 'active': True, 'notif': 'email', 'type': 'channel_email', 'groups': []})
+                recipient_data['partners'].append({'id': partner_id[0], 'share': True, 'active': True, 'notif': 'mail', 'type': 'channel_email', 'groups': []})
 
         return recipient_data
 

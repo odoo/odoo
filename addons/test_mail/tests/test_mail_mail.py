@@ -47,7 +47,7 @@ class TestMailMailRace(common.TransactionCase):
             'notification_ids': [(0, 0, {
                 'res_partner_id': self.partner.id,
                 'mail_mail_id': mail.id,
-                'notification_type': 'email',
+                'notification_type': 'mail',
                 'is_read': True,
                 'notification_status': 'outgoing',
             })],

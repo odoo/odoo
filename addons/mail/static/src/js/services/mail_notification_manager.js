@@ -104,7 +104,7 @@ MailManager.include({
             // with notification "Handled by Email", but web client should receive the message.
             // Channel has been marked as read server-side in this case, so it should not display
             // a notification by incrementing the unread counter.
-            notify = channel && (!channel.isMassMailing() || session.notification_type !== 'email');
+            notify = channel && (!channel.isMassMailing() || session.notification_type !== 'mail');
             def = this.joinChannel(messageData.channel_ids[0], { autoswitch: false });
         } else {
             def = Promise.resolve();
