@@ -9,6 +9,7 @@ var _t = core._t;
 tour.register('project_tour', {
     sequence: 30,
     url: "/web",
+    rainbowManMessage: "Congratulations, you are now a master of project management.",
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
     content: _t('Want a better way to <b>manage your projects</b>? <i>It starts here.</i>'),
@@ -22,86 +23,90 @@ tour.register('project_tour', {
 }, {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_project_kanban',
-    content: _t('Let\'s create your first project.'),
+    content: _t('Let\'s create your first <b>project</b>.'),
     position: 'bottom',
     width: 200,
 }, {
     trigger: 'input.o_project_name',
-    content: _t('Choose a <b>project name</b>. (e.g. Website Launch, Product Development, Office Party, etc.)'),
+    content: _t('Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\
+     of a product, of a team, of a construction site...</i>'),
     position: 'right',
 }, {
     trigger: '.o_open_tasks',
-    content: _t('This will create a new project and redirect us to its stages.'),
+    content: _t('Let\'s create your first <b>project</b>.'),
     position: 'top',
     run: function (actions) {
         actions.auto('.modal:visible .btn.btn-primary');
     },
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create input",
-    content: _t("Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In Progress - Done</i>"),
-    position: "bottom",
+    content: _t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>."),
+    position: 'bottom',
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     auto: true,
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create input",
-    content: _t("Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In Progress - Done</i>"),
-    position: "bottom",
+    extra_trigger: '.o_kanban_group',
+    content: _t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>."),
+    position: 'bottom',
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     auto: true,
 }, {
     trigger: '.o-kanban-button-new',
-    extra_trigger: '.o_kanban_project_tasks',
-    content: _t('Let\'s create your first task.'),
+    extra_trigger: '.o_kanban_group:eq(1)',
+    content: _t("Let's create your first <b>task</b>."),
     position: 'bottom',
     width: 200,
 }, {
     trigger: '.o_kanban_quick_create input.o_field_char[name=name]',
     extra_trigger: '.o_kanban_project_tasks',
-    content: _t('Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)'),
+    content: _t('Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>'),
     position: 'right',
 }, {
     trigger: '.o_kanban_quick_create .o_kanban_add',
     extra_trigger: '.o_kanban_project_tasks',
-    content: _t("<p>Once your task is ready, you can save it.</p>"),
-    position: 'bottom',
-}, {
-    trigger: ".o_kanban_record .o_priority_star",
-    extra_trigger: '.o_kanban_project_tasks',
-    content: _t("<b>Star tasks</b> to mark team priorities."),
+    content: _t("Add your task once it is ready."),
     position: "bottom",
 }, {
     trigger: ".o_kanban_record .oe_kanban_content",
     extra_trigger: '.o_kanban_project_tasks',
-    content: _t("Click on the card to write more information about it and collaborate with your coworkers."),
+    content: _t("<b>Drag &amp; drop</b> the card to change your task from stage."),
+    position: "bottom",
+    run: "drag_and_drop .o_kanban_group:eq(1) ",
+}, {
+    trigger: ".o_kanban_group:eq(1) > .o_kanban_record",
+    extra_trigger: '.o_kanban_project_tasks',
+    content: _t("Let's start working on your task."),
     position: "bottom",
 }, {
-    trigger: ".o_form_button_edit",
-    extra_trigger: '.o_form_project_tasks',
-    content: _t('Click on this button to modify the task.'),
-    position: "bottom"
-}, {
-    trigger: ".o_form_view .o_task_user_field",
-    extra_trigger: '.o_form_project_tasks.o_form_editable',
-    content: _t('<b>Assign the task</b> to someone. <i>You can create and invite a new user on the fly.</i>'),
+    trigger: ".o_chatter_button_new_message",
+    content: _t("Use this chatter to <b>send emails</b> and communicate efficently with your customers. \
+    Add new people in the followers list to make them aware about the main changes about this task."),
+    width: 350,
     position: "bottom",
-    run: function (actions) {
-        actions.text("Marc Demo", this.$anchor.find("input"));
-    },
 }, {
-    trigger: ".ui-autocomplete > li > a",
-    auto: true,
-}, {
-    trigger: ".o_form_button_save",
-    extra_trigger: '.o_form_project_tasks.o_form_editable',
-    content: _t('<b>Click the save button</b> to apply your changes to the task.'),
+    trigger: ".o_chatter_button_log_note",
+    content: _t("<b>Log notes</b> for internal communications <i>(the people following this task won't be notified \
+    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \
+    or # <b>mentions</b> to reach an entire team."),
+    width: 350,
     position: "bottom"
+}, {
+    trigger: ".o_chatter_button_schedule_activity",
+    content: _t("Use <b>activities</b> to organize your daily work."),
+}, {
+    trigger: ".modal-dialog .btn-primary",
+    content: "Schedule your activity once it is ready",
+    position: "bottom",
+    run: "click",
 }, {
     trigger: ".breadcrumb-item:not(.active):last",
     extra_trigger: '.o_form_project_tasks.o_form_readonly',
-    content: _t("Use the breadcrumbs to <b>go back to your tasks pipeline</b>."),
-    position: "right"
+    content: _t("Let's go back to your <b>kanban view</b> to have an overview of your next tasks."),
+    position: "right",
+    run: 'click',
 }]);
 
 });
