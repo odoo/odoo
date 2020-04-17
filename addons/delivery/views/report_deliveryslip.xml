@@ -29,8 +29,11 @@
         <xpath expr="//table[@name='stock_move_line_table']/thead/tr" position="inside">
             <th t-if="has_hs_code"><strong>HS Code</strong></th>
         </xpath>
-        <xpath expr="//table[@name='stock_move_line_table']/tbody/tr" position="inside">
+        <xpath expr="//t[@name='move_lines_has_serial']/tr" position="inside">
             <td t-if="has_hs_code"><span t-field="move_line.product_id.hs_code"/></td>
+        </xpath>
+        <xpath expr="//t[@name='aggregated_move_lines']/tr" position="inside">
+            <td t-if="has_hs_code"><span t-esc="aggregated_lines[line]['hs_code']"/></td>
         </xpath>
 
     </template>
