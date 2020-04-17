@@ -207,7 +207,7 @@ var Tip = Widget.extend({
         }
 
         // If the direction or the anchor change : The tip position is updated.
-        if (forceReposition || this.info.position !== position || this.viewPortState !== viewPortState) {
+        if ((forceReposition || this.info.position !== position || this.viewPortState !== viewPortState) && !this.tip_opened) {
             this.$el.removeClass('top right bottom left').addClass(position);
             this.viewPortState = viewPortState;
             this.info.position = position;
