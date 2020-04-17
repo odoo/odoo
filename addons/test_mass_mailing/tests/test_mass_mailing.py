@@ -31,11 +31,11 @@ class TestMassMailing(TestMassMailCommon):
             [{'email': 'test.record.00@test.example.com'},
              {'email': 'test.record.01@test.example.com'},
              {'email': 'test.record.02@test.example.com'},
-             {'email': 'test.record.03@test.example.com', 'state': 'ignored'},
-             {'email': 'test.record.04@test.example.com', 'state': 'ignored'}],
+             {'email': 'test.record.03@test.example.com', 'state': 'cancel'},
+             {'email': 'test.record.04@test.example.com', 'state': 'cancel'}],
             mailing, recipients, check_mail=True
         )
-        self.assertEqual(mailing.ignored, 2)
+        self.assertEqual(mailing.canceled, 2)
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -57,14 +57,14 @@ class TestMassMailing(TestMassMailCommon):
             mailing._process_mass_mailing_queue()
 
         self.assertMailTraces(
-            [{'email': 'test.record.00@test.example.com', 'state': 'ignored'},
-             {'email': 'test.record.01@test.example.com', 'state': 'ignored'},
+            [{'email': 'test.record.00@test.example.com', 'state': 'cancel'},
+             {'email': 'test.record.01@test.example.com', 'state': 'cancel'},
              {'email': 'test.record.02@test.example.com'},
              {'email': 'test.record.03@test.example.com'},
-             {'email': 'test.record.04@test.example.com', 'state': 'ignored'}],
+             {'email': 'test.record.04@test.example.com', 'state': 'cancel'}],
             mailing, recipients, check_mail=True
         )
-        self.assertEqual(mailing.ignored, 3)
+        self.assertEqual(mailing.canceled, 3)
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -114,13 +114,13 @@ class TestMassMailing(TestMassMailCommon):
             mailing._process_mass_mailing_queue()
 
         self.assertMailTraces(
-            [{'email': 'test@test.example.com', 'state': 'ignored'},
+            [{'email': 'test@test.example.com', 'state': 'cancel'},
              {'email': 'test@test.example.com', 'state': 'sent'},
              {'email': 'test3@test.example.com'},
              {'email': 'test4@test.example.com'},
-             {'email': 'test5@test.example.com', 'state': 'ignored'}],
+             {'email': 'test5@test.example.com', 'state': 'cancel'}],
             mailing,
             mailing_contact_1 | mailing_contact_2 | mailing_contact_3 | mailing_contact_4 | mailing_contact_5,
             check_mail=True
         )
-        self.assertEqual(mailing.ignored, 2)
+        self.assertEqual(mailing.canceled, 2)

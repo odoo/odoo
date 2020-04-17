@@ -45,11 +45,11 @@
                     </button>
                 </div>
             </xpath>
-            <xpath expr="//span[@name='ignored_text']" position="attributes">
+            <xpath expr="//span[@name='canceled_text']" position="attributes">
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
-            <xpath expr="//span[@name='ignored_text']" position="after">
-                <span name="ignored_text_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS Text Message have been ignored and will not be sent.</span>
+            <xpath expr="//span[@name='canceled_text']" position="after">
+                <span name="canceled_text_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS Text Message have been ignored and will not be sent.</span>
             </xpath>
             <xpath expr="//span[@name='scheduled_text']" position="attributes">
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>

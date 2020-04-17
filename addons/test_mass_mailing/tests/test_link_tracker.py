@@ -48,18 +48,19 @@ class TestLinkTracker(common.TestMassMailCommon):
         mailing = self.env['mailing.mailing'].create({'name': 'Test Mailing', "subject": "Hi!"})
         code = self.link.code
         self.assertEqual(self.link.count, 1)
-        stat = self.env['mailing.trace'].create({'mass_mailing_id': mailing.id})
-        self.assertFalse(stat.opened)
-        self.assertFalse(stat.clicked)
+        trace = self.env['mailing.trace'].create({'mass_mailing_id': mailing.id})
+        self.assertEqual(trace.trace_status, 'outgoing')
+        self.assertFalse(trace.links_click_done)
 
         # click from a new IP should create a new entry and update stat when provided
         click = self.env['link.tracker.click'].sudo().add_click(
             code,
             ip='100.00.00.01',
             country_code='BEL',
-            mailing_trace_id=stat.id
+            mailing_trace_id=trace.id
         )
         self.assertEqual(self.link.count, 2)
         self.assertEqual(click.mass_mailing_id, mailing)
-        self.assertTrue(stat.opened)
-        self.assertTrue(stat.clicked)
+        self.assertTrue(trace.trace_status, 'open')
+        self.assertTrue(trace.links_click_done)
+        self.assertEqual(trace.links_click_ids, click)

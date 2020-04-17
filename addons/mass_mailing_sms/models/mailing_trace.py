@@ -52,7 +52,7 @@ class MailingTrace(models.Model):
         code / mailing_id / number will be requested. """
         return ''.join(random.choice(string.ascii_letters + string.digits) for dummy in range(self.CODE_SIZE))
 
-    def _get_records_from_sms(self, sms_sms_ids=None, additional_domain=None):
+    def _find_traces_from_sms(self, sms_sms_ids=None, additional_domain=None):
         if not self.ids and sms_sms_ids:
             domain = [('sms_sms_id_int', 'in', sms_sms_ids)]
         else:
@@ -61,26 +61,22 @@ class MailingTrace(models.Model):
             domain = expression.AND([domain, additional_domain])
         return self.search(domain)
 
-    def set_failed(self, failure_type):
-        for trace in self:
-            trace.write({'exception': fields.Datetime.now(), 'failure_type': failure_type})
-
     def set_sms_sent(self, sms_sms_ids=None):
-        statistics = self._get_records_from_sms(sms_sms_ids, [('sent', '=', False)])
-        statistics.write({'sent': fields.Datetime.now()})
+        statistics = self._find_traces_from_sms(sms_sms_ids, [('sent', '=', False)])
+        statistics.set_sent()
         return statistics
 
     def set_sms_clicked(self, sms_sms_ids=None):
-        statistics = self._get_records_from_sms(sms_sms_ids, [('clicked', '=', False)])
-        statistics.write({'clicked': fields.Datetime.now()})
+        statistics = self._find_traces_from_sms(sms_sms_ids, [('clicked', '=', False)])
+        statistics.set_clicked()
         return statistics
 
-    def set_sms_ignored(self, sms_sms_ids=None):
-        statistics = self._get_records_from_sms(sms_sms_ids, [('ignored', '=', False)])
-        statistics.write({'ignored': fields.Datetime.now()})
+    def set_sms_canceled(self, sms_sms_ids=None):
+        statistics = self._find_traces_from_sms(sms_sms_ids, [('ignored', '=', False)])
+        statistics.set_canceled()
         return statistics
 
-    def set_sms_exception(self, sms_sms_ids=None):
-        statistics = self._get_records_from_sms(sms_sms_ids, [('exception', '=', False)])
-        statistics.write({'exception': fields.Datetime.now()})
+    def set_sms_failed(self, sms_sms_ids=None):
+        statistics = self._find_traces_from_sms(sms_sms_ids, [('exception', '=', False)])
+        statistics.set_failed()
         return statistics

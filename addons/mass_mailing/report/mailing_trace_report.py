@@ -38,19 +38,19 @@ class MailingTraceReport(models.Model):
                     utm_source.name as name,
                     mailing.mailing_type,
                     utm_campaign.name as campaign,
-                    trace.scheduled as scheduled_date,
+                    trace.create_date as scheduled_date,
                     mailing.state,
                     mailing.email_from,
-                    count(trace.sent) as sent,
-                    (count(trace.sent) - count(trace.bounced)) as delivered,
-                    count(trace.opened) as opened,
-                    count(trace.replied) as replied,
-                    count(trace.clicked) as clicked,
-                    count(trace.bounced) as bounced
+                    count(trace.sent_datetime) as sent,
+                    (count(trace.sent_datetime) - count(trace.trace_status in ('error', 'bounce', 'cancel'))) as delivered,
+                    count(trace.trace_status = 'open') as opened,
+                    count(trace.trace_status = 'reply') as replied,
+                    count(trace.links_click_done) as clicked,
+                    count(trace.trace_status = 'bounce') as bounced
                 FROM
                     mailing_trace as trace
                     left join mailing_mailing as mailing ON (trace.mass_mailing_id=mailing.id)
                     left join utm_campaign as utm_campaign ON (mailing.campaign_id = utm_campaign.id)
                     left join utm_source as utm_source ON (mailing.source_id = utm_source.id)
-                GROUP BY trace.scheduled, utm_source.name, utm_campaign.name, mailing.mailing_type, mailing.state, mailing.email_from
+                GROUP BY trace.create_date, utm_source.name, utm_campaign.name, mailing.mailing_type, mailing.state, mailing.email_from
             )""")

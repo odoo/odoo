@@ -201,7 +201,7 @@ class TestMassMailFeatures(TestMassMailCommon):
 
         self.assertMailTraces(
             [{'email': 'test1@example.com'},
-             {'email': 'test2@example.com', 'state': 'ignored'}],
+             {'email': 'test2@example.com', 'state': 'cancel'}],
             mailing, partner_a | partner_b, check_mail=True
         )
 

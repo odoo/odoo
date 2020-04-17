@@ -45,7 +45,8 @@ class TestMassMailCommon(TestMassMailCommon, TestMailCommon):
         trace = cls.env['mailing.trace'].create({
             'model': record._name,
             'res_id': record.id,
-            'bounced': dt,
+            'trace_status': 'bounce',
+            'trace_status_update': dt,
             # TDE FIXME: improve this with a mail-enabled heuristics
             'email': trace_email,
             'message_id': '<%5f@gilbert.boitempomils>' % randomized,

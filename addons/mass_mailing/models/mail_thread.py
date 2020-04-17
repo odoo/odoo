@@ -19,8 +19,8 @@ class MailThread(models.AbstractModel):
         matching message_id in mailing.trace. """
         if message.get('References') and routes:
             message_ids = [x.strip() for x in message['References'].split()]
-            self.env['mailing.trace'].set_opened(mail_message_ids=message_ids)
-            self.env['mailing.trace'].set_replied(mail_message_ids=message_ids)
+            self.env['mailing.trace'].set_opened(message_ids=message_ids)
+            self.env['mailing.trace'].set_replied(message_ids=message_ids)
         return super(MailThread, self)._message_route_process(message, message_dict, routes)
 
     def message_post_with_template(self, template_id, **kwargs):
@@ -49,10 +49,10 @@ class MailThread(models.AbstractModel):
         bounced_partner = message_dict['bounced_partner']
 
         if bounced_msg_id:
-            self.env['mailing.trace'].set_bounced(mail_message_ids=bounced_msg_id)
+            self.env['mailing.trace'].set_bounced(message_ids=bounced_msg_id)
         if bounced_email:
             three_months_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(weeks=13))
-            stats = self.env['mailing.trace'].search(['&', ('bounced', '>', three_months_ago), ('email', '=ilike', bounced_email)]).mapped('bounced')
+            stats = self.env['mailing.trace'].search(['&', '&', ('trace_status', '=', 'bounce'), ('trace_status_update', '>', three_months_ago), ('email', '=ilike', bounced_email)]).mapped('trace_status_update')
             if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT and (not bounced_partner or bounced_partner.message_bounce >= BLACKLIST_MAX_BOUNCED_LIMIT):
                 if max(stats) > min(stats) + datetime.timedelta(weeks=1):
                     blacklist_rec = self.env['mail.blacklist'].sudo()._add(bounced_email)

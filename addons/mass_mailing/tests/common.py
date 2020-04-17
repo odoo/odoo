@@ -33,7 +33,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         mail gateway mock.
 
         :param emails: list of emails;
-        :param state: state of mail.mail;
+        :param status: status of mail.mail;
         :param content: content to check for each email;
         :param fields_values: specific value to check on the mail.mail record;
         """
@@ -76,7 +76,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                 email = partner.email_normalized
 
             recipient_trace = traces.filtered(
-                lambda t: t.email == email and t.state == state and (t.res_id == record.id if record else True)
+                lambda t: t.email == email and t.trace_status == state and (t.res_id == record.id if record else True)
             )
             self.assertTrue(
                 len(recipient_trace) == 1,
@@ -90,12 +90,10 @@ class MassMailCase(MailCase, MockLinkTracker):
 
                 if state == 'sent':
                     self.assertMailMailWEmails([email], 'sent', content, fields_values=fields_values)
-                elif state == 'ignored':
+                elif state == 'cancel':
                     self.assertMailMailWEmails([email], 'cancel', content, fields_values=fields_values)
-                elif state == 'exception':
-                    self.assertMailMailWEmails([email], 'exception', content, fields_values=fields_values)
-                elif state == 'canceled':
-                    self.assertMailMailWEmails([email], 'canceled', content, fields_values=fields_values)
+                elif state == 'error':
+                    self.assertMailMailWEmails([email], 'error', content, fields_values=fields_values)
                 else:
                     raise NotImplementedError()
 

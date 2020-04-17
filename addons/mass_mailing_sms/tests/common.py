@@ -24,7 +24,7 @@ class MockSMS(sms_common.MockSMS):
             ('sms_sms_id_int', 'in', found_sms.ids),
         ])
         self.assertEqual(len(found_sms), len(found_traces))
-        self.assertTrue(all(s.state == 'outgoing' for s in found_traces))
+        self.assertTrue(all(s.trace_status == 'outgoing' for s in found_traces))
         self.assertTrue(all(s.res_model == records._name for s in found_traces))
         self.assertEqual(set(found_traces.mapped('res_id')), set(records.ids))
         self.assertTrue(all(s.mass_mailing_id == mailing for s in found_traces))
@@ -57,7 +57,7 @@ class MockSMS(sms_common.MockSMS):
             if number is None and partner:
                 number = phone_validation.phone_get_sanitized_record_number(partner)
 
-            notif = traces.filtered(lambda s: s.sms_number == number and s.state == state)
+            notif = traces.filtered(lambda trace: trace.sms_number == number and trace.trace_status == state)
             self.assertTrue(notif, 'SMS: not found notification for number %s, (state: %s)' % (number, state))
 
             if check_sms:
@@ -65,9 +65,11 @@ class MockSMS(sms_common.MockSMS):
                     self.assertSMSSent([number], content)
                 elif state == 'outgoing':
                     self.assertSMSOutgoing(partner, number, content)
-                elif state == 'exception':
+                elif state == 'error':
                     self.assertSMSFailed(partner, number, recipient_info.get('failure_type'), content)
-                elif state == 'ignored':
+                elif state == 'cancel':
+                    self.assertSMSCanceled(partner, number, recipient_info.get('failure_type', False), content)
+                elif state == 'bounce':
                     self.assertSMSCanceled(partner, number, recipient_info.get('failure_type', False), content)
                 else:
                     raise NotImplementedError()
