@@ -73,6 +73,12 @@ class ResConfigSettings(models.TransientModel):
     module_snailmail_account = fields.Boolean(string="Snailmail")
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal", readonly=False)
+    account_cash_basis_base_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Base Tax Received Account",
+        readonly=False,
+        related='company_id.account_cash_basis_base_account_id',
+        domain=[('deprecated', '=', False)])
 
     qr_code = fields.Boolean(string='Display SEPA QR-code', related='company_id.qr_code', readonly=False)
     invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print', readonly=False)

@@ -121,6 +121,12 @@ class AccountChartTemplate(models.Model):
     property_tax_payable_account_id = fields.Many2one('account.account.template', string="Tax current account (payable)")
     property_tax_receivable_account_id = fields.Many2one('account.account.template', string="Tax current account (receivable)")
     property_advance_tax_payment_account_id = fields.Many2one('account.account.template', string="Advance tax payment account")
+    property_cash_basis_base_account_id = fields.Many2one(
+        comodel_name='account.account.template',
+        domain=[('deprecated', '=', False)],
+        string="Base Tax Received Account",
+        help="Account that will be set on lines created in cash basis journal entry and used to keep track of the "
+             "tax base amount.")
 
     @api.model
     def _prepare_transfer_account_template(self, prefix=None):
@@ -249,6 +255,7 @@ class AccountChartTemplate(models.Model):
             'default_cash_difference_income_account_id': acc_template_ref.get(self.default_cash_difference_income_account_id.id, False),
             'default_cash_difference_expense_account_id': acc_template_ref.get(self.default_cash_difference_expense_account_id.id, False),
             'account_journal_suspense_account_id': acc_template_ref.get(self.account_journal_suspense_account_id.id),
+            'account_cash_basis_base_account_id': acc_template_ref.get(self.property_cash_basis_base_account_id.id),
         })
 
         if not company.account_journal_suspense_account_id:
@@ -555,10 +562,9 @@ class AccountChartTemplate(models.Model):
 
         # writing account values after creation of accounts
         for key, value in generated_tax_res['account_dict']['account.tax'].items():
-            if value['cash_basis_transition_account_id'] or value['cash_basis_base_account_id']:
+            if value['cash_basis_transition_account_id']:
                 AccountTaxObj.browse(key).write({
                     'cash_basis_transition_account_id': account_ref.get(value['cash_basis_transition_account_id'], False),
-                    'cash_basis_base_account_id': account_ref.get(value['cash_basis_base_account_id'], False),
                 })
 
         AccountTaxRepartitionLineObj = self.env['account.tax.repartition.line']
@@ -855,11 +861,6 @@ class AccountTaxTemplate(models.Model):
         string="Cash Basis Transition Account",
         domain=[('deprecated', '=', False)],
         help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
-    cash_basis_base_account_id = fields.Many2one(
-        'account.account.template',
-        domain=[('deprecated', '=', False)],
-        string='Base Tax Received Account',
-        help='Account that will be set on lines created in cash basis journal entry and used to keep track of the tax base amount.')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, type_tax_use, chart_template_id)', 'Tax names must be unique !'),
@@ -946,7 +947,6 @@ class AccountTaxTemplate(models.Model):
                 # Since the accounts have not been created yet, we have to wait before filling these fields
                 todo_dict['account.tax'][tax.id] = {
                     'cash_basis_transition_account_id': template.cash_basis_transition_account_id.id,
-                    'cash_basis_base_account_id': template.cash_basis_base_account_id.id,
                 }
 
                 # We also have to delay the assignation of accounts to repartition lines
