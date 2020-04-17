@@ -71,22 +71,22 @@ class MailComposeMessage(models.TransientModel):
 
                 # prevent sending to blocked addresses that were included by mistake
                 # blacklisted or optout or duplicate -> cancel
-                error_code = False
+                failure_type = False
                 if mail_values.get('state') == 'cancel':
-                    error_code = 'mail_bl'
+                    failure_type = 'mail_bl'
                 elif opt_out_list and mail_to in opt_out_list:
                     mail_values['state'] = 'cancel'
-                    error_code = 'mail_optout'
+                    failure_type = 'mail_optout'
                 elif seen_list and mail_to in seen_list:
                     mail_values['state'] = 'cancel'
-                    error_code = 'mail_dup'
+                    failure_type = 'mail_dup'
                 # void of falsey values -> error
                 elif not mail_to:
                     mail_values['state'] = 'cancel'
-                    error_code = 'mail_email_missing'
+                    failure_type = 'mail_email_missing'
                 elif not mail_to_normalized or not email_re.findall(mail_to):
                     mail_values['state'] = 'cancel'
-                    error_code = "RECIPIENT"
+                    failure_type = "mail_email_invalid"
                 elif seen_list is not None:
                     seen_list.add(mail_to)
 
@@ -102,8 +102,8 @@ class MailComposeMessage(models.TransientModel):
                     trace_vals['trace_status'] = 'cancel'
                 elif mail_values.get('state') == 'exception':
                     trace_vals['trace_status'] = 'error'
-                if error_code:
-                    trace_vals['failure_type'] = error_code
+                if failure_type:
+                    trace_vals['failure_type'] = failure_type
 
                 mail_values.update({
                     'mailing_id': mass_mailing.id,

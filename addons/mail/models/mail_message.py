@@ -29,8 +29,10 @@ class Message(models.Model):
       * notification_type
         'inbox', 'email', 'sms' (SMS addon), 'snail' (snailmail addon)
       * failure_type
+        # generic
+        unknown,
         # mail
-        "SMTP", "RECIPIENT", "BOUNCE", "UNKNOWN", "mail_email_missing"
+        "mail_email_invalid", "mail_smtp", "mail_email_missing"
         # sms (SMS addon)
         'sms_number_missing', 'sms_number_format', 'sms_credit',
         'sms_server', 'sms_acc'
