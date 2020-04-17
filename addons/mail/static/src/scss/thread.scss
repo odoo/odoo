@@ -210,15 +210,13 @@
                 }
             }
 
-            .o_thread_message_star, .o_thread_message_needaction, .o_thread_message_reply, .o_thread_message_email {
+            .o_thread_message_star, .o_thread_message_needaction, .o_thread_message_reply, .o_thread_message_notification {
                 padding: 4px;
             }
 
-            i.o_thread_message_email {
-                &.o_thread_message_email_ready {
-                    color: grey;
-                }
-                &.o_thread_message_email_exception, &.o_thread_message_email_bounce {
+            .o_thread_message_notification {
+                color: grey;
+                &.o_thread_message_notification_error {
                     color: red;
                     opacity: 1;
                     cursor: pointer;

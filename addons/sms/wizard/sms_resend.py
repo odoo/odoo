@@ -91,7 +91,7 @@ class SMSResend(models.TransientModel):
                     put_in_queue=False
                 )
 
-        self.mail_message_id._notify_sms_update()
+        self.mail_message_id._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}
 
     def action_cancel(self):
@@ -99,7 +99,7 @@ class SMSResend(models.TransientModel):
 
         sudo_self = self.sudo()
         sudo_self.mapped('recipient_ids.notification_id').write({'notification_status': 'canceled'})
-        self.mail_message_id._notify_sms_update()
+        self.mail_message_id._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}
 
     def action_buy_credits(self):

@@ -13,7 +13,7 @@ MessagingMenu.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when clicking on a preview related to a snailmail failure
+     * Called when clicking on a preview related to an SMS failure.
      *
      * @private
      * @param {$.Element} $target DOM of preview element clicked

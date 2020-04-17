@@ -34,5 +34,5 @@ WHERE notif.notification_type = 'sms' IS TRUE AND notif.notification_status IN (
             if notif_ids:
                 self.env['mail.notification'].browse(notif_ids).sudo().write({'notification_status': 'canceled'})
             if message_ids:
-                self.env['mail.message'].browse(message_ids)._notify_sms_update()
+                self.env['mail.message'].browse(message_ids)._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}

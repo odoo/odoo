@@ -30,14 +30,12 @@ var MailFailure = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
 
         this._documentID = data.res_id;
         this._documentModel = data.model;
-        this._failureType = data.failure_type || 'mail';
         this._lastMessageDate = moment(); // by default: current datetime
         this._messageID = data.message_id;
+        this._messageType = data.message_type;
         this._modelName = data.model_name;
         this._moduleIcon = data.module_icon;
         this._notifications = data.notifications;
-        this._recordName = data.record_name;
-        this._uuid = data.uuid;
 
         if (data.last_message_date) {
             this._lastMessageDate = moment(time.str_to_datetime(data.last_message_date));
@@ -65,14 +63,6 @@ var MailFailure = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         return this._documentID;
     },
     /**
-     * Get the type of failure of this mail failure.
-     *
-     * @returns {string}
-     */
-    getFailureType: function () {
-        return this._failureType;
-    },
-    /**
      * Get the ID of the message that this mail failure is related to.
      *
      * @returns {integer}
@@ -81,18 +71,26 @@ var MailFailure = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         return this._messageID;
     },
     /**
+     * Get the type of the message that this mail failure is related to.
+     *
+     * @returns {string}
+     */
+    getMessageType() {
+        return this._messageType;
+    },
+    /**
      * Get a valid object for the 'mail.preview' template
      *
      * @returns {Object}
      */
     getPreview: function () {
         var preview = {
-            body: _t("An error occurred when sending an email"),
+            body: this._getPreviewBody(),
             date: this._lastMessageDate,
             documentID: this._documentID,
             documentModel: this._documentModel,
             id: 'mail_failure',
-            imageSRC: this._moduleIcon,
+            imageSRC: this._getPreviewImage(),
             title: this._modelName,
         };
         return preview;
@@ -104,6 +102,23 @@ var MailFailure = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      */
     isLinkedToDocument: function () {
         return !!(this._documentModel && this._documentID);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @returns {string}
+     */
+    _getPreviewBody() {
+        return _t("An error occurred when sending an email.");
+    },
+    /**
+     * @returns {string}
+     */
+    _getPreviewImage() {
+        return '/mail/static/src/img/smiley/mailfailure.jpg';
     },
 });
 
