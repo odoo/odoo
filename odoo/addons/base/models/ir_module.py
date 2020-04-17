@@ -11,6 +11,7 @@ import os
 import pkg_resources
 import shutil
 import tempfile
+import threading
 import zipfile
 
 import requests
@@ -563,6 +564,13 @@ class Module(models.Model):
         }
 
     def _button_immediate_function(self, function):
+        if getattr(threading.currentThread(), 'testing', False):
+            raise RuntimeError(
+                "Module operations inside tests are not transactional and thus forbidden.\n"
+                "If you really need to perform module operations to test a specific behavior, it "
+                "is best to write it as a standalone script, and ask the runbot/metastorm team "
+                "for help."
+            )
         try:
             # This is done because the installation/uninstallation/upgrade can modify a currently
             # running cron job and prevent it from finishing, and since the ir_cron table is locked
