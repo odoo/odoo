@@ -214,6 +214,7 @@ class TestViewSaving(common.TransactionCase):
         # common text nodes should be be escaped client side
         replacement = u'world &amp;amp; &amp;lt;b&amp;gt;cie'
         view.save(replacement, xpath='/t/p')
+        self.env['ir.ui.view'].invalidate_cache(fnames=['arch', 'arch_db'], ids=[view.id])
         self.assertIn(replacement, view.arch, 'common text node should not be escaped server side')
         self.assertIn(
             replacement,
