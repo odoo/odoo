@@ -44,7 +44,7 @@
                     </thead>
                     <tbody>
                         <tr t-foreach="o.move_id._get_reconciled_invoices_partials()" t-as="rec">
-                            <t t-set="amount" t-value="rec[0]"/>
+                            <t t-set="amount" t-value="rec[1]"/>
                             <t t-set="inv" t-value="rec[2].move_id"/>
                             <td><span t-field="inv.invoice_date"/></td>
                             <td><span t-field="inv.name"/></td>
