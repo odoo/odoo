@@ -17,9 +17,13 @@ class Contract(models.Model):
 
     name = fields.Char('Contract Reference', required=True)
     active = fields.Boolean(default=True)
-    structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type")
+    structure_type_id = fields.Many2one(
+        'hr.payroll.structure.type', string="Salary Structure Type",
+        compute="_compute_structure_type_id", store=True, readonly=False)
     employee_id = fields.Many2one(
-        'hr.employee', string='Employee', tracking=True, check_company=True)
+        'hr.employee', string='Employee', tracking=True)
+    # no check_company on employee_id because we want to support the case
+    # See enterprise/hr_work_entry_holidays/tests/test_work_entry.py
     department_id = fields.Many2one(
         'hr.department', string="Department", check_company=True)
     job_id = fields.Many2one(
@@ -30,6 +34,8 @@ class Contract(models.Model):
         help="End date of the contract (if it's a fixed-term contract).")
     trial_date_end = fields.Date('End of Trial Period',
         help="End date of the trial period (if there is one).")
+    # VFE NOTE the following check_company=True may have to be dropped
+    # functional analysis is maybe necessary.
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Schedule',
         compute="_compute_resource_calendar_id", store=True, readonly=False, copy=False,
@@ -44,7 +50,7 @@ class Contract(models.Model):
     ], string='Status', group_expand='_expand_states', copy=False,
        tracking=True, help='Status of the contract', default='draft')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
-    company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
+    company_country_id = fields.Many2one(string="Company country", related='company_id.country_id')
 
     """
         kanban_state:
@@ -66,10 +72,22 @@ class Contract(models.Model):
     calendar_mismatch = fields.Boolean(compute='_compute_calendar_mismatch')
     first_contract_date = fields.Date(related='employee_id.first_contract_date')
 
-    @api.depends('company_id', 'employee_id')
+    @api.depends('company_id', 'employee_id', 'structure_type_id')
     def _compute_resource_calendar_id(self):
         for contract in self:
-            contract.resource_calendar_id = contract.employee_id.resource_calendar_id or contract.company_id.resource_calendar_id
+            contract = contract.with_company(contract.company_id)
+            contract.resource_calendar_id = contract.company_id.resource_calendar_id or\
+                contract.employee_id.resource_calendar_id or\
+                contract.structure_type_id.default_resource_calendar_id or\
+                contract.resource_calendar_id
+
+    @api.depends('company_id')
+    def _compute_structure_type_id(self):
+        for contract in self:
+            company = self.company_id or self.env.company
+            contract.structure_type_id = self.env['hr.payroll.structure.type'].search([
+                ('country_id', 'in', [company.country_id.id, False]),
+            ], limit=1)
 
     @api.depends('employee_id.resource_calendar_id', 'resource_calendar_id')
     def _compute_calendar_mismatch(self):
@@ -85,24 +103,6 @@ class Contract(models.Model):
             self.job_id = self.employee_id.job_id
             self.department_id = self.employee_id.department_id
             self.company_id = self.employee_id.company_id
-
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            structure_types = self.env['hr.payroll.structure.type'].search([
-                '|',
-                ('country_id', '=', self.company_id.country_id.id),
-                ('country_id', '=', False)])
-            if structure_types:
-                self.structure_type_id = structure_types[0]
-            elif self.structure_type_id not in structure_types:
-                self.structure_type_id = False
-
-    @api.onchange('structure_type_id')
-    def _onchange_structure_type_id(self):
-        self = self.with_company(self.company_id)
-        if self.structure_type_id.default_resource_calendar_id:
-            self.resource_calendar_id = self.structure_type_id.default_resource_calendar_id
 
     @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
     def _check_current_contract(self):
