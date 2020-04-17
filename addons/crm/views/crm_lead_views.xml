@@ -22,6 +22,9 @@
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': ['|', ('active', '=', False), ('type', '=', 'lead')]}"/>
                     </header>
+                    <div class="text-center alert alert-primary" role="alert" attrs="{'invisible': ['|', ('ribbon_message', '=', False), ('ribbon_message', '=', '')]}">
+                        <field name="ribbon_message"/>
+                    </div>
                     <sheet>
                         <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
@@ -139,15 +142,8 @@
                                     <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
                                         title="This email is blacklisted for mass mailings. Click to unblacklist."
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
-                                        attrs="{'invisible': ['|', ('is_blacklisted', '=', False), ('partner_address_email', '!=', False)]}"/>
-                                    <field name="email_from"
-                                        attrs="{'invisible': [('partner_address_email', '!=', False)]}" string="Email" widget="email"/>
-                                    <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
-                                        title="This email is blacklisted for mass mailings. Click to unblacklist."
-                                        type="object" context="{'default_email': partner_address_email}" groups="base.group_user"
-                                        attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}"/>
-                                    <field name="partner_address_email"
-                                        attrs="{'invisible': [('partner_address_email', '=', False)]}" widget="email" string="Email"/>
+                                        attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
+                                    <field name="email_from" string="Email" widget="email"/>
                                 </div>
                                 <label for="phone" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
@@ -165,6 +161,7 @@
                                     <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                 </div>
                                 <field name="is_blacklisted" invisible="1"/>
+                                <field name="phone_blacklisted" invisible="1"/>
                                 <field name="email_state" invisible="1"/>
                                 <field name="phone_state" invisible="1"/>
                                 <label for="email_from" class="oe_inline"/>
@@ -172,15 +169,8 @@
                                     <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
                                         title="This email is blacklisted for mass mailings. Click to unblacklist."
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
-                                        attrs="{'invisible': ['|', ('is_blacklisted', '=', False), ('partner_address_email', '!=', False)]}"/>
-                                    <field name="email_from"
-                                        attrs="{'invisible': [('partner_address_email', '!=', False)]}" string="Email" widget="email"/>
-                                    <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
-                                        title="This email is blacklisted for mass mailings. Click to unblacklist."
-                                        type="object" context="{'default_email': partner_address_email}" groups="base.group_user"
-                                        attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}"/>
-                                    <field name="partner_address_email"
-                                        attrs="{'invisible': [('partner_address_email', '=', False)]}" widget="email" string="Email"/>
+                                        attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
+                                    <field name="email_from" string="Email" widget="email"/>
                                 </div>
                                 <field name="email_cc" groups="base.group_no_one"/>
                                 <field name="function"/>
@@ -470,7 +460,6 @@
                     <field name="activity_date_deadline"/>
                     <field name="user_email"/>
                     <field name="user_id"/>
-                    <field name="partner_address_email"/>
                     <field name="partner_id"/>
                     <field name="activity_summary"/>
                     <field name="active"/>

@@ -93,6 +93,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'partner_id': False,
             'contact_name': 'Amy Wong',
             'email_from': 'amy.wong@test.example.com',
+            'country_id': cls.env.ref('base.us').id,
         })
         # update lead_1: stage_id is not computed anymore by default for leads
         cls.lead_1.write({
@@ -145,6 +146,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'street': 'Cookieville Minimum-Security Orphanarium',
             'city': 'New New York',
             'country_id': cls.env.ref('base.us').id,
+            'mobile': '+1 202 555 0999',
             'zip': '97648',
         })
 
@@ -180,7 +182,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'type': 'lead',
             'team_id': lead.team_id.id,
             'partner_id': self.customer.id,
-            'email_from': 'another.email@test.example.com',
         })
         if create_opp:
             self.opp_lost = self.env['crm.lead'].create({

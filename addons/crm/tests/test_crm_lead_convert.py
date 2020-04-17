@@ -43,7 +43,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(lead.partner_id, self.contact_2)
         self.assertEqual(lead.email_from, self.contact_2.email)
         self.assertEqual(lead.mobile, self.contact_2.mobile)
-        self.assertEqual(lead.phone, '123456789')
+        self.assertEqual(lead.phone, self.contact_2.phone)
         self.assertEqual(lead.team_id, self.sales_team_1)
         self.assertEqual(lead.stage_id, self.stage_team1_1)
 
@@ -250,7 +250,6 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.lead_1.write({
             'partner_id': self.customer.id,
         })
-        self.customer.write({'email': False})
         convert = self.env['crm.lead2opportunity.partner'].with_context({
             'active_model': 'crm.lead',
             'active_id': self.lead_1.id,
@@ -457,11 +456,10 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         duplicates if deduplicate is set to True. """
         lead_1_dups = self._create_duplicates(self.lead_1, create_opp=False)
         lead_1_final = self.lead_1  # after merge: same but with lower ID
-        lead_1_dups_partner = lead_1_dups[1]  # copy with a partner_id set but another email -> not correctly taken into account
 
         lead_w_partner_dups = self._create_duplicates(self.lead_w_partner, create_opp=False)
         lead_w_partner_final = lead_w_partner_dups[0]  # lead_w_partner has no stage -> lower in sort by confidence
-        lead_w_partner_dups_partner = lead_w_partner_dups[1]  # copy with a partner_id set but another email -> not correctly taken into account
+        lead_w_partner_dups_partner = lead_w_partner_dups[1]  # copy with a partner_id (with the same email)
 
         mass_convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
             'active_model': 'crm.lead',
@@ -477,8 +475,8 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         mass_convert.action_mass_convert()
 
         self.assertEqual(
-            (lead_1_dups | lead_w_partner_dups).exists(),
-            lead_1_dups_partner | lead_w_partner_final | lead_w_partner_dups_partner
+            (lead_1_dups | lead_w_partner_dups | lead_w_partner_dups_partner).exists(),
+            lead_w_partner_final
         )
         for lead in lead_1_final | lead_w_partner_final:
             self.assertTrue(lead.active)

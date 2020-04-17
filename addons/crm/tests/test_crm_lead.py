@@ -32,6 +32,36 @@ class TestCRMLead(TestCrmCommon):
         # self.assertEqual(lead.country_id, self.contact_1.country_id)
 
     @users('user_sales_manager')
+    def test_crm_lead_partner_sync(self):
+        lead, partner = self.lead_1.with_user(self.env.user), self.contact_2
+        partner_email, partner_phone = self.contact_2.email, self.contact_2.phone
+        lead.partner_id = partner
+
+        # email & phone must be automatically set on the lead
+        lead.partner_id = partner
+        self.assertEqual(lead.email_from, partner_email)
+        self.assertEqual(lead.phone, partner_phone)
+
+        # writing on the lead field must change the partner field
+        lead.email_from = '"John Zoidberg" <john.zoidberg@test.example.com>'
+        lead.phone = '+1 202 555 7799'
+        self.assertEqual(partner.email, '"John Zoidberg" <john.zoidberg@test.example.com>')
+        self.assertEqual(partner.email_normalized, 'john.zoidberg@test.example.com')
+        self.assertEqual(partner.phone, '+1 202 555 7799')
+
+        # writing on the partner must change the lead values
+        partner.email = partner_email
+        partner.phone = '+1 202 555 6666'
+        self.assertEqual(lead.email_from, partner_email)
+        self.assertEqual(lead.phone, '+1 202 555 6666')
+
+        # resetting lead values also resets partner
+        lead.email_from, lead.phone = False, False
+        self.assertFalse(partner.email)
+        self.assertFalse(partner.email_normalized)
+        self.assertFalse(partner.phone)
+
+    @users('user_sales_manager')
     def test_crm_lead_stages(self):
         lead = self.lead_1.with_user(self.env.user)
         self.assertEqual(lead.team_id, self.sales_team_1)

@@ -47,7 +47,7 @@ class Lead(models.Model):
             # If lead is lost, active == False, but is anyway removed from the search in the cron.
             if lead.probability == 100 or lead.iap_enrich_done:
                 continue
-            normalized_email = tools.email_normalize(lead.partner_address_email) or tools.email_normalize(lead.email_from)
+            normalized_email = tools.email_normalize(lead.email_from)
             if normalized_email:
                 lead_emails[lead.id] = normalized_email.split('@')[1]
             else:
