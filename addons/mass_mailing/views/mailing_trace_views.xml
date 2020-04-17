@@ -10,22 +10,22 @@
                 <field name="message_id"/>
                 <field name="email"/>
                 <field name="mass_mailing_id"/>
-                <filter string="Scheduled" name="filter_scheduled" domain="[('scheduled', '!=', False), ('sent', '=', False), ('exception', '=', False), ('ignored', '=', False), ('bounced', '=', False)]"/>
-                <filter string="Ignored" name="filter_ignored" domain="[('scheduled', '!=', False), ('sent', '=', False), ('exception', '=', False), ('ignored', '!=', False)]"/>
-                <filter string="Sent" name="filter_sent" domain="[('sent', '!=', False)]"/>
-                <filter string="Delivered" name="filter_delivered" domain="[('sent', '!=', False), ('exception', '=', False), ('bounced', '=', False)]"/>
+                <filter string="Scheduled" name="filter_scheduled" domain="[('trace_status', '=', 'outgoing')]"/>
+                <filter string="Canceled" name="filter_canceled" domain="[('trace_status', '=', 'cancel')]"/>
+                <filter string="Sent" name="filter_sent" domain="[('sent_datetime', '!=', False)]"/>
+                <filter string="Delivered" name="filter_delivered" domain="[('sent_datetime', '!=', False), ('trace_status', 'not in', ['error', 'cancel'])]"/>
                 <separator/>
-                <filter string="Opened" name="filter_opened" domain="[('opened', '!=', False)]"/>
-                <filter string="Clicked" name="filter_clicked" domain="[('clicked', '!=', False)]"/>
-                <filter string="Replied" name="filter_replied" domain="[('replied', '!=', False)]"/>
-                <filter string="Bounced" name="filter_bounced" domain="[('bounced', '!=', False)]"/>
-                <filter string="Failed" name="filter_failed" domain="[('exception', '!=', False)]"/>
+                <filter string="Opened" name="filter_opened" domain="[('trace_status', 'in', ['open', 'reply'])]"/>
+                <filter string="Clicked" name="filter_clicked" domain="[('links_click_datetime', '!=', False)]"/>
+                <filter string="Replied" name="filter_replied" domain="[('trace_status', '=', 'reply')]"/>
+                <filter string="Bounced" name="filter_bounced" domain="[('trace_status', '=', 'bounce')]"/>
+                <filter string="Failed" name="filter_failed" domain="[('trace_status', '=', 'error')]"/>
                 <group expand="0" string="Group By">
-                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Open Date" name="group_open_date" context="{'group_by': 'opened:day'}"/>
-                    <filter string="Reply Date" name="group_reply_date" context="{'group_by': 'replied:day'}"/>
-                    <filter string="Last State Update" name="state_update" domain="[]" context="{'group_by':'state_update'}"/>
-                    <filter string="Mass Mailing"  name="mass_mailing" domain="[]" context="{'group_by':'mass_mailing_id'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by': 'trace_status'}"/>
+                    <filter string="Open Date" name="group_open_date" domain="[('trace_status', 'in', ['open', 'reply'])]" context="{'group_by': 'open_datetime:day'}"/>
+                    <filter string="Reply Date" name="group_reply_date" domain="[('trace_status', '=', 'reply')]" context="{'group_by': 'reply_datetime:day'}"/>
+                    <filter string="Last State Update" name="state_update" domain="[]" context="{'group_by': 'write_date'}"/>
+                    <filter string="Mass Mailing"  name="mass_mailing" domain="[]" context="{'group_by': 'mass_mailing_id'}"/>
                 </group>
             </search>
         </field>
@@ -38,16 +38,13 @@
             <tree string="Mail Statistics" create="0">
                 <field name="mass_mailing_id"/>
                 <field name="email"/>
-                <field name="state"/>
                 <field name="message_id"/>
-                <field name="scheduled"/>
-                <field name="sent"/>
-                <field name="exception"/>
-                <field name="opened"/>
-                <field name="clicked"/>
-                <field name="replied"/>
-                <field name="bounced"/>
-                <field name="ignored"/>
+                <field name="sent_datetime"/>
+                <field name="trace_status"/>
+                <field name="open_datetime" optional="hide"/>
+                <field name="reply_datetime" optional="hide"/>
+                <field name="links_click_datetime" optional="hide"/>
+                <field name="failure_type"/>
             </tree>
         </field>
     </record>
@@ -58,7 +55,7 @@
         <field name="arch" type="xml">
             <form string="Mail Statistics" create="0" edit="0">
                 <header>
-                    <field name="state" widget="statusbar"/>
+                    <field name="trace_status" widget="statusbar"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -71,24 +68,19 @@
                         <group string="Mailing">
                             <field name="trace_type" invisible="1"/>
                             <field name="email" string="Recipient Address" readonly="1"/>
-                            <field name="sent" attrs="{'invisible' : [('sent', '=', False)]}" readonly="1"/>
-                            <field name="opened" attrs="{'invisible' : [('opened', '=', False)]}" readonly="1"/>
-                            <field name="replied" attrs="{'invisible' : [('replied', '=', False)]}" readonly="1"/>
-                            <field name="bounced" attrs="{'invisible' : [('bounced', '=', False)]}" readonly="1"/>
-                            <field name="ignored" attrs="{'invisible' : [('ignored', '=', False)]}" readonly="1"/>
+                            <field name="sent_datetime" attrs="{'invisible' : [('sent_datetime', '=', False)]}" readonly="1"/>
+                            <field name="open_datetime" attrs="{'invisible' : [('open_datetime', '=', False)]}" readonly="1"/>
+                            <field name="reply_datetime" attrs="{'invisible' : [('reply_datetime', '=', False)]}" readonly="1"/>
                             <field name="failure_type" attrs="{'invisible' : [('failure_type', '=', False)]}" readonly="1"/>
                         </group>
-
                         <group string="Marketing">
                             <field name="campaign_id" readonly="1"/>
                             <field name="medium_id" readonly="1"/>
                             <field name="source_id" readonly="1"/>
                             <field name="mass_mailing_id" readonly="1"/>
+                            <field name="links_click_datetime" readonly="1"/>
                         </group>
-
                         <group string="Technical">
-                            <field name="exception" readonly="1"/>
-                            <field name="state_update" readonly="1"/>
                             <field name="mail_mail_id_int" string="Mail ID" readonly="1"/>
                             <field name="message_id" readonly="1"/>
                         </group>
@@ -103,8 +95,8 @@
         <field name="model">mailing.trace</field>
         <field name="arch" type="xml">
             <graph string="Mail Statistics" type="bar" stacked="True" sample="1">
-                <field name="state_update" type="row" interval="day"/>
-                <field name="state" type="row"/>
+                <field name="write_date" type="row" interval="day"/>
+                <field name="trace_status" type="row"/>
             </graph>
         </field>
     </record>

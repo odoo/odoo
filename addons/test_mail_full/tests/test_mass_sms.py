@@ -169,28 +169,28 @@ class TestMassSMSInternals(TestMassSMSCommon):
         # duplicates
         self.assertSMSTraces(
             [{'partner': new_record_2.customer_id, 'number': self.records_numbers[0],
-              'content': 'Dear %s this is a mass SMS.' % new_record_2.display_name, 'state': 'ignored',
+              'content': 'Dear %s this is a mass SMS.' % new_record_2.display_name, 'trace_status': 'cancel',
               'failure_type': 'sms_duplicate'}],
             self.mailing, new_record_2,
         )
         # blacklist
         self.assertSMSTraces(
             [{'partner': self.env['res.partner'], 'number': phone_validation.phone_format(bl_record_1.phone_nbr, 'BE', '32', force_format='E164'),
-              'content': 'Dear %s this is a mass SMS.' % bl_record_1.display_name, 'state': 'ignored',
+              'content': 'Dear %s this is a mass SMS.' % bl_record_1.display_name, 'trace_status': 'cancel',
               'failure_type': 'sms_blacklist'}],
             self.mailing, bl_record_1,
         )
         # missing number
         self.assertSMSTraces(
             [{'partner': self.env['res.partner'], 'number': False,
-              'content': 'Dear %s this is a mass SMS.' % void_record.display_name, 'state': 'ignored',
+              'content': 'Dear %s this is a mass SMS.' % void_record.display_name, 'trace_status': 'cancel',
               'failure_type': 'sms_number_missing'}],
             self.mailing, void_record,
         )
         # wrong values
         self.assertSMSTraces(
             [{'partner': self.env['res.partner'], 'number': record.phone_nbr,
-              'content': 'Dear %s this is a mass SMS.' % record.display_name, 'state': 'ignored',
+              'content': 'Dear %s this is a mass SMS.' % record.display_name, 'trace_status': 'cancel',
               'failure_type': 'sms_number_format'}
              for record in falsy_record_1 + falsy_record_2],
             self.mailing, falsy_record_1 + falsy_record_2,
@@ -220,7 +220,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
         # new failed traces generated for duplicates
         self.assertSMSTraces(
             [{'partner': record.customer_id, 'number': self.records_numbers[i],
-              'content': 'Dear %s this is a mass SMS.' % record.display_name, 'state': 'ignored',
+              'content': 'Dear %s this is a mass SMS.' % record.display_name, 'trace_status': 'cancel',
               'failure_type': 'sms_duplicate'}
              for i, record in enumerate(self.records[:5])],
             self.mailing, self.records[:5],
@@ -282,7 +282,7 @@ class TestMassSMS(TestMassSMSCommon):
         self.assertSMSTraces(
             [{'partner': record.customer_id,
               'number': self.records_numbers[i],
-              'state': 'sent',
+              'trace_status': 'sent',
               'content': 'Dear %s this is a mass SMS with two links' % record.display_name
              } for i, record in enumerate(self.records)],
             mailing, self.records,
@@ -317,7 +317,7 @@ class TestMassSMS(TestMassSMSCommon):
         self.assertSMSTraces(
             [{'partner': record.customer_id,
               'number': record.customer_id.phone_sanitized,
-              'state': 'sent',
+              'trace_status': 'sent',
               'content': 'Dear %s this is a mass SMS with two links' % record.display_name
              } for record in records],
             mailing, records,
@@ -342,7 +342,7 @@ class TestMassSMS(TestMassSMSCommon):
         self.assertSMSTraces(
             [{'partner': new_record.customer_id,
               'number': new_record.customer_id.phone_sanitized,
-              'state': 'sent',
+              'trace_status': 'sent',
               'content': 'Dear %s this is a mass SMS with two links' % new_record.display_name
              }],
             mailing, new_record,
@@ -395,11 +395,11 @@ class TestMassSMS(TestMassSMSCommon):
             mailing.action_send_sms()
 
         self.assertSMSTraces(
-            [{'number': '+32456000000', 'state': 'ignored', 'failure_type': 'sms_optout'},
-             {'number': '+32456000101', 'state': 'ignored', 'failure_type': 'sms_optout'},
-             {'number': '+32456000202', 'state': 'sent'},
-             {'number': '+32456000303', 'state': 'sent'},
-             {'number': '+32456000404', 'state': 'ignored', 'failure_type': 'sms_blacklist'}],
+            [{'number': '+32456000000', 'trace_status': 'cancel', 'failure_type': 'sms_optout'},
+             {'number': '+32456000101', 'trace_status': 'cancel', 'failure_type': 'sms_optout'},
+             {'number': '+32456000202', 'trace_status': 'sent'},
+             {'number': '+32456000303', 'trace_status': 'sent'},
+             {'number': '+32456000404', 'trace_status': 'cancel', 'failure_type': 'sms_blacklist'}],
             mailing, recipients
         )
-        self.assertEqual(mailing.ignored, 3)
+        self.assertEqual(mailing.canceled, 3)

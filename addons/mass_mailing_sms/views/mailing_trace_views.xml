@@ -33,14 +33,14 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <tree string="SMS Traces" create="0">
+                <field name="mass_mailing_id"/>
                 <field name="sms_number"/>
-                <field name="state"/>
-                <field name="scheduled"/>
-                <field name="sent"/>
-                <field name="clicked"/>
-                <field name="bounced"/>
-                <field name="exception"/>
-                <field name="ignored"/>
+                <field name="message_id"/>
+                <field name="sent_datetime"/>
+                <field name="trace_status"/>
+                <field name="open_datetime" optional="hide"/>
+                <field name="reply_datetime" optional="hide"/>
+                <field name="links_click_datetime" optional="hide"/>
                 <field name="failure_type"/>
             </tree>
         </field>
@@ -60,16 +60,6 @@
             <xpath expr="//field[@name='message_id']" position="attributes">
                 <attribute name="attrs">{'invisible': [('trace_type', '!=', 'mail')]}</attribute>
             </xpath>
-            <xpath expr="//field[@name='opened']" position="attributes">
-                <attribute name="attrs">
-                    {'invisible': ['|', ('opened', '=', False), ('trace_type', '=', 'sms')]}
-                </attribute>
-            </xpath>
-            <xpath expr="//field[@name='replied']" position="attributes">
-                <attribute name="attrs">
-                    {'invisible': ['|', ('replied', '=', False), ('trace_type', '=', 'sms')]}
-                </attribute>
-            </xpath>
             <xpath expr="//field[@name='email']" position="after">
                 <field name="sms_number" attrs="{'invisible': [('trace_type', '!=', 'sms')]}"/>
             </xpath>
@@ -87,13 +77,13 @@
         <field name="arch" type="xml">
             <form string="SMS Trace" create="0">
                 <header>
-                    <field name="state" widget="statusbar"/>
+                    <field name="trace_status" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <div class="alert alert-info text-center" attrs="{'invisible': [('exception', '=', False)]}" role="alert">
+                    <div class="alert alert-info text-center" attrs="{'invisible': [('trace_status', '!=', 'error')]}" role="alert">
                         <strong>This SMS could not be sent.</strong>
                     </div>
-                    <div class="alert alert-info text-center" attrs="{'invisible': [('bounced', '=', False)]}" role="alert">
+                    <div class="alert alert-info text-center" attrs="{'invisible': [('trace_status', '!=', 'bounce')]}" role="alert">
                         <strong>This number appears to be invalid.</strong>
                     </div>
                     <group>
@@ -106,13 +96,9 @@
                             <field name="res_id" groups="base.group_no_one"/>
                         </group>
                         <group>
-                            <field name="scheduled"/>
-                            <field name="sent"/>
-                            <field name="clicked"/>
-                            <field name="bounced"/>
-                            <field name="exception"/>
-                            <field name="failure_type" attrs="{'invisible': [('exception', '=', False)]}"/>
-                            <field name="ignored"/>
+                            <field name="sent_datetime"/>
+                            <field name="links_click_datetime"/>
+                            <field name="failure_type" attrs="{'invisible': [('trace_status', '!=', 'error')]}"/>
                         </group>
                     </group>
                 </sheet>

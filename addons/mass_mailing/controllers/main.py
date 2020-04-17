@@ -98,7 +98,7 @@ class MassMailController(http.Controller):
         if not consteq(token, tools.hmac(request.env(su=True), 'mass_mailing-mail_mail-open', mail_id)):
             raise BadRequest()
 
-        request.env['mailing.trace'].sudo().set_opened(mail_mail_ids=[mail_id])
+        request.env['mailing.trace'].sudo().set_opened(domain=[('mail_mail_id_int', 'in', [mail_id])])
         response = werkzeug.wrappers.Response()
         response.mimetype = 'image/gif'
         response.data = base64.b64decode(b'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==')
