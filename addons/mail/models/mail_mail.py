@@ -156,7 +156,7 @@ class MailMail(models.Model):
         if notif_mails_ids:
             notifications = self.env['mail.notification'].search([
                 ('notification_type', '=', 'email'),
-                ('mail_id', 'in', notif_mails_ids),
+                ('mail_mail_id', 'in', notif_mails_ids),
                 ('notification_status', 'not in', ('sent', 'cancel'))
             ])
             if notifications:
@@ -334,7 +334,7 @@ class MailMail(models.Model):
                 # mail record.
                 notifs = self.env['mail.notification'].search([
                     ('notification_type', '=', 'email'),
-                    ('mail_id', 'in', mail.ids),
+                    ('mail_mail_id', 'in', mail.ids),
                     ('notification_status', 'not in', ('sent', 'cancel'))
                 ])
                 if notifs:

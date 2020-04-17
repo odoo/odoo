@@ -46,7 +46,7 @@ class TestMailMailRace(common.TransactionCase):
             'subtype_id': self.ref('mail.mt_comment'),
             'notification_ids': [(0, 0, {
                 'res_partner_id': self.partner.id,
-                'mail_id': mail.id,
+                'mail_mail_id': mail.id,
                 'notification_type': 'email',
                 'is_read': True,
                 'notification_status': 'outgoing',
