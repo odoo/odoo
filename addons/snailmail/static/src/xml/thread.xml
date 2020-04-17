@@ -1,37 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template id="template" xml:space="preserve">
 
-    <t t-extend="mail.widget.Thread.Message">
-        <t t-jquery=".o_thread_tooltip_container" t-operation="after">
-            <span t-if="message.getType() === 'snailmail' and options.displaySnailmailIcons" class="o_thread_snailmail_tooltip_container">
-                <t t-set="thread_icon_class" t-value="'o_thread_snailmail_tooltip o_thread_message_snailmail o_thread_message_snailmail_' + message.getSnailmailStatus()" />
-                <t t-if="message.getSnailmailError()">
-                    <t t-set="thread_icon_class" t-value="thread_icon_class + ' o_thread_message_snailmail_error'"/>
-                </t>
-                <i t-att-class="thread_icon_class + ' fa fa-paper-plane'" t-att-data-message-id="message.getID()"/>
-            </span>
-        </t>
+    <t t-inherit="mail.widget.Thread.Message" t-inherit-mode="extension">
+        <xpath expr="//span[@name='notification_icon']" position="attributes">
+            <!--
+                Messages from snaimail are considered to have at most one notification.
+                The failure type of the whole message is considered to be the same as the one from
+                that first notification, and the click action will depend on it.
+            -->
+            <attribute name="t-att-data-failure-type">message.getNotifications()[0].failure_type</attribute>
+        </xpath>
     </t>
 
-    <t t-name="snailmail.widget.Thread.Message.SnailmailTooltip">
-        <span class="d-inline-block text-center o_thread_tooltip_snailmail">
-            <t t-if="status === 'sent'">
-                <i class='fa fa-check o_thread_tooltip_snailmail_icon' title="Sent" role="img" aria-label="Sent"/>
-                Sent
+    <t t-inherit="mail.widget.Thread.Message.MailTooltip" t-inherit-mode="extension">
+        <!--
+            It was decided that the information displayed for snaimail messages has to be
+            different than for standard messages, see task-1907998.
+        -->
+        <xpath expr="//span[@name='notification_status']" position="replace">
+            <t t-if="notification.notification_type === 'snail'">
+                <span class="d-inline-block text-center o_thread_tooltip_icon">
+                    <t t-if="notification.notification_status === 'sent'">
+                        <i class="fa fa-check o_thread_tooltip_snailmail_icon" title="Sent" role="img" aria-label="Sent"/>
+                        Sent
+                    </t>
+                    <t t-elif="notification.notification_status === 'canceled'">
+                        <i class="fa fa-trash-o o_thread_tooltip_snailmail_icon" title="Canceled" role="img" aria-label="Canceled"/>
+                        Canceled
+                    </t>
+                    <t t-elif="notification.notification_status === 'ready'">
+                        <i class="fa fa-clock-o o_thread_tooltip_snailmail_icon" title="Awaiting Dispatch" role="img" aria-label="Awaiting Dispatch"/>
+                        Awaiting Dispatch
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-exclamation text-danger o_thread_tooltip_snailmail_icon" title="Error" role="img" aria-label="Error"/>
+                        Error
+                    </t>
+                </span>
             </t>
-            <t t-elif="status === 'canceled'">
-                <i class='fa fa-trash-o o_thread_tooltip_snailmail_icon' title="Canceled" role="img" aria-label="Canceled"/>
-                Canceled
-            </t>
-            <t t-elif="status === 'pending'">
-                <i class='fa fa-clock-o o_thread_tooltip_snailmail_icon' title="Awaiting Dispatch" role="img" aria-label="Awaiting Dispatch"/>
-                Awaiting Dispatch
-            </t>
-            <t t-else="">
-                <i class='fa fa-exclamation text-danger o_thread_tooltip_snailmail_icon' title="Error" role="img" aria-label="Error"/>
-                Error
-            </t>
-        </span>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//span[@name='partner_name']" position="replace">
+            <t t-if="notification.notification_type === 'snail'"></t>
+            <t t-else="">$0</t>
+        </xpath>
     </t>
 
 </template>

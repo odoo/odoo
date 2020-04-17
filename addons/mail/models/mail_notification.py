@@ -82,3 +82,24 @@ class Notification(models.Model):
             ('notification_status', 'in', ('sent', 'canceled'))
         ]
         return self.search(domain).unlink()
+
+    def _filtered_for_web_client(self):
+        """Returns only the notifications to show on the web client."""
+        return self.filtered(lambda n:
+            n.notification_type != 'inbox' and
+            (n.notification_status in ['bounce', 'exception', 'canceled'] or n.res_partner_id.partner_share)
+        )
+
+    def _notification_format(self):
+        """Returns the current notifications in the format expected by the web
+        client."""
+        return {
+            notif.id: {
+                'notification_id': notif.id,
+                'notification_type': notif.notification_type,
+                'notification_status': notif.notification_status,
+                'failure_type': notif.failure_type,
+                'partner_id': notif.res_partner_id.id,
+                'partner_name': notif.res_partner_id.display_name,
+            } for notif in self
+        }

@@ -33,5 +33,5 @@ class MailResendCancel(models.TransientModel):
             messages_ids = list(set([row[1] for row in res]))
             if notif_ids:
                 self.env["mail.notification"].browse(notif_ids).sudo().write({'notification_status': 'canceled'})
-                self.env["mail.message"].browse(messages_ids)._notify_mail_failure_update()
+                self.env["mail.message"].browse(messages_ids)._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}

@@ -42,8 +42,7 @@ var ThreadWidget = Widget.extend({
         'click .oe_mail_expand': '_onClickMailExpand',
         'click .o_thread_message': '_onClickMessage',
         'click': '_onClick',
-        'click .o_thread_message_email_exception': '_onClickEmailException',
-        'click .o_thread_message_email_bounce': '_onClickEmailException',
+        'click .o_thread_message_notification_error': '_onClickMessageNotificationError',
         'click .o_thread_message_moderation': '_onClickMessageModeration',
         'change .moderation_checkbox': '_onChangeModerationCheckbox',
     },
@@ -66,7 +65,7 @@ var ThreadWidget = Widget.extend({
             displayDocumentLinks: true,
             displayAvatars: true,
             squashCloseMessages: true,
-            displayEmailIcons: true,
+            displayNotificationIcons: true,
             displayReplyIcons: false,
             loadMoreOnScroll: false,
             hasMessageAttachmentDeletable: false,
@@ -80,7 +79,7 @@ var ThreadWidget = Widget.extend({
             displayDocumentLinks: false,
             displayAvatars: this._enabledOptions.displayAvatars,
             squashCloseMessages: false,
-            displayEmailIcons: false,
+            displayNotificationIcons: false,
             displayReplyIcons: false,
             loadMoreOnScroll: this._enabledOptions.loadMoreOnScroll,
             hasMessageAttachmentDeletable: false,
@@ -215,7 +214,7 @@ var ThreadWidget = Widget.extend({
             }, 1000*60);
         }
 
-        this._renderMessageMailPopover(messages);
+        this._renderMessageNotificationPopover(messages);
         if (thread.hasSeenFeature()) {
             this._renderMessageSeenPopover(thread, messages);
         }
@@ -454,15 +453,16 @@ var ThreadWidget = Widget.extend({
         }
     }, 500, true),
     /**
-     * Render the popover when mouse-hovering on the mail icon of a message
-     * in the thread. There is at most one such popover at any given time.
+     * Render the popover when mouse-hovering on the notification icon of a
+     * message in the thread.
+     * There is at most one such popover at any given time.
      *
      * @private
      * @param {mail.model.AbstractMessage[]} messages list of messages in the
      *   rendered thread, for which popover on mouseover interaction is
      *   permitted.
      */
-    _renderMessageMailPopover: function (messages) {
+    _renderMessageNotificationPopover(messages) {
         if (this._messageMailPopover) {
             this._messageMailPopover.popover('hide');
         }
@@ -481,7 +481,7 @@ var ThreadWidget = Widget.extend({
                     return message.getID() === messageID;
                 });
                 return QWeb.render('mail.widget.Thread.Message.MailTooltip', {
-                    data: message.hasCustomerEmailData() ? message.getCustomerEmailData() : [],
+                    notifications: message.getNotifications(),
                 });
             },
         });
@@ -583,18 +583,6 @@ var ThreadWidget = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickEmailException: function (ev) {
-        var messageID = $(ev.currentTarget).data('message-id');
-        this.do_action('mail.mail_resend_message_action', {
-            additional_context: {
-                mail_message_to_resend: messageID
-            }
-        });
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickMailExpand: function (ev) {
         ev.preventDefault();
     },
@@ -612,6 +600,18 @@ var ThreadWidget = Widget.extend({
     _onClickMessageNeedaction: function (ev) {
         var messageID = $(ev.currentTarget).data('message-id');
         this.trigger('mark_as_read', messageID);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickMessageNotificationError(ev) {
+        const messageID = $(ev.currentTarget).data('message-id');
+        this.do_action('mail.mail_resend_message_action', {
+            additional_context: {
+                mail_message_to_resend: messageID,
+            }
+        });
     },
     /**
      * @private
