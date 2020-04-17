@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _, tools
 
 
 class MassMailing(models.Model):
@@ -61,3 +61,23 @@ class MassMailing(models.Model):
         if not res:
             res.append((0, '=', 1))
         return res
+
+    def _prepare_statistics_email_values(self):
+        self.ensure_one()
+        values = super(MassMailing, self)._prepare_statistics_email_values()
+        if not self.user_id:
+            return values
+
+        self_with_company = self.with_company(self.user_id.company_id)
+        currency = self.user_id.company_id.currency_id
+        formated_amount = tools.format_decimalized_amount(self_with_company.sale_invoiced_amount, currency)
+
+        values['kpi_data'][1]['kpi_col2'] = {
+            'value': self.sale_quotation_count,
+            'col_subtitle': _('QUOTATIONS'),
+        }
+        values['kpi_data'][1]['kpi_col3'] = {
+            'value': formated_amount,
+            'col_subtitle': _('INVOICED'),
+        }
+        return values

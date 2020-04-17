@@ -10,6 +10,8 @@ import re
 import threading
 from ast import literal_eval
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from werkzeug.urls import url_join
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -117,6 +119,7 @@ class MassMailing(models.Model):
         help='If checked, recipients will be mailed only once for the whole campaign. '
              'This lets you send different mailings to randomly selected recipients and test '
              'the effectiveness of the mailings, without causing duplicate messages.')
+    kpi_mail_required = fields.Boolean('KPI mail required', copy=False)
     # statistics data
     mailing_trace_ids = fields.One2many('mailing.trace', 'mass_mailing_id', string='Emails Statistics')
     total = fields.Integer(compute="_compute_total")
@@ -558,7 +561,12 @@ class MassMailing(models.Model):
             # auto-commit except in testing mode
             auto_commit = not getattr(threading.currentThread(), 'testing', False)
             composer.send_mail(auto_commit=auto_commit)
-            mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
+            mailing.write({
+                'state': 'done',
+                'sent_date': fields.Datetime.now(),
+                # send the KPI mail only if it's the first sending
+                'kpi_mail_required': not mailing.sent_date,
+            })
         return True
 
     def convert_links(self):
@@ -589,7 +597,119 @@ class MassMailing(models.Model):
                 mass_mailing.state = 'sending'
                 mass_mailing.action_send_mail()
             else:
-                mass_mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
+                mass_mailing.write({
+                    'state': 'done',
+                    'sent_date': fields.Datetime.now(),
+                    # send the KPI mail only if it's the first sending
+                    'kpi_mail_required': not mass_mailing.sent_date,
+                })
+
+        mailings = self.env['mailing.mailing'].search([
+            ('kpi_mail_required', '=', True),
+            ('state', '=', 'done'),
+            ('sent_date', '<=', fields.Datetime.now() - relativedelta(days=1)),
+            ('sent_date', '>=', fields.Datetime.now() - relativedelta(days=5)),
+        ])
+        if mailings:
+            mailings._action_send_statistics()
+
+    # ------------------------------------------------------
+    # STATISTICS
+    # ------------------------------------------------------
+    def _action_send_statistics(self):
+        """Send an email to the responsible of each finished mailing with the statistics."""
+        self.kpi_mail_required = False
+
+        for mailing in self:
+            user = mailing.user_id
+            mailing = mailing.with_context(lang=user.lang or self._context.get('lang'))
+
+            link_trackers = self.env['link.tracker'].search(
+                [('mass_mailing_id', '=', mailing.id)]
+            ).sorted('count', reverse=True)
+            link_trackers_body = self.env['ir.qweb']._render(
+                'mass_mailing.mass_mailing_kpi_link_trackers',
+                {'object': mailing, 'link_trackers': link_trackers},
+            )
+
+            rendered_body = self.env['ir.qweb']._render(
+                'digest.digest_mail_main',
+                {
+                    'body': tools.html_sanitize(link_trackers_body),
+                    'company': user.company_id,
+                    'user': user,
+                    'display_mobile_banner': True,
+                    ** mailing._prepare_statistics_email_values()
+                },
+            )
+
+            full_mail = self.env['mail.render.mixin']._render_encapsulate(
+                'digest.digest_mail_layout',
+                rendered_body,
+            )
+
+            mail_values = {
+                'subject': _('24H Stats of mailing "%s"') % mailing.subject,
+                'email_from': user.email_formatted,
+                'email_to': user.email_formatted,
+                'body_html': full_mail,
+                'auto_delete': True,
+            }
+            mail = self.env['mail.mail'].sudo().create(mail_values)
+            mail.send(raise_exception=False)
+
+    def _prepare_statistics_email_values(self):
+        """Return some statistics that will be displayed in the mailing statistics email.
+
+        Each item in the returned list will be displayed as a table, with a title and
+        1, 2 or 3 columns.
+        """
+        self.ensure_one()
+
+        random_tip = self.env['digest.tip'].search(
+            [('group_id.category_id', '=', self.env.ref('base.module_category_marketing_email_marketing').id)]
+        )
+        if random_tip:
+            random_tip = random.choice(random_tip).tip_description
+
+        formatted_date = tools.format_datetime(
+            self.env, self.sent_date, self.user_id.tz, 'MMM dd, YYYY',  self.user_id.lang
+        ) if self.sent_date else False
+
+        web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
+        return {
+            'title': _('24H Stats of mailing'),
+            'sub_title': '"%s"' % self.subject,
+            'top_button_label': _('More Info'),
+            'top_button_url': url_join(web_base_url, f'/web#id={self.id}&model=mailing.mailing&view_type=form'),
+            'kpi_data': [
+                {
+                    'kpi_fullname': _('Engagement on %i Emails Sent') % self.sent,
+                    'kpi_action': None,
+                    'kpi_col1': {
+                        'value': f'{self.received_ratio}%',
+                        'col_subtitle': '%s (%i)' % (_('RECEIVED'), self.delivered),
+                    },
+                    'kpi_col2': {
+                        'value': f'{self.opened_ratio}%',
+                        'col_subtitle': '%s (%i)' % (_('OPENED'), self.opened),
+                    },
+                    'kpi_col3': {
+                        'value': f'{self.replied_ratio}%',
+                        'col_subtitle': '%s (%i)' % (_('REPLIED'), self.replied),
+                    },
+                }, {
+                    'kpi_fullname': _('Business Benefits on %i Emails Sent') % self.sent,
+                    'kpi_action': None,
+                    'kpi_col1': {},
+                    'kpi_col2': {},
+                    'kpi_col3': {},
+                },
+            ],
+            'tips': [random_tip] if random_tip else False,
+            'formatted_date': formatted_date,
+        }
 
     # ------------------------------------------------------
     # TOOLS

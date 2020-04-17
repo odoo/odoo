@@ -1380,6 +1380,46 @@ def _format_time_ago(env, time_delta, lang_code=False, add_direction=True):
     return babel.dates.format_timedelta(-time_delta, add_direction=add_direction, locale=locale)
 
 
+def format_decimalized_number(number, decimal=1):
+    """Format a number to display to nearest metrics unit next to it.
+
+    Do not display digits if all visible digits are null.
+    Do not display units higher then "Tera" because most of people don't know what
+    a "Yotta" is.
+
+    >>> format_decimalized_number(123_456.789)
+    123.5k
+    >>> format_decimalized_number(123_000.789)
+    123k
+    >>> format_decimalized_number(-123_456.789)
+    -123.5k
+    >>> format_decimalized_number(0.789)
+    0.8
+    """
+    for unit in ['', 'k', 'M', 'G']:
+        if abs(number) < 1000.0:
+            return "%g%s" % (round(number, decimal), unit)
+        number /= 1000.0
+    return "%g%s" % (round(number, decimal), 'T')
+
+
+def format_decimalized_amount(amount, currency=None):
+    """Format a amount to display the currency and also display the metric unit of the amount.
+
+    >>> format_decimalized_amount(123_456.789, res.currency("$"))
+    $123.5k
+    """
+    formated_amount = format_decimalized_number(amount)
+
+    if not currency:
+        return formated_amount
+
+    if currency.position == 'before':
+        return "%s%s" % (currency.symbol or '', formated_amount)
+
+    return "%s %s" % (formated_amount, currency.symbol or '')
+
+
 def format_amount(env, amount, currency, lang_code=False):
     fmt = "%.{0}f".format(currency.decimal_places)
     lang = get_lang(env, lang_code)

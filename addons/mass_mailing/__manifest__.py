@@ -18,11 +18,13 @@
         'web_kanban_gauge',
         'social_media',
         'web_tour',
+        'digest',
     ],
     'data': [
         'security/mass_mailing_security.xml',
         'security/ir.model.access.csv',
         'data/mail_data.xml',
+        'data/mailing_data_templates.xml',
         'data/mass_mailing_data.xml',
         'wizard/mail_compose_message_views.xml',
         'wizard/mailing_list_merge_views.xml',
