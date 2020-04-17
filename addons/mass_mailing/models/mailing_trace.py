@@ -58,11 +58,12 @@ class MailingTrace(models.Model):
                                         ('bounced', 'Bounced'),
                                         ('ignored', 'Ignored')], store=True)
     failure_type = fields.Selection(selection=[
-        ("SMTP", "Connection failed (outgoing mail server problem)"),
-        ("RECIPIENT", "Invalid email address"),
-        ("BOUNCE", "Email address rejected by destination"),
-        ("UNKNOWN", "Unknown error"),
-    ], string='Failure type')
+        # generic
+        ("error", "Unknown error"),
+        # mail
+        ("m_mail", "Invalid email address"),
+        ("m_smtp", "Connection failed (outgoing mail server problem)"),
+        ], string='Failure type')
     state_update = fields.Datetime(compute="_compute_state", string='State Update',
                                    help='Last state update of the mail',
                                    store=True)
