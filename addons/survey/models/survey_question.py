@@ -553,7 +553,8 @@ class SurveyQuestionAnswer(models.Model):
     value = fields.Char('Suggested value', translate=True, required=True)
     value_image = fields.Image('Image', max_width=256, max_height=256)
     is_correct = fields.Boolean('Is a correct answer')
-    answer_score = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
+    answer_score = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer",
+                                compute="_compute_answer_score", store=True, readonly=False)
 
     @api.constrains('question_id', 'matrix_question_id')
     def _check_question_not_empty(self):
@@ -561,3 +562,17 @@ class SurveyQuestionAnswer(models.Model):
         for label in self:
             if not bool(label.question_id) != bool(label.matrix_question_id):
                 raise ValidationError(_("A label must be attached to only one question."))
+
+    @api.constrains('answer_score', 'is_correct')
+    def _check_correct_score(self):
+        for answer in self:
+            if answer.is_correct and answer.answer_score <= 0:
+                raise ValidationError(_("A correct answer must have a score > 0."))
+
+    @api.depends('is_correct')
+    def _compute_answer_score(self):
+        for answer in self:
+            if answer.is_correct and not answer.answer_score:
+                answer.answer_score = 1
+            elif not answer.is_correct and answer.answer_score:
+                answer.answer_score = 0
