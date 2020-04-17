@@ -2254,13 +2254,13 @@ class MailThread(models.AbstractModel):
                             tocreate_recipient_ids = [rid for rid in recipient_ids if rid not in existing_notifications.mapped('res_partner_id.id')]
                             existing_notifications.write({
                                 'notification_status': 'ready',
-                                'mail_id': email.id,
+                                'mail_mail_id': email.id,
                             })
                     notif_create_values += [{
                         'mail_message_id': message.id,
                         'res_partner_id': recipient_id,
                         'notification_type': 'email',
-                        'mail_id': email.id,
+                        'mail_mail_id': email.id,
                         'is_read': True,  # discard Inbox notification
                         'notification_status': 'ready',
                     } for recipient_id in tocreate_recipient_ids]
