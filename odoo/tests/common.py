@@ -31,6 +31,7 @@ from contextlib import contextmanager
 from datetime import datetime, date
 from unittest.mock import patch
 
+from collections import defaultdict
 from decorator import decorator
 from itertools import zip_longest as izip_longest
 from lxml import etree, html
@@ -74,6 +75,29 @@ def get_db_name():
     if not db and hasattr(threading.current_thread(), 'dbname'):
         return threading.current_thread().dbname
     return db
+
+
+standalone_tests = defaultdict(list)
+
+
+def standalone(*tags):
+    """ Decorator for standalone test functions.  This is somewhat dedicated to
+    tests that install, upgrade or uninstall some modules, which is currently
+    forbidden in regular test cases.  The function is registered under the given
+    ``tags`` and the corresponding Odoo module name.
+    """
+    def register(func):
+        # register func by odoo module name
+        if func.__module__.startswith('odoo.addons.'):
+            module = func.__module__.split('.')[2]
+            standalone_tests[module].append(func)
+        # register func with aribitrary name, if any
+        for tag in tags:
+            standalone_tests[tag].append(func)
+        standalone_tests['all'].append(func)
+        return func
+
+    return register
 
 
 # For backwards-compatibility - get_db_name() should be used instead
