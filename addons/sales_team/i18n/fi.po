@@ -10,7 +10,6 @@
 # Miku Laitinen <miku.laitinen@gmail.com>, 2019
 # Jussi Lehto <jussi@gulfeo.com>, 2019
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2019
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2019
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
 # Timo Koukkari <ti.ko@netikka.fi>, 2019
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
@@ -18,6 +17,7 @@
 # Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,11 +76,14 @@ msgid ""
 "Add members to automatically assign their documents to this sales team. You "
 "can only be member of one team."
 msgstr ""
+"Lisätyt jäsenet tulevat automaattisesti vastuuhenkilöiksi tälle "
+"myyntitiimille ohjattuihin dokumentteihin. Voit olla vain yhden myyntitiimin"
+" jäsen."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Hallinnoija"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
@@ -113,7 +116,7 @@ msgstr "Iso kaunis Painike :)"
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
-msgstr ""
+msgstr "Oletustiimiä ei voi poistaa \"%s\""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
@@ -170,7 +173,7 @@ msgstr "Työpöydän graafinen data"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_pipelines_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Define a new sales team"
-msgstr ""
+msgstr "Määrittele uusi myyntitiimi"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
@@ -335,7 +338,7 @@ msgstr "Myyntitiimi"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Sales Team name..."
-msgstr ""
+msgstr "Myyntitiimin nimi..."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
@@ -418,6 +421,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                    Each team will work with a separate pipeline."
 msgstr ""
+"Käytä myyntitiimejä myyntiosastojen organisointiin.\n"
+"                    Jokainen tiimi toimii omalla myyntiputkella."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
@@ -447,7 +452,7 @@ msgstr "Verkkosivu"
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team
 msgid "eBay"
-msgstr ""
+msgstr "eBay"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
