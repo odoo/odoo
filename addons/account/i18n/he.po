@@ -1552,7 +1552,7 @@ msgstr "הגדרות חשבונאות"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting-related settings are managed on"
-msgstr ""
+msgstr "הגדרות הקשורות להנהלת חשבונות מנוהלות ב"
 
 #. module: account
 #: selection:account.account.tag,applicability:0
@@ -1693,7 +1693,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Aged Partner Balance"
-msgstr ""
+msgstr "גיול יתרת לקוח/ספק"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -1835,7 +1835,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
 msgid "Allow the cash rounding management"
-msgstr ""
+msgstr "אפשר ניהול עיגול מזומן"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1889,7 +1889,7 @@ msgstr "מטבע סכום"
 #: model:ir.ui.view,arch_db:account.invoice_tree
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "Amount Due"
-msgstr ""
+msgstr "סכום לתשלום"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
@@ -1960,6 +1960,12 @@ msgid ""
 "                account). The annual accounts of a company are required by law\n"
 "                to disclose a certain amount of information."
 msgstr ""
+"חשבון הוא חלק מהספר הראשי המאפשר לחברה שלך\n"
+"                לרשום את כל סוגי עסקאות הזכות והחובה.\n"
+"                חברות מציגות את הדוחות השנתיים שלהן בשני חלקים עיקריים: דוח\n"
+"                מאזן  ודוח רווח והפסד.\n"
+"                הדוחות השנתיים של חברה נדרשים על פי חוק\n"
+"                כדי לחשוף כמות מסוימת של מידע."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -2090,13 +2096,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template_country_group_id
 msgid "Apply only if delivery or invoicing country match the group."
-msgstr ""
+msgstr "חל רק אם הארץ בכתובת למשלוח או בכתובת לחיוב תואמת לקבוצה."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template_country_id
 msgid "Apply only if delivery or invoicing country match."
-msgstr ""
+msgstr "חל רק אם הארץ בכתובת למשלוח או בכתובת לחיוב תואמת."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template_vat_required
@@ -2107,7 +2113,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply right VAT rates for digital products sold in EU"
-msgstr ""
+msgstr "החל שיעורי מע\"מ נכונים על מוצרים דיגיטליים הנמכרים באיחוד האירופי"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2515,7 +2521,7 @@ msgstr "הודעת חסימה"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type_include_initial_balance
 msgid "Bring Accounts Balance Forward"
-msgstr ""
+msgstr "הבא יתרת חשבונות קדימה"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -2888,7 +2894,7 @@ msgstr "בדוק אם הפרש הינו אפס."
 msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
-msgstr ""
+msgstr "סמן תיבה זו אם חשבון זה מאפשר התאמת חשבוניות ותשלומים של פקודות יומן."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence
@@ -2945,7 +2951,7 @@ msgstr "בחר תבנית חשבונאית"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Choose counterpart or Create Write-off"
-msgstr ""
+msgstr "בחר לקוח/ספק להתאמה או צור התאמה"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_journal_form
@@ -4545,7 +4551,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_expects_chart_of_accounts
 msgid "Expects a Chart of Accounts"
-msgstr ""
+msgstr "מצפה ללוח חשבונות"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_expense0
@@ -5165,6 +5171,8 @@ msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
 msgstr ""
+"אם מוגדר, הסכום המחושב על ידי מס זה ישויך לאותו חשבון אנליטי כמו בשורת "
+"החשבונית (אם קיימת)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_active
@@ -5773,7 +5781,7 @@ msgstr "זה מציין שהחשבונית נשלחה."
 #, python-format
 msgid ""
 "It is mandatory to specify an account and a journal to create a write-off."
-msgstr ""
+msgstr "חובה לציין חשבון ויומן כדי ליצור התאמה."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:470
@@ -7304,13 +7312,13 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:131
 #, python-format
 msgid "Outstanding credits"
-msgstr ""
+msgstr "יתרת זכות"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:134
 #, python-format
 msgid "Outstanding debits"
-msgstr ""
+msgstr "יתרת חובה"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7517,7 +7525,7 @@ msgstr "תאריך תשלום"
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_difference
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_difference_handling
 msgid "Payment Difference"
-msgstr ""
+msgstr "הפרש תשלום"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_journal_id
@@ -7827,7 +7835,7 @@ msgstr "רשום את כל פקודות היומן"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Post Difference In"
-msgstr ""
+msgstr "רשום הפרש ב"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
@@ -8643,7 +8651,7 @@ msgstr "חפש מיסים"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_account_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_account_id
 msgid "Second Account"
-msgstr ""
+msgstr "חשבון שני"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_amount
@@ -8660,7 +8668,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_analytic_account_id
 msgid "Second Analytic Account"
-msgstr ""
+msgstr "חשבון אנליטי שני"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_journal_id
@@ -9162,7 +9170,7 @@ msgstr "חישוב מס"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "Tax Declaration"
-msgstr ""
+msgstr "הצהרת מס"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_name
@@ -10415,7 +10423,7 @@ msgstr "העברות לחשבון"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_total_entry_encoding
 msgid "Transactions Subtotal"
-msgstr ""
+msgstr "סכום ביניים של עסקאות"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_transfer_account_id
@@ -10492,7 +10500,7 @@ msgstr "עדיין לא מוגדר"
 #: code:addons/account/models/company.py:367
 #, python-format
 msgid "Undistributed Profits/Losses"
-msgstr ""
+msgstr "רווחים שלא חולקו"
 
 #. module: account
 #. openerp-web
@@ -10981,7 +10989,7 @@ msgstr "אשף התאמות מס"
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 #, python-format
 msgid "Write-Off"
-msgstr ""
+msgstr "התאמה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_journal_id
@@ -11642,7 +11650,7 @@ msgstr "כדי להגדיר את היתרה של כל החשבונות שלך."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:53
 #, python-format
 msgid "transactions in"
-msgstr ""
+msgstr "עסקאות ב-"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
