@@ -1,0 +1,73 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!-- -->
+<record id="sale_order_tree_inherit" model="ir.ui.view">
+    <field name="name">sale.order.treee.inherit.custom</field>
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale.view_order_tree"/>
+    <field name="arch" type="xml">
+        <!-- find field description and add the field
+             idea_ids after it -->
+        <xpath expr="//field[@name='name']" position="after">
+          <field name="pricelist_id" string="Lista de precios"/>
+          <field name="payment_term_id" string="Plazo de pago"/>
+          <field name="team_id" string="Equipo de ventas"/>
+          <field name="company_id"/>
+          <field name="invoice_status"/>
+          <field name="origin"/>
+          <field name="medium_id"/>
+          <field name="payment_term_id" string="Plazo de pago"/>
+          <field name="team_id" string="Equipo de ventas"/>
+          <field name="company_id"/>
+          <field name="invoice_status"/>
+          <field name="origin"/>
+          <field name="medium_id"/>
+        </xpath>
+    </field>
+</record>
+
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="custom.action_window">
+      <field name="name">custom window</field>
+      <field name="res_model">custom.custom</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="custom.action_server">
+      <field name="name">custom server</field>
+      <field name="model_id" ref="model_custom_custom"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="custom" id="custom.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="custom.menu_1" parent="custom.menu_root"/>
+    <menuitem name="Menu 2" id="custom.menu_2" parent="custom.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="custom.menu_1_list" parent="custom.menu_1"
+              action="custom.action_window"/>
+    <menuitem name="Server to list" id="custom" parent="custom.menu_2"
+              action="custom.action_server"/>
+-->
+  </data>
+</odoo>
