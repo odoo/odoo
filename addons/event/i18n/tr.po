@@ -19,6 +19,7 @@
 # Ediz Duman <neps1192@gmail.com>, 2019
 # Abdullah Onur Uğur <aonurugur@outlook.com>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
+# Murat Durmuş <muratd@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 13:44+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
+"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +77,8 @@ msgid ""
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        To</b>"
 msgstr ""
+"<b><i class=\"fa fa-clock-o\"/>\n"
+"                                        Bitiş</b>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -92,6 +95,17 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"   Sayın ${object.name},<br/>\n"
+"    Sorgunuz için teşekkür ederiz.<br/>\n"
+"    Etkinlik için rozetiniz ${object.event_id.name}.<br/>\n"
+"    Herhangi bir sorunuz varsa, lütfen bize bildirin.\n"
+"    <br/><br/>\n"
+"    Teşekkür ederim,<br/>\n"
+"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -123,7 +137,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
-msgstr ""
+msgstr "<i>için</i>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -132,6 +146,9 @@ msgid ""
 "                                        to\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                       için\n"
+"                                    </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
@@ -689,12 +706,12 @@ msgstr "Yaka Kartı Arka"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_front
 msgid "Badge Front"
-msgstr ""
+msgstr "Rozet Önü"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_innerleft
 msgid "Badge Inner Left"
-msgstr ""
+msgstr "Rozet İç Sol"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_innerright
@@ -780,7 +797,7 @@ msgstr "Mimarlar Konferansı"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr ""
+msgstr "6 odada konferanslar, çalıştaylar ve eğitimler düzenlenecek:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -1972,7 +1989,7 @@ msgstr "UYARI: Etkinlik için Etkinlik Planlayıcı Hatası: %s"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
-msgstr ""
+msgstr "Depo yönetimi, Üretim (MRP) & amp; Satış, İthalat / İhracat."
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -2017,13 +2034,13 @@ msgstr "events@odoo.com"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "events@yourcompany.com"
-msgstr ""
+msgstr "events@yourcompany.com"
 
 #. module: event
 #: code:addons/event/models/event.py:526
 #, python-format
 msgid "in %d days"
-msgstr ""
+msgstr " %d gün içinde"
 
 #. module: event
 #: code:addons/event/models/event.py:530
