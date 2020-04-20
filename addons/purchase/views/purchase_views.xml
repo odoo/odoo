@@ -341,10 +341,10 @@
                         <page string="Other Information" name="purchase_delivery_invoice">
                             <group>
                                 <group name="planning">
-                                    <label for="date_planned"/>
-                                    <div name="date_planned_div" class="o_row">
-                                        <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve', 'purchase'))]}"/>
-                                        <span class="text-muted">Expected: <field name="expected_date" widget="date"/></span>
+                                    <label for="date_planned" attrs="{'invisible': [('state', '!=', 'draft'), ('date_planned', '=', False)]}"/>
+                                    <div name="date_planned_div" class="o_row" attrs="{'invisible': [('state', '!=', 'draft'), ('date_planned', '=', False)]}">
+                                        <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve'))]}"/>
+                                        <span name="expected_date_span" class="text-muted">Expected: <field name="expected_date" widget="date"/></span>
                                     </div>
                                 </group>
                                 <group name="other_info">
