@@ -255,7 +255,8 @@ class ProductProduct(models.Model):
             am_vals_list.append(move_vals)
 
         account_moves = self.env['account.move'].sudo().create(am_vals_list)
-        account_moves.post()
+        if account_moves:
+            account_moves.post()
 
     def _run_fifo(self, quantity, company):
         self.ensure_one()
