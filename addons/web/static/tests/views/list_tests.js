@@ -9243,7 +9243,6 @@ QUnit.module('Views', {
             storage: new RamStorage(),
         });
 
-        let newHash = '';
         var webClient = await testUtils.createWebClient({
             actions: this.actions,
             archs: this.archs,
@@ -9251,11 +9250,6 @@ QUnit.module('Views', {
             services: {
                 local_storage: RamStorageService,
             },
-            webClient: {
-                _getWindowHash() {
-                    return newHash;
-                }
-            }
         });
         await testUtils.actionManager.doAction(2);
 
@@ -9274,21 +9268,20 @@ QUnit.module('Views', {
             "should have a visible m2o field"); //m2o field
 
         // switch to kanban view
-        newHash = '#action=2&view_type=kanban';
-        window.dispatchEvent(new Event('hashchange'));
-        await testUtils.nextTick();
-        await testUtils.owlCompatibilityExtraNextTick();
-
+        await testUtils.actionManager.loadState(webClient, {
+            action: 2,
+            view_type: 'kanban',
+        });
         assert.containsNone(webClient, '.o_list_view',
             "should not display the list view anymore");
         assert.containsOnce(webClient, '.o_kanban_view',
             "should have switched to the kanban view");
 
         // switch back to list view
-        newHash = '#action=2&view_type=list';
-        window.dispatchEvent(new Event('hashchange'));
-        await testUtils.nextTick();
-        await testUtils.owlCompatibilityExtraNextTick();
+        await testUtils.actionManager.loadState(webClient, {
+            action: 2,
+            view_type: 'list',
+        });
 
         assert.containsNone(webClient, '.o_kanban_view',
             "should not display the kanban view anymore");

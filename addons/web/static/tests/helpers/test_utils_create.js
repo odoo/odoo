@@ -84,16 +84,7 @@ odoo.define('web.test_utils_create', function (require) {
             _getWindowHash() {
                 return '';
             },
-            _setWindowHash(newHash) {
-                let willChange;
-                newHash = newHash === '#' ? '' : newHash;
-                if (this._getWindowHash() !== newHash) {
-                    willChange = true;
-                }
-                if (willChange) {
-                    this._onHashchange();
-                }
-            },
+            _setWindowHash() {},
             _setWindowTitle() {},
             $(selector) {
                 if (!selector) {

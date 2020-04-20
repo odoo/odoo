@@ -15,7 +15,7 @@ async function loadState(webClient, state) {
         const hash = Object.keys(state).map(k => `${k}=${state[k]}`).join('&');
         return `#${hash}`;
     };
-    webClient._onHashchange();
+    webClient._onHashchange({});
     await testUtilsAsync.owlCompatibilityExtraNextTick();
     return testUtilsAsync.nextTick();
 }
