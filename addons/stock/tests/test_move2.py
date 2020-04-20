@@ -2616,23 +2616,25 @@ class TestRoutes(TestStockCommon):
             ('product_id', '=', product_a.id),
             ('state', '=', 'confirmed')
         ])
+        # Get back pack and ship pickings.
+        picking_pack = first_move.move_dest_ids.picking_id
+        picking_ship = first_move.move_dest_ids.move_dest_ids.picking_id
+        self.assertEqual(len(picking_pack.message_ids), 1)
+        self.assertEqual(len(picking_ship.message_ids), 1)
 
         # Change the schedule date on the pick.
         first_move.picking_id.scheduled_date += timedelta(days=2)
 
         # No activity should be created on the pack.
-        activity = first_move.move_dest_ids.picking_id.activity_ids  # PACK
-        self.assertFalse(activity)
+        self.assertEqual(len(picking_pack.message_ids), 1)
 
         # An activity is created on the ship.
-        activity = first_move.move_dest_ids.move_dest_ids.picking_id.activity_ids  # SHIP
-        self.assertTrue(activity, '')
-        self.assertTrue('has been automatically' in activity.note)
+        self.assertEqual(len(picking_ship.message_ids), 2)
+        self.assertTrue('has been automatically' in picking_ship.message_ids[0].body)
 
         # Change second time the schedule date on the pick.
         first_move.picking_id.scheduled_date += timedelta(days=2)
-        activity = first_move.move_dest_ids.move_dest_ids.picking_id.activity_ids  # SHIP
-        self.assertEqual(len(activity), 1)
+        self.assertEqual(len(picking_ship.message_ids), 2)
 
     def test_delay_alert_2(self):
         """ On a pick ship scenario, two pick linked to a ship. The delay alert is set on the ship rule?
@@ -2699,10 +2701,10 @@ class TestRoutes(TestStockCommon):
 
         picking_pick_1.scheduled_date += timedelta(days=2)
         picking_pick_2.scheduled_date += timedelta(days=2)
-        activity = picking_ship.activity_ids
-        self.assertEqual(len(activity), 2, 'not enough activity created')
-        self.assertTrue(picking_pick_1.name in activity[0].note + activity[1].note, 'Wrong activity message')
-        self.assertTrue(picking_pick_2.name in activity[0].note + activity[1].note, 'Wrong activity message')
+        messages = picking_ship.message_ids
+        self.assertEqual(len(messages), 3, 'not enough messages logged')
+        self.assertTrue(picking_pick_1.name in messages[0].body + messages[1].body, 'Wrong message')
+        self.assertTrue(picking_pick_2.name in messages[0].body + messages[1].body, 'Wrong message')
 
     def test_delay_alert_3(self):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
