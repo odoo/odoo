@@ -3985,6 +3985,37 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('bounce create button when no data and click on empty area', async function (assert) {
+        assert.expect(2);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `<kanban class="o_kanban_test"><templates><t t-name="kanban-box">
+                    <div>
+                        <t t-esc="record.foo.value"/>
+                        <field name="foo"/>
+                    </div>
+                </t></templates></kanban>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="hello">click to add a partner</p>'
+                }
+            },
+        });
+
+        await testUtils.dom.click(kanban.$('.o_kanban_view'));
+        assert.doesNotHaveClass(kanban.$('.o-kanban-button-new'), 'o_catch_attention');
+
+        await kanban.reload({ domain: [['id', '<', 0]] });
+
+        await testUtils.dom.click(kanban.$('.o_kanban_view'));
+        assert.hasClass(kanban.$('.o-kanban-button-new'), 'o_catch_attention');
+
+        kanban.destroy();
+    });
+
     QUnit.test('buttons with modifiers', async function (assert) {
         assert.expect(2);
 

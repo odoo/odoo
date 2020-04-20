@@ -3409,6 +3409,32 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('bounce create button when no data and click on empty area', async function (assert) {
+        assert.expect(4);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+            viewOptions: {
+                action: {
+                    help: '<p class="hello">click to add a record</p>'
+                }
+            },
+        });
+
+        assert.containsNone(list, '.o_view_nocontent');
+        await testUtils.dom.click(list.$('.o_list_view'));
+        assert.doesNotHaveClass(list.$('.o_list_button_add'), 'o_catch_attention');
+
+        await list.reload({ domain: [['id', '<', 0]] });
+        assert.containsOnce(list, '.o_view_nocontent');
+        await testUtils.dom.click(list.$('.o_view_nocontent'));
+        assert.hasClass(list.$('.o_list_button_add'), 'o_catch_attention');
+        list.destroy();
+    });
+
     QUnit.test('no content helper when no data', async function (assert) {
         assert.expect(5);
 

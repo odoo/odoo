@@ -519,6 +519,13 @@ var ListController = BasicController.extend({
         }
     },
     /**
+     * @override
+     */
+    _shouldBounceOnClick() {
+        const state = this.model.get(this.handle, {raw: true});
+        return !state.count;
+    },
+    /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
      *
      * @private
