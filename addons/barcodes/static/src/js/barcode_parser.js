@@ -17,7 +17,6 @@ var BarcodeParser = Class.extend({
     // necessary to parse the barcodes. The BarcodeParser is operational
     // only when those data have been loaded
     load: function(){
-        var self = this;
         if (!this.nomenclature_id) {
             return;
         }
@@ -25,23 +24,21 @@ var BarcodeParser = Class.extend({
         return rpc.query({
                 model: 'barcode.nomenclature',
                 method: 'read',
-                args: [[id], ['name','rule_ids','upc_ean_conv']],
-            })
-            .then(function (nomenclatures){
-                self.nomenclature = nomenclatures[0];
-
+                args: [[id], this._barcodeNomenclatureFields()],
+            }).then(nomenclatures => {
+                this.nomenclature = nomenclatures[0];
                 var args = [
-                    [['barcode_nomenclature_id', '=', self.nomenclature.id]],
-                    ['name', 'sequence', 'type', 'encoding', 'pattern', 'alias'],
+                    [['barcode_nomenclature_id', '=', this.nomenclature.id]],
+                    this._barcodeRuleFields(),
                 ];
                 return rpc.query({
                     model: 'barcode.rule',
                     method: 'search_read',
                     args: args,
                 });
-            }).then(function(rules){
+            }).then(rules => {
                 rules = rules.sort(function(a, b){ return a.sequence - b.sequence; });
-                self.nomenclature.rules = rules;
+                this.nomenclature.rules = rules;
             });
     },
 
@@ -187,15 +184,16 @@ var BarcodeParser = Class.extend({
         return match;
     },
 
-    // attempts to interpret a barcode (string encoding a barcode Code-128)
-    // it will return an object containing various information about the barcode.
-    // most importantly :
-    // - code    : the barcode
-    // - type   : the type of the barcode (e.g. alias, unit product, weighted product...)
-    //
-    // - value  : if the barcode encodes a numerical value, it will be put there
-    // - base_code : the barcode with all the encoding parts set to zero; the one put on
-    //               the product in the backend
+    /**
+     * Attempts to interpret a barcode (string encoding a barcode Code-128)
+     *
+     * @param {string} barcode
+     * @returns {Object} the returned object containing informations about the barcode:
+     *      - code: the barcode
+     *      - type: the type of the barcode (e.g. alias, unit product, weighted product...)
+     *      - value: if the barcode encodes a numerical value, it will be put there
+     *      - base_code: the barcode with all the encoding parts set to zero; the one put on the product in the backend
+     */
     parse_barcode: function(barcode){
         var parsed_result = {
             encoding: '',
@@ -252,6 +250,29 @@ var BarcodeParser = Class.extend({
             }
         }
         return parsed_result;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _barcodeNomenclatureFields: function () {
+        return [
+            'name',
+            'rule_ids',
+            'upc_ean_conv',
+        ];
+    },
+
+    _barcodeRuleFields: function () {
+        return [
+            'name',
+            'sequence',
+            'type',
+            'encoding',
+            'pattern',
+            'alias',
+        ];
     },
 });
 
