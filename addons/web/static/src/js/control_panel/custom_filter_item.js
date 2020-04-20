@@ -121,6 +121,10 @@ odoo.define('web.CustomFilterItem', function (require) {
                         condition.value.push(moment('23:59:59', 'hh:mm:ss'));
                     }
                     break;
+                case 'selection':
+                    const [firstValue] = this.fields[condition.field].selection[0];
+                    condition.value = firstValue;
+                    break;
                 default:
                     condition.value = "";
             }
