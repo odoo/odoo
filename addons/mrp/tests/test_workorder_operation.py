@@ -231,7 +231,9 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         # ---------------------------------------------------------------
         # Check consume quants and produce quants after posting inventory
         # ---------------------------------------------------------------
-        production_table.button_mark_done()
+        action = production_table.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_close_mo()
 
         self.assertEqual(product_screw.qty_available, 10)
         self.assertEqual(product_bolt.qty_available, 19)
@@ -628,10 +630,22 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         product_form = Form(self.env['mrp.product.produce'].with_context(context))
         product_form.qty_producing = 6.00
         laptop_lot_001 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id , 'company_id': self.env.company.id})
-        product_form.finished_lot_id = laptop_lot_001
-        product_consume = product_form.save()
-        product_consume._workorder_line_ids()[0].qty_done = 12
-        product_consume.do_produce()
+        mo_form = Form(mo_custom_laptop)
+        mo_form.qty_producing = 6
+        mo_form.lot_producing_id = laptop_lot_001
+        mo_custom_laptop = mo_form.save()
+        details_operation_form = Form(mo_custom_laptop.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.edit(0) as ml:
+            ml.qty_done = 12
+        details_operation_form.save()
+        details_operation_form = Form(mo_custom_laptop.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.edit(0) as ml:
+            ml.qty_done = 12
+        details_operation_form.save()
+
+        action = mo_custom_laptop.button_mark_done()
+        backorder = Form(self.env[action['res_model']].with_context(**action['context']))
+        backorder.save().action_backorder()
 
         # Check consumed move after produce 6 quantity of customized laptop.
         for move in mo_custom_laptop.move_raw_ids:

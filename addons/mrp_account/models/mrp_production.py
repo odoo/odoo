@@ -73,7 +73,8 @@ class MrpProduction(models.Model):
     def button_mark_done(self):
         self.ensure_one()
         res = super(MrpProduction, self).button_mark_done()
-        self._costs_generate()
+        for order in self:
+            order._costs_generate()
         return res
 
     def action_view_stock_valuation_layers(self):

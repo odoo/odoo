@@ -196,11 +196,12 @@ class TestTraceability(TestMrpCommon):
         produce_wizard = produce_form.save()
         produce_wizard.continue_production()
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': mo.id,
-            'active_ids': [mo.id],
-        }))
-        produce_form.finished_lot_id = self.env['stock.production.lot'].create({
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        mo_form = Form(mo_backorder)
+        mo_form.lot_producing_id = self.env['stock.production.lot'].create({
             'product_id': product_final.id,
             'name': 'Final_lot_2',
             'company_id': self.env.company.id,

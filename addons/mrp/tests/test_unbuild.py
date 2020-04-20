@@ -428,15 +428,20 @@ class TestUnbuild(TestMrpCommon):
             'company_id': self.env.company.id,
         })
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': mo.id,
-            'active_ids': [mo.id],
-        }))
-        produce_form.qty_producing = 3.0
-        produce_form.finished_lot_id = lot_finished_1
-        produce_wizard = produce_form.save()
-        produce_wizard._workorder_line_ids()[0].lot_id = lot_1
-        produce_wizard.do_produce()
+        self.assertEqual(mo.product_qty, 5)
+        mo_form = Form(mo)
+        mo_form.qty_producing = 3.0
+        mo_form.lot_producing_id = lot_finished_1
+        mo = mo_form.save()
+        self.assertEqual(mo.move_raw_ids[1].quantity_done, 12)
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.qty_done = 3
+            ml.lot_id = lot_1
+        details_operation_form.save()
+        action = mo.button_mark_done()
+        backorder = Form(self.env[action['res_model']].with_context(**action['context']))
+        backorder.save().action_backorder()
 
         lot_2 = self.env['stock.production.lot'].create({
             'name': 'lot_2',

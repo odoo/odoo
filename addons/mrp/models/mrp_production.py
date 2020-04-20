@@ -3,13 +3,18 @@
 
 import json
 import datetime
+import math
+import re
+
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 from itertools import groupby
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import date_utils, float_compare, float_round, float_is_zero, format_datetime
+from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
+
+SIZE_BACK_ORDER_NUMERING = 3
 
 
 class MrpProduction(models.Model):
@@ -56,6 +61,7 @@ class MrpProduction(models.Model):
 
     name = fields.Char(
         'Reference', copy=False, readonly=True, default=lambda x: _('New'))
+    backorder_sequence = fields.Integer("Backorder Sequence", default=0, help="Backorder sequence, if equals to 0 means there is not related backorder")
     origin = fields.Char(
         'Source', copy=False,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -233,6 +239,7 @@ class MrpProduction(models.Model):
 
     mrp_production_child_count = fields.Integer("Number of generated MO", compute='_compute_mrp_production_child_count')
     mrp_production_source_count = fields.Integer("Number of source MO", compute='_compute_mrp_production_source_count')
+    mrp_production_backorder_count = fields.Integer("Count of linked backorder", compute='_compute_mrp_production_backorder')
 
     @api.depends('product_id', 'bom_id', 'company_id')
     def _compute_allowed_product_ids(self):
@@ -250,15 +257,20 @@ class MrpProduction(models.Model):
                     product_domain += [('id', 'in', production.bom_id.product_tmpl_id.product_variant_ids.ids)]
             production.allowed_product_ids = self.env['product.product'].search(product_domain)
 
-    @api.depends('procurement_group_id.stock_move_ids.created_production_id')
+    @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_child_count(self):
         for production in self:
-            production.mrp_production_child_count = len(production.procurement_group_id.stock_move_ids.created_production_id)
+            production.mrp_production_child_count = len(production.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids)
 
-    @api.depends('move_dest_ids.group_id.mrp_production_id')
+    @api.depends('move_dest_ids.group_id.mrp_production_ids')
     def _compute_mrp_production_source_count(self):
         for production in self:
-            production.mrp_production_source_count = len(production.move_dest_ids.group_id.mrp_production_id)
+            production.mrp_production_source_count = len(production.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.mrp_production_ids)
+
+    @api.depends('procurement_group_id.mrp_production_ids')
+    def _compute_mrp_production_backorder(self):
+        for production in self:
+            production.mrp_production_backorder_count = len(production.procurement_group_id.mrp_production_ids)
 
     @api.depends('move_raw_ids.date_expected', 'move_finished_ids.date_expected')
     def _compute_dates_planned(self):
@@ -610,6 +622,10 @@ class MrpProduction(models.Model):
         return True
 
     def _get_finished_move_value(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False):
+        group_orders = self.procurement_group_id.mrp_production_ids
+        move_dest_ids = self.move_dest_ids
+        if len(group_orders) > 1:
+            move_dest_ids |= group_orders[0].move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_dest_ids
         date_planned_finished = self.date_planned_start + relativedelta(days=self.product_id.produce_delay)
         date_planned_finished = date_planned_finished + relativedelta(days=self.company_id.manufacturing_lead)
         if date_planned_finished == self.date_planned_start:
@@ -635,7 +651,7 @@ class MrpProduction(models.Model):
             'propagate_date': self.propagate_date,
             'delay_alert': self.delay_alert,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
-            'move_dest_ids': [(4, x.id) for x in self.move_dest_ids],
+            'move_dest_ids': [(4, x.id) for x in move_dest_ids],
         }
 
     def _generate_finished_moves(self):
@@ -778,7 +794,7 @@ class MrpProduction(models.Model):
 
     def action_view_mrp_production_childs(self):
         self.ensure_one()
-        mrp_production_ids = self.procurement_group_id.stock_move_ids.created_production_id.ids
+        mrp_production_ids = self.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
@@ -790,7 +806,7 @@ class MrpProduction(models.Model):
             })
         else:
             action.update({
-                'name': _("MO Source of %s" % self.name),
+                'name': _("%s Child MO's") % self.name,
                 'domain': [('id', 'in', mrp_production_ids)],
                 'view_mode': 'tree,form',
             })
@@ -798,7 +814,7 @@ class MrpProduction(models.Model):
 
     def action_view_mrp_production_sources(self):
         self.ensure_one()
-        mrp_production_ids = self.move_dest_ids.group_id.mrp_production_id.ids
+        mrp_production_ids = self.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.mrp_production_ids.ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
@@ -815,6 +831,16 @@ class MrpProduction(models.Model):
                 'view_mode': 'tree,form',
             })
         return action
+
+    def action_view_mrp_production_backorders(self):
+        backorder_ids = self.procurement_group_id.mrp_production_ids.ids
+        return {
+            'res_model': 'mrp.production',
+            'type': 'ir.actions.act_window',
+            'name': _("Backorder MO's"),
+            'domain': [('id', 'in', backorder_ids)],
+            'view_mode': 'tree,form',
+        }
 
     def action_confirm(self):
         self._check_company()
@@ -1024,6 +1050,28 @@ class MrpProduction(models.Model):
                     error_msg += ml.product_id.display_name + ' (' + ', '.join((lots_short & ml.lot_produced_ids).mapped('name')) + ')\n'
                 raise UserError(error_msg)
 
+    def _get_quantity_produced_issues(self):
+        quantity_issues = []
+        if self.env.context.get('skip_backorder', False):
+            return quantity_issues
+        for order in self:
+            if not float_is_zero(order._get_quantity_to_backorder(), precision_rounding=order.product_uom_id.rounding):
+                quantity_issues.append(order)
+        return quantity_issues
+
+    def _action_generate_backorder_wizard(self, quantity_issues):
+        ctx = self.env.context.copy()
+        lines = []
+        for order in quantity_issues:
+            lines.append((0, 0, {
+                'mrp_production_id': order.id,
+                'to_backorder': True
+            }))
+        ctx.update({'default_mrp_production_ids': self.ids, 'default_mrp_production_backorder_line_ids': lines})
+        action = self.env.ref('mrp.action_mrp_production_backorder').read()[0]
+        action['context'] = ctx
+        return action
+
     def action_cancel(self):
         """ Cancels production order, unfinished stock moves and set procurement
         orders in exception """
@@ -1103,23 +1151,139 @@ class MrpProduction(models.Model):
                     moveline.write({'consume_line_ids': [(6, 0, [x for x in consume_move_lines.ids])]})
         return True
 
-    def button_mark_done(self):
-        self.ensure_one()
-        self._check_company()
-        for wo in self.workorder_ids:
-            if wo.time_ids.filtered(lambda x: (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
-                raise UserError(_('Work order %s is still running') % wo.name)
-        self._check_lots()
+    @api.model
+    def _get_name_backorder(self, name, sequence):
+        if not sequence:
+            return name
+        seq_back = "-" + "0" * (SIZE_BACK_ORDER_NUMERING - 1 - int(math.log10(sequence))) + str(sequence)
+        if re.search("-\\d{%d}$" % SIZE_BACK_ORDER_NUMERING, name):
+            return name[:-SIZE_BACK_ORDER_NUMERING-1] + seq_back
+        return name + seq_back
 
-        self.post_inventory()
+    def _get_backorder_mo_vals(self, mo_source):
+        next_seq = max(mo_source.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"))
+        return {
+            'name': self._get_name_backorder(mo_source.name, next_seq + 1),
+            'backorder_sequence': next_seq + 1,
+            'procurement_group_id': mo_source.procurement_group_id.id,
+            'move_raw_ids': None,
+            'move_finished_ids': None,
+            'product_qty': self._get_quantity_to_backorder(),
+            'lot_producing_id': False,
+            'origin': mo_source.origin
+        }
+
+    def _generate_backorder_productions(self):
+        backorders = self.env['mrp.production']
+        for production in self:
+            if production.backorder_sequence == 0:  # Activate backorder naming
+                production.backorder_sequence = 1
+
+            backorder_mo = production.copy(default=self._get_backorder_mo_vals(production))
+            for wo in backorder_mo.workorder_ids:
+                wo.qty_produced = 0
+                if wo.product_tracking == 'serial':
+                    wo.qty_producing = 1
+                else:
+                    wo.qty_producing = wo.qty_remaining
+
+            production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write({
+                'raw_material_production_id': backorder_mo.id,
+                'reference': backorder_mo.name,
+            })
+            backorders |= backorder_mo
+
+            production.name = self._get_name_backorder(production.name, production.backorder_sequence)
+            # update moves references
+            (production.move_raw_ids | production.move_finished_ids).reference = production.name
+
+            for wo in backorder_mo.workorder_ids:
+                wo.duration_expected = wo._get_duration_expected(wo.workcenter_id)
+
+        backorders.action_confirm()
+        # Remove the serial move line without reserved quantity. Post inventory will assigned all the non done moves
+        # So those move lines are duplicated.
+        backorders.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id.tracking == 'serial' and ml.product_qty == 0).unlink()
+        backorders.move_raw_ids._recompute_state()
+
+        return backorders
+
+    def button_mark_done(self):
+        self._check_company()
+        for order in self:
+            # TODO : multi _check_lots and _check_sn_uniqueness + error message with MO name
+            order._check_lots()
+            order._check_sn_uniqueness()
+
+        res = self._pre_button_mark_done()
+        if res is not True:
+            return res
+
+        if self.env.context.get('mo_ids_to_backorder'):
+            productions_to_backorder = self.browse(self.env.context['mo_ids_to_backorder'])
+            productions_not_to_backorder = self - productions_to_backorder
+            # As a backorder will be created to produce the remaining quantity, we don't want
+            # action_done (in _post_inventory) create any new move for the finished one and the
+            # byproduct with the delta quantity (product_uom_qty - quantity_done)
+            for production in productions_to_backorder:
+                for move in production.move_finished_ids:
+                    if move.product_id == production.product_id:
+                        move.product_uom_qty = production.qty_producing
+                    else:
+                        move.product_uom_qty = move.quantity_done
+        else:
+            productions_not_to_backorder = self
+            productions_to_backorder = self.env['mrp.production']
+
+        self.workorder_ids.button_finish()
+        self._post_inventory()
+
+        backorders = productions_to_backorder._generate_backorder_productions()
+
         # Moves without quantity done are not posted => set them as done instead of canceling. In
         # case the user edits the MO later on and sets some consumed quantity on those, we do not
         # want the move lines to be canceled.
-        (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
+        (productions_not_to_backorder.move_raw_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
             'state': 'done',
             'product_uom_qty': 0.0,
         })
-        return self.write({'date_finished': fields.Datetime.now()})
+
+        for production in self:
+            production.write({'date_finished': fields.Datetime.now(), 'product_qty': production.qty_produced})
+
+        for workorder in self.workorder_ids.filtered(lambda w: w.state not in ('done', 'cancel')):
+            workorder.duration_expected = workorder._get_duration_expected(workorder.workcenter_id)
+
+        if not backorders:
+            return True
+        context = self.env.context.copy()
+        context = {k: v for k, v in context.items() if not k.startswith('default_')}
+        for k, v in context.items():
+            if k.startswith('skip_'):
+                context[k] = False
+        action = {
+            'res_model': 'mrp.production',
+            'type': 'ir.actions.act_window',
+            'context': dict(context, mo_ids_to_backorder=None)
+        }
+        if len(backorders) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': backorders[0].id,
+            })
+        else:
+            action.update({
+                'name': _("Backorder MO"),
+                'domain': [('id', 'in', backorders.ids)],
+                'view_mode': 'tree,form',
+            })
+        return action
+
+    def _pre_button_mark_done(self):
+        quantity_issues = self._get_quantity_produced_issues()
+        if quantity_issues:
+            return self._action_generate_backorder_wizard(quantity_issues)
+        return True
 
     def do_unreserve(self):
         for production in self:
@@ -1230,3 +1394,7 @@ class MrpProduction(models.Model):
     @api.model
     def _prepare_procurement_group_vals(self, values):
         return {'name': values['name']}
+
+    def _get_quantity_to_backorder(self):
+        self.ensure_one()
+        return max(self.product_qty - self.qty_produced, 0)
