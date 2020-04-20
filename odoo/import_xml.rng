@@ -44,7 +44,14 @@
         <rng:element name="function">
             <rng:attribute name="model" />
             <rng:attribute name="name" />
+<<<<<<< HEAD
             <rng:ref name="env"/>
+=======
+            <!-- doesn't look like it has any use? -->
+            <rng:optional><rng:attribute name="id" /></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:optional><rng:attribute name="uid" /></rng:optional>
+>>>>>>> c4075d5a235... temp
             <rng:optional>
                 <rng:choice>
                     <rng:attribute name="eval" />
