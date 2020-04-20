@@ -24,11 +24,12 @@
             <xpath expr="//field[@name='order_line']/tree//field[@name='date_planned']" position="after">
                 <field name="move_dest_ids" invisible="1"/>
             </xpath>
-            <xpath expr="//div[@name='date_planned_div']" position="replace">
-                <div class="o_row">
-                    <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve', 'purchase'))]}"/>
-                    <span class="text-muted" attrs="{'invisible': [('effective_date', '!=', False), ('date_planned', '!=', False)]}">Expected: <field name="expected_date" widget="date"/></span>
-                </div>
+            <xpath expr="//span[@name='expected_date_span']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': [('effective_date', '!=', False), ('date_planned', '!=', False)]}
+                </attribute>
+            </xpath>
+            <xpath expr="//div[@name='date_planned_div']" position="after">
                 <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='invoice_lines']" position="after">
