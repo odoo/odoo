@@ -199,8 +199,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 var tip = this.active_tooltips[tourName];
                 var activated = this._check_for_tooltip(tip, tourName);
                 if (activated) {
-                    break;
+                    continue;
                 }
+                // deactivate all other tips except activated one
+                this._deactivate_tip(tip);
             }
         }
     },
