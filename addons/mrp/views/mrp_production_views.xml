@@ -46,10 +46,11 @@
                 <header>
                     <field name="bom_has_operations" invisible="1"/>
                     <field name="confirm_cancel" invisible="1"/>
+                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('qty_producing', '=', 0)]}" string="Backorder" type="object" class="oe_highlight"/>
                     <button name="button_mark_done" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
-                    <button name="action_confirm" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_locked', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight"/>
-                    <button name="action_assign" attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object" class="oe_highlight"/>
-                    <button name="button_plan" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('bom_has_operations', '=', False)]}" type="object" string="Plan" class="oe_highlight"/>
+                    <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object" class="oe_highlight"/>
+                    <button name="button_plan" attrs="{'invisible': ['|', '|', ('state', 'not in', ('confirmed', 'progress')), ('workorder_ids', '=', []), ('is_planned', '=', True)]}" type="object" string="Plan" class="oe_highlight"/>
                     <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', '|', ('state', '!=', 'planned'), ('date_planned_start', '=', False), ('date_planned_finished', '=', False)]}"/>
                     <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('state', '=', 'to_close'), ('is_locked', '=', False), ('reservation_state', '!=', 'assigned'), ('bom_has_operations', '!=', False)]}" string="Produce" type="object" class="oe_highlight"/>
                     <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('state', '=', 'to_close'), ('is_locked', '=', False), ('reservation_state', 'not in', ('confirmed', 'waiting')), ('bom_has_operations', '!=', False)]}" string="Produce" type="object"/>
@@ -70,6 +71,7 @@
                     <field name="reservation_state" invisible="1"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="post_visible" invisible="1"/>
+                    <field name="qty_produced" invisible="1"/>
                     <field name="unreserve_visible" invisible="1"/>
                     <field name="reserve_visible" invisible="1"/>
                     <field name="consumption" invisible="1"/>
@@ -101,6 +103,12 @@
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="mrp_production_source_count"/></span>
                                 <span class="o_stat_text">Source MO</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" name="action_view_mrp_production_backorders" type="object" icon="fa-wrench" attrs="{'invisible': [('mrp_production_backorder_count', '&lt;', 2)]}">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="mrp_production_backorder_count"/></span>
+                                <span class="o_stat_text">Backorder MO's</span>
                             </div>
                         </button>
                         <field name="workorder_ids" invisible="1"/>

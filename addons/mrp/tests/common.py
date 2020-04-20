@@ -7,7 +7,7 @@ from odoo.addons.stock.tests import common2
 class TestMrpCommon(common2.TestStockCommon):
 
     @classmethod
-    def generate_mo(self, tracking_final='none', tracking_base_1='none', tracking_base_2='none', qty_final=5, qty_base_1=4, qty_base_2=1):
+    def generate_mo(self, tracking_final='none', tracking_base_1='none', tracking_base_2='none', qty_final=5, qty_base_1=4, qty_base_2=1, picking_type_id=False):
         """ This function generate a manufacturing order with one final
         product and two consumed product. Arguments allows to choose
         the tracking/qty for each different products. It returns the
@@ -39,6 +39,8 @@ class TestMrpCommon(common2.TestStockCommon):
                 (0, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1})
             ]})
         mo_form = Form(self.env['mrp.production'])
+        if picking_type_id:
+            mo_form.picking_type_id = picking_type_id
         mo_form.product_id = product_to_build
         mo_form.bom_id = bom_1
         mo_form.product_qty = qty_final

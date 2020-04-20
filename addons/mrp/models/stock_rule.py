@@ -140,7 +140,7 @@ class StockRule(models.Model):
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
-    mrp_production_id = fields.One2many('mrp.production', 'procurement_group_id')
+    mrp_production_ids = fields.One2many('mrp.production', 'procurement_group_id')
 
     @api.model
     def run(self, procurements, raise_user_error=True):
