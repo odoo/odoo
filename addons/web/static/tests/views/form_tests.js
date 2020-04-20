@@ -7499,7 +7499,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('bounce edit button in readonly mode', async function (assert) {
-        assert.expect(3);
+        assert.expect(2);
 
         var form = await createView({
             View: FormView,
@@ -7511,21 +7511,17 @@ QUnit.module('Views', {
                     '</div>' +
                 '</form>',
             res_id: 1,
-            intercepts: {
-                bounce_edit: function() {
-                    assert.step('bounce');
-                },
-            },
         });
 
         // in readonly
         await testUtils.dom.click(form.$('[name="display_name"]'));
-        assert.verifySteps(['bounce']);
+        assert.hasClass(form.$('.o_form_button_edit'), 'o_catch_attention');
 
         // in edit
         await testUtils.form.clickEdit(form);
         await testUtils.dom.click(form.$('[name="display_name"]'));
-        assert.verifySteps([]);
+        // await testUtils.nextTick();
+        assert.containsNone(form, 'button.o_catch_attention:visible');
 
         form.destroy();
     });
