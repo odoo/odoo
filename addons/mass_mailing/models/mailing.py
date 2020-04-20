@@ -8,6 +8,7 @@ import lxml
 import random
 import re
 import threading
+import werkzeug.urls
 from ast import literal_eval
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -528,6 +529,34 @@ class MassMailing(models.Model):
         done_res_ids = [record['res_id'] for record in already_mailed]
         return [rid for rid in res_ids if rid not in done_res_ids]
 
+    def _get_unsubscribe_url(self, email_to, res_id):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = werkzeug.urls.url_join(
+            base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+                'mailing_id': self.id,
+                'params': werkzeug.urls.url_encode({
+                    'res_id': res_id,
+                    'email': email_to,
+                    'token': self._unsubscribe_token(res_id, email_to),
+                }),
+            }
+        )
+        return url
+
+    def _get_view_url(self, email_to, res_id):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = werkzeug.urls.url_join(
+            base_url, 'mailing/%(mailing_id)s/view?%(params)s' % {
+                'mailing_id': self.id,
+                'params': werkzeug.urls.url_encode({
+                    'res_id': res_id,
+                    'email': email_to,
+                    'token': self._unsubscribe_token(res_id, email_to),
+                }),
+            }
+        )
+        return url
+
     def action_send_mail(self, res_ids=None):
         author_id = self.env.user.partner_id.id
 
@@ -583,7 +612,7 @@ class MassMailing(models.Model):
             if mass_mailing.medium_id:
                 vals['medium_id'] = mass_mailing.medium_id.id
 
-            res[mass_mailing.id] = mass_mailing._shorten_links(html, vals, blacklist=['/unsubscribe_from_list'])
+            res[mass_mailing.id] = mass_mailing._shorten_links(html, vals, blacklist=['/unsubscribe_from_list', '/view'])
 
         return res
 

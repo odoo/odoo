@@ -29,21 +29,6 @@ class MailMail(models.Model):
         token = tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', self.id)
         return werkzeug.urls.url_join(base_url, 'mail/track/%s/%s/blank.gif' % (self.id, token))
 
-    def _get_unsubscribe_url(self, email_to):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        url = werkzeug.urls.url_join(
-            base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
-                'mailing_id': self.mailing_id.id,
-                'params': werkzeug.urls.url_encode({
-                    'res_id': self.res_id,
-                    'email': email_to,
-                    'token': self.mailing_id._unsubscribe_token(
-                        self.res_id, email_to),
-                }),
-            }
-        )
-        return url
-
     def _send_prepare_body(self):
         """ Override to add the tracking URL to the body and to add
         trace ID in shortened urls """
@@ -81,10 +66,15 @@ class MailMail(models.Model):
         if self.mailing_id and res.get('body') and res.get('email_to'):
             emails = tools.email_split(res.get('email_to')[0])
             email_to = emails and emails[0] or False
-            unsubscribe_url = self._get_unsubscribe_url(email_to)
-            link_to_replace = base_url + '/unsubscribe_from_list'
-            if link_to_replace in res['body']:
-                res['body'] = res['body'].replace(link_to_replace, unsubscribe_url if unsubscribe_url else '#')
+
+            urls_to_replace = [
+               (base_url + '/unsubscribe_from_list', self.mailing_id._get_unsubscribe_url(email_to, self.res_id)),
+               (base_url + '/view', self.mailing_id._get_view_url(email_to, self.res_id))
+            ]
+
+            for url_to_replace, new_url in urls_to_replace:
+                if url_to_replace in res['body']:
+                    res['body'] = res['body'].replace(url_to_replace, new_url if new_url else '#')
         return res
 
     def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
