@@ -1,7 +1,19 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-<!-- -->
+<!---->
+<record id="account_move_form_inherit" model="ir.ui.view">
+    <field name="name">account.move.form.inherit.custom</field>
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="account.view_move_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='invoice_line_ids']//field[@name='price_unit']" position="before">
+            <field name="cost" string="Costo"/>
+        </xpath>
+    </field>
+</record>
+
+
 <record id="sale_order_tree_inherit" model="ir.ui.view">
     <field name="name">sale.order.treee.inherit.custom</field>
     <field name="model">sale.order</field>

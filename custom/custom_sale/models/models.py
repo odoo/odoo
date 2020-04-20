@@ -1,11 +1,18 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import api, models,fields
 
-# from odoo import models, fields, api
+class CustomAccountMove(models.Model):
+    _inherit = 'account.move.line'
+    cost = fields.Float(compute="_onchange_move", store=True)
 
-
+    @api.onchange('product_id')
+    def _onchange_move(self):
+        for record in self:
+            record.cost = record.product_id.standard_price
 # class custom(models.Model):
 #     _name = 'custom.custom'
-#     _description = 'custom.custom'
+#     _description = 'custom.custom'<field name="quantity"/>
 
 #     name = fields.Char()
 #     value = fields.Integer()
