@@ -196,9 +196,6 @@ class Meeting(models.Model):
     stop_date = fields.Date(
         'End Date', store=True, tracking=True,
         compute='_compute_dates', inverse='_inverse_dates')
-    event_tz = fields.Selection(
-        '_event_tz_get', string='Timezone',
-        default=lambda self: self.env.context.get('tz') or self.user_id.tz)
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
     description = fields.Text('Description')
     privacy = fields.Selection(
