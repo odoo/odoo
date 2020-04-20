@@ -53,6 +53,7 @@ tour.register('purchase_matrix_tour', {
     run: 'click' // Edit Sales Order.
 }, {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
+    extra_trigger: '.o_form_editable',
     run: 'click'
 }, {
     trigger: '.o_edit_product_configuration',
