@@ -22,6 +22,7 @@ class LinkTracker(models.Model):
     _name = "link.tracker"
     _rec_name = "short_url"
     _description = "Link Tracker"
+    _order="count DESC"
     _inherit = ["utm.mixin"]
 
     # URL info
