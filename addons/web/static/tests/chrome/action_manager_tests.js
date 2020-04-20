@@ -5718,7 +5718,7 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('hashchange does not trigger canberemoved right away', async function (assert) {
-        assert.expect(11);
+        assert.expect(9);
 
         var ClientAction = AbstractAction.extend({
             start() {
@@ -5744,29 +5744,14 @@ QUnit.module('ActionManager', {
         });
         core.action_registry.add('ClientAction2', ClientAction2);
 
-        let _hash = '';
         const webClient = await createWebClient({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
             menus: this.menus,
             webClient: {
-                _getWindowHash() {
-                    return _hash;
-                },
                 _setWindowHash(newHash) {
-                    let willChange;
-                    newHash = newHash === '#' ? '' : newHash;
-                    if (_hash !== newHash) {
-                        willChange = true;
-                    }
                     assert.step('hashSet');
-                    _hash = newHash;
-                    if (willChange) {
-                        this._onHashchange().then(() => {
-                            assert.step('hashChanged');
-                        });
-                    }
                 }
             }
         });
@@ -5774,7 +5759,6 @@ QUnit.module('ActionManager', {
         await doAction(9);
         assert.verifySteps([
             'hashSet',
-            'hashChanged',
         ]);
         assert.containsOnce(webClient, '.o_client_action_test');
         assert.verifySteps([]);
@@ -5783,7 +5767,6 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             'canBeRemoved',
             'hashSet',
-            'hashChanged',
         ]);
         webClient.destroy();
         delete core.action_registry.map.ClientAction;
