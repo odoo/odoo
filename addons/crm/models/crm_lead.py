@@ -79,7 +79,7 @@ class Lead(models.Model):
         default=crm_stage.AVAILABLE_PRIORITIES[0][0])
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', index=True, tracking=True,
-        compute='_compute_team_id', copy=True, readonly=False, store=True)
+        compute='_compute_team_id', readonly=False, store=True)
     stage_id = fields.Many2one(
         'crm.stage', string='Stage', index=True, tracking=True,
         compute='_compute_stage_id', readonly=False, store=True,
