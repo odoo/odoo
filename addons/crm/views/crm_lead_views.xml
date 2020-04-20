@@ -498,16 +498,19 @@
                                     </div>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <div>
-                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                    <div class="o_kanban_record_title">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="o_kanban_record_subtitle">
+                                        <t t-if="record.planned_revenue.raw_value">
+                                            <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                            <span t-if="record.partner_id.value"> - </span>
+                                        </t>
+                                        <span t-if="record.partner_id.value" t-esc="record.partner_id.value"></span>
                                     </div>
                                     <div>
                                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
-                                    <div class="text-muted o_kanban_record_subtitle">
-                                        <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/><span t-if="record.partner_id.value">,</span></t> <span t-if="record.partner_id.value"> <t t-esc="record.partner_id.value"/></span>
-                                    </div>
-
                                     <div class="o_kanban_record_bottom">
                                         <div class="oe_kanban_bottom_left">
                                             <field name="priority" widget="priority" groups="base.group_user"/>
