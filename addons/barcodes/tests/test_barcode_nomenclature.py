@@ -254,3 +254,26 @@ class TestBarcodeNomenclature(common.TransactionCase):
         self.assertEqual(res['encoding'], 'ean13')
         self.assertEqual(res['base_code'], '2212300000002')
         self.assertEqual(res['value'], 456.1025)
+
+    def test_gs1_date_to_date(self):
+        barcode_nomenclature = self.env['barcode.nomenclature']
+        # 20/10/2015 -> 151020
+        date_gs1 = "151020"
+        date = barcode_nomenclature.gs1_date_to_date(date_gs1)
+        self.assertEqual(date.day, 20)
+        self.assertEqual(date.month, 10)
+        self.assertEqual(date.year, 2015)
+
+        # XX/03/2052 -> 520300 -> (if day no set take last day of the month -> 31)
+        date_gs1 = "520300"
+        date = barcode_nomenclature.gs1_date_to_date(date_gs1)
+        self.assertEqual(date.day, 31)
+        self.assertEqual(date.month, 3)
+        self.assertEqual(date.year, 2052)
+
+        # XX/02/2020 -> 520200 -> (if day no set take last day of the month -> 29)
+        date_gs1 = "200200"
+        date = barcode_nomenclature.gs1_date_to_date(date_gs1)
+        self.assertEqual(date.day, 29)
+        self.assertEqual(date.month, 2)
+        self.assertEqual(date.year, 2020)

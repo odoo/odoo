@@ -9,7 +9,11 @@
                     <sheet>
                         <group col="4">
                             <field name="name" />
-                            <field name="upc_ean_conv"/>
+                            <field name="upc_ean_conv" attrs="{'invisible':[('is_gs1_nomenclature', '=', True)]}"/>
+                        </group>
+                        <group col="4">
+                            <field name="is_gs1_nomenclature"/>
+                            <field name="gs1_separator_fnc1" attrs="{'invisible':[('is_gs1_nomenclature', '!=', True)]}"/>
                         </group>
                         <div>
                             <p>
@@ -31,8 +35,11 @@
                                 <field name="sequence" widget="handle"/>
                                 <field name="name" />
                                 <field name="type" />
-                                <field name="encoding" />
+                                <field name="encoding" attrs="{'column_invisible': [('parent.is_gs1_nomenclature', '=', True)]}"/>
                                 <field name="pattern" />
+                                <field name="gs1_content_type" attrs="{'column_invisible': [('parent.is_gs1_nomenclature', '!=', True)]}"/>
+                                <field name="gs1_decimal_usage" attrs="{'column_invisible': [('parent.is_gs1_nomenclature', '!=', True)], 'invisible': [('gs1_content_type', '!=', 'measure')]}"/>
+                                <field name="associated_uom_id" attrs="{'column_invisible': [('parent.is_gs1_nomenclature', '!=', True)], 'invisible': [('gs1_content_type', '!=', 'measure')]}"/>
                             </tree>
                         </field>
                     </sheet>
@@ -46,6 +53,7 @@
             <field name="arch" type="xml">
                 <tree string="Barcode Nomenclatures">
                     <field name="name" />
+                    <field name="is_gs1_nomenclature"/>
                 </tree>
             </field>
         </record>
@@ -72,10 +80,14 @@
                     <group col="4">
                         <field name="name" />
                         <field name="sequence" />
-                        <field name="type"/>  
-                        <field name="encoding" attrs="{'invisible': [('type','=', 'alias')]}"/> 
+                        <field name="type"/>
                         <field name="pattern" />
-                        <field name="alias" attrs="{'invisible': [('type','!=', 'alias')]}"/>   
+                        <field name="encoding" attrs="{'invisible': ['|', ('parent.is_gs1_nomenclature', '=', True), ('type', '=', 'alias')]}" />
+                        <field name="alias" attrs="{'invisible': [('type','!=', 'alias')]}"/>
+                        <field name="gs1_content_type" attrs="{'invisible': [('parent.is_gs1_nomenclature', '!=', True)]}"/>
+                        <field name="gs1_decimal_usage" attrs="{'invisible': ['|', ('parent.is_gs1_nomenclature', '!=', True), ('gs1_content_type', '!=', 'measure')]}"/>
+                        <field name="associated_uom_id" attrs="{'invisible': ['|', ('parent.is_gs1_nomenclature', '!=', True), ('gs1_content_type', '!=', 'measure')]}"/>
+                        <field name="is_gs1_nomenclature" invisible="1"/>
                     </group>
                 </form>
             </field>

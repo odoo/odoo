@@ -11,10 +11,18 @@ class BarcodeRule(models.Model):
         ('weight', 'Weighted Product'),
         ('location', 'Location'),
         ('lot', 'Lot'),
-        ('package', 'Package')
+        ('package', 'Package'),
+        ('qty_done', 'Quantity'),
+        ('use_date', 'Best before Date'),
+        ('expiration_date', 'Expiration Date'),
+        ('packaging_date', 'Packaging Date')
     ], ondelete={
         'weight': 'set default',
         'location': 'set default',
         'lot': 'set default',
         'package': 'set default',
+        'qty_done': 'set default',
+        'use_date': 'set default',
+        'expiration_date': 'set default',
+        'packaging_date': 'set default',
     })
