@@ -291,6 +291,15 @@ class PurchaseOrderLine(models.Model):
                             # receive the product physically in our stock. To avoid counting the
                             # quantity twice, we do nothing.
                             pass
+                        elif (
+                            move.location_dest_id.usage == "internal"
+                            and move.to_refund
+                            and move.location_dest_id
+                            not in self.env["stock.location"].search(
+                                [("id", "child_of", move.warehouse_id.view_location_id.id)]
+                            )
+                        ):
+                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                         else:
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                 line.qty_received = total
