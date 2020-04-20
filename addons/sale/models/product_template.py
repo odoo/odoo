@@ -199,7 +199,7 @@ class ProductTemplate(models.Model):
 
         display_image = True
         quantity = self.env.context.get('quantity', add_qty)
-        context = dict(self.env.context, quantity=quantity, pricelist=pricelist.id if pricelist else False)
+        context = dict(self.env.context, bin_size=True, quantity=quantity, pricelist=pricelist.id if pricelist else False)
         product_template = self.with_context(context)
 
         combination = combination or product_template.env['product.template.attribute.value']
