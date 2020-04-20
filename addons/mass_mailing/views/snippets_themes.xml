@@ -28,6 +28,7 @@
                     <t t-snippet="mass_mailing.s_mail_block_header_text_social" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_text_social.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_header_logo" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_logo.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_banner" t-thumbnail="/mass_mailing/static/src/img/blocks/block_banner.png"/>
+                    <t t-snippet="mass_mailing.s_mail_block_header_view" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_browser.png"/>
                 </div>
             </div>
             <div id="email_designer_default_body" class="o_panel">
@@ -145,6 +146,24 @@
                         <td width="100%" valign="top" class="o_mail_full_width_padding o_mail_no_colorpicker">
                             <a href="#">
                                 <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_banner.jpg" class="d-block mx-auto" alt="Your Banner Image" />
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_header_view" name="View in browser">
+    <div class="o_snippet_view_in_browser">
+        <div class="o_mail_snippet_general">
+            <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles">
+                <tbody>
+                    <tr>
+                        <td width="100%" class="o_mail_h_padding o_mail_v_padding o_mail_no_colorpicker text-center">
+                            <a href="/view">
+                                View this email in your browser
                             </a>
                         </td>
                     </tr>

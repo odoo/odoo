@@ -105,6 +105,35 @@ class MassMailController(http.Controller):
 
         return response
 
+    @http.route(['/mailing/<int:mailing_id>/view'], type='http', website=True, auth='public')
+    def view(self, mailing_id, email=None, res_id=None, token=""):
+        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
+        if mailing.exists():
+            res_id = int(res_id) if res_id else False
+            if not self._valid_unsubscribe_token(mailing_id, res_id, email, str(token)) and not request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
+                raise exceptions.AccessDenied()
+
+            res = mailing.convert_links()
+            base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url').rstrip('/')
+            urls_to_replace = [
+               (base_url + '/unsubscribe_from_list', mailing._get_unsubscribe_url(email, res_id)),
+               (base_url + '/view', mailing._get_view_url(email, res_id))
+            ]
+            for url_to_replace, new_url in urls_to_replace:
+                if url_to_replace in res[mailing_id]:
+                    res[mailing_id] = res[mailing_id].replace(url_to_replace, new_url if new_url else '#')
+
+            res[mailing_id] = res[mailing_id].replace(
+                'class="o_snippet_view_in_browser"',
+                'class="o_snippet_view_in_browser" style="display: none;"'
+            )
+
+            return request.render('mass_mailing.view', {
+                    'body': res[mailing_id],
+                })
+
+        return request.redirect('/web')
+
     @http.route('/r/<string:code>/m/<int:mailing_trace_id>', type='http', auth="public")
     def full_url_redirect(self, code, mailing_trace_id, **post):
         # don't assume geoip is set, it is part of the website module
