@@ -4,7 +4,7 @@
 from addons.google_calendar.utils.google_calendar import GoogleEvent
 import pytz
 from datetime import datetime, date
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import SavepointCase, new_test_user
 
 
 class TestSyncGoogle2Odoo(SavepointCase):
@@ -50,6 +50,7 @@ class TestSyncGoogle2Odoo(SavepointCase):
         self.assertEqual(event.stop, datetime(2020, 1, 13, 18, 55))
         self.assertEqual('admin@yourcompany.example.com', event.attendee_ids.email)
         self.assertEqual('Mitchell Admin', event.attendee_ids.partner_id.name)
+        self.assertEqual(event.partner_ids, event.attendee_ids.partner_id)
         self.assertEqual('needsAction', event.attendee_ids.state)
 
     def test_cancelled(self):
@@ -88,6 +89,41 @@ class TestSyncGoogle2Odoo(SavepointCase):
         user_attendee = event.attendee_ids
         self.assertTrue(user_attendee)
         self.assertEqual(user_attendee.state, 'declined')
+
+    def test_attendee_removed(self):
+        user = new_test_user(self.env, login='calendar-user')
+        google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        event = self.env['calendar.event'].with_user(user).create({
+            'name': 'coucou',
+            'start': date(2020, 1, 6),
+            'stop': date(2020, 1, 6),
+            'google_id': google_id,
+            'user_id': False,  # user is not owner
+            'partner_ids': [(6, 0, user.partner_id.ids)],  # but user is attendee
+        })
+        gevent = GoogleEvent([{
+            'id': google_id,
+            'description': 'Small mini desc',
+            "updated": self.now,
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [],  # <= attendee removed in Google
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }])
+        self.assertEqual(event.partner_ids, user.partner_id)
+        self.assertEqual(event.attendee_ids.partner_id, user.partner_id)
+        self.sync(gevent)
+        self.assertFalse(event.attendee_ids, "The attendee should have been removed")
+        self.assertFalse(event.partner_ids, "The partner should have been removed")
 
     def test_recurrence(self):
         recurrence_id = 'oj44nep1ldf8a3ll02uip0c9aa'

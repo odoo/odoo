@@ -55,13 +55,15 @@ class Meeting(models.Model):
             return {'active': False}
 
         alarm_commands = self._odoo_reminders_commands(google_event.reminders.get('overrides') or default_reminders)
+        attendee_commands, partner_commands = self._odoo_attendee_commands(google_event)
         values = {
             'name': google_event.summary or _("(No title)"),
             'description': google_event.description,
             'location': google_event.location,
             'user_id': google_event.owner(self.env).id,
             'privacy': google_event.visibility or self.default_get(['privacy'])['privacy'],
-            'attendee_ids': self._odoo_attendee_commands(google_event),
+            'attendee_ids': attendee_commands,
+            'partner_ids': partner_commands,
             'alarm_ids': alarm_commands,
             'recurrency': google_event.is_recurrent()
         }
@@ -83,33 +85,33 @@ class Meeting(models.Model):
 
     @api.model
     def _odoo_attendee_commands(self, google_event):
-        commands = []
-        if not google_event.attendees:
-            return commands
-        emails = [a.get('email') for a in google_event.attendees]
+        attendee_commands = []
+        partner_commands = []
+        google_attendees = google_event.attendees or []
+        emails = [a.get('email') for a in google_attendees]
         existing_attendees = self.env['calendar.attendee']
         if google_event.exists(self.env):
-            existing_attendees = self.env['calendar.attendee'].search([
-                ('event_id', '=', google_event.odoo_id(self.env)),
-                ('email', 'in', emails)])
+            existing_attendees = self.browse(google_event.odoo_id(self.env)).attendee_ids
         attendees_by_emails = {a.email: a for a in existing_attendees}
-        for attendee in google_event.attendees:
+        for attendee in google_attendees:
             email = attendee.get('email')
 
             if email in attendees_by_emails:
                 # Update existing attendees
-                commands += [(1, attendees_by_emails[email].id, {'state': attendee.get('responseStatus')})]
+                attendee_commands += [(1, attendees_by_emails[email].id, {'state': attendee.get('responseStatus')})]
             else:
                 # Create new attendees
                 partner = self.env['res.partner'].find_or_create(attendee.get('email'))
-                commands += [(0, 0, {'state': attendee.get('responseStatus'), 'partner_id': partner.id})]
+                attendee_commands += [(0, 0, {'state': attendee.get('responseStatus'), 'partner_id': partner.id})]
+                partner_commands += [(4, partner.id)]
                 if attendee.get('displayName') and not partner.name:
                     partner.name = attendee.get('displayName')
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees
             if odoo_attendee.email not in emails:
-                commands += [(2, odoo_attendee.id)]
-        return commands
+                attendee_commands += [(2, odoo_attendee.id)]
+                partner_commands += [(3, odoo_attendee.partner_id.id)]
+        return attendee_commands, partner_commands
 
     @api.model
     def _odoo_reminders_commands(self, reminders=()):
@@ -139,7 +141,6 @@ class Meeting(models.Model):
                     duration = minutes
                     name = _("%s - %s Minutes") % (alarm_type_label, duration)
                 commands += [(0, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': alarm_type})]
-        reminders = {()}
         return commands
 
     def _google_values(self):
