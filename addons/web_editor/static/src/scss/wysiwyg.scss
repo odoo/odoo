@@ -363,12 +363,17 @@ body .modal {
 
     // LINK EDITOR DIALOG COLOR SELECTOR
     .o_link_dialog {
-        .o_link_dialog_color > .o_link_dialog_color_item input:checked + i::after {
-            content: "\f00c";
-        }
-
         .o_link_dialog_preview {
             border-left: 1px solid gray('200');
+        }
+        .o_btn_preview_grayscale {
+            filter: grayscale(1.0);
+        }
+        input.link-style:checked + *::after {
+            content: '\f00c';
+            display: inline-block;
+            font-family: FontAwesome;
+            margin-left: 0.5em;
         }
     }
 

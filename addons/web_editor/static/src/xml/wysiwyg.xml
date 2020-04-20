@@ -459,39 +459,49 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3">Size</label>
-                    <div class="col-md-9">
-                        <select name="link_style_size" class="form-control link-style">
-                            <option value="sm">Small</option>
-                            <option value="" selected="selected">Medium</option>
-                            <option value="lg">Large</option>
-                        </select>
+                    <label class="col-form-label col-md-3">Type</label>
+                    <div class="col-md-9 d-flex align-items-center">
+                        <t t-foreach="widget.colorsData" t-as="colorData">
+                            <label role="button" class="text-center m-0 mr-2">
+                                <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData[2]"/>
+                                <span t-attf-class="o_btn_preview btn btn-sm btn-#{colorData[0]}" t-esc="colorData[1]"/>
+                            </label>
+                        </t>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-form-label col-md-3">Style</label>
-                    <div class="col-md-9">
-                        <select name="link_style_shape" class="form-control link-style">
-                            <option value="" selected="selected">Default</option>
-                            <option value="outline">Outline</option>
-                            <option value="rounded-circle">Rounded</option>
-                            <option value="outline,rounded-circle">Outline-Rounded</option>
-                            <option value="flat">Flat</option>
-                        </select>
+                    <div class="col-md-9 d-flex align-items-center">
+                        <label role="button" class="text-center m-0 mr-2">
+                            <input type="radio" name="link_style_outline" class="d-none link-style" value=""/>
+                            <span class="o_btn_preview o_btn_preview_grayscale btn btn-sm btn-primary">Default</span>
+                        </label>
+                        <span class="text-center m-0 mr-2 small">or force a specific style:</span>
+                        <label role="button" class="text-center m-0 mr-2">
+                            <input type="radio" name="link_style_outline" class="d-none link-style" value="fill"/>
+                            <span class="o_btn_preview o_btn_preview_grayscale btn btn-sm btn-fill-primary">Fill</span>
+                        </label>
+                        <label role="button" class="text-center m-0 mr-2">
+                            <input type="radio" name="link_style_outline" class="d-none link-style" value="outline"/>
+                            <span class="o_btn_preview o_btn_preview_grayscale btn btn-sm btn-outline-primary">Outline</span>
+                        </label>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3">Color</label>
-                    <div class="col-md-9">
-                        <div class="o_link_dialog_color">
-                            <t t-foreach="widget.colorsData" t-as="colorData">
-                                <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{colorData[0]}">
-                                    <span t-esc="colorData[1]"/>
-                                    <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData[2]"/>
-                                    <i class="fa"/>
-                                </label>
-                            </t>
-                        </div>
+                    <label class="col-form-label col-md-3">Size</label>
+                    <div class="col-md-9 d-flex align-items-end">
+                        <label role="button" class="text-center m-0 mr-2">
+                            <input type="radio" name="link_style_size" class="d-none link-style" value="sm"/>
+                            <span class="o_btn_preview o_btn_preview_grayscale btn btn-sm btn-primary">Small</span>
+                        </label>
+                        <label role="button" class="text-center m-0 mr-2">
+                            <input type="radio" name="link_style_size" class="d-none link-style" value=""/>
+                            <span class="o_btn_preview o_btn_preview_grayscale btn btn-primary">Normal</span>
+                        </label>
+                        <label role="button" class="text-center m-0 mr-2">
+                            <input type="radio" name="link_style_size" class="d-none link-style" value="lg"/>
+                            <span class="o_btn_preview o_btn_preview_grayscale btn btn-lg btn-primary">Large</span>
+                        </label>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -501,6 +511,28 @@
                             <span/>
                             Open in new window
                         </label>
+                    </div>
+                </div>
+                <div class="form-group row mb-0">
+                    <div class="offset-md-3 col-md-9">
+                        <a href="#alt-shapes" class="small" data-toggle="collapse"
+                            aria-expanded="false" aria-controls="alt-shapes">Alternative Shapes...</a>
+                        <div id="alt-shapes" class="collapse">
+                            <div class="d-flex align-items-center mt-2">
+                                <label role="button" class="text-center m-0 mr-2">
+                                    <input type="radio" name="link_style_shape" class="d-none link-style" value=""/>
+                                    <span class="o_btn_preview o_btn_preview_grayscale btn btn-sm btn-primary">Default</span>
+                                </label>
+                                <label role="button" class="text-center m-0 mr-2">
+                                    <input type="radio" name="link_style_shape" class="d-none link-style" value="rounded-circle"/>
+                                    <span class="o_btn_preview o_btn_preview_grayscale btn btn-sm btn-primary rounded-circle">Rounded</span>
+                                </label>
+                                <label role="button" class="text-center m-0 mr-2">
+                                    <input type="radio" name="link_style_shape" class="d-none link-style" value="flat"/>
+                                    <span class="o_btn_preview o_btn_preview_grayscale btn btn-sm btn-primary flat">Flat</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>

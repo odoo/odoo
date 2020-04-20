@@ -17,7 +17,15 @@
 @import "grid";
 @import "tables";
 @import "forms";
+
+// Small hack in bootstrap (see bootstrap_review.scss): prevent it to generate
+// primary, secondary, and other color/outline classes by itself to be able to
+// do it ourself properly.
+$-tmp: $theme-colors;
+$theme-colors: ();
 @import "buttons";
+$theme-colors: $-tmp;
+
 @import "transitions";
 @import "dropdown";
 @import "button-group";
