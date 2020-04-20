@@ -82,13 +82,18 @@ var BarcodeReader = core.Class.extend({
             return;
         }
         var parsed_result = this.barcode_parser.parse_barcode(code);
-        if (this.action_callback[parsed_result.type]) {
-            this.action_callback[parsed_result.type](parsed_result);
-        } else if (this.action_callback.error) {
-            this.action_callback.error(parsed_result);
-        } else {
-            console.warn("Ignored Barcode Scan:", parsed_result);
+        if (! Array.isArray(parsed_result)) {
+            parsed_result = [parsed_result];
         }
+        parsed_result.forEach((item) => {
+            if (this.action_callback[item.type]) {
+                this.action_callback[item.type](item);
+            } else if (this.action_callback.error) {
+                this.action_callback.error(item);
+            } else {
+                console.warn("Ignored Barcode Scan:", item);
+            }
+        });
     },
 
     // the barcode scanner will listen on the hw_proxy/scanner interface for

@@ -36,5 +36,168 @@
             <field name="encoding">any</field>
             <field name="pattern">414</field>
         </record>
+
+        <!-- GS1 Barcodes -->
+        <!-- Identifier Barcodes -->
+        <record id="barcode_rule_gs1_01" model="barcode.rule">
+            <field name="name">Global Trade Item Number (GTIN)</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">100</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(01)(\d{14})</field>
+            <field name="type">product</field>
+            <field name="gs1_content_type">identifier</field>
+        </record>
+
+        <record id="barcode_rule_gs1_02" model="barcode.rule">
+            <field name="name">GTIN of contained trade items</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">101</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(02)(\d{14})</field>
+            <field name="type">product</field>
+            <field name="gs1_content_type">identifier</field>
+        </record>
+
+        <!-- TODO : location 4XX  -->
+        <!-- TODO : SSCC 00 -> package ?  -->
+
+        <!-- Alphanumeric Barcodes -->
+        <record id="barcode_rule_gs1_10" model="barcode.rule">
+            <field name="name">Batch or lot number</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">102</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(10)([!"%/0-9:?A-Za-z]{0,20})</field>
+            <field name="type">lot</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_21" model="barcode.rule">
+            <field name="name">Serial number</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">105</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(21)([!"%/0-9:?A-Za-z]{0,20})</field>
+            <field name="type">lot</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <!-- Date Barcodes -->
+        <record id="barcode_rule_gs1_13" model="barcode.rule">
+            <field name="name">Packaging date (YYMMDD)</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">103</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(13)(\d{6})</field>
+            <field name="type">packaging_date</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_15" model="barcode.rule">
+            <field name="name">Best before date (YYMMDD)</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">104</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(15)(\d{6})</field>
+            <field name="type">use_date</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_16" model="barcode.rule">
+            <field name="name">Expiration date (YYMMDD)</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">105</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(16)(\d{6})</field>
+            <field name="type">expiration_date</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <!-- Quantity/Measure Barcode -->
+        <record id="barcode_rule_gs1_30" model="barcode.rule">
+            <field name="name">Variable count of items (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">106</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(30)(\d{0,8})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">qty_done</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">False</field>
+
+        </record>
+        <record id="barcode_rule_gs1_37" model="barcode.rule">
+            <field name="name">Count of trade items or trade item pieces contained in a logistic unit</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">107</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(37)(\d{0,8})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">qty_done</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">False</field>
+        </record>
+
+        <record id="barcode_rule_gs1_310y" model="barcode.rule">
+            <field name="name">Net weight, kilograms (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">108</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(310[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_kgm"/>
+            <field name="type">qty_done</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_311y" model="barcode.rule">
+            <field name="name">Length or first dimension, metres (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">109</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(311[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_meter"/>
+            <field name="type">qty_done</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_315y" model="barcode.rule">
+            <field name="name">Net volume, litres (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">110</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(315[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_litre"/>
+            <field name="type">qty_done</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_321y" model="barcode.rule">
+            <field name="name">Length or first dimension, inches (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">110</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(321[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_inch"/>
+            <field name="type">qty_done</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_357y" model="barcode.rule">
+            <field name="name">Net weight (or volume), ounces (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">111</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(357[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_oz"/>
+            <field name="type">qty_done</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
     </data>
 </odoo>

@@ -1,11 +1,14 @@
 import logging
 import re
+import datetime
+import calendar
 
-from odoo import tools, models, fields, api, _
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
+FNC1_CHAR = '\x1D'
 
 UPC_EAN_CONVERSIONS = [
     ('none','Never'),
@@ -22,11 +25,26 @@ class BarcodeNomenclature(models.Model):
     rule_ids = fields.One2many('barcode.rule', 'barcode_nomenclature_id', string='Rules', help='The list of barcode rules')
     upc_ean_conv = fields.Selection(UPC_EAN_CONVERSIONS, string='UPC/EAN Conversion', required=True, default='always',
         help="UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.")
+    is_gs1_nomenclature = fields.Boolean(
+        string="Is GS1 Nomenclature",
+        help="This Nomenclature use the GS1 specification, only gs1-128 encoding rules is accept is this kind of nomenclature.")
+    gs1_separator_fnc1 = fields.Char(
+        string="FNC1 Seperator",
+        help="Alternative regex delimiter for the FNC1 (by default, if not set, it is <GS> ascii 29 char). The seperator must not match the begin/end of any related rules pattern.")
+
+    @api.constrains('gs1_separator_fnc1')
+    def _check_pattern(self):
+        for nom in self:
+            if nom.is_gs1_nomenclature and nom.gs1_separator_fnc1 and nom.gs1_separator_fnc1.trim():
+                try:
+                    re.compile("(?:%s)?" % nom.gs1_separator_fnc1)
+                except re.error as error:
+                    raise ValidationError(_("The FNC1 Seperator Alternative is not a valid Regex : ") + str(error))
 
     def get_barcode_check_digit(self, numeric_barcode):
         """This algorithm is identical for all fixed length numeric GS1 data structures.
 
-        It is also valid for ean8,12(upca),13 check digit.
+        It is also valid for ean8,12(upca),13 check digit after sanatizing.
         https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdf
 
         `numeric_barcode` need to have a length of 18, and the last numeric char is the checksum (or '0')
@@ -70,6 +88,84 @@ class BarcodeNomenclature(models.Model):
     # Returns a valid zero padded UPC-A from a UPC-A prefix. the UPC-A prefix must be a string.
     def sanitize_upc(self, upc):
         return self.sanitize_ean('0'+upc)[1:]
+
+    def gs1_date_to_date(self, gs1_date):
+        """Convert YYMMDD GS1 date into a datetime.date"""
+
+        # Determination of century
+        # https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdf#page=474&zoom=100,66,113
+        now = datetime.date.today()
+        substract_year = int(gs1_date[0:2]) - (now.year % 100)
+        century = (51 <= substract_year <= 99 and (now.year // 100) - 1) or (-99 <= substract_year <= -50 and (now.year // 100) + 1) or now.year // 100
+        year = century * 100 + int(gs1_date[0:2])
+
+        if gs1_date[-2:] == '00':  # Day is not mandatory, when not set -> last day of the month
+            date = datetime.datetime.strptime(str(year) + gs1_date[2:4], '%Y%m')
+            date = date.replace(day=calendar.monthrange(year, int(gs1_date[2:4]))[1])
+        else:
+            date = datetime.datetime.strptime(str(year) + gs1_date[2:4] + gs1_date[-2:], '%Y%m%d')
+        return date.date()
+
+    def parse_gs1_rule_pattern(self, match, rule):
+        result = {
+            'rule': rule,
+            'ai': match.group(1),
+            'string_value': match.group(2),
+        }
+        if rule.gs1_content_type == 'measure':
+            decimal_position = 0  # Decimal position begin at the end, 0 means no decimal
+            if rule.gs1_decimal_usage:
+                decimal_position = int(match.group(1)[-1])
+            if decimal_position > 0:
+                result['value'] = float(match.group(2)[:-decimal_position] + "." + match.group(2)[-decimal_position:])
+            else:
+                result['value'] = int(match.group(2))
+        elif rule.gs1_content_type == 'identifier':
+            # Check digit and remove it of the value
+            if match.group(2)[-1] != str(self.get_barcode_check_digit("0" * (18 - len(match.group(2))) + match.group(2))):
+                return None
+            result['value'] = match.group(2)
+        elif rule.gs1_content_type == 'date':
+            if len(match.group(2)) != 6:
+                return None
+            result['value'] = self.gs1_date_to_date(match.group(2))
+        else:  # when gs1_content_type == 'alpha':
+            result['value'] = match.group(2)
+        return result
+
+    def gs1_decompose_extanded(self, barcode):
+        """Try to decompose the gs1 extanded barcode into several unit of information using gs1 rules.
+
+        Return a ordered list of dict
+        """
+        self.ensure_one()
+        separator_group = FNC1_CHAR + "?"
+        if self.gs1_separator_fnc1 and self.gs1_separator_fnc1.trim():
+            separator_group = "(?:%s)?" % self.gs1_separator_fnc1
+        results = []
+        gs1_rules = self.rule_ids.filtered(lambda r: r.encoding == 'gs1-128')
+
+        def find_next_rule(remaining_barcode):
+            for rule in gs1_rules:
+                # is_variable_length = bool(re.search(r"\{\d?\,\d*\}", rule.pattern))  # TODO: don't catch * or + => maybe a use field or try with lookbehind
+                match = re.search("^" + rule.pattern + separator_group, remaining_barcode)
+                # If match and contains 2 groups at minimun, the first one need to be the IA and the second the value
+                # We can't use regex nammed group because in JS, it is not the same regex syntax (and not compatible in all browser)
+                if match and len(match.groups()) >= 2:
+                    res = self.parse_gs1_rule_pattern(match, rule)
+                    if res:
+                        return res, remaining_barcode[match.end():]
+            return None
+
+        while len(barcode) > 0:
+            res_bar = find_next_rule(barcode)
+            # Cannot continue -> Fail to decompose gs1 and return
+            if not res_bar or res_bar[1] == barcode:
+                return None
+            barcode = res_bar[1]
+            results.append(res_bar[0])
+
+        return results
 
     # Checks if barcode matches the pattern
     # Additionaly retrieves the optional numerical content in barcode
@@ -125,6 +221,9 @@ class BarcodeNomenclature(models.Model):
             'value': 0,
         }
 
+        if self.is_gs1_nomenclature:
+            return self.gs1_decompose_extanded(barcode)
+
         rules = []
         for rule in self.rule_ids:
             rules.append({'type': rule.type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
@@ -164,26 +263,44 @@ class BarcodeRule(models.Model):
     _description = 'Barcode Rule'
     _order = 'sequence asc'
 
-
     name = fields.Char(string='Rule Name', size=32, required=True, help='An internal identification for this barcode nomenclature rule')
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature')
+    is_gs1_nomenclature = fields.Boolean(related="barcode_nomenclature_id.is_gs1_nomenclature")
     sequence = fields.Integer(string='Sequence', help='Used to order rules such that rules with a smaller sequence match first')
     encoding = fields.Selection([
                 ('any', 'Any'),
                 ('ean13', 'EAN-13'),
                 ('ean8', 'EAN-8'),
                 ('upca', 'UPC-A'),
+                ('gs1-128', 'GS1-128')
         ], string='Encoding', required=True, default='any', help='This rule will apply only if the barcode is encoded with the specified encoding')
     type = fields.Selection([
             ('alias', 'Alias'),
-            ('product', 'Unit Product')
+            ('product', 'Unit Product'),
         ], string='Type', required=True, default='product')
     pattern = fields.Char(string='Barcode Pattern', size=32, help="The barcode matching pattern", required=True, default='.*')
+
+    gs1_content_type = fields.Selection([
+        ('date', 'Date'),  # To able to transform YYMMDD date into Odoo datetime
+        ('measure', 'Measure'),  # UOM related
+        ('identifier', 'Numeric Identifier'),  # When there is a numeric fixed length where there is a check digit ()
+        ('alpha', 'Alpha-Numeric name'),
+    ], string="GS1 Content Type")
+    gs1_decimal_usage = fields.Boolean('Decimal', help="If True, use the last digit of IA to dertermine where the first decimal is")
+    associated_uom_id = fields.Many2one('uom.uom')
+
     alias = fields.Char(string='Alias', size=32, default='0', help='The matched pattern will alias to this barcode', required=True)
 
     @api.constrains('pattern')
     def _check_pattern(self):
         for rule in self:
+            if rule.encoding == 'gs1-128':
+                try:
+                    # Maybe check that the number of group == 2 ?
+                    re.compile(rule.pattern)
+                except re.error as error:
+                    raise ValidationError(_("The rule pattern is not a valid Regex : ") + str(error))
+                continue
             p = rule.pattern.replace("\\\\", "X").replace("\{", "X").replace("\}", "X")
             findall = re.findall("[{]|[}]", p) # p does not contain escaped { or }
             if len(findall) == 2:
