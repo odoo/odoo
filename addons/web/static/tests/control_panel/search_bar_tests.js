@@ -484,5 +484,49 @@ odoo.define('web.search_bar_tests', function (require) {
 
             actionManager.destroy();
         });
+
+        QUnit.test('select autocompleted many2one', async function (assert) {
+            assert.expect(5);
+
+            const archs = Object.assign({}, this.archs, {
+                'partner,false,search': `
+                    <search>
+                        <field name="foo"/>
+                        <field name="birthday"/>
+                        <field name="birth_datetime"/>
+                        <field name="bar" operator="child_of"/>
+                    </search>`,
+            });
+            const actionManager = await createActionManager({
+                actions: this.actions,
+                archs,
+                data: this.data,
+                async mockRPC(route, { domain }) {
+                    if (route === '/web/dataset/search_read') {
+                        assert.step(JSON.stringify(domain));
+                    }
+                    return this._super(...arguments);
+                },
+            });
+            await actionManager.doAction(1);
+
+            await cpHelpers.editSearch(actionManager, "rec");
+            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li:last-child'));
+
+            await cpHelpers.removeFacet(actionManager, 0);
+
+            await cpHelpers.editSearch(actionManager, "rec");
+            await testUtils.dom.click(actionManager.el.querySelector('.o_expand'));
+            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li.o_menu_item.o_indent'));
+
+            assert.verifySteps([
+                '[]',
+                '[["bar","child_of","rec"]]', // Incomplete string -> Name search
+                '[]',
+                '[["bar","child_of",1]]', // Suggestion select -> Specific ID
+            ]);
+
+            actionManager.destroy();
+        });
     });
 });

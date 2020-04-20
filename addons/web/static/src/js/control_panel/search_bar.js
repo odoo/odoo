@@ -239,16 +239,25 @@ odoo.define('web.SearchBar', function (require) {
             const { type } = this.props.fields[source.fieldName];
             const parser = field_utils.parse[type];
             let parsedValue;
-            if (['date', 'datetime'].includes(type)) {
-                const parsedDate = parser(rawValue, { type }, { timezone: true });
-                const dateFormat = type === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD';
-                const momentValue = moment(parsedDate, dateFormat);
-                if (!momentValue.isValid()) {
-                    throw new Error('Invalid date');
+            switch (type) {
+                case 'date':
+                case 'datetime': {
+                    const parsedDate = parser(rawValue, { type }, { timezone: true });
+                    const dateFormat = type === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD';
+                    const momentValue = moment(parsedDate, dateFormat);
+                    if (!momentValue.isValid()) {
+                        throw new Error('Invalid date');
+                    }
+                    parsedValue = parsedDate.toJSON();
+                    break;
                 }
-                parsedValue = parsedDate.toJSON();
-            } else {
-                parsedValue = parser(rawValue);
+                case 'many2one': {
+                    parsedValue = rawValue;
+                    break;
+                }
+                default: {
+                    parsedValue = parser(rawValue);
+                }
             }
             return parsedValue;
         }
