@@ -32,7 +32,7 @@ class EventType(models.Model):
         'event.type.ticket', 'event_type_id',
         string='Tickets', compute='_compute_event_type_ticket_ids',
         readonly=False, store=True)
-    tag_ids = fields.Many2many('event.tag', string="Tags", copy=True)
+    tag_ids = fields.Many2many('event.tag', string="Tags")
     # registration
     has_seats_limitation = fields.Boolean('Limited Seats')
     seats_max = fields.Integer(
@@ -123,7 +123,7 @@ class EventEvent(models.Model):
         compute='_compute_from_event_type', readonly=False, store=True)
     tag_ids = fields.Many2many(
         'event.tag', string="Tags", readonly=False,
-        copy=True, store=True, compute="_compute_from_event_type")
+        store=True, compute="_compute_from_event_type")
     # Kanban fields
     kanban_state = fields.Selection([('normal', 'In Progress'), ('done', 'Done'), ('blocked', 'Blocked')], default='normal')
     kanban_state_label = fields.Char(
@@ -189,8 +189,7 @@ class EventEvent(models.Model):
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one(
-        'res.country', 'Country', related='address_id.country_id',
-        copy=True, readonly=False, store=True)
+        'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
     # badge fields
     badge_front = fields.Html(string='Badge Front')
     badge_back = fields.Html(string='Badge Back')
