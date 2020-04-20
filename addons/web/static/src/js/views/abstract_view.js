@@ -297,9 +297,11 @@ var AbstractView = Factory.extend({
             }
         });
         var controlPanelDomain = this.loadParams.domain;
+        const viewDomain = await this._getViewDomain(parent);
         var spParams = _.extend({}, this.searchPanelParams, {
             defaultValues: defaultValues,
             searchDomain: controlPanelDomain,
+            viewDomain,
             classes: params.classes || [],
         });
         var searchPanel = new this.config.SearchPanel(parent, spParams);
@@ -351,6 +353,17 @@ var AbstractView = Factory.extend({
             withSearchBar: inline ? false : this.withSearchBar,
             withSearchPanel: this.withSearchPanel,
         };
+    },
+    /**
+     * Get the domain defined by the view. It is meant to be overridden. The parent
+     * is provided in case some subcomponents need to be retrieved.
+     *
+     * @private
+     * @param {Object} parent
+     * @returns {Promise<Array[]>}
+     */
+    _getViewDomain: async function (parent) {
+        return [];
     },
     /**
      * Processes a fieldsView. In particular, parses its arch.

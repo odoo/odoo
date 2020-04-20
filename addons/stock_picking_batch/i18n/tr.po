@@ -18,6 +18,7 @@
 # Yedigen, 2019
 # abc Def <hdogan1974@gmail.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
+# Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +52,7 @@ msgstr "<strong>Ürün Barkodu</strong>"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Responsible:</strong>"
-msgstr ""
+msgstr "<strong>Sorumlu:</strong>"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -87,7 +88,7 @@ msgstr "Toplu Transfer Ekleyin"
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
 msgid "Add to batch"
-msgstr ""
+msgstr "Toplu iş ekle"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
@@ -109,28 +110,28 @@ msgstr "Barkod"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #, python-format
 msgid "Batch Transfer"
-msgstr ""
+msgstr "Toplu Transfer"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Batch Transfer Lines"
-msgstr ""
+msgstr "Toplu Transfer Satırları"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 msgid "Batch Transfers"
-msgstr ""
+msgstr "Toplu Transferler"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Transfers not finished"
-msgstr ""
+msgstr "Toplu transferler tamamlanmadı"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
 msgid "Batch associated to this transfer"
-msgstr ""
+msgstr "Bu transfer ile ilişkili toplu transfer"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -166,7 +167,7 @@ msgstr "Transferi onayla"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Create a new batch transfer"
-msgstr ""
+msgstr "Yeni toplu transfer oluştur"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_uid
@@ -304,7 +305,7 @@ msgstr "Geciken Aktiviteler"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
 msgid "List of transfers associated to this batch"
-msgstr ""
+msgstr "Bu toplu transfer ile ilişkili transfer listesi"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
@@ -324,7 +325,7 @@ msgstr "Mesajlar"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__name
 msgid "Name of the batch transfer"
-msgstr ""
+msgstr "Toplu transferin adı"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_date_deadline
@@ -375,7 +376,7 @@ msgstr "Okunmamış mesaj sayısı"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__user_id
 msgid "Person responsible for this batch transfer"
-msgstr ""
+msgstr "Bu toplu transferden sorumlu kişi"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
@@ -390,7 +391,7 @@ msgstr "Toplama"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Picking Reference"
-msgstr ""
+msgstr "Toplama Referansı"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
@@ -441,7 +442,7 @@ msgstr "Planlanan Tarih"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Transfer"
-msgstr ""
+msgstr "Toplu Transfer Arama"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
@@ -457,7 +458,7 @@ msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Some products require lots/serial numbers."
-msgstr ""
+msgstr "Bazı ürünler lot / seri numarası gerektirir."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
@@ -466,6 +467,8 @@ msgid ""
 "Some transfers are still waiting for goods. Please check or force their "
 "availability before setting this batch to done."
 msgstr ""
+"Bazı transferler hala mal bekliyor. Bu grubu yapmadan önce lütfen "
+"kullanılabilirliklerini kontrol edin veya zorlayın."
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
@@ -501,7 +504,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Transfer"
-msgstr ""
+msgstr "Stok Toplu Transfer"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -516,6 +519,10 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
+"Parti aktarımının amacı, verimliliklerini arttırmak için \n"
+"birlikte yapılması gereken (yapılması gereken) işlemleri gruplandırmaktır. \n"
+"İş atamak (bir kişi = bir parti) veya işlemlerin zamanlama yönetimine \n"
+"yardımcı olmak da yararlı olabilir (13: 00'da yapılacak işler)."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -525,7 +532,7 @@ msgstr "Bitiş"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "To take from:"
-msgstr ""
+msgstr "Almak için:"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter

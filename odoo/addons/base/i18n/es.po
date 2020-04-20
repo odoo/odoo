@@ -62,7 +62,6 @@
 # Efrem Jimenez <efj@odoo.com>, 2019
 # Otto Runarsson <oru@odoo.com>, 2019
 # John Guardado <jgu@odoo.com>, 2019
-# Jesse Garza <jga@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Martin Trigaux, 2019
@@ -71,8 +70,10 @@
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Marco Alejandro Martinez <martinezsuarezmarcoalejandro@gmail.com>, 2020
 # gpi odoo <gpi@odoo.com>, 2020
-# Elena Aguirre Claeyssens <eac@odoo.com>, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Jesse Garza <jga@odoo.com>, 2020
+# Elena Aguirre Claeyssens <eac@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -80,7 +81,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
+"Last-Translator: Elena Aguirre Claeyssens <eac@odoo.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1728,6 +1729,9 @@ msgid ""
 "Advanced features for the PoS like better views \n"
 "for IoT Box config.   \n"
 msgstr ""
+"\n"
+"Características avanzadas para el PdV como mejores vistas \n"
+"para la configuración de la IoT Box.   \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_calendar
@@ -4069,6 +4073,21 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a time off request is accepted by setting up a type of meeting in time off Type.\n"
 msgstr ""
+"\n"
+"Gestiona ausencias y solicitudes de asignación\n"
+"====================================\n"
+"\n"
+"Esta aplicación controla la planificación de vacaciones de su compañía. Permite a los empleados solicitar vacaciones. Luego, los responsables pueden revisar las solicitudes de vacaciones y aprobarlas o rechazarlas. De esta manera usted puede controlar en conjunto la planificación de las vacaciones para una compañía o departamento.\n"
+"\n"
+"Puede configurar distintos tipos de ausencias (enfermedad, vacaciones, días compensatorios, ...) y distribuirlas para un empleado o departamento rápidamente usando las solicitudes de asignación. Un empleado puede también hacer una petición para más días creando una nueva asignación. Esto incrementará el total de días disponibles para ese tipo de ausencia (si la petición es aceptada).\n"
+"\n"
+"Puede seguir las ausencias de diferentes maneras con los siguientes informes: \n"
+"\n"
+"* Resumen de ausencias\n"
+"* Ausencias por departamento\n"
+"* Análisis de ausencias\n"
+"\n"
+"También es posible la sincronización con la agenda interna (Reuniones del módulo de CRM) de cara a crear automáticamente una reunión cuando se acepta una solicitud de vacaciones, configurando un tipo reunión como tipo de ausencia.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_slides
@@ -5694,6 +5713,37 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Éste es el módulo base para gestionar el plan de cuentas para Bélgica en Odoo\n"
+"=============================================================================\n"
+"\n"
+"Después de instalar este módulo, se lanza el asistente de configuración para contabilidad.\n"
+"    * Existen plantillas que pueden ser útiles para generar los planes de cuentas.\n"
+"    * En ese asistente en particular, se le preguntará para dar el nombre de la compañía,\n"
+"      la plantilla contable a utilizar, el número de dígitos a generar, el código para su cuentas\n"
+"      bancarias y la moneda para crear diarios.\n"
+"\n"
+"Entonces, se genera una copia pura del plan contable.\n"
+"\n"
+"Éstos son los asistente provistos por este módulo:\n"
+"--------------------------------------------------\n"
+"    * IVA de empresas: Liste las empresas con su IVA correspondiente e importes facturados.\n"
+"       Prepara un formato de archivo XML.\n"
+"      \n"
+"         ** Ruta de acceso: ** Contabilidad / Informes / Informes / Declaraciones jurídicas belgas / IVA de empresas\n"
+"\n"
+"     * Declaración de IVA periódica: Prepara un archivo XML para la declaración del IVA de\n"
+"       la empresa principal del usuario actualmente conectado.\n"
+"      \n"
+"         ** Ruta de acceso: ** Contabilidad / Informes / Informes / Declaraciones jurídicas belgas / Declaración de IVA periódico\n"
+"\n"
+"     * Listado anual de clientes sometidos a IVA: Prepara un archivo XML para la\n"
+"       declaración de la empresa principal del usuario actualmente registrado en base al\n"
+"       año fiscal.\n"
+"      \n"
+"         ** Ruta de acceso: ** Contabilidad / Informes / Informes / Declaraciones jurídicas belgas / Listado anual de clientes  sometidos a IVA\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -6274,6 +6324,16 @@ msgid ""
 "trigger an automatic reminder email.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo permite implementar reglas de acción para cualquier objeto.\n"
+"============================================================\n"
+"\n"
+"Utilice acciones automatizadas para activar automáticamente acciones para varias pantallas.\n"
+"\n"
+"**Ejemplo:** Una oportunidad de venta creada por un usuario específico puede ser asignada a un \n"
+"equipo de ventas específico, o una oportunidad que aún esté en estado pendiente después de 14 días puede\n"
+"generar automáticamente un correo electrónico de recordatorio automático. \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_check_printing
@@ -6313,6 +6373,17 @@ msgid ""
 "- Check on bottom: ADP standard\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo le permite imprimir sus pagos en cheques preimpresos. Puede configurar la salida (diseño, apéndices, formato de papel, etc.) en la configuración de la empresa y administrar los\n"
+"cheques numerados (si utiliza cheques sin numeración) en la configuración del diario.\n"
+"Según la Asociación Canadiense de Pagos (https://www.payments.ca/sites/default/files/standard_006_complete_0.pdf)\n"
+"\n"
+"Formatos soportados\n"
+"----------------------------\n"
+"- Cheque en la parte superior : Quicken / QuickBooks standard\n"
+"- Cheque en la parte media: Peachtree standard\n"
+"- Cheque en la parte inferior: ADP standard\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -7809,9 +7880,9 @@ msgid ""
 "                                <span colspan=\"2\">Week of the Year: %(woy)s</span>\n"
 "                                <span colspan=\"2\">Day of the Week (0:Monday): %(weekday)s</span>"
 msgstr ""
-"<span colspan=\"2\">Día del Año: %(doy)s</span>\n"
-"                                <span colspan=\"2\">Semana del Año: %(woy)s</span>\n"
-"                                <span colspan=\"2\">Día de la Semana (0:Lunes): %(weekday)s</span>"
+"<span colspan=\"2\">Día del año: %(doy)s</span>\n"
+"                                <span colspan=\"2\">Semana del año: %(woy)s</span>\n"
+"                                <span colspan=\"2\">Día de la semana (0: Lunes): %(weekday)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -8202,7 +8273,7 @@ msgstr "Un módulo para generar excepciones."
 #. module: base
 #: model:ir.module.module,description:base.module_test_lint
 msgid "A module to test Odoo code with various linters."
-msgstr ""
+msgstr "Un módulo para probar el código Odoo con varias máquinas línters."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_impex
@@ -9154,7 +9225,7 @@ msgstr "Permitir al cajero re-imprimir recibos."
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
 msgid "Allow generating fsm tasks from ticket"
-msgstr ""
+msgstr "Permite generar tareas autómata finito a partir de un ticket"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ocn_client
@@ -9468,7 +9539,7 @@ msgstr "Estructura"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__arch_diff
 msgid "Architecture Diff"
-msgstr ""
+msgstr "Diferencia de arquitectura"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access_search
@@ -13565,7 +13636,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failures_count
 msgid "Failures Count"
-msgstr ""
+msgstr "Recuento de fallas"
 
 #. module: base
 #: model:res.country,name:base.fk
@@ -13754,7 +13825,7 @@ msgstr "Servicio externo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_report
 msgid "Field Service Reports"
-msgstr ""
+msgstr "Informes del Servicio Externo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_stock
@@ -13856,7 +13927,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "File Arch"
-msgstr ""
+msgstr "Archivo Arch"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__datas
@@ -16750,7 +16821,7 @@ msgstr "Salida en informes"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead_enrich
 msgid "Lead Enrichment"
-msgstr ""
+msgstr "Mejora de iniciativas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead
@@ -18359,7 +18430,7 @@ msgstr "Nueva Zelanda - Contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mass_mailing
 msgid "Newsletter Subscribe Button"
-msgstr ""
+msgstr "Botón de suscripción al boletín de noticias"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__nextcall
@@ -21298,7 +21369,7 @@ msgstr "Imprima la cantidad en palabras en los cheques emitidos para gastos"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_height
 msgid "Print page height (mm)"
-msgstr ""
+msgstr "Imprimir altura de la página (mm)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_width
@@ -21397,7 +21468,7 @@ msgstr "Proyecto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_enterprise
 msgid "Project Enterprise"
-msgstr ""
+msgstr "Proyecto Enterprise"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project
@@ -21578,7 +21649,7 @@ msgstr "Publique las preferencias de su cliente"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_membership
 msgid "Publish your members directory"
-msgstr ""
+msgstr "Publica tu directorio de miembros"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign

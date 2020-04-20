@@ -123,6 +123,7 @@ class Page(models.Model):
         # Create redirect if needed
         if data['create_redirect']:
             self.env['website.rewrite'].create({
+                'name': data['name'],
                 'redirect_type': data['redirect_type'],
                 'url_from': original_url,
                 'url_to': url,

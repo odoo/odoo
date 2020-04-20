@@ -16,10 +16,11 @@
 # Fábio Novais <fabionovais@aptu.com.br>, 2019
 # Silmar <pinheirosilmar@gmail.com>, 2019
 # Diego Bittencourt <diegomb86@gmail.com>, 2019
-# Fernando Alencar <fernando@fernandoalencar.com.br>, 2019
 # Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2019
 # grazziano <gra.negocia@gmail.com>, 2019
 # Fernanda Marques <fem@odoo.com>, 2020
+# Caroline Renson <car@odoo.com>, 2020
+# Luiz Fernando Gondin <lfpsgs@outlook.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Fernanda Marques <fem@odoo.com>, 2020\n"
+"Last-Translator: Luiz Fernando Gondin <lfpsgs@outlook.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +77,8 @@ msgid ""
 "Add members to automatically assign their documents to this sales team. You "
 "can only be member of one team."
 msgstr ""
+"Adicionar membros para atribuir automaticamente seus documentos à esta "
+"equipe de vendas. Você só pode ser membro de um único time."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -107,13 +110,13 @@ msgstr "Avatar"
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Big Pretty Button :)"
-msgstr ""
+msgstr "Botão grande e bonito :)"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
-msgstr ""
+msgstr "Não é possível apagar o time de vendas padrão \"%s\""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
@@ -158,19 +161,19 @@ msgstr "Moeda"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
-msgstr ""
+msgstr "Botão do Dashboard"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
 msgid "Dashboard Graph Data"
-msgstr ""
+msgstr "Dados do Gráfico do Dashboard"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_pipelines_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Define a new sales team"
-msgstr ""
+msgstr "Defina um novo time de vendas"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
@@ -245,6 +248,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
 msgstr ""
+"Se configurado, este time de vendas será utilizado para vendas a tribuições "
+"à este cliente"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -252,6 +257,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
+"Se o campo Ativo estiver definido como falso, será possível esconder o time "
+"de vendas sem removê-lo."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
@@ -296,7 +303,7 @@ msgstr "Número de ações"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Número de Erros"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
@@ -331,7 +338,7 @@ msgstr "Equipe de Vendas"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Sales Team name..."
-msgstr ""
+msgstr "Nome do Time de Vendas..."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
@@ -339,6 +346,8 @@ msgid ""
 "Sales Team the user is member of. Used to compute the members of a Sales "
 "Team through the inverse one2many"
 msgstr ""
+"Time de Vendas que o usuário é membro. Utilizado para calcular os membros de"
+" um time de vendas (one2many)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
@@ -380,7 +389,7 @@ msgstr "Membros da Equipe"
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_pipelines_act
 msgid "Team Pipelines"
-msgstr "Funil de Vendas"
+msgstr "Pipeline de Vendas"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
@@ -392,7 +401,7 @@ msgstr "Cor do canal"
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "Modelo de gráfico indefinido para o Time de Vendas: %s"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
@@ -412,11 +421,13 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                    Each team will work with a separate pipeline."
 msgstr ""
+"Utilize os Times de Vendas para organizar o departamento de vendas.\n"
+"Cada time irá trabalhar com Oportunidades separadas."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User's Sales Team"
-msgstr ""
+msgstr "Time de Vendas do Usuário"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -441,7 +452,7 @@ msgstr "Site"
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team
 msgid "eBay"
-msgstr ""
+msgstr "eBay"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
