@@ -42,6 +42,9 @@
     'demo': ['data/project_demo.xml'],
     'test': [
     ],
+    'qweb': [
+        'static/src/xml/project_templates.xml'
+    ],
     'installable': True,
     'auto_install': False,
     'application': True,

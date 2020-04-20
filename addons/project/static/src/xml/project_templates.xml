@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <t t-name="ProjectKanbanView.DemoRecord">
+        <div t-attf-class="oe_kanban_card o_kanban_record o_kanban_demo_record">
+            <div class="oe_kanban_content">
+                <div class="o_kanban_record_top">
+                    <div class="o_kanban_record_headings">
+                        <span class="o_kanban_record_title placeholder" t-attf-style="width: #{title}%"></span>
+                    </div>
+                </div>
+                <div class="o_kanban_record_body">
+                    <div class="o_field_many2manytags o_field_widget o_kanban_tags" t-if="tag">
+                        <span t-attf-class="o_tag o_tag_color_#{tag}">
+                            <span></span>
+                        </span>
+                        <span class="placeholder" style="width: 35%" />
+                    </div>
+                </div>
+                <div class="o_kanban_record_bottom" t-if="!selection_mode">
+                    <div class="oe_kanban_bottom_left">
+                        <i t-attf-class="fa #{favorite}" />
+                        <i t-attf-class="fa fa-clock-o #{activity}" />
+                        <i t-attf-class="fa #{rating}" t-if="rating" /> 
+                    </div>
+                    <div class="oe_kanban_bottom_right" t-if="!selection_mode">
+                        <i t-attf-class="o_status #{status}"></i>
+                        <img t-attf-src="/project/static/src/img/#{user}.jpg" class="oe_kanban_avatar" alt="User Image" />
+                    </div>
+                </div>
+            </div>
+            <div class="oe_clear"></div>
+        </div>
+    </t>
+</template>

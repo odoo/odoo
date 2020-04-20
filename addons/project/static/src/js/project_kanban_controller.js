@@ -1,10 +1,7 @@
-odoo.define('project.project_kanban', function (require) {
+odoo.define('project.project_kanban_controller', function (require) {
 'use strict';
 
 var KanbanController = require('web.KanbanController');
-var KanbanView = require('web.KanbanView');
-var KanbanColumn = require('web.KanbanColumn');
-var view_registry = require('web.view_registry');
 
 var ProjectKanbanController = KanbanController.extend({
     custom_events: _.extend({}, KanbanController.prototype.custom_events, {
@@ -27,22 +24,5 @@ var ProjectKanbanController = KanbanController.extend({
     }
 });
 
-var ProjectKanbanView = KanbanView.extend({
-    config: _.extend({}, KanbanView.prototype.config, {
-        Controller: ProjectKanbanController
-    }),
-});
-
-KanbanColumn.include({
-    _onDeleteColumn: function (event) {
-        event.preventDefault();
-        if (this.modelName === 'project.task') {
-            this.trigger_up('kanban_column_delete_wizard');
-            return;
-        }
-        this._super.apply(this, arguments);
-    }
-});
-
-view_registry.add('project_kanban', ProjectKanbanView);
+return ProjectKanbanController;
 });

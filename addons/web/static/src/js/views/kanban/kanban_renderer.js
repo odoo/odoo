@@ -676,7 +676,7 @@ var KanbanRenderer = BasicRenderer.extend({
         var $elem = this.$('.o_kanban_example_background_container');
         if (!this.state.data.length && !$elem.length) {
             this._renderExampleBackground(this.$el);
-        } else {
+        } else if(this.state.data.length) {
             $elem.remove();
         }
     },
