@@ -117,7 +117,6 @@ return AbstractModel.extend({
         }
         if ('orderby' in params) {
             this.chart.orderby = params.orderby;
-            this.chart.orderby_mode = params.orderby_mode;
         }
 
         this._computeDerivedParams();
@@ -195,12 +194,12 @@ return AbstractModel.extend({
         var context = _.extend({fill_temporal: true}, this.chart.context);
 
         var proms = [];
-        var orderBy = [];
+        let orderBy = [];
 
         if (this.chart.orderby) {
-            orderBy = _.map(groupBy, function(group) {
+            orderBy = groupBy.map(function (group) {
                 return {name: group, asc: self.chart.orderby === 'ascending' ? true : false};
-            })
+            });
         }
 
         this.chart.domains.forEach(function (domain, originIndex) {

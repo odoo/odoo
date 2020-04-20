@@ -1119,14 +1119,15 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
-    QUnit.test('sort graph rendering', async function (assert) {
+    QUnit.only('graph view sort axis', async function (assert) {
         assert.expect(6);
 
-        var rpcCount = 0;
-        var graph = await createView({
+        let rpcCount = 0;
+        const graph = await createView({
             View: GraphView,
             model: "foo",
             data: this.data,
+            debug: true,
             arch: '<graph string="Partners">' +
                         '<field name="product_id"/>' +
                 '</graph>',
@@ -1146,9 +1147,9 @@ QUnit.module('Views', {
         });
 
         assert.checkLabels(graph, [['xphone'], ['xpad']], 'Initially Lable should be in acceding with ID');
-        await testUtils.dom.click(graph.$buttons.find('button[data-mode="descending"]'));
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="descending"]'));
         assert.checkLabels(graph, [['xpad'], ['xphone']], 'After click on descending Lable should be in descending with ID');
-        await testUtils.dom.click(graph.$buttons.find('button[data-mode="ascending"]'));
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="ascending"]'));
         assert.checkLabels(graph, [['xphone'], ['xpad']], 'After click on ascending Lable should be in ascending with ID');
 
         graph.destroy();
