@@ -958,7 +958,7 @@ class GoogleCalendar(models.AbstractModel):
         return datetime.now() - timedelta(weeks=int(number_of_week))
 
     def get_need_synchro_attendee(self):
-        return self.env['ir.config_parameter'].sudo().get_param('calendar.block_synchro_attendee', default=True)
+        return not (self.env['ir.config_parameter'].sudo().get_param('calendar.block_synchro_attendee', default=False) == 'True')
 
     def get_disable_since_synchro(self):
         return self.env['ir.config_parameter'].sudo().get_param('calendar.block_since_synchro', default=False)
