@@ -815,7 +815,7 @@ class PaymentTransaction(models.Model):
             _logger.warning('Processed tx with abnormal state (ref: %s, target state: %s, previous state %s, expected previous states: %s)' % (tx.reference, target_state, tx.state, allowed_states))
 
         # Cancel the existing payments.
-        tx_to_process.mapped('payment_id').cancel()
+        tx_to_process.mapped('payment_id').action_cancel()
 
         tx_to_process.write({'state': target_state, 'date': fields.Datetime.now()})
         tx_to_process._log_payment_transaction_received()
