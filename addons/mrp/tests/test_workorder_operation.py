@@ -36,7 +36,9 @@ class TestWorkOrderProcessCommon(TestMrpCommon):
             'product_tmpl_id': cls.product_4.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 4.0,
-            'routing_id': cls.routing_1.id,
+            'operation_ids': [
+                (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+            ],
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
@@ -70,44 +72,41 @@ class TestWorkOrderProcessCommon(TestMrpCommon):
             'name': 'Assembly Line 1',
             'resource_calendar_id': cls.env.ref('resource.resource_calendar_std').id,
         })
-        cls.routing = cls.env['mrp.routing'].create({
-            'name': 'Assemble Furniture',
-            'operation_ids': [(0, 0, {
-                'workcenter_id': cls.mrp_workcenter.id,
-                'name': 'Manual Assembly',
-            })]
-        })
         cls.mrp_bom_desk = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.dining_table.product_tmpl_id.id,
             'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
             'sequence': 3,
             'consumption': 'flexible',
-            'routing_id': cls.routing.id,
+            'operation_ids': [
+                (0, 0, {'workcenter_id': cls.mrp_workcenter.id, 'name': 'Manual Assembly'}),
+            ],
+        })
+        cls.mrp_bom_desk.write({
             'bom_line_ids': [
                 (0, 0, {
                     'product_id': cls.product_table_sheet.id,
                     'product_qty': 1,
                     'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'sequence': 1,
-                    'operation_id': cls.routing.operation_ids.id}),
+                    'operation_id': cls.mrp_bom_desk.operation_ids.id}),
                 (0, 0, {
                     'product_id': cls.product_table_leg.id,
                     'product_qty': 4,
                     'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'sequence': 2,
-                    'operation_id': cls.routing.operation_ids.id}),
+                    'operation_id': cls.mrp_bom_desk.operation_ids.id}),
                 (0, 0, {
                     'product_id': cls.product_bolt.id,
                     'product_qty': 4,
                     'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'sequence': 3,
-                    'operation_id': cls.routing.operation_ids.id}),
+                    'operation_id': cls.mrp_bom_desk.operation_ids.id}),
                 (0, 0, {
                     'product_id': cls.product_screw.id,
                     'product_qty': 10,
                     'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'sequence': 4,
-                    'operation_id': cls.routing.operation_ids.id}),
+                    'operation_id': cls.mrp_bom_desk.operation_ids.id}),
             ]
         })
         cls.mrp_workcenter_1 = cls.env['mrp.workcenter'].create({
@@ -117,26 +116,6 @@ class TestWorkOrderProcessCommon(TestMrpCommon):
         cls.mrp_workcenter_3 = cls.env['mrp.workcenter'].create({
             'name': 'Assembly Line 1',
             'resource_calendar_id': cls.env.ref('resource.resource_calendar_std').id,
-        })
-        cls.routing_1 = cls.env['mrp.routing'].create({
-            'name': 'Secondary Assembly',
-            'operation_ids': [
-                (0, 0, {
-                    'workcenter_id': cls.mrp_workcenter_1.id,
-                    'name': 'Packing',
-                    'time_cycle': 30,
-                    'sequence': 5}),
-                (0, 0, {
-                    'workcenter_id': cls.mrp_workcenter_3.id,
-                    'name': 'Testing',
-                    'time_cycle': 60,
-                    'sequence': 10}),
-                (0, 0, {
-                    'workcenter_id': cls.mrp_workcenter_3.id,
-                    'name': 'Long time assembly',
-                    'time_cycle': 180,
-                    'sequence': 15}),
-            ]
         })
 
 
@@ -270,11 +249,30 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
 
         self.env['stock.move'].search([('product_id', '=', product_bolt.id)])._do_unreserve()
 
-        bom.routing_id = self.routing_1
+        bom.operation_ids = False
+        bom.write({
+            'operation_ids': [
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_1.id,
+                    'name': 'Packing',
+                    'time_cycle': 30,
+                    'sequence': 5}),
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_3.id,
+                    'name': 'Testing',
+                    'time_cycle': 60,
+                    'sequence': 10}),
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_3.id,
+                    'name': 'Long time assembly',
+                    'time_cycle': 180,
+                    'sequence': 15}),
+            ]
+        })
 
-        bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_sheet).operation_id = bom.routing_id.operation_ids[0]
-        bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_leg).operation_id = bom.routing_id.operation_ids[1]
-        bom.bom_line_ids.filtered(lambda p: p.product_id == product_bolt).operation_id = bom.routing_id.operation_ids[2]
+        bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_sheet).operation_id = bom.operation_ids[0]
+        bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_leg).operation_id = bom.operation_ids[1]
+        bom.bom_line_ids.filtered(lambda p: p.product_id == product_bolt).operation_id = bom.operation_ids[2]
 
         production_table_form = Form(self.env['mrp.production'])
         production_table_form.product_id = dining_table
@@ -399,8 +397,9 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
 
         # Set manual time cycle 20 and 10.
         # --------------------------------
-        self.operation_1.write({'time_cycle_manual': 20})
-        (self.operation_2 | self.operation_3).write({'time_cycle_manual': 10})
+        self.bom_3.operation_ids[0].time_cycle_manual = 10
+        self.bom_3.operation_ids[1].time_cycle_manual = 10
+        self.bom_2.operation_ids.time_cycle_manual = 20
 
         man_order_form = Form(self.env['mrp.production'])
         man_order_form.product_id = self.product_6
@@ -484,9 +483,10 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         # - kit bom: Stone Tool: 1 operation
         #   operation 1: Gift Wrapping
         workorders = man_order.workorder_ids
-        kit_wo = man_order.workorder_ids.filtered(lambda wo: wo.operation_id == self.operation_1)
-        door_wo_1 = man_order.workorder_ids.filtered(lambda wo: wo.operation_id == self.operation_2)
-        door_wo_2 = man_order.workorder_ids.filtered(lambda wo: wo.operation_id == self.operation_3)
+        kit_wo = man_order.workorder_ids.filtered(lambda wo: wo.operation_id.name == "Gift Wrap Maching")
+        door_wo_1 = man_order.workorder_ids.filtered(lambda wo: wo.operation_id.name == "Cutting Machine")
+        door_wo_2 = man_order.workorder_ids.filtered(lambda wo: wo.operation_id.name == "Weld Machine")
+
         for workorder in workorders:
             self.assertEqual(workorder.workcenter_id, self.workcenter_1, "Workcenter does not match.")
         self.assertEqual(kit_wo.state, 'ready', "Workorder should be in ready state.")
@@ -523,7 +523,6 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         door_wo_2.button_start()
         door_wo_2.record_production()
         self.assertEqual(door_wo_2.state, 'done', "Workorder should be in done state.")
-
 
     def test_01_without_workorder(self):
         """ Testing consume quants and produced quants without workorder """
@@ -816,7 +815,6 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         laptop = self.laptop
         graphics_card = self.graphics_card
         unit = self.env.ref("uom.product_uom_unit")
-        three_step_routing = self.routing_1
 
         laptop.tracking = 'serial'
 
@@ -829,7 +827,23 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
                 'product_qty': 1,
                 'product_uom_id': unit.id
             })],
-            'routing_id': three_step_routing.id
+            'operation_ids': [
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_1.id,
+                    'name': 'Packing',
+                    'time_cycle': 30,
+                    'sequence': 5}),
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_3.id,
+                    'name': 'Testing',
+                    'time_cycle': 60,
+                    'sequence': 10}),
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_3.id,
+                    'name': 'Long time assembly',
+                    'time_cycle': 180,
+                    'sequence': 15}),
+            ],
         })
 
         mo_laptop_form = Form(self.env['mrp.production'])
@@ -891,7 +905,23 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
             'product_tmpl_id': drawer.product_tmpl_id.id,
             'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             'sequence': 2,
-            'routing_id': self.routing_1.id,
+            'operation_ids': [
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_1.id,
+                    'name': 'Packing',
+                    'time_cycle': 30,
+                    'sequence': 5}),
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_3.id,
+                    'name': 'Testing',
+                    'time_cycle': 60,
+                    'sequence': 10}),
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_3.id,
+                    'name': 'Long time assembly',
+                    'time_cycle': 180,
+                    'sequence': 15}),
+            ],
             'bom_line_ids': [(0, 0, {
                 'product_id': drawer_drawer.id,
                 'product_qty': 1,
@@ -1156,10 +1186,14 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         calendar wc1 : [q1][q2]
         calendar wc2 :     [q1][q2]"""
         self.workcenter_1.alternative_workcenter_ids = self.wc_alt_1 | self.wc_alt_2
-        self.planning_bom.routing_id = self.routing_2
+        self.planning_bom.operation_ids = False
+        self.planning_bom.write({
+           'operation_ids': [
+                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1, 'batch': 'yes', 'batch_size': 1}),
+               (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+            ],
+        })
         # Allow second workorder to start once the first one is not ended yet
-        self.operation_2.batch = 'yes'
-        self.operation_2.batch_size = 1
         self.env['mrp.workcenter'].search([]).write({'capacity': 1})
         # workcenters work 24/7
         self.full_availability()
@@ -1175,8 +1209,8 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         self.assertEqual(mo.workorder_ids[0].workcenter_id, self.wc_alt_2, "wrong workcenter")
         self.assertEqual(mo.workorder_ids[1].workcenter_id, self.wc_alt_1, "wrong workcenter")
 
-        duration1 = self.operation_2.time_cycle * 100.0 / self.wc_alt_2.time_efficiency + self.wc_alt_2.time_start
-        duration2 = 2.0 * self.operation_2.time_cycle * 100.0 / self.wc_alt_1.time_efficiency + self.wc_alt_1.time_start + self.wc_alt_1.time_stop
+        duration1 = self.planning_bom.operation_ids[0].time_cycle * 100.0 / self.wc_alt_2.time_efficiency + self.wc_alt_2.time_start
+        duration2 = 2.0 * self.planning_bom.operation_ids[0].time_cycle * 100.0 / self.wc_alt_1.time_efficiency + self.wc_alt_1.time_start + self.wc_alt_1.time_stop
         wo2_start = mo.workorder_ids[1].date_planned_start
         wo2_stop = mo.workorder_ids[1].date_planned_finished
 
@@ -1262,7 +1296,6 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         """ Marking a workorder as done before the theoretical date should update
         the reservation slot in the calendar the be able to reserve the next
         production sooner """
-        self.workcenter_1.alternative_workcenter_ids = self.wc_alt_1 | self.wc_alt_2
         self.env['mrp.workcenter'].search([]).write({'tz': 'UTC'}) # compute all date in UTC
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_4
@@ -1274,7 +1307,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         mo.button_plan()
         wo = mo.workorder_ids
         self.assertAlmostEqual(wo.date_planned_start, datetime(2019, 5, 13, 9, 0, 0, 0), delta=timedelta(seconds=10))
-        self.assertAlmostEqual(wo.date_planned_finished, datetime(2019, 5, 13, 9, 0, 0, 0) + timedelta(minutes=85.58), delta=timedelta(seconds=10))
+        self.assertAlmostEqual(wo.date_planned_finished, datetime(2019, 5, 13, 9, 0, 0, 0) + timedelta(minutes=60), delta=timedelta(seconds=10))
         wo.button_start()
         wo.record_production()
         # Marking workorder as done should change the finished date
@@ -1302,7 +1335,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         self.workcenter_1.time_efficiency = 100
         self.workcenter_1.time_start = 0
         self.workcenter_1.time_stop = 0
-        self.routing_1.operation_ids.time_cycle = 60
+        self.planning_bom.operation_ids.time_cycle = 60
         self.product_4.tracking = 'serial'
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_4
@@ -1372,7 +1405,23 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
             'product_tmpl_id': self.product_5.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 1.0,
-            'routing_id': self.routing_1.id,
+            'operation_ids': [
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_1.id,
+                    'name': 'Packing',
+                    'time_cycle': 30,
+                    'sequence': 5}),
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_3.id,
+                    'name': 'Testing',
+                    'time_cycle': 60,
+                    'sequence': 10}),
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_3.id,
+                    'name': 'Long time assembly',
+                    'time_cycle': 180,
+                    'sequence': 15}),
+            ],
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': self.product_1.id, 'product_qty': 1}),
@@ -1403,14 +1452,32 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
 
     def test_conflict_and_replan(self):
         """ TEST Json data conflicted and the replan button of a workorder """
-        self.routing_1.operation_ids[0].write({'workcenter_id': self.mrp_workcenter_3.id})
         dining_table = self.dining_table
         bom = self.mrp_bom_desk
-        bom.routing_id = self.routing_1
+        bom.operation_ids = False
+        bom.write({
+            'operation_ids': [
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_3.id,
+                    'name': 'Packing',
+                    'time_cycle': 30,
+                    'sequence': 5}),
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_3.id,
+                    'name': 'Testing',
+                    'time_cycle': 60,
+                    'sequence': 10}),
+                (0, 0, {
+                    'workcenter_id': self.mrp_workcenter_3.id,
+                    'name': 'Long time assembly',
+                    'time_cycle': 180,
+                    'sequence': 15}),
+            ]})
 
-        bom.bom_line_ids.filtered(lambda p: p.product_id == self.product_table_sheet).operation_id = bom.routing_id.operation_ids[0].id
-        bom.bom_line_ids.filtered(lambda p: p.product_id == self.product_table_leg).operation_id = bom.routing_id.operation_ids[1].id
-        bom.bom_line_ids.filtered(lambda p: p.product_id == self.product_bolt).operation_id = bom.routing_id.operation_ids[2].id
+
+        bom.bom_line_ids.filtered(lambda p: p.product_id == self.product_table_sheet).operation_id = bom.operation_ids[0].id
+        bom.bom_line_ids.filtered(lambda p: p.product_id == self.product_table_leg).operation_id = bom.operation_ids[1].id
+        bom.bom_line_ids.filtered(lambda p: p.product_id == self.product_bolt).operation_id = bom.operation_ids[2].id
 
         production_table_form = Form(self.env['mrp.production'])
         production_table_form.product_id = dining_table
@@ -1513,54 +1580,38 @@ class TestRoutingAndKits(SavepointCase):
         cls.workcenter_kit1 = cls.env['mrp.workcenter'].create({
             'name': 'workcenter2',
         })
-        cls.routing_finished1 = cls.env['mrp.routing'].create({
-            'name': 'routing for finished1',
-        })
-        cls.operation_finished1 = cls.env['mrp.routing.workcenter'].create({
-            'sequence': 1,
-            'name': 'finished operation 1',
-            'workcenter_id': cls.workcenter_finished1.id,
-            'routing_id': cls.routing_finished1.id,
-        })
-        cls.operation_finished2 = cls.env['mrp.routing.workcenter'].create({
-            'sequence': 1,
-            'name': 'finished operation 2',
-            'workcenter_id': cls.workcenter_finished1.id,
-            'routing_id': cls.routing_finished1.id,
-        })
-        cls.routing_kit1 = cls.env['mrp.routing'].create({
-            'name': 'routing for kit1',
-        })
-        cls.operation_kit1 = cls.env['mrp.routing.workcenter'].create({
-            'name': 'Kit operation',
-            'workcenter_id': cls.workcenter_kit1.id,
-            'routing_id': cls.routing_kit1.id,
-        })
         cls.bom_finished1 = cls.env['mrp.bom'].create({
             'product_id': cls.finished1.id,
             'product_tmpl_id': cls.finished1.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 1,
             'type': 'normal',
-            'routing_id': cls.routing_finished1.id,
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.compfinished1.id, 'product_qty': 1}),
                 (0, 0, {'product_id': cls.kit1.id, 'product_qty': 1}),
-            ]})
+            ],
+            'operation_ids': [
+                (0, 0, {'sequence': 1, 'name': 'finished operation 1', 'workcenter_id': cls.workcenter_finished1.id}),
+                (0, 0, {'sequence': 2, 'name': 'finished operation 2', 'workcenter_id': cls.workcenter_finished1.id}),
+            ],
+        })
         cls.bom_kit1 = cls.env['mrp.bom'].create({
             'product_id': cls.kit1.id,
             'product_tmpl_id': cls.kit1.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 1,
             'type': 'phantom',
-            'routing_id': cls.routing_kit1.id,
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.compkit1.id, 'product_qty': 1}),
-            ]})
+            ],
+            'operation_ids': [
+                (0, 0, {'name': 'Kit operation', 'workcenter_id': cls.workcenter_kit1.id})
+            ]
+        })
 
     def test_1(self):
         """Operations are set on `self.bom_kit1` but none on `self.bom_finished1`."""
-        self.bom_kit1.bom_line_ids.operation_id = self.operation_kit1
+        self.bom_kit1.bom_line_ids.operation_id = self.bom_kit1.operation_ids[0]
 
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.finished1
@@ -1594,9 +1645,9 @@ class TestRoutingAndKits(SavepointCase):
 
     def test_3(self):
         """Operations are set both `self.bom_kit1` and `self.bom_finished1`."""
-        self.bom_kit1.bom_line_ids.operation_id = self.operation_kit1
-        self.bom_finished1.bom_line_ids[0].operation_id = self.operation_finished1
-        self.bom_finished1.bom_line_ids[1].operation_id = self.operation_finished2
+        self.bom_kit1.bom_line_ids.operation_id = self.bom_kit1.operation_ids
+        self.bom_finished1.bom_line_ids[0].operation_id = self.bom_finished1.operation_ids[0]
+        self.bom_finished1.bom_line_ids[1].operation_id = self.bom_finished1.operation_ids[1]
 
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.finished1
@@ -1653,12 +1704,12 @@ class TestRoutingAndKits(SavepointCase):
     def test_5(self):
         # Main bom: set the normal component to the first of the two operations of the routing.
         bomline_compfinished = self.bom_finished1.bom_line_ids.filtered(lambda bl: bl.product_id == self.compfinished1)
-        bomline_compfinished.operation_id = self.operation_finished1
+        bomline_compfinished.operation_id = self.bom_finished1.operation_ids[0]
 
         # Main bom: the kit do not have an operation set but there's one on its bom
         bomline_kit1 = self.bom_finished1.bom_line_ids - bomline_compfinished
         self.assertFalse(bomline_kit1.operation_id.id)
-        self.bom_kit1.bom_line_ids.operation_id = self.bom_kit1.routing_id.operation_ids
+        self.bom_kit1.bom_line_ids.operation_id = self.bom_kit1.operation_ids
 
         # Main bom: add a kit without routing
         kit2 = self.env['product.product'].create({
@@ -1693,28 +1744,10 @@ class TestRoutingAndKits(SavepointCase):
         self.assertEqual(mo.workorder_ids[1].raw_workorder_line_ids.product_id, compkit2)
         self.assertEqual(mo.workorder_ids[2].raw_workorder_line_ids.product_id, self.compkit1)
 
-    def test_6(self):
-        """ Use the same routing on `self.bom_fnished1` and `self.kit1`. The workorders should not
-        be duplicated.
-        """
-        self.bom_finished1.bom_line_ids[0].operation_id = self.operation_finished1
-        self.bom_finished1.bom_line_ids[1].operation_id = self.operation_finished2
-        self.bom_kit1.routing_id = self.routing_finished1
-        self.bom_kit1.bom_line_ids.operation_id = self.operation_finished1
-
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.finished1
-        mo_form.bom_id = self.bom_finished1
-        mo_form.product_qty = 1.0
-        mo = mo_form.save()
-
-        mo.action_confirm()
-        mo.button_plan()
-
-        self.assertEqual(len(mo.workorder_ids), 2)
-        self.assertEqual(set(mo.workorder_ids[0].raw_workorder_line_ids.product_id.ids), set([self.compfinished1.id, self.compkit1.id]))
-        self.assertFalse(mo.workorder_ids[1].raw_workorder_line_ids.product_id.id)
-
+    # -------------------------------------------------------------------------
+    # Those 2 next tests aren't related to routing and kit but to flexible
+    # consumption.
+    # -------------------------------------------------------------------------
     def test_merge_lot(self):
         """ Produce 10 units of product tracked by lot on two workorder. On the
         first one, produce 4 onto lot1 then 6 onto lot1 as well. The second
@@ -1768,7 +1801,7 @@ class TestRoutingAndKits(SavepointCase):
             move.location_id = mo.location_src_id
             move.location_dest_id = mo.production_location_id
             move.product_uom_qty = 2
-            move.operation_id = mo.routing_id.operation_ids[0]
+            move.operation_id = mo.bom_id.operation_ids[0]
         mo = mo_form.save()
         self.assertEqual(len(mo.move_raw_ids), 3)
         mo.action_confirm()
@@ -1802,7 +1835,7 @@ class TestRoutingAndKits(SavepointCase):
             move.location_id = mo.location_src_id
             move.location_dest_id = mo.production_location_id
             move.product_uom_qty = 2
-            move.operation_id = mo.routing_id.operation_ids[0]
+            move.operation_id = mo.bom_id.operation_ids[0]
         mo = mo_form.save()
         new_move = mo.move_raw_ids.filtered(lambda move: move.additional)
         self.assertEqual(len(mo.move_raw_ids), 3)

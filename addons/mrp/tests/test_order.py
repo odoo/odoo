@@ -63,7 +63,6 @@ class TestMrpOrder(TestMrpCommon):
 
         test_date_planned = Dt.now() - timedelta(days=1)
         test_quantity = 2.0
-        self.bom_1.routing_id = False
         man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
         man_order_form.product_id = self.product_4
         man_order_form.bom_id = self.bom_1
@@ -148,15 +147,6 @@ class TestMrpOrder(TestMrpCommon):
         production_2.action_assign()
         # check sub product availability state is assigned
         self.assertEqual(production_2.reservation_state, 'assigned', 'Production order should be availability for assigned state')
-
-    def test_empty_routing(self):
-        """ Check what happens when you work with an empty routing"""
-        routing = self.env['mrp.routing'].create({'name': 'Routing without operations'})
-        self.bom_3.routing_id = routing.id
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_6
-        production = production_form.save()
-        self.assertEqual(production.routing_id.id, False, 'The routing field should be empty on the mo')
 
     def test_split_move_line(self):
         """ Consume more component quantity than the initial demand.
@@ -911,8 +901,6 @@ class TestMrpOrder(TestMrpCommon):
                 bp.product_qty = 2.0
                 bp.product_uom_id = dozen
 
-        self.bom_1.routing_id = False
-
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.bom_1
@@ -1231,14 +1219,10 @@ class TestMrpOrder(TestMrpCommon):
             'uom_id': unit.id,
             'uom_po_id': unit.id,
         })
-        routing = self.env['mrp.routing'].create({
-            'name': 'Secondary Assembly',
-        })
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': plastic_laminate.product_tmpl_id.id,
             'product_uom_id': unit.id,
             'sequence': 1,
-            'routing_id': routing.id,
             'bom_line_ids': [(0, 0, {
                 'product_id': ply_veneer.id,
                 'product_qty': 1,

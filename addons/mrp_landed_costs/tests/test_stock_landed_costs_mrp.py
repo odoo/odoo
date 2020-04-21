@@ -37,16 +37,12 @@ class TestStockLandedCostsMrp(StockAccountTestCommon):
             'type': 'product',
             'categ_id': cls.categ_all.id
         })
-        cls.routing_1 = cls.env['mrp.routing'].create({
-            'name': 'Simple Line',
-        })
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.bom_refri = cls.env['mrp.bom'].create({
             'product_id': cls.product_refrigerator.id,
             'product_tmpl_id': cls.product_refrigerator.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 1.0,
-            'routing_id': cls.routing_1.id,
             'type': 'normal',
         })
         cls.bom_refri_line1 = cls.env['mrp.bom.line'].create({

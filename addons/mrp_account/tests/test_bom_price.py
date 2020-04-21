@@ -19,7 +19,7 @@ class TestBom(common.TransactionCase):
         super(TestBom, self).setUp()
         self.Product = self.env['product.product']
         self.Bom = self.env['mrp.bom']
-        self.Routing = self.env['mrp.routing']
+        #self.Routing = self.env['mrp.routing']
         self.operation = self.env['mrp.routing.workcenter']
 
         # Products.
@@ -117,37 +117,63 @@ class TestBom(common.TransactionCase):
         workcenter_from1.costs_hour = 100
         workcenter_1 = workcenter_from1.save()
 
-        routing_form1 = Form(self.Routing)
-        routing_form1.name = 'Assembly Furniture'
-        routing_1 = routing_form1.save()
+        self.bom_1.write({
+            'operation_ids': [
+                (0, 0, {
+                    'name': 'Cutting',
+                    'workcenter_id': workcenter_1.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 20,
+                    'batch': 'no',
+                    'sequence': 1,
+                }),
+                (0, 0, {
+                    'name': 'Drilling',
+                    'workcenter_id': workcenter_1.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 25,
+                    'batch': 'no',
+                    'sequence': 2,
+                }),
+                (0, 0, {
+                    'name': 'Fitting',
+                    'workcenter_id': workcenter_1.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 30,
+                    'batch': 'no',
+                    'sequence': 3,
+                }),
+            ],
+        }),
+        self.bom_2.write({
+            'operation_ids': [
+                (0, 0, {
+                    'name': 'Cutting',
+                    'workcenter_id': workcenter_1.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 20,
+                    'batch': 'no',
+                    'sequence': 1,
+                }),
+                (0, 0, {
+                    'name': 'Drilling',
+                    'workcenter_id': workcenter_1.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 25,
+                    'batch': 'no',
+                    'sequence': 2,
+                }),
+                (0, 0, {
+                    'name': 'Fitting',
+                    'workcenter_id': workcenter_1.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 30,
+                    'batch': 'no',
+                    'sequence': 3,
+                }),
+            ],
+        }),
 
-        operation_1 = self.operation.create({
-            'name': 'Cutting',
-            'workcenter_id': workcenter_1.id,
-            'routing_id': routing_1.id,
-            'time_mode': 'manual',
-            'time_cycle_manual': 20,
-            'batch': 'no',
-            'sequence': 1,
-        })
-        operation_2 = self.operation.create({
-            'name': 'Drilling',
-            'workcenter_id': workcenter_1.id,
-            'routing_id': routing_1.id,
-            'time_mode': 'manual',
-            'time_cycle_manual': 25,
-            'batch': 'no',
-            'sequence': 2,
-        })
-        operation_3 = self.operation.create({
-            'name': 'Fitting',
-            'workcenter_id': workcenter_1.id,
-            'routing_id': routing_1.id,
-            'time_mode': 'manual',
-            'time_cycle_manual': 30,
-            'batch': 'no',
-            'sequence': 3,
-        })
 
         # -----------------------------------------------------------------
         # Dinning Table Operation Cost(1 Unit)
@@ -160,7 +186,6 @@ class TestBom(common.TransactionCase):
         # Operation Cost  1 unit = 125
         # -----------------------------------------------------------------
 
-        self.bom_1.routing_id = routing_1.id
 
         # --------------------------------------------------------------------------
         # Table Head Operation Cost (1 Dozen)
@@ -173,7 +198,6 @@ class TestBom(common.TransactionCase):
         # Operation Cost 1 dozen (125 per dozen) and 10.42 for 1 Unit
         # --------------------------------------------------------------------------
 
-        self.bom_2.routing_id = routing_1.id
 
         self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
         self.dining_table.button_bom_cost()

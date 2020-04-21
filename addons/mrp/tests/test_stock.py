@@ -26,13 +26,6 @@ class TestWarehouse(common.TestMrpCommon):
             'name': 'Assembly Line 1',
             'resource_calendar_id': self.env.ref('resource.resource_calendar_std').id,
         })
-        mrp_routing = self.env['mrp.routing'].create({
-            'name': 'Primary Assembly',
-            'operation_ids': [(0, 0, {
-                'workcenter_id': mrp_workcenter.id,
-                'name': 'Manual Assembly',
-            })]
-        })
         inventory = self.env['stock.inventory'].create({
             'name': 'Initial inventory',
             'line_ids': [(0, 0, {
@@ -54,7 +47,9 @@ class TestWarehouse(common.TestMrpCommon):
                 'product_qty': 1,
                 'product_uom_id': unit.id
             })],
-            'routing_id': mrp_routing.id
+            'operation_ids': [
+                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+            ],
         })
 
     def new_mo_laptop(self):

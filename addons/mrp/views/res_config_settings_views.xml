@@ -20,13 +20,10 @@
                                     <label for="group_mrp_routings" string="Work Orders"/>
                                     <a href="https://www.odoo.com/documentation/user/13.0/manufacturing/management/manufacturing_order.html#manage-manufacturing-with-routings-and-work-centers" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
-                                        Process operations at specific work centers based on the routing
+                                        Process operations at specific work centers
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
                                         <div class="mt8">
-                                            <div>
-                                                <button name="%(mrp.mrp_routing_action)d" icon="fa-arrow-right" type="action" string="Routings" class="btn-link"/>
-                                            </div>
                                             <div>
                                                 <button name="%(mrp.mrp_workcenter_action)d" icon="fa-arrow-right" type="action" string="Work Centers" class="btn-link"/>
                                             </div>
