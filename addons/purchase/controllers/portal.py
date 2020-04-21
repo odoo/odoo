@@ -13,7 +13,6 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager, Custome
 from odoo.addons.web.controllers.main import Binary
 
 
-
 class CustomerPortal(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
@@ -111,6 +110,41 @@ class CustomerPortal(CustomerPortal):
 
         report_type = kw.get('report_type')
         if report_type in ('html', 'pdf', 'text'):
-            return self._show_report(model=order_sudo, report_type=report_type, report_ref='purchase.action_report_purchase_order',download=kw.get('download'))
+            return self._show_report(model=order_sudo, report_type=report_type, report_ref='purchase.action_report_purchase_order', download=kw.get('download'))
+
+        confirm_type = kw.get('confirm')
+        if confirm_type == 'reminder':
+            order_sudo.confirm_reminder_mail(kw.get('confirmed_date'))
+        if confirm_type == 'reception':
+            order_sudo._confirm_reception_mail()
+
+        values = self._purchase_order_get_page_view_values(order_sudo, access_token, **kw)
+        update_date = kw.get('update')
+        if update_date == 'True':
+            return request.render("purchase.portal_my_purchase_order_update_date", values)
+        return request.render("purchase.portal_my_purchase_order", values)
+
+    @http.route(['/my/purchase/<int:order_id>/update'], type='http', methods=['POST'], auth="public", website=True)
+    def portal_my_purchase_order_update_dates(self, order_id=None, access_token=None, **kw):
+        """User update scheduled date on purchase order line.
+        """
+        try:
+            order_sudo = self._document_check_access('purchase.order', order_id, access_token=access_token)
+        except (AccessError, MissingError):
+            return request.redirect('/my')
+
+        updated_dates = []
+        try:
+            for id_str, date in kw.items():
+                line = order_sudo.order_line.filtered(lambda l: l.id == int(id_str))
+                if not line:
+                    return request.redirect(order_sudo.get_portal_url())
+                updated_dates.append((line, date))
+        except ValueError:
+            return request.redirect(order_sudo.get_portal_url())
+
+        if updated_dates:
+            order_sudo._update_date_planned_for_lines(updated_dates)
+
         values = self._purchase_order_get_page_view_values(order_sudo, access_token, **kw)
         return request.render("purchase.portal_my_purchase_order", values)

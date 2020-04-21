@@ -16,6 +16,7 @@
         'views/assets.xml',
         'views/account_move_views.xml',
         'data/purchase_data.xml',
+        'data/ir_cron_data.xml',
         'report/purchase_reports.xml',
         'views/purchase_views.xml',
         'views/res_config_settings_views.xml',

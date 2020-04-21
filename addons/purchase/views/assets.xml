@@ -9,4 +9,10 @@
             <script type="text/javascript" src="/purchase/static/src/js/tours/purchase.js"></script>
         </xpath>
     </template>
+
+    <template id="assets_frontend" name="purchase assets" inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/purchase/static/src/js/purchase_datetimepicker.js"></script>
+        </xpath>
+    </template>
 </odoo>
