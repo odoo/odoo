@@ -186,7 +186,7 @@ var GraphController = AbstractController.extend({
             .toggleClass('o_hidden', state.mode !== 'bar');
         this.$buttons
             .find('.o_graph_button[data-order="' + state.orderby + '"]')
-            .toggleClass('active', state.orderby)
+            .toggleClass('active', !!state.orderby)
             .toggleClass('o_hidden', state.mode === 'pie');
     },
 

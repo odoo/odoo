@@ -1119,26 +1119,29 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
-    QUnit.only('graph view sort axis', async function (assert) {
-        assert.expect(6);
+    QUnit.test('graph view sort axis', async function (assert) {
+        assert.expect(12);
 
         let rpcCount = 0;
         const graph = await createView({
             View: GraphView,
             model: "foo",
             data: this.data,
-            debug: true,
             arch: '<graph string="Partners">' +
                         '<field name="product_id"/>' +
                 '</graph>',
             mockRPC: function (route, args) {
                 if (args.method === 'read_group') {
                     if (rpcCount === 0) {
-                        assert.deepEqual(args.kwargs.orderby, '', 'orderby should be empty');
+                        assert.strictEqual(args.kwargs.orderby, '', 'orderby should be empty');
                     } else if (rpcCount === 1) {
-                        assert.deepEqual(args.kwargs.orderby, "product_id DESC", 'orderby should be product_id DESC');
+                        assert.strictEqual(args.kwargs.orderby, "product_id ASC",
+                            'orderby should be product_id ASC');
                     } else if (rpcCount === 2) {
-                        assert.deepEqual(args.kwargs.orderby, "product_id ASC", 'orderby should be product_id ASC');
+                        assert.strictEqual(args.kwargs.orderby, "product_id DESC",
+                            'orderby should be product_id DESC');
+                    } else if (rpcCount === 3) {
+                        assert.strictEqual(args.kwargs.orderby, '', 'orderby should be empty');
                     }
                     rpcCount++;
                 }
@@ -1146,11 +1149,29 @@ QUnit.module('Views', {
             },
         });
 
-        assert.checkLabels(graph, [['xphone'], ['xpad']], 'Initially Lable should be in acceding with ID');
-        await testUtils.dom.click(graph.$buttons.find('button[data-order="descending"]'));
-        assert.checkLabels(graph, [['xpad'], ['xphone']], 'After click on descending Lable should be in descending with ID');
+        assert.containsN(graph, 'button[data-order]', 2,
+            "there should be two order buttons for sorting axis labels");
+        assert.checkLabels(graph, [['xphone'], ['xpad']],
+            "initially label should be in descending order");
+
         await testUtils.dom.click(graph.$buttons.find('button[data-order="ascending"]'));
-        assert.checkLabels(graph, [['xphone'], ['xpad']], 'After click on ascending Lable should be in ascending with ID');
+        assert.checkLabels(graph, [['xphone'], ['xpad']],
+            "after click on ascending label should be in ascending order");
+        assert.hasClass(graph.$('button[data-order="ascending"]'), 'active',
+            "ascending order button should be active");
+
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="descending"]'));
+        assert.checkLabels(graph, [['xpad'], ['xphone']],
+            "after click on descending label should be in descending order");
+        assert.hasClass(graph.$('button[data-order="descending"]'), 'active',
+            "ascending order button should be active");
+
+        // again click on descending button to deactivate order button
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="descending"]'));
+        assert.checkLabels(graph, [['xphone'], ['xpad']],
+            "label should be in descending order");
+        assert.doesNotHaveClass(graph.$('button[data-order="descending"]'), 'active',
+            "ascending order button should be active");
 
         graph.destroy();
     });
