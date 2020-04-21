@@ -39,6 +39,9 @@ up a management by affair.
     'demo': [
         'data/hr_timesheet_demo.xml',
     ],
+    'qweb': [
+        'static/src/xml/templates.xml',
+    ],
     'installable': True,
     'application': False,
     'auto_install': False,

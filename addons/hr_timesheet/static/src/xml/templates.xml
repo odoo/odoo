@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <t t-name="TimesheetGridKanban.DemoRecord">
+        <div class="oe_kanban_card o_kanban_record o_kanban_demo_record">
+            <div class="row">
+                <div class="col-2">
+                    <img t-attf-src="/hr_timesheet/static/img/#{user}.jpg" title="User Image" alt="User Image" class="oe_kanban_avatar o_image_40_cover float-left"/>
+                </div>
+                <div class="col-10">
+                    <div>
+                        <span class="placeholder" t-attf-style="width: #{title}%"></span>
+                    </div>
+                    <div class="text-muted">
+                        <span class="placeholder" t-attf-style="width: #{task}%"></span>
+                        <div class="float-right">
+                            <t t-if="running">
+                                <i class="fa fa-circle fa-stop-circle"></i>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-circle fa-play-circle"></i>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt4 mb4"/>
+            <span>
+                <i class="fa fa-calendar" role="img" aria-label="Date" title="Date"></i>
+                <span class="placeholder align-middle" style="width: 40%;"></span>
+            </span>
+            <span class="float-right">
+                <strong>Duration: </strong>
+                <t t-if="running">
+                    <span class="font-weight-bold text-danger"><t t-esc="duration" />:13:37</span>
+                </t>
+                <t t-else="">
+                    <t t-esc="duration" />:00
+                </t>
+            </span>
+        </div>
+    </t>
+</template>
