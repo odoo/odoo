@@ -177,7 +177,7 @@ class SaleOrderTemplateOption(models.Model):
     def _onchange_product_id(self):
         if not self.product_id:
             return
-        self.price_unit = self.product_id.list_price
+        self.price_unit = self.product_id.lst_price
         self.uom_id = self.product_id.uom_id
         self.name = self.product_id.get_product_multiline_description_sale()
 
@@ -189,4 +189,4 @@ class SaleOrderTemplateOption(models.Model):
             self.price_unit = 0.0
             return
         if self.uom_id.id != self.product_id.uom_id.id:
-            self.price_unit = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id)
+            self.price_unit = self.product_id.uom_id._compute_price(self.product_id.lst_price, self.uom_id)
