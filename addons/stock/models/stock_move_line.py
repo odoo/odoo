@@ -500,7 +500,13 @@ class StockMoveLine(models.Model):
                 ('product_qty', '>', 0.0),
                 ('id', 'not in', ml_to_ignore.ids),
             ]
-            current_picking_first = lambda cand: cand.picking_id != self.move_id.picking_id
+            # We take the current picking first, then the pickings with the latest scheduled date
+            current_picking_first = lambda cand: (
+                cand.picking_id != self.move_id.picking_id,
+                -(cand.picking_id.scheduled_date or cand.move_id.date_expected).timestamp()
+                if cand.picking_id or cand.move_id
+                else -cand.id,
+            )
             outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).sorted(current_picking_first)
 
             # As the move's state is not computed over the move lines, we'll have to manually
