@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.2\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-13 07:25+0000\n"
-"PO-Revision-Date: 2020-02-13 07:25+0000\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2020-04-21 10:46+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,6 +28,11 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Create a task in sales order's project"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.actions.server,name:sale_project.project_task_server_action_batch_invoice
+msgid "Create invoice"
 msgstr ""
 
 #. module: sale_project
@@ -59,6 +64,11 @@ msgstr ""
 #: code:addons/sale_project/models/sale_order.py:0
 #, python-format
 msgid "New"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
+msgid "Number of invoices"
 msgstr ""
 
 #. module: sale_project
@@ -264,6 +274,16 @@ msgstr ""
 msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
+msgstr ""
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_task_view_search
+msgid "To Invoice"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
+msgid "To invoice"
 msgstr ""
 
 #. module: sale_project
