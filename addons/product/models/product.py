@@ -683,7 +683,13 @@ class ProductProduct(models.Model):
 
     def toggle_active(self):
         """ Archiving related product.template if there is only one active product.product """
+<<<<<<< HEAD
         with_one_active = self.filtered(lambda product: len(product.product_tmpl_id.with_context(active_test=False).product_variant_ids) == 1)
+=======
+        with_one_active = self.filtered(lambda product:
+            len(product.product_tmpl_id.product_variant_ids) == 1 and product.active
+        )
+>>>>>>> e465fc072f0... temp
         for product in with_one_active:
             product.product_tmpl_id.toggle_active()
         return super(ProductProduct, self - with_one_active).toggle_active()
