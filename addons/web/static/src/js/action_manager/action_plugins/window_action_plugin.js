@@ -332,10 +332,10 @@ odoo.define('web.WindowActionPlugin', function (require) {
                 if (viewDescr && viewDescr.multiRecord) {
                     // cases 1) and 2) (with multi record views): replace the first
                     // controller linked to the same action in the stack
-                    index = _.findIndex(this.currentStack, controllerID => {
+                    index = this.currentStack.findIndex(controllerID => {
                         return this.controllers[controllerID].actionID === action.jsID;
                     });
-                } else if (!viewDescr || !_.findWhere(action.views, {type: currentController.viewType}).multiRecord) {
+                } else if (!viewDescr || !action.views.find(v => v.type === currentController.viewType).multiRecord) {
                     // case 2) (with mono record views): replace the last
                     // controller by the new one if they are from the same action
                     // and if they both are mono record
