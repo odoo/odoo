@@ -18,6 +18,7 @@
     'data': [
         'data/account_account_tag.xml',
         'data/account_chart_template.xml',
+        'data/account_group_template.xml',
         'data/account.account.template.csv',
         'data/account_chart_template_post_data.xml',
         'data/account_data.xml',
