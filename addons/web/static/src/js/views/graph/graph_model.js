@@ -72,6 +72,7 @@ return AbstractModel.extend({
             origins: [],
             stacked: params.stacked,
             timeRanges: params.timeRanges,
+            orderBy: params.orderBy
         });
 
         this._computeDerivedParams();
@@ -124,6 +125,10 @@ return AbstractModel.extend({
         }
         if ('stacked' in params) {
             this.chart.stacked = params.stacked;
+            return Promise.resolve();
+        }
+        if ('orderBy' in params) {
+            this.chart.orderBy = params.orderBy;
             return Promise.resolve();
         }
         return this._loadGraph();
