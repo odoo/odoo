@@ -16,7 +16,7 @@
         <field name="name">hr.leave.report.calendar.view</field>
         <field name="model">hr.leave.report.calendar</field>
         <field name="arch" type="xml">
-            <calendar string="Time Off" date_start="start_datetime" date_stop="stop_datetime" mode="month" quick_add="False" color="employee_id" event_open_popup="True">
+            <calendar string="Time Off" date_start="start_datetime" date_stop="stop_datetime" mode="month" quick_add="False" color="employee_id" event_open_popup="True" js_class="time_off_calendar_all">
                 <field name="name"/>
             </calendar>
         </field>
