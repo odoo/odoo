@@ -13,8 +13,8 @@ var _t = core._t;
 publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     selector: '.o_survey_form',
     events: {
-        'change .o_survey_form_choice_item': '_onChangeChoiceItem',
-        'click .o_survey_matrix_btn': '_onMatrixBtnClick',
+        'click .o_survey_form_choice_item': '_onChoiceItemClick',
+        'click .o_survey_choice_btn,.o_survey_matrix_btn': '_onClickChoiceBtn',
         'click button[type="submit"]': '_onSubmit',
     },
     custom_events: {
@@ -85,7 +85,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         if (this.$("textarea").is(":focus") || this.$('input').is(':focus')) {
             return;
         }
-
         var self = this;
         var keyCode = event.keyCode;
         var letter = String.fromCharCode(keyCode).toUpperCase();
@@ -104,17 +103,45 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             $('.o_survey_navigation_submit[value="previous"]').click();
         } else if (self.options.questionsLayout === 'page_per_question'
                    && letter.match(/[a-z]/i)) {
-            var $choiceInput = this.$(`input[data-selection-key=${letter}]`);
-            if ($choiceInput.length === 1) {
-                if ($choiceInput.attr('type') === 'radio') {
-                    $choiceInput.prop("checked", true).trigger('change');
+
+            var $input = this.$(`input[data-selection-key=${letter}]`)
+            var $choiceInput = this.$(`input[data-selection-key=${letter}]`).closest('label');
+            var $choiceItemMatrix = $input.closest('.o_survey_matrix_btn');
+
+            if ($input.length === 1) {
+                if ($choiceItemMatrix.length === 1) {
+                    $choiceItemMatrix.click();
                 } else {
-                    $choiceInput.prop("checked", !$choiceInput.prop("checked")).trigger('change');
+                    $choiceInput.click();
                 }
 
                 // Avoid selection key to be typed into the textbox if 'other' is selected by key
                 event.preventDefault();
             }
+        }
+    },
+
+    /**
+    * This event handler is only used to handle the un-selection of a radioButton in simple choice question.
+    * It will propagate the onchange event and uncheck the underlying input of the target choice button.
+    * In other cases it will just propagate the event to _onChoiceItemClick
+    */
+    _onClickChoiceBtn: function (event) {
+        var $target = $(event.currentTarget);
+        var $input = $target.find('input');
+        var $matrixBtn = $target.closest('.o_survey_matrix_btn');
+        if ($input.attr('type') === 'radio' && $matrixBtn.length === 0) {
+            var $choiceItemGroup = $target.closest('.o_survey_form_choice');
+            var previouslySelectedAnswer = $choiceItemGroup.find('label.o_survey_selected');
+            previouslySelectedAnswer.removeClass('o_survey_selected');
+            $input.closest('label').addClass('o_survey_selected');
+            if($input.prop('checked')){
+                event.preventDefault();
+                $input.prop("checked", false).trigger('change');
+                $input.closest('label').removeClass('o_survey_selected');
+            }
+        } else {
+            this._onChoiceItemClick(event);
         }
     },
 
@@ -126,9 +153,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     * @private
     * @param {Event} event
     */
-    _onChangeChoiceItem: function (event) {
+    _onChoiceItemClick: function (event) {
         var self = this;
         var $target = $(event.currentTarget);
+        if($target.hasClass('o_survey_matrix_btn')){
+            $target = $target.find('input');
+        }
+
         var $choiceItemGroup = $target.closest('.o_survey_form_choice');
         var $otherItem = $choiceItemGroup.find('.o_survey_js_form_other_comment');
         var $commentInput = $choiceItemGroup.find('textarea[type="text"]');
@@ -147,10 +178,17 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         var $matrixBtn = $target.closest('.o_survey_matrix_btn');
         if ($target.attr('type') === 'radio') {
+
             var isQuestionComplete = false;
             if ($matrixBtn.length > 0) {
-                $matrixBtn.closest('tr').find('td').removeClass('o_survey_selected');
-                $matrixBtn.addClass('o_survey_selected');
+                $target.prop("checked", !$target.prop("checked"));
+                if($matrixBtn.hasClass('o_survey_selected')){
+                    $matrixBtn.removeClass('o_survey_selected');
+                } else {
+                    // uncheck the row of other options since we can only select one
+                    $matrixBtn.closest('tr').find('td').removeClass('o_survey_selected');
+                    $matrixBtn.addClass('o_survey_selected');
+                }
                 if (this.options.questionsLayout === 'page_per_question') {
                     var subQuestionsIds = $matrixBtn.closest('table').data('subQuestions');
                     var completedQuestions = [];
@@ -162,14 +200,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                     isQuestionComplete = completedQuestions.length === subQuestionsIds.length;
                 }
             } else {
+                event.stopPropagation();
                 var previouslySelectedAnswer = $choiceItemGroup.find('label.o_survey_selected');
-                previouslySelectedAnswer.removeClass('o_survey_selected');
-
-                var newlySelectedAnswer = $target.closest('label');
-                if (newlySelectedAnswer.find('input').val() !== previouslySelectedAnswer.find('input').val()) {
-                    newlySelectedAnswer.addClass('o_survey_selected');
-                    isQuestionComplete = this.options.questionsLayout === 'page_per_question';
-                }
+                isQuestionComplete = this.options.questionsLayout === 'page_per_question';
 
                 // Conditional display
                 if (this.options.questionsLayout !== 'page_per_question') {
@@ -207,6 +240,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             }
         } else {  // $target.attr('type') === 'checkbox'
             if ($matrixBtn.length > 0) {
+                $target.prop("checked", !$target.prop("checked"));
                 $matrixBtn.toggleClass('o_survey_selected', !$matrixBtn.hasClass('o_survey_selected'));
             } else {
                 var $label = $target.closest('label');
@@ -231,20 +265,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                     }
                 }
             }
-        }
-    },
-
-    _onMatrixBtnClick: function (event) {
-        if (this.readonly) {
-            return;
-        }
-
-        var $target = $(event.currentTarget);
-        var $input = $target.find('input');
-        if ($input.attr('type') === 'radio') {
-            $input.prop("checked", true).trigger('change');
-        } else {
-            $input.prop("checked", !$input.prop("checked")).trigger('change');
         }
     },
 
@@ -356,7 +376,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     * @param {Boolean} [options.isFinish] fades out breadcrumb and timer
     * @private
     */
-    _submitForm: function (options) {
+    _submitForm: async function (options) {
         var self = this;
         var params = {};
         if (options.previousPageId) {
@@ -376,7 +396,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
             if (!options.skipValidation) {
                 // Validation pre submit
-                if (!this._validateForm($form, formData)) {
+                if (! await this._validateForm($form, formData)) {
                     return;
                 }
             }
@@ -393,7 +413,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             // prevent user from clicking on matrix options when form is submitted
             this.readonly = true;
         }
-
         var submitPromise = self._rpc({
             route: _.str.sprintf('%s/%s/%s', route, self.options.surveyToken, self.options.answerToken),
             params: params,
@@ -533,7 +552,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         });
 
         var inactiveQuestionIds = this.options.sessionInProgress ? [] : this._getInactiveConditionalQuestionIds();
-
         $form.find('[data-question-type]').each(function () {
             var $input = $(this);
             var $questionWrapper = $input.closest(".js_question-wrapper");
