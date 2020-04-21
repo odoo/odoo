@@ -10,6 +10,8 @@ from odoo.tools import lazy
 from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
 
+SEARCH_PANEL_LIMIT = 200
+
 
 class IrActionsActWindowView(models.Model):
     _inherit = 'ir.actions.act_window.view'
@@ -238,7 +240,7 @@ class Base(models.AbstractModel):
             fields.append(parent_name)
         return {
             'parent_field': parent_name,
-            'values': Comodel.with_context(hierarchical_naming=False).search_read([], fields),
+            'values': Comodel.with_context(hierarchical_naming=False).search_read([], fields, limit=SEARCH_PANEL_LIMIT),
         }
 
     @api.model
@@ -313,7 +315,7 @@ class Base(models.AbstractModel):
                 }
             # retrieve all possible values, and return them with their label and counter
             field_names = ['display_name', group_by] if group_by else ['display_name']
-            records = Comodel.search_read(comodel_domain, field_names)
+            records = Comodel.search_read(comodel_domain, field_names, limit=SEARCH_PANEL_LIMIT)
             for record in records:
                 record_id = record['id']
                 values = {
@@ -328,7 +330,7 @@ class Base(models.AbstractModel):
         elif field.type == 'many2many':
             # retrieve all possible values, and return them with their label and counter
             field_names = ['display_name', group_by] if group_by else ['display_name']
-            records = Comodel.search_read(comodel_domain, field_names)
+            records = Comodel.search_read(comodel_domain, field_names, limit=SEARCH_PANEL_LIMIT)
             for record in records:
                 record_id = record['id']
                 values = {
