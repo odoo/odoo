@@ -97,6 +97,7 @@ function intercept(widget, eventName, fn, propagate) {
  */
 function removeSrcAttribute(el, rpc) {
     var nodes;
+    el = el.nodeType === 8 ? el.nextSibling : el;
     if (el.nodeName === 'IMG' || el.nodeName === 'IFRAME') {
         nodes = [el];
     } else {

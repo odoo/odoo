@@ -281,6 +281,9 @@ class WebClient extends KeyboardNavigation {
         this._titleParts[part] = title;
     }
     _setWindowHash(newHash) {
+        if (newHash === null) {
+            return;
+        }
         let url = new URL(window.location);
         url.hash = newHash;
         url = url.toString();
