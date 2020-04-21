@@ -340,7 +340,10 @@ class TestProcurement(TestMrpCommon):
             'product_tmpl_id': parent_product.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
-            'routing_id': self.routing_2.id,
+            'operation_ids': [
+                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+            ],
             'type': 'normal',
         })
         self.env['mrp.bom.line'].create({
@@ -353,7 +356,10 @@ class TestProcurement(TestMrpCommon):
             'product_tmpl_id': child_product.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
-            'routing_id': self.routing_2.id,
+            'operation_ids': [
+                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+            ],
             'type': 'normal',
         })
         self.env['mrp.bom.line'].create({

@@ -177,25 +177,6 @@ class TestMrpMulticompany(common.TransactionCase):
         with self.assertRaises(UserError):
             produce_form.save()
 
-    def test_workcenter_1(self):
-        """Check it is not possible to use a routing of Company B in a
-        workcenter of Company A. """
-
-        workcenter = self.env['mrp.workcenter'].create({
-            'name': 'WC1',
-            'company_id': self.company_a.id,
-            'resource_calendar_id': self.company_a.resource_calendar_id.id,
-        })
-        with self.assertRaises(UserError):
-            self.env['mrp.routing'].create({
-                'name': 'WC1',
-                'company_id': self.company_b.id,
-                'operation_ids': [(0, 0, {
-                    'name': 'operation_1',
-                    'workcenter_id': workcenter.id,
-                })]
-            })
-
     def test_partner_1(self):
         """ On a product without company, as a user of Company B, check it is not possible to use a
         location limited to Company A as `property_stock_production` """

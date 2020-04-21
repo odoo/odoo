@@ -64,14 +64,6 @@ class TestStockProductionLot(TestStockCommon):
             'time_stop': 5,
             'time_efficiency': 80,
         })
-        cls.routing = cls.env['mrp.routing'].create({'name': 'COOK'})
-        cls.operation = cls.env['mrp.routing.workcenter'].create({
-            'name': 'Bake in the oven',
-            'workcenter_id': cls.workcenter.id,
-            'routing_id': cls.routing.id,
-            'time_cycle': 15,
-            'sequence': 1,
-        })
 
     def test_01_product_produce(self):
         """ Checks user doesn't get a confirmation wizard when they produces with
@@ -122,7 +114,14 @@ class TestStockProductionLot(TestStockCommon):
         """ Checks user doesn't get a confirmation wizard when they makes a
         workorder without expired components. """
         # Set a routing on the BOM.
-        self.bom_apple_pie.routing_id = self.routing
+        self.bom_apple_pie.write({
+            'operation_ids': [(0, 0, {
+                'name': 'Bake in the oven',
+                'workcenter_id': self.workcenter.id,
+                'time_cycle': 15,
+                'sequence': 1,
+            })],
+        })
         # Creates the MO, starts it and plans the Work Order.
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_apple_pie
@@ -149,7 +148,14 @@ class TestStockProductionLot(TestStockCommon):
         """ Checks user doesn't get a confirmation wizard when they makes a
         workorder without expired components. """
         # Set a routing on the BOM.
-        self.bom_apple_pie.routing_id = self.routing
+        self.bom_apple_pie.write({
+            'operation_ids': [(0, 0, {
+                'name': 'Bake in the oven',
+                'workcenter_id': self.workcenter.id,
+                'time_cycle': 15,
+                'sequence': 1,
+            })],
+        })
         # Creates the MO, starts it and plans the Work Order.
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_apple_pie

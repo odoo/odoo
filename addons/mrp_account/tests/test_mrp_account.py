@@ -66,7 +66,6 @@ class TestMrpAccount(TestWorkOrderProcessCommon):
         })
         inventory.action_validate
         bom = self.mrp_bom_desk.copy()
-        bom.routing_id = False # TODO: extend the test later with the necessary operations
         production_table_form = Form(self.env['mrp.production'])
         production_table_form.product_id = self.dining_table
         production_table_form.bom_id = bom

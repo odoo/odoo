@@ -130,12 +130,7 @@ class MrpProduction(models.Model):
         ('type', '=', 'normal')]""",
         check_company=True,
         help="Bill of Materials allow you to define the list of required components to make a finished product.")
-    routing_id = fields.Many2one(
-        'mrp.routing', 'Routing',
-        readonly=True, compute='_compute_routing', store=True,
-        help="The list of operations (list of work centers) to produce the finished product. The routing "
-             "is mainly used to compute work center costs during operations and to plan future loads on "
-             "work centers based on production planning.")
+    bom_has_operations = fields.Boolean(compute='_compute_bom_has_operations')
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -277,6 +272,14 @@ class MrpProduction(models.Model):
     def _set_date_planned_finished(self):
         self.move_finished_ids.write({'date_expected': self.date_planned_finished})
 
+    @api.depends('bom_id')
+    def _compute_bom_has_operations(self):
+        for production in self:
+            if not production.bom_id:
+                production.bom_has_operations = False
+            else:
+                production.bom_has_operations = len(production.bom_id.operation_ids) > 0
+
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
         delay_alert_date_data = self.env['stock.move'].read_group([('id', 'in', self.move_raw_ids.ids), ('delay_alert_date', '!=', False)], ['delay_alert_date:max'], 'raw_material_production_id')
@@ -367,14 +370,6 @@ class MrpProduction(models.Model):
         for production in self:
             production.finished_move_line_ids = production.move_finished_ids.mapped('move_line_ids')
 
-    @api.depends('bom_id.routing_id', 'bom_id.routing_id.operation_ids')
-    def _compute_routing(self):
-        for production in self:
-            if production.bom_id.routing_id.operation_ids:
-                production.routing_id = production.bom_id.routing_id.id
-            else:
-                production.routing_id = False
-
     @api.depends('workorder_ids')
     def _compute_workorder_count(self):
         data = self.env['mrp.workorder'].read_group([('production_id', 'in', self.ids)], ['production_id'], ['production_id'])
@@ -418,7 +413,7 @@ class MrpProduction(models.Model):
                     production.state = 'done'
             elif production.move_finished_ids.filtered(lambda m: m.state not in ('cancel', 'done') and m.product_id.id == production.product_id.id)\
                  and (production.qty_produced >= production.product_qty)\
-                 and (not production.routing_id or all(wo_state in ('cancel', 'done') for wo_state in production.workorder_ids.mapped('state'))):
+                 and (not production.bom_id.operation_ids or all(wo_state in ('cancel', 'done') for wo_state in production.workorder_ids.mapped('state'))):
                 production.state = 'to_close'
             elif production.workorder_ids and any(wo_state in ('progress') for wo_state in production.workorder_ids.mapped('state'))\
                  or production.qty_produced > 0 and production.qty_produced < production.product_qty:
@@ -435,7 +430,7 @@ class MrpProduction(models.Model):
             if production.state not in ('draft', 'done', 'cancel'):
                 relevant_move_state = production.move_raw_ids._get_relevant_state_among_moves()
                 if relevant_move_state == 'partially_available':
-                    if production.routing_id and production.routing_id.operation_ids and production.bom_id.ready_to_produce == 'asap':
+                    if production.bom_id.operation_ids and production.bom_id.ready_to_produce == 'asap':
                         production.reservation_state = production._get_ready_to_produce_state()
                     else:
                         production.reservation_state = 'confirmed'
@@ -516,7 +511,7 @@ class MrpProduction(models.Model):
 
     @api.onchange('date_planned_start')
     def _onchange_date_planned_start(self):
-        if not self.routing_id:
+        if not self.bom_id.operation_ids:
             self.date_planned_finished = self.date_planned_start + datetime.timedelta(hours=1)
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
@@ -537,7 +532,7 @@ class MrpProduction(models.Model):
         else:
             self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
 
-    @api.onchange('location_src_id', 'move_raw_ids', 'routing_id')
+    @api.onchange('location_src_id', 'move_raw_ids', 'bom_id')
     def _onchange_location(self):
         source_location = self.location_src_id
         self.move_raw_ids.update({
@@ -567,7 +562,7 @@ class MrpProduction(models.Model):
                     raise UserError(_('You cannot move a planned manufacturing order.'))
             if 'move_raw_ids' in vals and production.state != 'draft':
                 production._autoconfirm_production()
-            if not production.routing_id and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
+            if not production.bom_id.operation_ids and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
                 new_date_planned_start = fields.Datetime.to_datetime(vals.get('date_planned_start'))
                 if not production.date_planned_finished or new_date_planned_start >= production.date_planned_finished:
                     production.date_planned_finished = new_date_planned_start + datetime.timedelta(hours=1)
@@ -738,14 +733,12 @@ class MrpProduction(models.Model):
 
     def _get_ready_to_produce_state(self):
         """ returns 'assigned' if enough components are reserved in order to complete
-        the first operation in the routing. If not returns 'waiting'
+        the first operation of the bom. If not returns 'waiting'
         """
         self.ensure_one()
-        first_operation = self.routing_id.operation_ids[0]
-        # Get BoM line related to first opeation in rounting. If there is only
-        # one opeation in the routing then it will need all BoM lines.
+        first_operation = self.bom_id.operation_ids[0]
         bom_line_ids = self.env['mrp.bom.line']
-        if len(self.routing_id.operation_ids) == 1:
+        if len(self.bom_id.operation_ids) == 1:
             moves_in_first_operation = self.move_raw_ids
         else:
             moves_in_first_operation = self.move_raw_ids.filtered(lambda move: move.operation_id == first_operation)
@@ -852,7 +845,7 @@ class MrpProduction(models.Model):
 
     def button_plan(self):
         """ Create work orders. And probably do stuff, like things. """
-        orders_to_plan = self.filtered(lambda order: order.routing_id and order.state == 'confirmed')
+        orders_to_plan = self.filtered(lambda order: order.bom_id.operation_ids and order.state == 'confirmed')
         for order in orders_to_plan:
             order.move_raw_ids.filtered(lambda m: m.state == 'draft')._action_confirm()
             # `propagate_date` enables the automatic rescheduling which could lead to hard to
@@ -952,8 +945,8 @@ class MrpProduction(models.Model):
         workorders = self.env['mrp.workorder']
         original_one = False
         for bom, bom_data in exploded_boms:
-            # If the routing of the parent BoM and phantom BoM are the same, don't recreate work orders, but use one master routing
-            if bom.routing_id.id and (not bom_data['parent_line'] or bom_data['parent_line'].bom_id.routing_id.id != bom.routing_id.id):
+            # If the operations of the parent BoM and phantom BoM are the same, don't recreate work orders.
+            if bom.operation_ids and (not bom_data['parent_line'] or bom_data['parent_line'].bom_id.operation_ids != bom.operation_ids):
                 temp_workorders = self._workorders_create(bom, bom_data)
                 workorders += temp_workorders
                 if temp_workorders: # In order to avoid two "ending work orders"
@@ -975,7 +968,7 @@ class MrpProduction(models.Model):
         if self.product_id.tracking == 'serial':
             quantity = 1.0
 
-        for operation in bom.routing_id.operation_ids:
+        for operation in bom.operation_ids:
             workorder = workorders.create({
                 'name': operation.name,
                 'production_id': self.id,
@@ -994,9 +987,7 @@ class MrpProduction(models.Model):
             # get the raw moves to attach to this operation
             moves_raw = self.env['stock.move']
             for move in self.move_raw_ids:
-                if move.operation_id == operation and move.bom_line_id.bom_id.routing_id == bom.routing_id:
-                    moves_raw |= move
-                if move.operation_id == operation and not move.bom_line_id:
+                if move.operation_id == operation:
                     moves_raw |= move
             moves_finished = self.move_finished_ids.filtered(lambda move: move.operation_id == operation)
 
@@ -1004,9 +995,9 @@ class MrpProduction(models.Model):
             #   be consumed at the last workorder of the linked routing.
             # - Raw moves from a BoM where no rounting was set should be consumed at the last
             #   workorder of the main routing.
-            if len(workorders) == len(bom.routing_id.operation_ids):
-                moves_raw |= self.move_raw_ids.filtered(lambda move: not move.operation_id and move.bom_line_id.bom_id.routing_id == bom.routing_id)
-                moves_raw |= self.move_raw_ids.filtered(lambda move: not move.workorder_id and not move.bom_line_id.bom_id.routing_id)
+            if len(workorders) == len(bom.operation_ids):
+                moves_raw |= self.move_raw_ids.filtered(lambda move: not move.operation_id and move.bom_line_id.bom_id.operation_ids and move.bom_line_id.bom_id == bom)
+                moves_raw |= self.move_raw_ids.filtered(lambda move: not move.workorder_id and not move.bom_line_id.bom_id.operation_ids)
 
                 moves_finished |= self.move_finished_ids.filtered(lambda move: move.product_id != self.product_id and not move.operation_id)
 

@@ -76,10 +76,10 @@ class StockMove(models.Model):
         'mrp.unbuild', 'Disassembly Order', check_company=True)
     consume_unbuild_id = fields.Many2one(
         'mrp.unbuild', 'Consumed Disassembly Order', check_company=True)
+    allowed_operation_ids = fields.Many2many('mrp.routing.workcenter', compute='_compute_allowed_operation_ids')
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Operation To Consume', check_company=True,
-        domain="[('routing_id', '=', routing_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
-    routing_id = fields.Many2one(related='raw_material_production_id.routing_id')
+        domain="[('id', 'in', allowed_operation_ids)]")
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order To Consume', check_company=True)
     # Quantities to process, in normalized UoMs
@@ -117,6 +117,24 @@ class StockMove(models.Model):
             else:
                 move.order_finished_lot_ids = False
                 move.finished_lots_exist = False
+
+    @api.depends('raw_material_production_id.bom_id')
+    def _compute_allowed_operation_ids(self):
+        for move in self:
+            if (
+                not move.raw_material_production_id or
+                not move.raw_material_production_id.bom_id or not
+                move.raw_material_production_id.bom_id.operation_ids
+            ):
+                move.allowed_operation_ids = self.env['mrp.routing.workcenter']
+            else:
+                operation_domain = [
+                    ('id', 'in', move.raw_material_production_id.bom_id.operation_ids.ids),
+                    '|',
+                        ('company_id', '=', self.company_id.id),
+                        ('company_id', '=', False)
+                ]
+                move.allowed_operation_ids = self.env['mrp.routing.workcenter'].search(operation_domain)
 
     @api.depends('product_id.tracking')
     def _compute_needs_lots(self):

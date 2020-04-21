@@ -87,7 +87,11 @@ class TestMrpCancelMO(TestMrpCommon):
         mo_data = self.generate_mo()
         manufacturing_order = mo_data[0]
         bom = mo_data[1]
-        bom.routing_id = self.routing_1
+        bom.write({
+            'operation_ids': [
+                (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+            ],
+        })
 
         manufacturing_order.button_plan()
         workorder = manufacturing_order.workorder_ids
