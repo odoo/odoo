@@ -172,8 +172,16 @@ font[class*='bg-'] {
 }
 
 // Icons
-.fa {
-    font-family: "FontAwesome" !important;
+.fa, .fas, .far, .fab {
+    &.fas {
+        font-family: 'Font Awesome 5 Free Solid' !important;
+    }
+    &.far {
+        font-family: 'Font Awesome 5 Free Regular' !important;
+    }
+    &.fab {
+        font-family: 'Font Awesome 5 Free Brand' !important;
+    }
     $size: 3rem;
 
     &.rounded-circle,
@@ -419,7 +427,7 @@ table.table_desc tr td {
         background-image: none;
         color: $body-color;
         &:before {
-            font-family: "FontAwesome";
+            font-family: 'Font Awesome 5 Free Solid';
             display: inline-block;
             background-color: #fff;
         }
