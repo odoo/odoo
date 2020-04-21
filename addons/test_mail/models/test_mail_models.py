@@ -38,7 +38,7 @@ class MailTestStandard(models.Model):
     name = fields.Char()
     email_from = fields.Char()
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
-    umbrella_id = fields.Many2one('mail.test', tracking=True)
+    umbrella_id = fields.Many2one('mail.test.container', tracking=True)
     company_id = fields.Many2one('res.company')
 
 
@@ -63,11 +63,11 @@ class MailTestActivity(models.Model):
         self.activity_feedback(['test_mail.mail_act_test_todo'], feedback=action_feedback)
 
 
-class MailTestFull(models.Model):
+class MailTestTicket(models.Model):
     """ This model can be used in tests when complex chatter features are
     required like modeling tasks or tickets. """
-    _description = 'Full Chatter Model'
-    _name = 'mail.test.full'
+    _description = 'Ticket-like model'
+    _name = 'mail.test.ticket'
     _inherit = ['mail.thread']
 
     name = fields.Char()
@@ -77,34 +77,34 @@ class MailTestFull(models.Model):
     mail_template = fields.Many2one('mail.template', 'Template')
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=2)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
-    umbrella_id = fields.Many2one('mail.test', tracking=True)
+    umbrella_id = fields.Many2one('mail.test.container', tracking=True)
 
     def _track_template(self, changes):
-        res = super(MailTestFull, self)._track_template(changes)
+        res = super(MailTestTicket, self)._track_template(changes)
         record = self[0]
         if 'customer_id' in changes and record.mail_template:
             res['customer_id'] = (record.mail_template, {'composition_mode': 'mass_mail'})
         elif 'datetime' in changes:
-            res['datetime'] = ('test_mail.mail_test_full_tracking_view', {'composition_mode': 'mass_mail'})
+            res['datetime'] = ('test_mail.mail_test_ticket_tracking_view', {'composition_mode': 'mass_mail'})
         return res
 
     def _creation_subtype(self):
         if self.umbrella_id:
-            return self.env.ref('test_mail.st_mail_test_full_umbrella_upd')
-        return super(MailTestFull, self)._creation_subtype()
+            return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
+        return super(MailTestTicket, self)._creation_subtype()
 
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'umbrella_id' in init_values and self.umbrella_id:
-            return self.env.ref('test_mail.st_mail_test_full_umbrella_upd')
-        return super(MailTestFull, self)._track_subtype(init_values)
+            return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
+        return super(MailTestTicket, self)._track_subtype(init_values)
 
 
-class MailTestAlias(models.Model):
+class MailTestContainer(models.Model):
     """ This model can be used in tests when umbrella records like projects
     or teams are required. """
-    _description = 'Alias Chatter Model'
-    _name = 'mail.test'
+    _description = 'Project-like model with alias'
+    _name = 'mail.test.container'
     _mail_post_access = 'read'
     _inherit = ['mail.thread', 'mail.alias.mixin']
 
@@ -116,8 +116,8 @@ class MailTestAlias(models.Model):
         delegate=True)
 
     def _alias_get_creation_values(self):
-        values = super(MailTestAlias, self)._alias_get_creation_values()
-        values['alias_model_id'] = self.env['ir.model']._get('mail.test').id
+        values = super(MailTestContainer, self)._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('mail.test.container').id
         if self.id:
             values['alias_force_thread_id'] = self.id
             values['alias_parent_thread_id'] = self.id

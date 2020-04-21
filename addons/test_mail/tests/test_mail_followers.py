@@ -19,7 +19,7 @@ class BaseFollowersTest(TestMailCommon):
 
         Subtype = cls.env['mail.message.subtype']
         cls.mt_mg_def = Subtype.create({'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.test.simple'})
-        cls.mt_cl_def = Subtype.create({'name': 'mt_cl_def', 'default': True, 'res_model': 'mail.test'})
+        cls.mt_cl_def = Subtype.create({'name': 'mt_cl_def', 'default': True, 'res_model': 'mail.test.container'})
         cls.mt_al_def = Subtype.create({'name': 'mt_al_def', 'default': True, 'res_model': False})
         cls.mt_mg_nodef = Subtype.create({'name': 'mt_mg_nodef', 'default': False, 'res_model': 'mail.test.simple'})
         cls.mt_al_nodef = Subtype.create({'name': 'mt_al_nodef', 'default': False, 'res_model': False})
@@ -141,18 +141,18 @@ class AdvancedFollowersTest(TestMailCommon):
         Subtype = cls.env['mail.message.subtype']
 
         # clean demo data to avoid interferences
-        Subtype.search([('res_model', 'in', ['mail.test', 'mail.test.track'])]).unlink()
+        Subtype.search([('res_model', 'in', ['mail.test.container', 'mail.test.track'])]).unlink()
 
-        cls.sub_nodef = Subtype.create({'name': 'Sub NoDefault', 'default': False, 'res_model': 'mail.test'})
+        cls.sub_nodef = Subtype.create({'name': 'Sub NoDefault', 'default': False, 'res_model': 'mail.test.container'})
         cls.sub_umb1 = Subtype.create({'name': 'Sub Umbrella1', 'default': False, 'res_model': 'mail.test.track'})
         cls.sub_umb2 = Subtype.create({'name': 'Sub Umbrella2', 'default': False, 'res_model': 'mail.test.track'})
-        cls.umb_def = Subtype.create({'name': 'Umbrella Default', 'default': True, 'res_model': 'mail.test'})
+        cls.umb_def = Subtype.create({'name': 'Umbrella Default', 'default': True, 'res_model': 'mail.test.container'})
         # create subtypes for auto subscription from umbrella to sub records
         cls.umb_sub_def = Subtype.create({
-            'name': 'Umbrella Sub1', 'default': True, 'res_model': 'mail.test',
+            'name': 'Umbrella Sub1', 'default': True, 'res_model': 'mail.test.container',
             'parent_id': cls.sub_umb1.id, 'relation_field': 'umbrella_id'})
         cls.umb_sub_nodef = Subtype.create({
-            'name': 'Umbrella Sub2', 'default': False, 'res_model': 'mail.test',
+            'name': 'Umbrella Sub2', 'default': False, 'res_model': 'mail.test.container',
             'parent_id': cls.sub_umb2.id, 'relation_field': 'umbrella_id'})
 
     def test_auto_subscribe_create(self):
@@ -194,7 +194,7 @@ class AdvancedFollowersTest(TestMailCommon):
          * subscribing to a sub-record as creator applies default subtype values
          * portal user should not have access to internal subtypes
         """
-        umbrella = self.env['mail.test'].with_context(self._test_context).create({
+        umbrella = self.env['mail.test.container'].with_context(self._test_context).create({
             'name': 'Project-Like',
         })
 
