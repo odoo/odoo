@@ -165,5 +165,21 @@ class SaleOrderTemplateOption(models.Model):
     def _onchange_product_id(self):
         if not self.product_id:
             return
+<<<<<<< HEAD
         self.uom_id = self.product_id.uom_id
         self.name = self.product_id.get_product_multiline_description_sale()
+=======
+        self.price_unit = self.product_id.lst_price
+        self.uom_id = self.product_id.uom_id
+        self.name = self.product_id.get_product_multiline_description_sale()
+
+    @api.onchange('uom_id')
+    def _onchange_product_uom(self):
+        if not self.product_id:
+            return
+        if not self.uom_id:
+            self.price_unit = 0.0
+            return
+        if self.uom_id.id != self.product_id.uom_id.id:
+            self.price_unit = self.product_id.uom_id._compute_price(self.product_id.lst_price, self.uom_id)
+>>>>>>> db830083a18... temp
