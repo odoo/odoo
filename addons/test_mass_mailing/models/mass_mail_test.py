@@ -30,5 +30,5 @@ class MassMailTestBlacklist(models.Model):
         'res.users', 'Responsible',
         tracking=True)
     umbrella_id = fields.Many2one(
-        'mail.test', 'Meta Umbrella Record',
+        'mail.test.container', 'Meta Umbrella Record',
         tracking=True)

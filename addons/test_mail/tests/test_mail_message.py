@@ -19,7 +19,7 @@ class TestMessageValues(TestMailCommon):
         super(TestMessageValues, cls).setUpClass()
 
         cls._init_mail_gateway()
-        cls.alias_record = cls.env['mail.test'].with_context(cls._test_context).create({
+        cls.alias_record = cls.env['mail.test.container'].with_context(cls._test_context).create({
             'name': 'Pigs',
             'alias_name': 'pigs',
             'alias_contact': 'followers',
@@ -65,7 +65,7 @@ class TestMessageValues(TestMailCommon):
     @mute_logger('odoo.models.unlink')
     def test_mail_message_values_document_alias(self):
         msg = self.Message.create({
-            'model': 'mail.test',
+            'model': 'mail.test.container',
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
@@ -78,7 +78,7 @@ class TestMessageValues(TestMailCommon):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
 
         msg = self.Message.create({
-            'model': 'mail.test',
+            'model': 'mail.test.container',
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
@@ -90,7 +90,7 @@ class TestMessageValues(TestMailCommon):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
 
         msg = self.Message.create({
-            'model': 'mail.test',
+            'model': 'mail.test.container',
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
@@ -137,12 +137,12 @@ class TestMessageValues(TestMailCommon):
 
     def test_mail_message_values_no_auto_thread(self):
         msg = self.Message.create({
-            'model': 'mail.test',
+            'model': 'mail.test.container',
             'res_id': self.alias_record.id,
             'no_auto_thread': True,
         })
         self.assertIn('reply_to', msg.message_id.split('@')[0])
-        self.assertNotIn('mail.test', msg.message_id.split('@')[0])
+        self.assertNotIn('mail.test.container', msg.message_id.split('@')[0])
         self.assertNotIn('-%d-' % self.alias_record.id, msg.message_id.split('@')[0])
 
     def test_mail_message_base64_image(self):
