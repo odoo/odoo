@@ -71,6 +71,7 @@ BYDAY_SELECTION = [
     ('1', 'First'),
     ('2', 'Second'),
     ('3', 'Third'),
+    ('4', 'Fourth'),
     ('-1', 'Last'),
 ]
 
@@ -184,23 +185,35 @@ class RecurrenceRule(models.Model):
         ranges_to_create = (event_range for event_range in ranges if event_range not in existing_ranges)
         return synced_events, ranges_to_create
 
-    def _apply_recurrence(self):
+    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False):
         """Create missing events in the recurrence and detach events which no longer
         follow the recurrence rules.
         :return: detached events
         """
         event_vals = []
         keep = self.env['calendar.event']
+        if specific_values_creation is None:
+            specific_values_creation = {}
+
         for recurrence in self.filtered('base_event_id'):
             self.calendar_event_ids |= recurrence.base_event_id
             event = recurrence.base_event_id or recurrence._get_first_event(include_outliers=False)
             duration = event.stop - event.start
-            ranges = set(recurrence._get_ranges(event.start, duration))
+            if specific_values_creation:
+                ranges = set([(x[1], x[2]) for x in specific_values_creation if x[0] == recurrence.id])
+            else:
+                ranges = set(recurrence._get_ranges(event.start, duration))
 
             events_to_keep, ranges = recurrence._reconcile_events(ranges)
             keep |= events_to_keep
             [base_values] = event.copy_data()
-            event_vals += [dict(base_values, start=start, stop=stop, recurrence_id=recurrence.id) for start, stop in ranges]
+            values = []
+            for start, stop in ranges:
+                value = dict(base_values, start=start, stop=stop, recurrence_id=recurrence.id, follow_recurrence=True)
+                if (recurrence.id, start, stop) in specific_values_creation:
+                    value.update(specific_values_creation[(recurrence.id, start, stop)])
+                values += [value]
+            event_vals += values
 
         events = self.calendar_event_ids - keep
         detached_events = self._detach_events(events)
