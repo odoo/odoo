@@ -19,6 +19,8 @@ var qweb = core.qweb;
 // in the arch)
 var defaultViewTypes = ['kanban', 'tree'];
 
+const SEARCH_PANEL_LIMIT = 200;
+
 /**
  * Given a <searchpanel> arch node, iterate over its children to generate the
  * description of each section (being either a category or a filter).
@@ -280,7 +282,15 @@ var SearchPanel = Widget.extend({
      */
     _createCategoryTree: function (categoryId, values) {
         var category = this.categories[categoryId];
-        var parentField = category.parentField;
+
+        let parentField = category.parentField;
+        if (values.length === SEARCH_PANEL_LIMIT) {
+            category.limitAttained = true;
+            if (parentField) {
+                // we do not hierarchize values
+                parentField = false;
+            }
+        }
 
         category.values = {};
         _.each(values, function (value) {
@@ -324,6 +334,10 @@ var SearchPanel = Widget.extend({
      */
     _createFilterTree: function (filterId, values) {
         var filter = this.filters[filterId];
+
+        if (values.length === SEARCH_PANEL_LIMIT) {
+            filter.limitAttained = true;
+        }
 
         // restore checked property
         values.forEach(function (value) {

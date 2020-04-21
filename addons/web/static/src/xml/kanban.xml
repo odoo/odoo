@@ -236,6 +236,10 @@
                 <t t-set="values" t-value="category.rootIds"/>
             </t>
         </ul>
+        <div t-if="category.limitAttained" class="alert alert-warning">
+            <span>For performance reasons, only 200 values were fetched. Some values might be missing.</span>
+            <span t-if="category.parentField">The values have not been hierarchized.</span>
+        </div>
     </section>
 </t>
 <t t-name="SearchPanel.CategoryValues">
@@ -271,6 +275,9 @@
                 <t t-set="values" t-value="filter.values"/>
             </t>
         </ul>
+        <div t-if="filter.limitAttained" class="alert alert-warning">
+            <span>For performance reasons, only 200 values were fetched. Some values might be missing.</span>
+        </div>
     </section>
 </t>
 <t t-name="SearchPanel.FilterGroups">
