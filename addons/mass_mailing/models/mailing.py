@@ -65,7 +65,7 @@ class MassMailing(models.Model):
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
-    campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign')
+    campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign', index=True)
     source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='cascade',
                                 help="This is the link source, e.g. Search Engine, another domain, or name of email list")
     medium_id = fields.Many2one(
