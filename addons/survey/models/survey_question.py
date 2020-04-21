@@ -132,7 +132,7 @@ class SurveyQuestion(models.Model):
     validation_min_datetime = fields.Datetime('Minimum Datetime')
     validation_max_datetime = fields.Datetime('Maximum Datetime')
     validation_error_msg = fields.Char('Validation Error message', translate=True, default=lambda self: _("The answer you entered is not valid."))
-    constr_mandatory = fields.Boolean('Mandatory Answer')
+    constr_mandatory = fields.Boolean('Mandatory Answer', help="Constraint will be ignored on Live Session")
     constr_error_msg = fields.Char('Error message', translate=True, default=lambda self: _("This question requires an answer."))
     # answers
     user_input_line_ids = fields.One2many(

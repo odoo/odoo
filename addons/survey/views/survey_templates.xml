@@ -307,7 +307,7 @@
             <div class="mb-4">
                 <h3 t-if="not hide_question_title">
                     <span t-field='question.title' />
-                    <span t-if="question.constr_mandatory" class="text-danger">*</span>
+                    <span t-if="question.constr_mandatory and not answer.is_session_answer" class="text-danger">*</span>
                 </h3>
                 <div t-if="not is_html_empty(question.description)" t-field='question.description' class="text-muted oe_no_empty mt-1"/>
             </div>

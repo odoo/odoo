@@ -26,7 +26,7 @@
                                     <div class="js_question-wrapper" t-att-id="question.id">
                                         <h2>
                                             <span t-field='question.title'/>
-                                            <span t-if="question.constr_mandatory" class="text-danger">*</span>
+                                            <span t-if="question.constr_mandatory and not answer.is_session_answer" class="text-danger">*</span>
                                             <span t-if="scoring_display_correction" class="badge badge-pill" t-att-data-score-question="question.id"></span>
                                         </h2>
                                         <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
