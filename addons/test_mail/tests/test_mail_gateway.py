@@ -76,14 +76,14 @@ class TestMailAlias(TestMailCommon):
 
     @users('employee')
     def test_alias_creation(self):
-        record = self.env['mail.test'].create({
+        record = self.env['mail.test.container'].create({
             'name': 'Test Record',
             'alias_name': 'alias.test',
             'alias_contact': 'followers',
         })
-        self.assertEqual(record.alias_id.alias_model_id, self.env['ir.model']._get('mail.test'))
+        self.assertEqual(record.alias_id.alias_model_id, self.env['ir.model']._get('mail.test.container'))
         self.assertEqual(record.alias_id.alias_force_thread_id, record.id)
-        self.assertEqual(record.alias_id.alias_parent_model_id, self.env['ir.model']._get('mail.test'))
+        self.assertEqual(record.alias_id.alias_parent_model_id, self.env['ir.model']._get('mail.test.container'))
         self.assertEqual(record.alias_id.alias_parent_thread_id, record.id)
         self.assertEqual(record.alias_id.alias_name, 'alias.test')
         self.assertEqual(record.alias_id.alias_contact, 'followers')
@@ -108,7 +108,7 @@ class TestMailAlias(TestMailCommon):
 
     def test_alias_setup(self):
         alias = self.env['mail.alias'].create({
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_name': 'b4r+_#_R3wl$$',
         })
         self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
@@ -234,7 +234,7 @@ class TestMailgateway(TestMailCommon):
         # Test: author (and not recipient) added as follower
         # self.assertEqual(self.test_public.message_partner_ids, self.partner_1 | self.partner_2,
         #                  'message_process: after reply, group should have 2 followers')
-        # self.assertEqual(self.test_public.message_channel_ids, self.env['mail.test'],
+        # self.assertEqual(self.test_public.message_channel_ids, self.env['mail.test.container'],
         #                  'message_process: after reply, group should have 2 followers (0 channels)')
 
     # --------------------------------------------------
@@ -516,7 +516,7 @@ class TestMailgateway(TestMailCommon):
         new_alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
             'alias_user_id': False,
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
         new_rec = self.format_and_process(
@@ -543,7 +543,7 @@ class TestMailgateway(TestMailCommon):
         new_alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
             'alias_user_id': False,
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
         new_rec = self.format_and_process(
@@ -573,7 +573,7 @@ class TestMailgateway(TestMailCommon):
         new_alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
             'alias_user_id': False,
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
         new_rec = self.format_and_process(
@@ -599,7 +599,7 @@ class TestMailgateway(TestMailCommon):
         new_alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
             'alias_user_id': False,
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
         new_rec = self.format_and_process(
@@ -852,14 +852,14 @@ class TestMailgateway(TestMailCommon):
         self.env['mail.alias'].create({
             'alias_name': 'test.alias',
             'alias_user_id': False,
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
         init_msg_count = len(self.test_record.message_ids)
         res_test = self.format_and_process(
             MAIL_TEMPLATE, self.email_from, 'test.alias@test.com',
             subject='My Dear Forward', extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
-            target_model='mail.test')
+            target_model='mail.test.container')
 
         self.assertEqual(len(self.test_record.message_ids), init_msg_count)
         self.assertEqual(len(self.fake_email.child_ids), 0)
@@ -879,7 +879,7 @@ class TestMailgateway(TestMailCommon):
         res_test = self.format_and_process(
             MAIL_TEMPLATE, self.email_from, 'test.alias@test.com',
             subject='My Dear Forward', extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
-            target_model='mail.test')
+            target_model='mail.test.container')
 
         self.assertEqual(len(self.test_record.message_ids), init_msg_count + 1)
         self.assertEqual(len(self.fake_email.child_ids), 1)
@@ -891,14 +891,14 @@ class TestMailgateway(TestMailCommon):
         self.env['mail.alias'].create({
             'alias_name': 'test.alias',
             'alias_user_id': False,
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
         init_msg_count = len(self.test_record.message_ids)
         res_test = self.format_and_process(
             MAIL_TEMPLATE, self.email_from, 'catchall.test@test.com', cc='test.alias@test.com',
             subject='My Dear Forward', extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
-            target_model='mail.test')
+            target_model='mail.test.container')
 
         self.assertEqual(len(self.test_record.message_ids), init_msg_count + 1)
         self.assertEqual(len(self.fake_email.child_ids), 1)

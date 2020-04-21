@@ -4,10 +4,10 @@
 from odoo import api, fields, models
 
 
-class MailModel(models.Model):
-    _name = 'test_performance.mail'
-    _description = 'Test Performance Mail'
-    _inherit = 'mail.thread'
+class MailPerformanceThread(models.Model):
+    _name = 'mail.performance.thread'
+    _description = 'Performance: mail.thread'
+    _inherit = ['mail.thread']
 
     name = fields.Char()
     value = fields.Integer()
@@ -21,9 +21,9 @@ class MailModel(models.Model):
             record.value_pc = float(record.value) / 100
 
 
-class MailTrackingModel(models.Model):
-    _description = 'Test Tracking Model'
-    _name = 'mail.test.tracking'
+class MailPerformanceTracking(models.Model):
+    _name = 'mail.performance.tracking'
+    _description = 'Performance: multi tracking'
     _inherit = ['mail.thread']
 
     name = fields.Char(required=True, tracking=True)
@@ -32,9 +32,9 @@ class MailTrackingModel(models.Model):
     field_2 = fields.Char(tracking=True)
 
 
-class MailCompute(models.Model):
-    _name = 'mail.test.compute'
-    _description = "Test model with several tracked computed fields"
+class MailTestTrackCompute(models.Model):
+    _name = 'mail.test.track.compute'
+    _description = "Test tracking with computed fields"
     _inherit = ['mail.thread']
 
     partner_id = fields.Many2one('res.partner', tracking=True)
@@ -43,7 +43,7 @@ class MailCompute(models.Model):
     partner_phone = fields.Char(related='partner_id.phone', tracking=True)
 
 
-class MailMultiCompany(models.Model):
+class MailTestMultiCompany(models.Model):
     """ This model can be used in multi company tests"""
     _name = 'mail.test.multi.company'
     _description = "Test Multi Company Mail"
