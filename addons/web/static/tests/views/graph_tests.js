@@ -1119,6 +1119,162 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('graph view sort by measure', async function (assert) {
+        assert.expect(18);
+
+        // change first record from foo as there are 4 records count for each product
+        this.data.product.records.push({ id: 38, display_name: "zphone"});
+        this.data.foo.records[7].product_id = 38;
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: `<graph string="Partners" order="desc">
+                        <field name="product_id"/>
+                </graph>`,
+        });
+
+        assert.containsN(graph, 'button[data-order]', 2,
+            "there should be two order buttons for sorting axis labels in bar mode");
+        assert.checkLegend(graph, 'Count', 'measure should be by count');
+        assert.hasClass(graph.$('button[data-order="desc"]'), 'active',
+            'sorting should be applie on descending order by default when sorting="desc"');
+        assert.checkDatasets(graph, 'data', {data: [4, 3, 1]});
+
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="asc"]'));
+        assert.hasClass(graph.$('button[data-order="asc"]'), 'active',
+            "ascending order should be applied");
+        assert.checkDatasets(graph, 'data', {data: [1, 3, 4]});
+
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="desc"]'));
+        assert.hasClass(graph.$('button[data-order="desc"]'), 'active',
+            "descending order button should be active");
+        assert.checkDatasets(graph, 'data', { data: [4, 3, 1] });
+
+        // again click on descending button to deactivate order button
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="desc"]'));
+        assert.doesNotHaveClass(graph.$('button[data-order="desc"]'), 'active',
+            "descending order button should not be active");
+        assert.checkDatasets(graph, 'data', {data: [4, 3, 1]});
+
+        // set line mode
+        await testUtils.dom.click(graph.$buttons.find('button[data-mode="line"]'));
+        assert.containsN(graph, 'button[data-order]', 2,
+            "there should be two order buttons for sorting axis labels in line mode");
+        assert.checkLegend(graph, 'Count', 'measure should be by count');
+        assert.doesNotHaveClass(graph.$('button[data-order="desc"]'), 'active',
+            "descending order should be applied");
+        assert.checkDatasets(graph, 'data', {data: [4, 3, 1]});
+
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="asc"]'));
+        assert.hasClass(graph.$('button[data-order="asc"]'), 'active',
+            "ascending order button should be active");
+        assert.checkDatasets(graph, 'data', { data: [1, 3, 4] });
+
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="desc"]'));
+        assert.hasClass(graph.$('button[data-order="desc"]'), 'active',
+            "descending order button should be active");
+        assert.checkDatasets(graph, 'data', { data: [4, 3, 1] });
+
+        graph.destroy();
+
+    });
+
+    QUnit.test('graph view sort by measure for grouped data', async function (assert) {
+        assert.expect(9);
+
+        // change first record from foo as there are 4 records count for each product
+        this.data.product.records.push({ id: 38, display_name: "zphone", });
+        this.data.foo.records[7].product_id = 38;
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: `<graph string="Partners">
+                        <field name="product_id"/>
+                        <field name="bar"/>
+                </graph>`,
+        });
+
+        assert.checkLegend(graph, ["true","false"], 'measure should be by count');
+        assert.containsN(graph, 'button[data-order]', 2,
+            "there should be two order buttons for sorting axis labels");
+        assert.checkDatasets(graph, 'data', [{data: [3, 0, 0]}, {data: [1, 3, 1]}]);
+
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="asc"]'));
+        assert.hasClass(graph.$('button[data-order="asc"]'), 'active',
+            "ascending order should be applied by default");
+        assert.checkDatasets(graph, 'data', [{ data: [1, 3, 1] }, { data: [0, 0, 3] }]);
+
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="desc"]'));
+        assert.hasClass(graph.$('button[data-order="desc"]'), 'active',
+            "ascending order button should be active");
+        assert.checkDatasets(graph, 'data', [{data: [1, 3, 1]}, {data: [3, 0, 0]}]);
+
+        // again click on descending button to deactivate order button
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="desc"]'));
+        assert.doesNotHaveClass(graph.$('button[data-order="desc"]'), 'active',
+            "descending order button should not be active");
+        assert.checkDatasets(graph, 'data', [{ data: [3, 0, 0] }, { data: [1, 3, 1] }]);
+
+        graph.destroy();
+
+    });
+
+    QUnit.test('graph view sort by measure for multiple grouped data', async function (assert) {
+        assert.expect(9);
+
+        // change first record from foo as there are 4 records count for each product
+        this.data.product.records.push({ id: 38, display_name: "zphone" });
+        this.data.foo.records[7].product_id = 38;
+
+        // add few more records to data to have grouped data date wise
+        const data = [
+            {id: 9, foo: 48, bar: false, product_id: 41, date: "2016-04-01"},
+            {id: 10, foo: 49, bar: false, product_id: 41, date: "2016-04-01"},
+            {id: 11, foo: 50, bar: true, product_id: 37, date: "2016-01-03"},
+            {id: 12, foo: 50, bar: true, product_id: 41, date: "2016-01-03"},
+        ];
+
+        Object.assign(this.data.foo.records, data);
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: `<graph string="Partners">
+                        <field name="product_id"/>
+                        <field name="date"/>
+                </graph>`,
+            groupBy: ['date', 'product_id']
+        });
+
+        assert.checkLegend(graph, ["xpad","xphone","zphone"], 'measure should be by count');
+        assert.containsN(graph, 'button[data-order]', 2,
+            "there should be two order buttons for sorting axis labels");
+        assert.checkDatasets(graph, 'data', [{data: [2, 1, 1, 2]}, {data: [0, 1, 0, 0]}, {data: [1, 0, 0, 0]}]);
+
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="asc"]'));
+        assert.hasClass(graph.$('button[data-order="asc"]'), 'active',
+            "ascending order should be applied by default");
+        assert.checkDatasets(graph, 'data', [{ data: [1, 1, 2, 2] }, { data: [0, 1, 0, 0] }, { data: [0, 0, 0, 1] }]);
+
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="desc"]'));
+        assert.hasClass(graph.$('button[data-order="desc"]'), 'active',
+            "descending order button should be active");
+        assert.checkDatasets(graph, 'data', [{data: [1, 0, 0, 0]}, {data: [2, 2, 1, 1]}, {data: [0, 0, 1, 0]}]);
+
+        // again click on descending button to deactivate order button
+        await testUtils.dom.click(graph.$buttons.find('button[data-order="desc"]'));
+        assert.doesNotHaveClass(graph.$('button[data-order="desc"]'), 'active',
+            "descending order button should not be active");
+        assert.checkDatasets(graph, 'data', [{ data: [2, 1, 1, 2] }, { data: [0, 1, 0, 0] }, { data: [1, 0, 0, 0] }]);
+
+        graph.destroy();
+    });
+
     QUnit.module('GraphView: comparison mode', {
         beforeEach: async function () {
             this.data.foo.records[0].date = '2016-12-15';
@@ -1287,7 +1443,7 @@ QUnit.module('Views', {
         },
     }, function () {
         QUnit.test('comparison with one groupby equal to comparison date field', async function (assert) {
-            assert.expect(10);
+            assert.expect(11);
 
             this.combinationsToCheck = {
                 'last_30_days,previous_period,day': {
@@ -1335,6 +1491,9 @@ QUnit.module('Views', {
             await this.setMode('pie');
             await this.testCombinations(combinations, assert);
 
+            // isNotVisible can not have two elements so checking visibility of first element
+            assert.isNotVisible(this.actionManager.$('button[data-order]:first'),
+                "there should not be order button in comparison mode")
             assert.ok(true, "No combination causes a crash");
         });
 

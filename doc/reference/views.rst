@@ -1077,6 +1077,10 @@ attributes:
   within a group
 ``disable_linking``
   set to ``True`` to prevent from redirecting clicks on graph to list view
+``order``
+  if set, x-axis values will be sorted by default according their measure with
+  respect to the given order (``asc`` or ``desc``). Only used for ``bar`` and
+  ``pie`` charts.
 
 The only allowed element within a graph view is ``field`` which can have the
 following attributes:

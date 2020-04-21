@@ -769,6 +769,7 @@ return AbstractRenderer.extend({
             });
         }
         var dataPoints = this._filterDataPoints();
+        dataPoints = this._sortDataPoints(dataPoints);
         if (!dataPoints.length && this.state.mode !== 'pie') {
             this.$el.append(qweb.render('View.NoContentHelper'));
         } else if (this.isInDOM) {
@@ -1005,6 +1006,38 @@ return AbstractRenderer.extend({
             shortLabel = shortLabel + '/...';
         }
         return shortLabel;
+    },
+    /**
+     * Sort datapoints according to the current order (ASC or DESC).
+     *
+     * Note: this should be moved to the model at some point.
+     *
+     * @private
+     * @param {Object[]} dataPoints
+     * @returns {Object[]} sorted dataPoints if orderby set on state
+     */
+    _sortDataPoints(dataPoints) {
+        if (!Object.keys(this.state.timeRanges).length && this.state.orderBy &&
+            ['bar', 'line'].includes(this.state.mode) && this.state.groupBy.length) {
+            // group data by their x-axis value, and then sort datapoints
+            // based on the sum of values by group in ascending/descending order
+            const groupByFieldName = this.state.groupBy[0].split(':')[0];
+            const groupedByMany2One = this.fields[groupByFieldName].type === 'many2one';
+            const groupedDataPoints = {};
+            dataPoints.forEach(function (dataPoint) {
+                const key = groupedByMany2One ? dataPoint.resId : dataPoint.labels[0];
+                groupedDataPoints[key] = groupedDataPoints[key] || [];
+                groupedDataPoints[key].push(dataPoint);
+            });
+            dataPoints = _.sortBy(groupedDataPoints, function (group) {
+                return group.reduce((sum, dataPoint) => sum + dataPoint.value, 0);
+            });
+            dataPoints = dataPoints.flat();
+            if (this.state.orderBy === 'desc') {
+                dataPoints = dataPoints.reverse('value');
+            }
+        }
+        return dataPoints;
     },
 
     //--------------------------------------------------------------------------
