@@ -4,8 +4,10 @@
 from unittest.mock import patch
 
 from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.tests.common import tagged
 
 
+@tagged('mail_track')
 class TestTracking(TestMailCommon):
 
     def setUp(self):
@@ -126,61 +128,6 @@ class TestTracking(TestMailCommon):
         self.assertEqual(record.message_ids[0].body, '<p>Hello Test</p>')
         # one email send due to template
         self.assertSentEmail(self.record.env.user.partner_id, [self.partner_admin], body='<p>Hello Test</p>')
-
-    def test_message_tracking_sequence(self):
-        """ Update some tracked fields and check that the mail.tracking.value are ordered according to their tracking_sequence"""
-        self.record.write({
-            'name': 'Zboub',
-            'customer_id': self.user_admin.partner_id.id,
-            'user_id': self.user_admin.id,
-            'umbrella_id': self.env['mail.test'].with_context(mail_create_nosubscribe=True).create({'name': 'Umbrella'}).id
-        })
-        self.flush_tracking()
-        self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
-
-        tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids.id)])
-        self.assertEqual(tracking_values[0].tracking_sequence, 1)
-        self.assertEqual(tracking_values[1].tracking_sequence, 2)
-        self.assertEqual(tracking_values[2].tracking_sequence, 100)
-
-    def test_track_groups(self):
-        # patch the group attribute
-        field = self.record._fields['email_from']
-        self.addCleanup(setattr, field, 'groups', field.groups)
-        field.groups = 'base.group_erp_manager'
-
-        self.record.sudo().write({'email_from': 'X'})
-        self.flush_tracking()
-
-        msg_emp = self.record.message_ids.message_format()
-        msg_sudo = self.record.sudo().message_ids.message_format()
-        self.assertFalse(msg_emp[0].get('tracking_value_ids'), "should not have protected tracking values")
-        self.assertTrue(msg_sudo[0].get('tracking_value_ids'), "should have protected tracking values")
-
-    def test_notify_track_groups(self):
-        # patch the group attribute
-        field = self.record._fields['email_from']
-        self.addCleanup(setattr, field, 'groups', field.groups)
-        field.groups = 'base.group_erp_manager'
-
-        self.record.sudo().write({'email_from': 'X'})
-        self.flush_tracking()
-
-        msg_emp = self.record._notify_prepare_template_context(self.record.message_ids, {})
-        msg_sudo = self.record.sudo()._notify_prepare_template_context(self.record.message_ids, {})
-        self.assertFalse(msg_emp.get('tracking_values'), "should not have protected tracking values")
-        self.assertTrue(msg_sudo.get('tracking_values'), "should have protected tracking values")
-
-    def test_unlinked_field(self):
-        record_sudo = self.record.sudo()
-        record_sudo.write({'email_from': 'X'})  # create a tracking value
-        self.flush_tracking()
-        self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 1)
-        ir_model_field = self.env['ir.model.fields'].search([
-            ('model', '=', 'mail.test.full'),
-            ('name', '=', 'email_from')])
-        ir_model_field.with_context(_force_unlink=True).unlink()
-        self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 0)
 
     def test_create_partner_from_tracking_multicompany(self):
         company1 = self.env['res.company'].create({'name': 'company1'})
@@ -334,3 +281,61 @@ class TestTracking(TestMailCommon):
             ('partner_name', 'char', 'Fool', 'Bar'),
             ('partner_email', 'char', 'foo@example.com', 'bar@example.com'),
         ])
+
+
+@tagged('mail_track')
+class TestTrackingInternals(TestMailCommon):
+
+    def setUp(self):
+        super(TestTrackingInternals, self).setUp()
+
+        record = self.env['mail.test.full'].with_user(self.user_employee).with_context(self._test_context).create({
+            'name': 'Test',
+        })
+        self.flush_tracking()
+        self.record = record.with_context(mail_notrack=False)
+
+    def test_track_groups(self):
+        field = self.record._fields['email_from']
+        self.addCleanup(setattr, field, 'groups', field.groups)
+        field.groups = 'base.group_erp_manager'
+
+        self.record.sudo().write({'email_from': 'X'})
+        self.flush_tracking()
+
+        msg_emp = self.record.message_ids.message_format()
+        msg_sudo = self.record.sudo().message_ids.message_format()
+        self.assertFalse(msg_emp[0].get('tracking_value_ids'), "should not have protected tracking values")
+        self.assertTrue(msg_sudo[0].get('tracking_value_ids'), "should have protected tracking values")
+
+        msg_emp = self.record._notify_prepare_template_context(self.record.message_ids, {})
+        msg_sudo = self.record.sudo()._notify_prepare_template_context(self.record.message_ids, {})
+        self.assertFalse(msg_emp.get('tracking_values'), "should not have protected tracking values")
+        self.assertTrue(msg_sudo.get('tracking_values'), "should have protected tracking values")
+
+    def test_track_sequence(self):
+        """ Update some tracked fields and check that the mail.tracking.value are ordered according to their tracking_sequence"""
+        self.record.write({
+            'name': 'Zboub',
+            'customer_id': self.user_admin.partner_id.id,
+            'user_id': self.user_admin.id,
+            'umbrella_id': self.env['mail.test'].with_context(mail_create_nosubscribe=True).create({'name': 'Umbrella'}).id
+        })
+        self.flush_tracking()
+        self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
+
+        tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids.id)])
+        self.assertEqual(tracking_values[0].tracking_sequence, 1)
+        self.assertEqual(tracking_values[1].tracking_sequence, 2)
+        self.assertEqual(tracking_values[2].tracking_sequence, 100)
+
+    def test_unlinked_field(self):
+        record_sudo = self.record.sudo()
+        record_sudo.write({'email_from': 'new_value'})  # create a tracking value
+        self.flush_tracking()
+        self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 1)
+        ir_model_field = self.env['ir.model.fields'].search([
+            ('model', '=', 'mail.test.full'),
+            ('name', '=', 'email_from')])
+        ir_model_field.with_context(_force_unlink=True).unlink()
+        self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 0)
