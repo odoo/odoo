@@ -27,7 +27,7 @@ $body-color: palette-color('text') !default;
 
 $link-decoration: o-website-value('link-decoration') !default;
 
-// Fonts
+// Typography
 //
 // Font, line-height, and color for body text, headings, and more.
 
@@ -37,6 +37,21 @@ $font-size-base: o-website-value('font-size-base') !default;
 
 $headings-font-family: $o-theme-headings-font !default;
 $headings-color: palette-color('h1') !default;
+
+// Buttons
+//
+// For each of Bootstrap's buttons, define text, background, and border color.
+
+$btn-border-radius: o-website-value('btn-border-radius') !default;
+$btn-border-radius-lg: null !default;
+$btn-border-radius-sm: null !default;
+@if $btn-border-radius {
+    // We only allow the user to control the border radius of the default size
+    // button for simplicity in the UI but we keep the same ratio as BS intended
+    // for the small and large sizes.
+    $btn-border-radius-lg: (0.3 / 0.25) * $btn-border-radius !default;
+    $btn-border-radius-sm: (0.2 / 0.25) * $btn-border-radius !default;
+}
 
 // Jumbotron
 

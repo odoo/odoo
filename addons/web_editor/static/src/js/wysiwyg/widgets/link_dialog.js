@@ -139,7 +139,7 @@ var LinkDialog = Dialog.extend({
         this.data.text = this.data.text.replace(/[ \t\r\n]+/g, ' ');
 
         var allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
-        var allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
+        var allBtnShapes = /\s*(rounded-circle|rounded-0|flat)\s*/gi;
         this.data.className = this.data.iniClassName
             .replace(allBtnClassSuffixes, ' ')
             .replace(allBtnShapes, ' ');
