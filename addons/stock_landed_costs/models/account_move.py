@@ -41,7 +41,7 @@ class AccountMove(models.Model):
     def action_view_landed_costs(self):
         self.ensure_one()
         action = self.env.ref('stock_landed_costs.action_stock_landed_cost').read()[0]
-        domain = [('id', 'in', self.landed_costs_ids.ids)]
+        domain = [('vendor_bill_id', '=', self.id)]
         context = dict(self.env.context, default_vendor_bill_id=self.id)
         views = [(self.env.ref('stock_landed_costs.view_stock_landed_cost_tree2').id, 'tree'), (False, 'form'), (False, 'kanban')]
         return dict(action, domain=domain, context=context, views=views)
