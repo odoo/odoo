@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from itertools import groupby
+from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
@@ -127,6 +127,14 @@ class PurchaseOrder(models.Model):
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.company.id)
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='Ratio between the purchase order currency and the company currency')
 
+    mail_reminder_confirmed = fields.Boolean("Reminder Confirmed", default=False, readonly=True, copy=False, help="True if the reminder email is confirmed by the vendor.")
+    mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
+
+    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', related='partner_id.receipt_reminder_email', readonly=False,
+        help='Automatically send a reminder email to your vendors before receipt')
+    reminder_date_before_receipt = fields.Integer('Days Before Receipt', related='partner_id.reminder_date_before_receipt', readonly=False,
+        help="Number of days to send reminder email before the promised receipt date")
+
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
         for order in self:
@@ -177,6 +185,11 @@ class PurchaseOrder(models.Model):
                 name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             result.append((po.id, name))
         return result
+
+    @api.onchange('date_planned')
+    def onchange_date_planned(self):
+        if self.date_planned:
+            self.order_line.date_planned = self.date_planned
 
     @api.model
     def create(self, vals):
@@ -361,6 +374,8 @@ class PurchaseOrder(models.Model):
                 order.button_approve()
             else:
                 order.write({'state': 'to approve'})
+            if order.partner_id not in order.message_partner_ids:
+                order.message_subscribe([order.partner_id.id])
         return True
 
     def button_cancel(self):
@@ -613,6 +628,79 @@ class PurchaseOrder(models.Model):
 
         return result
 
+    @api.model
+    def _send_reminder_mail(self):
+        if not self.user_has_groups('purchase.group_send_reminder') and not self.receipt_reminder_email:
+            return
+
+        template = self.env.ref('purchase.email_template_edi_purchase_reminder', raise_if_not_found=False)
+        if template:
+            for order in self._get_orders_to_remind():
+                date = order.date_planned or order.expected_date
+                if date and (date - relativedelta(days=order.reminder_date_before_receipt)).date() == datetime.today().date():
+                    order.with_context(is_reminder=True).message_post_with_template(template.id, email_layout_xmlid="mail.mail_notification_paynow", composition_mode='comment')
+
+    @api.model
+    def _get_orders_to_remind(self):
+        """When auto sending a reminder mail, only send for unconfirmed purchase
+        order and not all products are service."""
+        return self.search([
+            ('state', 'in', ['purchase', 'done']),
+            ('mail_reminder_confirmed', '=', False)
+        ]).filtered(lambda p: p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
+
+    def get_confirm_url(self, confirm_type=None):
+        """Create url for confirm reminder or purchase reception email for sending
+        in mail."""
+        if confirm_type in ['reminder', 'reception']:
+            param = url_encode({
+                'confirm': confirm_type,
+                'confirmed_date': (self.date_planned or self.expected_date).date(),
+            })
+            return self.get_portal_url(query_string='&%s' % param)
+        return self.get_portal_url()
+
+    def get_update_url(self):
+        """Create portal url for user to update the scheduled date on purchase
+        order lines."""
+        update_param = url_encode({'update': 'True'})
+        return self.get_portal_url(query_string='&%s' % update_param)
+
+    def confirm_reminder_mail(self, confirmed_date=False):
+        for order in self:
+            if order.state in ['purchase', 'done'] and not order.mail_reminder_confirmed:
+                order.mail_reminder_confirmed = True
+                date = confirmed_date or (self.date_planned or self.expected_date).date()
+                order.message_post(body="%s confirmed the receipt will take place on %s." % (order.partner_id.name, date))
+
+    def _confirm_reception_mail(self):
+        for order in self:
+            if order.state in ['purchase', 'done'] and not order.mail_reception_confirmed:
+                order.mail_reception_confirmed = True
+                order.message_post(body="The order receipt has been acknowledged by %s." % order.partner_id.name)
+
+    def _update_date_planned_for_lines(self, updated_dates):
+        if updated_dates:
+            note = self._compose_note(updated_dates)
+            self.activity_schedule(
+                'mail.mail_activity_data_warning',
+                summary="Date Updated",
+                note=note,
+                user_id=self.user_id.id
+            )
+
+            for line, date in updated_dates:
+                line._update_date_planned(date)
+
+    def _compose_note(self, updated_dates):
+        """Helper method for creating log note when user update scheduled date
+        on portal website."""
+        note = _('<p> %s modified receipt dates for the following products:</p>') % self.partner_id.name
+        for line, date in updated_dates:
+            note += _('<p> &nbsp; - %s from %s to %s </p>') % (line.product_id.display_name, line.date_planned, date)
+        return note
+
+
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
     _description = 'Purchase Order Line'
@@ -832,7 +920,7 @@ class PurchaseOrderLine(models.Model):
             return
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
-        self.date_planned = datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        self.date_planned = self.order_id.date_planned or datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         self.price_unit = self.product_qty = 0.0
 
         self._product_id_change()
@@ -887,7 +975,7 @@ class PurchaseOrderLine(models.Model):
             params=params)
 
         if seller or not self.date_planned:
-            self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            self.date_planned = self.order_id.date_planned or self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         if not seller:
             self.price_unit = self.product_id.standard_price
@@ -1009,7 +1097,7 @@ class PurchaseOrderLine(models.Model):
         if product_lang.description_purchase:
             name += '\n' + product_lang.description_purchase
 
-        date_planned = self._get_date_planned(seller, po=po)
+        date_planned = self.order_id.date_planned or self._get_date_planned(seller, po=po)
 
         return {
             'name': name,
@@ -1021,3 +1109,6 @@ class PurchaseOrderLine(models.Model):
             'taxes_id': [(6, 0, taxes_id.ids)],
             'order_id': po.id,
         }
+
+    def _update_date_planned(self, updated_date):
+        self.date_planned = updated_date

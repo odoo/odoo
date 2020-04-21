@@ -143,6 +143,7 @@
                     <button name="print_quotation" string="Print RFQ" type="object" states="sent" groups="base.group_user"/>
                     <button name="button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
                     <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
+                    <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True)]}"/>
                     <button name="action_create_invoice" string="Create Bill" type="object" context="{'create_bill':True}" attrs="{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'not in', ('no', 'invoiced')), ('order_line', '=', [])]}"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
@@ -176,9 +177,28 @@
                         </group>
                         <group>
                             <field name="date_order" attrs="{'invisible': [('state','=','purchase')]}"/>
-                            <field name="date_approve" attrs="{'invisible': [('state','!=','purchase')]}"/>
+                            <label for="date_approve" attrs="{'invisible': [('state','!=','purchase')]}"/>
+                            <div name="date_approve" attrs="{'invisible': [('state','!=','purchase')]}" class="o_row">
+                                <field name="date_approve"/>
+                                <field name="mail_reception_confirmed" invisible="1"/>
+                                <span class="text-muted" attrs="{'invisible': [('mail_reception_confirmed','=', False)]}">(confirmed by vendor)</span>
+                            </div>
+                            <label for="date_planned"/>
+                            <div name="date_planned_and_confirmation">
+                                <div name="date_planned_div" class="o_row">
+                                    <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve', 'purchase'))]}"/>
+                                    <span name='expected_date_span' class="text-muted" attrs="{'invisible': ['|', ('expected_date', '=', False), ('date_planned', '!=', False)]}">Per line, first on <field name="expected_date" widget="date"/></span>
+                                    <field name="mail_reminder_confirmed" invisible="1"/>
+                                    <span class="text-muted" attrs="{'invisible': [('mail_reminder_confirmed', '=', False)]}">(confirmed by vendor)</span>
+                                </div>
+                                <div name="confirmation" class="oe_edit_only o_row" groups='purchase.group_send_reminder'>
+                                    <field name="receipt_reminder_email"/>
+                                    <span>Ask confirmation</span>
+                                    <field name="reminder_date_before_receipt" attrs="{'readonly': [('receipt_reminder_email', '=', False)]}"/>
+                                    <span> days before</span>
+                                </div>
+                            </div>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                     </group>
                     <notebook>
@@ -209,7 +229,7 @@
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text"/>
-                                    <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)]}"/>
+                                    <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)], 'readonly': [('parent.date_planned', '!=', False)]}" force_save="1"/>
                                     <field name="account_analytic_id" optional="hide" context="{'default_partner_id':parent.partner_id}" groups="analytic.group_analytic_accounting" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="analytic_tag_ids" optional="hide" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="product_qty"/>
@@ -253,7 +273,6 @@
                                                 <field name="date_planned" widget="date" attrs="{'required': [('display_type', '=', False)]}"/>
                                                 <field name="account_analytic_id" colspan="2" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                             </group>
                                             <group colspan="12">
                                             <notebook>
@@ -340,15 +359,11 @@
                         </page>
                         <page string="Other Information" name="purchase_delivery_invoice">
                             <group>
-                                <group name="planning">
-                                    <label for="date_planned" attrs="{'invisible': [('state', '!=', 'draft'), ('date_planned', '=', False)]}"/>
-                                    <div name="date_planned_div" class="o_row" attrs="{'invisible': [('state', '!=', 'draft'), ('date_planned', '=', False)]}">
-                                        <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve'))]}"/>
-                                        <span name="expected_date_span" class="text-muted">Expected: <field name="expected_date" widget="date"/></span>
-                                    </div>
-                                </group>
                                 <group name="other_info">
                                     <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                </group>
+                                <group name="invoice_info">
                                     <field name="invoice_status" attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'to approve', 'cancel'))]}"/>
                                     <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}" options="{'no_create': True}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
@@ -418,6 +433,7 @@
                     <field name="product_id"/>
                     <filter name="my_Orders" string="My Orders" domain="[('user_id', '=', uid)]"/>
                     <separator/>
+                    <filter name="unconfirmed" string="Not Acknowledged" domain="[('mail_reception_confirmed', '=', False), ('state', '=', 'purchase')]"/>
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status', '=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Bills Received" domain="[('invoice_status', '=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
                     <separator/>
