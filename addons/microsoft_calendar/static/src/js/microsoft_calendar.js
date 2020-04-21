@@ -1,4 +1,4 @@
-odoo.define('google_calendar.CalendarView', function (require) {
+odoo.define('microsoft_calendar.CalendarView', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -12,7 +12,7 @@ const viewRegistry = require('web.view_registry');
 
 var _t = core._t;
 
-const GoogleCalendarModel = CalendarModel.include({
+const MicrosoftCalendarModel = CalendarModel.include({
 
     /**
      * @override
@@ -23,33 +23,31 @@ const GoogleCalendarModel = CalendarModel.include({
         try {
             await Promise.race([
                 new Promise(resolve => setTimeout(resolve, 1000)),
-                this._syncGoogleCalendar(true)
+                this._syncMicrosoftCalendar(true)
             ]);
         } catch (error) {
             if (error.event) {
                 error.event.preventDefault();
             }
-            console.error("Could not synchronize Google events now.", error);
+            console.error("Could not synchronize Microsoft events now.", error);
         }
         return _super(...arguments);
     },
 
-    _syncGoogleCalendar(shadow = false) {
-        var context = this.getSession().user_context;
+    _syncMicrosoftCalendar(shadow = false) {
         return this._rpc({
-            route: '/google_calendar/sync_data',
+            route: '/microsoft_calendar/sync_data',
             params: {
                 model: this.modelName,
                 fromurl: window.location.href,
-                local_context: context, // LUL TODO remove this local_context
             }
         }, {shadow});
     },
-})
+});
 
-const GoogleCalendarController = CalendarController.include({
+const MicrosoftCalendarController = CalendarController.include({
     custom_events: _.extend({}, CalendarController.prototype.custom_events, {
-        syncGoogleCalendar: '_onGoogleSyncCalendar',
+        syncMicrosoftCalendar: '_onSyncMicrosoftCalendar',
     }),
 
 
@@ -58,19 +56,19 @@ const GoogleCalendarController = CalendarController.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Try to sync the calendar with Google Calendar. According to the result
-     * from Google API, this function may require an action of the user by the
+     * Try to sync the calendar with Microsoft Calendar. According to the result
+     * from Microsoft API, this function may require an action of the user by the
      * mean of a dialog.
      *
      * @private
      * @returns {OdooEvent} event
      */
-    _onGoogleSyncCalendar: function (event) {
+    _onSyncMicrosoftCalendar: function (event) {
         var self = this;
 
-        return this.model._syncGoogleCalendar().then(function (o) {
+        return this.model._syncMicrosoftCalendar().then(function (o) {
             if (o.status === "need_auth") {
-                Dialog.alert(self, _t("You will be redirected to Google to authorize access to your calendar!"), {
+                Dialog.alert(self, _t("You will be redirected to Microsoft to authorize the access to your calendar."), {
                     confirm_callback: function() {
                         framework.redirect(o.url);
                     },
@@ -78,14 +76,14 @@ const GoogleCalendarController = CalendarController.include({
                 });
             } else if (o.status === "need_config_from_admin") {
                 if (!_.isUndefined(o.action) && parseInt(o.action)) {
-                    Dialog.confirm(self, _t("The Google Synchronization needs to be configured before you can use it, do you want to do it now?"), {
+                    Dialog.confirm(self, _t("The Microsoft Synchronization needs to be configured before you can use it, do you want to do it now?"), {
                         confirm_callback: function() {
                             self.do_action(o.action);
                         },
                         title: _t('Configuration'),
                     });
                 } else {
-                    Dialog.alert(self, _t("An administrator needs to configure Google Synchronization before you can use it!"), {
+                    Dialog.alert(self, _t("An administrator needs to configure Microsoft Synchronization before you can use it!"), {
                         title: _t('Configuration'),
                     });
                 }
@@ -96,9 +94,9 @@ const GoogleCalendarController = CalendarController.include({
     }
 });
 
-const GoogleCalendarRenderer = CalendarRenderer.include({
+const MicrosoftCalendarRenderer = CalendarRenderer.include({
     events: _.extend({}, CalendarRenderer.prototype.events, {
-        'click .o_google_sync_button': '_onGoogleSyncCalendar',
+        'click .o_microsoft_sync_button': '_onSyncMicrosoftCalendar',
     }),
 
     //--------------------------------------------------------------------------
@@ -106,19 +104,19 @@ const GoogleCalendarRenderer = CalendarRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Adds the Sync with Google button in the sidebar
+     * Adds the Sync with Microsoft button in the sidebar
      *
      * @private
      */
     _initSidebar: function () {
         var self = this;
         this._super.apply(this, arguments);
-        this.$googleButton = $();
+        this.$microsoftButton = $();
         if (this.model === "calendar.event") {
-            this.$googleButton = $('<button/>', {type: 'button', html: _t("Sync with <b>Google</b>")})
-                                .addClass('o_google_sync_button oe_button btn btn-secondary')
+            this.$microsoftButton = $('<button/>', {type: 'button', html: _t("Sync with <b>Microsoft</b>")})
+                                .addClass('o_microsoft_sync_button oe_button btn btn-secondary')
                                 .prepend($('<img/>', {
-                                    src: "/google_calendar/static/src/img/calendar_32.png",
+                                    src: "/microsoft_calendar/static/src/img/calendar_outlook_32.png",
                                 }))
                                 .appendTo(self.$sidebar);
         }
@@ -129,26 +127,26 @@ const GoogleCalendarRenderer = CalendarRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Requests to sync the calendar with Google Calendar
+     * Requests to sync the calendar with Microsoft Calendar
      *
      * @private
      */
-    _onGoogleSyncCalendar: function () {
+    _onSyncMicrosoftCalendar: function () {
         var self = this;
         var context = this.getSession().user_context;
-        this.$googleButton.prop('disabled', true);
-        this.trigger_up('syncGoogleCalendar', {
+        this.$microsoftButton.prop('disabled', true);
+        this.trigger_up('syncMicrosoftCalendar', {
             on_always: function () {
-                self.$googleButton.prop('disabled', false);
+                self.$microsoftButton.prop('disabled', false);
             },
         });
     },
 });
 
 return {
-    GoogleCalendarController,
-    GoogleCalendarModel,
-    GoogleCalendarRenderer,
+    MicrosoftCalendarController,
+    MicrosoftCalendarModel,
+    MicrosoftCalendarRenderer,
 };
 
 });
