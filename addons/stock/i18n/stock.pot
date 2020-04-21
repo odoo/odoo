@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.2\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-13 08:33+0000\n"
-"PO-Revision-Date: 2020-02-13 08:33+0000\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2020-04-21 10:46+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -64,6 +64,12 @@ msgid ""
 "(b) The shipping policy is \"When all products are ready\": all product have been reserved.\n"
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_production_lot.py:0
+#, python-format
+msgid " - Product: %s, Serial Number: %s"
 msgstr ""
 
 #. module: stock
@@ -219,9 +225,10 @@ msgid ""
 "        %endif\n"
 "        <br/><br/>\n"
 "        Please find your delivery order attached for more details.<br/><br/>\n"
-"        Thank you,<br/>\n"
-"        % if user and user.signature:\n"
-"          ${user.signature | safe}\n"
+"        Thank you,\n"
+"        % if user.signature:\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
 "        % endif\n"
 "    </p>\n"
 "</div>\n"
@@ -481,12 +488,6 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "A done move line should never have a reserved quantity."
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "A serial number should only be linked to a single product."
 msgstr ""
 
 #. module: stock
@@ -1055,6 +1056,14 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Choose your date"
+msgstr ""
+
+#. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
+#, python-format
+msgid "Close"
 msgstr ""
 
 #. module: stock
@@ -1916,6 +1925,11 @@ msgid "Do you confirm you want to scrap"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Documentation"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__qty_done
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__is_done
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__done
@@ -2089,6 +2103,7 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
+#: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #, python-format
 msgid "Fold"
@@ -2322,14 +2337,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posz
 msgid "Height (Z)"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_receipt_picking_move
-msgid ""
-"Here you can receive individual products, no matter what\n"
-"                purchase order or picking order they come from. You will find\n"
-"                the list of all products you are waiting for."
 msgstr ""
 
 #. module: stock
@@ -2584,11 +2591,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Incoming"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_receipt_picking_move
-msgid "Incoming  Products"
 msgstr ""
 
 #. module: stock
@@ -3424,7 +3426,6 @@ msgid "Move that created the return move"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.act_product_stock_move_open
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__product_return_moves
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
@@ -3663,14 +3664,6 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "On hand:"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_receipt_picking_move
-msgid ""
-"Once you receive an order, you can filter based on the name of\n"
-"                the vendor or the purchase order reference. Then you can confirm\n"
-"                all products received using the buttons on the right of each line."
 msgstr ""
 
 #. module: stock
@@ -4130,7 +4123,7 @@ msgstr ""
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
-msgid "Please add 'Done' qantitites to the picking to create a new pack."
+msgid "Please add 'Done' quantities to the picking to create a new pack."
 msgstr ""
 
 #. module: stock
@@ -4356,6 +4349,11 @@ msgid "Product Template"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
+msgid "Product Tracking"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__type
 #: model:ir.model.fields,field_description:stock.field_product_template__type
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_type
@@ -4568,7 +4566,7 @@ msgstr ""
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
-msgid "Quant's edition is restricted, you can't do this operation."
+msgid "Quant's editing is restricted, you can't do this operation."
 msgstr ""
 
 #. module: stock
@@ -4821,11 +4819,6 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
 msgid "Refresh quantity"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_receipt_picking_move
-msgid "Register a product receipt"
 msgstr ""
 
 #. module: stock
@@ -5628,11 +5621,6 @@ msgid "Stock Moves Analysis"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.product_template_open_quants
-msgid "Stock On Hand"
-msgstr ""
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "Stock Operation"
 msgstr ""
@@ -5798,7 +5786,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line__is_editable
-msgid "Technical field to restrict the edition."
+msgid "Technical field to restrict editing."
 msgstr ""
 
 #. module: stock
@@ -5901,10 +5889,11 @@ msgid "The code of the warehouse must be unique per company!"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.constraint,message:stock.constraint_stock_production_lot_name_ref_uniq
+#: code:addons/stock/models/stock_production_lot.py:0
+#, python-format
 msgid ""
-"The combination of serial number and product must be unique across a company"
-" !"
+"The combination of serial number and product must be unique across a company.\n"
+"Following combination contains duplicates:\n"
 msgstr ""
 
 #. module: stock
@@ -6002,6 +5991,14 @@ msgstr ""
 msgid ""
 "The scheduled date has been automatically updated due to a delay on <a "
 "href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"The serial number has already been assigned: \n"
+" Product: %s, Serial Number: %s"
 msgstr ""
 
 #. module: stock
@@ -6322,7 +6319,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_tracking
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__tracking
 #: model:ir.model.fields,field_description:stock.field_stock_quant__tracking
-#: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
 #: model:ir.model.fields,field_description:stock.field_stock_track_line__tracking
 msgid "Tracking"
 msgstr ""
@@ -6401,6 +6397,11 @@ msgid "Trigger Another Rule"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+msgid "Trigger Another Rule If No Stock"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
 msgid "Type"
 msgstr ""
@@ -6433,6 +6434,8 @@ msgstr ""
 
 #. module: stock
 #. openerp-web
+#: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
+#: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #, python-format
@@ -6726,11 +6729,6 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
-msgid "Warehouse is set"
 msgstr ""
 
 #. module: stock
@@ -7222,7 +7220,9 @@ msgstr ""
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
-msgid "You need to supply a Lot/Serial number for product %s."
+msgid ""
+"You need to supply a Lot/Serial Number for product: \n"
+" - "
 msgstr ""
 
 #. module: stock
@@ -7240,7 +7240,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
