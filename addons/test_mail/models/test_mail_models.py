@@ -38,7 +38,7 @@ class MailTestStandard(models.Model):
     name = fields.Char()
     email_from = fields.Char()
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
-    umbrella_id = fields.Many2one('mail.test.container', tracking=True)
+    container_id = fields.Many2one('mail.test.container', tracking=True)
     company_id = fields.Many2one('res.company')
 
 
@@ -77,7 +77,7 @@ class MailTestTicket(models.Model):
     mail_template = fields.Many2one('mail.template', 'Template')
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=2)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
-    umbrella_id = fields.Many2one('mail.test.container', tracking=True)
+    container_id = fields.Many2one('mail.test.container', tracking=True)
 
     def _track_template(self, changes):
         res = super(MailTestTicket, self)._track_template(changes)
@@ -89,19 +89,19 @@ class MailTestTicket(models.Model):
         return res
 
     def _creation_subtype(self):
-        if self.umbrella_id:
+        if self.container_id:
             return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
         return super(MailTestTicket, self)._creation_subtype()
 
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'umbrella_id' in init_values and self.umbrella_id:
+        if 'container_id' in init_values and self.container_id:
             return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
         return super(MailTestTicket, self)._track_subtype(init_values)
 
 
 class MailTestContainer(models.Model):
-    """ This model can be used in tests when umbrella records like projects
+    """ This model can be used in tests when container records like projects
     or teams are required. """
     _description = 'Project-like model with alias'
     _name = 'mail.test.container'

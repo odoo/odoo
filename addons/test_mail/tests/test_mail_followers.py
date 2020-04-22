@@ -144,16 +144,16 @@ class AdvancedFollowersTest(TestMailCommon):
         Subtype.search([('res_model', 'in', ['mail.test.container', 'mail.test.track'])]).unlink()
 
         cls.sub_nodef = Subtype.create({'name': 'Sub NoDefault', 'default': False, 'res_model': 'mail.test.container'})
-        cls.sub_umb1 = Subtype.create({'name': 'Sub Umbrella1', 'default': False, 'res_model': 'mail.test.track'})
-        cls.sub_umb2 = Subtype.create({'name': 'Sub Umbrella2', 'default': False, 'res_model': 'mail.test.track'})
-        cls.umb_def = Subtype.create({'name': 'Umbrella Default', 'default': True, 'res_model': 'mail.test.container'})
-        # create subtypes for auto subscription from umbrella to sub records
+        cls.sub_umb1 = Subtype.create({'name': 'Sub Container1', 'default': False, 'res_model': 'mail.test.track'})
+        cls.sub_umb2 = Subtype.create({'name': 'Sub Container2', 'default': False, 'res_model': 'mail.test.track'})
+        cls.umb_def = Subtype.create({'name': 'Container Default', 'default': True, 'res_model': 'mail.test.container'})
+        # create subtypes for auto subscription from container to sub records
         cls.umb_sub_def = Subtype.create({
-            'name': 'Umbrella Sub1', 'default': True, 'res_model': 'mail.test.container',
-            'parent_id': cls.sub_umb1.id, 'relation_field': 'umbrella_id'})
+            'name': 'Container Sub1', 'default': True, 'res_model': 'mail.test.container',
+            'parent_id': cls.sub_umb1.id, 'relation_field': 'container_id'})
         cls.umb_sub_nodef = Subtype.create({
-            'name': 'Umbrella Sub2', 'default': False, 'res_model': 'mail.test.container',
-            'parent_id': cls.sub_umb2.id, 'relation_field': 'umbrella_id'})
+            'name': 'Container Sub2', 'default': False, 'res_model': 'mail.test.container',
+            'parent_id': cls.sub_umb2.id, 'relation_field': 'container_id'})
 
     def test_auto_subscribe_create(self):
         """ Creator of records are automatically added as followers """
@@ -183,27 +183,27 @@ class AdvancedFollowersTest(TestMailCommon):
         self.assertEqual(sub.message_partner_ids, (self.user_employee.partner_id | self.user_admin.partner_id))
 
     def test_auto_subscribe_defaults(self):
-        """ Test auto subscription based on an umbrella record. This mimics
+        """ Test auto subscription based on an container record. This mimics
         the behavior of addons like project and task where subscribing to
         some project's subtypes automatically subscribe the follower to its tasks.
 
         Functional rules applied here
 
-         * subscribing to an umbrella subtype with parent_id / relation_field set
+         * subscribing to an container subtype with parent_id / relation_field set
            automatically create subscription with matching subtypes
          * subscribing to a sub-record as creator applies default subtype values
          * portal user should not have access to internal subtypes
         """
-        umbrella = self.env['mail.test.container'].with_context(self._test_context).create({
+        container = self.env['mail.test.container'].with_context(self._test_context).create({
             'name': 'Project-Like',
         })
 
-        umbrella.message_subscribe(partner_ids=[self.partner_portal.id])
-        self.assertEqual(umbrella.message_partner_ids, self.partner_portal)
+        container.message_subscribe(partner_ids=[self.partner_portal.id])
+        self.assertEqual(container.message_partner_ids, self.partner_portal)
 
         sub1 = self.env['mail.test.track'].with_user(self.user_employee).create({
             'name': 'Task-Like Test',
-            'umbrella_id': umbrella.id,
+            'container_id': container.id,
         })
 
         all_defaults = self.env['mail.message.subtype'].search([('default', '=', True), '|', ('res_model', '=', 'mail.test.track'), ('res_model', '=', False)])

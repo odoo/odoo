@@ -60,25 +60,25 @@ class TestTracking(TestMailCommon):
             subtype_ids=[self.env.ref('test_mail.st_mail_test_ticket_container_upd').id]
         )
 
-        umbrella = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Umbrella'})
+        container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'})
         self.record.write({
             'name': 'Test2',
             'email_from': 'noone@example.com',
-            'umbrella_id': umbrella.id,
+            'container_id': container.id,
         })
         self.flush_tracking()
         # one new message containing tracking; subtype linked to tracking
         self.assertEqual(len(self.record.message_ids), 1)
         self.assertEqual(self.record.message_ids.subtype_id, self.env.ref('test_mail.st_mail_test_ticket_container_upd'))
 
-        # no specific recipients except those following umbrella
+        # no specific recipients except those following container
         self.assertEqual(self.record.message_ids.partner_ids, self.env['res.partner'])
         self.assertEqual(self.record.message_ids.notified_partner_ids, self.user_admin.partner_id)
 
         # verify tracked value
         self.assertTracking(
             self.record.message_ids,
-            [('umbrella_id', 'many2one', False, umbrella)  # onchange tracked field
+            [('container_id', 'many2one', False, container)  # onchange tracked field
              ])
 
     def test_message_track_template(self):
@@ -215,11 +215,11 @@ class TestTracking(TestMailCommon):
 
     def test_message_track_multiple(self):
         """ check that multiple updates generate a single tracking message """
-        umbrella = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Umbrella'})
+        container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'})
         self.record.name = 'Zboub'
         self.record.customer_id = self.user_admin.partner_id
         self.record.user_id = self.user_admin
-        self.record.umbrella_id = umbrella
+        self.record.container_id = container
         self.flush_tracking()
 
         # should have a single message with all tracked fields
@@ -227,7 +227,7 @@ class TestTracking(TestMailCommon):
         self.assertTracking(self.record.message_ids[0], [
             ('customer_id', 'many2one', False, self.user_admin.partner_id),
             ('user_id', 'many2one', False, self.user_admin),
-            ('umbrella_id', 'many2one', False, umbrella),
+            ('container_id', 'many2one', False, container),
         ])
 
     def test_tracked_compute(self):
@@ -319,7 +319,7 @@ class TestTrackingInternals(TestMailCommon):
             'name': 'Zboub',
             'customer_id': self.user_admin.partner_id.id,
             'user_id': self.user_admin.id,
-            'umbrella_id': self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Umbrella'}).id
+            'container_id': self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'}).id
         })
         self.flush_tracking()
         self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
