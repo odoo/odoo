@@ -213,9 +213,9 @@ var FormRenderer = BasicRenderer.extend({
         for (const notebook of this.el.querySelectorAll(':scope div.o_notebook')) {
             const name = notebook.dataset.name;
             const navs = notebook.querySelectorAll(':scope .o_notebook_headers .nav-item > .nav-link');
-            state[name] = [...navs].findIndex(
+            state[name] = Math.max([...navs].findIndex(
                 nav => nav.classList.contains('active')
-            );
+            ), 0);
         }
         return state;
     },
@@ -247,6 +247,9 @@ var FormRenderer = BasicRenderer.extend({
                 // We can't base the amount on the 'navs' length since some overrides
                 // are adding pageless nav items.
                 const validTabsAmount = pages.length;
+                if (!validTabsAmount) {
+                    continue; // No page defined on the notebook.
+                }
                 let activeIndex = state[name];
                 if (navs[activeIndex].classList.contains('o_invisible_modifier')) {
                     activeIndex = [...navs].findIndex(

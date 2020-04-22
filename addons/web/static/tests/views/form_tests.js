@@ -712,6 +712,77 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('empty notebook', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <notebook/>
+                    </sheet>
+                </form>`,
+            data: this.data,
+            model: 'partner',
+            res_id: 1,
+            View: FormView,
+        });
+
+        // Does not change when switching state
+        await testUtils.form.clickEdit(form);
+
+        assert.containsNone(form, ':scope .o_notebook .nav');
+
+        // Does not change when coming back to initial state
+        await testUtils.form.clickSave(form);
+
+        assert.containsNone(form, ':scope .o_notebook .nav');
+
+        form.destroy();
+    });
+
+    QUnit.test('no visible page', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <notebook>
+                            <page string="Foo" invisible="1">
+                                <field name="foo"/>
+                            </page>
+                            <page string="Bar" invisible="1">
+                                <field name="bar"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            data: this.data,
+            model: 'partner',
+            res_id: 1,
+            View: FormView,
+        });
+
+        // Does not change when switching state
+        await testUtils.form.clickEdit(form);
+
+        for (const nav of form.el.querySelectorAll(':scope .o_notebook .nav')) {
+            assert.containsNone(nav, '.nav-link.active');
+            assert.containsN(nav, '.nav-item.o_invisible_modifier', 2);
+        }
+
+        // Does not change when coming back to initial state
+        await testUtils.form.clickSave(form);
+
+        for (const nav of form.el.querySelectorAll(':scope .o_notebook .nav')) {
+            assert.containsNone(nav, '.nav-link.active');
+            assert.containsN(nav, '.nav-item.o_invisible_modifier', 2);
+        }
+
+        form.destroy();
+    });
+
     QUnit.test('invisible attrs on first notebook page', async function (assert) {
         assert.expect(6);
 
