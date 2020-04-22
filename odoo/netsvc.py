@@ -126,7 +126,7 @@ def init_logger():
     logging.setLogRecordFactory(record_factory)
 
     # enable deprecation warnings (disabled by default)
-    warnings.filterwarnings('once', category=DeprecationWarning)
+    warnings.filterwarnings('default', category=DeprecationWarning)
     # ignore deprecation warnings from invalid escape (there's a ton and it's
     # pretty likely a super low-value signal)
     warnings.filterwarnings('ignore', r'^invalid escape sequence \\.', category=DeprecationWarning)
