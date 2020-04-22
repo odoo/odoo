@@ -20,19 +20,15 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
             'visitor_id': self.visitor.id,
             'visit_datetime': self.base_datetime - datetime.timedelta(minutes=10),
         }, {
-            'page_id': self.env.ref('website.aboutus_page').id,
+            'page_id': self.env.ref('website.homepage_page').id,
             'visitor_id': self.visitor.id,
             'visit_datetime': self.base_datetime - datetime.timedelta(minutes=20),
-        }, {
-            'page_id': self.env.ref('website.contactus_page').id,
-            'visitor_id': self.visitor.id,
-            'visit_datetime': self.base_datetime - datetime.timedelta(minutes=30),
         }])
 
         handmade_history = "%s (21:10) → %s (21:20) → %s (21:30)" % (
-            self.env.ref('website.aboutus_page').name,
+            self.env.ref('website.homepage_page').name,
             self.env.ref('website.contactus_page').name,
-            self.env.ref('website.homepage_page').name
+            self.env.ref('website.homepage_page').name,
         )
         history = self.env['mail.channel']._get_visitor_history(self.visitor)
 
