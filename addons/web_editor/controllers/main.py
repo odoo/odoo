@@ -155,17 +155,17 @@ class Web_Editor(http.Controller):
         return True
 
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', filters=False, **kwargs):
+    def add_data(self, name, data, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
         try:
             data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
         except UserError:
             pass  # not an image
-        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model, filters=filters)
+        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
-    def add_url(self, url, res_id=False, res_model='ir.ui.view', filters=False, **kwargs):
-        attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model, filters=filters)
+    def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):
+        attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/<model("ir.attachment"):attachment>/update', type='json', auth='user', methods=['POST'], website=True)
@@ -245,7 +245,7 @@ class Web_Editor(http.Controller):
             result['originalSrc'] = record.url
         return result
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', filters=None):
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
         """Create and return a new attachment."""
         if not name and url:
             name = url.split("/").pop()
@@ -254,9 +254,6 @@ class Web_Editor(http.Controller):
             res_id = int(res_id)
         else:
             res_id = False
-
-        if filters:
-            name = filters + '_' + name
 
         attachment_data = {
             'name': name,
