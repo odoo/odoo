@@ -245,7 +245,7 @@ class SendSMS(models.TransientModel):
             records._message_log_batch(**log_values)
 
         if sms_all and self.mass_force_send:
-            sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
+            sms_all.filtered(lambda sms: sms.sms_status == 'outgoing').send(auto_commit=False, raise_exception=False)
             return self.env['sms.sms'].sudo().search([('id', 'in', sms_all.ids)])
         return sms_all
 
@@ -295,23 +295,23 @@ class SendSMS(models.TransientModel):
             recipients = all_recipients[record.id]
             sanitized = recipients['sanitized']
             if sanitized and record.id in blacklist_ids:
-                state = 'canceled'
+                sms_status = 'cancel'
                 error_code = 'sms_blacklist'
             elif sanitized and record.id in done_ids:
-                state = 'canceled'
+                sms_status = 'cancel'
                 error_code = 'sms_duplicate'
             elif not sanitized:
-                state = 'error'
+                sms_status = 'error'
                 error_code = 'sms_number_format' if recipients['number'] else 'sms_number_missing'
             else:
-                state = 'outgoing'
+                sms_status = 'outgoing'
                 error_code = ''
 
             result[record.id] = {
                 'body': all_bodies[record.id],
                 'partner_id': recipients['partner'].id,
                 'number': sanitized if sanitized else recipients['number'],
-                'state': state,
+                'sms_status': sms_status,
                 'error_code': error_code,
             }
         return result

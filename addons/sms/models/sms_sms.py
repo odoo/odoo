@@ -26,12 +26,12 @@ class SmsSms(models.Model):
     body = fields.Text()
     partner_id = fields.Many2one('res.partner', 'Customer')
     mail_message_id = fields.Many2one('mail.message', index=True)
-    state = fields.Selection([
+    sms_status = fields.Selection([
         ('outgoing', 'In Queue'),
         ('sent', 'Sent'),
         ('error', 'Error'),
-        ('canceled', 'Canceled')
-    ], 'SMS Status', readonly=True, copy=False, default='outgoing', required=True)
+        ('cancel', 'Canceled')
+    ], 'SMS Status', readonly=True, copy=False, default='outgoing')
     error_code = fields.Selection([
         ('sms_number_missing', 'Missing Number'),
         ('sms_number_format', 'Wrong Number Format'),
@@ -57,7 +57,7 @@ class SmsSms(models.Model):
                 self._cr.commit()
 
     def cancel(self):
-        self.state = 'canceled'
+        self.state = 'cancel'
 
     @api.model
     def _process_queue(self, ids=None):
@@ -67,7 +67,7 @@ class SmsSms(models.Model):
        :param list ids: optional list of emails ids to send. If passed no search
          is performed, and these ids are used instead.
         """
-        domain = [('state', '=', 'outgoing')]
+        domain = [('sms_status', '=', 'outgoing')]
 
         filtered_ids = self.search(domain, limit=10000).ids  # TDE note: arbitrary limit we might have to update
         if ids:
@@ -116,23 +116,23 @@ class SmsSms(models.Model):
         else:
             todelete_sms_ids = [item['res_id'] for item in iap_results if item['state'] == 'success']
 
-        for state in self.IAP_TO_SMS_STATE.keys():
-            sms_ids = [item['res_id'] for item in iap_results if item['state'] == state]
+        for status in self.IAP_TO_SMS_STATE:
+            sms_ids = [item['res_id'] for item in iap_results if item['state'] == status]
             if sms_ids:
-                if state != 'success' and not delete_all:
+                if status != 'success' and not delete_all:
                     self.env['sms.sms'].sudo().browse(sms_ids).write({
-                        'state': 'error',
-                        'error_code': self.IAP_TO_SMS_STATE[state],
+                        'sms_status': 'error',
+                        'error_code': self.IAP_TO_SMS_STATE[status],
                     })
                 notifications = self.env['mail.notification'].sudo().search([
                     ('notification_type', '=', 'sms'),
                     ('sms_id', 'in', sms_ids),
-                    ('notification_status', 'not in', ('sent', 'cancel'))]
-                )
+                    ('notification_status', 'not in', ('sent', 'cancel'))
+                ])
                 if notifications:
                     notifications.write({
-                        'notification_status': 'sent' if state == 'success' else 'error',
-                        'failure_type': self.IAP_TO_SMS_STATE[state] if state != 'success' else False,
+                        'notification_status': 'sent' if status == 'success' else 'error',
+                        'failure_type': self.IAP_TO_SMS_STATE[status] if status != 'success' else False,
                         'failure_reason': failure_reason if failure_reason else False,
                     })
         self.mail_message_id._notify_message_notification_update()

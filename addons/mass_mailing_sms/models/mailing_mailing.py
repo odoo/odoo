@@ -84,7 +84,7 @@ class Mailing(models.Model):
     def action_retry_failed_sms(self):
         failed_sms = self.env['sms.sms'].sudo().search([
             ('mailing_id', 'in', self.ids),
-            ('state', '=', 'error')
+            ('sms_status', '=', 'error')
         ])
         failed_sms.mapped('mailing_trace_ids').unlink()
         failed_sms.unlink()

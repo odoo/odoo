@@ -6,9 +6,11 @@
         <field name="arch" type="xml">
             <form string="SMS">
                 <header>
-                    <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
-                    <button name="cancel" string="Cancel" type="object" states='outgoing'/>
-                    <field name="state" widget="statusbar"/>
+                    <button name="send" string="Send Now" type="object" class="oe_highlight"
+                        attrs="{'invisible': [('sms_status', '!=', 'outgoing')]}"/>
+                    <button name="cancel" string="Cancel" type="object"
+                        attrs="{'invisible': [('sms_status', '!=', 'outgoing')]}"/>
+                    <field name="sms_status" widget="statusbar"/>
                 </header>
                 <sheet>
                     <group>
@@ -36,7 +38,7 @@
             <tree string="SMS Templates">
                 <field name="number"/>
                 <field name="partner_id"/>
-                <field name="state"/>
+                <field name="sms_status"/>
                 <field name="error_code"/>
             </tree>
         </field>

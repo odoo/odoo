@@ -154,9 +154,9 @@ class TestSMSPost(test_mail_full_common.TestSMSCommon, LinkTrackerMock):
         with self.assertRaises(exceptions.AccessError):
             with self.mockSMSGateway(sim_error='jsonrpc_exception'):
                 self.env['sms.sms'].browse(self.sms_all.ids).send(raise_exception=True)
-        self.assertEqual(set(self.sms_all.mapped('state')), set(['outgoing']))
+        self.assertEqual(set(self.sms_all.mapped('sms_status')), set(['outgoing']))
 
     def test_sms_send_raise_catch(self):
         with self.mockSMSGateway(sim_error='jsonrpc_exception'):
             self.env['sms.sms'].browse(self.sms_all.ids).send(raise_exception=False)
-        self.assertEqual(set(self.sms_all.mapped('state')), set(['error']))
+        self.assertEqual(set(self.sms_all.mapped('sms_status')), set(['error']))

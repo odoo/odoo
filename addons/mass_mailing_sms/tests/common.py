@@ -15,7 +15,7 @@ class MockSMS(sms_common.MockSMS):
     def assertSMSOutgoingStatistics(self, partners, numbers, records, mailing):
         found_sms = self.env['sms.sms'].sudo().search([
             '|', ('partner_id', 'in', partners.ids), ('number', 'in', numbers),
-            ('state', '=', 'outgoing')
+            ('sms_status', '=', 'outgoing')
         ])
         self.assertEqual(found_sms.filtered(lambda s: s.partner_id).mapped('partner_id'), partners)
         self.assertEqual(set(found_sms.filtered(lambda s: not s.partner_id).mapped('number')), set(numbers))

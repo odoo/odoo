@@ -265,7 +265,7 @@ class MailThread(models.AbstractModel):
         sms_base_vals = {
             'body': html2plaintext(body),
             'mail_message_id': message.id,
-            'state': 'outgoing',
+            'sms_status': 'outgoing',
         }
 
         # notify from computed recipients_data (followers, specific recipients)
@@ -293,7 +293,7 @@ class MailThread(models.AbstractModel):
                 sms_base_vals,
                 partner_id=False,
                 number=n,
-                state='outgoing' if n else 'error',
+                sms_status='outgoing' if n else 'error',
                 error_code='' if n else 'sms_number_missing',
             ) for n in tocreate_numbers]
 
@@ -322,8 +322,8 @@ class MailThread(models.AbstractModel):
                 'notification_type': 'sms',
                 'sms_id': sms.id,
                 'is_read': True,  # discard Inbox notification
-                'notification_status': 'outgoing' if sms.state == 'outgoing' else 'error',
-                'failure_type': '' if sms.state == 'outgoing' else sms.error_code,
+                'notification_status': 'outgoing' if sms.sms_status == 'outgoing' else 'error',
+                'failure_type': '' if sms.sms_status == 'outgoing' else sms.error_code,
             } for sms in sms_all if (sms.partner_id and sms.partner_id.id not in existing_pids) or (not sms.partner_id and sms.number not in existing_numbers)]
             if notif_create_values:
                 self.env['mail.notification'].sudo().create(notif_create_values)
@@ -342,6 +342,6 @@ class MailThread(models.AbstractModel):
                         })
 
         if sms_all and not put_in_queue:
-            sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
+            sms_all.filtered(lambda sms: sms.sms_status == 'outgoing').send(auto_commit=False, raise_exception=False)
 
         return True

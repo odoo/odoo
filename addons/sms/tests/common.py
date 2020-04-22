@@ -76,8 +76,9 @@ class MockSMS(common.BaseCase):
         if number is None and partner:
             number = partner.phone_get_sanitized_number()
         sms = self.env['sms.sms'].sudo().search([
-            ('partner_id', '=', partner.id), ('number', '=', number),
-            ('state', '=', 'canceled')
+            ('partner_id', '=', partner.id),
+            ('number', '=', number),
+            ('sms_status', '=', 'cancel')
         ])
         self.assertTrue(sms, 'SMS: not found canceled SMS for %s (number: %s)' % (partner, number))
         self.assertEqual(sms.error_code, error_code)
@@ -90,8 +91,9 @@ class MockSMS(common.BaseCase):
         if number is None and partner:
             number = partner.phone_get_sanitized_number()
         sms = self.env['sms.sms'].sudo().search([
-            ('partner_id', '=', partner.id), ('number', '=', number),
-            ('state', '=', 'error')
+            ('partner_id', '=', partner.id),
+            ('number', '=', number),
+            ('sms_status', '=', 'error')
         ])
         self.assertTrue(sms, 'SMS: not found failed SMS for %s (number: %s)' % (partner, number))
         self.assertEqual(sms.error_code, error_code)
@@ -104,8 +106,9 @@ class MockSMS(common.BaseCase):
         if number is None and partner:
             number = partner.phone_get_sanitized_number()
         sms = self.env['sms.sms'].sudo().search([
-            ('partner_id', '=', partner.id), ('number', '=', number),
-            ('state', '=', 'outgoing')
+            ('partner_id', '=', partner.id),
+            ('number', '=', number),
+            ('sms_status', '=', 'outgoing')
         ])
         self.assertTrue(sms, 'SMS: not found failed SMS for %s (number: %s)' % (partner, number))
         if content is not None:
@@ -124,7 +127,7 @@ class MockSMS(common.BaseCase):
           :param recipients_info: list[{
             'partner': res.partner record (may be empty),
             'number': number used for notification (may be empty, computed based on partner),
-            'state': ready / sent / exception / canceled (sent by default),
+            'state': ready / sent / error / cancel (sent by default),
             'failure_type': optional: sms_number_missing / sms_number_format / sms_credit / sms_server
             }, { ... }]
         """
@@ -147,23 +150,23 @@ class MockSMS(common.BaseCase):
         for recipient_info in recipients_info:
             partner = recipient_info.get('partner', self.env['res.partner'])
             number = recipient_info.get('number')
-            state = recipient_info.get('state', 'sent')
+            status = recipient_info.get('state', 'sent')
             if number is None and partner:
                 number = partner.phone_get_sanitized_number()
 
-            notif = notifications.filtered(lambda n: n.res_partner_id == partner and n.sms_number == number and n.notification_status == state)
-            self.assertTrue(notif, 'SMS: not found notification for %s (number: %s, state: %s)' % (partner, number, state))
+            notif = notifications.filtered(lambda n: n.res_partner_id == partner and n.sms_number == number and n.notification_status == status)
+            self.assertTrue(notif, 'SMS: not found notification for %s (number: %s, state: %s)' % (partner, number, status))
 
-            if state not in ('sent', 'out', 'cancel'):
+            if status not in ('sent', 'out', 'cancel'):
                 self.assertEqual(notif.failure_type, recipient_info['failure_type'])
             if check_sms:
-                if state == 'sent':
+                if status == 'sent':
                     self.assertSMSSent([number], content)
-                elif state == 'out':
+                elif status == 'out':
                     self.assertSMSOutgoing(partner, number, content)
-                elif state == 'error':
+                elif status == 'error':
                     self.assertSMSFailed(partner, number, recipient_info['failure_type'], content)
-                elif state == 'cancel':
+                elif status == 'cancel':
                     self.assertSMSCanceled(partner, number, recipient_info.get('failure_type', False), content)
                 else:
                     raise NotImplementedError('Not implemented')
