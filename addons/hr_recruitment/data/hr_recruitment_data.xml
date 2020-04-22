@@ -116,7 +116,7 @@
 
                 <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
                 <h3 style="color:#9A6C8E;"><strong>What is the next step?</strong></h3>
-                We usually <strong>answer applications within 3 days</strong>.
+                We usually <strong>answer applications within a few days</strong>.
                 <br/><br/>
                 The next step is either a call or a meeting in our offices.
                 <br/>
@@ -156,12 +156,6 @@
                     % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)
                 % endif
                 <br/>
-
-                % if object.job_id.address_id:
-                    <a href="https://maps.google.com/maps?q=${location}" target="new">
-                        <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;"/>
-                    </a>
-                % endif
             </div>
         </td>
     </tr>
@@ -214,7 +208,7 @@
                 % endif
 
                 <h3 style="color:#9A6C8E;"><strong>What is the next step?</strong></h3>
-                We usually <strong>answer applications within 3 days.</strong><br/><br/>
+                We usually <strong>answer applications within a few days.</strong><br/><br/>
                 Feel free to <strong>contact us if you want a faster
                 feedback</strong> or if you don't get news from us
                 quickly enough (just reply to this email).
@@ -250,11 +244,6 @@
                     % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)
                 % endif
                 <br/>
-                % if object.job_id.address_id:
-                    <a href="https://maps.google.com/maps?q=${location}" target="new">
-                        <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;"/>
-                    </a>
-                % endif
             </div>
         </td>
     </tr>
@@ -362,7 +351,6 @@
     </record>
     <record model="hr.recruitment.stage" id="stage_job2">
         <field name="name">First Interview</field>
-        <field name="template_id" ref="email_template_data_applicant_interest"/>
         <field name="sequence">2</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job3">

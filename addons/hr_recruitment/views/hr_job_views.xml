@@ -69,7 +69,7 @@
                                     <div class="o_recruitment_kanban_box o_kanban_primary_bottom bottom_block" style="padding-left:8px;">
                                         <div class="col-6"></div>
                                         <div class="col-6">
-                                            <a type="action" name="%(action_hr_job_sources)d">Share Trackers</a>
+                                            <a type="action" name="%(action_hr_job_sources)d">Link Trackers</a>
                                         </div>
                                     </div>
                                 </div>
@@ -101,12 +101,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='department_id']" position="after">
                 <filter string="My Job Positions" name="my_positions" domain="[('user_id', '=', uid)]"/>
-            </xpath>
-            <xpath expr="//group" position="after">
-                <searchpanel>
-                    <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
-                    <field name="user_id" icon="fa-users"/>
-                </searchpanel>
             </xpath>
         </field>
     </record>

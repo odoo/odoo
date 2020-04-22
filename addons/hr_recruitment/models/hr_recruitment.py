@@ -22,7 +22,7 @@ class RecruitmentSource(models.Model):
 
     source_id = fields.Many2one('utm.source', "Source", ondelete='cascade', required=True)
     email = fields.Char(related='alias_id.display_name', string="Email", readonly=True)
-    job_id = fields.Many2one('hr.job', "Job ID")
+    job_id = fields.Many2one('hr.job', "Job", ondelete='cascade')
     alias_id = fields.Many2one('mail.alias', "Alias ID")
 
     def create_alias(self):
@@ -43,7 +43,6 @@ class RecruitmentSource(models.Model):
             }
             source.alias_id = self.env['mail.alias'].create(vals)
             source.name = source.source_id.name
-
 
 class RecruitmentStage(models.Model):
     _name = "hr.recruitment.stage"
@@ -97,7 +96,7 @@ class Applicant(models.Model):
     _order = "priority desc, id desc"
     _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
 
-    name = fields.Char("Subject / Application Name", required=True)
+    name = fields.Char("Subject / Application Name", required=True, help="Email subject for applications sent via email")
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Text("Description")
     email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_phone_email',
