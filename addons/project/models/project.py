@@ -239,7 +239,7 @@ class Project(models.Model):
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
     subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', ondelete="restrict",
         help="Project in which sub-tasks of the current project will be created. It can be the current project itself.")
-    allow_subtasks = fields.Boolean('Sub-tasks', compute='_compute_allow_subtasks')
+    allow_subtasks = fields.Boolean('Sub-tasks')
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
@@ -264,10 +264,12 @@ class Project(models.Model):
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
     ]
 
-    def _compute_allow_subtasks(self):
-        subtask_enabled = self.user_has_groups('project.group_subtask_project')
-        for project in self:
-            project.allow_subtasks = subtask_enabled
+    @api.model
+    def default_get(self, *args, **kwargs):
+        defaults = super().default_get(*args, **kwargs)
+        if 'allow_subtasks' not in defaults:
+            defaults['allow_subtasks'] = self.env.user.has_group('project.group_subtask_project')
+        return defaults
 
     @api.depends('allowed_internal_user_ids', 'allowed_portal_user_ids')
     def _compute_allowed_users(self):
