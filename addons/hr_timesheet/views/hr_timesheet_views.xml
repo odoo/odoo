@@ -151,6 +151,8 @@
                 <field name="employee_id" position="replace"/>
                 <field name="department_id" position="replace"/>
                 <filter name="mine" position="replace"/>
+                <filter name="groupby_department" position="replace"/>
+                <filter name="groupby_employee" position="replace"/>
             </field>
         </record>
 
@@ -276,9 +278,6 @@
             <field name="domain">[('project_id', '!=', False)]</field>
             <field name="context">{
                 'search_default_week':1,
-                'search_default_groupby_employee':1,
-                'search_default_groupby_project':2,
-                'search_default_groupby_task':1,
             }</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
