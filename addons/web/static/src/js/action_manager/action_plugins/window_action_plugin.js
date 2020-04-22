@@ -62,19 +62,17 @@ odoo.define('web.WindowActionPlugin', function (require) {
                     lazyView = this._findMobileView(views, lazyView.multiRecord) || lazyView;
                 }
             }
-            let baseControllerParams;
-            if ('index' in options) {
-                baseControllerParams = { index: options.index };
-            } else {
-                baseControllerParams = options;
-            }
+            const baseControllerParams = Object.assign({}, options);
             const controllers = [];
             if (lazyView) {
                 this._createViewController(action, lazyView.type, {controllerState: options.controllerState}, baseControllerParams);
                 action.controller.options = options;
                 this.controllers[action.controller.jsID] = action.controller;
                 controllers.push(action.controller);
-                baseControllerParams = { index: action.controller.index + 1 };
+                Object.assign(
+                    baseControllerParams,
+                    { index: action.controller.index + 1 }
+                );
             }
 
             const viewOptions = {
