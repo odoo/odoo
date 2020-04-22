@@ -18,6 +18,9 @@ body {
 
 /* See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1524 */
 .table-sm {
+    > thead, > tfoot {
+        display: table-row-group !important;
+    }
     > thead > tr > th {
         border-bottom: none !important;
     }
