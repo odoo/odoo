@@ -27,21 +27,23 @@
             <tree string="Applicants" multi_edit="1">
                 <field name="message_needaction" invisible="1"/>
                 <field name="last_stage_id" invisible="1"/>
-                <field name="create_date" readonly="1" widget="date"/>
+                <field name="create_date" readonly="1" widget="date" optional="show"/>
                 <field name="date_last_stage_update" invisible="1"/>
                 <field name="name" readonly="1"/>
                 <field name="partner_name" readonly="1"/>
-                <field name="email_from" readonly="1"/>
-                <field name="partner_phone" widget="phone" readonly="1"/>
+                <field name="email_from" readonly="1" optional="hide"/>
+                <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="job_id"/>
                 <field name="stage_id"/>
-                <field name="medium_id"/>
-                <field name="source_id" readonly="1"/>
-                <field name="priority" widget="priority"/>
+                <field name="medium_id" optional="hide"/>
+                <field name="source_id" readonly="1" optional="hide"/>
+                <field name="priority" widget="priority" optional="show"/>
+                <field name="salary_expected" optional="show"/>
+                <field name="salary_proposed" optional="hide"/>
                 <field name="type_id" invisible="1"/>
-                <field name="availability" invisible="1"/>
+                <field name="availability" optional="show"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)" readonly="1"/>
-                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1"/>
             </tree>
         </field>
@@ -201,7 +203,7 @@
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                 <separator/>
-                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <filter string="Archived / Refused" name="inactive" domain="[('active', '=', False)]"/>
                 <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -853,7 +855,8 @@ action = act
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
             <tree string="Sources of Applicants" editable="top" class="o_recruitment_list">
-                <field name="source_id"/>
+                <field name="source_id" placeholder="e.g. LinkedIn"/>
+                <field name="job_id"/>
                 <button name="create_alias" title="Generate email alias" type="object" icon="fa-repeat" />
                 <field name="email"/>
             </tree>
