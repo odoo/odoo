@@ -583,7 +583,8 @@ class MrpProduction(models.Model):
             else:
                 values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
         if not values.get('procurement_group_id'):
-            values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id
+            procurement_group_vals = self._prepare_procurement_group_vals(values)
+            values['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
         production = super(MrpProduction, self).create(values)
         production.move_raw_ids.write({
             'group_id': production.procurement_group_id.id,
@@ -1234,3 +1235,7 @@ class MrpProduction(models.Model):
                         'create': False, 'edit': False},
             'target': 'new',
         }
+
+    @api.model
+    def _prepare_procurement_group_vals(self, values):
+        return {'name': values['name']}
