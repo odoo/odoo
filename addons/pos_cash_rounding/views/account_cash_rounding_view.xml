@@ -11,7 +11,7 @@
                 </div>
             </xpath>
             <xpath expr="//field[@name='account_id']" position="after">
-                <field name="loss_account_id" options="{'no_create': True}" attrs="{'invisible': [('strategy', '!=', 'add_invoice_line')]}"/>
+                <field name="loss_account_id" options="{'no_create': True}" attrs="{'invisible': [('strategy', '!=', 'add_invoice_line')]}" domain="[('user_type_id.type', 'not in', ('receivable', 'payable'))]"/>
             </xpath>
             <xpath expr="//field[@name='account_id']" position="attributes">
                   <attribute name="string">Profit Account</attribute>

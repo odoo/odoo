@@ -6,14 +6,15 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var WysiwygTranslate = require('web_editor.wysiwyg.multizone.translate');
+var TranslatorMenu = require('website.editor.menu.translate');
 
 var qweb = core.qweb;
 var _t = core._t;
 
-WysiwygTranslate.include({
-    xmlDependencies: (WysiwygTranslate.prototype.xmlDependencies || [])
+TranslatorMenu.include({
+    xmlDependencies: (TranslatorMenu.prototype.xmlDependencies || [])
         .concat(['/website_gengo/static/src/xml/website.gengo.xml']),
-    events: _.extend({}, WysiwygTranslate.prototype.events, {
+    events: _.extend({}, TranslatorMenu.prototype.events, {
         'click a[data-action=translation_gengo_post]': 'translation_gengo_post',
         'click a[data-action=translation_gengo_info]': 'translation_gengo_info',
     }),
@@ -32,7 +33,6 @@ WysiwygTranslate.include({
             this.$('button[data-action=save]')
                 .after(qweb.render('website.ButtonGengoTranslator'));
         }
-
         this.translation_gengo_display();
 
         return def;
@@ -85,7 +85,7 @@ WysiwygTranslate.include({
                         'lang': context.lang,
                     }).then(function () {
                         ajax.jsonRpc('/website/post_gengo_jobs', 'call', {});
-                        self._save();
+                        self.save();
                     }).guardedCatch(function () {
                         Dialog.alert(null, _t("Could not Post translation"));
                     });

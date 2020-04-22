@@ -1633,6 +1633,9 @@
                     <t t-if="payment_tx_id.state == 'authorized'">
                         <span>Your payment has been authorized.</span>
                     </t>
+                    <t t-if="payment_tx_id.state == 'error'">
+                        <span t-esc="payment_tx_id.state_message"/>
+                    </t>
                 </div>
                 <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and order.reference" class="card-body">
                     <b>Communication: </b><span t-esc='order.reference'/>
