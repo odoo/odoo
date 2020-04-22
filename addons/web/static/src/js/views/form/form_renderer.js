@@ -251,7 +251,7 @@ var FormRenderer = BasicRenderer.extend({
                     continue; // No page defined on the notebook.
                 }
                 let activeIndex = state[name];
-                if (navs[activeIndex].classList.contains('o_invisible_modifier')) {
+                if (navs[activeIndex] && navs[activeIndex].classList.contains('o_invisible_modifier')) {
                     activeIndex = [...navs].findIndex(
                         nav => !nav.classList.contains('o_invisible_modifier')
                     );
