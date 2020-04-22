@@ -12,7 +12,7 @@ from dateutil import relativedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.float_utils import float_compare, float_is_zero, float_repr, float_round
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
@@ -1457,6 +1457,58 @@ class StockMove(models.Model):
         self.with_context(prefetch_fields=False).mapped('move_line_ids').unlink()
         return super(StockMove, self).unlink()
 
+    def _get_consuming_document(self):
+        """ TODO WIP """
+        self.ensure_one()
+        return self.picking_id or False
+
+    @api.model
+    def _get_consuming_domain(self, location_ids):
+        outgoing_domain = [('picking_code', '=', 'outgoing')]
+        internal_domain = expression.AND([
+            [('picking_code', '=', 'internal')],
+            [('state', 'in', ['assigned', 'partially_available'])],
+        ])
+        if location_ids:
+            internal_domain = expression.AND([
+                internal_domain,
+                [('location_id', 'in', location_ids)]
+            ])
+        return expression.OR([outgoing_domain, internal_domain])
+
+    def _get_replenishment_document(self):
+        """ TODO WIP """
+        self.ensure_one()
+        return self.picking_id or False
+
+    @api.model
+    def _get_replenishment_domain(self, location_ids):
+        incoming_domain = [('picking_code', '=', 'incoming')]
+        internal_domain = expression.AND([
+            [('picking_code', '=', 'internal')],
+            [('state', 'in', ['assigned', 'partially_available'])],
+        ])
+        if location_ids:
+            internal_domain = expression.AND([
+                internal_domain,
+                [('location_dest_id', 'in', location_ids)]
+            ])
+        return expression.OR([incoming_domain, internal_domain])
+
+    def _is_consuming(self, wh_location_ids):
+        """ TODO WIP """
+        self.ensure_one()
+        if wh_location_ids and self.picking_code == 'internal':
+            return self.location_id.id in wh_location_ids
+        return self.picking_code in ['internal', 'outgoing']
+
+    def _is_replenishing(self, wh_location_ids):
+        """ TODO WIP """
+        self.ensure_one()
+        if wh_location_ids and self.picking_code == 'internal':
+            return self.location_dest_id.id in wh_location_ids
+        return self.picking_code in ['incoming', 'internal']
+
     def _prepare_move_split_vals(self, qty):
         vals = {
             'product_uom_qty': qty,
@@ -1592,6 +1644,26 @@ class StockMove(models.Model):
         @param qty: quantity in the UoM of move.product_uom
         """
         self.move_line_ids = self._set_quantity_done_prepare_vals(qty)
+
+    def _separate_consuming_and_replenishing_moves(self):
+        """ TODO """
+        location_ids = False
+        if self.env.context.get('wh_location_id'):
+            wh_location_id = self.env.context.get('wh_location_id')
+            location_ids = self.env['stock.location'].search_read(
+                [('id', 'child_of', wh_location_id)],
+                ['id'],
+            )
+            location_ids = [loc['id'] for loc in location_ids]
+            self = self.filtered(lambda move: move.location_id.id in location_ids or move.location_dest_id.id in location_ids)
+
+        consuming_moves = self.filtered(
+            lambda move: move._is_consuming(location_ids)
+        )
+        replenishing_moves = self.filtered(
+            lambda move: move._is_replenishing(location_ids)
+        )
+        return consuming_moves, replenishing_moves
 
     def _adjust_procure_method(self):
         """ This method will try to apply the procure method MTO on some moves if
