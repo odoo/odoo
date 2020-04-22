@@ -46,6 +46,8 @@ class MailTemplate(models.Model):
     reply_to = fields.Char('Reply-To', help="Preferred response address (placeholders may be used here)")
     # content
     body_html = fields.Html('Body', translate=True, sanitize=False)
+    body_html_original = fields.Html('Initial Body', translate=True, sanitize=False,
+                                     help="This field is used to reset the templates(created through demo data) to it's initial state")
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
@@ -66,6 +68,14 @@ class MailTemplate(models.Model):
     ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
+
+    @api.model
+    def create(self, vals):
+        if self.env.context.get('install_mode'):
+            vals['body_html_original'] = vals.get('body_html')
+        else:
+            vals['body_html_original'] = False
+        return super().create(vals)
 
     def unlink(self):
         self.unlink_action()
@@ -103,6 +113,9 @@ class MailTemplate(models.Model):
 
         return True
 
+    def reset_mail_template(self):
+        for template in self:
+            template.body_html = template.body_html_original
     # ------------------------------------------------------------
     # MESSAGE/EMAIL VALUES GENERATION
     # ------------------------------------------------------------
