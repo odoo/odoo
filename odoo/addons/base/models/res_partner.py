@@ -13,7 +13,7 @@ import requests
 from lxml import etree
 from werkzeug import urls
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
@@ -252,7 +252,10 @@ class Partner(models.Model):
 
     @api.depends('user_ids.share', 'user_ids.active')
     def _compute_partner_share(self):
-        for partner in self:
+        super_partner = self.env['res.users'].browse(SUPERUSER_ID).partner_id
+        if super_partner in self:
+            super_partner.partner_share = False
+        for partner in self - super_partner:
             partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
 
     @api.depends('vat')
