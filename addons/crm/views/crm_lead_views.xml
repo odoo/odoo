@@ -614,7 +614,8 @@
                     <field name="probability" avg="Avg. of Probability" optional="hide"/>
                     <field name="user_id" optional="show"/>
                     <field name="team_id" optional="show"/>
-                    <field name="planned_revenue" sum="Expected Revenues" optional="show"/>
+                    <field name="company_currency" invisible="1"/>
+                    <field name="planned_revenue" sum="Expected Revenues" optional="show" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                     <field name="referred" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="probability" invisible="1"/>
