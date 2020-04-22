@@ -3,6 +3,7 @@
 
 import ast
 from datetime import timedelta
+from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
@@ -1054,8 +1055,11 @@ class ProjectTags(models.Model):
     _name = "project.tags"
     _description = "Project Tags"
 
+    def _get_default_color(self):
+        return randint(1, 11)
+
     name = fields.Char('Tag Name', required=True)
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', default=_get_default_color)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists!"),
