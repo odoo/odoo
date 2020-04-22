@@ -587,7 +587,7 @@ options.registry.Theme = options.Class.extend({
         // system and do not link alpha-primary and beta-secondary at all.
         const style = window.getComputedStyle(document.documentElement);
         this._alphaEqualsPrimary = style.getPropertyValue('--is-alpha-primary').trim() == 'true';
-        this._betaIsSecondary = style.getPropertyValue('--is-beta-secondary').trim() == 'true';
+        this._betaEqualsSecondary = style.getPropertyValue('--is-beta-secondary').trim() == 'true';
         return this._super(...arguments);
     },
 
