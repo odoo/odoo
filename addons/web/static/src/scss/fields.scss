@@ -239,23 +239,25 @@
 
     // Favorite
     &.o_favorite {
-        i.fa {
+        .fa, .fas, .far, .fab {
             font-size: 16px;
         }
-        i.far.fa-star {
+        .far.fa-star {
             color: $o-main-color-muted;
             &:hover {
                 color: gold;
             }
         }
-        i.fas.fa-star {
+        .fas.fa-star {
             color: gold;
         }
     }
 
     // Specific success color for toggle_button widget
-    .fa.o_toggle_button_success {
-        color: theme-color('success');
+    .fa, .fas, .far, .fab {
+        &.o_toggle_button_success {
+            color: theme-color('success');
+        }
     }
 
     // Handle widget
@@ -375,12 +377,14 @@
             opacity: 0;
             transition: opacity ease 400ms;
 
-            > button.fa {
-                border: none;
-                background-color: transparent;
+            > button {
+                &.fa, &.fas, &.far, &.fab {
+                    border: none;
+                    background-color: transparent;
+                }
             }
 
-            > .fa {
+            > .fa, > .fas, > .far, > .fab {
                 padding: 4px;
                 margin: 5px;
                 cursor: pointer;
@@ -390,7 +394,7 @@
             .o_form_image_controls{
                 position: initial;
                 opacity: 1;
-                > .fa{
+                > .fa, > .fas, > .far, > .fab {
                     width: 50%;
                     padding: 6px;
                     margin: 0px;

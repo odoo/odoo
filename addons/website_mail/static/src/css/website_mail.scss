@@ -21,21 +21,21 @@
         };
     }
 
-    .fa:before {
-        content: "\f0f3";
+    .fas:before {
+        content: "\f0f3";  // fa-bell
         color: $text-muted;
     }
 
-    .js_follow_btn:hover .fa:before {
+    .js_follow_btn:hover .fas:before {
         color: $body-color;
     }
 
-    .js_unfollow_btn .fa:before {
+    .js_unfollow_btn .fas:before {
         color: theme-color('primary');
     }
 
-    .js_unfollow_btn:hover .fa:before {
-        content: "\f1f6";
+    .js_unfollow_btn:hover .fas:before {
+        content: "\f1f6"; // fa-bell-slash
         color: theme-color('danger');
     }
 }

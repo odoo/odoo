@@ -87,8 +87,10 @@ ul.flex-column > li > a {
 
 // Link without text but an icon
 a, .btn-link {
-    &.fa:hover {
-        text-decoration: $o-theme-btn-icon-hover-decoration;
+    &.fa, &.fas, &.far, &.fab {
+        &:hover {
+            text-decoration: $o-theme-btn-icon-hover-decoration;
+        }
     }
 }
 
@@ -371,7 +373,7 @@ img.o_we_custom_image {
                 margin-bottom: 0.3em;
             }
 
-            .fa {
+            .fa, .fas, .far, .fab {
                 @include o-position-absolute(0, $left: 0);
                 line-height: $line-height-base;
 

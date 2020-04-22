@@ -7,13 +7,17 @@
     $heart: "\f004";
     $heart-o: "\f08a";
     @mixin s_rating_generate_icons($off, $on) {
-        .fa:before {
-            content: $off;
+        .fa, .fas, .Far, .fab {
+            &:before {
+                content: $off;
+            }
         }
         @for $counter from 5 to 0 {
             &.s_rating_#{$counter} {
-                .fa:nth-of-type(-n+#{$counter}):before {
-                    content: $on;
+                .fa, .fas, .far, .fab {
+                    &:nth-of-type(-n+#{$counter}):before {
+                        content: $on;
+                    }
                 }
             }
         }
@@ -22,7 +26,7 @@
     > .s_rating_squares { @include s_rating_generate_icons($circle-o, $circle); }
     > .s_rating_hearts  { @include s_rating_generate_icons($heart-o, $heart);   }
     > .s_rating_bar {
-        .fa {
+        .fa, .fas, .far, .fab {
             display: none;
         }
         .s_rating_bar {
@@ -49,7 +53,7 @@
             }
         }
     }
-    > .s_rating_1x { .fa { font-size: 1em; }; }
-    > .s_rating_2x { .fa { font-size: 2em; }; }
-    > .s_rating_3x { .fa { font-size: 3em; }; }
+    > .s_rating_1x { .fa, .fas, .fab, .fab { font-size: 1em; }; }
+    > .s_rating_2x { .fa, .fas, .fab, .fab { font-size: 2em; }; }
+    > .s_rating_3x { .fa, .fas, .fab, .fab { font-size: 3em; }; }
 }

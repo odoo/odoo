@@ -43,12 +43,12 @@ class Web_Editor(http.Controller):
         size = max(1, size)
         # Initialize font
         if not font:
-            style = {'fab': 'brands', 'far': 'regular', 'fas': 'solid'}.get(style)
-            if not style:
+            font = {'fab': 'brands', 'far': 'regular', 'fas': 'solid'}.get(style)
+            if not font:
                 raise ValueError(f"Invalid font style: {style}, must be one of: fab, far ou fas.")
             font = (pathlib.Path(http.addons_manifest['web']['addons_path'])
                            .join('web/static/lib/fontawesome/webfonts')
-                           .glob(f'fa-{style}-*.ttf')[0])
+                           .glob(f'fa-{font}-*.ttf')[0])
         font_obj = ImageFont.truetype(font, size)
 
         # if received character is not a number, keep old behaviour (icon is character)

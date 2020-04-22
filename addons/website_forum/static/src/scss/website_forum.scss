@@ -14,12 +14,12 @@ $bronze: #eea91e;
         @include o-hover-text-color($body-color, $link-color);
         line-height: 1;
 
-        .fa {
+        .fa, .fas, .far, .fab {
             opacity: 0.5;
         }
 
         &:hover, &.active {
-            .fa {
+            .fa, .fas, .far, .fab {
                 opacity: 1;
             }
         }
@@ -131,7 +131,8 @@ $bronze: #eea91e;
             .o_wforum_validate_toggler {
                 @include o-hover-text-color(theme-color('success'), theme-color('warning'));
 
-                &:hover .fa.fa-check:before {
+                &:hover .fa.fa-check:before,
+                &:hover .fas.fa-check:before {
                     content: '\f00d';
                 }
             }

@@ -817,7 +817,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
      * Open Media Dialog on double click on an image/video/icon.
      * Shows a tooltip on click to say to the user he can double click.
      */
-    create_dblclick_feature("img, .media_iframe_video, i.fa, span.fa, a.o_image", function () {
+    create_dblclick_feature("img, .media_iframe_video, .fa, .fas, .far, .fab, a.o_image", function () {
         eventHandler.modules.imageDialog.show(oLayoutInfo);
     });
 

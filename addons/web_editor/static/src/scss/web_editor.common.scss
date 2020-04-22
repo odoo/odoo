@@ -100,17 +100,25 @@ ol > li.o_indent, ul > li.o_indent {
 img.shadow {
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
 }
-img.padding-small, .img.padding-small, span.fa.padding-small, iframe.padding-small {
-    padding: 4px;
+img, .img, iframe, .fa, .fas, .far, .fab {
+    &.padding-small {
+        padding: 4px;
+    }
 }
-img.padding-medium, .img.padding-medium, span.fa.padding-medium, iframe.padding-medium {
-    padding: 8px;
+img, .img, iframe, .fa, .fas, .far, .fab {
+    &.padding-medium {
+        padding: 8px;
+    }
 }
-img.padding-large, .img.padding-large, span.fa.padding-large, iframe.padding-large {
-    padding: 16px;
+img, .img, iframe, .fa, .fas, .far, .fab {
+    &.padding-large {
+        padding: 16px;
+    }
 }
-img.padding-xl, .img.padding-xl, span.fa.padding-xl, iframe.padding-xl {
-    padding: 32px;
+img, .img, iframe, .fa, .fas, .far, .fab {
+    &.padding-xl {
+        padding: 32px;
+    }
 }
 img.ml-auto, img.mx-auto {
     display: block;
@@ -131,8 +139,10 @@ img.ml-auto, img.mx-auto {
 .fa-10x {
     font-size: 10em;
 }
-.fa.d-block.mx-auto {
-    text-align: center;
+.fa, .fas, .far, .fab {
+    &.d-block.mx-auto {
+        text-align: center;    
+    }
 }
 
 div.media_iframe_video {

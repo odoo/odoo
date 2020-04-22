@@ -5,7 +5,7 @@
             display: block;
             overflow: hidden;
         }
-        .fa {
+        .fa, .fas, .far, .fab {
             display: block;
         }
     }
@@ -37,12 +37,20 @@
                 }
             }
             &:first-child .s_process_step_icon {
-                .fa:after { right: 0; }
-                .fa.float-right:after { width: 0; }
+                .fa, .fas, .far, .fab {
+                    &.after {
+                        right: 0;
+                    }
+                }
+                .fa, .fas, .far, .fab {
+                    &.float-right:after {
+                        width: 0;
+                    }
+                }
             }
             &:last-child .s_process_step_icon {
                 span:after { left: 0; }
-                .fa {
+                .fa, .fas, .far, .fab {
                     &:after { left: 0; }
                     &.float-left:after { width: 0; }
                 }

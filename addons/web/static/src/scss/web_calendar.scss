@@ -491,7 +491,7 @@ $o-cw-filter-avatar-size: 20px;
             input:not(:checked) + label .o_cw_filter_input_bg {
                 background: transparent!important;
 
-                i.fa {
+                .fa, .fas, .far, .fab {
                     visibility: hidden;
                 }
             }
@@ -501,7 +501,7 @@ $o-cw-filter-avatar-size: 20px;
                 @include size($o-cw-filter-avatar-size);
                 border-radius: 2px;
 
-                &.fa {
+                &.fa, &.fas, &.far, &.fab {
                     padding: 4px 3px;
                 }
             }

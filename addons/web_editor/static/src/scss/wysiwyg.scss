@@ -412,13 +412,16 @@ img.o_we_selected_image {
     @extend %o-we-selected-image;
 }
 
-.fa.o_we_selected_image::before {
-    @extend %o-we-selected-image;
+.fa, .fas, .far, .fab {
+    &.o_we_selected_image::before {
+        @extend %o-we-selected-image;
+    }
 }
 
-.fa.mx-auto,
-img.o_we_custom_image.mx-auto {
-    display: block;
+img.o_we_custom_image, .fa, .fas, .far, .fab {
+    &.mx-auto {
+        display: block;
+    }
 }
 
 @include media-breakpoint-down(md) {
