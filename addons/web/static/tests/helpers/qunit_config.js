@@ -41,16 +41,62 @@ QUnit.config.hidepassed = (window.location.href.match(/[?&]testId=/) === null);
 var sortButtonAppended = false;
 
 /**
+ * If we want to log several errors, we have to log all of them at once, as
+ * browser_js is closed as soon as an error is logged.
+ */
+const errorMessages = [];
+
+/**
+ * Waits for the module system to end processing the JS modules, so that we can
+ * make the suite fail if some modules couldn't be loaded (e.g. because of a
+ * missing dependency).
+ *
+ * @returns {Promise<boolean>}
+ */
+async function checkModules() {
+    // do not mark the suite as successful already, as we still need to ensure
+    // that all modules have been correctly loaded
+    $('#qunit-banner').removeClass('qunit-pass');
+    const $modulesAlert = $('<div>')
+        .addClass('alert alert-info')
+        .text('Waiting for modules check...');
+    $modulesAlert.appendTo('#qunit');
+
+    // wait for the module system to end processing the JS modules
+    await odoo.__DEBUG__.didLogInfo;
+
+    const info = odoo.__DEBUG__.jsModules;
+    if (info.missing.length || info.failed.length) {
+        $('#qunit-banner').addClass('qunit-fail');
+        $modulesAlert.toggleClass('alert-info alert-danger');
+        const failingModules = info.missing.concat(info.failed);
+        const error = `Some modules couldn't be started: ${failingModules.join(', ')}.`;
+        $modulesAlert.text(error);
+        errorMessages.unshift(error);
+        return false;
+    } else {
+        $modulesAlert.toggleClass('alert-info alert-success');
+        $modulesAlert.text('All modules have been correctly loaded.');
+        $('#qunit-banner').addClass('qunit-pass');
+        return true;
+    }
+}
+
+/**
  * This is the way the testing framework knows that tests passed or failed. It
  * only look in the phantomJS console and check if there is a ok or an error.
  *
  * Someday, we should devise a safer strategy...
  */
-QUnit.done(function(result) {
-    if (!result.failed) {
+QUnit.done(async function (result) {
+    const allModulesLoaded = await checkModules();
+    if (result.failed) {
+        errorMessages.push(`${result.failed} / ${result.total} tests failed.`);
+    }
+    if (!result.failed && allModulesLoaded) {
         console.log('test successful');
     } else {
-        console.error(result.failed, "/", result.total, "tests failed");
+        console.error(errorMessages.join('\n'));
     }
 
     if (!sortButtonAppended) {
@@ -73,7 +119,7 @@ QUnit.log(function (result) {
             info += ', expected: "' + result.expected + '"';
         }
         info += ']';
-        console.error(info);
+        errorMessages.push(info);
     }
 });
 
