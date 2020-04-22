@@ -447,8 +447,8 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'name': 'Test Customer',
             'email': 'test@example.com'
         })
-        self.umbrella = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({
-            'name': 'Test Umbrella',
+        self.container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({
+            'name': 'Test Container',
             'customer_id': self.customer.id,
             'alias_name': 'test-alias',
         })
@@ -456,12 +456,12 @@ class TestMailComplexPerformance(BaseMailPerformance):
         self.partners = self.env['res.partner']
         for x in range(0, 10):
             self.partners |= Partners.create({'name': 'Test %s' % x, 'email': 'test%s@example.com' % x})
-        self.umbrella.message_subscribe(self.partners.ids, subtype_ids=[
+        self.container.message_subscribe(self.partners.ids, subtype_ids=[
             self.env.ref('mail.mt_comment').id,
             self.env.ref('test_mail.st_mail_test_container_child_full').id]
         )
         # `test_complex_mail_mail_send`
-        self.umbrella.flush()
+        self.container.flush()
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -473,7 +473,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'author_id': self.env.user.partner_id.id,
             'email_from': self.env.user.partner_id.email,
             'model': 'mail.test.container',
-            'res_id': self.umbrella.id,
+            'res_id': self.container.id,
         })
         mail = self.env['mail.mail'].sudo().create({
             'body_html': '<p>Test</p>',
@@ -485,14 +485,14 @@ class TestMailComplexPerformance(BaseMailPerformance):
             self.env['mail.mail'].sudo().browse(mail_ids).send()
 
         self.assertEqual(mail.body_html, '<p>Test</p>')
-        self.assertEqual(mail.reply_to, formataddr(('%s %s' % (self.env.company.name, self.umbrella.name), 'test-alias@example.com')))
+        self.assertEqual(mail.reply_to, formataddr(('%s %s' % (self.env.company.name, self.container.name), 'test-alias@example.com')))
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
     @warmup
     def test_complex_message_post(self):
-        self.umbrella.message_subscribe(self.user_portal.partner_id.ids)
-        record = self.umbrella.with_user(self.env.user)
+        self.container.message_subscribe(self.user_portal.partner_id.ids)
+        record = self.container.with_user(self.env.user)
 
         with self.assertQueryCount(__system__=68, emp=69):
             record.message_post(
@@ -507,8 +507,8 @@ class TestMailComplexPerformance(BaseMailPerformance):
     @users('__system__', 'emp')
     @warmup
     def test_complex_message_post_template(self):
-        self.umbrella.message_subscribe(self.user_portal.partner_id.ids)
-        record = self.umbrella.with_user(self.env.user)
+        self.container.message_subscribe(self.user_portal.partner_id.ids)
+        record = self.container.with_user(self.env.user)
         template_id = self.env.ref('test_mail.mail_test_container_tpl').id
 
         with self.assertQueryCount(__system__=78, emp=80):
@@ -527,7 +527,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         subtype_ids = subtypes.ids
         rec = self.env['mail.test.ticket'].create({
             'name': 'Test',
-            'umbrella_id': False,
+            'container_id': False,
             'customer_id': False,
             'user_id': self.user_portal.id,
         })
@@ -576,7 +576,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         """ Assignation performance test on already-created record """
         rec = self.env['mail.test.ticket'].create({
             'name': 'Test',
-            'umbrella_id': self.umbrella.id,
+            'container_id': self.container.id,
             'customer_id': self.customer.id,
             'user_id': self.env.uid,
         })
@@ -598,14 +598,14 @@ class TestMailComplexPerformance(BaseMailPerformance):
     @warmup
     def test_complex_tracking_subscription_create(self):
         """ Creation performance test involving auto subscription, assignation, tracking with subtype and template send. """
-        umbrella_id = self.umbrella.id
+        container_id = self.container.id
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
         with self.assertQueryCount(__system__=116, emp=117):
             rec = self.env['mail.test.ticket'].create({
                 'name': 'Test',
-                'umbrella_id': umbrella_id,
+                'container_id': container_id,
                 'customer_id': customer_id,
                 'user_id': user_id,
             })
@@ -624,7 +624,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         """ Write performance test involving auto subscription, tracking with subtype """
         rec = self.env['mail.test.ticket'].create({
             'name': 'Test',
-            'umbrella_id': False,
+            'container_id': False,
             'customer_id': False,
             'user_id': self.user_portal.id,
         })
@@ -634,7 +634,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         with self.assertQueryCount(__system__=83, emp=83):
             rec.write({
                 'name': 'Test2',
-                'umbrella_id': self.umbrella.id,
+                'container_id': self.container.id,
             })
 
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
@@ -651,17 +651,17 @@ class TestMailComplexPerformance(BaseMailPerformance):
     @warmup
     def test_complex_tracking_subscription_write(self):
         """ Write performance test involving auto subscription, tracking with subtype and template send """
-        umbrella_id = self.umbrella.id
+        container_id = self.container.id
         customer_id = self.customer.id
-        umbrella2 = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({
-            'name': 'Test Umbrella 2',
+        container2 = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({
+            'name': 'Test Container 2',
             'customer_id': False,
             'alias_name': False,
         })
 
         rec = self.env['mail.test.ticket'].create({
             'name': 'Test',
-            'umbrella_id': umbrella2.id,
+            'container_id': container2.id,
             'customer_id': False,
             'user_id': self.user_portal.id,
         })
@@ -671,7 +671,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         with self.assertQueryCount(__system__=91, emp=91):
             rec.write({
                 'name': 'Test2',
-                'umbrella_id': umbrella_id,
+                'container_id': container_id,
                 'customer_id': customer_id,
             })
 
@@ -693,7 +693,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         self.assertTrue(self.env.registry.ready, "We need to simulate that registery is ready")
         rec = self.env['mail.test.ticket'].create({
             'name': 'Test',
-            'umbrella_id': self.umbrella.id,
+            'container_id': self.container.id,
             'customer_id': False,
             'user_id': self.user_portal.id,
             'mail_template': self.env.ref('test_mail.mail_test_ticket_tracking_tpl').id,
@@ -729,8 +729,8 @@ class TestMailComplexPerformance(BaseMailPerformance):
         Those messages might not make sense functionally but they are crafted to
         cover as much of the code as possible in regard to number of queries.
         """
-        name_field = self.env['ir.model.fields']._get(self.umbrella._name, 'name')
-        customer_id_field = self.env['ir.model.fields']._get(self.umbrella._name, 'customer_id')
+        name_field = self.env['ir.model.fields']._get(self.container._name, 'name')
+        customer_id_field = self.env['ir.model.fields']._get(self.container._name, 'customer_id')
 
         messages = self.env['mail.message'].sudo().create([{
             'subject': 'Test 0',
@@ -738,7 +738,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'author_id': self.partners[0].id,
             'email_from': self.partners[0].email,
             'model': 'mail.test.container',
-            'res_id': self.umbrella.id,
+            'res_id': self.container.id,
             'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'),
             'attachment_ids': [
                 (0, 0, {
@@ -782,7 +782,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'author_id': self.partners[1].id,
             'email_from': self.partners[1].email,
             'model': 'mail.test.container',
-            'res_id': self.umbrella.id,
+            'res_id': self.container.id,
             'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
             'attachment_ids': [
                 (0, 0, {
