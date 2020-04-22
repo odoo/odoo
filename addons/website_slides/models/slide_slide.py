@@ -170,7 +170,7 @@ class Slide(models.Model):
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
     link_ids = fields.One2many('slide.slide.link', 'slide_id', string="External URL for this slide")
     slide_resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide")
-    slide_resource_downloadable = fields.Boolean('Allow Download', default=False, help="Allow the user to download the content of the slide.")
+    slide_resource_downloadable = fields.Boolean('Allow Download', default=True, help="Allow the user to download the content of the slide.")
     mime_type = fields.Char('Mime-type')
     html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True)
     # website
