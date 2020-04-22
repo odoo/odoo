@@ -46,7 +46,6 @@ class TestReorderingRule(SavepointCase):
         orderpoint_form.product_min_qty = 0.000
         orderpoint_form.product_max_qty = 0.000
         order_point = orderpoint_form.save()
-        print('picking')
         # Create Delivery Order of 10 product
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = self.partner
