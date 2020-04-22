@@ -34,7 +34,7 @@
                                         <h4 class="o_kanban_record_title"><field name="name"/></h4>
                                     </div>
                                     <div class="o_kanban_record_body">
-                                        <t t-if="duration"><field name="duration" widget="float_time"/> hours</t>
+                                        <t t-if="record.duration"><field name="duration" widget="float_time"/> hours</t>
                                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
                                     <div class="o_kanban_record_bottom">
