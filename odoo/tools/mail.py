@@ -392,7 +392,7 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
     """
     html = ustr(html)
     if plaintext and preserve:
-        content = u'\n<pre>%s</pre>\n' % ustr(content)
+        content = u'\n<pre>%s</pre>\n' % misc.html_escape(ustr(content))
     elif plaintext:
         content = '\n%s\n' % plaintext2html(content, container_tag)
     else:
