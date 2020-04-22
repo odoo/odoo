@@ -48,7 +48,7 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
     if (unsubscribed_list){
         $('#subscription_info').html(_.str.sprintf(
             _t("You have been <strong>successfully unsubscribed from %s</strong>."),
-            unsubscribed_list
+            _.escape(unsubscribed_list)
         ));
     }
     else{
