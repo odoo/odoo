@@ -848,8 +848,8 @@
                                     colspan="2" nolabel="1" widget="payment"
                                     attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('type', 'in', ('out_receipt', 'in_receipt'))]}"/>
 
-                                <!-- Internal note -->
-                                <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                                <!-- Note -->
+                                <field name="narration" placeholder="Add a note..." nolabel="1" height="50"/>
                             </page>
                             <page id="aml_tab" string="Journal Items" groups="account.group_account_user">
                                 <field name="line_ids"
@@ -1004,8 +1004,8 @@
                                         <field name="company_id" groups="base.group_multi_company" required="1"/>
                                     </group>
                                 </group>
-                                <!-- Internal note -->
-                                <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                                <!-- Note -->
+                                <field name="narration" placeholder="Add a note..." nolabel="1" height="50"/>
                             </page>
                         </notebook>
                     </sheet>
