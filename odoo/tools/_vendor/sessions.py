@@ -1,52 +1,16 @@
 # -*- coding: utf-8 -*-
 r"""
-    werkzeug.contrib.sessions
-    ~~~~~~~~~~~~~~~~~~~~~~~~~
+    Vendored copy of https://github.com/pallets/werkzeug/blob/2b2c4c3dd3cf7389e9f4aa06371b7332257c6289/src/werkzeug/contrib/sessions.py
 
-    This module contains some helper classes that help one to add session
-    support to a python WSGI application.  For full client-side session
-    storage see :mod:`~werkzeug.contrib.securecookie` which implements a
-    secure, client-side session storage.
+    werkzeug.contrib was removed from werkzeug 1.0. sessions (and secure
+    cookies) were moved to the secure-cookies package. Problem is distros
+    are starting to update werkzeug to 1.0 without having secure-cookies
+    (e.g. Arch has done so, Debian has updated python-werkzeug in
+    "experimental"), which will be problematic once that starts trickling
+    down onto more stable distros and people start deploying that.
 
-
-    Application Integration
-    =======================
-
-    ::
-
-        from werkzeug.contrib.sessions import SessionMiddleware, \
-             FilesystemSessionStore
-
-        app = SessionMiddleware(app, FilesystemSessionStore())
-
-    The current session will then appear in the WSGI environment as
-    `werkzeug.session`.  However it's recommended to not use the middleware
-    but the stores directly in the application.  However for very simple
-    scripts a middleware for sessions could be sufficient.
-
-    This module does not implement methods or ways to check if a session is
-    expired.  That should be done by a cronjob and storage specific.  For
-    example to prune unused filesystem sessions one could check the modified
-    time of the files.  If sessions are stored in the database the new()
-    method should add an expiration timestamp for the session.
-
-    For better flexibility it's recommended to not use the middleware but the
-    store and session object directly in the application dispatching::
-
-        session_store = FilesystemSessionStore()
-
-        def application(environ, start_response):
-            request = Request(environ)
-            sid = request.cookies.get('cookie_name')
-            if sid is None:
-                request.session = session_store.new()
-            else:
-                request.session = session_store.get(sid)
-            response = get_the_response_object(request)
-            if request.session.should_save:
-                session_store.save(request.session)
-                response.set_cookie('cookie_name', request.session.sid)
-            return response(environ, start_response)
+    Edited some to fix imports and remove some compatibility things
+    (mostly PY2) and the unnecessary (to us) SessionMiddleware
 
     :copyright: 2007 Pallets
     :license: BSD-3-Clause
@@ -54,45 +18,23 @@ r"""
 import os
 import re
 import tempfile
-import warnings
 from hashlib import sha1
 from os import path
 from pickle import dump
 from pickle import HIGHEST_PROTOCOL
 from pickle import load
-from random import random
 from time import time
 
-from .._compat import PY2
-from .._compat import text_type
-from ..datastructures import CallbackDict
-from ..filesystem import get_filesystem_encoding
-from ..http import dump_cookie
-from ..http import parse_cookie
-from ..posixemulation import rename
-from ..wsgi import ClosingIterator
-
-warnings.warn(
-    "'werkzeug.contrib.sessions' is deprecated as of version 0.15 and"
-    " will be removed in version 1.0. It has moved to"
-    " https://github.com/pallets/secure-cookie.",
-    DeprecationWarning,
-    stacklevel=2,
-)
+from werkzeug.datastructures import CallbackDict
+from werkzeug.posixemulation import rename
 
 _sha1_re = re.compile(r"^[a-f0-9]{40}$")
-
-
-def _urandom():
-    if hasattr(os, "urandom"):
-        return os.urandom(30)
-    return text_type(random()).encode("ascii")
 
 
 def generate_key(salt=None):
     if salt is None:
         salt = repr(salt).encode("ascii")
-    return sha1(b"".join([salt, str(time()).encode("ascii"), _urandom()])).hexdigest()
+    return sha1(b"".join([salt, str(time()).encode("ascii"), os.urandom(30)])).hexdigest()
 
 
 class ModificationTrackingDict(CallbackDict):
@@ -234,8 +176,6 @@ class FilesystemSessionStore(SessionStore):
         if path is None:
             path = tempfile.gettempdir()
         self.path = path
-        if isinstance(filename_template, text_type) and PY2:
-            filename_template = filename_template.encode(get_filesystem_encoding())
         assert not filename_template.endswith(_fs_transaction_suffix), (
             "filename templates may not end with %s" % _fs_transaction_suffix
         )
@@ -247,8 +187,6 @@ class FilesystemSessionStore(SessionStore):
         # out of the box, this should be a strict ASCII subset but
         # you might reconfigure the session object to have a more
         # arbitrary string.
-        if isinstance(sid, text_type) and PY2:
-            sid = sid.encode(get_filesystem_encoding())
         return path.join(self.path, self.filename_template % sid)
 
     def save(self, session):
@@ -309,81 +247,3 @@ class FilesystemSessionStore(SessionStore):
             if match is not None:
                 result.append(match.group(1))
         return result
-
-
-class SessionMiddleware(object):
-    """A simple middleware that puts the session object of a store provided
-    into the WSGI environ.  It automatically sets cookies and restores
-    sessions.
-
-    However a middleware is not the preferred solution because it won't be as
-    fast as sessions managed by the application itself and will put a key into
-    the WSGI environment only relevant for the application which is against
-    the concept of WSGI.
-
-    The cookie parameters are the same as for the :func:`~dump_cookie`
-    function just prefixed with ``cookie_``.  Additionally `max_age` is
-    called `cookie_age` and not `cookie_max_age` because of backwards
-    compatibility.
-    """
-
-    def __init__(
-        self,
-        app,
-        store,
-        cookie_name="session_id",
-        cookie_age=None,
-        cookie_expires=None,
-        cookie_path="/",
-        cookie_domain=None,
-        cookie_secure=None,
-        cookie_httponly=False,
-        cookie_samesite="Lax",
-        environ_key="werkzeug.session",
-    ):
-        self.app = app
-        self.store = store
-        self.cookie_name = cookie_name
-        self.cookie_age = cookie_age
-        self.cookie_expires = cookie_expires
-        self.cookie_path = cookie_path
-        self.cookie_domain = cookie_domain
-        self.cookie_secure = cookie_secure
-        self.cookie_httponly = cookie_httponly
-        self.cookie_samesite = cookie_samesite
-        self.environ_key = environ_key
-
-    def __call__(self, environ, start_response):
-        cookie = parse_cookie(environ.get("HTTP_COOKIE", ""))
-        sid = cookie.get(self.cookie_name, None)
-        if sid is None:
-            session = self.store.new()
-        else:
-            session = self.store.get(sid)
-        environ[self.environ_key] = session
-
-        def injecting_start_response(status, headers, exc_info=None):
-            if session.should_save:
-                self.store.save(session)
-                headers.append(
-                    (
-                        "Set-Cookie",
-                        dump_cookie(
-                            self.cookie_name,
-                            session.sid,
-                            self.cookie_age,
-                            self.cookie_expires,
-                            self.cookie_path,
-                            self.cookie_domain,
-                            self.cookie_secure,
-                            self.cookie_httponly,
-                            samesite=self.cookie_samesite,
-                        ),
-                    )
-                )
-            return start_response(status, headers, exc_info)
-
-        return ClosingIterator(
-            self.app(environ, injecting_start_response),
-            lambda: self.store.save_if_modified(session),
-        )
