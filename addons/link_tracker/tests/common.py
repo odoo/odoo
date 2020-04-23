@@ -22,8 +22,9 @@ class MockLinkTracker(common.BaseCase):
         self.addCleanup(link_tracker_title_patch.stop)
 
     def _get_href_from_anchor_id(self, body, anchor_id):
+        body = "<div>%s</div>" % body  # XML always need a root element
         html = etree.fromstring(body)
-        return html.xpath("*[@id='%s']" % anchor_id)[0].attrib.get('href')
+        return html.xpath("//*[@id='%s']" % anchor_id)[0].attrib.get('href')
 
     def _get_tracker_from_short_url(self, short_url):
         code = self.env['link.tracker.code'].sudo().search([
