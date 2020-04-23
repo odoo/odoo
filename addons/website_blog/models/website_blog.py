@@ -153,7 +153,7 @@ class BlogPost(models.Model):
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
     author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)
     visits = fields.Integer('No of Views', copy=False, default=0)
-    website_id = fields.Many2one(related='blog_id.website_id', readonly=True)
+    website_id = fields.Many2one(related='blog_id.website_id', readonly=True, store=True)
 
     @api.depends('content', 'teaser_manual')
     def _compute_teaser(self):
