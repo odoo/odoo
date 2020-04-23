@@ -1,7 +1,17 @@
-.o_timesheet_kanban {
-    .o_kanban_demo_record {
-        opacity: 0.3;
-        cursor: default;
+.o_timesheet_demo table, .o_timesheet_kanban .o_kanban_demo_record {
+    opacity: 0.3;
+    cursor: default;
+
+    .placeholder {
+        height: 1rem;
+        background: gray('400');
+        display: inline-block;
+    }
+
+    .text-muted {
+        .placeholder {
+            background: gray('200');
+        }
     }
 
     .placeholder {
@@ -23,30 +33,9 @@
     .fa-stop-circle {
         color: $red;
     }
-
+    
     .oe_kanban_avatar {
         height: 1.6em;
         width: 1.6em;
-    }
-}
-
-.o_timesheet_list {
-    .o_list_demo {
-        opacity: 0.3;
-        cursor: default;
-    }
-
-    .placeholder {
-        height: 1rem;
-        background: gray('400');
-        display: inline-block;
-        width: 70%;
-    }
-    .fa-play-circle {
-        color: $link-color;
-    }
-
-    .fa-stop-circle {
-        color: $red;
     }
 }

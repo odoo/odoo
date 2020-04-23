@@ -11,9 +11,14 @@ function randInt(max) {
 }
 
 const TimesheetListRenderer = ListRenderer.extend({
+    init() {
+        this._super.apply(this, arguments);
+        this.demo_records = [];
+    },
+
     _renderNoContentHelper() {
-        let $noContent = $('<div/>').addClass('table-responsive');
-        let $table = $('<table>').addClass('o_list_table table table-sm table-hover table-striped o_list_demo');
+        let $noContent = $('<div/>').addClass('table-responsive o_timesheet_demo');
+        let $table = $('<table>').addClass('o_list_table table table-sm table-hover table-striped');
         let content = this._super.apply(this, arguments);
 
         this.$el.addClass('o_list_view o_timesheet_list');
@@ -25,11 +30,16 @@ const TimesheetListRenderer = ListRenderer.extend({
         });
 
         let $rows = $('<tbody>');
-        const numRecords = randInt(7) + 3;
-        for(let i = 0; i < numRecords; i++) {
-            let $row = this._renderDemoRow();
-            $rows.append($row);
+
+        if(!this.demo_records.length) {
+            const numRecords = randInt(4) + 3;
+            for(let i = 0; i < numRecords; i++) {
+                let $row = this._renderDemoRow();
+                this.demo_records.push($row);
+            }
         }
+
+        $rows.append(this.demo_records);
 
         $table.append($header);
         $table.append($rows);
@@ -43,7 +53,7 @@ const TimesheetListRenderer = ListRenderer.extend({
     _renderDemoRow() {
         let $row = $('<tr>').addClass('o_data_row');
         let record = {
-            is_timer_running: randInt(10) > 7 ? '<i class="fa fa-play-circle"></i>':'<i class="fa fa-stop-circle"></i>',
+            is_timer_running: randInt(10) < 7 ? '<i class="fa fa-play-circle"></i>':'<i class="fa fa-stop-circle"></i>',
         };
         $row.append(this._renderSelector('td', true));
 
@@ -53,7 +63,8 @@ const TimesheetListRenderer = ListRenderer.extend({
             if(col.attrs.name in record) {
                 $cell.html(record[col.attrs.name]);
             } else {
-                $cell.html('<span class="placeholder"></span>');
+                const width = 15 + randInt(75);
+                $cell.html(`<span class="placeholder" style="width: ${width}%"></span>`);
             }
 
             $row.append($cell);

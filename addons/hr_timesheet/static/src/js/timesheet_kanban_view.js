@@ -19,16 +19,19 @@ function randInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-function generateDemoRecord() {
+function renderDemoRecord(record) {
     const template = 'TimesheetGridKanban.DemoRecord';
-    let record = $(qweb.render(template, {
+    return $(qweb.render(template, record || generateDemoRecord()));
+}
+
+function generateDemoRecord() {
+    return {
         user: 'user' + randInt(4),
         title: 25 + (randInt(5) * 15),
         task: 15 + (randInt(5) * 15),
         duration: '0' + randInt(9),
         running: randInt(10) > 7,
-    }));
-    return record;
+    }
 }
 
 /**
@@ -41,12 +44,21 @@ const TimesheetKanbanColumn = KanbanColumn.extend({
         let defs = [];
         let empty = !this.getParent().state.count;
         if (empty) {
-            const numRecords = randInt(3);
+            let demoRecords = this.getParent().demo_records;
 
-            for(let i = 0; i <= numRecords; i++) {
-                let prom = generateDemoRecord().insertAfter(this.$header);
-                defs.push(prom);
+            if(!demoRecords[this.id]) {
+                const numRecords = randInt(3);
+                demoRecords[this.id] = [];
+
+                for(let i = 0; i <= numRecords; i++) {
+                    demoRecords[this.id].push(generateDemoRecord());
+                }
             }
+
+            demoRecords[this.id].forEach((record) => {
+                let prom = renderDemoRecord(record).insertAfter(this.$header);
+                defs.push(prom)
+            });
         }
 
         return Promise.all(defs);
@@ -77,18 +89,31 @@ const TimesheetKanbanRenderer = KanbanRenderer.extend({
         KanbanColumn: TimesheetKanbanColumn,
     }),
 
+    init() {
+        this._super.apply(this, arguments);
+        this.demo_records = {};
+    },
+
     _renderGhostDivs(fragment, nbDivs, options) {
         let defs = [];
         let empty = !this.state.count;
-        if (!empty) {
-            return this._super_apply(this, arguments);
+        let demo_records = this.demo_records;
+
+        if(empty) {
+            if(!demo_records[0]) {
+                demo_records[0] = [];
+
+                for(let i = 0; i < nbDivs; i++) {
+                    demo_records[0].push(generateDemoRecord());
+                }
+            }
+
+            demo_records[0].forEach((record) => {
+                defs.push(renderDemoRecord(record).appendTo(fragment));
+            });
         }
 
-        for(let i = 0; i < nbDivs; i++) {
-            let prom = generateDemoRecord().appendTo(fragment);
-            defs.push(prom);
-        }
-
+        defs.push(this._super.apply(this, arguments));
         return Promise.all(defs);
     },
 });
