@@ -126,21 +126,6 @@ class MailController(http.Controller):
         url = '/web?#%s' % url_encode(url_params)
         return werkzeug.utils.redirect(url)
 
-    @http.route('/mail/receive', type='json', auth='none')
-    def receive(self, req):
-        """ End-point to receive mail from an external SMTP server. """
-        dbs = req.jsonrequest.get('databases')
-        for db in dbs:
-            message = base64.b64decode(dbs[db])
-            try:
-                db_registry = registry(db)
-                with db_registry.cursor() as cr:
-                    env = api.Environment(cr, SUPERUSER_ID, {})
-                    env['mail.thread'].message_process(None, message)
-            except psycopg2.Error:
-                pass
-        return True
-
     @http.route('/mail/read_followers', type='json', auth='user')
     def read_followers(self, follower_ids):
         request.env['mail.followers'].check_access_rights("read")
