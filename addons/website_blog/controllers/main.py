@@ -206,19 +206,6 @@ class WebsiteBlog(http.Controller):
         BlogPost = request.env['blog.post']
         date_begin, date_end = post.get('date_begin'), post.get('date_end')
 
-        pager_url = "/blogpost/%s" % blog_post.id
-
-        pager = request.website.pager(
-            url=pager_url,
-            total=len(blog_post.website_message_ids),
-            page=page,
-            step=self._post_comment_per_page,
-            scope=7
-        )
-        pager_begin = (page - 1) * self._post_comment_per_page
-        pager_end = page * self._post_comment_per_page
-        comments = blog_post.website_message_ids[pager_begin:pager_end]
-
         domain = request.website.website_domain()
         blogs = blog.search(domain, order="create_date, id asc")
 
@@ -261,8 +248,6 @@ class WebsiteBlog(http.Controller):
             'next_post': next_post,
             'date': date_begin,
             'blog_url': blog_url,
-            'pager': pager,
-            'comments': comments,
         }
         response = request.render("website_blog.blog_post_complete", values)
 
