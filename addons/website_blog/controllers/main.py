@@ -259,7 +259,7 @@ class WebsiteBlog(http.Controller):
             request.session.modified = True
 
             # Increase counter
-            blog_post.sudo().write({
+            blog_post.sudo()._write({
                 'visits': blog_post.visits + 1,
                 'write_date': blog_post.write_date,
             })
