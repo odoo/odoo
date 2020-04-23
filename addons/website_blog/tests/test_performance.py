@@ -2,11 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website.tests.test_performance import UtilPerf
+import random
 
 
 class TestBlogPerformance(UtilPerf):
     def test_10_perf_sql_blog_standard_data(self):
-        self.assertEqual(self._get_url_hot_query('/blog'), 50)
+        self.assertEqual(self._get_url_hot_query('/blog'), 40)
 
     def test_20_perf_sql_blog_bigger_data_scaling(self):
         BlogPost = self.env['blog.post']
@@ -18,4 +19,19 @@ class TestBlogPerformance(UtilPerf):
         for blog_post in blog_posts:
             blog_post.tag_ids += blog_tags
             blog_tags = blog_tags[:-1]
-        self.assertEqual(self._get_url_hot_query('/blog'), 116)
+        self.assertEqual(self._get_url_hot_query('/blog'), 38)
+
+        self.assertEqual(self._get_url_hot_query(blog_post[0].website_url), 61)
+
+    def test_30_perf_sql_blog_bigger_data_random(self):
+        BlogPost = self.env['blog.post']
+        BlogTag = self.env['blog.tag']
+        blogs = self.env['blog.blog'].search([])
+        blog_tags = BlogTag.create([{'name': 'New Blog Tag Test %s' % i} for i in range(1, 50)])
+        BlogPost.create([{'name': 'New Blog Post Test %s' % i, 'is_published': True, 'blog_id': blogs[random.randint(0, 1)].id} for i in range(1, 100)])
+        blog_posts = BlogPost.search([])
+        for blog_post in blog_posts:
+            blog_post.write({'tag_ids': [[6, 0, random.choices(blog_tags.ids, k=random.randint(0, len(blog_tags)))]]})
+        self.assertEqual(self._get_url_hot_query('/blog'), 38)
+
+        self.assertEqual(self._get_url_hot_query(blog_post[0].website_url), 61)

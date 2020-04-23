@@ -22,12 +22,12 @@ class WebsiteBlog(http.Controller):
     _post_comment_per_page = 10
 
     def tags_list(self, tag_ids, current_tag):
-        tag_ids = list(tag_ids) # required to avoid using the same list
+        tag_ids = list(tag_ids)  # required to avoid using the same list
         if current_tag in tag_ids:
             tag_ids.remove(current_tag)
         else:
             tag_ids.append(current_tag)
-        tag_ids = request.env['blog.tag'].browse(tag_ids).exists()
+        tag_ids = request.env['blog.tag'].browse(tag_ids)
         return ','.join(slug(tag) for tag in tag_ids)
 
     def nav_list(self, blog=None):
@@ -57,6 +57,7 @@ class WebsiteBlog(http.Controller):
     def _prepare_blog_values(self, blogs, blog=False, date_begin=False, date_end=False, tags=False, state=False, page=False):
         """ Prepare all values to display the blogs index page or one specific blog"""
         BlogPost = request.env['blog.post']
+        BlogTag = request.env['blog.tag']
 
         # prepare domain
         domain = request.website.website_domain()
@@ -66,15 +67,16 @@ class WebsiteBlog(http.Controller):
 
         if date_begin and date_end:
             domain += [("post_date", ">=", date_begin), ("post_date", "<=", date_end)]
-
         active_tag_ids = tags and [unslug(tag)[1] for tag in tags.split(',')] or []
+        active_tags = BlogTag
         if active_tag_ids:
-            fixed_tag_slug = ",".join(slug(t) for t in request.env['blog.tag'].browse(active_tag_ids).exists())
+            active_tags = BlogTag.browse(active_tag_ids).exists()
+            fixed_tag_slug = ",".join(slug(t) for t in active_tags)
             if fixed_tag_slug != tags:
                 new_url = request.httprequest.full_path.replace("/tag/%s" % tags, "/tag/%s" % fixed_tag_slug, 1)
                 if new_url != request.httprequest.full_path:  # check that really replaced and avoid loop
                     return request.redirect(new_url, 301)
-            domain += [('tag_ids', 'in', active_tag_ids)]
+            domain += [('tag_ids', 'in', active_tags.ids)]
 
         if request.env.user.has_group('website.group_website_designer'):
             count_domain = domain + [("website_published", "=", True), ("post_date", "<=", fields.Datetime.now())]
@@ -127,7 +129,7 @@ class WebsiteBlog(http.Controller):
             'pager': pager,
             'posts': posts.with_prefetch(post_ids),
             'tag': tags,
-            'active_tag_ids': active_tag_ids,
+            'active_tag_ids': active_tags.ids,
             'domain': domain,
             'state_info': state and {"state": state, "published": published_count, "unpublished": unpublished_count},
             'blogs': blogs,
