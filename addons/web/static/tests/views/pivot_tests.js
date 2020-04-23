@@ -212,7 +212,7 @@ QUnit.module('Views', {
         // there should be only one displayed measure as the other one is invisible
         assert.containsOnce(pivot, '.o_pivot_measure_row');
         // there should be only one measure besides count, as the other one is invisible
-        assert.containsN(pivot, '.o_cp_left .dropdown-item', 2);
+        assert.containsN(pivot, '.o_cp_bottom_left .dropdown-item', 2);
 
         pivot.destroy();
     });
