@@ -11,6 +11,10 @@ const viewRegistry = require('web.view_registry');
 
 const qweb = core.qweb;
 
+/**
+ * Generate a random integer between 0 and `max`
+ * @param {integer} max 
+ */
 function randInt(max) {
     return Math.floor(Math.random() * max);
 }
@@ -27,6 +31,9 @@ function generateDemoRecord() {
     return record;
 }
 
+/**
+ * @override the KanbanColumn to generate fake transparent records if there are none
+ */
 const TimesheetKanbanColumn = KanbanColumn.extend({
     start() {
         this._super.apply(this, arguments);
@@ -62,6 +69,9 @@ const TimesheetKanbanController = KanbanController.extend({
     }
 });
 
+/**
+ * @override the KanbanRenderer to generate fake transparent records if there are none
+ */
 const TimesheetKanbanRenderer = KanbanRenderer.extend({
     config: _.extend({}, KanbanRenderer.prototype.config, {
         KanbanColumn: TimesheetKanbanColumn,
