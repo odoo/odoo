@@ -15,7 +15,8 @@
                         <button name="open_assignation_logs"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-history">
+                            icon="fa-history"
+                            groups="fleet.fleet_group_user">
                             <field name="history_count" widget="statinfo" string="Drivers History"/>
                         </button>
                         <button name="return_action_to_open"
@@ -23,7 +24,8 @@
                             class="oe_stat_button"
                             icon="fa-book"
                             context="{'xml_id':'fleet_vehicle_log_contract_action'}"
-                            help="show the contract for this vehicle">
+                            help="Show the contract for this vehicle"
+                            groups="fleet.fleet_group_user">
                             <field name="contract_count" widget="statinfo" string="Contracts"/>
                         </button>
                         <button name="return_action_to_open"
@@ -31,7 +33,7 @@
                             class="oe_stat_button"
                             icon="fa-wrench"
                             context="{'xml_id':'fleet_vehicle_log_services_action'}"
-                            help="show the services logs for this vehicle" >
+                            help="Show the services logs for this vehicle">
                             <field name="service_count" widget="statinfo" string="Services"/>
                         </button>
                         <button name="return_action_to_open"
@@ -39,7 +41,7 @@
                             class="oe_stat_button"
                             icon="fa-tachometer"
                             context="{'xml_id':'fleet_vehicle_odometer_action'}"
-                            help="show the odometer logs for this vehicle"
+                            help="Show the odometer logs for this vehicle"
                             attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
                             <field name="odometer_count" widget="statinfo" string="Odometer"/>
                         </button>
@@ -63,8 +65,8 @@
                             <field name="active" invisible="1"/>
                             <field name="vehicle_type" invisible="1"/>
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]"/>
-                            <label for="future_driver_id"/>
-                            <div class="o_row">
+                            <label for="future_driver_id" groups="fleet.fleet_group_manager"/>
+                            <div class="o_row" groups="fleet.fleet_group_manager">
                                 <field name="future_driver_id"/>
                                 <button string="Apply Change"
                                     class="btn btn-primary"
@@ -73,25 +75,25 @@
                                     attrs="{'invisible': [('future_driver_id', '=', False)]}"/>
                             </div>
                             <field name="plan_to_change_car" groups="fleet.fleet_group_manager"/>
-                            <field name="next_assignation_date"/>
-                            <field name="location"/>
+                            <field name="next_assignation_date" groups="fleet.fleet_group_manager"/>
+                            <field name="location" groups="fleet.fleet_group_manager"/>
                         </group>
                         <group string="Vehicle">
-                            <label for="odometer" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
-                            <div class="o_row" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
+                            <label for="odometer" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}" groups="fleet.fleet_group_manager"/>
+                            <div class="o_row" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}" groups="fleet.fleet_group_manager">
                                 <field name="odometer"/>
                                 <field name="odometer_unit"/>
                             </div>
                             <field name="acquisition_date" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <field name="vin_sn"/>
-                            <field name="car_value" widget="monetary"/>
-                            <field name="net_car_value" widget="monetary"/>
-                            <field name="residual_value" widget="monetary"/>
+                            <field name="car_value" widget="monetary" groups="fleet.fleet_group_manager"/>
+                            <field name="net_car_value" widget="monetary" groups="fleet.fleet_group_manager"/>
+                            <field name="residual_value" widget="monetary" groups="fleet.fleet_group_manager"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="Contract" name="contract">
-                            <field name="manager_id" domain="[('share', '=', False)]"/>
-                            <field name="first_contract_date"/>
+                            <field name="manager_id" string="Fleet Manager" domain="[('share', '=', False)]"/>
+                            <field name="first_contract_date" groups="fleet.fleet_group_user"/>
                         </group>
                         <group string="Model">
                             <field name="seats" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
@@ -118,12 +120,24 @@
                         </group>
                     </group>
                 </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Chatter only visible for Fleet Manager -->
+    <record id="fleet_vehicle_view_form_inherit_manager" model="ir.ui.view">
+        <field name="name">fleet.vehicle.view.form.inherit.manager</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="groups_id" eval="[(4, ref('fleet.fleet_group_manager'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
                     <field name="message_ids"/>
                 </div>
-            </form>
+            </xpath>
         </field>
     </record>
 
@@ -139,7 +153,7 @@
                 <field name="license_plate"/>
                 <field name="model_id" widget="many2one_avatar" />
                 <field name="driver_id" widget="many2one_avatar"/>
-                <field name="future_driver_id"  widget="many2one_avatar"/>
+                <field name="future_driver_id" widget="many2one_avatar" groups="fleet.fleet_group_manager"/>
                 <field name="log_drivers" invisible="1"/>
                 <field name="vin_sn"/>
                 <field name="co2" string="CO2 Emissions g/km" optional="hide" />
@@ -213,7 +227,6 @@
                 <field name="activity_ids"/>
                 <field name="activity_state"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
-
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
@@ -236,7 +249,7 @@
                                         <t t-if="record.location.raw_value"><field name="location"/></t>
                                     </li>
                                 </ul>
-                                <div class="o_kanban_record_bottom" t-if="!selection_mode">
+                                <div class="o_kanban_record_bottom" t-if="!selection_mode" groups="fleet.fleet_group_user">
                                     <div class="oe_kanban_bottom_left">
                                         <a t-if="record.contract_count.raw_value>0" data-type="object"
                                            data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a"
@@ -250,7 +263,9 @@
                                                 class="fa fa-exclamation-triangle" t-att-style="'color:red;'" role="img" aria-label="Attention: renewal overdue" title="Attention: renewal overdue">
                                             </span>
                                         </a>
-                                        <field name="activity_ids" widget="kanban_activity"/>
+                                        <div class="o_kanban_inline_block" t-if="!selection_mode" groups="fleet.fleet_group_user">
+                                            <field name="activity_ids" widget="kanban_activity"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

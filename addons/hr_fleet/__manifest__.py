@@ -8,6 +8,8 @@
     'description': "",
     'depends': ['hr', 'fleet'],
     'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'views/employee_views.xml',
         'views/fleet_vehicle_views.xml',
         'wizard/hr_departure_wizard_views.xml'
