@@ -3031,6 +3031,9 @@ exports.Order = Backbone.Model.extend({
     wait_for_push_order: function () {
         return this.is_to_email();
     },
+    get_total_balance: function() {
+        return this.get_total_with_tax() - this.get_total_paid();
+    },
 });
 
 var OrderCollection = Backbone.Collection.extend({
