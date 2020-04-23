@@ -204,9 +204,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                     }
                 }
             }
-            // Submit Form
+            // Auto Submit Form
             var isLastQuestion = this.$('button[value="finish"]').length !== 0;
-            if (!isLastQuestion && this.options.usersCanGoBack && isQuestionComplete) {
+            var questionHasComment = $target.closest('.o_survey_form_choice').find('.o_survey_comment').length !== 0
+                                        || $target.hasClass('o_survey_js_form_other_comment');
+            if (!isLastQuestion && this.options.usersCanGoBack && isQuestionComplete && !questionHasComment) {
                 this._submitForm({});
             }
         } else {  // $target.attr('type') === 'checkbox'
