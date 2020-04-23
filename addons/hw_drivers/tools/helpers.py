@@ -79,6 +79,7 @@ def check_git_branch():
 
                 if db_branch != local_branch:
                     subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+                    subprocess.check_call(["rm", "/home/pi/odoo/addons/hw_drivers/drivers/*"])
                     subprocess.check_call(git + ['branch', '-m', db_branch])
                     subprocess.check_call(git + ['remote', 'set-branches', 'origin', db_branch])
                     os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
