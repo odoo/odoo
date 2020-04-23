@@ -6,7 +6,7 @@ from odoo.addons.website.tests.test_performance import UtilPerf
 
 class TestBlogPerformance(UtilPerf):
     def test_10_perf_sql_blog_standard_data(self):
-        self.assertEqual(self._get_url_hot_query('/blog'), 70)
+        self.assertEqual(self._get_url_hot_query('/blog'), 50)
 
     def test_20_perf_sql_blog_bigger_data_scaling(self):
         BlogPost = self.env['blog.post']
@@ -18,4 +18,4 @@ class TestBlogPerformance(UtilPerf):
         for blog_post in blog_posts:
             blog_post.tag_ids += blog_tags
             blog_tags = blog_tags[:-1]
-        self.assertEqual(self._get_url_hot_query('/blog'), 136)
+        self.assertEqual(self._get_url_hot_query('/blog'), 116)

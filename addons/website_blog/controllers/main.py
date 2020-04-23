@@ -88,8 +88,8 @@ class WebsiteBlog(http.Controller):
         else:
             domain += [("post_date", "<=", fields.Datetime.now())]
 
-        use_cover = request.website.viewref('website_blog.opt_blog_cover_post').active
-        fullwidth_cover = request.website.viewref('website_blog.opt_blog_cover_post_fullwidth_design').active
+        use_cover = request.website.is_view_active('website_blog.opt_blog_cover_post')
+        fullwidth_cover = request.website.is_view_active('website_blog.opt_blog_cover_post_fullwidth_design')
 
         # if blog, we show blog title, if use_cover and not fullwidth_cover we need pager + latest always
         offset = (page - 1) * self._blog_post_per_page

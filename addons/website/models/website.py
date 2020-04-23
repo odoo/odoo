@@ -698,6 +698,15 @@ class Website(models.Model):
             raise ValueError('No record found for unique ID %s. It may have been deleted.' % (view_id))
         return view
 
+    @tools.ormcache_context('key', keys=('website_id',))
+    def is_view_active(self, key):
+        """
+            Return True if active, False if not active, None if not found
+        """
+        view = self.viewref(key, raise_if_not_found=False)
+        return view.active if view else None
+
+
     @api.model
     def get_template(self, template):
         View = self.env['ir.ui.view']
