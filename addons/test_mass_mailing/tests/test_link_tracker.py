@@ -5,7 +5,7 @@ from odoo.tests.common import users
 from odoo.addons.test_mass_mailing.tests import common
 
 
-class TestLinkTracker(common.TestMailCommon):
+class TestLinkTracker(common.TestMassMailCommon):
 
     def setUp(self):
         super(TestLinkTracker, self).setUp()
@@ -43,7 +43,7 @@ class TestLinkTracker(common.TestMailCommon):
         self.assertEqual(click, None)
         self.assertEqual(self.link.count, 2)
 
-    @users('marketing')
+    @users('user_marketing')
     def test_add_link_mail_stat(self):
         mailing = self.env['mailing.mailing'].create({'name': 'Test Mailing', "subject": "Hi!"})
         code = self.link.code
