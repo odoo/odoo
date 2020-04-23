@@ -28,18 +28,28 @@ class CRMLeadMiningRequest(models.Model):
         else:
             return 'opportunity'
 
+
+    def _default_active_company(self):
+        return self.env.user.company_id.country_id
+
+    def _default_user(self):
+        return self.env.user
+
+    def _default_sales_team_current_user(self):
+        return self.env.user.sale_team_id
+
     name = fields.Char(string='Request Number', required=True, readonly=True, default=lambda self: _('New'), copy=False)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('error', 'Error')], string='Status', required=True, default='draft')
 
     # Request Data
-    lead_number = fields.Integer(string='Number of Leads', required=True, default=10)
+    lead_number = fields.Integer(string='Number of Leads', required=True, default=3)
     search_type = fields.Selection([('companies', 'Companies'), ('people', 'Companies and their Contacts')], string='Target', required=True, default='companies')
     error = fields.Text(string='Error', readonly=True)
 
     # Lead / Opportunity Data
     lead_type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], string='Type', required=True, default=_default_lead_type)
-    team_id = fields.Many2one('crm.team', string='Sales Team', domain="[('use_opportunities', '=', True)]")
-    user_id = fields.Many2one('res.users', string='Salesperson')
+    team_id = fields.Many2one('crm.team', string='Sales Team', domain="[('use_opportunities', '=', True)]", default=_default_sales_team_current_user)
+    user_id = fields.Many2one('res.users', string='Salesperson', default=_default_user)
     tag_ids = fields.Many2many('crm.lead.tag', string='Tags')
     lead_ids = fields.One2many('crm.lead', 'lead_mining_request_id', string='Generated Lead / Opportunity')
     leads_count = fields.Integer(compute='_compute_leads_count', string='Number of Generated Leads')
@@ -48,7 +58,7 @@ class CRMLeadMiningRequest(models.Model):
     filter_on_size = fields.Boolean(string='Filter on Size', default=False)
     company_size_min = fields.Integer(string='Size', default=1)
     company_size_max = fields.Integer(default=1000)
-    country_ids = fields.Many2many('res.country', string='Countries')
+    country_ids = fields.Many2many('res.country', string='Countries', default=_default_active_company)
     state_ids = fields.Many2many('res.country.state', string='States')
     industry_ids = fields.Many2many('crm.iap.lead.industry', string='Industries')
 
