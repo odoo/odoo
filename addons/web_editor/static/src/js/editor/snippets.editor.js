@@ -1386,11 +1386,11 @@ var SnippetsMenu = Widget.extend({
      * See implementation for function details.
      *
      * @private
-     * @param {string} include
+     * @param {string} selector
      *        jQuery selector that DOM elements must match to be considered as
      *        potential snippet.
      * @param {string} exclude
-     *        jQuery selector that DOM elements must *not* match the be
+     *        jQuery selector that DOM elements must *not* match to be
      *        considered as potential snippet.
      * @param {string|false} target
      *        jQuery selector that at least one child of a DOM element must
@@ -1403,46 +1403,33 @@ var SnippetsMenu = Widget.extend({
      *        considered (@see noCheck), this is true if the DOM elements'
      *        parent must also be in an editable environment to be considered.
      */
-    _computeSelectorFunctions: function (include, exclude, target, noCheck, isChildren) {
+    _computeSelectorFunctions: function (selector, exclude, target, noCheck, isChildren) {
         var self = this;
 
-        // Convert the selector for elements to include into a list
-        var selectorList = _.compact(include.split(/\s*,\s*/));
+        exclude += `${exclude && ', '}.o_snippet_not_selectable`;
 
-        // Convert the selector for elements to exclude into a list
-        var excludeList = _.compact(exclude.split(/\s*,\s*/));
-        excludeList.push('.o_snippet_not_selectable');
-
-        // Prepare the condition that will be added to each subselector for
-        // elements to include: 'not the elements to exclude and only the
-        // editable ones if needed'
-        var selectorConditions = _.map(excludeList, function (exc) {
-            return ':not(' + exc + ')';
-        }).join('');
+        let filterFunc = function () {
+            return !$(this).is(exclude);
+        };
         if (target) {
-            selectorConditions += ':has(' + target + ')';
+            const oldFilter = filterFunc;
+            filterFunc = function () {
+                return oldFilter.apply(this) && $(this).find(target).length !== 0;
+            };
         }
-        if (!noCheck) {
-            selectorConditions = (this.options.addDropSelector || '') + selectorConditions;
-        }
-
-        // (Re)join the subselectors
-        var selector = _.map(selectorList, function (s) {
-            return s + selectorConditions;
-        }).join(', ');
 
         // Prepare the functions
         var functions = {
             is: function ($from) {
-                return $from.is(selector);
+                return $from.is(selector) && $from.filter(filterFunc).length !== 0;
             },
         };
         if (noCheck) {
             functions.closest = function ($from, parentNode) {
-                return $from.closest(selector, parentNode);
+                return $from.closest(selector, parentNode).filter(filterFunc);
             };
             functions.all = function ($from) {
-                return $from ? dom.cssFind($from, selector) : $(selector);
+                return ($from ? dom.cssFind($from, selector) : $(selector)).filter(filterFunc);
             };
         } else {
             functions.closest = function ($from, parentNode) {
@@ -1456,13 +1443,13 @@ var SnippetsMenu = Widget.extend({
                         node = node.parentNode;
                     }
                     return false;
-                });
+                }).filter(filterFunc);
             };
             functions.all = isChildren ? function ($from) {
-                return dom.cssFind($from || self.getEditableArea(), selector);
+                return dom.cssFind($from || self.getEditableArea(), selector).filter(filterFunc);
             } : function ($from) {
                 $from = $from || self.getEditableArea();
-                return $from.filter(selector).add(dom.cssFind($from, selector));
+                return $from.filter(selector).add(dom.cssFind($from, selector)).filter(filterFunc);
             };
         }
         return functions;
