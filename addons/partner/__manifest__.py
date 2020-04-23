@@ -20,6 +20,7 @@ This module holds the business definition of a basic partner, company, user
         'views/res_partner_title_views.xml',
         'views/res_partner_industry_views.xml',
         'views/res_users_views.xml',
+        'views/report_templates.xml',
         'views/onboarding_views.xml',
         'wizard/base_document_layout_views.xml',
         'wizard/base_partner_merge_views.xml',
