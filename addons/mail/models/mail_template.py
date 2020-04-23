@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import json
 import logging
 
 
@@ -46,8 +47,7 @@ class MailTemplate(models.Model):
     reply_to = fields.Char('Reply-To', help="Preferred response address (placeholders may be used here)")
     # content
     body_html = fields.Html('Body', translate=True, sanitize=False)
-    body_html_original = fields.Html('Initial Body', translate=True, sanitize=False,
-                                     help="This field is used to reset the templates(created through demo data) to it's initial state")
+    original_template_vals = fields.Text(help="This field is used to reset the templates(created through demo data) to it's initial state")
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
@@ -72,9 +72,7 @@ class MailTemplate(models.Model):
     @api.model
     def create(self, vals):
         if self.env.context.get('install_mode'):
-            vals['body_html_original'] = vals.get('body_html')
-        else:
-            vals['body_html_original'] = False
+            vals['original_template_vals'] = json.dumps(vals)
         return super().create(vals)
 
     def unlink(self):
@@ -115,7 +113,8 @@ class MailTemplate(models.Model):
 
     def reset_mail_template(self):
         for template in self:
-            template.body_html = template.body_html_original
+            template.write(json.loads(template.original_template_vals))
+
     # ------------------------------------------------------------
     # MESSAGE/EMAIL VALUES GENERATION
     # ------------------------------------------------------------
