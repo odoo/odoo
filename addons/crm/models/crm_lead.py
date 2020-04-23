@@ -154,6 +154,11 @@ class Lead(models.Model):
                            self._table, ['user_id', 'team_id', 'type'])
         return res
 
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        if not self.name and self.partner_id.name:
+            self.name = _("%s's opportunity") % self.partner_id.name
+
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         # retrieve team_id from the context and write the domain
