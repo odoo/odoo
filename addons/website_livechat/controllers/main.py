@@ -49,6 +49,7 @@ class WebsiteLivechat(LivechatController):
 
         # the value dict to render the template
         values = {
+            'main_object': channel,
             'channel': channel,
             'ratings': ratings,
             'team': channel.sudo().user_ids,

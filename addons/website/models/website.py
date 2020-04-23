@@ -13,7 +13,7 @@ from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, tools
-from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype
+from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
 from odoo.http import request
@@ -862,7 +862,7 @@ class Website(models.Model):
 
     def get_website_pages(self, domain=[], order='name', limit=None):
         domain += self.get_current_website().website_domain()
-        pages = self.env['website.page'].search(domain, order='name', limit=limit)
+        pages = self.env['website.page'].search(domain, order=order, limit=limit)
         return pages
 
     def search_pages(self, needle=None, limit=None):
@@ -873,6 +873,14 @@ class Website(models.Model):
             if len(res) == limit:
                 break
         return res
+
+    def get_suggested_controllers(self):
+        """
+            Returns a tuple (name, url, icon).
+            Where icon can be a module name, or a path
+        """
+        suggested_controllers = [(_('Homepage'), url_for('/'), 'website')]
+        return suggested_controllers
 
     @api.model
     def image_url(self, record, field, size=None):

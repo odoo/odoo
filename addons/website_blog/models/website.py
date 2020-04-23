@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _
+from odoo.addons.http_routing.models.ir_http import url_for
 
 
 class Website(models.Model):
@@ -56,3 +57,8 @@ class Website(models.Model):
             })
 
         return dep
+
+    def get_suggested_controllers(self):
+        suggested_controllers = super(Website, self).get_suggested_controllers()
+        suggested_controllers.append((_('Blog'), url_for('/blog'), 'website_blog'))
+        return suggested_controllers
