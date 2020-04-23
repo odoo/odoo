@@ -51,10 +51,10 @@ list of filtered posts (by date or tag).
         </t>
 
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
-        <t t-set="opt_blog_cards_design" t-value="request.website.viewref('website_blog.opt_blog_cards_design').active"/>
-        <t t-set="opt_blog_list_view" t-value="request.website.viewref('website_blog.opt_blog_list_view').active"/>
-        <t t-set="opt_blog_readable" t-value="request.website.viewref('website_blog.opt_blog_readable').active"/>
-        <t t-set="opt_blog_sidebar_show" t-value="request.website.viewref('website_blog.opt_blog_sidebar_show').active"/>
+        <t t-set="opt_blog_cards_design" t-value="is_view_active('website_blog.opt_blog_cards_design')"/>
+        <t t-set="opt_blog_list_view" t-value="is_view_active('website_blog.opt_blog_list_view')"/>
+        <t t-set="opt_blog_readable" t-value="is_view_active('website_blog.opt_blog_readable')"/>
+        <t t-set="opt_blog_sidebar_show" t-value="is_view_active('website_blog.opt_blog_sidebar_show')"/>
 
         <div id="o_wblog_blog_top">
             <!-- Selectively display droppable-areas for 'all blogs' or single-blog pages -->
