@@ -1028,7 +1028,7 @@ class Lead(models.Model):
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
             email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
             email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
-            sub_title = _('or send an email to %s') % (email_link)
+            sub_title = _('Emails sent to %s automatically create opportunities.') % (email_link)
         return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
     def log_meeting(self, meeting_subject, meeting_date, duration):
