@@ -11,7 +11,8 @@
     }
 
     @include media-breakpoint-up(md) {
-        .breadcrumb, .o_cp_left, .o_cp_searchview, .o_cp_right {
+        .o_cp_top_left, .o_cp_top_right,
+        .o_cp_bottom_left, .o_cp_bottom_right {
             width: 50%;
         }
     }
@@ -24,11 +25,11 @@
         }
     }
 
-    .o_cp_searchview {
+    .o_cp_top_right {
         min-height: $o-cp-breadcrumb-height;
     }
 
-    .o_cp_left {
+    .o_cp_bottom_left {
         display: flex;
         justify-content: space-between;
 
@@ -61,7 +62,7 @@
         }
     }
 
-    .o_cp_right {
+    .o_cp_bottom_right {
         display: flex;
 
         > .o_cp_pager {
