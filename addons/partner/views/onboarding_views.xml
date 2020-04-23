@@ -128,6 +128,7 @@
             </div>
         </div>
     </template>
+
     <!-- ONBOARDING STEPS -->
     <template id="onboarding_company_step">
         <t t-call="base.onboarding_step">
@@ -141,29 +142,5 @@
             <t t-set="state" t-value="state.get('base_onboarding_company_state')" />
         </t>
     </template>
-    <!-- COMPANY FORM -->
-    <record id="base_onboarding_company_form" model="ir.ui.view">
-        <field name="name">base.company.onboarding.form</field>
-        <field name="model">res.company</field>
-        <field name="inherit_id" ref="base.view_company_form" />
-        <field name="mode">primary</field>
-        <field name="priority">1000</field>
-        <field name="arch" type="xml">
-            <xpath expr="//group[@name='social_media']" position="replace" />
-            <form position="inside">
-                <footer position="replace">
-                    <button name="action_save_onboarding_company_step" class="btn btn-primary" type="object" string="Apply" />
-                    <button special="cancel" string="Cancel" />
-                </footer>
-            </form>
-        </field>
-    </record>
-    <record id="action_open_base_onboarding_company" model="ir.actions.act_window">
-        <field name="name">Set your company data</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">res.company</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="base_onboarding_company_form" />
-        <field name="target">new</field>
-    </record>
+
 </odoo>

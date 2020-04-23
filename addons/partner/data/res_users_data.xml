@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_root" model="res.users">
+            <field name="signature" type="xml"><span>-- <br/>System</span></field>
+        </record>
+
+        <!-- user 2 is the human admin user -->
+        <record id="base.user_admin" model="res.users">
+            <field name="image_1920" type="base64" file="base/static/img/avatar_grey.png"/>
+            <field name="signature" type="xml"><span>-- <br/>Administrator</span></field>
+        </record>
+
+        <record id="base.public_user" model="res.users">
+            <field name="image_1920" type="base64" file="base/static/img/public_user-image.png"/>
+        </record>
+    </data>
+</odoo>

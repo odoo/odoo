@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_groups_search" model="ir.ui.view">
+        <field name="name">res.groups.search</field>
+        <field name="model">res.groups</field>
+        <field name="arch" type="xml">
+            <search string="Groups">
+                <field name="name" filter_domain="['|', ('name','ilike',self), ('category_id','ilike',self)]" string="Group"/>
+                <separator orientation="vertical"/>
+                <field name="share"/>
+                <filter name="no_share" string="Internal Groups" domain="[('share','=',False)]"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_groups_form" model="ir.ui.view">
+        <field name="name">res.groups.form</field>
+        <field name="model">res.groups</field>
+        <field name="arch" type="xml">
+            <form string="Groups">
+              <sheet>
+                <group col="4">
+                    <field name="category_id"/>
+                    <field name="name"/>
+                    <field name="share"/>
+                </group>
+                <notebook>
+                    <page string="Users" name="users">
+                        <field name="users" context="{'search_default_no_share':1}"/>
+                    </page>
+                    <page string="Inherited" name="inherit_groups">
+                        <label for="implied_ids" string="Users added to this group are automatically added in the following groups."/>
+                        <field name="implied_ids"/>
+                    </page>
+                    <page string="Menus" name="menus">
+                        <field name="menu_access"/>
+                    </page>
+                    <page string="Views" name="views">
+                        <field name="view_access"/>
+                    </page>
+                    <page string="Access Rights" name="access_rights">
+                        <field name="model_access">
+                            <tree string="Access Rights" editable="top">
+                                <field name="name"/>
+                                <field name="model_id"/>
+                                <field name="perm_read"/>
+                                <field name="perm_write"/>
+                                <field name="perm_create"/>
+                                <field name="perm_unlink"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Record Rules" name="record_rules">
+                        <field name="rule_groups">
+                            <tree string="Record Rules" editable="top">
+                                <field name="name"/>
+                                <field name="model_id"/>
+                                <field name="domain_force"/>
+                                <field name="perm_read"/>
+                                <field name="perm_write"/>
+                                <field name="perm_create"/>
+                                <field name="perm_unlink"/>
+                            </tree>
+                        </field>
+                    </page><page string="Notes" name="notes">
+                        <field name="comment"/>
+                    </page>
+                </notebook>
+              </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_res_groups" model="ir.actions.act_window">
+        <field name="name">Groups</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.groups</field>
+        <field name="context">{'search_default_no_share': 1}</field>
+        <field name="help">A group is a set of functional areas that will be assigned to the user in order to give them access and rights to specific applications and tasks in the system. You can create custom groups or edit the ones existing by default in order to customize the view of the menu that users will be able to see. Whether they can have a read, write, create and delete access right can be managed from here.</field>
+    </record>
+    <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" groups="base.group_no_one" sequence="3"/>
+</odoo>

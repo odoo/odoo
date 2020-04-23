@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_partner_industry_view_form" model="ir.ui.view">
+        <field name="name">Industry</field>
+        <field name="model">res.partner.industry</field>
+        <field name="arch" type="xml">
+            <form string="Industry">
+                <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="full_name"/>
+                        <field name="active" widget="boolean_toggle"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_partner_industry_view_tree" model="ir.ui.view">
+        <field name="name">Industry</field>
+        <field name="model">res.partner.industry</field>
+        <field eval="6" name="priority"/>
+        <field name="arch" type="xml">
+            <tree string="Industry" editable="bottom">
+                <field name="name"/>
+                <field name="full_name"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_partner_industry_view_search" model="ir.ui.view">
+        <field name="name">res.partner.industry.view.search</field>
+        <field name="model">res.partner.industry</field>
+        <field name="arch" type="xml">
+            <search string="Search Partner Industry">
+                <field name="name"/>
+                <field name="full_name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_res_partner_industry" model="ir.actions.act_window">
+        <field name="name">Industries</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner.industry</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="res_partner_industry_view_search"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new industry
+          </p><p>
+            Manage industries to better classify partners for tracking and analysis purposes.
+          </p>
+        </field>
+    </record>
+</odoo>

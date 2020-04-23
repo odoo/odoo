@@ -166,7 +166,9 @@ class ProductTemplate(models.Model):
 
     @api.depends('company_id')
     def _compute_currency_id(self):
-        main_company = self.env['res.company']._get_main_company()
+        main_company = self.sudo().env.ref('base.main_company', raise_if_not_found=False)
+        if not main_company:
+            main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
         for template in self:
             template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
 
