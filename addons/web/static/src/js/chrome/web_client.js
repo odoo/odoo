@@ -89,7 +89,8 @@ class WebClient extends KeyboardNavigation {
         };
     }
     get isRendering() {
-        return !!this.renderingInfo;
+        const { isMounted , currentFiber } = this.__owl__;
+        return isMounted && currentFiber && !currentFiber.isCompleted;
     }
 
     //--------------------------------------------------------------------------
@@ -99,7 +100,7 @@ class WebClient extends KeyboardNavigation {
         if (this.isRendering) {
             this.__owl__.currentFiber.cancel();
         }
-        this.renderingInfo = null;
+        //this.renderingInfo = null;
     }
     async _clearUncommitedChanges() {
         if (!this.currentDialogComponent.comp && this.currentMainComponent.comp) {
