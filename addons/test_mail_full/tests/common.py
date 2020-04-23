@@ -6,7 +6,7 @@ from odoo.addons.test_mail.tests import common as test_mail_common
 from odoo.addons.test_mass_mailing.tests import common as test_mass_mailing_common
 
 
-class TestSMSCommon(test_mass_mailing_common.TestMailCommon, mass_mailing_sms_common.MockSMS):
+class TestSMSCommon(test_mass_mailing_common.TestMassMailCommon, mass_mailing_sms_common.MockSMS):
 
     @classmethod
     def setUpClass(cls):
