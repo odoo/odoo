@@ -60,6 +60,16 @@ var ActivityMenu = Widget.extend({
         });
     },
     /**
+     * Return views to display when coming from systray depending on the model.
+     *
+     * @private
+     * @param {string} model
+     * @returns {Array[]} output the list of views to display.
+     */
+    _getViewsList(model) {
+        return [[false, 'kanban'], [false, 'list'], [false, 'form']];
+    },
+    /**
      * Update(render) activity system tray view on activity updation.
      * @private
      */
@@ -155,7 +165,7 @@ var ActivityMenu = Widget.extend({
             type: 'ir.actions.act_window',
             name: data.model_name,
             res_model:  data.res_model,
-            views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
+            views: this._getViewsList(data.res_model),
             search_view_id: [false],
             domain: domain,
             context:context,
