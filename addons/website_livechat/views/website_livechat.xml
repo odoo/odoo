@@ -68,12 +68,6 @@
             <t t-call="website.layout">
               <div id="wrap">
                 <div class="container">
-                    <!-- published button -->
-                    <t t-call="website.publish_management">
-                        <t t-set="object" t-value="channel"/>
-                        <t t-set="publish_edit" t-value="True"/>
-                    </t>
-
                     <h1><span>Livechat Channel</span>  <small t-field="channel.name" /></h1>
                     <div t-field="channel.website_description" class="oe_structure mt16" />
                     <div class="row mt32">
@@ -83,7 +77,7 @@
                                     <div class="col-lg-12 mb32">
                                         <h3>Statistics</h3>
                                         <div class="row">
-                                            <div class="col-lg-5">
+                                            <div class="col-lg-4 d-flex justify-content-end flex-column">
                                                 <div class="card bg-success text-white" t-attf-style="height: #{160 + int(percentage['great'])}px;">
                                                     <div class="card-body text-center">
                                                         <img src="/rating/static/src/img/rating_10.png" style="height:40px" alt="Happy face"/>
@@ -98,7 +92,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-4 d-flex justify-content-end flex-column">
                                                 <div class="card bg-warning text-white" t-attf-style="height: #{160 + int(percentage['okay'])}px;">
                                                     <div class="card-body text-center">
                                                         <img src="/rating/static/src/img/rating_5.png" style="height:40px" alt="Neutral face"/>
@@ -113,7 +107,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3">
+                                            <div class="col-lg-4 d-flex justify-content-end flex-column">
                                                 <div class="card bg-danger text-white" t-attf-style="height: #{160 + int(percentage['bad'])}px;">
                                                     <div class="card-body text-center">
                                                         <img src="/rating/static/src/img/rating_1.png" style="height:40px" alt="Sad face"/>
@@ -134,7 +128,7 @@
                                 <div class="row">
                                     <div class="col-lg-12 mb32">
                                         <h3>The <t t-esc="len(ratings)"/> last feedbacks</h3>
-                                        <div style="text-align:center">
+                                        <div>
                                             <t t-foreach="ratings" t-as="rating">
                                                 <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name" width="48px" height="48px"/>
                                                 <t t-if="(rating_index+1) % 10 == 0">
@@ -200,7 +194,7 @@
                 <div id="wrap">
                     <div class="oe_structure" id="oe_structure_website_livechat_channel_list_1"/>
                     <div class="container">
-                        <h1>Livechat Support Channels</h1>
+                        <h1 class="pt-3">Livechat Support Channels</h1>
                         <div class="row mt32 mb32">
                             <t t-if="not len(channels)">
                                 <div class="col-lg-6 offset-lg-3">
@@ -208,13 +202,13 @@
                                 </div>
                             </t>
                             <t t-if="len(channels)">
-                                <div class="col-lg-6 offset-lg-3">
+                                <div class="col-lg-6">
                                     <t t-foreach="channels" t-as="channel">
                                         <div t-attf-class="media#{' mt-3' if channel_index else ''}">
                                             <a t-attf-href="/livechat/channel/#{ slug(channel)}">
                                                 <img t-att-src="channel.image_128 and image_data_uri(channel.image_128) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" class="o_image_64_cover"/>
                                             </a>
-                                            <div class="media-body">
+                                            <div class="media-body h-100 my-auto">
                                                 <h4><t t-esc="channel.name"/></h4>
                                             </div>
                                         </div>

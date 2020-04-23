@@ -33,7 +33,35 @@ function loadAnchors(url) {
  * @param {jQuery} $input
  */
 function autocompleteWithPages(self, $input) {
-    $input.autocomplete({
+    $.widget("website.urlcomplete", $.ui.autocomplete, {
+        _create: function () {
+            this._super();
+            this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
+        },
+        _renderMenu: function (ul, items) {
+            const self = this;
+            items.forEach(item => {
+                if (item.separator) {
+                    self._renderSeparator(ul, item);
+                }
+                else {
+                    self._renderItem(ul, item);
+                }
+            });
+        },
+        _renderSeparator: function (ul, item) {
+            return $("<li class='ui-autocomplete-category font-weight-bold text-capitalize m-2'>")
+                   .append(`<div>${item.separator}</div>`)
+                   .appendTo(ul);
+        },
+        _renderItem: function (ul, item) {
+            return $("<li>")
+                   .data('ui-autocomplete-item', item)
+                   .append(`<div>${item.label}</div>`)
+                   .appendTo(ul);
+        },
+    });
+    $input.urlcomplete({
         source: function (request, response) {
             if (request.term[0] === '#') {
                 loadAnchors(request.term).then(function (anchors) {
@@ -41,17 +69,22 @@ function autocompleteWithPages(self, $input) {
                 });
             } else {
                 return self._rpc({
-                    model: 'website',
-                    method: 'search_pages',
-                    args: [null, request.term],
-                    kwargs: {
+                    route: '/website/get_suggested_links',
+                    params: {
+                        needle: request.term,
                         limit: 15,
-                    },
-                }).then(function (exists) {
-                    var rs = _.map(exists, function (r) {
-                        return r.loc;
+                    }
+                }).then(function (res) {
+                    let choices = res.matching_pages;
+                    res.others.forEach(other => {
+                        if (other.values.length) {
+                            choices = choices.concat(
+                                [{separator: other.title}],
+                                other.values,
+                            );
+                        }
                     });
-                    response(rs.sort());
+                    response(choices);
                 });
             }
         },
