@@ -1393,9 +1393,9 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="customer"]'));
 
         values = [
-            "29", "2", "1", "32",
+            "29", "1", "2", "32",
             "12",           "12",
-            "17", "2", "1", "20",
+            "17", "1", "2", "20",
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
 
@@ -1404,10 +1404,10 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="other_product_id"]'));
 
         values = [
-            "29", "2", "1", "32",
+            "29", "1", "2", "32",
             "12",           "12",
-            "17", "2", "1", "20",
-            "17", "2", "1", "20",
+            "17", "1", "2", "20",
+            "17", "1", "2", "20",
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
 
@@ -1421,11 +1421,11 @@ QUnit.module('Views', {
         // sanity check of what the table should look like if all groups are
         // expanded, to ensure that the former asserts are pertinent
         values = [
-            "12", "17", "2", "1", "32",
+            "12", "17", "1", "2", "32",
             "12",                 "12",
             "12",                 "12",
-                  "17", "2", "1", "20",
-                  "17", "2", "1", "20",
+                  "17", "1", "2", "20",
+                  "17", "1", "2", "20",
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
 
@@ -2716,6 +2716,52 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('th.o_pivot_header_cell_closed')[1]);
 
         assert.containsOnce(pivot, '.o_pivot_field_menu', 'Only one dropdown should be displayed at a time');
+
+        pivot.destroy();
+    });
+
+    QUnit.test('Server order is kept by default', async function (assert) {
+        assert.expect(1);
+
+        let isSecondReadGroup = false;
+
+        var pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                    '<field name="customer" type="row"/>' +
+                    '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group' && isSecondReadGroup) {
+                    return Promise.resolve([
+                        {
+                            customer: [2, 'Second'],
+                            foo: 18,
+                            __count: 2,
+                            __domain :[["customer", "=", 2]],
+                        },
+                        {
+                            customer: [1, 'First'],
+                            foo: 14,
+                            __count: 2,
+                            __domain :[["customer", "=", 1]],
+                        }
+                    ]);
+                }
+                var result = this._super.apply(this, arguments);
+                isSecondReadGroup = true;
+                return result;
+            },
+        });
+
+        const values = [
+            "32", // Total Value
+            "18", // Second
+            "14", // First
+        ];
+        assert.strictEqual(getCurrentValues(pivot), values.join());
 
         pivot.destroy();
     });
