@@ -1012,7 +1012,7 @@ class Lead(models.Model):
         if self._context.get('default_type') == 'lead':
             help_title = _('Create a new lead')
         else:
-            help_title = _('Create an opportunity in your pipeline')
+            help_title = _('Create opportunities to keep an eye on all your ongoing sales talks.')
         alias_record = self.env['mail.alias'].search([
             ('alias_name', '!=', False),
             ('alias_name', '!=', ''),
