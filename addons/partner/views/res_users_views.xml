@@ -23,10 +23,6 @@
             <div name="title" position="before">
                 <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
             </div>
-            <group name="preferences" position="inside">
-                <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
-                <field name="tz_offset" invisible="1"/>
-            </group>
             <group name="preferences" position="after">
                 <group string="Menus Customization" groups="base.group_no_one">
                     <field name="action_id"/>
@@ -84,10 +80,6 @@
             <xpath expr="//h1" position="before">
                 <field name="image_1920" readonly="0" widget='image' class="oe_right oe_avatar" options='{"preview_image": "image_128"}'/>
             </xpath>
-            <group name="lang_info" position="inside">
-                <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
-                <field name="tz_offset" invisible="1"/>
-            </group>
             <group name="preferences" position="after">
                 <group name="signature">
                     <field name="signature" readonly="0"/>

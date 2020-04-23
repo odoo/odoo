@@ -2,10 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import pytz
 
 from odoo import api, fields, models, tools, _
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
+
+# put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
+_tzs = [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
+def _tz_get(self):
+    return _tzs
 
 @api.model
 def _lang_get(self):
@@ -35,6 +41,12 @@ class Partner(models.Model):
         'Share Partner', compute='_compute_partner_share', store=True,
         help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
              "access or with a limited access created for sharing data.")
+    tz = fields.Selection(
+        _tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
+        help="When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
+             "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
+             "Anywhere else, time values are computed according to the time offset of your web client.")
+    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
@@ -42,6 +54,11 @@ class Partner(models.Model):
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
     ]
+
+    @api.depends('tz')
+    def _compute_tz_offset(self):
+        for partner in self:
+            partner.tz_offset = datetime.datetime.now(pytz.timezone(partner.tz or 'GMT')).strftime('%z')
 
     @api.depends('user_ids.share', 'user_ids.active')
     def _compute_partner_share(self):

@@ -17,11 +17,6 @@ WARNING_MESSAGE = [
 WARNING_HELP = 'Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.'
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 
-# put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
-_tzs = [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
-def _tz_get(self):
-    return _tzs
-
 
 class Partner(models.Model):
     _description = 'Contact'
@@ -51,13 +46,6 @@ class Partner(models.Model):
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
     child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
     ref = fields.Char(string='Reference', index=True)
-    tz = fields.Selection(
-        _tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
-        help="When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
-             "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
-             "Anywhere else, time values are computed according to the time offset of your web client.")
-
-    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
       help='The internal user in charge of this contact.')
     vat = fields.Char(
@@ -122,11 +110,6 @@ class Partner(models.Model):
         names = dict(self.with_context(**diff).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
-
-    @api.depends('tz')
-    def _compute_tz_offset(self):
-        for partner in self:
-            partner.tz_offset = datetime.datetime.now(pytz.timezone(partner.tz or 'GMT')).strftime('%z')
 
     @api.depends('vat')
     def _compute_same_vat_partner_id(self):

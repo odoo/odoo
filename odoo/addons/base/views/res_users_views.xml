@@ -106,6 +106,8 @@
                                             aria-label="More languages"
                                             title="More languages"/>
                                     </div>
+                                    <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
+                                    <field name="tz_offset" invisible="1"/>
                                 </group>
                             </group>
                         </page>
@@ -206,6 +208,8 @@
                                 title="More languages"
                             />
                         </div>
+                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
+                        <field name="tz_offset" invisible="1"/>
                     </group>
                 </group>
                 <group name="status" string="Status" invisible="1">
