@@ -169,17 +169,19 @@ odoo.define('web.PivotModel', function (require) {
  *                      labels: [la1,...,lal]
  *                  },
  *                  directSubTrees: {
- *                      JSON.stringify(v): {
+ *                      v => {
  *                              root: {
  *                                  values: [v1,...,vl,v]
  *                                  labels: [label1,...,labell,label]
  *                              },
  *                              directSubTrees: {...}
  *                          },
- *                      JSON.stringify(v'): {...},
+ *                      v' => {...},
  *                      ...
  *                  }
  *             }
+ *
+ *             (directSubTrees is a Map instance)
  *
  *             In the example, the rowGroupTree is:
  *
@@ -189,40 +191,40 @@ odoo.define('web.PivotModel', function (require) {
  *                      labels: []
  *                  },
  *                  directSubTrees: {
- *                      1: {
+ *                      1 => {
  *                              root: {
  *                                  values: [1],
  *                                  labels: ['Europe'],
  *                              },
  *                              directSubTrees: {
- *                                  1: {
+ *                                  1 => {
  *                                          root: {
  *                                              values: [1, 1],
  *                                              labels: ['Europe', 'Brussels'],
  *                                          },
- *                                          directSubTrees: {},
+ *                                          directSubTrees: new Map(),
  *                                  },
- *                                  2: {
+ *                                  2 => {
  *                                          root: {
  *                                              values: [1, 2],
  *                                              labels: ['Europe', 'Paris'],
  *                                          },
- *                                          directSubTrees: {},
+ *                                          directSubTrees: new Map(),
  *                                  },
  *                              },
  *                          },
- *                      2: {
+ *                      2 => {
  *                              root: {
  *                                  values: [2],
  *                                  labels: ['America'],
  *                              },
  *                              directSubTrees: {
- *                                  3: {
+ *                                  3 => {
  *                                          root: {
  *                                              values: [2, 3],
  *                                              labels: ['America', 'Washington'],
  *                                          }
- *                                          directSubTrees: {},
+ *                                          directSubTrees: new Map(),
  *                                  },
  *                              },
  *                      },
@@ -335,7 +337,7 @@ var PivotModel = AbstractModel.extend({
             tree = this.colGroupTree;
             group = this._findGroup(this.colGroupTree, groupId[1]);
         }
-        group.directSubTrees = {};
+        group.directSubTrees.clear();
         delete group.sortedKeys;
         var newGroupBysLength = this._getTreeHeight(tree) - 1;
         if (newGroupBysLength <= groupBys.length) {
@@ -650,7 +652,7 @@ var PivotModel = AbstractModel.extend({
 
         var sortFunction = function (tree) {
             return function (subTreeKey) {
-                var subTree = tree.directSubTrees[subTreeKey];
+                var subTree = tree.directSubTrees.get(subTreeKey);
                 var groupIntersectionId = [subTree.root.values, colGroupValues];
                 var value = self._getCellValue(
                     groupIntersectionId,
@@ -701,16 +703,15 @@ var PivotModel = AbstractModel.extend({
         var tree = groupTree;
         // we assume here that the group with value value.slice(value.length - 2) has already been added.
         values.slice(0, values.length - 1).forEach(function (value) {
-            var key = JSON.stringify(value);
-            tree = tree.directSubTrees[key];
+            tree = tree.directSubTrees.get(value);
         });
-        tree.directSubTrees[JSON.stringify(values[values.length - 1])] = {
+        tree.directSubTrees.set(values[values.length - 1], {
             root: {
                 labels: labels,
                 values: values,
             },
-            directSubTrees: {},
-        };
+            directSubTrees: new Map(),
+        });
     },
     /**
      * Compute what should be used as rowGroupBys by the pivot view
@@ -733,8 +734,7 @@ var PivotModel = AbstractModel.extend({
     _findGroup: function (groupTree, values) {
         var tree = groupTree;
         values.slice(0, values.length).forEach(function (value) {
-            var key = JSON.stringify(value);
-            tree = tree.directSubTrees[key];
+            tree = tree.directSubTrees.get(value);
         });
         return tree;
     },
@@ -866,10 +866,10 @@ var PivotModel = AbstractModel.extend({
         var self = this;
         var leafCounts = {};
         var leafCount;
-        if (_.isEmpty(tree.directSubTrees)) {
+        if (!tree.directSubTrees.size) {
             leafCount = 1;
         } else {
-            leafCount = _.values(tree.directSubTrees).reduce(
+            leafCount = [...tree.directSubTrees.values()].reduce(
                 function (acc, subTree) {
                     var subLeafCounts = self._getLeafCounts(subTree);
                     _.extend(leafCounts, subLeafCounts);
@@ -1123,7 +1123,7 @@ var PivotModel = AbstractModel.extend({
             var rowIndex = group.values.length;
             var row = colGroupRows[rowIndex];
             var groupId = [[], group.values];
-            var isLeaf = _.isEmpty(tree.directSubTrees);
+            var isLeaf = !tree.directSubTrees.size;
             var leafCount = leafCounts[JSON.stringify(tree.root.values)];
             var cell = {
                 groupId: groupId,
@@ -1138,7 +1138,7 @@ var PivotModel = AbstractModel.extend({
                 measureColumns.push(cell);
             }
 
-            _.values(tree.directSubTrees).forEach(function (subTree) {
+            [...tree.directSubTrees.values()].forEach(function (subTree) {
                 generateTreeHeaders(subTree, fields);
             });
         }
@@ -1185,7 +1185,7 @@ var PivotModel = AbstractModel.extend({
         var rowGroupId = [group.values, []];
         var title = group.labels[group.labels.length - 1] || _t('Total');
         var indent = group.labels.length;
-        var isLeaf = _.isEmpty(tree.directSubTrees);
+        var isLeaf = !tree.directSubTrees.size;
         var rowGroupBys = this._getGroupBys().rowGroupBys;
 
         var subGroupMeasurements = columns.map(function (column) {
@@ -1215,9 +1215,9 @@ var PivotModel = AbstractModel.extend({
             subGroupMeasurements: subGroupMeasurements
         });
 
-        var subTreeKeys = tree.sortedKeys || Object.keys(tree.directSubTrees);
+        var subTreeKeys = tree.sortedKeys || [...tree.directSubTrees.keys()];
         subTreeKeys.forEach(function (subTreeKey) {
-            var subTree = tree.directSubTrees[subTreeKey];
+            var subTree = tree.directSubTrees.get(subTreeKey);
             rows = rows.concat(self._getTableRows(subTree, columns));
         });
 
@@ -1231,7 +1231,7 @@ var PivotModel = AbstractModel.extend({
      * @returns {number}
      */
     _getTreeHeight: function (tree) {
-        var subTreeHeights = _.values(tree.directSubTrees).map(this._getTreeHeight.bind(this));
+        var subTreeHeights = [...tree.directSubTrees.values()].map(this._getTreeHeight.bind(this));
         return Math.max(0, Math.max.apply(null, subTreeHeights)) + 1;
     },
     /**
@@ -1259,8 +1259,8 @@ var PivotModel = AbstractModel.extend({
     _loadData: function () {
         var self = this;
 
-        this.rowGroupTree = { root: { labels: [], values: [] }, directSubTrees: {} };
-        this.colGroupTree = { root: { labels: [], values: [] }, directSubTrees: {} };
+        this.rowGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
+        this.colGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
         this.measurements = {};
         this.counts = {};
 
@@ -1414,20 +1414,19 @@ var PivotModel = AbstractModel.extend({
      * @param {Object} oldTree
      */
     _pruneTree: function (tree, oldTree) {
-        if (_.isEmpty(oldTree.directSubTrees)) {
-            tree.directSubTrees = {};
+        if (!oldTree.directSubTrees.size) {
+            tree.directSubTrees.clear();
             delete tree.sortedKeys;
             return;
         }
         var self = this;
-        Object.keys(tree.directSubTrees).forEach(function (subTreeKey) {
-            var index = Object.keys(oldTree.directSubTrees).indexOf(subTreeKey);
-            var subTree = tree.directSubTrees[subTreeKey];
-            if (index === -1) {
-                subTree.directSubTrees = {};
+        [...tree.directSubTrees.keys()].forEach(function (subTreeKey) {
+            var subTree = tree.directSubTrees.get(subTreeKey);
+            if (!oldTree.directSubTrees.has(subTreeKey)) {
+                subTree.directSubTrees.clear();
                 delete subTreeKey.sortedKeys;
             } else {
-                var oldSubTree = oldTree.directSubTrees[subTreeKey];
+                var oldSubTree = oldTree.directSubTrees.get(subTreeKey);
                 self._pruneTree(subTree, oldSubTree);
             }
         });
@@ -1519,8 +1518,8 @@ var PivotModel = AbstractModel.extend({
      */
     _sortTree: function (sortFunction, tree) {
         var self = this;
-        tree.sortedKeys = _.sortBy(Object.keys(tree.directSubTrees), sortFunction(tree));
-        _.values(tree.directSubTrees).forEach(function (subTree) {
+        tree.sortedKeys = _.sortBy([...tree.directSubTrees.keys()], sortFunction(tree));
+        [...tree.directSubTrees.values()].forEach(function (subTree) {
             self._sortTree(sortFunction, subTree);
         });
     },
