@@ -929,7 +929,7 @@ class Website(models.Model):
             arguments = dict(request.endpoint_arguments)
             for key, val in list(arguments.items()):
                 if isinstance(val, models.BaseModel):
-                    if val.env.context.get('lang') != lang.url_code:
+                    if val.env.context.get('lang') != lang.code:
                         arguments[key] = val.with_context(lang=lang.url_code)
             path = router.build(request.endpoint, arguments)
         else:
