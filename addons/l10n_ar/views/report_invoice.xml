@@ -1,83 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="l10n_ar_report_invoice_document">
-        <t t-call="web.html_container">
+    <template id="custom_header">
+        <div class="header" style="font-size: 14px; color: #555555;">
+            <div id="sector-a">
+                <t t-set="pre_printed_invoice" t-value="o.journal_id.l10n_ar_afip_pos_system == 'II_IM'"/>
+                <div class="row" t-if="not pre_printed_invoice">
+                    <div name="left-upper-side" class="col-5">
+                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 45px;" alt="Logo"/>
+                    </div>
+                    <div name="center-upper" class="col-2 text-center">
+                        <span style="display: inline-block; text-align: center; line-height: 8px;">
+                            <h1 style="line-height: 25px;">
+                                <strong><span t-field="o.l10n_latam_document_type_id.l10n_ar_letter"/></strong>
+                            </h1>
+                            <span style="font-size: x-small;">Code N <t t-esc=" '%02d' % int(o.l10n_latam_document_type_id.code) if o.l10n_latam_document_type_id.code else ''"/></span>
+                        </span>
+                    </div>
+                    <div name="rigth-upper-side" class="col-5 text-right">
 
-            <t t-set="o" t-value="o.with_context(lang=lang)"/>
-            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
-                <div class="header" style="font-size: 14px; color: #555555;">
-                    <div id="sector-a">
-                        <t t-set="pre_printed_invoice" t-value="o.journal_id.l10n_ar_afip_pos_system == 'II_IM'"/>
-                        <div class="row" t-if="not pre_printed_invoice">
-                            <div name="left-upper-side" class="col-5">
-                                <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 45px;" alt="Logo"/>
-                            </div>
-                            <div name="center-upper" class="col-2 text-center">
-                                <span style="display: inline-block; text-align: center; line-height: 8px;">
-                                    <h1 style="line-height: 25px;">
-                                        <strong><span t-field="o.l10n_latam_document_type_id.l10n_ar_letter"/></strong>
-                                    </h1>
-                                    <span style="font-size: x-small;">Code N <t t-esc=" '%02d' % int(o.l10n_latam_document_type_id.code) if o.l10n_latam_document_type_id.code else ''"/></span>
-                                </span>
-                            </div>
-                            <div name="rigth-upper-side" class="col-5 text-right">
+                        <!-- (6) Titulo de Documento -->
+                        <h4><strong>
+                            <span t-field="o.l10n_latam_document_type_id.report_name"/>
+                        </strong></h4>
 
-                                <!-- (6) Titulo de Documento -->
-                                <h4><strong>
-                                    <span t-field="o.l10n_latam_document_type_id.report_name"/>
-                                </strong></h4>
-
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <t t-if="not pre_printed_invoice">
-                                    <!-- (1) Nombre de Fantasia -->
-                                    <!-- (2) Apellido y Nombre o Razon Social -->
-                                    <span t-field="o.company_id.partner_id.name"/>
-                                    <t t-set="journal_address" t-value="o.journal_id.l10n_ar_afip_pos_partner_id"/>
-
-                                    <!-- (3) Domicilio Comercial: -->
-                                    <!-- (4) Domicilio Fiscal -->
-                                    <br/>
-                                    <t t-esc="' - '.join([item for item in [
-                                        ', '.join([item for item in [journal_address.street, journal_address.street2] if item]),
-                                        journal_address.city,
-                                        journal_address.state_id and journal_address.state_id.name,
-                                        journal_address.zip,
-                                        journal_address.country_id and journal_address.country_id.name,
-                                        journal_address.phone and 'Tel: ' + journal_address.phone] if item])"/>
-                                    <br/>
-                                    <t t-esc="' - '.join([item for item in [journal_address.website, journal_address.email] if item])"/>
-                                </t>
-                            </div>
-                            <div class="col-6 text-right">
-
-                                <t t-if="not pre_printed_invoice">
-                                    <!-- (7) Numero punto venta - (8) numero de documento -->
-                                    <span>Nro: </span><span t-field="o.l10n_latam_document_number"/>
-                                    <br/>
-                                </t>
-
-                                <!-- (9) Fecha -->
-                                <span>Date: </span><span t-field="o.invoice_date"/>
-
-                                <t t-if="not pre_printed_invoice">
-                                    <!-- (5) Condicion de IVA / Responsabilidad -->
-                                    <!-- (10) CUIT -->
-                                    <br/>
-                                    <span t-field="o.company_id.l10n_ar_afip_responsibility_type_id"/> - CUIT: <span t-field="o.company_id.vat"/>
-
-                                    <!-- (11) IIBB: -->
-                                    <!-- (12) Inicio de actividades -->
-                                    <br/>Gross Income: <span t-esc="o.company_id.l10n_ar_gross_income_type == 'exempt' and 'Exento' or o.company_id.l10n_ar_gross_income_number"/> - Start of activities: <span t-field="o.company_id.l10n_ar_afip_start_date"/>
-                                </t>
-
-                            </div>
-                        </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-6">
+                        <t t-if="not pre_printed_invoice">
+                            <!-- (1) Nombre de Fantasia -->
+                            <!-- (2) Apellido y Nombre o Razon Social -->
+                            <span t-field="o.company_id.partner_id.name"/>
+                            <t t-set="journal_address" t-value="o.journal_id.l10n_ar_afip_pos_partner_id"/>
+
+                            <!-- (3) Domicilio Comercial: -->
+                            <!-- (4) Domicilio Fiscal -->
+                            <br/>
+                            <t t-esc="' - '.join([item for item in [
+                                ', '.join([item for item in [journal_address.street, journal_address.street2] if item]),
+                                journal_address.city,
+                                journal_address.state_id and journal_address.state_id.name,
+                                journal_address.zip,
+                                journal_address.country_id and journal_address.country_id.name,
+                                journal_address.phone and 'Tel: ' + journal_address.phone] if item])"/>
+                            <br/>
+                            <t t-esc="' - '.join([item for item in [journal_address.website, journal_address.email] if item])"/>
+                        </t>
+                    </div>
+                    <div class="col-6 text-right">
+
+                        <t t-if="not pre_printed_invoice">
+                            <!-- (7) Numero punto venta - (8) numero de documento -->
+                            <span>Nro: </span><span t-field="o.l10n_latam_document_number"/>
+                            <br/>
+                        </t>
+
+                        <!-- (9) Fecha -->
+                        <span>Date: </span><span t-field="o.invoice_date"/>
+
+                        <t t-if="not pre_printed_invoice">
+                            <!-- (5) Condicion de IVA / Responsabilidad -->
+                            <!-- (10) CUIT -->
+                            <br/>
+                            <span t-field="o.company_id.l10n_ar_afip_responsibility_type_id"/> - CUIT: <span t-field="o.company_id.vat"/>
+
+                            <!-- (11) IIBB: -->
+                            <!-- (12) Inicio de actividades -->
+                            <br/>Gross Income: <span t-esc="o.company_id.l10n_ar_gross_income_type == 'exempt' and 'Exento' or o.company_id.l10n_ar_gross_income_number"/> - Start of activities: <span t-field="o.company_id.l10n_ar_afip_start_date"/>
+                        </t>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="l10n_ar_report_invoice_document">
+
+        <t t-call="l10n_ar.custom_header"/>
+
+        <!-- <t t-call="web.html_container"> -->
+        <t t-call="web.external_layout">
+
+            <t t-set="o" t-value="o.with_context(lang=lang)"/>
+            <!-- <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"> -->
                 <div class="page">
                     <div id="informations">
                         <div id="sector-b" class="row">
@@ -301,7 +308,7 @@
                         </div>
                    </div>
                 </div>
-            </div>
+            <!-- </div> -->
         </t>
     </template>
 
