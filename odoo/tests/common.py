@@ -537,7 +537,8 @@ class TransactionCase(BaseCase):
         self.env = api.Environment(self.cr, odoo.SUPERUSER_ID, {})
         self.addCleanup(self.env.reset)
 
-        self.patch(type(self.env['res.partner']), '_get_gravatar_image', lambda *a: False)
+        if hasattr(self.env['res.partner'], '_get_gravatar_image'):
+            self.patch(type(self.env['res.partner']), '_get_gravatar_image', lambda *a: False)
 
     def patch(self, obj, key, val):
         """ Do the patch ``setattr(obj, key, val)``, and prepare cleanup. """
