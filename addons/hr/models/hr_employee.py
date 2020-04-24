@@ -195,7 +195,7 @@ class HrEmployeePrivate(models.Model):
     @api.onchange('user_id')
     def _onchange_user(self):
         if self.user_id:
-            self.update(self._sync_user(self.user_id))
+            self.update(self._sync_user(self.user_id, bool(self.image_1920)))
             if not self.name:
                 self.name = self.user_id.name
 
@@ -204,12 +204,13 @@ class HrEmployeePrivate(models.Model):
         if self.resource_calendar_id and not self.tz:
             self.tz = self.resource_calendar_id.tz
 
-    def _sync_user(self, user):
+    def _sync_user(self, user, employee_has_image=False):
         vals = dict(
-            image_1920=user.image_1920,
             work_email=user.email,
             user_id=user.id,
         )
+        if not employee_has_image:
+            vals['image_1920'] = user.image_1920
         if user.tz:
             vals['tz'] = user.tz
         return vals
@@ -218,7 +219,7 @@ class HrEmployeePrivate(models.Model):
     def create(self, vals):
         if vals.get('user_id'):
             user = self.env['res.users'].browse(vals['user_id'])
-            vals.update(self._sync_user(user))
+            vals.update(self._sync_user(user, vals.get('image_1920') == self._default_image()))
             vals['name'] = vals.get('name', user.name)
         employee = super(HrEmployeePrivate, self).create(vals)
         url = '/web#%s' % url_encode({'action': 'hr.plan_wizard_action', 'active_id': employee.id, 'active_model': 'hr.employee'})
@@ -235,7 +236,8 @@ class HrEmployeePrivate(models.Model):
             if account_id:
                 self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
         if vals.get('user_id'):
-            vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
+            # Update the profile pictures with user, except if provided 
+            vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']), bool(vals.get('image_1920'))))
         res = super(HrEmployeePrivate, self).write(vals)
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
