@@ -42,7 +42,7 @@ class StockMoveLine(models.Model):
                 qty = move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id)
             move_line.sale_price = unit_price * qty
 
-    def _get_aggregated_product_quantities(self):
+    def _get_aggregated_product_quantities(self, **kwargs):
         """Returns dictionary of products and corresponding values of interest + hs_code
 
         Unfortunately because we are working with aggregated data, we have to loop through the
@@ -50,7 +50,7 @@ class StockMoveLine(models.Model):
 
         returns: dictionary {same_key_as_super: {same_values_as_super, hs_code}, ...}
         """
-        aggregated_move_lines = super(StockMoveLine, self)._get_aggregated_product_quantities()
+        aggregated_move_lines = super()._get_aggregated_product_quantities(**kwargs)
         for aggregated_move_line in aggregated_move_lines:
             hs_code = aggregated_move_lines[aggregated_move_line]['product'].product_tmpl_id.hs_code
             aggregated_move_lines[aggregated_move_line]['hs_code'] = hs_code

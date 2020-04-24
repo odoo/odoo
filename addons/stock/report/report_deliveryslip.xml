@@ -69,12 +69,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                        <!-- This part gets complicated with different use cases:
+                        <!-- This part gets complicated with different use cases (additional use cases in extensions of this report):
                                 1. If serial numbers are used and set to print on delivery slip => print lines as is, otherwise group them by overlapping
                                     product + description + uom combinations
                                 2. If any packages are assigned => split products up by package (or non-package) and then apply use case 1 -->
                             <!-- If has destination packages => create sections of corresponding products -->
-                            <t t-if="o.has_packages">
+                            <t t-if="o.has_packages" name="has_packages">
                                 <t t-set="packages" t-value="o.move_line_ids.mapped('result_package_id')"/>
                                 <t t-foreach="packages" t-as="package">
                                     <t t-call="stock.stock_report_delivery_package_section_line"/>
@@ -92,16 +92,16 @@
                                     </t>
                                 </t>
                                 <!-- Make sure we do another section for package-less products if they exist -->
-                                <t t-set="package_move_lines" t-value="o.move_line_ids.filtered(lambda l: not l.result_package_id)"/>
-                                <t t-if="package_move_lines">
-                                    <t t-call="stock.stock_report_delivery_no_package_section_line"/>
+                                <t t-set="move_lines" t-value="o.move_line_ids.filtered(lambda l: not l.result_package_id)"/>
+                                <t t-if="move_lines" name="no_package_move_lines">
+                                    <t t-call="stock.stock_report_delivery_no_package_section_line" name="no_package_section"/>
                                     <t t-if="has_serial_number">
-                                        <tr t-foreach="package_move_lines" t-as="move_line">
+                                        <tr t-foreach="move_lines" t-as="move_line">
                                             <t t-call="stock.stock_report_delivery_has_serial_move_line"/>
                                         </tr>
                                     </t>
                                     <t t-else="">
-                                        <t t-set="aggregated_lines" t-value="package_move_lines._get_aggregated_product_quantities()"/>
+                                        <t t-set="aggregated_lines" t-value="move_lines._get_aggregated_product_quantities()"/>
                                         <t t-if="aggregated_lines">
                                             <t t-call="stock.stock_report_delivery_aggregated_move_lines"/>
                                         </t>
@@ -177,8 +177,14 @@
     <template id="stock_report_delivery_has_serial_move_line">
         <td>
             <span t-field="move_line.product_id"/>
-            <p t-if="move_line.move_id.description_picking != move_line.product_id.name">
-                <span t-field="move_line.move_id.description_picking"/>
+            <!-- this is an annoying workaround for the multiple types of descriptions (often auto-filled) that we do not want to print -->
+            <!-- this makes it so we can pre-filter the descriptions in inherited templates since we cannot extend the standard "if" condition -->
+            <!-- let's agree that pre-filtered descriptions will be set to "" -->
+            <t t-if="not description and description != ''">
+                <t t-set="description" t-value="move_line.move_id.description_picking"/>
+            </t>
+            <p t-if="description !='' and description != move_line.product_id.name">
+                <span t-esc="description"/>
             </p>
         </td>
         <t t-if="has_serial_number" name="move_line_lot">
