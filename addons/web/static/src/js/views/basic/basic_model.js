@@ -92,6 +92,7 @@ var session = require('web.session');
 var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
 var localStorage = require('web.local_storage');
+var viewNoData = require('web.viewNoData');
 
 var _t = core._t;
 
@@ -642,6 +643,7 @@ var BasicModel = AbstractModel.extend({
                 getFieldNames: element.getFieldNames,
                 id: element.id,
                 isDirty: element.isDirty,
+                isSample: this.localData[element.id].isSample,
                 limit: element.limit,
                 model: element.model,
                 offset: element.offset,
@@ -701,6 +703,7 @@ var BasicModel = AbstractModel.extend({
             id: element.id,
             isDirty: element.isDirty,
             isOpen: element.isOpen,
+            isSample: element.isSample,
             limit: element.limit,
             model: element.model,
             offset: element.offset,
@@ -3970,6 +3973,7 @@ var BasicModel = AbstractModel.extend({
             groupsOffset: 0,
             id: _.uniqueId(params.modelName + '_'),
             isOpen: params.isOpen,
+            isSample: params.isSample,
             limit: type === 'record' ? 1 : (params.limit || Number.MAX_SAFE_INTEGER),
             loadMoreOffset: 0,
             model: params.modelName,
@@ -4660,7 +4664,8 @@ var BasicModel = AbstractModel.extend({
                     }
                     list.data.push(newGroup.id);
                     list.count += newGroup.count;
-                    if (newGroup.isOpen && newGroup.count > 0) {
+                    let previousGroup = previousGroups.find(group => group.id === newGroup.id);
+                    if (newGroup.isOpen && (!previousGroup || (previousGroup && previousGroup.isSample) || (newGroup.count > 0))) {
                         openGroupCount++;
                         if (group.__data) {
                             // bypass the search_read when the group's records have been obtained
@@ -4671,6 +4676,8 @@ var BasicModel = AbstractModel.extend({
                         defs.push(self._load(newGroup, options));
                     }
                 });
+                list.isSample = viewNoData.isSample = list.count > 0 ? false : true;
+
                 if (options.keepEmptyGroups) {
                     // Find the groups that were available in a previous
                     // readGroup but are not there anymore.
@@ -4895,7 +4902,11 @@ var BasicModel = AbstractModel.extend({
         }
         return prom.then(function (result) {
             delete list.__data;
+            if (viewNoData.isSample && result.length === 0) {
+                result = viewNoData._makeSampleData(self, list.fields);
+            }
             list.count = result.length;
+            list.isSample = result.isSample;
             var ids = _.pluck(result.records, 'id');
             var data = _.map(result.records, function (record) {
                 var dataPoint = self._makeDataPoint({
@@ -4906,6 +4917,7 @@ var BasicModel = AbstractModel.extend({
                     modelName: list.model,
                     parentID: list.id,
                     viewType: list.viewType,
+                    isSample: list.isSample,
                 });
 
                 // add many2one records

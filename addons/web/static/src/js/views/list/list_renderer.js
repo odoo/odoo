@@ -935,6 +935,9 @@ var ListRenderer = BasicRenderer.extend({
             $tr.prepend(this._renderSelector('td', !record.res_id));
         }
         this._setDecorationClasses($tr, this.rowDecorations, record);
+        if (this.renderSample) {
+            $tr.addClass('o_record_sample');
+        }
         return $tr;
     },
     /**
@@ -1027,18 +1030,29 @@ var ListRenderer = BasicRenderer.extend({
     _renderView: function () {
         var self = this;
 
+        if (this.sampleType !== "helper" && this.state.isSample && this.getParent().viewType === 'list' 
+            && JSON.stringify(this.initialDomain) === JSON.stringify(this.state.getDomain())) {
+            this.renderSample = true;
+        } else {
+            this.renderSample = false;
+            if (this.state.isSample) {
+                this.state.data = [];
+            }
+        }
+
         const oldPagers = this.pagers;
         this.pagers = [];
 
         // display the no content helper if there is no data to display
-        var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
-        this.$el.toggleClass('o_list_view', !displayNoContentHelper);
-        if (displayNoContentHelper) {
+        var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp && this.sampleType !== "sample";
+        this.$el.toggleClass('o_list_view', !displayNoContentHelper || this.sampleType !== "helper");
+        if (displayNoContentHelper && this.sampleType === "helper") {
             // destroy the previously instantiated pagers, if any
             oldPagers.forEach(pager => pager.destroy());
 
             this.$el.removeClass('table-responsive');
             this.$el.html(this._renderNoContentHelper());
+            this.$el.removeClass('o_record_sample');
             return this._super.apply(this, arguments);
         }
 
@@ -1094,7 +1108,27 @@ var ListRenderer = BasicRenderer.extend({
                 }
             }
         });
-        return Promise.all([this._super.apply(this, arguments), prom]);
+        return Promise.all([this._super.apply(this, arguments), prom]).then(function (){
+            if (self.sampleType !== "sample" && self.state.count === 0 && !self.arch.attrs.editable && !!self.noContentHelp) {
+                self.$el.parent().find('.o_view_nocontent').remove()
+                self._renderNoContentHelper().insertAfter(self.$el);
+            }
+            if (self.renderSample) {
+                self.$el.find('.o_data_row').on('click', (evt) => {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    self.getParent().$buttons.find('.btn-primary:visible:first').odooBounce();
+                });
+                if (self.state.data.length > 0) {
+                    self.$('tfoot').addClass('o_record_sample');
+                } else {
+                    self.$('tfoot').remove();
+                }
+            } else if (self.state.isSample) {
+                //self.$el.empty();
+                self.$('tfoot').remove();
+            }
+        });
     },
     /**
      * Each line or cell can be decorated according to a few simple rules. The

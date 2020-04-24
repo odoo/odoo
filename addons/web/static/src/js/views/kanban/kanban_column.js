@@ -99,7 +99,9 @@ var KanbanColumn = Widget.extend({
         this.$header = this.$('.o_kanban_header');
 
         for (var i = 0; i < this.data_records.length; i++) {
-            defs.push(this._addRecord(this.data_records[i]));
+            if (this.getParent().state.isSample || !this.data_records[i].isSample) {
+                defs.push(this._addRecord(this.data_records[i]));
+            }
         }
 
         if (this.recordsDraggable) {
@@ -147,6 +149,25 @@ var KanbanColumn = Widget.extend({
                 self._onToggleFold(event);
             }
         });
+
+        if (this.getParent().sampleType !== "helper" && this.data.isSample && 
+            JSON.stringify(this.getParent().initialDomain) === JSON.stringify(this.getParent().state.getDomain())) {
+            this.getParent().renderSample = true;
+            /*if (this.data.progressBarValues) {
+                _.each(this.data.fields[this.data.progressBarValues.field].selection, function (type) {
+                    self.data.progressBarValues.counts[type[0]] = 0;
+                });
+                _.each(this.data.data, function (record) {
+                    self.data.progressBarValues.counts[record.data[self.data.progressBarValues.field]]++;
+                    if (self.data.progressBarValues.sum_field) {
+                        self.data.aggregateValues[self.data.progressBarValues.sum_field] += record.data[self.data.progressBarValues.sum_field];
+                    }
+                });
+            }*/
+        } else if (this.data.isSample) {
+            this.getParent().renderSample = false;
+        }
+
         if (this.barOptions) {
             this.$el.addClass('o_kanban_has_progressbar');
             this.progressBar = new KanbanColumnProgressBar(this, this.barOptions, this.data);
@@ -220,6 +241,9 @@ var KanbanColumn = Widget.extend({
     cancelQuickCreate: function () {
         if (this.quickCreateWidget) {
             this.quickCreateWidget.cancel();
+        }
+        if (!this.getParent().state.count) {
+            this.$el.find('.o_record_sample').remove();
         }
     },
     /**

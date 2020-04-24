@@ -396,6 +396,14 @@ var KanbanRenderer = BasicRenderer.extend({
         var self = this;
         var KanbanRecord = this.config.KanbanRecord;
         var kanbanRecord;
+
+        if (this.sampleType !== "helper" && this.state.isSample &&
+            JSON.stringify(this.initialDomain) === JSON.stringify(this.state.getDomain())) {
+            this.renderSample = true;
+        } else {
+            this.renderSample = false;
+        }
+
         _.each(this.state.data, function (record) {
             kanbanRecord = new KanbanRecord(self, record, self.recordOptions);
             self.widgets.push(kanbanRecord);
@@ -458,6 +466,19 @@ var KanbanRenderer = BasicRenderer.extend({
                 self.$el.empty();
                 self.$el.toggleClass('o_kanban_grouped', isGrouped);
                 self.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
+                let $records = $(fragment).find('.o_kanban_record');
+                if (self.renderSample && self.state.isSample) {
+                    $records.addClass('o_record_sample');
+                    _.each($records, function(record) {
+                        $(record).on('mousedown', (evt) => {
+                            evt.preventDefault();
+                            evt.stopPropagation();
+                            self.getParent().$buttons.find('.btn-primary:visible:first').odooBounce();
+                        });
+                    });
+                } else if (self.state.isSample) {
+                    $records.remove();
+                }
                 self.$el.append(fragment);
                 self._toggleNoContentHelper();
                 if (self._isInDom) {
@@ -476,7 +497,8 @@ var KanbanRenderer = BasicRenderer.extend({
             !this._hasContent() &&
             !!this.noContentHelp &&
             !(this.quickCreate && !this.quickCreate.folded) &&
-            !this.state.isGroupedByM2ONoColumn;
+            !this.state.isGroupedByM2ONoColumn &&
+            this.sampleType !== "sample";
 
         var $noContentHelper = this.$('.o_view_nocontent');
 

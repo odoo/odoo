@@ -40,9 +40,12 @@
 
 // No content helper
 .o_view_nocontent {
-    @include o-position-absolute(20%, 0, 0, 0);
+    @include o-position-absolute(30%, 0, 0, 0);
     pointer-events: none;
     z-index: 1;
+    border-radius: 50%;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 120px 120px #f9f9f9;
 
     .o_nocontent_help {
         @include o-nocontent-empty;
@@ -71,4 +74,10 @@
             background: transparent url(/web/static/src/img/graph_background.png) no-repeat 0 0;
         }
     }
+}
+
+.o_record_sample {
+    opacity: 0.4;
+    cursor: default !important;
+    pointer-events: none;
 }

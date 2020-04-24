@@ -40,6 +40,8 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         // This attribute lets us know if there is a handle widget on a field,
         // and on which field it is set.
         this.handleField = null;
+        this.initialDomain = this.state.getDomain();
+        this.sampleType = params.arch.attrs.no_data || "helper"; // types: all, helper, sample (default: helper)
     },
     /**
      * @override
