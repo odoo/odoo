@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import re
 import pytz
 
@@ -79,10 +80,7 @@ class Partner(models.Model):
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         if (not view_id) and (view_type == 'form') and self._context.get('force_email'):
             view_id = self.env.ref('base.view_partner_simple_form').id
-        res = super(Partner, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
-            res['arch'] = self._fields_view_get_address(res['arch'])
-        return res
+        return super(Partner, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     def copy(self, default=None):
         self.ensure_one()

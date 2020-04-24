@@ -48,7 +48,7 @@
                             <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                         </h1>
                     </div>
-                    <group>
+                    <group name="main_info">
                         <group>
                             <field name="type" groups="base.group_no_one" attrs="{'readonly': [('user_ids', '!=', [])]}"/>
                         </group>
@@ -70,7 +70,6 @@
                             </div>
                         </group>
                     </group>
-                    <notebook colspan="4"/>
                 </sheet>
                 </form>
             </field>

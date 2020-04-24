@@ -8,7 +8,7 @@
     'description': """
 This module holds the business definition of a basic partner, company, user
 """,
-    'depends': ['base'],
+    'depends': ['base', 'web'],
     'data': [
         'data/res_partner_data.xml',
         'data/res_partner_industry_data.xml',

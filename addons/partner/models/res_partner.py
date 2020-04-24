@@ -203,6 +203,13 @@ class Partner(models.Model):
     def onchange_company_type(self):
         self.is_company = (self.company_type == 'company')
 
+    @api.model
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super()._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            res['arch'] = self._fields_view_get_address(res['arch'])
+        return res
+
     @api.constrains('barcode')
     def _check_barcode_unicity(self):
         if self.env['res.partner'].search_count([('barcode', '=', self.barcode)]) > 1:
