@@ -1809,7 +1809,7 @@ class Meeting(models.Model):
             if values.get('name'):
                 activity_values['summary'] = values['name']
             if values.get('description'):
-                activity_values['note'] = values['description']
+                activity_values['note'] = tools.plaintext2html(values['description'])
             if values.get('start'):
                 # self.start is a datetime UTC *only when the event is not allday*
                 # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)
