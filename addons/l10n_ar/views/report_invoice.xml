@@ -76,7 +76,7 @@
         </div>
     </template>
 
-    <template id="l10n_ar_report_invoice_document">
+    <template id="report_invoice_document">
 
         <t t-call="l10n_ar.custom_header"/>
 
@@ -312,7 +312,7 @@
         </t>
     </template>
 
-    <template id="report_invoice_document_with_payments" inherit_id="l10n_ar.l10n_ar_report_invoice_document" primary="True">
+    <template id="report_invoice_document_with_payments" inherit_id="l10n_ar.report_invoice_document" primary="True">
         <xpath expr="//div[@id='total']/div/table" position="inside">
             <t t-set="payments_vals" t-value="o._get_reconciled_info_JSON_values()"/>
             <t t-foreach="payments_vals" t-as="payment_vals">
