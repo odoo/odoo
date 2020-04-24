@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import _
 from odoo.http import route, request
 from odoo.osv import expression
 from odoo.addons.mass_mailing.controllers.main import MassMailController
@@ -25,6 +26,11 @@ class MassMailController(MassMailController):
 
     @route('/website_mass_mailing/subscribe', type='json', website=True, auth="public")
     def subscribe(self, list_id, email, **post):
+        if not request.env['ir.http']._verify_request_recaptcha_token('website_mass_mailing_subscribe'):
+            return {
+                'toast_type': 'danger',
+                'toast_content': _("Suspicious activity detected by Google reCaptcha."),
+            }
         ContactSubscription = request.env['mailing.contact.subscription'].sudo()
         Contacts = request.env['mailing.contact'].sudo()
         name, email = Contacts.get_name_email(email)
@@ -41,7 +47,10 @@ class MassMailController(MassMailController):
         # add email to session
         request.session['mass_mailing_email'] = email
         mass_mailing_list = request.env['mailing.list'].sudo().browse(list_id)
-        return {'toast_content': mass_mailing_list.toast_content}
+        return {
+            'toast_type': 'success',
+            'toast_content': mass_mailing_list.toast_content
+        }
 
     @route(['/website_mass_mailing/get_content'], type='json', website=True, auth="public")
     def get_mass_mailing_content(self, newsletter_id, **post):

@@ -6,6 +6,8 @@ var rpc = require('web.rpc');
 var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
 var options = require('web_editor.snippets.options');
 var wUtils = require('website.utils');
+
+const qweb = core.qweb;
 var _t = core._t;
 
 
@@ -60,6 +62,39 @@ options.registry.mailing_list_subscribe = options.Class.extend({
         this.select_mailing_list('click').guardedCatch(function () {
             self.getParent()._onRemoveClick($.Event( "click" ));
         });
+    },
+});
+
+options.registry.recaptchaSubscribe = options.Class.extend({
+    xmlDependencies: ['/google_recaptcha/static/src/xml/recaptcha.xml'],
+
+    /**
+     * Toggle the recaptcha legal terms
+     */
+    toggleRecaptchaLegal: function (previewMode, value, params) {
+        const recaptchaLegalEl = this.$target[0].querySelector('.o_recaptcha_legal_terms');
+        if (recaptchaLegalEl) {
+            recaptchaLegalEl.remove();
+        } else {
+            const template = document.createElement('template');
+            template.innerHTML = qweb.render("google_recaptcha.recaptcha_legal_terms");
+            this.$target[0].appendChild(template.content.firstElementChild);
+        }
+    },
+
+    //----------------------------------------------------------------------
+    // Private
+    //----------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        switch (methodName) {
+            case 'toggleRecaptchaLegal':
+                return !this.$target[0].querySelector('.o_recaptcha_legal_terms') || '';
+        }
+        return this._super(...arguments);
     },
 });
 
