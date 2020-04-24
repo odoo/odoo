@@ -606,7 +606,7 @@ class StockMoveLine(models.Model):
         self.ensure_one()
         return location.should_bypass_reservation() or self.product_id.type != 'product'
 
-    def _get_aggregated_product_quantities(self):
+    def _get_aggregated_product_quantities(self, **kwargs):
         """ Returns a dictionary of products (key = id+name+description+uom) and corresponding values of interest.
 
         Allows aggregation of data across separate move lines for the same product. This is expected to be useful
