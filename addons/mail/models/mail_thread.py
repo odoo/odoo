@@ -1346,8 +1346,16 @@ class MailThread(models.AbstractModel):
         processing.
 
         :param email_message: an email.message instance;
-        :param message_dict: dictionary holding already-parsed values and in
-            which bounce-related values will be added;
+        :param message_dict: dictionary holding already-parsed values;
+
+        :return dict: bounce-related values will be added, containing
+
+          * bounced_email: email that bounced (normalized);
+          * bounce_partner: res.partner recordset whose email_normalized =
+            bounced_email;
+          * bounced_msg_id: list of message_ID references (<...@myserver>) linked
+            to the email that bounced;
+          * bounced_message: if found, mail.message recordset matching bounced_msg_id;
         """
         if not isinstance(email_message, EmailMessage):
             raise TypeError('message must be an email.message.EmailMessage at this point')
@@ -1367,8 +1375,8 @@ class MailThread(models.AbstractModel):
         bounced_msg_id = False
         bounced_message = self.env['mail.message'].sudo()
         if email_part:
-            email = email_part.get_payload()[0]
-            bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
+            email_payload = email_part.get_payload()[0]
+            bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email_payload, 'Message-Id'))
             if bounced_msg_id:
                 bounced_message = self.env['mail.message'].sudo().search([('message_id', 'in', bounced_msg_id)])
 
