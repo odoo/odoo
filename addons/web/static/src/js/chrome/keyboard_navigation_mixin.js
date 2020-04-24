@@ -1,6 +1,7 @@
 odoo.define('web.KeyboardNavigationMixin', function (require) {
     "use strict";
     var BrowserDetection = require('web.BrowserDetection');
+    const core = require('web.core');
 
     /**
      * list of the key that should not be used as accesskeys. Either because we want to reserve them for a specific behavior in Odoo or
@@ -43,6 +44,22 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
             }, options);
             this._areAccessKeyVisible = false;
             this.BrowserDetection = new BrowserDetection();
+        },
+        /**
+         * @override
+         */
+        start: function () {
+            const temp = this._hideAccessKeyOverlay.bind(this);
+            this._hideAccessKeyOverlay = () => temp();
+            window.addEventListener('blur', this._hideAccessKeyOverlay);
+            core.bus.on('click', null, this._hideAccessKeyOverlay);
+        },
+        /**
+         * @destructor
+         */
+        destroy: function () {
+            window.removeEventListener('blur', this._hideAccessKeyOverlay);
+            core.bus.off('click', null, this._hideAccessKeyOverlay);
         },
 
         //--------------------------------------------------------------------------

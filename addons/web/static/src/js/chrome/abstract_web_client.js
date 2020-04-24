@@ -104,7 +104,11 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         this.env = env;
         core.bus.on('legacy_webclient_request', this, this._onLegacyWebclientRequest);
     },
+    /**
+     * @override
+     */
     start: function () {
+        KeyboardNavigationMixin.start.call(this);
         var self = this;
 
         // we add the o_touch_device css class to allow CSS to target touch
@@ -161,7 +165,13 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
                 }
             });
     },
-
+    /**
+     * @override
+     */
+    destroy: function () {
+        KeyboardNavigationMixin.destroy.call(this);
+        return this._super(...arguments);
+    },
     bind_events: function () {
         var self = this;
         $('.oe_systray').show();
@@ -190,14 +200,12 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
                 }
             }, 0);
         });
-        window.addEventListener('blur', function (e) {self._hideAccessKeyOverlay(); });
         core.bus.on('click', this, function (ev) {
             $('.tooltip').remove();
             if (!$(ev.target).is('input[type=file]')) {
                 $(this.el.getElementsByClassName('oe_dropdown_menu oe_opened')).removeClass('oe_opened');
                 $(this.el.getElementsByClassName('oe_dropdown_toggle oe_opened')).removeClass('oe_opened');
             }
-            this._hideAccessKeyOverlay();
         });
         core.bus.on('connection_lost', this, this._onConnectionLost);
         core.bus.on('connection_restored', this, this._onConnectionRestored);
