@@ -2,13 +2,11 @@
 <odoo>
     <data noupdate="1">
         <!-- user 1 is the technical admin user -->
-        <record model="res.users" id="base.user_root">
+        <record id="user_root" model="res.users">
             <field name="partner_id" ref="base.partner_root"/>
             <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[(4, ref('main_company'))]"/>
             <field name="email">root@example.com</field>
-            <field name="signature"><![CDATA[<span>-- <br/>
-System</span>]]></field>
         </record>
 
         <!-- user 2 is the human admin user -->
@@ -19,9 +17,6 @@ System</span>]]></field>
             <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[(4, ref('main_company'))]"/>
             <field name="groups_id" eval="[(6,0,[])]"/>
-            <field name="image_1920" type="base64" file="base/static/img/avatar_grey.png"/>
-            <field name="signature"><![CDATA[<span>-- <br/>
-Administrator</span>]]></field>
         </record>
 
         <!-- Default user with full access rights for newly created users -->
@@ -37,7 +32,6 @@ Administrator</span>]]></field>
             <field name="password"></field>
             <!-- Avoid auto-including this demo user in any default group -->
             <field name="groups_id" eval="[(6,0,[])]"/>
-            <field name="image_1920" type="base64" file="base/static/img/public_user-image.png"/>
             <field name="partner_id" ref="public_partner"/>
             <field name="active" eval="False"/>
         </record>

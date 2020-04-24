@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_simple_form" model="ir.ui.view">
+        <field name="name">res.users.simplified.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_simple_form"/>
+        <field name="arch" type="xml">
+            <div name="title" position="before">
+                <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image": "image_128"}'/>
+            </div>
+            <group name="phone_numbers" position="inside">
+                <field name="phone" widget="phone" options="{'enable_sms': false}"/>
+                <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_users_form" model="ir.ui.view">
+        <field name="name">res.users.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <div name="title" position="before">
+                <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
+            </div>
+            <group name="preferences" position="after">
+                <group string="Menus Customization" groups="base.group_no_one">
+                    <field name="action_id"/>
+                </group>
+            </group>
+            <group name="references" position="after">
+                <group name="messaging">
+                    <field name="signature"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_res_users_kanban" model="ir.ui.view">
+        <field name="name">res.users.kanban</field>
+        <field name="model">res.users</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="login"/>
+                <field name="lang"/>
+                <field name="active"/>
+                <field name="login_date"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <img alt="Avatar" t-att-src="kanban_image('res.users', 'image_128', record.id.raw_value)"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <ul>
+                                    <li class="text-success float-right mb4" t-if="record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Ok" title="Ok"></i></li>
+                                    <li class="text-danger float-right mb4" t-if="!record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Invalid" title="Invalid"></i></li>
+                                    <li class="mb4">
+                                        <strong><field name="name"/></strong>
+                                    </li>
+                                    <li class="badge badge-pill float-right mb4" t-if="record.lang.raw_value"><field name="lang"/></li>
+                                    <li class="mb4" t-if="record.login.raw_value" title="Login"><i class="fa fa-envelope" role="img" aria-label="Login"/> <field name="login"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_users_form_simple_modif" model="ir.ui.view">
+        <field name="name">res.users.preferences.form</field>
+        <field name="model">res.users</field>
+        <field eval="18" name="priority"/>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//h1" position="before">
+                <field name="image_1920" readonly="0" widget='image' class="oe_right oe_avatar" options='{"preview_image": "image_128"}'/>
+            </xpath>
+            <group name="preferences" position="after">
+                <group name="signature">
+                    <field name="signature" readonly="0"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

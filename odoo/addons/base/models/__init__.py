@@ -41,6 +41,7 @@ from . import res_bank
 from . import res_config
 from . import res_currency
 from . import res_company
+from . import res_groups
 from . import res_users
 
 from . import decimal_precision

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.partner_demo" model="res.partner">
+            <field name="company_name">YourCompany</field>
+            <field name="street">3575  Buena Vista Avenue</field>
+            <field name="city">Eugene</field>
+            <field name="state_id"  model="res.country.state" search="[('code','ilike','OR')]"/>
+            <field name="zip">97401</field>
+            <field name="country_id" ref="us"/>
+            <field name="tz">Europe/Brussels</field>
+            <field name="phone">(441)-695-2334</field>
+        </record>
+
+        <record id="base.main_partner" model="res.partner">
+            <field name="company_name">YourCompany</field>
+            <field name="street">250 Executive Park Blvd, Suite 3400</field>
+            <field name="city">San Francisco</field>
+            <field name="zip">94134</field>
+            <field name='country_id' ref='base.us'/>
+            <field name='state_id' ref='state_us_5'/>
+            <field name="phone">+1 (650) 691-3277 </field>
+            <field name="website">www.example.com</field>
+        </record>
+
+        <record id="base.user_demo" model="res.users">
+            <field name="signature" type="xml"><span>-- <br/>+Mr Demo</span></field>
+            <field name="image_1920" type="base64" file="base/static/img/user_demo-image.jpg"/>
+        </record>
+
+        <record id="base.partner_root" model="res.partner">
+            <field name="tz">Europe/Brussels</field>
+        </record>
+
+        <record id="base.partner_admin" model="res.partner">
+            <field name="company_name">YourCompany</field>
+            <field name="street">215 Vine St</field>
+            <field name="city">Scranton</field>
+            <field name="zip">18503</field>
+            <field name='country_id' ref='base.us'/>
+            <field name='state_id' ref='state_us_39'/>
+            <field name="phone">+1 555-555-5555</field>
+            <field name="tz">Europe/Brussels</field>
+            <field name="image_1920" type="base64" file="base/static/img/partner_root-image.jpg"/>
+        </record>
+
+        <record id="base.partner_demo_portal" model="res.partner">
+            <field name="street">858 Lynn Street</field>
+            <field name="city">Bayonne</field>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','NJ')]"/>
+            <field name="zip">07002</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="company_name">YourCompany</field>
+            <field name="image_1920" type="base64" file="base/static/img/partner_demo_portal.jpg"/>
+            <field name="phone">(683)-556-5104</field>
+        </record>
+
+        <record id="base.demo_user0" model="res.users">
+            <field name="signature" type="xml"><span>-- <br/>Mr Demo Portal</span></field>
+        </record>
+    </data>
+</odoo>

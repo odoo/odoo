@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_category_0" model="res.partner.category">
+        <field name="name">Vendor</field>
+        <field name="color" eval="2"/>
+    </record>
+    <record id="res_partner_category_2" model="res.partner.category">
+        <field name="name">Prospects</field>
+        <field name="color" eval="3"/>
+    </record>
+    <record id="res_partner_category_3" model="res.partner.category">
+        <field name="name">Employees</field>
+        <field name="color" eval="4"/>
+    </record>
+    <record id="res_partner_category_8" model="res.partner.category">
+        <field name="name">Consulting Services</field>
+        <field name="color" eval="5"/>
+    </record>
+    <record id="res_partner_category_11" model="res.partner.category">
+        <field name="name">Services</field>
+        <field name="color" eval="7"/>
+    </record>
+    <record id="res_partner_category_12" model="res.partner.category">
+        <field name="name">Office Supplies</field>
+        <field name="parent_id" ref="res_partner_category_0"/>
+        <field name="color" eval="8"/>
+    </record>
+    <record id="res_partner_category_14" model="res.partner.category">
+        <field name="name">Desk Manufacturers</field>
+        <field name="color" eval="10"/>
+        <field name="parent_id" ref="res_partner_category_0"/>
+    </record>
+</odoo>
