@@ -101,8 +101,8 @@ class HrEmployeeBase(models.AbstractModel):
     @api.depends('address_id')
     def _compute_phones(self):
         for employee in self.filtered('address_id'):
-            employee.work_phone = employee.address_id.phone
-            employee.mobile_phone = employee.address_id.mobile
+            if employee.address_id.phone:
+                employee.work_phone = employee.address_id.phone
 
     @api.depends('company_id')
     def _compute_address_id(self):
