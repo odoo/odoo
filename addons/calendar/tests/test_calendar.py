@@ -226,7 +226,8 @@ class TestCalendar(TransactionCase):
         })
         now = datetime.now()
         test_user = self.env.ref('base.user_demo')
-        test_name, test_description, test_description2 = 'Test-Meeting', '<p>Test-Description</p>', '<p>NotTest</p>'
+        test_name, test_description, test_description2 = 'Test-Meeting', 'Test-Description', 'NotTest'
+        test_note, test_note2 = '<p>Test-Description</p>', '<p>NotTest</p>'
 
         # create using default_* keys
         test_event = self.env['calendar.event'].with_user(test_user).with_context(
@@ -243,7 +244,7 @@ class TestCalendar(TransactionCase):
         self.assertEqual(test_event.res_id, test_record.id)
         self.assertEqual(len(test_record.activity_ids), 1)
         self.assertEqual(test_record.activity_ids.summary, test_name)
-        self.assertEqual(test_record.activity_ids.note, test_description)
+        self.assertEqual(test_record.activity_ids.note, test_note)
         self.assertEqual(test_record.activity_ids.user_id, self.env.user)
         self.assertEqual(test_record.activity_ids.date_deadline, (now + timedelta(days=-1)).date())
 
@@ -255,9 +256,18 @@ class TestCalendar(TransactionCase):
             'user_id': test_user.id,
         })
         self.assertEqual(test_record.activity_ids.summary, '%s2' % test_name)
-        self.assertEqual(test_record.activity_ids.note, test_description2)
+        self.assertEqual(test_record.activity_ids.note, test_note2)
         self.assertEqual(test_record.activity_ids.user_id, test_user)
         self.assertEqual(test_record.activity_ids.date_deadline, (now + timedelta(days=-2)).date())
+
+        # update event with a description that have a special character and a new line
+        test_description3 = 'Test & \n Description'
+        test_note3 = '<p>Test &amp; <br> Description</p>'
+        test_event.write({
+            'description': test_description3,
+        })
+
+        self.assertEqual(test_record.activity_ids.note, test_note3)
 
         # deleting meeting should delete its activity
         test_record.activity_ids.unlink()
