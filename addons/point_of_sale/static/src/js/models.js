@@ -1559,7 +1559,7 @@ exports.Orderline = Backbone.Model.extend({
             var self = this;
             _(taxes).each(function(tax) {
                 var line_tax = self._map_tax_fiscal_position(tax);
-                if(tax.price_include && line_tax.id != tax.id){
+                if(tax.price_include && !line_tax.price_include && tax.id != line_tax.id){
                     mapped_included_taxes.push(tax);
                 }
             });
