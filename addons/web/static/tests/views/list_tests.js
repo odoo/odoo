@@ -1,11 +1,13 @@
 odoo.define('web.list_tests', function (require) {
 "use strict";
 
+var AbstractFieldOwl = require('web.AbstractFieldOwl');
 var AbstractStorageService = require('web.AbstractStorageService');
 var BasicModel = require('web.BasicModel');
 var core = require('web.core');
 var basicFields = require('web.basic_fields');
 var fieldRegistry = require('web.field_registry');
+var fieldRegistryOwl = require('web.field_registry_owl');
 var FormView = require('web.FormView');
 var ListRenderer = require('web.ListRenderer');
 var ListView = require('web.ListView');
@@ -9357,6 +9359,37 @@ QUnit.module('Views', {
         assert.strictEqual(document.activeElement.name, "int_field");
 
         list.destroy();
+    });
+
+    QUnit.test('list view with field component: mounted and willUnmount calls', async function (assert) {
+        // this test could be removed as soon as the list view will be written in Owl
+        assert.expect(3);
+
+        let mountedCalls = 0;
+        let willUnmountCalls = 0;
+        class MyField extends AbstractFieldOwl {
+            mounted() {
+                mountedCalls++;
+            }
+            willUnmount() {
+                willUnmountCalls++;
+            }
+        }
+        MyField.template = owl.tags.xml`<span>Hello World</span>`;
+        fieldRegistryOwl.add('my_owl_field', MyField);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo" widget="my_owl_field"/></tree>',
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        list.destroy();
+
+        assert.strictEqual(mountedCalls, 4);
+        assert.strictEqual(willUnmountCalls, 4);
     });
 });
 
