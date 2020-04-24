@@ -53,5 +53,9 @@ models.Order = models.Order.extend({
         }
         return 0;
     },
+    get_total_balance: function() {
+        return this.get_total_with_tax() - this.get_total_paid() + this.get_rounding_applied();
+    },
 });
 });
+

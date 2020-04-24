@@ -69,12 +69,12 @@ msgstr "# nın Görevleri"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Memnuniyet Anketi"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "% On"
-msgstr ""
+msgstr "% Açık"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -169,6 +169,62 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Merhaba ${partner.name},<br/>\n"
+"            Lütfen görevle ilgili hizmetlerimizi değerlendirmek için bir dakikanızı ayırın \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Bize hizmetimiz hakkında ne düşündüğünüzü söyleyin</strong><br/>\n"
+"                    <span style=\"text-color: #888888\">(bu suratlardan birine tıklayın)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/10\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/5\">\n"
+"                                    <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/1\">\n"
+"                                    <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Geribildirim için teşekkürler. Sürekli gelişmemize yardımcı olacaktır.\n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Bu müşteri anketi, göreviniz<b>${object.stage_id.name}</b> aşamasına taşındığı için gönderildi </span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Bu müşteri anketi aşaması<b>${object.stage_id.name}</b> olduğu sürece gönderilecek.\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -183,6 +239,15 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Sevgili ${object.partner_id.name or 'customer'},<br/>\n"
+"    Anketiniz için teşekkür ederiz.<br/>\n"
+"      Herhangi bir sorunuz varsa, lütfen bize bildirin.\n"
+"    <br/><br/>\n"
+"    Teşekkürler,\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -242,6 +307,10 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Belgeler projenizin görevlerine eklenir.</p><p>\n"
+"                        Belgeleri projenize bağlamak için mesaj gönderin veya dahili notları eklerle birlikte loglara kaydedin.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -293,7 +362,7 @@ msgstr "<strong class=\"d-block mb-2\">Açıklama </strong>"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "<strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
-msgstr ""
+msgstr "<strong style=\"font-size: 16px;\">Posta ağ geçidini deneyin</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -477,6 +546,8 @@ msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
+"Bu projenin finansal yönetim için bağlantılı olduğu analitik hesap. "
+"Projenize maliyet ve gelir kaydetmek için analitik hesap kullanın."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -566,6 +637,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Müşteri bu aşama için geri bildirime yanıt verdiğinde kanban durumunu otomatik olarak değiştirin.\n"
+"* Müşteriden gelen iyi bir geri bildirim kanban durumunu 'yeni aşamaya hazır' (yeşil madde işareti) olarak güncelleyecektir.\n"
+"* Orta veya kötü bir geri bildirim, kanban durumunu 'engellenmiş' (kırmızı madde işareti) olarak ayarlayacaktır.\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -691,6 +765,8 @@ msgid ""
 "Click on the card to write more information about it and collaborate with "
 "your coworkers."
 msgstr ""
+"Bu konuda daha fazla bilgi yazmak ve iş arkadaşlarınızla işbirliği yapmak "
+"için karta tıklayın."
 
 #. module: project
 #. openerp-web
@@ -715,6 +791,10 @@ msgid ""
 "designs to the task, so that information flow from designers to the workers "
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 msgstr ""
+"E-posta ağ geçidini kullanarak görevdeki müşterilerle iletişim kurun. Göreve"
+" logo tasarımları ekleyin, böylece tasarımcılardan tişörtü basan işçilere "
+"bilgi akışı sağlayın. %s simgesini kullanarak siparişler arasında "
+"öncelikleri düzenleyin."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -731,6 +811,9 @@ msgid ""
 "Computed using sum of hours planned of all subtasks created from main task. "
 "Usually these hours are less or equal to the Planned Hours (of main task)."
 msgstr ""
+"Ana görevden oluşturulan tüm alt görevler için planlanan saat toplamı "
+"kullanılarak hesaplanır. Genellikle bu saatler Planlanan Saatlere (ana "
+"görev) eşit veya daha azdır."
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
@@ -912,6 +995,10 @@ msgid ""
 "feedback is accepted %s and which feedback is moved to the \"Refused\" "
 "column."
 msgstr ""
+"Müşterilere e-posta yoluyla geri bildirim önerir; Odoo otomatik olarak "
+"görevler oluşturur ve görev üzerinden doğrudan iletişim kurabilirsiniz. "
+"Hangi geri bildirimin kabul edileceğine %s ve hangi geri bildirimlerin "
+"\"Reddedildi\" sütununa taşınacağına yöneticileriniz karar verir."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -961,6 +1048,10 @@ msgid ""
 "- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
+"Projenin görevlerinin görünürlüğünü tanımlar:\n"
+"- Davet edilen çalışanlar: çalışanlar yalnızca takip edilen projeyi ve görevleri görebilir.\n"
+"- Tüm çalışanlar: çalışanlar tüm proje ve görevleri görebilir.\n"
+"- Portal kullanıcıları ve tüm çalışanlar: çalışanlar her şeyi görebilir. Portal kullanıcıları, proje ve görevleri kendileri veya şirketlerinden biri tarafından görülebilir."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1135,6 +1226,9 @@ msgid ""
 " all documents or links to the task directly, to have all information about "
 "a research centralized."
 msgstr ""
+"Herkes fikir önerebilir ve Editör %s en iyi fikirleri işaretler. Merkezi bir"
+" araştırma hakkında tüm bilgilere sahip olmak için tüm belgeleri veya "
+"bağlantıları doğrudan göreve ekleyin."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1161,6 +1255,11 @@ msgid ""
 "review the \"This Week\" column to move important tasks \"Today\". Every "
 "Monday, you review the \"This Month\" column."
 msgstr ""
+"E-posta ağ geçidi ile kolayca gelen kutunuzu doldurun. Gelen kutunuzu "
+"periyodik olarak gözden geçirin ve görevleri diğer sütunlara taşıyarak "
+"planlayın. Her gün, önemli görevleri \"bugün\" taşımak için \"bu hafta\" "
+"sütununu gözden geçirirsiniz. Her Pazartesi, \"bu ay\" sütununu gözden "
+"geçirirsiniz."
 
 #. module: project
 #. openerp-web
@@ -1285,6 +1384,8 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea"
 msgstr ""
+"Yeni projelerinizin görevlerinde fikirlerinizi toplayıp ele alın. Fikrinizin"
+" mevcut durumunun ne olduğunu sinyalize etmek için %s ve %s kullanın."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -1316,6 +1417,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Müşteri geri bildirimi nasıl alınır?\n"
+"- Aşama değiştirilirken değerlendirme: bir görev başka bir aşamaya çekildiğinde bir e-posta gönderilir.\n"
+"- Periyodik değerlendirme: periyodik olarak e-posta gönderilir.\n"
+"\n"
+"Müşterinin geri bildirimlerini almak istediğiniz aşamalarda eposta şablonlarını ayarlamayı unutmayın."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1389,6 +1495,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Projenin değerlendirme yapılandırması 'Aşama değiştirilirken değerlendirme' "
+"olarak ayarlanırsa, görev bu adıma ulaştığında müşteriye bir e-posta "
+"gönderilir."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1500,6 +1609,9 @@ msgid ""
 "It is the time planned to achieve the task. If this document has sub-tasks, "
 "it means the time needed to achieve this tasks and its childs."
 msgstr ""
+"Bu görevi gerçekleştirmek için planlanan zamandır. Bu belgenin alt görevleri"
+" varsa, bu görevleri ve alt görevlerini gerçekleştirmek için gereken süre "
+"anlamına gelir."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
@@ -1693,6 +1805,9 @@ msgid ""
 "acquired project, assign them and use the %s and %s to define if the project"
 " is ready for the next step."
 msgstr ""
+"Kanban görünümünü kullanarak projenizin yaşam döngüsünü yönetin. Yeni "
+"edinilen projeyi ekleyin, bunları atayın ve projenin bir sonraki adıma hazır"
+" olup olmadığını tanımlamak için %s ve %s öğelerini kullanın."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -1910,6 +2025,8 @@ msgid ""
 "Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br>\n"
 "                    You can track progress, discuss on tasks, attach documents, etc."
 msgstr ""
+"Odoo'nun proje yönetimi, görevlerinizin panelini verimli bir şekilde yönetmenizi sağlar.<br>\n"
+"İlerlemeyi izleyebilir, görevler hakkında tartışabilir, belge ekleyebilir vb."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -2039,6 +2156,8 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Son 30 gün içindeki mutlu puanların yüzdesi. Diğer menüsünden derecelendirme"
+" ayrıntılarını alın."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
@@ -2099,6 +2218,10 @@ msgid ""
 "your colleagues that a task is ready for the next stage.%s Use the %s to "
 "signalize a problem or a need for discussion on a task."
 msgstr ""
+"%s Simgesini kullanarak görevlere öncelik verin. İş arkadaşlarınıza bir "
+"görevin bir sonraki aşamaya hazır olduğunu bildirmek için%s %s butonunu "
+"kullanın. Bir sorunu veya bir görevle ilgili tartışma ihtiyacını bildirmek "
+"için%s %s kullanın."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2172,6 +2295,8 @@ msgid ""
 "Project in which sub-tasks of the current project will be created. It can be"
 " the current project itself."
 msgstr ""
+"Mevcut projenin alt görevlerinin oluşturulacağı proje. Mevcut projenin "
+"kendisi olabilir."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -2299,7 +2424,7 @@ msgstr "Değerlendirmeler"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Ratings of %s"
-msgstr ""
+msgstr "%s puanları"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2667,7 +2792,7 @@ msgstr "Görev"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Task %s cannot have several subtask levels."
-msgstr ""
+msgstr "%s görevinin birden fazla alt görev adımı olamaz."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
@@ -2860,12 +2985,15 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Projenin gizliliği çok kısıtlı olduğundan proje alıcılarla paylaşılamaz. "
+"Alıcıların erişebilmesi için gizliliği 'Müşterileri izleyerek görünür' "
+"olarak ayarlayın."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "The subtasks belong to a company you do not have access to."
-msgstr ""
+msgstr "Alt görevler, erişiminiz olmayan bir şirkete aittir."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2875,6 +3003,9 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Projenin gizliliği çok kısıtlı olduğundan görev alıcılarla paylaşılamaz. "
+"Alıcının erişebilmesi için projenin gizliliğini 'Müşterileri izleyerek "
+"görünür' olarak ayarlayın."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -2984,6 +3115,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
+"İşleri bitirmek için görevlerdeki etkinlikleri ve durumları kullanın.\n"
+"Verimli bir şekilde işbirliği yapmak için gerçek zamanlı veya e-posta ile sohbet edin."
 
 #. module: project
 #. openerp-web
@@ -3091,7 +3224,7 @@ msgstr "Görünürlük"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Waiting for the next stage: use %s and %s bullets."
-msgstr ""
+msgstr "Bir sonraki aşama bekleniyor: %skullanımı ve %s madde işaretleri."
 
 #. module: project
 #. openerp-web

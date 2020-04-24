@@ -27,6 +27,7 @@
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # David Minneci <david@numeko.it>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Iacopo Simonelli <lsi@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -34,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Iacopo Simonelli <lsi@odoo.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +54,13 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
+" * Bozza: l'OP non è ancora confermato.\n"
+" * Confermato: l'OP è confermato, le regole dello stock e il riordino dei componenti sono attivate.\n"
+" * Pianificato: l'OM è pianificato.\n"
+" * In corso: la produzione è iniziata (sul OM o sul OL).\n"
+" * Da chiudere: la produzione è terminata, l' OM deve essere chiuso.\n"
+" * Fatto: l'OM è chiuso, i movimenti di magazzino sono registrati.\n"
+" * Annullato: l'OM è stato cancellato, non può più essere confermato."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reservation_state
@@ -61,6 +69,9 @@ msgid ""
 "            * Waiting: The material is not available to start the production.\n"
 "            The material availability is impacted by the manufacturing readiness            defined on the BoM."
 msgstr ""
+" * Pronto: il materiale è disponibile per iniziare la produzione.\n"
+"            * In attesa: il materiale non è disponibile per iniziare la produzione.\n"
+"            La disponibilità del materiale è influenzata dalla priorità di produzione definita sulla distinta dei materiali."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -110,22 +121,22 @@ msgstr "# Distinte Base"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s cannot be deleted. Try to cancel them before."
-msgstr ""
+msgstr "%s non può essere eliminato. Prova ad annullarlo prima."
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
 msgid "'Bom Structure - %s' % object.display_name"
-msgstr ""
+msgstr "'Struttura della distinta base - %s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_finished_product
 msgid "'Finished products - %s' % object.name"
-msgstr ""
+msgstr "'Prodotto finito - %s' % object.name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
 msgid "'Production Order - %s' % object.name"
-msgstr ""
+msgstr "'Ordine di Produzione - %s' % object.name"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -193,7 +204,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Load</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Carica</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -342,7 +353,7 @@ msgstr "<strong>Data Inizio: </strong>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
 msgid "<strong>Stop Date: </strong>"
-msgstr ""
+msgstr "<strong>Data Finale: </strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -353,12 +364,14 @@ msgstr "<strong>Centro di Lavorazione</strong>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
 msgid "<strong>Workcenter: </strong>"
-msgstr ""
+msgstr "<strong>Centro di Lavorazione: </strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "A BoM of type kit is used to split the product into its components."
 msgstr ""
+"Una distinta base di tipo kit viene utilizzata per dividere il prodotto nei "
+"suoi componenti."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -370,7 +383,7 @@ msgstr "Un ordine di produzione è gia' stato eseguito o cancellato."
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "A workcenter cannot be an alternative of itself"
-msgstr ""
+msgstr "Un centro di lavorazione non può essere un'alternativa a se stesso"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_abstract_workorder_line
@@ -457,6 +470,8 @@ msgstr "Aggiungi controlli di qualita' ai tuoi ordini di produzione"
 #, python-format
 msgid "Add some materials to consume before marking this MO as to do."
 msgstr ""
+"Aggiungi alcuni materiali da consumare prima di contrassegnare questo OM "
+"come 'da fare'."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -485,12 +500,12 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__use_create_components_lots
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Allow to create new lot/serial numbers for the components"
-msgstr ""
+msgstr "Consente di creare nuovi numeri di lotto / serie per i componenti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__allowed_lots_domain
 msgid "Allowed Lots Domain"
-msgstr ""
+msgstr "Dominio lotti consentito"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__post_visible
@@ -505,7 +520,7 @@ msgstr "E' permesso annullare la riserva dell'inventario."
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__alternative_workcenter_ids
 msgid "Alternative Workcenters"
-msgstr ""
+msgstr "Centri di lavorazione alternativi"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__alternative_workcenter_ids
@@ -513,6 +528,8 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
+"Centri di lavorazione alternativi che possono sostituire questo per iniziare"
+" la produzione"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -546,12 +563,12 @@ msgstr "Archiviato"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Manufacturing Order."
-msgstr ""
+msgstr "Alla creazione di un ordine di produzione."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Stock Transfer."
-msgstr ""
+msgstr "Alla creazione di un trasferimento di stock."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
@@ -619,6 +636,8 @@ msgstr "BoM delle varianti del prodotto"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 msgid "BOM Product Variants needed to apply this line."
 msgstr ""
+"Le varianti del prodotto, inserite nella distinta base, sono necessarie per "
+"applicare questa linea."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
@@ -676,6 +695,8 @@ msgid ""
 "Bill of Materials allow you to define the list of required components to "
 "make a finished product."
 msgstr ""
+"Le disinte base consentono di definire la lista dei componenti da usare per "
+"creare i prodotti finiti."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -720,12 +741,12 @@ msgstr "Tempo Bloccato"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__blocked_time
 msgid "Blocked hours over the last month"
-msgstr ""
+msgstr "Ore di fermo nell'ultimo mese"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__name
 msgid "Blocking Reason"
-msgstr ""
+msgstr "Ragioni del blocco"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
@@ -1689,7 +1710,7 @@ msgstr "Icona"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_icon
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Icona per indicare un'attività di eccezione."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_id
@@ -3919,6 +3940,8 @@ msgstr "L'ordine di produzione \"%s\" non ha nessuna quantità specificata."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
 msgid "The quantity to produce must be positive!"
 msgstr "La quantità da produrre deve essere positiva!"
 

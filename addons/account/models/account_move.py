@@ -1505,7 +1505,7 @@ class AccountMove(models.Model):
             # Shortcut to load the demo data.
             # Doing line.account_id triggers a default_get(['account_id']) that could returns a result.
             # A section / note must not have an account_id set.
-            if not line._cache.get('account_id') and not line.display_type:
+            if not line._cache.get('account_id') and not line.display_type and not line._origin:
                 line.account_id = line._get_computed_account()
                 if not line.account_id:
                     if self.is_sale_document(include_receipts=True):
@@ -2118,8 +2118,6 @@ class AccountMove(models.Model):
         # `user_has_group` won't be bypassed by `sudo()` since it doesn't change the user anymore.
         if not self.env.su and not self.env.user.has_group('account.group_account_invoice'):
             raise AccessError(_("You don't have the access rights to post an invoice."))
-        # Force balance check since nothing prevents another module to create an incorrect entry.
-        self._check_balanced()
         for move in self:
             if not move.line_ids.filtered(lambda line: not line.display_type):
                 raise UserError(_('You need to add a line before posting.'))
@@ -2202,6 +2200,10 @@ class AccountMove(models.Model):
         self.filtered(
             lambda m: m.is_invoice(include_receipts=True) and m.currency_id.is_zero(m.amount_total)
         ).action_invoice_paid()
+
+        # Force balance check since nothing prevents another module to create an incorrect entry.
+        # This is performed at the very end to avoid flushing fields before the whole processing.
+        self._check_balanced()
 
     def action_reverse(self):
         action = self.env.ref('account.action_view_account_move_reversal').read()[0]
@@ -3479,6 +3481,8 @@ class AccountMoveLine(models.Model):
             if 'account_id' in default_fields and not values.get('account_id'):
                 if len(move.line_ids[-2:]) == 2 and  move.line_ids[-1].account_id == move.line_ids[-2].account_id != False:
                     values['account_id'] = move.line_ids[-2:].mapped('account_id').id
+        if values.get('display_type'):
+            values.pop('account_id', None)
         return values
 
     @api.depends('ref', 'move_id')

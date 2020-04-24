@@ -471,7 +471,7 @@
                                           'pricelist': parent.pricelist_id,
                                           'uom':product_uom,
                                           'company_id': parent.company_id,
-                                          'default_lst_price': price_unit,
+                                          'default_list_price': price_unit,
                                           'default_description_sale': name
                                       }"
                                       domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"

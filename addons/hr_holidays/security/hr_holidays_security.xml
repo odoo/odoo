@@ -94,7 +94,7 @@
         <field name="groups" eval="[(4, ref('hr_holidays.group_hr_holidays_responsible'))]"/>
     </record>
 
-    <record id="hr_leave_rule_responsible_read" model="ir.rule">
+    <record id="hr_leave_rule_user_read" model="ir.rule">
         <field name="name">Time Off All Approver read</field>
         <field name="model_id" ref="model_hr_leave"/>
         <field name="domain_force">[(1, '=', 1)]</field>
@@ -217,12 +217,4 @@
         <field name="global" eval="True"/>
         <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
     </record>
-
-    <record id="hr_leave_report_calendar_rule_multi_company" model="ir.rule">
-        <field name="name">Time Off Report Calendar: multi company global rule</field>
-        <field name="model_id" ref="model_hr_leave_report_calendar"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-    </record>
-
 </odoo>

@@ -252,11 +252,11 @@ var StatementAction = AbstractAction.extend({
      *
      * @private
      */
-    _openFirstLine: function () {
+    _openFirstLine: function (previous_handle) {
         var self = this;
-
+        previous_handle = previous_handle || 'rline0';
         var handle = _.compact(_.map(this.model.lines,  function (line, handle) {
-                return line.reconciled ? null : handle;
+                return (line.reconciled || (parseInt(handle.substr(5)) < parseInt(previous_handle.substr(5)))) ? null : handle;
             }))[0];
         if (handle) {
             var line = this.model.getLine(handle);
@@ -430,7 +430,7 @@ var StatementAction = AbstractAction.extend({
                 var toLoad = self.model.defaultDisplayQty - self.widgets.length;
                 self._loadMore(toLoad);
             }
-            self._openFirstLine();
+            self._openFirstLine(handle);
         });
     },
 });
@@ -485,7 +485,7 @@ var ManualAction = StatementAction.extend({
             if(!_.any(result.updated, function (handle) {
                 return self.model.getLine(handle).mode !== 'inactive';
             })) {
-                self._openFirstLine();
+                self._openFirstLine(handle);
             }
         });
     },

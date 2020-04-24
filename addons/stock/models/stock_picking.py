@@ -947,7 +947,11 @@ class Picking(models.Model):
         for pack in self.mapped('move_line_ids').filtered(lambda x: x.product_id and not x.move_id):
             quantity_done.setdefault(pack.product_id.id, 0)
             quantity_done[pack.product_id.id] += pack.product_uom_id._compute_quantity(pack.qty_done, pack.product_id.uom_id)
-        return any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done)
+        prec = self.env["decimal.precision"].precision_get("Product Unit of Measure")
+        return any(
+            float_compare(quantity_done[x], quantity_todo.get(x, 0), precision_digits=prec,) == -1
+            for x in quantity_done
+        )
 
     def _autoconfirm_picking(self):
         # Clean-up the context key to avoid forcing the creation of immediate transfers.

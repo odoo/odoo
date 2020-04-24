@@ -953,7 +953,7 @@ class Meeting(models.Model):
             self.start = self.start_datetime
             # Round the duration (in hours) to the minute to avoid weird situations where the event
             # stops at 4:19:59, later displayed as 4:19.
-            self.stop = start + timedelta(minutes=round(self.duration * 60))
+            self.stop = start + timedelta(minutes=round((self.duration or 1.0) * 60))
             if self.allday:
                 self.stop -= timedelta(seconds=1)
 
@@ -1435,24 +1435,28 @@ class Meeting(models.Model):
     ####################################################
 
     def _get_message_unread(self):
+        self.message_unread_counter = False
+        self.message_unread = False
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
         real = self.browse(set(id_map.values()))
         super(Meeting, real)._get_message_unread()
         for event in self:
-            if event.id == id_map[event.id]:
+            if event._origin.id == id_map[event._origin.id]:
                 continue
-            rec = self.browse(id_map[event.id])
+            rec = self.browse(id_map[event._origin.id])
             event.message_unread_counter = rec.message_unread_counter
             event.message_unread = rec.message_unread
 
     def _get_message_needaction(self):
+        self.message_needaction_counter = False
+        self.message_needaction = False
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
         real = self.browse(set(id_map.values()))
         super(Meeting, real)._get_message_needaction()
         for event in self:
-            if event.id == id_map[event.id]:
+            if event._origin.id == id_map[event._origin.id]:
                 continue
-            rec = self.browse(id_map[event.id])
+            rec = self.browse(id_map[event._origin.id])
             event.message_needaction_counter = rec.message_needaction_counter
             event.message_needaction = rec.message_needaction
 
