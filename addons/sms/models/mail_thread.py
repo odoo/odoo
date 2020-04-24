@@ -129,7 +129,7 @@ class MailThread(models.AbstractModel):
                     'field_store': fname,
                 }
             else:
-                value, fname = next(((value, fname) for value, fname in zip(all_numbers, tocheck_fields) if value), (0, False))
+                value, fname = next(((value, fname) for value, fname in zip(all_numbers, tocheck_fields) if value), (0, 'mobile'))
                 result[record.id] = {
                     'partner': self.env['res.partner'],
                     'sanitized': False,
