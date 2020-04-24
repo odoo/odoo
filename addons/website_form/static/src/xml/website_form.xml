@@ -8,17 +8,11 @@
         </span>
     </t>
 
-    <!-- Missing field status -->
-    <t t-name="website_form.status_invalid">
-        <span id="s_website_form_result" class="text-danger ml8">
-            <i class="fa fa-close mr4" role="img" aria-label="Error" title="Error"/>Please fill in the form correctly.
-        </span>
-    </t>
-
     <!-- Error status -->
     <t t-name="website_form.status_error">
         <span id="s_website_form_result" class="text-danger ml8">
-            <i class="fa fa-close mr4" role="img" aria-label="Error" title="Error"/>An error has occured, the form has not been sent.
+            <i class="fa fa-close mr4" role="img" aria-label="Error" title="Error"/>
+            <t t-esc="message"/>
         </span>
     </t>
 </templates>

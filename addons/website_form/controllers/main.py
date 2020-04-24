@@ -8,11 +8,11 @@ import pytz
 from datetime import datetime
 from psycopg2 import IntegrityError
 
-from odoo import http, SUPERUSER_ID
+from odoo import http, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 
 
@@ -21,9 +21,22 @@ class WebsiteForm(http.Controller):
     # Check and insert values from the form on the model <model>
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):
+        try:
+            if request.env['ir.http']._verify_request_recaptcha_token('website_form'):
+                return self._handle_website_form(model_name, **kwargs)
+            error = _("Suspicious activity detected by Google reCaptcha.")
+        except (ValidationError, UserError) as e:
+            error = e.args[0]
+        return json.dumps({
+            'error': error,
+        })
+
+    def _handle_website_form(self, model_name, **kwargs):
         model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
         if not model_record:
-            return json.dumps(False)
+            return json.dumps({
+                'error': _("The form's specified model does not exist")
+            })
 
         try:
             data = self.extract_data(model_record, request.params)

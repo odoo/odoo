@@ -6,6 +6,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var utils = require('web.utils');
 var publicWidget = require('web.public.widget');
+const {ReCaptcha} = require('google_recaptcha.ReCaptchaV3');
 
 var _t = core._t;
 
@@ -16,6 +17,20 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         'click .js_subscribe_btn': '_onSubscribeClick',
     },
 
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super(...arguments);
+        this._recaptcha = new ReCaptcha();
+    },
+    /**
+     * @override
+     */
+    willStart: function () {
+        this._recaptcha.loadLibs();
+        return this._super(...arguments);
+    },
     /**
      * @override
      */
@@ -50,7 +65,9 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      * @override
      */
     destroy: function () {
-        this.$target.addClass('d-none');
+        if (!this.editableMode) {
+            this.$target.addClass('d-none');
+        }
         this._super.apply(this, arguments);
     },
 
@@ -61,7 +78,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onSubscribeClick: function () {
+    _onSubscribeClick: async function () {
         var self = this;
         var $email = this.$(".js_subscribe_email:visible");
 
@@ -70,22 +87,35 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             return false;
         }
         this.$target.removeClass('o_has_error').find('.form-control').removeClass('is-invalid');
+        const tokenObj = await this._recaptcha.getToken('website_form');
+        if (tokenObj.error) {
+            self.displayNotification({
+                type: 'danger',
+                title: _t("Error"),
+                message: tokenObj.error,
+                sticky: true,
+            });
+            return false;
+        }
         this._rpc({
             route: '/website_mass_mailing/subscribe',
             params: {
                 'list_id': this.$target.data('list-id'),
                 'email': $email.length ? $email.val() : false,
+                recaptcha_token_response: tokenObj.token,
             },
         }).then(function (result) {
-            self.$(".js_subscribe_btn").addClass('d-none');
-            self.$(".js_subscribed_btn").removeClass('d-none');
-            self.$('input.js_subscribe_email').prop('disabled', !!result);
-            if (self.$popup.length) {
-                self.$popup.modal('hide');
+            if (result.type === 'success') {
+                self.$(".js_subscribe_btn").addClass('d-none');
+                self.$(".js_subscribed_btn").removeClass('d-none');
+                self.$('input.js_subscribe_email').prop('disabled', !!result);
+                if (self.$popup.length) {
+                    self.$popup.modal('hide');
+                }
             }
             self.displayNotification({
-                type: 'success',
-                title: _t("Success"),
+                type: result.toast_type,
+                title: _t(`${result.toast_type === 'success' ? 'Success' : 'Error'}`),
                 message: result.toast_content,
                 sticky: true,
             });

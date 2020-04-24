@@ -18,8 +18,7 @@ class WebsiteForm(WebsiteForm):
         return ['phone', 'mobile']
 
     # Check and insert values from the form on the model <model> + validation phone fields
-    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
-    def website_form(self, model_name, **kwargs):
+    def _handle_website_form(self, model_name, **kwargs):
         model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
         if model_record and hasattr(request.env[model_name], 'phone_format'):
             try:
@@ -46,7 +45,7 @@ class WebsiteForm(WebsiteForm):
                 state = request.env['res.country.state'].search([('code', '=', geoip_state_code), ('country_id.code', '=', geoip_country_code)])
                 if state:
                     request.params['state_id'] = state.id
-        return super(WebsiteForm, self).website_form(model_name, **kwargs)
+        return super(WebsiteForm, self)._handle_website_form(model_name, **kwargs)
 
     def insert_record(self, request, model, values, custom, meta=None):
         is_lead_model = model.model == 'crm.lead'
