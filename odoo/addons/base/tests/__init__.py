@@ -3,12 +3,10 @@
 
 from . import common
 from . import test_acl
-from . import test_api
 from . import test_base
 from . import test_basecase
 from . import test_cache
 from . import test_db_cursor
-from . import test_expression
 from . import test_float
 from . import test_func
 from . import test_http_case

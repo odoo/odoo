@@ -3,7 +3,7 @@
     'name': "Test Performance",
     'version': "1.0",
     'category': "Hidden",
-    'depends': ['base'],
+    'depends': ['partner'],
     'data': [
         'security/ir.model.access.csv',
     ],

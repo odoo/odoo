@@ -22,8 +22,10 @@ def _lang_get(self):
 class Partner(models.Model):
     _name = "res.partner"
     _description = 'Contact'
+    _order = "display_name"
 
     name = fields.Char(index=True)
+    display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
     lang = fields.Selection(
         _lang_get, string='Language',
         help="All the emails and documents sent to this contact will be translated in this language.")
@@ -55,6 +57,12 @@ class Partner(models.Model):
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
     ]
+
+    @api.depends('name')
+    def _compute_display_name(self):
+        names = dict(self.with_context(show_email=None).name_get())
+        for partner in self:
+            partner.display_name = names.get(partner.id)
 
     @api.depends('tz')
     def _compute_tz_offset(self):
@@ -199,8 +207,43 @@ class Partner(models.Model):
         partner = self.create(create_values)
         return partner.name_get()[0]
 
+    def _get_name(self):
+        """ Utility method to allow name_get to be overrided without re-browse the partner """
+        partner = self
+        name = partner.name or ''
+        if self._context.get('show_email') and partner.email:
+            name = "%s <%s>" % (name, partner.email)
+        return name
+
+    def name_get(self):
+        res = []
+        for partner in self:
+            name = partner._get_name()
+            res.append((partner.id, name))
+        return res
+
     def _get_name_search_order_by_fields(self):
         return ''
+
+    @api.model
+    def _name_search_where(self):
+        # Overridden in partner module to add ref/vat fields
+        return ""
+
+    @api.model
+    def _name_search_query_vals(self):
+        unaccent = get_unaccent_wrapper(self.env.cr)
+        return {
+            'email': unaccent('res_partner.email'),
+            'display_name': unaccent('res_partner.display_name'),
+            'percent': unaccent('%s'),
+        }
+
+    @api.model
+    def _name_search_where_clause_params(self, search_name):
+        res = [search_name] * 2  # for email / display_name
+        res += [search_name]  # for order by
+        return res
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -226,35 +269,30 @@ class Partner(models.Model):
             if operator in ('=ilike', '=like'):
                 operator = operator[1:]
 
-            unaccent = get_unaccent_wrapper(self.env.cr)
-
             fields = self._get_name_search_order_by_fields()
 
             query = """SELECT res_partner.id
-                         FROM {from_str}
-                      {where} ({email} {operator} {percent}
-                           OR {display_name} {operator} {percent}
-                           OR {reference} {operator} {percent}
-                           OR {vat} {operator} {percent})
-                           -- don't panic, trust postgres bitmap
-                     ORDER BY {fields} {display_name} {operator} {percent} desc,
-                              {display_name}
-                    """.format(from_str=from_str,
-                               fields=fields,
-                               where=where_str,
-                               operator=operator,
-                               email=unaccent('res_partner.email'),
-                               display_name=unaccent('res_partner.display_name'),
-                               reference=unaccent('res_partner.ref'),
-                               percent=unaccent('%s'),
-                               vat=unaccent('res_partner.vat'),)
+                       FROM {from_str}
+                       {where} ({email} {operator} {percent}
+                       OR {display_name} {operator} {percent}
+                       %s)
+                       ORDER BY {fields} {display_name} {operator} {percent} desc, 
+                            {display_name}
+                    """ % (self._name_search_where())
+            query_vals = {
+                'from_str': from_str,
+                'fields': fields,
+                'where': where_str,
+                'operator': operator,
+            }
+            query_vals.update(self._name_search_query_vals())
+            query = query.format(**query_vals)
 
-            where_clause_params += [search_name]*3  # for email / display_name, reference
-            where_clause_params += [re.sub('[^a-zA-Z0-9]+', '', search_name) or None]  # for vat
-            where_clause_params += [search_name]  # for order by
+            where_clause_params += self._name_search_where_clause_params(search_name)
             if limit:
                 query += ' limit %s'
                 where_clause_params.append(limit)
+            print('caca', query, where_clause_params)
             self.env.cr.execute(query, where_clause_params)
             partner_ids = [row[0] for row in self.env.cr.fetchall()]
 

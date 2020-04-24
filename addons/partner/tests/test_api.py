@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+from odoo.addons.partner.tests.common import SavepointCaseWithPartnersSet
 from odoo.tools import mute_logger
 from odoo.exceptions import AccessError
 
 
-class TestAPI(SavepointCaseWithUserDemo):
+class TestAPI(SavepointCaseWithPartnersSet):
     """ test the new API of the ORM """
 
     @classmethod

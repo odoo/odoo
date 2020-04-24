@@ -2,10 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+import collections
 import pytz
+import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.osv.expression import get_unaccent_wrapper
+
 
 # Global variables used for the warning fields declared on the res.partner
 # in the following modules : sale, purchase, account, stock
@@ -21,7 +25,6 @@ ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 class Partner(models.Model):
     _description = 'Contact'
     _inherit = ['res.partner', 'format.address.mixin', 'image.mixin']
-    _order = "display_name"
 
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
@@ -39,7 +42,7 @@ class Partner(models.Model):
             values['lang'] = values.get('lang') or parent.lang or self.env.lang
         return values
 
-    display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
+    display_name = fields.Char(compute='_compute_display_name')
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
@@ -202,6 +205,29 @@ class Partner(models.Model):
     @api.onchange('company_type')
     def onchange_company_type(self):
         self.is_company = (self.company_type == 'company')
+
+    def _name_search_where(self):
+        return super()._name_search_where() + """
+            OR {reference} {operator} {percent}
+            OR {vat} {operator} {percent})
+            -- don't panic, trust postgres bitmap"""
+
+    @api.model
+    def _name_search_query_vals(self):
+        res = super()._name_search_query_vals()
+        unaccent = get_unaccent_wrapper(self.env.cr)
+        res.update({
+            'reference': unaccent('res_partner.ref'),
+            'vat': unaccent('res_partner.vat')
+        })
+        return res
+
+    @api.model
+    def _name_search_where_clause_params(self, search_name):
+        res = [search_name] * 3  # for email / display_name, reference
+        res += [re.sub('[^a-zA-Z0-9]+', '', search_name) or None]  # for vat
+        res += [search_name]  # for order by
+        return res
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -407,8 +433,7 @@ class Partner(models.Model):
     def _get_name(self):
         """ Utility method to allow name_get to be overrided without re-browse the partner """
         partner = self
-        name = partner.name or ''
-
+        name = super()._get_name()
         if partner.company_name or partner.parent_id:
             if not name and partner.type in ['invoice', 'delivery', 'other']:
                 name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
@@ -422,20 +447,9 @@ class Partner(models.Model):
         name = name.replace('\n\n', '\n')
         if self._context.get('address_inline'):
             name = name.replace('\n', ', ')
-        if self._context.get('show_email') and partner.email:
-            name = "%s <%s>" % (name, partner.email)
-        if self._context.get('html_format'):
-            name = name.replace('\n', '<br/>')
         if self._context.get('show_vat') and partner.vat:
             name = "%s ‒ %s" % (name, partner.vat)
         return name
-
-    def name_get(self):
-        res = []
-        for partner in self:
-            name = partner._get_name()
-            res.append((partner.id, name))
-        return res
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):

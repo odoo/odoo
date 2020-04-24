@@ -4,7 +4,7 @@
     'version': '0.1',
     'category': 'Hidden/Tests',
     'description': """A module to test import/export.""",
-    'depends': ['base'],
+    'depends': ['partner'],
     'data': ['ir.model.access.csv'],
     'installable': True,
     'auto_install': False,
