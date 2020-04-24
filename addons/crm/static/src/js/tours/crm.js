@@ -102,7 +102,10 @@ tour.register('crm_tour', {
     trigger: ".breadcrumb-item:not(.active):last",
     extra_trigger: '.o_lead_opportunity_form',
     content: _t("Use the breadcrumbs to <b>go back to your sales pipeline</b>."),
-    position: "bottom"
+    position: "bottom",
+    run: function (actions) {
+        actions.auto(".breadcrumb-item:not(.active):last");
+    }
 }]);
 
 });
