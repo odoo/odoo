@@ -110,6 +110,9 @@ class SlideChannelInvite(models.TransientModel):
                 template_ctx = {
                     'message': self.env['mail.message'].sudo().new(dict(body=mail_values['body_html'], record_name=self.channel_id.name)),
                     'model_description': self.env['ir.model']._get('website_slides.slide_channel').display_name,
+                    'access_url': slide_channel_partner.channel_id.website_url,
+                    'access_name': _("Click here to start the course"),
+                    'record': slide_channel_partner,
                     'company': self.env.company,
                 }
                 body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)

@@ -406,7 +406,8 @@ class WebsiteSlides(WebsiteProfile):
 
         # sorting criterion
         if channel.channel_type == 'documentation':
-            actual_sorting = sorting if sorting and sorting in request.env['slide.slide']._order_by_strategy else channel.promote_strategy
+            default_sorting = 'latest' if channel.promote_strategy in ['specific', 'none'] else channel.promote_strategy
+            actual_sorting = sorting if sorting and sorting in request.env['slide.slide']._order_by_strategy else default_sorting
         else:
             actual_sorting = 'sequence'
         order = request.env['slide.slide']._order_by_strategy[actual_sorting]
@@ -489,7 +490,10 @@ class WebsiteSlides(WebsiteProfile):
         # of them but unreachable ones won't be clickable (+ slide controller will crash anyway)
         # documentation mode may display less slides than content by category but overhead of
         # computation is reasonable
-        values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
+        if channel.promote_strategy == 'specific':
+            values['slide_promoted'] = channel.sudo().promoted_slide
+        else:
+            values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
 
         limit_category_data = False
         if channel.channel_type == 'documentation':
@@ -613,6 +617,17 @@ class WebsiteSlides(WebsiteProfile):
             if not can_upload or not can_publish:
                 return {'error': _('You cannot add tags to this course.')}
 
+        tag_id = self._create_or_get_tag(tag_id, group_id)
+        tag_id.write({'channel_ids': [(4, channel.id, 0)]})
+
+        return {'url': "/slides/%s" % (slug(channel))}
+
+    @http.route('/slides/tag/add', type='json', auth='user', methods=['POST'], website=True)
+    def slide_tag_add(self, tag_id, group_id):
+        tag_id = self._create_or_get_tag(tag_id, group_id)
+        return {'tag_id': tag_id.id}
+
+    def _create_or_get_tag(self, tag_id, group_id):
         if tag_id:
             # handle creation of new channel tag
             if tag_id[0] == 0:
@@ -629,14 +644,15 @@ class WebsiteSlides(WebsiteProfile):
                 else:
                     return {'error': _('Missing "Tag Group" for creating a new "Tag".')}
 
-                request.env['slide.channel.tag'].create({'name': tag_id[1]['name'],
-                                                         'channel_ids': [channel.id],
-                                                         'group_id': group_id,
-                                                         })
+                new_tag = request.env['slide.channel.tag'].create({
+                    'name': tag_id[1]['name'],
+                    'group_id': group_id,
+                })
+                return new_tag
+
             else:
-                # use existing channel tag
-                request.env['slide.channel.tag'].browse(tag_id[0]).write({'channel_ids': [(4, channel.id, 0)]})
-        return {'url': "/slides/%s" % (slug(channel))}
+                existing_tag = request.env['slide.channel.tag'].browse(tag_id[0])
+                return existing_tag
 
     @http.route(['/slides/channel/subscribe'], type='json', auth='user', website=True)
     def slide_channel_subscribe(self, channel_id):

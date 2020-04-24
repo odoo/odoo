@@ -220,6 +220,10 @@ $o-wslides-fs-side-width: 300px;
         margin-right: auto;
         max-width: 200px;
     }
+
+    .o_wslides_html_no_img img {
+        display: none;
+    }
 }
 
 // Courses Card
@@ -552,6 +556,11 @@ $o-wslides-fs-side-width: 300px;
     .tooltip > .arrow::before {
         display: none;
     }
+}
+
+#slide_channel_add_form input[name="channel_type"]:checked + label {
+    border: 4px solid $primary;
+    box-shadow: 3px 3px 5px gray;
 }
 
 // Embed PDFViewer

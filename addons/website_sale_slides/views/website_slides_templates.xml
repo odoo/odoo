@@ -32,6 +32,16 @@
     </xpath>
 </template>
 
+<template name="Slide template for a training channel" id="course_slides_list_slide_buy_course" inherit_id="website_slides.course_slides_list_slide">
+    <xpath expr="//span[@name='preview_badge_admin']" position="replace">
+        <span name="preview_badge_admin" t-att-data-slide-id="slide.id" t-attf-class="o_wslides_js_slide_toggle_is_preview badge #{'badge-success' if slide.is_preview else 'badge-light badge-hide border'} font-weight-normal px-2 py-1 m-1">
+            <t t-esc="'Free Preview' if channel.enroll == 'payment' else 'Preview'"/>
+        </span>
+    </xpath>
+    <xpath expr="//span[@name='preview_badge']" position="replace">
+        <span name="preview_badge" class="badge badge-success font-weight-normal px-2 py-1 m-1"><t t-esc="'Free Preview' if channel.enroll == 'payment' else 'Preview'"/></span>
+    </xpath>
+</template>
 <!-- FULLSCREEN -->
 <template id="slide_fullscreen" inherit_id="website_slides.slide_fullscreen">
     <xpath expr="//div[hasclass('o_wslides_fs_main')]" position="attributes">
