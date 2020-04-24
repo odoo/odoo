@@ -118,7 +118,6 @@ class EventEvent(models.Model):
         default=lambda self: self.env.company.partner_id,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     event_type_id = fields.Many2one('event.type', string='Template', ondelete='set null')
-    color = fields.Integer('Kanban Color Index')
     event_mail_ids = fields.One2many(
         'event.mail', 'event_id', string='Mail Schedule', copy=True,
         compute='_compute_from_event_type', readonly=False, store=True)

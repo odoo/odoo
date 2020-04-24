@@ -322,7 +322,6 @@
                     <field name="seats_reserved"/>
                     <field name="seats_used"/>
                     <field name="seats_expected"/>
-                    <field name="color"/>
                     <field name="legend_blocked"/>
                     <field name="legend_normal"/>
                     <field name="legend_done"/>
@@ -330,7 +329,7 @@
                     <field name="activity_state"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="d-flex flex-column p-0 {{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
+                            <div t-attf-class="d-flex flex-column p-0 oe_kanban_card oe_kanban_global_click">
                                 <div class="o_kanban_content p-0 m-0 position-relative row d-flex flex-fill">
                                     <div class="col-3 bg-primary p-2 text-center d-flex flex-column justify-content-center">
                                         <div t-esc="record.date_begin.raw_value.getDate()" class="o_event_fontsize_20"/>
@@ -437,7 +436,6 @@
                 <pivot string="Event">
                     <field name="name" type="row"/>
                     <field name="seats_reserved" type="measure"/>
-                    <field name="color" invisible="1"/>
                 </pivot>
             </field>
         </record>
