@@ -3,6 +3,7 @@ odoo.define('website_form.s_website_form', function (require) {
 
     var core = require('web.core');
     var time = require('web.time');
+    const {ReCaptcha} = require('google_recaptcha.ReCaptchaV3');
     var ajax = require('web.ajax');
     var publicWidget = require('web.public.widget');
 
@@ -21,11 +22,19 @@ odoo.define('website_form.s_website_form', function (require) {
          */
         init: function () {
             this._super(...arguments);
+            this._recaptcha = new ReCaptcha();
             this.__started = new Promise(resolve => this.__startResolve = resolve);
         },
-
+        willStart: function () {
+            const res = this._super(...arguments);
+            if (!this.$target[0].classList.contains('s_website_form_no_recaptcha')) {
+                this._recaptcha.loadLibs();
+            }
+            return res;
+        },
         start: function () {
             var self = this;
+
             // Initialize datetimepickers
             var datepickers_options = {
                 minDate: moment({y: 1900}),
@@ -86,7 +95,7 @@ odoo.define('website_form.s_website_form', function (require) {
             this.$target.parent().find('.s_website_form_end_message').addClass('d-none');
         },
 
-        send: function (e) {
+        send: async function (e) {
             e.preventDefault(); // Prevent the default submit behavior
              // Prevent users from crazy clicking
             this.$target.find('.s_website_form_send, .o_website_form_send').addClass('disabled'); // !compatibility
@@ -95,7 +104,7 @@ odoo.define('website_form.s_website_form', function (require) {
 
             self.$target.find('#s_website_form_result, #o_website_form_result').empty(); // !compatibility
             if (!self.check_error_fields({})) {
-                self.update_status('invalid');
+                self.update_status('error', _t("Please fill in the form correctly."));
                 return false;
             }
 
@@ -132,6 +141,13 @@ odoo.define('website_form.s_website_form', function (require) {
                 }
             });
 
+            const tokenObj = await this._recaptcha.getToken('website_form');
+            if (tokenObj.token) {
+                form_values['recaptcha_token_response'] = tokenObj.token;
+            } else if (tokenObj.error) {
+                self.update_status('error', tokenObj.error);
+                return false;
+            }
             // Post form and handle result
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action') || this.$target.data('model_name')), form_values)
             .then(function (result_data) {
@@ -140,7 +156,7 @@ odoo.define('website_form.s_website_form', function (require) {
                 result_data = JSON.parse(result_data);
                 if (!result_data.id) {
                     // Failure, the server didn't return the created record ID
-                    self.update_status('error');
+                    self.update_status('error', result_data.error ? result_data.error : false);
                     if (result_data.error_fields) {
                         // If the server return a list of bad fields, show these fields for users
                         self.check_error_fields(result_data.error_fields);
@@ -265,17 +281,23 @@ odoo.define('website_form.s_website_form', function (require) {
             return value;
         },
 
-        update_status: function (status) {
+        update_status: function (status, message) {
             if (status !== 'success') { // Restore send button behavior if result is an error
                 this.$target.find('.s_website_form_send, .o_website_form_send').removeClass('disabled'); // !compatibility
             }
             var $result = this.$('#s_website_form_result, #o_website_form_result'); // !compatibility
 
+            if (status === 'error' && !message) {
+                message = _t("An error has occured, the form has not been sent.");
+            }
+
             // Note: we still need to wait that the widget is properly started
             // before any qweb rendering which depends on xmlDependencies
             // because the event handlers are binded before the call to
             // willStart for public widgets...
-            this.__started.then(() => $result.replaceWith(qweb.render(`website_form.status_${status}`)));
+            this.__started.then(() => $result.replaceWith(qweb.render(`website_form.status_${status}`, {
+                message: message,
+            })));
         },
     });
 });

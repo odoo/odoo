@@ -43,15 +43,15 @@
         padding-bottom: 0.5rem;
     }
 
-    .s_website_form_submit {
+    .s_website_form_submit, .s_website_form_recaptcha {
         .s_website_form_label {
             float: left;
             height: 1px;
         }
-        &.s_website_form_no_submit_label {
-            .s_website_form_label {
-                display: none;
-            }
+    }
+    .s_website_form_no_submit_label {
+        .s_website_form_label {
+            display: none;
         }
     }
 }
