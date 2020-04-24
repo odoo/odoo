@@ -2695,3 +2695,54 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
 
         with self.assertRaises(ValueError):
             self.registry.setup_models(self.env.cr)
+
+
+@common.tagged('selection_field')
+class TestNewSelectionFields(common.TransactionCase):
+
+    def test_case_sensitivity(self):
+        Model = self.env['test_new_api.selection']
+        lowercase = Model.create({'sensitive': 'a'})
+        uppercase = Model.create({'sensitive': 'A'})
+
+        self.assertEqual(lowercase.sensitive, 'a')
+        self.assertEqual(uppercase.sensitive, 'A')
+        self.assertNotEqual(lowercase.sensitive, uppercase.sensitive)
+
+    def test_normal_xmlid_gen(self):
+        f1 = self.env['test_new_api.selection']._fields['MY_FIELD']
+        f2 = self.env['test_new_api.selection']._fields['my_field']
+        self.assertEqual(f1.type, 'char')
+        self.assertEqual(f2.type, 'integer')
+
+        imf1 = self.env['ir.model.fields']._get('test_new_api.selection', 'MY_FIELD')
+        imf2 = self.env['ir.model.fields']._get('test_new_api.selection', 'my_field')
+        xmlids = (imf1 + imf2)._get_external_ids()
+
+        self.assertEqual(
+            xmlids.get(imf1.id),
+            ['test_new_api.field_test_new_api_selection__MY_FIELD'],
+        )
+
+        self.assertEqual(
+            xmlids.get(imf2.id),
+            ['test_new_api.field_test_new_api_selection__my_field'],
+        )
+
+    def test_selection_xmlid_gen(self):
+        field = self.env['test_new_api.selection']._fields['sensitive']
+        self.assertEqual(field.selection, [('a', 'Lowercase'), ('A', 'Uppercase')])
+
+        imf = self.env['ir.model.fields']._get('test_new_api.selection', 'sensitive')
+        lower, upper = imf.selection_ids
+        xmlids = (lower + upper)._get_external_ids()
+
+        self.assertEqual(
+            xmlids.get(lower.id),
+            ['test_new_api.selection__test_new_api_selection__sensitive__a'],
+        )
+
+        self.assertEqual(
+            xmlids.get(upper.id),
+            ['test_new_api.selection__test_new_api_selection__sensitive__A'],
+        )

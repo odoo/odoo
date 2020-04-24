@@ -59,7 +59,7 @@ def field_xmlid(module, model_name, field_name):
 def selection_xmlid(module, model_name, field_name, value):
     """ Return the XML id of the given selection. """
     xmodel = model_name.replace('.', '_')
-    xvalue = value.replace('.', '_').replace(' ', '_').lower()
+    xvalue = value.replace('.', '_').replace(' ', '_')
     return '%s.selection__%s__%s__%s' % (module, xmodel, field_name, xvalue)
 
 

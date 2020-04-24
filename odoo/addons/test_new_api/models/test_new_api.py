@@ -662,6 +662,9 @@ class Selection(models.Model):
     _description = "Selection"
 
     state = fields.Selection([('foo', 'Foo'), ('bar', 'Bar')])
+    sensitive = fields.Selection([('a', 'Lowercase'), ('A', 'Uppercase')])
+    MY_FIELD = fields.Char(string='foo')
+    my_field = fields.Integer(string='bar')
 
 
 class RequiredM2O(models.Model):
