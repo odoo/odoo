@@ -127,9 +127,27 @@ class MailActivity(models.Model):
         'Document Name', compute='_compute_res_name', compute_sudo=True, store=True,
         help="Display name of the related document.", readonly=True)
     # activity
+    @api.model
+    def default_get_activity_type(self):
+        activity_type = self.env["mail.activity.type"]
+        ir_model_obj = self.env['ir.model']
+        current_model_name = self.env.context['default_res_model']
+        current_model = ir_model_obj.search([('model', '=', current_model_name)])
+        current_model_id = current_model[0].id
+        todo = activity_type.search([('name','ilike','to do')], limit=1)
+        if len(todo) > 0:
+            return todo[0]
+        activities_linked_model = activity_type.search([('res_model_id', '=', current_model_id)], limit=1)
+        if len(activities_linked_model) > 0:
+            return activities_linked_model[0]
+        activities = activity_type.search([('res_model_id','=', False)], limit=1)
+        if len(activities) > 0:
+            return activities[0]
+
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
-        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict')
+        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict',
+        default=default_get_activity_type)
     activity_category = fields.Selection(related='activity_type_id.category', readonly=True)
     activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=True)
     icon = fields.Char('Icon', related='activity_type_id.icon', readonly=True)
