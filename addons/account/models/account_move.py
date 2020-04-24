@@ -3223,6 +3223,8 @@ class AccountMoveLine(models.Model):
         BUSINESS_FIELDS = ('price_unit', 'quantity', 'discount', 'tax_ids')
 
         for vals in vals_list:
+            if vals.get('display_type'):
+                vals['account_id'] = False
             move = self.env['account.move'].browse(vals['move_id'])
             vals.setdefault('company_currency_id', move.company_id.currency_id.id) # important to bypass the ORM limitation where monetary fields are not rounded; more info in the commit message
 
