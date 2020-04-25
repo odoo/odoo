@@ -24,13 +24,14 @@ class ReturnPicking(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        if len(self.env.context.get('active_ids', list())) > 1:
-            raise UserError(_("You may only return one picking at a time."))
         res = super(ReturnPicking, self).default_get(fields)
-        if self.env.context.get('active_id') and self.env.context.get('active_model') == 'stock.picking':
-            picking = self.env['stock.picking'].browse(self.env.context.get('active_id'))
-            if picking.exists():
-                res.update({'picking_id': picking.id})
+        if self.env.context.get('active_model') == 'stock.picking':
+            if len(self.env.context.get('active_ids', list())) > 1:
+                raise UserError(_("You may only return one picking at a time."))
+            if self.env.context.get('active_id'):
+                picking = self.env['stock.picking'].browse(self.env.context.get('active_id'))
+                if picking.exists():
+                    res.update({'picking_id': picking.id})
         return res
 
     picking_id = fields.Many2one('stock.picking')
