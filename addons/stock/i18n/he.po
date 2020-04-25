@@ -767,7 +767,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
 msgid "Are you sure you want to validate this picking?"
-msgstr "האם אתה בטוח שברצונך לאמת ליקוט זה?"
+msgstr "האם אתה בטוח שברצונך לאשר ליקוט זה?"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -2526,8 +2526,8 @@ msgid ""
 "If the inventory adjustment is not validated, date at which the theoritical quantities have been checked.\n"
 "If the inventory adjustment is validated, date at which the inventory adjustment has been validated."
 msgstr ""
-"אם התאמת המלאי לא תאומת, התאריך שיקבע הנו תאריך שנבדקו הכמויות התאורטיות.\n"
-"אם התאמת המלאי תאומת, התאריך שיקבע הנו תאריך שבו בוצעה התאמת המלאי ואומתה."
+"אם התאמת המלאי לא תאושר, התאריך שיקבע הנו תאריך שנבדקו הכמויות התאורטיות.\n"
+"אם התאמת המלאי תאושר, התאריך שיקבע הנו תאריך שבו בוצעה התאמת המלאי ואושרה."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3753,7 +3753,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:0
 #, python-format
 msgid "Only a stock manager can validate an inventory adjustment."
-msgstr "רק מנהל מלאי יכול לאמת התאמת מלאי."
+msgstr "רק מנהל מחסן יכול לאשר התאמת מלאי."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -5514,7 +5514,7 @@ msgstr "הצג אספקה מחדש "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_validate
 msgid "Show Validate"
-msgstr "הצג אימות"
+msgstr "הצג אישור"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -5776,7 +5776,7 @@ msgstr "דוח כללי מלאי"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__type__product
 msgid "Storable Product"
-msgstr "מוצר מנוהל מלאי"
+msgstr "מנוהל מלאי"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
@@ -5883,7 +5883,7 @@ msgstr "שדה טכני המשמש לחישוב אם נדרש להציג את כ
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_validate
 msgid "Technical field used to compute whether the validate should be shown."
-msgstr "שדה טכני המשמש לחישוב אם יש להציג את האימות."
+msgstr "שדה טכני המשמש לחישוב אם יש להציג את האישור."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__restrict_partner_id
@@ -5991,7 +5991,7 @@ msgstr "המועד הצפוי של ההעברה שנוצרה יחושב על ב�
 #: code:addons/stock/static/src/js/inventory_validate_button_controller.js:0
 #, python-format
 msgid "The inventory has been validated"
-msgstr "המלאי אומת"
+msgstr "המלאי אושר"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_name_uniq
@@ -6711,7 +6711,7 @@ msgstr "משתמש"
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Validate"
-msgstr "אמת"
+msgstr "אשר"
 
 #. module: stock
 #. openerp-web
@@ -6719,13 +6719,13 @@ msgstr "אמת"
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 #, python-format
 msgid "Validate Inventory"
-msgstr "אמת את המלאי"
+msgstr "אשר את המלאי"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__state__done
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Validated"
-msgstr "אומת"
+msgstr "אושר"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_variant_count
@@ -7023,13 +7023,13 @@ msgstr "כאשר מסומן, אם המהלך שנוצר על ידי כלל זה 
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
 msgid ""
 "When validating the transfer, the products will be assigned to this owner."
-msgstr "בעת אימות ההעברה, המוצרים ישויכו לבעלים זה."
+msgstr "בעת אישור ההעברה, המוצרים ישויכו לבעלים זה."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid ""
 "When validating the transfer, the products will be taken from this owner."
-msgstr "בעת אימות ההעברה המוצרים יילקחו מבעלים זה."
+msgstr "בעת אישור ההעברה המוצרים יילקחו מבעלים זה."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
@@ -7164,7 +7164,7 @@ msgstr "אתה יכול רק לעבד 1.0 %s של מוצרים עם מספר ס�
 msgid ""
 "You can't validate the inventory '%s', maybe this inventory has been already"
 " validated or isn't ready."
-msgstr "אינך יכול לאמת את המלאי '%s', אולי המלאי הזה כבר אושר או שאינו מוכן."
+msgstr "אינך יכול לאשר את המלאי '%s', אולי המלאי הזה כבר אושר או שאינו מוכן."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -7300,8 +7300,8 @@ msgid ""
 "You cannot validate a transfer if no quantites are reserved nor done. To "
 "force the transfer, switch in edit more and encode the done quantities."
 msgstr ""
-"לא ניתן לאמת העברה אם אין כמויות שמורות או שבוצעו. כדי לכפות את ההעברה, עבור"
-" לערוך כמות  והכנס את הכמויות שבוצעו."
+"לא ניתן לאשר העברה אם אין כמויות שמורות או שבוצעו. כדי לאלץ את ההעברה, עבור "
+"לערוך כמות  והכנס את הכמויות שבוצעו."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
