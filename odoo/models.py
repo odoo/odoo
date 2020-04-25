@@ -2926,7 +2926,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if self._uid == SUPERUSER_ID:
             return
 
-        if self.is_transient():
+        if self.is_transient() and self.exists():
             # Only one single implicit access rule for transient models: owner only!
             # This is ok to hardcode because we assert that TransientModels always
             # have log_access enabled so that the create_uid column is always there.
