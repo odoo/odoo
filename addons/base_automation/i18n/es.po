@@ -12,6 +12,7 @@
 # Jon Perez <jop@odoo.com>, 2019
 # 966ff43e6966712895a590e7320ca288, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2019\n"
+"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +36,8 @@ msgid ""
 "\"\n"
 "                    (ID:"
 msgstr ""
+"\"\n"
+"                    (ID:"
 
 #. module: base_automation
 #: model:mail.template,body_html:base_automation.test_mail_template_automation
@@ -117,12 +120,12 @@ msgstr "Acciones automáticas"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Automated Rule Line Test"
-msgstr ""
+msgstr "Regla automática línea de prueba"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Automated Rule Test"
-msgstr ""
+msgstr "Prueba de Regla Automática"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
@@ -178,13 +181,13 @@ msgstr ""
 #: model:base.automation,name:base_automation.test_rule_with_trigger
 #: model:ir.actions.server,name:base_automation.test_rule_with_trigger_ir_actions_server
 msgid "Base Automation: test rule with trigger"
-msgstr ""
+msgstr "Automatización base: regla de prueba con disparador"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
 msgid "Base Automation: test send an email"
-msgstr ""
+msgstr "Automatización base: prueba enviar un correo electrónico"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
@@ -214,7 +217,7 @@ msgstr "Tipo de vínculo"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
 msgid "Binding View Types"
-msgstr ""
+msgstr "Tipos de vista de enlace"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__cancel
@@ -310,7 +313,7 @@ msgstr "Demostración"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
-msgstr ""
+msgstr "Desactivar acción"
 
 #. module: base_automation
 #. openerp-web
@@ -322,6 +325,10 @@ msgid ""
 "                    as you are effectively disabling a customization that may set\n"
 "                    important and/or required fields."
 msgstr ""
+"Deshabilitar esta acción automatizada le permitirá continuar su flujo de trabajo\n"
+"                     pero cualquier dato creado después de esto podría estar dañado,\n"
+"                     ya que deshabilita efectivamente una personalización que puede establecer\n"
+"                     campos importantes y / o obligatorios."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -345,7 +352,7 @@ msgstr "Tipo de vencimiento"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
-msgstr ""
+msgstr "Editar acción"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -598,7 +605,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Configurar una nueva automatización automatizada"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
@@ -632,6 +639,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"El \"%(trigger_value)s\" %(trigger_label)s solo puede ser utilizado con el "
+"tipo de acción \"%(state_value)s\""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -639,6 +648,8 @@ msgid ""
 "The action will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"La acción se activará si y solo si uno de estos campos se actualiza. Si está"
+" vacío, se observan todos los campos."
 
 #. module: base_automation
 #. openerp-web
@@ -648,6 +659,8 @@ msgid ""
 "The error occurred during the execution of the automated action\n"
 "                    \""
 msgstr ""
+"El error ocurrió durante la ejecución de la acción automatizada.\n"
+"                     \""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -711,6 +724,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Utilice acciones automatizadas para activar acciones automáticamente para\n"
+"                 Varias pantallas. Ejemplo: un cliente potencial creado por un usuario específico puede\n"
+"                 configurarse automáticamente a un equipo de ventas específico, o un\n"
+"                 oportunidad que todavía tiene estado pendiente después de 14 días podría\n"
+"                 desencadenar un recordatorio automático por correo electrónico."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -736,7 +754,7 @@ msgstr "Alerta"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
 msgid "Watched fields"
-msgstr ""
+msgstr "Campos vigilados"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -787,6 +805,8 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
 msgstr ""
+"Puede pedirle a un administrador que desactive o corrija esta acción "
+"automatizada."
 
 #. module: base_automation
 #. openerp-web
@@ -794,3 +814,5 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
+"Puede deshabilitar esta acción automatizada o editarla para resolver el "
+"problema."
