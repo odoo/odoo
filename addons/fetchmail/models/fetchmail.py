@@ -109,7 +109,7 @@ class FetchmailServer(models.Model):
                 connection = IMAP4_SSL(self.server, int(self.port))
             else:
                 connection = IMAP4(self.server, int(self.port))
-            connection.login(self.user, self.password)
+            self._imap_login(connection)
         elif self.type == 'pop':
             if self.is_ssl:
                 connection = POP3_SSL(self.server, int(self.port))
@@ -122,6 +122,16 @@ class FetchmailServer(models.Model):
         # Add timeout on socket
         connection.sock.settimeout(MAIL_TIMEOUT)
         return connection
+
+    def _imap_login(self, connection):
+        """Authenticate the IMAP connection.
+
+        Can be overridden in other module for different authentication methods.
+
+        :param connection: The IMAP connection to authenticate
+        """
+        self.ensure_one()
+        connection.login(self.user, self.password)
 
     @api.multi
     def button_confirm_login(self):
