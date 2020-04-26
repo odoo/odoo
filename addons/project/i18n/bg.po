@@ -7,7 +7,6 @@
 # Anton Vassilev, 2020
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2020
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2020
-# Igor Sheludko <igor.sheludko@gmail.com>, 2020
 # Ivan Ivanov, 2020
 # kalatchev, 2020
 # Martin Trigaux, 2020
@@ -17,6 +16,7 @@
 # Albena Mincheva <albena_vicheva@abv.bg>, 2020
 # Boyan Rabchev <boyan.rabchev@plana.solutions>, 2020
 # Maria Boyadjieva <marabo2000@gmail.com>, 2020
+# Igor Sheludko <igor.sheludko@gmail.com>, 2020
 # Ivan Goychev <igoychev.projects@gmail.com>, 2020
 # 
 msgid ""
@@ -722,7 +722,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Конфиг Настройки"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -986,7 +986,7 @@ msgstr "Развитие"
 #. module: project
 #: model:ir.model,name:project.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Публикация"
 
 #. module: project
 #. openerp-web
@@ -2621,7 +2621,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "T-shirt Printing"
-msgstr ""
+msgstr "Принтиране върху тениски"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__name
@@ -2960,7 +2960,7 @@ msgstr "За извършване"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "To Print"
-msgstr ""
+msgstr "За печат"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3179,6 +3179,14 @@ msgid ""
 msgstr ""
 "Освен това можете да добавите описание, за да помогнете на колегите ви да "
 "разберат значението и целта на етапа."
+
+#. module: project
+#: code:addons/project/models/analytic_account.py:0
+#, python-format
+msgid ""
+"You cannot change the company of an analytical account if it is related to a"
+" project."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0

@@ -7,6 +7,7 @@
 # liAnGjiA <liangjia@qq.com>, 2019
 # 苏州远鼎 <tiexinliu@126.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
 # keecome <7017511@qq.com>, 2019
 # bower Guo <124358678@qq.com>, 2019
 # roye w <159820@qq.com>, 2019
@@ -16,8 +17,7 @@
 # Martin Trigaux, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-25 15:01+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2020\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,7 +121,7 @@ msgstr "取消"
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
-msgstr "找不到产品%s的库存入库科目。 在处理此操作之前，您必须在品类或产品上进行一个定义。"
+msgstr "找不到产品%s的库存入库科目。 在处理此操作之前，您必须在产品类别或产品上进行一个定义。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -130,7 +130,7 @@ msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
 "on the product category, or on the location, before processing this "
 "operation."
-msgstr "找不到产品%s的库存出库库科目。 在处理此操作之前，您必须在品类或产品上进行定义。"
+msgstr "找不到产品%s的库存出库库科目。 在处理此操作之前，您必须在产品类别或产品上进行定义。"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -186,7 +186,7 @@ msgstr "成本方法"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
-msgstr "品类%s的成本定价核算方法更改：从%s 到%s。"
+msgstr "产品类别%s的成本定价核算方法更改：从%s 到%s。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id
@@ -252,7 +252,7 @@ msgid ""
 "Due to a change of product category (from %s to %s), the costing method"
 "                                has changed for product template %s: from %s"
 " to %s."
-msgstr "由于品类的变化（从 %s 至%s ），成本定价方法已更改为产品 %s：从 %s 至%s 。"
+msgstr "由于产品类别的变化（从 %s 至%s ），成本定价方法已更改为产品模板 %s：从 %s 至%s 。"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -404,7 +404,7 @@ msgstr "产品"
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 msgid "Product Category"
-msgstr "品类"
+msgstr "产品类别"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
@@ -415,7 +415,7 @@ msgstr "产品移动(移库明细)"
 #: model:ir.model,name:stock_account.model_product_template
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
 msgid "Product Template"
-msgstr "产品"
+msgstr "产品模板"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -662,7 +662,7 @@ msgstr "估价层？"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
-msgstr "品类的评估方法更改 %s: 从 %s 到 %s."
+msgstr "产品类别的评估方法更改 %s: 从 %s 到 %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -722,7 +722,7 @@ msgstr "在进行自动库存评估时，这是会计日记账，其中处理库
 msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr "你没有在品类中定义任何输入评估帐户。你必须在处理此操作之前定义一个。"
+msgstr "你没有在产品类别中定义任何输入评估帐户。你必须在处理此操作之前定义一个。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -730,7 +730,7 @@ msgstr "你没有在品类中定义任何输入评估帐户。你必须在处理
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
-msgstr "没有在产品种类中设置库存日记账，检查是否安装科目表"
+msgstr "没有在产品类别中设置库存日记账，检查是否安装科目表"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -741,7 +741,7 @@ msgstr "没有在产品种类中设置库存日记账，检查是否安装科目
 msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr "您没有在您的品类中定义任何库存评估账户。 处理此操作之前，您必须定义一个。"
+msgstr "您没有在您的产品类别中定义任何库存评估账户。 处理此操作之前，您必须定义一个。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
