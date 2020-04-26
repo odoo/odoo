@@ -4,17 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
-# Jerther, 2019
-# Cécile Collart <cco@odoo.com>, 2019
+# Marie Willemyns <mwi@odoo.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2019-03-20 14:56+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -317,7 +318,9 @@ msgid "Digest Subscriptions"
 msgstr "Abonnements Digest"
 
 #. module: digest
+#: model:ir.actions.act_window,name:digest.digest_tip_action
 #: model:ir.model,name:digest.model_digest_tip
+#: model:ir.ui.menu,name:digest.digest_tip_menu
 msgid "Digest Tips"
 msgstr "Conseil"
 
@@ -325,7 +328,7 @@ msgstr "Conseil"
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:digest.field_digest_tip__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Nom affiché"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__template_id
@@ -370,9 +373,19 @@ msgid "KPI Digest"
 msgstr "KPI Digest"
 
 #. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_form
+msgid "KPI Digest Tip"
+msgstr ""
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_tree
+msgid "KPI Digest Tips"
+msgstr ""
+
+#. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "KPIs"
-msgstr "KPIs"
+msgstr "KPIs (???)"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total_value
@@ -403,6 +416,21 @@ msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: digest
+#: model:digest.tip,name:digest.digest_tip_mail_2
+msgid "Mail: apps videos tour"
+msgstr ""
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_mail_1
+msgid "Mail: get things done with activities"
+msgstr ""
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_mail_0
+msgid "Mail: ping colleagues"
+msgstr ""
+
+#. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total
 msgid "Messages"
 msgstr "Messages"
@@ -414,6 +442,7 @@ msgstr "Mensuel"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__name
+#: model:ir.model.fields,field_description:digest.field_digest_tip__name
 msgid "Name"
 msgstr "Nom"
 
@@ -482,7 +511,7 @@ msgstr ""
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_2
 msgid "To reach your full potential with Odoo, have a look at our"
-msgstr "Pour atteindre votre plein potentiel avec Odoo, consultez les "
+msgstr "Pour atteindre votre plein potentiel avec Odoo, consultez nos "
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -551,7 +580,7 @@ msgstr "et découvrez de nouveaux outils pour travailler mieux et plus vite."
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_2
 msgid "apps videos"
-msgstr "vidéos de nos applis"
+msgstr "vidéos des applis"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
@@ -565,6 +594,9 @@ msgid ""
 "                                                <code>kpi_myfield</code>\n"
 "                                                and display it in the KPI's tab;"
 msgstr ""
+"créez d'abord un champ booléen appelé\n"
+"                                                 <code>kpi_myfield</code>\n"
+"                                                 et affichez-le dans l'onglet KPIs;"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -573,6 +605,9 @@ msgid ""
 "                                                <code>kpi_myfield_value</code>\n"
 "                                                that will compute your customized KPI."
 msgstr ""
+"puis créez un champ calculé appelé\n"
+"<code>kpi_myfield_value</code>\n"
+"qui calculera votre KPI personnalisé."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form

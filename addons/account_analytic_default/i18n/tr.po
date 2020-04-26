@@ -3,21 +3,24 @@
 # 	* account_analytic_default
 # 
 # Translators:
-# Kaya Zeren <kayazeren@gmail.com>, 2019
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
-# Martin Trigaux, 2019
-# Levent Karakaş <levent@mektup.at>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
+# Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Martin Trigaux, 2017
+# Kaya Zeren <kayazeren@gmail.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
 # Umur Akın <umura@projetgrup.com>, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Yedigen, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:07+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Yedigen, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,17 +55,18 @@ msgid "Accounts"
 msgstr "Hesaplar"
 
 #. module: account_analytic_default
-#: code:addons/account_analytic_default/models/account_analytic_default.py:28
+#: code:addons/account_analytic_default/models/account_analytic_default.py:0
 #, python-format
 msgid ""
 "An analytic default requires at least an analytic account or an analytic "
 "tag."
 msgstr ""
-"Analitik bir varsayılan, en az bir analitik hesap veya bir analitik etiket "
-"gerektirir."
+"Analitik bir varsayılan, en azından analitik bir hesap veya analitik bir "
+"etiket gerektirir."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_move_line__analytic_account_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
 msgstr "Analitik Hesap"
@@ -70,15 +74,19 @@ msgstr "Analitik Hesap"
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Analytic Default Rule"
-msgstr ""
+msgstr "Analitik Varsayılan Kural"
+
+#. module: account_analytic_default
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
+msgid "Analytic Defaults"
+msgstr "Analitik Öndeğerleri"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
-#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
-#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
-msgid "Analytic Defaults"
-msgstr "Analitik Varsayılanları"
+msgid "Analytic Defaults Rules"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
@@ -93,6 +101,7 @@ msgstr "Analitik Kuralları"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_tag_ids
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_move_line__analytic_tag_ids
 msgid "Analytic Tags"
 msgstr "Analitik Etiketleri"
 
@@ -100,7 +109,7 @@ msgstr "Analitik Etiketleri"
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__company_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Company"
-msgstr "Şirket"
+msgstr "Firma"
 
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
@@ -115,12 +124,7 @@ msgstr "Oluşturan"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
-
-#. module: account_analytic_default
-#: model_terms:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
-msgid "Default Analytic Values"
-msgstr "Varsayılan Analitik Değerleri"
+msgstr "Oluşturulma zamanı"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_stop
@@ -238,6 +242,9 @@ msgid ""
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this account, it will automatically take this as an analytic account)"
 msgstr ""
+"Analitik varsayılan da tanımlanan analitik hesabı kullanacak bir muhasebe "
+"hesabı seçin (örneğin, yeni oluşturulan bir siparişte ya da müşteri "
+"faturasında bu ürünü seçersek otomatik olarak bu hesap kullanılacaktır.)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__sequence

@@ -3,18 +3,21 @@
 # 	* mrp
 # 
 # Translators:
+# Zoriana Zaiats, 2018
+# Kateryna Onyshchenko <Katrona17@gmail.com>, 2018
+# trolka <trolka.olug@gmail.com>, 2018
 # Bohdan Lisnenko, 2019
-# ТАрас <tratatuta@i.ua>, 2019
-# Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Martin Trigaux, 2020
+# ТАрас <tratatuta@i.ua>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,18 +64,18 @@ msgstr " <br/><br/> Компоненти будуть взяті з <b>%s</b>."
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
 msgid " When all components are available"
-msgstr "Коли доступні усі компоненти"
+msgstr "Коли доступні усі кмпоненти"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
 #: model:ir.model.fields,field_description:mrp.field_product_template__bom_count
 msgid "# Bill of Material"
-msgstr "К-сть специфифікацій"
+msgstr "К-сть Специфифікацій"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
 msgid "# BoM Where Used"
-msgstr "К-сть специфікації, які було використано"
+msgstr "К-сть специфікації було використано"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workorder_done_count
@@ -127,6 +130,12 @@ msgstr ""
 "            Можливо знадобиться ручна дія."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ": Insufficient Quantity To Unbuild"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
@@ -175,6 +184,11 @@ msgstr ""
 "specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Child MO's</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Load</span>"
 msgstr "<span class=\"o_stat_text\">Завантажити</span>"
@@ -204,7 +218,12 @@ msgstr "<span class=\"o_stat_text\">Продуктивність</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<span class=\"o_stat_text\">Scraps</span>"
-msgstr "<span class=\"o_stat_text\">Брак</span>"
+msgstr "<span class=\"o_stat_text\">Записки</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Source MO's</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_form_view
@@ -259,17 +278,18 @@ msgstr "<span>РОБОЧІ ЗАМОВЛЕННЯ</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-msgid ""
-"<strong attrs=\"{'invisible': [('date_planned_finished', '=', False)]}\" class=\"mr8\">to</strong>\n"
-"                                    <strong class=\"oe_edit_only mr8\" attrs=\"{'invisible': [('date_planned_finished', '!=', False)]}\">to</strong>"
+msgid "<strong class=\"mr8 oe_inline\">to</strong>"
 msgstr ""
-"<strong attrs=\"{'invisible': [('date_planned_finished', '=', False)]}\" class=\"mr8\">до</strong>\n"
-"                                    <strong class=\"oe_edit_only mr8\" attrs=\"{'invisible': [('date_planned_finished', '!=', False)]}\">до</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<strong class=\"mr8\">to</strong>"
 msgstr "<strong class=\"mr8\">до</strong>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Description:</strong><br/>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -340,6 +360,11 @@ msgid "<strong>Workcenter: </strong>"
 msgstr "<strong>Робочий центр: </strong>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
+msgid "? This may lead to inconsistencies in your inventory."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "A BoM of type kit is used to split the product into its components."
 msgstr ""
@@ -350,7 +375,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
-msgstr "Замовлення на виробництво виконано або скасовано."
+msgstr "Замовлення на виробництво виконано або скасоване."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -457,6 +482,12 @@ msgid "All"
 msgstr "Всі"
 
 #. module: mrp
+#: code:addons/mrp/controller/main.py:0
+#, python-format
+msgid "All files uploaded"
+msgstr "Усі файли завантажено"
+
+#. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_line_bom_qty_zero
 msgid ""
 "All product quantities must be greater or equal to 0.\n"
@@ -481,14 +512,24 @@ msgid "Allowed Lots Domain"
 msgstr "Дозволено домени партій"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__allowed_mo_ids
+msgid "Allowed Mo"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__post_visible
 msgid "Allowed to Post Inventory"
 msgstr "Дозволена складська публікація"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
+msgid "Allowed to Reserve Production"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
-msgid "Allowed to Unreserve Inventory"
-msgstr "Дозволено перезаписувати інвентаризацію"
+msgid "Allowed to Unreserve Production"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__alternative_workcenter_ids
@@ -524,7 +565,10 @@ msgid "Approve"
 msgstr "Затвердити"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
@@ -541,12 +585,17 @@ msgid "At the creation of a Stock Transfer."
 msgstr "На створенні складського переміщення."
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
+msgid "Attached To"
+msgstr "Прикріплено до"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_attachment_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_attachment_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_attachment_count
 msgid "Attachment Count"
-msgstr "Підрахунок прикріплень"
+msgstr "Підрахунок прикріплення"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__local_url
@@ -558,6 +607,7 @@ msgstr "URL прикріплення"
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/js/mrp_bom_report.js:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
 #, python-format
 msgid "Attachments"
 msgstr "Прикріплення"
@@ -594,7 +644,7 @@ msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added."
 msgstr ""
-"Середній час у днях для виробництва цього товару. У випадку багаторівневої "
+"Середній час у днях для виробництво цього товару. У випадку багаторівневої "
 "специфікації буде додано час виготовлення компонентів."
 
 #. module: mrp
@@ -618,7 +668,6 @@ msgid "BOM lines of the referred bom"
 msgstr "Рядки специфікації згаданої специфікації"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Barcode"
 msgstr "Штрих-код"
@@ -688,14 +737,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr "Блокувати"
+msgstr "Блок"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter_wo
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block Workcenter"
-msgstr "Блокувати робочий центр"
+msgstr "Блок робочого центру"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter__working_state__blocked
@@ -784,12 +833,7 @@ msgstr ""
 " той же час."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
-msgid "BoM details"
-msgstr "Деталі специфікації"
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
+#: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
 msgstr ""
@@ -855,13 +899,13 @@ msgstr "Не можливо видалити замовлення на виро�
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__capacity
 msgid "Capacity"
-msgstr "Ємність"
+msgstr "Потужність"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_category_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_category_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_category_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__loss_type
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
@@ -901,7 +945,6 @@ msgstr "Код"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__color
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__color
 msgid "Color"
 msgstr "Колір"
 
@@ -937,7 +980,14 @@ msgid "Company"
 msgstr "Компанія"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_rule.py:0
+#, python-format
+msgid "Company Manufacture Lead Time"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_id
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Component"
@@ -1041,6 +1091,7 @@ msgstr "Спожитий в операції"
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder__consumption
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__consumption
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__consumption
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__consumption
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__consumption
 msgid "Consumption"
 msgstr "Споживання"
@@ -1058,6 +1109,7 @@ msgstr "Продовжити виробництво"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_category_id
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__product_uom_category_id
+#: model:ir.model.fields,help:mrp.field_mrp_production__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
@@ -1163,12 +1215,17 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__create_date
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Creates a new serial/lot number"
 msgstr "Створює новий серійний/партійний номер"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
+msgid "Creation"
+msgstr "Створення"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -1181,6 +1238,11 @@ msgstr "Поточне виробництво"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
 msgid "Currently Produced Quantity"
 msgstr "Наразі вироблена кількість"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_description_variants
+msgid "Custom Description"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__db_datas
@@ -1243,6 +1305,21 @@ msgstr ""
 "Визначає, коли замовлення на виробництво вважається готовим до запуску"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
+msgid "Delay Alert Date"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert
+msgid "Delay alert"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
+msgid "Delete"
+msgstr "Видалити"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
 msgid "Delivery Orders"
 msgstr "Замовлення на доставку"
@@ -1279,6 +1356,7 @@ msgid "Disassembly Order"
 msgstr "Замовлення на споживання"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Discard"
 msgstr "Відмінити"
@@ -1309,9 +1387,19 @@ msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
+msgid "Do you confirm you want to unbuild"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
 msgid "Document"
 msgstr "Документ"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Документація"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__is_done
@@ -1325,12 +1413,22 @@ msgid "Done"
 msgstr "Готово"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
+msgid "Download"
+msgstr "Завантажити"
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__draft
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_unbuild__state__draft
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Draft"
 msgstr "Чернетка"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
+msgid "Dropdown menu"
+msgstr "Спадне меню"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
@@ -1353,12 +1451,17 @@ msgstr "Розрахунок тривалості"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_percent
 msgid "Duration Deviation (%)"
-msgstr "Відхилення тривалості (%)"
+msgstr "Тривалість відхилення (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_unit
 msgid "Duration Per Unit"
 msgstr "Тривалість на одиницю"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
+msgid "Edit"
+msgstr "Редагувати"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -1368,15 +1471,19 @@ msgstr "Дата набрання чинності"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_finished
 msgid "Effective End Date"
-msgstr "Кінцева дата набрання чинності"
+msgstr "Ефективна кінцева дата"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_start
 msgid "Effective Start Date"
-msgstr "Початкова дата набрання чинності"
+msgstr "Ефективна дата початку"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_type
+msgid "Effectiveness"
+msgstr "Ефективність"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_type
 msgid "Effectiveness Category"
 msgstr "Категорія ефективності"
@@ -1396,15 +1503,14 @@ msgstr "Кінцева дата"
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__product_tracking
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_line__product_tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr "Забезпечте відстеження товару, що зберігається, на вашому складі."
+msgstr "Забезпечення відстеження товару, що зберігається, на вашому складі."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
-msgid "Exception Activities"
-msgstr "Виключення дій"
+#. openerp-web
+#: code:addons/mrp/static/src/js/mrp_documents_controller_mixin.js:0
+#, python-format
+msgid "Error"
+msgstr "Помилка"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -1419,12 +1525,12 @@ msgstr "Винятки:"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_expected
 msgid "Expected Duration"
-msgstr "Тривалість очікування"
+msgstr "Очікувана тривалість"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__duration_expected
 msgid "Expected duration (in minutes)"
-msgstr "Тривалість очікування (у хвилинах)"
+msgstr "Очікувана тривалість (у хвилинах)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__datas
@@ -1486,7 +1592,7 @@ msgstr "Мітка готового товару (PDF)"
 #. module: mrp
 #: model:ir.actions.report,name:mrp.label_manufacture_template
 msgid "Finished Product Label (ZPL)"
-msgstr "Мітка готової продукції (ZPL)"
+msgstr "Етикетка готової продукції (ZPL)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__finished_workorder_id
@@ -1515,6 +1621,7 @@ msgstr "Розташування готових товарів"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_abstract_workorder__consumption__flexible
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__flexible
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_product_produce__consumption__flexible
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__flexible
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__consumption__flexible
 msgid "Flexible"
 msgstr "Гнучкий"
@@ -1568,8 +1675,7 @@ msgstr "Загальна інформація"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__priority
 msgid "Gives the sequence order when displaying a list of MRP documents."
-msgstr ""
-"Дає порядок послідовності при відображенні списку документів виробництва."
+msgstr "Дає порядок послідовності при відображенні списку документів MRP."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__sequence
@@ -1634,6 +1740,11 @@ msgid "High"
 msgstr "Високий"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
+msgid "History"
+msgstr "Історія"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Hours"
 msgstr "Години"
@@ -1694,7 +1805,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_needaction
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
+msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_has_error
@@ -1735,7 +1846,7 @@ msgid ""
 "record without removing it."
 msgstr ""
 "Якщо активне поле встановлено як Помилкове, це дозволить вам приховати запис"
-" ресурсу, не видаливши його."
+" кадрів, не видаливши його."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing__active
@@ -1760,6 +1871,11 @@ msgstr "Шлях до зображення"
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_width
 msgid "Image Width"
 msgstr "Ширина зображення"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
+msgid "Image is a link"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -1797,7 +1913,7 @@ msgstr "В процесі"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__index_content
 msgid "Indexed Content"
-msgstr "Проіндексований вміст"
+msgstr "Проіндексований контент"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_deadline
@@ -1807,17 +1923,6 @@ msgid ""
 msgstr ""
 "Інформаційна дата, що дозволяє визначити, коли виробниче замовлення слід "
 "опрацювати, щоби вчасно виконати доставку."
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_stock_move_line__lot_produced_qty
-msgid "Informative, not used in matching"
-msgstr "Інформативний, не використовується у відповідності"
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:0
-#, python-format
-msgid "Insufficient Quantity"
-msgstr "Недостатня кількість"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
@@ -1831,6 +1936,11 @@ msgid ""
 msgstr ""
 "Складське переміщення, для якого потрібно сканувати партійні номери у цьому "
 "робочому замовленні"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_finished_lines_editable
+msgid "Is Finished Lines Editable"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_is_follower
@@ -1877,6 +1987,11 @@ msgid "It has already been unblocked."
 msgstr "Це було розблоковано."
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__json_popover
+msgid "JSON data for the popover widget"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Kit"
@@ -1905,7 +2020,7 @@ msgstr "Комплект"
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_bom_structure____last_update
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Остання модифікація"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__write_uid
@@ -1963,7 +2078,7 @@ msgstr "Останній користувач, який працював на ц
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Late"
-msgstr "Пізно"
+msgstr "Запізнено"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1985,8 +2100,8 @@ msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
 "consume in them. "
 msgstr ""
-"Рядки треба видалити, але не можна, оскільки у них все одно є кількості для "
-"споживання."
+"Рядки треба видалити, але не можна, оскільки у них все одно є багато "
+"споживаних."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
@@ -2047,7 +2162,7 @@ msgstr "Партія/Серійний номер"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__finished_lot_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__lot_id
 msgid "Lot/Serial Number"
-msgstr "Партія/Серійний номер"
+msgstr "Партія/серійний номер"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__lot_id
@@ -2067,12 +2182,24 @@ msgstr "Партії"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_traceability
 msgid "Lots/Serial Numbers"
-msgstr "Партії/Серійні номери"
+msgstr "Партії/серійні номери"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__1
 msgid "Low"
 msgstr "Низький"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "MO Generated by %s"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "MO Source of %s"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
@@ -2097,25 +2224,25 @@ msgstr "Основне прикріплення"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "Виготовлення на замовлення"
+msgstr "Виготовлення під замовлення"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr "Керувати операціями робочих замовлень"
+msgstr "Керувати операціями нарядів на роботу"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle_manual
 msgid "Manual Duration"
-msgstr "Тривалість вручну"
+msgstr "Ручна тривалість"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_steps
 #: model:ir.model.fields.selection,name:mrp.selection__stock_rule__action__manufacture
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_stock_rule
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_stock_rule
 #, python-format
 msgid "Manufacture"
 msgstr "Виробництво"
@@ -2176,10 +2303,12 @@ msgid "Manufacturing"
 msgstr "Виробництво"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:mrp.field_product_product__produce_delay
 #: model:ir.model.fields,field_description:mrp.field_product_template__produce_delay
 #: model:ir.model.fields,field_description:mrp.field_res_company__manufacturing_lead
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
+#, python-format
 msgid "Manufacturing Lead Time"
 msgstr "Час виконання виробництва"
 
@@ -2203,7 +2332,6 @@ msgid "Manufacturing Order"
 msgstr "Замовлення на виробництво"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.act_product_mrp_production
 #: model:ir.actions.act_window,name:mrp.act_product_mrp_production_workcenter
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_form
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
@@ -2254,13 +2382,13 @@ msgid ""
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
 "Виробничі операції обробляються в робочих центрах. Робочий центр може складатися з\n"
-"                 робітників та/або машин, вони використовуються для вирахування вартості, планування, планування потужностей тощо.\n"
+"                 робітники та/або машини, вони використовуються для вирахування вартості, планування, планування потужностей тощо.\n"
 "                 Робочі центри визначаються в операціях маршрутизації."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Mark as Done"
-msgstr "Позначте, як Готово"
+msgstr "Позначте, як зроблено"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2270,7 +2398,7 @@ msgstr "Позначити як Зробити"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
 msgid "Master Data"
-msgstr "Основні дані"
+msgstr "Головні дані"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_mps
@@ -2279,7 +2407,6 @@ msgstr "Майстер виробничого розкладу"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_availability
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Material Availability"
 msgstr "Доступність матеріалу"
@@ -2313,9 +2440,8 @@ msgstr "Хвилини"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Miscellaneous"
-msgstr "Різне"
+msgstr "Інші"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder_line__move_id
@@ -2335,14 +2461,19 @@ msgid "Moves to Track"
 msgstr "Переміщення на відстеження"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_procurement_group__mrp_production_id
+msgid "Mrp Production"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
 msgid "Mrp: Plan Production Orders"
-msgstr "Виробництво: запланувати замовлення на виробництво"
+msgstr "Mrp: планувати замовлення на виробництво"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__name
 msgid "Name"
-msgstr "Ім'я"
+msgstr "Назва"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -2391,14 +2522,8 @@ msgstr "Немає доступних даних."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_delta_report
 msgid "No data to display"
 msgstr "Немає даних для відображення"
-
-#. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_loss_action
-msgid "No productivity loss defined"
-msgstr "Не визначено втрати продуктивності"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_blocked
@@ -2411,7 +2536,7 @@ msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
 "Жодного робочого замовлення наразі не обробляється. Натисніть, щоб "
-"відзначити робочий центр як заблоковано."
+"відзначити робочий центру як заблоковано."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__0
@@ -2423,7 +2548,7 @@ msgstr "Звичайний"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_scrap__workorder_id
 msgid "Not to restrict or prefer quants, but informative."
-msgstr "Не обмежувати або віддавати перевагу кількостям, але інформативним."
+msgstr "Не обмежувати або віддавати перевагу квантам, але інформативним."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__0
@@ -2446,7 +2571,7 @@ msgstr "Кількість дій"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_late
 msgid "Number of Manufacturing Orders Late"
-msgstr "Кількість пізніх замовлень на виробництво"
+msgstr "Кількість замовлень на виробництво пізніше"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_waiting
@@ -2467,6 +2592,11 @@ msgid "Number of errors"
 msgstr "Кількість помилок"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_child_count
+msgid "Number of generated MO"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction_counter
@@ -2480,12 +2610,7 @@ msgstr "Кількість повідомлень, які потебують д�
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_error_counter
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Кількість повідомлень з помилковою доставкою"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__capacity
-msgid "Number of pieces that can be produced in parallel."
-msgstr "Кількість штук, які можна виготовляти паралельно."
+msgstr "Кількість повідомлень з помилковою дставкою"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
@@ -2497,6 +2622,11 @@ msgstr ""
 "Кількість одиниць, які можна виготовити паралельно. Якщо робочий центр має "
 "місткість 5, і вам доведеться виготовити 10 одиниць на своєму робочому "
 "замовленні, звичайний час операції буде помножено на 2."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
+msgid "Number of source MO"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread_counter
@@ -2535,6 +2665,7 @@ msgstr "Як тільки деякі товари будуть оброблен�
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__operation_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Operation"
 msgstr "Операція"
 
@@ -2590,6 +2721,11 @@ msgstr "Порядок замовлення"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__order_ids
 msgid "Orders"
 msgstr "Замовлення"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_document__original_id
+msgid "Original (unoptimized, unresized) attachment"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_production
@@ -2693,7 +2829,7 @@ msgstr "Продуктивність за останній місяць"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pick Components"
-msgstr "Комплектувати компоненти"
+msgstr "Компоненти комплектування"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -2750,14 +2886,19 @@ msgid "Plan"
 msgstr "План"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__date_start_wo
-msgid "Plan From"
-msgstr "Запланувати з"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Plan Orders"
 msgstr "Заплановані замовлення"
+
+#. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
+msgid "Plan a Manufacturing Order"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Plan from"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -2776,7 +2917,7 @@ msgstr "Заплановано"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Planned Date"
-msgstr "Запланована дата"
+msgstr "Очікувана дата"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished
@@ -2784,10 +2925,21 @@ msgid "Planned End Date"
 msgstr "Запланована кінцева дата"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "Planned at the same time than other workorder(s) at %s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Planning"
 msgstr "Планування"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Planning Issues"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -2804,6 +2956,11 @@ msgid ""
 msgstr ""
 "Будь ласка, встановіть кількість, яку ви зараз виробляєте. Вона повинна бути"
 " більше нуля."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__json_popover
+msgid "Popover Data JSON"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__possible_bom_product_template_attribute_value_ids
@@ -2916,7 +3073,6 @@ msgstr "Вироблено в операції"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__product_id
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_id
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -2938,10 +3094,9 @@ msgstr "Вартість товару"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_plm
 msgid "Product Lifecycle Management (PLM)"
-msgstr "Управління життєвим циклом товару (PLM)"
+msgstr "Управління життєвим циклом продукту (PLM)"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_move_line
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Product Moves"
@@ -2963,7 +3118,7 @@ msgstr "Шаблон товару"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_id
 msgid "Product Unit of Measure"
-msgstr "Одиниця вимірювання товару"
+msgstr "Одиниця виміру товару"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_id
@@ -3002,7 +3157,7 @@ msgstr "Розташування виробництва"
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "Production Order"
-msgstr "Замовлення на виробництво"
+msgstr "Заявка на виробництво"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__raw_material_production_id
@@ -3013,6 +3168,11 @@ msgstr "Замовлення на виробництво для компонен
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
 msgid "Production Order for finished products"
 msgstr "Замовлення на виробництво для завершених товарів"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
+msgid "Production State"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3051,7 +3211,6 @@ msgid "Productivity"
 msgstr "Продуктивність"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_loss_action
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_blocked
 msgid "Productivity Losses"
 msgstr "Втрати на продуктивність"
@@ -3104,6 +3263,7 @@ msgstr "Кількість"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_produced
+#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__quantity
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -3118,11 +3278,6 @@ msgstr "Кількість"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_produce_line_kanban
 msgid "Quantity Done"
 msgstr "Кількість виконано"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_move_line__lot_produced_qty
-msgid "Quantity Finished Product"
-msgstr "Кількість завершених товарів"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_produced
@@ -3159,12 +3314,11 @@ msgstr "Кількість у виробництві"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__batch_size
 msgid "Quantity to Process"
-msgstr "Кількість до виконання"
+msgstr "Кількість в процесі"
 
 #. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/xml/mrp.xml:0
-#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 #, python-format
 msgid "Quantity:"
 msgstr "Кількість:"
@@ -3213,7 +3367,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing__code
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__name
 msgid "Reference"
-msgstr "Посилання"
+msgstr "Референс"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_name_uniq
@@ -3230,12 +3384,19 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "Reference:"
-msgstr "Референс:"
+msgstr "Довідка:"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__ir_attachment_id
 msgid "Related attachment"
 msgstr "Пов'язане вкладення"
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:0
+#, python-format
+msgid "Replan"
+msgstr ""
 
 #. module: mrp
 #. openerp-web
@@ -3252,7 +3413,7 @@ msgstr "Звітність"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__serial
 msgid "Requires Serial"
-msgstr "Необхідний серійний"
+msgstr "Потрібен послідовний"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_date_minimum_delta
@@ -3311,13 +3472,14 @@ msgstr "Відповідальний користувач"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing__name
+#: model:ir.model.fields,field_description:mrp.field_stock_move__routing_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr "Маршрут"
+msgstr "Маршрути"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
@@ -3336,7 +3498,7 @@ msgstr "Маршрутизація робочих центрів"
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Routings"
-msgstr "Маршрути"
+msgstr "Технологічні маршрути"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -3348,6 +3510,11 @@ msgstr ""
 "Маршрути визначають послідовні операції, які повинні бути\n"
 "                 зроблені для реалізації замовлення на виробництво. Кожна операція з\n"
 "                 маршрутизації виконується в певному робочому центрі та має певну тривалість."
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_procurement_compute_mrp
+msgid "Run Scheduler"
+msgstr "Запустити планувальник"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_sms_error
@@ -3376,17 +3543,30 @@ msgstr "Запланована дата"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_planned_finished
 msgid "Scheduled Date Finished"
-msgstr "Завершена запланована дата"
+msgstr "Запланована дата завершення"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_planned_start
 msgid "Scheduled Date Start"
-msgstr "Початок запланованої дати"
+msgstr "Запланована дата початку"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
 msgstr "Запланована дата по місяцю"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "Scheduled before the previous work order, planned from %s to %s"
+msgstr ""
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/js/mrp_workorder_popover.js:0
+#, python-format
+msgid "Scheduling Information"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3443,7 +3623,7 @@ msgstr "Пошук робочого центру mrp"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Security Lead Time"
-msgstr "Час проведення безпеки"
+msgstr "Безпека часу проведення"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_res_company__manufacturing_lead
@@ -3481,7 +3661,7 @@ msgstr "Послідовність складу після виробництв�
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
 msgid "Set duration manually"
-msgstr "Встановіть тривалість вручну"
+msgstr "Встановити тривалість вручну"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -3495,6 +3675,11 @@ msgstr "Налаштування"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_final_lots
 msgid "Show Final Lots"
 msgstr "Показати фінальні партії"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__show_json_popover
+msgid "Show Popover?"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -3577,7 +3762,7 @@ msgstr "Джерело"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__location_id
 msgid "Source Location"
-msgstr "Місцезнаходження джерела"
+msgstr "Вихідне розташування"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
@@ -3605,13 +3790,11 @@ msgstr "Початок роботи"
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "Start a new work order"
 msgstr "Розпочніть нове робоче замовлення"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
 msgid "State"
 msgstr "Область"
 
@@ -3649,6 +3832,11 @@ msgid "Stock After Manufacturing Rule"
 msgstr "Складське правило після виробництва"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_availability
+msgid "Stock Availability"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
 msgstr "Складське переміщення "
@@ -3676,7 +3864,7 @@ msgstr "Місцезнаходження складу після виробни�
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "Звіт правила запасу"
+msgstr "Звіт складського правила"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -3693,6 +3881,7 @@ msgstr "Назва файлу збереження"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_abstract_workorder__consumption__strict
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__strict
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_product_produce__consumption__strict
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__strict
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__consumption__strict
 msgid "Strict"
 msgstr "Точний"
@@ -3732,6 +3921,11 @@ msgstr "Технічне поле, що вказує, чи працює пото
 #: model:ir.model.fields,help:mrp.field_mrp_production__post_visible
 msgid "Technical field to check when we can post"
 msgstr "Технічне поле, щоби перевірити, коли ми можемо опублікувати"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
+msgid "Technical field to check when we can reserve quantities"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__unreserve_visible
@@ -3786,10 +3980,11 @@ msgstr "Зміна повинна бути вищою, ніж ця величи�
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model
 msgid "The database object this attachment will be attached to."
-msgstr "Об'єкт бази даних цього прикріплення буде додано."
+msgstr "Об'єкт бази даних цього додатку буде приєднано."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__routing_id
+#: model:ir.model.fields,help:mrp.field_stock_move__routing_id
 msgid ""
 "The list of operations (list of work centers) to produce the finished "
 "product. The routing is mainly used to compute work center costs during "
@@ -3854,6 +4049,7 @@ msgid "The production order for '%s' has no quantity specified."
 msgstr "Замовлення на виробництво для '%s' не має вказаної кількості."
 
 #. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
 msgid "The quantity to produce must be positive!"
 msgstr "Кількість виробництва повинна бути позитивною!"
@@ -3861,7 +4057,7 @@ msgstr "Кількість виробництва повинна бути поз
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
 msgid "The record id this is attached to."
-msgstr "ID запису, до якого воно прикріплено."
+msgstr "ID запису, до якого прикріплено."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_date
@@ -3875,9 +4071,21 @@ msgid ""
 "create work orders afterwards which alters the execution of the "
 "manufacturing order."
 msgstr ""
-"Маршрут містить усі використовувані робочі центри та термін. Після цього "
-"буде створено робоче замовлення, що змінить виконання замовлення на "
+"Маршрут містить усі використовувані робочі центри та на який термін. Після "
+"цього буде створено робоче замовлення, що змінить виконання замовлення на "
 "виробництво."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_abstract_workorder.py:0
+#, python-format
+msgid "The serial number %s used for byproduct %s has already been produced"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_abstract_workorder.py:0
+#, python-format
+msgid "The serial number %s used for component %s has already been consumed"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -3890,6 +4098,12 @@ msgstr ""
 "вимірювання товару."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "The work order should have already been processed."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -3900,7 +4114,7 @@ msgstr ""
 " Визначіть специфікацію для цього товару."
 
 #. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_move_line
+#: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
 msgid "There's no product move yet"
 msgstr "Ще немає товарних переміщень"
 
@@ -3910,7 +4124,7 @@ msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
 msgstr ""
-"Це поле використовується для визначення того, в який часовий період "
+"Це поле використовується для визначення того, в який часовий пояс "
 "працюватимуть ресурси."
 
 #. module: mrp
@@ -3925,8 +4139,8 @@ msgstr ""
 "Це поле використовується для розрахунку очікуваної тривалості робочого "
 "замовлення в цьому робочому центрі. Наприклад, якщо робочий порядок займає "
 "одну годину, а коефіцієнт ефективності становить 100%, то очікувана "
-"тривалість становитиме одну годину. Якщо коефіцієнт ефективності становить "
-"200%, очікувана тривалість становить 30 хвилин."
+"тривалість буде одна година. Якщо коефіцієнт ефективності становить 200%, "
+"очікувана тривалість - 30 хвилин."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -3949,13 +4163,17 @@ msgid "This is the cost defined on the product."
 msgstr "Це вартість, визначена на товарі."
 
 #. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_move_line
+#: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
 msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
-"                    You can filter on the product to see all the past movements for the product."
+"                You can filter on the product to see all the past movements for the product."
 msgstr ""
-"Це меню дає повне відстеження операцій інвентаризації на певному товарі.\n"
-"                   Ви можете фільтрувати на товарі, щоби побачити усі минулі переміщення для товару."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_abstract_workorder.py:0
+#, python-format
+msgid "This serial number for product %s has already been produced"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__production_location_id
@@ -3963,8 +4181,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
 msgstr ""
-"Це складське місцезнаходження буде використано замість типового як початкове"
-" розташування для складських переміщень, згенерованих виробничими "
+"Це місце складування буде використано замість типового як початкове "
+"розташування для складських переміщень, згенерованих виробничими "
 "замовленнями."
 
 #. module: mrp
@@ -4006,7 +4224,7 @@ msgstr "Час перед вир-ом."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__time_stop
 msgid "Time in minutes for the cleaning."
-msgstr "Час у хвилинах для очищення."
+msgstr "Час у хвилинах для чищення."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__time_start
@@ -4046,7 +4264,7 @@ msgstr "Закрити"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__qty_to_consume
 #: model_terms:ir.ui.view,arch_db:mrp.view_stock_move_raw_tree
 msgid "To Consume"
-msgstr "Використати"
+msgstr "Спожити"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4131,7 +4349,7 @@ msgstr "Загальна тривалість"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Traceability"
-msgstr "Переміщення"
+msgstr "Відстеження"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_traceability_report
@@ -4184,13 +4402,16 @@ msgstr "Розблокувати"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild"
-msgstr "Розібрати"
+msgstr "Розбирання"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild Order"
 msgstr "Замовлення на розбирання"
 
@@ -4206,6 +4427,12 @@ msgstr "Кількість товару замовлення на розбира
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
 msgstr "Замовлення на розбирання"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "Unbuild: %s"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -4227,6 +4454,7 @@ msgstr "Фактор одиниці"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_uom_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_uom_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_uom_name
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4279,6 +4507,7 @@ msgid "Unread Messages Counter"
 msgstr "Кількість непрочитаних повідомлень"
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.mrp_production_action_unreserve_tree
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unreserve"
 msgstr "Відмінити резервування"
@@ -4289,6 +4518,13 @@ msgid "Update"
 msgstr "Оновити"
 
 #. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp_document_template.xml:0
+#, python-format
+msgid "Upload"
+msgstr "Завантажити"
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__worksheet
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__worksheet
 msgid "Upload your PDF file."
@@ -4297,12 +4533,12 @@ msgstr "Завантажте ваш PDF-файл."
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__2
 msgid "Urgent"
-msgstr "Терміново"
+msgstr "Терміновий"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__url
 msgid "Url"
-msgstr "Url-адреса"
+msgstr "URL"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4311,7 +4547,7 @@ msgid ""
 "products."
 msgstr ""
 "Використовуйте кнопку Виробити або обробляйте замовлення на виробництво, "
-"щоби створити деякі готові товари."
+"щоби створити деякі готові вироби."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -4321,8 +4557,8 @@ msgstr "Використано в"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__user_id
-#: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 #: model:res.groups,name:mrp.group_mrp_user
+#: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "User"
 msgstr "Користувач"
 
@@ -4388,6 +4624,12 @@ msgid "Waiting for another WO"
 msgstr "Очікує інших РЗ"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "Waiting the previous work order, planned from %s to %s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
 msgid "Warehouse"
 msgstr "Склад"
@@ -4395,7 +4637,7 @@ msgstr "Склад"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr "Попередження про недостатню кількість розбирання"
+msgstr "Попередження про недостатню кількість замовлень на розбирання"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4403,7 +4645,12 @@ msgstr "Попередження про недостатню кількість 
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "Warning"
-msgstr "Сповіщення"
+msgstr "Попередження"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Warnings"
+msgstr "Попередження"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
@@ -4444,7 +4691,7 @@ msgstr "Коли доступні компоненти для першої оп�
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr "При виготовленні товарів вони можуть виготовлятися на цьому складі."
+msgstr "При виготовленні товарів вони можуть виготовлятися в цьому складі."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -4453,8 +4700,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a manufacturing order is "
 "created to fulfill the need."
 msgstr ""
-"Коли товари необхідні в <b>%s</b>, <br/> замовлення на виробництво "
-"створюється для задоволення потреби."
+"Коли товари необхідні в <b>%s</b>, <br/> замовлення на виробництво створене "
+"для задоволення потреби."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -4518,13 +4765,9 @@ msgstr "Огляд робочих центрів"
 msgid ""
 "Work Centers allow you to create and manage manufacturing\n"
 "                units. They consist of workers and/or machines, which are\n"
-"                considered as units for task assignation as well as capacity\n"
+"                considered as units for task assignment as well as capacity\n"
 "                and planning forecast."
 msgstr ""
-"Робочі центри дозволяють створювати та управляти одиницями\n"
-"               виробництва. Вони складаються з працівників та/або машин, які \n"
-"                 розглядаються як одиниці для призначення завдання, а також потенціал\n"
-"                 та планування прогнозу."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -4539,7 +4782,7 @@ msgstr "Робоча інструкція"
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__workorder_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Work Order"
-msgstr "Робоче замовлення"
+msgstr "Наряд"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4573,12 +4816,7 @@ msgstr "Робоче замовлення до споживання"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Work Orders"
-msgstr "Робочі замовлення"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_workorder_delta_report
-msgid "Work Orders Deviation"
-msgstr "Відхилення робочих замовлень"
+msgstr "Наряди"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
@@ -4589,24 +4827,22 @@ msgstr "Продуктивність робочих замовлень"
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_workcenter
 msgid "Work Orders Planning"
-msgstr "Планування робочих замовлень"
+msgstr "Планування нарядів"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work Orders are operations to be processed at a Work Center to realize a\n"
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones"
 msgstr ""
 "Робочі замовлення - це операції, що підлягають обробці в робочому центрі для реалізації\n"
-"             замовлення на виробництво. Робочі замовлення спричинені замовленням на виробництво,\n"
-"             засновані на маршрутизації, визначеної на них"
+"             виробничого замовлення. Робочі замовлення спричинені замовленням на виробництво,\n"
+"             засновані на маршрутизації, визначеної на цих"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_type
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet_type
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Work Sheet"
 msgstr "Робочий аркуш"
@@ -4618,20 +4854,17 @@ msgid "Work order %s is still running"
 msgstr "Робоче замовлення%s досі запускається"
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
+msgid ""
+"Work orders correspond to the different operations, taking place at specific"
+" workcenters, which are performed to manufacture a product. Those can be "
+"defined in a routing that will be assigned to a bill of material."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
 msgstr "Робочі замовлення в процесі. Натисніть, щоби блокувати робочий центр."
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_production__date_start_wo
-msgid ""
-"Work orders will be planned based on the availability of the work centers"
-"              starting from this date. If empty, the work orders will be "
-"planned as soon as possible."
-msgstr ""
-"Робочі замовлення будуть заплановані на основі наявних робочих центрів, "
-"починаючи з цієї дати. Якщо порожньо, робочі замовлення будуть заплановані "
-"якнайшвидше."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
@@ -4672,7 +4905,7 @@ msgstr "Статус робочого центру"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Workcenter blocked, click to unblock."
-msgstr "Робочий центр заблоковано, натисніть, щоби розблокувати."
+msgstr "Робочий центр блоковано, натисніть, щоби розблокувати."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_calendar_id
@@ -4693,6 +4926,11 @@ msgstr "Рядок переміщення робочого замовлення"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet
 msgid "Worksheet"
 msgstr "Робочий аркуш"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet_type
+msgid "Worksheet Type"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet_google_slide
@@ -4732,7 +4970,7 @@ msgstr "Ви не можете змінити закінчене робоче з
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
-msgstr "Ви не можете споживати, не кажучи про те, яку партію ви споживали"
+msgstr "Ви не можете споживати, не кажучи про те, яку кількість ви споживали"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4761,14 +4999,18 @@ msgstr ""
 "процесі чи вже виконане."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_abstract_workorder.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
-"You cannot consume the same serial number twice. Please correct the serial "
-"numbers encoded."
+"You cannot consume additional component as the consumption defined on the "
+"Bill of Material is set to \"strict\""
 msgstr ""
-"Ви не можете використовувати той самий серійний номер двічі. Будь ласка, "
-"виправте зашифровані серійні номери."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid "You cannot create a new Bill of Material from here."
+msgstr "Ви не можете створити нову специфікацію звідси."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -4816,7 +5058,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
 #, python-format
 msgid "You cannot produce the same serial number twice."
-msgstr "Ви не можете виготовити один і той же серійний номер двічі."
+msgstr "Ви не можете зробити один і той же серійний номер двічі."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -4856,7 +5098,7 @@ msgid ""
 "Productivity Losses."
 msgstr ""
 "Потрібно визначити щонайменше одну втрату продуктивності в категорії "
-"\"Продуктивність\". Створіть її з додатку Виробництво, меню: "
+"\"Продуктивність\". Створіть його з додатку Виробництво, меню: "
 "Налаштування/Втрати продуктивності."
 
 #. module: mrp
@@ -4868,7 +5110,7 @@ msgid ""
 " Productivity Losses."
 msgstr ""
 "Потрібно визначити принаймні одну втрату продуктивності в категорії "
-"\"Продуктивність\". Створіть її з додатку Виробництво, меню: "
+"\"Продуктивність\". Створіть його з додатку Виробництво, меню: "
 "Налаштування/Втрати продуктивності."
 
 #. module: mrp
@@ -4880,7 +5122,7 @@ msgid ""
 "Productivity Losses."
 msgstr ""
 "Ви повинні визначити принаймні одну неактивну втрату продуктивності в "
-"категорії \"Продуктивність\". Створіть її з додатку Виробництво, меню: "
+"категорії \"Продуктивність\". Створіть його з додатку Виробництво, меню: "
 "Налаштування/Втрати продуктивності."
 
 #. module: mrp
@@ -4901,10 +5143,16 @@ msgstr ""
 "специфікації."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You should provide a lot for the final product"
+msgstr "Ви повинні вказати партію для кінцевого товару"
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You should provide a lot number for the final product."
-msgstr "Необхідно вказати номер партії для кінцевого товару."
+msgstr "Необхідно вказати номер партії для кінцевого продукту."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4916,7 +5164,6 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_delta_report
 msgid ""
 "You will get here statistics about the\n"
 "              work orders duration related to this routing."
@@ -4930,10 +5177,22 @@ msgid "cancelled"
 msgstr "Скасовано"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_rule.py:0
+#: code:addons/mrp/models/stock_rule.py:0
+#, python-format
+msgid "day(s)"
+msgstr "день(і)"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
-msgstr "дні"
+msgstr "днів"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
+msgid "from location"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -4962,6 +5221,11 @@ msgid "of"
 msgstr "від"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
+msgid "on"
+msgstr "на"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "ordered instead of"
 msgstr "замовлено замість"
@@ -4970,6 +5234,13 @@ msgstr "замовлено замість"
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
 msgid "quantity has been updated."
 msgstr "кількість було оновлено."
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/js/mrp_documents_controller_mixin.js:0
+#, python-format
+msgid "status code: %s </br> message: %s"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view

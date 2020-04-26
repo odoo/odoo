@@ -5,16 +5,17 @@
 # Translators:
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Thomas Pot <thomas@open2bizz.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2019-03-20 14:56+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -320,7 +321,9 @@ msgid "Digest Subscriptions"
 msgstr "Verslag abonnementen"
 
 #. module: digest
+#: model:ir.actions.act_window,name:digest.digest_tip_action
 #: model:ir.model,name:digest.model_digest_tip
+#: model:ir.ui.menu,name:digest.digest_tip_menu
 msgid "Digest Tips"
 msgstr "Verslag tips"
 
@@ -328,7 +331,7 @@ msgstr "Verslag tips"
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:digest.field_digest_tip__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__template_id
@@ -373,6 +376,16 @@ msgid "KPI Digest"
 msgstr "KPI verslag"
 
 #. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_form
+msgid "KPI Digest Tip"
+msgstr ""
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_tree
+msgid "KPI Digest Tips"
+msgstr ""
+
+#. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "KPIs"
 msgstr "KPIs"
@@ -380,7 +393,7 @@ msgstr "KPIs"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total_value
 msgid "Kpi Mail Message Total Value"
-msgstr "KPI e-mail bericht totale waarde"
+msgstr "KPI E-mail bericht totale waarde"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected_value
@@ -406,6 +419,21 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: digest
+#: model:digest.tip,name:digest.digest_tip_mail_2
+msgid "Mail: apps videos tour"
+msgstr ""
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_mail_1
+msgid "Mail: get things done with activities"
+msgstr ""
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_mail_0
+msgid "Mail: ping colleagues"
+msgstr ""
+
+#. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total
 msgid "Messages"
 msgstr "Berichten"
@@ -417,6 +445,7 @@ msgstr "Maandelijks"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__name
+#: model:ir.model.fields,field_description:digest.field_digest_tip__name
 msgid "Name"
 msgstr "Naam"
 
@@ -465,7 +494,7 @@ msgstr "Nu verzenden"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__sequence
 msgid "Sequence"
-msgstr "Reeks"
+msgstr "Volgorde"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__state

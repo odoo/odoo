@@ -3,16 +3,19 @@
 # 	* crm_iap_lead_enrich
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Gilles Mangin <gilles.mangin@phidias.fr>, 2019
+# Alexandra Jubert <aju@odoo.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
-"PO-Revision-Date: 2019-09-09 12:33+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2019-12-16 11:02+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +26,7 @@ msgstr ""
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
 msgid "(Time Now)"
-msgstr ""
+msgstr "(Heure Actuelle)"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
@@ -36,62 +39,89 @@ msgid "<b>Timezone : </b>"
 msgstr "<b>Fuseau horaire:</b>"
 
 #. module: crm_iap_lead_enrich
-#: model:mail.template,body_html:crm_iap_lead_enrich.mail_template_data_iap_lead_enrich_nocredit
-msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p>Dear ${object.create_uid.name or 'Madam/Sir'},</p><br/>\n"
-"    <p>Unfortunately, there are no more credits on your IAP Lead Enrichment account.<br/>\n"
-"    You can charge it back from the Settings of the CRM app or from your IAP portal.<br/></p><br/>\n"
-"    <p>Best regards,</p><br/>\n"
-"    <p>Odoo S.A.</p>\n"
-"</div>\n"
-"        "
-msgstr ""
-
-#. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_notfound
 msgid ""
 "<span> No company data found based on the email address or email address is "
 "one of an email provider. No credit was consumed. </span>"
 msgstr ""
+"<span> Aucunes données trouvées sur l'entreprise à partir de l'adresse "
+"e-mail ou l'adresse e-mail appartient à un fournisseur d'adresses e-mail. "
+"Aucun crédit n'a été consommé. </span>"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_email
 msgid ""
 "<span>Enrichment could not be done as no email address was provided.</span>"
 msgstr ""
+"<span>L'enrichissement n'a pas pu être effectué car aucune adresse e-mail "
+"n'a été fournie.</span>"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
 msgid "<span>Lead enriched based on email address</span>"
-msgstr ""
+msgstr "Piste enrichie à partir de l'adresse e-mail</span>"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__show_enrich_button
+msgid "Allow manual enrich"
+msgstr "Autoriser l'enrichissement manuel"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.actions.server,name:crm_iap_lead_enrich.ir_cron_lead_enrichment_ir_actions_server
 #: model:ir.cron,cron_name:crm_iap_lead_enrich.ir_cron_lead_enrichment
 #: model:ir.cron,name:crm_iap_lead_enrich.ir_cron_lead_enrichment
 msgid "CRM: enrich leads (IAP)"
-msgstr ""
+msgstr "CRM: enrichir des pistes (IAP)"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model,name:crm_iap_lead_enrich.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de config"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_iap_enrich_api__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Nom affiché"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.actions.server,name:crm_iap_lead_enrich.action_enrich_mail
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
+msgid "Enrich"
+msgstr "Enrichir"
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
+msgid "Enrich this lead with company data based on the email address"
+msgstr ""
+"Enrichir cette piste avec des données sur l'entreprise à partir de l'adresse"
+" e-mail"
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
+msgid "Enrich this opportunity with company data based on the email address"
+msgstr ""
+"Enrichir cette opportunité avec des données sur l'entreprise à partir de "
+"l'adresse e-mail"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__iap_enrich_done
 msgid "Enrichment done"
-msgstr ""
+msgstr "Enrichissement effectué"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model,name:crm_iap_lead_enrich.model_ir_model_fields
+msgid "Fields"
+msgstr "Champs"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model,name:crm_iap_lead_enrich.model_iap_enrich_api
 msgid "IAP Lead Enrichment API"
-msgstr ""
+msgstr "API d'IAP Enrichissement de Pistes"
 
 #. module: crm_iap_lead_enrich
-#: model:mail.template,subject:crm_iap_lead_enrich.mail_template_data_iap_lead_enrich_nocredit
-msgid "IAP Lead Enrichment Notification"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
+msgid "IAP account"
+msgstr "Compte IAP"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_iap_enrich_api__id
@@ -107,12 +137,12 @@ msgstr "Dernière modification le"
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_email
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_notfound
 msgid "Lead Enrichment based on email address"
-msgstr ""
+msgstr "Piste enrichie à partir de l'adresse e-mail"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
 msgid "Lead enriched based on email address"
-msgstr ""
+msgstr "Piste enrichie à partir de l'adresse e-mail"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model,name:crm_iap_lead_enrich.model_crm_lead
@@ -122,7 +152,7 @@ msgstr "Piste/opportunité"
 #. module: crm_iap_lead_enrich
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__reveal_id
 msgid "Reveal ID"
-msgstr ""
+msgstr "ID de Révélation"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
@@ -135,18 +165,17 @@ msgid ""
 "Whether IAP service for lead enrichment based on email has been performed on"
 " this lead."
 msgstr ""
+"Si le service IAP pour l'enrichissement des pistes à partir de l'e-mail a "
+"été effectué pour cette piste."
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
 msgid "Your balance for Lead Enrichment is insufficient. Please go to your"
 msgstr ""
-
-#. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
-msgid "iap account"
-msgstr ""
+"Votre solde pour l'Enrichissement de Pistes est insuffisant. Merci d'aller "
+"sur votre"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
 msgid "to buy credits."
-msgstr ""
+msgstr "pour acheter des crédits."

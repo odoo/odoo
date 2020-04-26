@@ -3,15 +3,16 @@
 # 	* sale_expense
 # 
 # Translators:
+# sejun huang <sejun.huang@gmail.com>, 2018
 # Martin Trigaux, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +24,7 @@ msgstr ""
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
 msgid "# of Expenses"
-msgstr "# 費用"
+msgstr "#費用數量"
 
 #. module: sale_expense
 #: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
@@ -38,12 +39,17 @@ msgstr "啟動費用電子信件"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
 msgid "Can be reinvoiced"
-msgstr ""
+msgstr "可以請求報銷"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
 msgid "Expense"
 msgstr "費用"
+
+#. module: sale_expense
+#: model:digest.tip,name:sale_expense.digest_tip_sale_expense_0
+msgid "Expense: try mailgateway"
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
@@ -57,12 +63,12 @@ msgstr "費用"
 msgid ""
 "If the product has an expense policy, it will be reinvoiced on this sales "
 "order"
-msgstr ""
+msgstr "若產品上具有費用政策，將可以於銷售訂單上向客戶請求費用報銷"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
 msgid "Invoicing"
-msgstr "會計"
+msgstr "開立發票"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move_line
@@ -77,7 +83,7 @@ msgstr "产品模板"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 msgid "Reinvoice Customer"
-msgstr ""
+msgstr "費用報銷客戶"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order

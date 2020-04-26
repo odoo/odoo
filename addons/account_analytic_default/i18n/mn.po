@@ -3,17 +3,20 @@
 # 	* account_analytic_default
 # 
 # Translators:
+# nasaaskii <nasaaskii@gmail.com>, 2018
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # Martin Trigaux, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:07+0000\n"
-"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2019\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +37,7 @@ msgstr "<strong>Захиалагч</strong>"
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
-msgstr "<strong>Бараа</strong>"
+msgstr "Бараа"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__account_id
@@ -48,7 +51,7 @@ msgid "Accounts"
 msgstr "Данс"
 
 #. module: account_analytic_default
-#: code:addons/account_analytic_default/models/account_analytic_default.py:28
+#: code:addons/account_analytic_default/models/account_analytic_default.py:0
 #, python-format
 msgid ""
 "An analytic default requires at least an analytic account or an analytic "
@@ -59,6 +62,7 @@ msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_move_line__analytic_account_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
 msgstr "Шинжилгээний данс"
@@ -69,12 +73,16 @@ msgid "Analytic Default Rule"
 msgstr ""
 
 #. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
-#: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
 msgstr "Шинжилгээний анхны утгууд"
+
+#. module: account_analytic_default
+#: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
+#: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
+msgid "Analytic Defaults Rules"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
@@ -89,8 +97,9 @@ msgstr "Шинжилгээний дүрмүүд"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_tag_ids
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_move_line__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "Шинжилгээний пайз"
+msgstr "Шинжилгээний Пайзууд"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__company_id
@@ -106,7 +115,7 @@ msgstr "Нөхцөлүүд"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_uid
 msgid "Created by"
-msgstr "Үүсгэсэн этгээд"
+msgstr "Үүсгэгч"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_date
@@ -114,29 +123,24 @@ msgid "Created on"
 msgstr "Үүсгэсэн огноо"
 
 #. module: account_analytic_default
-#: model_terms:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
-msgid "Default Analytic Values"
-msgstr "Шинжилгээний анхны утгууд"
-
-#. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_stop
 msgid "Default end date for this Analytic Account."
-msgstr "Энэ шинжилгээний дансны дуусах огнооны анхны утга."
+msgstr "Энэ Шинжилгээний дансны дуусах огнооны анхны утга."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_start
 msgid "Default start date for this Analytic Account."
-msgstr "Энэ шинжилгээний дансны эхлэх огнооны анхны утга"
+msgstr "Энэ Шинжилгээний дансны эхлэх огнооны анхны утга"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__display_name
 msgid "Display Name"
-msgstr "Дэлгэрэнгүй нэр"
+msgstr "Дэлгэцийн Нэр"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_stop
 msgid "End Date"
-msgstr "Дуусах огноо"
+msgstr "Дуусах Огноо"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__sequence
@@ -148,7 +152,7 @@ msgstr ""
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
-msgstr "Бүлэглэлт"
+msgstr "Бүлэглэх"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__id
@@ -163,17 +167,17 @@ msgstr "Журналын бичилт"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default____last_update
 msgid "Last Modified on"
-msgstr "Сүүлд зассан огноо"
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_uid
 msgid "Last Updated by"
-msgstr "Сүүлд зассан этгээд"
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_date
 msgid "Last Updated on"
-msgstr "Сүүлд зассан огноо"
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__partner_id
@@ -194,10 +198,9 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "company, it will automatically take this as an analytic account)"
 msgstr ""
-"Шинжилгээний анхны утгаар хэрэглэгдэх шинжилгээний данс нь аль компаных "
-"байхыг сонгоно уу. (ө.х. энэ компани дээр шинээр захиалагчийн нэхэмжлэл "
-"эсвэл борлуулалтын захиалга үүсгэхэд автоматаар энэ шинжилгээний данс "
-"сонгогдоно)"
+"Шинжилгээний анхны утгад өгөгдсөн шинжилгээний дансыг хэрэглэх компанийг "
+"сонго (ө.х. шинэ захиалагчийн нэхэмжлэл үүсгээд эсвэл борлуулалтын захиалга "
+"үүсгээд энэ компанийг сонговол автоматаар энэ шинжилгээний дансыг авна)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__partner_id
@@ -206,10 +209,9 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
 msgstr ""
-"Шинжилгээний анхны утгаар хэрэглэгдэх шинжилгээний данс нь аль харилцагчынх "
-"байхыг сонгоно уу. (ө.х. энэ харилцагчыг сонгож шинээр захиалагчийн "
-"нэхэмжлэл эсвэл борлуулалтын захиалга үүсгэхэд автоматаар энэ шинжилгээний "
-"данс сонгогдоно)"
+"Шинжилгээний анхны утгад өгөгдсөн шинжилгээний дансыг хэрэглэх харилцагч "
+"сонго (ө.х. шинэ захиалагчийн нэхэмжлэл үүсгээд эсвэл борлуулалтын захиалга "
+"үүсгээд энэ харилцагчийг сонговол автоматаар энэн шинжилгээний дансыг авна)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__product_id
@@ -218,18 +220,17 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "product, it will automatically take this as an analytic account)"
 msgstr ""
-"Шинжилгээний анхны утгаар хэрэглэгдэх шинжилгээний данс нь аль бараатай "
-"холбоотой байхыг сонгоно уу. (ө.х. энэ барааг сонгож шинээр захиалагчийн "
-"нэхэмжлэл эсвэл борлуулалтын захиалга үүсгэхэд автоматаар энэ шинжилгээний "
-"данс сонгогдоно)"
+"Шинжилгээний анхны утгад өгөгдсөн шинжилгээний дансыг хэрэглэх барааг сонго "
+"(ө.х. шинэ захиалагчийн нэхэмжлэл үүсгээд эсвэл борлуулалтын захиалга "
+"үүсгээд хэрэв энэ барааг сонговол автоматаар энэ шинжилгээний дансыг авна)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
 msgstr ""
-"Ямар хэрэглэгч энэ шинжилгээний дансыг анхны утга болгож ашиглахыг зааж өгнө"
-" үү."
+"Шинжилгээний анхны утгад өгөгдсөн шинжилгээний дансыг хэрэглэх хэрэглэгчийг "
+"сонго."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__account_id
@@ -242,12 +243,12 @@ msgstr ""
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__sequence
 msgid "Sequence"
-msgstr "Дугаарлалт"
+msgstr "Дараалал"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_start
 msgid "Start Date"
-msgstr "Эхлэх огноо"
+msgstr "Эхлэх Огноо"
 
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
@@ -263,4 +264,4 @@ msgstr "Хэрэглэгч"
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "to"
-msgstr "очих"
+msgstr "-"
