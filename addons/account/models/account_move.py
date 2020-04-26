@@ -1801,9 +1801,9 @@ class AccountMove(models.Model):
             return super()._get_creation_message()
         return {
             'out_invoice': _('Invoice Created'),
-            'out_refund': _('Refund Created'),
+            'out_refund': _('Credit Note Created'),
             'in_invoice': _('Vendor Bill Created'),
-            'in_refund': _('Credit Note Created'),
+            'in_refund': _('Refund Created'),
             'out_receipt': _('Sales Receipt Created'),
             'in_receipt': _('Purchase Receipt Created'),
         }[self.move_type]
