@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_mail_server_view_form" model="ir.ui.view">
+        <field name="name">ir_mail_server_view_form</field>
+        <field name="model">ir.mail_server</field>
+        <field name="inherit_id" ref="base.ir_mail_server_form"/>
+        <field name="arch" type="xml">
+            <field name="smtp_host" position="before">
+                <field name="is_gmail" string="Gmail"/>
+            </field>
+            <field name="smtp_user" position="after">
+                <field string="Authorization Code" name="google_gmail_authorization_code" password="True"
+                    attrs="{'required': [('is_gmail', '=', True)], 'invisible': [('is_gmail', '=', False)]}"/>
+                <field name="google_gmail_uri"
+                    class="fa fa-arrow-right mb16 oe_edit_only"
+                    widget="url"
+                    text=" Get an Authorization Code"
+                    attrs="{'invisible': [('is_gmail', '=', False)]}"
+                    nolabel="1"/>
+            </field>
+            <field name="smtp_pass" position="attributes">
+                <attribute name="attrs">{'invisible' : [('is_gmail', '=', True)]}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

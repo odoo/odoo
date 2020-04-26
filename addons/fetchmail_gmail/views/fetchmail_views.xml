@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="email_server_view_form" model="ir.ui.view">
+        <field name="name">fetchmail_server_view_form</field>
+        <field name="model">fetchmail.server</field>
+        <field name="inherit_id" ref="fetchmail.view_email_server_form"/>
+        <field name="arch" type="xml">
+            <field name="server" position="before">
+                <field name="is_gmail" string="Gmail"/>
+            </field>
+            <field name="user" position="after">
+                <field string="Authorization Code" name="google_gmail_authorization_code" password="True"
+                    attrs="{'required': [('is_gmail', '=', True)], 'invisible': [('is_gmail', '=', False)]}"/>
+                <field name="google_gmail_uri"
+                    class="fa fa-arrow-right oe_edit_only"
+                    widget="url"
+                    text=" Get an Authorization Code"
+                    attrs="{'invisible': [('is_gmail', '=', False)]}"
+                    nolabel="1"/>
+            </field>
+            <field name="password" position="attributes">
+                <attribute name="attrs">{'required' : ['&amp;', ('server_type', '!=', 'local'), ('is_gmail', '=', False)], 'invisible' : [('is_gmail', '=', True)]}</attribute>
+            </field>
+            <field name="server" position="attributes">
+                <attribute name="attrs">{'readonly' : [('id', '!=', False), ('is_gmail', '=', True)]}</attribute>
+            </field>
+            <field name="server_type" position="attributes">
+                <attribute name="attrs">{'readonly' : [('id', '!=', False), ('is_gmail', '=', True)]}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

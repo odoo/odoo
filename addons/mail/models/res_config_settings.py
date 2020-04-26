@@ -13,6 +13,10 @@ class ResConfigSettings(models.TransientModel):
     the alias domain. """
     _inherit = 'res.config.settings'
 
+    module_google_gmail = fields.Boolean("Support gmail authentication", help="A new option 'Gmail' will be available in your incoming/outgoing mail server.")
+    google_gmail_client_identifier = fields.Char("Gmail Client Id", config_parameter='google_gmail_client_id')
+    google_gmail_client_secret = fields.Char("Gmail Client Secret", config_parameter='google_gmail_client_secret')
+
     fail_counter = fields.Integer('Fail Mail', readonly=True)
     alias_domain = fields.Char('Alias Domain', help="If you have setup a catch-all email domain redirected to "
                                "the Odoo server, enter the domain name here.", config_parameter='mail.catchall.domain')
