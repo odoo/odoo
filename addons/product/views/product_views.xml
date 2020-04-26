@@ -580,7 +580,8 @@
                             </div>
                         </group>
                         <group string="Price List">
-                            <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
+                            <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"
+                                   domain="[('purchase_ok', '=', True), ('company_id', 'in', [False, company_id])]"/>
                             <label for="min_qty"/>
                             <div class="o_row">
                                 <field name="min_qty"/>
