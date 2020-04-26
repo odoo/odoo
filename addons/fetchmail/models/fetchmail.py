@@ -36,11 +36,13 @@ class FetchmailServer(models.Model):
     server = fields.Char(string='Server Name', readonly=True, help="Hostname or IP of the mail server", states={'draft': [('readonly', False)]})
     port = fields.Integer(readonly=True, states={'draft': [('readonly', False)]})
     server_type = fields.Selection([
-        ('pop', 'POP Server'),
-        ('imap', 'IMAP Server'),
-        ('local', 'Local Server'),
-    ], string='Server Type', index=True, required=True, default='pop')
-    is_ssl = fields.Boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)")
+            ('pop', 'POP Server'),
+            ('imap', 'IMAP Server'),
+            ('local', 'Local Server'),
+        ], string='Server Type', index=True, required=True, default='pop',
+        readonly=True, states={'draft': [('readonly', False)]})
+    is_ssl = fields.Boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)",
+                            readonly=True, states={'draft': [('readonly', False)]})
     attach = fields.Boolean('Keep Attachments', help="Whether attachments should be downloaded. "
                                                      "If not enabled, incoming emails will be stripped of any attachments before being processed", default=True)
     original = fields.Boolean('Keep Original', help="Whether a full original copy of each email should be kept for reference "
@@ -138,9 +140,10 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             finally:
                 try:
                     if connection:
-                        if server.server_type == 'imap':
+                        connection_type = server._get_connection_type()
+                        if connection_type == 'imap':
                             connection.close()
-                        elif server.server_type == 'pop':
+                        elif connection_type == 'pop':
                             connection.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
@@ -164,7 +167,8 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             count, failed = 0, 0
             imap_server = None
             pop_server = None
-            if server.server_type == 'imap':
+            connection_type = server._get_connection_type()
+            if connection_type == 'imap':
                 try:
                     imap_server = server.connect()
                     imap_server.select()
@@ -188,7 +192,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                     if imap_server:
                         imap_server.close()
                         imap_server.logout()
-            elif server.server_type == 'pop':
+            elif connection_type == 'pop':
                 try:
                     while True:
                         failed_in_loop = 0
@@ -220,6 +224,15 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         pop_server.quit()
             server.write({'date': fields.Datetime.now()})
         return True
+
+    def _get_connection_type(self):
+        """Return which connection must be used for this mail server (IMAP or POP).
+
+        Can be overridden in sub-module to define which connection to use for a specific
+        "server_type" (e.g. Gmail server).
+        """
+        self.ensure_one()
+        return self.server_type
 
     @api.model
     def _update_cron(self):

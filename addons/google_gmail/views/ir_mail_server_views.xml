@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_mail_server_view_form" model="ir.ui.view">
+        <field name="name">ir.mail_server.view.form.inherit.gmail</field>
+        <field name="model">ir.mail_server</field>
+        <field name="inherit_id" ref="base.ir_mail_server_form"/>
+        <field name="arch" type="xml">
+            <field name="smtp_user" position="after">
+                <field string="Authorization Code" name="google_gmail_authorization_code" password="True"
+                    attrs="{'required': [('smtp_authentication', '=', 'gmail')], 'invisible': [('smtp_authentication', '!=', 'gmail')]}"/>
+                <field name="google_gmail_uri"
+                    class="fa fa-arrow-right oe_edit_only"
+                    widget="url"
+                    text=" Get an Authorization Code"
+                    attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_uri', '=', False)]}"
+                    nolabel="1"/>
+                <div class="alert alert-warning" role="alert"
+                    attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_uri', '!=', False)]}">
+                    Setup your Gmail API credentials to link a Gmail account.
+                </div>
+            </field>
+            <field name="smtp_user" position="attributes">
+                <attribute name="attrs">{'invisible' : [('smtp_authentication', '!=', 'login'), ('smtp_authentication', '!=', 'gmail')]}</attribute>
+            </field>
+            <field name="smtp_pass" position="attributes">
+                <attribute name="attrs">{'invisible' : [('smtp_authentication', '=', 'gmail')]}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

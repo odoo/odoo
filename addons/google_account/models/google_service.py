@@ -44,13 +44,25 @@ class GoogleService(models.AbstractModel):
             'redirect_uri': redirect_uri,
             'grant_type': "authorization_code"
         }
+
+        error_msg = None
+        error_messages = {
+            'invalid_client': _('Your credentials are invalid.'),
+        }
         try:
             req = requests.post(GOOGLE_TOKEN_ENDPOINT, data=data, headers=headers, timeout=TIMEOUT)
+
+            try:
+                content = req.json()
+                error_msg = error_messages.get(content.get('error'))
+            except ValueError:
+                content = {}
+
             req.raise_for_status()
-            content = req.json()
         except IOError:
-            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired")
-            raise self.env['res.config.settings'].get_config_warning(error_msg)
+            error_msg = error_msg or _('Maybe your Authorization Code is invalid or already expired.')
+            raise self.env['res.config.settings'].get_config_warning(
+                _('Something went wrong during your token generation.\n%s', error_msg))
 
         return content.get('refresh_token')
 
@@ -118,6 +130,41 @@ class GoogleService(models.AbstractModel):
         except requests.HTTPError:
             error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid")
             raise self.env['res.config.settings'].get_config_warning(error_msg)
+
+    @api.model
+    def _get_access_token(self, refresh_token, service, scope):
+        """Fetch the access token thanks to the refresh token."""
+        get_config_warning = self.env['res.config.settings'].get_config_warning
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        client_id = get_param('google_%s_client_id' % service, default=False)
+        client_secret = get_param('google_%s_client_secret' % service, default=False)
+
+        if not client_id or not client_secret:
+            raise get_config_warning(_('Google %s is not yet configured.', service.title()))
+
+        if not refresh_token:
+            raise get_config_warning(_('The refresh token for authentication is not set.'))
+
+        try:
+            result = requests.post(
+                GOOGLE_TOKEN_ENDPOINT,
+                data={
+                    'client_id': client_id,
+                    'client_secret': client_secret,
+                    'refresh_token': refresh_token,
+                    'grant_type': 'refresh_token',
+                    'scope': scope,
+                },
+                headers={'Content-type': 'application/x-www-form-urlencoded'},
+                timeout=TIMEOUT,
+            )
+            result.raise_for_status()
+        except requests.HTTPError:
+            raise get_config_warning(
+                _('Something went wrong during the token generation. Please request again an authorization code .')
+            )
+
+        return result.json().get('access_token')
 
     @api.model
     def _do_request(self, uri, params=None, headers=None, method='POST', preuri="https://www.googleapis.com", timeout=TIMEOUT):
