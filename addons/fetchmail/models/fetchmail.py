@@ -127,6 +127,10 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         self.ensure_one()
         connection.login(self.user, self.password)
 
+<<<<<<< HEAD
+=======
+    @api.multi
+>>>>>>> 6c042c090ae... temp
     def button_confirm_login(self):
         for server in self:
             try:
