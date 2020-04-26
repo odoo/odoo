@@ -239,6 +239,9 @@ class IrMailServer(models.Model):
         elif not host:
             mail_server = self.sudo().search([], order='sequence', limit=1)
 
+        if not mail_server:
+            mail_server = self.env['ir.mail_server']
+
         if mail_server:
             smtp_server = mail_server.smtp_host
             smtp_port = mail_server.smtp_port
@@ -289,7 +292,7 @@ class IrMailServer(models.Model):
             # See also bug #597143 and python issue #5285
             smtp_user = pycompat.to_text(ustr(smtp_user))
             smtp_password = pycompat.to_text(ustr(smtp_password))
-            connection.login(smtp_user, smtp_password)
+            mail_server._smtp_login(connection, smtp_user, smtp_password)
 
         # Some methods of SMTP don't check whether EHLO/HELO was sent.
         # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
@@ -297,13 +300,25 @@ class IrMailServer(models.Model):
 
         return connection
 
+    def _smtp_login(self, connection, smtp_user, smtp_password):
+        """Authenticate the SMTP connection.
+
+        Can be overridden in other module for different authentication methods.Can be
+        called on the model itself or on a singleton.
+
+        :param connection: The SMTP connection to authenticate
+        :param smtp_user: The user to used for the authentication
+        :param smtp_password: The password to used for the authentication
+        """
+        connection.login(smtp_user, smtp_password)
+
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                     attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,
                     body_alternative=None, subtype_alternative='plain'):
         """Constructs an RFC2822 email.message.Message object based on the keyword arguments passed, and returns it.
 
            :param string email_from: sender email address
-           :param list email_to: list of recipient addresses (to be joined with commas) 
+           :param list email_to: list of recipient addresses (to be joined with commas)
            :param string subject: email subject (no pre-encoding/quoting necessary)
            :param string body: email body, of the type ``subtype`` (by default, plaintext).
                                If html subtype is used, the message will be automatically converted
