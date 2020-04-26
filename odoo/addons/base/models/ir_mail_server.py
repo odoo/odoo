@@ -195,6 +195,9 @@ class IrMailServer(models.Model):
         elif not host:
             mail_server = self.sudo().search([], order='sequence', limit=1)
 
+        if not mail_server:
+            mail_server = self.env['ir.mail_server']
+
         if mail_server:
             smtp_server = mail_server.smtp_host
             smtp_port = mail_server.smtp_port
@@ -243,13 +246,25 @@ class IrMailServer(models.Model):
             local, at, domain = smtp_user.rpartition('@')
             if at:
                 smtp_user = local + at + idna.encode(domain).decode('ascii')
-            connection.login(smtp_user, smtp_password or '')
+            mail_server._smtp_login(connection, smtp_user, smtp_password or '')
 
         # Some methods of SMTP don't check whether EHLO/HELO was sent.
         # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
         connection.ehlo_or_helo_if_needed()
 
         return connection
+
+    def _smtp_login(self, connection, smtp_user, smtp_password):
+        """Authenticate the SMTP connection.
+
+        Can be overridden in other module for different authentication methods.Can be
+        called on the model itself or on a singleton.
+
+        :param connection: The SMTP connection to authenticate
+        :param smtp_user: The user to used for the authentication
+        :param smtp_password: The password to used for the authentication
+        """
+        connection.login(smtp_user, smtp_password)
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                     attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,
