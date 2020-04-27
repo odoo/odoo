@@ -218,6 +218,41 @@
         </field>
     </record>
 
+
+    <record id="mailing_contact_subscription_view_graph" model="ir.ui.view">
+            <field name="name">mailing.contact.subscription.view.graph</field>
+            <field name="model">mailing.contact.subscription</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <graph string="Subscription Analysis" stacked="True">
+                    <field name="opt_out_reason" type="row"/>
+                </graph>
+            </field>
+    </record>
+    <record id="mailing_contact_subscription_view_pivot" model="ir.ui.view">
+                <field name="name">mailing.contact.subscription.view.pivot</field>
+                <field name="model">mailing.contact.subscription</field>
+                <field name="priority">10</field>
+                <field name="arch" type="xml">
+                    <pivot string="Subscription Analysis">
+                        <field name="opt_out_reason" type="row"/>
+                        <field name="list_id" type="col"/>
+                    </pivot>
+                </field>
+    </record>
+    <record id="mailing_contact_subscription_view_search" model="ir.ui.view">
+                    <field name="name">mailing.contact.subscription.view.search</field>
+                    <field name="model">mailing.contact.subscription</field>
+                    <field name="arch" type="xml">
+                        <search string="Mass Mailing Statistics">
+                            <group expand="1" string="Group By...">
+                                <filter string="Subscriptin Mailing List" name="subscription_mailing_list"
+                                    domain="[]" context="{'group_by':'list_id'}"/>
+                            </group>
+                        </search>
+                    </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
         <field name="name">Mailing List Contacts</field>
         <field name="res_model">mailing.contact</field>
@@ -232,7 +267,25 @@
         </field>
     </record>
 
-    <menuitem name="Mailing List Contacts" id="menu_email_mass_mailing_contacts"
-        parent="mass_mailing_mailing_list_menu" sequence="4"
+    <record model="ir.actions.act_window" id="action_view_mass_mailing_subscribe_report">
+            <field name="name">Subscribtion Report</field>
+            <field name="res_model">mailing.contact.subscription</field>
+            <field name="domain">[('opt_out', '=', 'True')]</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="target">current</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a mailing contact
+                </p><p>
+                    Mailing contacts allow you to separate your marketing audience from your business contact directory.
+                </p>
+            </field>
+    </record>
+
+
+    <menuitem name="Mailing List Contacts" id="menu_email_mass_mailing_contacts" sequence="4"
+        parent="mass_mailing_mailing_list_menu"
         action="action_view_mass_mailing_contacts"/>
+
+
 </odoo>

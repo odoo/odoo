@@ -47,12 +47,12 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
     var unsubscribed_list = $("input[name='unsubscribed_list']").val();
     if (unsubscribed_list){
         $('#subscription_info').html(_.str.sprintf(
-            _t("You have been <strong>successfully unsubscribed from %s</strong>."),
+            _t("You have successfully been <strong>unsubscribed from %s</strong>."),
             unsubscribed_list
         ));
     }
     else{
-        $('#subscription_info').html(_t('You have been <strong>successfully unsubscribed</strong>.'));
+        $('#subscription_info').html(_t('You have successfully been <strong>unsubscribed from this Mailing List</strong>.'));
     }
 
     $('#unsubscribe_form').on('submit', function (e) {
@@ -88,6 +88,17 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
                 $('#info_state').removeClass('alert-info').addClass('alert-warning');
             });
     });
+
+    $('#inputGroupSelect01').on('change',function(){
+        var val = $("#inputGroupSelect01").val();
+        if(val=="5"){
+            $('#text-feedback').show();
+        }
+        else{
+            $('#text-feedback').hide();
+        }
+        
+    })
 
     //  ==================
     //      Blacklist
@@ -160,9 +171,17 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
     //      Feedback
     // ==================
     $('#button_feedback').click(function (e) {
-        var feedback = $("textarea[name='opt_out_feedback']").val();
+        if($('#inputGroupSelect01').children("option:selected").val() == 5){
+            var feedback = 'Other: ' + $("textarea[name='opt_out_feedback']").val();
+            var reason = $('#inputGroupSelect01').children("option:selected").text()
+        }
+        else{
+            var feedback = $('#inputGroupSelect01').children("option:selected").text()
+            var reason = $('#inputGroupSelect01').children("option:selected").text()
+        }
+        
         e.preventDefault();
-        ajax.jsonRpc('/mailing/feedback', 'call', {'mailing_id': mailing_id, 'res_id': res_id, 'email': email, 'feedback': feedback, 'token': token})
+        ajax.jsonRpc('/mailing/feedback', 'call', {'mailing_id': mailing_id, 'res_id': res_id, 'email': email, 'feedback': feedback, 'reason': reason, 'token': token})
             .then(function (result) {
                 if (result == 'unauthorized'){
                     $('#subscription_info').html(_t('You are not authorized to do this!'));

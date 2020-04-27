@@ -58,11 +58,23 @@
            <field name="res_model">mailing.trace.report</field>
            <field name="domain">[('mailing_type', '=', 'mail')]</field>
            <field name="view_mode">graph,pivot</field>
+           <field name="target">current</field>
            <field name="help" type="html"><p>Mass Mailing Statistics allows you to check different mailing related information like number of bounced mails, opened mails, replied mails. You can sort out your analysis by different groups to get accurate grained analysis.</p></field>
        </record>
 
+
        <menuitem name="Reporting" id="menu_mass_mailing_report" sequence="99"
-            parent="mass_mailing_menu_root"
+            parent="mass_mailing_menu_root"/>
+
+
+        <menuitem name="Unsubscription report" id="menu_mass_mailing_unsubscribe_report" sequence="4"
+            parent="menu_mass_mailing_report"
+            action="action_view_mass_mailing_subscribe_report"/>
+
+        <menuitem name="Mailing Reporting" id="menu_mailing_report" sequence="99"
+            parent="menu_mass_mailing_report"
             action="mailing_trace_report_action_mail"
             groups="mass_mailing.group_mass_mailing_user"/>
+
+
 </odoo>
