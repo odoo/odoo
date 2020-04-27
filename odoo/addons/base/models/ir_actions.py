@@ -173,6 +173,15 @@ class IrActionsActWindow(models.Model):
                     act.views.append((act.view_id.id, act.view_id.type))
                 act.views.extend([(False, mode) for mode in missing_modes])
 
+    @api.constrains('view_mode')
+    def _check_view_mode(self):
+        for rec in self:
+            modes = rec.view_mode.split(',')
+            if len(modes) != len(set(modes)):
+                raise ValidationError(_('The modes in view_mode must not be duplicated: %s') % modes)
+            if ' ' in modes:
+                raise ValidationError(_('No spaces allowed in view_mode: %r') % modes)
+
     @api.depends('res_model', 'search_view_id')
     def _compute_search_view(self):
         for act in self:
