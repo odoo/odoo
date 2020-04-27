@@ -22,6 +22,11 @@
             <form string="Time Off Type">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_set_accrual_plan" icon="fa-archive">
+                                <div>
+                                <span class="o_stat_text">Set accrual plan</span>
+                            </div>
+                        </button>
                         <button class="oe_stat_button" type="object" name="action_see_days_allocated" icon="fa-archive" attrs="{'invisible': [('allocation_type', '=', 'no')]}">
                             <div class="o_stat_info">
                                 <field name="group_days_allocation"/>
@@ -34,6 +39,7 @@
                                 <span class="o_stat_text">Group Time Off</span>
                             </div>
                         </button>
+                        
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
@@ -43,7 +49,8 @@
                         <group name="description" string="Options">
                             <field name="active" invisible="1"/>
                             <field name="code" string="Payroll Code"/>
-                            <field name="request_unit" widget="radio"/>
+                            <field name="request_unit"/>
+                            <field name="allow_negative"/>
                         </group>
                         <group name="validity" string="Validity">
                             <field name="validity_start"/>

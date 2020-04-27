@@ -115,6 +115,8 @@ class HolidaysAllocation(models.Model):
         'hr.employee.category', compute='_compute_from_holiday_type', store=True, string='Employee Tag', readonly=False,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
     # accrual configuration
+    accrual_plan_id = fields.Many2one('hr.accrual.plan',compute='_compute_accrual_plan', string='Accrual Plan')
+    use_accrual_plan=fields.Boolean('Use an accrual plan', compute='_compute_accrual_plan')
     allocation_type = fields.Selection(
         [
             ('regular', 'Regular Allocation'),
@@ -153,7 +155,7 @@ class HolidaysAllocation(models.Model):
         ('number_per_interval_check', "CHECK(number_per_interval > 0)", "The number per interval should be greater than 0"),
         ('interval_number_check', "CHECK(interval_number > 0)", "The interval number should be greater than 0"),
     ]
-
+    
     @api.model
     def _update_accrual(self):
         """
@@ -213,6 +215,28 @@ class HolidaysAllocation(models.Model):
                 values['number_of_days'] = min(values['number_of_days'], holiday.accrual_limit)
 
             holiday.write(values)
+
+    def _compute_accrual_plan(self):
+        accrual_plans=self.env['hr.accrual.plan'].search([("company_id","=",self.env.company.id)])
+        for record in self:
+            record.use_accrual_plan=False
+            contract_start=record.employee_id.contract_id.date_start or record.employee_id.contract_ids.date_start
+            # TO DO : level 
+            for accrual_plan in accrual_plans:
+                type = accrual_plan.start_after_type
+                count = accrual_plan.start_after_count
+                if type =='days':
+                    accrual_start = contract_start + relativedelta(days=+count)
+                if type =='months':
+                    accrual_start = contract_start + relativedelta(months=+count)
+                if type =='years':
+                    accrual_start = contract_start + relativedelta(years=+count)
+                today = datetime.now().date()
+                if today >= accrual_start:
+                    record.accrual_plan_id=accrual_plan
+                    record.use_accrual_plan=True
+            if record.use_accrual_plan == False :
+                record.accrual_plan_id=False
 
     @api.depends_context('uid')
     def _compute_description(self):

@@ -1,0 +1,88 @@
+<odoo>
+    <record id="edit_accrual_plan_form" model="ir.ui.view">
+        <field name="name">hr.accrual.plan.form</field>
+        <field name="model">hr.accrual.plan</field>
+        <field name="arch" type="xml">
+            <form string="Accrual Plan">
+                <sheet>
+                    <div class="oe_title">
+                    <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Accrual plan name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <div style="font-weight:bold;">
+                            Start <field name="start_after_count" class="oe_inline"/> <field name="start_after_type"  class="oe_inline"/> after start date <br/>
+                       
+                            Add <field name="added_hours" class="oe_inline"/> hours of time off <field name="frequency" class="oe_inline"/> 
+                            <span attrs="{'invisible': [('frequency', '!=', 'weekly'),('frequency', '!=', 'every other week')]}">
+                                on <field name="period_weekday" class="oe_inline"/>
+                            </span>
+                            <span attrs="{'invisible': [('frequency', '!=', 'every other week')]}">
+                                Which <field name="period_weekday" class="oe_inline" readonly="1"/>s ? 
+                            </span>
+                            <span attrs="{'invisible': [('frequency', '!=', 'every other week')]}">
+                                <field name="period_even_or_odd_week"  class="oe_inline"/>
+                            </span>
+                            <span attrs="{'invisible': [('frequency', '!=', 'monthly'),('frequency','!=','twice a month'),('frequency','!=','twice a year'),('frequency','!=','quarterly'),('frequency','!=','yearly')]}">
+                                on the <field name="period_day_1" class="oe_inline"/>
+                            </span>
+                            <span attrs="{'invisible': [('frequency','!=','twice a year'),('frequency','!=','quarterly'),('frequency','!=','yearly')]}">
+                                day of <field name="period_month_1" class="oe_inline"/>
+                            </span>
+                            <span attrs="{'invisible': [('frequency','!=','twice a month'),('frequency','!=','twice a year'),('frequency','!=','quarterly')]}">
+                                <span attrs="{'invisible': [('frequency','!=','twice a year'),('frequency','!=','quarterly')]}"><br/></span>
+                                and the <field name="period_day_2"  class="oe_inline"/>
+                            </span>
+                            <span attrs="{'invisible': [('frequency','!=','twice a year'),('frequency','!=','quarterly')]}">
+                                 day of <field name="period_month_2" class="oe_inline"/>
+                            </span>
+                            <span attrs="{'invisible': [('frequency','!=','quarterly')]}">
+                                <br/>and the <field name="period_day_3" class="oe_inline"/>
+                            </span>
+                            <span attrs="{'invisible': [('frequency', '!=', 'quarterly')]}">
+                                 day of <field name="period_month_3" class="oe_inline"/>
+                            </span>
+                            <span attrs="{'invisible': [('frequency', '!=', 'quarterly')]}">
+                                <br/>and the <field name="period_day_4" class="oe_inline"/>
+                            </span>
+                            <span attrs="{'invisible': [('frequency', '!=', 'quarterly')]}">
+                                day of <field name="period_month_4" class="oe_inline"/>
+                            </span>
+                            <br/>
+                            Max accrual <field name="maximum_hours" class="oe_inline" /> hours
+                            <br/>
+                           <label for="allow_negative_hours"><b>Allow negative hours :</b></label> <field name="allow_negative_hours"/><br/>
+                             Carryover <field name="carryover_type"  class="oe_inline"/>
+                            <field name="carryover_amount"  class="oe_inline" attrs="{'invisible': [('carryover_type', '!=', 'until')]}"/>
+                        
+                        </div>
+                    </group>
+                        
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+     <record id="view_accrual_plan_tree" model="ir.ui.view">
+        <field name="name">hr.accrual.plan.tree</field>
+        <field name="model">hr.accrual.plan</field>
+        <field name="arch" type="xml">
+            <tree string="Accrual Plan">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="open_view_accrual_plan" model="ir.actions.act_window">
+        <field name="name">Accrual Plan</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.accrual.plan</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+
+
+</odoo>

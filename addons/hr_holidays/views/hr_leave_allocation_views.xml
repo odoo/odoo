@@ -88,8 +88,10 @@
                         <group>
                             <field name="type_request_unit" invisible="1"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
-
-                            <field name="allocation_type" invisible="1" widget="radio"/>
+                            <!-- TO DO : VISIBILITY -->
+                            <field name="use_accrual_plan"/>
+                            <field name="allocation_type" widget="radio" attrs="{'invisible': [('use_accrual_plan', '=', 'True')]}" />
+                            <field name="accrual_plan_id" attrs="{'invisible': [('use_accrual_plan', '=', 'False')]}"/>
 
                             <field name="number_of_days_display" invisible="1"/>
                             <field name="number_of_days" invisible="1"/>
