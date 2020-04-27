@@ -27,10 +27,9 @@ class TestMrpProductionBackorder(TestMrpCommon):
         """
         mo = self.generate_mo(qty_final=4)[0]
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context(active_id=mo.id))
-        produce_form.qty_producing = 4
-        produce = produce_form.save()
-        produce.do_produce()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 4
+        mo = mo_form.save()
 
         # No backorder is proposed
         self.assertTrue(mo.button_mark_done())
@@ -61,10 +60,9 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(production.state, 'confirmed')
         self.assertEqual(production.reserve_visible, False)
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context(active_id=production.id))
-        produce_form.qty_producing = 1
-        produce = produce_form.save()
-        produce.do_produce()
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
 
         action = production.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
@@ -103,10 +101,9 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(set(pbm_move.mapped("product_id")), {product_to_use_1, product_to_use_2})
         self.assertFalse(pbm_move.move_orig_ids)
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context(active_id=production.id))
-        produce_form.qty_producing = 1
-        produce = produce_form.save()
-        produce.do_produce()
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
         self.assertEqual(sum(pbm_move.filtered(lambda m: m.product_id.id == product_to_use_1.id).mapped("product_qty")), 16)
         self.assertEqual(sum(pbm_move.filtered(lambda m: m.product_id.id == product_to_use_2.id).mapped("product_qty")), 4)
 
@@ -154,10 +151,9 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(sam_move.product_id.id, product_to_build.id)
         self.assertEqual(sum(sam_move.mapped("product_qty")), 4)
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context(active_id=production.id))
-        produce_form.qty_producing = 1
-        produce = produce_form.save()
-        produce.do_produce()
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
 
         action = production.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))

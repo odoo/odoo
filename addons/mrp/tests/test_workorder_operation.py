@@ -151,7 +151,6 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         production_table_form.product_qty = 1.0
         production_table_form.product_uom_id = dining_table.uom_id
         production_table = production_table_form.save()
-        production_table.action_confirm()
 
         # Set tracking lot on finish and consume products.
         dining_table.tracking = 'lot'
@@ -159,6 +158,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         product_table_leg.tracking = 'lot'
         product_bolt.tracking = "lot"
 
+        production_table.action_confirm()
         # Initial inventory of product sheet, lags and bolt
         lot_sheet = self.env['stock.production.lot'].create({'product_id': product_table_sheet.id, 'company_id': self.env.company.id})
         lot_leg = self.env['stock.production.lot'].create({'product_id': product_table_leg.id, 'company_id': self.env.company.id})
@@ -626,9 +626,6 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         # -----------------
 
         # Produce 6 Unit of custom laptop will consume ( 12 Unit of keybord and 12 Unit of charger)
-        context = {"active_ids": [mo_custom_laptop.id], "active_id": mo_custom_laptop.id}
-        product_form = Form(self.env['mrp.product.produce'].with_context(context))
-        product_form.qty_producing = 6.00
         laptop_lot_001 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id , 'company_id': self.env.company.id})
         mo_form = Form(mo_custom_laptop)
         mo_form.qty_producing = 6
@@ -651,11 +648,8 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         for move in mo_custom_laptop.move_raw_ids:
             self.assertEqual(move.quantity_done, 12, "Wrong produced quantity on raw material %s" % (move.product_id.name))
         self.assertEqual(len(mo_custom_laptop.move_raw_ids), 2)
-        mo_custom_laptop.post_inventory()
-        self.assertEqual(len(mo_custom_laptop.move_raw_ids), 4)
 
         # Check done move and confirmed move quantity.
-
         charger_done_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_charger.id and x.state == 'done')
         keybord_done_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_keybord.id and x.state == 'done')
         self.assertEqual(charger_done_move.product_uom_qty, 12)
@@ -665,164 +659,25 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         # ----------------------------
 
         # Produce 4 Unit of custom laptop will consume ( 8 Unit of keybord and 8 Unit of charger).
-        context = {"active_ids": [mo_custom_laptop.id], "active_id": mo_custom_laptop.id}
-        produce_form = Form(self.env['mrp.product.produce'].with_context(context))
-        produce_form.qty_producing = 4.00
         laptop_lot_002 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id, 'company_id': self.env.company.id})
-        produce_form.finished_lot_id = laptop_lot_002
-        product_consume = produce_form.save()
-        self.assertEqual(len(product_consume._workorder_line_ids()), 2)
-        product_consume._workorder_line_ids()[0].qty_done = 8
-        product_consume.do_produce()
+        mo_custom_laptop = mo_custom_laptop.procurement_group_id.mrp_production_ids[1]
+        mo_form = Form(mo_custom_laptop)
+        mo_form.qty_producing = 4
+        mo_form.lot_producing_id = laptop_lot_002
+        mo_custom_laptop = mo_form.save()
+        details_operation_form = Form(mo_custom_laptop.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.edit(0) as ml:
+            ml.qty_done = 8
+        details_operation_form.save()
+        details_operation_form = Form(mo_custom_laptop.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.edit(0) as ml:
+            ml.qty_done = 8
+        details_operation_form.save()
+
         charger_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_charger.id and x.state != 'done')
         keybord_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_keybord.id and x.state !='done')
         self.assertEqual(charger_move.quantity_done, 8, "Wrong consumed quantity of %s" % charger_move.product_id.name)
         self.assertEqual(keybord_move.quantity_done, 8, "Wrong consumed quantity of %s" % keybord_move.product_id.name)
-
-        # Post Inventory of production order.
-        mo_custom_laptop.post_inventory()
-
-#         raw_moves_state = any(move.state != 'done' for move in mo_custom_laptop.move_raw_ids)
-#         finsh_moves_state = any(move.state != 'done' for move in mo_custom_laptop.move_finished_ids)
-#         self.assertFalse(raw_moves_state, "Wrong state in consumed moves of production order.")
-#         self.assertFalse(finsh_moves_state, "Wrong state in consumed moves of production order.")
-#
-#         # Finished move quants of production order
-#
-#         finshed_quant_lot_001 = mo_custom_laptop.move_finished_ids.filtered(lambda x: x.product_id.id == custom_laptop.id and x.product_uom_qty==6).mapped('quant_ids')
-#         finshed_quant_lot_002 = mo_custom_laptop.move_finished_ids.filtered(lambda x: x.product_id.id == custom_laptop.id and x.product_uom_qty==4).mapped('quant_ids')
-#
-#         # Check total quantity consumed of charger, keybord
-#         # --------------------------------------------------
-#         charger_quants = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_charger.id and x.state == 'done').mapped('quant_ids')
-#         keybord_moves = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_keybord.id and x.state == 'done').mapped('quant_ids')
-#         self.assertEqual(sum(charger_quants.mapped('qty')), 20)
-#         self.assertEqual(sum(keybord_moves.mapped('qty')), 20)
-
-    def test_02_different_uom_on_bomlines(self):
-        """ Testing bill of material with different unit of measure."""
-        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
-        route_mto = self.warehouse.mto_pull_id.route_id.id
-        unit = self.ref("uom.product_uom_unit")
-        dozen = self.ref("uom.product_uom_dozen")
-        kg = self.ref("uom.product_uom_kgm")
-        gm = self.ref("uom.product_uom_gram")
-        # Create Product A, B, C
-        product_A = self.env['product.product'].create({
-            'name': 'Product A',
-            'type': 'product',
-            'tracking': 'lot',
-            'uom_id': dozen,
-            'uom_po_id': dozen,
-            'route_ids': [(6, 0, [route_manufacture, route_mto])]})
-        product_B = self.env['product.product'].create({
-            'name': 'Product B',
-            'type': 'product',
-            'tracking': 'lot',
-            'uom_id': dozen,
-            'uom_po_id': dozen})
-        product_C = self.env['product.product'].create({
-            'name': 'Product C',
-            'type': 'product',
-            'tracking': 'lot',
-            'uom_id': kg,
-            'uom_po_id': kg})
-
-        # Bill of materials
-        # -----------------
-
-        #===================================
-        # Product A 1 Unit
-        #     Product B 4 Unit
-        #     Product C 600 gram
-        # -----------------------------------
-
-        bom_a = self.env['mrp.bom'].create({
-            'product_tmpl_id': product_A.product_tmpl_id.id,
-            'product_qty': 2,
-            'product_uom_id': unit,
-            'bom_line_ids': [(0, 0, {
-                'product_id': product_B.id,
-                'product_qty': 4,
-                'product_uom_id': unit
-            }), (0, 0, {
-                'product_id': product_C.id,
-                'product_qty': 600,
-                'product_uom_id': gm
-            })]
-        })
-
-        # Create production order with product A 10 Unit.
-        # -----------------------------------------------
-
-        mo_custom_product_form = Form(self.env['mrp.production'])
-        mo_custom_product_form.product_id = product_A
-        mo_custom_product_form.bom_id = bom_a
-        mo_custom_product_form.product_qty = 10.0
-        mo_custom_product_form.product_uom_id = self.env.ref("uom.product_uom_unit")
-        mo_custom_product = mo_custom_product_form.save()
-
-        move_product_b = mo_custom_product.move_raw_ids.filtered(lambda x: x.product_id == product_B)
-        move_product_c = mo_custom_product.move_raw_ids.filtered(lambda x: x.product_id == product_C)
-
-        # Check move correctly created or not.
-        self.assertEqual(move_product_b.product_uom_qty, 20)
-        self.assertEqual(move_product_b.product_uom.id, unit)
-        self.assertEqual(move_product_c.product_uom_qty, 3000)
-        self.assertEqual(move_product_c.product_uom.id, gm)
-
-        # Lot create for product B and product C
-        # ---------------------------------------
-        lot_a = self.env['stock.production.lot'].create({'product_id': product_A.id, 'company_id': self.env.company.id})
-        lot_b = self.env['stock.production.lot'].create({'product_id': product_B.id, 'company_id': self.env.company.id})
-        lot_c = self.env['stock.production.lot'].create({'product_id': product_C.id, 'company_id': self.env.company.id})
-
-        # Inventory Update
-        # ----------------
-        inventory = self.env['stock.inventory'].create({
-            'name': 'Inventory Product B and C',
-            'line_ids': [(0, 0, {
-                'product_id': product_B.id,
-                'product_uom_id': product_B.uom_id.id,
-                'product_qty': 3,
-                'prod_lot_id': lot_b.id,
-                'location_id': self.source_location_id
-            }), (0, 0, {
-                'product_id': product_C.id,
-                'product_uom_id': product_C.uom_id.id,
-                'product_qty': 3,
-                'prod_lot_id': lot_c.id,
-                'location_id': self.source_location_id
-            })]
-        })
-        inventory.action_start()
-        inventory.action_validate()
-
-        # Start Production ...
-        # --------------------
-
-        mo_custom_product.action_confirm()
-        mo_custom_product.action_assign()
-        context = {"active_ids": [mo_custom_product.id], "active_id": mo_custom_product.id}
-        produce_form = Form(self.env['mrp.product.produce'].with_context(context))
-        produce_form.qty_producing = 10.00
-        produce_form.finished_lot_id = lot_a
-        product_consume = produce_form.save()
-        # laptop_lot_002 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
-        self.assertEqual(len(product_consume._workorder_line_ids()), 2)
-        product_consume._workorder_line_ids().filtered(lambda x: x.product_id == product_C).write({'qty_done': 3000})
-        product_consume._workorder_line_ids().filtered(lambda x: x.product_id == product_B).write({'qty_done': 20})
-        product_consume.do_produce()
-        mo_custom_product.post_inventory()
-
-        # Check correct quant linked with move or not
-        # -------------------------------------------
-        #TODO: check original quants qtys diminished
-#         self.assertEqual(len(move_product_b.quant_ids), 1)
-#         self.assertEqual(len(move_product_c.quant_ids), 1)
-#         self.assertEqual(move_product_b.quant_ids.qty, move_product_b.product_qty)
-#         self.assertEqual(move_product_c.quant_ids.qty, 3)
-#         self.assertEqual(move_product_c.quant_ids.product_uom_id.id, kg)
 
     def test_03_test_serial_number_defaults(self):
         """ Test that the correct serial number is suggested on consecutive work orders. """
@@ -1311,6 +1166,18 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         the reservation slot in the calendar the be able to reserve the next
         production sooner """
         self.env['mrp.workcenter'].search([]).write({'tz': 'UTC'}) # compute all date in UTC
+        mrp_workcenter_3 = self.env['mrp.workcenter'].create({
+            'name': 'assembly line 1',
+            'resource_calendar_id': self.env.ref('resource.resource_calendar_std').id,
+        })
+        self.planning_bom.operation_ids = False
+        self.planning_bom.write({
+            'operation_ids': [(0, 0, {
+                'workcenter_id': mrp_workcenter_3.id,
+                'name': 'Manual Assembly',
+                'time_cycle': 60,
+            })]
+        })
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.planning_bom

@@ -75,13 +75,9 @@ class TestMrpAccount(TestWorkOrderProcessCommon):
         production_table.extra_cost = 20
         production_table.action_confirm()
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': production_table.id,
-            'active_ids': [production_table.id],
-        }))
-        produce_form.qty_producing = 1.0
-        produce_wizard = produce_form.save()
-        produce_wizard.do_produce()
+        mo_form = Form(production_table)
+        mo_form.qty_producing = 1
+        production_table = mo_form.save()
         production_table.post_inventory()
         move_value = production_table.move_finished_ids.filtered(lambda x: x.state == "done").stock_valuation_layer_ids.value
 

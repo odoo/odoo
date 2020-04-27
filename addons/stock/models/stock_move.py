@@ -219,7 +219,7 @@ class StockMove(models.Model):
             else:
                 move.show_details_visible = (((consignment_enabled and move.picking_id.picking_type_id.code != 'incoming') or
                                              show_details_visible or move.has_tracking != 'none') and
-                                             (move.state != 'draft' or (move.picking_id.immediate_transfer and move.state == 'draft')) and
+                                             move._show_details_in_draft() and
                                              move.picking_id.picking_type_id.show_operations is False)
 
     def _compute_show_reserved_availability(self):
@@ -1653,3 +1653,7 @@ class StockMove(models.Model):
                 mtso_free_qties_by_loc[move.location_id][move.product_id.id] -= needed_qty
             else:
                 move.procure_method = 'make_to_order'
+
+    def _show_details_in_draft(self):
+        self.ensure_one()
+        return self.state != 'draft' or (self.picking_id.immediate_transfer and self.state == 'draft')

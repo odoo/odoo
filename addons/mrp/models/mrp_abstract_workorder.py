@@ -186,7 +186,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
             if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) <= 0:
                 break
             # move line already 'used' in workorder (from its lot for instance)
-            if move_line.lot_produced_ids or float_compare(move_line.product_uom_qty, move_line.qty_done, precision_rounding=move.product_uom.rounding) <= 0:
+            if float_compare(move_line.product_uom_qty, move_line.qty_done, precision_rounding=move.product_uom.rounding) <= 0:
                 continue
             # search wo line on which the lot is not fully consumed or other reserved lot
             linked_wo_line = self._workorder_line_ids().filtered(
@@ -371,9 +371,9 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
         """ update a move line to save the workorder line data"""
         self.ensure_one()
         if self.lot_id:
-            move_lines = self.move_id.move_line_ids.filtered(lambda ml: ml.lot_id == self.lot_id and not ml.lot_produced_ids)
+            move_lines = self.move_id.move_line_ids.filtered(lambda ml: ml.lot_id == self.lot_id)
         else:
-            move_lines = self.move_id.move_line_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_produced_ids)
+            move_lines = self.move_id.move_line_ids.filtered(lambda ml: not ml.lot_id)
 
         # Sanity check: if the product is a serial number and `lot` is already present in the other
         # consumed move lines, raise.
@@ -396,14 +396,12 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             if float_compare(new_quantity_done, ml.product_uom_qty, precision_rounding=rounding) >= 0:
                 ml.write({
                     'qty_done': new_quantity_done,
-                    'lot_produced_ids': self._get_produced_lots(),
                 })
             else:
                 new_qty_reserved = ml.product_uom_qty - new_quantity_done
                 default = {
                     'product_uom_qty': new_quantity_done,
                     'qty_done': new_quantity_done,
-                    'lot_produced_ids': self._get_produced_lots(),
                 }
                 ml.copy(default=default)
                 ml.with_context(bypass_reservation_update=True).write({
@@ -436,7 +434,6 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                 'product_uom_qty': 0,
                 'product_uom_id': self.product_uom_id.id,
                 'qty_done': min(quantity, self.qty_done),
-                'lot_produced_ids': self._get_produced_lots(),
             }
             if self.lot_id:
                 vals.update({'lot_id': self.lot_id.id})
@@ -456,7 +453,6 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                 'product_uom_qty': 0,
                 'product_uom_id': self.product_uom_id.id,
                 'qty_done': self.qty_done,
-                'lot_produced_ids': self._get_produced_lots(),
             }
             if self.lot_id:
                 vals.update({'lot_id': self.lot_id.id})

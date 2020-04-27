@@ -184,7 +184,7 @@ class MrpUnbuild(models.Model):
                 needed_quantity = move.product_qty
                 moves_lines = original_move.mapped('move_line_ids')
                 if move in produce_moves and self.lot_id:
-                    moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.lot_produced_ids)
+                    moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.produce_line_ids.lot_id)  # FIXME sle: double check with arm
                 for move_line in moves_lines:
                     # Iterate over all move_lines until we unbuilded the correct quantity.
                     taken_quantity = min(needed_quantity, move_line.qty_done)
