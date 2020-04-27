@@ -5,8 +5,8 @@
 # Translators:
 # bower Guo <124358678@qq.com>, 2019
 # snow wang <147156565@qq.com>, 2019
-# roye w <159820@qq.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
+# roye w <159820@qq.com>, 2019
 # 老窦 北京 <2662059195@qq.com>, 2019
 # 湘子 南 <1360857908@qq.com>, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2019
@@ -33,7 +33,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -384,12 +384,12 @@ msgstr "会计日记账用来登录销售分录。"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction
 msgid "Action Needed"
-msgstr "需要采取行动"
+msgstr "需要行动"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__active
 msgid "Active"
-msgstr "有效"
+msgstr "启用"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_ids
@@ -2102,7 +2102,7 @@ msgstr "它将作为一个默认借方科目"
 msgid ""
 "It is forbidden to modify a tax used in a POS order not posted. You must "
 "close the POS sessions before modifying the tax."
-msgstr "禁止修改未过账POS订单税率。修改税率前必须关闭POS会话。"
+msgstr "禁止修改未过账POS订单税金。修改税金前必须关闭POS会话。"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_journal
@@ -2513,7 +2513,7 @@ msgstr "备注"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction_counter
 msgid "Number of Actions"
-msgstr "操作次数"
+msgstr "动作个数"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__nb_print
@@ -2974,23 +2974,23 @@ msgstr "电话"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_id
 msgid "Picking"
-msgstr "分拣"
+msgstr "拣货"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__picking_count
 msgid "Picking Count"
-msgstr "拣配计数"
+msgstr "拣货计数"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Picking Errors"
-msgstr "分拣错误"
+msgstr "拣货错误"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr "挑选POS"
+msgstr "拣货POS"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3353,16 +3353,12 @@ msgid "Pricing"
 msgstr "定价"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
-msgid "Print"
-msgstr "打印"
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
 #, python-format
-msgid "Print Invoice"
-msgstr "打印发票"
+msgid "Print"
+msgstr "打印"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4204,7 +4200,7 @@ msgstr "拿钱进/出"
 #: model:ir.model,name:point_of_sale.model_account_tax
 #, python-format
 msgid "Tax"
-msgstr "税率"
+msgstr "税金"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -4214,7 +4210,7 @@ msgstr "税金总额"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tax_included
 msgid "Tax Display"
-msgstr "税率显示"
+msgstr "税金显示"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4253,7 +4249,7 @@ msgstr "含税价格"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Taxes"
-msgstr "税率设置"
+msgstr "税金设置"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids_after_fiscal_position
@@ -4266,7 +4262,7 @@ msgstr "待用税种"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Taxes:"
-msgstr "税率："
+msgstr "税金："
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
@@ -4369,7 +4365,7 @@ msgstr "订单已提前同步。请从后台为订单开具发票："
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:715
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid ""
 "The order has been synchronized earlier. To print the invoice please refer "
@@ -4617,7 +4613,7 @@ msgstr ""
 msgid ""
 "This is useful for restaurants with onsite and take-away services that imply"
 " specific tax rates."
-msgstr "这对于提供具有特定税率的上门服务和外卖服务的餐厅十分有用。"
+msgstr "这对于提供具有特定税金的上门服务和外卖服务的餐厅十分有用。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5152,18 +5148,6 @@ msgstr ""
 #, python-format
 msgid "You have to select a pricelist in the sale form."
 msgstr "请先在销售页面选择一个价格表。"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_details.py:0
-#, python-format
-msgid "You have to set a logo or a layout for your company."
-msgstr "须为您的公司设置商标或布局。"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_details.py:0
-#, python-format
-msgid "You have to set your reports's header and footer layout."
-msgstr "须设置报告的页眉和页脚布局。"
 
 #. module: point_of_sale
 #. openerp-web

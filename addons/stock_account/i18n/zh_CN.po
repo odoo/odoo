@@ -3,6 +3,7 @@
 # 	* stock_account
 # 
 # Translators:
+# Jeanphy <hzh0292@qq.com>, 2019
 # Maie <m@maie.name>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # 苏州远鼎 <tiexinliu@126.com>, 2019
@@ -11,21 +12,20 @@
 # keecome <7017511@qq.com>, 2019
 # bower Guo <124358678@qq.com>, 2019
 # roye w <159820@qq.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
 # Martin Trigaux, 2019
-# Jeanphy <hzh0292@qq.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:01+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +79,7 @@ msgstr "会计信息"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__active
 msgid "Active"
-msgstr "有效"
+msgstr "启用"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -260,6 +260,11 @@ msgid "First In First Out (FIFO)"
 msgstr "先进先出(FIFO)"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Group by..."
+msgstr "分组"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
 msgid "Has Account Moves"
 msgstr "有会计凭证"
@@ -397,6 +402,7 @@ msgstr "价格"
 #: model:ir.model,name:stock_account.model_product_product
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "产品"
 
@@ -409,7 +415,7 @@ msgstr "产品类别"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "产品移动(移库明细)"
+msgstr "产品凭证(移库明细)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -498,7 +504,7 @@ msgstr "库存日记账"
 #: model:ir.model.fields,field_description:stock_account.field_account_move__stock_move_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_move_id
 msgid "Stock Move"
-msgstr "库存转移"
+msgstr "库存凭证"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -558,7 +564,7 @@ msgstr "库存进货和/或出货科目不能与库存计价科目相同。"
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
-msgstr "移动处于不一致状态：有些正在进入，有的正在离开公司。"
+msgstr "凭证处于不一致状态：有些正在进入，有的正在离开公司。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -567,7 +573,7 @@ msgid ""
 "The move lines are not in a consistent states: they are doing an "
 "intercompany in a single step while they should go through the intercompany "
 "transit location."
-msgstr "移动处于不一致的状态：他们在一个单一的步骤中作为一个公司的内部公司，而他们应该通过公司间中转地点。"
+msgstr "凭证处于不一致的状态：他们在一个单一的步骤中作为一个公司的内部公司，而他们应该通过公司间中转地点。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -575,14 +581,14 @@ msgstr "移动处于不一致的状态：他们在一个单一的步骤中作为
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
-msgstr "移动处于不一致的状态:它们不属于同一个来源或目标公司。"
+msgstr "凭证处于不一致的状态:它们不属于同一个来源或目标公司。"
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
 msgid ""
 "There is no valuation layers. Valuation layers are created when some product"
 " moves should impact the valuation of the stock."
-msgstr "没有评估层。当某些产品移动会影响股票的估值时，会创建评估层。"
+msgstr "没有评估层。当某些产品凭证会影响股票的估值时，会创建评估层。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
@@ -592,7 +598,7 @@ msgstr "总价值"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr "调拨"
+msgstr "转账"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -694,7 +700,7 @@ msgid ""
 "                unless there is a specific valuation account set on the source location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"在进行自动库存估价时，所有进货库存移动的对应日记帐项目将在此帐户中过帐，\n"
+"在进行自动库存估价时，所有进货库存凭证的对应日记帐项目将在此帐户中过帐，\n"
 "                除非在来源位置设置了特定的评估帐户。这是此类别中所有产品的默认值。\n"
 "          它也可以直接在每个产品上设置。 "
 
@@ -705,7 +711,7 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"在进行自动库存评估时，所有外发库存移动的对应日记帐项目将在此帐户中过帐，\n"
+"在进行自动库存评估时，所有外发库存凭证的对应日记帐项目将在此帐户中过帐，\n"
 "               除非在目的地设置了特定的评估帐户。 这是此类别中所有产品的默认值。\n"
 "                它也可以直接在每个产品上设置。"
 
@@ -714,7 +720,7 @@ msgstr ""
 msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr "在进行自动库存评估时，这是会计日记账，其中处理库存移动时将自动过帐条目。"
+msgstr "在进行自动库存评估时，这是会计日记账，其中处理库存凭证时将自动过帐条目。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0

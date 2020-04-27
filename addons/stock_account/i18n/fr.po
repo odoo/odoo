@@ -3,7 +3,6 @@
 # 	* stock_account
 # 
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2019
 # Saad Thaifa <saad.thaifa@gmail.com>, 2019
 # bb76cd9ac0cb7e20167a14728edb858b, 2019
 # fr trans <e2ffr05@hotmail.com>, 2019
@@ -14,23 +13,23 @@
 # Laura Piraux <lap@odoo.com>, 2019
 # e2f Production <e2f_prod@outlook.com>, 2019
 # Rémi CAZENAVE <remi@le-filament.com>, 2019
-# Pierrick Brun <brun.pierrick@protonmail.com>, 2019
 # Thomas Dobbelsteyn <tdo@odoo.com>, 2019
 # Marie Willemyns <mwi@odoo.com>, 2019
 # a270031086f2a0d3514bc0cb507b48f6, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Olivier ANDRE <frsw194@gmail.com>, 2019
-# Oriane Malburny <oma@odoo.com>, 2019
+# omaodoo <oma@odoo.com>, 2019
 # e2f <projects@e2f.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:01+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -289,6 +288,11 @@ msgid "First In First Out (FIFO)"
 msgstr "First In First Out (FIFO)"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Group by..."
+msgstr "Regrouper par..."
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
 msgid "Has Account Moves"
 msgstr "A des mouvements comptables"
@@ -319,12 +323,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
 msgid "Inventory"
-msgstr "Stock"
+msgstr "Inventaire"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr "Emplacements de stock"
+msgstr "Emplacements de l'inventaire"
 
 #. module: stock_account
 #: code:addons/stock_account/__init__.py:0
@@ -430,6 +434,7 @@ msgstr "Prix"
 #: model:ir.model,name:stock_account.model_product_product
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "Article"
 
@@ -696,11 +701,11 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Utilisé pour la valorisation du stock en temps réel. Lorsqu'on le définit "
-"sur un emplacement virtuel, ce compte est utilisé pour valoriser les "
-"articles qui sont déplacés de cet emplacement à un emplacement interne, à la"
-" place du compte de sortie de stock générique défini sur l'article. Ceci est"
-" sans effet sur les emplacements internes."
+"Utilisé pour la valorisation de l'inventaire en temps réel. Lorsqu'on le "
+"définit sur un emplacement virtuel, ce compte est utilisé pour valoriser les"
+" articles qui sont déplacés de cet emplacement à un emplacement interne, à "
+"la place du compte de sortie de stock générique défini sur l'article. Ceci "
+"est sans effet sur les emplacements internes."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -775,7 +780,7 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"Quand la valorisation d'invenaire est automatique, c'est le journal "
+"Quand la valorisation d'inventaire est automatique, c'est le journal "
 "comptable dans lequel les entrées seront automatiquement postées lorsque les"
 " mouvements de stock seront réalisés."
 

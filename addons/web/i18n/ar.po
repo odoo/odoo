@@ -8,7 +8,6 @@
 # Zuhair Hammadi <zuhair12@gmail.com>, 2019
 # Yihya Hugirat <hugirat@gmail.com>, 2019
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019
-# Akram Alfusayal <akram_ma@hotmail.com>, 2019
 # hoxhe Aits <hoxhe0@gmail.com>, 2019
 # Fahad Alqahtani <fahad@cloudland.sa>, 2019
 # Ali zuaby <ali@zuaby.net>, 2019
@@ -19,17 +18,18 @@
 # Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2019
 # Islam Eldeeb <islameldeb@gmail.com>, 2019
 # Abdulmajeed Alomar <majeeed87@gmail.com>, 2019
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
 # Martin Trigaux, 2019
+# Mustafa Rawi <mustafa@cubexco.com>, 2020
+# Akram Alfusayal <akram_ma@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-04-27 10:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Akram Alfusayal <akram_ma@hotmail.com>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -411,6 +411,7 @@ msgstr "إضافة فرع"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add column"
 msgstr "إضافة عمود"
@@ -692,7 +693,6 @@ msgstr "الحقول المتاحة"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
@@ -819,6 +819,13 @@ msgstr "التقويم"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/web_calendar.xml:0
+#, python-format
+msgid "Calendar toolbar"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_view.js:0
 #, python-format
 msgid "Calendar view has not defined 'date_start' attribute."
@@ -874,6 +881,14 @@ msgstr "تغيير الافتراضي:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Change graph"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Checkbox"
@@ -924,6 +939,9 @@ msgstr "توقيع واضح"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector_dialog.js:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/dialog.xml:0
+#: code:addons/web/static/src/xml/notification.xml:0
 #, python-format
 msgid "Close"
 msgstr "إغلاق"
@@ -941,6 +959,11 @@ msgstr ""
 #, python-format
 msgid "Column title"
 msgstr "عنوان العمود"
+
+#. module: web
+#: model:ir.model,name:web.model_res_company
+msgid "Companies"
+msgstr "الشركات"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
@@ -1012,6 +1035,14 @@ msgstr "السياق:"
 #, python-format
 msgid "Control"
 msgstr "التتبع"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Control panel toolbar"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1353,6 +1384,13 @@ msgstr "خطأ بالنطاق"
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
+msgid "Domain node"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
 msgid "Domain:"
 msgstr "النطاق:"
 
@@ -1362,6 +1400,13 @@ msgstr "النطاق:"
 #, python-format
 msgid "Don't leave yet,<br />it's still loading..."
 msgstr "لا تغادر الآن،<br />ما زال التحميل جاريًا..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Download"
+msgstr "تحميل"
 
 #. module: web
 #. openerp-web
@@ -2141,6 +2186,17 @@ msgstr "البريد الإلكتروني:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Main actions"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
@@ -2629,6 +2685,13 @@ msgstr "الشفافية %"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools#{widget.debug_mode_help}"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open View"
 msgstr "فتح واجهة العرض"
 
@@ -2695,6 +2758,13 @@ msgid "PDF Viewer"
 msgstr ""
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "PDF controls"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid ""
 "Page:\n"
@@ -2712,6 +2782,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
 msgstr "الصفحة: <span class=\"page\"/> / <span class=\"topage\"/>"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pager"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2786,6 +2864,13 @@ msgstr ""
 #, python-format
 msgid "Pivot"
 msgstr "محور"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pivot settings"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -3477,6 +3562,13 @@ msgstr "الدعم"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Switch to this company"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Syntax error"
@@ -3495,13 +3587,6 @@ msgstr "الوسوم"
 #, python-format
 msgid "Take a minute to get a coffee,<br />because it's loading..."
 msgstr "استغل الوقت واشرب كوبًا من القهوة<br />ما زال التحميل جاريًا..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Tap on the list to change company"
-msgstr "اضغط على القائمة لتغيير المؤسسة"
 
 #. module: web
 #. openerp-web
@@ -4005,6 +4090,13 @@ msgstr "استخدمه كافتراضي"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "User"
+msgstr "المستخدم"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "User Error"
@@ -4050,6 +4142,13 @@ msgstr "عرض البيانات الوصفية"
 #: model:ir.model.fields,field_description:web.field_ir_actions_act_window_view__view_mode
 msgid "View Type"
 msgstr "نوع واجهة العرض"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View switcher"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -4624,6 +4723,13 @@ msgstr ""
 #, python-format
 msgid "remaining)"
 msgstr "متبقيين)"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "search"
+msgstr ""
 
 #. module: web
 #. openerp-web

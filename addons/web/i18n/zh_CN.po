@@ -29,17 +29,18 @@
 # liAnGjiA <liangjia@qq.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # wangting <39181819@qq.com>, 2019
-# Martin Trigaux, 2019
 # as co02 <asco02@163.com>, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# Martin Trigaux, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-04-27 10:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -415,6 +416,7 @@ msgstr "添加分支"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add column"
 msgstr "添加列"
@@ -694,7 +696,6 @@ msgstr "可用字段"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
@@ -817,6 +818,13 @@ msgstr "日历"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/web_calendar.xml:0
+#, python-format
+msgid "Calendar toolbar"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_view.js:0
 #, python-format
 msgid "Calendar view has not defined 'date_start' attribute."
@@ -872,6 +880,14 @@ msgstr "更改预设："
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Change graph"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Checkbox"
@@ -922,6 +938,9 @@ msgstr "清除签名"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector_dialog.js:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/dialog.xml:0
+#: code:addons/web/static/src/xml/notification.xml:0
 #, python-format
 msgid "Close"
 msgstr "关闭"
@@ -939,6 +958,11 @@ msgstr "列 %s"
 #, python-format
 msgid "Column title"
 msgstr "列标题"
+
+#. module: web
+#: model:ir.model,name:web.model_res_company
+msgid "Companies"
+msgstr "公司"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
@@ -1010,6 +1034,14 @@ msgstr "上下文:"
 #, python-format
 msgid "Control"
 msgstr "控制"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Control panel toolbar"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1338,21 +1370,28 @@ msgstr "文档"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Domain"
-msgstr "领域"
+msgstr "域"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Domain error"
-msgstr "领域错误"
+msgstr "域错误"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Domain node"
+msgstr ""
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Domain:"
-msgstr "Domain:"
+msgstr "域:"
 
 #. module: web
 #. openerp-web
@@ -1360,6 +1399,13 @@ msgstr "Domain:"
 #, python-format
 msgid "Don't leave yet,<br />it's still loading..."
 msgstr "请不要离开，<br />它仍在加载..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Download"
+msgstr "下载"
 
 #. module: web
 #. openerp-web
@@ -1428,7 +1474,7 @@ msgstr "编辑控制面板视图"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Edit Domain"
-msgstr "编辑领域"
+msgstr "编辑域"
 
 #. module: web
 #. openerp-web
@@ -1886,7 +1932,7 @@ msgstr "数据库名称无效。只允许字母数字字符、下划线、连字
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Invalid domain"
-msgstr "非法的领域"
+msgstr "无效的域"
 
 #. module: web
 #. openerp-web
@@ -2134,6 +2180,17 @@ msgstr "Mac"
 #: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 msgid "Mail:"
 msgstr "邮件："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Main actions"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2473,14 +2530,14 @@ msgstr "未设置"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Not active state"
-msgstr "非激活的状态"
+msgstr "非启用的状态"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Not active state, click to change it"
-msgstr "处於非激活状态，单击以更改它"
+msgstr "处於非启用状态，单击以更改它"
 
 #. module: web
 #. openerp-web
@@ -2624,6 +2681,13 @@ msgstr "不透明度百分比 %"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools#{widget.debug_mode_help}"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open View"
 msgstr "打开视图"
 
@@ -2690,6 +2754,13 @@ msgid "PDF Viewer"
 msgstr "PDF 查看器"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "PDF controls"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid ""
 "Page:\n"
@@ -2707,6 +2778,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
 msgstr "页: <span class=\"page\"/> / <span class=\"topage\"/>"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pager"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2760,7 +2839,7 @@ msgstr "饼图"
 msgid ""
 "Pie chart cannot display all zero numbers.. Try to change your domain to "
 "display positive results"
-msgstr "饼图无法显示零数字..尝试改变你的领域，以显示正的结果"
+msgstr "饼图无法显示零数字..尝试改变你的域，以显示正的结果"
 
 #. module: web
 #. openerp-web
@@ -2769,7 +2848,7 @@ msgstr "饼图无法显示零数字..尝试改变你的领域，以显示正的�
 msgid ""
 "Pie chart cannot mix positive and negative numbers. Try to change your "
 "domain to only display positive results"
-msgstr "饼图不能混用正数和负数。尝试改变你的领域只显示正数结果"
+msgstr "饼图不能混用正数和负数。尝试改变你的域只显示正数结果"
 
 #. module: web
 #. openerp-web
@@ -2777,6 +2856,13 @@ msgstr "饼图不能混用正数和负数。尝试改变你的领域只显示正
 #, python-format
 msgid "Pivot"
 msgstr "透视表"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pivot settings"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -3468,6 +3554,13 @@ msgstr "支持"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Switch to this company"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Syntax error"
@@ -3486,13 +3579,6 @@ msgstr "标签"
 #, python-format
 msgid "Take a minute to get a coffee,<br />because it's loading..."
 msgstr "系统仍在加载<br />请耐心等待。"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Tap on the list to change company"
-msgstr "点击列表更改公司"
 
 #. module: web
 #. openerp-web
@@ -3541,7 +3627,7 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "The domain you entered is not properly formed"
-msgstr "您输入的领域格式不正确。"
+msgstr "您输入的域格式不正确。"
 
 #. module: web
 #. openerp-web
@@ -3683,7 +3769,7 @@ msgstr "这个日期是在将来。确信这是你所期望的。"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "This domain is not supported."
-msgstr "此领域不受支持。"
+msgstr "此域不受支持。"
 
 #. module: web
 #. openerp-web
@@ -3991,6 +4077,13 @@ msgstr "默认使用"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "User"
+msgstr "用户"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "User Error"
@@ -4036,6 +4129,13 @@ msgstr "查看元数据"
 #: model:ir.model.fields,field_description:web.field_ir_actions_act_window_view__view_mode
 msgid "View Type"
 msgstr "视图类型"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View switcher"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -4606,6 +4706,13 @@ msgstr "记录?"
 #, python-format
 msgid "remaining)"
 msgstr "剩余)"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "search"
+msgstr ""
 
 #. module: web
 #. openerp-web
