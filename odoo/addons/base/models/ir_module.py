@@ -950,7 +950,7 @@ class Module(models.Model):
                 'parent_field': 'parent_id',
                 'values': self.env['ir.module.category'].search_read(
                     [('id', 'in', categories.ids)],
-                    ['display_name', 'parent_id'], order=kwargs.get('order', None)),
+                    ['display_name', 'parent_id'], order=kwargs.get('order', False)),
             }
         return super(Module, self).search_panel_select_range(field_name, **kwargs)
 

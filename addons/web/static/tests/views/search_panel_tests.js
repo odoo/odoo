@@ -2288,14 +2288,13 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('do sorting in the searchpanel field value', async function (assert) {
+    QUnit.test('search panel sorting on categories and filters', async function (assert) {
         assert.expect(2);
 
-        var kanban = await createView({
+        const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -2319,7 +2318,7 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_kw/partner/search_panel_select_range") {
                     assert.deepEqual(args.kwargs, {order: "name"},
-                            'order argument passed to sort the list by name in descending order.');
+                        'should pass order argument to sort categories by name.');
                 }
                 if (route === "/web/dataset/call_kw/partner/search_panel_select_multi_range") {
                     assert.deepEqual(args.kwargs, {
@@ -2330,7 +2329,7 @@ QUnit.module('Views', {
                             group_by: false,
                             order: "name",
                             search_domain: [],
-                        }, 'order argument passed to sort the list by name in ascending order.');
+                    }, 'should pass order argument to sort the filters by name.');
                 }
                 return this._super.apply(this, arguments);
             },
