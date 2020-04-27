@@ -510,3 +510,8 @@ class PurchaseOrderLine(models.Model):
                     incoming_moves |= move
 
         return outgoing_moves, incoming_moves
+
+    @api.model
+    def _update_qty_received_method(self):
+        """Update qty_received_method for old PO before install this module."""
+        self.search([])._compute_qty_received_method()
