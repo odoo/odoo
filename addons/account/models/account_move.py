@@ -452,6 +452,9 @@ class AccountMove(models.Model):
         if not self.ids:
             return True
 
+        if self.env.context.get('line_ids'):
+            # we are just adding a line
+            return True
         # /!\ As this method is called in create / write, we can't make the assumption the computed stored fields
         # are already done. Then, this query MUST NOT depend of computed stored fields (e.g. balance).
         # It happens as the ORM makes the create with the 'no_recompute' statement.
