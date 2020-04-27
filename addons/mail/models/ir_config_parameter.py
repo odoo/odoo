@@ -15,6 +15,7 @@ class IrConfigParameter(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        if 'value' in vals and self.key in ['mail.bounce.alias', 'mail.catchall.alias']:
-            vals['value'] = self.env['mail.alias']._clean_and_check_unique(vals.get('value'))
+        for parameter in self:
+            if 'value' in vals and parameter.key in ['mail.bounce.alias', 'mail.catchall.alias'] and vals['value'] != parameter.value:
+                vals['value'] = self.env['mail.alias']._clean_and_check_unique(vals.get('value'))
         return super().write(vals)
