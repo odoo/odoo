@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import configparser as ConfigParser
+import contextlib
 import errno
 import logging
+import operator
 import optparse
 import glob
 import os
@@ -89,6 +91,21 @@ class configmanager(object):
         # dictionary mapping option destination (keys in self.options) to MyOptions.
         self.casts = {}
 
+        # Service limit options which have their own section in the
+        # configuration file, which are outside the default 'option'
+        # section.
+        self.non_default_option_set = {
+            'db_maxconn_http', 'db_maxconn_longpolling', 'db_maxconn_cron',
+            'limit_memory_hard_http', 'limit_memory_hard_longpolling', 'limit_memory_hard_cron',
+            'limit_memory_soft_http', 'limit_memory_soft_longpolling', 'limit_memory_soft_cron',
+            'limit_time_cpu_http', 'limit_time_cpu_cron',
+            'limit_time_real_http', 'limit_time_real_cron',
+            'limit_request_http', 'limit_request_cron'
+        }
+        self.options_http = {}
+        self.options_longpolling = {}
+        self.options_cron = {}
+
         self.misc = {}
         self.config_file = fname
 
@@ -133,19 +150,93 @@ class configmanager(object):
                               "Keep empty to listen on all interfaces (0.0.0.0)")
         group.add_option("-p", "--http-port", dest="http_port", my_default=8069,
                          help="Listen port for the main HTTP service", type="int", metavar="PORT")
-        group.add_option("--longpolling-port", dest="longpolling_port", my_default=8072,
-                         help="Listen port for the longpolling HTTP service", type="int", metavar="PORT")
         group.add_option("--no-http", dest="http_enable", action="store_false", my_default=True,
                          help="Disable the HTTP and Longpolling services entirely")
         group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
                          help="Activate reverse proxy WSGI wrappers (headers rewriting) "
                               "Only enable this when running behind a trusted web proxy!")
+        group.add_option("--db_maxconn-http", dest="db_maxconn_http", type='int', my_default=-1,
+                         help="specify the maximum number of physical connections to PostgreSQL "
+                              "specific to http workers (default --db_maxconn")
+        if os.name == 'posix':
+            group.add_option("--limit-memory-soft-http", dest="limit_memory_soft_http", my_default=-1,
+                             help="Maximum allowed virtual memory per http worker/thread (in bytes), "
+                                  "when reached the worker be reset after the current request "
+                                  "(default --limit-memory-soft)",
+                             type="int")
+            group.add_option("--limit-memory-hard-http", dest="limit_memory_hard_http", my_default=-1,
+                             help="Maximum allowed virtual memory per http worker/thread (in bytes), "
+                                  "when reached, any memory allocation will fail "
+                                  "(default --limit-memory-hard).",
+                             type="int")
+            group.add_option("--limit-time-cpu-http", dest="limit_time_cpu_http", my_default=-1,
+                             help="Maximum allowed CPU time per HTTP request (default --limit-time-cpu).",
+                             type="int")
+            group.add_option("--limit-time-real-http", dest="limit_time_real_http", my_default=-1,
+                             help="Maximum allowed Real time per http request (default --limit-time-real).",
+                             type="int")
+            group.add_option("--limit-request-http", dest="limit_request_http", my_default=-1,
+                             help="Maximum number of request to be processed per http worker "
+                                  "(default --limit-request).",
+                             type="int")
         # HTTP: hidden backwards-compatibility for "*xmlrpc*" options
         hidden = optparse.SUPPRESS_HELP
         group.add_option("--xmlrpc-interface", dest="http_interface", help=hidden)
         group.add_option("--xmlrpc-port", dest="http_port", type="int", help=hidden)
         group.add_option("--no-xmlrpc", dest="http_enable", action="store_false", help=hidden)
+        parser.add_option_group(group)
 
+        # Longpolling
+        group = optparse.OptionGroup(parser, "Longpolling Service Configuration")
+        group.add_option("--longpolling-port", dest="longpolling_port", my_default=8072,
+                         help="Listen port for the longpolling HTTP service", type="int", metavar="PORT")
+        group.add_option("--db_maxconn-longpolling", dest="db_maxconn_longpolling", type='int', my_default=-1,
+                         help="specify the maximum number of physical connections to PostgreSQL "
+                              "specific to longpolling workers (default --db_maxconn")
+        if os.name == 'posix':
+            group.add_option("--limit-memory-soft-longpolling", dest="limit_memory_soft_longpolling", my_default=-1,
+                             help="Maximum allowed virtual memory for the longpolling process (in bytes), "
+                                  "when reached the worker be reset after the current request "
+                                  "(default --limit-memory-soft)",
+                             type="int")
+            group.add_option("--limit-memory-hard-longpolling", dest="limit_memory_hard_longpolling", my_default=-1,
+                             help="Maximum allowed virtual memory for the longpolling process (in bytes), "
+                                  "when reached, any memory allocation will fail "
+                                  "(default --limit-memory-hard).",
+                             type="int")
+        parser.add_option_group(group)
+
+        # CRON
+        group = optparse.OptionGroup(parser, "CRON Service Configuration")
+        group.add_option("--no-cron", dest="cron_enable", action="store_false", my_default=True,
+                         help="Disable the CRON service entirely")
+        group.add_option("--db_maxconn-cron", dest="db_maxconn_cron", type='int', my_default=-1,
+                         help="specify the maximum number of physical connections to PostgreSQL "
+                              "specific to cron workers (default --db_maxconn")
+        group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
+                         help="Maximum number of threads/workers processing concurrently cron jobs (default 2).",
+                         type="int")  # max-cron-workers
+        if os.name == 'posix':
+            group.add_option("--limit-memory-soft-cron", dest="limit_memory_soft_cron", my_default=-1,
+                             help="Maximum allowed virtual memory for cron threads/workers (in bytes), "
+                                  "when reached the worker be reset after the current request "
+                                  "(default --limit-memory-soft)",
+                             type="int")
+            group.add_option("--limit-memory-hard-cron", dest="limit_memory_hard_cron", my_default=-1,
+                             help="Maximum allowed virtual memory for cron threads/workers (in bytes), "
+                                  "when reached, any memory allocation will fail "
+                                  "(default --limit-memory-hard).",
+                             type="int")
+            group.add_option("--limit-time-cpu-cron", dest="limit_time_cpu_cron", my_default=-1,
+                             help="Maximum allowed CPU time per cron job (default --limit-time-cpu).",
+                             type="int")
+            group.add_option("--limit-time-real-cron", dest="limit_time_real_cron", my_default=-1,
+                             help="Maximum allowed Real time per cron job (default --limit-time-real).",
+                             type="int")
+            group.add_option("--limit-request-cron", dest="limit_request_cron", my_default=-1,
+                             help="Maximum number of request to be processed per cron worker "
+                                  "(default --limit-request).",
+                             type="int")
         parser.add_option_group(group)
 
         # WEB
@@ -288,9 +379,6 @@ class configmanager(object):
         group.add_option("--osv-memory-age-limit", dest="osv_memory_age_limit", my_default=False,
                          help="Deprecated alias to the transient-age-limit option",
                          type="float")
-        group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
-                         help="Maximum number of threads processing concurrently cron jobs (default 2).",
-                         type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Try to enable the unaccent extension when creating new databases.")
         group.add_option("--geoip-db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLite2-City.mmdb',
@@ -301,8 +389,8 @@ class configmanager(object):
             group = optparse.OptionGroup(parser, "Multiprocessing options")
             # TODO sensible default for the three following limits.
             group.add_option("--workers", dest="workers", my_default=0,
-                             help="Specify the number of workers, 0 disable prefork mode.",
-                             type="int")
+                             help="Specify the number of http workers, 0 disable prefork mode.",
+                             type="int")  # population, max-http-workers
             group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=2048 * 1024 * 1024,
                              help="Maximum allowed virtual memory per worker (in bytes), when reached the worker be "
                              "reset after the current request (default 2048MiB).",
@@ -316,10 +404,6 @@ class configmanager(object):
                              type="int")
             group.add_option("--limit-time-real", dest="limit_time_real", my_default=120,
                              help="Maximum allowed Real time per request (default 120).",
-                             type="int")
-            group.add_option("--limit-time-real-cron", dest="limit_time_real_cron", my_default=-1,
-                             help="Maximum allowed Real time per cron job. (default: --limit-time-real). "
-                                  "Set to 0 for no limit. ",
                              type="int")
             group.add_option("--limit-request", dest="limit_request", my_default=8192,
                              help="Maximum number of request to be processed per worker (default 8192).",
@@ -472,13 +556,76 @@ class configmanager(object):
         else:
             self.options.update(dict.fromkeys(posix_keys, None))
 
+        def can_cast(arg, value):
+            return isinstance(value, str) and self.casts[arg].type in optparse.Option.TYPE_CHECKER
+
+        def cast(arg, value):
+            return optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, value)
+
         # Copy the command-line arguments...
         for arg in keys:
             if getattr(opt, arg) is not None:
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
-            elif isinstance(self.options[arg], str) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
-                self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
+            elif can_cast(arg, self.options[arg]):
+                self.options[arg] = cast(arg, self.options[arg])
+
+        http_keys = {'db_maxconn_http': 'db_maxconn'}
+        if os.name == 'posix':
+            http_keys.update({
+                'limit_memory_hard_http': 'limit_memory_hard',
+                'limit_memory_soft_http': 'limit_memory_soft',
+                'limit_time_cpu_http': 'limit_time_cpu',
+                'limit_time_real_http': 'limit_time_real',
+                'limit_request_http': 'limit_request',
+            })
+
+        longpolling_keys = {'db_maxconn_longpolling': 'db_maxconn'}
+        if os.name == 'posix':
+            longpolling_keys.update({
+                'limit_memory_hard_longpolling': 'limit_memory_hard',
+                'limit_memory_soft_longpolling': 'limit_memory_soft',
+            })
+
+        cron_keys = {'db_maxconn_cron': 'db_maxconn'}
+        if os.name == 'posix':
+            cron_keys.update({
+                'limit_memory_hard_cron': 'limit_memory_hard',
+                'limit_memory_soft_cron': 'limit_memory_soft',
+                'limit_time_cpu_cron': 'limit_time_cpu',
+                'limit_time_real_cron': 'limit_time_real',
+                'limit_request_cron': 'limit_request',
+            })
+
+        # Every service (http, cron, longpolling) can be started with
+        # dedicated limits. The default value can be override by (in
+        # priority order):
+        # 1) the dedicated cli option (--limit-time-cpu-http)
+        # 2) the dedicated config file option ([http] limit_time_cpu=)
+        # 3) the generic cli option (--limit-time-cpu)
+        # 4) the generic config file option ([options] limit_time_cpu=)
+        for service, keys in [('http', http_keys), ('longpolling', longpolling_keys), ('cron', cron_keys)]:
+            for dedicated_arg, generic_arg in keys.items():
+                dedicated_cli_value = getattr(opt, dedicated_arg)
+                dedicated_file_value = getattr(self, 'options_' + service).get(generic_arg)
+                generic_cli_value = getattr(opt, generic_arg)
+                generic_file_value = self.options[generic_arg]
+
+                if dedicated_cli_value not in (None, -1):
+                    self.options[dedicated_arg] = dedicated_cli_value
+                    # save the option in the suitable section of the config
+                    getattr(self, 'options_' + service)[generic_arg] = dedicated_cli_value
+                elif can_cast(dedicated_arg, dedicated_file_value):
+                    self.options[dedicated_arg] = cast(dedicated_arg, dedicated_file_value)
+                elif dedicated_file_value is not None:
+                    self.options[dedicated_arg] = dedicated_file_value
+                elif generic_cli_value is not None:
+                    self.options[dedicated_arg] = generic_cli_value
+                elif can_cast(generic_arg, generic_file_value):
+                    self.options[dedicated_arg] = cast(generic_arg, generic_file_value)
+                else:
+                    self.options[dedicated_arg] = generic_file_value
+
 
         self.options['root_path'] = self._normalize(os.path.join(os.path.dirname(__file__), '..'))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
@@ -591,6 +738,13 @@ class configmanager(object):
             parser.values.test_tags = "+standard"
 
     def load(self):
+        def strasbool(s):
+            if s in ('True', 'true'):
+                return True
+            if s in ('False', 'false'):
+                return False
+            return s
+
         outdated_options_map = {
             'xmlrpc_port': 'http_port',
             'xmlrpc_interface': 'http_interface',
@@ -601,22 +755,29 @@ class configmanager(object):
             p.read([self.rcfile])
             for (name,value) in p.items('options'):
                 name = outdated_options_map.get(name, name)
-                if value=='True' or value=='true':
-                    value = True
-                if value=='False' or value=='false':
-                    value = False
-                self.options[name] = value
+                self.options[name] = strasbool(value)
+
+            for opt in ("db_maxconn", "limit_memory_soft", "limit_memory_hard",
+                        "limit_time_cpu", "limit_time_real", "limit_request"):
+                with contextlib.suppress(KeyError):
+                    self.options_http[opt] = strasbool(p['http'][opt])
+
+            for opt in ("db_maxconn", "limit_memory_soft", "limit_memory_hard"):
+                with contextlib.suppress(KeyError):
+                    self.options_longpolling[opt] = strasbool(p['longpolling'][opt])
+
+            for opt in ('db_maxconn', 'limit_memory_soft', 'limit_memory_hard',
+                        'limit_time_cpu', 'limit_time_real', 'limit_request'):
+                with contextlib.suppress(KeyError):
+                    self.options_cron[opt] = strasbool(p['cron'][opt])
+
             #parse the other sections, as well
             for sec in p.sections():
-                if sec == 'options':
+                if sec.casefold() in {'options', 'http', 'longpolling', 'cron'}:
                     continue
                 self.misc.setdefault(sec, {})
                 for (name, value) in p.items(sec):
-                    if value=='True' or value=='true':
-                        value = True
-                    if value=='False' or value=='false':
-                        value = False
-                    self.misc[sec][name] = value
+                    self.misc[sec][name] = strasbool(value)
         except IOError:
             pass
         except ConfigParser.NoSectionError:
@@ -631,12 +792,27 @@ class configmanager(object):
                 continue
             if opt in self.blacklist_for_save:
                 continue
+            if opt in self.non_default_option_set:
+                continue
             if opt in ('log_level',):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
             elif opt == 'log_handler':
                 p.set('options', opt, ','.join(_deduplicate_loggers(self.options[opt])))
             else:
                 p.set('options', opt, self.options[opt])
+
+        p.add_section('http')
+        for opt, val in sorted(self.options_http.items(), key=operator.itemgetter(0)):
+            print('!!!')
+            p.set('http', opt, val)
+
+        p.add_section('longpolling')
+        for opt, val in sorted(self.options_longpolling.items(), key=operator.itemgetter(0)):
+            p.set('longpolling', opt, val)
+
+        p.add_section('cron')
+        for opt, val in sorted(self.options_cron.items(), key=operator.itemgetter(0)):
+            p.set('cron', opt, val)
 
         for sec in sorted(self.misc):
             p.add_section(sec)
