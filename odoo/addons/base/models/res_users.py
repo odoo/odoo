@@ -1264,7 +1264,7 @@ class UsersView(models.Model):
             for user in users:
                 if len(user.company_ids) <= 1 and group_multi_company_id in user.groups_id.ids:
                     user.write({'groups_id': [(3, group_multi_company_id)]})
-                elif len(user.company_ids) > 1 and group_multi_company_id in user.groups_id.ids:
+                elif len(user.company_ids) > 1 and group_multi_company_id not in user.groups_id.ids:
                     user.write({'groups_id': [(4, group_multi_company_id)]})
         return users
 
