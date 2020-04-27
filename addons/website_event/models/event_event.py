@@ -168,3 +168,6 @@ class Event(models.Model):
 
     def get_backend_menu_id(self):
         return self.env.ref('event.event_main_menu').id
+
+    def toggle_website_menu(self, val):
+        self.website_menu = val
