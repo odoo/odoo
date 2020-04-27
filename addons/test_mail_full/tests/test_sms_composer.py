@@ -368,7 +368,7 @@ class TestSMSComposerMass(TestMailFullCommon):
         for partner in self.partners[5:]:
             self.assertSMSOutgoing(partner, partner.phone_sanitized, content=self._test_body)
         for partner in self.partners[:5]:
-            self.assertSMSCanceled(partner, partner.phone_sanitized, error_code='sms_blacklist', content=self._test_body)
+            self.assertSMSCanceled(partner, partner.phone_sanitized, failure_type='sms_blacklist', content=self._test_body)
 
     def test_composer_mass_active_ids_wo_blacklist(self):
         self.env['phone.blacklist'].create([{
@@ -419,9 +419,9 @@ class TestSMSComposerMass(TestMailFullCommon):
         for partner in self.partners[8:]:
             self.assertSMSOutgoing(partner, partner.phone_sanitized, content=self._test_body)
         for partner in self.partners[5:8]:
-            self.assertSMSCanceled(partner, partner.phone_sanitized, error_code='sms_duplicate', content=self._test_body)
+            self.assertSMSCanceled(partner, partner.phone_sanitized, failure_type='sms_duplicate', content=self._test_body)
         for partner in self.partners[:5]:
-            self.assertSMSCanceled(partner, partner.phone_sanitized, error_code='sms_blacklist', content=self._test_body)
+            self.assertSMSCanceled(partner, partner.phone_sanitized, failure_type='sms_blacklist', content=self._test_body)
 
     def test_composer_mass_active_ids_w_template(self):
         with self.with_user('employee'):

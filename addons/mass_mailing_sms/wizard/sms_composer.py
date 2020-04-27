@@ -35,10 +35,10 @@ class SMSComposer(models.TransientModel):
             'sms_code': trace_code,
         }
         if sms_values['state'] == 'error':
-            trace_values['failure_type'] = sms_values['error_code']
+            trace_values['failure_type'] = sms_values['failure_type']
             trace_values['trace_status'] = 'error'
         elif sms_values['state'] == 'canceled':
-            trace_values['failure_type'] = sms_values['error_code']
+            trace_values['failure_type'] = sms_values['failure_type']
             trace_values['trace_status'] = 'cancel'
         else:
             if self.mass_sms_allow_unsubscribe:
