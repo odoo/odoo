@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Delete Project">
                     <field name="task_count" invisible="1" />
+                    <field name="projects_archived" invisible="1" />
                     <group attrs="{'invisible': [('task_count', '=', 0)]}">
                         <span>You cannot delete a project containing tasks. You can either archive it or first delete all of its tasks.</span>
                     </group>
@@ -14,7 +15,7 @@
                         <span>Are you sure you want to delete this project ?</span>
                     </group>
                     <footer attrs="{'invisible': [('task_count', '=', 0)]}">
-                        <button string="Archive project" type="object" name="action_archive" class="btn btn-primary" />
+                        <button string="Archive project" type="object" name="action_archive" class="btn btn-primary" attrs="{'invisible': [('projects_archived', '=', True)]}" />
                         <button string="Discard" special="cancel" />
                     </footer>
                     <footer attrs="{'invisible': [('task_count', '>', 0)]}">
