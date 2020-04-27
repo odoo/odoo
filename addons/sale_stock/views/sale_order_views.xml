@@ -25,6 +25,11 @@
                     <field name="incoterm" widget="selection" groups="sale_stock.group_display_incoterm"/>
                     <field name="picking_policy" required="True"/>
                 </xpath>
+                <xpath expr="//span[@name='expected_date_span']" position="attributes">
+                    <attribute name="attrs">
+                        {'invisible': [('effective_date', '!=', False), ('commitment_date', '!=', False)]}
+                    </attribute>
+                </xpath>
                 <xpath expr="//div[@name='commitment_date_div']" position="replace">
                     <div class="o_row">
                         <field name="commitment_date"/>
