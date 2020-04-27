@@ -13,10 +13,7 @@ according to the enabled options.
         <t t-if="state_info" t-set="state" t-value="state_info['state']"/>
 
         <!-- Check for active options -->
-        <t t-set="opt_posts_loop_show_cover" t-value="request.website.viewref('website_blog.opt_posts_loop_show_cover').active"/>
-        <t t-set="opt_posts_loop_show_author" t-value="request.website.viewref('website_blog.opt_posts_loop_show_author').active"/>
-        <t t-set="opt_posts_loop_show_stats" t-value="request.website.viewref('website_blog.opt_posts_loop_show_stats').active"/>
-        <t t-set="opt_posts_loop_show_teaser" t-value="request.website.viewref('website_blog.opt_posts_loop_show_teaser').active"/>
+        <t t-set="opt_posts_loop_show_cover" t-value="is_view_active('website_blog.opt_posts_loop_show_cover')"/>
 
         <div groups="website.group_website_designer" t-if="state_info and (state_info['published'] > 0 and state_info['unpublished'] > 0)">
             <div class="bg-200 py-2 mb-4 alert alert-dismissable">
@@ -105,7 +102,7 @@ according to the enabled options.
                             <div t-if="opt_posts_loop_show_cover">
                                 <t t-call="website_blog.post_cover_image"/>
                             </div>
-                            <div t-if="opt_posts_loop_show_teaser" t-att-class="opt_blog_cards_design and 'card-body pt-0'">
+                            <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')" t-att-class="opt_blog_cards_design and 'card-body pt-0'">
                                 <t t-call="website_blog.post_teaser"/>
                             </div>
                             <div t-if="opt_blog_cards_design" t-attf-class="opt_blog_cards_design and 'card-body pt-0 pb-2'}">
@@ -122,7 +119,7 @@ according to the enabled options.
                             <t t-if="opt_posts_loop_show_cover" t-call="website_blog.post_cover_image"/>
                             <div t-att-class="opt_blog_cards_design and 'card-body px-2 py-0 mb-2'">
                                 <t t-call="website_blog.post_heading"/>
-                                <div t-if="opt_posts_loop_show_teaser">
+                                <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')">
                                     <t t-call="website_blog.post_teaser"/>
                                 </div>
                             </div>
@@ -150,7 +147,7 @@ according to the enabled options.
        Untitled Post
    </a>
 
-    <div t-if="not opt_posts_loop_show_cover and opt_posts_loop_show_author" class="text-muted small mt-2">
+    <div t-if="not opt_posts_loop_show_cover and is_view_active('website_blog.opt_posts_loop_show_author')" class="text-muted small mt-2">
         by <span t-field="blog_post.author_id"/>
     </div>
 </template>
@@ -160,7 +157,7 @@ according to the enabled options.
     <div class="d-flex small flex-wrap mb-1 w-100">
         <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between mx-n2 #{opt_blog_list_view and 'flex-grow-0 w-auto mw-100' or 'flex-grow-1' }">
             <time t-field="blog_post.post_date" class="text-nowrap font-weight-bold px-2" t-options='{"format": "MMM d, yyyy"}'/>
-            <div t-if="opt_posts_loop_show_stats" class="px-2">
+            <div t-if="is_view_active('website_blog.opt_posts_loop_show_stats')" class="px-2">
                 <b class="text-nowrap" title="Comments"><i class="fa fa-comment text-muted mr-1"/><t t-esc="len(blog_post.message_ids)"/></b>
                 <b class="text-nowrap pl-2" title="Views"><i class="fa fa-binoculars text-muted mr-1"/><t t-esc="blog_post.visits"/></b>
             </div>
@@ -185,7 +182,7 @@ according to the enabled options.
             <t t-set="_record" t-value="blog_post"/>
             <t t-set="additionnal_classes" t-value="'o_list_cover o_not_editable ' + (not opt_blog_cards_design and ' rounded overflow-hidden shadow mb-3' or '')"/>
 
-            <t t-if="opt_posts_loop_show_author" t-call="website_blog.post_author">
+            <t t-if="is_view_active('website_blog.opt_posts_loop_show_author')" t-call="website_blog.post_author">
                 <t t-set="additionnal_classes" t-value="'o_wblog_post_list_author o_list_cover d-flex text-white w-100 o_not_editable ' + ('p-3 h5 m-0' if opt_blog_list_view else 'px-2 pb-2 pt-3') "/>
                 <t t-set="hide_date" t-value="True"/>
             </t>
