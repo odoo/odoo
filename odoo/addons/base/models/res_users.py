@@ -211,8 +211,8 @@ class Users(models.Model):
     SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image_1920', 'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
 
     def _default_groups(self):
-        default_user = self.env.ref('base.default_user', raise_if_not_found=False)
-        return (default_user or self.env['res.users']).sudo().groups_id
+        default_user_id = self.env['ir.model.data'].xmlid_to_res_id('base.default_user', raise_if_not_found=False)
+        return self.env['res.users'].browse(default_user_id).sudo().groups_id if default_user_id else []
 
     @api.model
     def _get_default_image(self):
@@ -357,8 +357,10 @@ class Users(models.Model):
 
     @api.depends('groups_id')
     def _compute_share(self):
-        for user in self:
-            user.share = not user.has_group('base.group_user')
+        user_group_id = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')
+        internal_users = self.filtered_domain([('groups_id', 'in', [user_group_id])])
+        internal_users.share = False
+        (self - internal_users).share = True
 
     def _compute_companies_count(self):
         self.companies_count = self.env['res.company'].sudo().search_count([])
@@ -1250,17 +1252,21 @@ class ModuleCategory(models.Model):
 class UsersView(models.Model):
     _inherit = 'res.users'
 
-    @api.model
-    def create(self, values):
-        values = self._remove_reified_groups(values)
-        user = super(UsersView, self).create(values)
-        group_multi_company = self.env.ref('base.group_multi_company', False)
-        if group_multi_company and 'company_ids' in values:
-            if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                user.write({'groups_id': [(3, group_multi_company.id)]})
-            elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                user.write({'groups_id': [(4, group_multi_company.id)]})
-        return user
+    @api.model_create_multi
+    def create(self, vals_list):
+        new_vals_list = []
+        for values in vals_list:
+            new_vals_list.append(self._remove_reified_groups(values))
+        users = super(UsersView, self).create(new_vals_list)
+        group_multi_company_id = self.env['ir.model.data'].xmlid_to_res_id(
+            'base.group_multi_company', raise_if_not_found=False)
+        if group_multi_company_id:
+            for user in users:
+                if len(user.company_ids) <= 1 and group_multi_company_id in user.groups_id.ids:
+                    user.write({'groups_id': [(3, group_multi_company_id)]})
+                elif len(user.company_ids) > 1 and group_multi_company_id in user.groups_id.ids:
+                    user.write({'groups_id': [(4, group_multi_company_id)]})
+        return users
 
     def write(self, values):
         values = self._remove_reified_groups(values)
