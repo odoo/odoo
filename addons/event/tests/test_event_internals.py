@@ -139,8 +139,8 @@ class TestEventData(TestEventCommon):
         registration.write({'event_ticket_id': event_ticket1.id})
         self.assertEqual(registration.event_ticket_id, event_ticket1)
 
-        # change template to a void one for mails -> do not reset event
-        # change template to a one with other tickets -> reset event
+        # change template to a void one for mails -> reset event lines that are void
+        # change template to a one with other tickets -> keep line linked to a registration
         event_type.write({
             'use_mail_schedule': False,
             'event_type_mail_ids': [(5, 0)],
@@ -148,15 +148,16 @@ class TestEventData(TestEventCommon):
                                       (0, 0, {'name': 'Registration1'}),
                                       (0, 0, {'name': 'Registration2'})],
         })
-        event._compute_from_event_type()
-        self.assertEqual(len(event.event_mail_ids), 1)
-        self.assertEqual(len(event.event_ticket_ids), 2)
+        event._compute_event_ticket_ids()
+        event._compute_event_mail_ids()
+        self.assertEqual(event.event_mail_ids, self.env['event.mail'])
+        self.assertEqual(len(event.event_ticket_ids), 3)
         self.assertEqual(
             set(event.mapped('event_ticket_ids.name')),
-            set(['Registration1', 'Registration2'])
+            set(['TestRegistration', 'Registration1', 'Registration2'])
         )
         # registration loose its ticket
-        self.assertEqual(registration.event_ticket_id, self.env['event.event.ticket'])
+        self.assertEqual(registration.event_ticket_id, event_ticket1)
 
         # change template to a one with different mails -> reset event
         event_type.write({
@@ -165,7 +166,8 @@ class TestEventData(TestEventCommon):
                 'interval_nbr': 3, 'interval_unit': 'days', 'interval_type': 'after_event',
                 'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
         })
-        event._compute_from_event_type()
+        event._compute_event_ticket_ids()
+        event._compute_event_mail_ids()
         self.assertEqual(len(event.event_mail_ids), 1)
         self.assertEqual(event.event_mail_ids.interval_nbr, 3)
         self.assertEqual(event.event_mail_ids.interval_type, 'after_event')
