@@ -88,16 +88,6 @@ class Project(models.Model):
             elif not project.timesheet_product_id:
                 project.timesheet_product_id = default_product
 
-    @api.depends('allow_billable')
-    def _compute_allow_billable(self):
-        """ In order to keep task billable type as 'task_rate' using sale_timesheet usual flow.
-            (see _compute_billable_type method in sale_timesheet)
-        """
-        self.filtered(lambda p: p.allow_billable).update({
-            'sale_order_id': False,
-            'sale_line_employee_ids': False,
-        })
-
     @api.constrains('sale_line_id', 'billable_type')
     def _check_sale_line_type(self):
         for project in self:
