@@ -82,14 +82,10 @@ class EventTicket(models.Model):
             else:
                 ticket.is_expired = False
 
-    @api.depends('start_sale_date', 'end_sale_date', 'event_id.date_tz', 'seats_available', 'seats_max')
+    @api.depends('is_expired', 'start_sale_date', 'event_id.date_tz', 'seats_available', 'seats_max')
     def _compute_sale_available(self):
         for ticket in self:
-            ticket = ticket._set_tz_context()
-            current_date = fields.Date.context_today(ticket)
-            if (ticket.start_sale_date and ticket.start_sale_date > current_date) or \
-                    ticket.end_sale_date and ticket.end_sale_date < current_date or \
-                    ticket.seats_available <= 0 and ticket.seats_max > 0:
+            if not ticket.is_launched() or ticket.is_expired or (ticket.seats_max and ticket.seats_available <= 0):
                 ticket.sale_available = False
             else:
                 ticket.sale_available = True
@@ -142,3 +138,13 @@ class EventTicket(models.Model):
     def _set_tz_context(self):
         self.ensure_one()
         return self.with_context(tz=self.event_id.date_tz or 'UTC')
+
+    def is_launched(self):
+        # TDE FIXME: in master, make a computed field, easier to use
+        self.ensure_one()
+        if self.start_sale_date:
+            ticket = self._set_tz_context()
+            current_date = fields.Date.context_today(ticket)
+            return ticket.start_sale_date < current_date
+        else:
+            return True
