@@ -154,6 +154,7 @@ class Employee(models.Model):
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
+            ('holiday_status_id.active', '=', True),
             ('state', 'not in', ('cancel', 'refuse'))
         ])
         leave_data = {}
