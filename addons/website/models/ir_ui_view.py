@@ -448,6 +448,7 @@ class View(models.Model):
                 self._context.copy(),
                 main_object=self,
                 website=request.website,
+                is_view_active=request.website.is_view_active,
                 url_for=url_for,
                 res_company=request.website.company_id.sudo(),
                 languages=request.env['res.lang'].get_available(),
