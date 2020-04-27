@@ -117,13 +117,10 @@ class TestStockLandedCostsMrp(StockAccountTestCommon):
         self.assertEqual(first_move.product_qty, 2.0)
 
         # produce product
-        produce_form = Form(self.env['mrp.product.produce'].with_user(self.allow_user).with_context({
-            'active_id': man_order.id,
-            'active_ids': [man_order.id],
-        }))
-        produce_form.qty_producing = 2.0
-        produce_wizard = produce_form.save()
-        produce_wizard.do_produce()
+        mo_form = Form(man_order.with_user(self.allow_user))
+        mo_form.qty_producing = 2
+        man_order = mo_form.save()
+
 
         man_order.button_mark_done()
 

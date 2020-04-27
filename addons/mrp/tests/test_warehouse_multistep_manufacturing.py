@@ -184,13 +184,9 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(production_order.reservation_state, 'assigned')
         self.assertEqual(picking_stock_postprod.state, 'waiting')
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': production_order.id,
-            'active_ids': [production_order.id],
-        }))
+        produce_form = Form(production_order)
         produce_form.qty_producing = production_order.product_qty
-        product_produce = produce_form.save()
-        product_produce.do_produce()
+        production_order = produce_form.save()
         production_order.button_mark_done()
 
         self.assertFalse(sum(self.env['stock.quant']._gather(self.raw_product, self.warehouse.pbm_loc_id).mapped('quantity')))

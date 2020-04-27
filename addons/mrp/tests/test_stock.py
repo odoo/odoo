@@ -207,14 +207,10 @@ class TestWarehouse(common.TestMrpCommon):
         mo_laptop = self.new_mo_laptop()
         serial = self.env['stock.production.lot'].create({'product_id': self.laptop.id, 'company_id': self.env.company.id})
 
-        product_produce = self.env['mrp.product.produce'].with_context({
-            'active_id': mo_laptop.id,
-            'active_ids': [mo_laptop.id],
-        }).create({
-            "qty_producing": 1.0,
-            "finished_lot_id": serial.id,
-        })
-        product_produce.do_produce()
+        mo_form = Form(mo_laptop)
+        mo_form.qty_producing = 1
+        mo_form.lot_producing_id = serial
+        mo_laptop = mo_form.save()
         mo_laptop.button_mark_done()
 
         # We check if the laptop go in the depot and not in the stock

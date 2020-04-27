@@ -39,14 +39,11 @@ class TestMrpValuationCommon(TestStockValuationCommon):
         return mo
 
     def _produce(self, mo, quantity=0):
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': mo.id,
-            'active_ids': [mo.id],
-        }))
-        if quantity:
-            produce_form.qty_producing = quantity
-        product_produce = produce_form.save()
-        product_produce.do_produce()
+        mo_form = Form(mo)
+        if not quantity:
+            quantity = mo.product_qty - mo.qty_produced
+        mo_form.qty_producing += quantity
+        mo = mo_form.save()
 
 
 class TestMrpValuationStandard(TestMrpValuationCommon):
@@ -94,7 +91,10 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         self._make_in_move(self.component, 1, 20)
         mo = self._make_mo(self.bom, 2)
         self._produce(mo, 1)
-        mo.post_inventory()
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_close_mo()
+        mo = mo.procurement_group_id.mrp_production_ids[-1]
         self.assertEqual(self.component.value_svl, 20)
         self.assertEqual(self.product1.value_svl, 10)
         self.assertEqual(self.component.quantity_svl, 1)

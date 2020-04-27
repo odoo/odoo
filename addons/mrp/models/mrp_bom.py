@@ -66,7 +66,7 @@ class MrpBom(models.Model):
         ('strict', 'Strict'),
         ('flexible', 'Flexible')],
         help="Defines if you can consume more or less components than the quantity defined on the BoM.",
-        default='strict',
+        default='flexible',
         string='Consumption',
         required=True
     )

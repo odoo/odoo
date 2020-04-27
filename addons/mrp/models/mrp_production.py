@@ -72,6 +72,7 @@ class MrpProduction(models.Model):
         domain="[('id', 'in', allowed_product_ids)]",
         readonly=True, required=True, check_company=True,
         states={'draft': [('readonly', False)]})
+    product_tracking = fields.Selection(related='product_id.tracking')
     allowed_product_ids = fields.Many2many('product.product', compute='_compute_allowed_product_ids')
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
@@ -83,6 +84,10 @@ class MrpProduction(models.Model):
         'uom.uom', 'Product Unit of Measure',
         readonly=True, required=True,
         states={'draft': [('readonly', False)]}, domain="[('category_id', '=', product_uom_category_id)]")
+    lot_producing_id = fields.Many2one(
+        'stock.production.lot', string='Lot/Serial Number', copy=False,
+        domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True)
+    qty_producing = fields.Float(string="Quantity Producing", copy=False)
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     picking_type_id = fields.Many2one(
@@ -175,6 +180,7 @@ class MrpProduction(models.Model):
         'stock.move', 'production_id', 'Finished Products',
         copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
+    move_byproduct_ids = fields.One2many('stock.move', compute='_compute_move_byproduct_ids', inverse='_set_move_byproduct_ids')
     finished_move_line_ids = fields.One2many(
         'stock.move.line', compute='_compute_lines', inverse='_inverse_lines', string="Finished Product"
         )
@@ -454,8 +460,9 @@ class MrpProduction(models.Model):
         for order in self:
             already_reserved = order.is_locked and order.state not in ('done', 'cancel') and order.mapped('move_raw_ids.move_line_ids')
             any_quantity_done = any([m.quantity_done > 0 for m in order.move_raw_ids])
+
             order.unreserve_visible = not any_quantity_done and already_reserved
-            order.reserve_visible = order.state in ('confirmed', 'planned') and any(move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids)
+            order.reserve_visible = order.state in ('confirmed', 'progress', 'to_close') and any(move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids.filtered(lambda m: m.product_uom_qty))
 
     @api.depends('move_finished_ids.quantity_done', 'move_finished_ids.state', 'is_locked')
     def _compute_post_visible(self):
@@ -475,6 +482,14 @@ class MrpProduction(models.Model):
         count_data = dict((item['production_id'][0], item['production_id_count']) for item in data)
         for production in self:
             production.scrap_count = count_data.get(production.id, 0)
+
+    @api.depends('move_finished_ids')
+    def _compute_move_byproduct_ids(self):
+        for order in self:
+            order.move_byproduct_ids = order.move_finished_ids.filtered(lambda m: m.product_id != order.product_id)
+
+    def _set_move_byproduct_ids(self):
+        self.move_finished_ids |= self.move_byproduct_ids
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
@@ -502,7 +517,7 @@ class MrpProduction(models.Model):
         """ Finds UoM of changed product. """
         if not self.product_id:
             self.bom_id = False
-        else:
+        elif not self.bom_id or self.bom_id.product_tmpl_id != self.product_tmpl_id or (self.bom_id.product_id and self.bom_id.product_id != self.product_id):
             bom = self.env['mrp.bom']._bom_find(product=self.product_id, picking_type=self.picking_type_id, company_id=self.company_id.id, bom_type='normal')
             if bom:
                 self.bom_id = bom.id
@@ -563,6 +578,28 @@ class MrpProduction(models.Model):
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
+    @api.onchange('qty_producing', 'lot_producing_id')
+    def _onchange_producing(self):
+        if self.product_id.tracking == 'serial':
+            qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
+            if qty_producing_uom != 1:
+                self.qty_producing = self.product_id.uom_id._compute_quantity(1, self.product_uom_id, rounding_method='HALF-UP')
+        for move in (self.move_raw_ids | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
+            if move.state in ('done', 'cancel'):
+                continue
+            # Do not update extra product quantities
+            if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+                continue
+            if move.has_tracking != 'none' or move.state == 'done':
+                continue
+            vals = move._update_quantity_done(self)
+            if vals.get('to_create'):
+                for res in vals['to_create']:
+                    move.move_line_ids.new(res)
+            if vals.get('to_write'):
+                for move_line, res in vals['to_write']:
+                    move_line.update(res)
+
     def write(self, vals):
         res = super(MrpProduction, self).write(vals)
 
@@ -572,7 +609,7 @@ class MrpProduction(models.Model):
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
                 if production.workorder_ids and not self.env.context.get('force_date', False):
                     raise UserError(_('You cannot move a planned manufacturing order.'))
-            if 'move_raw_ids' in vals and production.state != 'draft':
+            if ('move_raw_ids' in vals or 'move_finished_ids' in vals) and production.state != 'draft':
                 production._autoconfirm_production()
             if not production.bom_id.operation_ids and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
                 new_date_planned_start = fields.Datetime.to_datetime(vals.get('date_planned_start'))
@@ -595,7 +632,6 @@ class MrpProduction(models.Model):
         production = super(MrpProduction, self).create(values)
         production.move_raw_ids.write({
             'group_id': production.procurement_group_id.id,
-            'reference': production.name,  # set reference when MO name is different than 'New'
         })
         # Trigger move_raw creation when importing a file
         if 'import_file' in self.env.context:
@@ -692,7 +728,6 @@ class MrpProduction(models.Model):
         data = {
             'sequence': bom_line.sequence if bom_line else 10,
             'name': self.name,
-            'reference': self.name,
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
             'bom_line_id': bom_line.id if bom_line else False,
@@ -782,13 +817,14 @@ class MrpProduction(models.Model):
             )
             additional_moves.write({
                 'group_id': production.procurement_group_id.id,
-                'reference': production.name,  # set reference when MO name is different than 'New'
             })
             additional_moves._adjust_procure_method()
             moves_to_confirm |= additional_moves
-            moves_to_confirm |= production.move_finished_ids.filtered(
+            additional_byproducts = production.move_finished_ids.filtered(
                 lambda move: move.state == 'draft' and move.additional
             )
+            moves_to_confirm |= additional_byproducts
+
         if moves_to_confirm:
             moves_to_confirm._action_confirm()
 
@@ -826,7 +862,7 @@ class MrpProduction(models.Model):
             })
         else:
             action.update({
-                'name': _("MO Generated by %s" % self.name),
+                'name': _("MO Generated by %s") % self.name,
                 'domain': [('id', 'in', mrp_production_ids)],
                 'view_mode': 'tree,form',
             })
@@ -841,6 +877,34 @@ class MrpProduction(models.Model):
             'domain': [('id', 'in', backorder_ids)],
             'view_mode': 'tree,form',
         }
+
+    def action_generate_serial(self):
+        self.ensure_one()
+        self.lot_producing_id = self.env['stock.production.lot'].create({
+            'product_id': self.product_id.id,
+            'company_id': self.company_id.id
+        })
+        if self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids:
+            self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids.lot_id = self.lot_producing_id
+        if self.product_id.tracking == 'serial':
+            # copy/paste from _onchange_producing
+            qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
+            if qty_producing_uom != 1:
+                self.qty_producing = self.product_id.uom_id._compute_quantity(1, self.product_uom_id, rounding_method='HALF-UP')
+            for move in (self.move_raw_ids | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
+                if move.state in ('done', 'cancel'):
+                    continue
+                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+                    continue
+                if move.has_tracking != 'none':
+                    continue
+                vals = move._update_quantity_done(self)
+                if vals.get('to_create'):
+                    for res in vals['to_create']:
+                        move.move_line_ids.create(res)
+                if vals.get('to_write'):
+                    for move_line, res in vals['to_write']:
+                        move_line.write(res)
 
     def action_confirm(self):
         self._check_company()
@@ -861,13 +925,6 @@ class MrpProduction(models.Model):
             production.move_raw_ids._action_assign()
             production.workorder_ids._refresh_wo_lines()
         return True
-
-    def open_produce_product(self):
-        self.ensure_one()
-        if self.bom_id.type == 'phantom':
-            raise UserError(_('You cannot produce a MO with a bom kit product.'))
-        action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
-        return action
 
     def button_plan(self):
         """ Create work orders. And probably do stuff, like things. """
@@ -1122,7 +1179,7 @@ class MrpProduction(models.Model):
         self.ensure_one()
         return True
 
-    def post_inventory(self):
+    def _post_inventory(self, cancel_backorder=False):
         for order in self:
             moves_not_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done')
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
@@ -1132,23 +1189,26 @@ class MrpProduction(models.Model):
             # to get extra moves.
             moves_to_do = moves_to_do._action_done()
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done') - moves_not_to_do
+
+            finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
+            # the finish move can already be completed by the workorder.
+            if not finish_moves.quantity_done:
+                if order.product_tracking == 'serial':
+                    uom = order.product_id.uom_id
+                    finish_moves.quantity_done = order.product_uom_id._compute_quantity(order.qty_producing, uom, round='HALF-UP')
+                    finish_moves.move_line_ids.product_uom_id = uom
+                else:
+                    finish_moves.quantity_done = float_round(self.qty_producing - self.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
+                finish_moves.move_line_ids.lot_id = self.lot_producing_id
             order._cal_price(moves_to_do)
+
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            moves_to_finish = moves_to_finish._action_done()
+            moves_to_finish = moves_to_finish._action_done(cancel_backorder=cancel_backorder)
             order.workorder_ids.mapped('raw_workorder_line_ids').unlink()
             order.workorder_ids.mapped('finished_workorder_line_ids').unlink()
             order.action_assign()
             consume_move_lines = moves_to_do.mapped('move_line_ids')
-            for moveline in moves_to_finish.mapped('move_line_ids'):
-                if moveline.move_id.has_tracking != 'none' and moveline.product_id == order.product_id or moveline.lot_id in consume_move_lines.mapped('lot_produced_ids'):
-                    if any([not ml.lot_produced_ids for ml in consume_move_lines]):
-                        raise UserError(_('You can not consume without telling for which lot you consumed it'))
-                    # Link all movelines in the consumed with same lot_produced_ids false or the correct lot_produced_ids
-                    filtered_lines = consume_move_lines.filtered(lambda ml: moveline.lot_id in ml.lot_produced_ids)
-                    moveline.write({'consume_line_ids': [(6, 0, [x for x in filtered_lines.ids])]})
-                else:
-                    # Link with everything
-                    moveline.write({'consume_line_ids': [(6, 0, [x for x in consume_move_lines.ids])]})
+            order.move_finished_ids.move_line_ids.consume_line_ids = [(6, 0, consume_move_lines.ids)]
         return True
 
     @api.model
@@ -1189,13 +1249,10 @@ class MrpProduction(models.Model):
 
             production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write({
                 'raw_material_production_id': backorder_mo.id,
-                'reference': backorder_mo.name,
             })
             backorders |= backorder_mo
 
             production.name = self._get_name_backorder(production.name, production.backorder_sequence)
-            # update moves references
-            (production.move_raw_ids | production.move_finished_ids).reference = production.name
 
             for wo in backorder_mo.workorder_ids:
                 wo.duration_expected = wo._get_duration_expected(wo.workcenter_id)
@@ -1236,8 +1293,9 @@ class MrpProduction(models.Model):
             productions_to_backorder = self.env['mrp.production']
 
         self.workorder_ids.button_finish()
-        self._post_inventory()
 
+        productions_not_to_backorder._post_inventory(cancel_backorder=False)
+        productions_to_backorder._post_inventory(cancel_backorder=True)
         backorders = productions_to_backorder._generate_backorder_productions()
 
         # Moves without quantity done are not posted => set them as done instead of canceling. In
@@ -1383,7 +1441,7 @@ class MrpProduction(models.Model):
             'res_model': 'mrp.unbuild',
             'view_id': self.env.ref('mrp.mrp_unbuild_form_view_simplified').id,
             'type': 'ir.actions.act_window',
-            'context': {'default_mo_id': self.id, 
+            'context': {'default_mo_id': self.id,
                         'default_company_id': self.company_id.id,
                         'default_location_id': self.location_dest_id.id,
                         'default_location_dest_id': self.location_src_id.id,
@@ -1398,3 +1456,84 @@ class MrpProduction(models.Model):
     def _get_quantity_to_backorder(self):
         self.ensure_one()
         return max(self.product_qty - self.qty_produced, 0)
+
+    def _check_sn_uniqueness(self):
+        """ Alert the user if the serial number as already been consumed/produced """
+        if self.product_tracking == 'serial' and self.lot_producing_id:
+            sml = self.env['stock.move.line'].search_count([
+                ('lot_id', '=', self.lot_producing_id.id),
+                ('location_id.usage', '=', 'production'),
+                ('qty_done', '=', 1),
+                ('state', '=', 'done')
+            ])
+            if sml:
+                raise UserError(_('This serial number for product %s has already been produced') % self.product_id.name)
+
+        for move in self.move_finished_ids:
+            if move.has_tracking != 'serial' or move.product_id == self.product_id:
+                continue
+            for move_line in move.move_line_ids:
+                domain = [
+                    ('lot_id', '=', move_line.lot_id.id),
+                    ('qty_done', '=', 1),
+                    ('state', '=', 'done')
+                ]
+                message = _('The serial number %s used for byproduct %s has already been produced') % (move_line.lot_id.name, move_line.product_id.name)
+                co_prod_move_lines = self.move_finished_ids.move_line_ids.filtered(lambda ml: ml.product_id != self.product_id)
+                domain_unbuild = domain + [
+                    ('production_id', '=', False),
+                    ('location_dest_id.usage', '=', 'production')
+                ]
+
+                # Check presence of same sn in previous productions
+                duplicates = self.env['stock.move.line'].search_count(domain + [
+                    ('location_id.usage', '=', 'production')
+                ])
+                if duplicates:
+                    # Maybe some move lines have been compensated by unbuild
+                    duplicates_unbuild = self.env['stock.move.line'].search_count(domain_unbuild)
+                    if not (duplicates_unbuild and duplicates - duplicates_unbuild == 0):
+                        raise UserError(message)
+                # Check presence of same sn in current production
+                duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == move_line.lot_id) - move_line
+                if duplicates:
+                    raise UserError(message)
+
+        for move in self.move_raw_ids:
+            if move.has_tracking != 'serial':
+                continue
+            for move_line in move.move_line_ids:
+                if float_is_zero(move_line.qty_done, precision_rounding=move_line.product_uom_id.rounding):
+                    continue
+                domain = [
+                    ('lot_id', '=', move_line.lot_id.id),
+                    ('qty_done', '=', 1),
+                    ('state', '=', 'done')
+                ]
+                message = _('The serial number %s used for component %s has already been consumed') % (move_line.lot_id.name, move_line.product_id.name)
+                co_prod_move_lines = self.move_raw_ids.move_line_ids
+                domain_unbuild = domain + [
+                    ('production_id', '=', False),
+                    ('location_id.usage', '=', 'production')
+                ]
+
+                # Check presence of same sn in previous productions
+                duplicates = self.env['stock.move.line'].search_count(domain + [
+                    ('location_dest_id.usage', '=', 'production')
+                ])
+                if duplicates:
+                    # Maybe some move lines have been compensated by unbuild
+                    duplicates_unbuild = self.env['stock.move.line'].search_count(domain_unbuild)
+                    if not (duplicates_unbuild and duplicates - duplicates_unbuild == 0):
+                        raise UserError(message)
+                # Check presence of same sn in current production
+                duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == move_line.lot_id) - move_line
+                if duplicates:
+                    raise UserError(message)
+
+    def _strict_consumption_check(self):
+        if self.consumption == 'strict':
+            for move in self.move_raw_ids:
+                rounding = move.product_uom.rounding
+                if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=rounding) != 0:
+                    raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % move.product_id.name)

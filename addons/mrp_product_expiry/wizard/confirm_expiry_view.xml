@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='description']" position="after">
                 <field name="picking_ids" invisible="1"/>
-                <field name="produce_id" invisible="1"/>
+                <field name="production_ids" invisible="1"/>
                 <field name="workorder_id" invisible="1"/>
             </xpath>
             <xpath expr="//button[@name='process']" position="attributes">
@@ -17,19 +17,18 @@
                 <attribute name="attrs">{'invisible': [('picking_ids', '=', [])]}</attribute>
             </xpath>
             <xpath expr="//button[@special='cancel']" position="attributes">
-                <attribute name="attrs">{'invisible': [('produce_id', '!=', False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('production_ids', '!=', [])]}</attribute>
             </xpath>
             <xpath expr="//button[@name='process']" position="after">
                 <!-- From Produce Product wizard -->
                 <button name="confirm_produce"
                     string="Confirm"
                     type="object"
-                    attrs="{'invisible': [('produce_id', '=', False)]}"
+                    attrs="{'invisible': [('production_ids', '=', [])]}"
                     class="btn-primary"/>
-                <button name="return_to_produce_wizard"
+                <button special="cancel"
                     string="Discard"
-                    type="object"
-                    attrs="{'invisible': [('produce_id', '=', False)]}"
+                    attrs="{'invisible': [('production_ids', '=', [])]}"
                     class="btn-secondary"/>
                 <!-- From a Workorder -->
                 <button name="confirm_workorder"
