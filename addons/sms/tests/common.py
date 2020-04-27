@@ -70,7 +70,7 @@ class MockSMS(common.BaseCase):
             self.assertTrue(bool(sent_sms), 'Number %s not found in %s' % (number, repr([s['number'] for s in self._sms])))
             self.assertEqual(sent_sms['body'], content)
 
-    def assertSMSCanceled(self, partner, number, error_code, content=None):
+    def assertSMSCanceled(self, partner, number, failure_type, content=None):
         """ Check canceled SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
         if number is None and partner:
@@ -81,11 +81,11 @@ class MockSMS(common.BaseCase):
             ('sms_status', '=', 'cancel')
         ])
         self.assertTrue(sms, 'SMS: not found canceled SMS for %s (number: %s)' % (partner, number))
-        self.assertEqual(sms.error_code, error_code)
+        self.assertEqual(sms.failure_type, failure_type)
         if content is not None:
             self.assertEqual(sms.body, content)
 
-    def assertSMSFailed(self, partner, number, error_code, content=None):
+    def assertSMSFailed(self, partner, number, failure_type, content=None):
         """ Check failed SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
         if number is None and partner:
@@ -96,7 +96,7 @@ class MockSMS(common.BaseCase):
             ('sms_status', '=', 'error')
         ])
         self.assertTrue(sms, 'SMS: not found failed SMS for %s (number: %s)' % (partner, number))
-        self.assertEqual(sms.error_code, error_code)
+        self.assertEqual(sms.failure_type, failure_type)
         if content is not None:
             self.assertEqual(sms.body, content)
 

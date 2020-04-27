@@ -36,7 +36,7 @@ class SMSComposer(models.TransientModel):
             'sms_code': trace_code,
         }
         if sms_values['sms_status'] == 'error':
-            if sms_values['error_code'] == 'sms_number_format':
+            if sms_values['failure_type'] == 'sms_number_format':
                 trace_values['sent'] = fields.Datetime.now()
                 trace_values['bounced'] = fields.Datetime.now()
             else:
