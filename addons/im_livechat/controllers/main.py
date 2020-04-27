@@ -3,7 +3,7 @@
 
 import base64
 
-from odoo import http, _
+from odoo import http, _, api, models, SUPERUSER_ID
 from odoo.http import request
 from odoo.addons.base.ir.ir_qweb import AssetsBundle
 from odoo.addons.web.controllers.main import binary_content
@@ -118,3 +118,24 @@ class LivechatController(http.Controller):
         if channel:
             channel._send_history_message(pid, page_history)
         return True
+
+class Http(models.AbstractModel):
+    _inherit = 'ir.http'
+    @classmethod
+    def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',
+                       unique=False, filename=None, filename_field='datas_fname', download=False,
+                       mimetype=None, default_mimetype='application/octet-stream',
+                       access_token=None, env=None):
+        env = env or request.env
+        obj = None
+        if xmlid:
+            obj = env.ref(xmlid, False)
+        elif id and model in env:
+            obj = env[model].browse(int(id))
+        if obj and 'user_ids' in obj._fields and env['im_livechat.channel'].search([('user_ids', 'in', obj.sudo().user_ids.ids)]):
+            env = env(user=SUPERUSER_ID)
+        return super(Http, cls).binary_content(
+            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype,
+            default_mimetype=default_mimetype, access_token=access_token, env=env)
+
