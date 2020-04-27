@@ -241,7 +241,7 @@ class EventEvent(models.Model):
             seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
             event.seats_expected = seats_expected
 
-    @api.depends('date_tz', 'start_sale_date', 'date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available')
+    @api.depends('date_tz', 'start_sale_date', 'date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available', 'event_ticket_ids.sale_available_soon')
     def _compute_event_registrations_open(self):
         """ Compute whether people may take registrations for this event
 
@@ -258,7 +258,7 @@ class EventEvent(models.Model):
             event.event_registrations_open = (event.start_sale_date <= current_datetime.date() if event.start_sale_date else True) and \
                 (date_end_tz >= current_datetime if date_end_tz else True) and \
                 (not event.seats_limited or event.seats_available) and \
-                (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
+                (not event.event_ticket_ids or any(ticket.sale_available or ticket.sale_available_soon for ticket in event.event_ticket_ids))
 
     @api.depends('event_ticket_ids.start_sale_date')
     def _compute_start_sale_date(self):

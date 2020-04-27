@@ -113,6 +113,13 @@ class EventTicket(models.Model):
             ticket.sale_available = False
         super(EventTicket, self - inactive_product_tickets)._compute_sale_available()
 
+    @api.depends('product_id.active')
+    def _compute_sale_available_soon(self):
+        inactive_product_tickets = self.filtered(lambda ticket: not ticket.product_id.active)
+        for ticket in inactive_product_tickets:
+            ticket.sale_available_soon = False
+        super(EventTicket, self - inactive_product_tickets)._compute_sale_available_soon()
+
     def _get_ticket_multiline_description(self):
         """ If people set a description on their product it has more priority
         than the ticket name itself for the SO description. """

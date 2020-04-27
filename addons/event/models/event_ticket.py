@@ -66,6 +66,7 @@ class EventTicket(models.Model):
     is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
     is_launched = fields.Boolean(string='Is Launched', compute='_compute_is_launched')
     sale_available = fields.Boolean(string='Is Available', compute='_compute_sale_available', compute_sudo=True)
+    sale_available_soon = fields.Boolean(string='Is Available Soon', compute='_compute_sale_available_soon', compute_sudo=True)
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
     # seats
     seats_reserved = fields.Integer(string='Reserved Seats', compute='_compute_seats', store=True)
@@ -100,6 +101,14 @@ class EventTicket(models.Model):
                 ticket.sale_available = False
             else:
                 ticket.sale_available = True
+
+    @api.depends('is_expired', 'is_launched', 'seats_available', 'seats_max')
+    def _compute_sale_available_soon(self):
+        for ticket in self:
+            if ticket.is_launched or ticket.seats_available <= 0 and ticket.seats_max > 0:
+                ticket.sale_available_soon = False
+            else:
+                ticket.sale_available_soon = True
 
     @api.depends('seats_max', 'registration_ids.state')
     def _compute_seats(self):
