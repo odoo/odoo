@@ -314,26 +314,26 @@ class SendSMS(models.TransientModel):
             sanitized = recipients['sanitized']
             if sanitized and record.id in blacklist_ids:
                 state = 'canceled'
-                error_code = 'sms_blacklist'
+                failure_type = 'sms_blacklist'
             elif sanitized and record.id in optout_ids:
                 state = 'canceled'
-                error_code = 'sms_optout'
+                failure_type = 'sms_optout'
             elif sanitized and record.id in done_ids:
                 state = 'canceled'
-                error_code = 'sms_duplicate'
+                failure_type = 'sms_duplicate'
             elif not sanitized:
                 state = 'canceled'
-                error_code = 'sms_number_format' if recipients['number'] else 'sms_number_missing'
+                failure_type = 'sms_number_format' if recipients['number'] else 'sms_number_missing'
             else:
                 state = 'outgoing'
-                error_code = ''
+                failure_type = ''
 
             result[record.id] = {
                 'body': all_bodies[record.id],
                 'partner_id': recipients['partner'].id,
                 'number': sanitized if sanitized else recipients['number'],
                 'state': state,
-                'error_code': error_code,
+                'failure_type': failure_type,
             }
         return result
 
