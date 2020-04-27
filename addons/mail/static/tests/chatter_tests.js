@@ -5,9 +5,11 @@ var Composers = require('mail.composer');
 
 var Bus = require('web.Bus');
 var concurrency = require('web.concurrency');
+var fieldRegistry = require("web.field_registry");
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
+var FormRenderer = require('web.FormRenderer');
 
 var BasicComposer = Composers.BasicComposer;
 
@@ -284,6 +286,64 @@ QUnit.test('chatter is not rendered in mode === create', function (assert) {
         "chatter should be opened");
 
     form.destroy();
+});
+
+QUnit.test("chatter is always available even in async rendering", function (assert) {
+    assert.expect(3);
+    var done = assert.async();
+
+    var FieldChar = fieldRegistry.get('char');
+    fieldRegistry.add('asyncwidget', FieldChar.extend({
+        willStart: function () {
+            return concurrency.delay(0);
+        },
+    }));
+    var recordEdited = false;
+
+    testUtils.patch(FormRenderer, {
+        _updateView: function ($newContent) {
+            if (recordEdited) {
+                assert.strictEqual($newContent.filter(".oe_chatter").length, 1, "chatter should be displayed3");
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    createAsyncView({
+        View: FormView,
+        model: "partner",
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo" widget="asyncwidget"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        intercepts: {
+            get_messages: function (event) {
+                event.stopPropagation();
+                event.data.callback($.when([]));
+            },
+            get_bus: function (event) {
+                event.stopPropagation();
+                event.data.callback(new Bus());
+            },
+        },
+    }).then(function (form) {
+        assert.strictEqual(form.$(".oe_chatter").length, 1, "chatter should be displayed1");
+        recordEdited = true;
+        form.$buttons.find(".o_form_button_edit").click();
+        return concurrency.delay(1).then(function () {
+            assert.strictEqual(form.$(".oe_chatter").length, 1, "chatter should be displayed2");
+            testUtils.unpatch(FormRenderer);
+            form.destroy();
+            delete fieldRegistry.map.asyncwidget;
+            done();
+        });
+    });
 });
 
 QUnit.test('chatter rendering inside the sheet', function (assert) {

@@ -44,24 +44,17 @@ FormRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Overrides the function that renders the nodes to return the chatter's $el
-     * for the 'oe_chatter' div node.
-     * Returns an empty div instead of the chatter's $el in create mode.
+     * Overrides the function that renders the nodes to process the 'oe_chatter'
+     * div node: we instantiate (or update if it already exists) the chatter,
+     * and we return a fake node that we will use as a hook to insert the
+     * chatter into the DOM when the whole view will be rendered.
+     * In create mode returns an empty div instead of the fake hook node.
      *
      * @override
      * @private
      */
     _renderNode: function (node) {
         if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
-            if (this.chatter) {
-                // Detach the chatter before updating the $el.
-                // This is important because if the view is now in create mode
-                // (edit mode with no res_id), the chatter will be removed from
-                // the DOM, and its handlers will be unbound. By detaching it
-                // beforehand, we ensure to keep its handlers alive so that if
-                // it is re-appended later, everything will still work properly
-                this.chatter.$el.detach();
-            }
             if (this.mode === 'edit' && !this.state.data.id) {
                 // there is no chatter in create mode
                 var $div = $('<div>');
@@ -77,10 +70,25 @@ FormRenderer.include({
                 } else {
                     this.chatter.update(this.state);
                 }
-                return this.chatter.$el;
+                return $('<div>', { class: 'oe_chatter', id: 'temp_chatter_hook' });
             }
         } else {
             return this._super.apply(this, arguments);
+        }
+    },
+    /**
+     * @override
+     */
+    _updateView: function () {
+        // detach the chatter before calling _super, as we'll empty the html,
+        // which would remove all handlers on the chatter
+        if (this.chatter) {
+            this.chatter.$el.detach();
+        }
+        this._super.apply(this, arguments);
+        // replace our hook by the chatter's el once the view has been updated
+        if (this.chatter && this.state.data.id) {
+            this.$('#temp_chatter_hook').replaceWith(this.chatter.$el);
         }
     },
 });
