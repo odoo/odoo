@@ -94,8 +94,8 @@ class MassSMSCase(SMSCase):
                         self.assertSMS(partner, number, 'sent', content=content)
                 elif status in state_mapping:
                     sms_state = state_mapping[status]
-                    error_code = recipient_info['failure_type'] if status in ('error', 'cancel', 'bounce') else None
-                    self.assertSMS(partner, number, sms_state, error_code=error_code, content=content)
+                    failure_type = recipient_info['failure_type'] if status in ('error', 'cancel', 'bounce') else None
+                    self.assertSMS(partner, number, sms_state, failure_type=failure_type, content=content)
                 else:
                     raise NotImplementedError()
 

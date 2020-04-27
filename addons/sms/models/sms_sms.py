@@ -33,7 +33,7 @@ class SmsSms(models.Model):
         ('error', 'Error'),
         ('canceled', 'Canceled')
     ], 'SMS Status', readonly=True, copy=False, default='outgoing', required=True)
-    error_code = fields.Selection([
+    failure_type = fields.Selection([
         ('sms_number_missing', 'Missing Number'),
         ('sms_number_format', 'Wrong Number Format'),
         ('sms_credit', 'Insufficient Credit'),
@@ -154,7 +154,7 @@ class SmsSms(models.Model):
                 if state != 'success' and not delete_all:
                     self.env['sms.sms'].sudo().browse(sms_ids).write({
                         'state': 'error',
-                        'error_code': self.IAP_TO_SMS_STATE[state],
+                        'failure_type': self.IAP_TO_SMS_STATE[state],
                     })
                 notifications = self.env['mail.notification'].sudo().search([
                     ('notification_type', '=', 'sms'),
