@@ -18,7 +18,6 @@
     width: 40px;
     float: right;
     margin-top: -33px;
-
     * {
         outline: none!important;
         box-shadow: none!important;
@@ -38,4 +37,16 @@
 
 .o_mail_emojis_dropdown_textarea{
     margin-top: -40px;
+}
+
+
+// XXS form view specific rules
+
+// position fix for the emoji dropdown
+@include media-breakpoint-down(sm) {
+    .o_form_view.o_xxs_form_view {
+        .o_mail_emojis_dropdown {
+            margin-top: -48px;
+        }
+    }
 }
