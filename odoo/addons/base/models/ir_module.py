@@ -983,13 +983,6 @@ class Module(models.Model):
                 'parent_field': 'parent_id',
                 'values': list(values_range.values()),
             }
-
-# =======
-#                 'values': self.env['ir.module.category'].search_read(
-#                     [('id', 'in', categories.ids)],
-#                     ['display_name', 'parent_id'], order=kwargs.get('order', None)),
-#             }
-# >>>>>>> [IMP] base,web,document : sort the filter items in searchpanel.
         return super(Module, self).search_panel_select_range(field_name, **kwargs)
 
 

@@ -465,6 +465,7 @@ class Base(models.AbstractModel):
         :param limit: integer, maximal number of values to fetch. Default is None.
         :param search_domain: base domain of search. Default is [].
                         with parents if hierarchize is set)
+        :param order: comodel field to sort comodel records
         :return: {
             'parent_field': parent field on the comodel of field, or False
             'values': array of dictionaries containing some info on the records
@@ -567,10 +568,6 @@ class Base(models.AbstractModel):
             self._search_panel_global_counters(field_range, parent_name)
         
         order = kwargs.get('order', None)
-        # return {
-        #     'parent_field': parent_name,
-        #     'values': Comodel.with_context(hierarchical_naming=False).search_read([], fields, limit=SEARCH_PANEL_LIMIT, order=order),
-        # }
         return {
             'parent_field': parent_name,
             'values': list(field_range.values()),
@@ -633,6 +630,7 @@ class Base(models.AbstractModel):
         group_by = kwargs.get('group_by')
         order = kwargs.get('order', None)
         limit = kwargs.get('limit')
+        order = kwargs.get('order', False)
         if group_by:
             group_by_field = Comodel._fields[group_by]
 
