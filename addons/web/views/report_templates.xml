@@ -411,7 +411,7 @@
     </template>
 
     <template id="styles_company_report">
-        <t t-foreach="company_ids" t-as="company">
+        <t t-foreach="company_ids" t-as="company" t-translation="off">
             <t t-set="font" t-value="company.font or 'Lato'" />
             <t t-set="primary" t-value="company.primary_color or 'black'" />
             <t t-set="secondary" t-value="company.secondary_color or 'black'" />
