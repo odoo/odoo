@@ -308,10 +308,11 @@ var py = {};
                     }));
                 } else if (string_pattern.test(token)) {
                     var m = string_pattern.exec(token);
-                    var value = (m[3] !== undefined ? m[3] : m[5]);
                     tokens.push(create(symbols['(string)'], {
-                        unicode: !!(m[2] || m[4]),
-                        value: value
+                        value: PY_decode_string_literal(
+                            m[3] !== undefined ? m[3] : m[5],
+                            !!(m[2] || m[4])
+                        )
                     }));
                 } else if (token in symbols) {
                     var symbol;
@@ -1350,8 +1351,7 @@ var py = {};
             }
             return PY_ensurepy(val, expr.value);
         case '(string)':
-            return py.str.fromJSON(PY_decode_string_literal(
-                expr.value, expr.unicode));
+            return py.str.fromJSON(expr.value);
         case '(number)':
             return py.float.fromJSON(expr.value);
         case '(constant)':

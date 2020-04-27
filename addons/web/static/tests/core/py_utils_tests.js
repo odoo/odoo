@@ -5,6 +5,7 @@ var Context = require('web.Context');
 var pyUtils = require('web.py_utils');
 var time = require('web.time');
 
+const r = String.raw;
 
 QUnit.assert.checkAST = function (expr, message) {
     var ast = pyUtils._getPyJSAST(expr);
@@ -1273,6 +1274,22 @@ QUnit.module('core', function () {
 
         var expr = `[("type", "=", "in"), ("day", "<=", time.strftime("%Y-%m-%d")), ("day", ">", (context_today() - datetime.timedelta(days = 15)).strftime("%Y-%m-%d"))]`;
         assert.checkAST(expr);
+    });
+
+    QUnit.test('escaping support', function (assert) {
+        assert.expect(4);
+        assert.strictEqual(py.eval(r`"\x61"`), "a", "hex escapes");
+        assert.strictEqual(py.eval(r`"\\abc"`), r`\abc`, "escaped backslash");
+        assert.checkAST(r`"\\abc"`, "escaped backslash AST check");
+
+        const {_getPyJSAST, _formatAST} = pyUtils;
+        const a = r`'foo\\abc"\''`;
+        const b = _formatAST(_getPyJSAST(_formatAST(_getPyJSAST(a))));
+        // Our repr uses JSON.stringify which always uses double quotes,
+        // whereas Python's repr is single-quote-biased: strings are repr'd
+        // using single quote delimiters *unless* they contain single quotes and
+        // no double quotes, then they're delimited with double quotes.
+        assert.strictEqual(b, r`"foo\\abc\"'"`);
     });
 
     QUnit.module('pyutils (_normalizeDomain)');
