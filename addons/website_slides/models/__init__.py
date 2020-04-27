@@ -3,6 +3,7 @@
 
 from . import ir_http
 from . import gamification_challenge
+from . import gamification_karma_tracking
 from . import slide_slide
 from . import slide_question
 from . import slide_channel

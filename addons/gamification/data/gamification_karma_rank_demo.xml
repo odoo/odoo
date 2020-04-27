@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data noupdate="1">
+    <record id="karma_tracking_user_demo_creation_karma" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="new_value">0</field>
+        <field name="reason">User creation</field>
+    </record>
     <!--Ranks-->
     <record id="rank_student" model="gamification.karma.rank">
         <field name="description_motivational" type="html">

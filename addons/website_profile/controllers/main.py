@@ -290,7 +290,7 @@ class WebsiteProfile(http.Controller):
     def _get_user_tracking_karma_gain_position(self, domain, user_ids, group_by):
         """ Helper method computing boundaries to give to _get_tracking_karma_gain_position.
         See that method for more details. """
-        to_date = fields.Date.today()
+        to_date = fields.Date.today() + relativedelta(days=1, microseconds=-1)
         if group_by == 'week':
             from_date = to_date - relativedelta(weeks=1)
         elif group_by == 'month':

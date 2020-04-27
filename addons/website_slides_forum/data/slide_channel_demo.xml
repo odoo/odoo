@@ -24,7 +24,22 @@
         <field name="content" type="html"><p></p></field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=31)"/>
     </record>
+    <!-- Removing karma.tracking from odoobot as self.env.user is used in create -->
+    <function model="gamification.karma.tracking" name="unlink">
+        <value model="gamification.karma.tracking" search="[
+                    ('user_id', 'in', [ref('base.user_root')]),
+                    ('originated_by_post_id', 'in', [ref('website_slides_forum.forum_post_O_0')])
+                ]"/>
+    </function>
+    <!-- Generating karma.tracking to user_admin as self.env.user is used in create -->
+    <function model="res.users" name="add_karma">
+        <value model="res.users" eval="[ref('base.user_admin')]"/>
+        <value eval="2"/>
+        <value model="forum.post" eval="obj().env.ref('website_slides_forum.forum_post_O_0')"/>
+        <value>Asking a question</value>
+    </function>
     <record id="forum_post_O_0_answer_0" model="forum.post">
+        <field name="name">Re: What is the best fertilizer for tulips ?</field>
         <field name="forum_id" ref="forum_forum_demo_channel_0"/>
         <field name="content" type="html"><p>You can use loam for tulips.</p></field>
         <field name="parent_id" ref="forum_post_O_0"/>
@@ -39,5 +54,19 @@
         <field name="content" type="html"><p>I have an oak in my garden since 1997 and I was wondering about the growth of this type of tree ?
             Is there a way to accelerate the process ?</p></field>
     </record>
+    <!-- Removing karma.tracking from odoobot as self.env.user is used in create -->
+    <function model="gamification.karma.tracking" name="unlink">
+        <value model="gamification.karma.tracking" search="[
+                    ('user_id', 'in', [ref('base.user_root')]),
+                    ('originated_by_post_id', 'in', [ref('website_slides_forum.forum_post_2_0')])
+                ]"/>
+    </function>
+    <!-- Generating karma.tracking to user_admin as self.env.user is used in create -->
+    <function model="res.users" name="add_karma">
+        <value model="res.users" eval="[ref('base.user_demo')]"/>
+        <value eval="2"/>
+        <value model="forum.post" eval="obj().env.ref('website_slides_forum.forum_post_2_0')"/>
+        <value>Asking a question</value>
+    </function>
 
 </data></odoo>

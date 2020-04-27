@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="gamification_karma_tracking_view_form" model="ir.ui.view">
+        <field name="name">gamification.karma.tracking.view.form</field>
+        <field name="model">gamification.karma.tracking</field>
+        <field name="inherit_id" ref="gamification.gamification_karma_tracking_view_form"/>
+        <field name="arch" type="xml">
+            <field name="new_value" position="after">
+                <field name="originated_by_post_id" attrs="{'invisible': [('originated_by_post_id', '==', False)]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

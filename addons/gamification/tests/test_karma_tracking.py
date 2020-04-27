@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
@@ -14,6 +13,14 @@ class TestKarmaTrackingCommon(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
+        cls.test_date = fields.Datetime.now() + relativedelta(month=4, day=1)
+        cls.first_day_and_time_of_test_date_month = (cls.test_date + relativedelta(day=1)).strftime('%Y-%m-%d')
+        cls.first_day_and_time_of_test_date_next_month = ((cls.test_date + relativedelta(day=1)) + relativedelta(months=1)).strftime('%Y-%m-%d')
+
+        cls.patcher = patch('odoo.addons.gamification.models.gamification_karma_tracking.fields.Date', wraps=fields.Datetime)
+        cls.mock_datetime = cls.patcher.start()
+        cls.mock_datetime.today.return_value = cls.test_date - relativedelta(minutes=1)
+
         super(TestKarmaTrackingCommon, cls).setUpClass()
         cls.test_user = mail_new_test_user(
             cls.env, login='test',
@@ -28,8 +35,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
             groups='base.group_user',
         )
         cls.env['gamification.karma.tracking'].search([]).unlink()
-
-        cls.test_date = fields.Date.today() + relativedelta(month=4, day=1)
+        cls.patcher.stop()
 
     @classmethod
     def _create_trackings(cls, user, karma, steps, track_date, days_delta=1):
@@ -41,7 +47,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
                 'old_value': old_value,
                 'new_value': new_value,
                 'consolidated': False,
-                'tracking_date': fields.Date.to_string(track_date)
+                'tracking_date': fields.Datetime.to_string(track_date)
             }])
             old_value = new_value
             track_date = track_date + relativedelta(days=days_delta)
@@ -78,20 +84,22 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self.assertEqual(len(results), 0)
 
     def test_consolidation_cron(self):
-        self.patcher = patch('odoo.addons.gamification.models.gamification_karma_tracking.fields.Date', wraps=fields.Date)
+        Tracking = self.env['gamification.karma.tracking']
+        self.patcher = patch('odoo.addons.gamification.models.gamification_karma_tracking.fields.Date', wraps=fields.Datetime)
         self.mock_datetime = self.patcher.start()
-        self.mock_datetime.today.return_value = date(self.test_date.year, self.test_date.month + 1, self.test_date.day)
+        self.mock_datetime.today.return_value = self.test_date + relativedelta(months=2)
 
         self._create_trackings(self.test_user, 20, 2, self.test_date, days_delta=30)
         self._create_trackings(self.test_user_2, 10, 20, self.test_date, days_delta=2)
-        self.env['gamification.karma.tracking']._consolidate_last_month()
+        Tracking._consolidate_old_karma_tracking()
         consolidated = self.env['gamification.karma.tracking'].search([
             ('user_id', 'in', (self.test_user | self.test_user_2).ids),
             ('consolidated', '=', True),
-            ('tracking_date', '=', self.test_date)
+            ('tracking_date', '>=', self.first_day_and_time_of_test_date_month),
+            ('tracking_date', '<', self.first_day_and_time_of_test_date_next_month)
         ])
         self.assertEqual(len(consolidated), 2)
-        unconsolidated = self.env['gamification.karma.tracking'].search([
+        unconsolidated = Tracking.search([
             ('user_id', 'in', (self.test_user | self.test_user_2).ids),
             ('consolidated', '=', False),
         ])
@@ -106,11 +114,12 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self._create_trackings(self.test_user, 20, 2, self.test_date, days_delta=30)
         self._create_trackings(self.test_user_2, 10, 20, self.test_date, days_delta=2)
 
-        Tracking._process_consolidate(self.test_date)
+        Tracking._process_consolidate_monthly_data(self.test_date)
         consolidated = Tracking.search([
             ('user_id', '=', self.test_user_2.id),
             ('consolidated', '=', True),
-            ('tracking_date', '=', self.test_date)
+            ('tracking_date', '>=', self.first_day_and_time_of_test_date_month),
+            ('tracking_date', '<', self.first_day_and_time_of_test_date_next_month)
         ])
         self.assertEqual(len(consolidated), 1)
         self.assertEqual(consolidated.old_value, base_test_user_2_karma)  # 15 2-days span, from 1 to 29 included = 15 steps -> 150 karma
@@ -124,7 +133,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self.assertEqual(remaining[0].tracking_date, self.test_date + relativedelta(months=1, day=9))  # ordering: last first
         self.assertEqual(remaining[-1].tracking_date, self.test_date + relativedelta(months=1, day=1))
 
-        Tracking._process_consolidate(self.test_date + relativedelta(months=1))
+        Tracking._process_consolidate_monthly_data(self.test_date + relativedelta(months=1))
         consolidated = Tracking.search([
             ('user_id', '=', self.test_user_2.id),
             ('consolidated', '=', True),
@@ -132,7 +141,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self.assertEqual(len(consolidated), 2)
         self.assertEqual(consolidated[0].new_value, base_test_user_2_karma + 200)  # 5 remaining 2-days span, from 1 to 9 included = 5 steps -> 50 karma
         self.assertEqual(consolidated[0].old_value, base_test_user_2_karma + 150)  # coming from previous iteration
-        self.assertEqual(consolidated[0].tracking_date, self.test_date + relativedelta(months=1))  # tracking set at beginning of month
+        self.assertEqual(consolidated[0].tracking_date, self.test_date + relativedelta(days=38))  # tracking set at last included tracking tracking_date (2*(20-1)) as first record tracking_date is self.test_date
         self.assertEqual(consolidated[-1].new_value, base_test_user_2_karma + 150)  # previously created one still present
         self.assertEqual(consolidated[-1].old_value, base_test_user_2_karma)  # previously created one still present
 
@@ -162,11 +171,10 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         with self.assertRaises(exceptions.AccessError):
             user.read(['karma_tracking_ids'])
 
-        user.write({'karma': 60})
-        user.add_karma(10)
+        user.add_karma(38)
         self.assertEqual(user.karma, 70)
         trackings = self.env['gamification.karma.tracking'].sudo().search([('user_id', '=', user.id)])
-        self.assertEqual(len(trackings), 3)  # create + write + add_karma
+        self.assertEqual(len(trackings), 2)  # create + add_karma
 
     def test_user_tracking(self):
         self.test_user.write({'groups_id': [
@@ -182,16 +190,13 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self.assertEqual(user.karma_tracking_ids.old_value, 0)
         self.assertEqual(user.karma_tracking_ids.new_value, 32)
 
-        user.write({'karma': 60})
-        user.add_karma(10)
+        user.add_karma(38)
         self.assertEqual(user.karma, 70)
-        self.assertEqual(len(user.karma_tracking_ids), 3)
-        self.assertEqual(user.karma_tracking_ids[2].old_value, 60)
-        self.assertEqual(user.karma_tracking_ids[2].new_value, 70)
-        self.assertEqual(user.karma_tracking_ids[1].old_value, 32)
-        self.assertEqual(user.karma_tracking_ids[1].new_value, 60)
+        self.assertEqual(len(user.karma_tracking_ids), 2)
         self.assertEqual(user.karma_tracking_ids[0].old_value, 0)
         self.assertEqual(user.karma_tracking_ids[0].new_value, 32)
+        self.assertEqual(user.karma_tracking_ids[1].old_value, 32)
+        self.assertEqual(user.karma_tracking_ids[1].new_value, 70)
 
 
 class TestComputeRankCommon(common.TransactionCase):

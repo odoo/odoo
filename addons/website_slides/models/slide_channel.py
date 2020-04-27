@@ -71,20 +71,24 @@ class ChannelUsersRelation(models.Model):
 
     def _set_as_completed(self):
         """ Set record as completed and compute karma gains """
-        partner_karma = dict.fromkeys(self.mapped('partner_id').ids, 0)
+        partner_karma = dict.fromkeys(self.mapped('partner_id').ids, defaultdict(lambda: {'channel': {}, 'karma': 0}))
         for record in self:
             record.completed = True
-            partner_karma[record.partner_id.id] += record.channel_id.karma_gen_channel_finish
+            if record.channel_id.id not in partner_karma[record.partner_id.id]:
+                partner_karma[record.partner_id.id][record.channel_id.id]['channel'] = record.channel_id
+            partner_karma[record.partner_id.id][record.channel_id.id]['karma'] += record.channel_id.karma_gen_channel_finish
 
         partner_karma = {
-            partner_id: karma_to_add
-            for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0
+            partner_id: channel_id
+            for partner_id, channel_id in partner_karma.items() if len(channel_id) > 0
         }
 
         if partner_karma:
             users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
             for user in users:
-                users.add_karma(partner_karma[user.partner_id.id])
+                for channel_id, karma_info in partner_karma[user.partner_id.id].items():
+                    if karma_info['karma'] != 0:
+                        user.add_karma(karma_info['karma'], karma_info['channel'], _('Course finished'))
 
     def _send_completed_mail(self):
         """ Send an email to the attendee when he has successfully completed a course. """
@@ -607,7 +611,7 @@ class Channel(models.Model):
         Warning: this count will not be accurate if the configuration has been
         modified after the completion of a course!
         """
-        total_karma = defaultdict(int)
+        total_karma = defaultdict(lambda: [])
 
         slide_completed = self.env['slide.slide.partner'].sudo().search([
             ('partner_id', 'in', partner_ids),
@@ -624,7 +628,7 @@ class Channel(models.Model):
                      slide.quiz_third_attempt_reward,
                      slide.quiz_fourth_attempt_reward]
             attempts = min(partner_slide.quiz_attempts_count - 1, 3)
-            total_karma[partner_slide.partner_id.id] += gains[attempts]
+            total_karma[partner_slide.partner_id.id].append({'karma': gains[attempts], 'channel_id': slide.channel_id})
 
         channel_completed = self.env['slide.channel.partner'].sudo().search([
             ('partner_id', 'in', partner_ids),
@@ -633,7 +637,7 @@ class Channel(models.Model):
         ])
         for partner_channel in channel_completed:
             channel = partner_channel.channel_id
-            total_karma[partner_channel.partner_id.id] += channel.karma_gen_channel_finish
+            total_karma[partner_channel.partner_id.id].append({'karma': channel.karma_gen_channel_finish, 'channel_id': channel})
 
         return total_karma
 
@@ -649,8 +653,8 @@ class Channel(models.Model):
             ('partner_id', 'in', list(earned_karma)),
         ])
         for user in users:
-            if earned_karma[user.partner_id.id]:
-                user.add_karma(-1 * earned_karma[user.partner_id.id])
+            for entry in earned_karma[user.partner_id.id]:
+                user.add_karma(-1 * entry['karma'], entry['channel_id'], _('Membership removed'))
 
         removed_channel_partner_domain = []
         for channel in self:

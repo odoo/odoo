@@ -7,6 +7,8 @@
             <search string="Search Trackings">
                 <field name="user_id"/>
                 <field name="tracking_date"/>
+                <field name="origin_type"/>
+                <field name="originated_by"/>
                 <filter string="Consolidated" name="filter_consolidated"
                     domain="[('consolidated', '=', True)]"/>
                 <group string="Group By" expand="1">
@@ -21,12 +23,16 @@
         <field name="name">gamification.karma.tracking.view.tree</field>
         <field name="model">gamification.karma.tracking</field>
         <field name="arch" type="xml">
-            <tree string="Trackings">
-                <field name="user_id"/>
+            <tree string="Trackings" editable="top" default_order="tracking_date desc, id desc">
+                <field name="user_id" attrs="{'readonly': [('create_date', '!=', False)]}"/>
                 <field name="tracking_date"/>
                 <field name="old_value"/>
-                <field name="new_value"/>
-                <field name="consolidated"/>
+                <field name="new_value" attrs="{'readonly': [('create_date', '!=', False)]}"/>
+                <field name="origin_type"/>
+                <field name="originated_by"/>
+                <field name="reason"/>
+                <field name="consolidated" readonly="True"/>
+                <field name="create_date" invisible="True"/>
             </tree>
         </field>
     </record>
@@ -38,11 +44,13 @@
             <form string="Tracking">
                 <sheet>
                     <group>
-                        <field name="user_id"/>
+                        <field name="user_id" attrs="{'readonly': [('create_date', '!=', False)]}"/>
                         <field name="tracking_date"/>
                         <field name="old_value"/>
-                        <field name="new_value"/>
+                        <field name="new_value" attrs="{'readonly': [('create_date', '!=', False)]}"/>
+                        <field name="reason"/>
                         <field name="consolidated"/>
+                        <field name="create_date" invisible="True"/>
                     </group>
                 </sheet>
             </form>

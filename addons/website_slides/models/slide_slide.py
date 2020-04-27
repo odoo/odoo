@@ -600,26 +600,27 @@ class Slide(models.Model):
         channel = slide_id.channel_id
         karma_to_add = 0
 
+        reason_lesson_upvoted = _('Lesson upvoted')
+        reason_lesson_downvoted = _('Lesson downvoted')
+
         for slide_partner in slide_partners:
             if upvote:
-                new_vote = 0 if slide_partner.vote == -1 else 1
                 if slide_partner.vote != 1:
-                    karma_to_add += channel.karma_gen_slide_vote
+                    self.env.user.add_karma(channel.karma_gen_slide_vote, slide_partner.channel_id,
+                                            reason_lesson_upvoted)
+                slide_partner.vote = 0 if slide_partner.vote == -1 else 1
             else:
-                new_vote = 0 if slide_partner.vote == 1 else -1
                 if slide_partner.vote != -1:
-                    karma_to_add -= channel.karma_gen_slide_vote
-            slide_partner.vote = new_vote
+                    self.env.user.add_karma(-channel.karma_gen_slide_vote, slide_partner.channel_id,
+                                            reason_lesson_downvoted)
+                slide_partner.vote = 0 if slide_partner.vote == 1 else -1
 
         for new_slide in new_slides:
             new_vote = 1 if upvote else -1
             new_slide.write({
                 'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
-            karma_to_add += new_slide.channel_id.karma_gen_slide_vote * (1 if upvote else -1)
-
-        if karma_to_add:
-            self.env.user.add_karma(karma_to_add)
+            self.env.user.add_karma(new_slide.channel_id.karma_gen_slide_vote * (1 if upvote else -1), new_slide.channel_id, reason_lesson_upvoted if upvote else reason_lesson_downvoted)
 
     def action_set_viewed(self, quiz_attempts_inc=False):
         if any(not slide.channel_id.is_member for slide in self):
@@ -675,7 +676,7 @@ class Slide(models.Model):
         if any(not slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide quiz as completed if you are not among its members.'))
 
-        points = 0
+        add_karma_result = True
         for slide in self:
             user_membership_sudo = slide.user_membership_id.sudo()
             if not user_membership_sudo or user_membership_sudo.completed or not user_membership_sudo.quiz_attempts_count:
@@ -685,9 +686,11 @@ class Slide(models.Model):
                      slide.quiz_second_attempt_reward,
                      slide.quiz_third_attempt_reward,
                      slide.quiz_fourth_attempt_reward]
-            points += gains[user_membership_sudo.quiz_attempts_count - 1] if user_membership_sudo.quiz_attempts_count <= len(gains) else gains[-1]
+            points = gains[user_membership_sudo.quiz_attempts_count - 1] if user_membership_sudo.quiz_attempts_count <= len(gains) else gains[-1]
+            if points:
+                add_karma_result = self.env.user.sudo().add_karma(points, slide, _('Quiz completed'))
 
-        return self.env.user.sudo().add_karma(points)
+        return add_karma_result
 
     def _compute_quiz_info(self, target_partner, quiz_done=False):
         result = dict.fromkeys(self.ids, False)

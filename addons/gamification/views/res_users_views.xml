@@ -7,9 +7,12 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="base.view_users_form"/>
         <field name="arch" type="xml">
-            <group name="messaging" position="inside">
-                <field name="karma"/>
-            </group>
+            <div name="button_box" position="inside">
+                <button type="object" class="oe_stat_button" name="action_view_karma_trackings" icon="fa-certificate" attrs="{'invisible': [('create_date', '=', False)]}">
+                    <field name="create_date" invisible="1"/>
+                    <field string="Karma" name="karma" widget="statinfo"/>
+                </button>
+            </div>
         </field>
     </record>
 

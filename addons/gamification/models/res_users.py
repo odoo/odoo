@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class Users(models.Model):
     _inherit = 'res.users'
 
-    karma = fields.Integer('Karma', default=0)
+    karma = fields.Integer('Karma', compute='compute_karma', compute_sudo=True, store=True)
     karma_tracking_ids = fields.One2many('gamification.karma.tracking', 'user_id', string='Karma Changes', groups="base.group_system")
     badge_ids = fields.One2many('gamification.badge.user', 'user_id', string='Badges', copy=False)
     gold_badge = fields.Integer('Gold badges count', compute="_get_user_badge_level")
@@ -39,38 +39,46 @@ class Users(models.Model):
             # levels are gold, silver, bronze but fields have _badge postfix
             self.browse(user_id)['{}_badge'.format(level)] = count
 
+    @api.depends('karma_tracking_ids')
+    def compute_karma(self):
+        KarmaTracking = self.env['gamification.karma.tracking']
+        karma_tracking_values = KarmaTracking.search_read(
+            [('user_id', 'in', self.ids)], ['user_id', 'new_value'], order='user_id, tracking_date desc, id desc')
+
+        current_user_id = None
+        mapped_karma_values = {}
+        for karma_tracking_value in karma_tracking_values:
+            if current_user_id != karma_tracking_value['user_id'][0]:
+                current_user_id = karma_tracking_value['user_id'][0]
+                mapped_karma_values[current_user_id] = karma_tracking_value['new_value']
+
+        for user in self:
+            user.karma = mapped_karma_values[user.id] if (user.id in mapped_karma_values) else 0
+
+        self._recompute_rank()
+
     @api.model_create_multi
     def create(self, values_list):
         res = super(Users, self).create(values_list)
+        KarmaTracking = self.env['gamification.karma.tracking']
 
         karma_trackings = []
-        for user in res:
-            if user.karma:
-                karma_trackings.append({'user_id': user.id, 'old_value': 0, 'new_value': user.karma})
+        for i, user in enumerate(res):
+            karma_trackings.append(KarmaTracking.create_karma_tracking_dict(
+                user.id, 0, values_list[i].get('karma', 0), None, _('User creation')
+            ))
         if karma_trackings:
-            self.env['gamification.karma.tracking'].sudo().create(karma_trackings)
+            KarmaTracking.sudo().create(karma_trackings)
 
-        res._recompute_rank()
         return res
 
-    def write(self, vals):
-        karma_trackings = []
-        if 'karma' in vals:
-            for user in self:
-                if user.karma != vals['karma']:
-                    karma_trackings.append({'user_id': user.id, 'old_value': user.karma, 'new_value': vals['karma']})
-
-        result = super(Users, self).write(vals)
-
-        if karma_trackings:
-            self.env['gamification.karma.tracking'].sudo().create(karma_trackings)
-        if 'karma' in vals:
-            self._recompute_rank()
-        return result
-
-    def add_karma(self, karma):
-        for user in self:
-            user.karma += karma
+    def add_karma(self, karma, source=None, reason=''):
+        self.ensure_one()
+        if karma:
+            KarmaTracking = self.env['gamification.karma.tracking']
+            KarmaTracking.sudo().create(KarmaTracking.create_karma_tracking_dict(
+                self.id, self.karma, self.karma + karma, source, reason
+            ))
         return True
 
     def _get_tracking_karma_gain_position(self, user_domain, from_date=None, to_date=None):
@@ -104,10 +112,10 @@ class Users(models.Model):
 
         params = []
         if from_date:
-            date_from_condition = 'AND tracking.tracking_date::timestamp >= timestamp %s'
+            date_from_condition = 'AND tracking.tracking_date >= timestamp %s'
             params.append(from_date)
         if to_date:
-            date_to_condition = 'AND tracking.tracking_date::timestamp <= timestamp %s'
+            date_to_condition = 'AND tracking.tracking_date <= timestamp %s'
             params.append(to_date)
         params.append(tuple(self.ids))
 
@@ -299,3 +307,12 @@ WHERE sub.user_id IN %%s""" % {
         """
         self.ensure_one()
         return []
+
+    def action_view_karma_trackings(self):
+        self.ensure_one()
+        action = self.env.ref('gamification.gamification_karma_tracking_action').read()[0]
+        action['context'] = {
+            'default_user_id': self.id,
+            'search_default_user_id': self.id
+        }
+        return action
