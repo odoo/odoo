@@ -26,7 +26,7 @@
                             <field name="rounding"/>
                             <field name="strategy"/>
                             <field name="account_id" options="{'no_create': True}" attrs="{'invisible': [('strategy', '!=', 'add_invoice_line')], 'required': [('strategy', '=', 'add_invoice_line')]}"
-                                groups="account.group_account_user"/>
+                                groups="account.group_account_user" domain="[('user_type_id.type', 'not in', ('receivable', 'payable'))]" />
                             <field name="rounding_method"/>
                         </group>
                     </sheet>

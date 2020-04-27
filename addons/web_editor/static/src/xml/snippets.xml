@@ -45,19 +45,20 @@
         </div>
     </div>
 
-    <!-- t-field options -->
     <t t-name="web_editor.many2one.button">
         <div class="btn-group">
-            <a role="button" href="#" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" title="Search Contact" aria-label="Search Contact"><i class="fa fa-search"></i></a>
-            <ul class="dropdown-menu contact_menu" role="menu">
-                <li><a role="menuitem" class="dropdown-item"><input href="#" type="email" placeholder="Search"/></a></li>
+            <a role="button" href="#" class="btn btn-secondary dropdown-toggle d-none" data-toggle="dropdown" data-hover="dropdown" title="Search Contact" aria-label="Search Contact">
+                <i class="fa fa-search"></i>
+            </a>
+            <ul class="dropdown-menu contact_menu d-block list-group list-group-flush mx-1" role="menu">
+                <li class="px-1"><a role="menuitem" class="dropdown-item pl-1 pr-2"><i class="fa fa-search"></i><input href="#" type="email" placeholder="Search" class="ml-2" autocomplete="off"/></a></li>
             </ul>
         </div>
     </t>
 
     <t t-name="web_editor.many2one.search">
         <t t-foreach="contacts" t-as="item">
-            <li><a role="menuitem" href="#" t-att-data-id="item.id" t-att-data-name="item.display_name"><t t-esc="item.display_name"/> <t t-if="item.city or item.country_id"><small class="text-muted">(<t t-esc="item.city"/> <t t-esc="item.country_id and item.country_id[1]"/>)</small></t></a></li>
+            <li class="list-group-item px-2"><a role="menuitem" href="#" t-att-data-id="item.id" t-att-data-name="item.display_name"><t t-esc="item.display_name"/> <t t-if="item.city or item.country_id"><small class="text-muted">(<t t-esc="item.city"/> <t t-esc="item.country_id and item.country_id[1]"/>)</small></t></a></li>
         </t>
     </t>
 </templates>
