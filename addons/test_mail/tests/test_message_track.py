@@ -56,6 +56,7 @@ class TestTracking(TestMailCommon):
 
     def test_message_track_subtype(self):
         """ Update some tracked fields linked to some subtype -> message with onchange """
+        self._add_user_log(self.user_admin)
         self.record.message_subscribe(
             partner_ids=[self.user_admin.partner_id.id],
             subtype_ids=[self.env.ref('test_mail.st_mail_test_ticket_container_upd').id]

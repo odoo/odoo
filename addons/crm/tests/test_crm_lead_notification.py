@@ -17,6 +17,7 @@ class NewLeadNotification(TestCrmCommon):
         })
 
         subtype = self.env.ref("crm.mt_salesteam_lead")
+        self._add_user_log(self.user_sales_manager)
         sales_team_1.message_subscribe(partner_ids=[self.user_sales_manager.partner_id.id], channel_ids=[channel_listen.id], subtype_ids=[subtype.id])
 
         # Imitate what happens in the controller when somebody creates a new

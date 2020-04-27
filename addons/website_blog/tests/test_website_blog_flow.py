@@ -6,9 +6,10 @@ from odoo.tests.common import users
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from odoo.addons.portal.controllers.mail import PortalChatter
+from odoo.addons.mail.tests.common import MailCase
 
+class TestWebsiteBlogFlow(TestWebsiteBlogCommon, MailCase):
 
-class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
     def setUp(self):
         super(TestWebsiteBlogFlow, self).setUp()
         group_portal = self.env.ref('base.group_portal')
@@ -30,6 +31,9 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
          - when published, a notification is sent to all blog followers
          - if someone subscribe to the post or comment it, it become follower
            and receive notification for future comments. """
+
+        self._add_user_log(self.user_employee)
+        self._add_user_log(self.user_public)
 
         # Create a new blog, subscribe the employee to the blog
         self.assertIn(

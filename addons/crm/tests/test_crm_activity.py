@@ -123,6 +123,7 @@ class TestCrmMailActivity(TestCrmCommon):
         self.assertFalse(internal_subtypes)
 
         # Add sale manager as follower of default subtypes
+        self._add_user_log(self.user_sales_manager)
         self.lead_1.message_subscribe([self.user_sales_manager.partner_id.id], subtype_ids=[self.env.ref('mail.mt_activities').id, self.env.ref('mail.mt_comment').id])
 
         activity = self.env['mail.activity'].with_user(self.user_sales_leads).create({

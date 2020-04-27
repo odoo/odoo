@@ -432,6 +432,11 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'notification_type': 'email',
             'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
         })
+        # It marks user as active and logged in at least once, which is a requirement for receiving notification
+        old_user = self.env.uid
+        self.env.uid = self.user_portal.id
+        self.env['res.users.log'].create({})
+        self.env.uid = old_user
 
         # setup mail gateway
         self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'example.com')
@@ -582,7 +587,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         })
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id)
-        with self.assertQueryCount(__system__=39, emp=40):
+        with self.assertQueryCount(__system__=42, emp=43):
             rec.write({'user_id': self.user_portal.id})
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
@@ -602,7 +607,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(__system__=116, emp=117):
+        with self.assertQueryCount(__system__=119, emp=120):
             rec = self.env['mail.test.ticket'].create({
                 'name': 'Test',
                 'container_id': container_id,

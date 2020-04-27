@@ -413,6 +413,13 @@ class MailCase(MockEmail):
         cls.email_template = cls.env['mail.template'].create(create_values)
         return cls.email_template
 
+    # It marks user as active and logged in at least once, which is a requirement for receiving notification
+    def _add_user_log(self, user):
+        old_user = self.env.uid
+        self.env.uid = user.id
+        self.env['res.users.log'].create({})
+        self.env.uid = old_user
+
     # ------------------------------------------------------------
     # MAIL ASSERTS WRAPPERS
     # ------------------------------------------------------------

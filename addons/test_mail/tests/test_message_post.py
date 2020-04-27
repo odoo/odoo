@@ -48,6 +48,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
     def test_post_inactive_follower(self):
         # In some case odoobot is follower of a record.
         # Even if it shouldn't be the case, we want to be sure that odoobot is not notified
+        self._add_user_log(self.user_employee)
         (self.user_employee | self.user_admin).write({'notification_type': 'inbox'})
         self.test_record._message_subscribe(self.user_employee.partner_id.ids)
         with self.assertSinglePostNotifications([{'partner': self.partner_employee, 'type': 'inbox'}], {'content': 'Test'}):
@@ -66,6 +67,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         _body, _subject = '<p>Test Body</p>', 'Test Subject'
 
         # subscribe second employee to the group to test notifications
+        self._add_user_log(self.user_admin)
         self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
 
         with self.assertSinglePostNotifications([
@@ -91,6 +93,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_notifications_keep_emails(self):
+        self._add_user_log(self.user_admin)
         self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
 
         msg = self.test_record.with_user(self.user_employee).message_post(
@@ -185,6 +188,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_portal_ok(self):
+        self._add_user_log(self.user_employee)
         self.test_record.message_subscribe((self.partner_1 | self.user_employee.partner_id).ids)
 
         with self.assertPostNotifications([{'content': '<p>Test</p>', 'notif': [
