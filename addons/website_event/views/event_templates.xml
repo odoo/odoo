@@ -599,7 +599,7 @@
                                     </t>
                                 </select>
                                 <div t-else="" class="text-danger">
-                                    <span t-if="not ticket.sale_available and not ticket.is_expired and ticket.start_sale_date &lt; datetime.date.today()" >Sold Out</span>
+                                    <span t-if="not ticket.sale_available and not ticket.is_expired and ticket.is_launched()" >Sold Out</span>
                                     <span t-if="ticket.is_expired">Expired</span>
                                 </div>
                             </div>
