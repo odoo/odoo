@@ -21,17 +21,22 @@ class ChooseDeliveryPackage(models.TransientModel):
             total_weight += qty * ml.product_id.weight
         return total_weight
 
+    def _get_default_weight_uom(self):
+        return self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+
     picking_id = fields.Many2one('stock.picking', 'Picking')
     delivery_packaging_id = fields.Many2one('product.packaging', 'Delivery Packaging', check_company=True)
     shipping_weight = fields.Float('Shipping Weight', default=_default_shipping_weight)
-    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
+    weight_uom_id = fields.Many2one(
+        'uom.uom', string='Weight unit of measure', readonly=True,
+        default=_get_default_weight_uom, required=True)
     company_id = fields.Many2one(related='picking_id.company_id')
 
     @api.depends('delivery_packaging_id')
     def _compute_weight_uom_name(self):
         weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
         for package in self:
-            package.weight_uom_name = weight_uom_id.name
+            package.weight_uom_id = weight_uom_id
 
     @api.onchange('delivery_packaging_id', 'shipping_weight')
     def _onchange_packaging_weight(self):

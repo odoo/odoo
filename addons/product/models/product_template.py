@@ -27,6 +27,18 @@ class ProductTemplate(models.Model):
         # Deletion forbidden (at least through unlink)
         return self.env.ref('uom.product_uom_unit')
 
+    @tools.ormcache()
+    def _get_default_weight_uom_id(self):
+        return self._get_weight_uom_id_from_ir_config_parameter()
+
+    @tools.ormcache()
+    def _get_default_volume_uom_id(self):
+        return self._get_volume_uom_id_from_ir_config_parameter()
+
+    @tools.ormcache()
+    def _get_default_length_uom_id(self):
+        return self._get_length_uom_id_from_ir_config_parameter()
+
     def _read_group_categ_id(self, categories, domain, order):
         category_ids = self.env.context.get('default_categ_id')
         if not category_ids and self.env.context.get('group_expand'):
@@ -84,11 +96,15 @@ class ProductTemplate(models.Model):
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume', digits='Volume', store=True)
-    volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name')
+    volume_uom_id = fields.Many2one(
+        'uom.uom', 'Volume Unit of Measure', readonly=True,
+        default=_get_default_volume_uom_id, required=True)
     weight = fields.Float(
         'Weight', compute='_compute_weight', digits='Stock Weight',
         inverse='_set_weight', store=True)
-    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
+    weight_uom_id = fields.Many2one(
+        'uom.uom', 'Weight Unit of Measure', readonly=True,
+        default=_get_default_weight_uom_id, required=True)
 
     sale_ok = fields.Boolean('Can be Sold', default=True)
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
@@ -314,22 +330,8 @@ class ProductTemplate(models.Model):
             return self.env.ref('uom.product_uom_cubic_meter')
 
     @api.model
-    def _get_weight_uom_name_from_ir_config_parameter(self):
-        return self._get_weight_uom_id_from_ir_config_parameter().display_name
-
-    @api.model
     def _get_length_uom_name_from_ir_config_parameter(self):
         return self._get_length_uom_id_from_ir_config_parameter().display_name
-
-    @api.model
-    def _get_volume_uom_name_from_ir_config_parameter(self):
-        return self._get_volume_uom_id_from_ir_config_parameter().display_name
-
-    def _compute_weight_uom_name(self):
-        self.weight_uom_name = self._get_weight_uom_name_from_ir_config_parameter()
-
-    def _compute_volume_uom_name(self):
-        self.volume_uom_name = self._get_volume_uom_name_from_ir_config_parameter()
 
     def _set_weight(self):
         for template in self:
