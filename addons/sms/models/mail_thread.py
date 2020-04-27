@@ -133,7 +133,7 @@ class MailThread(models.AbstractModel):
                 # if none, just assign False to the first available number field
                 value, fname = next(
                     ((value, fname) for value, fname in zip(all_numbers, tocheck_fields) if value),
-                    (0, tocheck_fields[0] if tocheck_fields else False)
+                    (False, tocheck_fields[0] if tocheck_fields else False)
                 )
                 result[record.id] = {
                     'partner': self.env['res.partner'],
