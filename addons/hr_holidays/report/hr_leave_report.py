@@ -16,7 +16,7 @@ class LeaveReport(models.Model):
     number_of_days = fields.Float('Number of Days', readonly=True)
     leave_type = fields.Selection([
         ('allocation', 'Allocation'),
-        ('request', 'Time Off')
+        ('request', 'Time Off'),
         ], string='Request Type', readonly=True)
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True)
@@ -39,7 +39,6 @@ class LeaveReport(models.Model):
 
     def init(self):
         tools.drop_view_if_exists(self._cr, 'hr_leave_report')
-
         self._cr.execute("""
             CREATE or REPLACE view hr_leave_report as (
                 SELECT row_number() over(ORDER BY leaves.employee_id) as id,
@@ -49,20 +48,21 @@ class LeaveReport(models.Model):
                 leaves.holiday_status_id as holiday_status_id, leaves.state as state,
                 leaves.holiday_type as holiday_type, leaves.date_from as date_from,
                 leaves.date_to as date_to, leaves.payslip_status as payslip_status
-                from (select
-                    allocation.employee_id as employee_id,
-                    allocation.private_name as name,
-                    allocation.number_of_days as number_of_days,
-                    allocation.category_id as category_id,
-                    allocation.department_id as department_id,
-                    allocation.holiday_status_id as holiday_status_id,
-                    allocation.state as state,
-                    allocation.holiday_type,
+                from (select 
+                    allocation_item.employee_id as employee_id,
+                    private_name as name,
+                    allocation_item.number_of_days as number_of_days,
+                    category_id,
+                    department_id,
+                    holiday_status_id,
+                    state as state,
+                    holiday_type,
                     null as date_from,
                     null as date_to,
                     FALSE as payslip_status,
                     'allocation' as leave_type
-                from hr_leave_allocation as allocation
+                from hr_leave_allocation_item as allocation_item
+                join hr_leave_allocation on hr_leave_allocation.id = allocation_item.allocation_id
                 union all select
                     request.employee_id as employee_id,
                     request.private_name as name,
@@ -76,8 +76,9 @@ class LeaveReport(models.Model):
                     request.date_to as date_to,
                     request.payslip_status as payslip_status,
                     'request' as leave_type
-                from hr_leave as request) leaves
-            );
+                from hr_leave as request                  
+                ) leaves
+            )
         """)
 
     @api.model

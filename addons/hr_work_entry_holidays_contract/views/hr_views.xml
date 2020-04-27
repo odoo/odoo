@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+    <record id="hr_employee_view_form_inherit_we_holidays_contract" model="ir.ui.view">
+        <field name="name">hr.work.entry.holidays.contract.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_holidays.hr_employee_view_form_inherit_accrual"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='start_work_date']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

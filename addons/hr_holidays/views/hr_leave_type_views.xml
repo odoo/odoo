@@ -43,7 +43,8 @@
                         <group name="description" string="Options">
                             <field name="active" invisible="1"/>
                             <field name="code" string="Payroll Code"/>
-                            <field name="request_unit" widget="radio"/>
+                            <field name="request_unit"/>
+                            <field name="allow_negative" attrs="{'invisible': [('allocation_type', '=', 'no')]}"/>
                         </group>
                         <group name="validity" string="Validity">
                             <field name="validity_start"/>

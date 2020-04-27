@@ -17,6 +17,7 @@ This application allows you to integrate time off with work entry.
     'depends': ['hr_work_entry', 'hr_holidays'],
     'data': [
         'views/hr_leave_views.xml',
+        'views/hr_work_entry_views.xml'
     ],
     'demo': ['data/hr_work_entry_holidays_demo.xml'],
     'installable': True,

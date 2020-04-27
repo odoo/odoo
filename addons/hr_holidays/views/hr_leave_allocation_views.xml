@@ -38,8 +38,9 @@
                         ]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
-                    <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
+                    <filter name="group_type" string="Time Off Type" context="{'group_by':'holiday_status_id'}"/>
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_allocation_type" string="Allocation Type" context="{'group_by': 'allocation_type'}"/>
                 </group>
                 <searchpanel>
                     <field name="state" string="Status"/>
@@ -80,6 +81,23 @@
                                 </span>
                             </div>
                         </button>
+                        <button
+                            class="oe_stat_button"
+                            icon="fa-sun-o"
+                            type="object"
+                            name="action_related_items"
+                            attrs="{'invisible': ['|', '|', ('allocation_type', '=', 'regular'), ('state', '!=', 'validate'), ('holiday_type', '=', 'employee')]}"
+                            help="Allocation items related to this allocation">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="allocation_item_count"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Allocations
+                                </span>
+                            </div>
+                        </button>
+
                     </div>
                     <div class="oe_title">
                         <h2><field name="name" placeholder="e.g. Public Holiday Allocation" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" required="1"/></h2>
@@ -87,24 +105,19 @@
                     <group>
                         <group>
                             <field name="type_request_unit" invisible="1"/>
-                            <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
-
-                            <field name="allocation_type" invisible="1" widget="radio"/>
-
-                            <field name="number_of_days_display" invisible="1"/>
                             <field name="number_of_days" invisible="1"/>
-                            <div class="o_td_label">
-                                <label for="number_of_days" string="Duration" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
-                                <label for="number_of_days" string="Extra days" attrs="{'invisible': [('allocation_type', '!=', 'accrual')]}"/>
-                            </div>
-                            <div>
-                                <field name="number_of_days_display" class="oe_inline" nolabel="1"
-                                    attrs="{'readonly': ['|', ('type_request_unit', '=', 'hour'), ('state', 'not in', ('draft', 'confirm'))], 'invisible': [('type_request_unit', '=', 'hour')]}"/>
-                                <field name="number_of_hours_display" class="oe_inline" nolabel="1"
-                                    attrs="{'readonly': ['|', ('type_request_unit', '!=', 'hour'), ('state', 'not in', ('draft', 'confirm'))], 'invisible': [('type_request_unit', '!=', 'hour')]}"/>
-                                <span class="ml8" attrs="{'invisible': [('type_request_unit', '=', 'hour')]}">Days</span>
-                                <span class="ml8" attrs="{'invisible': [('type_request_unit', '!=', 'hour')]}">Hours</span>
-                            </div>
+                            <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
+                            <field name="allocation_type" widget="radio" groups="hr_holidays.group_allow_accrual"/>
+                            <field name="accrual_plan_id" attrs="{'invisible': [('allocation_type', '=', 'regular')],
+                                                                  'required': [('allocation_type', '=', 'accrual')]}"/>
+                            <label for="number_of_days" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
+                            <div class="o_row" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}">
+                                 <field name="number_of_days_display" class="oe_inline" attrs="{'invisible': [('type_request_unit', '=', 'hour')]}"/>
+                                 <field name="number_of_hours_display" class="oe_inline" attrs="{'invisible': [('type_request_unit', '!=', 'hour')]}"/>
+                                 <span class="ml8" attrs="{'invisible': [('type_request_unit', '=', 'hour')]}">Days</span>
+                                 <span class="ml8" attrs="{'invisible': [('type_request_unit', '!=', 'hour')]}">Hours</span>
+                             </div>
+                            <field name="extra_days" attrs="{'invisible': [('allocation_type', '!=', 'accrual')]}"/>
                         </group>
                         <group name="alloc_right_col">
                             <field name="employee_id" invisible="1" groups="hr_holidays.group_hr_holidays_user"/>
@@ -164,23 +177,16 @@
                 <label for="date_from" attrs="{'invisible': [('allocation_type', '=', 'regular')]}"/>
                 <div class="o_row" attrs="{'invisible': [('allocation_type', '=', 'regular')]}">
                     <field name="date_from" widget="date" class="mr-2" attrs="{'required': [('allocation_type', '=', 'accrual')]}" />
-                    Run until <field name="date_to" help="If no value set, runs indefinitely" class="ml-2" widget="date"/>
+                    <span attrs="{'invisible': [('date_to', '=', False), ('state','not in', ['draft', 'confirm'])]}">Run until</span>
+                    <field name="date_to" help="If no value set, runs indefinitely" class="ml-2" widget="date"/>
                 </div>
-                <label for="date_from" invisible="1"/>
-                <div attrs="{'invisible': [('allocation_type', '=', 'regular')]}">
-                    <div class="o_row">
-                        <span>Add</span>
-                        <field name="number_per_interval" class="ml8"
-                            attrs="{'required': [('allocation_type', '=', 'accrual')]}"/>
-                        <field name="unit_per_interval"
-                            attrs="{'required': [('allocation_type', '=', 'accrual')]}"/>
-                        <span class="ml8">of time off every</span>
-                        <field name="interval_number" class="ml8"
-                            attrs="{'required': [('allocation_type', '=', 'accrual')]}"/>
-                        <field name="interval_unit"
-                            attrs="{'required': [('allocation_type', '=', 'accrual')]}"/>
-                    </div>
-                </div>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="after">
+                <field name="aggretated_duration"
+                       attrs="{'invisible': ['|', '|', ('state', '!=', 'validate'), ('allocation_type', '=', 'regular'), ('holiday_type', '!=', 'employee')]}"
+                       string="Duration"
+                       help="Current available days"
+                />
             </xpath>
         </field>
     </record>
@@ -191,11 +197,14 @@
         <field name="priority">16</field>
         <field name="arch" type="xml">
             <tree string="Allocation Requests" sample="1">
-                <field name="employee_id"/>
+                 <field name="employee_id" invisible="1"/>
+                <field name="target" string="Employee"/>
                 <field name="department_id" optional="hide"/>
                 <field name="holiday_status_id" class="font-weight-bold"/>
                 <field name="name"/>
-                <field name="duration_display" string="Duration"/>
+                <field name="allocation_type" invisible="1"/>
+                <field name="aggretated_duration" string="Duration"/>
+                <field name="allocation_type"/>
                 <field name="message_needaction" invisible="1"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'"/>
                 <button string="Approve" name="action_approve" type="object"
@@ -283,7 +292,7 @@
         <field name="name">hr.leave.allocation.view.kanban</field>
         <field name="model">hr.leave.allocation</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" create="0" sample="1">
+            <kanban class="o_kanban_mobile" sample="1">
                 <field name="employee_id"/>
                 <field name="date_from"/>
                 <field name="date_to"/>

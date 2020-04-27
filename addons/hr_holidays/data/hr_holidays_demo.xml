@@ -24,7 +24,7 @@
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="state">validate</field>
+        <field name="state">draft</field>
     </record>
 
     <record id="hr_holidays_int_tour" model="hr.leave.allocation">
@@ -32,9 +32,13 @@
         <field name="holiday_status_id" ref="holiday_status_comp"/>
         <field name="number_of_days">7</field>
         <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="state">confirm</field>
+        <field name="state">draft</field>
     </record>
-    <function model="hr.leave.allocation" name="action_approve">
+    <!--  We need to confirm it with the function to generate the items  -->
+    <function model="hr.leave.allocation" name="action_confirm">
+        <value eval="ref('hr_holidays.hr_holidays_int_tour')"/>
+    </function>
+    <function model="hr.leave.allocation" name="action_validate">
         <value eval="ref('hr_holidays.hr_holidays_int_tour')"/>
     </function>
 
@@ -50,7 +54,7 @@
         <field name="holiday_status_id" ref="holiday_status_comp"/>
         <field name="number_of_days">12</field>
         <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="state">validate</field>
+        <field name="state">draft</field>
     </record>
 
     <!-- leave request -->
@@ -72,9 +76,13 @@
         <field eval="(datetime.now() + relativedelta(day=20, weekday=0)).strftime('%Y-%m-%d 08:00:00')" name="request_date_from"/>
         <field eval="(datetime.now() + relativedelta(day=20, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 17:00:00')" name="request_date_to"/>
         <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="state">confirm</field>
+        <field name="state">draft</field>
     </record>
-    <function model="hr.leave" name="action_approve">
+
+    <function model="hr.leave" name="action_confirm">
+        <value eval="ref('hr_holidays.hr_holidays_sl')"/>
+    </function>
+    <function model="hr.leave" name="action_validate">
         <value eval="ref('hr_holidays.hr_holidays_sl')"/>
     </function>
 
@@ -102,7 +110,7 @@
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_al"/>
-        <field name="state">validate</field>
+        <field name="state">draft</field>
     </record>
 
     <record id="hr_holidays_allocation_pl_al" model="hr.leave.allocation">
@@ -110,7 +118,7 @@
         <field name="holiday_status_id" ref="hr_holiday_status_dv"/>
         <field name="number_of_days">10</field>
         <field name="employee_id" ref="hr.employee_al"/>
-        <field name="state">validate</field>
+        <field name="state">draft</field>
     </record>
 
     <record id="hr_holidays_vc_al" model="hr.leave.allocation">
@@ -118,8 +126,23 @@
         <field name="holiday_status_id" ref="holiday_status_unpaid"/>
         <field name="number_of_days">12</field>
         <field name="employee_id" ref="hr.employee_al"/>
-        <field name="state">validate</field>
+        <field name="state">draft</field>
     </record>
+
+    <!-- confirm leave allocations -->
+    <function model="hr.leave.allocation" name="action_confirm">
+        <value model="hr.leave.allocation" search="[
+            ('id', 'in', [ref('hr_holidays.hr_holidays_allocation_cl_al'), ref('hr_holidays.hr_holidays_allocation_pl_al'), ref('hr_holidays.hr_holidays_vc_al')])
+        ]"/>
+    </function>
+
+    <!-- validate leave allocations -->
+    <function model="hr.leave.allocation" name="action_validate">
+        <value model="hr.leave.allocation" search="[
+             ('id', 'in', [ref('hr_holidays.hr_holidays_allocation_cl_al'), ref('hr_holidays.hr_holidays_allocation_pl_al'), ref('hr_holidays.hr_holidays_vc_al')])
+        ]"/>
+    </function>
+
 
     <!-- leave request -->
     <record id="hr_holidays_cl_al" model="hr.leave">
@@ -129,6 +152,7 @@
         <field eval="time.strftime('%Y-%m-10')" name="date_to"/>
         <field eval="time.strftime('%Y-%m-04')" name="request_date_from"/>
         <field eval="time.strftime('%Y-%m-10')" name="request_date_to"/>
+        <field name="number_of_days">6</field>
         <field name="employee_id" ref="hr.employee_al"/>
     </record>
     <function model="hr.leave" name="action_approve">
@@ -143,8 +167,14 @@
         <field eval="(datetime.now()+relativedelta(months=1, day=17, weekday=0)).strftime('%Y-%m-%d 08:00:00')" name="request_date_from"/>
         <field eval="(datetime.now()+relativedelta(months=1, day=17, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 17:00:00')" name="request_date_to"/>
         <field name="employee_id" ref="hr.employee_al"/>
-        <field name="state">confirm</field>
+        <field name="state">draft</field>
     </record>
+
+    <!-- confirm the leave request -->
+    <function model="hr.leave" name="action_confirm">
+        <value eval="ref('hr_holidays.hr_holidays_sl_al')"/>
+    </function>
+
     <function model="hr.leave" name="action_approve">
         <value eval="ref('hr_holidays.hr_holidays_sl_al')"/>
     </function>
@@ -156,7 +186,7 @@
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_mit"/>
-        <field name="state">validate</field>
+        <field name="state">draft</field>
     </record>
 
     <record id="hr_holidays_vc_mit" model="hr.leave.allocation">
@@ -164,7 +194,19 @@
         <field name="holiday_status_id" ref="holiday_status_unpaid"/>
         <field name="number_of_days">7</field>
         <field name="employee_id" ref="hr.employee_mit"/>
+        <field name="state">draft</field>
     </record>
+
+    <function model="hr.leave.allocation" name="action_confirm">
+        <value model="hr.leave.allocation" search="[
+            ('id', 'in', [ref('hr_holidays.hr_holidays_allocation_cl_mit'), ref('hr_holidays.hr_holidays_vc_mit')])
+        ]"/>
+    </function>
+    <function model="hr.leave.allocation" name="action_validate">
+        <value model="hr.leave.allocation" search="[
+             ('id', 'in', [ref('hr_holidays.hr_holidays_vc_mit'), ref('hr_holidays.hr_holidays_allocation_cl_mit')])
+        ]"/>
+    </function>
 
     <!-- leave request -->
     <record id="hr_holidays_cl_mit" model="hr.leave">
@@ -263,16 +305,21 @@
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_niv"/>
-        <field name="state">validate</field>
+        <field name="state">draft</field>
     </record>
 
     <record id="hr_holidays_vc_vad" model="hr.leave.allocation">
-        <field name="name">Summer Vacation</field>
-        <field name="holiday_status_id" ref="holiday_status_unpaid"/>
-        <field name="number_of_days">5</field>
+        <field name="name">Summer Vacation for Sharlene</field>
+        <field name="holiday_status_id" ref="holiday_status_cl"/>
+        <field name="number_of_days">10</field>
         <field name="employee_id" ref="hr.employee_niv"/>
+        <field name="state">draft</field>
     </record>
-    <function model="hr.leave.allocation" name="action_approve">
+
+    <function model="hr.leave.allocation" name="action_confirm">
+        <value eval="ref('hr_holidays.hr_holidays_vc_vad')"/>
+    </function>
+    <function model="hr.leave.allocation" name="action_validate">
         <value eval="ref('hr_holidays.hr_holidays_vc_vad')"/>
     </function>
 
@@ -342,5 +389,61 @@
         <field name="state">confirm</field>
     </record>
 
+    <!-- accrual plan -->
+
+    <record id="hr_accrual_US_first_year" model="hr.leave.accrual">
+        <field name="name">First year</field>
+        <field name="start_count">0</field>
+        <field name="start_type">year</field>
+        <field name="added_days">0.4167</field>
+        <field name="frequency">bimonthly</field>
+    </record>
+    <record id="hr_accrual_US_second_year" model="hr.leave.accrual">
+        <field name="name">Second year</field>
+        <field name="start_count">1</field>
+        <field name="start_type">year</field>
+        <field name="added_days">0.625</field>
+        <field name="frequency">bimonthly</field>
+    </record>
+    <record id="hr_accrual_US_third_year" model="hr.leave.accrual">
+        <field name="name">Third year</field>
+        <field name="start_count">2</field>
+        <field name="start_type">year</field>
+        <field name="added_days">0.8333</field>
+        <field name="frequency">bimonthly</field>
+    </record>
+    <record id="hr_accrual_plan_US_market" model="hr.leave.accrual.plan">
+        <field name="name">US market</field>
+        <field name="accrual_ids" eval="[(6, 0, [
+                ref('hr_accrual_US_first_year'),
+                ref('hr_accrual_US_second_year'),
+                ref('hr_accrual_US_third_year'),
+                ])]"/>
+    </record>
+    <record id="hr_accrual_BE" model="hr.leave.accrual">
+        <field name="name">20 days by year</field>
+        <field name="start_count">0</field>
+        <field name="start_type">year</field>
+        <field name="added_days">20</field>
+        <field name="frequency">yearly</field>
+    </record>
+    <record id="hr_accrual_plan_BE" model="hr.leave.accrual.plan">
+        <field name="name">BE market</field>
+        <field name="accrual_ids" eval="[(6, 0, [
+                ref('hr_accrual_BE'),
+                ])]"/>
+    </record>
+
+    <!--  Randall Lewis has the US plan  -->
+    <record id="hr.employee_stw" model="hr.employee">
+        <field name="leave_manager_id" ref="base.user_demo"/>
+        <field name="accrual_plan_ids" eval="[(6, 0, [ref('hr_accrual_plan_US_market')])]"/>
+    </record>
+
+    <!-- Jennie Fletcher has the BE plan -->
+    <record id="hr.employee_chs" model="hr.employee">
+        <field name="leave_manager_id" ref="base.user_demo"/>
+        <field name="accrual_plan_ids" eval="[(6, 0, [ref('hr_accrual_plan_BE')])]"/>
+    </record>
 </data>
 </odoo>

@@ -92,21 +92,23 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'responsible_id': self.env.ref('base.user_admin').id,
         })
 
-        self.env['hr.leave.allocation'].create([
+        paid_allocations = self.env['hr.leave.allocation'].create([
             {
                 'name': 'Paid Time off for David',
                 'holiday_status_id': holiday_status_paid_time_off.id,
                 'number_of_days': 20,
                 'employee_id': self.employee_emp_id,
-                'state': 'validate',
+                'state': 'draft'
             }, {
-                'name': 'Paid Time off for David',
+                'name': 'Paid Time off for Admin',
                 'holiday_status_id': holiday_status_paid_time_off.id,
                 'number_of_days': 20,
                 'employee_id': self.ref('hr.employee_admin'),
-                'state': 'validate',
+                'state': 'draft'
             }
         ])
+        paid_allocations.action_confirm()
+        paid_allocations.action_approve()
 
         def _check_holidays_status(holiday_status, ml, lt, rl, vrl):
             self.assertEqual(holiday_status.max_leaves, ml,
@@ -144,9 +146,9 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         })
         # HrUser validates the first step
         aloc1_user_group.action_approve()
-
         # HrManager validates the second step
         aloc1_user_group.with_user(self.user_hrmanager_id).action_validate()
+
         # Checks Employee has effectively some days left
         hol_status_2_employee_group = self.holidays_status_limited.with_user(self.user_employee_id)
         _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 2.0)
@@ -198,7 +200,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         employee_id = self.ref('hr.employee_admin')
         # cl can be of maximum 20 days for employee_admin
         hol3_status = holiday_status_paid_time_off.with_context(employee_id=employee_id)
-        # I assign the dates in the holiday request for 1 day
+        # I assign the dates in the holiday request for 1 day+
         hol3 = Requests.create({
             'name': 'Sick Time Off',
             'holiday_status_id': hol3_status.id,
@@ -249,13 +251,15 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'responsible_id': self.env.ref('base.user_admin').id,
         })
 
-        self.env['hr.leave.allocation'].create({
+        allocation = self.env['hr.leave.allocation'].create({
             'name': 'Paid Time off for David',
             'holiday_status_id': holiday_status_paid_time_off.id,
             'number_of_days': 20,
             'employee_id': self.ref('hr.employee_admin'),
-            'state': 'validate',
+            'state': 'draft',
         })
+        allocation.action_confirm()
+        allocation.action_approve()
 
         leave_vals = {
             'name': 'Sick Time Off',

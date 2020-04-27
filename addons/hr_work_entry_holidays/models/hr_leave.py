@@ -80,7 +80,7 @@ class HrLeave(models.Model):
                     'state': 'validated',
                     'leave_id': leave.id,
             }
-
+            # arj fixme wtf ??
             for att in attendances[False]._items:
                 # arj fixme wtf ??
                 # what if true?
@@ -194,8 +194,8 @@ class HrLeave(models.Model):
         where the refused leave was.
         """
         res = super(HrLeave, self).action_refuse()
-        # arj fixme necessary ???
-        self.flush()
+        # arj fixme necessary to flush ???
+        # self.flush()
         work_entries = self.env['hr.work.entry'].sudo().search([('leave_id', 'in', self.ids)])
 
         work_entries.write({'active': False})

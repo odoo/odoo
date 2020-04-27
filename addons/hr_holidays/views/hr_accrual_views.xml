@@ -1,0 +1,180 @@
+<odoo>
+
+    <record id="view_hr_leave_allocation_item_filter" model="ir.ui.view">
+        <field name="name">hr.holidays.accrual.filter_items</field>
+        <field name="model">hr.leave.allocation.item</field>
+        <field name="arch" type="xml">
+            <search string="Search allocations">
+                <field name="employee_id"/>
+                <field name="accrual_plan_id"/>
+                <field name="accrual_id"/>
+                <field name="allocation_id"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="group_type" string="Accrual Plan" context="{'group_by':'accrual_plan_id'}"/>
+                    <filter name="group_type" string="Accrual Step" context="{'group_by':'accrual_id'}"/>
+                    <filter name="group_type" string="Allocation" context="{'group_by':'allocation_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="employee_id"/>
+                </searchpanel>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_accrual_item_view_tree" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.item.tree</field>
+        <field name="model">hr.leave.allocation.item</field>
+        <field name="arch" type="xml">
+            <tree string="Accrual Item" sample="1">
+                <field name="employee_id"/>
+                <field name="name"/>
+                <field name="accrual_plan_id"/>
+                <field name="accrual_id"/>
+                <field name="allocation_name"/>
+                <field name="extra_days"/>
+                <field name="number_of_hours"/>
+                <field name="number_of_days"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_accrual_plan_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.plan.form</field>
+        <field name="model">hr.leave.accrual.plan</field>
+        <field name="arch" type="xml">
+            <form string="Accrual Plan">
+                <header>
+                     <button string="Create allocation" class="btn btn-primary"
+                            name="create_allocation"
+                            type="object"
+                            attrs="{'invisible': [('allocation_count', '>', 0)]}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-sun-o" name="action_open_accrual_plan_allocations"
+                                type="object">
+                            <div class="o_stat_info">
+                                <field name="allocation_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Allocations</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-user" name="action_open_accrual_plan_employees"
+                                type="object">
+                            <div class="o_stat_info">
+                                <field name="employees_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Employees</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Accrual plan"/>
+                        </h1>
+                    </div>
+                    <group>
+                    </group>
+                    <label for="accrual_ids"/>
+                    <field name="accrual_ids"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_accrual_plan_view_tree" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.plan.tree</field>
+        <field name="model">hr.leave.accrual.plan</field>
+        <field name="arch" type="xml">
+            <tree string="Accrual Plan" sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hr_accrual_plan" model="ir.actions.act_window">
+        <field name="name">Accrual Plans</field>
+        <field name="res_model">hr.leave.accrual.plan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new accrual plan
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_accrual_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.form</field>
+        <field name="model">hr.leave.accrual</field>
+        <field name="arch" type="xml">
+            <form string="Accrual Name">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="E.g. First year"/>
+                        </h1>
+                    </div>
+                    <group class="col-md-6">
+                        <label for="start_count" string="Start Date"/>
+                        <div class="o_row">
+                            <field name="start_count"/>
+                            <field name="start_type"/>
+                            <span>after employee's hire date</span>
+                        </div>
+                        <label for="added_days" string="Accrue of"/>
+                        <div class="o_row">
+                            <field name="added_days"/>
+                            <span>days per period</span>
+                        </div>
+                        <field name="frequency"/>
+                        <field name="week_day" attrs="{'invisible': [('frequency', '!=', 'weekly')]}"/>
+                        <label for="maximum_leave" string="Maximum Accrual"/>
+                        <div class="o_row">
+                            <field name="maximum_leave"/>
+                            <span>Days</span>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_accrual_view_tree" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.tree</field>
+        <field name="model">hr.leave.accrual</field>
+        <field name="arch" type="xml">
+            <tree string="Accrual Plan Line">
+                <field name="name"/>
+                <field name="added_days" width="1"/>
+                <field name="frequency"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="hr_holidays_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'hr_holidays'}</field>
+    </record>
+
+    <record id="hr_holidays_allocation_item" model="ir.actions.act_window">
+        <field name="name">Allocations</field>
+        <field name="res_model">hr.leave.allocation.item</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No accrual items
+            </p>
+            <p>
+                The best way to create accrual items is to validate the corresponding allocation.
+            </p>
+        </field>
+    </record>
+
+</odoo>

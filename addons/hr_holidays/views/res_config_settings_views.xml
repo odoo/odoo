@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr_holidays</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Time Off" string="Time Off" data-key="hr_holidays" groups="hr_holidays.group_hr_holidays_manager">
+                    <h2>Allocations</h2>
+                    <div class="row mt16 o_settings_container" name="allocation_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Accrue allocations time off based on employees worked days.">
+                            <div class="o_setting_left_pane">
+                                <field name="enable_accrual"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="enable_accrual"/>
+                                <div class="text-muted">
+                                    Accrue allocations time off based on employees worked days.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

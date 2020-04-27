@@ -234,12 +234,15 @@
                         <field name="employee_id" nolabel="1" readonly="1" force_save="1" invisible="1"/>
                     </h1>
                     <h2>
-                        <field name="holiday_status_id" nolabel="1" domain="['&amp;', ('virtual_remaining_leaves', '&gt;', 0), '|', ('allocation_type', 'in', ['fixed_allocation', 'no']),'&amp;',('allocation_type', '=', 'fixed'), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}" class="w-100"/>
+                        <field name="holiday_status_id" nolabel="1"
+                               domain="['|', '&amp;',  ('allow_negative', '=', True), ('allocation_type', 'in', ['fixed_allocation', 'fixed']), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), '|', ('allocation_type', 'in', ['fixed_allocation', 'no']),'&amp;',('allocation_type', '=', 'fixed'), ('max_leaves', '>', '0')]"
+                               context="{'employee_id':employee_id, 'default_date_from':date_from}"
+                               options="{'no_create': True, 'no_open': True}"
+                               class="w-100"/>
                     </h2>
                 </div>
                 <group>
                     <group>
-
                         <label for="request_date_from" string="Dates"/>
                         <div>
                             <field name="date_from" invisible="1"/>

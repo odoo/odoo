@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
@@ -31,10 +34,39 @@ class TestHrHolidaysCommon(common.TransactionCase):
             'name': 'Research and devlopment',
         })
 
+        # Create a an accrual plan
+
+        AccrualPlan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True)
+        self.accrual_plan = AccrualPlan.create({
+            'name': 'Accrual Plan For Test',
+            'accrual_ids': [(0, 0, {
+                'name': '1h weekly after 0 day',
+                'start_count': 0,
+                'start_type': 'day',
+                'added_days': 1,
+                'frequency': 'weekly',
+                'maximum_leave': 10000
+            })],
+        })
+
+        self.accrual_plan_monthly = AccrualPlan.create({
+            'name': 'Accrual Plan For Test (bis)',
+            'accrual_ids': [(0, 0, {
+                'name': '8h/day weekly after 0 day',
+                'start_count': 0,
+                'start_type': 'day',
+                'added_days': 1,
+                'frequency': 'monthly',
+                'maximum_leave': 10000
+            })],
+        })
+        employee_create_date = datetime.today() - relativedelta(years=20)
         self.employee_emp = self.env['hr.employee'].create({
             'name': 'David Employee',
             'user_id': self.user_employee_id,
             'department_id': self.rd_dept.id,
+            # 'accrual_plan_ids': [(6, 0, [self.accrual_plan.id, self.accrual_plan_monthly.id])],
+            'start_work_date': employee_create_date
         })
         self.employee_emp_id = self.employee_emp.id
 
@@ -42,6 +74,8 @@ class TestHrHolidaysCommon(common.TransactionCase):
             'name': 'Armande HrUser',
             'user_id': self.user_hruser_id,
             'department_id': self.rd_dept.id,
+            # 'accrual_plan_ids': [(6, 0, [self.accrual_plan.id, self.accrual_plan_monthly.id])],
+            'start_work_date': employee_create_date
         })
         self.employee_hruser_id = self.employee_hruser.id
 
@@ -50,6 +84,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
             'user_id': self.user_hrmanager_id,
             'department_id': self.hr_dept.id,
             'parent_id': self.employee_hruser_id,
+            'start_work_date': employee_create_date
         })
         self.employee_hrmanager_id = self.employee_hrmanager.id
 

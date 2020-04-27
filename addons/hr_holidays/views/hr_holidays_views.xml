@@ -86,7 +86,16 @@
         id="menu_hr_holidays_configuration"
         name="Configuration"
         parent="menu_hr_holidays_root"
+        groups="hr_holidays.group_hr_holidays_user"
         sequence="5"/>
+
+      <menuitem id="hr_holidays_settings_menu_configuration"
+        name="Settings"
+        parent="menu_hr_holidays_configuration"
+        action="hr_holidays_config_settings_action"
+        groups="hr_holidays.group_hr_holidays_manager"
+        sequence="1"
+     />
 
     <menuitem
         id="hr_holidays_status_menu_configuration"
@@ -94,11 +103,21 @@
         name="Time Off Types"
         parent="menu_hr_holidays_configuration"
         groups="hr_holidays.group_hr_holidays_user"
-        sequence="1"/>
+        sequence="5"
+    />
 
     <menuitem id="hr_holidays_menu_config_activity_type"
         action="mail_activity_type_action_config_hr_holidays"
         parent="menu_hr_holidays_configuration"
-        groups="base.group_no_one"/>
+        groups="base.group_no_one"
+        sequence="10"
+    />
+
+    <menuitem id="hr_accrual__plan_menu_configuration"
+        action="action_hr_accrual_plan"
+        parent="menu_hr_holidays_configuration"
+        groups="hr_holidays.group_allow_accrual"
+        sequence="15"
+    />
 
 </odoo>

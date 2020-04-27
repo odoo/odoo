@@ -170,6 +170,9 @@
                 <field name="show_leaves" invisible="1"/>
                 <field name="is_absent" invisible="1"/>
                 <field name="hr_icon_display" invisible="1"/>
+                <field name="allocation_item_ids" invisible="1"/>
+                <field name="accrual_plan_ids" invisible="1"/>
+                <field name="allocation_count" invisible="1"/>
                 <button disabled="1"
                         class="oe_stat_button"
                         context="{'search_default_employee_id': active_id}"
@@ -204,6 +207,17 @@
                         </span>
                     </div>
                 </button>
+                <button name="action_employee_accrual_items"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-sun-o"
+                        attrs="{'invisible': ['|', '|', ('allocation_item_ids','=', False), ('accrual_plan_ids', '=', False), ('allocation_count', '=', 0)]}"
+                        groups="base.group_user"
+                        help="Remaining leaves">
+                    <div class="o_field_widget o_stat_info">
+                        Allocations
+                    </div>
+                </button>
             </div>
         </field>
     </record>
@@ -215,6 +229,23 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='work_location_id']" position="after">
                 <field name="leave_manager_id" optional="hide" string="Time Off Approver"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_view_form_inherit_accrual" model="ir.ui.view">
+        <field name="name">hr.employee.form.accrual</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_type']" position="before">
+                <field name="start_work_date" groups="hr_holidays.group_allow_accrual"/>
+            </xpath>
+            <!-- arj fixme: just for information, it was removed from the spec...  -->
+            <xpath expr="//page[@name='hr_settings']" position="inside">
+                <group string="Time Off" name="timeoff" groups="hr_holidays.group_allow_accrual">
+                    <field name="accrual_plan_ids"  widget="many2many_tags" class="oe_inline"/>
+               </group>
             </xpath>
         </field>
     </record>

@@ -6,9 +6,9 @@ from datetime import datetime
 from odoo import models, api
 
 class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+    _inherit = "hr.employee"
 
-    @api.depends('first_contract_date')
+    @api.depends('first_contract_date', 'contract_ids')
     def _compute_date_start_work(self):
         # override, this is used in hr holidays to calculate the accrual allocations
         for employee in self:

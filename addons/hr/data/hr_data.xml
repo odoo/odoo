@@ -42,6 +42,11 @@
             <field name="responsible">employee</field>
         </record>
 
+         <record id="onboarding_allocate_time_off" model="hr.plan.activity.type">
+            <field name="summary">Allocate Time Off For Employee</field>
+            <field name="responsible">manager</field>
+        </record>
+
         <record id="offboarding_setup_compute_out_delais" model="hr.plan.activity.type">
             <field name="summary">Compute Out Delais</field>
             <field name="responsible">manager</field>
@@ -58,6 +63,7 @@
                 ref('hr.onboarding_setup_it_materials'),
                 ref('hr.onboarding_plan_training'),
                 ref('hr.onboarding_training'),
+                ref('hr.onboarding_allocate_time_off'),
                 ])]"/>
         </record>
 
