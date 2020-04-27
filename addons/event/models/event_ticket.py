@@ -64,7 +64,6 @@ class EventTicket(models.Model):
     start_sale_date = fields.Date(string="Registration Start")
     end_sale_date = fields.Date(string="Registration End")
     is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
-    is_launched = fields.Boolean(string='Is Launched', compute='_compute_is_launched')
     sale_available = fields.Boolean(string='Is Available', compute='_compute_sale_available', compute_sudo=True)
     sale_available_soon = fields.Boolean(string='Is Available Soon', compute='_compute_sale_available_soon', compute_sudo=True)
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
@@ -73,16 +72,6 @@ class EventTicket(models.Model):
     seats_available = fields.Integer(string='Available Seats', compute='_compute_seats', store=True)
     seats_unconfirmed = fields.Integer(string='Unconfirmed Seats', compute='_compute_seats', store=True)
     seats_used = fields.Integer(string='Used Seats', compute='_compute_seats', store=True)
-
-    @api.depends('start_sale_date', 'event_id.date_tz')
-    def _compute_is_launched(self):
-        for ticket in self:
-            ticket = ticket._set_tz_context()
-            current_date = fields.Date.context_today(ticket)
-            if ticket.start_sale_date:
-                ticket.is_launched = ticket.start_sale_date < current_date
-            else:
-                ticket.is_launched = True
 
     @api.depends('end_sale_date', 'event_id.date_tz')
     def _compute_is_expired(self):
@@ -102,10 +91,10 @@ class EventTicket(models.Model):
             else:
                 ticket.sale_available = True
 
-    @api.depends('is_expired', 'is_launched', 'seats_available', 'seats_max')
+    @api.depends('seats_available', 'seats_max')
     def _compute_sale_available_soon(self):
         for ticket in self:
-            if ticket.is_launched or ticket.seats_available <= 0 and ticket.seats_max > 0:
+            if ticket.is_launched() or ticket.seats_available <= 0 and ticket.seats_max > 0:
                 ticket.sale_available_soon = False
             else:
                 ticket.sale_available_soon = True

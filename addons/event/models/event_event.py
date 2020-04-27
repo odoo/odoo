@@ -330,7 +330,7 @@ class EventEvent(models.Model):
     @api.depends('event_type_id')
     def _compute_date_tz(self):
         for event in self:
-            if event.event_type_id.use_timezone:
+            if event.event_type_id.default_timezone != event.date_tz:
                 event.date_tz = event.event_type_id.default_timezone
             if not event.date_tz:
                 event.date_tz = self.env.user.tz or 'UTC'
@@ -369,32 +369,34 @@ class EventEvent(models.Model):
                     event.event_ticket_ids = False
                 continue
 
-            if event.event_type_id.seats_max:
+            if event.event_type_id.seats_max != event.seats_max:
                 event.seats_max = event.event_type_id.seats_max
 
-            if event.event_type_id.auto_confirm:
+            if event.event_type_id.has_seats_limitation != event.seats_limited:
+                event.seats_limited = event.event_type_id.has_seats_limitation
+
+            if event.event_type_id.auto_confirm != event.auto_confirm:
                 event.auto_confirm = event.event_type_id.auto_confirm
 
-            # compute mailing information (force only if activated and mailing defined)
-            if event.event_type_id.use_mail_schedule and event.event_type_id.event_type_mail_ids:
-                event.event_mail_ids = [(5, 0, 0)] + [
-                    (0, 0, {
-                        attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
-                        for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
-                        })
-                    for line in event.event_type_id.event_type_mail_ids]
+            # compute mailing information (only if no mail already set)
+            event.event_mail_ids -= event.event_mail_ids.filtered(lambda mail: not mail.mail_sent and len(mail.mail_registration_ids.filtered('mail_sent')) == 0)
+            event.event_mail_ids = [
+                (0, 0, {
+                    attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
+                    for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
+                    })
+            for line in event.event_type_id.event_type_mail_ids]
 
-            # compute tickets information (force only if activated and tickets defined)
-            if event.event_type_id.use_ticket and event.event_type_id.event_type_ticket_ids:
-                event.event_ticket_ids = [(5, 0, 0)] + [
-                    (0, 0, {
-                        attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
-                        for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
-                        })
-                    for line in event.event_type_id.event_type_ticket_ids]
+            # compute tickets information (only if no ticket already)
+            event.event_ticket_ids -= event.event_ticket_ids.filtered(lambda ticket: len(ticket.registration_ids) == 0)
+            event.event_ticket_ids = [
+                (0, 0, {
+                    attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
+                    for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
+                    })
+                for line in event.event_type_id.event_type_ticket_ids]
 
-            if event.event_type_id.tag_ids:
-                event.tag_ids = event.event_type_id.tag_ids
+            event.tag_ids = event.event_type_id.tag_ids
 
     @api.constrains('seats_max', 'seats_available', 'seats_limited')
     def _check_seats_limit(self):

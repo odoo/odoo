@@ -29,17 +29,17 @@ class EventEvent(models.Model):
     def _compute_from_event_type(self):
         super(EventEvent, self)._compute_from_event_type()
         for event in self:
-            if event.event_type_id.use_questions and event.event_type_id.question_ids:
-                event.question_ids = [(5, 0, 0)] + [
-                    (0, 0, {
-                        'title': question.title,
-                        'question_type': question.question_type,
-                        'sequence': question.sequence,
-                        'once_per_order': question.once_per_order,
-                        'answer_ids': [(0, 0, {
-                            'name': answer.name,
-                            'sequence': answer.sequence
-                        }) for answer in question.answer_ids],
-                    })
-                    for question in event.event_type_id.question_ids
-                ]
+            event.question_ids -= event.question_ids.filtered(lambda question: self.env['event.registration.answer'].search_count([('question_id', '=', question.id)]) == 0)
+            event.question_ids = [
+                (0, 0, {
+                    'title': question.title,
+                    'question_type': question.question_type,
+                    'sequence': question.sequence,
+                    'once_per_order': question.once_per_order,
+                    'answer_ids': [(0, 0, {
+                        'name': answer.name,
+                        'sequence': answer.sequence
+                    }) for answer in question.answer_ids],
+                })
+                for question in event.event_type_id.question_ids
+            ]
