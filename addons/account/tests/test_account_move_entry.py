@@ -142,6 +142,23 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # The date has been changed to the first valid date.
         self.assertEqual(copy_move.date, copy_move.company_id.fiscalyear_lock_date + relativedelta(days=1))
 
+    def test_misc_fiscalyear_lock_date_2(self):
+        self.test_move.post()
+
+        # Create a bank statement to get a balance in the suspense account.
+        statement = self.env['account.bank.statement'].create({
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'date': '2016-01-01',
+            'line_ids': [
+                (0, 0, {'payment_ref': 'test', 'amount': 10.0})
+            ],
+        })
+        statement.button_post()
+
+        # You can't lock the fiscal year if there is some unreconciled statement.
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string('2017-01-01')
+
     def test_misc_tax_lock_date_1(self):
         self.test_move.post()
 
