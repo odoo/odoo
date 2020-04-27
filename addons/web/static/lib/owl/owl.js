@@ -1222,11 +1222,12 @@
             const protectID = this.generateID();
             this.rootContext.protectedScopeNumber++;
             this.rootContext.shouldDefineScope = true;
-            const scopeExpr = codeBlock
-                ? `Object.create(scope);`
-                : `Object.assign(Object.create(context), scope);`;
+            const scopeExpr = `Object.create(scope);`;
             this.addLine(`let _origScope${protectID} = scope;`);
             this.addLine(`scope = ${scopeExpr}`);
+            if (!codeBlock) {
+                this.addLine(`scope.__access_mode__ = 'ro';`);
+            }
             return protectID;
         }
         stopProtectScope(protectID) {
@@ -1235,6 +1236,18 @@
         }
     }
     CompilationContext.nextID = 1;
+
+    const browser = {
+        setTimeout: window.setTimeout.bind(window),
+        clearTimeout: window.clearTimeout.bind(window),
+        setInterval: window.setInterval.bind(window),
+        clearInterval: window.clearInterval.bind(window),
+        requestAnimationFrame: window.requestAnimationFrame.bind(window),
+        random: Math.random,
+        Date: window.Date,
+        fetch: (window.fetch || (() => { })).bind(window),
+        localStorage: window.localStorage
+    };
 
     /**
      * Owl Utils
@@ -1279,7 +1292,7 @@
         return promise;
     }
     async function loadFile(url) {
-        const result = await fetch(url);
+        const result = await browser.fetch(url);
         if (!result.ok) {
             throw new Error("Error while fetching xml templates");
         }
@@ -1316,8 +1329,8 @@
                 }
             }
             const callNow = immediate && !timeout;
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
+            browser.clearTimeout(timeout);
+            timeout = browser.setTimeout(later, wait);
             if (callNow) {
                 func.apply(context, args);
             }
@@ -1403,7 +1416,9 @@
         },
         getScope(obj, property) {
             const obj0 = obj;
-            while (obj && !obj.hasOwnProperty(property)) {
+            while (obj &&
+                !obj.hasOwnProperty(property) &&
+                !(obj.hasOwnProperty("__access_mode__") && obj.__access_mode__ === "ro")) {
                 const newObj = obj.__proto__;
                 if (!newObj || isComponent(newObj)) {
                     return obj0;
@@ -3090,15 +3105,34 @@
             ctx.addLine(`parent.__owl__.cmap[${templateKey}] = w${componentID}.__owl__.id;`);
             if (hasSlots) {
                 const clone = node.cloneNode(true);
-                const slotNodes = clone.querySelectorAll("[t-set]");
+                const slotNodes = Array.from(clone.querySelectorAll("[t-set-slot]"));
+                // The next code is a fallback for compatibility reason. It accepts t-set
+                // elements that are direct children with a non empty body as nodes defining
+                // the content of a slot.
+                //
+                // This is wrong, but is necessary to prevent breaking all existing Owl
+                // code using slots. This will be removed in v2.0 someday. Meanwhile,
+                // please use t-set-slot everywhere you need to set the content of a
+                // slot.
+                for (let el of clone.children) {
+                    if (el.getAttribute("t-set") && el.hasChildNodes()) {
+                        slotNodes.push(el);
+                    }
+                }
                 const slotId = QWeb.nextSlotId++;
                 ctx.addLine(`w${componentID}.__owl__.slotId = ${slotId};`);
                 if (slotNodes.length) {
                     for (let i = 0, length = slotNodes.length; i < length; i++) {
                         const slotNode = slotNodes[i];
                         slotNode.parentElement.removeChild(slotNode);
-                        const key = slotNode.getAttribute("t-set");
-                        slotNode.removeAttribute("t-set");
+                        let key = slotNode.getAttribute("t-set-slot");
+                        slotNode.removeAttribute("t-set-slot");
+                        // here again, this code should be removed when we stop supporting
+                        // using t-set to define the content of named slots.
+                        if (!key) {
+                            key = slotNode.getAttribute("t-set");
+                            slotNode.removeAttribute("t-set");
+                        }
                         const slotFn = qweb._compile(`slot_${key}_template`, slotNode, ctx);
                         QWeb.slots[`${slotId}_${key}`] = slotFn;
                     }
@@ -3217,8 +3251,7 @@
             });
         }
     }
-    const raf = window.requestAnimationFrame.bind(window);
-    const scheduler = new Scheduler(raf);
+    const scheduler = new Scheduler(browser.requestAnimationFrame);
 
     /**
      * Owl Fiber Class
@@ -3403,6 +3436,12 @@
                         if (target.tagName.toLowerCase() !== fiber.vnode.sel) {
                             throw new Error(`Cannot attach '${component.constructor.name}' to target node (not same tag name)`);
                         }
+                        // In self mode, we *know* we are to take possession of the target
+                        // Hence we manually create the corresponding VNode and copy the "key" in data
+                        const selfVnodeData = fiber.vnode.data ? { key: fiber.vnode.data.key } : {};
+                        const selfVnode = h(fiber.vnode.sel, selfVnodeData);
+                        selfVnode.elm = target;
+                        target = selfVnode;
                     }
                     else {
                         target = component.__owl__.vnode || document.createElement(fiber.vnode.sel);
@@ -3719,6 +3758,9 @@
                 if (!this.env.qweb) {
                     this.env.qweb = new QWeb();
                 }
+                if (!this.env.browser) {
+                    this.env.browser = browser;
+                }
                 this.env.qweb.on("update", this, () => {
                     if (this.__owl__.isMounted) {
                         this.render(true);
@@ -3908,14 +3950,15 @@
          */
         async render(force = false) {
             const __owl__ = this.__owl__;
-            if (!__owl__.isMounted && !__owl__.currentFiber) {
+            const currentFiber = __owl__.currentFiber;
+            if (!__owl__.isMounted && !currentFiber) {
                 // if we get here, this means that the component was either never mounted,
                 // or was unmounted and some state change  triggered a render. Either way,
                 // we do not want to actually render anything in this case.
                 return;
             }
-            if (__owl__.currentFiber && !__owl__.currentFiber.isRendered) {
-                return scheduler.addFiber(__owl__.currentFiber.root);
+            if (currentFiber && !currentFiber.isRendered && !currentFiber.isCompleted) {
+                return scheduler.addFiber(currentFiber.root);
             }
             // if we aren't mounted at this point, it implies that there is a
             // currentFiber that is already rendered (isRendered is true), so we are
@@ -4143,9 +4186,10 @@
                 // here, the component and none of its superclasses defines a static `template`
                 // key. So we fall back on looking for a template matching its name (or
                 // one of its subclass).
-                let template;
-                while ((template = p.name) && !(template in qweb.templates) && p !== Component) {
+                let template = p.name;
+                while (!(template in qweb.templates) && p !== Component) {
                     p = p.__proto__;
+                    template = p.name;
                 }
                 if (p === Component) {
                     throw new Error(`Could not find template for component "${this.constructor.name}"`);
@@ -4452,7 +4496,7 @@
             if (component.__owl__[method]) {
                 const current = component.__owl__[method];
                 component.__owl__[method] = function (...args) {
-                    return Promise.all[(current.call(component, ...args), cb.call(component, ...args))];
+                    return Promise.all([current.call(component, ...args), cb.call(component, ...args)]);
                 };
             }
             else {
@@ -5134,9 +5178,9 @@
     exports.useState = useState$1;
     exports.utils = utils;
 
-    exports.__info__.version = '1.0.5';
-    exports.__info__.date = '2020-02-21T08:48:04.397Z';
-    exports.__info__.hash = 'fd6327b';
+    exports.__info__.version = '1.0.7';
+    exports.__info__.date = '2020-04-17T13:53:00.270Z';
+    exports.__info__.hash = '23ce19e';
     exports.__info__.url = 'https://github.com/odoo/owl';
 
 }(this.owl = this.owl || {}));
