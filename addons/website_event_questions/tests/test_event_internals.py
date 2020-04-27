@@ -13,7 +13,7 @@ from odoo.addons.website_event_questions.tests.common import TestEventQuestionCo
 class TestEventData(TestEventQuestionCommon):
 
     @users('user_eventmanager')
-    def test_event_type_configuration(self):
+    def test_event_type_configuration_from_type(self):
         event_type = self.event_type_complex.with_user(self.env.user)
 
         event = self.env['event.event'].create({
