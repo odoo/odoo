@@ -240,9 +240,10 @@
                                     <group string="Email" groups="base.group_no_one">
                                         <field name="message_bounce" readonly="1"/>
                                     </group>
-                                    <group string="Tracking" groups="base.group_multi_company" name="categorization">
+                                    <group string="Tracking" name="categorization">
                                         <field name="company_id"
-                                            options="{'no_create': True}"/>
+                                            options="{'no_create': True}"
+                                            groups="base.group_multi_company"/>
                                         <field name="campaign_id" />
                                         <field name="medium_id"/>
                                         <field name="source_id"/>
