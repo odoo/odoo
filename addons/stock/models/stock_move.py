@@ -292,28 +292,36 @@ class StockMove(models.Model):
         field will be used in `_action_done` in order to know if the move will need a backorder or
         an extra move.
         """
-        move_lines = self.env['stock.move.line']
-        for move in self:
-            move_lines |= move._get_move_lines()
+        if not any(self._ids):
+            # onchange
+            for move in self:
+                quantity_done = 0
+                for move_line in move._get_move_lines():
+                    quantity_done += move_line.product_uom_id._compute_quantity(
+                        move_line.qty_done, move.product_uom, round=False)
+                move.quantity_done = quantity_done
+        else:
+            # compute
+            move_lines = self.env['stock.move.line']
+            for move in self:
+                move_lines |= move._get_move_lines()
 
-        data = self.env['stock.move.line'].read_group(
-            [('id', 'in', move_lines.ids)],
-            ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
-            lazy=False
-        )
-
-        rec = defaultdict(list)
-        for d in data:
-            rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
-
-        # In case we are in an onchange, move.id is a NewId, not an integer. Therefore, there is no
-        # match in the rec dictionary. By using move.ids[0] we get the correct integer value.
-        for move in self:
-            uom = move.product_uom
-            move.quantity_done = sum(
-                self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
-                for line_uom_id, qty in rec.get(move.ids[0] if move.ids else move.id, [])
+            data = self.env['stock.move.line'].read_group(
+                [('id', 'in', move_lines.ids)],
+                ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
+                lazy=False
             )
+
+            rec = defaultdict(list)
+            for d in data:
+                rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
+
+            for move in self:
+                uom = move.product_uom
+                move.quantity_done = sum(
+                    self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
+                     for line_uom_id, qty in rec.get(move.ids[0] if move.ids else move.id, [])
+                )
 
     def _quantity_done_set(self):
         quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`
@@ -342,10 +350,19 @@ class StockMove(models.Model):
         and is represented by the aggregated `product_qty` on the linked move lines. If the move
         is force assigned, the value will be 0.
         """
-        result = {data['move_id'][0]: data['product_qty'] for data in
-            self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id','product_qty'], ['move_id'])}
-        for rec in self:
-            rec.reserved_availability = rec.product_id.uom_id._compute_quantity(result.get(rec.id, 0.0), rec.product_uom, rounding_method='HALF-UP')
+        if not any(self._ids):
+            # onchange
+            for move in self:
+                reserved_availability = sum(move.move_line_ids.mapped('product_qty'))
+                move.reserved_availability = move.product_id.uom_id._compute_quantity(
+                    reserved_availability, move.product_uom, rounding_method='HALF-UP')
+        else:
+            # compute
+            result = {data['move_id'][0]: data['product_qty'] for data in
+                      self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id', 'product_qty'], ['move_id'])}
+            for move in self:
+                move.reserved_availability = move.product_id.uom_id._compute_quantity(
+                    result.get(move.id, 0.0), move.product_uom, rounding_method='HALF-UP')
 
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
     def _compute_product_availability(self):
