@@ -243,9 +243,11 @@ class Project(models.Model):
             timesheet_forecast_table_rows.append(sale_order_row)
             for sale_line_row_key, sale_line_row in rows_sale_line.items():
                 if sale_order_id == sale_line_row_key[0]:
+                    sale_order_row[0]['has_children'] = True
                     timesheet_forecast_table_rows.append(sale_line_row)
                     for employee_row_key, employee_row in rows_employee.items():
                         if sale_order_id == employee_row_key[0] and sale_line_row_key[1] == employee_row_key[1] and employee_row_key[2] in employees.ids:
+                            sale_line_row[0]['has_children'] = True
                             timesheet_forecast_table_rows.append(employee_row)
 
         # complete table data
