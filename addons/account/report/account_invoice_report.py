@@ -99,9 +99,9 @@ class AccountInvoiceReport(models.Model):
                 move.invoice_date_due,
                 move.invoice_payment_term_id,
                 move.invoice_partner_bank_id,
-                -line.balance * (move.amount_residual_signed / move.amount_total_signed) * (line.price_total / line.price_subtotal)
+                -line.balance * (move.amount_residual_signed / NULLIF(move.amount_total_signed, 0.0)) * (line.price_total / NULLIF(line.price_subtotal, 0.0))
                                                                             AS residual,
-                -line.balance * (line.price_total / line.price_subtotal)    AS amount_total,
+                -line.balance * (line.price_total / NULLIF(line.price_subtotal, 0.0))    AS amount_total,
                 uom_template.id                                             AS product_uom_id,
                 template.categ_id                                           AS product_categ_id,
                 line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)
@@ -192,7 +192,7 @@ class AccountInvoiceReport(models.Model):
         for res in result:
             if self.env.company.currency_id.id != res['currency_id'][0]:
                 for field in {'amount_total', 'price_average', 'price_subtotal', 'residual'} & set(res):
-                    res[field] = self.env.company.currency_id.round(res[field] * get_rate(res['currency_id'][0]))
+                    res[field] = self.env.company.currency_id.round((res[field] or 0.0) * get_rate(res['currency_id'][0]))
         return result
 
 
