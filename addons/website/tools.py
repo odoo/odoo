@@ -1,20 +1,24 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import contextlib
+import json
 import re
 from unittest.mock import Mock, MagicMock, patch
 
 import werkzeug
+import requests
 
 import odoo
 from odoo.tools.misc import DotDict
+from odoo.tools import image_process
+from odoo.modules.module import get_module_resource
 
 
-def get_video_embed_code(video_url):
-    ''' Computes the valid iframe from given URL that can be embedded
+def get_video_platform_and_id(video_url):
+    ''' Computes the valid source and document ID from given URL
         (or False in case of invalid URL).
     '''
-
     if not video_url:
         return False
 
@@ -31,7 +35,6 @@ def get_video_embed_code(video_url):
     if not re.search(validURLRegex, video_url):
         return False
     else:
-        embedUrl = False
         ytMatch = re.search(ytRegex, video_url)
         vimeoMatch = re.search(vimeoRegex, video_url)
         dmMatch = re.search(dmRegex, video_url)
@@ -39,22 +42,80 @@ def get_video_embed_code(video_url):
         ykuMatch = re.search(ykuRegex, video_url)
 
         if ytMatch and len(ytMatch.groups()[1]) == 11:
-            embedUrl = '//www.youtube%s.com/embed/%s?rel=0' % (ytMatch.groups()[0] or '', ytMatch.groups()[1])
+            return ('youtube', ytMatch.groups()[1], ytMatch)
         elif vimeoMatch:
-            embedUrl = '//player.vimeo.com/video/%s' % (vimeoMatch.groups()[2])
+            return ('vimeo', vimeoMatch.groups()[2], vimeoMatch)
         elif dmMatch:
-            embedUrl = '//www.dailymotion.com/embed/video/%s' % (dmMatch.groups()[1])
+            justId = dmMatch.groups()[1].replace('video/', '')
+            return ('dailymotion', justId, dmMatch)
         elif igMatch:
-            embedUrl = '//www.instagram.com/p/%s/embed/' % (igMatch.groups()[1])
+            return ('instagram', igMatch.groups()[1], igMatch)
         elif ykuMatch:
             ykuLink = ykuMatch.groups()[2]
             if '.html?' in ykuLink:
                 ykuLink = ykuLink.split('.html?')[0]
-            embedUrl = '//player.youku.com/embed/%s' % (ykuLink)
+            return ('youku', ykuLink, ykuMatch)
         else:
-            # We directly use the provided URL as it is
-            embedUrl = video_url
-        return '<iframe class="embed-responsive-item" src="%s" allowFullScreen="true" frameborder="0"></iframe>' % embedUrl
+            return video_url
+
+def get_video_embed_code(video_url):
+    ''' Computes the valid iframe from given URL that can be embedded
+        (or False in case of invalid URL).
+    '''
+    source = get_video_platform_and_id(video_url)
+    if not source:
+        return False
+
+    # We directly use the provided URL as it is
+    embedUrl = video_url
+    if isinstance(source, tuple):
+        platform = source[0]
+        platform_id = source[1]
+        platform_match = source[2]
+        if platform == 'youtube' and len(platform_id) == 11:
+            embedUrl = '//www.youtube%s.com/embed/%s?rel=0' % (platform_match.groups()[0] or '', platform_id)
+        elif platform == 'vimeo':
+            embedUrl = '//player.vimeo.com/video/%s' % (platform_id)
+        elif platform == 'dailymotion':
+            justId = platform_id.replace('video/', '')
+            embedUrl = '//www.dailymotion.com/embed/video/%s' % (justId)
+        elif platform == 'instagram':
+            embedUrl = '//www.instagram.com/p/%s/embed/' % (platform_id)
+        elif platform == 'youku':
+            embedUrl = '//player.youku.com/embed/%s' % (platform_id)
+
+    return '<iframe class="embed-responsive-item" src="%s" allowFullScreen="true" frameborder="0"></iframe>' % embedUrl
+
+def get_video_thumbnail(video_url):
+    ''' Computes the valid thumbnail image from given URL
+        (or False in case of invalid URL).
+    '''
+    source = get_video_platform_and_id(video_url)
+    if not source:
+        return False
+
+    response = False
+    if isinstance(source, tuple):
+        platform = source[0]
+        platform_id = source[1]
+        if platform == 'youtube' and len(platform_id) == 11:
+            response = requests.get('https://img.youtube.com/vi/'+ platform_id + '/0.jpg')
+        elif platform == 'vimeo':
+            vimeo_req = requests.get('https://vimeo.com/api/oembed.json?url='+ video_url)
+            if vimeo_req.status_code == 200:
+                data = json.loads(vimeo_req.content)
+                response = requests.get(data['thumbnail_url'])
+        elif platform == 'dailymotion':
+            response = requests.get('https://www.dailymotion.com/thumbnail/video/'+ platform_id)
+        elif platform == 'instagram':
+            response = requests.get('https://www.instagram.com/p/'+ platform_id + '/media/?size=t')
+
+    if response and response.status_code == 200:
+        return image_process(base64.b64encode(response.content))
+    else:
+        #set a default image
+        image_path = get_module_resource('web', 'static/src/img', 'placeholder.png')
+        return image_process(base64.b64encode(open(image_path, 'rb').read()))
 
 
 def werkzeugRaiseNotFound(*args, **kwargs):
