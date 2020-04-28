@@ -46,7 +46,7 @@ WITH service_costs AS (
         LEFT JOIN fleet_vehicle_log_services se ON se.vehicle_id = ve.id
             AND date_trunc('month', se.date) = date_trunc('month', d)
     WHERE
-        ve.active
+        ve.active AND se.active AND se.state != 'cancelled'
     GROUP BY
         ve.id,
         ve.company_id,

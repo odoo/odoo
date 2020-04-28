@@ -54,10 +54,13 @@
             </div>
             <div class="o_viewer_img_wrapper">
                 <div class="o_viewer_zoomer">
-                    <div t-if="widget.activeAttachment.fileType == 'image'" class="o_loading_img text-center">
-                        <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
-                    </div>
-                    <img t-if="widget.activeAttachment.fileType === 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1&amp;signature=#{widget.activeAttachment.checksum}&amp;model=#{model}" alt="Viewer"/>
+                    <t t-if="widget.activeAttachment.fileType === 'image'">
+                        <div class="o_loading_img text-center">
+                            <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
+                        </div>
+                        <t t-set="unique" t-value="widget.activeAttachment.checksum ? widget.activeAttachment.checksum.slice(-8) : ''"/>
+                        <img class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=#{unique}&amp;model=#{model}" alt="Viewer"/>
+                    </t>
                     <iframe t-if="widget.activeAttachment.fileType == 'application/pdf'" class="mt32 o_viewer_pdf"  t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}?model%3D#{model}" />
                     <iframe t-if="(widget.activeAttachment.fileType || '').indexOf('text') !== -1" class="mt32 o_viewer_text" t-attf-src="/web/content/#{widget.activeAttachment.id}?model=#{model}" />
                     <iframe t-if="widget.activeAttachment.fileType == 'youtu'" class="mt32 o_viewer_text"  allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
@@ -253,7 +256,7 @@
         @param {Object} options
         @param {boolean} [options.displayAvatars]
         @param {boolean} [options.displayDocumentLinks]
-        @param {boolean} [options.displayEmailIcons]
+        @param {boolean} [options.displayNotificationIcons]
         @param {boolean} [options.displayMarkAsRead]
         @param {boolean} [options.displayModerationCommands] when set, display the moderation commands on
           the message. This includes the moderation checkboxes (needs a control panel such as in Discuss app).
@@ -324,13 +327,11 @@
                     <t t-if="message.originatesFromChannel() and (message.getOriginChannelID() !== thread.getID())">
                         (<small>from</small> <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
                     </t>
-                    <span t-if="options.displayEmailIcons and (message.hasCustomerEmailData() or ['exception', 'bounce'].indexOf(message._customerEmailStatus) > -1)" class="o_thread_tooltip_container">
-
-                        <t t-set="fatype" t-value="''"/>
-                        <t t-if="message.getCustomerEmailStatus() === 'sent' or message.getCustomerEmailStatus() === 'ready'">
-                            <t t-set="fatype" t-value="'-o'"/>
-                        </t>
-                        <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope' + fatype" t-att-data-message-id="message.getID()"/>
+                    <span t-if="options.displayNotificationIcons and message.hasNotifications()" class="o_thread_tooltip_container">
+                        <span name="notification_icon" t-attf-class="d-inline-flex align-items-center o_thread_tooltip o_thread_message_notification {{ message.hasNotificationsError() ? 'o_thread_message_notification_error' : '' }}" t-att-data-message-id="message.getID()" t-att-data-message-type="message.getType()">
+                            <i t-att-class="message.getNotificationIcon()"/>
+                            <small t-if="message.getNotificationText()" t-esc="message.getNotificationText()" class="font-weight-bold ml-1"/>
+                        </span>
                     </span>
                     <span t-attf-class="o_thread_icons">
                         <t t-if="thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
@@ -447,23 +448,22 @@
     </t>
 
     <!--
-        @param {Object[]|undefined} list of customer email data of a given message.
-           A customer email data is a list with the following format:
-           [partnerID, partnerName, emailStatus]
+        @param {Object[]} notifications: list of notifications
+           A notification is an object with at least the following keys:
+           {notification_status, partner_name}
     -->
     <t t-name="mail.widget.Thread.Message.MailTooltip">
-        <div t-foreach="data" t-as="customerEmailData">
-            <span class="d-inline-block text-center o_thread_tooltip_icon">
-                <i t-if="customerEmailData[2] === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
-                <i t-if="customerEmailData[2] === 'bounce'" class='fa fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
-                <i t-if="customerEmailData[2] === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
-                <i t-if="customerEmailData[2] === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
-                <i t-if="customerEmailData[2] === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
+        <div t-foreach="notifications" t-as="notification">
+            <span name="notification_status" class="d-inline-block text-center o_thread_tooltip_icon">
+                <i t-if="notification.notification_status === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
+                <i t-if="notification.notification_status === 'bounce'" class='fa fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
+                <i t-if="notification.notification_status === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
+                <i t-if="notification.notification_status === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
+                <i t-if="notification.notification_status === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
             </span>
-            <span t-esc="customerEmailData[1]"/>
+            <span name="partner_name" t-esc="notification.partner_name"/>
         </div>
     </t>
-
     <!--
         @param {mail.model.Message} message
         @param {Object} options

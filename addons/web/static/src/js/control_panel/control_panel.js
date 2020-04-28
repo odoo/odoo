@@ -6,6 +6,7 @@ odoo.define('web.ControlPanel', function (require) {
     const FavoriteMenu = require('web.FavoriteMenu');
     const FilterMenu = require('web.FilterMenu');
     const GroupByMenu = require('web.GroupByMenu');
+    const patchMixin = require('web.patchMixin');
     const Pager = require('web.Pager');
     const SearchBar = require('web.SearchBar');
     const TimeRangeMenu = require('web.TimeRangeMenu');
@@ -221,5 +222,5 @@ odoo.define('web.ControlPanel', function (require) {
 
     ControlPanel.template = 'web.ControlPanel';
 
-    return ControlPanel;
+    return patchMixin(ControlPanel);
 });

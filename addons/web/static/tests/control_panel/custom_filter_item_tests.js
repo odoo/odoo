@@ -29,6 +29,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 boolean_field: { name: 'boolean_field', string: "Boolean Field", type: 'boolean', default: true, searchable: true },
                 char_field: { name: 'char_field', string: "Char Field", type: 'char', default: "foo", trim: true, searchable: true },
                 float_field: { name: 'float_field', string: "Floaty McFloatface", type: 'float', searchable: true },
+                color: { name: 'color', string: "Color", type: 'selection', selection: [['black', "Black"], ['white', "White"]], searchable: true },
             };
         },
     }, function () {
@@ -76,6 +77,47 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             assert.containsN(cfi, 'div.o_filter_condition', 2);
             assert.containsOnce(cfi, 'div.o_filter_condition .o_or_filter');
             assert.containsN(cfi, 'div.o_filter_condition .o_generator_menu_delete', 2);
+
+            cfi.destroy();
+        });
+
+        QUnit.test('selection field: default and updated value', async function (assert) {
+            assert.expect(2);
+
+            let expectedFilters;
+            class MockedControlPanelModel extends Model {
+                createNewFilters(preFilters) {
+                    assert.deepEqual(preFilters, expectedFilters);
+                }
+            }
+            const controlPanelModel = new MockedControlPanelModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { controlPanelModel },
+            });
+
+            // Default value
+            expectedFilters = [{
+                description: 'Color is "black"',
+                domain: '[["color","=","black"]]',
+                type: 'filter',
+            }];
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'color');
+            await cpHelpers.applyFilter(cfi);
+
+            // Updated value
+            expectedFilters = [{
+                description: 'Color is "white"',
+                domain: '[["color","=","white"]]',
+                type: 'filter',
+            }];
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'color');
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_value select'), 'white');
+            await cpHelpers.applyFilter(cfi);
 
             cfi.destroy();
         });

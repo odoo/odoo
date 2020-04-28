@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-from odoo.tools.translate import _
+from odoo import fields, models
 
 
-class Notification(models.Model):
+class MailNotification(models.Model):
     _inherit = 'mail.notification'
 
     notification_type = fields.Selection(selection_add=[

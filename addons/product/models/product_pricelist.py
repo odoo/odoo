@@ -131,8 +131,7 @@ class Pricelist(models.Model):
         """
         self.ensure_one()
         if not date:
-            date = self._context.get('date') or fields.Date.today()
-        date = fields.Date.to_date(date)  # boundary conditions differ if we have a datetime
+            date = self._context.get('date') or fields.Datetime.now()
         if not uom_id and self._context.get('uom'):
             uom_id = self._context['uom']
         if uom_id:
@@ -307,8 +306,11 @@ class Pricelist(models.Model):
         return pricelist.get_products_price(
             list(zip(**products_by_qty_by_partner)))
 
-    def _get_partner_pricelist_multi_search_domain_hook(self):
-        return [('active', '=', True)]
+    def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
+        return [
+            ('active', '=', True),
+            ('company_id', 'in', [company_id, False]),
+        ]
 
     def _get_partner_pricelist_multi_filter_hook(self):
         return self.filtered('active')
@@ -331,10 +333,11 @@ class Pricelist(models.Model):
         # `partner_ids` might be ID from inactive uers. We should use active_test
         # as we will do a search() later (real case for website public user).
         Partner = self.env['res.partner'].with_context(active_test=False)
+        company_id = company_id or self.env.company.id
 
         Property = self.env['ir.property'].with_company(company_id)
         Pricelist = self.env['product.pricelist']
-        pl_domain = self._get_partner_pricelist_multi_search_domain_hook()
+        pl_domain = self._get_partner_pricelist_multi_search_domain_hook(company_id)
 
         # if no specific property, try to find a fitting pricelist
         result = Property.get_multi('property_product_pricelist', Partner._name, partner_ids)
@@ -444,8 +447,10 @@ class PricelistItem(models.Model):
         readonly=True, related='pricelist_id.currency_id', store=True)
     active = fields.Boolean(
         readonly=True, related="pricelist_id.active", store=True)
-    date_start = fields.Date('Start Date', help="Starting date for the pricelist item validation")
-    date_end = fields.Date('End Date', help="Ending valid for the pricelist item validation")
+    date_start = fields.Datetime('Start Date', help="Starting datetime for the pricelist item validation\n"
+                                                "The displayed value depends on the timezone set in your preferences.")
+    date_end = fields.Datetime('End Date', help="Ending datetime for the pricelist item validation\n"
+                                                "The displayed value depends on the timezone set in your preferences.")
     compute_price = fields.Selection([
         ('fixed', 'Fixed Price'),
         ('percentage', 'Percentage (discount)'),

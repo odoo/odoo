@@ -698,6 +698,23 @@ class Website(models.Model):
             raise ValueError('No record found for unique ID %s. It may have been deleted.' % (view_id))
         return view
 
+    @tools.ormcache_context(keys=('website_id',))
+    def _cache_customize_show_views(self):
+        views = self.env['ir.ui.view'].with_context(active_test=False).search([('customize_show', '=', True)])
+        views = views.filter_duplicate()
+        return {v.key: v.active for v in views}
+
+    @tools.ormcache_context('key', keys=('website_id',))
+    def is_view_active(self, key, raise_if_not_found=False):
+        """
+            Return True if active, False if not active, None if not found or not a customize_show view
+        """
+        views = self._cache_customize_show_views()
+        view = key in views and views[key]
+        if view is None and raise_if_not_found:
+            raise ValueError('No view of type customize_show found for key %s' % key)
+        return view
+
     @api.model
     def get_template(self, template):
         View = self.env['ir.ui.view']
@@ -783,7 +800,7 @@ class Website(models.Model):
                                (rule.endpoint.method, ','.join(rule.endpoint.routing['routes'])))
 
             converters = rule._converters or {}
-            if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
+            if query_string and not converters and (query_string not in rule.build({}, append_unknown=False)[1]):
                 continue
 
             values = [{}]
@@ -920,7 +937,7 @@ class Website(models.Model):
             arguments = dict(request.endpoint_arguments)
             for key, val in list(arguments.items()):
                 if isinstance(val, models.BaseModel):
-                    if val.env.context.get('lang') != lang.url_code:
+                    if val.env.context.get('lang') != lang.code:
                         arguments[key] = val.with_context(lang=lang.url_code)
             path = router.build(request.endpoint, arguments)
         else:

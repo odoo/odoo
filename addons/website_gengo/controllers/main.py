@@ -57,7 +57,7 @@ class WebsiteGengo(http.Controller):
                 vals.update({
                     'name': 'website',
                     'lang': lang,
-                    'source': initial_content,
+                    'src': initial_content,
                 })
                 IrTranslation.create(vals)
         return True

@@ -12,6 +12,7 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.osv import expression
+from odoo.tools import groupby
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
@@ -258,32 +259,33 @@ class Message(models.Model):
         self.env['mail.notification'].flush(['mail_message_id', 'res_partner_id'])
         self.env['mail.channel'].flush(['channel_message_ids'])
         self.env['mail.channel.partner'].flush(['channel_id', 'partner_id'])
-        self._cr.execute("""
-            SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.message_type,
-                            COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
-                            channel_partner.channel_id as channel_id
-            FROM "%s" m
-            LEFT JOIN "mail_message_res_partner_rel" partner_rel
-            ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
-            LEFT JOIN "mail_message_res_partner_needaction_rel" needaction_rel
-            ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
-            LEFT JOIN "mail_message_mail_channel_rel" channel_rel
-            ON channel_rel.mail_message_id = m.id
-            LEFT JOIN "mail_channel" channel
-            ON channel.id = channel_rel.mail_channel_id
-            LEFT JOIN "mail_channel_partner" channel_partner
-            ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = %%(pid)s
+        for sub_ids in self._cr.split_for_in_conditions(ids):
+            self._cr.execute("""
+                SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.message_type,
+                                COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
+                                channel_partner.channel_id as channel_id
+                FROM "%s" m
+                LEFT JOIN "mail_message_res_partner_rel" partner_rel
+                ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
+                LEFT JOIN "mail_message_res_partner_needaction_rel" needaction_rel
+                ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
+                LEFT JOIN "mail_message_mail_channel_rel" channel_rel
+                ON channel_rel.mail_message_id = m.id
+                LEFT JOIN "mail_channel" channel
+                ON channel.id = channel_rel.mail_channel_id
+                LEFT JOIN "mail_channel_partner" channel_partner
+                ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = %%(pid)s
 
-            WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=pid, ids=ids))
-        for id, rmod, rid, author_id, message_type, partner_id, channel_id in self._cr.fetchall():
-            if author_id == pid:
-                author_ids.add(id)
-            elif partner_id == pid:
-                partner_ids.add(id)
-            elif channel_id:
-                channel_ids.add(id)
-            elif rmod and rid and message_type != 'user_notification':
-                model_ids.setdefault(rmod, {}).setdefault(rid, set()).add(id)
+                WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=pid, ids=list(sub_ids)))
+            for id, rmod, rid, author_id, message_type, partner_id, channel_id in self._cr.fetchall():
+                if author_id == pid:
+                    author_ids.add(id)
+                elif partner_id == pid:
+                    partner_ids.add(id)
+                elif channel_id:
+                    channel_ids.add(id)
+                elif rmod and rid and message_type != 'user_notification':
+                    model_ids.setdefault(rmod, {}).setdefault(rid, set()).add(id)
 
         allowed_ids = self._find_allowed_doc_ids(model_ids)
 
@@ -890,7 +892,7 @@ class Message(models.Model):
         for partner_id, message_ids in partner_to_pid.items():
             notifications.append([
                 (self._cr.dbname, 'res.partner', partner_id),
-                {'type': 'deletion', 'message_ids': list(message_ids)}
+                {'type': 'deletion', 'message_ids': sorted(list(message_ids))}  # sorted to make deterministic for tests
             ])
         self.env['bus.bus'].sendmany(notifications)
         self.unlink()
@@ -955,21 +957,6 @@ class Message(models.Model):
             else:
                 author = (0, message_sudo.email_from)
 
-            # Notifications
-            customer_email_status = (
-                (all(n.notification_status == 'sent' for n in message_sudo.notification_ids if n.notification_type == 'email') and 'sent') or
-                (any(n.notification_status == 'exception' for n in message_sudo.notification_ids if n.notification_type == 'email') and 'exception') or
-                (any(n.notification_status == 'bounce' for n in message_sudo.notification_ids if n.notification_type == 'email') and 'bounce') or
-                'ready'
-            )
-            customer_email_data = []
-            filtered_notifications = message_sudo.notification_ids.filtered(lambda n:
-                n.notification_type == 'email' and n.res_partner_id.active and
-                (n.notification_status in ('bounce', 'exception', 'canceled') or n.res_partner_id.partner_share)
-            )
-            for notification in filtered_notifications:
-                customer_email_data.append((notification.res_partner_id.id, notification.res_partner_id.display_name, notification.notification_status))
-
             # Attachments
             main_attachment = self.env['ir.attachment']
             if message_sudo.attachment_ids and message_sudo.res_id and issubclass(self.pool[message_sudo.model], self.pool['mail.thread']):
@@ -977,6 +964,7 @@ class Message(models.Model):
             attachment_ids = []
             for attachment in message_sudo.attachment_ids:
                 attachment_ids.append({
+                    'checksum': attachment.checksum,
                     'id': attachment.id,
                     'filename': attachment.name,
                     'name': attachment.name,
@@ -999,8 +987,7 @@ class Message(models.Model):
 
             vals.update({
                 'author_id': author,
-                'customer_email_status': customer_email_status,
-                'customer_email_data': customer_email_data,
+                'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
             })
@@ -1008,14 +995,16 @@ class Message(models.Model):
         return vals_list
 
     def message_fetch_failed(self):
+        """Returns all messages, sent by the current user, that have errors, in
+        the format expected by the web client."""
         messages = self.search([
             ('has_error', '=', True),
-            ('author_id.id', '=', self.env.user.partner_id.id), 
+            ('author_id', '=', self.env.user.partner_id.id),
             ('res_id', '!=', 0),
             ('model', '!=', False),
             ('message_type', '!=', 'user_notification')
         ])
-        return messages._format_mail_failures()
+        return messages._message_notification_format()
 
     @api.model
     def message_fetch(self, domain, limit=20, moderated_channel_ids=None):
@@ -1115,47 +1104,34 @@ class Message(models.Model):
             'moderation_status',
         ]
 
-    def _get_mail_failure_dict(self):
+    def _message_notification_format(self):
+        """Returns the current messages and their corresponding notifications in
+        the format expected by the web client.
+
+        Notifications hold the information about each recipient of a message: if
+        the message was successfully sent or if an exception or bounce occurred.
+        """
         return {
-            'message_id': self.id,
-            'record_name': self.record_name,
-            'model_name': self.env['ir.model']._get(self.model).display_name,
-            'uuid': self.message_id,
-            'res_id': self.res_id,
-            'model': self.model,
-            'last_message_date': self.date,
-            'module_icon': '/mail/static/src/img/smiley/mailfailure.jpg',
+            message.id: {
+                'message_id': message.id,
+                'model_name': message.env['ir.model']._get(message.model).display_name,
+                'res_id': message.res_id,
+                'model': message.model,
+                'last_message_date': message.date,
+                'message_type': message.message_type,
+                'notifications': message.notification_ids._filtered_for_web_client()._notification_format(),
+            } for message in self
         }
 
-    def _format_mail_failures(self):
-        """ A shorter message to notify a failure update """
-        failures_infos = []
-
-        # prepare notifications computation in batch
-        all_notifications = self.env['mail.notification'].sudo().search([
-            ('mail_message_id', 'in', self.ids)
-        ])
-        msgid_to_notif = defaultdict(lambda: self.env['mail.notification'].sudo())
-        for notif in all_notifications:
-            msgid_to_notif[notif.mail_message_id.id] += notif
-
-        # for each channel, build the information header and include the logged partner information
-        for message in self:
-            notifications = msgid_to_notif[message.id]
-            if not any(notification.notification_type == 'email' for notification in notifications):
-                continue
-            info = dict(message._get_mail_failure_dict(),
-                        failure_type='mail',
-                        notifications=dict((notif.res_partner_id.id, (notif.notification_status, notif.res_partner_id.name)) for notif in notifications))
-            failures_infos.append(info)
-        return failures_infos
-
-    def _notify_mail_failure_update(self):
+    def _notify_message_notification_update(self):
+        """Send bus notifications to update status of notifications in the web
+        client. Purpose is to send the updated status per author."""
         messages = self.env['mail.message']
         for message in self:
             # Check if user has access to the record before displaying a notification about it.
             # In case the user switches from one company to another, it might happen that he doesn't
             # have access to the record related to the notification. In this case, we skip it.
+            # YTI FIXME: check allowed_company_ids if necessary
             if message.model and message.res_id:
                 record = self.env[message.model].browse(message.res_id)
                 try:
@@ -1165,12 +1141,11 @@ class Message(models.Model):
                     continue
                 else:
                     messages |= message
-
-        for author, author_messages in tools.groupby(messages, itemgetter('author_id')):
-            self.env['bus.bus'].sendone(
-                (self._cr.dbname, 'res.partner', author.id),
-                {'type': 'mail_failure', 'elements': self.env['mail.message'].concat(*author_messages)._format_mail_failures()}
-            )
+        updates = [[
+            (self._cr.dbname, 'res.partner', author.id),
+            {'type': 'message_notification_update', 'elements': self.env['mail.message'].concat(*author_messages)._message_notification_format()}
+        ] for author, author_messages in groupby(messages.sorted('author_id'), itemgetter('author_id'))]
+        self.env['bus.bus'].sendmany(updates)
 
     # ------------------------------------------------------
     # TOOLS

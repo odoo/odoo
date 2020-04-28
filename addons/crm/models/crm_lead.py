@@ -293,8 +293,13 @@ class Lead(models.Model):
             lead.expected_revenue = round((lead.planned_revenue or 0.0) * (lead.probability or 0) / 100.0, 2)
 
     def _compute_meeting_count(self):
-        meeting_data = self.env['calendar.event'].sudo().read_group([('opportunity_id', 'in', self.ids)], ['opportunity_id'], ['opportunity_id'])
-        mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
+        if self.ids:
+            meeting_data = self.env['calendar.event'].sudo().read_group([
+                ('opportunity_id', 'in', self.ids)
+            ], ['opportunity_id'], ['opportunity_id'])
+            mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
+        else:
+            mapped_data = dict()
         for lead in self:
             lead.meeting_count = mapped_data.get(lead.id, 0)
 
@@ -399,12 +404,11 @@ class Lead(models.Model):
     def _update_probability(self):
         lead_probabilities = self.sudo()._pls_get_naive_bayes_probabilities()
         for lead in self:
-            if lead.id in lead_probabilities:
-                lead_proba = lead_probabilities[lead.id]
-                proba_vals = {'automated_probability': lead_proba}
-                if lead.active and lead.is_automated_probability:
-                    proba_vals['probability'] = lead_proba
-                super(Lead, lead).write(proba_vals)
+            lead_proba = lead_probabilities.get(lead.id, 0)
+            proba_vals = {'automated_probability': lead_proba}
+            if lead.is_automated_probability:
+                proba_vals = {'probability': lead_proba}
+            super(Lead, lead).write(proba_vals)
         return
 
     def _should_update_probability(self, vals):

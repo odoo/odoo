@@ -337,7 +337,7 @@
 <template id="index_sidebar_country_event" inherit_id="website_event.index_sidebar" active="True" customize_show="True" name="Country Events" priority="70">
     <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
         <div class="o_wevent_sidebar_block">
-            <t t-call="website_event.s_country_events"/>
+            <t t-snippet-call="website_event.s_country_events"/>
         </div>
     </xpath>
 </template>
@@ -496,7 +496,7 @@
                         <div class="o_wevent_sidebar_block">
                             <h6 class="o_wevent_sidebar_title">SHARE</h6>
                             <p class="mb-2">Find out what people see and say about this event, and join the conversation.</p>
-                            <t t-call="website.s_share">
+                            <t t-snippet-call="website.s_share">
                                 <t t-set="_no_title" t-value="True"/>
                                 <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
                                 <t t-set="_link_classes" t-valuef="o_wevent_social_link"/>
@@ -558,7 +558,7 @@
         <div id="o_wevent_tickets" class="bg-white shadow-sm o_wevent_js_ticket_details" data-folded-by-default="0">
             <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
             <!-- If some tickets expired and there is only one type left, we keep the same layout -->
-            <t t-if="len(event.event_ticket_ids) &gt; 1"> 
+            <t t-if="len(event.event_ticket_ids) &gt; 1">
                 <div class="d-flex justify-content-between align-items-center py-2 pl-3 pr-2 border-bottom">
                     <div id="price-range" class="pr-3 d-none"/>
                     <span t-if="not event.event_registrations_open" class="text-danger">
@@ -783,7 +783,7 @@
 <!-- Multipage event - Default template for the Introduction page -->
 <template id="template_intro">
     <t t-call="website_event.layout">
-        <section class="s_title pt48 pb48" data-vcss="001">
+        <section class="s_title pt48 pb48" data-vcss="001" data-snippet="s_title">
             <div class="container">
                 <h1>Introduction</h1>
             </div>

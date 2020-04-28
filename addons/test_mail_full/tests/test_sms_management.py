@@ -45,14 +45,7 @@ class TestSMSWizards(test_mail_full_common.TestSMSCommon, test_mail_full_common.
             {'partner': self.partner_1, 'state': 'sent'},
             {'partner': self.partner_2, 'state': 'sent'}
         ], 'TEST BODY', self.msg, check_sms=True)
-        self.assertBusNotifications(
-            [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
-            [{'type': 'sms_update', 'elements': [{
-                'message_id': self.msg.id,
-                'failure_type': 'sms',
-                'notifications': {'%s' % self.partner_1.id: ['sent', self.partner_1.name], '%s' % self.partner_2.id: ['sent', self.partner_2.name]}
-            }]}]
-        )
+        self.assertMessageBusNotifications(self.msg)
 
     def test_sms_resend_update_number(self):
         self._reset_bus()
@@ -67,14 +60,7 @@ class TestSMSWizards(test_mail_full_common.TestSMSCommon, test_mail_full_common.
             {'partner': self.partner_1, 'state': 'sent', 'number': self.random_numbers_san[0]},
             {'partner': self.partner_2, 'state': 'sent', 'number': self.random_numbers_san[1]}
         ], 'TEST BODY', self.msg, check_sms=True)
-        self.assertBusNotifications(
-            [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
-            [{'type': 'sms_update', 'elements': [{
-                'message_id': self.msg.id,
-                'failure_type': 'sms',
-                'notifications': {'%s' % self.partner_1.id: ['sent', self.partner_1.name], '%s' % self.partner_2.id: ['sent', self.partner_2.name]}
-            }]}]
-        )
+        self.assertMessageBusNotifications(self.msg)
 
     def test_sms_resend_cancel(self):
         self._reset_bus()
@@ -88,14 +74,7 @@ class TestSMSWizards(test_mail_full_common.TestSMSCommon, test_mail_full_common.
             {'partner': self.partner_1, 'state': 'canceled', 'number': self.notif_p1.sms_number, 'failure_type': 'sms_number_format'},
             {'partner': self.partner_2, 'state': 'canceled', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}
         ], 'TEST BODY', self.msg, check_sms=False)
-        self.assertBusNotifications(
-            [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
-            [{'type': 'sms_update', 'elements': [{
-                'message_id': self.msg.id,
-                'failure_type': 'sms',
-                'notifications': {'%s' % self.partner_1.id: ['canceled', self.partner_1.name], '%s' % self.partner_2.id: ['canceled', self.partner_2.name]}
-            }]}]
-        )
+        self.assertMessageBusNotifications(self.msg)
 
     def test_sms_resend_internals(self):
         self._reset_bus()
@@ -123,14 +102,7 @@ class TestSMSWizards(test_mail_full_common.TestSMSCommon, test_mail_full_common.
 
         self.assertSMSNotification([{'partner': self.partner_1, 'state': 'sent'}], 'TEST BODY', self.msg, check_sms=True)
         self.assertSMSNotification([{'partner': self.partner_2, 'state': 'canceled', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}], 'TEST BODY', self.msg, check_sms=False)
-        self.assertBusNotifications(
-            [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
-            [{'type': 'sms_update', 'elements': [{
-                'message_id': self.msg.id,
-                'failure_type': 'sms',
-                'notifications': {'%s' % self.partner_1.id: ['sent', self.partner_1.name], '%s' % self.partner_2.id: ['canceled', self.partner_2.name]}
-            }]}]
-        )
+        self.assertMessageBusNotifications(self.msg)
 
     def test_sms_cancel(self):
         self._reset_bus()
@@ -141,11 +113,4 @@ class TestSMSWizards(test_mail_full_common.TestSMSCommon, test_mail_full_common.
 
             self.assertEqual((self.notif_p1 | self.notif_p2).mapped('notification_status'), ['canceled', 'canceled'])
 
-        self.assertBusNotifications(
-            [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
-            [{'type': 'sms_update', 'elements': [{
-                'message_id': self.msg.id,
-                'failure_type': 'sms',
-                'notifications': {'%s' % self.partner_1.id: ['canceled', self.partner_1.name], '%s' % self.partner_2.id: ['canceled', self.partner_2.name]}
-            }]}]
-        )
+        self.assertMessageBusNotifications(self.msg)

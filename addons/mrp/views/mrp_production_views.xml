@@ -113,6 +113,7 @@
                     <group>
                         <group>
                             <field name="id" invisible="1"/>
+                            <field name="allowed_product_ids" invisible="1"/>
                             <field name="product_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', '=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
@@ -125,11 +126,11 @@
                                     <button type="action"
                                         name="%(mrp.action_change_production_qty)d"
                                         context="{'default_mo_id': id}"
-                                        string="Update" class="oe_link" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False)]}"/>
+                                        string="Update" class="oe_link" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False), ('bom_id', '=', False)]}"/>
                                 </div>
                             </div>
                             <field name="bom_id"
-                                context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
                         <group>
@@ -439,7 +440,6 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_mode">form</field>
-            <field name="context">{'default_picking_type_id': active_id}</field>
         </record>
     </data>
 </odoo>

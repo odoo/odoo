@@ -636,8 +636,9 @@ options.registry.Theme = options.Class.extend({
         // used as 'primary' and 'secondary' BS values (to customize standard BS
         // used in Odoo). However, some themes are still going against that
         // system and do not link alpha-primary and beta-secondary at all.
-        this._alphaEqualsPrimary = (this._getCSSColorFromName('primary') === this._getCSSColorFromName('alpha'));
-        this._betaEqualsSecondary = (this._getCSSColorFromName('secondary') === this._getCSSColorFromName('beta'));
+        const style = window.getComputedStyle(document.documentElement);
+        this._alphaEqualsPrimary = style.getPropertyValue('--is-alpha-primary').trim() == 'true';
+        this._betaEqualsSecondary = style.getPropertyValue('--is-beta-secondary').trim() == 'true';
         return this._super(...arguments);
     },
 

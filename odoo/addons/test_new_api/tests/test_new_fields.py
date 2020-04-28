@@ -629,6 +629,33 @@ class TestFields(TransactionCaseWithUserDemo):
             for record in records:
                 self.check_monetary(record, amount, currency, 'multi write(amount)')
 
+    def test_20_monetary_opw_2223134(self):
+        """ test monetary fields with cache override """
+        model = self.env['test_new_api.monetary_order']
+        currency = self.env.ref('base.USD')
+
+        def check(value):
+            self.assertEqual(record.total, value)
+            record.flush()
+            self.cr.execute('SELECT total FROM test_new_api_monetary_order WHERE id=%s', [record.id])
+            [total] = self.cr.fetchone()
+            self.assertEqual(total, value)
+
+        # create, and compute amount
+        record = model.create({
+            'currency_id': currency.id,
+            'line_ids': [(0, 0, {'subtotal': 1.0})],
+        })
+        check(1.0)
+
+        # delete and add a line: the deletion of the line clears the cache, then
+        # the recomputation of 'total' must prefetch record.currency_id without
+        # screwing up the new value in cache
+        record.write({
+            'line_ids': [(2, record.line_ids.id), (0, 0, {'subtotal': 1.0})],
+        })
+        check(1.0)
+
     def test_21_date(self):
         """ test date fields """
         record = self.env['test_new_api.mixed'].create({})

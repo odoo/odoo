@@ -134,6 +134,8 @@ class BlogPost(models.Model):
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id)
+    author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)
+    author_name = fields.Char(related='author_id.display_name', string="Author Name", readonly=False, store=True)
     active = fields.Boolean('Active', default=True)
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
@@ -151,9 +153,8 @@ class BlogPost(models.Model):
     create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
     write_date = fields.Datetime('Last Updated on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
-    author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)
     visits = fields.Integer('No of Views', copy=False, default=0)
-    website_id = fields.Many2one(related='blog_id.website_id', readonly=True)
+    website_id = fields.Many2one(related='blog_id.website_id', readonly=True, store=True)
 
     @api.depends('content', 'teaser_manual')
     def _compute_teaser(self):

@@ -124,13 +124,11 @@ class StockRule(models.Model):
             return delay, delay_description
         manufacture_rule.ensure_one()
         manufacture_delay = product.produce_delay
-        if manufacture_delay:
-            delay += manufacture_delay
-            delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Manufacturing Lead Time'), manufacture_delay, _('day(s)'))
+        delay += manufacture_delay
+        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacturing Lead Time'), manufacture_delay, _('day(s)'))
         security_delay = manufacture_rule.picking_type_id.company_id.manufacturing_lead
-        if security_delay:
-            delay += security_delay
-            delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Company Manufacture Lead Time'), security_delay, _('day(s)'))
+        delay += security_delay
+        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacture Security Lead Time'), security_delay, _('day(s)'))
         return delay, delay_description
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):

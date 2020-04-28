@@ -30,7 +30,7 @@
                     <div class="oe_button_box d-flex justify-content-end" name="button_box">
                     </div>
                     <group id="top-group">
-                        <field name="name" string="Campaign Name"/>
+                        <field name="name" string="Campaign Name" placeholder="e.g. Black Friday"/>
                         <field name="user_id" domain="[('share', '=', False)]"/>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
@@ -54,11 +54,26 @@
         </field>
     </record>
 
+    <record id="utm_campaign_view_form_quick_create" model="ir.ui.view">
+        <field name="name">utm.campaign.view.form.quick.create</field>
+        <field name="model">utm.campaign</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name" string="Campaign Name" placeholder="e.g. Black Friday"/>
+                    <field name="user_id" domain="[('share', '=', False)]"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="utm_campaign_view_kanban">
         <field name="name">utm.campaign.view.kanban</field>
         <field name="model">utm.campaign</field>
         <field name="arch" type="xml">
-            <kanban default_group_by='stage_id' class="o_utm_kanban">
+            <kanban default_group_by='stage_id' class="o_utm_kanban" on_create="quick_create" quick_create_view="utm.utm_campaign_view_form_quick_create">
                 <field name='color'/>
                 <field name='user_id'/>
                 <field name="stage_id"/>

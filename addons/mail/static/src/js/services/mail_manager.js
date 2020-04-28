@@ -728,7 +728,7 @@ var MailManager =  AbstractService.extend({
                 if (
                     item.failure.isLinkedToDocument() &&
                     (item.failure.getDocumentModel() === failure.getDocumentModel()) &&
-                    (item.failure.getFailureType() === failure.getFailureType())
+                    (item.failure.getMessageType() === failure.getMessageType())
                 ) {
                     isSameDocument = item.failure.getDocumentID() === failure.getDocumentID();
                     return true;

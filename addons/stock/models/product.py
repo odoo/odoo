@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import operator as py_operator
+from ast import literal_eval
+from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
@@ -424,6 +426,22 @@ class Product(models.Model):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
 
+    def action_view_orderpoints(self):
+        action = self.env.ref('stock.action_orderpoint').read()[0]
+        action['context'] = literal_eval(action.get('context'))
+        action['context'].pop('search_default_trigger', False)
+        action['context'].update({
+            'search_default_filter_not_snoozed': True,
+        })
+        if self and len(self) == 1:
+            action['context'].update({
+                'default_product_id': self.ids[0],
+                'search_default_product_id': self.ids[0]
+            })
+        else:
+            action['domain'] = expression.AND([action.get('domain', []), [('product_id', 'in', self.ids)]])
+        return action
+
     def action_view_routes(self):
         return self.mapped('product_tmpl_id').action_view_routes()
 
@@ -518,16 +536,22 @@ class Product(models.Model):
             })
         return super().write(values)
 
-    def _get_rules_from_location(self, location, seen_rules=False):
+    def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
+        return defaultdict(float), defaultdict(float)
+
+    def _get_rules_from_location(self, location, route_ids=False, seen_rules=False):
         if not seen_rules:
             seen_rules = self.env['stock.rule']
-        rule = self.env['procurement.group']._get_rule(self, location, {'warehouse_id': location.get_warehouse()})
+        rule = self.env['procurement.group']._get_rule(self, location, {
+            'route_ids': route_ids,
+            'warehouse_id': location.get_warehouse()
+        })
         if not rule:
             return seen_rules
         if rule.procure_method == 'make_to_stock' or rule.action not in ('pull_push', 'pull'):
             return seen_rules | rule
         else:
-            return self._get_rules_from_location(rule.location_src_id, seen_rules | rule)
+            return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
 
 
 class ProductTemplate(models.Model):
@@ -739,14 +763,7 @@ class ProductTemplate(models.Model):
         return self._get_action_view_related_putaway_rules(domain)
 
     def action_view_orderpoints(self):
-        products = self.mapped('product_variant_ids')
-        action = self.env.ref('stock.product_open_orderpoint').read()[0]
-        if products and len(products) == 1:
-            action['context'] = {'default_product_id': products.ids[0], 'search_default_product_id': products.ids[0]}
-        else:
-            action['domain'] = [('product_id', 'in', products.ids)]
-            action['context'] = {}
-        return action
+        return self.product_variant_ids.action_view_orderpoints()
 
     def action_view_stock_move_lines(self):
         self.ensure_one()
@@ -766,6 +783,23 @@ class ProductTemplate(models.Model):
             action['context'].update({
                 'default_product_id': self.product_variant_id.id,
             })
+        return action
+
+    def action_open_routes_diagram(self):
+        products = False
+        if self.env.context.get('default_product_id'):
+            products = self.env['product.product'].browse(self.env.context['default_product_id'])
+        if not products and self.env.context.get('default_product_tmpl_id'):
+            products = self.env['product.template'].browse(self.env.context['default_product_tmpl_id']).product_variant_ids
+        if not self.user_has_groups('stock.group_stock_multi_warehouses') and len(products) == 1:
+            company = products.company_id or self.env.company
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
+            return self.env.ref('stock.action_report_stock_rule').report_action(None, data={
+                'product_id': products.id,
+                'warehouse_ids': warehouse.ids,
+            })
+        action = self.env.ref('stock.action_stock_rules_report').read()[0]
+        action['context'] = self.env.context
         return action
 
     def action_product_tmpl_forecast_report(self):

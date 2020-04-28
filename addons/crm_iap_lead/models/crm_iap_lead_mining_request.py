@@ -42,7 +42,7 @@ class CRMLeadMiningRequest(models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson')
     tag_ids = fields.Many2many('crm.tag', string='Tags')
     lead_ids = fields.One2many('crm.lead', 'lead_mining_request_id', string='Generated Lead / Opportunity')
-    leads_count = fields.Integer(compute='_compute_leads_count', string='Number of Generated Leads')
+    lead_count = fields.Integer(compute='_compute_lead_count', string='Number of Generated Leads')
 
     # Company Criteria Filter
     filter_on_size = fields.Boolean(string='Filter on Size', default=False)
@@ -74,10 +74,19 @@ class CRMLeadMiningRequest(models.Model):
             record.lead_credits = _('%d credits will be consumed to find %d companies.') % (company_credits, record.lead_number)
             record.lead_total_credits = _("This makes a total of %d credits for this request.") % (total_contact_credits + company_credits)
 
-    @api.depends('lead_ids')
-    def _compute_leads_count(self):
-        for req in self:
-            req.leads_count = len(req.lead_ids)
+    @api.depends('lead_ids.lead_mining_request_id')
+    def _compute_lead_count(self):
+        if self.ids:
+            leads_data = self.env['crm.lead'].read_group(
+                [('lead_mining_request_id', 'in', self.ids)],
+                ['lead_mining_request_id'], ['lead_mining_request_id'])
+        else:
+            leads_data = []
+        mapped_data = dict(
+            (m['lead_mining_request_id'][0], m['lead_mining_request_id_count'])
+            for m in leads_data)
+        for request in self:
+            request.lead_count = mapped_data.get(request.id, 0)
 
     @api.onchange('lead_number')
     def _onchange_lead_number(self):
@@ -160,15 +169,21 @@ class CRMLeadMiningRequest(models.Model):
     def _create_leads_from_response(self, result):
         """ This method will get the response from the service and create the leads accordingly """
         self.ensure_one()
-        lead_vals = []
+        lead_vals_list = []
         messages_to_post = {}
         for data in result:
-            lead_vals.append(self._lead_vals_from_response(data))
-            messages_to_post[data['company_data']['clearbit_id']] = self.env['crm.iap.lead.helpers'].format_data_for_message_post(data['company_data'], data.get('people_data'))
-        leads = self.env['crm.lead'].create(lead_vals)
+            lead_vals_list.append(self._lead_vals_from_response(data))
+
+            template_values = data['company_data']
+            template_values.update({
+                'flavor_text': _("Opportunity created by Odoo Lead Generation"),
+                'people_data': data.get('people_data'),
+            })
+            messages_to_post[data['company_data']['clearbit_id']] = template_values
+        leads = self.env['crm.lead'].create(lead_vals_list)
         for lead in leads:
             if messages_to_post.get(lead.reveal_id):
-                lead.message_post_with_view('crm_iap_lead.lead_message_template', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
+                lead.message_post_with_view('partner_autocomplete.enrich_service_information', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
 
     # Methods responsible for format response data into valid odoo lead data
     @api.model

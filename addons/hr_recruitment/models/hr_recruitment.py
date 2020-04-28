@@ -29,6 +29,8 @@ class RecruitmentSource(models.Model):
         for source in self:
             vals = {
                 'alias_parent_thread_id': source.job_id.id,
+                'alias_model_id': self.env['ir.model']._get('hr.applicant').id,
+                'alias_parent_model_id': self.env['ir.model']._get('hr.job').id,
                 'alias_name': "%s+%s" % (source.job_id.alias_name or source.job_id.name, source.name),
                 'alias_defaults': {
                     'job_id': source.job_id.id,
@@ -37,7 +39,7 @@ class RecruitmentSource(models.Model):
                     'source_id': source.source_id.id,
                 },
             }
-            source.alias_id = self.with_context(alias_model_name='hr.applicant', alias_parent_model_name='hr.job').env['mail.alias'].create(vals)
+            source.alias_id = self.env['mail.alias'].create(vals)
             source.name = source.source_id.name
 
 
@@ -96,7 +98,8 @@ class Applicant(models.Model):
     name = fields.Char("Subject / Application Name", required=True)
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Text("Description")
-    email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_phone_email', store=True, readonly=False)
+    email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_phone_email',
+        inverse='_inverse_partner_email', store=True)
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact", copy=False)
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
@@ -123,8 +126,10 @@ class Applicant(models.Model):
     salary_expected = fields.Float("Expected Salary", group_operator="avg", help="Salary Expected by Applicant", tracking=True)
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     partner_name = fields.Char("Applicant's Name")
-    partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone_email', store=True, readonly=False)
-    partner_mobile = fields.Char("Mobile", size=32, compute='_compute_partner_phone_email', store=True, readonly=False)
+    partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone_email',
+        inverse='_inverse_partner_phone', store=True)
+    partner_mobile = fields.Char("Mobile", size=32, compute='_compute_partner_phone_email',
+        inverse='_inverse_partner_mobile', store=True)
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     department_id = fields.Many2one(
         'hr.department', "Department", compute='_compute_department', store=True, readonly=False,
@@ -179,8 +184,17 @@ class Applicant(models.Model):
         (self - applicants).application_count = False
 
     def _compute_meeting_count(self):
+        if self.ids:
+            meeting_data = self.env['calendar.event'].sudo().read_group(
+                [('applicant_id', 'in', self.ids)],
+                ['applicant_id'],
+                ['applicant_id']
+            )
+            mapped_data = {m['applicant_id'][0]: m['applicant_id_count'] for m in meeting_data}
+        else:
+            mapped_data = dict()
         for applicant in self:
-            applicant.meeting_count = self.env['calendar.event'].search_count([('applicant_id', '=', applicant.id)])
+            applicant.meeting_count = mapped_data.get(applicant.id, 0)
 
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment'].read_group(
@@ -238,28 +252,24 @@ class Applicant(models.Model):
         for applicant in self.filtered(lambda a: a.job_id):
             applicant.user_id = applicant.job_id.user_id.id
 
-
-    @api.onchange('email_from')
-    def onchange_email_from(self):
-        if self.partner_id and self.email_from and not self.partner_id.email:
-            self.partner_id.email = self.email_from
-
-    @api.onchange('partner_phone')
-    def onchange_partner_phone(self):
-        if self.partner_id and self.partner_phone and not self.partner_id.phone:
-            self.partner_id.phone = self.partner_phone
-
-    @api.onchange('partner_mobile')
-    def onchange_partner_mobile(self):
-        if self.partner_id and self.partner_mobile and not self.partner_id.mobile:
-            self.partner_id.mobile = self.partner_mobile
-
     @api.depends('partner_id')
     def _compute_partner_phone_email(self):
         for applicant in self:
             applicant.partner_phone = applicant.partner_id.phone
             applicant.partner_mobile = applicant.partner_id.mobile
             applicant.email_from = applicant.partner_id.email
+
+    def _inverse_partner_email(self):
+        for applicant in self.filtered(lambda a: a.partner_id and a.email_from and not a.partner_id.email):
+            applicant.partner_id.email = applicant.email_from
+
+    def _inverse_partner_phone(self):
+        for applicant in self.filtered(lambda a: a.partner_id and a.partner_phone and not a.partner_id.phone):
+            applicant.partner_id.phone = applicant.partner_phone
+
+    def _inverse_partner_mobile(self):
+        for applicant in self.filtered(lambda a: a.partner_id and a.partner_mobile and not a.partner_id.mobile):
+            applicant.partner_id.mobile = applicant.partner_mobile
 
     @api.depends('stage_id')
     def _compute_date_closed(self):
@@ -436,6 +446,7 @@ class Applicant(models.Model):
                     'phone': applicant.partner_phone,
                     'mobile': applicant.partner_mobile
                 })
+                applicant.partner_id = new_partner_id
                 address_id = new_partner_id.address_get(['contact'])['contact']
             if applicant.partner_name or contact_name:
                 employee = self.env['hr.employee'].create({

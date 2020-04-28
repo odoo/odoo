@@ -982,7 +982,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
     def prepare_preview(self, **data):
         Slide = request.env['slide.slide']
-        document_type, document_id = Slide._find_document_data_from_url(data['url'])
+        unused, document_id = Slide._find_document_data_from_url(data['url'])
         preview = {}
         if not document_id:
             preview['error'] = _('Please enter valid youtube or google doc url')
@@ -1024,7 +1024,7 @@ class WebsiteSlides(WebsiteProfile):
             # minutes to hours conversion
             values['completion_time'] = int(post['duration']) / 60
 
-        category_id = False
+        category = False
         # handle creation of new categories on the fly
         if post.get('category_id'):
             category_id = post['category_id'][0]
@@ -1050,7 +1050,7 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
 
         # ensure correct ordering by re sequencing slides in front-end (backend should be ok thanks to list view)
-        channel._resequence_slides(slide, category)
+        channel._resequence_slides(slide, force_category=category)
 
         redirect_url = "/slides/slide/%s" % (slide.id)
         if channel.channel_type == "training" and not slide.slide_type == "webpage":

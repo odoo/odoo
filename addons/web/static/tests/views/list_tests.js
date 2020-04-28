@@ -1,10 +1,13 @@
 odoo.define('web.list_tests', function (require) {
 "use strict";
 
+var AbstractFieldOwl = require('web.AbstractFieldOwl');
 var AbstractStorageService = require('web.AbstractStorageService');
 var BasicModel = require('web.BasicModel');
 var core = require('web.core');
 var basicFields = require('web.basic_fields');
+var fieldRegistry = require('web.field_registry');
+var fieldRegistryOwl = require('web.field_registry_owl');
 var FormView = require('web.FormView');
 var ListRenderer = require('web.ListRenderer');
 var ListView = require('web.ListView');
@@ -8961,6 +8964,62 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list view with optional fields and async rendering', async function (assert) {
+        assert.expect(14);
+
+        const prom = testUtils.makeTestPromise();
+        const FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('asyncwidget', FieldChar.extend({
+            async _render() {
+                assert.ok(true, 'the rendering must be async');
+                this._super(...arguments);
+                await prom;
+            },
+        }));
+
+        const RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <field name="m2o"/>
+                    <field name="foo" widget="asyncwidget" optional="hide"/>
+                </tree>`,
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.containsN(list, 'th', 2);
+        assert.isNotVisible(list.$('.o_optional_columns_dropdown'));
+
+        // add an optional field (we click on the label on purpose, as it will trigger
+        // a second event on the input)
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.isVisible(list.$('.o_optional_columns_dropdown'));
+        assert.containsNone(list.$('.o_optional_columns_dropdown'), 'input:checked');
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first label'));
+
+        assert.containsN(list, 'th', 2);
+        assert.isVisible(list.$('.o_optional_columns_dropdown'));
+        assert.containsNone(list.$('.o_optional_columns_dropdown'), 'input:checked');
+
+        prom.resolve();
+        await testUtils.nextTick();
+
+        assert.containsN(list, 'th', 3);
+        assert.isVisible(list.$('.o_optional_columns_dropdown'));
+        assert.containsOnce(list.$('.o_optional_columns_dropdown'), 'input:checked');
+
+        list.destroy();
+        delete fieldRegistry.map.asyncwidget;
+    });
+
     QUnit.test('change the viewType of the current action', async function (assert) {
         assert.expect(25);
 
@@ -9300,6 +9359,37 @@ QUnit.module('Views', {
         assert.strictEqual(document.activeElement.name, "int_field");
 
         list.destroy();
+    });
+
+    QUnit.test('list view with field component: mounted and willUnmount calls', async function (assert) {
+        // this test could be removed as soon as the list view will be written in Owl
+        assert.expect(3);
+
+        let mountedCalls = 0;
+        let willUnmountCalls = 0;
+        class MyField extends AbstractFieldOwl {
+            mounted() {
+                mountedCalls++;
+            }
+            willUnmount() {
+                willUnmountCalls++;
+            }
+        }
+        MyField.template = owl.tags.xml`<span>Hello World</span>`;
+        fieldRegistryOwl.add('my_owl_field', MyField);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo" widget="my_owl_field"/></tree>',
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        list.destroy();
+
+        assert.strictEqual(mountedCalls, 4);
+        assert.strictEqual(willUnmountCalls, 4);
     });
 });
 

@@ -15,7 +15,7 @@ from odoo.addons.calendar.models.calendar_recurrence import weekday_to_field, RR
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
 from odoo.tools import pycompat
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -108,8 +108,8 @@ class Meeting(models.Model):
 
     @api.model
     def _get_public_fields(self):
-        return self._get_recurrent_fields() | {
-            'id', 'active', 'allday', 'start', 'stop',
+        return self._get_recurrent_fields() | self._get_time_fields() | {
+            'id', 'active', 'allday',
             'duration', 'user_id', 'interval',
             'count', 'rrule', 'recurrence_id', 'show_as'}
 
@@ -328,7 +328,7 @@ class Meeting(models.Model):
         for event in self.filtered('duration'):
             # Round the duration (in hours) to the minute to avoid weird situations where the event
             # stops at 4:19:59, later displayed as 4:19.
-            event.stop = event.start + timedelta(minutes=round(event.duration * 60))
+            event.stop = event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
             if event.allday:
                 event.stop -= timedelta(seconds=1)
 
@@ -763,9 +763,11 @@ class Meeting(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        private_fields = set(groupby) - self._get_public_fields()
+        groupby = [groupby] if isinstance(groupby, str) else groupby
+        grouped_fields = set(group_field.split(':')[0] for group_field in groupby)
+        private_fields = grouped_fields - self._get_public_fields()
         if not self.env.su and private_fields:
-            raise UserError(_("Grouping by %s is not allowed." % ', '.join([self._fields[field_name].string for field_name in private_fields])))
+            raise AccessError(_("Grouping by %s is not allowed." % ', '.join([self._fields[field_name].string for field_name in private_fields])))
         return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def unlink(self):
@@ -792,7 +794,7 @@ class Meeting(models.Model):
                 if 'name' in fields:
                     activity_values['summary'] = event.name
                 if 'description' in fields:
-                    activity_values['note'] = event.description
+                    activity_values['note'] = tools.plaintext2html(event.description)
                 if 'start' in fields:
                     # self.start is a datetime UTC *only when the event is not allday*
                     # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)

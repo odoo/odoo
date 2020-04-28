@@ -70,18 +70,14 @@ QUnit.module('Chatter', {
                         string: "Related Document ID",
                         type: 'integer',
                     },
-                    snailmail_status: {
-                        string: "Snailmail Status",
-                        type: "char"
-                    },
-                    snailmail_error: {
-                        string: "Snailmail Error",
-                        type: "boolean",
-                    },
                     message_type: {
                         string: "Type",
                         type: 'selection',
                     },
+                    notifications: {
+                        string: "Notifications",
+                        type: 'array',
+                    }
                 },
                 records: [{
                     id: 11,
@@ -106,10 +102,12 @@ QUnit.module('Chatter', {
 });
 
 QUnit.test('Sent', async function (assert) {
-    assert.expect(7);
+    assert.expect(6);
 
-    this.data['mail.message'].records[0].snailmail_status = 'sent';
-    this.data['mail.message'].records[0].snailmail_error = false;
+    this.data['mail.message'].records[0].notifications = [{
+        'notification_type': 'snail',
+        'notification_status': 'sent',
+    }];
 
     var form = await createView({
         View: FormView,
@@ -120,31 +118,32 @@ QUnit.test('Sent', async function (assert) {
         arch: getArch(),
     });
 
-    assert.containsOnce(form, '.o_thread_snailmail_tooltip_container',
+    assert.containsOnce(form, '.o_thread_message_notification',
         "Snailmail icon should appear on message");
-    assert.containsOnce(form, '.o_thread_message_snailmail_sent',
-        "Snailmail status of message should be 'sent'");
-    assert.containsNone(form, '.o_thread_tooltip_snailmail',
+    assert.containsNone(form, '.o_thread_tooltip_icon',
         "No tooltip should be present");
 
-    await testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_sent'), 'mouseover');
-    assert.ok($('.o_thread_tooltip_snailmail:visible').length,
+    await testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_notification'), 'mouseover');
+    assert.ok($('.o_thread_tooltip_icon:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
-    assert.ok($('.o_thread_tooltip_snailmail_icon.fa-check').length,
+    assert.ok($('.o_thread_tooltip_icon .fa-check').length,
         "Tooltip should show correct icon");
-    assert.ok($('.o_thread_tooltip_snailmail:contains("Sent")').length,
+    assert.ok($('.o_thread_tooltip_icon:contains("Sent")').length,
         "Tooltip should show correct text");
 
-    await testUtils.dom.click(form.$('.o_thread_message_snailmail_sent'));
+    await testUtils.dom.click(form.$('.o_thread_message_notification'));
     assert.containsNone($('.modal'), "No modal should open on click");
 
     form.destroy();
 });
 
 QUnit.test('Canceled', async function (assert) {
-    assert.expect(7);
+    assert.expect(6);
 
-    this.data['mail.message'].records[0].snailmail_status = 'canceled';
+    this.data['mail.message'].records[0].notifications = [{
+        'notification_type': 'snail',
+        'notification_status': 'canceled',
+    }];
 
     var form = await createView({
         View: FormView,
@@ -155,32 +154,32 @@ QUnit.test('Canceled', async function (assert) {
         arch: getArch(),
     });
 
-    assert.containsOnce(form, '.o_thread_snailmail_tooltip_container',
+    assert.containsOnce(form, '.o_thread_message_notification',
         "Snailmail icon should appear on message");
-    assert.containsOnce(form, '.o_thread_message_snailmail_canceled',
-        "Snailmail status of message should be 'canceled'");
-    assert.containsNone(form, '.o_thread_tooltip_snailmail',
+    assert.containsNone(form, '.o_thread_tooltip_icon',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_canceled'), 'mouseover');
-    assert.ok($('.o_thread_tooltip_snailmail:visible').length,
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_notification'), 'mouseover');
+    assert.ok($('.o_thread_tooltip_icon:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
-    assert.ok($('.o_thread_tooltip_snailmail_icon.fa-trash-o').length,
+    assert.ok($('.o_thread_tooltip_icon .fa-trash-o').length,
         "Tooltip should show correct icon");
-    assert.ok($('.o_thread_tooltip_snailmail:contains("Canceled")').length,
+    assert.ok($('.o_thread_tooltip_icon:contains("Canceled")').length,
         "Tooltip should show correct text");
 
-    await testUtils.dom.click(form.$('.o_thread_message_snailmail_canceled'));
+    await testUtils.dom.click(form.$('.o_thread_message_notification'));
     assert.containsNone($('.modal'), "No modal should open on click");
 
     form.destroy();
 });
 
 QUnit.test('Pending', async function (assert) {
-    assert.expect(7);
+    assert.expect(6);
 
-    this.data['mail.message'].records[0].snailmail_status = 'pending';
-    this.data['mail.message'].records[0].snailmail_error = false;
+    this.data['mail.message'].records[0].notifications = [{
+        'notification_type': 'snail',
+        'notification_status': 'ready',
+    }];
 
     var form = await createView({
         View: FormView,
@@ -191,32 +190,33 @@ QUnit.test('Pending', async function (assert) {
         arch: getArch(),
     });
 
-    assert.containsOnce(form, '.o_thread_snailmail_tooltip_container',
+    assert.containsOnce(form, '.o_thread_message_notification',
         "Snailmail icon should appear on message");
-    assert.containsOnce(form, '.o_thread_message_snailmail_pending',
-        "Snailmail status of message should be 'pending'");
-    assert.containsNone(form, '.o_thread_tooltip_snailmail',
+    assert.containsNone(form, '.o_thread_tooltip_icon',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_pending'), 'mouseover');
-    assert.ok($('.o_thread_tooltip_snailmail:visible').length,
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_notification'), 'mouseover');
+    assert.ok($('.o_thread_tooltip_icon:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
-    assert.ok($('.o_thread_tooltip_snailmail_icon.fa-clock-o').length,
+    assert.ok($('.o_thread_tooltip_icon .fa-clock-o').length,
         "Tooltip should show correct icon");
-    assert.ok($('.o_thread_tooltip_snailmail:contains("Awaiting Dispatch")').length,
+    assert.ok($('.o_thread_tooltip_icon:contains("Awaiting Dispatch")').length,
         "Tooltip should show correct text");
 
-    await testUtils.dom.click(form.$('.o_thread_message_snailmail_pending'));
+    await testUtils.dom.click(form.$('.o_thread_message_notification'));
     assert.containsNone($('.modal'), "No modal should open on click");
 
     form.destroy();
 });
 
 QUnit.test('No Price Available', async function (assert) {
-    assert.expect(11);
+    assert.expect(10);
 
-    this.data['mail.message'].records[0].snailmail_status = 'no_price_available';
-    this.data['mail.message'].records[0].snailmail_error = true;
+    this.data['mail.message'].records[0].notifications = [{
+        'notification_type': 'snail',
+        'notification_status': 'exception',
+        'failure_type': 'sn_price',
+    }];
 
     var form = await createView({
         View: FormView,
@@ -234,22 +234,20 @@ QUnit.test('No Price Available', async function (assert) {
         }
     });
 
-    assert.containsOnce(form, '.o_thread_snailmail_tooltip_container',
+    assert.containsOnce(form, '.o_thread_message_notification',
         "Snailmail icon should appear on message");
-    assert.containsOnce(form, '.o_thread_message_snailmail_no_price_available',
-        "Snailmail status of message should be 'no_price_available'");
-    assert.containsNone(form, '.o_thread_tooltip_snailmail',
+    assert.containsNone(form, '.o_thread_tooltip_icon',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_no_price_available'), 'mouseover');
-    assert.ok($('.o_thread_tooltip_snailmail:visible').length,
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_notification'), 'mouseover');
+    assert.ok($('.o_thread_tooltip_icon:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
-    assert.ok($('.o_thread_tooltip_snailmail_icon.fa-exclamation').length,
+    assert.ok($('.o_thread_tooltip_icon .fa-exclamation').length,
         "Tooltip should show correct icon");
-    assert.ok($('.o_thread_tooltip_snailmail:contains("Error")').length,
+    assert.ok($('.o_thread_tooltip_icon:contains("Error")').length,
         "Tooltip should show correct text");
 
-    await testUtils.dom.click(form.$('.o_thread_message_snailmail_no_price_available'));
+    await testUtils.dom.click(form.$('.o_thread_message_notification'));
     var $modal = $('.modal');
     assert.ok($modal.length, "A modal should open on click");
 
@@ -267,10 +265,13 @@ QUnit.test('No Price Available', async function (assert) {
 });
 
 QUnit.test('Format Error', async function (assert) {
-    assert.expect(8);
+    assert.expect(7);
 
-    this.data['mail.message'].records[0].snailmail_status = 'format_error';
-    this.data['mail.message'].records[0].snailmail_error = true;
+    this.data['mail.message'].records[0].notifications = [{
+        'notification_type': 'snail',
+        'notification_status': 'exception',
+        'failure_type': 'sn_format',
+    }];
 
     testUtils.mock.patch(ThreadWidget, {
         do_action: function (action, options) {
@@ -294,22 +295,20 @@ QUnit.test('Format Error', async function (assert) {
         }
     });
 
-    assert.containsOnce(form, '.o_thread_snailmail_tooltip_container',
+    assert.containsOnce(form, '.o_thread_message_notification',
         "Snailmail icon should appear on message");
-    assert.containsOnce(form, '.o_thread_message_snailmail_format_error',
-        "Snailmail status of message should be 'format_error'");
-    assert.containsNone(form, '.o_thread_tooltip_snailmail',
+    assert.containsNone(form, '.o_thread_tooltip_icon',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_format_error'), 'mouseover');
-    assert.ok($('.o_thread_tooltip_snailmail:visible').length,
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_notification'), 'mouseover');
+    assert.ok($('.o_thread_tooltip_icon:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
-    assert.ok($('.o_thread_tooltip_snailmail_icon.fa-exclamation').length,
+    assert.ok($('.o_thread_tooltip_icon .fa-exclamation').length,
         "Tooltip should show correct icon");
-    assert.ok($('.o_thread_tooltip_snailmail:contains("Error")').length,
+    assert.ok($('.o_thread_tooltip_icon:contains("Error")').length,
         "Tooltip should show correct text");
 
-    await testUtils.dom.click(form.$('.o_thread_message_snailmail_format_error'));
+    await testUtils.dom.click(form.$('.o_thread_message_notification'));
     assert.verifySteps(['do_action'], "'do_action' should have been called");
 
     form.destroy();
@@ -317,10 +316,13 @@ QUnit.test('Format Error', async function (assert) {
 });
 
 QUnit.test('Credit Error', async function (assert) {
-    assert.expect(14);
+    assert.expect(13);
 
-    this.data['mail.message'].records[0].snailmail_status = 'credit_error';
-    this.data['mail.message'].records[0].snailmail_error = true;
+    this.data['mail.message'].records[0].notifications = [{
+        'notification_type': 'snail',
+        'notification_status': 'exception',
+        'failure_type': 'sn_credit',
+    }];
 
     var form = await createView({
         View: FormView,
@@ -343,22 +345,20 @@ QUnit.test('Credit Error', async function (assert) {
         }
     });
 
-    assert.containsOnce(form, '.o_thread_snailmail_tooltip_container',
+    assert.containsOnce(form, '.o_thread_message_notification',
         "Snailmail icon should appear on message");
-    assert.containsOnce(form, '.o_thread_message_snailmail_credit_error',
-        "Snailmail status of message should be 'credit_error'");
-    assert.containsNone(form, '.o_thread_tooltip_snailmail',
+    assert.containsNone(form, '.o_thread_tooltip_icon',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_credit_error'), 'mouseover');
-    assert.ok($('.o_thread_tooltip_snailmail:visible').length,
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_notification'), 'mouseover');
+    assert.ok($('.o_thread_tooltip_icon:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
-    assert.ok($('.o_thread_tooltip_snailmail_icon.fa-exclamation').length,
+    assert.ok($('.o_thread_tooltip_icon .fa-exclamation').length,
         "Tooltip should show correct icon");
-    assert.ok($('.o_thread_tooltip_snailmail:contains("Error")').length,
+    assert.ok($('.o_thread_tooltip_icon:contains("Error")').length,
         "Tooltip should show correct text");
 
-    await testUtils.dom.click(form.$('.o_thread_message_snailmail_credit_error'));
+    await testUtils.dom.click(form.$('.o_thread_message_notification'));
     var $modal = $('.modal');
     assert.ok($modal.length, "A modal should open on click");
 
@@ -369,7 +369,7 @@ QUnit.test('Credit Error', async function (assert) {
     assert.notOk($('.modal').length,
         "The modal should be closed after click on 'Re-send letter'");
 
-    await testUtils.dom.click(form.$('.o_thread_message_snailmail_credit_error'));
+    await testUtils.dom.click(form.$('.o_thread_message_notification'));
 
     assert.containsOnce($modal, 'button:contains("Cancel letter")',
         "Modal should have a 'Cancel letter' button");
@@ -385,10 +385,13 @@ QUnit.test('Credit Error', async function (assert) {
 });
 
 QUnit.test('Trial Error', async function (assert) {
-    assert.expect(14);
+    assert.expect(13);
 
-    this.data['mail.message'].records[0].snailmail_status = 'trial_error';
-    this.data['mail.message'].records[0].snailmail_error = true;
+    this.data['mail.message'].records[0].notifications = [{
+        'notification_type': 'snail',
+        'notification_status': 'exception',
+        'failure_type': 'sn_trial',
+    }];
 
     var form = await createView({
         View: FormView,
@@ -411,22 +414,20 @@ QUnit.test('Trial Error', async function (assert) {
         }
     });
 
-    assert.containsOnce(form, '.o_thread_snailmail_tooltip_container',
+    assert.containsOnce(form, '.o_thread_message_notification',
         "Snailmail icon should appear on message");
-    assert.containsOnce(form, '.o_thread_message_snailmail_trial_error',
-        "Snailmail status of message should be 'trial_error'");
-    assert.containsNone(form, '.o_thread_tooltip_snailmail',
+    assert.containsNone(form, '.o_thread_tooltip_icon',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_trial_error'), 'mouseover');
-    assert.ok($('.o_thread_tooltip_snailmail:visible').length,
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_notification'), 'mouseover');
+    assert.ok($('.o_thread_tooltip_icon:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
-    assert.ok($('.o_thread_tooltip_snailmail_icon.fa-exclamation').length,
+    assert.ok($('.o_thread_tooltip_icon .fa-exclamation').length,
         "Tooltip should show correct icon");
-    assert.ok($('.o_thread_tooltip_snailmail:contains("Error")').length,
+    assert.ok($('.o_thread_tooltip_icon:contains("Error")').length,
         "Tooltip should show correct text");
 
-    await testUtils.dom.click(form.$('.o_thread_message_snailmail_trial_error'));
+    await testUtils.dom.click(form.$('.o_thread_message_notification'));
     var $modal = $('.modal');
     assert.ok($modal.length, "A modal should open on click");
 
@@ -437,7 +438,7 @@ QUnit.test('Trial Error', async function (assert) {
     assert.containsNone($('.modal'),
         "The modal should be closed after click on 'Re-send letter'");
 
-    await testUtils.dom.click(form.$('.o_thread_message_snailmail_trial_error'));
+    await testUtils.dom.click(form.$('.o_thread_message_notification'));
 
     $modal = $('.modal');
     assert.containsOnce($modal, 'button:contains("Cancel letter")',
@@ -454,10 +455,13 @@ QUnit.test('Trial Error', async function (assert) {
 });
 
 QUnit.test('Missing Required Fields', async function (assert) {
-    assert.expect(8);
+    assert.expect(7);
 
-    this.data['mail.message'].records[0].snailmail_status = 'missing_required_fields';
-    this.data['mail.message'].records[0].snailmail_error = true;
+    this.data['mail.message'].records[0].notifications = [{
+        'notification_type': 'snail',
+        'notification_status': 'exception',
+        'failure_type': 'sn_fields',
+    }];
 
     testUtils.mock.patch(ThreadWidget, {
         do_action: function (action, options) {
@@ -480,22 +484,20 @@ QUnit.test('Missing Required Fields', async function (assert) {
         }
     });
 
-    assert.containsOnce(form, '.o_thread_snailmail_tooltip_container',
+    assert.containsOnce(form, '.o_thread_message_notification',
         "Snailmail icon should appear on message");
-    assert.containsOnce(form, '.o_thread_message_snailmail_missing_required_fields',
-        "Snailmail status of message should be 'missing_required_fields'");
-    assert.containsNone(form, '.o_thread_tooltip_snailmail',
+    assert.containsNone(form, '.o_thread_tooltip_icon',
         "No tooltip should be present");
 
-    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_snailmail_missing_required_fields'), 'mouseover');
-    assert.ok($('.o_thread_tooltip_snailmail:visible').length,
+    testUtils.dom.triggerMouseEvent(form.$('.o_thread_message_notification'), 'mouseover');
+    assert.ok($('.o_thread_tooltip_icon:visible').length,
         "Tooltip should appear when hovering the Snailmail Icon");
-    assert.ok($('.o_thread_tooltip_snailmail_icon.fa-exclamation').length,
+    assert.ok($('.o_thread_tooltip_icon .fa-exclamation').length,
         "Tooltip should show correct icon");
-    assert.ok($('.o_thread_tooltip_snailmail:contains("Error")').length,
+    assert.ok($('.o_thread_tooltip_icon:contains("Error")').length,
         "Tooltip should show correct text");
 
-    await testUtils.dom.click(form.$('.o_thread_message_snailmail_missing_required_fields'));
+    await testUtils.dom.click(form.$('.o_thread_message_notification'));
     assert.verifySteps(['do_action'], "'do_action' should have been called");
 
     form.destroy();

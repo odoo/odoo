@@ -334,7 +334,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         orderpoint_form.save()
 
         self.mock_date.today.return_value = fields.Date.today() + timedelta(days=1)
-        self.env.cache.invalidate()
+        orderpoint._compute_qty()
         self.env['procurement.group'].run_scheduler()
         po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
         self.assertEqual(len(po_line), 2)

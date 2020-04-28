@@ -2,7 +2,7 @@
 <odoo>
 <template id="snippets">
     <div id="snippets_menu">
-        <button type="button" class="o_we_add_snippet_btn active">
+        <button type="button" class="o_we_add_snippet_btn active" accesskey="1">
             Blocks
         </button>
         <t t-set="customize_title">Click in the page to customize</t>
@@ -46,6 +46,9 @@
 
     <div data-selector=".s_hr"
          data-drop-near="p, h1, h2, h3, blockquote, .s_hr"/>
+
+    <div data-js="VersionControl"
+         data-selector="[data-snippet]"/>
 </template>
 
 <!-- default block -->

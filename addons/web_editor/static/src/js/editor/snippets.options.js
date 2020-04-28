@@ -3093,10 +3093,31 @@ registry.many2one = SnippetOptionWidget.extend({
             self.$target.html($li.data('name'));
         }
 
-        _.defer(function () {
-            self.trigger_up('deactivate_snippet');
-        });
+        this._clear();
     }
+});
+
+/**
+ * Allows to display a warning message on outdated snippets.
+ */
+registry.VersionControl = SnippetOptionWidget.extend({
+    xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
+
+    /**
+     * @override
+     */
+    start: function () {
+        this.trigger_up('get_snippet_versions', {
+            snippetName: this.$target[0].dataset.snippet,
+            onSuccess: snippetVersions => {
+                const isUpToDate = snippetVersions && ['vjs', 'vcss', 'vxml'].every(key => this.$target[0].dataset[key] === snippetVersions[key]);
+                if (!isUpToDate) {
+                    this.$el.prepend(qweb.render('web_editor.outdated_block_message'));
+                }
+            },
+        });
+        return this._super(...arguments);
+    },
 });
 
 /**

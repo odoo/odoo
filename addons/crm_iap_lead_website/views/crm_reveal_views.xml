@@ -13,9 +13,9 @@
                                 <span class="o_stat_text"> Opportunities </span>
                             </div>
                         </button>
-                        <button name="action_get_lead_tree_view" class="oe_stat_button" type="object" icon="fa-handshake-o" groups="crm.group_use_lead" attrs="{'invisible': [('lead_type', '!=', 'lead'), ('leads_count', '=' , 0)]}">
+                        <button name="action_get_lead_tree_view" class="oe_stat_button" type="object" icon="fa-handshake-o" groups="crm.group_use_lead" attrs="{'invisible': [('lead_type', '!=', 'lead'), ('lead_count', '=' , 0)]}">
                             <div class="o_stat_info">
-                                <field name="leads_count"/>
+                                <field name="lead_count"/>
                                 <span class="o_stat_text"> Leads </span>
                             </div>
                         </button>
@@ -132,13 +132,12 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <field name="reveal_state" widget="statusbar"/>
+                    <field name="reveal_state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
                     <group>
                         <field name="reveal_ip"/>
                         <field name="reveal_rule_id"/>
-                        <field name="reveal_state"/>
                         <field name="create_date"/>
                     </group>
                 </sheet>

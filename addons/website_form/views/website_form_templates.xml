@@ -5,7 +5,7 @@
         <xpath expr="//div[@name='mail_button']" position="replace">
             <span class="hidden" data-for="contactus_form" t-att-data-values="{'email_to': res_company.email}" />
             <div id="contactus_section">
-                <section class="s_website_form" data-vcss="001">
+                <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                     <div class="container">
                         <form id="contactus_form" action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                             <div class="s_website_form_rows row s_col_no_bgcolor">

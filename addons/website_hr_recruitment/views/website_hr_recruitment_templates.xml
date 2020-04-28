@@ -136,7 +136,7 @@
             </h2>
             <span class="hidden" data-for="hr_recruitment_form" t-att-data-values="{'department_id': job and job.department_id.id or '', 'job_id': job and job.id or ''}" />
             <div id="jobs_section">
-                <section id="forms" class="s_website_form" data-vcss="001">
+                <section id="forms" class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                     <div class="container">
                         <form id="hr_recruitment_form" action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="hr.applicant" data-success-mode="redirect" data-success-page="/job-thank-you" hide-change-model="true">
                             <div class="s_website_form_rows row s_col_no_bgcolor">
@@ -247,7 +247,7 @@
                     </p>
                 </div>
                 <div class="col-lg-3 offset-lg-1 pb32">
-                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star">
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
                         <h6 class="s_rating_title">Customer Relationship</h6>
                         <div class="s_rating_icons o_not_editable">
                             <span class="s_rating_active_icons text-primary">
@@ -261,7 +261,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star">
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
                         <h6 class="s_rating_title">Personal Evolution</h6>
                         <div class="s_rating_icons o_not_editable">
                             <span class="s_rating_active_icons text-primary">
@@ -275,7 +275,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star">
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
                         <h6 class="s_rating_title">Autonomy</h6>
                         <div class="s_rating_icons o_not_editable">
                             <span class="s_rating_active_icons text-primary">
@@ -289,7 +289,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star">
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
                         <h6 class="s_rating_title">Administrative Work</h6>
                         <div class="s_rating_icons o_not_editable">
                             <span class="s_rating_active_icons text-primary">
@@ -303,7 +303,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star">
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
                         <h6 class="s_rating_title">Technical Expertise</h6>
                         <div class="s_rating_icons o_not_editable">
                             <span class="s_rating_active_icons text-primary">
@@ -322,7 +322,7 @@
         </div>
     </section>
     <!-- Responsabilities, Must Have and Nice to have -->
-    <section class="s_comparisons pt24 pb24 bg-200">
+    <section class="s_comparisons pt24 pb24 bg-200" data-snippet="s_comparisons">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
@@ -383,24 +383,20 @@
                     <div>
                         <h5>About us</h5>
                         <p>Learn more about our company.</p>
-                        <div class="s_btn text-left" data-name="Button">
-                            <a href="/aboutus" class="btn btn-outline-alpha" target="_blank"><small><b>READ</b></small></a>
-                        </div>
+                        <p><a href="/aboutus" class="btn btn-outline-alpha" target="_blank"><small><b>READ</b></small></a></p>
                     </div>
                     <br/>
                     <div>
                         <h5>Our Product</h5>
                         <p>Discover our products.</p>
-                        <div class="s_btn text-left" data-name="Button">
-                            <a href="/" class="btn btn-outline-alpha" target="_blank"><small><b>READ</b></small></a>
-                        </div>
+                        <p><a href="/" class="btn btn-outline-alpha" target="_blank"><small><b>READ</b></small></a></p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <!-- What we offer -->
-    <section class="s_features pt40 pb40 bg-200" data-name="Features">
+    <section class="s_features pt40 pb40 bg-200" data-name="Features" data-snippet="s_features">
         <div class="container">
             <h2>What We Offer</h2>
             <br/>
@@ -595,9 +591,7 @@
                                 We are a team of passionate people whose goal is to improve everyone's life through disruptive products.
                                 We build great products to solve your business problems.
                             </p>
-                            <div class="s_btn pt18" data-name="Button">
-                                <a href="/aboutus" class="btn btn-primary">About us</a>
-                            </div>
+                            <p><a href="/aboutus" class="btn btn-primary">About us</a></p>
                         </div>
                     </div>
                 </div>

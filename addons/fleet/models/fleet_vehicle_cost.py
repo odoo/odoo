@@ -140,8 +140,10 @@ class FleetVehicleLogServices(models.Model):
         })
         return res
 
+    active = fields.Boolean(default=True)
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', default=1, required=True, help='Vehicle concerned by this log')
     amount = fields.Float('Cost')
+    description = fields.Char('Description')
     odometer_id = fields.Many2one('fleet.vehicle.odometer', 'Odometer', help='Odometer measure of the vehicle at the moment of this log')
     odometer = fields.Float(compute="_get_odometer", inverse='_set_odometer', string='Odometer Value',
         help='Odometer measure of the vehicle at the moment of this log')
@@ -154,6 +156,12 @@ class FleetVehicleLogServices(models.Model):
     vendor_id = fields.Many2one('res.partner', 'Vendor')
     notes = fields.Text()
     service_type_id = fields.Many2one('fleet.service.type', 'Service Type', required=True)
+    state = fields.Selection([
+        ('todo', 'To Do'),
+        ('running', 'Running'),
+        ('done', 'Done'),
+        ('cancelled', 'Cancelled'),
+    ], default='todo', string='Stage')
 
     def _get_odometer(self):
         self.odometer = 0
