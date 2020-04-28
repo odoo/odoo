@@ -7,6 +7,7 @@ odoo.define('web.component_extension_tests', function (require) {
     const { Component, tags } = owl;
     const { xml } = tags;
     const { useListener } = require('web.custom_hooks');
+    const { Model , useModel } = require('web.model');
 
     QUnit.module("web", function () {
         QUnit.module("Component Extension");
@@ -247,6 +248,60 @@ odoo.define('web.component_extension_tests', function (require) {
             assert.verifySteps(['Root custom1', 'Leaf custom1']);
 
             root.destroy();
+        });
+
+        QUnit.module('Model');
+
+        QUnit.test("Model can dispatch during mount", async function (assert) {
+            assert.expect(2);
+
+            class MyModel extends Model {
+                constructor() {
+                    super(...arguments);
+                    this.text = null;
+                }
+                async loadState(text) {
+                    await Promise.resolve();
+                    this.text = text;
+                }
+                _dispatch() {
+                    this.trigger('state-loaded', this.text);
+                }
+            }
+            class Parent extends Component {
+                constructor() {
+                    super(...arguments);
+                    this.text = null;
+                    this.model = useModel('mainModel');
+                    this.model.on('state-loaded', this, text => {
+                        this.text = text;
+                    });
+                }
+                async willStart() {
+                    await this.model.dispatch('loadState', 'tell me so');
+                    return super.willStart(...arguments);
+                }
+            }
+            Parent.env = makeTestEnvironment({}, () => Promise.resolve());
+            Parent.template = xml`<div t-esc="text" />`;
+
+            const fixture = document.body.querySelector('#qunit-fixture');
+
+            const model = new MyModel();
+            Parent.env.mainModel = model;
+            const parent = new Parent(null);
+            await parent.mount(fixture);
+            assert.strictEqual(
+                fixture.innerHTML,
+                '<div>tell me so</div>'
+            );
+
+            await model.dispatch('loadState', 'set my soul on fire');
+            assert.strictEqual(
+                fixture.innerHTML,
+                '<div>set my soul on fire</div>'
+            );
+            parent.destroy();
         });
     });
 });

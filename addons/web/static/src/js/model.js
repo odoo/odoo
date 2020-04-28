@@ -137,7 +137,9 @@ odoo.define('web.model', function () {
         model.on('update', component, async modelRev => {
             if (mapping[componentId] < modelRev) {
                 mapping[componentId] = modelRev;
-                await component.render();
+                if (__owl__.isMounted) {
+                    await component.render();
+                }
             }
         });
 
