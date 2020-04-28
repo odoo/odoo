@@ -41,6 +41,7 @@ _ref_vat = {
     'hu': 'HU12345676',
     'hr': 'HR01234567896',  # Croatia, contributed by Milan Tribuson
     'ie': 'IE1234567FA',
+    'in': "12AAAAA1234AAZA",
     'is': 'IS062199',
     'it': 'IT12345670017',
     'lt': 'LT123456715',
@@ -467,6 +468,19 @@ class ResPartner(models.Model):
         except ValueError:
             return False
         return True
+
+    def check_vat_in(self, vat):
+        #reference from https://www.gstzen.in/a/format-of-a-gst-number-gstin.html
+        if vat and len(vat) == 15:
+            all_gstin_re = [
+                r'[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[Zz1-9A-Ja-j]{1}[0-9a-zA-Z]{1}', # Normal, Composite, Casual GSTIN
+                r'[0-9]{4}[A-Z]{3}[0-9]{5}[UO]{1}[N][A-Z0-9]{1}', #UN/ON Body GSTIN
+                r'[0-9]{4}[a-zA-Z]{3}[0-9]{5}[N][R][0-9a-zA-Z]{1}', #NRI GSTIN
+                r'[0-9]{2}[a-zA-Z]{4}[a-zA-Z0-9]{1}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[DK]{1}[0-9a-zA-Z]{1}', #TDS GSTIN
+                r'[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[C]{1}[0-9a-zA-Z]{1}' #TCS GSTIN
+            ]
+            return any(re.compile(rx).match(vat) for rx in all_gstin_re)
+        return False
 
     def _fix_vat_number(self, vat, country_id):
         code = self.env['res.country'].browse(country_id).code if country_id else False
