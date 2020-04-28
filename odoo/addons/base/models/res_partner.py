@@ -11,6 +11,7 @@ import re
 
 import requests
 from lxml import etree
+from random import randint
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _
@@ -72,8 +73,11 @@ class PartnerCategory(models.Model):
     _order = 'name'
     _parent_store = True
 
+    def _get_default_color(self):
+        return randint(1, 11)
+
     name = fields.Char(string='Tag Name', required=True, translate=True)
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', default=_get_default_color)
     parent_id = fields.Many2one('res.partner.category', string='Parent Category', index=True, ondelete='cascade')
     child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
