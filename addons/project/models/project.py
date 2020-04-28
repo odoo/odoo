@@ -133,36 +133,6 @@ class Project(models.Model):
         action['context'] = "{'default_res_model': '%s','default_res_id': %d}" % (self._name, self.id)
         return action
 
-    @api.model
-    def activate_sample_project(self):
-        """ Unarchives the sample project 'project.project_project_data' and
-            reloads the project dashboard """
-        # Unarchive sample project
-        project = self.env.ref('project.project_project_data', False)
-        if project:
-            project.write({'active': True})
-
-        cover_image = self.env.ref('project.msg_task_data_14_attach', False)
-        cover_task = self.env.ref('project.project_task_data_14', False)
-        if cover_image and cover_task:
-            cover_task.write({'displayed_image_id': cover_image.id})
-
-        # Change the help message on the action (no more activate project)
-        action = self.env.ref('project.open_view_project_all', False)
-        action_data = None
-        if action:
-            action.sudo().write({
-                "help": _('''<p class="o_view_nocontent_smiling_face">
-                    Create a new project</p>''')
-            })
-            action_data = action.read()[0]
-
-            action_config = self.env.ref('project.open_view_project_all_config', False)
-            if action_config:
-                action_config.sudo().write({'help': action.help})
-        # Reload the dashboard
-        return action_data
-
     def _compute_is_favorite(self):
         for project in self:
             project.is_favorite = self.env.user in project.favorite_user_ids
@@ -183,6 +153,7 @@ class Project(models.Model):
         return [(6, 0, [self.env.uid])]
 
     name = fields.Char("Name", index=True, required=True, tracking=True)
+    description = fields.Text()
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
@@ -204,15 +175,14 @@ class Project(models.Model):
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
-        default=lambda self: self.env.company.resource_calendar_id.id,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="Timetable working hours to adjust the gantt diagram report")
+        related='company_id.resource_calendar_id')
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
                                domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)])
     color = fields.Integer(string='Color Index')
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True)
+    alias_enabled = fields.Boolean(string='Use email alias', compute='_compute_alias_enabled', readonly=False)
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True,
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
@@ -270,6 +240,10 @@ class Project(models.Model):
         if 'allow_subtasks' not in defaults:
             defaults['allow_subtasks'] = self.env.user.has_group('project.group_subtask_project')
         return defaults
+
+    def _compute_alias_enabled(self):
+        for project in self:
+            project.alias_enabled = project.alias_domain and project.alias_id.alias_name
 
     @api.depends('allowed_internal_user_ids', 'allowed_portal_user_ids')
     def _compute_allowed_users(self):
@@ -580,8 +554,13 @@ class Task(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_is_company = fields.Boolean(related='partner_id.is_company', readonly=True)
     commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')
-    partner_email = fields.Char(related='partner_id.email', string='Customer Email')
-    partner_phone = fields.Char(related='partner_id.phone')
+    partner_email = fields.Char(
+        compute='_compute_partner_email', inverse='_inverse_partner_email',
+        string='Email', readonly=False, store=True)
+    partner_phone = fields.Char(
+        compute='_compute_partner_phone', inverse='_inverse_partner_phone',
+        string="Phone", readonly=False, store=True)
+    ribbon_message = fields.Char('Ribbon message', compute='_compute_ribbon_message')
     partner_city = fields.Char(related='partner_id.city', readonly=False)
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=_default_company_id)
@@ -600,7 +579,7 @@ class Task(models.Model):
     subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
     allow_subtasks = fields.Boolean('project.project', related="project_id.allow_subtasks", readonly=True)
     subtask_count = fields.Integer("Sub-task count", compute='_compute_subtask_count')
-    email_from = fields.Char(string='Email', help="These people will receive email.", index=True,
+    email_from = fields.Char(string='Email From', help="These people will receive email.", index=True,
         compute='_compute_email_from', store="True", readonly=False)
     allowed_user_ids = fields.Many2many('res.users', string="Visible to", groups='project.group_project_manager', compute='_compute_allowed_user_ids', store=True, readonly=False)
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
@@ -611,6 +590,43 @@ class Task(models.Model):
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+
+    @api.depends('partner_id.email')
+    def _compute_partner_email(self):
+        for task in self:
+            if task.partner_id and task.partner_id.email != task.partner_email:
+                task.partner_email = task.partner_id.email
+
+    def _inverse_partner_email(self):
+        for task in self:
+            if task.partner_id and task.partner_email != task.partner_id.email:
+                task.partner_id.email = task.partner_email
+
+    @api.depends('partner_id.phone')
+    def _compute_partner_phone(self):
+        for task in self:
+            if task.partner_id and task.partner_phone != task.partner_id.phone:
+                task.partner_phone = task.partner_id.phone
+
+    def _inverse_partner_phone(self):
+        for task in self:
+            if task.partner_id and task.partner_phone != task.partner_id.phone:
+                task.partner_id.phone = task.partner_phone
+
+    @api.depends('partner_email', 'partner_phone', 'partner_id')
+    def _compute_ribbon_message(self):
+        for task in self:
+            will_write_email = task.partner_id and task.partner_email != task.partner_id.email
+            will_write_phone = task.partner_id and task.partner_phone != task.partner_id.phone
+
+            if will_write_email and will_write_phone:
+                task.ribbon_message = _('By saving this change, the customer email and phone number will also be updated.')
+            elif will_write_email:
+                task.ribbon_message = _('By saving this change, the customer email will also be updated.')
+            elif will_write_phone:
+                task.ribbon_message = _('By saving this change, the customer phone number will also be updated.')
+            else:
+                task.ribbon_message = False
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
@@ -1086,7 +1102,7 @@ class ProjectTags(models.Model):
     def _get_default_color(self):
         return randint(1, 11)
 
-    name = fields.Char('Tag Name', required=True)
+    name = fields.Char('Name', required=True)
     color = fields.Integer(string='Color Index', default=_get_default_color)
 
     _sql_constraints = [
