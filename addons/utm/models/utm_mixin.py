@@ -31,7 +31,7 @@ class UtmMixin(models.AbstractModel):
                 value = False
                 if request:
                     # ir_http dispatch saves the url params in a cookie
-                    value = request.httprequest.cookies.get(cookie_name)
+                    value = request.httprequest.cookies.get(cookie_name) or request.params and request.params.get(url_param)
                 # if we receive a string for a many2one, we search/create the id
                 if field.type == 'many2one' and isinstance(value, str) and value:
                     Model = self.env[field.comodel_name]
