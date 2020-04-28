@@ -109,13 +109,14 @@ class SaleOrderLine(models.Model):
     # CRUD
     # --------------------------
 
-    @api.model
+    @api.model_create_multi
     def create(self, values):
-        line = super(SaleOrderLine, self).create(values)
+        lines = super(SaleOrderLine, self).create(values)
         # Do not generate purchase when expense SO line since the product is already delivered
-        if line.state == 'sale' and not line.is_expense:
-            line.sudo()._purchase_service_generation()
-        return line
+        lines.filtered(
+            lambda line: line.state == 'sale' and not line.is_expense
+        )._purchase_service_generation()
+        return lines
 
     def write(self, values):
         increased_lines = None
