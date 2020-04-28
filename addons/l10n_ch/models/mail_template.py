@@ -32,14 +32,21 @@ class MailTemplate(models.Model):
             if related_model._name == 'account.invoice' and related_model.l10n_ch_isr_valid:
                 #We add an attachment containing the ISR
                 template = res_ids_to_templates[res_id]
-                report_name = 'ISR-' + self._render_template(template.report_name, template.model, res_id) + '.pdf'
+                inv_print_name = self._render_template(template.report_name, template.model, res_id)
 
-                pdf = self.env.ref('l10n_ch.l10n_ch_isr_report').render_qweb_pdf([res_id])[0]
-                pdf = base64.b64encode(pdf)
+                isr_report_name = 'ISR-' + inv_print_name + '.pdf'
+                qr_report_name = 'QR-bill-' + inv_print_name + '.pdf'
 
+                isr_pdf = self.env.ref('l10n_ch.l10n_ch_isr_report').render_qweb_pdf([res_id])[0]
+                isr_pdf = base64.b64encode(isr_pdf)
+
+                qr_pdf = self.env.ref('l10n_ch.l10n_ch_qr_report').render_qweb_pdf([res_id])[0]
+                qr_pdf = base64.b64encode(qr_pdf)
+
+                new_attachments = [(isr_report_name, isr_pdf), (qr_report_name, qr_pdf)]
                 attachments_list = multi_mode and rslt[res_id].get('attachments', False) or rslt.get('attachments', False)
                 if attachments_list:
-                    attachments_list.append((report_name, pdf))
+                    attachments_list.extend(new_attachments)
                 else:
-                    rslt[res_id]['attachments'] = [(report_name, pdf)]
+                    rslt[res_id]['attachments'] = new_attachments
         return rslt
