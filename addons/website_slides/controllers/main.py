@@ -440,9 +440,13 @@ class WebsiteSlides(WebsiteProfile):
                 last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]
                 last_message_attachment_ids = last_message_values.pop('attachment_ids', [])
                 if last_message_attachment_ids:
-                    last_message_attachment_ids = json.dumps(request.env['ir.attachment'].browse(last_message_attachment_ids).read(
-                        ['id', 'name', 'mimetype', 'file_size', 'access_token']
-                    ))
+                    # use sudo as portal user cannot read access_token, necessary for updating attachments
+                    # through frontend chatter -> access is already granted and limited to current user message
+                    last_message_attachment_ids = json.dumps(
+                        request.env['ir.attachment'].sudo().browse(last_message_attachment_ids).read(
+                            ['id', 'name', 'mimetype', 'file_size', 'access_token']
+                        )
+                    )
             else:
                 last_message_values = {}
                 last_message_attachment_ids = []
