@@ -92,8 +92,8 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      * @param {Function} callback - to be executed after the scroll is performed
      */
     _forumScrollAction: function ($el, duration, callback) {
-        var $mainNav = $('#wrapwrap > header');
-        var gap = $mainNav.height() + $mainNav.offset().top;
+        const $main = $('#wrapwrap > main');
+        var gap = $main.offset().top + parseInt($main.css('padding-top'));
 
         $('html, body').stop().animate({
             scrollTop: $el.offset().top - gap
