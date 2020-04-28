@@ -320,6 +320,17 @@ class account_register_payments(models.TransientModel):
 
         return rec
 
+    def _get_payment_group_key(self, inv):
+        """Define group key to group invoices in payments."""
+        if inv.partner_id.type == 'invoice':
+            partner_id = inv.partner_id.id
+        else:
+            partner_id = inv.commercial_partner_id.id
+        account_id = inv.account_id.id
+        invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
+        recipient_account = inv.partner_bank_id
+        return (partner_id, account_id, invoice_type, recipient_account)
+
     @api.multi
     def _groupby_invoices(self):
         '''Groups the invoices linked to the wizard.
@@ -338,18 +349,19 @@ class account_register_payments(models.TransientModel):
         results = {}
         # Create a dict dispatching invoices according to their commercial_partner_id, account_id, invoice_type and partner_bank_id
         for inv in self.invoice_ids:
-            if inv.partner_id.type == 'invoice':
-                partner_id = inv.partner_id.id
-            else:
-                partner_id = inv.commercial_partner_id.id
-            account_id = inv.account_id.id
-            invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
-            recipient_account =  inv.partner_bank_id
-            key = (partner_id, account_id, invoice_type, recipient_account)
+            key = self._get_payment_group_key(inv)
             if not key in results:
                 results[key] = self.env['account.invoice']
             results[key] += inv
         return results
+
+    def _prepare_communication(self, invoices):
+        '''Define the value for communication field
+        Append all invoice's references together.
+        '''
+        return self.show_communication_field and self.communication \
+                or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
+                or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
 
     @api.multi
     def _prepare_payment_vals(self, invoices):
@@ -361,9 +373,7 @@ class account_register_payments(models.TransientModel):
         amount = self._compute_payment_amount(invoices=invoices) if self.multi else self.amount
         payment_type = ('inbound' if amount > 0 else 'outbound') if self.multi else self.payment_type
         bank_account = self.multi and invoices[0].partner_bank_id or self.partner_bank_account_id
-        pmt_communication = self.show_communication_field and self.communication \
-                            or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
-                            or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
+        pmt_communication = self._prepare_communication(invoices)
 
         if invoices[0].partner_id.type == 'invoice':
             partner_id = invoices[0].partner_id
