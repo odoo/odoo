@@ -581,7 +581,7 @@ class Module(models.Model):
     def button_uninstall(self):
         if 'base' in self.mapped('name'):
             raise UserError(_("The `base` module cannot be uninstalled"))
-        if not all(state == 'installed' for state in self.mapped('state')):
+        if not all(state in ('installed', 'to upgrade') for state in self.mapped('state')):
             raise UserError(_(
                 "One or more of the selected modules have already been uninstalled, if you "
                 "believe this to be an error, you may try again later or contact support."
