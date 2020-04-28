@@ -76,9 +76,7 @@ class AccountMove(models.Model):
     l10n_vn_invoice_no = fields.Char(string='Invoice No (Số hóa đơn)', copy=False)
     l10n_vn_reservation_code = fields.Char(string='Reservation Code (Mã số bí mật)', copy=False)
     l10n_vn_uuid = fields.Char(readonly=True, copy=False)
-    l10n_vn_is_send_mail_success = fields.Boolean(default=False, readonly=True, copy=False)
     l10n_vn_transaction_date = fields.Char(string='Transaction ID (Ngày lập)', readonly=True, copy=False)
-    l10n_vn_file = fields.Binary(readonly=True, copy=False)
     l10n_vn_vas_invoice_date = fields.Datetime(compute='_compute_l10n_vn_vas_invoice_date', store=True)
     l10n_vn_tax_invoice_number = fields.Char(copy=False)
     l10n_vn_tax_invoice_series = fields.Char(copy=False)
@@ -91,15 +89,13 @@ class AccountMove(models.Model):
             else:
                 record.l10n_vn_vas_invoice_date = False
 
-    # #### ACTIONS
+    def post(self):
+        res = super().post()
+        for record in self.filtered(lambda r: r.country_code == 'VN'):
+            record._export_einvoice()
+        return res
 
-    def button_export_draft_invoice(self):
-        self.action_export_einvoice(is_draft=True)
-
-    def button_export_confirmed_invoice(self):
-        self.action_export_einvoice(is_draft=False)
-
-    def action_export_einvoice(self, is_draft):
+    def _export_einvoice(self):
         self.ensure_one()
         customer_address = self.partner_id._display_address(without_company=True).replace('\n', ', ')
         company_address = self.partner_id.company_id.partner_id._display_address(without_company=True).replace('\n', ', ')
@@ -180,7 +176,7 @@ class AccountMove(models.Model):
             'tax_list': tax_list,
         })
 
-        data_return, viettel_input = self._l10n_vn_export_to_viettel(inv_vals, inv_lines_vals, is_draft=is_draft)
+        data_return, viettel_input = self._l10n_vn_export_to_viettel(inv_vals, inv_lines_vals)
         self.write({
             'l10n_vn_transaction_id': data_return['transaction_id'],
             'l10n_vn_invoice_no': data_return['inv_no'],
@@ -200,27 +196,30 @@ class AccountMove(models.Model):
         else:
             self.message_post(body="Export Draft E-Invoice successfully!")
 
-    def action_get_l10n_vn_file(self):
-        self.ensure_one()
-        if not self.l10n_vn_invoice_no:
-            raise UserError(_('The invoice has not been exported to Viettel.\nPlease click to button Export E-Invoice first'))
-        data = self._l10n_vn_get_invoice(self.company_id.vat, self.l10n_vn_invoice_no)[0]
-        if not data['description'] and not data['errorCode']:
-            self.l10n_vn_file = data['fileToBytes']
-        else:
-            raise UserError(_('%s\nError code:%s' % (data['description'], data['errorCode'])))
+    def action_invoice_print(self):
+        vn_invoices = self.filtered(lambda r: r.country_code == 'VN')
+        other_invoices = self - vn_invoices
 
-    def action_send_l10n_vn_mail(self):
-        self.ensure_one()
-        if not self.partner_id.email:
-            raise UserError(_("You cannot send email because you did not specify the customer's email. Please setup email for the customer"))
-        data = self._l10n_vn_send_mail(self.company_id.vat, self.l10n_vn_uuid)
-        data_output = data['commonOutputs']
-        if data_output[0]['description'] == 'SUCCESS':
-            self.message_post(body="Sent E-Invoice mail to customer")
-            self.l10n_vn_is_send_mail_success = True
-        else:
-            raise UserError(_('%s\nError code:%s' % (data_output['description'], data_output['errorCode'])))
+        if any(not move.is_invoice(include_receipts=True) for move in vn_invoices):
+            raise UserError(_("Only invoices could be printed."))
+
+        vn_invoices.filtered(lambda inv: not inv.invoice_sent).write({'invoice_sent': True})
+
+        for record in vn_invoices:
+            if not record.l10n_vn_invoice_no:
+                raise UserError(_('The invoice has not been exported to Viettel.\nPlease click to button Export E-Invoice first'))
+            data = record._l10n_vn_get_invoice(record.company_id.vat, record.l10n_vn_invoice_no)[0]
+            if not data['description'] and not data['errorCode']:
+                self.env['ir.attachment'].create({
+                    'name': "official_invoice.pdf",
+                    'datas': data['fileToBytes'],
+                    'res_model': 'account.move',
+                    'res_id': record.id,
+                })
+            else:
+                raise UserError(_('%s\nError code:%s' % (data['description'], data['errorCode'])))
+
+        return super(AccountMove, other_invoices).action_invoice_print()
 
     # #### VIETTEL API METHODS
 
@@ -251,7 +250,7 @@ class AccountMove(models.Model):
             response = e
         return response, request_status
 
-    def _l10n_vn_export_to_viettel(self, inv_vals, inv_lines_vals, is_draft=True):
+    def _l10n_vn_export_to_viettel(self, inv_vals, inv_lines_vals):
         self.ensure_one()
 
         invoice = {
@@ -282,7 +281,7 @@ class AccountMove(models.Model):
             ],
         }
         headers = urllib3.util.make_headers(basic_auth=self.company_id.l10n_vn_authority)
-        create_status = 'createOrUpdateInvoiceDraft' if is_draft else 'createInvoice'
+        create_status = 'createOrUpdateInvoiceDraft' if self.state == 'draft' else 'createInvoice'
         url_tail = 'InvoiceWS/{0}/{1}'.format(create_status, inv_vals.get('company_tax_code'))
         r, request_status = self._l10n_vn_request_http(invoice, headers, url_tail, return_dict=False)
 
@@ -337,13 +336,42 @@ class AccountMove(models.Model):
         url_tail = 'InvoiceUtilsWS/getInvoiceRepresentationFile'
         return self._l10n_vn_request_http(body, headers, url_tail)
 
-    def _l10n_vn_send_mail(self, tax_code, uuid):
-        self.ensure_one()
-        body = {
-            "supplierTaxCode": tax_code,
-            "lstTransactionUuid": uuid,
-        }
-        l10n_vn_auth = self.company_id.l10n_vn_authority
-        headers = urllib3.util.make_headers(basic_auth=l10n_vn_auth)
-        url_tail = 'InvoiceUtilsWS/sendHtmlMailProcess'
-        return self._l10n_vn_request_http(body, headers, url_tail)
+
+class AccountInvoiceSend(models.TransientModel):
+    _inherit = 'account.invoice.send'
+
+    @api.model
+    def default_get(self, fields):
+        res = super(AccountInvoiceSend, self).default_get(fields)
+        res_ids = self._context.get('active_ids')
+        invoices = self.env['account.move'].browse(res_ids).filtered(lambda move: move.is_invoice(include_receipts=True))
+
+        if any(cc == 'VN' for cc in invoices.mapped("country_code")):
+            if not all(cc == 'VN' for cc in invoices.mapped("country_code")):
+                raise UserError(_('All or none of the invoices must be from Vietnam to print and send'))
+            res['template_id'] = self.env.ref('l10n_vn_viettel.email_template_edi_invoice').id
+        return res
+
+    @api.onchange('template_id')
+    def onchange_template_id(self):
+        if 'VN' in self.invoice_ids.mapped('country_code'):
+            if self.composer_id:
+                self.composer_id.template_id = self.template_id
+                self.composer_id.onchange_template_id_wrapper()
+            self.attachment_ids = False
+            for invoice in self.invoice_ids:
+                if not invoice.l10n_vn_invoice_no:
+                    raise UserError(_('The invoice has not been exported to Viettel.\nPlease post the invoice first'))
+                data = invoice._l10n_vn_get_invoice(invoice.company_id.vat, invoice.l10n_vn_invoice_no)[0]
+                if not data['description'] and not data['errorCode']:
+                    attachment_id = self.env['ir.attachment'].create({
+                        'name': "official_invoice.pdf",
+                        'datas': data['fileToBytes'],
+                        'res_model': 'account.move',
+                        'res_id': invoice.id,
+                    })
+                    self.attachment_ids += attachment_id
+                else:
+                    raise UserError(_('%s\nError code:%s' % (data['description'], data['errorCode'])))
+        else:
+            super().onchange_template_id()

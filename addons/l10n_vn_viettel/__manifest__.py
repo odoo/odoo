@@ -17,7 +17,7 @@ This is the module to manage electronic invoices for Vietnam in Odoo.
         "l10n_vn",
     ],
     "data": [
-        'security/security.xml',
+        'data/mail_template_data.xml',
         'views/account_move_views.xml',
         'views/res_config_settings_views.xml',
     ],

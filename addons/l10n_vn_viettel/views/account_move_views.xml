@@ -6,14 +6,7 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <header position="inside">
-                <button name="action_send_l10n_vn_mail" type="object" string="Send mail to customer" attrs="{'invisible': ['|', ('country_code', '!=', 'VN'), '|','|',('l10n_vn_invoice_no', '!=', False), ('state','=', 'posted'),('l10n_vn_is_send_mail_success', '=', True)]}"/>
-                <button name="button_export_draft_invoice" type="object" string="Export Draft E-Invoice" attrs="{'invisible': ['|', ('country_code', '!=', 'VN'), ('l10n_vn_file', '!=', False), ('state', 'not in', ('draft', 'posted'))]}"/>
-                <button name="button_export_confirmed_invoice" type="object" string="Export Confirmed E-Invoice" attrs="{'invisible': ['|', ('country_code', '!=', 'VN'), '|', ('state','!=', 'posted'), '&amp;', ('l10n_vn_invoice_no', '=', False), ('l10n_vn_file', '!=', False)]}" groups="l10n_vn_viettel.group_l10n_vn_send_validated_invoice"/>
-                <button name="action_get_l10n_vn_file" type="object" string="Get E-Invoice PDF file" attrs="{'invisible':['|', ('country_code', '!=', 'VN'), ('l10n_vn_file', '!=', False)]}"/>
-            </header>
             <field name="type" position="after">
-                <field name="l10n_vn_is_send_mail_success" invisible="1"/>
                 <field name="country_code" invisible="1"/>
             </field>
             <xpath expr="//notebook/page[@name='other_info']" position="inside">
@@ -25,10 +18,6 @@
                     <group>
                         <field name="l10n_vn_invoice_no"/>
                         <field name="l10n_vn_reservation_code"/>
-                    </group>
-
-                    <group>
-                        <field name="l10n_vn_file" filename="file_name" string="E-Invoice PDF file"/>
                     </group>
                 </group>
             </xpath>

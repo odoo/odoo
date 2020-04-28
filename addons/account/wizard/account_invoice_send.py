@@ -60,8 +60,8 @@ class AccountInvoiceSend(models.TransientModel):
                 res_ids = self._context.get('active_ids')
                 self.composer_id = self.env['mail.compose.message'].create({
                     'composition_mode': 'comment' if len(res_ids) == 1 else 'mass_mail',
-                    'template_id': self.template_id.id
                 })
+            self.onchange_template_id()
             self.composer_id.onchange_template_id_wrapper()
 
     @api.onchange('is_email')
