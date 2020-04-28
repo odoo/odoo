@@ -23,32 +23,6 @@
              </field>
         </record>
 
-        <!-- Custom reports (aka filters) -->
-        <record id="filter_task_report_task_pipe" model="ir.filters">
-            <field name="name">Task Pipe</field>
-            <field name="model_id">report.project.task.user</field>
-            <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['project_id'], 'col_group_by': ['stage_id'], 'measures': ['nbr']}</field>
-        </record>
-        <record id="filter_task_report_workload" model="ir.filters">
-            <field name="name">Workload</field>
-            <field name="model_id">report.project.task.user</field>
-            <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['project_id'], 'measures': ['planned_hours']}</field>
-        </record>
-        <record id="filter_task_report_responsible" model="ir.filters">
-            <field name="name">By Responsible</field>
-            <field name="model_id">report.project.task.user</field>
-            <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['project_id', 'user_id']}</field>
-        </record>
-        <record id="filter_task_report_cumulative_flow" model="ir.filters">
-            <field name="name">Cumulative Flow</field>
-            <field name="model_id">report.project.task.user</field>
-            <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['stage_id', 'state'], 'measures': ['nbr','planned_hours']}</field>
-        </record>
-
         <record id="view_task_project_user_search" model="ir.ui.view">
             <field name="name">report.project.task.user.search</field>
             <field name="model">report.project.task.user</field>
@@ -65,7 +39,6 @@
                     <field name="stage_id"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
-                    <filter string="New" name="new" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
                     <group expand="0" string="Extended Filters">
                         <field name="priority"/>
                         <field name="company_id" groups="base.group_multi_company"/>
@@ -74,8 +47,6 @@
                         <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
                         <filter string="Assigned to" name="User" context="{'group_by': 'user_id'}"/>
                         <filter string="Stage" name="Stage" context="{'group_by': 'stage_id'}"/>
-                        <filter string="Assignment Date" name="assignation_month" context="{'group_by': 'date_assign:month'}"/>
-                        <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>

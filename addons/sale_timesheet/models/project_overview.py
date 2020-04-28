@@ -396,24 +396,19 @@ class Project(models.Model):
 
     def _plan_get_stat_button(self):
         stat_buttons = []
-        if len(self) == 1:
-            edit_project = self.env.ref('project.edit_project')
-            stat_buttons.append({
-                'name': _('Project'),
-                'icon': 'fa fa-puzzle-piece',
-                'action': _to_action_data('project.project', res_id=self.id,
-                    views=[[edit_project.id, 'form']])
-            })
-        ts_tree = self.env.ref('hr_timesheet.hr_timesheet_line_tree')
-        ts_form = self.env.ref('hr_timesheet.hr_timesheet_line_form')
+        num_projects = len(self)
+        if num_projects == 1:
+            action_data = _to_action_data('project.project', res_id=self.id,
+                                          views=[[self.env.ref('project.edit_project').id, 'form']])
+        else:
+            action_data = _to_action_data(action=self.env.ref('project.open_view_project_all_config'),
+                                          domain=[('id', 'in', self.ids)])
+
         stat_buttons.append({
-            'name': _('Timesheets'),
-            'icon': 'fa fa-calendar',
-            'action': _to_action_data(
-                'account.analytic.line',
-                domain=[('project_id', 'in', self.ids)],
-                views=[(ts_tree.id, 'list'), (ts_form.id, 'form')],
-            )
+            'name': _('Project') if num_projects == 1 else _('Projects'),
+            'count': num_projects,
+            'icon': 'fa fa-puzzle-piece',
+            'action': action_data
         })
 
         # if only one project, add it in the context as default value
@@ -439,7 +434,7 @@ class Project(models.Model):
             )
         })
         stat_buttons.append({
-            'name': _("Late Tasks"),
+            'name': [_("Tasks"), _("Late")],
             'count': self.env['project.task'].search_count(late_tasks_domain),
             'icon': 'fa fa-tasks',
             'action': _to_action_data(
@@ -449,7 +444,7 @@ class Project(models.Model):
             ),
         })
         stat_buttons.append({
-            'name': _("Tasks in Overtime"),
+            'name': [_("Tasks"), _("in Overtime")],
             'count': self.env['project.task'].search_count(overtime_tasks_domain),
             'icon': 'fa fa-tasks',
             'action': _to_action_data(
@@ -495,6 +490,25 @@ class Project(models.Model):
                             context={'create': False, 'delete': False}
                         )
                     })
+
+        ts_tree = self.env.ref('hr_timesheet.hr_timesheet_line_tree')
+        ts_form = self.env.ref('hr_timesheet.hr_timesheet_line_form')
+        if self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
+            timesheet_label = [_('Days'), _('Recorded')]
+        else:
+            timesheet_label = [_('Hours'), _('Recorded')]
+
+        stat_buttons.append({
+            'name': timesheet_label,
+            'count': sum(self.mapped('total_timesheet_time')),
+            'icon': 'fa fa-calendar',
+            'action': _to_action_data(
+                'account.analytic.line',
+                domain=[('project_id', 'in', self.ids)],
+                views=[(ts_tree.id, 'list'), (ts_form.id, 'form')],
+            )
+        })
+
         return stat_buttons
 
 

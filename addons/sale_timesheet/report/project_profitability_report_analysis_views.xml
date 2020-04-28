@@ -39,7 +39,7 @@
                 <field name="product_id"/>
                 <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <filter string="My Project" name="my_project" domain="[('user_id','=', uid)]"/>
+                <filter string="My Projects" name="my_project" domain="[('user_id','=', uid)]"/>
                 <group expand="1" string="Group By">
                     <filter string="Project" name="group_by_project" context="{'group_by':'project_id'}"/>
                     <filter string="Project Manager" name="group_by_user_id" context="{'group_by':'user_id'}"/>
