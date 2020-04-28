@@ -236,9 +236,10 @@
                     <field name="progress" />
                     <field name="remaining_hours" />
                     <field name="planned_hours" />
+                    <field name="allow_timesheets"/>
                 </templates>
                 <div class="oe_kanban_bottom_left" position="inside">
-                   <t t-if="record.planned_hours.raw_value &gt; 0">
+                   <t t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value">
                         <t t-set="badge" t-value="" t-if="record.progress.raw_value &lt; 80"/>
                         <t t-set="badge" t-value="'badge-warning'" t-if="record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100"/>
                         <t t-set="badge" t-value="'badge-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
