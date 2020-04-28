@@ -25,18 +25,31 @@ class MailTemplate(models.Model):
             res_ids = [res_ids]
             multi_mode = False
 
-        for record in self.env[self.model].browse(res_ids):
-            if record.l10n_ch_isr_valid:
-                # We add an attachment containing the ISR
-                report_name = 'ISR-' + self._render_field('report_name', record.ids, compute_lang=True)[record.id] + '.pdf'
+        if self.model == 'account.move':
+            for record in self.env[self.model].browse(res_ids):
+                if record.l10n_ch_isr_valid:
+                    # We add an attachment containing the ISR
+                    inv_print_name = self._render_field('report_name', record.ids, compute_lang=True)[record.id]
 
-                pdf = self.env.ref('l10n_ch.l10n_ch_isr_report').render_qweb_pdf(record.ids)[0]
-                pdf = base64.b64encode(pdf)
+                    report_name = 'ISR-' + self._render_field('report_name', record.ids, compute_lang=True)[record.id] + '.pdf'
 
-                record_dict = multi_mode and result[record.id] or result
-                attachments_list = record_dict.get('attachments', False)
+                    isr_report_name = 'ISR-' + inv_print_name + '.pdf'
+                    qr_report_name = 'QR-bill-' + inv_print_name + '.pdf'
+
+                    isr_pdf = self.env.ref('l10n_ch.l10n_ch_isr_report').render_qweb_pdf(record.ids)[0]
+                    isr_pdf = base64.b64encode(isr_pdf)
+
+                    qr_pdf = self.env.ref('l10n_ch.l10n_ch_qr_report').render_qweb_pdf(record.ids)[0]
+                    qr_pdf = base64.b64encode(qr_pdf)
+
+                    new_attachments = [(isr_report_name, isr_pdf), (qr_report_name, qr_pdf)]
+
+                    record_dict = multi_mode and result[record.id] or result
+                    attachments_list = record_dict.get('attachments', False)
+
                 if attachments_list:
-                    attachments_list.append((report_name, pdf))
+                    attachments_list.extend(new_attachments)
                 else:
-                    record_dict['attachments'] = [(report_name, pdf)]
+                    record_dict['attachments'] =  new_attachments
+
         return result

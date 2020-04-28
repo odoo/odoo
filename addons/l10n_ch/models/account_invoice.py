@@ -4,7 +4,7 @@
 import re
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools.float_utils import float_split_str
 from odoo.tools.misc import mod10r
 
@@ -166,8 +166,8 @@ class AccountMove(models.Model):
         return float_split_str(self.amount_residual, 2)
 
     def display_swiss_qr_code(self):
-        """ Returns whether or not to print the QR-bills additional page when
-        generation an invoice pdf.
+        """ DEPRECATED FUNCTION: not used anymore. QR-bills can now always
+        be generated, with a dedicated report
         """
         self.ensure_one()
         return self.display_qr_code and \
@@ -187,6 +187,17 @@ class AccountMove(models.Model):
                                    - define its bank\n
                                    - associate this bank with a postal reference for the currency used in this invoice\n
                                    - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."""))
+
+    def print_ch_qr_bill(self):
+        """ Triggered by the 'Print QR-bill' button.
+        """
+        self.ensure_one()
+
+        if not self.invoice_partner_bank_id._eligible_for_qr_code('ch_qr', self.partner_id, self.currency_id):
+            raise UserError(_("Cannot generate the QR-bill. Please check you have configured the address of your company and debtor. If you are using a QR-IBAN, also check the invoice's payment reference is a QR reference."))
+
+        self.l10n_ch_isr_sent = True
+        return self.env.ref('l10n_ch.l10n_ch_qr_report').report_action(self)
 
     def action_invoice_sent(self):
         # OVERRIDE
