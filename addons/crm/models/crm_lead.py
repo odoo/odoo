@@ -374,12 +374,12 @@ class Lead(models.Model):
                            self._table, ['create_date', 'team_id'])
         return res
 
-    @api.model
-    def create(self, vals):
-        lead = super(Lead, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        leads = super().create(vals_list)
         # Compute new probability for each lead separately
-        lead._update_probability()
-        return lead
+        leads._update_probability()
+        return leads
 
     def write(self, vals):
         # stage change:
