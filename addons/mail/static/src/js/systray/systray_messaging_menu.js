@@ -26,6 +26,7 @@ var MessagingMenu = Widget.extend({
         'click .o_mail_preview_mark_as_read': '_onClickPreviewMarkAsRead',
         'click .o_thread_window_expand': '_onClickExpand',
         'show.bs.dropdown': '_onShowDropdown',
+        'hide.bs.dropdown': '_onHideDropdown',
     },
     /**
      * @override
@@ -276,7 +277,14 @@ var MessagingMenu = Widget.extend({
      * @private
      */
     _onShowDropdown: function () {
+        document.body.classList.add('modal-open');
         this._updatePreviews();
+    },
+    /**
+     * @private
+     */
+    _onHideDropdown: function () {
+        document.body.classList.remove('modal-open');
     },
     /**
      * Opens the related document
