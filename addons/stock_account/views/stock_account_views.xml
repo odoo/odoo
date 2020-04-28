@@ -88,6 +88,7 @@
             <field name="name">Inventory Valuation</field>
             <field name="res_model">stock.valuation.layer</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('product_id.type', '=', 'product')]</field>
             <field name="context">{'search_default_group_by_product_id': 1}</field>
             <field name="search_view_id" ref="view_inventory_valuation_search"/>
         </record>
