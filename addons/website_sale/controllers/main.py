@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import json
 import logging
+import requests
+
 from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import fields, http, SUPERUSER_ID, tools, _
@@ -17,6 +20,7 @@ from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers import main
 from odoo.addons.website_form.controllers.main import WebsiteForm
+from odoo.addons.website.tools import get_video_thumbnail
 from odoo.osv import expression
 from odoo.tools.json import scriptsafe as json_scriptsafe
 _logger = logging.getLogger(__name__)
@@ -303,6 +307,26 @@ class WebsiteSale(http.Controller):
         if category:
             values['main_object'] = category
         return request.render("website_sale.products", values)
+
+    @http.route(['/shop/product/thumbnail_image/content'], type='json', auth="user", website=True)
+    def get_product_thumbnail_image_content(self, image_1920=None, **kwargs):
+        if not request.env.user.has_group("website.group_website_designer"):
+            kwargs['error'] = _("You don't have the access rights to get image content.")
+        else:
+            video_url = kwargs.get('video_url')
+            if not video_url and image_1920:
+                try:
+                    response = requests.get(image_1920, timeout=5)
+                    response.raise_for_status()
+                    kwargs['image_1920'] = base64.b64encode(response.content)
+                except requests.exceptions.HTTPError as e:
+                    kwargs['error'] = e.response.content
+                except requests.exceptions.ConnectionError as e:
+                    kwargs['error'] = str(e)
+            if video_url:
+                kwargs['image_1920'] = get_video_thumbnail(video_url)
+
+        return kwargs
 
     @http.route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
     def product(self, product, category='', search='', **kwargs):

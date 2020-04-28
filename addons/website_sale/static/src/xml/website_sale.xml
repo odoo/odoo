@@ -8,4 +8,31 @@
         </div>
     </t>
 
+    <t t-name="carouselIndicator">
+        <li t-if="video_url or image_1920" class="d-inline-block m-1 align-top o_wsale_product_new_img" data-target='#o-carousel-product' t-att-data-slide-to="index">
+            <img class="img img-fluid" alt="Binary file" t-attf-src="#{video_url ? 'data:image/png;base64,' : ''}#{image_1920}" name="image_1920" border="1"/>
+            <i t-if="video_url" class="fa fa-2x fa-play-circle-o o_product_video_thumb"/>
+        </li>
+    </t>
+
+    <t t-name="carouselInnerItem">
+        <div t-if="video_url or image_1920" class="carousel-item h-100">
+            <div t-if="video_url" class="d-flex align-items-center justify-content-center h-100 embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" t-att-src="video_url" allowfullscreen="true" frameborder="0"></iframe>
+            </div>
+            <div t-else="" class="d-flex align-items-center justify-content-center h-100">
+                <img t-att-src="image_1920" itemprop="image" class="img img-fluid product_detail_img mh-100" t-att-alt="name"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="carouselControl">
+        <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-slide="prev">
+            <span class="fa fa-chevron-left p-2" role="img" aria-label="Previous" title="Previous"/>
+        </a>
+        <a class="carousel-control-next" href="#o-carousel-product" role="button" data-slide="next">
+            <span class="fa fa-chevron-right p-2" role="img" aria-label="Next" title="Next"/>
+        </a>
+    </t>
+
 </templates>

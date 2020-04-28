@@ -69,6 +69,7 @@
             'website_sale/static/src/snippets/s_dynamic_snippet_products/options.js',
         ],
         'website.assets_editor': [
+            'website_sale/static/src/js/website_sale_extra_product_media.js',
             'website_sale/static/src/js/website_sale.editor.js',
             'website_sale/static/src/js/website_sale_form_editor.js',
             'website_sale/static/src/js/tours/website_sale_shop_frontend.js',
@@ -76,6 +77,7 @@
         'web.assets_common': [
             'website_sale/static/src/js/tours/tour_utils.js',
             'website_sale/static/src/js/tours/website_sale_shop.js',
+            'website_sale/static/src/js/tours/website_sale_shop_product_extra_media.js',
         ],
         'web.assets_tests': [
             'website_sale/static/tests/**/*',

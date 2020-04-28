@@ -96,7 +96,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     },
     {
         content: "click on compare button to add in comparison list when variant changed",
-        extra_trigger: 'body:not(:has(.carousel-indicators))', // there is 1 image on the custom variant
+        extra_trigger: 'body:has(.carousel-indicators li:eq(1).o_wsale_product_add_media i.fa-upload)',
         trigger: '.o_add_compare_dyn',
     },
     {
