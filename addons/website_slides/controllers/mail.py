@@ -29,7 +29,7 @@ class SlidesPortalChatter(PortalChatter):
         '/mail/chatter_update',
         ], type='http', auth="user")
     def mail_update_message(self, res_model, res_id, message, message_id, redirect=None, attachment_ids='', attachment_tokens='', **post):
-        # keep this mecanism intern to slide currently (saas 12.5) as it is
+        # keep this mechanism intern to slide currently (saas 12.5) as it is
         # considered experimental
         if res_model != 'slide.channel':
             raise Forbidden()
@@ -57,7 +57,7 @@ class SlidesPortalChatter(PortalChatter):
         message = request.env['mail.message'].search(domain, limit=1)
         if not message:
             raise NotFound()
-        message.write({
+        message.sudo().write({
             'body': message_body,
             'attachment_ids': [(4, aid) for aid in attachment_ids],
         })
