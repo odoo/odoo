@@ -12,7 +12,7 @@
                     <field name="partner_id"/>
                     <field name="rating_text" decoration-danger="rating_text == 'highly_dissatisfied'" decoration-warning="rating_text == 'not_satisfied'" decoration-success="rating_text == 'satisfied'"/>
                     <field name="feedback"/>
-                    <field name="create_date" string="Submitted on"/>
+                    <field name="create_date"/>
                 </tree>
             </field>
         </record>
@@ -23,17 +23,12 @@
             <field name="arch" type="xml">
                 <form string="Rating" create="false">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="action_open_rated_object" icon="fa-file">
-                                <div class="o_form_field o_stat_info">
-                                    <span class="o_stat_text">Resource</span>
-                                </div>
-                            </button>
-                        </div>
                         <group>
                             <group>
-                                <field name="res_name" string="Document"/>
-                                <field name="parent_res_name" string="Parent Holder"/>
+                                <field name="resource_ref" string="Document"/>
+                                <field name="res_name" string="Document" invisible="1"/>
+                                <field name="parent_ref" string="Parent Holder"/>
+                                <field name="parent_res_name" string="Parent Holder" invisible="1"/>
                                 <field name="rated_partner_id"/>
                                 <field name="rating" invisible="1"/>
                                 <field name="is_internal"/>
@@ -46,7 +41,7 @@
                                         <strong><field name="rating_text"/></strong>
                                     </div>
                                 </div>
-                                <field name="create_date" string="Submitted on"/>
+                                <field name="create_date"/>
                                 <field name="feedback" attrs="{'invisible': [('feedback','=',False)]}"/>
                             </group>
                         </group>

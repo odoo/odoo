@@ -31,17 +31,28 @@ class Rating(models.Model):
     def _default_access_token(self):
         return uuid.uuid4().hex
 
+    @api.model
+    def _selection_target_model(self):
+        return [(model.model, model.name) for model in self.env['ir.model'].search([])]
+
+    create_date = fields.Datetime(string="Submitted on")
     res_name = fields.Char(string='Resource name', compute='_compute_res_name', store=True, help="The name of the rated resource.")
     res_model_id = fields.Many2one('ir.model', 'Related Document Model', index=True, ondelete='cascade', help='Model of the followed resource')
     res_model = fields.Char(string='Document Model', related='res_model_id.model', store=True, index=True, readonly=True)
     res_id = fields.Integer(string='Document', required=True, help="Identifier of the rated object", index=True)
+    resource_ref = fields.Reference(
+        string='Resource Ref', selection='_selection_target_model',
+        compute='_compute_resource_ref', readonly=True)
     parent_res_name = fields.Char('Parent Document Name', compute='_compute_parent_res_name', store=True)
     parent_res_model_id = fields.Many2one('ir.model', 'Parent Related Document Model', index=True, ondelete='cascade')
     parent_res_model = fields.Char('Parent Document Model', store=True, related='parent_res_model_id.model', index=True, readonly=False)
     parent_res_id = fields.Integer('Parent Document', index=True)
+    parent_ref = fields.Reference(
+        string='Parent Ref', selection='_selection_target_model',
+        compute='_compute_parent_ref', readonly=True)
     rated_partner_id = fields.Many2one('res.partner', string="Rated person", help="Owner of the rated resource")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
-    rating = fields.Float(string="Rating Number", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 5=Happy")
+    rating = fields.Float(string="Rating Value", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 5=Happy")
     rating_image = fields.Binary('Image', compute='_compute_rating_image')
     rating_text = fields.Selection([
         ('satisfied', 'Satisfied'),
@@ -50,12 +61,28 @@ class Rating(models.Model):
         ('no_rating', 'No Rating yet')], string='Rating', store=True, compute='_compute_rating_text', readonly=True)
     feedback = fields.Text('Comment', help="Reason of the rating")
     message_id = fields.Many2one(
-        'mail.message', string="Linked message",
+        'mail.message', string="Message",
         index=True, ondelete='cascade',
         help="Associated message when posting a review. Mainly used in website addons.")
-    is_internal = fields.Boolean('Employee Only', readonly=False, related='message_id.is_internal', store=True)
+    is_internal = fields.Boolean('Visible Internally Only', readonly=False, related='message_id.is_internal', store=True)
     access_token = fields.Char('Security Token', default=_default_access_token, help="Access token to set the rating of the value")
     consumed = fields.Boolean(string="Filled Rating", help="Enabled if the rating has been filled.")
+
+    @api.depends('res_model', 'res_id')
+    def _compute_resource_ref(self):
+        for rating in self:
+            if rating.res_model and rating.res_model in self.env:
+                rating.resource_ref = '%s,%s' % (rating.res_model, rating.res_id or 0)
+            else:
+                rating.resource_ref = None
+
+    @api.depends('parent_res_model', 'parent_res_id')
+    def _compute_parent_ref(self):
+        for rating in self:
+            if rating.parent_res_model and rating.parent_res_model in self.env:
+                rating.parent_ref = '%s,%s' % (rating.parent_res_model, rating.parent_res_id or 0)
+            else:
+                rating.parent_ref = None
 
     @api.depends('parent_res_model', 'parent_res_id')
     def _compute_parent_res_name(self):

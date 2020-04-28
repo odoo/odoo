@@ -7,7 +7,7 @@ class Rating(models.Model):
     _inherit = 'rating.rating'
 
     # Adding information for comment a rating message
-    publisher_comment = fields.Text("Publisher Comment")
+    publisher_comment = fields.Text("Publisher comment")
     publisher_id = fields.Many2one('res.partner', 'Commented by',
                                    ondelete='set null', readonly=True)
     publisher_datetime = fields.Datetime("Commented on", readonly=True)

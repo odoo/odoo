@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='analytic_account_id']" position="after">
                 <field name="sale_order_id" optional="hide" widget="sale_order_many2one"/>
-                <field name="sale_line_id" optional="hide" widget="sale_order_many2one"/>
+                <field name="sale_line_id" optional="hide" widget="sale_order_many2one" readonly="1"/>
             </xpath>
         </field>
     </record>
@@ -56,10 +56,6 @@
             <xpath expr="//field[@name='stage_id']" position="before">
                 <field name="sale_order_id" string="Sale Order" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
             </xpath>
-            <filter name="inactive" position="before">
-                <filter string="To Invoice" name="to_invoice" domain="[('task_to_invoice', '=', True)]" groups="sales_team.group_sale_salesman" />
-                <separator/>
-            </filter>
         </field>
     </record>
 

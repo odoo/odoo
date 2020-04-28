@@ -6,10 +6,13 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
         <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <button string="Project Overview" class="oe_stat_button" type="object" name="action_view_timesheet" icon="fa-puzzle-piece"/>
+            </div>
             <xpath expr="//header" position="inside">
                 <button name="action_make_billable" string="Create Sales Order" type="object" attrs="{'invisible': [('display_create_order', '=', False)]}" groups="sales_team.group_sale_salesman"/>
             </xpath>
-            <xpath expr="//page[@name='emails']" position="after">
+            <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" attrs="{'invisible': [('billable_type', '=', 'no')]}">
                     <group>
                         <field name="display_create_order" invisible="1"/>
@@ -114,10 +117,10 @@
             </field>
         </record>
 
-    <record id="project_timesheet_action_client_timesheet_plan" model="ir.actions.act_window">
-        <field name="name">Overview</field>
-        <field name="res_model">project.project</field>
-        <field name="view_mode">qweb</field>
-    </record>
+        <record id="project_timesheet_action_client_timesheet_plan" model="ir.actions.act_window">
+            <field name="name">Overview</field>
+            <field name="res_model">project.project</field>
+            <field name="view_mode">qweb</field>
+        </record>
 
 </odoo>

@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record id="act_hr_timesheet_line_by_project" model="ir.actions.act_window">
-            <field name="name">Activities</field>
+            <field name="name">Timesheets</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="timesheet_view_tree_user"/>
@@ -39,7 +39,19 @@
             <field name="priority">24</field>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
+                        <div class="o_field_widget o_stat_info">
+                            <div class="oe_inline">
+                                <span class="o_stat_value mr-1">
+                                    <field name="total_timesheet_time" widget="statinfo" nolabel="1"/>
+                                </span>
+                                <span class="o_stat_value">
+                                    <field name="timesheet_encode_uom_id" class="o_stat_text" options="{'no_open' : True}"/>
+                                </span>
+                            </div>
+                            <span class="o_stat_text">Recorded</span>
+                        </div>
+                    </button>
                 </div>
                 <xpath expr="//div[@id='rating_settings']/.." position="before">
                     <div class="row mt16 o_settings_container">
@@ -65,17 +77,17 @@
             <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@id='timesheet_settings']" position="after">
-                        <div class="col-lg-6 o_setting_box"  attrs="{'invisible': [('allow_timesheets', '=', False)]}">
-                            <div class="o_setting_left_pane">
-                                <field name="allow_timesheet_timer"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="allow_timesheet_timer"/>
-                                <div class="text-muted">
-                                    Track your time using a timer
-                                </div>
+                    <div class="col-lg-6 o_setting_box"  attrs="{'invisible': [('allow_timesheets', '=', False)]}" id="timer_setting">
+                        <div class="o_setting_left_pane">
+                            <field name="allow_timesheet_timer"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="allow_timesheet_timer"/>
+                            <div class="text-muted">
+                                Track your time using a timer
                             </div>
                         </div>
+                    </div>
                 </xpath>
             </field>
         </record>
@@ -193,10 +205,13 @@
             <field name="inherit_id" ref="project.view_task_tree2" />
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <field name="user_id" position="after">
-                    <field name="planned_hours" widget="float_time" sum="Initially Planned Hours" optional="show"/>
+                <field name="company_id" position="after">
+                    <field name="allow_subtasks" invisible="1"/>
+                    <field name="planned_hours" widget="float_time" sum="Initially Planned Hours" optional="hide"/>
                     <field name="effective_hours" widget="float_time" sum="Effective Hours" optional="show"/>
-                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" optional="show" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
+                    <field name="subtask_effective_hours" widget="float_time" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
+                    <field name="total_hours_spent" widget="float_time" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
                     <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </field>
             </field>
