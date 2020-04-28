@@ -44,7 +44,11 @@ class ProjectCreateSalesOrder(models.TransientModel):
     def _onchange_product_id(self):
         if self.billable_type == 'project_rate':
             if self.product_id:
-                self.price_unit = self.product_id.lst_price
+                product = self.product_id.with_context(
+                    partner=self.partner_id,
+                    pricelist=self.partner_id.property_product_pricelist.id,
+                )
+                self.price_unit = product.price
         else:
             self.price_unit = 0.0
 
