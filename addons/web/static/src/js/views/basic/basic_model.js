@@ -31,7 +31,7 @@ odoo.define('web.BasicModel', function (require) {
  *      groupedBy: {string[]},
  *      id: {integer},
  *      isOpen: {boolean},
- *      loadMoreOffset: {integer},
+ *      isLoadMore: {boolean},
  *      limit: {integer},
  *      model: {string},
  *      offset: {integer},
@@ -2998,7 +2998,7 @@ var BasicModel = AbstractModel.extend({
                 }
             });
         } else {
-            def = this._searchReadUngroupedList(list);
+            def = this._searchReadUngroupedList(list, options);
         }
         return def.then(function () {
             if (options.enableRelationalFetch) {
@@ -3971,7 +3971,7 @@ var BasicModel = AbstractModel.extend({
             id: _.uniqueId(params.modelName + '_'),
             isOpen: params.isOpen,
             limit: type === 'record' ? 1 : (params.limit || Number.MAX_SAFE_INTEGER),
-            loadMoreOffset: 0,
+            isLoadMore: false,
             model: params.modelName,
             offset: params.offset || (type === 'record' ? _.indexOf(res_ids, res_id) : 0),
             openGroupByDefault: params.openGroupByDefault,
@@ -4612,6 +4612,7 @@ var BasicModel = AbstractModel.extend({
                         });
                         value = choice ? choice[1] : false;
                     }
+                    let domain;
                     var newGroup = self._makeDataPoint({
                         modelName: list.model,
                         count: group[rawGroupBy + '_count'],
@@ -4648,7 +4649,14 @@ var BasicModel = AbstractModel.extend({
                         // set the limit such that all previously loaded records
                         // (e.g. if we are coming back to the kanban view from a
                         // form view) are reloaded
-                        newGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
+                        if (oldGroup.isLoadMore || (oldGroup.res_ids.length > oldGroup.limit && oldGroup.viewType == 'kanban')) {
+                            newGroup.limit = oldGroup.res_ids.length;
+                            newGroup.progressBarValues = oldGroup.progressBarValues;
+                            newGroup.isLoadMore = oldGroup.isLoadMore;
+                            domain = {domain: newGroup.domain.concat([['id', 'in', oldGroup.res_ids]])};
+                        } else {
+                            newGroup.limit = oldGroup.limit;
+                        }
                         self.localData[newGroup.id] = newGroup;
                     } else if (!newGroup.openGroupByDefault || openGroupCount >= openGroupsLimit) {
                         newGroup.isOpen = false;
@@ -4668,7 +4676,7 @@ var BasicModel = AbstractModel.extend({
                             newGroup.__data = group.__data;
                         }
                         options = _.defaults({enableRelationalFetch: false}, options);
-                        defs.push(self._load(newGroup, options));
+                        defs.push(self._load(newGroup, _.extend({}, options,  domain || {})));
                     }
                 });
                 if (options.keepEmptyGroups) {
@@ -4808,7 +4816,7 @@ var BasicModel = AbstractModel.extend({
         if (options.orderedBy !== undefined) {
             element.orderedBy = (options.orderedBy.length && options.orderedBy) || element.orderedBy;
         }
-        if (options.domain !== undefined) {
+        if (options.domain !== undefined && options.isLoadMore != true) {
             element.domain = options.domain;
         }
         if (options.groupBy !== undefined) {
@@ -4826,11 +4834,8 @@ var BasicModel = AbstractModel.extend({
         if (options.groupsOffset !== undefined) {
             element.groupsOffset = options.groupsOffset;
         }
-        if (options.loadMoreOffset !== undefined) {
-            element.loadMoreOffset = options.loadMoreOffset;
-        } else {
-            // reset if not specified
-            element.loadMoreOffset = 0;
+        if (options.isLoadMore === true) {
+            element.isLoadMore = true;
         }
         if (options.currentId !== undefined) {
             element.res_id = options.currentId;
@@ -4842,7 +4847,7 @@ var BasicModel = AbstractModel.extend({
         if (element.type === 'record') {
             element.offset = _.indexOf(element.res_ids, element.res_id);
         }
-        var loadOptions = _.pick(options, 'fieldNames', 'viewType');
+        var loadOptions = _.pick(options, 'fieldNames', 'viewType', 'domain');
         return this._load(element, loadOptions).then(function (result) {
             return result.id;
         });
@@ -4873,7 +4878,7 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} list
      * @returns {Promise}
      */
-    _searchReadUngroupedList: function (list) {
+    _searchReadUngroupedList: function (list, options) {
         var self = this;
         var fieldNames = list.getFieldNames();
         var prom;
@@ -4887,15 +4892,14 @@ var BasicModel = AbstractModel.extend({
                 model: list.model,
                 fields: fieldNames,
                 context: _.extend({}, list.getContext(), {bin_size: true}),
-                domain: list.domain || [],
+                domain: options && options.domain || list.domain || [],
                 limit: list.limit,
-                offset: list.loadMoreOffset + list.offset,
+                offset: list.offset,
                 orderBy: list.orderedBy,
             });
         }
         return prom.then(function (result) {
             delete list.__data;
-            list.count = result.length;
             var ids = _.pluck(result.records, 'id');
             var data = _.map(result.records, function (record) {
                 var dataPoint = self._makeDataPoint({
@@ -4912,7 +4916,13 @@ var BasicModel = AbstractModel.extend({
                 self._parseServerData(fieldNames, dataPoint, dataPoint.data);
                 return dataPoint.id;
             });
-            if (list.loadMoreOffset) {
+            if (list.progressBarValues && list.progressBarValues.active_filter) {
+                list.totalRecordCount = list.count;
+                list.count = list.progressBarValues.counts[list.progressBarValues.active_filter] || list.count;
+            } else {
+                list.count = list.isLoadMore ? list.count : result.length;
+            }
+            if (list.isLoadMore) {
                 list.data = list.data.concat(data);
                 list.res_ids = list.res_ids.concat(ids);
             } else {
