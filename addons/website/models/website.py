@@ -911,11 +911,13 @@ class Website(models.Model):
             return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
         return self.env["ir.actions.actions"]._for_xml_id("website.action_website")
 
-    def button_go_website(self):
+    def button_go_website(self, path='/', mode_edit=False):
         self._force()
+        if mode_edit:
+            path += '?enable_editor=1'
         return {
             'type': 'ir.actions.act_url',
-            'url': '/',
+            'url': path,
             'target': 'self',
         }
 
