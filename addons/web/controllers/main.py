@@ -1338,6 +1338,8 @@ class Export(http.Controller):
 
             if len(id.split('/')) < 3 and 'relation' in field:
                 ref = field.pop('relation')
+                if import_compat and field.get('type') in ['many2one', 'many2many']:
+                    record['id'] += '/id'
                 record['value'] += '/id'
                 record['params'] = {'model': ref, 'prefix': id, 'name': name, 'parent_field': field}
                 record['children'] = True
