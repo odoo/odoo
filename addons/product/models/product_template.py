@@ -307,8 +307,8 @@ class ProductTemplate(models.Model):
         by adding an ir.config_parameter record with "product.volume_in_cubic_feet" as key
         and "1" as value.
         """
-        product_length_in_feet_param = self.env['ir.config_parameter'].sudo().get_param('product.volume_in_cubic_feet')
-        if product_length_in_feet_param == '1':
+        product_volume_in_cubic_feet_param = self.env['ir.config_parameter'].sudo().get_param('product.volume_in_cubic_feet')
+        if product_volume_in_cubic_feet_param == '1':
             return self.env.ref('uom.product_uom_cubic_foot')
         else:
             return self.env.ref('uom.product_uom_cubic_meter')
