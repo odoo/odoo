@@ -285,20 +285,20 @@ odoo.define('web.component_extension_tests', function (require) {
             Parent.env = makeTestEnvironment({}, () => Promise.resolve());
             Parent.template = xml`<div t-esc="text" />`;
 
-            const fixture = document.body.querySelector('#qunit-fixture');
-
+            const target = testUtils.prepareTarget();
             const model = new MyModel();
             Parent.env.mainModel = model;
             const parent = new Parent(null);
-            await parent.mount(fixture);
+            await parent.mount(target);
             assert.strictEqual(
-                fixture.innerHTML,
+                target.innerHTML,
                 '<div>tell me so</div>'
             );
 
             await model.dispatch('loadState', 'set my soul on fire');
+            await testUtils.nextTick();
             assert.strictEqual(
-                fixture.innerHTML,
+                target.innerHTML,
                 '<div>set my soul on fire</div>'
             );
             parent.destroy();

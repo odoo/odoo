@@ -69,7 +69,7 @@ odoo.define('web.model', function () {
             let rev = this.rev;
             await Promise.resolve();
             if (rev === this.rev) {
-                await this._notifyComponents();
+                this._notifyComponents();
             }
             return result;
         }
@@ -137,9 +137,7 @@ odoo.define('web.model', function () {
         model.on('update', component, async modelRev => {
             if (mapping[componentId] < modelRev) {
                 mapping[componentId] = modelRev;
-                if (__owl__.isMounted) {
-                    await component.render();
-                }
+                await component.render();
             }
         });
 
