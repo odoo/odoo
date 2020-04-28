@@ -97,6 +97,7 @@ class AccountInvoiceReport(models.Model):
                 move.invoice_date_due,
                 move.invoice_payment_term_id,
                 move.invoice_partner_bank_id,
+<<<<<<< HEAD
                 ROUND(move.amount_residual_signed / (SELECT count(*) FROM account_move_line aml where line.move_id = aml.move_id AND NOT aml.exclude_from_invoice_tab),
                   COALESCE((SELECT decimal_places
                     FROM res_currency rc INNER JOIN res_currency_rate cr ON
@@ -126,6 +127,11 @@ class AccountInvoiceReport(models.Model):
                         THEN -1
                         ELSE 1
                     END)                                                    AS amount_total,
+=======
+                -line.balance * (move.amount_residual_signed / NULLIF(move.amount_total_signed, 0.0)) * (line.price_total / NULLIF(line.price_subtotal, 0.0))
+                                                                            AS residual,
+                -line.balance * (line.price_total / NULLIF(line.price_subtotal, 0.0))    AS amount_total,
+>>>>>>> a00214b74d8... temp
                 uom_template.id                                             AS product_uom_id,
                 template.categ_id                                           AS product_categ_id,
                 SUM(line.quantity / NULLIF(COALESCE(uom_line.factor, 1) * COALESCE(uom_template.factor, 1), 0.0))
@@ -207,6 +213,7 @@ class ReportInvoiceWithoutPayment(models.AbstractModel):
     _description = 'Account report without payment lines'
 
     @api.model
+<<<<<<< HEAD
     def _get_report_values(self, docids, data=None):
         docs = self.env['account.move'].browse(docids)
 
@@ -216,6 +223,23 @@ class ReportInvoiceWithoutPayment(models.AbstractModel):
                 new_code_url = invoice.generate_qr_code()
                 if new_code_url:
                     qr_code_urls[invoice.id] = new_code_url
+=======
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        @lru_cache(maxsize=32)  # cache to prevent a SQL query for each data point
+        def get_rate(currency_id):
+            return self.env['res.currency']._get_conversion_rate(
+                self.env['res.currency'].browse(currency_id),
+                self.env.company.currency_id,
+                self.env.company,
+                self._fields['invoice_date'].today()
+            )
+        result = super(AccountInvoiceReport, self).read_group(domain, fields, set(groupby) | {'currency_id'}, offset, limit, orderby, lazy)
+        for res in result:
+            if res.get('currency_id') and self.env.company.currency_id.id != res['currency_id'][0]:
+                for field in {'amount_total', 'price_average', 'price_subtotal', 'residual'} & set(res):
+                    res[field] = self.env.company.currency_id.round((res[field] or 0.0) * get_rate(res['currency_id'][0]))
+        return result
+>>>>>>> a00214b74d8... temp
 
         return {
             'doc_ids': docids,
