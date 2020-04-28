@@ -7,9 +7,8 @@
         <field name="user_id" eval="False"/>
         <field name="is_default" eval="True"/>
         <field name="context">{
-        	'group_by': ['project_id', 'sale_line_id'],
-        	'pivot_measures': ['amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_cost', 'timesheet_unit_amount'],
-        	'pivot_column_groupby': [], 'pivot_row_groupby': []
+            'group_by': ['project_id', 'sale_line_id'],
+            'pivot_measures': ['amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_cost', 'timesheet_unit_amount']
         }</field>
     </record>
 

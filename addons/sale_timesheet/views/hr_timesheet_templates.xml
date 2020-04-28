@@ -339,14 +339,14 @@
                                                 <t t-if="row_type == 'sale_order_line'">
                                                     <t t-set="current_order_line" t-value="False"/>
                                                 </t>
-                                                <t t-set="foldable" t-value="row_type in ('sale_order', 'sale_order_line')"/>
+                                                <t t-set="foldable" t-value="row[0].get('has_children')"/>
                                                 <tr t-att-class="'o_timesheet_forecast_' + row_type + ' sale_order_' + str(current_order) + ' sale_order_line_' + str(current_order_line)"
-                                                    t-att-style="'display: none;' if row_type != 'sale_order' else ''">
+                                                    t-att-style="'display: none;' if row_type not in ('sale_order', 'sale_order_line') else ''">
                                                     <t t-foreach="row" t-as="row_value">
                                                         <td t-att-class="'o_right_bordered' if row_value_index in [5,10] else '' + ' text-center' if row_value_index != 0 else ''">
                                                             <t t-if="row_value_index == 0">
-                                                                <span t-if="foldable" t-att-class="'fa fa-caret-right' + (' project_overview_foldable' if foldable else '')" style="cursor: pointer;"
-                                                                      t-att-data-model="row[0].get('res_model')" t-att-data-res-id="row[0].get('res_id')"/>
+                                                                <span t-if="foldable" t-att-class="('fa fa-caret-down' if row_type == 'sale_order' else 'fa fa-caret-right') + (' project_overview_foldable' if foldable else '')"
+                                                                      style="cursor: pointer;" t-att-data-model="row[0].get('res_model')" t-att-data-res-id="row[0].get('res_id')"/>
                                                                 <t t-if="row_type == 'sale_order'">
                                                                     <a type="action" t-att-data-model="row_value['res_model']" t-att-data-res-id="row_value['res_id']" t-att-class="'o_timesheet_plan_redirect' if row_value['res_id'] else ''">
                                                                         <t t-esc="row_value.get('label')"/>
