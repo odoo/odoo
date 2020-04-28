@@ -56,18 +56,18 @@ odoo.define('web.OwlCompatibility', function () {
      *         <SpecificAdapter Component="LegacyWidget" firstArg="a" secondArg="b"/>
      *
      * If the legacy widget has to be updated when props change, one must define
-     * a subclass of ComponentAdapter to override 'update' and 'render'. The
-     * 'update' function takes the nextProps as argument, and should update the
+     * a subclass of ComponentAdapter to override 'updateWidget' and 'renderWidget'. The
+     * 'updateWidget' function takes the nextProps as argument, and should update the
      * internal state of the widget (might be async, and return a Promise).
      * However, to ensure that the DOM is updated all at once, it shouldn't do
-     * a re-rendering. This is the role of function 'render', which will be
+     * a re-rendering. This is the role of function 'renderWidget', which will be
      * called just before patching the DOM, and which thus must be synchronous.
      * For instance:
      *     class SpecificAdapter extends ComponentAdapter {
-     *         update(nextProps) {
+     *         updateWidget(nextProps) {
      *             return this.widget.updateState(nextProps);
      *         }
-     *         render() {
+     *         renderWidget() {
      *             return this.widget.render();
      *         }
      *     }
