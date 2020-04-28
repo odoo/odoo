@@ -26,19 +26,14 @@ _test_logger = logging.getLogger('odoo.tests')
 
 
 def load_data(cr, idref, mode, kind, package, report):
-    print("\n\n\n\n\n\n\n\n\n...........coming here",cr)
-
     """
-    
+
     kind: data, demo, test, init_xml, update_xml, demo_xml.
 
     noupdate is False, unless it is demo data or it is csv data in
     init mode.
 
     """
-    if(package.name=="mail"):
-
-        print("\n\n\n\n\n\n\n\n\n...........",package.data)
 
     def _get_files_of_kind(kind):
         if kind == 'demo':
@@ -77,8 +72,6 @@ def load_data(cr, idref, mode, kind, package, report):
 
 
 def load_demo(cr, package, idref, mode, report=None):
-    print("\n\n\n\n\n\n\n\n\n...........coming here 2",cr)
-
     """
     Loads demo data for the specified package.
     """
@@ -106,7 +99,6 @@ def load_demo(cr, package, idref, mode, report=None):
 
 
 def force_demo(cr):
-
     """
     Forces the `demo` flag on all modules, and installs demo data for all installed modules.
     """
@@ -274,7 +266,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                 # tests may have reset the environment
                 env = api.Environment(cr, SUPERUSER_ID, {})
                 module = env['ir.module.module'].browse(module_id)
-
 
             processed_modules.append(package.name)
 

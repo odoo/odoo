@@ -4,10 +4,12 @@
 import base64
 import json
 import logging
-
-
+import odoo.modules.graph
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
+import odoo
+import os.path
+from lxml import etree, builder
 
 _logger = logging.getLogger(__name__)
 
@@ -112,8 +114,19 @@ class MailTemplate(models.Model):
         return True
 
     def reset_mail_template(self):
-        for template in self:
-            template.write(json.loads(template.original_template_vals))
+        graph = odoo.modules.graph.Graph()
+        module_list= self.env['ir.module.module'].search([('state', '=', 'installed')])
+        module_list = [module.name for module in module_list]
+        graph.add_modules(self.env.cr, module_list, ['demo'])
+        files = []
+        for package in graph:
+             for f in package.data['data']:
+                if f.endswith('.xml') and f.count('data'):
+                    pathname =None
+                    files.append(f)
+                    pathname = os.path.join(package.name, f)
+                        print("\n\n\n\n\n\n\n\n................pathname..",pathname)
+                            
 
     # ------------------------------------------------------------
     # MESSAGE/EMAIL VALUES GENERATION
