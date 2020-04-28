@@ -44,6 +44,7 @@ function _processSearchPanelNode(node, fields) {
         const section = {
             color: childNode.attrs.color,
             description: childNode.attrs.string || fields[fieldName].string,
+            disableCounters: !!pyUtils.py_eval(childNode.attrs.disable_counters || '0'),
             fieldName: fieldName,
             icon: childNode.attrs.icon,
             id: sectionId,
@@ -53,7 +54,6 @@ function _processSearchPanelNode(node, fields) {
         if (section.type === 'category') {
             section.icon = section.icon || 'fa-folder';
         } else if (section.type === 'filter') {
-            section.disableCounters = !!pyUtils.py_eval(childNode.attrs.disable_counters || '0');
             section.domain = childNode.attrs.domain || '[]';
             section.groupBy = childNode.attrs.groupby;
             section.icon = section.icon || 'fa-filter';
@@ -110,6 +110,7 @@ const SearchPanel = Widget.extend({
         this.fields = params.fields;
         this.model = params.model;
         this.className = params.classes.concat(['o_search_panel']).join(' ');
+        this.reloadOptions = null;
         this.searchDomain = params.searchDomain;
         this.viewDomain = params.viewDomain;
     },
@@ -122,7 +123,7 @@ const SearchPanel = Widget.extend({
             this.filters = this.initialState.filters;
             this.categories = this.initialState.categories;
         } else {
-            await this._fetchCategories();
+            await this._fetchCategories(true);
             await this._fetchFilters();
             await this._applyDefaultFilterValues();
         }
@@ -221,8 +222,8 @@ const SearchPanel = Widget.extend({
         this._render();
     },
     /**
-     * Reload the filters and re-render. Note that we only reload the filters if
-     * the controlPanel domain or searchPanel domain has changed.
+     * Reload the filters and categories and re-render. Note that we only reload them
+     * if the controlPanel domain or searchPanel domain has changed.
      *
      * @param {Object} params
      * @param {Array[]} params.searchDomain domain coming from controlPanel
@@ -232,11 +233,14 @@ const SearchPanel = Widget.extend({
     async update(params) {
         const currentDomain = JSON.stringify([...this.searchDomain, ...this.viewDomain]);
         const newDomain = JSON.stringify([...params.searchDomain, ...params.viewDomain]);
-        if (this.needReload || (currentDomain !== newDomain)) {
-            this.needReload = false;
+        if (this.reloadOptions || (currentDomain !== newDomain)) {
             this.searchDomain = params.searchDomain;
             this.viewDomain = params.viewDomain;
+            if (!this.reloadOptions || this.reloadOptions.shouldFetchCategories) {
+                await this._fetchCategories();
+            }
             await this._fetchFilters();
+            this.reloadOptions = null;
         }
         return this._render();
     },
@@ -277,13 +281,16 @@ const SearchPanel = Widget.extend({
                 parentField = false;
             }
         }
+        const unfoldedIds = Object.values(category.values || {})
+            .filter(c => c.folded === false)
+            .map(c => c.id);
 
         category.values = {};
         values.forEach(value => {
             category.values[value.id] = Object.assign({}, value, {
                 childrenIds: [],
-                folded: true,
-                parentId: value[parentField] && value[parentField][0] || false,
+                folded: !unfoldedIds.includes(value.id),
+                parentId: value[parentField] || false,
             });
         });
         values.forEach(value => {
@@ -374,35 +381,35 @@ const SearchPanel = Widget.extend({
         }
     },
     /**
-     * Fetch values for each category. This is done only once, at startup.
+     * Fetch values for each category at startup. At reload a category is only
+     * fetched if the searchDomain changes and displayCounters is true for it.
      *
      * @private
+     * @param {boolean} [force]
      * @returns {Promise} resolved when all categories have been fetched
      */
-    _fetchCategories() {
+    _fetchCategories(force) {
         const proms = [];
-        let prom;
         for (const category of Object.values(this.categories)) {
             const field = this.fields[category.fieldName];
-            if (field.type === 'selection') {
-                const values = field.selection.map(value => {
-                    return { id: value[0], display_name: value[1] };
-                });
-                prom = Promise.resolve(values);
-            } else {
-                prom = this._rpc({
+            if (force || !category.disableCounters) {
+                const prom = this._rpc({
                     method: 'search_panel_select_range',
                     model: this.model,
                     args: [category.fieldName],
-                }).then(result => {
-                    category.parentField = result.parent_field;
-                    return result.values;
+                    kwargs: {
+                        category_domain: this._getCategoryDomain(category.id),
+                        disable_counters: category.disableCounters,
+                        search_domain: this.searchDomain,
+                    },
+                }).then(({ parent_field, values }) => {
+                    if (field.type === 'many2one') {
+                        category.parentField = parent_field;
+                    }
+                    this._createCategoryTree(category.id, values);
                 });
+                proms.push(prom);
             }
-            prom.then(values => {
-                this._createCategoryTree(category.id, values);
-            });
-            proms.push(prom);
         }
         return Promise.all(proms);
     },
@@ -419,7 +426,6 @@ const SearchPanel = Widget.extend({
             evalContext[category.fieldName] = category.activeValueId;
         }
         const categoryDomain = this._getCategoryDomain();
-        const filterDomain = this._getFilterDomain();
         const proms = [];
         for (const filter of Object.values(this.filters)) {
             const prom = this._rpc({
@@ -430,8 +436,9 @@ const SearchPanel = Widget.extend({
                     category_domain: categoryDomain,
                     comodel_domain: Domain.prototype.stringToArray(filter.domain, evalContext),
                     disable_counters: filter.disableCounters,
-                    filter_domain: filterDomain,
+                    filter_domain: this._getFilterDomain(filter.id),
                     group_by: filter.groupBy || false,
+                    group_domain: this._getGroupDomain(filter),
                     search_domain: [...this.searchDomain, ...this.viewDomain],
                 },
             }).then(values => { this._createFilterTree(filter.id, values); });
@@ -443,7 +450,7 @@ const SearchPanel = Widget.extend({
      * @private
      * @param {Object} category
      * @param {Array} validValues
-     * @returns id of the default item of the category or false
+     * @returns {(number|boolean)} id of the default item of the category or false
      */
     _getCategoryDefaultValue(category, validValues) {
         // set active value from context
@@ -460,11 +467,15 @@ const SearchPanel = Widget.extend({
      * Compute and return the domain based on the current active categories.
      *
      * @private
+     * @param {string} [excludedCategoryId]
      * @returns {Array[]}
      */
-    _getCategoryDomain() {
+    _getCategoryDomain(excludedCategoryId) {
         const domain = [];
         for (const category of Object.values(this.categories)) {
+            if (category.id === excludedCategoryId) {
+                continue;
+            }
             if (category.activeValueId) {
                 const field = this.fields[category.fieldName];
                 const op = (field.type === 'many2one' && category.parentField) ? 'child_of' : '=';
@@ -482,10 +493,10 @@ const SearchPanel = Widget.extend({
      * a group (and grouped using an 'OR').
      *
      * @private
-     * @param {string} filterId
+     * @param {string} [excludedFilterId]
      * @returns {Array[]}
      */
-    _getFilterDomain(filterId) {
+    _getFilterDomain(excludedFilterId) {
         const domain = [];
 
         function addCondition(fieldName, checkedValues) {
@@ -496,7 +507,7 @@ const SearchPanel = Widget.extend({
         }
 
         for (const filter of Object.values(this.filters)) {
-            if (filter.id === filterId) {
+            if (filter.id === excludedFilterId) {
                 continue;
             }
             const { fieldName } = filter;
@@ -514,6 +525,81 @@ const SearchPanel = Widget.extend({
         return domain;
     },
     /**
+     * Returns a domain or an object of domains used to complement
+     * the filter domains to accurately describe the constraints on
+     * records when computing record counts associated with the filter
+     * values (if a groupBy is provided). The idea is that the checked values
+     * within a group should not impact the counts for the other values
+     * in the same group.
+     *
+     * @private
+     * @param {string} filter
+     * @returns {(Array{}|Array[]|undefined)}
+     */
+    _getGroupDomain(filter) {
+        const { fieldName, groups, disableCounters } = filter;
+        const { type: fieldType } = this.fields[fieldName];
+
+        if (disableCounters || !groups) {
+            switch (fieldType) {
+                case 'many2one': return [];
+                case 'many2many': return {};
+                default: return;
+            }
+        }
+
+        let groupDomain;
+        if (fieldType === 'many2one') {
+            for (const group of Object.values(groups)) {
+                const valueIds = [];
+                let active = false;
+                for (const value of Object.values(group.values || {})) {
+                    const { id, checked } = value;
+                    valueIds.push(id);
+                    if (checked) {
+                        active = true;
+                    }
+                }
+                if (active) {
+                    if (groupDomain) {
+                        groupDomain = Domain.FALSE_DOMAIN;
+                        break;
+                    } else {
+                        groupDomain = [[fieldName, 'in', valueIds]];
+                    }
+                }
+            }
+        } else if (fieldType === 'many2many') {
+            const checkedValueIds = {};
+            for (const group of Object.values(groups)) {
+                for (const value of Object.values(group.values || {})) {
+                    const { id, checked } = value;
+                    if (checked) {
+                        if (!checkedValueIds[group.id]) {
+                            checkedValueIds[group.id] = [];
+                        }
+                        checkedValueIds[group.id].push(id);
+                    }
+                }
+            }
+            groupDomain = {};
+            for (const gId in checkedValueIds) {
+                const ids = checkedValueIds[gId];
+                for (const group of Object.values(groups)) {
+                    if (gId !== group.id) {
+                        if (!groupDomain[group.id]) {
+                            groupDomain[group.id] = [];
+                        }
+                        groupDomain[group.id].push(
+                            [fieldName, 'in', ids]
+                        );
+                    }
+                }
+            }
+        }
+        return groupDomain;
+    },
+    /**
      * The active id of each category is stored in the localStorage, s.t. it
      * can be restored afterwards (when the action is reloaded, for instance).
      * This function returns the key in the sessionStorage for a given category.
@@ -527,8 +613,8 @@ const SearchPanel = Widget.extend({
     /**
      * @private
      * @param {Object} category
-     * @param {integer} categoryValueId
-     * @returns {integer[]} list of ids of the ancestors of the given value in
+     * @param {number} categoryValueId
+     * @returns {number[]} list of ids of the ancestors of the given value in
      *   the given category
      */
     _getAncestorValueIds(category, categoryValueId) {
@@ -547,9 +633,10 @@ const SearchPanel = Widget.extend({
      * the searchPanel and the reloading of the data.
      *
      * @private
+     * @param {Object} [reloadOptions={}]
      */
-    _notifyDomainUpdated() {
-        this.needReload = true;
+    _notifyDomainUpdated(reloadOptions = {}) {
+        this.reloadOptions = reloadOptions;
         this.trigger_up('search_panel_domain_updated', {
             domain: this.getDomain(),
         });
@@ -638,13 +725,18 @@ const SearchPanel = Widget.extend({
         const valueId = !isNaN(item.dataset.id) ?
             Number(item.dataset.id) :
             item.dataset.id || false;
+        const hasChanged = category.activeValueId !== valueId;
         category.activeValueId = valueId;
         if (category.values[valueId]) {
             category.values[valueId].folded = !category.values[valueId].folded;
         }
-        const storageKey = this._getLocalStorageKey(category);
-        this.call('local_storage', 'setItem', storageKey, valueId);
-        this._notifyDomainUpdated();
+        if (hasChanged) {
+            const storageKey = this._getLocalStorageKey(category);
+            this.call('local_storage', 'setItem', storageKey, valueId);
+            this._notifyDomainUpdated({ shouldFetchCategories: true });
+        } else {
+            this._render();
+        }
     },
     /**
      * @private

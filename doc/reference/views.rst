@@ -1988,6 +1988,13 @@ Possible children elements of the search view are:
 
   * ``color``: determines the icon color
 
+  * ``disable_counters``: default is false. If set to true the counters won't be computed.
+
+    This feature has been implemented in case performances would be too bad.
+
+    Another way to solve performance issues is to properly override the
+    ``search_panel_select_range`` and ``search_panel_select_multi_range`` methods.
+
   Additional optional attributes are available in the ``multi`` case:
 
   * ``domain``: determines conditions that the comodel records have to satisfy.
@@ -2007,12 +2014,6 @@ Possible children elements of the search view are:
 
   * ``groupby``: field name of the comodel (only available for many2one and many2many fields). Values will be grouped by that field.
 
-  * ``disable_counters``: default is false. If set to true the counters won't be computed.
-
-    This feature has been implemented in case performances would be too bad.
-
-    Another way to solve performance issues is to properly override the
-    ``search_panel_select_multi_range`` method.
 
 .. _reference/views/search/defaults:
 
