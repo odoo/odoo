@@ -3356,6 +3356,27 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('support field decoration', async function (assert) {
+        assert.expect(3);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <field name="foo" decoration-danger="int_field > 5"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsN(list, 'tbody tr', 4, "should have 4 rows");
+        assert.containsN(list, 'tbody td.o_list_char.text-danger', 3);
+        assert.containsNone(list, 'tbody td.o_list_number.text-danger');
+
+        list.destroy();
+    });
+
     QUnit.test('no content helper when no data', async function (assert) {
         assert.expect(5);
 

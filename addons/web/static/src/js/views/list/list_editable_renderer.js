@@ -186,7 +186,7 @@ ListRenderer.include({
             if (widgets.length) {
                 var $row = self._getRow(recordID);
                 var record = self._getRecord(recordID);
-                self._setDecorationClasses(record, $row);
+                self._setDecorationClasses($row, self.rowDecorations, record);
                 self._updateFooter();
             }
             return widgets;
