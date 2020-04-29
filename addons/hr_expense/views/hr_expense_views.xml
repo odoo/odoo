@@ -55,7 +55,7 @@
                     <field name="quantity" optional="hide"/>
                     <field name="tax_ids" optional="show" widget="many2many_tags" groups="account.group_account_user"/>
                     <field name="total_amount" optional="show" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                    <button name="action_get_attachment_view" string="View Attached Documents" type="object" icon="fa-paperclip" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
+                    <button name="action_get_attachment_view" string="Attachments" type="object" icon="fa-paperclip" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="state" optional="show" readonly="1"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" readonly="1"/>
