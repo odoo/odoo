@@ -43,7 +43,7 @@
                             ('state', '!=', 'confirm')]}"/>
                 <field name="theoretical_qty" string="On Hand" width="0.5"
                        force_save="1" readonly="1" optional="show"/>
-                <button name="action_refresh_quantity" string="Refresh quantity" title="Refresh quantity"
+                <button name="action_refresh_quantity" title="Refresh quantity"
                         icon="fa-refresh" type="object"
                         attrs="{'invisible': [('outdated', '=', False)]}"/>
                 <field name="product_qty" width="0.5" string="Counted"/>

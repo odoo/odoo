@@ -41,8 +41,8 @@
                 <field name='price' sum="Total" string="Price" widget="monetary"/>
                 <field name='state'/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <button name="action_confirm" string="Confirm" type="object" icon="fa-phone text-success" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
-                <button name="action_cancel" string="Cancel" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_confirm" string="Confirm" type="object" icon="fa-check" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_cancel" string="Cancel" type="object" icon="fa-times" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
             </tree>
         </field>
     </record>
@@ -148,10 +148,6 @@
             Nothing to order today
           </p><p>
             Here you can see today's orders grouped by vendors.
-          </p><p>
-            Click on the <span class="fa fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
-            Click on the <span class="fa fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
-            Click on the <span class="fa fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> to announce that the order isn't available.
           </p>
         </field>
     </record>

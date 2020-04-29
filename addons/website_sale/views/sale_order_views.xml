@@ -289,7 +289,7 @@
         <field name="inherit_id" ref="sale.view_quotation_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='user_id']" position="before">
-                <field name="website_id" optional="show"/>
+                <field name="website_id" optional="hide"/>
             </xpath>
         </field>
     </record>
@@ -299,7 +299,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='user_id']" position="before">
+            <xpath expr="//field[@name='partner_id']" position="before">
                 <field name="website_id" optional="show"/>
             </xpath>
         </field>

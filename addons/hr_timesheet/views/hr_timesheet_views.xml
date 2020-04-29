@@ -44,7 +44,7 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="after">
-                    <field name="employee_id" required="1" options='{"no_open": True}'/>
+                    <field name="employee_id" required="1" widget="many2one_avatar_employee"/>
                 </xpath>
             </field>
         </record>

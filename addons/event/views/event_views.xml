@@ -495,9 +495,9 @@
                     <field name="state" readonly="0"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="message_needaction" invisible="1"/>
-                    <button name="action_confirm" string="Confirm Registration" states="draft" type="object" icon="fa-check text-success"/>
-                    <button name="action_set_done" string="Attended the Event" states="open" type="object" icon="fa-level-down text-success"/>
-                    <button name="action_cancel" string="Cancel Registration" states="draft,open" type="object" icon="fa-times-circle text-danger"/>
+                    <button name="action_confirm" string="Confirm" states="draft" type="object" icon="fa-check"/>
+                    <button name="action_set_done" string="Mark as Attending" states="open" type="object" icon="fa-level-down"/>
+                    <button name="action_cancel" string="Cancel" states="draft,open" type="object" icon="fa-times"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
