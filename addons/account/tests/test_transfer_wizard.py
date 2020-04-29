@@ -233,16 +233,16 @@ class TestTransferWizard(AccountTestInvoicingCommon):
 
         groups = {}
         for line in transfer_move.line_ids:
-            key = (line.account_id, line.partner_id or None, line.currency_id or None)
+            key = (line.account_id, line.partner_id or None, line.currency_id)
             self.assertFalse(groups.get(key), "There should be only one line per (account, partner, currency) group in the transfer move.")
             groups[key] = line
 
-        self.assertAlmostEqual(groups[(self.accounts[0], self.partner_a, None)].balance, -800, self.company.currency_id.decimal_places)
-        self.assertAlmostEqual(groups[(self.accounts[1], None, None)].balance, 500, self.company.currency_id.decimal_places)
-        self.assertAlmostEqual(groups[(self.accounts[1], self.partner_b, None)].balance, -480, self.company.currency_id.decimal_places)
-        self.assertAlmostEqual(groups[(self.accounts[2], self.partner_a, None)].balance, 1030, self.company.currency_id.decimal_places)
+        self.assertAlmostEqual(groups[(self.accounts[0], self.partner_a, self.company_data['currency'])].balance, -800, self.company.currency_id.decimal_places)
+        self.assertAlmostEqual(groups[(self.accounts[1], None, self.company_data['currency'])].balance, 500, self.company.currency_id.decimal_places)
+        self.assertAlmostEqual(groups[(self.accounts[1], self.partner_b, self.company_data['currency'])].balance, -480, self.company.currency_id.decimal_places)
+        self.assertAlmostEqual(groups[(self.accounts[2], self.partner_a, self.company_data['currency'])].balance, 1030, self.company.currency_id.decimal_places)
         self.assertAlmostEqual(groups[(self.accounts[2], self.partner_a, self.test_currency_2)].balance, 512, self.company.currency_id.decimal_places)
-        self.assertAlmostEqual(groups[(self.accounts[3], self.partner_a, None)].balance, -250, self.company.currency_id.decimal_places)
+        self.assertAlmostEqual(groups[(self.accounts[3], self.partner_a, self.company_data['currency'])].balance, -250, self.company.currency_id.decimal_places)
 
 
     def test_transfer_wizard_currency_conversion(self):

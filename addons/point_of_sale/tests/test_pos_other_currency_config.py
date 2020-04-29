@@ -222,8 +222,8 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         +---------------------+------------+-----------------+
         | sale_account        |   -7153.90 |        -3576.95 |
         | pos_receivable-cash |    7153.90 |         3576.95 |
-        | expense_account     |    2375.99 |            0.00 |
-        | output_account      |   -2375.99 |            0.00 |
+        | expense_account     |    2375.99 |         2375.99 |
+        | output_account      |   -2375.99 |        -2375.99 |
         +---------------------+------------+-----------------+
         | Total balance       |       0.00 |            0.00 |
         +---------------------+------------+-----------------+
@@ -258,19 +258,11 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
 
         expense_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.expense_account)
         self.assertAlmostEqual(expense_line.balance, 2375.99)
-        self.assertFalse(expense_line.currency_id, msg='Should be no currency in the stock expense line.')
-        self.assertAlmostEqual(
-            expense_line.amount_currency, 0.00,
-            msg="Should be zero because the balance is calculated from amounts in company's currency.",
-        )
+        self.assertAlmostEqual(expense_line.amount_currency, 2375.99)
 
         output_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.output_account)
         self.assertAlmostEqual(output_line.balance, -2375.99)
-        self.assertFalse(output_line.currency_id, msg='Should be no currency in the stock output line.')
-        self.assertAlmostEqual(
-            output_line.amount_currency, 0.00,
-            msg="Should be zero because the balance is calculated from amounts in company's currency.",
-        )
+        self.assertAlmostEqual(output_line.amount_currency, -2375.99)
 
         self.assertTrue(receivable_line_cash.full_reconcile_id, msg='Cash receivable line should be fully-reconciled.')
         self.assertTrue(output_line.full_reconcile_id, msg='The stock output account line should be fully-reconciled.')

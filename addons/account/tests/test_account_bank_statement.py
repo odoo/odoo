@@ -508,7 +508,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             120.0,              80.0,
             self.currency_2,    self.currency_1,
             {'debit': 80.0,     'credit': 0.0,      'amount_currency': 120.0,       'currency_id': self.currency_2.id},
-            {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
     def test_edition_journal_curr_1_statement_curr_2(self):
@@ -531,8 +531,8 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         self._test_edition_customer_and_supplier_flows(
             80.0,               0.0,
             self.currency_1,    False,
-            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': False},
-            {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_1.id},
+            {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
     def test_zero_amount_journal_curr_1_statement_curr_2(self):
@@ -604,7 +604,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         self.assertRecordValues(statement.line_ids.move_id.line_ids, [
             {'debit': 10.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_2.id},
-            {'debit': 0.0,      'credit': 10.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 0.0,      'credit': 10.0,     'amount_currency': -10.0,       'currency_id': self.currency_1.id},
         ])
 
     def test_zero_amount_currency_journal_curr_2_statement_curr_1(self):
@@ -628,7 +628,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         self.assertRecordValues(statement.line_ids.move_id.line_ids, [
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': 10.0,        'currency_id': self.currency_2.id},
-            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_1.id},
         ])
 
     def test_zero_amount_journal_curr_2_statement_curr_3(self):
@@ -1049,7 +1049,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             120.0,              80.0,               -120.0,
             self.currency_2,    self.currency_1,    self.currency_2,
             {'debit': 80.0,     'credit': 0.0,      'amount_currency': 120.0,       'currency_id': self.currency_2.id},
-            {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
     def test_reconciliation_journal_curr_2_statement_curr_3_counterpart_curr_2(self):
@@ -1104,8 +1104,8 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         self._test_reconciliation_customer_and_supplier_flows(
             80.0,               0.0,                -480.0,
             self.currency_1,    False,              self.currency_3,
-            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': False},
-            {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_1.id},
+            {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
     def test_reconciliation_journal_curr_2_statement_curr_1_counterpart_curr_1(self):
@@ -1113,7 +1113,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             120.0,              80.0,               -80.0,
             self.currency_2,    self.currency_1,    self.currency_1,
             {'debit': 80.0,     'credit': 0.0,      'amount_currency': 120.0,       'currency_id': self.currency_2.id},
-            {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
     def test_reconciliation_journal_curr_2_statement_curr_3_counterpart_curr_1(self):
@@ -1144,8 +1144,8 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         self._test_reconciliation_customer_and_supplier_flows(
             80.0,               0.0,                -80.0,
             self.currency_1,    False,              self.currency_1,
-            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': False},
-            {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
+            {'debit': 80.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_1.id},
+            {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
     def test_reconciliation_statement_line_state(self):

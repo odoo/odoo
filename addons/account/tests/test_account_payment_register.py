@@ -257,24 +257,24 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             {
                 'debit': 0.0,
                 'credit': 2200.0,
-                'currency_id': False,
-                'amount_currency': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': -2200.0,
                 'reconciled': False,
             },
             # Liquidity line:
             {
                 'debit': 0.0,
                 'credit': 800.0,
-                'currency_id': False,
-                'amount_currency': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': -800.0,
                 'reconciled': False,
             },
             # Payable line:
             {
                 'debit': 3000.0,
                 'credit': 0.0,
-                'currency_id': False,
-                'amount_currency': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': 3000.0,
                 'reconciled': True,
             },
         ])
@@ -299,24 +299,24 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             {
                 'debit': 0.0,
                 'credit': 3100.0,
-                'currency_id': False,
-                'amount_currency': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': -3100.0,
                 'reconciled': False,
             },
             # Writeoff line:
             {
                 'debit': 100.0,
                 'credit': 0.0,
-                'currency_id': False,
-                'amount_currency': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': 100.0,
                 'reconciled': False,
             },
             # Payable line:
             {
                 'debit': 3000.0,
                 'credit': 0.0,
-                'currency_id': False,
-                'amount_currency': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': 3000.0,
                 'reconciled': True,
             },
         ])
@@ -388,16 +388,16 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             {
                 'debit': 0.0,
                 'credit': 3000.0,
-                'currency_id': False,
-                'amount_currency': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': -3000.0,
                 'reconciled': False,
             },
             # Payable line:
             {
                 'debit': 3000.0,
                 'credit': 0.0,
-                'currency_id': False,
-                'amount_currency': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': 3000.0,
                 'reconciled': True,
             },
             # == Payment 2: to pay in_invoice_3 ==
@@ -439,16 +439,16 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             {
                 'debit': 0.0,
                 'credit': 1000.0,
-                'currency_id': False,
-                'amount_currency': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': -1000.0,
                 'reconciled': False,
             },
             # Payable line:
             {
                 'debit': 1000.0,
                 'credit': 0.0,
-                'currency_id': False,
-                'amount_currency': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': 1000.0,
                 'reconciled': True,
             },
             # == Payment 2: to pay in_invoice_2 ==
@@ -456,16 +456,16 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             {
                 'debit': 0.0,
                 'credit': 2000.0,
-                'currency_id': False,
-                'amount_currency': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': -2000.0,
                 'reconciled': False,
             },
             # Payable line:
             {
                 'debit': 2000.0,
                 'credit': 0.0,
-                'currency_id': False,
-                'amount_currency': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': 2000.0,
                 'reconciled': True,
             },
             # == Payment 3: to pay in_invoice_3 ==
