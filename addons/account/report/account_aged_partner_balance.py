@@ -52,9 +52,12 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         if target_move == 'posted':
             move_state = ['posted']
         arg_list = (tuple(move_state), tuple(account_type), date_from, date_from,)
-        if ctx.get('partner_ids'):
-            partner_clause = 'AND (l.partner_id IN %s)'
-            arg_list += (tuple(ctx['partner_ids'].ids),)
+        if 'partner_ids' in ctx:
+            if ctx['partner_ids']:
+                partner_clause = 'AND (l.partner_id IN %s)'
+                arg_list += (tuple(ctx['partner_ids'].ids),)
+            else:
+                partner_clause = 'AND l.partner_id IS NULL'
         if ctx.get('partner_categories'):
             partner_clause += 'AND (l.partner_id IN %s)'
             partner_ids = self.env['res.partner'].search([('category_id', 'in', ctx['partner_categories'].ids)]).ids

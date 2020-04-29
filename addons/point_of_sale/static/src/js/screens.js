@@ -2288,7 +2288,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         }
 
         // The exact amount must be paid if there is no cash payment method defined.
-        if (Math.abs(order.get_total_with_tax() - order.get_total_paid()) > 0.00001) {
+        if (Math.abs(order.get_total_balance()) > 0.00001) {
             var cash = false;
             for (var i = 0; i < this.pos.payment_methods.length; i++) {
                 cash = cash || (this.pos.payment_methods[i].is_cash_count);

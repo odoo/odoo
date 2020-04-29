@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -277,22 +277,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
 msgstr "<i class=\"fa fa-smile-o\"/>평가하지 않음"
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Documents are attached to the tasks of your project.</p><p>\n"
-"                        Send messages or log internal notes with attachments to link\n"
-"                        documents to your project.\n"
-"                    </p>"
-msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        프로젝트의 작업에 문서가 첨부됩니다. </p><p>\n"
-"                        프로젝트에 첨부파일을 포함한 링크가 있는 \n"
-"메시지를 보내거나 내부 기록을 남길 수 있습니다. \n"
-"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -596,12 +580,6 @@ msgstr "첨부 파일 수"
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachment that don't come from message."
 msgstr "메세지에서 오지 않는 첨부 파일."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Attachments"
-msgstr "첨부 파일"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
@@ -2819,6 +2797,9 @@ msgstr "다음 단계를 위해 준비된 작업"
 #: model_terms:ir.ui.view,arch_db:project.view_task_partner_info_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
+#: model:project.project,label_tasks:project.project_project_1
+#: model:project.project,label_tasks:project.project_project_2
+#: model:project.project,label_tasks:project.project_project_data
 msgid "Tasks"
 msgstr "작업"
 
@@ -2888,12 +2869,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "The parent task belongs to a company you do not have access to."
-msgstr "상위 작업이 접근 권한이 없는 회사에 속해 있습니다."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "The project cannot be shared with the recipient(s) because the privacy of "
 "the project is too restricted. Set the privacy to 'Visible by following "
@@ -2901,12 +2876,6 @@ msgid ""
 msgstr ""
 "프로젝트의 개인 정보가 너무 제한되어 있으므로 프로젝트를 수신자와 공유할 수 없습니다. 수신자가 개인 정보에 접근할 수있게 하려면 개인 "
 "정보를 '고객에게 표시'로 설정하십시오."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "The subtasks belong to a company you do not have access to."
-msgstr "하위 작업이 접근 권한이 없는 회사에 속해 있습니다."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3229,6 +3198,14 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr "동료가 단계의 의미와 목적을 이해할 수 있도록 설명을 추가 할 수도 있습니다."
+
+#. module: project
+#: code:addons/project/models/analytic_account.py:0
+#, python-format
+msgid ""
+"You cannot change the company of an analytical account if it is related to a"
+" project."
+msgstr "프로젝트와 관련된 분석 계정의 회사는 변경할 수 없습니다."
 
 #. module: project
 #: code:addons/project/models/project.py:0

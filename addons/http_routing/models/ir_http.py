@@ -587,7 +587,7 @@ class IrHttp(models.AbstractModel):
             code = exception.code
 
         values.update(
-            status_message=werkzeug.http.HTTP_STATUS_CODES[code],
+            status_message=werkzeug.http.HTTP_STATUS_CODES.get(code,''),
             status_code=code,
         )
 

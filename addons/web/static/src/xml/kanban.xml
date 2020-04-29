@@ -56,8 +56,8 @@
                         <button class="btn btn-primary o_kanban_add" type="button">Add</button>
                     </span>
                 </div>
-                <span class="o_discard_msg text-muted float-right">Esc to discard</span>
-                <t t-if="widget.examples">
+                <span t-if="!widget.isMobile" class="o_discard_msg text-muted float-right">Esc to discard</span>
+                <t t-if="widget.examples &amp;&amp; !widget.isMobile">
                     <button type="button" class="btn btn-link o_kanban_examples">See examples</button>
                 </t>
             </div>
@@ -236,6 +236,10 @@
                 <t t-set="values" t-value="category.rootIds"/>
             </t>
         </ul>
+        <div t-if="category.limitAttained" class="alert alert-warning">
+            <span>For performance reasons, only 200 values were fetched. Some values might be missing.</span>
+            <span t-if="category.parentField">The values have not been hierarchized.</span>
+        </div>
     </section>
 </t>
 <t t-name="SearchPanel.CategoryValues">
@@ -271,6 +275,9 @@
                 <t t-set="values" t-value="filter.values"/>
             </t>
         </ul>
+        <div t-if="filter.limitAttained" class="alert alert-warning">
+            <span>For performance reasons, only 200 values were fetched. Some values might be missing.</span>
+        </div>
     </section>
 </t>
 <t t-name="SearchPanel.FilterGroups">
@@ -319,12 +326,17 @@
 
 <!-- Mobile templates -->
 <t t-name="KanbanView.MobileTabs">
-    <div class="o_kanban_mobile_tabs">
-        <t t-foreach="data" t-as="group">
-            <div class="o_kanban_mobile_tab" t-att-data-id="group.res_id or group.id">
-                <span class="o_column_title"><t t-esc="group.value"/></span>
+    <div class="o_kanban_mobile_tabs_container">
+        <div class="o_kanban_mobile_tabs">
+            <t t-foreach="data" t-as="group">
+                <div class="o_kanban_mobile_tab" t-att-data-id="group.res_id or group.id">
+                    <span class="o_column_title"><t t-esc="group.value"/></span>
+                </div>
+            </t>
+            <div class="o_kanban_mobile_add_column" t-if="quickCreateEnabled">
+                <i class="fa fa-plus " role="img" aria-label="Add column" title="Add column"/>
             </div>
-        </t>
+        </div>
     </div>
 </t>
 </template>

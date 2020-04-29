@@ -12,7 +12,7 @@
 # Carlos Lopez <celm1990@hotmail.com>, 2019
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2019
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Antonio Trueba, 2019
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2019
 # Sabina Batlle <sbb@odoo.com>, 2019
@@ -24,15 +24,14 @@
 # Martin Trigaux, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 09:47+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020\n"
+"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -333,6 +332,12 @@ msgstr "Importe"
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
 msgid "Amount Max"
 msgstr "Cantidad Máxima"
+
+#. module: payment
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "An error occured during the processing of this payment"
+msgstr ""
 
 #. module: payment
 #. openerp-web
@@ -1247,31 +1252,6 @@ msgstr "Solo los administradores pueden acceder a estos datos."
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
-msgid "Only draft transaction can be authorized."
-msgstr "Solo se puede autorizar una transacción en borrador."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft transaction can be processed."
-msgstr "Solo se puede procesar una transacción en borrador."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft/authorized transaction can be cancelled."
-msgstr "Solo se puede cancelar la transacción borrador/autorizada."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft/authorized transaction can be posted."
-msgstr "Solo se puede publicar la transacción borrador/autorizada."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
 msgid "Only transactions having the capture status can be captured."
 msgstr ""
 "Solo se pueden capturar transacciones que tengan el estado de captura."
@@ -1749,8 +1729,8 @@ msgstr "Plantilla para el método de registro"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__test
-#: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Test Mode"
 msgstr "Modo Test"
 

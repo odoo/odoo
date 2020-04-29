@@ -7,13 +7,14 @@
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2020
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2020
 # Albena Mincheva <albena_vicheva@abv.bg>, 2020
+# Igor Sheludko <igor.sheludko@gmail.com>, 2020
 # Maria Boyadjieva <marabo2000@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:33+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
 "Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2020\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
@@ -73,7 +74,7 @@ msgstr "Чат"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Конфиг Настройки"
 
 #. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
@@ -101,8 +102,22 @@ msgid "Happy face"
 msgstr ""
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/xml/thread.xml:0
+#, python-format
+msgid "History"
+msgstr "История"
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_mail_channel__livechat_active
 msgid "Is livechat ongoing?"
+msgstr ""
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/xml/thread.xml:0
+#, python-format
+msgid "Lang"
 msgstr ""
 
 #. module: website_livechat
@@ -262,6 +277,20 @@ msgid "Visitor"
 msgstr "Посетител"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/xml/thread.xml:0
+#, python-format
+msgid "Visitor is connected"
+msgstr ""
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/xml/thread.xml:0
+#, python-format
+msgid "Visitor is offline"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
 msgid "Visitor's Sessions"
 msgstr ""
@@ -277,7 +306,10 @@ msgid "Visitors"
 msgstr ""
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/xml/thread.xml:0
 #: model:ir.model,name:website_livechat.model_website
+#, python-format
 msgid "Website"
 msgstr "Уебсайт"
 

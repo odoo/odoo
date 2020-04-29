@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2019
-# Miroslav Fic <mirko.fic@gmail.com>, 2019
+# 192015edb78c7397bdecc2172c7447b3, 2019
 # Robert Kirschner <robertkirschner@yahoo.com>, 2019
 # Martin Trigaux, 2019
 # Matus Krnac <matus.krnac@gmail.com>, 2019
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 09:47+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
@@ -306,6 +306,12 @@ msgstr "Suma"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
 msgid "Amount Max"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "An error occured during the processing of this payment"
 msgstr ""
 
 #. module: payment
@@ -681,6 +687,7 @@ msgstr "Určite poradie zobrazenia"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
+#: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Disabled"
 msgstr "Blokovaný"
 
@@ -1208,31 +1215,6 @@ msgstr "Iba správcovia môžu pristupovať k týmto údajom."
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
-msgid "Only draft transaction can be authorized."
-msgstr "Iba náhľad transakcie môže byť autorizovaný."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft transaction can be processed."
-msgstr "Iba náhľad transakcie môže byť spracovaný."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft/authorized transaction can be cancelled."
-msgstr "Iba náhľad/autorizovaná transakcia môže byť zrušená."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft/authorized transaction can be posted."
-msgstr "Iba náhľad/autorizovaná transakcia môže byť odoslaná."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
 msgid "Only transactions having the capture status can be captured."
 msgstr "Iba transakcie majúce status zachytenia môžu byť zachytené."
 
@@ -1706,6 +1688,7 @@ msgstr "Šablóna pre registráciu metódy"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__test
+#: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Test Mode"
 msgstr "Testovací režim"

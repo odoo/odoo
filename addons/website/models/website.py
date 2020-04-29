@@ -737,7 +737,7 @@ class Website(models.Model):
                 continue
 
             converters = rule._converters or {}
-            if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
+            if query_string and not converters and (query_string not in rule.build({}, append_unknown=False)[1]):
                 continue
 
             values = [{}]
@@ -798,6 +798,7 @@ class Website(models.Model):
         return pages
 
     def search_pages(self, needle=None, limit=None):
+
         name = slugify(needle, max_length=50, path=True)
         res = []
         for page in self.enumerate_pages(query_string=name, force=True):
