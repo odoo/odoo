@@ -469,9 +469,18 @@ var ListRenderer = BasicRenderer.extend({
         var self = this;
         var nodeWithoutWidth = Object.assign({}, node);
         delete nodeWithoutWidth.attrs.width;
+
+        let extraClass = '';
+        if (node.attrs.icon) {
+            // if there is an icon, we force the btn-link style, unless a btn-xxx
+            // style class is explicitely provided
+            const btnStyleRegex = /\bbtn-(primary|secondary|link|success|info|warning|danger)\b/;
+            if (!btnStyleRegex.test(nodeWithoutWidth.attrs.class)) {
+                extraClass = 'btn-link o_icon_button';
+            }
+        }
         var $button = viewUtils.renderButtonFromNode(nodeWithoutWidth, {
-            extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
-            textAsTitle: !!node.attrs.icon,
+            extraClass: extraClass,
         });
         this._handleAttributes($button, node);
         this._registerModifiers(node, record, $button);
