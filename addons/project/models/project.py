@@ -735,7 +735,7 @@ class Task(models.Model):
             self.company_id = self.project_id.company_id
         else:
             self.stage_id = False
-    
+
     @api.onchange('company_id')
     def _onchange_task_company(self):
         if self.project_id.company_id != self.company_id:
@@ -805,23 +805,32 @@ class Task(models.Model):
     # CRUD overrides
     # ------------------------------------------------
 
-    @api.model
-    def create(self, vals):
-        # context: no_log, because subtype already handle this
-        context = dict(self.env.context)
-        stage_id = vals.get('stage_id') or context.get('default_stage_id') or False
-        # for default stage
-        if vals.get('project_id') and not context.get('default_project_id'):
-            context['default_project_id'] = vals.get('project_id')
-        # user_id change: update date_assign
-        if vals.get('user_id'):
-            vals['date_assign'] = fields.Datetime.now()
-        # Stage change: Update date_end if folded stage and date_last_stage_update
-        if stage_id:
-            vals.update(self.update_date_end(stage_id))
-            vals['date_last_stage_update'] = fields.Datetime.now()
-        task = super(Task, self.with_context(context)).create(vals)
-        return task
+    @api.model_create_multi
+    def create(self, vals_list):
+        default_stage = dict()
+        for vals in vals_list:
+            project_id = vals.get('project_id') or self.env.context.get('default_project_id')
+            if project_id and not "company_id" in vals:
+                vals["company_id"] = self.env["project.project"].browse(
+                    project_id
+                ).company_id.id or self.env.company.id
+            if project_id and "stage_id" not in vals:
+                # 1) Allows keeping the batch creation of tasks
+                # 2) Ensure the defaults are correct (and computed once by project),
+                # by using default get (instead of _get_default_stage_id or _stage_find),
+                if project_id not in default_stage:
+                    default_stage[project_id] = self.with_context(
+                        default_project_id=project_id
+                    ).default_get(['stage_id']).get('stage_id')
+                vals["stage_id"] = default_stage[project_id]
+            # user_id change: update date_assign
+            if vals.get('user_id'):
+                vals['date_assign'] = fields.Datetime.now()
+            # Stage change: Update date_end if folded stage and date_last_stage_update
+            if vals.get('stage_id'):
+                vals.update(self.update_date_end(vals['stage_id']))
+                vals['date_last_stage_update'] = fields.Datetime.now()
+        return super().create(vals_list)
 
     def write(self, vals):
         now = fields.Datetime.now()
