@@ -7053,6 +7053,79 @@ QUnit.module('basic_fields', {
 
         form.destroy();
     });
+
+    QUnit.module('FieldBadge');
+
+    QUnit.test('FieldBadge component on a char field in list view', async function (assert) {
+        assert.expect(3);
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: `<list><field name="display_name" widget="badge"/></list>`,
+        });
+
+        assert.containsOnce(list, '.o_field_badge[name="display_name"]:contains(first record)');
+        assert.containsOnce(list, '.o_field_badge[name="display_name"]:contains(second record)');
+        assert.containsOnce(list, '.o_field_badge[name="display_name"]:contains(aaa)');
+
+        list.destroy();
+    });
+
+    QUnit.test('FieldBadge component on a selection field in list view', async function (assert) {
+        assert.expect(3);
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: `<list><field name="selection" widget="badge"/></list>`,
+        });
+
+        assert.containsOnce(list, '.o_field_badge[name="selection"]:contains(Blocked)');
+        assert.containsOnce(list, '.o_field_badge[name="selection"]:contains(Normal)');
+        assert.containsOnce(list, '.o_field_badge[name="selection"]:contains(Done)');
+
+        list.destroy();
+    });
+
+    QUnit.test('FieldBadge component on a many2one field in list view', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: `<list><field name="trululu" widget="badge"/></list>`,
+        });
+
+        assert.containsOnce(list, '.o_field_badge[name="trululu"]:contains(first record)');
+        assert.containsOnce(list, '.o_field_badge[name="trululu"]:contains(aaa)');
+
+        list.destroy();
+    });
+
+    QUnit.test('FieldBadge component with decoration-xxx attributes', async function (assert) {
+        assert.expect(3);
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <list>
+                    <field name="selection"/>
+                    <field name="foo" widget="badge" decoration-danger="selection == 'done'" decoration-warning="selection == 'blocked'"/>
+                </list>`,
+        });
+
+        assert.containsN(list, '.o_field_badge[name="foo"]', 5);
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger-light');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning-light');
+
+        list.destroy();
+    });
 });
 });
 });

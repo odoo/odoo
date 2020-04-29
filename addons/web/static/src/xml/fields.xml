@@ -6,4 +6,8 @@
             class="o_field_boolean" t-on-change="_onChange"/>
     </t>
 
+    <t t-name="web.FieldBadge" owl="1">
+        <span class="badge badge-pill o_field_badge" t-esc="_formatValue(value)"/>
+    </t>
+
 </templates>
