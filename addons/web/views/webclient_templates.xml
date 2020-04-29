@@ -533,10 +533,7 @@
             <div class="container py-5">
                 <div t-attf-class="card border-0 mx-auto bg-100 {{login_card_classes}} o_database_list" style="max-width: 300px;">
                     <div class="card-body">
-                        <div t-attf-class="text-center pb-3 border-bottom {{'mb-3' if form_small else 'mb-4'}}">
-                            <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo" style="max-height:120px; max-width: 100%; width:auto"/>
-                        </div>
-                        <t t-raw="0"/>
+                        <t t-raw="0" t-name="main_content"/>
                         <div class="text-center small mt-4 pt-3 border-top" t-if="not disable_footer">
                             <t t-if="not disable_database_manager">
                                 <a class="border-right pr-2 mr-1" href="/web/database/manager">Manage Databases</a>

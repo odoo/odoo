@@ -87,8 +87,8 @@ return AbstractWebClient.extend({
             if (_.keys(state).length === 1 && _.keys(state)[0] === "cids") {
                 return self.menu_dp.add(self._rpc({
                         model: 'res.users',
-                        method: 'read',
-                        args: [session.uid, ["action_id"]],
+                        method: 'read_action_id',
+                        args: [session.uid],
                     }))
                     .then(function (result) {
                         var data = result[0];

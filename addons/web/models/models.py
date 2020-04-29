@@ -382,7 +382,7 @@ class ResCompany(models.Model):
         return res
 
     def _get_asset_style_b64(self):
-        template_style = self.env.ref('web.styles_company_report', raise_if_not_found=False)
+        template_style = self.env.ref('partner.styles_company_report', raise_if_not_found=False)
         if not template_style:
             return b''
         # One bundle for everyone, so this method

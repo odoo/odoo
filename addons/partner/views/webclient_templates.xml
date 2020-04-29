@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/partner/static/src/js/user_menu.js"/>
+        </xpath>
+    </template>
+
+    <template id="partner.login_layout" inherit_id="web.login_layout">
+        <xpath expr="//t[@t-name='main_content']" position="before">
+            <div t-attf-class="text-center pb-3 border-bottom {{'mb-3' if form_small else 'mb-4'}}">
+                <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo" style="max-height:120px; max-width: 100%; width:auto"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

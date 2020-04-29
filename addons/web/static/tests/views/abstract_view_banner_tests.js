@@ -21,7 +21,7 @@ var TestView = AbstractView.extend({
     }),
 });
 
-var test_css_url = '/test_assetsbundle/static/src/css/test_cssfile1.css';
+var test_css_url = '/test_base_assetsbundle/static/src/css/test_cssfile1.css';
 
 QUnit.module('Views', {
         beforeEach: function () {

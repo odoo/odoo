@@ -5,7 +5,7 @@ var ajax = require('web.ajax');
 
 QUnit.module('core', function () {
 
-    var test_css_url = '/test_assetsbundle/static/src/css/test_cssfile1.css';
+    var test_css_url = '/test_base_assetsbundle/static/src/css/test_cssfile1.css';
     var test_link_selector = 'link[href="' + test_css_url + '"]';
 
     QUnit.module('ajax', {

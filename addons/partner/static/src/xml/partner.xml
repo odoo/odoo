@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="UserMenu">
+        <t t-jquery="span.oe_topbar_name" t-operation="before">
+            <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="User"/>
+        </t>
+    </t>
+
+</templates>

@@ -34,22 +34,11 @@ var UserMenu = Widget.extend({
             self['_onMenu' + menu.charAt(0).toUpperCase() + menu.slice(1)]();
         });
         return this._super.apply(this, arguments).then(function () {
-            var $avatar = self.$('.oe_topbar_avatar');
-            if (!session.uid) {
-                $avatar.attr('src', $avatar.data('default-src'));
-                return Promise.resolve();
-            }
             var topbar_name = session.name;
             if (config.isDebug()) {
                 topbar_name = _.str.sprintf("%s (%s)", topbar_name, session.db);
             }
             self.$('.oe_topbar_name').text(topbar_name);
-            var avatar_src = session.url('/web/image', {
-                model:'res.users',
-                field: 'image_128',
-                id: session.uid,
-            });
-            $avatar.attr('src', avatar_src);
         });
     },
 
