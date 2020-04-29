@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 from base64 import b64decode
+from datetime import datetime, timedelta
 from dbus.mainloop.glib import DBusGMainLoop
 from importlib import util
 import json
 import logging
 import os
+import requests
 import socket
 import subprocess
 import sys
@@ -289,6 +291,63 @@ class EventManager(object):
 
 event_manager = EventManager()
 
+#----------------------------------------------------------
+# ConnectionManager
+#----------------------------------------------------------
+
+class ConnectionManager(Thread):
+    def __init__(self):
+        super(ConnectionManager, self).__init__()
+        self.pairing_code = False
+        self.pairing_uuid = False
+
+    def run(self):
+        if not helpers.get_odoo_server_url():
+            end_time = datetime.now() + timedelta(minutes=5)
+            while (datetime.now() < end_time):
+                self._connect_box()
+                time.sleep(10)
+            self.pairing_code = False
+            self.pairing_uuid = False
+            self._refresh_displays()
+
+    def _connect_box(self):
+        data = {
+            'jsonrpc': 2.0,
+            'params': {
+                'pairing_code': self.pairing_code,
+                'pairing_uuid': self.pairing_uuid,
+            }
+        }
+
+        urllib3.disable_warnings()
+        req = requests.post('https://iot-proxy.odoo.com/odoo-enterprise/iot/connect-box', json=data, verify=False)
+        result = req.json().get('result', {})
+
+        if all(key in result for key in ['pairing_code', 'pairing_uuid']):
+            self.pairing_code = result['pairing_code']
+            self.pairing_uuid = result['pairing_uuid']
+        elif all(key in result for key in ['url', 'token', 'db_uuid', 'enterprise_code']):
+            self._connect_to_server(result['url'], result['token'], result['db_uuid'], result['enterprise_code'])
+
+    def _connect_to_server(self, url, token, db_uuid, enterprise_code):
+        if db_uuid and enterprise_code:
+            helpers.add_credential(db_uuid, enterprise_code)
+
+        # Save DB URL and token
+        subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, '', token, 'noreboot'])
+        # Notify the DB, so that the kanban view already shows the IoT Box
+        m.send_alldevices()
+        # Restart to checkout the git branch, get a certificate, load the IoT handlers...
+        subprocess.check_call(["sudo", "service", "odoo", "restart"])
+
+    def _refresh_displays(self):
+        """Refresh all displays to hide the pairing code"""
+        for d in iot_devices:
+            if iot_devices[d].device_type == 'display':
+                iot_devices[d].action({
+                    'action': 'display_refresh'
+                })
 
 #----------------------------------------------------------
 # Manager
@@ -385,6 +444,10 @@ class Manager(Thread):
 
 # Must be started from main thread
 DBusGMainLoop(set_as_default=True)
+
+cm = ConnectionManager()
+cm.daemon = True
+cm.start()
 
 m = Manager()
 m.daemon = True
