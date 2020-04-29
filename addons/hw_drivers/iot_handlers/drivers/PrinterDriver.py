@@ -15,15 +15,10 @@ import tempfile
 from PIL import Image, ImageOps
 
 from odoo import http, _
-from odoo.addons.hw_drivers.controllers.driver import event_manager, Driver, iot_devices
+from odoo.addons.hw_drivers.controllers.driver import event_manager, Driver, iot_devices, cm
 from odoo.addons.hw_drivers.iot_handlers.interfaces.PrinterInterface import PPDs, conn, cups_lock
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.addons.hw_proxy.controllers.main import drivers as old_drivers
-
-try:
-    from odoo.addons.hw_drivers.controllers.driver import cm
-except:
-    cm = None
 
 _logger = logging.getLogger(__name__)
 
@@ -262,7 +257,7 @@ class PrinterDriver(Driver):
             mac = '\nMAC Address:\n%s\n' % helpers.get_mac_address()
             homepage = '\nHomepage:\nhttp://%s:8069\n\n' % main_ips
 
-        code = cm and cm.pairing_code
+        code = cm.pairing_code
         if code:
             pairing_code = '\nPairing Code:\n%s\n' % code
 
