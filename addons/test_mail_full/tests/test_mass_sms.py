@@ -3,12 +3,12 @@
 
 
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.addons.test_mail_full.tests import common as test_mail_full_common
+from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 from odoo.tests import tagged
 
 
 @tagged('mass_mailing')
-class TestMassSMS(test_mail_full_common.TestSMSCommon):
+class TestMassSMS(TestMailFullCommon):
 
     @classmethod
     def setUpClass(cls):

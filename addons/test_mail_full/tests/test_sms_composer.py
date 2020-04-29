@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail_full.tests import common as test_mail_full_common
+from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestRecipients
 
 
-class TestSMSComposerComment(test_mail_full_common.TestSMSCommon, test_mail_full_common.TestRecipients):
+class TestSMSComposerComment(TestMailFullCommon, TestRecipients):
     """ TODO LIST
 
      * add test for default_res_model / default_res_id and stuff like that;
@@ -201,7 +201,7 @@ class TestSMSComposerComment(test_mail_full_common.TestSMSCommon, test_mail_full
         self.assertSMSSent(self.random_numbers_san, self._test_body)
 
 
-class TestSMSComposerBatch(test_mail_full_common.TestSMSCommon):
+class TestSMSComposerBatch(TestMailFullCommon):
     @classmethod
     def setUpClass(cls):
         super(TestSMSComposerBatch, cls).setUpClass()
@@ -277,7 +277,7 @@ class TestSMSComposerBatch(test_mail_full_common.TestSMSCommon):
             self.assertSMSNotification([{'partner': r.customer_id} for r in self.records], 'Zizisse an SMS.', messages)
 
 
-class TestSMSComposerMass(test_mail_full_common.TestSMSCommon):
+class TestSMSComposerMass(TestMailFullCommon):
 
     @classmethod
     def setUpClass(cls):

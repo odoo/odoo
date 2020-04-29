@@ -3,11 +3,11 @@
 
 from ast import literal_eval
 
-from odoo.addons.mass_mailing.tests.common import TestMassMailCommon
+from odoo.addons.mass_mailing_sms.tests.common import MassSMSCommon
 from odoo.tests.common import users
 
 
-class TestMassMailValues(TestMassMailCommon):
+class TestMassMailValues(MassSMSCommon):
 
     @classmethod
     def setUpClass(cls):
