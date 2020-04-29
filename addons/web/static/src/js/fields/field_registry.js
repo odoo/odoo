@@ -34,6 +34,7 @@ registry
     .add('date', basic_fields.FieldDate)
     .add('datetime', basic_fields.FieldDateTime)
     .add('daterange', basic_fields.FieldDateRange)
+    .add('remaining_days', basic_fields.RemainingDays)
     .add('domain', basic_fields.FieldDomain)
     .add('text', basic_fields.FieldText)
     .add('list.text', basic_fields.ListFieldText)

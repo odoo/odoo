@@ -379,11 +379,12 @@ var AbstractField = Widget.extend({
      *
      * @private
      * @param {any} value (from the field type)
+     * @param {string} [formatType=this.formatType] the formatter to use
      * @returns {string}
      */
-    _formatValue: function (value) {
+    _formatValue: function (value, formatType) {
         var options = _.extend({}, this.nodeOptions, { data: this.recordData }, this.formatOptions);
-        return field_utils.format[this.formatType](value, this.field, options);
+        return field_utils.format[formatType || this.formatType](value, this.field, options);
     },
     /**
      * Returns the className corresponding to a given decoration. A
