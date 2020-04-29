@@ -370,7 +370,8 @@ var AbstractField = Widget.extend({
             var isToggled = py.PY_isTrue(
                 py.evaluate(dec.expression, self.record.evalContext)
             );
-            self.$el.toggleClass(dec.className, isToggled);
+            const className = self._getClassFromDecoration(dec.name);
+            self.$el.toggleClass(className, isToggled);
         });
     },
     /**
@@ -383,6 +384,18 @@ var AbstractField = Widget.extend({
     _formatValue: function (value) {
         var options = _.extend({}, this.nodeOptions, { data: this.recordData }, this.formatOptions);
         return field_utils.format[this.formatType](value, this.field, options);
+    },
+    /**
+     * Returns the className corresponding to a given decoration. A
+     * decoration is of the form 'decoration-%s'. By default, replaces
+     * 'decoration' by 'text'.
+     *
+     * @private
+     * @param {string} decoration must be of the form 'decoration-%s'
+     * @returns {string}
+     */
+    _getClassFromDecoration: function (decoration) {
+        return `text-${decoration.split('-')[1]}`;
     },
     /**
      * This method check if a value is the same as the current value of the

@@ -232,11 +232,10 @@ var BasicView = AbstractView.extend({
 
         // process decoration attributes
         _.each(attrs, function (value, key) {
-            var splitKey = key.split('-');
-            if (splitKey[0] === 'decoration') {
+            if (key.startsWith('decoration-')) {
                 attrs.decorations = attrs.decorations || [];
                 attrs.decorations.push({
-                    className: 'text-' + splitKey[1],
+                    name: key,
                     expression: pyUtils._getPyJSAST(value),
                 });
             }
