@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class ProductCategory(models.Model):
     _inherit = "product.category"
-    _populate_database_scales = {"low": 50, "medium": 500, "high": 30000}
+    _populate_sizes = {"small": 50, "medium": 500, "large": 30000}
 
     def _populate_factories(self):
         def get_name(values=None, counter=0, complete=False, **kwargs):
@@ -23,7 +23,7 @@ class ProductCategory(models.Model):
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
-    _populate_database_scales = {"low": 150, "medium": 5000, "high": 60000}
+    _populate_sizes = {"small": 150, "medium": 5000, "large": 60000}
 
     def _populate_factories(self):
 
