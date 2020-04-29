@@ -2155,6 +2155,11 @@ Relational fields
 
     - Supported field types: *many2one* (pointing to 'res.users')
 
+- many2one_avatar_employee (Many2OneAvatarEmployee)
+    Same as Many2OneAvatarUser, but for many2one fields pointing to 'hr.employee'.
+
+    - Supported field types: *many2one* (pointing to 'hr.employee')
+
 - kanban.many2one (KanbanFieldMany2One)
     Default widget for many2one fields (in kanban view). We need to disable all
     editing in kanban views.
