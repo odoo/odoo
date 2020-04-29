@@ -83,6 +83,17 @@
         }
     }
 
+    // Many2OneAvatar
+    &.o_field_many2one_avatar {
+        > img.o_m2o_avatar {
+            border-radius: 50%;
+            width: 19px;
+            height: 19px;
+            object-fit: cover;
+            margin-right: 4px;
+        }
+    }
+
     // Many2many tags
     &.o_field_many2manytags {
         flex-flow: row wrap;

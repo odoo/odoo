@@ -2139,6 +2139,15 @@ Relational fields
 
     - Supported field types: *many2one*
 
+- many2one_avatar (Many2OneAvatar)
+    This widget is only supported on many2one fields pointing to a model which
+    inherits from 'image.mixin'. In readonly, it displays the image of the
+    related record next to its display_name. Note that the display_name isn't a
+    clickable link in this case. In edit, it behaves exactly like the regular
+    many2one.
+
+    - Supported field types: *many2one*
+
 - kanban.many2one (KanbanFieldMany2One)
     Default widget for many2one fields (in kanban view). We need to disable all
     editing in kanban views.
