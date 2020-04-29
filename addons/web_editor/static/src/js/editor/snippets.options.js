@@ -863,7 +863,7 @@ const InputUserValueWidget = UserValueWidget.extend({
      * @returns {string}
      */
     _floatToStr: function (value) {
-        return `${parseFloat(value.toFixed(3))}`;
+        return `${parseFloat(value.toFixed(5))}`;
     },
 
     //--------------------------------------------------------------------------
