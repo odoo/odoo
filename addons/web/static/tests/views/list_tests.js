@@ -277,6 +277,33 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list view with icon buttons', async function (assert) {
+        assert.expect(5);
+
+        this.data.foo.records.splice(1);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <button name="x" type="object" icon="fa-asterisk"/>
+                    <button name="x" type="object" icon="fa-star" class="o_yeah"/>
+                    <button name="x" type="object" icon="fa-refresh" string="Refresh" class="o_yeah"/>
+                    <button name="x" type="object" icon="fa-exclamation" string="Danger" class="o_yeah btn-danger"/>
+                </tree>`,
+        });
+
+        assert.containsOnce(list, 'button.btn.btn-link i.fa.fa-asterisk');
+        assert.containsOnce(list, 'button.btn.btn-link.o_yeah i.fa.fa-star');
+        assert.containsOnce(list, 'button.btn.btn-link.o_yeah:contains("Refresh") i.fa.fa-refresh');
+        assert.containsOnce(list, 'button.btn.btn-danger.o_yeah:contains("Danger") i.fa.fa-exclamation');
+        assert.containsNone(list, 'button.btn.btn-link.btn-danger');
+
+        list.destroy();
+    });
+
     QUnit.test('simple editable rendering', async function (assert) {
         assert.expect(15);
 
