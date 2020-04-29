@@ -52,7 +52,7 @@
     </template>
     <template id="onboarding_step">
         <div t-att-class="'o_onboarding_step ' + ('o_onboarding_done' if state in ('done', 'just_done') else 'o_onboarding_current') + (' o_onboarding_just_done' if state == 'just_done' else '')">
-            <t t-call="base.onboarding_confetti" />
+            <t t-call="partner.onboarding_confetti" />
             <div class="o_onboarding_progress d-inline-block progress">
                 <div class="progress-bar"></div>
             </div>
@@ -128,9 +128,10 @@
             </div>
         </div>
     </template>
+
     <!-- ONBOARDING STEPS -->
     <template id="onboarding_company_step">
-        <t t-call="base.onboarding_step">
+        <t t-call="partner.onboarding_step">
             <t t-set="title">Company Data</t>
             <t t-set="description">
                 Set your company's data for documents header/footer.
@@ -141,29 +142,5 @@
             <t t-set="state" t-value="state.get('base_onboarding_company_state')" />
         </t>
     </template>
-    <!-- COMPANY FORM -->
-    <record id="base_onboarding_company_form" model="ir.ui.view">
-        <field name="name">base.company.onboarding.form</field>
-        <field name="model">res.company</field>
-        <field name="inherit_id" ref="base.view_company_form" />
-        <field name="mode">primary</field>
-        <field name="priority">1000</field>
-        <field name="arch" type="xml">
-            <xpath expr="//group[@name='social_media']" position="replace" />
-            <form position="inside">
-                <footer position="replace">
-                    <button name="action_save_onboarding_company_step" class="btn btn-primary" type="object" string="Apply" />
-                    <button special="cancel" string="Cancel" />
-                </footer>
-            </form>
-        </field>
-    </record>
-    <record id="action_open_base_onboarding_company" model="ir.actions.act_window">
-        <field name="name">Set your company data</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">res.company</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="base_onboarding_company_form" />
-        <field name="target">new</field>
-    </record>
+
 </odoo>
