@@ -105,7 +105,7 @@ class Channel(models.Model):
         'slide.channel.tag', 'slide_channel_tag_rel', 'channel_id', 'tag_id',
         string='Tags', help='Used to categorize and filter displayed channels/courses')
     # slides: promote, statistics
-    slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides and categories")
+    slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides and categories", context={'active_test': False})
     slide_content_ids = fields.One2many('slide.slide', string='Slides', compute="_compute_category_and_slide_ids")
     slide_category_ids = fields.One2many('slide.slide', string='Categories', compute="_compute_category_and_slide_ids")
     slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
@@ -428,6 +428,7 @@ class Channel(models.Model):
         to_activate = self.filtered(lambda channel: not channel.active)
         res = super(Channel, self).toggle_active()
         if to_archive:
+            to_archive.is_published = False
             to_archive.mapped('slide_ids').action_archive()
         if to_activate:
             to_activate.with_context(active_test=False).mapped('slide_ids').action_unarchive()
