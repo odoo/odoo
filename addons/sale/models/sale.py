@@ -465,8 +465,9 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         company_id = self.company_id.id
-        journal_id = (self.env['account.invoice'].with_context(company_id=company_id or self.env.user.company_id.id)
-            .default_get(['journal_id'])['journal_id'])
+        journal_id = self.env['account.invoice']
+            .with_context(company_id=company_id or self.env.user.company_id.id, default_currency_id=self.currency_id.id)
+            .default_get(['journal_id'])['journal_id']
         if not journal_id:
             raise UserError(_('Please define an accounting sales journal for this company.'))
         vinvoice = self.env['account.invoice'].new({'partner_id': self.partner_invoice_id.id, 'type': 'out_invoice'})
