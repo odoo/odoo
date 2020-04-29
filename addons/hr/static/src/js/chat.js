@@ -44,18 +44,8 @@ odoo.define('hr.employee_chat', function (require) {
             open_chat: '_onOpenChat'
         }),
 
-        _onOpenChat: function(ev) {
-            var self = this;
-            var dmChat = this.call('mail_service', 'getDMChatFromPartnerID', ev.data.partner_id);
-            if (dmChat) {
-                dmChat.detach();
-            } else {
-                var def = this.call('mail_service', 'createChannel', ev.data.partner_id, 'dm_chat').then(function (dmChatId) {
-                    dmChat = self.call('mail_service', 'getChannel', dmChatId);
-                    dmChat.detach();
-                });
-                Promise.resolve(def);
-            }
+        _onOpenChat: function (ev) {
+            this.call('mail_service', 'openDMChatWindow', ev.data.partner_id);
         },
     });
 
