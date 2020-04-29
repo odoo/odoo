@@ -657,7 +657,7 @@
                         <page string="Other Info" name="other_information">
                             <group>
                                 <group name="sales_person" string="Sales">
-                                    <field name="user_id" domain="[('share', '=', False)]"/>
+                                    <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                     <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" options="{'no_create': True}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="require_signature"/>
