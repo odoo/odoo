@@ -8,5 +8,5 @@ from . import base_module_upgrade
 from . import base_module_uninstall
 from . import base_export_language
 from . import base_update_translations
-from . import base_partner_merge
-from . import base_document_layout
+from . import change_password_user
+from . import change_password_wizard
