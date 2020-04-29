@@ -2,13 +2,19 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.KanbanActivity">
-    <div class="o_kanban_inline_block dropdown o_kanban_selection o_mail_activity">
+    <div class="o_kanban_inline_block dropdown o_mail_activity">
         <a class="dropdown-toggle o-no-caret o_activity_btn" data-toggle="dropdown" role="button">
             <!-- span classes are generated dynamically (see _render) -->
             <span t-att-title="widget.selection[widget.activityState]" role="img" t-att-aria-label="widget.selection[widget.activity_state]"/>
        </a>
         <div class="dropdown-menu o_activity" role="menu"/>
     </div>
+</t>
+
+<t t-name="mail.ListActivity" t-extend="mail.KanbanActivity">
+    <t t-jquery=".o_mail_activity" t-operation="append">
+        <span class="o_activity_summary"/>
+    </t>
 </t>
 
 <t t-name="mail.KanbanActivityLoading">

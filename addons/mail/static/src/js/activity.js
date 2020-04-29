@@ -14,6 +14,7 @@ var time = require('web.time');
 
 var QWeb = core.qweb;
 var _t = core._t;
+const _lt = core._lt;
 
 /**
  * Fetches activities and postprocesses them.
@@ -646,14 +647,14 @@ var Activity = BasicActivity.extend({
 // Activities Widget for Kanban views ('kanban_activity' widget)
 // -----------------------------------------------------------------------------
 var KanbanActivity = BasicActivity.extend({
-    className: 'o_mail_activity_kanban',
     template: 'mail.KanbanActivity',
     events: _.extend({}, BasicActivity.prototype.events, {
         'show.bs.dropdown': '_onDropdownShow',
     }),
     fieldDependencies: _.extend({}, BasicActivity.prototype.fieldDependencies, {
         activity_exception_decoration: {type: 'selection'},
-        activity_exception_icon: {type: 'char'}
+        activity_exception_icon: {type: 'char'},
+        activity_state: {type: 'selection'},
     }),
 
     /**
@@ -757,6 +758,62 @@ var KanbanActivity = BasicActivity.extend({
 });
 
 // -----------------------------------------------------------------------------
+// Activities Widget for List views ('list_activity' widget)
+// -----------------------------------------------------------------------------
+const ListActivity = KanbanActivity.extend({
+    template: 'mail.ListActivity',
+    events: Object.assign({}, KanbanActivity.prototype.events, {
+        'click .dropdown-menu.o_activity': '_onDropdownClicked',
+    }),
+    fieldDependencies: _.extend({}, KanbanActivity.prototype.fieldDependencies, {
+        activity_summary: {type: 'char'},
+        activity_type_id: {type: 'many2one', relation: 'mail.activity.type'},
+    }),
+    label: _lt('Next Activity'),
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: async function () {
+        await this._super(...arguments);
+        // set the 'special_click' prop on the activity icon to prevent from
+        // opening the record when the user clicks on it (as it opens the
+        // activity dropdown instead)
+        this.$('.o_activity_btn > span').prop('special_click', true);
+        if (this.value.count) {
+            let text;
+            if (this.recordData.activity_exception_decoration) {
+                text = _t('Warning');
+            } else {
+                text = this.recordData.activity_summary ||
+                          this.recordData.activity_type_id.data.display_name;
+            }
+            this.$('.o_activity_summary').text(text);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * As we are in a list view, we don't want clicks inside the activity
+     * dropdown to open the record in a form view.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onDropdownClicked: function (ev) {
+        ev.stopPropagation();
+    },
+});
+
+// -----------------------------------------------------------------------------
 // Activity Exception Widget to display Exception icon ('activity_exception' widget)
 // -----------------------------------------------------------------------------
 
@@ -800,6 +857,7 @@ var ActivityException = AbstractField.extend({
 field_registry
     .add('mail_activity', Activity)
     .add('kanban_activity', KanbanActivity)
+    .add('list_activity', ListActivity)
     .add('activity_exception', ActivityException);
 
 return Activity;
