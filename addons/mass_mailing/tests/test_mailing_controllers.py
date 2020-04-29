@@ -3,11 +3,11 @@
 
 import werkzeug
 
-from odoo.addons.mass_mailing.tests.common import TestMassMailCommon
+from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests.common import HttpCase
 
 
-class TestMassMailingControllers(TestMassMailCommon, HttpCase):
+class TestMassMailingControllers(MassMailCommon, HttpCase):
 
     def test_tracking_url_token(self):
         mail_mail = self.env['mail.mail'].create({})

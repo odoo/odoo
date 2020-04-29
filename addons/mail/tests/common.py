@@ -3,7 +3,6 @@
 
 import email
 import email.policy
-import json
 import time
 
 from collections import defaultdict
@@ -170,16 +169,32 @@ class MockEmail(common.BaseCase):
     # GATEWAY ASSERTS
     # ------------------------------------------------------------
 
-    def _find_mail(self, author, recipients, mail_message):
+    def _find_mail_mail_wpartners(self, recipients, status, mail_message=None, author=None):
         for mail in self._new_mails:
-            if mail.mail_message_id != mail_message:
-                continue
             if author is not None and mail.author_id != author:
+                continue
+            if mail_message is not None and mail.mail_message_id != mail_message:
+                continue
+            if status and mail.state != status:
                 continue
             if all(p in mail.recipient_ids for p in recipients):
                 break
         else:
-            raise AssertionError('mail.mail not found for message %s / recipients %s' % (mail_message, recipients.ids))
+            raise AssertionError('mail.mail not found for message %s / status %s / recipients %s' % (mail_message, status, recipients.ids))
+        return mail
+
+    def _find_mail_mail_wemail(self, email_to, status, mail_message=None, author=None):
+        for mail in self._new_mails:
+            if author is not None and mail.author_id != author:
+                continue
+            if mail_message is not None and mail.mail_message_id != mail_message:
+                continue
+            if status and mail.state != status:
+                continue
+            if (mail.email_to == email_to and not mail.recipient_ids) or (not mail.email_to and mail.recipient_ids.email) == email_to:
+                break
+        else:
+            raise AssertionError('mail.mail not found for email_to %s / status %s in %s' % (email_to, status, repr([m.email_to for m in self._new_mails])))
         return mail
 
     def _find_mail_mail_wrecord(self, record):
@@ -194,16 +209,33 @@ class MockEmail(common.BaseCase):
         mail = self._find_mail(author, recipients, mail_message)
         self.assertEqual(mail.state, 'exception')
 
-    def assertMailSent(self, author, recipients, mail_message, check_mail_mail=True, **values):
+    def assertMailMail(self, recipients, status, check_mail_mail=True, mail_message=None, author=None, email_values=None):
         if check_mail_mail:
-            mail = self._find_mail(author, recipients, mail_message)
-            self.assertEqual(mail.state, 'sent')
-        for recipient in recipients:
-            self.assertSentEmail(author, [recipient], **values)
+            mail = self._find_mail_mail_wpartners(recipients, status, mail_message=mail_message, author=author)
+            self.assertTrue(bool(mail))
+        if status == 'sent':
+            for recipient in recipients:
+                self.assertSentEmail(author, [recipient], **email_values)
+
+    def assertMailMailWEmails(self, emails, status, content, fields_values=None):
+        """ Will check in self._new_mails to find a sent mail.mail. To use with
+        mail gateway mock.
+
+        :param emails: list of emails;
+        :param status: status of mail.mail;
+        :param content: content to check for each email;
+        :param fields_values: specific value to check on the mail.mail record;
+        """
+        for email_to in emails:
+            sent_mail = self._find_mail_mail_wemail(email_to, status)
+            if content:
+                self.assertIn(content, sent_mail.body_html)
+            for fname, fvalue in (fields_values or {}).items():
+                self.assertEqual(sent_mail[fname], fvalue)
 
     def assertNoMail(self, author, recipients, mail_message):
         try:
-            self._find_mail(author, recipients, mail_message)
+            self._find_mail_mail_wpartners(recipients, False, mail_message=mail_message, author=author)
         except AssertionError:
             pass
         else:
@@ -290,6 +322,11 @@ class MailCase(MockEmail):
             mail_notrack=False
         )
 
+    def flush_tracking(self):
+        """ Force the creation of tracking values. """
+        self.env['base'].flush()
+        self.cr.precommit()
+
     # ------------------------------------------------------------
     # MAIL MOCKS
     # ------------------------------------------------------------
@@ -362,6 +399,19 @@ class MailCase(MockEmail):
             for counter in range(count)]
 
         return cls.env['mail.message'].sudo().create(create_vals)
+
+    @classmethod
+    def _create_template(cls, model, template_values=None):
+        create_values = {
+            'name': 'TestTemplate',
+            'subject': 'About ${object.name}',
+            'body_html': '<p>Hello ${object.name}</p>',
+            'model_id': cls.env['ir.model']._get(model).id,
+        }
+        if template_values:
+            create_values.update(template_values)
+        cls.email_template = cls.env['mail.template'].create(create_values)
+        return cls.email_template
 
     # ------------------------------------------------------------
     # MAIL ASSERTS WRAPPERS
@@ -505,12 +555,16 @@ class MailCase(MockEmail):
             for recipients in email_groups.values():
                 partners = self.env['res.partner'].sudo().concat(*recipients)
                 if all(p in mail_groups['failure'] for p in partners):
-                    self.assertMailFailed(message.author_id, partners, message)
+                    self.assertMailMail(partners, 'exception', author=message.author_id, mail_message=message)
                 else:
                     check_mail_mail = not self.mail_unlink_sent
-                    self.assertMailSent(
-                        message.author_id if message.author_id else message.email_from, partners, message,
-                        check_mail_mail=check_mail_mail, body_content=mbody)
+                    self.assertMailMail(
+                        partners, 'sent',
+                        author=message.author_id if message.author_id else message.email_from,
+                        mail_message=message,
+                        check_mail_mail=check_mail_mail,
+                        email_values={'body_content': mbody}
+                    )
             if not any(p for recipients in email_groups.values() for p in recipients):
                 self.assertNoMail(message.author_id, partners, message)
 
@@ -580,3 +634,39 @@ class MailCase(MockEmail):
                 self.assertEqual(tracking.new_value_char, new_value and new_value.display_name or '')
             else:
                 self.assertEqual(1, 0)
+
+
+class MailCommon(common.SavepointCase, MailCase):
+    """ Almost-void class definition setting the savepoint case + mock of mail.
+    Used mainly for class inheritance in other applications and test modules. """
+
+    @classmethod
+    def setUpClass(cls):
+        super(MailCommon, cls).setUpClass()
+        # give default values for all email aliases and domain
+        cls._init_mail_gateway()
+        # ensure admin configuration
+        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.user_admin.write({'notification_type': 'inbox'})
+        cls.partner_admin = cls.env.ref('base.partner_admin')
+        cls.company_admin = cls.user_admin.company_id
+        cls.company_admin.write({'email': 'company@example.com'})
+
+        # test standard employee
+        cls.user_employee = mail_new_test_user(
+            cls.env, login='employee',
+            groups='base.group_user',
+            company_id=cls.company_admin.id,
+            name='Ernest Employee',
+            notification_type='inbox',
+            signature='--\nErnest'
+        )
+        cls.partner_employee = cls.user_employee.partner_id
+
+    @classmethod
+    def _create_portal_user(cls):
+        cls.user_portal = mail_new_test_user(
+            cls.env, login='portal_test', groups='base.group_portal', company_id=cls.company_admin.id,
+            name='Chell Gladys', notification_type='email')
+        cls.partner_portal = cls.user_portal.partner_id
+        return cls.user_portal

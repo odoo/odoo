@@ -9,7 +9,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('mail_performance')
-class TestSMSPerformance(BaseMailPerformance, sms_common.MockSMS):
+class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
 
     def setUp(self):
         super(TestSMSPerformance, self).setUp()

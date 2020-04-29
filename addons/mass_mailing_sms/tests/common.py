@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from contextlib import contextmanager
-from unittest.mock import patch
-
-from odoo import exceptions, tools
+from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.addons.sms.tests import common as sms_common
-from odoo.tests import common
-from odoo.addons.sms.models.sms_api import SmsApi
+from odoo.addons.sms.tests.common import SMSCase, SMSCommon
 
 
-class MockSMS(sms_common.MockSMS):
+class MassSMSCase(SMSCase):
 
     def assertSMSOutgoingStatistics(self, partners, numbers, records, mailing):
         found_sms = self.env['sms.sms'].sudo().search([
@@ -71,3 +66,10 @@ class MockSMS(sms_common.MockSMS):
                     self.assertSMSCanceled(partner, number, recipient_info.get('failure_type', False), content)
                 else:
                     raise NotImplementedError()
+
+
+class MassSMSCommon(MassMailCommon, SMSCommon, MassSMSCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(MassSMSCommon, cls).setUpClass()
