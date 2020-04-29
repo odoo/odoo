@@ -959,6 +959,44 @@ var KanbanFieldMany2One = AbstractField.extend({
     },
 });
 
+/**
+ * Widget Many2OneAvatar is only supported on many2one fields pointing to a
+ * model which inherits from 'image.mixin'. In readonly, it displays the
+ * record's image next to the display_name. In edit, it behaves exactly like a
+ * regular many2one widget.
+ */
+const Many2OneAvatar = FieldMany2One.extend({
+    _template: 'web.Many2OneAvatar',
+
+    init() {
+        this._super.apply(this, arguments);
+        if (this.mode === 'readonly') {
+            this.template = null;
+            this.tagName = 'div';
+            this.className = 'o_field_many2one_avatar';
+            // disable the redirection to the related record on click, in readonly
+            this.noOpen = true;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _renderReadonly() {
+        this.$el.empty();
+        if (this.value) {
+            this.$el.html(qweb.render(this._template, {
+                url: `/web/image/${this.field.relation}/${this.value.res_id}/image_128`,
+                value: this.m2o_value,
+            }));
+        }
+    },
+});
+
 //------------------------------------------------------------------------------
 // X2Many widgets
 //------------------------------------------------------------------------------
@@ -3308,8 +3346,9 @@ return {
     Many2oneBarcode: Many2oneBarcode,
     KanbanFieldMany2One: KanbanFieldMany2One,
     ListFieldMany2One: ListFieldMany2One,
+    Many2OneAvatar: Many2OneAvatar,
 
-    FieldX2Many : FieldX2Many,
+    FieldX2Many: FieldX2Many,
     FieldOne2Many: FieldOne2Many,
 
     FieldMany2Many: FieldMany2Many,
