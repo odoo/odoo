@@ -234,6 +234,26 @@ class CrmLead(models.Model):
                     })
             lead.write(lead_values)
 
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, **kwargs):
+        """
+        If the partner is assigned, and if he give the attachment access token,
+        sudo write the attachments to bypass the standard verification.
+        """
+        attachment_tokens = kwargs.get('attachment_tokens')
+        if self.partner_assigned_id == self.env.user.partner_id and attachment_tokens:
+            attachment_ids = kwargs.pop('attachment_ids', [])
+            attachment_ids = self.env['ir.attachment'].browse(attachment_ids)
+            attachment_ids = attachment_ids.filtered(
+                lambda attachment: attachment.access_token in attachment_tokens
+            )
+
+            mail_message = super(CrmLead, self).message_post(**kwargs)
+            mail_message.sudo().attachment_ids = attachment_ids
+            return mail_message
+
+        return super(CrmLead, self).message_post(**kwargs)
+
     @api.model
     def create_opp_portal(self, values):
         if not (self.env.user.partner_id.grade_id or self.env.user.commercial_partner_id.grade_id):

@@ -140,6 +140,7 @@ class PortalChatter(http.Controller):
                 'message': message,
                 'send_after_commit': False,
                 'attachment_ids': attachment_ids,
+                'attachment_tokens': attachment_tokens,
             }
             post_values.update((fname, kw.get(fname)) for fname in self._portal_post_filter_params())
             message = _message_post_helper(**post_values)
