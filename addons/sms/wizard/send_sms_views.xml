@@ -8,6 +8,14 @@
             <form string="Send an SMS">
                 <sheet>
                     <group>
+                        <div colspan="2" class="oe_form_box_info bg-info oe_text_center"
+                                invisible="not context.get('active_domain')">
+                            <p>
+                                <strong>
+                                    A sms will be sent to all the records matching your current search filter, not only the ids selected in the list view.
+                                </strong>
+                            </p>
+                        </div>
                         <field name="recipients"/>
                         <field name="message" widget="sms_widget"/>
                     </group>
