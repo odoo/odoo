@@ -566,23 +566,18 @@ class AccountBankStatementLine(models.Model):
                 balance = self.amount_currency
             else:
                 amount_currency = self.amount
-                balance = journal_currency._convert(amount_currency, journal.company_id.currency_id, journal.company_id, self.date)
+                balance = journal_currency._convert(amount_currency, company_currency, journal.company_id, self.date)
         elif self.foreign_currency_id and not journal_currency:
-            if self.foreign_currency_id == company_currency:
-                amount_currency = 0.0
-                balance = self.amount
-                currency_id = False
-            else:
-                amount_currency = self.amount_currency
-                balance = self.amount
-                currency_id = self.foreign_currency_id.id
+            amount_currency = self.amount_currency
+            balance = self.amount
+            currency_id = self.foreign_currency_id.id
         elif not self.foreign_currency_id and journal_currency:
             currency_id = journal_currency.id
             amount_currency = self.amount
             balance = journal_currency._convert(amount_currency, journal.company_id.currency_id, journal.company_id, self.date)
         else:
-            currency_id = False
-            amount_currency = 0.0
+            currency_id = company_currency.id
+            amount_currency = self.amount
             balance = self.amount
 
         return {
@@ -685,8 +680,8 @@ class AccountBankStatementLine(models.Model):
             amount_currency = amounts[journal_currency.id]
             currency_id = journal_currency.id
         else:
-            amount_currency = 0.0
-            currency_id = False
+            amount_currency = amounts[company_currency.id]
+            currency_id = company_currency.id
 
         return {
             **counterpart_vals,
@@ -695,8 +690,8 @@ class AccountBankStatementLine(models.Model):
             'partner_id': self.partner_id.id,
             'currency_id': currency_id,
             'account_id': counterpart_vals.get('account_id', move_line.account_id.id if move_line else False),
-            'debit': balance if balance > 0 else 0.0,
-            'credit': -balance if balance < 0 else 0.0,
+            'debit': balance if balance > 0.0 else 0.0,
+            'credit': -balance if balance < 0.0 else 0.0,
             'amount_currency': amount_currency,
         }
 
@@ -717,6 +712,12 @@ class AccountBankStatementLine(models.Model):
             ) % self.journal_id.display_name)
 
         liquidity_line_vals = self._prepare_liquidity_move_line_vals()
+
+        # Ensure the counterpart will have a balance exactly equals to the amount in journal currency.
+        # This avoid some rounding issues when the currency rate between two currencies is not symmetrical.
+        # E.g:
+        # A.convert(amount_a, B) = amount_b
+        # B.convert(amount_b, A) = amount_c != amount_a
 
         counterpart_vals = {
             'name': self.payment_ref,
@@ -772,15 +773,12 @@ class AccountBankStatementLine(models.Model):
                 st_line.is_reconciled = True
 
             # Compute residual amount
-            st_line_currency = suspense_lines.currency_id or suspense_lines.company_currency_id
-            balance_field, residual_field = ('amount_currency', 'amount_residual_currency') if suspense_lines.currency_id else ('balance', 'amount_residual')
-
             if st_line.to_check:
                 st_line.amount_residual = -st_line.amount_currency if st_line.foreign_currency_id else -st_line.amount
             elif suspense_lines.account_id.reconcile:
-                st_line.amount_residual = sum(suspense_lines.mapped(residual_field))
+                st_line.amount_residual = sum(suspense_lines.mapped('amount_residual_currency'))
             else:
-                st_line.amount_residual = sum(suspense_lines.mapped(balance_field))
+                st_line.amount_residual = sum(suspense_lines.mapped('amount_currency'))
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -921,14 +919,13 @@ class AccountBankStatementLine(models.Model):
                             'foreign_currency_id': False,
                         })
 
-                    elif not suspense_lines.currency_id and st_line.foreign_currency_id == company_currency:
+                    elif not journal_currency and suspense_lines.currency_id == company_currency:
 
-                        # The suspense line has no foreign currency because the foreign currency set on the
-                        # statement line is the same as the company one. In that case, don't erase the
-                        # 'foreign_currency_id' field.
+                        # Don't set a specific foreign currency on the statement line.
 
                         st_line_vals_to_write.update({
-                            'amount_currency': -suspense_lines.balance,
+                            'amount_currency': 0.0,
+                            'foreign_currency_id': False,
                         })
 
                     else:
@@ -1121,7 +1118,7 @@ class AccountBankStatementLine(models.Model):
                 'name': '%s: %s' % (self.payment_ref, _('Open Balance')),
                 'account_id': open_balance_account.id,
                 'balance': -total_balance,
-                'currency_id': False,
+                'currency_id': self.company_currency_id.id,
             })
         else:
             open_balance_vals = None

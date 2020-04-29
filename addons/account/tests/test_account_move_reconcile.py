@@ -249,11 +249,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         line_5 = move.line_ids.filtered(lambda line: line.credit == 500.0)
 
         self.assertRecordValues(line_1 + line_2 + line_3 + line_4 + line_5, [
-            {'amount_residual': 1000.0,     'amount_residual_currency': 0.0,    'reconciled': False},
-            {'amount_residual': 200.0,      'amount_residual_currency': 0.0,    'reconciled': False},
-            {'amount_residual': -300.0,     'amount_residual_currency': 0.0,    'reconciled': False},
-            {'amount_residual': -400.0,     'amount_residual_currency': 0.0,    'reconciled': False},
-            {'amount_residual': -500.0,     'amount_residual_currency': 0.0,    'reconciled': False},
+            {'amount_residual': 1000.0,     'amount_residual_currency': 1000.0, 'reconciled': False},
+            {'amount_residual': 200.0,      'amount_residual_currency': 200.0,  'reconciled': False},
+            {'amount_residual': -300.0,     'amount_residual_currency': -300.0, 'reconciled': False},
+            {'amount_residual': -400.0,     'amount_residual_currency': -400.0, 'reconciled': False},
+            {'amount_residual': -500.0,     'amount_residual_currency': -500.0, 'reconciled': False},
         ])
 
         res = (line_1 + line_3).reconcile()
@@ -267,7 +267,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         }])
 
         self.assertRecordValues(line_1 + line_3, [
-            {'amount_residual': 700.0,      'amount_residual_currency': 0.0,    'reconciled': False},
+            {'amount_residual': 700.0,      'amount_residual_currency': 700.0,  'reconciled': False},
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
         ])
 
@@ -282,7 +282,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         }])
 
         self.assertRecordValues(line_1 + line_4, [
-            {'amount_residual': 300.0,      'amount_residual_currency': 0.0,    'reconciled': False},
+            {'amount_residual': 300.0,      'amount_residual_currency': 300.0,  'reconciled': False},
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
         ])
 
@@ -298,7 +298,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.assertRecordValues(line_1 + line_5, [
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
-            {'amount_residual': -200.0,     'amount_residual_currency': 0.0,    'reconciled': False},
+            {'amount_residual': -200.0,     'amount_residual_currency': -200.0, 'reconciled': False},
         ])
 
         res = (line_2 + line_5).reconcile()
@@ -757,7 +757,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
-            (self.cash_basis_transfer_account,      -33.34,     0.0),
+            (self.cash_basis_transfer_account,      -33.34,     -33.34),
             (self.tax_account_1,                    0.0,        0.0),
             (self.tax_account_2,                    0.0,        0.0),
         ])
@@ -798,8 +798,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
-            (self.cash_basis_transfer_account,      -22.23,     0.0),
-            (self.tax_account_1,                    -11.11,     0.0),
+            (self.cash_basis_transfer_account,      -22.23,     -22.23),
+            (self.tax_account_1,                    -11.11,     -11.11),
             (self.tax_account_2,                    0.0,        0.0),
         ])
 
@@ -850,8 +850,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
-            (self.cash_basis_transfer_account,      -0.01,      0.0),
-            (self.tax_account_1,                    -33.33,     0.0),
+            (self.cash_basis_transfer_account,      -0.01,      -0.01),
+            (self.tax_account_1,                    -33.33,     -33.33),
             (self.tax_account_2,                    0.0,        0.0),
         ])
 
@@ -879,8 +879,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
             (self.cash_basis_transfer_account,      0.0,        0.0),
-            (self.tax_account_1,                    -33.33,     0.0),
-            (self.tax_account_2,                    -0.01,      0.0),
+            (self.tax_account_1,                    -33.33,     -33.33),
+            (self.tax_account_2,                    -0.01,      -0.01),
         ])
 
     def test_reconcile_cash_basis_workflow_multi_currency(self):
