@@ -3,11 +3,11 @@
 
 from ast import literal_eval
 
-from odoo.addons.mass_mailing.tests.common import TestMassMailCommon
+from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests.common import users, Form
 from odoo.tools import formataddr, mute_logger
 
-class TestMassMailValues(TestMassMailCommon):
+class TestMassMailValues(MassMailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -122,7 +122,7 @@ class TestMassMailValues(TestMassMailCommon):
         self.assertEqual(mailing_form.mailing_model_real, 'res.partner')
 
 
-class TestMassMailFeatures(TestMassMailCommon):
+class TestMassMailFeatures(MassMailCommon):
 
     @classmethod
     def setUpClass(cls):

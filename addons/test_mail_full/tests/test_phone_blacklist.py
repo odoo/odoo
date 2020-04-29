@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail_full.tests import common as test_mail_full_common
+from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestRecipients
 
 
-class TestPhoneBlacklist(test_mail_full_common.TestSMSCommon, test_mail_full_common.TestRecipients):
+class TestPhoneBlacklist(TestMailFullCommon, TestRecipients):
     """ TODO """
 
     @classmethod

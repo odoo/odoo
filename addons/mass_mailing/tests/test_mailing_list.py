@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mass_mailing.tests.common import TestMassMailCommon
+from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests.common import users
 
 
-class TestMailingListMerge(TestMassMailCommon):
+class TestMailingListMerge(MassMailCommon):
 
     @classmethod
     def setUpClass(cls):
