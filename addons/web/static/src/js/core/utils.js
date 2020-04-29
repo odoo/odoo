@@ -447,7 +447,7 @@ var utils = {
     },
     /**
      * Checks if a class is an extension of owl.Component.
-     * 
+     *
      * @param {any} value A class reference
      */
     isComponent: function (value) {
@@ -527,12 +527,12 @@ var utils = {
     /**
      * Patch a class and return a function that remove the patch
      * when called.
-     * 
+     *
      * This function is the last resort solution for monkey-patching an
      * ES6 Class, for people that do not control the code defining the Class
      * to patch (e.g. partners), and when that Class isn't patchable already
      * (i.e. when it doesn't have a 'patch' function, defined by the 'web.patchMixin').
-     * 
+     *
      * @param {Class} C Class to patch
      * @param {string} patchName
      * @param {Object} patch
@@ -648,6 +648,36 @@ var utils = {
             'max-age=' + ttl,
             'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
         ].join(';');
+    },
+    /**
+     * Return a shallow copy of a given array sorted by a given criterion or a default one.
+     * The given criterion can either be:
+     * - a string: a property name on the array elements returning the sortable primitive
+     * - a function: a handler that will return the sortable primitive from a given element.
+     *
+     * @param {any[]} array
+     * @param {(string|function)} [criterion]
+     */
+    sortBy: function (array, criterion) {
+        let getter;
+        if (criterion) {
+            switch (typeof criterion) {
+                case 'string': getter = element => element[criterion]; break;
+                case 'function': getter = criterion; break;
+                default: throw new Error(`Expected criterion of type 'string' or 'function' and got '${typeof criterion}'`);
+            }
+        } else {
+            getter = element => element;
+        }
+        return array.slice().sort((elA, elB) => {
+            const a = getter(elA);
+            const b = getter(elB);
+            if (isNaN(a) && isNaN(b)) {
+                return a > b ? 1 : a < b ? -1 : 0;
+            } else {
+                return a - b;
+            }
+        });
     },
     /**
      * Returns a string formatted using given values.
