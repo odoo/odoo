@@ -466,6 +466,14 @@ class Slide(models.Model):
             category.channel_id._move_category_slides(category, False)
         super(Slide, self).unlink()
 
+    def toggle_active(self):
+        # archiving/unarchiving a channel does it on its slides, too
+        to_archive = self.filtered(lambda slide: slide.active)
+        res = super(Slide, self).toggle_active()
+        if to_archive:
+            to_archive.filtered(lambda slide: not slide.is_category).is_published = False
+        return res
+
     # ---------------------------------------------------------
     # Mail/Rating
     # ---------------------------------------------------------
