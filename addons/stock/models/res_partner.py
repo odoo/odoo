@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
-from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
+from odoo.addons.partner.models.res_partner import WARNING_HELP, WARNING_MESSAGE
 
 
 class Partner(models.Model):

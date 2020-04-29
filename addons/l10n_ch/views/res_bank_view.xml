@@ -4,7 +4,7 @@
         <record id="isr_partner_bank_form" model="ir.ui.view">
             <field name="name">l10n_ch.res.partner.bank.form</field>
             <field name="model">res.partner.bank</field>
-            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="inherit_id" ref="partner.view_partner_bank_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='acc_number']" position="after">
                     <label for="l10n_ch_postal" string="ISR Client Identification Number" attrs="{'invisible': [('l10n_ch_show_subscription', '=', False)]}"/>

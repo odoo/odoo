@@ -14,7 +14,7 @@
     <record model="ir.ui.view" id="view_partner_bank_form_l10n_mx_edi_bank">
         <field name="name">view.partner.bank.form.mx.inherit</field>
         <field name="model">res.partner.bank</field>
-        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="inherit_id" ref="partner.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='bank_id']" position="after">
                 <field name="l10n_mx_edi_clabe" colspan="2"/>

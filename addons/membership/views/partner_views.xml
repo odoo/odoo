@@ -79,7 +79,7 @@
          <record model="ir.actions.act_window.view" id="action_membership_members_view_kanban">
             <field name="sequence" eval="1"/>
             <field name="view_mode">kanban</field>
-            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="view_id" ref="partner.res_partner_view_kanban"/>
             <field name="act_window_id" ref="action_membership_members"/>
         </record>
         <menuitem name="Members" id="menu_membership" sequence="0" parent="menu_association" action="action_membership_members"/>

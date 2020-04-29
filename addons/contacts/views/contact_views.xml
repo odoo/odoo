@@ -18,7 +18,7 @@
     <record id="action_contacts_view_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="0"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="base.res_partner_kanban_view"/>
+        <field name="view_id" ref="partner.res_partner_view_kanban"/>
         <field name="act_window_id" ref="action_contacts"/>
     </record>
     <record id="action_contacts_view_tree" model="ir.actions.act_window.view">
@@ -54,17 +54,17 @@
         sequence="2"/>
 
     <menuitem id="menu_partner_category_form"
-        action="base.action_partner_category_form"
+        action="partner.action_res_partner_category"
         name="Contact Tags"
         sequence="1" parent="res_partner_menu_config"/>
 
     <menuitem id="menu_partner_title_contact"
-        action="base.action_partner_title_contact"
+        action="partner.action_res_partner_title"
         name="Contact Titles" parent="res_partner_menu_config"
         sequence="3"/>
 
     <menuitem id="res_partner_industry_menu" name="Industries"
-        action="base.res_partner_industry_action" parent="res_partner_menu_config"
+        action="partner.action_res_partner_industry" parent="res_partner_menu_config"
         sequence="4"/>
 
     <menuitem id="menu_localisation" name="Localization"
@@ -90,12 +90,12 @@
         sequence="6"/>
 
     <menuitem id="menu_action_res_bank_form"
-        action="base.action_res_bank_form"
+        action="partner.action_res_bank_form"
         parent="menu_config_bank_accounts"
         sequence="1"/>
 
     <menuitem id="menu_action_res_partner_bank_form"
-        action="base.action_res_partner_bank_account_form"
+        action="partner.action_res_partner_bank_account_form"
         parent="menu_config_bank_accounts"
         sequence="2"/>
 </odoo>

@@ -31,7 +31,7 @@
         <record id="res_partner_view_kanban_inherit_mail" model="ir.ui.view">
             <field name="name">res.partner.view.kanban.inherit.mail</field>
             <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="inherit_id" ref="partner.res_partner_view_kanban"/>
             <field name="arch" type="xml">
                 <field name="type" position="after">
                     <field name="activity_state"/>
@@ -92,13 +92,13 @@
         </record>
 
         <!-- Add mail-defined activity view to standard action on partners to manage activities related to partner model -->
-        <record id="base.action_partner_form" model="ir.actions.act_window">
+        <record id="partner.action_partner_form" model="ir.actions.act_window">
             <field name="view_mode">kanban,tree,form,activity</field>
         </record>
-        <record id="base.action_partner_customer_form" model="ir.actions.act_window">
+        <record id="partner.action_partner_customer_form" model="ir.actions.act_window">
             <field name="view_mode">kanban,tree,form,activity</field>
         </record>
-        <record id="base.action_partner_supplier_form" model="ir.actions.act_window">
+        <record id="partner.action_partner_supplier_form" model="ir.actions.act_window">
             <field name="view_mode">kanban,tree,form,activity</field>
         </record>
 

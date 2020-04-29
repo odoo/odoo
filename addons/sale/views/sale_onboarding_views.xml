@@ -2,7 +2,7 @@
 <odoo>
     <!-- ONBOARDING STEPS -->
     <template id="onboarding_quotation_layout_step">
-        <t t-call="base.onboarding_step">
+        <t t-call="partner.onboarding_step">
             <t t-set="title">Quotation Layout</t>
             <t t-set="description">Customize the look of your quotations.</t>
             <t t-set="done_icon" t-value="'fa-star'" />
@@ -14,7 +14,7 @@
         </t>
     </template>
     <template id="sale_onboarding_order_confirmation_step">
-        <t t-call="base.onboarding_step">
+        <t t-call="partner.onboarding_step">
             <t t-set="title">Payment method</t>
             <t t-set="description">Choose your default customer payment method.</t>
             <t t-set="btn_text">Set payments</t>
@@ -24,7 +24,7 @@
         </t>
     </template>
         <template id="sale_onboarding_sample_quotation_step">
-        <t t-call="base.onboarding_step">
+        <t t-call="partner.onboarding_step">
             <t t-set="title">Sample Quotation</t>
             <t t-set="description">Send a quotation to test the customer portal.</t>
             <t t-set="btn_text">Send sample</t>
@@ -36,12 +36,12 @@
 
     <!-- ONBOARDING PANEL-->
     <template id="sale_quotation_onboarding_panel" name="sale.quotation.onboarding.panel">
-        <t t-call="base.onboarding_container">
+        <t t-call="partner.onboarding_container">
             <t t-set="classes" t-value="'o_onboarding_violet'" />
             <t t-set="bg_image" t-value="'/sale/static/src/img/sale_quotation_onboarding_bg.jpg'"/>
             <t t-set="close_method" t-value="'action_close_sale_quotation_onboarding'" />
             <t t-set="close_model" t-value="'res.company'" />
-            <t t-call="base.onboarding_company_step" name="company_step" />
+            <t t-call="partner.onboarding_company_step" name="company_step" />
             <t t-call="sale.onboarding_quotation_layout_step" name="quotation_layout_step" />
             <t t-call="sale.sale_onboarding_order_confirmation_step" name="payment_acquirer_step" />
             <t t-call="sale.sale_onboarding_sample_quotation_step" name="sample_quotation_step" />

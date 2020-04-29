@@ -19,5 +19,5 @@ with the street name, the house number, and room number.
         'views/base_address_extended.xml',
         'data/base_address_extended_data.xml',
     ],
-    'depends': ['base'],
+    'depends': ['partner'],
 }
