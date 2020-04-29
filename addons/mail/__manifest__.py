@@ -54,6 +54,7 @@
         'static/src/xml/chatter.xml',
         'static/src/xml/discuss.xml',
         'static/src/xml/followers.xml',
+        'static/src/xml/many2one_avatar_user.xml',
         'static/src/xml/systray.xml',
         'static/src/xml/out_of_office.xml',
         'static/src/xml/thread.xml',
