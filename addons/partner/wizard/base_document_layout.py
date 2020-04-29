@@ -64,7 +64,7 @@ class BaseDocumentLayout(models.TransientModel):
         for wizard in self:
             if wizard.report_layout_id:
                 ir_qweb = wizard.env['ir.qweb']
-                wizard.preview = ir_qweb.render('base.layout_preview', {'company': wizard})
+                wizard.preview = ir_qweb.render('partner.layout_preview', {'company': wizard})
             else:
                 wizard.preview = False
 
@@ -181,7 +181,7 @@ class BaseDocumentLayout(models.TransientModel):
     @api.model
     def action_open_base_document_layout(self, action_ref=None):
         if not action_ref:
-            action_ref = 'base.action_base_document_layout_configurator'
+            action_ref = 'partner.action_base_document_layout_configurator'
         return self.env.ref(action_ref).read()[0]
 
     def document_layout_save(self):
