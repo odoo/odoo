@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import odoo.tests
 
 from odoo.addons.website_slides.tests import common as slides_common
 from odoo.tests.common import users
@@ -128,3 +129,17 @@ class TestFromURL(slides_common.SlidesCase):
                     document = self.env['slide.slide']._find_document_data_from_url(url)
                     self.assertEqual(document[0], 'youtube')
                     self.assertEqual(document[1], id)
+
+@odoo.tests.tagged('archive_course')
+class TestUnpublish(slides_common.SlidesCase):
+
+    def test_archive(self):
+        # Archive a course
+        self.channel.toggle_active();
+        self.assertFalse(self.channel.active)
+        self.assertFalse(self.channel.is_published)
+
+        # Assert all slides are archived and unpublished
+        for slide in self.channel.slide_ids:
+            self.assertFalse(slide.active)
+            self.assertFalse(slide.is_published)
