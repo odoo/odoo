@@ -81,22 +81,22 @@ BasicModel.include({
  * @param {Array} activities list of activity Object
  * @return {Array} : list of modified activity Object
  */
-var setDelayLabel = function (activities){
+var setDelayLabel = function (activities) {
     var today = moment().startOf('day');
-    _.each(activities, function (activity){
+    _.each(activities, function (activity) {
         var toDisplay = '';
         var diff = activity.date_deadline.diff(today, 'days', true); // true means no rounding
-        if (diff === 0){
+        if (diff === 0) {
             toDisplay = _t("Today");
         } else {
-            if (diff < 0){ // overdue
-                if (diff === -1){
+            if (diff < 0) { // overdue
+                if (diff === -1) {
                     toDisplay = _t("Yesterday");
                 } else {
                     toDisplay = _.str.sprintf(_t("%d days overdue"), Math.abs(diff));
                 }
             } else { // due
-                if (diff === 1){
+                if (diff === 1) {
                     toDisplay = _t("Tomorrow");
                 } else {
                     toDisplay = _.str.sprintf(_t("Due in %d days"), Math.abs(diff));
@@ -264,7 +264,7 @@ var BasicActivity = AbstractField.extend({
         var self = this;
         _.each(activities, function (activity) {
             if (activity.fileuploadID) {
-                $(window).on(activity.fileuploadID, function() {
+                $(window).on(activity.fileuploadID, function () {
                     framework.unblockUI();
                     // find the button clicked and display the feedback popup on it
                     var files = Array.prototype.slice.call(arguments, 1);
@@ -341,7 +341,7 @@ var BasicActivity = AbstractField.extend({
         var previousActivityTypeID = $markDoneBtn.data('previous-activity-type-id') || false;
         var forceNextActivity = $markDoneBtn.data('force-next-activity');
 
-        if ($markDoneBtn.data('toggle') == 'collapse') {
+        if ($markDoneBtn.data('toggle') === 'collapse') {
             var $actLi = $markDoneBtn.parents('.o_log_activity');
             var $panel = self.$('#o_activity_form_' + activityID);
 
@@ -381,11 +381,11 @@ var BasicActivity = AbstractField.extend({
             $markDoneBtn.popover({
                 template: $(Popover.Default.template).addClass('o_mail_activity_feedback')[0].outerHTML, // Ugly but cannot find another way
                 container: $markDoneBtn,
-                title : _t("Feedback"),
+                title: _t("Feedback"),
                 html: true,
                 trigger: 'manual',
                 placement: 'right', // FIXME: this should work, maybe a bug in the popper lib
-                content : function () {
+                content: function () {
                     var $popover = $(QWeb.render('mail.activity_feedback_form', {
                         previous_activity_type_id: previousActivityTypeID,
                         force_next: forceNextActivity
@@ -435,7 +435,7 @@ var BasicActivity = AbstractField.extend({
             ev.stopPropagation();
             if ($btn.data('bs.popover')) {
                 $btn.popover('hide');
-            } else if ($btn.data('toggle') == 'collapse') {
+            } else if ($btn.data('toggle') === 'collapse') {
                 self.$('#o_activity_form_' + activityID).collapse('hide');
             }
         });
@@ -545,7 +545,7 @@ var BasicActivity = AbstractField.extend({
 // -----------------------------------------------------------------------------
 var Activity = BasicActivity.extend({
     className: 'o_mail_activity',
-    events:_.extend({}, BasicActivity.prototype.events, {
+    events: _.extend({}, BasicActivity.prototype.events, {
         'click a': '_onClickRedirect',
     }),
     specialData: '_fetchSpecialActivity',
@@ -648,7 +648,7 @@ var Activity = BasicActivity.extend({
 var KanbanActivity = BasicActivity.extend({
     className: 'o_mail_activity_kanban',
     template: 'mail.KanbanActivity',
-    events:_.extend({}, BasicActivity.prototype.events, {
+    events: _.extend({}, BasicActivity.prototype.events, {
         'show.bs.dropdown': '_onDropdownShow',
     }),
     fieldDependencies: _.extend({}, BasicActivity.prototype.fieldDependencies, {
@@ -790,8 +790,8 @@ var ActivityException = AbstractField.extend({
         this.$el.empty();
         if (this.value) {
             this.$el.attr({
-                'title': _t('This record has an exception activity.'),
-                'class': "pull-right mt-1 text-" + this.value + " fa " + this.recordData.activity_exception_icon
+                title: _t('This record has an exception activity.'),
+                class: "pull-right mt-1 text-" + this.value + " fa " + this.recordData.activity_exception_icon
             });
         }
     }
