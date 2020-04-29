@@ -7,6 +7,27 @@ odoo.define('web.basic_fields_owl', function (require) {
 
     const _lt = core._lt;
 
+
+    /**
+     * FieldBadge displays the field's value inside a bootstrap pill badge.
+     * The supported field's types are 'char', 'selection' and 'many2one'.
+     *
+     * By default, the background color of the badge is a light gray, but it can
+     * be customized by setting a 'decoration-xxx' attribute on the field.
+     * For instance,
+     *   <field name="some_field" widget="badge" decoration-danger="state == 'cancel'"/>
+     * renders a badge with a red background on records matching the condition.
+     */
+    class FieldBadge extends AbstractField {
+        _getClassFromDecoration(decoration) {
+            return `bg-${decoration.split('-')[1]}-light`;
+        }
+    }
+    FieldBadge.description = _lt("Badge");
+    FieldBadge.supportedFieldTypes = ['selection', 'many2one', 'char'];
+    FieldBadge.template = 'web.FieldBadge';
+
+
     class FieldBoolean extends AbstractField {
         patched() {
             super.patched();
@@ -105,7 +126,9 @@ odoo.define('web.basic_fields_owl', function (require) {
     FieldBoolean.supportedFieldTypes = ['boolean'];
     FieldBoolean.template = 'web.FieldBoolean';
 
+
     return {
+        FieldBadge,
         FieldBoolean,
     };
 });

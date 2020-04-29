@@ -2028,6 +2028,19 @@ order.
 
     - Supported field types: *char, text*
 
+- badge (FieldBadge)
+    Displays the value inside a bootstrap badge pill.
+
+    - Supported field types: *char*, *selection*, *many2one*
+
+    By default, the badge has a lightgrey background, but it can be customized
+    by using the decoration-X mechanism. For instance, to display a red badge
+    under a given condition:
+
+    .. code-block:: xml
+
+        <field name="foo" widget"badge" decoration-danger="state == 'cancel'"/>
+
 Relational fields
 -----------------
 
