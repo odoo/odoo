@@ -887,6 +887,49 @@ var FieldDateTime = FieldDate.extend({
     },
 });
 
+const RemainingDays = FieldDate.extend({
+    description: _lt("Remaining Days"),
+    supportedFieldTypes: ['date', 'datetime'],
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Displays the delta (in days) between the value of the field and today. If
+     * the delta is larger than 99 days, displays the date as usual (without
+     * time).
+     *
+     * @override
+     */
+    _renderReadonly() {
+        if (this.value === false) {
+            this.$el.removeClass('text-bf text-danger text-warning');
+            return;
+        }
+        // compare the value (in the user timezone) with now (also in the user
+        // timezone), to get a meaningful delta for the user
+        const nowUTC = moment().utc();
+        const nowUserTZ = nowUTC.clone().add(session.getTZOffset(nowUTC), 'minutes');
+        const valueUserTZ = this.value.clone().add(session.getTZOffset(this.value), 'minutes');
+        const diffDays = valueUserTZ.startOf('day').diff(nowUserTZ.startOf('day'), 'days');
+        let text;
+        if (Math.abs(diffDays) > 99) {
+            text = this._formatValue(this.value, 'date');
+        } else if (diffDays === 0) {
+            text = _t("Today");
+        } else if (diffDays < 0) {
+            text = diffDays === -1 ? _t("Yesterday") : _t(`${-diffDays} days ago`);
+        } else {
+            text = diffDays === 1 ? _t("Tomorrow") : _t(`In ${diffDays} days`);
+        }
+        this.$el.text(text).attr('title', this._formatValue(this.value, 'date'));
+        this.$el.toggleClass('text-bf', diffDays <= 0);
+        this.$el.toggleClass('text-danger', diffDays < 0);
+        this.$el.toggleClass('text-warning', diffDays === 0);
+    },
+});
+
 var FieldMonetary = NumericField.extend({
     description: _lt("Monetary"),
     className: 'o_field_monetary o_field_number',
@@ -3437,6 +3480,7 @@ return {
     FieldDate: FieldDate,
     FieldDateTime: FieldDateTime,
     FieldDateRange: FieldDateRange,
+    RemainingDays: RemainingDays,
     FieldDomain: FieldDomain,
     FieldFloat: FieldFloat,
     FieldFloatTime: FieldFloatTime,
