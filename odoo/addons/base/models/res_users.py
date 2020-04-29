@@ -105,24 +105,13 @@ class Users(models.Model):
     __uid_cache = defaultdict(dict)             # {dbname: {uid: password}}
 
     # User can write on a few of his own fields (but not his groups for example)
-    SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz']
+    SELF_WRITEABLE_FIELDS = ['company_id', 'email', 'name', 'lang', 'tz']
     # User can read a few of his own fields
-    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image_1920', 'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
+    SELF_READABLE_FIELDS = ['company_id', 'login', 'email', 'name', 'lang', 'tz', 'groups_id', 'partner_id', '__last_update']
 
     def _default_groups(self):
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
         return (default_user or self.env['res.users']).sudo().groups_id
-
-    @api.model
-    def _get_default_image(self):
-        """ Get a default image when the user is created without image
-
-            Inspired to _get_default_image method in
-            https://github.com/odoo/odoo/blob/11.0/odoo/addons/base/res/res_partner.py
-        """
-        image_path = get_module_resource('base', 'static/img', 'avatar.png')
-        image = base64.b64encode(open(image_path, 'rb').read())
-        return image_process(image, colorize=True)
 
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
         string='Related Partner', help='Partner-related data of the user')
@@ -136,18 +125,15 @@ class Users(models.Model):
         help="Specify a value only when creating a user or if you're "\
              "changing the user's password, otherwise leave empty. After "\
              "a change of password, the user has to login again.")
-    signature = fields.Html(string="Email Signature", default="")
     active = fields.Boolean(default=True)
     active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
-    action_id = fields.Many2one('ir.actions.actions', string='Home Action',
-        help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=_default_groups)
     log_ids = fields.One2many('res.users.log', 'create_uid', string='User log entries')
     login_date = fields.Datetime(related='log_ids.create_date', string='Latest authentication', readonly=False)
+    # YTI I have a doubt for this one
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies")
-    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
 
     # Special behavior for this field: res.company.search() will only return the companies
     # available to the current user (should be the user's companies?), when the user_preference
@@ -162,13 +148,13 @@ class Users(models.Model):
     name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
     email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
 
+    # YTI Those groups could be moved IMO
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
                                     compute='_compute_accesses_count', compute_sudo=True)
     rules_count = fields.Integer('# Record Rules', help='Number of record rules that apply to the current user',
                                  compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count', compute_sudo=True)
-    image_1920 = fields.Image(related='partner_id.image_1920', inherited=True, readonly=False, default=_get_default_image)
 
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
@@ -254,6 +240,10 @@ class Users(models.Model):
             else:
                 user.password = user.new_password
 
+    def read_action_id(self):
+        self.ensure_one()
+        return [{'id': self.id, 'action_id': False}]
+
     @api.depends('groups_id')
     def _compute_share(self):
         for user in self:
@@ -261,11 +251,6 @@ class Users(models.Model):
 
     def _compute_companies_count(self):
         self.companies_count = self.env['res.company'].sudo().search_count([])
-
-    @api.depends('tz')
-    def _compute_tz_offset(self):
-        for user in self:
-            user.tz_offset = datetime.datetime.now(pytz.timezone(user.tz or 'GMT')).strftime('%z')
 
     @api.depends('groups_id')
     def _compute_accesses_count(self):
@@ -279,10 +264,6 @@ class Users(models.Model):
     def on_change_login(self):
         if self.login and tools.single_email_re.match(self.login):
             self.email = self.login
-
-    @api.onchange('parent_id')
-    def onchange_parent_id(self):
-        return self.partner_id.onchange_parent_id()
 
     def _read(self, fields):
         super(Users, self)._read(fields)
@@ -301,12 +282,6 @@ class Users(models.Model):
     def _check_company(self):
         if any(user.company_id not in user.company_ids for user in self):
             raise ValidationError(_('The chosen company is not in the allowed companies for this user'))
-
-    @api.constrains('action_id')
-    def _check_action_id(self):
-        action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
-        if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
-            raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
 
     @api.constrains('groups_id')
     def _check_one_user_type(self):
