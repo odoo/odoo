@@ -271,7 +271,7 @@ class Registry(Mapping):
     def field_computed(self):
         """ Return a dict mapping each field to the fields computed by the same method. """
         computed = {}
-        for Model in self.models.values():
+        for model_name, Model in self.models.items():
             groups = defaultdict(list)
             for field in Model._fields.values():
                 if field.compute:
@@ -280,7 +280,7 @@ class Registry(Mapping):
             for fields in groups.values():
                 if len({field.compute_sudo for field in fields}) > 1:
                     _logger.warning("%s: inconsistent 'compute_sudo' for computed fields: %s",
-                                    self._name, ", ".join(field.name for field in fields))
+                                    model_name, ", ".join(field.name for field in fields))
         return computed
 
     @lazy_property
