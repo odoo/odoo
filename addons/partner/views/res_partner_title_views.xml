@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_title_view_tree" model="ir.ui.view">
+        <field name="name">res.partner.title.tree</field>
+        <field name="model">res.partner.title</field>
+        <field name="arch" type="xml">
+            <tree string="Partner Titles" editable="bottom">
+                <field name="name"/>
+                <field name="shortcut"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_partner_title_view_form" model="ir.ui.view">
+        <field name="name">res.partner.title.form</field>
+        <field name="model">res.partner.title</field>
+        <field name="arch" type="xml">
+            <form string="Partner Titles">
+                <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="shortcut"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_res_partner_title" model="ir.actions.act_window">
+        <field name="name">Contact Titles</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner.title</field>
+        <field name="help">Manage the contact titles you want to have available in your system and the way you want to print them in letters and other documents. Some example: Mr., Mrs. </field>
+    </record>
+
+</odoo>
+

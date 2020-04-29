@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_category_view_form" model="ir.ui.view">
+        <field name="name">Contact Tags</field>
+        <field name="model">res.partner.category</field>
+        <field name="arch" type="xml">
+            <form string="Contact Tag">
+                <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="active" widget="boolean_toggle"/>
+                        <field name="parent_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_partner_category_view_tree" model="ir.ui.view">
+        <field name="name">Contact Tags</field>
+        <field name="model">res.partner.category</field>
+        <field eval="6" name="priority"/>
+        <field name="arch" type="xml">
+            <tree string="Contact Tags">
+                <field name="display_name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_partner_category_view_search" model="ir.ui.view">
+        <field name="name">res.partner.category.view.search</field>
+        <field name="model">res.partner.category</field>
+        <field name="arch" type="xml">
+            <search string="Search Partner Category">
+                <field name="name"/>
+                <field name="display_name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_res_partner_category" model="ir.actions.act_window">
+        <field name="name">Contact Tags</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner.category</field>
+        <field name="search_view_id" ref="res_partner_category_view_search"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new contact tag
+          </p><p>
+            Manage contact tags to better classify them for tracking and analysis purposes.
+          </p>
+        </field>
+    </record>
+</odoo>
