@@ -132,5 +132,15 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(typeof(actual),typeof([]));
         assert.strictEqual(actual.length, 0);
     });
+
+    QUnit.test("compute true domain", function (assert) {
+        assert.expect(1);
+        assert.ok(new Domain(Domain.TRUE_DOMAIN).compute({}));
+    });
+
+    QUnit.test("compute false domain", function (assert) {
+        assert.expect(1);
+        assert.notOk(new Domain(Domain.FALSE_DOMAIN).compute({}));
+    });
 });
 });
