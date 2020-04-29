@@ -490,6 +490,28 @@ security-related topics:
   machines than the production ones. And apply the same security precautions as for
   production.
 
+- If your public-facing Odoo server has access to sensitive internal network resources
+  or services (e.g. via a private VLAN), implement appropriate firewall rules to
+  protect those internal resources. This will ensure that the Odoo server cannot
+  be used accidentally (or as a result of malicious user actions) to access or disrupt
+  those internal resources.
+  Typically this can be done by applying an outbound default DENY rule on the firewall,
+  then only explicitly authorizing access to internal resources that the Odoo server
+  needs to access.
+  `Systemd IP traffic access control <http://0pointer.net/blog/ip-accounting-and-access-lists-with-systemd.html>`_
+  may also be useful to implement per-process network access control.
+
+- If your public-facing Odoo server is behind a Web Application Firewall, a load-balancer,
+  a transparent DDoS protection service (like CloudFlare) or a similar network-level
+  device, you may wish to avoid direct access to the Odoo system. It is generally
+  difficult to keep the endpoint IP addresses of your Odoo servers secret. For example
+  they can appear in web server logs when querying public systems, or in the headers
+  of emails posted from Odoo.
+  In such a situation you may want to configure your firewall so that the endpoints
+  are not accessible publicly except from the specific IP addresses of your WAF,
+  load-balancer or proxy service. Service providers like CloudFlare usually maintain
+  a public list of their IP address ranges for this purpose.
+
 - If you are hosting multiple customers, isolate customer data and files from each other
   using containers or appropriate "jail" techniques.
 
