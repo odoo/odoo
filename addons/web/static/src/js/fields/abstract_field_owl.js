@@ -627,6 +627,11 @@ odoo.define('web.AbstractFieldOwl', function (require) {
      * If this flag is set to true, the list column name will be empty.
      */
     AbstractField.noLabel = false;
+    /**
+     * Currently only used in list view.
+     * If set, this value will be displayed as column name.
+     */
+    AbstractField.label = "";
 
     return AbstractField;
 });

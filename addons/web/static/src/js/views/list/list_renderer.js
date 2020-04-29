@@ -812,8 +812,11 @@ var ListRenderer = BasicRenderer.extend({
         var description = string || field.string;
         if (node.attrs.widget) {
             $th.addClass(' o_' + node.attrs.widget + '_cell');
-            if (this.state.fieldsInfo.list[name].Widget.prototype.noLabel) {
+            const FieldWidget = this.state.fieldsInfo.list[name].Widget;
+            if (FieldWidget.prototype.noLabel) {
                 description = '';
+            } else if (FieldWidget.prototype.label) {
+                description = FieldWidget.prototype.label;
             }
         }
         $th.text(description)
