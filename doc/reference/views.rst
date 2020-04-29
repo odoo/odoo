@@ -1469,6 +1469,13 @@ Possible children elements of the list view are:
         be 3 times larger than the others). Note that when there are records in
         the list, we let the browser automatically adapt the column's widths
         according to their content, and this attribute is thus ignored.
+    ``decoration-{$name}``
+        allow changing the style of a cell's text based on the corresponding
+        record's attributes.
+
+        ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
+        (``font-style: italic``), or any `bootstrap contextual color`_ (``danger``,
+        ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 
     .. note::
 
