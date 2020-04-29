@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_company_view_form" model="ir.ui.view">
+        <field name="name">res.company.view.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <div name="title" position="before">
+                <field name="logo" widget="image"  class="oe_avatar"/>
+            </div>
+            <field name="partner_id" position="after">
+                <label for="street" string="Address"/>
+                <div class="o_address_format">
+                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                    <field name="city" placeholder="City" class="o_address_city"/>
+                    <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
+                </div>
+                <field name="phone" class="o_force_ltr"/>
+            </field>
+            <field name="email" position="after">
+                <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+            </field>
+            <group name="general_info_main_group" position="inside">
+                <group>
+                    <field name="vat"/>
+                    <field name="company_registry"/>
+                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" id="company_currency" context="{'active_test': False}"/>
+                    <field name="parent_id"  groups="base.group_multi_company"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="favicon" widget="image" class="float-left oe_avatar" groups="base.group_no_one"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="res_company_view_tree" model="ir.ui.view">
+        <field name="name">res.company.view.tree</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="sequence" widget="handle"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="res_company_view_kanban" model="ir.ui.view">
+        <field name="name">res.company.view.kanban</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_res_company_kanban"/>
+        <field name="arch" type="xml">
+            <field name="email" position="after">
+                <field name="phone"/>
+            </field>
+            <div name="email_title" position="after">
+                <div t-if="record.phone.value" class="col-6 text-center">
+                    <strong>Phone</strong>
+                </div>
+            </div>
+            <div name="email_value" position="after">
+                <div t-if="record.phone.value" class="col-6 text-center o_force_ltr">
+                    <field name="phone"/>
+                </div>
+            </div>
+            <div name="email_title_else" position="after">
+                <div t-if="record.phone.value" class="o_force_ltr">
+                    <strong>Phone:</strong>
+                    <field name="phone"/>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="base_onboarding_company_form" model="ir.ui.view">
+        <field name="name">base.company.onboarding.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form position="inside">
+                <footer position="replace">
+                    <button name="action_save_onboarding_company_step" class="btn btn-primary" type="object" string="Apply" />
+                    <button special="cancel" string="Cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_open_base_onboarding_company" model="ir.actions.act_window">
+        <field name="name">Set your company data</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.company</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="base_onboarding_company_form" />
+        <field name="target">new</field>
+    </record>
+
+</odoo>
