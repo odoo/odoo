@@ -10,6 +10,7 @@
         <template id="assets_backend" name="mail assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/mail/static/src/js/many2many_tags_email.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/many2one_avatar_user.js"></script>
 
                 <!-- Services -->
                 <script type="text/javascript" src="/mail/static/src/js/services/mail_manager.js"></script>
@@ -97,6 +98,7 @@
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/systray.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/mail_activity.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/many2one_avatar_user.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/activity_view.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/kanban_view.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/attachment_box.scss"/>
@@ -123,6 +125,7 @@
                 <script type="text/javascript" src="/mail/static/tests/mail_utils_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/discuss_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/document_viewer_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/many2one_avatar_user_tests.js"></script>
                 <!-- systray -->
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_activity_menu_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_messaging_menu_tests.js"></script>

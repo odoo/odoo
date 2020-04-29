@@ -2148,6 +2148,13 @@ Relational fields
 
     - Supported field types: *many2one*
 
+- many2one_avatar_user (Many2OneAvatarUser)
+    This widget is a specialization of the Many2OneAvatar. When the avatar is
+    clicked, we open a chat window with the corresponding user. This widget can
+    only be set on many2one fields pointing to the 'res.users' model.
+
+    - Supported field types: *many2one* (pointing to 'res.users')
+
 - kanban.many2one (KanbanFieldMany2One)
     Default widget for many2one fields (in kanban view). We need to disable all
     editing in kanban views.
