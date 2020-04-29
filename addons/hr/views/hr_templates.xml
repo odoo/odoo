@@ -6,6 +6,13 @@
             <link rel="stylesheet" type="text/scss" href="/hr/static/src/scss/hr.scss"/>
             <script type="text/javascript" src="/hr/static/src/js/chat.js"></script>
             <script type="text/javascript" src="/hr/static/src/js/language.js"></script>
+            <script type="text/javascript" src="/hr/static/src/js/many2one_avatar_employee.js"></script>
+        </xpath>
+    </template>
+
+    <template id="qunit_suite" name="hr tests" inherit_id="web.qunit_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/hr/static/tests/many2one_avatar_employee_tests.js"></script>
         </xpath>
     </template>
 </odoo>
