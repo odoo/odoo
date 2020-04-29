@@ -112,6 +112,18 @@ class ModuleCategory(models.Model):
         for cat in self:
             cat.xml_id = xml_ids.get(cat.id, [''])[0]
 
+    def write(self, values):
+        res = super().write(values)
+        if "name" in values:
+            self.env["res.groups"]._update_user_groups_view()
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self.env["res.groups"]._update_user_groups_view()
+        return res
+
+
 class MyFilterMessages(Transform):
     """
     Custom docutils transform to remove `system message` for a document and
