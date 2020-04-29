@@ -995,7 +995,7 @@
                                            attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}">
                                         <label for="ref" string="Customer Reference" />
                                         <field name="ref" nolabel="1"/>
-                                        <field name="invoice_user_id" domain="[('share', '=', False)]"/>
+                                        <field name="invoice_user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                         <field name="invoice_origin" string="Source Document" force_save="1"
                                                attrs="{'invisible': [('invoice_origin', '=', False)]}"/>
                                         <field name="partner_bank_id"

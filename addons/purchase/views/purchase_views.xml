@@ -348,7 +348,7 @@
                                     </div>
                                 </group>
                                 <group name="other_info">
-                                    <field name="user_id" domain="[('share', '=', False)]"/>
+                                    <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                     <field name="invoice_status" attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'to approve', 'cancel'))]}"/>
                                     <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}" options="{'no_create': True}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
