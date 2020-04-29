@@ -275,6 +275,7 @@ var AbstractModel = require('web.AbstractModel');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var dataComparisonUtils = require('web.dataComparisonUtils');
+const Domain = require('web.Domain');
 var mathUtils = require('web.mathUtils');
 var session = require('web.session');
 
@@ -1346,7 +1347,7 @@ var PivotModel = AbstractModel.extend({
 
                 if (!(key in self.groupDomains)) {
                     self.groupDomains[key] = self.data.origins.map(function () {
-                        return [[0, '=', 1]];
+                        return Domain.FALSE_DOMAIN;
                     });
                 }
                 // if __domain is not defined this means that we are in the
