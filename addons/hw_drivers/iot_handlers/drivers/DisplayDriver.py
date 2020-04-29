@@ -11,12 +11,7 @@ import urllib3
 
 from odoo import http
 from odoo.addons.hw_drivers.tools import helpers
-from odoo.addons.hw_drivers.controllers.driver import Driver, event_manager, iot_devices
-
-try:
-    from odoo.addons.hw_drivers.controllers.driver import cm
-except:
-    cm = None
+from odoo.addons.hw_drivers.controllers.driver import Driver, event_manager, iot_devices, cm
 
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '../../views'))
 loader = jinja2.FileSystemLoader(path)
@@ -220,5 +215,5 @@ class DisplayController(http.Controller):
             'cust_js': cust_js,
             'display_ifaces': display_ifaces,
             'display_identifier': display_identifier,
-            'pairing_code': cm and cm.pairing_code,
+            'pairing_code': cm.pairing_code,
         })
