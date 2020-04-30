@@ -181,7 +181,7 @@ class Lead(models.Model):
     def _compute_day_open(self):
         """ Compute difference between create date and open date """
         for lead in self.filtered(lambda l: l.date_open and l.create_date):
-            date_create = fields.Datetime.from_string(lead.create_date)
+            date_create = fields.Datetime.from_string(lead.create_date).replace(microsecond=0)
             date_open = fields.Datetime.from_string(lead.date_open)
             lead.day_open = abs((date_open - date_create).days)
 
