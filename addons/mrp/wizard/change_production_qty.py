@@ -53,46 +53,27 @@ class ChangeProductionQty(models.TransientModel):
             production.write({'product_qty': wizard.product_qty})
             done_moves = production.move_finished_ids.filtered(lambda x: x.state == 'done' and x.product_id == production.product_id)
             qty_produced = production.product_id.uom_id._compute_quantity(sum(done_moves.mapped('product_qty')), production.product_uom_id)
-            factor = production.product_uom_id._compute_quantity(production.product_qty - qty_produced, production.bom_id.product_uom_id) / production.bom_id.product_qty
-            boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
+
+            factor = (production.product_qty - qty_produced) / (old_production_qty - qty_produced)
+            update_info = production._update_raw_moves(factor)
             documents = {}
-            for line, line_data in lines:
-                if line.child_bom_id and line.child_bom_id.type == 'phantom' or\
-                        line.product_id.type not in ['product', 'consu']:
-                    continue
-                move = production.move_raw_ids.filtered(lambda x: x.bom_line_id.id == line.id and x.state not in ('done', 'cancel'))
-                if move:
-                    move = move[0]
-                    old_qty = move.product_uom_qty
-                else:
-                    old_qty = 0
+            for move, old_qty, new_qty in update_info:
                 iterate_key = production._get_document_iterate_key(move)
                 if iterate_key:
-                    document = self.env['stock.picking']._log_activity_get_documents({move: (line_data['qty'], old_qty)}, iterate_key, 'UP')
+                    document = self.env['stock.picking']._log_activity_get_documents({move: (new_qty, old_qty)}, iterate_key, 'UP')
                     for key, value in document.items():
                         if documents.get(key):
                             documents[key] += [value]
                         else:
                             documents[key] = [value]
-
-                production._update_raw_move(line, line_data)
             production._log_manufacture_exception(documents)
-            operation_bom_qty = {}
-            for bom, bom_data in boms:
-                for operation in bom.operation_ids:
-                    operation_bom_qty[operation.id] = bom_data['qty']
-            finished_moves_modification = self._update_finished_moves(production, production.product_qty - qty_produced, old_production_qty)
+            finished_moves_modification = self._update_finished_moves(production, production.product_qty - qty_produced, old_production_qty - qty_produced)
             if finished_moves_modification:
                 production._log_downside_manufactured_quantity(finished_moves_modification)
-            moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            moves._action_assign()
+
             for wo in production.workorder_ids:
                 operation = wo.operation_id
-                if operation_bom_qty.get(operation.id):
-                    cycle_number = float_round(operation_bom_qty[operation.id] / operation.workcenter_id.capacity, precision_digits=0, rounding_method='UP')
-                    wo.duration_expected = (operation.workcenter_id.time_start +
-                                 operation.workcenter_id.time_stop +
-                                 cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
+                wo._onchange_expected_duration()
                 quantity = wo.qty_production - wo.qty_produced
                 if production.product_id.tracking == 'serial':
                     quantity = 1.0 if not float_is_zero(quantity, precision_digits=precision) else 0.0
