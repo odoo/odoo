@@ -2498,3 +2498,30 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # assertNotUnbalancedEntryWhenSaving
         with Form(invoice) as move_form:
             move_form.invoice_payment_term_id = self.env.ref('account.account_payment_term_30days')
+
+    def test_out_invoice_rounding_recomputation_receivable_lines(self):
+        ''' Test rounding error due to the fact that subtracting then rounding is different from
+        rounding then subtracting.
+        '''
+        self.env['decimal.precision'].search([
+            ('name', '=', self.env['account.move.line']._fields['price_unit']._digits),
+        ]).digits = 5
+
+        self.env['res.currency.rate'].search([]).unlink()
+
+        invoice = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_payment_term_id': self.env.ref('account.account_payment_term_immediate').id,
+        })
+
+        # assertNotUnbalancedEntryWhenSaving
+        with Form(invoice) as move_form:
+            with move_form.invoice_line_ids.new() as line_form:
+                line_form.name = 'line1'
+                line_form.account_id = self.company_data['default_account_revenue']
+                line_form.tax_ids.clear()
+                line_form.price_unit = 0.89500
+        move_form.save()
