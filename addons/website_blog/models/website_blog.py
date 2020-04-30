@@ -192,6 +192,26 @@ class BlogPost(models.Model):
             return True
         return False
 
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, **kwargs):
+        """
+        If the user give the attachments access tokens, sudo write the attachments
+        to bypass the standard verification.
+        """
+        attachment_tokens = kwargs.get('attachment_tokens')
+        if attachment_tokens:
+            attachment_ids = kwargs.pop('attachment_ids', [])
+            attachment_ids = self.env['ir.attachment'].browse(attachment_ids)
+            attachment_ids = attachment_ids.filtered(
+                lambda attachment: attachment.access_token in attachment_tokens
+            )
+
+            mail_message = super(BlogPost, self).message_post(**kwargs)
+            mail_message.sudo().attachment_ids = attachment_ids
+            return mail_message
+
+        return super(BlogPost, self).message_post(**kwargs)
+
     @api.model
     def create(self, vals):
         post_id = super(BlogPost, self.with_context(mail_create_nolog=True)).create(vals)
