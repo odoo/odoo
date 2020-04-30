@@ -285,17 +285,17 @@
     <main role="alert">
         <p>
             <t t-if="changes.nbRecords != changes.nbValidRecords">
-                Among the <t t-raw="changes.nbRecords"/> selected records,
-                <t t-raw="changes.nbValidRecords"/> are valid for this update.<br/>
+                Among the <t t-esc="changes.nbRecords"/> selected records,
+                <t t-esc="changes.nbValidRecords"/> are valid for this update.<br/>
             </t>
-            Are you sure you want to perform the following update on those <t t-raw="changes.nbValidRecords"/> records ?
+            Are you sure you want to perform the following update on those <t t-esc="changes.nbValidRecords"/> records ?
         </p>
         <div class="table-responsive">
             <table class="o_modal_changes">
                 <tbody>
                     <tr>
                         <td>Field:</td>
-                        <td><t t-raw="changes.fieldLabel"/></td>
+                        <td><t t-esc="changes.fieldLabel"/></td>
                     </tr>
                     <tr>
                         <td>Update to:</td>
@@ -1480,7 +1480,7 @@
     <li class="o_switch_company_menu">
         <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" title="Dropdown menu">
             <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}">
-                <t t-if="!widget.isMobile"><t t-raw="widget.current_company_name"/></t>
+                <t t-if="!widget.isMobile"><t t-esc="widget.current_company_name"/></t>
             </span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu">

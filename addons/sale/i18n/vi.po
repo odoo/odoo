@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-03 14:57+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Manh Vu <vuducmanh96vp@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -1947,12 +1947,6 @@ msgid "Import Template for Products"
 msgstr "Nhập sản phẩm gốc"
 
 #. module: sale
-#: code:addons/sale/models/product_template.py:0
-#, python-format
-msgid "Import Template for Products (with several prices)"
-msgstr "Import Template for Products (with several prices)"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Incl. tax)"
 msgstr "Bao gồm thuế)"
@@ -2313,8 +2307,12 @@ msgid "Margins"
 msgstr "Biên Lợi nhuận"
 
 #. module: sale
+#: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
+msgid "Mark Quotation as Sent"
+msgstr "Đánh dấu báo giá là Đã gửi"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Marketing"
 msgstr "Marketing"
 
@@ -2584,6 +2582,12 @@ msgid "Only Integer Value should be valid."
 msgstr "Bạn chỉ được nhập số nguyên."
 
 #. module: sale
+#: code:addons/sale/models/sale.py:0
+#, python-format
+msgid "Only draft orders can be marked as sent directly."
+msgstr "Chỉ có các đơn dự thảo mới có thể được trực tiếp đánh dấu là đã gửi."
+
+#. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
@@ -2756,11 +2760,6 @@ msgstr "Thanh toán &amp; Xác nhận"
 #, python-format
 msgid "Pay Now"
 msgstr "Thanh toán Ngay"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Pay now"
-msgstr "Thanh toán ngay"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3165,7 +3164,7 @@ msgstr "Từ chối Báo giá này"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__remaining_validity_days
 msgid "Remaining Days Before Expiration"
-msgstr ""
+msgstr "Số ngày còn lại trước khi hết hạn"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -3880,6 +3879,7 @@ msgstr "Giá trị cố định để xuất hoá đơn trước ứng trước,
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
+#, python-format
 msgid ""
 "The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
 "%s\n"
@@ -4196,12 +4196,6 @@ msgid "UTM Campaign"
 msgstr "Chiến dịch UTM"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:0
-#, python-format
-msgid "Uncategorized"
-msgstr "Chưa phân loại"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4218,7 +4212,7 @@ msgstr "Đơn Giá:"
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Unit of Measure"
-msgstr "Đơn vị Đo lường"
+msgstr "Đơn vị đo lường"
 
 #. module: sale
 #: model:product.product,uom_name:sale.advance_product_0
@@ -4227,16 +4221,7 @@ msgstr "Đơn vị Đo lường"
 #: model:product.template,uom_name:sale.advance_product_0_product_template
 #: model:product.template,uom_name:sale.product_product_4e_product_template
 msgid "Units"
-msgstr ""
-
-#. module: sale
-#: model:product.product,uom_name:sale.advance_product_0
-#: model:product.product,uom_name:sale.product_product_4e
-#: model:product.product,uom_name:sale.product_product_4f
-#: model:product.template,uom_name:sale.advance_product_0_product_template
-#: model:product.template,uom_name:sale.product_product_4e_product_template
-msgid "Units"
-msgstr ""
+msgstr "Đơn vị"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
@@ -4555,14 +4540,3 @@ msgstr "loại: [(tên, tổng, cơ sở, tổng đã chỉnh, cơ sở đã ch�
 #, python-format
 msgid "uninvoiced sales orders"
 msgstr "đơn bán chưa xuất hoá đơn"
-
-#. module: sale
-#: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
-msgid "Mark Quotation as Sent"
-msgstr "Đánh dấu báo giá đã gửi"
-
-#. module: sale
-#: code:addons/sale/models/sale.py:0
-#, python-format
-msgid "Only draft orders can be marked as sent directly."
-msgstr ""
