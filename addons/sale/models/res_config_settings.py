@@ -95,6 +95,7 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange('sale_pricelist_setting')
     def _onchange_sale_pricelist_setting(self):
+        self.pos_pricelist_setting_sync(self.sale_pricelist_setting)
         if self.sale_pricelist_setting == 'percentage':
             self.update({
                 'group_product_pricelist': True,
@@ -113,6 +114,14 @@ class ResConfigSettings(models.TransientModel):
                 'group_sale_pricelist': False,
                 'group_pricelist_item': False,
             })
+
+    def sale_pricelist_setting_sync(self, pos_pricelist_setting):
+        if not pos_pricelist_setting:
+            self.multi_sales_price = False
+            self.sale_pricelist_setting = 'fixed'
+        else:
+            self.multi_sales_price = True
+            self.sale_pricelist_setting = pos_pricelist_setting
 
     @api.onchange('portal_confirmation_pay')
     def _onchange_portal_confirmation_pay(self):
