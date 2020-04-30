@@ -130,6 +130,9 @@ class MockSMS(common.BaseCase):
         """
         partners = self.env['res.partner'].concat(*list(p['partner'] for p in recipients_info if p.get('partner')))
         numbers = [p['number'] for p in recipients_info if p.get('number')]
+        # special case of void notifications: check for False / False notifications
+        if not partners and not numbers:
+            numbers = [False]
         base_domain = [
             '|', ('res_partner_id', 'in', partners.ids),
             '&', ('res_partner_id', '=', False), ('sms_number', 'in', numbers),
