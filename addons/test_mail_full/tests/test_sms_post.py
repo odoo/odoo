@@ -125,6 +125,20 @@ class TestSMSPost(test_mail_full_common.TestSMSCommon, test_mail_full_common.Tes
 
         self.assertSMSNotification([{'number': self.test_record.mobile_nbr}], self._test_body, messages)
 
+    def test_message_sms_on_field_wo_partner_wo_value(self):
+        """ Test record without a partner and without phone values. """
+        self.test_record.write({
+            'customer_id': False,
+            'phone_nbr': False,
+            'mobile_nbr': False,
+        })
+
+        with self.with_user('employee'), self.mockSMSGateway():
+            test_record = self.env['mail.test.sms'].browse(self.test_record.id)
+            messages = test_record._message_sms(self._test_body)
+
+        self.assertNoSMSNotification(messages)
+
     def test_message_sms_on_field_wo_partner_default_field(self):
         self.test_record.write({'customer_id': False})
 
