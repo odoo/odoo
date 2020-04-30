@@ -192,6 +192,26 @@ class ProductTemplate(models.Model):
 
     product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Media", copy=True)
 
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, **kwargs):
+        """
+        If the user give the attachments access tokens, sudo write the attachments
+        to bypass the standard verification.
+        """
+        attachment_tokens = kwargs.get('attachment_tokens')
+        if attachment_tokens:
+            attachment_ids = kwargs.pop('attachment_ids', [])
+            attachment_ids = self.env['ir.attachment'].browse(attachment_ids)
+            attachment_ids = attachment_ids.filtered(
+                lambda attachment: attachment.access_token in attachment_tokens
+            )
+
+            mail_message = super(ProductTemplate, self).message_post(**kwargs)
+            mail_message.sudo().attachment_ids = attachment_ids
+            return mail_message
+
+        return super(ProductTemplate, self).message_post(**kwargs)
+
     def _has_no_variant_attributes(self):
         """Return whether this `product.template` has at least one no_variant
         attribute.
