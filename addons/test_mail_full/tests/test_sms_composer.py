@@ -155,6 +155,38 @@ class TestSMSComposerComment(test_mail_full_common.TestSMSCommon, test_mail_full
         self.test_record.flush()
         self.assertEqual(self.test_record.phone_nbr, self.random_numbers[0])
 
+    def test_composer_comment_wo_partner_wo_value_update(self):
+        """ Test record without partner and without phone values: should allow updating first found phone field """
+        self.test_record.write({
+            'customer_id': False,
+            'phone_nbr': False,
+            'mobile_nbr': False,
+        })
+        default_field_name = self.env['mail.test.sms']._sms_get_number_fields()[0]
+
+        with self.with_user('employee'):
+            composer = self.env['sms.composer'].with_context(
+                active_model='mail.test.sms', active_id=self.test_record.id,
+                default_composition_mode='comment',
+            ).create({
+                'body': self._test_body,
+            })
+            self.assertFalse(composer.recipient_single_number_itf)
+            self.assertFalse(composer.recipient_single_number)
+            self.assertEqual(composer.number_field_name, default_field_name)
+
+            composer.write({
+                'recipient_single_number_itf': self.random_numbers_san[0],
+            })
+            self.assertEqual(composer.recipient_single_number_itf, self.random_numbers_san[0])
+            self.assertFalse(composer.recipient_single_number)
+
+            with self.mockSMSGateway():
+                messages = composer._action_send_sms()
+
+        self.assertEqual(self.test_record[default_field_name], self.random_numbers_san[0])
+        self.assertSMSNotification([{'partner': self.env['res.partner'], 'number': self.random_numbers_san[0]}], self._test_body, messages)
+
     def test_composer_numbers_no_model(self):
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
