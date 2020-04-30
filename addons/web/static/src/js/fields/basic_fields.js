@@ -763,7 +763,7 @@ var FieldDate = InputField.extend({
      */
     activate: function () {
         if (this.isFocusable() && this.datewidget) {
-            this.datewidget.focus();
+            this.datewidget.$input.select();
             return true;
         }
         return false;
