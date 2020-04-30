@@ -45,7 +45,7 @@
 
     .o_kanban_record {
         position: relative;
-        display: flex;
+        display: inline-block; // Force the creation of a block formatting context to clear float items
         border-color: gray('400');
         min-width: 150px;
         margin: 0 0 -1px;
@@ -342,19 +342,19 @@
         }
 
         .o_kanban_image {
+            float: left;
             width: $o-kanban-image-width;
-            flex-shrink: 0;
 
             + div {
-                padding-left: $o-kanban-inside-hgutter;
+                padding-left: $o-kanban-image-width + $o-kanban-inside-hgutter;
                 @include media-breakpoint-down(sm) {
-                    padding-left: $o-kanban-inside-hgutter-mobile;
+                    padding-left:  $o-kanban-image-width + $o-kanban-inside-hgutter-mobile;
                 }
             }
         }
 
         .oe_kanban_details {
-            display: flex;
+            display: inherit;
             flex-flow: column;
             width: 100%;
 
