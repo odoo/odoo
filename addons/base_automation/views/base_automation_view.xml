@@ -8,6 +8,10 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="base.view_server_action_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                  <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                  <field name="active" invisible="1"/>
+                </xpath>
                 <xpath expr="//button[@name='create_action']" position="replace">
                 </xpath>
                 <xpath expr="//button[@name='unlink_action']" position="replace">
