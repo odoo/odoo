@@ -179,7 +179,6 @@ class AccountChartTemplate(models.Model):
             for template in self:
                 template.with_context(default_company_id=company.id)._load(15.0, 15.0, company)
 
-    try_loading_for_current_company = try_loading
 
     def _load(self, sale_tax_rate, purchase_tax_rate, company):
         """ Installs this chart of accounts on the current company, replacing
