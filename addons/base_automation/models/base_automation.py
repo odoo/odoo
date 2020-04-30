@@ -474,6 +474,7 @@ class BaseAutomation(models.Model):
         # retrieve all the action rules to run based on a timed condition
         eval_context = self._get_eval_context()
         for action in self.with_context(active_test=True).search([('trigger', '=', 'on_time')]):
+            _logger.info("Starting time-based automated action `%s`.", action.name)
             last_run = fields.Datetime.from_string(action.last_run) or datetime.datetime.utcfromtimestamp(0)
 
             # retrieve all the records that satisfy the action's condition
@@ -503,6 +504,7 @@ class BaseAutomation(models.Model):
                         _logger.error(traceback.format_exc())
 
             action.write({'last_run': now.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+            _logger.info("Time-based automated action `%s` done.", action.name)
 
             if automatic:
                 # auto-commit for batch processing
