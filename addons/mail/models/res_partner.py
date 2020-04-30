@@ -18,6 +18,9 @@ class Partner(models.Model):
     _inherit = ['res.partner', 'mail.activity.mixin', 'mail.thread.blacklist']
     _mail_flat_thread = False
 
+    email = fields.Char(tracking=1)
+    phone = fields.Char(tracking=2)
+
     channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
     # override the field to track the visibility of user
     user_id = fields.Many2one(tracking=True)
