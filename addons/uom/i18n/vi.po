@@ -68,7 +68,7 @@ msgstr "Tỷ lệ lớn hơn"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
 msgid "Bigger than the reference Unit of Measure"
-msgstr "Lớn hơn đơn vị đo lường gốc"
+msgstr "Lớn hơn Đơn vị tính gốc"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
@@ -81,7 +81,7 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Việc chuyển đổi qua lại giữa các đơn vị đo lường chỉ có thể xảy ra nếu chúng"
+"Việc chuyển đổi qua lại giữa các Đơn vị tính chỉ có thể xảy ra nếu chúng"
 " thuộc cùng một nhóm. Việc chuyển đổi sẽ dựa trên tỉ lệ."
 
 #. module: uom
@@ -148,7 +148,7 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
-"Số Đơn vị Đo lường này lớn hơn Đơn vị Đo lường trong đơn vị này bao nhiêu "
+"Số Đơn vị tính này lớn hơn Đơn vị tính trong đơn vị này bao nhiêu "
 "lần: 1 * (đơn vị này) = tỷ lệ * (đơn vị tham chiếu)"
 
 #. module: uom
@@ -157,7 +157,7 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
-"Đơn vị này lớn hơn hoặc nhỏ hơn bao nhiêu so với Đơn vị đo lường tham chiếu "
+"Đơn vị này lớn hơn hoặc nhỏ hơn bao nhiêu so với Đơn vị tính tham chiếu "
 "cho danh mục này: 1 * (đơn vị tham chiếu) = tỷ lệ * (đơn vị này)"
 
 #. module: uom
@@ -197,17 +197,17 @@ msgstr "Lít"
 #. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr "Quản lý Đa đơn vị Đo lường"
+msgstr "Quản lý Đa Đơn vị tính"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "Đơn vị Đo lường của sản phẩm"
+msgstr "Đơn vị tính của sản phẩm"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr "Nhóm Đơn vị Đo lường Sản phẩm"
+msgstr "Nhóm Đơn vị tính Sản phẩm"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -241,7 +241,7 @@ msgid ""
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
 "Số lượng được tính toán sẽ là bội số (số chia hết) của giá trị này. Sử dụng "
-"1.0 cho một đơn vị đo lường mà không thể được chia nhỏ nữa, ví du như đơn vị"
+"1.0 cho một Đơn vị tính mà không thể được chia nhỏ nữa, ví du như đơn vị"
 " là một miếng (một mảnh)."
 
 #. module: uom
@@ -252,7 +252,7 @@ msgstr "Tỷ lệ chuyển đổi cho một đơn vị đo lương không thể 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr "Đơn vị đo lường gốc phải có tỷ lệ chuyển đổi bằng 1."
+msgstr "Đơn vị tính gốc phải có tỷ lệ chuyển đổi bằng 1."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_rounding_gt_zero
@@ -298,12 +298,12 @@ msgstr "Đơn vị"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
 msgid "Unit of Measure"
-msgstr "Đơn vị Đo lường"
+msgstr "Đơn vị tính"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
 msgid "Unit of Measure Category"
-msgstr "Nhóm đơn vị đo lường"
+msgstr "Nhóm Đơn vị tính"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
@@ -315,18 +315,18 @@ msgstr "Đơn vị"
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units of Measure"
-msgstr "Đơn vị Đo lường"
+msgstr "Đơn vị tính"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr "Nhóm Đơn vị Đo lường"
+msgstr "Nhóm Đơn vị tính"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
 msgid "Units of Measure categories"
-msgstr "Nhóm Đơn vị Đo lường"
+msgstr "Nhóm Đơn vị tính"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
@@ -336,8 +336,8 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
-"Các đơn vị đo lường trong cùng một nhóm có thể được chuyển đối qua\n"
-"            lại lẫn nhau. Ví dụ, trong nhóm <i>'Thời gian'</i>, bạn sẽ có            các đơn vị đo lường như: giờ, ngày, phút.\n"
+"Các Đơn vị tính trong cùng một nhóm có thể được chuyển đối qua\n"
+"            lại lẫn nhau. Ví dụ, trong nhóm <i>'Thời gian'</i>, bạn sẽ có            các Đơn vị tính như: giờ, ngày, phút.\n"
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
