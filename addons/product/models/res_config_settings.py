@@ -43,3 +43,9 @@ class ResConfigSettings(models.TransientModel):
         super(ResConfigSettings, self).set_values()
         product_rule = self.env.ref('product.product_comp_rule')
         product_rule.write({'active': not bool(self.company_share_product)})
+
+    def sale_pricelist_setting_sync(self, pos_pricelist_setting):
+        pass
+
+    def pos_pricelist_setting_sync(self, sale_pricelist_setting):
+        pass
