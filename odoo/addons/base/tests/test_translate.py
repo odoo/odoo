@@ -364,7 +364,6 @@ class TestTranslation(TransactionCase):
         self.assertEqual(cheese.with_context(lang='fr_FR').name, 'Fromage')
         self.assertEqual(cheese.with_context(lang='en_US').name, 'The Cheese')
         cheese.flush()
-        cheese.invalidate_cache()
 
         # set a new master value
         cheese.with_context(lang='en_US').write({'name': 'Delicious Cheese'})
@@ -683,7 +682,6 @@ class TestXMLTranslation(TransactionCase):
         # modify source term in view (fixed type in 'cheeze')
         terms_en = ('Bread and cheese',)
         view.with_env(env_en).write({'arch_db': archf % terms_en})
-        view.invalidate_cache(fnames=['arch_db'], ids=view.ids)
 
         # check whether translations have been synchronized
         self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
@@ -695,7 +693,6 @@ class TestXMLTranslation(TransactionCase):
         # modify source term in view in another language with close term
         new_terms_fr = ('Pains et fromage',)
         view.with_env(env_fr).write({'arch_db': archf % new_terms_fr})
-        view.invalidate_cache(fnames=['arch_db'], ids=view.ids)
 
         # check whether translations have been synchronized
         self.assertEqual(view.with_env(env_nolang).arch_db, archf % new_terms_fr)
@@ -704,7 +701,7 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
     def test_sync_update(self):
-        """ Check translations after minor change in source terms. """
+        """ Check translations after major changes in source terms. """
         archf = '<form string="X"><div>%s</div><div>%s</div></form>'
         terms_src = ('Subtotal', 'Subtotal:')
         terms_en = ('', 'Sub total:')
@@ -718,9 +715,8 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(len(translations), 2)
 
         # modifying the arch should sync existing translations without errors
-        view.write({
-            "arch": archf % ('Subtotal', 'Subtotal:<br/>')
-        })
+        new_arch = archf % ('Subtotal', 'Subtotal:<br/>')
+        view.write({"arch_db": new_arch})
 
         translations = self.env['ir.translation'].search([
             ('type', '=', 'model_terms'),
@@ -730,3 +726,18 @@ class TestXMLTranslation(TransactionCase):
         # 'Subtotal' being src==value, it will be discared
         # 'Subtotal:' will be discarded as it match 'Subtotal' instead of 'Subtotal:<br/>'
         self.assertEqual(len(translations), 0)
+
+    def test_cache_consistency(self):
+        view = self.env["ir.ui.view"].create({
+            "name": "test_translate_xml_cache_invalidation",
+            "model": "res.partner",
+            "arch": "<form><b>content</b></form>",
+        })
+        view_fr = view.with_context({"lang": "fr_FR"})
+        self.assertIn("<b>", view.arch_db)
+        self.assertIn("<b>", view_fr.arch_db)
+
+        # write with no lang, and check consistency in other languages
+        view.write({"arch_db": "<form><i>content</i></form>"})
+        self.assertIn("<i>", view.arch_db)
+        self.assertIn("<i>", view_fr.arch_db)

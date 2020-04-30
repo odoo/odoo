@@ -259,7 +259,7 @@ actual arch.
          """)
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
-    @api.depends_context('read_arch_from_file')
+    @api.depends_context('read_arch_from_file', 'lang')
     def _compute_arch(self):
         def resolve_external_ids(arch_fs, view_xml_id):
             def replacer(m):
@@ -297,6 +297,10 @@ actual arch.
                     data['arch_fs'] = '/'.join(path_info[0:2])
                     data['arch_updated'] = False
             view.write(data)
+        # the field 'arch' depends on the context and has been implicitly
+        # modified in all languages; the invalidation below ensures that the
+        # field does not keep an old value in another environment
+        self.invalidate_cache(['arch'], self._ids)
 
     @api.depends('arch')
     @api.depends_context('read_arch_from_file')
@@ -378,8 +382,6 @@ actual arch.
         # Any exception raised below will cause a transaction rollback.
         self = self.with_context(check_field_names=True)
         for view in self:
-            if not view.arch:
-                continue
             view_arch = etree.fromstring(view.arch.encode('utf-8'))
             view._valid_inheritance(view_arch)
             view_def = view.read_combined(['arch'])
