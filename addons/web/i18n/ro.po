@@ -5,16 +5,16 @@
 # Translators:
 # sharkutz <sharkutz4life@yahoo.com>, 2019
 # Cozmin Candea <office@terrabit.ro>, 2019
-# Martin Trigaux, 2019
 # Dorin Hongu <dhongu@gmail.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-04-27 10:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -390,6 +390,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add column"
 msgstr "Adaugă colonă"
@@ -669,7 +670,6 @@ msgstr "Câmpuri disponibile"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
@@ -794,6 +794,13 @@ msgstr "Calendar"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/web_calendar.xml:0
+#, python-format
+msgid "Calendar toolbar"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_view.js:0
 #, python-format
 msgid "Calendar view has not defined 'date_start' attribute."
@@ -849,6 +856,14 @@ msgstr "Schimbă implicit:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Change graph"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Checkbox"
@@ -899,6 +914,9 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector_dialog.js:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/dialog.xml:0
+#: code:addons/web/static/src/xml/notification.xml:0
 #, python-format
 msgid "Close"
 msgstr "Închide"
@@ -916,6 +934,11 @@ msgstr ""
 #, python-format
 msgid "Column title"
 msgstr "Titlu coloană"
+
+#. module: web
+#: model:ir.model,name:web.model_res_company
+msgid "Companies"
+msgstr "Companii"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
@@ -987,6 +1010,14 @@ msgstr "Context:"
 #, python-format
 msgid "Control"
 msgstr "Control"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Control panel toolbar"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1328,6 +1359,13 @@ msgstr "Eroare domeniu"
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
+msgid "Domain node"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
 msgid "Domain:"
 msgstr "Domeniu:"
 
@@ -1337,6 +1375,13 @@ msgstr "Domeniu:"
 #, python-format
 msgid "Don't leave yet,<br />it's still loading..."
 msgstr "Nu plecați,<br />încă se încarcă..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Download"
+msgstr "Descarcă"
 
 #. module: web
 #. openerp-web
@@ -2116,6 +2161,17 @@ msgstr "Mail:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Main actions"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
@@ -2605,6 +2661,13 @@ msgstr "Opacitate %"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools#{widget.debug_mode_help}"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open View"
 msgstr "Deschide vizualizare"
 
@@ -2671,6 +2734,13 @@ msgid "PDF Viewer"
 msgstr ""
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "PDF controls"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid ""
 "Page:\n"
@@ -2688,6 +2758,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
 msgstr "Pagina: <span class=\"page\"/> / <span class=\"topage\"/>"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pager"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2762,6 +2840,13 @@ msgstr ""
 #, python-format
 msgid "Pivot"
 msgstr "Pivot"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pivot settings"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -3453,6 +3538,13 @@ msgstr "Asistență"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Switch to this company"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Syntax error"
@@ -3471,13 +3563,6 @@ msgstr "Etichete"
 #, python-format
 msgid "Take a minute to get a coffee,<br />because it's loading..."
 msgstr "Faceți o pauză de cafea,<br /> încă se încarcă..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Tap on the list to change company"
-msgstr "Selectează din listă pentru a schimba compania"
 
 #. module: web
 #. openerp-web
@@ -3985,6 +4070,13 @@ msgstr "Foloșeste implicit"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "User"
+msgstr "Operator"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "User Error"
@@ -4030,6 +4122,13 @@ msgstr "Vizualizare metadate"
 #: model:ir.model.fields,field_description:web.field_ir_actions_act_window_view__view_mode
 msgid "View Type"
 msgstr "Tip vizualizare"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View switcher"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -4600,6 +4699,13 @@ msgstr ""
 #, python-format
 msgid "remaining)"
 msgstr "ceea ce a rămas)"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "search"
+msgstr ""
 
 #. module: web
 #. openerp-web

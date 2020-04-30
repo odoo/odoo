@@ -11,7 +11,6 @@
 # MIka Pakkanen <mika.pakkanen@gmail.com>, 2019
 # Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2019
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2019
 # Miku Laitinen <miku.laitinen@gmail.com>, 2019
 # Mikko Salmela <salmemik@gmail.com>, 2019
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2019
@@ -22,6 +21,7 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
 # Retropikzel, 2019
 # Martin Trigaux, 2019
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2020
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # 
@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-04-27 10:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
 "Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
@@ -412,6 +412,7 @@ msgstr "Lisää haara"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add column"
 msgstr "Lisää sarake"
@@ -692,7 +693,6 @@ msgstr "Mahdolliset kentät"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
@@ -816,6 +816,13 @@ msgstr "Kalenteri"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/web_calendar.xml:0
+#, python-format
+msgid "Calendar toolbar"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_view.js:0
 #, python-format
 msgid "Calendar view has not defined 'date_start' attribute."
@@ -871,6 +878,14 @@ msgstr "Vaihda oletusarvo:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Change graph"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Checkbox"
@@ -921,6 +936,9 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector_dialog.js:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/dialog.xml:0
+#: code:addons/web/static/src/xml/notification.xml:0
 #, python-format
 msgid "Close"
 msgstr "Sulje"
@@ -938,6 +956,11 @@ msgstr ""
 #, python-format
 msgid "Column title"
 msgstr "Sarakeotsikko"
+
+#. module: web
+#: model:ir.model,name:web.model_res_company
+msgid "Companies"
+msgstr "Yritykset"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
@@ -1009,6 +1032,14 @@ msgstr "Konteksti:"
 #, python-format
 msgid "Control"
 msgstr "Hallinta"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Control panel toolbar"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1350,6 +1381,13 @@ msgstr "Toimialue virhe"
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
+msgid "Domain node"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
 msgid "Domain:"
 msgstr "Toimialue:"
 
@@ -1359,6 +1397,13 @@ msgstr "Toimialue:"
 #, python-format
 msgid "Don't leave yet,<br />it's still loading..."
 msgstr "Odota vielä,<br />lataa yhä..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Download"
+msgstr "Lataa"
 
 #. module: web
 #. openerp-web
@@ -2140,6 +2185,17 @@ msgstr "Sähköposti:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Main actions"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
@@ -2629,6 +2685,13 @@ msgstr "Opasiteetti %"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools#{widget.debug_mode_help}"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open View"
 msgstr "Avaa näkymä"
 
@@ -2695,6 +2758,13 @@ msgid "PDF Viewer"
 msgstr ""
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "PDF controls"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid ""
 "Page:\n"
@@ -2712,6 +2782,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
 msgstr "Sivu: <span class=\"page\"/> / <span class=\"topage\"/>"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pager"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2787,6 +2865,13 @@ msgstr ""
 #, python-format
 msgid "Pivot"
 msgstr "Taulukko"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pivot settings"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -3476,6 +3561,13 @@ msgstr "Tuki"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Switch to this company"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Syntax error"
@@ -3494,13 +3586,6 @@ msgstr "Tunnisteet"
 #, python-format
 msgid "Take a minute to get a coffee,<br />because it's loading..."
 msgstr "Käy vaikka kahvilla,<br />koska tämä lataus kestää hetken..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Tap on the list to change company"
-msgstr "Vaihda yritys klikkaamalla luettelosta"
 
 #. module: web
 #. openerp-web
@@ -4001,6 +4086,13 @@ msgstr "Käytä oletuksena"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "User"
+msgstr "Käyttäjä"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "User Error"
@@ -4046,6 +4138,13 @@ msgstr "Näytä metatiedot"
 #: model:ir.model.fields,field_description:web.field_ir_actions_act_window_view__view_mode
 msgid "View Type"
 msgstr "Näkymän tyyppi"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View switcher"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -4616,6 +4715,13 @@ msgstr ""
 #, python-format
 msgid "remaining)"
 msgstr "jäljellä)"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "search"
+msgstr ""
 
 #. module: web
 #. openerp-web

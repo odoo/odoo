@@ -42,7 +42,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -62,7 +62,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"%s --> 产品单位是 %s (%s) - 库存转移单位是 %s (%s)"
+"%s --> 产品单位是 %s (%s) - 库存移动单位是 %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -186,7 +186,7 @@ msgstr "'作业-类型 - %s' % object.name"
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
-msgstr "'挑选作业 - %s - %s' % (object.partner_id.name or '', object.name)"
+msgstr "'拣货作业 - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -198,8 +198,8 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* 新建: 当库存转移被创建，还没被确认时。\n"
-"* 等待其它转移: 当需要等待另外一个移库完成时，出现该状态。例如：链式物流.\n"
+"* 新建: 当库存移动被创建，还没被确认时。\n"
+"* 等待其它移动: 当需要等待另外一个移库完成时，出现该状态。例如：链式物流.\n"
 "* 等待可用: 当需求还不能被直接了当地解决时，出现该状态。可能需要等调度程序被运行，有个部件在等待制造等等...\n"
 "* 可用: 当产品已经被保留了，状态就被设置为 可用。\n"
 "* 完成: 当这次装运被处理，状态就是“完成”。"
@@ -425,7 +425,7 @@ msgid ""
 "            </strong>"
 msgstr ""
 "<strong>\n"
-"                已完成的转移行被纠正。\n"
+"                已完成的移动行被纠正。\n"
 "            </strong>"
 
 #. module: stock
@@ -547,7 +547,7 @@ msgstr "<strong>你要把产品发送到哪里？</strong>"
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "A done move line should never have a reserved quantity."
-msgstr "完成的转移行将永远不能有预留数量"
+msgstr "完成的移动行将永远不能有预留数量"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -583,7 +583,7 @@ msgstr "动作"
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_needaction
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_needaction
 msgid "Action Needed"
-msgstr "需要采取行动"
+msgstr "需要行动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__active
@@ -593,7 +593,7 @@ msgstr "需要采取行动"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__active
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__active
 msgid "Active"
-msgstr "有效"
+msgstr "启用"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_ids
@@ -632,7 +632,7 @@ msgstr "增加新路线"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid ""
 "Add an internal note that will be printed on the Picking Operations sheet"
-msgstr "添加将在“拣配作业”工作表上打印的内部注释"
+msgstr "添加将在“拣货作业”工作表上打印的内部注释"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_adv_location
@@ -640,7 +640,7 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加并自定义路线作业以处理你库存中的产品转移：例如：卸货>品控>入库，挑选>包装>发运。\n"
+"添加并自定义路线作业以处理你库存中的产品移动：例如：卸货>品控>入库，挑选>包装>发运。\n"
 "您也可以在仓位置置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
 
 #. module: stock
@@ -652,7 +652,7 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加并自定义路线作业以处理你库存中的产品转移：例如：卸货>品控>入库，挑选>包装>发运。您也可以在仓位置置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
+"添加并自定义路线作业以处理你库存中的产品移动：例如：卸货>品控>入库，挑选>包装>发运。您也可以在仓位置置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -721,7 +721,7 @@ msgstr "产品尚未全部运送完毕，剩余产品有货时会立刻运送。
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
-msgstr "全部退回转移"
+msgstr "全部退回移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -826,7 +826,7 @@ msgstr "分配序列号"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Assigned Moves"
-msgstr "指派的转移"
+msgstr "指派的移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_attachment_count
@@ -844,7 +844,7 @@ msgstr "属性"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
 msgid "Automatic Move"
-msgstr "自动转移"
+msgstr "自动移动"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__auto__transparent
@@ -933,7 +933,7 @@ msgstr "条形码(ZPL)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Pickings"
-msgstr "批量挑选"
+msgstr "批量拣货"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -972,13 +972,13 @@ msgid ""
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
-"默认情况下，系统从源位置的库存中取货，并被动等待产品入库。另外一个可能是允许您在源位置上直接创建一个采购单（从而忽略其当前库存）来获取产品。如果我们想把库存转移连接起来，并让库存转移等待上一次转移，您应该选择第二种方法。"
+"默认情况下，系统从源位置的库存中取货，并被动等待产品入库。另外一个可能是允许您在源位置上直接创建一个采购单（从而忽略其当前库存）来获取产品。如果我们想把库存移动连接起来，并让库存移动等待上一次移动，您应该选择第二种方法。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
-msgstr "通过取消勾选有效字段，你能隐藏一个位置而不是删除它。"
+msgstr "通过取消勾选启用字段，你能隐藏一个位置而不是删除它。"
 
 #. module: stock
 #: model:product.product,name:stock.product_cable_management_box
@@ -1025,7 +1025,7 @@ msgstr "取消盘点"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_cancel
 msgid "Cancel Next Move"
-msgstr "取消下一步转移"
+msgstr "取消下一步移动"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__state__cancel
@@ -1039,7 +1039,7 @@ msgstr "已取消"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Cancelled Moves"
-msgstr "取消的转移"
+msgstr "取消的移动"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -1047,7 +1047,7 @@ msgstr "取消的转移"
 msgid ""
 "Cannot set the done quantity from this stock move, work directly with the "
 "move lines."
-msgstr "无法从此库存转移中设置完成数量，直接使用转移路线​​。"
+msgstr "无法从此库存移动中设置完成数量，直接使用移动路线​​。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_category_id
@@ -1065,7 +1065,7 @@ msgstr "类别路线"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
 msgid "Chained Move Exists"
-msgstr "链接的转移已存在"
+msgstr "链接的移动已存在"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_change_product_quantity
@@ -1098,6 +1098,12 @@ msgid "Changing the operation type of this record is forbidden at this point."
 msgstr "此时禁止更改此记录的作业类型。"
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
 msgstr "检查可用量"
@@ -1105,12 +1111,12 @@ msgstr "检查可用量"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_packages
 msgid "Check the existence of destination packages on move lines"
-msgstr "检查转移行上的目的地包裹的存在"
+msgstr "检查移动行上的目的地包裹的存在"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_line_exist
 msgid "Check the existence of pack operation on the picking"
-msgstr "检查挑选时是否需要进行包装作业"
+msgstr "检查拣货时是否需要进行包装作业"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
@@ -1139,6 +1145,13 @@ msgstr "选择目的位置"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Choose your date"
 msgstr "选择你的日期"
+
+#. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
+#, python-format
+msgid "Close"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
@@ -1298,32 +1311,32 @@ msgstr "不能预留全部需要的产品。请使用‘标记为待做’按钮
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
 msgid "Count Picking"
-msgstr "挑选个数"
+msgstr "拣货个数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "挑选欠单个数"
+msgstr "拣货欠单个数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
 msgid "Count Picking Draft"
-msgstr "草稿挑选个数"
+msgstr "草稿拣货个数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_late
 msgid "Count Picking Late"
-msgstr "迟到挑选个数"
+msgstr "迟到拣货个数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_ready
 msgid "Count Picking Ready"
-msgstr "就绪挑选个数"
+msgstr "就绪拣货个数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_waiting
 msgid "Count Picking Waiting"
-msgstr "等待挑选个数"
+msgstr "等待拣货个数"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
@@ -1396,7 +1409,7 @@ msgstr "新建产品"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
 msgid "Create a new stock movement"
-msgstr "创建新库存转移"
+msgstr "创建新库存移动"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -1418,7 +1431,7 @@ msgstr "创建一个订货规则"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__move_ids
 msgid "Created Moves"
-msgstr "创建的转移"
+msgstr "创建的移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__create_uid
@@ -1824,7 +1837,7 @@ msgstr "收货单说明"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
 msgid "Description of Picking"
-msgstr "挑选说明"
+msgstr "拣货说明"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
@@ -1836,7 +1849,7 @@ msgstr "出库单说明"
 #: model:ir.model.fields,field_description:stock.field_product_product__description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template__description_picking
 msgid "Description on Picking"
-msgstr "挑选说明"
+msgstr "拣货说明"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingin
@@ -1847,7 +1860,7 @@ msgstr "收货说明"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
 msgid "Description picking"
-msgstr "挑选说明"
+msgstr "拣货说明"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
@@ -1874,7 +1887,7 @@ msgstr "目的位置:"
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_dest_ids
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Destination Moves"
-msgstr "目的地转移"
+msgstr "目的地移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__result_package_id
@@ -2026,7 +2039,7 @@ msgstr "草稿"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Draft Moves"
-msgstr "草稿转移"
+msgstr "草稿移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
@@ -2055,7 +2068,7 @@ msgstr "邮件确认"
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_move_email_validation
 msgid "Email Confirmation picking"
-msgstr "邮件确认挑选"
+msgstr "邮件确认拣货"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2066,7 +2079,7 @@ msgstr "EMail模板"
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_mail_confirmation_template_id
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_mail_confirmation_template_id
 msgid "Email Template confirmation picking"
-msgstr "确认分拣邮件模版"
+msgstr "确认拣货邮件模版"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
@@ -2114,7 +2127,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s) occurred on the picking"
-msgstr "挑选作业出现异常"
+msgstr "拣货作业出现异常"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -2374,7 +2387,7 @@ msgstr "分组"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_move_lines
 msgid "Has Move Lines"
-msgstr "有转移行"
+msgstr "有移动行"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_exist
@@ -2389,7 +2402,7 @@ msgstr "有包裹"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_scrap_move
 msgid "Has Scrap Moves"
-msgstr "有报废转移"
+msgstr "有报废移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_tracking
@@ -2414,7 +2427,7 @@ msgid ""
 "                purchase order or picking order they come from. You will find\n"
 "                the list of all products you are waiting for."
 msgstr ""
-"这里你可以收到单个产品，不管他们来自采购或者挑选单。\n"
+"这里你可以收到单个产品，不管他们来自采购或者拣货单。\n"
 "你能看到所有你在等待产品的产品列表。"
 
 #. module: stock
@@ -2501,7 +2514,7 @@ msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__propagate_cancel
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr "如果勾选此项，在取消本转移时也取消关联的转移。"
+msgstr "如果勾选此项，在取消本移动时也取消关联的移动。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__result_package_id
@@ -2513,14 +2526,14 @@ msgstr "如果设置，将对动作进行组合。"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
-msgstr "如果有效字段被设置为否，系统将会允许你隐藏订货点而不是删除。"
+msgstr "如果启用字段被设置为否，系统将会允许你隐藏订货点而不是删除。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
-msgstr "如果有效字段被设置为否，系统将会允许你隐藏路线而不是删除。"
+msgstr "如果启用字段被设置为否，系统将会允许你隐藏路线而不是删除。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__date
@@ -2536,7 +2549,7 @@ msgstr ""
 msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
-msgstr "如果挑选被解锁，你可以编辑初始需求（适用于挑选草稿）或已完成数量（适用于已完成的挑选）。"
+msgstr "如果拣货被解锁，你可以编辑初始需求（适用于拣货草稿）或已完成数量（适用于已完成的拣货）。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_reserved
@@ -2554,7 +2567,7 @@ msgid ""
 "If this checkbox is ticked, the pickings lines will represent detailed stock"
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
-msgstr "如果勾选此框，则挑选线将表示详细的库存作业。否则，拣选线将代表详细的库存作业的总和。"
+msgstr "如果勾选此框，则拣货线将表示详细的库存作业。否则，拣选线将代表详细的库存作业的总和。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_create_lots
@@ -2588,7 +2601,7 @@ msgstr "如果这个送货被拆分，该字段连接到包括了已经处理的
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
 msgid "If ticked, you will be able to select entire packages to move"
-msgstr "如果勾选此项，你将被允许可以选择整个包装来进行转移。"
+msgstr "如果勾选此项，你将被允许可以选择整个包装来进行移动。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -2716,7 +2729,7 @@ msgstr "内部参考"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__internal
 msgid "Internal Transfer"
-msgstr "内部转账"
+msgstr "内部调拨"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -3115,7 +3128,7 @@ msgstr "如果这个位置是公司间共享的，则此字段留空"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Linked Moves"
-msgstr "链接的转移"
+msgstr "链接的移动"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3401,7 +3414,7 @@ msgstr "消息传递错误"
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
 #: model:ir.model.fields,field_description:stock.field_res_users__picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr "库存挑选单消息"
+msgstr "库存拣货单消息"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_ids
@@ -3436,12 +3449,12 @@ msgstr "最小库存规则"
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__move_id
 msgid "Move"
-msgstr "转移"
+msgstr "移动"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Move Detail"
-msgstr "转移详情"
+msgstr "移动详情"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_type_entire_packs
@@ -3449,38 +3462,38 @@ msgstr "转移详情"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_entire_packs
 msgid "Move Entire Packages"
-msgstr "转移整个包裹"
+msgstr "移动整个包裹"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_line_ids
 msgid "Move Line"
-msgstr "转移明细行"
+msgstr "移动明细行"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_line_nosuggest_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_nosuggest_ids
 msgid "Move Line Nosuggest"
-msgstr "转移行无建议"
+msgstr "移动行无建议"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Move Lines"
-msgstr "转移明细行"
+msgstr "移动明细行"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
 msgid ""
 "Move date: scheduled date until move is done, then date of actual move "
 "processing"
-msgstr "转移日期: 安排的日期直到转移完成的日期，这日期是转移实际处理完成的日期."
+msgstr "移动日期: 安排的日期直到移动完成的日期，这日期是移动实际处理完成的日期."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__origin_returned_move_id
 msgid "Move that created the return move"
-msgstr "创建退回转移的转移"
+msgstr "创建退回移动的移动"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -3490,7 +3503,7 @@ msgstr "创建退回转移的转移"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking_board
 msgid "Moves"
-msgstr "转移"
+msgstr "移动"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__group_id
@@ -3498,7 +3511,7 @@ msgid ""
 "Moves created through this orderpoint will be put in this procurement group."
 " If none is given, the moves generated by stock rules will be grouped into "
 "one big picking."
-msgstr "通过此订购补货点创建的库存转移将放在此补货组中。如果没有被提供，由补货规则生成的库存转移将被组合到一个大挑选组中。"
+msgstr "通过此订购补货点创建的库存移动将放在此补货组中。如果没有被提供，由补货规则生成的库存移动将被组合到一个大拣货组中。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
@@ -3547,7 +3560,7 @@ msgstr "新建"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "New Move:"
-msgstr "新转移："
+msgstr "新移动："
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__new_quantity
@@ -3708,6 +3721,8 @@ msgid "Number of unread messages"
 msgstr "未读消息数量"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "On Hand"
 msgstr "在手"
@@ -3765,6 +3780,12 @@ msgid "Operation Types"
 msgstr "作业类型"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
 msgid "Operation type (PDF)"
 msgstr "作业类型（PDF)"
@@ -3811,17 +3832,17 @@ msgstr "可选的定位细节，仅供参考"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__returned_move_ids
 msgid "Optional: all returned moves created from this move"
-msgstr "可选: 所有从此转移创建的退货转移"
+msgstr "可选: 所有从此移动创建的退货移动"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__move_dest_ids
 msgid "Optional: next stock move when chaining them"
-msgstr "可选: 当链接它们时下一库存转移."
+msgstr "可选: 当链接它们时下一库存移动."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__move_orig_ids
 msgid "Optional: previous stock move when chaining them"
-msgstr "可选: 当链接它们时前一库存转移"
+msgstr "可选: 当链接它们时前一库存移动"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -3836,12 +3857,12 @@ msgstr "原始"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Origin Moves"
-msgstr "原始转移"
+msgstr "原始移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__origin_returned_move_id
 msgid "Origin return move"
-msgstr "原始退回转移"
+msgstr "原始退回移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__original_location_id
@@ -3851,7 +3872,7 @@ msgstr "原始位置"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_orig_ids
 msgid "Original Move"
-msgstr "原始转移"
+msgstr "原始移动"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4127,32 +4148,32 @@ msgstr "挑选类型"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__picking_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Picking"
-msgstr "挑选"
+msgstr "拣货"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr "挑选清单"
+msgstr "拣货清单"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr "挑选作业"
+msgstr "拣货作业"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "Picking Type"
-msgstr "挑选类型"
+msgstr "拣货类型"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Picking list"
-msgstr "挑选清单"
+msgstr "拣货清单"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings already processed"
-msgstr "挑选早已处理"
+msgstr "拣货早已处理"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -4163,13 +4184,13 @@ msgstr "计划的调拨"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Please add 'Done' qantitites to the picking to create a new pack."
-msgstr "请给挑选添加‘完成’数量用以创建新包。"
+msgstr "请给拣货添加‘完成’数量用以创建新包。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Please add some items to move."
-msgstr "请添加一些项目到转移"
+msgstr "请添加一些项目到移动"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -4337,12 +4358,12 @@ msgstr "产品批次筛选"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 #, python-format
 msgid "Product Moves"
-msgstr "产品转移"
+msgstr "产品移动"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "产品转移(移库明细)"
+msgstr "产品移动(移库明细)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_packaging
@@ -4710,7 +4731,7 @@ msgstr "超期数量"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reserved_availability
 msgid "Quantity that has already been reserved for this move"
-msgstr "已为这次转移保留的数量"
+msgstr "已为这次移动保留的数量"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant
@@ -4872,7 +4893,7 @@ msgstr "登记批次，包裹，位置"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Remaining parts of picking partially processed"
-msgstr "部分已处理的挑选后剩余部分"
+msgstr "部分已处理的拣货后剩余部分"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_removal
@@ -5033,7 +5054,7 @@ msgstr "退回位置"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "退回挑选"
+msgstr "退回拣货"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
@@ -5050,7 +5071,7 @@ msgstr "退回 %s"
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Returned Picking"
-msgstr "退回的挑选"
+msgstr "退回的拣货"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -5176,7 +5197,7 @@ msgstr "计划日期或移库日期"
 msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
-msgstr "计划时间的第一部分送货即将进行。在此手动设定一个值表示所有库存转移的期望时间。"
+msgstr "计划时间的第一部分送货即将进行。在此手动设定一个值表示所有库存移动的期望时间。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -5205,7 +5226,7 @@ msgstr "报废位置"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__move_id
 msgid "Scrap Move"
-msgstr "报废转移"
+msgstr "报废移动"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
@@ -5344,7 +5365,7 @@ msgstr "打包序列"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence picking"
-msgstr "挑选序列"
+msgstr "拣货序列"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5622,7 +5643,7 @@ msgstr "库存位置"
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__move_id
 msgid "Stock Move"
-msgstr "库存转移"
+msgstr "库存移动"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
@@ -5635,13 +5656,13 @@ msgstr "库存转移"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 msgid "Stock Moves"
-msgstr "库存转移"
+msgstr "库存移动"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_graph
 #: model_terms:ir.ui.view,arch_db:stock.view_move_pivot
 msgid "Stock Moves Analysis"
-msgstr "库存转移分析"
+msgstr "库存移动分析"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.product_template_open_quants
@@ -5668,7 +5689,7 @@ msgstr "库存包装层级"
 #: model:ir.model.fields,field_description:stock.field_res_users__picking_warn
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_id
 msgid "Stock Picking"
-msgstr "库存挑选"
+msgstr "库存拣货"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_quant_ids
@@ -5715,22 +5736,22 @@ msgstr "库存追溯行"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids_without_package
 msgid "Stock moves not in package"
-msgstr "库存转移不在包裹里"
+msgstr "库存移动不在包裹里"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that are Available (Ready to process)"
-msgstr "可用的库存转移（准备处理）"
+msgstr "可用的库存移动（准备处理）"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that are Confirmed, Available or Waiting"
-msgstr "库存转移处于已确认、可用或者在等待的状态"
+msgstr "库存移动处于已确认、可用或者在等待的状态"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that have been processed"
-msgstr "已经处理转移库存"
+msgstr "已经处理移动库存"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
@@ -5852,7 +5873,7 @@ msgstr "用于计算验证是否应该显示的技术字段。"
 msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
-msgstr "该技术字段用来描述当所有者的份转移标记为’完成‘时的限制"
+msgstr "该技术字段用来描述当所有者的份移动标记为’完成‘时的限制"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__price_unit
@@ -5861,7 +5882,7 @@ msgid ""
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
 msgstr ""
-"该技术字段用来记录用户在挑选确认期间设置的产品成本（使用 '平均价格' 或'真正'的成本方法时）。以公司的货币及产品的默认计量单位来赋予值。"
+"该技术字段用来记录用户在拣货确认期间设置的产品成本（使用 '平均价格' 或'真正'的成本方法时）。以公司的货币及产品的默认计量单位来赋予值。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__produce_line_ids
@@ -5895,7 +5916,7 @@ msgid ""
 "The 'Manual Operation' value will create a stock move after the current one."
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
-msgstr "“手动作业”的值会在当前作业之后创建库存转移。当“自动无步骤添加”时，位置将在原来的转移中被替换。"
+msgstr "“手动作业”的值会在当前作业之后创建库存移动。当“自动无步骤添加”时，位置将在原来的移动中被替换。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -6076,7 +6097,7 @@ msgid ""
 "The warehouse to propagate on the created move/procurement, which can be "
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
-msgstr "在已创建的转移/补货传播的仓库，它可以与此规则所针对的仓库不同 (例如：从另外仓库补货的规则)"
+msgstr "在已创建的移动/补货传播的仓库，它可以与此规则所针对的仓库不同 (例如：从另外仓库补货的规则)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__theoretical_qty
@@ -6094,12 +6115,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
-msgstr "还没有产品转移"
+msgstr "还没有产品移动"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr "此字段将填写挑选源和其转移的名称"
+msgstr "此字段将填写挑选源和其移动的名称"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_dest_id
@@ -6109,7 +6130,7 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
-"当你用这种挑选类型手工创建一个移库时候，这是一个默认的目标位置。你也可以改变这个位置或者在路径设置中更改为其他位置。如果为空，系统会检查相关业务伙伴的客户位置"
+"当你用这种拣货类型手工创建一个移库时候，这是一个默认的目标位置。你也可以改变这个位置或者在路径设置中更改为其他位置。如果为空，系统会检查相关业务伙伴的客户位置"
 " 。"
 
 #. module: stock
@@ -6119,7 +6140,7 @@ msgid ""
 "this operation type. It is possible however to change it or that the routes "
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
-msgstr "这是使用此作业类型手动创建拣配时的默认目标位置。 但是可以改变它或者路线放置另一个位置。 如果它是空的，它将检查合作伙伴上的客户位置。"
+msgstr "这是使用此作业类型手动创建拣货时的默认目标位置。 但是可以改变它或者路线放置另一个位置。 如果它是空的，它将检查合作伙伴上的客户位置。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
@@ -6145,7 +6166,7 @@ msgid ""
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
 msgstr ""
-"这是库存视角的产品数量。对于状态为“完成”的转移，这就是真正完成了转移的产品数量。对于其它转移，则是计划进行转移的数量。降低此数量不会生成欠单。在已指定的转移变更此数量将影响产品预留，而且应该慎重处理。"
+"这是库存视角的产品数量。对于状态为“完成”的移动，这就是真正完成了移动的产品数量。对于其它移动，则是计划进行移动的数量。降低此数量不会生成欠单。在已指定的移动变更此数量将影响产品预留，而且应该慎重处理。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -6173,7 +6194,7 @@ msgid ""
 "                to see all the past or future movements for the product."
 msgstr ""
 "此菜单能让你完整的追溯某一特定产品的盘点\n"
-"作业。你可以在产品上筛选此产品过去和将来的的所有的转移。　　　　　　　　"
+"作业。你可以在产品上筛选此产品过去和将来的的所有的移动。　　　　　　　　"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -6209,7 +6230,7 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
 msgstr ""
-"这个挑选显示和别的作业链接起来. 稍后, 如果你正在接收退回的货物，确保<b>逆转</b> ，这样是为了防止同样的物流规则再次被执行 (创建重复作业)"
+"这个拣货显示和别的作业链接起来. 稍后, 如果你正在接收退回的货物，确保<b>逆转</b> ，这样是为了防止同样的物流规则再次被执行 (创建重复作业)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -6230,7 +6251,7 @@ msgstr "此记录早已存在。"
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
-msgstr "该位置将被使用以替换默认值，同样，库存转移的源位置将根据制造单生成。"
+msgstr "该位置将被使用以替换默认值，同样，库存移动的源位置将根据制造单生成。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_inventory
@@ -6238,7 +6259,7 @@ msgstr "该位置将被使用以替换默认值，同样，库存转移的源位
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr "此库存位置将被使用以替换默认的，当你做盘点时，同样的作为根据制造单生成的库存转移之源位置。"
+msgstr "此库存位置将被使用以替换默认的，当你做盘点时，同样的作为根据制造单生成的库存移动之源位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__responsible_id
@@ -6360,6 +6381,7 @@ msgstr "追溯明细"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
+#: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Transfer"
@@ -6373,7 +6395,7 @@ msgstr "调拨目的地地址"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_overprocessed_transfer
 msgid "Transfer Over Processed Stock"
-msgstr "已过帐转移"
+msgstr "调拨超量处理的库存"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_id
@@ -6397,7 +6419,7 @@ msgstr "调拨"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Transfers allow you to move products from one location to another."
-msgstr "调拨允许你将产品从一个位置转移到另外一个位置。"
+msgstr "调拨允许你将产品从一个位置移动到另外一个位置。"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -6424,6 +6446,11 @@ msgstr "中转位置"
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule"
 msgstr "触发其他规则"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+msgid "Trigger Another Rule If No Stock"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -6692,7 +6719,7 @@ msgstr "正在等待"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__waiting
 msgid "Waiting Another Move"
-msgstr "等待其它转移"
+msgstr "等待其它移动"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__waiting
@@ -6707,7 +6734,7 @@ msgstr "等待可用量"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Waiting Moves"
-msgstr "等待转移"
+msgstr "等待移动"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
@@ -6748,7 +6775,7 @@ msgstr "仓库个数"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__warehouse_domain_ids
 msgid "Warehouse Domain"
-msgstr "仓库 Domain"
+msgstr "仓库 域"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -6802,7 +6829,7 @@ msgstr "警告"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Warning on the Picking"
-msgstr "挑选的警告"
+msgstr "拣货的警告"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -6894,7 +6921,7 @@ msgstr "当产品到达<b>%s</b>时，<br/><b>%s</b>会被建立并送到<b>%s</
 msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
-msgstr "当挑选进行时，允许改变初始需求。当拣选完成时，只允许改变已完成数量。"
+msgstr "当拣货进行时，允许改变初始需求。当拣选完成时，只允许改变已完成数量。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -6923,7 +6950,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
 msgid ""
 "When validating the transfer, the products will be assigned to this owner."
-msgstr ""
+msgstr "在验证调拨时，产品将会分派到此物主。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
@@ -6934,7 +6961,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
 msgid "Whether the move was added after the picking's confirmation"
-msgstr "是否在挑选确认后添加了转移"
+msgstr "是否在拣货确认后添加了移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__wizard_id
@@ -6943,7 +6970,7 @@ msgid "Wizard"
 msgstr "向导"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree_lot_name_as_textarea
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Write your SN/LN one by one or copy paste a list."
 msgstr ""
 
@@ -6954,7 +6981,7 @@ msgid ""
 "You are not allowed to change the product linked to a serial or lot number "
 "if some stock moves have already been created with that number. This would "
 "lead to inconsistencies in your stock."
-msgstr "当一个序号已有产生库存转移时，你不能修改此已连接到序号或者批号的产品。 因这样会导致库存记录不完整。"
+msgstr "当一个序号已有产生库存移动时，你不能修改此已连接到序号或者批号的产品。 因这样会导致库存记录不完整。"
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -7005,7 +7032,7 @@ msgid ""
 "You can not change the type of a product that is currently reserved on a "
 "stock move. If you need to change the type, you should first unreserve the "
 "stock move."
-msgstr "您无法更改当前在库存转移中保留的产品类型。 如果您需要更改类型，则应先取消保留库存的转移。"
+msgstr "您无法更改当前在库存移动中保留的产品类型。 如果您需要更改类型，则应先取消保留库存的移动。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -7013,7 +7040,7 @@ msgstr "您无法更改当前在库存转移中保留的产品类型。 如果�
 msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
-msgstr "如果挑选已完成，不能删除产品转移。你可以纠正完成数量。"
+msgstr "如果拣货已完成，不能删除产品移动。你可以纠正完成数量。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -7039,7 +7066,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can only delete draft moves."
-msgstr "你只能删除草稿状态的转移。"
+msgstr "你只能删除草稿状态的移动。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -7087,7 +7114,7 @@ msgstr "您无法更改位置类型或此位置已被作为废料位置且此位
 msgid ""
 "You cannot change the ratio of this unit of mesure as some products with "
 "this UoM have already been moved or are currently reserved."
-msgstr "你无法更改此计量单位的换算比率，因为某些使用此计量单位的产品已发生转移或当前已被保留。"
+msgstr "你无法更改此计量单位的换算比率，因为某些使用此计量单位的产品已发生移动或当前已被保留。"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -7116,7 +7143,7 @@ msgstr "不能修改盘点损失数量"
 msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
-msgstr "你不能在同一调拨中多次转移同一包装内容，或将同一包装拆分到两个位置。"
+msgstr "你不能在同一调拨中多次移动同一包装内容，或将同一包装拆分到两个位置。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7124,7 +7151,7 @@ msgstr "你不能在同一调拨中多次转移同一包装内容，或将同一
 msgid ""
 "You cannot perform the move because the unit of measure has a different "
 "category as the product unit of measure."
-msgstr "你无法执行此转移，因为此计量单位与产品的计量单位不是同一类别。"
+msgstr "你无法执行此移动，因为此计量单位与产品的计量单位不是同一类别。"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -7140,13 +7167,13 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
-msgstr "你不能拆分一个草稿转移。你需要先确认它。"
+msgstr "你不能拆分一个草稿移动。你需要先确认它。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "你无法拆分状态已标记为“完成”的库存转移。"
+msgstr "你无法拆分状态已标记为“完成”的库存移动。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7160,7 +7187,7 @@ msgstr "您不能从“视图”类型的位置获取产品或将产品交付到
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
-msgstr "你无法取消状态已标记为“完成”的库存转移。"
+msgstr "你无法取消状态已标记为“完成”的库存移动。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -7232,13 +7259,13 @@ msgstr "你必须选择同一计量单位类别内的计量单位而不是产品
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return Done pickings."
-msgstr "你只能退回已完成的挑选。"
+msgstr "你只能退回已完成的拣货。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return one picking at a time."
-msgstr "你每次只能退回一次挑选。"
+msgstr "你每次只能退回一次拣货。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -7275,7 +7302,7 @@ msgstr ""
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
-msgstr "您对此产品仍然有一些有效的重新排序规则。 请先归档或删除它们。"
+msgstr "您对此产品仍然有一些启用的重新排序规则。 请先归档或删除它们。"
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -7362,10 +7389,4 @@ msgstr "已做替代处理"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph
 msgid "report_stock_quantity_graph"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:223
-#, python-format
-msgid "Changing the product is only allowed in 'Draft' state."
 msgstr ""

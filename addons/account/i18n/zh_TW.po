@@ -9,17 +9,17 @@
 # sejun huang <sejun.huang@gmail.com>, 2019
 # Michael Yeung, 2019
 # Martin Trigaux, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 曾逸民 <suncombo@gmail.com>, 2020
 # 棋文 鄭 <a09930185@gmail.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: 棋文 鄭 <a09930185@gmail.com>, 2020\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -904,6 +904,12 @@ msgid "A selected statement line was already reconciled with an account move."
 msgstr "選定的銀行對帳單明細已經與日記帳分錄明細對帳調節."
 
 #. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid "A tag defined to be used on taxes must always have a country set."
+msgstr ""
+
+#. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr "稅務財政情況在相同的稅上面只能定義一次。"
@@ -1359,9 +1365,17 @@ msgstr "會計財政狀況定位"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
+#, python-format
+msgid ""
+"Accrual Adjusting Entries ({percent}%% recognized) have been created for "
+"this invoice on {date}"
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
-msgid "Accrual Adjusting Entry (%s recognized) for invoice: %s"
+msgid "Accrual Adjusting Entry (%s%% recognized) for invoice: %s"
 msgstr ""
 
 #. module: account
@@ -1908,6 +1922,7 @@ msgid "Analytic Acc."
 msgstr "分析帳戶"
 
 #. module: account
+#: model:ir.model,name:account.model_account_analytic_account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__analytic_account_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_account_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__analytic_account_id
@@ -1953,6 +1968,7 @@ msgid "Analytic Lines"
 msgstr "分析項目"
 
 #. module: account
+#: model:ir.model,name:account.model_account_analytic_tag
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_tag_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__analytic_tag_ids
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_analytic_tags
@@ -2334,6 +2350,7 @@ msgstr "銀行對帳單.pdf"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
+#: model_terms:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Bank Statements"
 msgstr "銀行對帳單"
 
@@ -3110,6 +3127,7 @@ msgstr "公司是指業務夥伴"
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_id
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__company_id
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__company_id
 #: model:ir.model.fields,field_description:account.field_account_common_report__company_id
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__company_id
@@ -5683,6 +5701,13 @@ msgid "Indicates that this journal item is a tax line"
 msgstr "表示此日記帳專案是稅行"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_payment.xml:0
+#, python-format
+msgid "Info"
+msgstr "信息"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Information"
 msgstr "信息"
@@ -7166,12 +7191,6 @@ msgid "Next Number Prefix"
 msgstr "下一個號碼前綴"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:545
-#, python-format
-msgid "No default debit and credit account defined on journal %s (ids: %s)"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
 msgstr "無催款"
@@ -7186,6 +7205,12 @@ msgstr "沒消息"
 #, python-format
 msgid "No attachment was provided"
 msgstr "未提供附件"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "No default debit and credit account defined on journal %s (ids: %s)."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -7557,6 +7582,7 @@ msgid "Opening Unit Numbers"
 msgstr "開張的單元數量"
 
 #. module: account
+#: code:addons/account/models/account.py:0
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Opening balance"
@@ -7935,6 +7961,7 @@ msgid "Payment Method Type"
 msgstr "付款方法類型"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_bank_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Method Types"
 msgstr "付款方式類型"
@@ -8332,6 +8359,13 @@ msgstr "預付帳款"
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr "請在憑單和付款匹配期間創建日記帳分錄"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:0
+#, python-format
+msgid "Presets config"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9497,10 +9531,13 @@ msgid ""
 msgstr "如果您不想在根據模版生成科目表的嚮導裡用這個模版，不要勾選這個字段。用於您僅需要在用到本模版的子模板時才生成這個模版的會計科目。"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #: model:ir.actions.act_window,name:account.action_account_config
 #: model:ir.actions.act_window,name:account.action_open_settings
 #: model:ir.ui.menu,name:account.menu_account_config
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, python-format
 msgid "Settings"
 msgstr "設定"
 
@@ -9843,11 +9880,6 @@ msgstr "建議對應值"
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_rank
 msgid "Supplier Rank"
 msgstr "供應商排名"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.res_partner_action_supplier
-msgid "Suppliers"
-msgstr "供應商"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
@@ -11941,6 +11973,7 @@ msgid "Vendor Taxes"
 msgstr "供應商稅"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #: model:ir.ui.menu,name:account.menu_finance_payables
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
@@ -12200,6 +12233,46 @@ msgid ""
 msgstr "您可以在這裡設定預設通信，該通信將顯示在客戶應收憑單上，一旦驗證，以幫助客戶在付款時參考該特定憑單。"
 
 #. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your account since there are some journal "
+"items linked to it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your journal since there are some journal "
+"entries linked to it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your tax since there are some journal items "
+"linked to it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic account since there are "
+"some journal items linked to it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic tags since there are some"
+" journal items linked to it."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12437,6 +12510,12 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr "您無法驗證總金額為負的憑單。您應該創建一個貸項通知單代替。使用動作選單將其轉換為貸方通知單或退款。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You don't have the access rights to post an invoice."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12725,43 +12804,3 @@ msgstr "供應商帳單"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ 計數"
-
-#. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid ""
-"You can't change the company of your account since there are some journal "
-"items linked to it."
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid ""
-"You can't change the company of your journal since there are some journal "
-"entries linked to it."
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid ""
-"You can't change the company of your tax since there are some journal items "
-"linked to it."
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_analytic_line.py:0
-#, python-format
-msgid ""
-"You can't set a different company on your analytic account since there are "
-"some journal items linked to it."
-msgstr ""
-
-#. module: account
-#. module: account
-#: code:addons/account/models/account_analytic_line.py:0
-#: code:addons/account/models/account.py:56
-#, python-format, python-format
-msgid "A tag defined to be used on taxes must always have a country set."
-msgstr ""

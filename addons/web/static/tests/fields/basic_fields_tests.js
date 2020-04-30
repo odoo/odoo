@@ -3317,7 +3317,7 @@ QUnit.module('basic_fields', {
 
         assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be opened");
 
-        form.el.dispatchEvent(new Event('scroll'));
+        form.el.dispatchEvent(new Event('wheel'));
         assert.containsNone($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be closed");
 
         form.destroy();

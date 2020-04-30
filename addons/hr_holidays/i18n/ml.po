@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:33+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: avinashnk94 <avinashnk94@gmail.com>, 2020\n"
 "Language-Team: Malayalam (https://www.transifex.com/odoo/teams/41243/ml/)\n"
@@ -114,6 +114,18 @@ msgid "%s on %s: %.2f days"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s on Time Off : %.2f day(s)"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s on Time Off : %.2f hour(s)"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "&lt;/td&gt;"
 msgstr ""
@@ -201,14 +213,14 @@ msgid "11:30 PM"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__12
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__12
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__0
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__0
 msgid "12:00 AM"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__0
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__0
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__12
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__12
 msgid "12:00 PM"
 msgstr ""
 
@@ -1290,6 +1302,11 @@ msgid "Everyone"
 msgstr ""
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid "Extra days"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__duration_display
 msgid ""
 "Field allowing to see the allocation duration in days or hours depending on "
@@ -1474,6 +1491,20 @@ msgstr "ഐക്കൺ"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "ഒരു ഒഴിവാക്കൽ പ്രവർത്തനം സൂചിപ്പിക്കുന്നതിനുള്ള ഐക്കൺ."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
+msgid ""
+"If Accrual Allocation: Number of days allocated in addition to the ones you "
+"will get via the accrual' system."
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
+msgid ""
+"If Accrual Allocation: Number of hours allocated in addition to the ones you"
+" will get via the accrual' system."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -2181,6 +2212,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_id
+#: model:res.groups,name:hr_holidays.group_hr_holidays_responsible
 msgid "Responsible"
 msgstr "ഉത്തരവാദിയായ"
 
@@ -2734,20 +2766,6 @@ msgid "Type of the exception activity on record."
 msgstr "റെക്കോർഡിലെ ഒഴിവാക്കൽ പ്രവർത്തനത്തിന്റെ തരം."
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
-msgid ""
-"UX field allowing to see and modify the allocation duration, computed in "
-"days."
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
-msgid ""
-"UX field allowing to see and modify the allocation duration, computed in "
-"hours."
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__unit_per_interval
 msgid "Unit of time added at each interval"
 msgstr ""
@@ -2785,6 +2803,20 @@ msgstr "വായിക്കാത്ത സന്ദേശങ്ങളുട�
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__user_id
 msgid "User"
 msgstr "ഉപയോക്താവ്"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/discuss.xml:0
+#, python-format
+msgid "User is online"
+msgstr ""
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/discuss.xml:0
+#, python-format
+msgid "User is out of office"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee__leave_manager_id
