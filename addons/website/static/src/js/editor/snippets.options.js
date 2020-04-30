@@ -66,7 +66,7 @@ options.registry.menu_data = options.Class.extend({
                             },
                         ],
                     });
-                }},
+                }, close: true},
                 {text: _t("Stay on this page"), close: true}
             ]
         })).open();
