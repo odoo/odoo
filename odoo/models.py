@@ -749,7 +749,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             )))
             for r in missing
         )
-        fields = ['module', 'model', 'name', 'res_id']
+        fields = ['module', 'model', 'name', 'res_id', 'create_date']
 
         # disable eventual async callback / support for the extent of
         # the COPY FROM, as these are apparently incompatible
@@ -758,11 +758,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         try:
             cr.copy_from(io.StringIO(
                 u'\n'.join(
-                    u"%s\t%s\t%s\t%d" % (
+                    u"%s\t%s\t%s\t%d\t%s" % (
                         modname,
                         record._name,
                         xids[record.id][1],
                         record.id,
+                        odoo.fields.Datetime.now(),
                     )
                     for record in missing
                 )),
