@@ -428,6 +428,9 @@ var loadXML = (function () {
  * Loads a template file according to the given xmlId.
  *
  * @param {string} [xmlId] - the template xmlId
+ * @param {Object} [context]
+ *        additionnal rpc context to be merged with the default one
+ * @param {string} [tplRoute='/web/dataset/call_kw/']
  * @returns {Deferred} resolved with an object
  *          cssLibs: list of css files
  *          cssContents: list of style tag contents
@@ -437,23 +440,28 @@ var loadXML = (function () {
 var loadAsset = (function () {
     var cache = {};
 
-    var load = function loadAsset(xmlId) {
+    var load = function loadAsset(xmlId, context, tplRoute = '/web/dataset/call_kw/') {
         if (cache[xmlId]) {
-            return Promise.resolve(cache[xmlId]);
+            return cache[xmlId];
         }
-        var params = {
+        context = _.extend({}, odoo.session_info.user_context, context);
+        const params = {
             args: [xmlId, {
                 debug: config.isDebug()
             }],
             kwargs: {
-                context: odoo.session_info.user_context,
+                context: context,
             },
-            method: 'render_template',
-            model: 'ir.ui.view',
         };
-        return rpc('/web/dataset/call_kw/ir.ui.view/render_template', params).then(function (xml) {
+        if (tplRoute === '/web/dataset/call_kw/') {
+            Object.assign(params, {
+                model: 'ir.ui.view',
+                method: 'render_template',
+            });
+        }
+        cache[xmlId] = rpc(tplRoute, params).then(function (xml) {
             var $xml = $(xml);
-            cache[xmlId] = {
+            return {
                 cssLibs: $xml.filter('link[href]:not([type="image/x-icon"])').map(function () {
                     return $(this).attr('href');
                 }).get(),
@@ -467,8 +475,11 @@ var loadAsset = (function () {
                     return $(this).html();
                 }).get(),
             };
-            return cache[xmlId];
+        }).guardedCatch(reason => {
+            reason.event.preventDefault();
+            throw `Unable to render the required templates for the assets to load: ${reason.message.message}`;
         });
+        return cache[xmlId];
     };
 
     return load;
@@ -499,10 +510,15 @@ var loadAsset = (function () {
  *      List of inline styles to add after loading the CSS files.
  * @param {string[]} [libs.jsContents=[]]
  *      List of inline scripts to add after loading the JS files.
+ * @param {Object} [context]
+ *        additionnal rpc context to be merged with the default one
+ * @param {string} [tplRoute]
+ *      Custom route to use for template rendering of the potential assets
+ *      to load (see libs.assetLibs).
  *
  * @returns {Promise}
  */
-function loadLibs(libs) {
+function loadLibs(libs, context, tplRoute) {
     var mutex = new concurrency.Mutex();
     mutex.exec(function () {
         var defs = [];
@@ -525,7 +541,7 @@ function loadLibs(libs) {
     });
     mutex.exec(function () {
         return _loadArray(libs.assetLibs || [], function (xmlID) {
-            return ajax.loadAsset(xmlID).then(function (asset) {
+            return ajax.loadAsset(xmlID, context, tplRoute).then(function (asset) {
                 return ajax.loadLibs(asset);
             });
         });

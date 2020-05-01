@@ -2,6 +2,8 @@ odoo.define('web.GraphModel', function (require) {
 "use strict";
 
 var core = require('web.core');
+const { DEFAULT_INTERVAL, rank } = require('web.controlPanelViewParameters');
+
 var _t = core._t;
 
 /**
@@ -84,6 +86,7 @@ return AbstractModel.extend({
             timeRange: params.timeRange,
             timeRangeDescription: params.timeRangeDescription,
         };
+        this.chart.processedGroupBy = this._processGroupBy(this.chart.groupBy);
         return this._loadGraph(this._getDomains());
     },
     /**
@@ -135,6 +138,7 @@ return AbstractModel.extend({
         if ('measure' in params) {
             this.chart.measure = params.measure;
         }
+        this.chart.processedGroupBy = this._processGroupBy(this.chart.groupBy);
         if ('mode' in params) {
             this.chart.mode = params.mode;
             return Promise.resolve();
@@ -155,7 +159,7 @@ return AbstractModel.extend({
      * @returns {number}
      */
     _getComparisonFieldIndex: function () {
-        var groupBys = this.chart.groupBy.map(function (gb) {
+        var groupBys = this.chart.processedGroupBy.map(function (gb) {
             return gb.split(":")[0];
         });
         return groupBys.indexOf(this.chart.comparisonField);
@@ -186,7 +190,7 @@ return AbstractModel.extend({
     _loadGraph: function (domains) {
         var self = this;
         this.chart.dataPoints = [];
-        var groupBy = this.chart.groupBy;
+        var groupBy = this.chart.processedGroupBy;
         var fields = _.map(groupBy, function (groupBy) {
             return groupBy.split(':')[0];
         });
@@ -235,13 +239,13 @@ return AbstractModel.extend({
         var labels;
 
         function getLabels (dataPt) {
-            return self.chart.groupBy.map(function (field) {
+            return self.chart.processedGroupBy.map(function (field) {
                 return self._sanitizeValue(dataPt[field], field.split(":")[0]);
             });
         }
         rawData.forEach(function (dataPt){
             labels = getLabels(dataPt);
-            var count = dataPt.__count || dataPt[self.chart.groupBy[0]+'_count'] || 0;
+            var count = dataPt.__count || dataPt[self.chart.processedGroupBy[0]+'_count'] || 0;
             var value = isCount ? count : dataPt[self.chart.measure];
             if (value instanceof Array) {
                 // when a many2one field is used as a measure AND as a grouped
@@ -254,11 +258,47 @@ return AbstractModel.extend({
                 value = 1;
             }
             self.chart.dataPoints.push({
+                resId: dataPt[self.chart.groupBy[0]] instanceof Array ? dataPt[self.chart.groupBy[0]][0] : -1,
                 count: count,
                 value: value,
                 labels: labels,
                 originIndex: originIndex,
             });
+        });
+    },
+    /**
+     * Process the groupBy parameter in order to keep only the finer interval option for
+     * elements based on date/datetime field (e.g. 'date:year'). This means that
+     * 'week' is prefered to 'month'. The field stays at the place of its first occurence.
+     * For instance,
+     * ['foo', 'date:month', 'bar', 'date:week'] becomes ['foo', 'date:week', 'bar'].
+     *
+     * @private
+     * @param {string[]} groupBy
+     * @returns {string[]}
+     */
+    _processGroupBy: function(groupBy) {
+        const groupBysMap = new Map();
+        for (const gb of groupBy) {
+            let [fieldName, interval] = gb.split(':');
+            const field = this.fields[fieldName];
+            if (['date', 'datetime'].includes(field.type)) {
+                interval = interval || DEFAULT_INTERVAL;
+            }
+            if (groupBysMap.has(fieldName)) {
+                const registeredInterval = groupBysMap.get(fieldName);
+                if (rank(registeredInterval) < rank(interval)) {
+                    groupBysMap.set(fieldName, interval);
+                }
+            } else {
+                groupBysMap.set(fieldName, interval);
+            }
+        }
+        return [...groupBysMap].map(([fieldName, interval]) => {
+            if (interval) {
+                return `${fieldName}:${interval}`;
+            }
+            return fieldName;
         });
     },
     /**

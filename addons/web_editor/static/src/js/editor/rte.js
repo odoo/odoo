@@ -1,7 +1,7 @@
 odoo.define('web_editor.rte', function (require) {
 'use strict';
 
-var base = require('web_editor.base');
+var fonts = require('wysiwyg.fonts');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Widget = require('web.Widget');
@@ -271,7 +271,7 @@ var RTEWidget = Widget.extend({
         this._getConfig = params && params.getConfig || this._getDefaultConfig;
         this._saveElement = params && params.saveElement || this._saveElement;
 
-        base.computeFonts();
+        fonts.computeFonts();
     },
     /**
      * @override
@@ -466,7 +466,7 @@ var RTEWidget = Widget.extend({
 
         $('.o_editable')
             .destroy()
-            .removeClass('o_editable o_is_inline_editable');
+            .removeClass('o_editable o_is_inline_editable o_editable_date_field_linked o_editable_date_field_format_changed');
 
         var $dirty = $('.o_dirty');
         $dirty
@@ -487,25 +487,25 @@ var RTEWidget = Widget.extend({
                 return self._saveElement($el, context || weContext.get())
                 .then(function () {
                     $el.removeClass('o_dirty');
-                }, function (response) {
+                }).guardedCatch(function (response) {
                     // because ckeditor regenerates all the dom, we can't just
                     // setup the popover here as everything will be destroyed by
                     // the DOM regeneration. Add markings instead, and returns a
                     // new rejection with all relevant info
                     var id = _.uniqueId('carlos_danger_');
                     $el.addClass('o_dirty oe_carlos_danger ' + id);
-                    var html = (response.data.exception_type === 'except_osv');
+                    var html = (response.message.data.exception_type === 'except_osv');
                     if (html) {
-                        var msg = $('<div/>', {text: response.data.message}).html();
+                        var msg = $('<div/>', {text: response.message.data.message}).html();
                         var data = msg.substring(3, msg.length  -2).split(/', u'/);
-                        response.data.message = '<b>' + data[0] + '</b>' + data[1];
+                        response.message.data.message = '<b>' + data[0] + '</b>' + data[1];
                     }
                     $('.o_editable.' + id)
                         .removeClass(id)
                         .popover({
                             html: html,
                             trigger: 'hover',
-                            content: response.data.message,
+                            content: response.message.data.message,
                             placement: 'auto top',
                         })
                         .popover('show');
@@ -515,7 +515,7 @@ var RTEWidget = Widget.extend({
 
         return Promise.all(defs).then(function () {
             window.onbeforeunload = null;
-        }, function (failed) {
+        }).guardedCatch(function (failed) {
             // If there were errors, re-enable edition
             self.cancel();
             self.start();
@@ -534,6 +534,17 @@ var RTEWidget = Widget.extend({
      * @param {jQuery} $editable
      */
     _enableEditableArea: function ($editable) {
+        if ($editable.data('oe-type') === "datetime" || $editable.data('oe-type') === "date") {
+            var selector = '[data-oe-id="' + $editable.data('oe-id') + '"]';
+            selector += '[data-oe-field="' + $editable.data('oe-field') + '"]';
+            selector += '[data-oe-model="' + $editable.data('oe-model') + '"]';
+            var $linkedFieldNodes = this.editable().find(selector).addBack(selector);
+            $linkedFieldNodes.not($editable).addClass('o_editable_date_field_linked');
+            if (!$editable.hasClass('o_editable_date_field_format_changed')) {
+                $linkedFieldNodes.html($editable.data('oe-original-with-format'));
+                $linkedFieldNodes.addClass('o_editable_date_field_format_changed');
+            }
+        }
         if ($editable.data('oe-type') === "monetary") {
             $editable.attr('contenteditable', false);
             $editable.find('.oe_currency_value').attr('contenteditable', true);
@@ -648,6 +659,9 @@ var RTEWidget = Widget.extend({
         var $target = $(ev.target);
         var $editable = $target.closest('.o_editable');
 
+        if (this && this.$last && this.$last.length && this.$last[0] !== $target[0]) {
+            $('.o_editable_date_field_linked').removeClass('o_editable_date_field_linked');
+        }
         if (!$editable.length || $.summernote.core.dom.isContentEditableFalse($target)) {
             return;
         }
@@ -697,6 +711,7 @@ var RTEWidget = Widget.extend({
                 clearTimeout(lastTimerId);
             }
         }
+
         if ($editable.length && (!this.$last || this.$last[0] !== $editable[0])) {
             $editable.summernote(this._getConfig($editable));
 

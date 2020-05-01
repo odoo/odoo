@@ -32,8 +32,6 @@ except ImportError:
 from odoo import http, _
 from odoo.addons.hw_proxy.controllers import main as hw_proxy
 
-from uuid import getnode as get_mac
-
 _logger = logging.getLogger(__name__)
 
 # workaround https://bugs.launchpad.net/openobject-server/+bug/947231

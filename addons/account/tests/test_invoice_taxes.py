@@ -139,6 +139,7 @@ class TestInvoiceTaxes(AccountingTestCase):
         return self.env['account.account.tag'].create({
             'name': tag_name,
             'applicability': 'taxes',
+            'country_id': self.env.ref('base.main_company').country_id.id,
         })
 
     def test_tax_repartition(self):

@@ -700,7 +700,7 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: 'div[name=bank_journal_cta] > button[data-name=action_cofigure_bank_journal], div[name=bank_journal_cta] > button[data-name=action_configure_bank_journal]',
+    trigger: 'button[data-name=action_configure_bank_journal]',
     content: _t('Configure Bank Journal'),
     position: 'bottom',
 }, {

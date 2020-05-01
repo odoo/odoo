@@ -18,17 +18,18 @@
 # Eric Geens <ericgeens@yahoo.com>, 2019
 # Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2019
-# Peter Koenderink <peterkoenderink@gmail.com>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# ca2da8678cdb9cbd573eaf985f02c476, 2019
+# Antoine Gilard <ang@odoo.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -655,6 +656,11 @@ msgid "<span>Quantity</span>"
 msgstr "<span>Hoeveelheid</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Reference</span>"
+msgstr "<span>Referentie</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
 msgstr "<span>Rapportages</span>"
@@ -719,7 +725,7 @@ msgstr "<strong class=\"text-muted\">Verkoper</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr "<strong>Openstaande bedragen</strong>"
+msgstr "<strong>Openstaand bedrag</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -922,7 +928,14 @@ msgstr "Een geselecteerde boeking is al afgeletterd."
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
-msgstr "De geselecteerde verrichting werd reeds afgeletterd met een boeking."
+msgstr ""
+"Een geselecteerd bankafschrift is al afgeletterd met een andere boeking."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid "A tag defined to be used on taxes must always have a country set."
+msgstr ""
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -1394,10 +1407,18 @@ msgstr "Boekhoudkundige mapping  - fiscale positie"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
+#, python-format
+msgid ""
+"Accrual Adjusting Entries ({percent}%% recognized) have been created for "
+"this invoice on {date}"
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
-msgid "Accrual Adjusting Entry (%s recognized) for invoice: %s"
-msgstr "Transitorische boeking (%s toegewezen) voor factuur: %s"
+msgid "Accrual Adjusting Entry (%s%% recognized) for invoice: %s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
@@ -1957,6 +1978,7 @@ msgid "Analytic Acc."
 msgstr "Kostenplaats"
 
 #. module: account
+#: model:ir.model,name:account.model_account_analytic_account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__analytic_account_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_account_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__analytic_account_id
@@ -2002,6 +2024,7 @@ msgid "Analytic Lines"
 msgstr "Kostenplaatsregels"
 
 #. module: account
+#: model:ir.model,name:account.model_account_analytic_tag
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_tag_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__analytic_tag_ids
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_analytic_tags
@@ -2392,6 +2415,7 @@ msgstr "Bankafschrift.pdf"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
+#: model_terms:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Bank Statements"
 msgstr "Bankafschriften"
 
@@ -3150,6 +3174,8 @@ msgid ""
 "Collect information and produce statistics on the trade in goods in Europe "
 "with intrastat"
 msgstr ""
+"Verzamelt informatie en genereert statistieken over het handelen van "
+"goederen in Europa met Intrastat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__color
@@ -3199,6 +3225,7 @@ msgstr "Bedrijven die referenen aan relatie"
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_id
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__company_id
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__company_id
 #: model:ir.model.fields,field_description:account.field_account_common_report__company_id
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__company_id
@@ -5878,6 +5905,13 @@ msgid "Indicates that this journal item is a tax line"
 msgstr "Geeft aan dat deze boeking een BTW regel is"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_payment.xml:0
+#, python-format
+msgid "Info"
+msgstr "Info"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Information"
 msgstr "Informatie"
@@ -5937,13 +5971,13 @@ msgstr "Interne notities"
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__transfer
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Internal Transfer"
-msgstr "Interne mutatie"
+msgstr "Interne overboeking"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_payments_transfer
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Internal Transfers"
-msgstr "Interne verplaatsingen"
+msgstr "Interne overboekingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__internal_type
@@ -7415,6 +7449,12 @@ msgid "No attachment was provided"
 msgstr "Er was geen bijlage aangeleverd"
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "No default debit and credit account defined on journal %s (ids: %s)."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "No move from this reconciliation model"
@@ -7804,6 +7844,7 @@ msgstr "Begin aantal"
 
 #. module: account
 #: code:addons/account/models/account.py:0
+#: code:addons/account/models/account.py:0
 #, python-format
 msgid "Opening balance"
 msgstr "Openingssaldo"
@@ -8188,6 +8229,7 @@ msgid "Payment Method Type"
 msgstr "Betaalwijze soort"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_bank_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Method Types"
 msgstr "Betalingsmethodesoorten"
@@ -8597,6 +8639,13 @@ msgid ""
 msgstr ""
 "Voorinstelling om boekingen aan te maken bij het afletteren van facturen met"
 " betalingen"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:0
+#, python-format
+msgid "Presets config"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9181,7 +9230,8 @@ msgstr "Beperk relaties tot"
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_same_currency
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
-msgstr "Beperk tot voorstellen met dezelfde valuta als de verrichtingsregel."
+msgstr ""
+"Beperk het voorstel tot regels met dezelfde valuta als de afschriftregel."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
@@ -9794,10 +9844,13 @@ msgstr ""
 "sjabloon bij het laden van het onderliggende sjaboon."
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #: model:ir.actions.act_window,name:account.action_account_config
 #: model:ir.actions.act_window,name:account.action_open_settings
 #: model:ir.ui.menu,name:account.menu_account_config
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, python-format
 msgid "Settings"
 msgstr "Instellingen"
 
@@ -10143,11 +10196,6 @@ msgstr "Stel een tegenrekening voor."
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_rank
 msgid "Supplier Rank"
 msgstr "Leveranciersrang"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.res_partner_action_supplier
-msgid "Suppliers"
-msgstr "Leveranciers"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
@@ -11323,8 +11371,8 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
 msgstr ""
-"Het aflettermodel zal enkel toegepast worden op de geselcteerde "
-"klanten/leveranciers categorien."
+"Het aflettermodel zal enkel toegepast worden op de geselecteerde "
+"klanten/leveranciers categorieën."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_ids
@@ -11333,7 +11381,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customers/vendors."
 msgstr ""
-"het aflettermodel zal enkel toegepast worden op de geslecteerde "
+"Het aflettermodel zal enkel toegepast worden op de geselecteerde "
 "klanten/leveranciers."
 
 #. module: account
@@ -11345,7 +11393,7 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
-"Het aflettermodel zal enkel toegepast worden op het geselecteerde verrchting type:\n"
+"Het aflettermodel zal enkel toegepast worden op het geselecteerde verrichtingtype:\n"
 "        * Ontvangen bedrag: Enkel toegepast indien bedrag ontvangen.\n"
 "        * Bedrag betaald: Enkel toegepast indien bedrag betaald.\n"
 "        * Bedrag betaald/ontvangen: Toegepast in beide gevallen."
@@ -11367,7 +11415,7 @@ msgid ""
 "than, greater than or between specified amount(s)."
 msgstr ""
 "Het aflettermodel zal enkel toegepast worden indien het bedrag kleiner dan, "
-"groter dan of tussen gespecifieerde bedrag(en) ligt."
+"groter dan of tussen gespecificeerde bedrag(en) ligt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -11455,8 +11503,8 @@ msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount under this percentage."
 msgstr ""
-"De som van de voorgestelde totale restwaarde matches het totale bedrag van "
-"de verrichting volgens het percentage."
+"Het voorstel van de som van het totale restbedrag is lager dat dit "
+"percentage."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_total_amount
@@ -11465,8 +11513,8 @@ msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount."
 msgstr ""
-"De som van de voorgestelde totale restwaarde komt overeen met het totale "
-"bedrag van de verrichting."
+"Het voorstel van de som van het totale restbedrag komt overeen met het "
+"totale bedrag van de afschriftregel."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_report_line_ids
@@ -11524,6 +11572,14 @@ msgid ""
 msgstr ""
 "Er zijn nog ongeboekte boekingen in de periode die u wilt afsluiten. U dient"
 " deze te boeken of te verwijderen."
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"There is more than one receivable/payable account in the concerned invoices."
+" You cannot group payments in that case."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12431,6 +12487,7 @@ msgid "Vendor Taxes"
 msgstr "Inkoop BTW"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #: model:ir.ui.menu,name:account.menu_finance_payables
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
@@ -12721,6 +12778,56 @@ msgstr ""
 "naar dat bijzonder factuur bij het uitvoeren van de betaling."
 
 #. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your account since there are some journal "
+"items linked to it."
+msgstr ""
+"U kunt het bedrijf van uw rekening niet wijzigen, omdat er een aantal "
+"boekingen aan zijn gekoppeld."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your journal since there are some journal "
+"entries linked to it."
+msgstr ""
+"U kunt het bedrijf van uw dagboek niet wijzigen, omdat er een aantal "
+"boekingen aan zijn gekoppeld."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your tax since there are some journal items "
+"linked to it."
+msgstr ""
+"U kunt het bedrijf van uw BTW niet wijzigen, omdat er een aantal boekingen "
+"aan zijn gekoppeld."
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic account since there are "
+"some journal items linked to it."
+msgstr ""
+"U kunt het bedrijf van uw kostenplaats niet wijzigen, omdat er een aantal "
+"boekingen aan zijn gekoppeld."
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic tags since there are some"
+" journal items linked to it."
+msgstr ""
+"U kunt het bedrijf van uw kostenplaatslabels niet wijzigen, omdat er een "
+"aantal boekingen aan zijn gekoppeld."
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13001,6 +13108,12 @@ msgstr ""
 "U kunt geen factuur bevestigen met een negatief totaalbedrag. Maak hiervoor "
 "een creditfactuur aan. Gebruik het actiemenu om deze factuur om te zetten in"
 " een creditfactuur."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You don't have the access rights to post an invoice."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13299,53 +13412,3 @@ msgstr "leveranciersfacturen"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Telling"
-
-#. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid ""
-"You can't change the company of your account since there are some journal "
-"items linked to it."
-msgstr ""
-"U kunt het bedrijf van uw rekening niet wijzigen, omdat er een aantal "
-"boekingen aan zijn gekoppeld."
-
-#. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid ""
-"You can't change the company of your journal since there are some journal "
-"entries linked to it."
-msgstr ""
-"U kunt het bedrijf van uw dagboek niet wijzigen, omdat er een aantal "
-"boekingen aan zijn gekoppeld."
-
-#. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid ""
-"You can't change the company of your tax since there are some journal items "
-"linked to it."
-msgstr ""
-"U kunt het bedrijf van uw BTW niet wijzigen, omdat er een aantal boekingen "
-"aan zijn gekoppeld."
-
-#. module: account
-#: code:addons/account/models/account_analytic_line.py:0
-#, python-format
-msgid ""
-"You can't set a different company on your analytic account since there are "
-"some journal items linked to it."
-msgstr ""
-"U kunt het bedrijf van uw kostenplaats niet wijzigen, omdat er een aantal "
-"boekingen aan zijn gekoppeld."
-
-#. module: account
-#: code:addons/account/models/account_analytic_line.py:0
-#, python-format
-msgid ""
-"You can't set a different company on your analytic tags since there are some"
-" journal items linked to it."
-msgstr ""
-"U kunt het bedrijf van uw kostenplaatslabels niet wijzigen, omdat er een "
-"aantal boekingen aan zijn gekoppeld."

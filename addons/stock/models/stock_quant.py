@@ -51,15 +51,13 @@ class StockQuant(models.Model):
         'product.product', 'Product',
         domain=lambda self: self._domain_product_id(),
         ondelete='restrict', readonly=True, required=True, index=True, check_company=True)
-    # so user can filter on template in webclient
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
         related='product_id.product_tmpl_id', readonly=False)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         readonly=True, related='product_id.uom_id')
-    company_id = fields.Many2one(related='location_id.company_id',
-        string='Company', store=True, readonly=True)
+    company_id = fields.Many2one(related='location_id.company_id', string='Company', store=True, readonly=True)
     location_id = fields.Many2one(
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),
@@ -89,6 +87,7 @@ class StockQuant(models.Model):
         readonly=True, required=True)
     in_date = fields.Datetime('Incoming Date', readonly=True)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
+    on_hand = fields.Boolean('On Hand', store=False, search='_search_on_hand')
 
     @api.depends('quantity')
     def _compute_inventory_quantity(self):
@@ -118,6 +117,18 @@ class StockQuant(models.Model):
                 move_vals = quant._get_inventory_move_values(-diff, quant.location_id, quant.product_id.with_context(force_company=quant.company_id.id or self.env.company.id).property_stock_inventory, out=True)
             move = quant.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
             move._action_done()
+
+    def _search_on_hand(self, operator, value):
+        """Handle the "on_hand" filter, indirectly calling `_get_domain_locations`."""
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
+        domain_loc = self.env['product.product']._get_domain_locations()[0]
+        quant_ids = [l['id'] for l in self.env['stock.quant'].search_read(domain_loc, ['id'])]
+        if (operator == '!=' and value is True) or (operator == '=' and value is False):
+            domain_operator = 'not in'
+        else:
+            domain_operator = 'in'
+        return [('id', domain_operator, quant_ids)]
 
     @api.model
     def create(self, vals):
@@ -484,7 +495,7 @@ class StockQuant(models.Model):
         """
         precision_digits = max(6, self.sudo().env.ref('product.decimal_product_uom').digits * 2)
         # Use a select instead of ORM search for UoM robustness.
-        query = """SELECT id FROM stock_quant WHERE round(quantity::numeric, %s) = 0 AND round(reserved_quantity::numeric, %s) = 0;"""
+        query = """SELECT id FROM stock_quant WHERE (round(quantity::numeric, %s) = 0 OR quantity IS NULL) AND round(reserved_quantity::numeric, %s) = 0;"""
         params = (precision_digits, precision_digits)
         self.env.cr.execute(query, params)
         quant_ids = self.env['stock.quant'].browse([quant['id'] for quant in self.env.cr.dictfetchall()])

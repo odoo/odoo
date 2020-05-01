@@ -51,6 +51,9 @@ const INTERVAL_OPTIONS = [
     { description: _lt('Week'), optionId: 'week', groupId: 1 },
     { description: _lt('Day'), optionId: 'day', groupId: 1 },
 ];
+function rank(oId) {
+    return INTERVAL_OPTIONS.findIndex(o => o.optionId === oId);
+}
 
 // for TimeRangeMenu
 const DEFAULT_TIMERANGE = DEFAULT_PERIOD;
@@ -71,6 +74,7 @@ return {
     PERIOD_OPTIONS: PERIOD_OPTIONS,
     TIME_RANGE_OPTIONS: TIME_RANGE_OPTIONS,
     YEAR_OPTIONS: YEAR_OPTIONS,
+    rank: rank,
 };
 
 });

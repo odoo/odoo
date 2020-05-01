@@ -294,8 +294,14 @@
     /* Create view */
     .create {
         > div > div.quick_add > .o_reconcile_models {
-            max-height: 54px;
+            max-width: 100%;
+            max-height: 70px;
+            flex-wrap: wrap;
             overflow: auto;
+
+            & > * {
+                flex-grow: 0;
+            }
         }
         .quick_add {
             margin-bottom: 7px;

@@ -162,7 +162,8 @@ tour.register('shop_sale_coupon', {
             trigger: 'a[href="/shop/checkout?express=1"]',
         },
         {
-            content: "check total is unchanged",
+            content: "check total is unchanged once we land on payment page",
+            extra_trigger: '#payment_method h3:contains("Pay with")',
             trigger: 'tr#order_total .oe_currency_value:contains("967.50")',
             run: function () {}, // it's a check
         },

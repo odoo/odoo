@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import Form
 from odoo.tests.common import SavepointCase
 from odoo.tools import float_round
 from odoo.exceptions import UserError
@@ -355,3 +356,273 @@ class TestPacking(SavepointCase):
         picking.action_confirm()
         with self.assertRaises(UserError):
             picking.action_done()
+
+    def test_pack_in_receipt_two_step_single_putway(self):
+        """ Checks all works right in the following specific corner case:
+
+          * For a two-step receipt, receives two products using the same putaway
+          * Puts these products in a package then valid the receipt.
+          * Cancels the automatically generated internal transfer then create a new one.
+          * In this internal transfer, adds the package then valid it.
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        grp_multi_step_rule = self.env.ref('stock.group_adv_location')
+        grp_pack = self.env.ref('stock.group_tracking_lot')
+        self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(3, grp_multi_step_rule.id)]})
+        self.env.user.write({'groups_id': [(3, grp_pack.id)]})
+        self.warehouse.reception_steps = 'two_steps'
+        # Settings of receipt.
+        self.warehouse.in_type_id.show_operations = True
+        self.warehouse.in_type_id.show_entire_packs = True
+        self.warehouse.in_type_id.show_reserved = True
+        # Settings of internal transfer.
+        self.warehouse.int_type_id.show_operations = True
+        self.warehouse.int_type_id.show_entire_packs = True
+        self.warehouse.int_type_id.show_reserved = True
+
+        # Creates two new locations for putaway.
+        location_form = Form(self.env['stock.location'])
+        location_form.name = 'Shelf A'
+        location_form.location_id = self.stock_location
+        loc_shelf_A = location_form.save()
+
+        # Creates a new putaway rule for productA and productB.
+        putaway_A = self.env['stock.putaway.rule'].create({
+            'product_id': self.productA.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': loc_shelf_A.id,
+        })
+        putaway_B = self.env['stock.putaway.rule'].create({
+            'product_id': self.productB.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': loc_shelf_A.id,
+        })
+        self.stock_location.putaway_rule_ids = [(4, putaway_A.id, 0), (4, putaway_B.id, 0)]
+
+        # Create a new receipt with the two products.
+        receipt_form = Form(self.env['stock.picking'])
+        receipt_form.picking_type_id = self.warehouse.in_type_id
+        # Add 2 lines
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productA
+            move_line.product_uom_qty = 1
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productB
+            move_line.product_uom_qty = 1
+        receipt = receipt_form.save()
+        receipt.action_confirm()
+
+        # Adds quantities then packs them and valids the receipt.
+        receipt_form = Form(receipt)
+        with receipt_form.move_line_ids_without_package.edit(0) as move_line:
+            move_line.qty_done = 1
+        with receipt_form.move_line_ids_without_package.edit(1) as move_line:
+            move_line.qty_done = 1
+        receipt = receipt_form.save()
+        receipt.put_in_pack()
+        receipt.button_validate()
+
+        receipt_package = receipt.package_level_ids_details[0]
+        self.assertEqual(receipt_package.location_dest_id.id, receipt.location_dest_id.id)
+        self.assertEqual(
+            receipt_package.move_line_ids[0].location_dest_id.id,
+            receipt.location_dest_id.id)
+        self.assertEqual(
+            receipt_package.move_line_ids[1].location_dest_id.id,
+            receipt.location_dest_id.id)
+
+        # Checks an internal transfer was created following the validation of the receipt.
+        internal_transfer = self.env['stock.picking'].search([
+            ('picking_type_id', '=', self.warehouse.int_type_id.id)
+        ], order='id desc', limit=1)
+        self.assertEqual(internal_transfer.origin, receipt.name)
+        self.assertEqual(
+            len(internal_transfer.package_level_ids_details), 1)
+        internal_package = internal_transfer.package_level_ids_details[0]
+        self.assertNotEqual(
+            internal_package.location_dest_id.id,
+            internal_transfer.location_dest_id.id)
+        self.assertEqual(
+            internal_package.location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The package destination location must be the one from the putaway.")
+        self.assertEqual(
+            internal_package.move_line_ids[0].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the putaway.")
+        self.assertEqual(
+            internal_package.move_line_ids[1].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the putaway.")
+
+        # Cancels the internal transfer and creates a new one.
+        internal_transfer.action_cancel()
+        internal_form = Form(self.env['stock.picking'])
+        internal_form.picking_type_id = self.warehouse.int_type_id
+        internal_form.location_id = self.warehouse.wh_input_stock_loc_id
+        with internal_form.package_level_ids_details.new() as pack_line:
+            pack_line.package_id = receipt_package.package_id
+        internal_transfer = internal_form.save()
+
+        # Checks the package fields have been correctly set.
+        internal_package = internal_transfer.package_level_ids_details[0]
+        self.assertEqual(
+            internal_package.location_dest_id.id,
+            internal_transfer.location_dest_id.id)
+        internal_transfer.action_assign()
+        self.assertNotEqual(
+            internal_package.location_dest_id.id,
+            internal_transfer.location_dest_id.id)
+        self.assertEqual(
+            internal_package.location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The package destination location must be the one from the putaway.")
+        self.assertEqual(
+            internal_package.move_line_ids[0].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the putaway.")
+        self.assertEqual(
+            internal_package.move_line_ids[1].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the putaway.")
+        internal_transfer.button_validate()
+
+    def test_pack_in_receipt_two_step_multi_putaway(self):
+        """ Checks all works right in the following specific corner case:
+
+          * For a two-step receipt, receives two products using two putaways
+          targeting different locations.
+          * Puts these products in a package then valid the receipt.
+          * Cancels the automatically generated internal transfer then create a new one.
+          * In this internal transfer, adds the package then valid it.
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        grp_multi_step_rule = self.env.ref('stock.group_adv_location')
+        grp_pack = self.env.ref('stock.group_tracking_lot')
+        self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(3, grp_multi_step_rule.id)]})
+        self.env.user.write({'groups_id': [(3, grp_pack.id)]})
+        self.warehouse.reception_steps = 'two_steps'
+        # Settings of receipt.
+        self.warehouse.in_type_id.show_operations = True
+        self.warehouse.in_type_id.show_entire_packs = True
+        self.warehouse.in_type_id.show_reserved = True
+        # Settings of internal transfer.
+        self.warehouse.int_type_id.show_operations = True
+        self.warehouse.int_type_id.show_entire_packs = True
+        self.warehouse.int_type_id.show_reserved = True
+
+        # Creates two new locations for putaway.
+        location_form = Form(self.env['stock.location'])
+        location_form.name = 'Shelf A'
+        location_form.location_id = self.stock_location
+        loc_shelf_A = location_form.save()
+        location_form = Form(self.env['stock.location'])
+        location_form.name = 'Shelf B'
+        location_form.location_id = self.stock_location
+        loc_shelf_B = location_form.save()
+
+        # Creates a new putaway rule for productA and productB.
+        putaway_A = self.env['stock.putaway.rule'].create({
+            'product_id': self.productA.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': loc_shelf_A.id,
+        })
+        putaway_B = self.env['stock.putaway.rule'].create({
+            'product_id': self.productB.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': loc_shelf_B.id,
+        })
+        self.stock_location.putaway_rule_ids = [(4, putaway_A.id, 0), (4, putaway_B.id, 0)]
+        # location_form = Form(self.stock_location)
+        # location_form.putaway_rule_ids = [(4, putaway_A.id, 0), (4, putaway_B.id, 0), ],
+        # self.stock_location = location_form.save()
+
+        # Create a new receipt with the two products.
+        receipt_form = Form(self.env['stock.picking'])
+        receipt_form.picking_type_id = self.warehouse.in_type_id
+        # Add 2 lines
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productA
+            move_line.product_uom_qty = 1
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productB
+            move_line.product_uom_qty = 1
+        receipt = receipt_form.save()
+        receipt.action_confirm()
+
+        # Adds quantities then packs them and valids the receipt.
+        receipt_form = Form(receipt)
+        with receipt_form.move_line_ids_without_package.edit(0) as move_line:
+            move_line.qty_done = 1
+        with receipt_form.move_line_ids_without_package.edit(1) as move_line:
+            move_line.qty_done = 1
+        receipt = receipt_form.save()
+        receipt.put_in_pack()
+        receipt.button_validate()
+
+        receipt_package = receipt.package_level_ids_details[0]
+        self.assertEqual(receipt_package.location_dest_id.id, receipt.location_dest_id.id)
+        self.assertEqual(
+            receipt_package.move_line_ids[0].location_dest_id.id,
+            receipt.location_dest_id.id)
+        self.assertEqual(
+            receipt_package.move_line_ids[1].location_dest_id.id,
+            receipt.location_dest_id.id)
+
+        # Checks an internal transfer was created following the validation of the receipt.
+        internal_transfer = self.env['stock.picking'].search([
+            ('picking_type_id', '=', self.warehouse.int_type_id.id)
+        ], order='id desc', limit=1)
+        self.assertEqual(internal_transfer.origin, receipt.name)
+        self.assertEqual(
+            len(internal_transfer.package_level_ids_details), 1)
+        internal_package = internal_transfer.package_level_ids_details[0]
+        self.assertEqual(
+            internal_package.location_dest_id.id,
+            internal_transfer.location_dest_id.id)
+        self.assertNotEqual(
+            internal_package.location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The package destination location must be the one from the picking.")
+        self.assertNotEqual(
+            internal_package.move_line_ids[0].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the picking.")
+        self.assertNotEqual(
+            internal_package.move_line_ids[1].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the picking.")
+
+        # Cancels the internal transfer and creates a new one.
+        internal_transfer.action_cancel()
+        internal_form = Form(self.env['stock.picking'])
+        internal_form.picking_type_id = self.warehouse.int_type_id
+        internal_form.location_id = self.warehouse.wh_input_stock_loc_id
+        with internal_form.package_level_ids_details.new() as pack_line:
+            pack_line.package_id = receipt_package.package_id
+        internal_transfer = internal_form.save()
+
+        # Checks the package fields have been correctly set.
+        internal_package = internal_transfer.package_level_ids_details[0]
+        self.assertEqual(
+            internal_package.location_dest_id.id,
+            internal_transfer.location_dest_id.id)
+        internal_transfer.action_assign()
+        self.assertEqual(
+            internal_package.location_dest_id.id,
+            internal_transfer.location_dest_id.id)
+        self.assertNotEqual(
+            internal_package.location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The package destination location must be the one from the picking.")
+        self.assertNotEqual(
+            internal_package.move_line_ids[0].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the picking.")
+        self.assertNotEqual(
+            internal_package.move_line_ids[1].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the picking.")
+        internal_transfer.button_validate()

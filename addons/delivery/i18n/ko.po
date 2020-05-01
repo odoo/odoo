@@ -305,14 +305,14 @@ msgstr "배송 방법"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr "배송 상품 포장 선택 마법사"
+msgstr "꾸러미 상품 배송 선택 마법사"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
-msgstr "배송 상품 포장"
+msgstr "꾸러미 상품 배송"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
@@ -449,7 +449,7 @@ msgstr "주문 금액이 기준을 초과하면 무료"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "Generate Return Label"
-msgstr "반송 라벨 생성"
+msgstr "반송 꼬리표 생성"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
@@ -464,7 +464,7 @@ msgstr "요율 가져오기 및 적하물 작성"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr "그룹화"
+msgstr "그룹별"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_product__hs_code
@@ -643,30 +643,30 @@ msgstr "주문"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr "상품 포장"
+msgstr "꾸러미 상품"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__shipper_package_code
 msgid "Package Code"
-msgstr "상품 포장 코드"
+msgstr "꾸러미 상품 코드"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid "Package Details"
-msgstr "상품 포장 내용"
+msgstr "꾸러미 상품 내용"
 
 #. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid "Package too heavy!"
-msgstr "상품 포장이 너무 무겁습니다!"
+msgstr "꾸러미 상품이 너무 무겁습니다!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__package_ids
 msgid "Packages"
-msgstr "상품 포장"
+msgstr "꾸러미 상품"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__picking_id
@@ -699,7 +699,7 @@ msgstr "가격 책정 규칙"
 #: model_terms:ir.ui.view,arch_db:delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
-msgstr "반송 라벨 인쇄"
+msgstr "반송 꼬리표 인쇄"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
@@ -738,12 +738,12 @@ msgstr "실제 비용"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
-msgstr "반송 이름표"
+msgstr "반송 꼬리표"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid "Return Label Accessible from Customer Portal"
-msgstr "고객 포털에서 반송 이름표를 사용할 수 있음"
+msgstr "고객 포털에서 반송 꼬리표를 사용할 수 있음"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -850,7 +850,7 @@ msgstr "국제 운송 및 상품 신고를 위한 표준화된 코드. 현재는
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
 msgid "States"
-msgstr "주/도"
+msgstr "시/도"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -868,12 +868,12 @@ msgstr "게시물"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
-msgstr "반송 이름표는 고객이 고객 포털에서 다운로드할 수 있습니다."
+msgstr "반송 꼬리표는 고객이 고객 포털에서 다운로드할 수 있습니다."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
-msgstr "반송 이름표는 배송 시 자동으로 생성됩니다."
+msgstr "반송 꼬리표는 배송 시 자동으로 생성됩니다."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:0
@@ -893,7 +893,7 @@ msgstr "선적료는 배송이 완료되면 설정됩니다."
 msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
-msgstr "상품 포장 무게가 이 상품 포장 유형에 대해 승인된 최대 중량보다 큽니다. 다른 상품 포장 유형을 선택하세요."
+msgstr "꾸러미 상품 무게가 이 꾸러미 상품 유형에 대해 승인된 최대 중량보다 큽니다. 다른 꾸러미 상품 유형을 선택하세요."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:0
@@ -919,19 +919,19 @@ msgstr "이 비율로 선적 비용에 추가됩니다."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
 msgid "Total weight of all the products contained in the package."
-msgstr "패키지로 묶여진 모든 제품의 전체 무게"
+msgstr "꾸러미 상품으로 묶여진 모든 제품의 전체 무게"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
 msgid "Total weight of the package."
-msgstr "패키지의 총 중량"
+msgstr "꾸러미 상품의 총 중량"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__shipping_weight
 msgid ""
 "Total weight of the packages and products which are not in a package. That's"
 " the weight used to compute the cost of the shipping."
-msgstr "패키지에 포함되지 않은 제품과 패키지의 총 중량입니다. 배송비를 계산하는 데 사용되는 무게입니다."
+msgstr "꾸러미 상품에 포함되지 않은 제품과 꾸러미 상품의 총 중량입니다. 배송비를 계산하는 데 사용되는 무게입니다."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight
@@ -1038,7 +1038,7 @@ msgstr "선적 중량"
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "측정 라벨의 중량 단위"
+msgstr "측정 꼬리표의 중량 단위"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__width

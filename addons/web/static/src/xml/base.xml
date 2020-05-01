@@ -285,17 +285,17 @@
     <main role="alert">
         <p>
             <t t-if="changes.nbRecords != changes.nbValidRecords">
-                Among the <t t-raw="changes.nbRecords"/> selected records,
-                <t t-raw="changes.nbValidRecords"/> are valid for this update.<br/>
+                Among the <t t-esc="changes.nbRecords"/> selected records,
+                <t t-esc="changes.nbValidRecords"/> are valid for this update.<br/>
             </t>
-            Are you sure you want to perform the following update on those <t t-raw="changes.nbValidRecords"/> records ?
+            Are you sure you want to perform the following update on those <t t-esc="changes.nbValidRecords"/> records ?
         </p>
         <div class="table-responsive">
             <table class="o_modal_changes">
                 <tbody>
                     <tr>
                         <td>Field:</td>
-                        <td><t t-raw="changes.fieldLabel"/></td>
+                        <td><t t-esc="changes.fieldLabel"/></td>
                     </tr>
                     <tr>
                         <td>Update to:</td>
@@ -503,7 +503,7 @@
 
 <t t-name="FormSelection">
     <div class="btn-group o_selection" aria-atomic="true">
-        <a href="#" data-toggle="dropdown" aria-label="Dropdown menu" title="Dropdown menu"><span class="o_status"/></a>
+        <a href="#" data-toggle="dropdown" aria-expanded="false" role="button" title="Dropdown menu"><span class="o_status"/></a>
         <div class="dropdown-menu state" role="menu"/>
     </div>
 </t>
@@ -1063,7 +1063,7 @@
             <div t-if="group !== item.groupNumber" role="separator" class="dropdown-divider" data-removable="1"/>
             <div t-attf-class="o_menu_item"
                 t-att-data-id="item.id">
-                <a role="menuitem" href="#" t-attf-class="dropdown-item#{item.isActive ? ' selected ' : ''}">
+                <a role="menuitemcheckbox" t-att-aria-checked="item.isActive" href="#" t-attf-class="dropdown-item#{item.isActive ? ' selected ' : ''}">
                     <t t-esc="item.description"/>
                     <span t-if="item.isRemovable" t-att-data-id="item.id" class="o_trash_button" > <span class="fa fa-trash-o"></span> </span>
                     <span t-if="item.hasOptions" t-att-data-id="item.id" class="o_submenu_switcher">
@@ -1076,7 +1076,7 @@
                         <li t-if="subgroup !== option.groupId" role="separator" class="dropdown-divider" data-removable="1"/>
                         <li class="o_item_option"
                             t-att-data-item_id="item.id" t-att-data-option_id="option.optionId">
-                            <a role="menuitem" href="#" t-attf-class="dropdown-item#{item.currentOptionIds.has(option.optionId) ? ' selected': ''} pl-5"><t t-esc="option.description"/></a>
+                            <a role="menuitemcheckbox" t-att-aria-label="item.currentOptionIds.has(option.optionId)" href="#" t-attf-class="dropdown-item#{item.currentOptionIds.has(option.optionId) ? ' selected': ''} pl-5"><t t-esc="option.description"/></a>
                         </li>
                         <t t-set="subgroup" t-value="option.groupId"/>
                     </t>
@@ -1197,9 +1197,9 @@
 
 <div t-name="SearchView" class="o_searchview" role="search" aria-autocomplete="list">
     <t t-if="widget.isMobile">
+        <button class="o_enable_searchview btn btn-link fa fa-search"/>
         <t t-call="MobileSearchView"/>
         <button class="o_toggle_searchview_full o_hidden btn fa fa-filter"/>
-        <button class="o_enable_searchview btn btn-link fa fa-search"/>
     </t>
     <t t-else="">
         <span class="o_searchview_more fa" title="Advanced Search..." role="img" aria-label="Advanced Search..."/>
@@ -1458,7 +1458,7 @@
 <t t-name="UserMenu">
     <li class="o_user_menu">
         <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
-            <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="Avatar"/>
+            <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="User"/>
             <span class="oe_topbar_name"/>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu">
@@ -1478,31 +1478,33 @@
 
 <t t-name="SwitchCompanyMenu">
     <li class="o_switch_company_menu">
-        <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+        <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" title="Dropdown menu">
             <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}">
-                <t t-if="!widget.isMobile"><t t-raw="widget.current_company_name"/></t>
+                <t t-if="!widget.isMobile"><t t-esc="widget.current_company_name"/></t>
             </span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu">
             <t t-foreach="widget.user_companies" t-as="company">
-                <div role="menuitem" class="dropdown-item d-flex py-0 px-0" data-menu="company" t-att-data-company-id="company[0]">
-                    <div class="ml-auto pl-3 pr-3 border border-top-0 border-left-0 border-bottom-0 toggle_company o_py">
+                <div class="dropdown-item d-flex py-0 px-0" data-menu="company" t-att-data-company-id="company[0]">
+                    <t t-set="is_allowed" t-value="widget.allowed_company_ids.includes(company[0])"/>
+                    <t t-set="is_current" t-value="company[0] === widget.current_company"/>
+                    <div role="menuitemcheckbox" t-att-aria-checked="is_allowed" t-att-aria-label="company[1]" tabindex="0" class="ml-auto pl-3 pr-3 border border-top-0 border-left-0 border-bottom-0 toggle_company o_py">
                         <span style="height: 2rem;">
-                            <t t-if="widget.allowed_company_ids.includes(company[0])">
+                            <t t-if="is_allowed">
                                 <i class="fa fa-fw fa-check-square pt-2"></i>
                             </t>
-                            <t t-if="!widget.allowed_company_ids.includes(company[0])">
+                            <t t-if="!is_allowed">
                                 <i class="fa fa-fw fa-square-o pt-2"></i>
                             </t>
                         </span>
                     </div>
-                    <div class="d-flex flex-grow-1 align-items-center py-0 log_into pl-3 o_py" t-att-style="company[0] === widget.current_company ? 'background-color: lightgrey;' : ''">
-                        <t t-if="widget.allowed_company_ids.includes(company[0])">
+                    <div role="button" t-att-aria-pressed="is_current" aria-label="Switch to this company" tabindex="0" class="d-flex flex-grow-1 align-items-center py-0 log_into pl-3 o_py" t-att-style="is_current ? 'background-color: lightgrey;' : ''">
+                        <t t-if="is_allowed">
                             <span class='mr-3 company_label'>
                                 <t t-esc="company[1]"/>
                             </span>
                         </t>
-                        <t t-if="!widget.allowed_company_ids.includes(company[0])">
+                        <t t-if="!is_allowed">
                             <span class='mr-3 company_label text-muted'>
                                 <t t-esc="company[1]"/>
                             </span>

@@ -70,7 +70,7 @@
                 </div>
                 <div class="row no-gutters">
                     <div class="col-md-4 offset-md-8 py-2 pl-md-0 pr-md-2">
-                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-att-disabled="not tickets_available or None" t-attf-id="#{event.id}">Register</button>
+                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-att-disabled="not tickets_available or None" t-attf-id="#{event.id}">Register<t t-if="event.seats_availability != 'unlimited'">(Available seats: <t t-esc="event.seats_available"/>)</t></button>
                     </div>
                 </div>
             </div>

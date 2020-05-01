@@ -12,5 +12,24 @@
 /* ---- Order page ---- */
 
 .sale_tbody .o_line_note {
-    word-break: break-all;
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.o_portal .sale_tbody .js_quantity_container {
+    width: 50%;
+
+    .js_quantity {
+        text-align: center;
+        padding: 0;
+    }
+
+    .input-group-text {
+        padding: 0.2rem 0.4rem;
+    }
+
+    @include media-breakpoint-down(sm) {
+        width: 100%;
+    }
 }

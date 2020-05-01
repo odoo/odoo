@@ -306,10 +306,9 @@ class Lead(models.Model):
         if optional_field_name and optional_field_name not in self._pls_get_safe_fields():
             return
         lead_probabilities = self._pls_get_naive_bayes_probabilities()
-        if self.id in lead_probabilities:
-            self.automated_probability = lead_probabilities[self.id]
-            if self._origin.is_automated_probability:
-                self.probability = self.automated_probability
+        self.automated_probability = lead_probabilities.get(self.id, 0)
+        if self._origin.is_automated_probability:
+            self.probability = self.automated_probability
 
     @api.onchange('stage_id')
     def _onchange_stage_id(self):
@@ -432,7 +431,7 @@ class Lead(models.Model):
         return write_result
 
     def _update_probability(self):
-        lead_probabilities = self._pls_get_naive_bayes_probabilities()
+        lead_probabilities = self.sudo()._pls_get_naive_bayes_probabilities()
         for lead in self:
             if lead.id in lead_probabilities:
                 lead_proba = lead_probabilities[lead.id]

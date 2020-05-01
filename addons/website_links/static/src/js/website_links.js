@@ -31,6 +31,9 @@ var SelectBox = publicWidget.Widget.extend({
         defs.push(this._rpc({
             model: this.obj,
             method: 'search_read',
+            params: {
+                fields: ['id', 'name'],
+            },
         }).then(function (result) {
             self.objects = _.map(result, function (val) {
                 return {id: val.id, text: val.name};

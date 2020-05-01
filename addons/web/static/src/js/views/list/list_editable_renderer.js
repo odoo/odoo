@@ -391,12 +391,10 @@ ListRenderer.include({
             // we want to always keep at least 4 (possibly empty) rows
             var $emptyRow = this._renderEmptyRow();
             $row.replaceWith($emptyRow);
-            if (this.editable === "top") {
-                // move the empty row we just inserted after data rows
-                var $lastDataRow = this.$('.o_data_row:last');
-                if ($lastDataRow.length) {
-                    $emptyRow.insertAfter($lastDataRow);
-                }
+            // move the empty row we just inserted after last data row
+            const $lastDataRow = this.$('.o_data_row:last');
+            if ($lastDataRow.length) {
+                $emptyRow.insertAfter($lastDataRow);
             }
         }
     },
@@ -660,7 +658,7 @@ ListRenderer.include({
         const table = this.el.getElementsByTagName('table')[0];
         let columnWidths = this.columnWidths;
 
-        if (!columnWidths) { // no column widths to restore
+        if (!columnWidths || !columnWidths.length) { // no column widths to restore
             // Set table layout auto and remove inline style to make sure that css
             // rules apply (e.g. fixed width of record selector)
             table.style.tableLayout = 'auto';

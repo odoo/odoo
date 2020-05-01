@@ -9,6 +9,9 @@
 .ui-autocomplete {
     z-index: $zindex-modal + 1;
     max-width: 600px;
+    .ui-menu-item > a {
+        display: block;
+    }
 }
 
 [aria-hidden="true"], [aria-hidden="1"] {
@@ -89,6 +92,7 @@ span.o_force_ltr {
     display: inline-block;
 }
 .o_force_ltr, .o_field_phone {
+    unicode-bidi: embed; // ensure element has level of embedding for direction
     /*rtl:ignore*/
     direction: ltr;
 }
@@ -132,6 +136,10 @@ span.o_force_ltr {
 }
 
 .o_image_128_max {
-    max-width: 128px;
-    max-height: 128px;
+    max-width: 128px !important;
+    max-height: 128px !important;
+}
+
+.o_width_128 {
+    width: 128px;
 }

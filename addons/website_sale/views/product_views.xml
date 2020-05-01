@@ -172,6 +172,19 @@
         </field>
     </record>
 
+    <record id="website_sale_pricelist_form_view2" model="ir.ui.view">
+        <field name="name">website_sale.pricelist.form.2</field>
+        <field name="inherit_id" ref="product.product_pricelist_view" />
+        <field name="model">product.pricelist</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <xpath expr='//field[@name="item_ids"]/tree' position='inside'>
+                <!-- this field should have been added by 9b62813cddb2726003b4b989c32185400059dfa1 -->
+                <!-- but it might be missing in dbs where "product" has been installed before this fix -->
+                <field name="company_id" invisible='1'/>
+            </xpath>
+          </field>
+    </record>
     <record id="website_sale_pricelist_form_view" model="ir.ui.view">
         <field name="name">website_sale.pricelist.form</field>
         <field name="inherit_id" ref="product.product_pricelist_view" />

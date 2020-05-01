@@ -40,6 +40,7 @@ class StockRule(models.Model):
             schedule_date = (procurement_date_planned - relativedelta(days=procurement.company_id.po_lead))
 
             supplier = procurement.product_id._select_seller(
+                partner_id=procurement.values.get("supplier_id"),
                 quantity=procurement.product_qty,
                 date=schedule_date.date(),
                 uom_id=procurement.product_uom)
@@ -221,7 +222,7 @@ class StockRule(models.Model):
             price_unit = seller.currency_id._convert(
                 price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.today())
 
-        product_lang = product_id.with_context(
+        product_lang = product_id.with_prefetch().with_context(
             lang=partner.lang,
             partner_id=partner.id,
         )

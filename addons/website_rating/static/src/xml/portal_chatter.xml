@@ -52,7 +52,7 @@
     <t t-name="website_rating.chatter_rating_publisher">
         <div class="o_wrating_publisher_container">
             <button t-if="is_publisher"
-                t-attf-class="btn px-2 btn-sm border o_wrating_js_publisher_comment_btn {{ rating.publisher_comment !== '' ? 'd-none' : '' }}"
+                t-attf-class="btn px-2 mb-2 btn-sm border o_wrating_js_publisher_comment_btn {{ rating.publisher_comment !== '' ? 'd-none' : '' }}"
                 t-att-data-mes_index="rating.mes_index">
                 <i class="fa fa-comment text-muted mr-1"/>Comment
             </button>
@@ -68,7 +68,7 @@
             <div class="media-body">
                 <div class="o_portal_chatter_message_title">
                     <div class="d-inline-block">
-                        <h5><t t-esc="rating.publisher_name"/></h5>
+                        <h5 class="mb-1"><t t-esc="rating.publisher_name"/></h5>
                     </div>
                     <div t-if="is_publisher" class="dropdown d-inline-block">
                         <button class="btn py-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -94,7 +94,7 @@
             <img class="o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
             <div class="media-body">
                 <div class="o_portal_chatter_message_title">
-                    <h5><t t-esc="rating.publisher_name"/></h5>
+                    <h5 class='mb-1'><t t-esc="rating.publisher_name"/></h5>
                     <p>Published on <t t-esc="rating.publisher_datetime"/></p>
                 </div>
                 <textarea rows="3" class="form-control o_portal_rating_comment_input"><t t-esc="rating.publisher_comment"/></textarea>

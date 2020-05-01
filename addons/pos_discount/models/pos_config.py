@@ -19,6 +19,6 @@ class PosConfig(models.Model):
 
     @api.model
     def _default_discount_value_on_module_install(self):
-        configs = self.env['pos.config'].search([])
+        configs = self.env['pos.config'].search([]).filtered(lambda c: not c.current_session_id)
         for conf in configs:
             conf._default_discount_product_id()

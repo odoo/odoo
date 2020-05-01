@@ -75,7 +75,6 @@ class l10n_eu_service(models.TransientModel):
             'factor_percent': line.factor_percent,
             'repartition_type': line.repartition_type,
             'account_id': line.repartition_type == 'tax' and (self.account_collected_id.id or line.account_id.id) or None,
-            'tag_ids': [(6, 0, line.tag_ids.ids)],
             'company_id': line.company_id.id,
             'sequence': line.sequence,
         }) for line in original_rep_lines]

@@ -179,8 +179,6 @@ var ThemeCustomizeDialog = Dialog.extend({
 
         // Enable the first option tab or the given default tab
         this.opened().then(function () {
-            $tabs.eq(self.defaultTab).tab('show');
-
             // Hack to hide primary/secondary if they are equal to alpha/beta
             // (this is the case with default values but not in some themes).
             var $primary = self.$('.o_theme_customize_color[data-color="primary"]');
@@ -188,8 +186,8 @@ var ThemeCustomizeDialog = Dialog.extend({
             var $secondary = self.$('.o_theme_customize_color[data-color="secondary"]');
             var $beta = self.$('.o_theme_customize_color[data-color="beta"]');
 
-            var sameAlphaPrimary = $primary.css('background-color') === $alpha.css('background-color');
-            var sameBetaSecondary = $secondary.css('background-color') === $beta.css('background-color');
+            var sameAlphaPrimary = self.style.getPropertyValue('--is-alpha-primary').trim() == 'true';
+            var sameBetaSecondary = self.style.getPropertyValue('--is-beta-secondary').trim() == 'true';
 
             if (!sameAlphaPrimary) {
                 $alpha.prev().text(_t("Extra Color"));
@@ -211,6 +209,9 @@ var ThemeCustomizeDialog = Dialog.extend({
             } else if (sameAlphaPrimary && !sameBetaSecondary) {
                 $secondary.insertAfter($alpha);
             }
+
+            $alpha.tooltip({title: _t('Changing this color will regenerate the default theme color scheme'), delay: { "show": 100, "hide": 100 }, container: 'body'});
+            $tabs.eq(self.defaultTab).tab('show');
         });
 
         return Promise.all([this._super.apply(this, arguments), loadDef]);
@@ -230,7 +231,6 @@ var ThemeCustomizeDialog = Dialog.extend({
             var editor = new weWidgets.MediaDialog(self, {
                 mediaWidth: 1920,
                 onlyImages: true,
-                firstFilters: ['background'],
             }, $image[0]);
 
             editor.on('save', self, function (media) { // TODO use scss customization instead (like for user colors)
@@ -588,7 +588,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         var self = this;
         var text = $inputData.text().trim();
         var value = parseFloat(text) || '';
-        var unit = text.match(/([^\s\d]+)$/)[1];
+        var unit = (text.match(/[^\s\d]+$/) || ['px'])[0];
 
         return new Promise(function (resolve, reject) {
             var qEdit = new QuickEdit(self, value, unit);

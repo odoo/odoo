@@ -83,11 +83,15 @@ class StockScrap(models.Model):
     def _onchange_company_id(self):
         if self.company_id:
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
-            self.location_id = warehouse.lot_stock_id
-            self.scrap_location_id = self.env['stock.location'].search([
-                ('scrap_location', '=', True),
-                ('company_id', 'in', [self.company_id.id, False]),
-            ], limit=1)
+            # Change the locations only if their company doesn't match the company set, otherwise
+            # user defaults are overridden.
+            if self.location_id.company_id != self.company_id:
+                self.location_id = warehouse.lot_stock_id
+            if self.scrap_location_id.company_id != self.company_id:
+                self.scrap_location_id = self.env['stock.location'].search([
+                    ('scrap_location', '=', True),
+                    ('company_id', 'in', [self.company_id.id, False]),
+                ], limit=1)
         else:
             self.location_id = False
             self.scrap_location_id = False

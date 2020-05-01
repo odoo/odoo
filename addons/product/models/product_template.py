@@ -41,7 +41,7 @@ class ProductTemplate(models.Model):
 
     def _read_group_categ_id(self, categories, domain, order):
         category_ids = self.env.context.get('default_categ_id')
-        if not category_ids:
+        if not category_ids and self.env.context.get('group_expand'):
             category_ids = categories._search([], order=order, access_rights_uid=SUPERUSER_ID)
         return categories.browse(category_ids)
 
@@ -183,9 +183,15 @@ class ProductTemplate(models.Model):
         for template in self:
             template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
 
+    @api.depends_context('force_company')
     def _compute_cost_currency_id(self):
+        # Cost_currency_id is the displayed currency for standard_price
+        # which is company_dependent and thus depends on force_company
+        # context key (or self.env.company)
+        company_id = self._context.get('force_company') or self.env.company.id
+        company = self.env['res.company'].browse(company_id)
         for template in self:
-            template.cost_currency_id = self.env.company.currency_id.id
+            template.cost_currency_id = company.currency_id.id
 
     def _compute_template_price(self):
         prices = self._compute_template_price_no_inverse()
@@ -203,7 +209,9 @@ class ProductTemplate(models.Model):
             partner = self.env.context.get('partner')
             quantity = self.env.context.get('quantity', 1.0)
 
-            # Support context pricelists specified as display_name or ID for compatibility
+            # Support context pricelists specified as list, display_name or ID for compatibility
+            if isinstance(pricelist_id_or_name, list):
+                pricelist_id_or_name = pricelist_id_or_name[0]
             if isinstance(pricelist_id_or_name, str):
                 pricelist_data = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_data:
@@ -226,8 +234,11 @@ class ProductTemplate(models.Model):
         else:
             self.write({'list_price': self.price})
 
+    @api.depends_context('force_company')
     @api.depends('product_variant_ids', 'product_variant_ids.standard_price')
     def _compute_standard_price(self):
+        # Depends on force_company context because standard_price is company_dependent
+        # on the product_product
         unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
         for template in unique_variants:
             template.standard_price = template.product_variant_ids.standard_price
@@ -278,9 +289,9 @@ class ProductTemplate(models.Model):
         get_param = self.env['ir.config_parameter'].sudo().get_param
         product_weight_in_lbs_param = get_param('product.weight_in_lbs')
         if product_weight_in_lbs_param == '1':
-            return self.env.ref('uom.product_uom_lb')
+            return self.env.ref('uom.product_uom_lb', False) or self.env['uom.uom'].search([('measure_type', '=' , 'weight'), ('uom_type', '=', 'reference')], limit=1)
         else:
-            return self.env.ref('uom.product_uom_kgm')
+            return self.env.ref('uom.product_uom_kgm', False) or self.env['uom.uom'].search([('measure_type', '=' , 'weight'), ('uom_type', '=', 'reference')], limit=1)
 
     @api.model
     def _get_weight_uom_name_from_ir_config_parameter(self):
@@ -433,7 +444,12 @@ class ProductTemplate(models.Model):
             args = args if args is not None else []
             products_ns = Product._name_search(name, args+domain, operator=operator, name_get_uid=name_get_uid)
             products = Product.browse([x[0] for x in products_ns])
-            templates |= products.mapped('product_tmpl_id')
+            new_templates = products.mapped('product_tmpl_id')
+            if new_templates & templates:
+                """Product._name_search can bypass the domain we passed (search on supplier info).
+                   If this happens, an infinite loop will occur."""
+                break
+            templates |= new_templates
             current_round_templates = self.browse([])
             if not products:
                 domain_template = args + domain_no_variant + (templates and [('id', 'not in', templates.ids)] or [])

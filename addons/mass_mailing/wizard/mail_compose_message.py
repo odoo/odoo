@@ -30,7 +30,7 @@ class MailComposeMessage(models.TransientModel):
                 mass_mailing = self.env['mailing.mailing'].create({
                         'campaign_id': self.campaign_id.id,
                         'name': self.mass_mailing_name,
-                        'template_id': self.template_id.id,
+                        'subject': self.subject,
                         'state': 'done',
                         'reply_to_mode': reply_to_mode,
                         'reply_to': reply_to,

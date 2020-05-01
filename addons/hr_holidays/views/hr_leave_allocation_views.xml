@@ -92,8 +92,11 @@
                             <field name="allocation_type" invisible="1" widget="radio"/>
 
                             <field name="number_of_days" invisible="1"/>
-                            <label for="number_of_days" string="Duration" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
-                            <div attrs="{'invisible': [('allocation_type', '=', 'accrual')]}">
+                            <div class="o_td_label">
+                                <label for="number_of_days" string="Duration" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
+                                <label for="number_of_days" string="Extra days" attrs="{'invisible': [('allocation_type', '!=', 'accrual')]}"/>
+                            </div>
+                            <div>
                                 <field name="number_of_days_display" class="oe_inline" nolabel="1"
                                     attrs="{'readonly': ['|', ('type_request_unit', '=', 'hour'), ('state', 'not in', ('draft', 'confirm'))], 'invisible': [('type_request_unit', '=', 'hour')]}"/>
                                 <field name="number_of_hours_display" class="oe_inline" nolabel="1"
@@ -197,7 +200,7 @@
                 <button string="Approve" name="action_approve" type="object"
                     icon="fa-check text-success"
                     states="confirm"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <button string="Validate" name="action_validate" type="object"
                     icon="fa-check text-success"
                     states="validate1"
@@ -368,8 +371,8 @@
         <field name="name">Department Allocation to Approve</field>
         <field name="res_model">hr.leave.allocation</field>
         <field name="view_mode">tree,form,kanban,activity</field>
-        <field name="context">{'search_default_managed_people':1, 'search_default_approve':1}</field>
-        <field name="domain">[]</field>
+        <field name="context">{'search_default_approve':1}</field>
+        <field name="domain">[('employee_id.leave_manager_id', '=', uid)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new time off allocation

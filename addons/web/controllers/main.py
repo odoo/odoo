@@ -657,6 +657,8 @@ class GroupsTreeNode:
         """ Return field names of exported field having a group operator """
         aggregated_field_names = []
         for field_name in self._export_field_names:
+            if field_name == '.id':
+                field_name = 'id'
             if '/' in field_name:
                 # Currently no support of aggregated value for nested record fields
                 # e.g. line_ids/analytic_line_ids/amount
@@ -1446,6 +1448,10 @@ class Binary(http.Controller):
         if status in [301, 304] or (status != 200 and download):
             return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if not image_base64:
+            # Since we set a placeholder for any missing image, the status must be 200. In case one
+            # wants to configure a specific 404 page (e.g. though nginx), a 404 status will cause
+            # troubles.
+            status = 200
             image_base64 = base64.b64encode(self.placeholder(image=placeholder))
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
@@ -1834,7 +1840,7 @@ class ExportFormat(object):
         if not import_compat and groupby:
             groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
             domain = [('id', 'in', ids)] if ids else domain
-            groups_data = Model.read_group(domain, field_names, groupby, lazy=False)
+            groups_data = Model.read_group(domain, [x if x != '.id' else 'id' for x in field_names], groupby, lazy=False)
 
             # read_group(lazy=False) returns a dict only for final groups (with actual data),
             # not for intermediary groups. The full group tree must be re-constructed.

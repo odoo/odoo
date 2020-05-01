@@ -3,6 +3,8 @@
 import hashlib
 import hmac
 
+from werkzeug import urls
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools import ustr, consteq
@@ -59,7 +61,7 @@ class PaymentLinkWizard(models.TransientModel):
     def _generate_link(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for payment_link in self:
-            payment_link.link = '%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s&partner_id=%s&access_token=%s' % (base_url, payment_link.description, payment_link.amount, payment_link.currency_id.id, payment_link.partner_id.id, payment_link.access_token)
+            payment_link.link = '%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s&partner_id=%s&access_token=%s' % (base_url, urls.url_quote(payment_link.description), payment_link.amount, payment_link.currency_id.id, payment_link.partner_id.id, payment_link.access_token)
 
     @api.model
     def check_token(self, access_token, partner_id, amount, currency_id):

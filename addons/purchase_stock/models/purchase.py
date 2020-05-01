@@ -254,7 +254,9 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if line.qty_received_method == 'stock_moves':
                 total = 0.0
-                for move in line.move_ids:
+                # In case of a BOM in kit, the products delivered do not correspond to the products in
+                # the PO. Therefore, we can skip them since they will be handled later on.
+                for move in line.move_ids.filtered(lambda m: m.product_id == line.product_id):
                     if move.state == 'done':
                         if move.location_dest_id.usage == "supplier":
                             if move.to_refund:
@@ -265,6 +267,15 @@ class PurchaseOrderLine(models.Model):
                             # receive the product physically in our stock. To avoid counting the
                             # quantity twice, we do nothing.
                             pass
+                        elif (
+                            move.location_dest_id.usage == "internal"
+                            and move.to_refund
+                            and move.location_dest_id
+                            not in self.env["stock.location"].search(
+                                [("id", "child_of", move.warehouse_id.view_location_id.id)]
+                            )
+                        ):
+                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                         else:
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                 line.qty_received = total

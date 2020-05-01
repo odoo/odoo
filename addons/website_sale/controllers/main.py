@@ -585,7 +585,7 @@ class WebsiteSale(http.Controller):
     def _checkout_form_save(self, mode, checkout, all_values):
         Partner = request.env['res.partner']
         if mode[0] == 'new':
-            partner_id = Partner.sudo().create(checkout).id
+            partner_id = Partner.sudo().with_context(tracking_disable=True).create(checkout).id
         elif mode[0] == 'edit':
             partner_id = int(all_values.get('partner_id', 0))
             if partner_id:
@@ -693,7 +693,7 @@ class WebsiteSale(http.Controller):
                 partner_id = self._checkout_form_save(mode, post, kw)
                 if mode[1] == 'billing':
                     order.partner_id = partner_id
-                    order.onchange_partner_id()
+                    order.with_context(not_self_saleperson=True).onchange_partner_id()
                     # This is the *only* thing that the front end user will see/edit anyway when choosing billing address
                     order.partner_invoice_id = partner_id
                     if not kw.get('use_same'):

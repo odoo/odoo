@@ -80,7 +80,7 @@
         <field name="chart_template_id" ref="cl_chart_template"/>
         <field name="name">Retención de Segunda Categoría</field>
         <field name="description">Retención de Segunda Categoría</field>
-        <field name="amount">-10</field>
+        <field name="amount">-10.75</field>
         <field name="sequence" eval="2"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -261,4 +261,309 @@
             }),
         ]"/>
     </record>
+
+    <record id="ila_a_100_p" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Beb. Analcólicas 10% (Compras)</field>
+        <field name="description">ILA C 10%</field>
+        <field name="amount">10</field>
+        <field name="amount_type">percent</field>
+        <field name="l10n_cl_sii_code">27</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence" eval="7"/>
+        <field name="tax_group_id" ref="tax_group_ila"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_compras')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_compras')],
+                'account_id': ref('account_420220'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_compras')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_compras')],
+                'account_id': ref('account_420220'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="ila_a_180_p" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Beb. Analcólicas 18% (Compras)</field>
+        <field name="description">ILA C 18%</field>
+        <field name="amount">18</field>
+        <field name="amount_type">percent</field>
+        <field name="l10n_cl_sii_code">26</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence" eval="7"/>
+        <field name="tax_group_id" ref="tax_group_ila"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_compras')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_compras')],
+                'account_id': ref('account_420220'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_compras')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_compras')],
+                'account_id': ref('account_420220'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="ila_v_205_p" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Vinos (Compras)</field>
+        <field name="description">ILA C 20.5%</field>
+        <field name="amount">20.5</field>
+        <field name="amount_type">percent</field>
+        <field name="l10n_cl_sii_code">25</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence" eval="7"/>
+        <field name="tax_group_id" ref="tax_group_ila"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_compras')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_compras')],
+                'account_id': ref('account_420220'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_compras')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_compras')],
+                'account_id': ref('account_420220'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="ila_l_315_p" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Licores 31.5% (Compras)</field>
+        <field name="description">ILA C 31.5%</field>
+        <field name="amount">31.5</field>
+        <field name="amount_type">percent</field>
+        <field name="l10n_cl_sii_code">24</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence" eval="7"/>
+        <field name="tax_group_id" ref="tax_group_ila"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_compras')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_compras')],
+                'account_id': ref('account_420220'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_compras')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_compras')],
+                'account_id': ref('account_420220'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="ila_a_100_s" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Beb. Analcólicas 10% (Ventas)</field>
+        <field name="description">ILA V 10%</field>
+        <field name="amount">10</field>
+        <field name="amount_type">percent</field>
+        <field name="l10n_cl_sii_code">27</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence" eval="7"/>
+        <field name="tax_group_id" ref="tax_group_ila"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_ventas')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_ventas')],
+                'account_id': ref('account_210760'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_ventas')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_ventas')],
+                'account_id': ref('account_210760'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="ila_a_180_s" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Beb. Analcólicas 18% (Ventas)</field>
+        <field name="description">ILA V 18%</field>
+        <field name="amount">18</field>
+        <field name="amount_type">percent</field>
+        <field name="l10n_cl_sii_code">26</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence" eval="7"/>
+        <field name="tax_group_id" ref="tax_group_ila"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_ventas')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_ventas')],
+                'account_id': ref('account_210760'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_ventas')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_ventas')],
+                'account_id': ref('account_210760'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="ila_v_205_s" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Vinos (Ventas)</field>
+        <field name="description">ILA V 20.5%</field>
+        <field name="amount">20.5</field>
+        <field name="amount_type">percent</field>
+        <field name="l10n_cl_sii_code">25</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence" eval="7"/>
+        <field name="tax_group_id" ref="tax_group_ila"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_ventas')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_ventas')],
+                'account_id': ref('account_210760'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_ventas')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_ventas')],
+                'account_id': ref('account_210760'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="ila_l_315_s" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Licores 31.5% (Ventas)</field>
+        <field name="description">ILA V 31.5%</field>
+        <field name="amount">31.5</field>
+        <field name="amount_type">percent</field>
+        <field name="l10n_cl_sii_code">24</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence" eval="7"/>
+        <field name="tax_group_id" ref="tax_group_ila"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_ventas')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_ventas')],
+                'account_id': ref('account_210760'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_ila_ventas')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_tax_ila_ventas')],
+                'account_id': ref('account_210760'),
+            }),
+        ]"/>
+    </record>
+
 </odoo>

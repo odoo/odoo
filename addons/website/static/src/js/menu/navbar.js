@@ -1,19 +1,24 @@
 odoo.define('website.navbar', function (require) {
 'use strict';
 
+var core = require('web.core');
 var dom = require('web.dom');
 var publicWidget = require('web.public.widget');
 var concurrency = require('web.concurrency');
 var Widget = require('web.Widget');
 var websiteRootData = require('website.root');
 
+var qweb = core.qweb;
+
 var websiteNavbarRegistry = new publicWidget.RootWidgetRegistry();
 
 var WebsiteNavbar = publicWidget.RootWidget.extend({
+    xmlDependencies: ['/website/static/src/xml/website.xml'],
     events: _.extend({}, publicWidget.RootWidget.prototype.events || {}, {
         'click [data-action]': '_onActionMenuClick',
         'mouseover > ul > li.dropdown:not(.show)': '_onMenuHovered',
         'click .o_mobile_menu_toggle': '_onMobileMenuToggleClick',
+        'mouseover #oe_applications:not(:has(.dropdown-item))': '_onOeApplicationsHovered',
     }),
     custom_events: _.extend({}, publicWidget.RootWidget.prototype.custom_events || {}, {
         'action_demand': '_onActionDemand',
@@ -129,6 +134,25 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Called when the backend applications menu is hovered -> fetch the
+     * available menus and insert it in DOM.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onOeApplicationsHovered: function (ev) {
+        var self = this;
+        this._rpc({
+            model: 'ir.ui.menu',
+            method: 'load_menus_root',
+            args: [],
+        }).then(function (result) {
+            self.$('#oe_applications .dropdown-menu').html(
+                $(qweb.render('website.oe_applications_menu', {menu_data: result}))
+            );
+        });
+    },
     /**
      * Called when an action menu is clicked -> searches for the automatic
      * widget {@see RootWidget} which can handle that action.

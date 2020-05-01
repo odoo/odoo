@@ -27,9 +27,7 @@ msgstr ""
 msgid ""
 "${object.create_uid.name} from ${object.company_id.name} invites you to "
 "connect to Odoo"
-msgstr ""
-"${object.company_id.name}의 ${object.create_uid.name} 이(가) 귀하를 Odoo에 연결되도록 "
-"초대합니다."
+msgstr "${object.company_id.name}의 ${object.create_uid.name} 이(가) 귀하를 초대합니다."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
@@ -42,14 +40,14 @@ msgstr "%s 연결됨"
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr "<strong>이 사용자에게 비밀번호 재설정 요청 되었습니다. 다음 링크가 포함된 이메일이 전송 되었습니다.</strong>"
+msgstr "<strong>이 사용자가 비밀번호 재설정을 요청하였습니다. 다음 링크가 포함된 이메일을 전송하였습니다.</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr "<strong>다음 가입 링크가 있는 초대장이 발급됩니다.</strong>"
+msgstr "<strong>가입 링크가 포함된 초대장을 아래와 같이 발급하였습니다 :</strong>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -94,6 +92,45 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                 % set invited_users = ctx['invited_users']\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        대기중인 초대\n"
+"                    </span><br/><br/>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        ${object.name or ''}님 안녕하세요.<br/> <br/>\n"
+"                        다음 사용자를 데이터베이스에 추가했지만 아직 등록하지 않았습니다 :\n"
+"                        <ul>\n"
+"                            % for invited_user in invited_users :\n"
+"                                <li>${invited_user}</li>\n"
+"                            % endfor\n"
+"                        </ul>\n"
+"                        데이터베이스에 접근하여 작업을 시작할 수 있도록 후속 조치를 수행하십시오.\n"
+"                        <br/><br/>\n"
+"                        좋은 하루 보내세요!<br/>\n"
+"                        --<br/>${object.company_id.name} 팀\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -379,15 +416,15 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Dear ${object.name},<br/><br/>\n"
-"                        이 이메일에 연결된 Odoo 계정에 대해 비밀번호 재설정이 요청되었습니다.\n"
-"                        24시간 동안 유효한 이 링크를 클릭하여 비밀번호를 변경할 수 있습니다 :<br/>\n"
+"                        ${object.name}님 안녕하세요.<br/><br/>\n"
+"                        이 이메일로 연결된 계정에 대해 비밀번호 재설정을 요청하셨습니다.\n"
+"                        24시간 동안 유효한 다음 링크를 클릭하여 비밀번호를 변경할 수 있습니다 :<br/>\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                            <a href=\"${object.signup_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                비밀번호 변경\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        원하지 않으면 이 메시지를 무시하십시오.<br/><br/>\n"
+"                        원하지 않으시면 이 메시지를 무시하십시오.<br/><br/>\n"
 "                        감사합니다,<br/>\n"
 "                        ${user.signature | safe}<br/>\n"
 "                    </div>\n"
@@ -643,7 +680,7 @@ msgstr "설정 구성"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Confirm"
-msgstr "확정"
+msgstr "확인"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -653,7 +690,7 @@ msgstr "비밀번호 확인"
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__active
 msgid "Confirmed"
-msgstr "확정됨"
+msgstr "확인됨"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -717,7 +754,7 @@ msgstr "고객의 로그인 정보를 보려면 로그인하십시오."
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
-msgstr "연결되지 않음"
+msgstr "미접속"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -816,7 +853,7 @@ msgstr "가입 URL"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr "초대 받지 않은 사용자는 가입 할 수 없습니다."
+msgstr "초대 받지 않은 사용자는 가입할 수 없습니다."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
@@ -906,7 +943,7 @@ msgstr "귀하의 이메일"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr "성함"
+msgstr "성명"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

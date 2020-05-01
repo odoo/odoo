@@ -64,6 +64,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
                 'top': '50%',
                 'transform': 'translateY(-50%)',
                 'z-index': '-1',
+                'opacity': '0',
             },
         });
         // Avoid to show autocomplete for a non appearing input

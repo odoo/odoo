@@ -6,19 +6,21 @@
 # Ediz Duman <neps1192@gmail.com>, 2019
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
 # Martin Trigaux, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
 # Saban Yildiz <sabany@projetgrup.com>, 2019
 # gezgin biri <gezginbiri@hotmail.com>, 2019
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
+# abc Def <hdogan1974@gmail.com>, 2020
+# Murat Durmuş <muratd@projetgrup.com>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +36,8 @@ msgid ""
 "#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : "
 "'/mail/chatter_post'}"
 msgstr ""
+"#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : "
+"'/mail/chatter_post'}"
 
 #. module: website_rating
 #. openerp-web
@@ -48,7 +52,7 @@ msgstr "&times;"
 #: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
 msgid "Add a review"
-msgstr ""
+msgstr "Gözden geçirme ekle"
 
 #. module: website_rating
 #. openerp-web
@@ -66,6 +70,13 @@ msgstr "İptal"
 
 #. module: website_rating
 #. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
+#, python-format
+msgid "Close"
+msgstr "Kapat"
+
+#. module: website_rating
+#. openerp-web
 #: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Comment"
@@ -74,12 +85,12 @@ msgstr "Yorum"
 #. module: website_rating
 #: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_id
 msgid "Commented by"
-msgstr ""
+msgstr "Yorumlayan"
 
 #. module: website_rating
 #: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_datetime
 msgid "Commented on"
-msgstr ""
+msgstr "Yorum yapıldı"
 
 #. module: website_rating
 #. openerp-web
@@ -108,7 +119,7 @@ msgstr "Düzenle"
 #: code:addons/website_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Half a star"
-msgstr ""
+msgstr "Yarım yıldız"
 
 #. module: website_rating
 #. openerp-web
@@ -142,7 +153,7 @@ msgstr "Bunu seviyorum"
 #: code:addons/website_rating/controllers/portal_rating.py:0
 #, python-format
 msgid "Invalid rating"
-msgstr ""
+msgstr "Geçersiz derecelendirme"
 
 #. module: website_rating
 #. openerp-web
@@ -162,7 +173,7 @@ msgstr "Mesaj"
 #: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
 msgid "Modify your review"
-msgstr ""
+msgstr "Gözden geçirmenizi değiştirin"
 
 #. module: website_rating
 #. openerp-web
@@ -170,20 +181,21 @@ msgstr ""
 #: code:addons/website_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "One star"
-msgstr ""
+msgstr "Bir yıldız"
 
 #. module: website_rating
 #: code:addons/website_rating/models/rating.py:0
 #, python-format
 msgid "Only the publisher of the website can change the rating comment"
 msgstr ""
+"Derecelendirme yorumunu yalnızca web sitesinin yayıncısı değiştirebilir"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Post comment"
-msgstr ""
+msgstr "Yorum Gönder"
 
 #. module: website_rating
 #: model:ir.model.fields,field_description:website_rating.field_rating_rating__website_published
@@ -196,17 +208,17 @@ msgstr "Yayınlandı"
 #: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Published on"
-msgstr ""
+msgstr "Yayınlandı"
 
 #. module: website_rating
 #: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_comment
 msgid "Publisher Comment"
-msgstr ""
+msgstr "Yayıncı Yorumu"
 
 #. module: website_rating
 #: model_terms:ir.ui.view,arch_db:website_rating.rating_rating_view_form
 msgid "Publisher comment"
-msgstr ""
+msgstr "Yayıncı Yorumu"
 
 #. module: website_rating
 #: model:ir.model,name:website_rating.model_rating_rating
@@ -216,16 +228,17 @@ msgstr "Değerlendirme"
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Remove Selection"
-msgstr ""
+msgstr "Seçimi Kaldır"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Update comment"
-msgstr ""
+msgstr "Yorumu güncelle"
 
 #. module: website_rating
 #: model:ir.model.fields,help:website_rating.field_rating_rating__website_published
@@ -237,7 +250,7 @@ msgstr "Web sitesinde bir yorum olarak görünür"
 #: code:addons/website_rating/static/src/js/portal_chatter.js:0
 #, python-format
 msgid "Write your comment"
-msgstr ""
+msgstr "Yorumunuzu yazın"
 
 #. module: website_rating
 #. openerp-web
@@ -252,7 +265,7 @@ msgstr "avatar"
 #: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
 msgid "ratings)"
-msgstr ""
+msgstr "derecelendirmeler)"
 
 #. module: website_rating
 #. openerp-web

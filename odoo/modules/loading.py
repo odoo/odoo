@@ -175,6 +175,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             if package.name != 'base':
                 registry.setup_models(cr)
             migrations.migrate_module(package, 'pre')
+            if package.name != 'base':
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                env['base'].flush()
 
         load_openerp_module(package.name)
 
@@ -187,12 +190,16 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
         model_names = registry.load(cr, package)
 
+        mode = 'update'
+        if hasattr(package, 'init') or package.state == 'to install':
+            mode = 'init'
+
         loaded_modules.append(package.name)
         if needs_update:
             models_updated |= set(model_names)
             models_to_check -= set(model_names)
             registry.setup_models(cr)
-            registry.init_models(cr, model_names, {'module': package.name})
+            registry.init_models(cr, model_names, {'module': package.name}, new_install)
         elif package.state != 'to remove':
             # The current module has simply been loaded. The models extended by this module
             # and for which we updated the schema, must have their schema checked again.
@@ -202,10 +209,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             models_to_check |= set(model_names) & models_updated
 
         idref = {}
-
-        mode = 'update'
-        if hasattr(package, 'init') or package.state == 'to install':
-            mode = 'init'
 
         if needs_update:
             env = api.Environment(cr, SUPERUSER_ID, {})
@@ -419,12 +422,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     ['to install'], force, status, report,
                     loaded_modules, update_module, models_to_check)
 
-        # check modules states
-        cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade', 'to remove')")
+        # check that new module dependencies have been properly installed after a migration/upgrade
+        cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade')")
         module_list = [name for (name,) in cr.fetchall()]
         if module_list:
             _logger.error("Some modules have inconsistent states, some dependencies may be missing: %s", sorted(module_list))
 
+        # check that all installed modules have been loaded by the registry after a migration/upgrade
         cr.execute("SELECT name from ir_module_module WHERE state = 'installed' and name != 'studio_customization'")
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
         if module_list:
@@ -437,6 +441,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         migrations = odoo.modules.migration.MigrationManager(cr, graph)
         for package in graph:
             migrations.migrate_module(package, 'end')
+
+        # STEP 3.6: apply remaining constraints in case of an upgrade
+        registry.finalize_constraints()
 
         # STEP 4: Finish and cleanup installations
         if processed_modules:

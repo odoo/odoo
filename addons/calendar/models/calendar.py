@@ -953,7 +953,7 @@ class Meeting(models.Model):
             self.start = self.start_datetime
             # Round the duration (in hours) to the minute to avoid weird situations where the event
             # stops at 4:19:59, later displayed as 4:19.
-            self.stop = start + timedelta(minutes=round(self.duration * 60))
+            self.stop = start + timedelta(minutes=round((self.duration or 1.0) * 60))
             if self.allday:
                 self.stop -= timedelta(seconds=1)
 
@@ -1235,7 +1235,7 @@ class Meeting(models.Model):
         """
         if self.interval <= 0:
             raise UserError(_('The interval cannot be negative.'))
-        if self.end_type == 'count' and self.count <= 0:
+        if self.end_type == 'count' and self.count < 0:
             raise UserError(_('The number of repetitions  cannot be negative.'))
 
         def get_week_string(freq):
@@ -1260,7 +1260,7 @@ class Meeting(models.Model):
         def get_end_date():
             final_date = fields.Date.to_string(self.final_date)
             end_date_new = ''.join((re.compile('\d')).findall(final_date)) + 'T235959Z' if final_date else False
-            return (self.end_type == 'count' and (';COUNT=' + str(self.count)) or '') +\
+            return (self.end_type == 'count' and (';COUNT=' + str(max(1, self.count))) or '') +\
                 ((end_date_new and self.end_type == 'end_date' and (';UNTIL=' + end_date_new)) or '')
 
         freq = self.rrule_type  # day/week/month/year
@@ -1435,24 +1435,28 @@ class Meeting(models.Model):
     ####################################################
 
     def _get_message_unread(self):
+        self.message_unread_counter = False
+        self.message_unread = False
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
         real = self.browse(set(id_map.values()))
         super(Meeting, real)._get_message_unread()
         for event in self:
-            if event.id == id_map[event.id]:
+            if event._origin.id == id_map[event._origin.id]:
                 continue
-            rec = self.browse(id_map[event.id])
+            rec = self.browse(id_map[event._origin.id])
             event.message_unread_counter = rec.message_unread_counter
             event.message_unread = rec.message_unread
 
     def _get_message_needaction(self):
+        self.message_needaction_counter = False
+        self.message_needaction = False
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
         real = self.browse(set(id_map.values()))
         super(Meeting, real)._get_message_needaction()
         for event in self:
-            if event.id == id_map[event.id]:
+            if event._origin.id == id_map[event._origin.id]:
                 continue
-            rec = self.browse(id_map[event.id])
+            rec = self.browse(id_map[event._origin.id])
             event.message_needaction_counter = rec.message_needaction_counter
             event.message_needaction = rec.message_needaction
 
@@ -1751,7 +1755,9 @@ class Meeting(models.Model):
                 new_arg = (arg[0], arg[1], get_real_ids(arg[2]))
             new_args.append(new_arg)
 
-        if not self._context.get('virtual_id', True):
+        # update_custom_fields: context used by the ORM to check if custom fields (studio) should be updated
+        virtual_id_fallback = not self._context.get('update_custom_fields')
+        if not self._context.get('virtual_id', virtual_id_fallback):
             return super(Meeting, self)._search(new_args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
         if any(arg[0] == 'start' for arg in args) and \
@@ -1789,7 +1795,7 @@ class Meeting(models.Model):
             if values.get('name'):
                 activity_values['summary'] = values['name']
             if values.get('description'):
-                activity_values['note'] = values['description']
+                activity_values['note'] = tools.plaintext2html(values['description'])
             if values.get('start'):
                 # self.start is a datetime UTC *only when the event is not allday*
                 # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)

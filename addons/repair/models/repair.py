@@ -82,7 +82,7 @@ class Repair(models.Model):
         copy=True, readonly=True, states={'draft': [('readonly', False)]})
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist',
-        default=lambda self: self.env['product.pricelist'].search([], limit=1).id,
+        default=lambda self: self.env['product.pricelist'].search([('company_id', 'in', [self.env.company.id, False])], limit=1).id,
         help='Pricelist of the selected partner.')
     partner_invoice_id = fields.Many2one('res.partner', 'Invoicing Address')
     invoice_method = fields.Selection([
@@ -177,15 +177,18 @@ class Repair(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
+        company_id = self.company_id.id or self.env.company.id
         if not self.partner_id:
             self.address_id = False
             self.partner_invoice_id = False
-            self.pricelist_id = self.env['product.pricelist'].search([], limit=1).id
+            self.pricelist_id = self.env['product.pricelist'].search([
+                ('company_id', 'in', [company_id, False]),
+            ], limit=1)
         else:
             addresses = self.partner_id.address_get(['delivery', 'invoice', 'contact'])
             self.address_id = addresses['delivery'] or addresses['contact']
             self.partner_invoice_id = addresses['invoice']
-            self.pricelist_id = self.partner_id.property_product_pricelist.id
+            self.pricelist_id = self.partner_id.with_context(force_company=company_id).property_product_pricelist.id
 
     def button_dummy(self):
         # TDE FIXME: this button is very interesting
@@ -503,14 +506,14 @@ class Repair(models.Model):
                 available_quantity = self.env['stock.quant']._get_available_quantity(
                     move.product_id,
                     move.location_id,
-                    lot_id=operation.lot_id.id,
+                    lot_id=operation.lot_id,
                     strict=False,
                 )
                 move._update_reserved_quantity(
                     product_qty,
                     available_quantity,
                     move.location_id,
-                    lot_id=operation.lot_id.id,
+                    lot_id=operation.lot_id,
                     strict=False,
                 )
                 # Then, set the quantity done. If the required quantity was not reserved, negative
@@ -688,7 +691,7 @@ class RepairFee(models.Model):
     name = fields.Text('Description', index=True, required=True)
     product_id = fields.Many2one('product.product', 'Product')
     product_uom_qty = fields.Float('Quantity', digits='Product Unit of Measure', required=True, default=1.0)
-    price_unit = fields.Float('Unit Price', required=True)
+    price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
     product_uom = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', store=True, digits=0)

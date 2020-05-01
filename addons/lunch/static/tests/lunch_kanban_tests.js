@@ -212,8 +212,9 @@ QUnit.module('LunchKanbanView', {
         });
 
         QUnit.test('search panel domain location', async function (assert) {
-            assert.expect(10);
-            const locationId = this.data['lunch.location'].records[0].id;
+            assert.expect(20);
+            let expectedLocation = 1;
+            let locationId = this.data['lunch.location'].records[0].id;
             const regularInfos = _.extend({}, this.regularInfos);
 
             const kanban = await createLunchKanbanView({
@@ -233,30 +234,49 @@ QUnit.module('LunchKanbanView', {
                     assert.step(route);
 
                     if (route.startsWith('/lunch')) {
+                        if (route === '/lunch/user_location_set') {
+                            locationId = args.location_id;
+                            return Promise.resolve(true);
+                        }
                         return mockLunchRPC({
                             infos: regularInfos,
                             userLocation: locationId,
                         }).apply(this, arguments);
                     }
                     if (args.method === 'search_panel_select_multi_range') {
-                        assert.deepEqual(args.kwargs.search_domain, [["is_available_at", "in", [locationId]]],
+                        assert.deepEqual(args.kwargs.search_domain, [["is_available_at", "in", [expectedLocation]]],
                             'The initial domain of the search panel must contain the user location');
                     }
                     if (route === '/web/dataset/search_read') {
-                        assert.deepEqual(args.domain, [["is_available_at", "in", [locationId]]],
+                        assert.deepEqual(args.domain, [["is_available_at", "in", [expectedLocation]]],
                             'The domain for fetching actual data should be correct');
                     }
                     return this._super.apply(this, arguments);
-                }
+                },
             });
+
+            expectedLocation = 2;
+            await testUtils.fields.many2one.clickOpenDropdown('locations');
+            await testUtils.fields.many2one.clickItem('locations', "Office 2");
+
             assert.verifySteps([
+                // Initial state
                 '/lunch/user_location_get',
                 '/web/dataset/call_kw/product/search_panel_select_multi_range',
                 '/web/dataset/call_kw/product/search_panel_select_multi_range',
                 '/web/dataset/search_read',
                 '/lunch/infos',
                 '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
-            ])
+                // Click m2o
+                '/web/dataset/call_kw/lunch.location/name_search',
+                // Click new location
+                '/lunch/user_location_set',
+                '/web/dataset/call_kw/product/search_panel_select_multi_range',
+                '/web/dataset/call_kw/product/search_panel_select_multi_range',
+                '/web/dataset/search_read',
+                '/lunch/infos',
+                '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
+            ]);
 
             kanban.destroy();
         });

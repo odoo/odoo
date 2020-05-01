@@ -118,10 +118,10 @@ class SaleCouponProgram(models.Model):
 
     def toggle_active(self):
         super(SaleCouponProgram, self).toggle_active()
-        if not self.active:
-            coupons = self.filtered(lambda p: p.promo_code_usage == 'code_needed').mapped('coupon_ids')
-            coupons.filtered(lambda x: x.state != 'used').write({'state': 'expired'})
-        self.mapped('discount_line_product_id').write({'active': self.active})
+        for program in self:
+            program.discount_line_product_id.active = program.active
+        coupons = self.filtered(lambda p: not p.active and p.promo_code_usage == 'code_needed').mapped('coupon_ids')
+        coupons.filtered(lambda x: x.state != 'used').write({'state': 'expired'})
 
     def action_view_sales_orders(self):
         self.ensure_one()

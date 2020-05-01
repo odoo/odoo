@@ -239,7 +239,8 @@ class ProductProduct(models.Model):
             }
             am_vals_list.append(move_vals)
         account_moves = self.env['account.move'].create(am_vals_list)
-        account_moves.post()
+        if account_moves:
+            account_moves.post()
 
         # Actually update the standard price.
         self.with_context(force_company=company_id.id).sudo().write({'standard_price': new_price})
@@ -249,7 +250,7 @@ class ProductProduct(models.Model):
 
         # Find back incoming stock valuation layers (called candidates here) to value `quantity`.
         qty_to_take_on_candidates = quantity
-        candidates = self.env['stock.valuation.layer'].sudo().search([
+        candidates = self.env['stock.valuation.layer'].sudo().with_context(active_test=False).search([
             ('product_id', '=', self.id),
             ('remaining_qty', '>', 0),
             ('company_id', '=', company.id),
@@ -378,6 +379,7 @@ class ProductProduct(models.Model):
                 'stock_move_id': move.id,
                 'company_id': move.company_id.id,
                 'description': 'Revaluation of %s (negative inventory)' % move.picking_id.name or move.name,
+                'stock_valuation_layer_id': svl_to_vacuum.id,
             }
             vacuum_svl = self.env['stock.valuation.layer'].sudo().create(vals)
 
@@ -587,6 +589,8 @@ class ProductProduct(models.Model):
         :rtype: float
         """
         self.ensure_one()
+        if not qty_to_invoice:
+            return 0.0
 
         candidates = stock_moves\
             .sudo()\
@@ -596,6 +600,8 @@ class ProductProduct(models.Model):
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
             candidate_quantity = abs(candidate.quantity)
+            if float_is_zero(candidate_quantity, precision_rounding=candidate.uom_id.rounding):
+                continue  # correction entries
             if not float_is_zero(qty_invoiced, precision_rounding=candidate.uom_id.rounding):
                 qty_ignored = min(qty_invoiced, candidate_quantity)
                 qty_invoiced -= qty_ignored
@@ -605,7 +611,8 @@ class ProductProduct(models.Model):
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate_quantity)
 
             qty_to_take_on_candidates -= qty_taken_on_candidate
-            tmp_value += qty_taken_on_candidate * (candidate.value / candidate.quantity)
+            tmp_value += qty_taken_on_candidate * \
+                ((candidate.value + sum(candidate.stock_valuation_layer_ids.mapped('value'))) / candidate.quantity)
             if float_is_zero(qty_to_take_on_candidates, precision_rounding=candidate.uom_id.rounding):
                 break
 

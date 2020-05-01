@@ -717,7 +717,7 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
 
                 search_timeout = setTimeout(function(){
                     self.perform_search(self.category, searchbox.value, event.which === 13);
-                },70);
+                },200);
             }
         };
     },
@@ -1787,19 +1787,6 @@ var ReceiptScreenWidget = ScreenWidget.extend({
                 self.print();
             }
         });
-        var button_print_invoice = this.$('.button.print_invoice');
-        button_print_invoice.click(function () {
-            var order = self.pos.get_order();
-            var invoiced = self.pos.push_and_invoice_order(order);
-            self.invoicing = true;
-
-            invoiced.catch(self._handleFailedPushForInvoice.bind(self, order, true)); // refresh
-
-            invoiced.then(function(){
-                self.invoicing = false;
-                self.gui.show_screen('receipt', {button_print_invoice: false}, true); // refresh
-            });
-        });
 
     },
     render_change: function() {
@@ -1807,7 +1794,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         this.$('.change-value').html(this.format_currency(this.pos.get_order().get_change()));
         var order = this.pos.get_order();
         var order_screen_params = order.get_screen_data('params');
-        var button_print_invoice = this.$('.button.print_invoice');
+        var button_print_invoice = this.$('h2.print_invoice');
         if (order_screen_params && order_screen_params.button_print_invoice) {
             button_print_invoice.show();
         } else {
@@ -2301,7 +2288,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         }
 
         // The exact amount must be paid if there is no cash payment method defined.
-        if (Math.abs(order.get_total_with_tax() - order.get_total_paid()) > 0.00001) {
+        if (Math.abs(order.get_total_balance()) > 0.00001) {
             var cash = false;
             for (var i = 0; i < this.pos.payment_methods.length; i++) {
                 cash = cash || (this.pos.payment_methods[i].is_cash_count);

@@ -196,10 +196,12 @@ class DisplayController(http.Controller):
             if 'wlan' in iface_id or 'eth' in iface_id:
                 iface_obj = ni.ifaddresses(iface_id)
                 ifconfigs = iface_obj.get(ni.AF_INET, [])
+                essid = helpers.get_ssid()
                 for conf in ifconfigs:
                     if conf.get('addr'):
                         display_ifaces.append({
                             'iface_id': iface_id,
+                            'essid': essid,
                             'addr': conf.get('addr'),
                             'icon': 'sitemap' if 'eth' in iface_id else 'wifi',
                         })

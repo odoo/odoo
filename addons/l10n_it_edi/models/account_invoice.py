@@ -52,7 +52,10 @@ class AccountMove(models.Model):
         super(AccountMove, self).post()
 
         # Retrieve invoices to generate the xml.
-        invoices_to_export = self.filtered(lambda move: move.company_id.country_id == self.env.ref('base.it') and move.is_sale_document())
+        invoices_to_export = self.filtered(lambda move:
+                move.company_id.country_id == self.env.ref('base.it') and
+                move.is_sale_document() and
+                move.l10n_it_send_state not in ['sent', 'delivered', 'delivered_accepted'])
 
         invoices_to_export.write({'l10n_it_send_state': 'other'})
         invoices_to_send = self.env['account.move']
@@ -255,7 +258,11 @@ class AccountMove(models.Model):
         self.ensure_one()
         allowed_state = ['to_send', 'invalid']
 
-        if not self.company_id.l10n_it_mail_pec_server_id or not self.company_id.l10n_it_address_send_fatturapa:
+        if (
+            not self.company_id.l10n_it_mail_pec_server_id
+            or not self.company_id.l10n_it_mail_pec_server_id.active
+            or not self.company_id.l10n_it_address_send_fatturapa
+        ):
             self.message_post(
                 body=(_("Error when sending mail with E-Invoice: Your company must have a mail PEC server and must indicate the mail PEC that will send electronic invoice."))
                 )
@@ -302,13 +309,13 @@ class AccountMove(models.Model):
         multi = False
 
         # possible to have multiple invoices in the case of an invoice batch, the batch itself is repeated for every invoice of the batch
-        for body_tree in tree.xpath('//FatturaElettronicaBody', namespaces=tree.nsmap):
+        for body_tree in tree.xpath('//FatturaElettronicaBody'):
             if multi:
                 # make sure all the iterations create a new invoice record (except the first which could have already created one)
                 self = self.env['account.move']
             multi = True
 
-            elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento', namespaces=tree.nsmap)
+            elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento')
             if elements and elements[0].text and elements[0].text == 'TD01':
                 self_ctx = self.with_context(default_type='in_invoice')
             elif elements and elements[0].text and elements[0].text == 'TD04':
@@ -319,10 +326,10 @@ class AccountMove(models.Model):
             # type must be present in the context to get the right behavior of the _default_journal method (account.move).
             # journal_id must be present in the context to get the right behavior of the _default_account method (account.move.line).
 
-            elements = tree.xpath('//CessionarioCommittente//IdCodice', namespaces=tree.nsmap)
+            elements = tree.xpath('//CessionarioCommittente//IdCodice')
             company = elements and self.env['res.company'].search([('vat', 'ilike', elements[0].text)], limit=1)
             if not company:
-                elements = tree.xpath('//CessionarioCommittente//CodiceFiscale', namespaces=tree.nsmap)
+                elements = tree.xpath('//CessionarioCommittente//CodiceFiscale')
                 company = elements and self.env['res.company'].search([('l10n_it_codice_fiscale', 'ilike', elements[0].text)], limit=1)
 
             if company:
@@ -345,7 +352,7 @@ class AccountMove(models.Model):
             # TD04 == credit note
             # TD05 == debit note
             # TD06 == fee
-            elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento', namespaces=tree.nsmap)
+            elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento')
             if elements and elements[0].text and elements[0].text == 'TD01':
                 type = 'in_invoice'
             elif elements and elements[0].text and elements[0].text == 'TD04':
@@ -355,13 +362,13 @@ class AccountMove(models.Model):
                 message_to_log = []
 
                 # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
-                elements = tree.xpath('//CedentePrestatore//IdCodice', namespaces=tree.nsmap)
+                elements = tree.xpath('//CedentePrestatore//IdCodice')
                 partner = elements and self.env['res.partner'].search(['&', ('vat', 'ilike', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
                 if not partner:
-                    elements = tree.xpath('//CedentePrestatore//CodiceFiscale', namespaces=tree.nsmap)
+                    elements = tree.xpath('//CedentePrestatore//CodiceFiscale')
                     partner = elements and self.env['res.partner'].search(['&', ('l10n_it_codice_fiscale', '=', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
                 if not partner:
-                    elements = tree.xpath('//DatiTrasmissione//Email', namespaces=tree.nsmap)
+                    elements = tree.xpath('//DatiTrasmissione//Email')
                     partner = elements and self.env['res.partner'].search(['&', '|', ('email', '=', elements[0].text), ('l10n_it_pec_email', '=', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
                 if partner:
                     invoice_form.partner_id = partner
@@ -372,16 +379,16 @@ class AccountMove(models.Model):
                             tree, './/CedentePrestatore')))
 
                 # Numbering attributed by the transmitter. <1.1.2>
-                elements = tree.xpath('//ProgressivoInvio', namespaces=tree.nsmap)
+                elements = tree.xpath('//ProgressivoInvio')
                 if elements:
                     invoice_form.invoice_payment_ref = elements[0].text
 
-                elements = body_tree.xpath('.//DatiGeneraliDocumento//Numero', namespaces=body_tree.nsmap)
+                elements = body_tree.xpath('.//DatiGeneraliDocumento//Numero')
                 if elements:
                     invoice_form.ref = elements[0].text
 
                 # Currency. <2.1.1.2>
-                elements = body_tree.xpath('.//DatiGeneraliDocumento/Divisa', namespaces=body_tree.nsmap)
+                elements = body_tree.xpath('.//DatiGeneraliDocumento/Divisa')
                 if elements:
                     currency_str = elements[0].text
                     currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
@@ -389,14 +396,14 @@ class AccountMove(models.Model):
                         invoice_form.currency_id = currency
 
                 # Date. <2.1.1.3>
-                elements = body_tree.xpath('.//DatiGeneraliDocumento/Data', namespaces=body_tree.nsmap)
+                elements = body_tree.xpath('.//DatiGeneraliDocumento/Data')
                 if elements:
                     date_str = elements[0].text
                     date_obj = datetime.strptime(date_str, DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
                     invoice_form.invoice_date = date_obj.strftime(DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
 
                 #  Dati Bollo. <2.1.1.6>
-                elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiBollo/ImportoBollo', namespaces=body_tree.nsmap)
+                elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiBollo/ImportoBollo')
                 if elements:
                     invoice_form.l10n_it_stamp_duty = float(elements[0].text)
 
@@ -405,19 +412,19 @@ class AccountMove(models.Model):
                 percentage_global_discount = 1.0
 
                 # Global discount. <2.1.1.8>
-                discount_elements = body_tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione', namespaces=body_tree.nsmap)
+                discount_elements = body_tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione')
                 total_discount_amount = 0.0
                 if discount_elements:
                     for discount_element in discount_elements:
-                        discount_line = discount_element.xpath('.//Tipo', namespaces=body_tree.nsmap)
+                        discount_line = discount_element.xpath('.//Tipo')
                         discount_sign = -1
                         if discount_line and discount_line[0].text == 'SC':
                             discount_sign = 1
-                        discount_percentage = discount_element.xpath('.//Percentuale', namespaces=body_tree.nsmap)
+                        discount_percentage = discount_element.xpath('.//Percentuale')
                         if discount_percentage and discount_percentage[0].text:
                             percentage_global_discount *= 1 - float(discount_percentage[0].text)/100 * discount_sign
 
-                        discount_amount_text = discount_element.xpath('.//Importo', namespaces=body_tree.nsmap)
+                        discount_amount_text = discount_element.xpath('.//Importo')
                         if discount_amount_text and discount_amount_text[0].text:
                             discount_amount = float(discount_amount_text[0].text) * discount_sign * -1
                             discount = {}
@@ -432,7 +439,7 @@ class AccountMove(models.Model):
                             discount_list.append(discount)
 
                 # Comment. <2.1.1.11>
-                elements = body_tree.xpath('.//DatiGeneraliDocumento//Causale', namespaces=body_tree.nsmap)
+                elements = body_tree.xpath('.//DatiGeneraliDocumento//Causale')
                 for element in elements:
                     invoice_form.narration = '%s%s\n' % (invoice_form.narration or '', element.text)
 
@@ -440,28 +447,28 @@ class AccountMove(models.Model):
                 # the reception phase or invoices previously transmitted
                 # <2.1.2> - <2.1.6>
                 for document_type in ['DatiOrdineAcquisto', 'DatiContratto', 'DatiConvenzione', 'DatiRicezione', 'DatiFattureCollegate']:
-                    elements = body_tree.xpath('.//DatiGenerali/' + document_type, namespaces=body_tree.nsmap)
+                    elements = body_tree.xpath('.//DatiGenerali/' + document_type)
                     if elements:
                         for element in elements:
                             message_to_log.append("%s %s<br/>%s" % (document_type, _("from XML file:"),
                             self._compose_info_message(element, '.')))
 
                 #  Dati DDT. <2.1.8>
-                elements = body_tree.xpath('.//DatiGenerali/DatiDDT', namespaces=body_tree.nsmap)
+                elements = body_tree.xpath('.//DatiGenerali/DatiDDT')
                 if elements:
                     message_to_log.append("%s<br/>%s" % (
                         _("Transport informations from XML file:"),
                         self._compose_info_message(body_tree, './/DatiGenerali/DatiDDT')))
 
                 # Due date. <2.4.2.5>
-                elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento/DataScadenzaPagamento', namespaces=body_tree.nsmap)
+                elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento/DataScadenzaPagamento')
                 if elements:
                     date_str = elements[0].text
                     date_obj = datetime.strptime(date_str, DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
                     invoice_form.invoice_date_due = fields.Date.to_string(date_obj)
 
                 # Total amount. <2.4.2.6>
-                elements = body_tree.xpath('.//ImportoPagamento', namespaces=body_tree.nsmap)
+                elements = body_tree.xpath('.//ImportoPagamento')
                 amount_total_import = 0
                 for element in elements:
                     amount_total_import += float(element.text)
@@ -470,56 +477,57 @@ class AccountMove(models.Model):
                         amount_total_import))
 
                 # Bank account. <2.4.2.13>
-                elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento/IBAN', namespaces=body_tree.nsmap)
-                if elements:
-                    if invoice_form.partner_id and invoice_form.partner_id.commercial_partner_id:
-                        bank = self.env['res.partner.bank'].search([
-                            ('acc_number', '=', elements[0].text),
-                            ('partner_id.id', '=', invoice_form.partner_id.commercial_partner_id.id)
-                            ])
-                    else:
-                        bank = self.env['res.partner.bank'].search([('acc_number', '=', elements[0].text)])
-                    if bank:
-                        invoice_form.invoice_partner_bank_id = bank
-                    else:
-                        message_to_log.append("%s<br/>%s" % (
-                            _("Bank account not found, useful informations from XML file:"),
-                            self._compose_multi_info_message(
-                                body_tree, ['.//DatiPagamento//Beneficiario',
-                                    './/DatiPagamento//IstitutoFinanziario',
-                                    './/DatiPagamento//IBAN',
-                                    './/DatiPagamento//ABI',
-                                    './/DatiPagamento//CAB',
-                                    './/DatiPagamento//BIC',
-                                    './/DatiPagamento//ModalitaPagamento'])))
-                else:
-                    elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento', namespaces=body_tree.nsmap)
+                if invoice_form.type not in ('out_invoice', 'in_refund'):
+                    elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento/IBAN')
                     if elements:
-                        message_to_log.append("%s<br/>%s" % (
-                            _("Bank account not found, useful informations from XML file:"),
-                            self._compose_info_message(body_tree, './/DatiPagamento')))
+                        if invoice_form.partner_id and invoice_form.partner_id.commercial_partner_id:
+                            bank = self.env['res.partner.bank'].search([
+                                ('acc_number', '=', elements[0].text),
+                                ('partner_id.id', '=', invoice_form.partner_id.commercial_partner_id.id)
+                                ])
+                        else:
+                            bank = self.env['res.partner.bank'].search([('acc_number', '=', elements[0].text)])
+                        if bank:
+                            invoice_form.invoice_partner_bank_id = bank
+                        else:
+                            message_to_log.append("%s<br/>%s" % (
+                                _("Bank account not found, useful informations from XML file:"),
+                                self._compose_multi_info_message(
+                                    body_tree, ['.//DatiPagamento//Beneficiario',
+                                        './/DatiPagamento//IstitutoFinanziario',
+                                        './/DatiPagamento//IBAN',
+                                        './/DatiPagamento//ABI',
+                                        './/DatiPagamento//CAB',
+                                        './/DatiPagamento//BIC',
+                                        './/DatiPagamento//ModalitaPagamento'])))
+                    else:
+                        elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento')
+                        if elements:
+                            message_to_log.append("%s<br/>%s" % (
+                                _("Bank account not found, useful informations from XML file:"),
+                                self._compose_info_message(body_tree, './/DatiPagamento')))
 
                 # Invoice lines. <2.2.1>
-                elements = body_tree.xpath('.//DettaglioLinee', namespaces=body_tree.nsmap)
+                elements = body_tree.xpath('.//DettaglioLinee')
                 if elements:
                     for element in elements:
                         with invoice_form.invoice_line_ids.new() as invoice_line_form:
 
                             # Sequence.
-                            line_elements = element.xpath('.//NumeroLinea', namespaces=body_tree.nsmap)
+                            line_elements = element.xpath('.//NumeroLinea')
                             if line_elements:
                                 invoice_line_form.sequence = int(line_elements[0].text) * 2
 
                             # Product.
-                            line_elements = element.xpath('.//Descrizione', namespaces=body_tree.nsmap)
+                            line_elements = element.xpath('.//Descrizione')
                             if line_elements:
                                 invoice_line_form.name = " ".join(line_elements[0].text.split())
 
-                            elements_code = element.xpath('.//CodiceArticolo', namespaces=body_tree.nsmap)
+                            elements_code = element.xpath('.//CodiceArticolo')
                             if elements_code:
                                 for element_code in elements_code:
-                                    type_code = element_code.xpath('.//CodiceTipo', namespaces=body_tree.nsmap)[0]
-                                    code = element_code.xpath('.//CodiceValore', namespaces=body_tree.nsmap)[0]
+                                    type_code = element_code.xpath('.//CodiceTipo')[0]
+                                    code = element_code.xpath('.//CodiceValore')[0]
                                     if type_code.text == 'EAN':
                                         product = self.env['product.product'].search([('barcode', '=', code.text)])
                                         if product:
@@ -532,27 +540,27 @@ class AccountMove(models.Model):
                                             break
                                 if not invoice_line_form.product_id:
                                     for element_code in elements_code:
-                                        code = element_code.xpath('.//CodiceValore', namespaces=body_tree.nsmap)[0]
+                                        code = element_code.xpath('.//CodiceValore')[0]
                                         product = self.env['product.product'].search([('default_code', '=', code.text)])
                                         if product:
                                             invoice_line_form.product_id = product
                                             break
 
                             # Price Unit.
-                            line_elements = element.xpath('.//PrezzoUnitario', namespaces=body_tree.nsmap)
+                            line_elements = element.xpath('.//PrezzoUnitario')
                             if line_elements:
                                 invoice_line_form.price_unit = float(line_elements[0].text)
 
                             # Quantity.
-                            line_elements = element.xpath('.//Quantita', namespaces=body_tree.nsmap)
+                            line_elements = element.xpath('.//Quantita')
                             if line_elements:
                                 invoice_line_form.quantity = float(line_elements[0].text)
                             else:
                                 invoice_line_form.quantity = 1
 
                             # Taxes
-                            tax_element = element.xpath('.//AliquotaIVA', namespaces=body_tree.nsmap)
-                            natura_element = element.xpath('.//Natura', namespaces=body_tree.nsmap)
+                            tax_element = element.xpath('.//AliquotaIVA')
+                            natura_element = element.xpath('.//Natura')
                             invoice_line_form.tax_ids.clear()
                             if tax_element and tax_element[0].text:
                                 percentage = float(tax_element[0].text)
@@ -596,22 +604,22 @@ class AccountMove(models.Model):
                             # pourcent: 1-(1-P2)*(1-P5)
                             # fix amount: A1*(1-P2)*(1-P5)+A3*(1-P5)+A4*(1-P5) (we must take account of all
                             # percentage present after the fix amount)
-                            line_elements = element.xpath('.//ScontoMaggiorazione', namespaces=body_tree.nsmap)
+                            line_elements = element.xpath('.//ScontoMaggiorazione')
                             total_discount_amount = 0.0
                             total_discount_percentage = percentage_global_discount
                             if line_elements:
                                 for line_element in line_elements:
-                                    discount_line = line_element.xpath('.//Tipo', namespaces=body_tree.nsmap)
+                                    discount_line = line_element.xpath('.//Tipo')
                                     discount_sign = -1
                                     if discount_line and discount_line[0].text == 'SC':
                                         discount_sign = 1
-                                    discount_percentage = line_element.xpath('.//Percentuale', namespaces=body_tree.nsmap)
+                                    discount_percentage = line_element.xpath('.//Percentuale')
                                     if discount_percentage and discount_percentage[0].text:
                                         pourcentage_actual = 1 - float(discount_percentage[0].text)/100 * discount_sign
                                         total_discount_percentage *= pourcentage_actual
                                         total_discount_amount *= pourcentage_actual
 
-                                    discount_amount = line_element.xpath('.//Importo', namespaces=body_tree.nsmap)
+                                    discount_amount = line_element.xpath('.//Importo')
                                     if discount_amount and discount_amount[0].text:
                                         total_discount_amount += float(discount_amount[0].text) * discount_sign * -1
 
@@ -642,11 +650,11 @@ class AccountMove(models.Model):
             new_invoice = invoice_form.save()
             new_invoice.l10n_it_send_state = "other"
 
-            elements = body_tree.xpath('.//Allegati', namespaces=body_tree.nsmap)
+            elements = body_tree.xpath('.//Allegati')
             if elements:
                 for element in elements:
-                    name_attachment = element.xpath('.//NomeAttachment', namespaces=body_tree.nsmap)[0].text
-                    attachment_64 = str.encode(element.xpath('.//Attachment', namespaces=body_tree.nsmap)[0].text)
+                    name_attachment = element.xpath('.//NomeAttachment')[0].text
+                    attachment_64 = str.encode(element.xpath('.//Attachment')[0].text)
                     attachment_64 = self.env['ir.attachment'].create({
                         'name': name_attachment,
                         'datas': attachment_64,
@@ -668,7 +676,7 @@ class AccountMove(models.Model):
 
     def _compose_info_message(self, tree, element_tags):
         output_str = ""
-        elements = tree.xpath(element_tags, namespaces=tree.nsmap)
+        elements = tree.xpath(element_tags)
         for element in elements:
             output_str += "<ul>"
             for line in element.iter():
@@ -683,7 +691,7 @@ class AccountMove(models.Model):
         output_str = "<ul>"
 
         for element_tag in element_tags:
-            elements = tree.xpath(element_tag, namespaces=tree.nsmap)
+            elements = tree.xpath(element_tag)
             if not elements:
                 continue
             for element in elements:

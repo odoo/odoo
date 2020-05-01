@@ -75,10 +75,10 @@ class HolidaysAllocation(models.Model):
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-        help="UX field allowing to see and modify the allocation duration, computed in days.")
+        help="If Accrual Allocation: Number of days allocated in addition to the ones you will get via the accrual' system.")
     number_of_hours_display = fields.Float(
         'Duration (hours)', compute='_compute_number_of_hours_display',
-        help="UX field allowing to see and modify the allocation duration, computed in hours.")
+        help="If Accrual Allocation: Number of hours allocated in addition to the ones you will get via the accrual' system.")
     duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display',
         help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit")
     # details
@@ -226,7 +226,7 @@ class HolidaysAllocation(models.Model):
             if allocation.parent_id and allocation.parent_id.type_request_unit == "hour":
                 allocation.number_of_hours_display = allocation.number_of_days * HOURS_PER_DAY
             else:
-                allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.sudo().resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+                allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
 
     @api.depends('number_of_hours_display', 'number_of_days_display')
     def _compute_duration_display(self):
@@ -274,7 +274,7 @@ class HolidaysAllocation(models.Model):
     def _onchange_type(self):
         if self.holiday_type == 'employee':
             if not self.employee_id:
-                self.employee_id = self.env.user.employee_ids[:1].id
+                self.employee_id = self.env.user.employee_id.id
             self.mode_company_id = False
             self.category_id = False
         elif self.holiday_type == 'company':
@@ -287,7 +287,7 @@ class HolidaysAllocation(models.Model):
             self.mode_company_id = False
             self.category_id = False
             if not self.department_id:
-                self.department_id = self.env.user.employee_ids[:1].department_id.id
+                self.department_id = self.env.user.employee_id.department_id.id
         elif self.holiday_type == 'category':
             self.employee_id = False
             self.mode_company_id = False

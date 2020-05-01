@@ -184,7 +184,7 @@ class ResourceCalendar(models.Model):
         'resource.calendar.leaves', 'calendar_id', 'Time Off')
     global_leave_ids = fields.One2many(
         'resource.calendar.leaves', 'calendar_id', 'Global Time Off',
-        domain=[('resource_id', '=', False)]
+        domain=[('resource_id', '=', False)], copy=True,
         )
     hours_per_day = fields.Float("Average Hour per Day", default=HOURS_PER_DAY,
                                  help="Average hours per day a resource is supposed to work with this calendar.")
@@ -194,6 +194,23 @@ class ResourceCalendar(models.Model):
         help="This field is used in order to define in which timezone the resources will work.")
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        self.ensure_one()
+        if default is None:
+            default = {}
+        if not default.get('name'):
+            default.update(name=_('%s (copy)') % (self.name))
+        return super(ResourceCalendar, self).copy(default)
+
+    @api.constrains('attendance_ids')
+    def _check_attendance_ids(self):
+        for resource in self:
+            if (resource.two_weeks_calendar and
+                    resource.attendance_ids.filtered(lambda a: a.display_type == 'line_section') and
+                    not resource.attendance_ids.sorted('sequence')[0].display_type):
+                raise ValidationError(_("In a calendar with 2 weeks mode, all periods need to be in the sections."))
 
     @api.depends('two_weeks_calendar')
     def _compute_two_weeks_explanation(self):

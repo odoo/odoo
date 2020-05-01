@@ -192,17 +192,22 @@ var SnippetEditor = Widget.extend({
     /**
      * Removes the associated snippet from the DOM and destroys the associated
      * editor (itself).
+     *
+     * @returns {Promise}
      */
-    removeSnippet: function () {
+    removeSnippet: async function () {
         this.toggleFocus(false);
 
-        this.trigger_up('call_for_each_child_snippet', {
-            $snippet: this.$target,
-            callback: function (editor, $snippet) {
-                for (var i in editor.styles) {
-                    editor.styles[i].onRemove();
-                }
-            },
+        await new Promise(resolve => {
+            this.trigger_up('call_for_each_child_snippet', {
+                $snippet: this.$target,
+                callback: function (editor, $snippet) {
+                    for (var i in editor.styles) {
+                        editor.styles[i].onRemove();
+                    }
+                    resolve();
+                },
+            });
         });
 
         this.trigger_up('go_to_parent', {$snippet: this.$target});
@@ -229,6 +234,8 @@ var SnippetEditor = Widget.extend({
                 editor = $parent.data('snippet-editor');
             }
             if (isEmptyAndRemovable($parent, editor)) {
+                // TODO maybe this should be part of the actual Promise being
+                // returned by the function ?
                 setTimeout(() => editor.removeSnippet());
             }
         }
@@ -388,7 +395,7 @@ var SnippetEditor = Widget.extend({
         var $optionsSection = $(core.qweb.render('web_editor.customize_block_options_section', {
             name: this._getName(),
         })).data('editor', this);
-        $optionsSection.on('mouseover', this._onOptionsSectionMouseOver.bind(this));
+        $optionsSection.on('mouseenter', this._onOptionsSectionMouseOver.bind(this));
         $optionsSection.on('mouseleave', this._onOptionsSectionMouseLeave.bind(this));
         $optionsSection.on('click', 'we-title > span', this._onOptionsSectionClick.bind(this));
         $optionsSection.on('click', '.oe_snippet_clone', this._onCloneClick.bind(this));

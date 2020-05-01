@@ -81,12 +81,9 @@ var LunchKanbanController = KanbanController.extend({
      * to the searchDomain (coming from the controlPanel).
      *
      * @override
-     * @private
      */
-    _getSearchDomain: function () {
-        var searchDomain = this._super.apply(this, arguments) || [];
-        var locationId = this.model.getCurrentLocationId();
-        return searchDomain.concat([['is_available_at', 'in', [locationId]]]);
+    _getViewDomain: async function () {
+        return this.model.getLocationDomain();
     },
     /**
      * Renders and appends the lunch banner widget.

@@ -434,7 +434,8 @@ var SelectEditMenuDialog = weWidgets.Dialog.extend({
         var self = this;
         self.roots = [{id: null, name: _t("Top Menu")}];
         $('[data-content_menu_id]').each(function () {
-            self.roots.push({id: $(this).data('content_menu_id'), name: $(this).attr('name')});
+            // Remove name fallback in master
+            self.roots.push({id: $(this).data('content_menu_id'), name: $(this).attr('name') || $(this).data('menu_name')});
         });
         this._super(parent, _.extend({}, {
             title: _t("Select a Menu"),

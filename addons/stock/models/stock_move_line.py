@@ -17,6 +17,7 @@ class StockMoveLine(models.Model):
     picking_id = fields.Many2one(
         'stock.picking', 'Stock Picking', auto_join=True,
         check_company=True,
+        index=True,
         help='The stock operation where the packing has been made')
     move_id = fields.Many2one(
         'stock.move', 'Stock Move',
@@ -198,7 +199,7 @@ class StockMoveLine(models.Model):
                     vals['move_id'] = new_move.id
         mls = super(StockMoveLine, self).create(vals_list)
 
-        for ml in mls:
+        for ml, vals in zip(mls, vals_list):
             if ml.move_id and \
                     ml.move_id.picking_id and \
                     ml.move_id.picking_id.immediate_transfer and \
@@ -224,7 +225,6 @@ class StockMoveLine(models.Model):
                 next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
                 next_moves._do_unreserve()
                 next_moves._action_assign()
-
         return mls
 
     def write(self, vals):
@@ -358,7 +358,8 @@ class StockMoveLine(models.Model):
         # done stock move should have its `quantity_done` equals to its `product_uom_qty`, and
         # this is what move's `action_done` will do. So, we replicate the behavior here.
         if updates or 'qty_done' in vals:
-            moves = self.filtered(lambda ml: ml.move_id.state == 'done' or ml.move_id.picking_id and ml.move_id.picking_id.immediate_transfer).mapped('move_id')
+            moves = self.filtered(lambda ml: ml.move_id.state == 'done').mapped('move_id')
+            moves |= self.filtered(lambda ml: ml.move_id.state not in ('done', 'cancel') and ml.move_id.picking_id.immediate_transfer and not ml.product_uom_qty).mapped('move_id')
             for move in moves:
                 move.product_uom_qty = move.quantity_done
         next_moves._do_unreserve()
@@ -457,8 +458,9 @@ class StockMoveLine(models.Model):
                 rounding = ml.product_uom_id.rounding
 
                 # if this move line is force assigned, unreserve elsewhere if needed
-                if not ml._should_bypass_reservation(ml.location_id) and float_compare(ml.qty_done, ml.product_qty, precision_rounding=rounding) > 0:
-                    extra_qty = ml.qty_done - ml.product_qty
+                if not ml._should_bypass_reservation(ml.location_id) and float_compare(ml.qty_done, ml.product_uom_qty, precision_rounding=rounding) > 0:
+                    qty_done_product_uom = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id, rounding_method='HALF-UP')
+                    extra_qty = qty_done_product_uom - ml.product_qty
                     ml._free_reservation(ml.product_id, ml.location_id, extra_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, ml_to_ignore=done_ml)
                 # unreserve what's been reserved
                 if not ml._should_bypass_reservation(ml.location_id) and ml.product_id.type == 'product' and ml.product_qty:
@@ -542,7 +544,13 @@ class StockMoveLine(models.Model):
                 ('product_qty', '>', 0.0),
                 ('id', 'not in', ml_to_ignore.ids),
             ]
-            current_picking_first = lambda cand: cand.picking_id != self.move_id.picking_id
+            # We take the current picking first, then the pickings with the latest scheduled date
+            current_picking_first = lambda cand: (
+                cand.picking_id != self.move_id.picking_id,
+                -(cand.picking_id.scheduled_date or cand.move_id.date_expected).timestamp()
+                if cand.picking_id or cand.move_id
+                else -cand.id,
+            )
             outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).sorted(current_picking_first)
 
             # As the move's state is not computed over the move lines, we'll have to manually

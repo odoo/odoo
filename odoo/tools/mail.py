@@ -328,7 +328,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
             html += '\n\n'
         html += ustr('[%s] %s\n') % (i + 1, url)
 
-    return html
+    return html.strip()
 
 def plaintext2html(text, container_tag=False):
     """ Convert plaintext into html. Content of the text is escaped to manage
@@ -386,7 +386,7 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
     """
     html = ustr(html)
     if plaintext and preserve:
-        content = u'\n<pre>%s</pre>\n' % ustr(content)
+        content = u'\n<pre>%s</pre>\n' % misc.html_escape(ustr(content))
     elif plaintext:
         content = '\n%s\n' % plaintext2html(content, container_tag)
     else:

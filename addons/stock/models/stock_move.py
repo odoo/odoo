@@ -306,11 +306,13 @@ class StockMove(models.Model):
         for d in data:
             rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
 
+        # In case we are in an onchange, move.id is a NewId, not an integer. Therefore, there is no
+        # match in the rec dictionary. By using move.ids[0] we get the correct integer value.
         for move in self:
             uom = move.product_uom
             move.quantity_done = sum(
                 self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
-                for line_uom_id, qty in rec.get(move.id, [])
+                for line_uom_id, qty in rec.get(move.ids[0] if move.ids else move.id, [])
             )
 
     def _quantity_done_set(self):
@@ -473,7 +475,10 @@ class StockMove(models.Model):
                     move_dest_ids._delay_alert_log_activity('manual', move)
                     continue
                 for move_dest in move_dest_ids:
-                    move_dest.date_expected += relativedelta.relativedelta(days=delta_days)
+                    # We want to propagate a negative delta, but not propagate an expected date
+                    # in the past.
+                    new_move_date = max(move_dest.date_expected + relativedelta.relativedelta(days=delta_days or 0), fields.Datetime.now())
+                    move_dest.date_expected = new_move_date
                 move_dest_ids._delay_alert_log_activity('auto', move)
 
         # Manual tracking of the `state` field for the stock.picking records.
@@ -612,7 +617,7 @@ class StockMove(models.Model):
                 else:
                     raise UserError(_('You cannot unreserve a stock move that has been set to \'Done\'.'))
             moves_to_unreserve |= move
-        moves_to_unreserve.mapped('move_line_ids').unlink()
+        moves_to_unreserve.with_context(prefetch_fields=False).mapped('move_line_ids').unlink()
         return True
 
     def _generate_serial_numbers(self, next_serial_count=False):
@@ -632,8 +637,9 @@ class StockMove(models.Model):
         padding = len(initial_number)
         # We split the serial number to get the prefix and suffix.
         splitted = regex_split(initial_number, self.next_serial)
-        prefix = splitted[0]
-        suffix = splitted[1]
+        # initial_number could appear several times in the SN, e.g. BAV023B00001S00001
+        prefix = initial_number.join(splitted[:-1])
+        suffix = splitted[-1]
         initial_number = int(initial_number)
 
         lot_names = []
@@ -766,22 +772,22 @@ class StockMove(models.Model):
             .filtered(lambda move: move.state not in ['cancel', 'done'])\
             .sorted(key=lambda move: (sort_map.get(move.state, 0), move.product_uom_qty))
         # The picking should be the same for all moves.
-        if moves_todo[0].picking_id and moves_todo[0].picking_id.move_type == 'one':
+        if moves_todo[:1].picking_id and moves_todo[:1].picking_id.move_type == 'one':
             most_important_move = moves_todo[0]
             if most_important_move.state == 'confirmed':
                 return 'confirmed' if most_important_move.product_uom_qty else 'assigned'
             elif most_important_move.state == 'partially_available':
                 return 'confirmed'
             else:
-                return moves_todo[0].state or 'draft'
-        elif moves_todo[0].state != 'assigned' and any(move.state in ['assigned', 'partially_available'] for move in moves_todo):
+                return moves_todo[:1].state or 'draft'
+        elif moves_todo[:1].state != 'assigned' and any(move.state in ['assigned', 'partially_available'] for move in moves_todo):
             return 'partially_available'
         else:
-            least_important_move = moves_todo[-1]
+            least_important_move = moves_todo[-1:]
             if least_important_move.state == 'confirmed' and least_important_move.product_uom_qty == 0:
                 return 'assigned'
             else:
-                return moves_todo[-1].state or 'draft'
+                return moves_todo[-1:].state or 'draft'
 
     @api.onchange('product_id', 'product_qty')
     def onchange_quantity(self):
@@ -926,6 +932,7 @@ class StockMove(models.Model):
         else:
             location_dest = self.location_dest_id._get_putaway_strategy(self.product_id)
         move_line_vals = {
+            'picking_id': self.picking_id.id,
             'location_dest_id': location_dest.id or self.location_dest_id.id,
             'location_id': self.location_id.id,
             'product_id': self.product_id.id,
@@ -1182,7 +1189,9 @@ class StockMove(models.Model):
                         move_line_vals_list.append(move._prepare_move_line_vals(quantity=missing_reserved_quantity))
                 assigned_moves |= move
             else:
-                if not move.move_orig_ids:
+                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+                    assigned_moves |= move
+                elif not move.move_orig_ids:
                     if move.procure_method == 'make_to_order':
                         continue
                     # If we don't need any quantity, consider the move assigned.
@@ -1431,7 +1440,7 @@ class StockMove(models.Model):
         if any(move.state not in ('draft', 'cancel') for move in self):
             raise UserError(_('You can only delete draft moves.'))
         # With the non plannified picking, draft moves could have some move lines.
-        self.mapped('move_line_ids').unlink()
+        self.with_context(prefetch_fields=False).mapped('move_line_ids').unlink()
         return super(StockMove, self).unlink()
 
     def _prepare_move_split_vals(self, qty):
@@ -1561,6 +1570,15 @@ class StockMove(models.Model):
         """ This method will try to apply the procure method MTO on some moves if
         a compatible MTO route is found. Else the procure method will be set to MTS
         """
+        # Prepare the MTSO variables. They are needed since MTSO moves are handled separately.
+        # We need 2 dicts:
+        # - needed quantity per location per product
+        # - forecasted quantity per location per product
+        mtso_products_by_locations = defaultdict(list)
+        mtso_needed_qties_by_loc = defaultdict(dict)
+        mtso_free_qties_by_loc = {}
+        mtso_moves = self.env['stock.move']
+
         for move in self:
             product_id = move.product_id
             domain = [
@@ -1569,8 +1587,32 @@ class StockMove(models.Model):
                 ('action', '!=', 'push')
             ]
             rules = self.env['procurement.group']._search_rule(False, product_id, move.warehouse_id, domain)
-            if rules and (rules.procure_method == 'make_to_order'):
-                move.procure_method = rules.procure_method
+            if rules:
+                if rules.procure_method in ['make_to_order', 'make_to_stock']:
+                    move.procure_method = rules.procure_method
+                else:
+                    # Get the needed quantity for the `mts_else_mto` moves.
+                    mtso_needed_qties_by_loc[rules.location_src_id].setdefault(product_id.id, 0)
+                    mtso_needed_qties_by_loc[rules.location_src_id][product_id.id] += move.product_qty
+
+                    # This allow us to get the forecasted quantity in batch later on
+                    mtso_products_by_locations[rules.location_src_id].append(product_id.id)
+                    mtso_moves |= move
             else:
                 move.procure_method = 'make_to_stock'
 
+        # Get the forecasted quantity for the `mts_else_mto` moves.
+        for location, product_ids in mtso_products_by_locations.items():
+            products = self.env['product.product'].browse(product_ids).with_context(location=location.id)
+            mtso_free_qties_by_loc[location] = {product.id: product.free_qty for product in products}
+
+        # Now that we have the needed and forecasted quantity per location and per product, we can
+        # choose whether the mtso_moves need to be MTO or MTS.
+        for move in mtso_moves:
+            needed_qty = move.product_qty
+            forecasted_qty = mtso_free_qties_by_loc[move.location_id][move.product_id.id]
+            if float_compare(needed_qty, forecasted_qty, precision_rounding=product_id.uom_id.rounding) <= 0:
+                move.procure_method = 'make_to_stock'
+                mtso_free_qties_by_loc[move.location_id][move.product_id.id] -= needed_qty
+            else:
+                move.procure_method = 'make_to_order'

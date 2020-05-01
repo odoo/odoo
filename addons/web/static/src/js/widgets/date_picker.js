@@ -41,7 +41,7 @@ var DateWidget = Widget.extend({
                 previous: 'fa fa-chevron-left',
                 next: 'fa fa-chevron-right',
                 today: 'fa fa-calendar-check-o',
-                clear: 'fa fa-delete',
+                clear: 'fa fa-trash',
                 close: 'fa fa-check primary',
             },
             calendarWeeks: true,
@@ -75,7 +75,7 @@ var DateWidget = Widget.extend({
      */
     destroy: function () {
         if (this._onScroll) {
-            window.removeEventListener('scroll', this._onScroll, true);
+            window.removeEventListener('wheel', this._onScroll, true);
         }
         this.__libInput++;
         this.$el.datetimepicker('destroy');
@@ -263,7 +263,7 @@ var DateWidget = Widget.extend({
         this.__isOpen = false;
         this.changeDatetime();
         if (this._onScroll) {
-            window.removeEventListener('scroll', this._onScroll, true);
+            window.removeEventListener('wheel', this._onScroll, true);
         }
         this.changeDatetime();
     },
@@ -287,7 +287,7 @@ var DateWidget = Widget.extend({
                 self.__libInput--;
             }
         };
-        window.addEventListener('scroll', this._onScroll, true);
+        window.addEventListener('wheel', this._onScroll, true);
     },
     /**
      * @private

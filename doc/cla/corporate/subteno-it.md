@@ -8,7 +8,7 @@ declaration.
 
 Signed,
 
-Sébastien LANGE sebastien.lange@subteno-it.fr https://github.com/sla-subteno-it
+Sébastien LANGE sla@subteno-it.com https://github.com/sla-subteno-it
 
 List of contributors:
 

@@ -378,7 +378,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         self.assertEqual(float_compare(project_so_1_stat['timesheet_cost'], project_so_1_timesheet_cost, precision_rounding=rounding), 0, "The timesheet cost of the project from SO1 should include all timesheet")
         self.assertEqual(float_compare(project_so_1_stat['expense_amount_untaxed_to_invoice'], -1 * expense1.amount, precision_rounding=rounding), 0, "The expense cost to reinvoice of the project from SO1 should be 0.0")
         self.assertTrue(float_is_zero(project_so_1_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
-        self.assertEqual(float_compare(project_so_1_stat['expense_cost'], expense1.amount, precision_rounding=rounding), 0, "The expense cost of the project from SO1 should be 0.0")
+        self.assertEqual(float_compare(project_so_1_stat['expense_cost'], expense1.amount,  precision_rounding=rounding), 0, "The expense cost of the project from SO1 should be 0.0")
 
         # order project is not impacted by the expenses
         project_so_2_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_2.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]

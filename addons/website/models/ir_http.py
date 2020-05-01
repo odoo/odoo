@@ -17,7 +17,7 @@ from odoo import api, models
 from odoo import registry, SUPERUSER_ID
 from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
-from odoo.osv.expression import FALSE_DOMAIN, OR
+from odoo.osv.expression import FALSE_DOMAIN
 
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
 from odoo.addons.portal.controllers.portal import _build_url_w_params
@@ -226,9 +226,10 @@ class Http(models.AbstractModel):
         return super(Http, cls)._get_default_lang()
 
     @classmethod
-    def _get_translation_frontend_modules_domain(cls):
-        domain = super(Http, cls)._get_translation_frontend_modules_domain()
-        return OR([domain, [('name', 'ilike', 'website')]])
+    def _get_translation_frontend_modules_name(cls):
+        mods = super(Http, cls)._get_translation_frontend_modules_name()
+        installed = request.registry._init_modules | set(odoo.conf.server_wide_modules)
+        return mods + [mod for mod in installed if mod.startswith('website')]
 
     @classmethod
     def _serve_page(cls):
@@ -236,22 +237,15 @@ class Http(models.AbstractModel):
         page_domain = [('url', '=', req_page)] + request.website.website_domain()
 
         published_domain = page_domain
-        # need to bypass website_published, to apply is_most_specific
-        # filter later if not publisher
-        pages = request.env['website.page'].sudo().search(published_domain, order='website_id')
-        pages = pages.filtered(pages._is_most_specific_page)
-
-        if not request.website.is_publisher():
-            pages = pages.filtered('is_visible')
-
-        mypage = pages[0] if pages else False
-        _, ext = os.path.splitext(req_page)
-        if mypage:
-            return request.render(mypage.get_view_identifier(), {
-                # 'path': req_page[1:],
+        # specific page first
+        page = request.env['website.page'].sudo().search(published_domain, order='website_id asc', limit=1)
+        if page and (request.website.is_publisher() or page.is_visible):
+            _, ext = os.path.splitext(req_page)
+            return request.render(page.get_view_identifier(), {
                 'deletable': True,
-                'main_object': mypage,
+                'main_object': page,
             }, mimetype=_guess_mimetype(ext))
+        return False
 
     @classmethod
     def _serve_redirect(cls):
@@ -379,6 +373,5 @@ class ModelConverter(ModelConverter):
         domain = safe_eval(self.domain, (args or {}).copy())
         if dom:
             domain += dom
-        for record in Model.search_read(domain=domain, fields=['write_date', Model._rec_name]):
-            if record.get(Model._rec_name, False):
-                yield {'loc': (record['id'], record[Model._rec_name])}
+        for record in Model.search_read(domain, ['display_name']):
+            yield {'loc': (record['id'], record['display_name'])}

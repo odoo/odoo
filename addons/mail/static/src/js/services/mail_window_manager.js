@@ -381,6 +381,7 @@ MailManager.include({
                     }
                 })
                 .on('click', '.o_thread_window_close', function (ev) {
+                    ev.preventDefault();
                     var threadID = $(ev.currentTarget).closest('.o_thread_window_header')
                                                       .data('thread-id');
                     var threadWindow = self._getHiddenThreadWindow(threadID);
@@ -658,11 +659,13 @@ MailManager.include({
      */
     _onNewChannel: function (channel, proms) {
         if (channel.isDetached()) {
-            var prom = this.openThreadWindow(channel.getID(), {
-                keepFoldState: true,
-                passively: true,
-            });
-            proms.push(prom);
+            if (!config.device.isMobile) {
+                var prom = this.openThreadWindow(channel.getID(), {
+                    keepFoldState: true,
+                    passively: true,
+                });
+                proms.push(prom);
+            }
         } else {
             this._closeThreadWindow(channel.getID());
         }

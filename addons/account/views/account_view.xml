@@ -387,8 +387,8 @@
                             <group>
                                 <field name="company_partner_id" invisible="1"/>
                                 <field name="bank_account_id"/>
-                                <field name="bank_acc_number" attrs="{'readonly': [('bank_account_id', '!=', False)]}"/>
-                                <field name="bank_id" attrs="{'readonly': [('bank_account_id', '!=', False)]}"/>
+                                <field name="bank_acc_number" attrs="{'readonly': [('bank_account_id', '!=', False)], 'invisible':[('bank_account_id', '=', False)]}"/>
+                                <field name="bank_id" attrs="{'readonly': [('bank_account_id', '!=', False)], 'invisible':[('bank_account_id', '=', False)]}"/>
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -1881,7 +1881,7 @@ action = model.setting_init_bank_account_action()
 
         <menuitem id="menu_account_supplier" name="Vendors"
             parent="account.menu_finance_payables"
-            action="base.action_partner_supplier_form" sequence="200"/>
+            action="account.res_partner_action_supplier" sequence="200"/>
 
         <!-- Manual reconciliation -->
         <record id="action_manual_reconciliation" model="ir.actions.client">

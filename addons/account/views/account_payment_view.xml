@@ -37,7 +37,7 @@
             <field name="name">account.payment.kanban</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" create="0" group_create="0" >
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="payment_date"/>
@@ -61,6 +61,7 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <field name="amount" widget='monetary'/>
+                                        <field name="currency_id" invisible="1"/>
                                     </div>
                                     <div class="col-6">
                                         <span class="float-right">
@@ -186,9 +187,9 @@
                                     <field name="payment_difference_handling" widget="radio" nolabel="1"/>
                                     <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
                                         <label for="writeoff_account_id" class="oe_edit_only" string="Post Difference In"/>
-                                        <field name="writeoff_account_id" options="{'no_create': True}" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                        <field name="writeoff_account_id" options="{'no_create': True}" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile'), ('payment_difference', '!=', 0.0)]}"/>
                                         <label for="writeoff_label" class="oe_edit_only" string="Label"/>
-                                        <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                        <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile'), ('payment_difference', '!=', 0.0)]}"/>
                                     </div>
                                 </div>
                             </group>

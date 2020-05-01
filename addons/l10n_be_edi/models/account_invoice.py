@@ -135,7 +135,10 @@ class AccountMove(models.Model):
 
                     # Price Unit
                     elements = eline.xpath('cac:Price/cbc:PriceAmount', namespaces=namespaces)
-                    invoice_line_form.price_unit = elements and float(elements[0].text) or 0.0
+                    price_unit = elements and float(elements[0].text) or 0.0
+                    elements = eline.xpath('cbc:LineExtensionAmount', namespaces=namespaces)
+                    line_extension_amount = elements and float(elements[0].text) or 0.0
+                    invoice_line_form.price_unit = price_unit or line_extension_amount / invoice_line_form.quantity or 0.0
 
                     # Name
                     elements = eline.xpath('cac:Item/cbc:Description', namespaces=namespaces)

@@ -241,7 +241,8 @@ class AccountChartTemplate(models.Model):
             })
 
         # Set the transfer account on the company
-        company.transfer_account_id = self.env['account.account'].search([('code', '=like', self.transfer_account_code_prefix + '%')])[:1]
+        company.transfer_account_id = self.env['account.account'].search([
+            ('code', '=like', self.transfer_account_code_prefix + '%'), ('company_id', '=', company.id)], limit=1)
 
         # Create Bank journals
         self._create_bank_journals(company, acc_template_ref)
@@ -261,10 +262,12 @@ class AccountChartTemplate(models.Model):
         the provided company (meaning hence that its chart of accounts cannot
         be changed anymore).
         """
-        model_to_check = ['account.move', 'account.payment', 'account.bank.statement']
+        model_to_check = ['account.move.line', 'account.payment', 'account.bank.statement']
         for model in model_to_check:
             if self.env[model].sudo().search([('company_id', '=', company_id.id)], limit=1):
                 return True
+        if self.env['account.move'].sudo().search([('company_id', '=', company_id.id), ('name', '!=', '/')], limit=1):
+            return True
         return False
 
     def _create_tax_templates_from_rates(self, company_id, sale_tax_rate, purchase_tax_rate):

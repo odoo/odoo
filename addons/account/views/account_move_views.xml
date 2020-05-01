@@ -402,6 +402,7 @@
                     <field name="invoice_date" optional="show" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Invoice Date"/>
                     <field name="invoice_origin" optional="show" string="Source Document"/>
                     <field name="invoice_payment_ref" optional="hide" invisible="context.get('default_type') in ('out_invoice', 'out_refund','out_receipt')"/>
+                    <field name="ref" optional="hide"/>
                     <field name="invoice_user_id" optional="show" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                     <field name="invoice_date_due" optional="show"/>
@@ -661,7 +662,7 @@
                                 <field name="invoice_line_ids"
                                        widget="section_and_note_one2many"
                                        mode="tree,kanban"
-                                       context="{'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
+                                       context="{'default_type': context.get('default_type'), 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
                                     <tree editable="bottom" string="Journal Items" default_order="sequence, date desc, move_name desc, id">
                                         <control>
                                             <create name="add_line_control" string="Add a line"/>
@@ -724,6 +725,7 @@
                                         <field name="is_rounding_line" invisible="1"/>
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
                                         <field name="account_internal_type" invisible="1"/>
+                                        <field name="always_set_currency_id" invisible="1"/>
                                     </tree>
                                     <kanban class="o_kanban_mobile">
                                         <!-- Displayed fields -->
@@ -801,6 +803,7 @@
                                         <field name="is_rounding_line" invisible="1"/>
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
                                         <field name="account_internal_type" invisible="1"/>
+                                        <field name="always_set_currency_id" invisible="1"/>
                                     </kanban>
                                     <form>
                                         <sheet>
@@ -831,38 +834,34 @@
                                 </field>
 
                                 <!-- Totals (only invoices / receipts) -->
-                                <group class="oe_right">
-                                    <group class="oe_subtotal_footer"
-                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
-                                        <field name="amount_untaxed"/>
-                                        <field name="amount_by_group" widget="tax-group-custom-field" nolabel="1" colspan="2"/>
-                                        <field name="amount_total" class="oe_subtotal_footer_separator"/>
-                                        <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
-                                        <field name="amount_residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
-                                    </group>
-
-                                    <newline/>
-
-                                    <group class="oe_invoice_outstanding_credits_debits" style="width: 350px !important;">
-                                        <field name="invoice_outstanding_credits_debits_widget"
-                                            colspan="2" nolabel="1" widget="payment"
-                                            attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('type', 'in', ('out_receipt', 'in_receipt'))]}"/>
-                                    </group>
-
+                                <group class="oe_subtotal_footer"
+                                    attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                                    <field name="amount_untaxed"/>
+                                    <field name="amount_by_group" widget="tax-group-custom-field" nolabel="1" colspan="2"/>
+                                    <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                                    <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
+                                    <field name="amount_residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                 </group>
+
+                                <field name="invoice_outstanding_credits_debits_widget"
+                                    class="oe_invoice_outstanding_credits_debits"
+                                    colspan="2" nolabel="1" widget="payment"
+                                    attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('type', 'in', ('out_receipt', 'in_receipt'))]}"/>
+
                                 <!-- Internal note -->
                                 <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
                             </page>
                             <page id="aml_tab" string="Journal Items" groups="account.group_account_user">
                                 <field name="line_ids"
-                                       context="{'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
+                                       context="{'default_type': context.get('default_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
                                     <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">
                                         <!-- Displayed fields -->
                                         <field name="account_id"
                                                attrs="{
                                                     'required': [('display_type', 'not in', ('line_section', 'line_note'))],
                                                     'invisible': [('display_type', 'in', ('line_section', 'line_note'))],
-                                               }"/>
+                                               }"
+                                               domain="[('company_id', '=', parent.company_id)]" />
                                         <field name="partner_id"
                                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
                                                attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>
@@ -966,7 +965,7 @@
                                            name="sale_info_group"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
                                         <field name="invoice_user_id"/>
-                                        <field name="invoice_origin" string="Source Document"
+                                        <field name="invoice_origin" force_save="1" string="Source Document"
                                                attrs="{'invisible': [('invoice_origin', '=', False)]}"/>
                                     </group>
                                     <group string="Accounting"
@@ -982,10 +981,11 @@
                                     <group string="Payments"
                                            name="payments_info_group"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
-                                        <field name="invoice_payment_ref" attrs="{'readonly': [('state', '=', 'paid'), ('type', 'in', ('in_invoice', 'in_refund'))]}"/>
+                                        <field name="invoice_payment_ref"
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="invoice_partner_bank_id"
                                                domain="[('partner_id', '=', bank_partner_id)]"
-                                               attrs="{'readonly': [('state', '=', 'paid')]}"/>
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                 </group>
                             </page>
@@ -1075,10 +1075,11 @@
                     <filter domain="[('invoice_user_id', '=', uid)]" name="myinvoices" help="My Invoices"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
-                    <filter name="unpaid" string="Posted" domain="[('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]"/>
+                    <filter name="posted" string="Posted" domain="[('state', '=', 'posted')]"/>
                     <separator/>
                     <filter name="in_payment" string="In Payment" domain="[('invoice_payment_state', '=', 'in_payment')]"/>
                     <filter name="paid" string="Paid" domain="[('invoice_payment_state', '=', 'paid')]"/>
+                    <filter name="unpaid" string="Not Paid" domain="[('invoice_payment_state', '=', 'not_paid')]"/>
                     <filter name="late" string="Overdue" domain="['&amp;', ('invoice_date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <filter name="invoice_date" string="Invoice Date" date="invoice_date"/>
@@ -1148,7 +1149,7 @@
             view_id="account.view_move_line_tax_audit_tree"/>
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'name_groupby':1}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'name_groupby':1, 'create':0}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -1224,7 +1225,7 @@
             <field name="context">{'journal_type':'general', 'search_default_posted':1}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
-            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('move_id.state', '!=', 'cancel')]</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>

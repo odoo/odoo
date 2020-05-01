@@ -2234,6 +2234,47 @@ class StockMove(SavepointCase):
         self.assertEqual(quant.quantity, 9.0)
         self.assertEqual(quant.reserved_quantity, 9.0)
 
+    def test_use_reserved_move_line_2(self):
+        # make 12 units available in stock
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 12.0)
+
+        # reserve 12 units
+        move1 = self.env['stock.move'].create({
+            'name': 'test_use_reserved_move_line_2_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 12,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        quant = self.env['stock.quant']._gather(self.product, self.stock_location)
+        self.assertEqual(quant.quantity, 12)
+        self.assertEqual(quant.reserved_quantity, 12)
+
+        # force a move of 1 dozen
+        move2 = self.env['stock.move'].create({
+            'name': 'test_use_reserved_move_line_2_2',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_dozen.id,
+            'product_uom_qty': 1,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        self.assertEqual(move2.state, 'confirmed')
+        move2._set_quantity_done(1)
+        move2._action_done()
+
+        # mov1 should be unreserved and the quant should be unlinked
+        self.assertEqual(move1.state, 'confirmed')
+        quant = self.env['stock.quant']._gather(self.product, self.stock_location)
+        self.assertEqual(quant.quantity, 0)
+        self.assertEqual(quant.reserved_quantity, 0)
+
     def test_use_unreserved_move_line_1(self):
         """ Test that validating a stock move linked to an untracked product reserved by another one
         correctly unreserves the other one.
@@ -4150,12 +4191,12 @@ class StockMove(SavepointCase):
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
             'product_uom': self.uom_unit.id,
-            'product_uom_qty': 10.0,
+            'quantity_done': 10.0,
             'picking_id': picking.id,
         })
         picking._autoconfirm_picking()
         self.assertEqual(picking.state, 'assigned')
-        move1.product_uom_qty = 12
+        move1.quantity_done = 12
         self.assertEqual(picking.state, 'assigned')
 
     def test_initial_demand_4(self):

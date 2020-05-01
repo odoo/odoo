@@ -28,20 +28,20 @@ class ReportStockQuantity(models.Model):
 CREATE or REPLACE VIEW report_stock_quantity AS (
 SELECT
     m.id,
-    product_id,
+    m.product_id,
     CASE
-        WHEN (ls.usage = 'internal' OR ls.usage = 'transit' AND ls.company_id IS NOT NULL) AND ld.usage != 'internal' THEN 'out'
-        WHEN ls.usage != 'internal' AND (ld.usage = 'internal' OR ld.usage = 'transit' AND ld.company_id IS NOT NULL) THEN 'in'
+        WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN 'out'
+        WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN 'in'
     END AS state,
-    date_expected::date AS date,
+    m.date_expected::date AS date,
     CASE
-        WHEN (ls.usage = 'internal' OR ls.usage = 'transit' AND ls.company_id IS NOT NULL) AND ld.usage != 'internal' THEN -product_qty
-        WHEN ls.usage != 'internal' AND (ld.usage = 'internal' OR ld.usage = 'transit' AND ld.company_id IS NOT NULL) THEN product_qty
+        WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -product_qty
+        WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN product_qty
     END AS product_qty,
     m.company_id,
     CASE
-        WHEN (ls.usage = 'internal' OR ls.usage = 'transit' AND ls.company_id IS NOT NULL) AND ld.usage != 'internal' THEN whs.id
-        WHEN ls.usage != 'internal' AND (ld.usage = 'internal' OR ld.usage = 'transit' AND ld.company_id IS NOT NULL) THEN whd.id
+        WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN whs.id
+        WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN whd.id
     END AS warehouse_id
 FROM
     stock_move m
@@ -53,17 +53,16 @@ LEFT JOIN product_product pp on pp.id=m.product_id
 LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
 WHERE
     pt.type = 'product' AND
-    product_qty != 0 AND (
-    (ls.usage = 'internal' OR ls.usage = 'transit' AND ls.company_id IS NOT NULL) AND ld.usage != 'internal' OR
-    ls.usage != 'internal' AND (ld.usage = 'internal' OR ld.usage = 'transit' AND ld.company_id IS NOT NULL)) AND
+    product_qty != 0 AND
+    (whs.id IS NULL or whd.id IS NULL OR whs.id != whd.id) AND
     m.state NOT IN ('cancel', 'draft', 'done')
 UNION
 SELECT
     -q.id as id,
-    product_id,
+    q.product_id,
     'forecast' as state,
     date.*::date,
-    quantity as product_qty,
+    q.quantity as product_qty,
     q.company_id,
     wh.id as warehouse_id
 FROM
@@ -77,27 +76,27 @@ WHERE
 UNION
 SELECT
     m.id,
-    product_id,
+    m.product_id,
     'forecast' as state,
     GENERATE_SERIES(
     CASE
         WHEN m.state = 'done' THEN (now() at time zone 'utc')::date - interval '3month'
-        ELSE date_expected::date
+        ELSE m.date_expected::date
     END,
     CASE
         WHEN m.state != 'done' THEN (now() at time zone 'utc')::date + interval '3 month'
-        ELSE date::date - interval '1 day'
+        ELSE m.date::date - interval '1 day'
     END, '1 day'::interval)::date date,
     CASE
-        WHEN (ls.usage = 'internal' OR ls.usage = 'transit' AND ls.company_id IS NOT NULL) AND ld.usage != 'internal' AND m.state = 'done' THEN product_qty
-        WHEN ls.usage != 'internal' AND (ld.usage = 'internal' OR ld.usage = 'transit' AND ld.company_id IS NOT NULL) AND m.state = 'done' THEN -product_qty
-        WHEN (ls.usage = 'internal' OR ls.usage = 'transit' AND ls.company_id IS NOT NULL) AND ld.usage != 'internal' THEN -product_qty
-        WHEN ls.usage != 'internal' AND (ld.usage = 'internal' OR ld.usage = 'transit' AND ld.company_id IS NOT NULL) THEN product_qty
+        WHEN ((whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit') AND m.state = 'done' THEN product_qty
+        WHEN ((whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit') AND m.state = 'done' THEN -product_qty
+        WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -product_qty
+        WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN product_qty
     END AS product_qty,
     m.company_id,
     CASE
-        WHEN (ls.usage = 'internal' OR ls.usage = 'transit' AND ls.company_id IS NOT NULL) AND ld.usage != 'internal' THEN whs.id
-        WHEN ls.usage != 'internal' AND (ld.usage = 'internal' OR ld.usage = 'transit' AND ld.company_id IS NOT NULL) THEN whd.id
+        WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN whs.id
+        WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN whd.id
     END AS warehouse_id
 FROM
     stock_move m
@@ -109,9 +108,8 @@ LEFT JOIN product_product pp on pp.id=m.product_id
 LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
 WHERE
     pt.type = 'product' AND
-    product_qty != 0 AND (
-    (ls.usage = 'internal' OR ls.usage = 'transit' AND ls.company_id IS NOT NULL) AND ld.usage != 'internal' OR
-    ls.usage != 'internal' AND (ld.usage = 'internal' OR ld.usage = 'transit' AND ld.company_id IS NOT NULL)) AND
+    product_qty != 0 AND
+    (whs.id IS NULL or whd.id IS NULL OR whs.id != whd.id) AND
     m.state NOT IN ('cancel', 'draft')
 );
 """

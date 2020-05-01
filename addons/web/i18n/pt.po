@@ -7,19 +7,19 @@
 # Vitor Fernandes <vmlf01@gmail.com>, 2019
 # Pedro Castro Silva <pedrocs@exo.pt>, 2019
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2019
-# Pedro Filipe <pedro2.10@hotmail.com>, 2019
-# Manuela Silva <manuelarodsilva@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Nuno Silva <nuno.silva@arxi.pt>, 2019
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2019
+# Nuno Silva <nuno.silva@arxi.pt>, 2020
+# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
+# Manuela Silva <manuelarodsilva@gmail.com>, 2020
+# Pedro Filipe <pedro2.10@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-04-27 10:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2019\n"
+"Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2020\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -397,6 +397,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add column"
 msgstr "Adicionar coluna"
@@ -676,7 +677,6 @@ msgstr "Campos disponíveis"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
@@ -804,6 +804,13 @@ msgstr "Calendário"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/web_calendar.xml:0
+#, python-format
+msgid "Calendar toolbar"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_view.js:0
 #, python-format
 msgid "Calendar view has not defined 'date_start' attribute."
@@ -859,6 +866,14 @@ msgstr "Alterar predefinição:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Change graph"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Checkbox"
@@ -909,6 +924,9 @@ msgstr "Limpar Assinatura"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector_dialog.js:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/dialog.xml:0
+#: code:addons/web/static/src/xml/notification.xml:0
 #, python-format
 msgid "Close"
 msgstr "Fechar"
@@ -926,6 +944,11 @@ msgstr ""
 #, python-format
 msgid "Column title"
 msgstr "Título da coluna"
+
+#. module: web
+#: model:ir.model,name:web.model_res_company
+msgid "Companies"
+msgstr "Empresas"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
@@ -997,6 +1020,14 @@ msgstr "Contexto:"
 #, python-format
 msgid "Control"
 msgstr "Controlar"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Control panel toolbar"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1338,6 +1369,13 @@ msgstr "Erro de domínio"
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
+msgid "Domain node"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
 msgid "Domain:"
 msgstr "Domínio:"
 
@@ -1347,6 +1385,13 @@ msgstr "Domínio:"
 #, python-format
 msgid "Don't leave yet,<br />it's still loading..."
 msgstr "Não vá embora,<br /> a aplicação ainda está a carregar..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Download"
+msgstr "Transferir"
 
 #. module: web
 #. openerp-web
@@ -1436,7 +1481,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Edit a record"
-msgstr ""
+msgstr "Editar um registo"
 
 #. module: web
 #. openerp-web
@@ -2126,6 +2171,17 @@ msgstr "Correio:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Main actions"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
@@ -2615,6 +2671,13 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools#{widget.debug_mode_help}"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open View"
 msgstr "Abrir Visualização"
 
@@ -2630,21 +2693,21 @@ msgstr "Abrir o próximo registo"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Open the previous record"
-msgstr ""
+msgstr "Abrir o registo anterior"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Open to kanban view"
-msgstr ""
+msgstr "Abrir em vista kanban"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Open to list view"
-msgstr ""
+msgstr "Abrir em lista"
 
 #. module: web
 #. openerp-web
@@ -2681,6 +2744,13 @@ msgid "PDF Viewer"
 msgstr ""
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "PDF controls"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid ""
 "Page:\n"
@@ -2698,6 +2768,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
 msgstr "Página: <span class=\"page\"/> / <span class=\"topage\"/>"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pager"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2772,6 +2850,13 @@ msgstr ""
 #, python-format
 msgid "Pivot"
 msgstr "Pivot"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pivot settings"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2853,7 +2938,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 #. module: web
 #. openerp-web
@@ -3165,7 +3250,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Save a record"
-msgstr ""
+msgstr "Guardar um registo"
 
 #. module: web
 #. openerp-web
@@ -3354,7 +3439,7 @@ msgstr "Partilhar com todos os utilizadores"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Shortcuts"
-msgstr ""
+msgstr "Atalhos"
 
 #. module: web
 #. openerp-web
@@ -3463,6 +3548,13 @@ msgstr "Suporte"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Switch to this company"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Syntax error"
@@ -3481,13 +3573,6 @@ msgstr "Etiquetas"
 #, python-format
 msgid "Take a minute to get a coffee,<br />because it's loading..."
 msgstr "Aproveite para tomar um café,<br />porque a operação pode demorar..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Tap on the list to change company"
-msgstr "Clique na lista para alterar a empresa"
 
 #. module: web
 #. openerp-web
@@ -3990,6 +4075,13 @@ msgstr "Utilizar por predefinição"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "User"
+msgstr "Utilizador"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "User Error"
@@ -4035,6 +4127,13 @@ msgstr "Ver Metadados"
 #: model:ir.model.fields,field_description:web.field_ir_actions_act_window_view__view_mode
 msgid "View Type"
 msgstr "Tipo de Vista"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View switcher"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -4108,7 +4207,7 @@ msgstr "Widget:"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Windows/Linux"
-msgstr ""
+msgstr "Windows/Linux"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4606,6 +4705,13 @@ msgstr ""
 #, python-format
 msgid "remaining)"
 msgstr "restantes)"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "search"
+msgstr ""
 
 #. module: web
 #. openerp-web

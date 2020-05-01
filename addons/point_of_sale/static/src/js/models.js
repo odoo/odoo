@@ -977,7 +977,7 @@ exports.PosModel = Backbone.Model.extend({
         options = options || {};
 
         var self = this;
-        var timeout = typeof options.timeout === 'number' ? options.timeout : 7500 * orders.length;
+        var timeout = typeof options.timeout === 'number' ? options.timeout : 30000 * orders.length;
 
         // Keep the order ids that are about to be sent to the
         // backend. In between create_from_ui and the success callback
@@ -1504,9 +1504,9 @@ exports.Orderline = Backbone.Model.extend({
             var unit = this.get_unit();
             if(unit){
                 if (unit.rounding) {
-                    this.quantity    = round_pr(quant, unit.rounding);
                     var decimals = this.pos.dp['Product Unit of Measure'];
-                    this.quantity = round_di(this.quantity, decimals)
+                    var rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
+                    this.quantity    = round_pr(quant, rounding);
                     this.quantityStr = field_utils.format.float(this.quantity, {digits: [69, decimals]});
                 } else {
                     this.quantity    = round_pr(quant, 1);
@@ -1897,8 +1897,8 @@ exports.Orderline = Backbone.Model.extend({
             currency_rounding = currency_rounding * 0.00001;
 
         // 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
-        var recompute_base = function(base_amount, fixed_amount, percent_amount, division_amount){
-             return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100;
+        var recompute_base = function(base_amount, fixed_amount, percent_amount, division_amount, prec){
+             return round_pr((base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100, prec);
         }
 
         var base = round_pr(price_unit * quantity, currency_rounding);
@@ -1921,7 +1921,7 @@ exports.Orderline = Backbone.Model.extend({
 
         _(taxes.reverse()).each(function(tax){
             if(tax.include_base_amount){
-                base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount);
+                base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, currency_rounding);
                 incl_fixed_amount = 0.0;
                 incl_percent_amount = 0.0;
                 incl_division_amount = 0.0;
@@ -1947,7 +1947,7 @@ exports.Orderline = Backbone.Model.extend({
             i -= 1;
         });
 
-        var total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount);
+        var total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, currency_rounding);
         var total_included = total_excluded;
 
         // 5) Iterate the taxes in the sequence order to fill missing base/amount values.
@@ -1985,8 +1985,8 @@ exports.Orderline = Backbone.Model.extend({
 
         return {
             'taxes': taxes_vals,
-            'total_excluded': sign * round_pr(total_excluded, currency_rounding),
-            'total_included': sign * round_pr(total_included, currency_rounding),
+            'total_excluded': sign * round_pr(total_excluded, this.pos.currency.rounding),
+            'total_included': sign * round_pr(total_included, this.pos.currency.rounding),
         }
     },
     get_all_prices: function(){
@@ -2638,6 +2638,12 @@ exports.Order = Backbone.Model.extend({
         var line = new exports.Orderline({}, {pos: this.pos, order: this, product: product});
         this.fix_tax_included_price(line);
 
+        if(options.extras !== undefined){
+            for (var prop in options.extras) {
+                line[prop] = options.extras[prop];
+            }
+        }
+
         if(options.quantity !== undefined){
             line.set_quantity(options.quantity);
         }
@@ -2653,12 +2659,6 @@ exports.Order = Backbone.Model.extend({
 
         if(options.discount !== undefined){
             line.set_discount(options.discount);
-        }
-
-        if(options.extras !== undefined){
-            for (var prop in options.extras) {
-                line[prop] = options.extras[prop];
-            }
         }
 
         var to_merge_orderline;
@@ -3030,6 +3030,9 @@ exports.Order = Backbone.Model.extend({
     },
     wait_for_push_order: function () {
         return this.is_to_email();
+    },
+    get_total_balance: function() {
+        return this.get_total_with_tax() - this.get_total_paid();
     },
 });
 

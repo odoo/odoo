@@ -8,24 +8,25 @@
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2019
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
 # Pablo Rojas <rojaspablo88@gmail.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Antonio Trueba, 2019
 # Miguel Orueta <mo@landoo.es>, 2019
 # 966ff43e6966712895a590e7320ca288, 2019
 # Pilar Marín <pilar@odooperu.pe>, 2019
 # Alejandro Die Sanchis <marketing@domatix.com>, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2019
-# Jon Perez <jop@odoo.com>, 2019
 # Martin Trigaux, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Jon Perez <jop@odoo.com>, 2020
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2019\n"
+"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -250,6 +251,7 @@ msgid "Choose the Sales Order to invoice"
 msgstr "Elija el pedido de cliente para facturar"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__company_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "Company"
 msgstr "Compañía"
@@ -962,6 +964,11 @@ msgid ""
 "Mapping' of the project, the timesheet entry will be linked to this sales "
 "order item."
 msgstr ""
+"Artículo de pedido de ventas al que está vinculada la tarea. Si las hojas de"
+" tiempo de un empleado en esta tarea, y si este empleado no está en la "
+"'Asignación de artículos de pedido de Empleado/Ventas' del proyecto, la "
+"entrada de la hoja de tiempo se vinculará a este artículo de pedido de "
+"ventas."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_order_id
@@ -1058,6 +1065,7 @@ msgstr "Tarea generada por el elemento del pedido de venta"
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__tasks_count
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#: model:project.project,label_tasks:sale_timesheet.project_support
 #, python-format
 msgid "Tasks"
 msgstr "Tareas"
@@ -1080,6 +1088,10 @@ msgid ""
 "The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
+"El pedido de venta no puede ser creado porque no introdujo algunos de los "
+"empleados que han introducido partes de horas en el proyecto. Por favor "
+"revise el listado de empleados antes de crear el pedido de venta. Empleado/s"
+" faltante/s: %s"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1169,6 +1181,9 @@ msgid ""
 " the task, nor on the project. Please define one to save your timesheet "
 "line."
 msgstr ""
+"La línea de parte de horas no puede ser facturada: no hay línea de pedido de"
+" venta definida en la tarea ni en el proyecto. Por favor defina una para "
+"guardar su línea de parte de horas."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_encode_uom_id
@@ -1176,6 +1191,8 @@ msgid ""
 "This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
+"Esto establecerá la unidad de medida utilizada para codificar la parte de horas. Esto simplemente proporcionará herramientas\n"
+"y widgets para ayudar a la codificación. Todos los informes se expresarán en horas (valor predeterminado)."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1203,7 +1220,7 @@ msgstr "Coste del parte de horas"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr ""
+msgstr "Unidad de codificación de parte de horas"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
@@ -1368,6 +1385,12 @@ msgstr ""
 " pedidos de venta facturados en tiempo y material)."
 
 #. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:0
+#, python-format
+msgid "You can not modify timesheets from different employees"
+msgstr "No puede modificar partes de horas de diferentes empleados"
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
@@ -1381,6 +1404,8 @@ msgid ""
 "You cannot link the order item %s - %s to this task because it is a re-"
 "invoiced expense."
 msgstr ""
+"No puede enlazar la línea de pedido %s - %s a esta tarea porque es un gasto "
+"re-facturado."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0

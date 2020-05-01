@@ -2282,6 +2282,39 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create record: open on a column while another column has already one', async function (assert) {
+        assert.expect(6);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        // Click on quick create in first column
+        await testUtils.dom.click(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_quick_add'));
+        assert.containsOnce(kanban, '.o_kanban_quick_create');
+        assert.containsOnce(kanban.$('.o_kanban_group:nth-child(1)'), '.o_kanban_quick_create');
+
+        // Click on quick create in second column
+        await testUtils.dom.click(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_quick_add'));
+        assert.containsOnce(kanban, '.o_kanban_quick_create');
+        assert.containsOnce(kanban.$('.o_kanban_group:nth-child(2)'), '.o_kanban_quick_create');
+
+        // Click on quick create in first column once again
+        await testUtils.dom.click(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_quick_add'));
+        assert.containsOnce(kanban, '.o_kanban_quick_create');
+        assert.containsOnce(kanban.$('.o_kanban_group:nth-child(1)'), '.o_kanban_quick_create');
+
+        kanban.destroy();
+    });
+
     QUnit.test('many2many_tags in kanban views', async function (assert) {
         assert.expect(12);
 

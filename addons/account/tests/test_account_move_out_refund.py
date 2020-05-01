@@ -190,7 +190,7 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
             # Current price_unit is 1000.
-            # We set quantity = 4, discount = 50%, price_unit = 500 because (4 * 500) * 0.5 = 1000.
+            # We set quantity = 4, discount = 50%, price_unit = 400. The debit/credit fields don't change because (4 * 500) * 0.5 = 1000.
             line_form.quantity = 4
             line_form.discount = 50
             line_form.price_unit = 500
@@ -337,6 +337,7 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
                 **self.term_line_vals_1,
                 'name': 'turlututu',
                 'partner_id': self.partner_b.id,
+                'account_id': self.partner_b.property_account_receivable_id.id,
                 'price_unit': -987.0,
                 'price_subtotal': -987.0,
                 'price_total': -987.0,
@@ -347,6 +348,7 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
                 **self.term_line_vals_1,
                 'name': 'turlututu',
                 'partner_id': self.partner_b.id,
+                'account_id': self.partner_b.property_account_receivable_id.id,
                 'price_unit': -423.0,
                 'price_subtotal': -423.0,
                 'price_total': -423.0,

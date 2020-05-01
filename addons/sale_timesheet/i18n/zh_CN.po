@@ -16,21 +16,21 @@
 # Felix Yuen <fyu@odoo.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Martin Trigaux, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # v2exerer <9010446@qq.com>, 2019
 # Gary Wei <Gary.wei@elico-corp.com>, 2019
 # snow wang <147156565@qq.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # keecome <7017511@qq.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -258,6 +258,7 @@ msgid "Choose the Sales Order to invoice"
 msgstr "选择销售订单开票"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__company_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "Company"
 msgstr "公司"
@@ -385,7 +386,7 @@ msgstr "显示名称"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__visible_project
 msgid "Display project"
-msgstr ""
+msgstr "显示项目"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_tracking__no
@@ -689,7 +690,7 @@ msgstr "非计费任务"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable tasks"
-msgstr ""
+msgstr "非计费任务"
 
 #. module: sale_timesheet
 #: model:project.task,legend_blocked:sale_timesheet.project_task_2
@@ -822,7 +823,7 @@ msgstr "项目管理员"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project Overview"
-msgstr ""
+msgstr "项目概论"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_profitability_report
@@ -1059,6 +1060,7 @@ msgstr "销售订单项目生成的任务"
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__tasks_count
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#: model:project.project,label_tasks:sale_timesheet.project_support
 #, python-format
 msgid "Tasks"
 msgstr "任务"
@@ -1098,7 +1100,7 @@ msgstr "产品%s不应该有一个全局项目，因为它将生成一个项目�
 msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
-msgstr "产品%s不应该有项目或项目模板，因为它不会生成项目。"
+msgstr "产品模板%s不应该有项目或项目模板，因为它不会生成项目。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1106,7 +1108,7 @@ msgstr "产品%s不应该有项目或项目模板，因为它不会生成项目�
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
-msgstr "产品%s不应具有项目模板，因为它将在全局项目中生成任务。"
+msgstr "产品模板%s不应具有项目模板，因为它将在全局项目中生成任务。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1367,6 +1369,12 @@ msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
 "items invoiced on Time and material)."
 msgstr "您不可以修改已开具发票的工时表（与按时间和材料开具发票的销售订单项目相关联）。"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:0
+#, python-format
+msgid "You can not modify timesheets from different employees"
+msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0

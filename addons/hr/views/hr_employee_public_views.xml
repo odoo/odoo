@@ -91,7 +91,7 @@
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
-                    <field name="work_phone"/>
+                    <field name="work_phone" class="o_force_ltr"/>
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
@@ -113,7 +113,7 @@
                     <templates>
                         <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
-                            <field name="image_128" widget="image" class="o_kanban_image_fill_left o_hr_rounded_circle" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
+                            <field name="image_128" widget="image" class="o_kanban_image_fill_left" options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"/>
 
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
@@ -136,7 +136,7 @@
                                 <ul>
                                     <li id="last_login"/>
                                     <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
-                                    <li t-if="record.work_phone.raw_value"><field name="work_phone" /></li>
+                                    <li t-if="record.work_phone.raw_value" class="o_force_ltr"><field name="work_phone" /></li>
                                 </ul>
                             </div>
                         </div>

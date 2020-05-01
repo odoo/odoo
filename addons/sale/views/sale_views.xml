@@ -115,6 +115,7 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5">
+                    <field name="currency_id" invisible="1"/>
                     <field name="partner_id" avatar_field="image_128"/>
                     <field name="amount_total" widget="monetary"/>
                     <field name="payment_term_id"/>
@@ -470,7 +471,7 @@
                                           'pricelist': parent.pricelist_id,
                                           'uom':product_uom,
                                           'company_id': parent.company_id,
-                                          'default_lst_price': price_unit,
+                                          'default_list_price': price_unit,
                                           'default_description_sale': name
                                       }"
                                       domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
@@ -636,8 +637,8 @@
                                     <field name="user_id"/>
                                     <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" options="{'no_create': True}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="require_signature" groups="base.group_no_one"/>
-                                    <field name="require_payment" groups="base.group_no_one"/>
+                                    <field name="require_signature"/>
+                                    <field name="require_payment"/>
                                     <field name="reference" readonly="1" attrs="{'invisible': [('reference', '=', False)]}"/>
                                     <field name="client_order_ref"/>
                                 </group>
@@ -847,6 +848,15 @@
                 or check every order and invoice them one by one.
               </p>
             </field>
+        </record>
+
+        <record id="model_sale_order_action_quotation_sent" model="ir.actions.server">
+            <field name="name">Mark Quotation as Sent</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_quotation_sent()</field>
         </record>
 
         <menuitem id="menu_sale_invoicing"

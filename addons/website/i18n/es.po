@@ -9,7 +9,7 @@
 # Sergio Flores <vitavitae1@gmail.com>, 2019
 # Gustavo Valverde, 2019
 # Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # 966ff43e6966712895a590e7320ca288, 2019
 # Raquel Iciarte <ric@odoo.com>, 2019
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2019
@@ -37,20 +37,21 @@
 # Alejandro Die Sanchis <marketing@domatix.com>, 2019
 # Antonio Trueba, 2019
 # Martin Trigaux, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2019
 # JOSE ALEJANDRO ECHEVERRI VALENCIA <josealejandroeche@gmail.com>, 2019
 # Cris Martin <cristina.marrod@gmail.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Pablo Rojas <rojaspablo88@gmail.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# gpi odoo <gpi@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 09:46+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Pablo Rojas <rojaspablo88@gmail.com>, 2019\n"
+"Last-Translator: gpi odoo <gpi@odoo.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -408,6 +409,13 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            Crear un Proyecto de Google y obetener la clave"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            Enable billing on your Google Project"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1290,7 +1298,7 @@ msgstr "Base"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_base
 msgid "Base View Architecture"
-msgstr ""
+msgstr "Arquitectura de la vista base"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1444,6 +1452,13 @@ msgid "Change Icons"
 msgstr "Cambiar iconos"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/widgets/theme.js:0
+#, python-format
+msgid "Changing this color will regenerate the default theme color scheme"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__field_parent
 msgid "Child Field"
 msgstr "Campo hijo"
@@ -1562,6 +1577,7 @@ msgstr "Clonar esta página"
 #. openerp-web
 #: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
+#: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
@@ -2304,6 +2320,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"Campo desde donde se origina la vista.\n"
+"                                                          Útil para resetear vistas rotas o para leer el arco des de archivos en dev-xml."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2908,7 +2926,10 @@ msgid "Indexed"
 msgstr "Indexado"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#, python-format
 msgid "Info"
 msgstr "Información"
 
@@ -3499,7 +3520,7 @@ msgstr "Modelos"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_updated
 msgid "Modified Architecture"
-msgstr ""
+msgstr "Estructura Modificada"
 
 #. module: website
 #. openerp-web
@@ -4099,7 +4120,7 @@ msgstr "Anterior"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_prev
 msgid "Previous View Architecture"
-msgstr ""
+msgstr "Arquitectura de la vista previa"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4198,7 +4219,7 @@ msgstr "Qweb"
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Campo Qweb de Contacto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_btn
@@ -5382,15 +5403,6 @@ msgstr ""
 "menú"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid ""
-"User-agent: *\n"
-"Sitemap:"
-msgstr ""
-"User-agent: *\n"
-"Sitemap:"
-
-#. module: website
 #: model:ir.model,name:website.model_res_users
 msgid "Users"
 msgstr "Usuarios"
@@ -6084,11 +6096,6 @@ msgstr "px"
 #, python-format
 msgid "signs to get your website ready in no time."
 msgstr "símbolos para tener su sitio web listo en muy poco tiempo."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid "sitemap.xml"
-msgstr "sitemap.xml"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search

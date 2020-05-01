@@ -50,7 +50,7 @@ tour.register('course_publisher', {
     run: 'dblclick',
 }, {
     content: 'eLearning: click pâtissière',
-    trigger: 'img[title="sell.jpg"]',
+    trigger: 'img[title="s_company_team_image_4.png"]',
 }, {
     content: 'eLearning: validate pâtissière',
     trigger: 'footer.modal-footer button:contains("Add")',
@@ -58,7 +58,7 @@ tour.register('course_publisher', {
     content: 'eLearning: is the pâtissière set ?',
     trigger: 'img.o_wslides_course_pict',
     run: function () {
-        if ($('img.o_wslides_course_pict').attr('src').endsWith('sell.jpg')) {
+        if ($('img.o_wslides_course_pict').attr('src').endsWith('s_team_member_4.png')) {
             $('img.o_wslides_course_pict').addClass('o_wslides_tour_success');
         }
     },

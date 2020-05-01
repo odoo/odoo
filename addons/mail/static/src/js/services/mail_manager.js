@@ -864,6 +864,19 @@ var MailManager =  AbstractService.extend({
         this._pinnedDmPartners = [];
         // all threads, including channels, DM, mailboxes, document threads, ...
         this._threads = [];
+
+        this._addMailbox({
+            id: 'inbox',
+            name: _t("Inbox"),
+        });
+        this._addMailbox({
+            id: 'starred',
+            name: _t("Starred"),
+        });
+        this._addMailbox({
+            id: 'history',
+            name: _t("History"),
+        });
     },
     /**
      * State whether discuss app is open or not
@@ -890,11 +903,6 @@ var MailManager =  AbstractService.extend({
                 args: [[channelID]],
             })
             .then(function (result) {
-                // Prevent to automatically open chat window when a new message
-                // is received on mobile.
-                if (config.device.isMobile) {
-                    options.silent = true;
-                }
                 return self._addChannel(result, options);
             });
     },
@@ -1222,11 +1230,6 @@ var MailManager =  AbstractService.extend({
         var proms = [];
         const options = {};
 
-        // Prevent to automatically open all chat windows at initial loading.
-        if (config.device.isMobile) {
-            options.silent = true;
-        }
-
         _.each(data.channel_slots, function (channels) {
             _.each(channels, function (channel) {
                 proms.push(self._addChannel(channel, options));
@@ -1286,20 +1289,8 @@ var MailManager =  AbstractService.extend({
      *   set to 'Starred'
      */
     _updateMailboxesFromServer: function (data) {
-        this._addMailbox({
-            id: 'inbox',
-            name: _t("Inbox"),
-            mailboxCounter: data.needaction_inbox_counter || 0,
-        });
-        this._addMailbox({
-            id: 'starred',
-            name: _t("Starred"),
-            mailboxCounter: data.starred_counter || 0,
-        });
-        this._addMailbox({
-            id: 'history',
-            name: _t("History"),
-        });
+        this.getMailbox('inbox').setMailboxCounter(data.needaction_inbox_counter || 0);
+        this.getMailbox('starred').setMailboxCounter(data.starred_counter || 0);
 
         if (data.is_moderator) {
             this._addMailbox({

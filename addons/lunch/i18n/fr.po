@@ -7,15 +7,17 @@
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # f5f0a0dac17dde787a1d812a6989680e, 2019
-# Laura Piraux <lap@odoo.com>, 2019
 # Rémi CAZENAVE <remi@le-filament.com>, 2019
 # Martin Trigaux, 2019
 # Fabien Pinckaers <fp@openerp.com>, 2019
 # Nathan Grognet <ngr@odoo.com>, 2019
 # Olivier ANDRE <frsw194@gmail.com>, 2019
 # Celia Tydgat <cty@odoo.com>, 2019
-# Cécile Collart <cco@odoo.com>, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
+# Eloïse Stilmant <est@odoo.com>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Laura Piraux <lap@odoo.com>, 2020
+# Vallen Delobel <edv@odoo.com>, 2020
+# Priscilla Sanchez <prs@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
+"Last-Translator: Priscilla Sanchez <prs@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -345,6 +347,9 @@ msgid ""
 "            An expense is automatically created at the order receipt.<br>\n"
 "            A payment represents the employee reimbursement to the company."
 msgstr ""
+"Un mouvement de trésorerie peut être une dépense ou un paiement.<br>\n"
+"            Une dépense est automatiquement créée à la réception de la commande.<br>\n"
+"            Un paiement représente le remboursement de l'employé à l'entreprise."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
@@ -513,7 +518,7 @@ msgstr "Mouvements d'argent"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove_report
 msgid "Cashmoves report"
-msgstr ""
+msgstr "Rapport Cashmoves"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_report_view_search
@@ -596,13 +601,13 @@ msgstr "Confirmer"
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_control_accounts
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_control_accounts
 msgid "Control Accounts"
-msgstr "Comptes de contrôle"
+msgstr "Contrôle Comptes"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_action_control_suppliers
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_control_suppliers
 msgid "Control Vendors"
-msgstr "Vendeurs de controle"
+msgstr "Contrôle Fournisseurs"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__country_id
@@ -737,7 +742,7 @@ msgstr "Mode Edition"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__send_by__mail
 msgid "Email"
-msgstr "Courriel"
+msgstr "Email"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_month
@@ -868,7 +873,7 @@ msgstr "Met en forme l'adresse email « Nom <email@domaine> »"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email_formatted
 msgid "Formatted Email"
-msgstr "Courriel mis en forme"
+msgstr "Email mis en forme"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_friday
@@ -1152,14 +1157,14 @@ msgstr "Déjeuner : recevoir des repas"
 #: model:ir.cron,cron_name:lunch.ir_cron_lunch_alerts
 #: model:ir.cron,name:lunch.ir_cron_lunch_alerts
 msgid "Lunch: alert chat notification"
-msgstr ""
+msgstr "Lunch = chat notification d'alerte "
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.ir_cron_lunch_ir_actions_server
 #: model:ir.cron,cron_name:lunch.ir_cron_lunch
 #: model:ir.cron,name:lunch.ir_cron_lunch
 msgid "Lunch: automatic email send"
-msgstr ""
+msgstr "Lunch: envoi d'email automatique"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
@@ -1204,7 +1209,7 @@ msgstr "Messages"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__moment
 msgid "Moment"
-msgstr ""
+msgstr "Instant"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_monday
@@ -1338,7 +1343,7 @@ msgstr "Rien à commander aujourd'hui"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_moment
 msgid "Notification Moment"
-msgstr ""
+msgstr "Instant de notification"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_time
@@ -1403,7 +1408,7 @@ msgstr "Date de la commande"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__automatic_email_time
 msgid "Order Time"
-msgstr ""
+msgstr "Heure de commande"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action_order
@@ -1501,7 +1506,7 @@ msgstr "Catégories d'articles"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 msgid "Product Categories Form"
-msgstr ""
+msgstr "Catégories de produits de"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__category_id
@@ -1535,7 +1540,7 @@ msgstr "Recherche d'article"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_report
 msgid "Product report"
-msgstr ""
+msgstr "Rapport produit"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
@@ -1802,7 +1807,7 @@ msgstr "Aujourd'hui"
 #: model:ir.actions.act_window,name:lunch.lunch_order_action_by_supplier
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_by_supplier
 msgid "Today's Orders"
-msgstr "Commandes d'aujourd'hui"
+msgstr "Commandes du jour"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
@@ -1812,17 +1817,17 @@ msgstr "Catégories des garnitures"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_ids_1
 msgid "Topping Ids 1"
-msgstr ""
+msgstr "Garniture 1"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_ids_2
 msgid "Topping Ids 2"
-msgstr ""
+msgstr "Garniture 2"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_ids_3
 msgid "Topping Ids 3"
-msgstr ""
+msgstr "Garniture 3"
 
 #. module: lunch
 #. openerp-web
@@ -1897,7 +1902,7 @@ msgstr "Fournisseur"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Vendor Orders by Date"
-msgstr "Commandes Vendeur par Date"
+msgstr "Commandes Fournisseur par Date"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_vendors_action
@@ -1992,7 +1997,7 @@ msgstr "Code postal"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "alert form"
-msgstr ""
+msgstr "alerte de"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_form

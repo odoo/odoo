@@ -3,7 +3,7 @@
 import logging
 import re
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.tools import float_compare
 
 
@@ -122,7 +122,7 @@ class PaymentTransaction(models.Model):
                                    'mark_invoice_as_sent': True,
                                    }
                     trans = trans.with_context(ctx_company)
-                    for invoice in trans.invoice_ids:
+                    for invoice in trans.invoice_ids.with_user(SUPERUSER_ID):
                         invoice.message_post_with_template(int(default_template), email_layout_xmlid="mail.mail_notification_paynow")
         return res
 
@@ -166,8 +166,7 @@ class PaymentTransaction(models.Model):
 
     def render_sale_button(self, order, submit_txt=None, render_values=None):
         values = {
-            'partner_id': order.partner_shipping_id.id or order.partner_invoice_id.id,
-            'billing_partner_id': order.partner_invoice_id.id,
+            'partner_id': order.partner_id.id,
         }
         if render_values:
             values.update(render_values)

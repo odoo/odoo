@@ -352,7 +352,10 @@ var ListRenderer = BasicRenderer.extend({
                 if (!formatFunc) {
                     formatFunc = field_utils.format[field.type];
                 }
-                var formattedValue = formatFunc(value, field, { escape: true });
+                var formattedValue = formatFunc(value, field, {
+                    escape: true,
+                    digits: column.attrs.digits ? JSON.parse(column.attrs.digits) : undefined,
+                });
                 $cell.addClass('o_list_number').attr('title', help).html(formattedValue);
             }
             return $cell;
@@ -1095,6 +1098,11 @@ var ListRenderer = BasicRenderer.extend({
     _onToggleOptionalColumn: function (ev) {
         var self = this;
         ev.stopPropagation();
+        // when the input's label is clicked, the click event is also raised on the
+        // input itself (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label),
+        // so this handler is executed twice (except if the rendering is quick enough,
+        // as when we render, we empty the HTML)
+        ev.preventDefault();
         var input = ev.currentTarget.querySelector('input');
         var fieldIndex = this.optionalColumnsEnabled.indexOf(input.name);
         if (fieldIndex >= 0) {

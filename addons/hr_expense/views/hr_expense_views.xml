@@ -82,7 +82,7 @@
                             <field name="product_id" required="1" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"
                                    widget="many2one_barcode"
                             />
-                            <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <field name="product_uom_category_id" invisible="1"/>
                             <label for="quantity"/>
                             <div class="o_row">
@@ -142,7 +142,7 @@
             <field name="name">hr.expense.kanban</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" js_class="hr_expense_kanban">
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="total_amount"/>

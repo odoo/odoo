@@ -109,7 +109,7 @@ class ProductProduct(models.Model):
         In FIFO: value of the last unit that left the stock (automatically computed).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders.""")
-    volume = fields.Float('Volume')
+    volume = fields.Float('Volume', digits='Volume')
     weight = fields.Float('Weight', digits='Stock Weight')
 
     pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_variant_item_count")
@@ -227,7 +227,9 @@ class ProductProduct(models.Model):
             partner = self.env.context.get('partner', False)
             quantity = self.env.context.get('quantity', 1.0)
 
-            # Support context pricelists specified as display_name or ID for compatibility
+            # Support context pricelists specified as list, display_name or ID for compatibility
+            if isinstance(pricelist_id_or_name, list):
+                pricelist_id_or_name = pricelist_id_or_name[0]
             if isinstance(pricelist_id_or_name, str):
                 pricelist_name_search = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_name_search:
@@ -678,7 +680,7 @@ class ProductProduct(models.Model):
 
     def toggle_active(self):
         """ Archiving related product.template if there is only one active product.product """
-        with_one_active = self.filtered(lambda product: len(product.product_tmpl_id.product_variant_ids) == 1)
+        with_one_active = self.filtered(lambda product: len(product.product_tmpl_id.with_context(active_test=False).product_variant_ids) == 1)
         for product in with_one_active:
             product.product_tmpl_id.toggle_active()
         return super(ProductProduct, self - with_one_active).toggle_active()

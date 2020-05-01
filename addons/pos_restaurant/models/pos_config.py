@@ -38,7 +38,13 @@ class PosConfig(models.Model):
     def get_tables_order_count(self):
         """         """
         self.ensure_one()
+        tables = self.env['restaurant.table'].search([('floor_id.pos_config_id', 'in', self.ids)])
+        domain = [('state', '=', 'draft'), ('table_id', 'in', tables.ids)]
+
+        order_stats = self.env['pos.order'].read_group(domain, ['table_id'], 'table_id')
+        orders_map = dict((s['table_id'][0], s['table_id_count']) for s in order_stats)
+
         result = []
-        for table in self.floor_ids.table_ids.filtered(lambda t: t.active ==  True):
-            result.append({'id': table.id, 'orders': self.env['pos.order'].search_count([('state', '=', 'draft'), ('table_id', '=', table.id)])})
+        for table in tables:
+            result.append({'id': table.id, 'orders': orders_map.get(table.id, 0)})
         return result

@@ -151,8 +151,9 @@ var Tip = Widget.extend({
 
         // Reverse left/right position if direction is right to left
         var appendAt = this.info.position;
-        if (_t.database.parameters.direction === 'rtl') {
-            appendAt = appendAt === 'right' ? 'left': 'right';
+        var rtlMap = {left: 'right', right: 'left'};
+        if (rtlMap[appendAt] && _t.database.parameters.direction === 'rtl') {
+            appendAt = rtlMap[appendAt];
         }
         this.$el.position({
             my: this._get_spaced_inverted_position(appendAt),
@@ -177,13 +178,20 @@ var Tip = Widget.extend({
         this.$el.addClass("o_animated");
     },
     _bind_anchor_events: function () {
-        this.consume_event = Tip.getConsumeEventType(this.$anchor);
+        this.consume_event = Tip.getConsumeEventType(this.$anchor, this.info.run);
         this.$consumeEventAnchor = this.$anchor;
         // jQuery-ui draggable triggers 'drag' events on the .ui-draggable element,
         // but the tip is attached to the .ui-draggable-handle element which may
         // be one of its children (or the element itself)
         if (this.consume_event === "drag") {
             this.$consumeEventAnchor = this.$anchor.closest('.ui-draggable');
+        } else if (this.consume_event.includes('apply.daterangepicker')) {
+            this.$consumeEventAnchor = this.$anchor.parent().children('.o_field_date_range');
+        }
+        // when an element is dragged inside a sortable container (with classname
+        // 'ui-sortable'), jQuery triggers the 'sort' event on the container
+        if (this.consume_event === "sort") {
+            this.$consumeEventAnchor = this.$anchor.closest('.ui-sortable');
         }
         this.$consumeEventAnchor.on(this.consume_event + ".anchor", (function (e) {
             if (e.type !== "mousedown" || e.which === 1) { // only left click
@@ -305,16 +313,32 @@ var Tip = Widget.extend({
     },
 });
 
-Tip.getConsumeEventType = function ($element) {
+/**
+ * @static
+ * @param {jQuery} $element
+ * @param {string} [run] the run parameter of the tip (only strings are useful)
+ */
+Tip.getConsumeEventType = function ($element, run) {
     if ($element.hasClass('o_field_many2one') || $element.hasClass('o_field_many2manytags')) {
         return 'autocompleteselect';
     } else if ($element.is("textarea") || $element.filter("input").is(function () {
         var type = $(this).attr("type");
         return !type || !!type.match(/^(email|number|password|search|tel|text|url)$/);
     })) {
+        // FieldDateRange triggers a special event when using the widget
+        if ($element.hasClass("o_field_date_range")) {
+            return "apply.daterangepicker input";
+        }
         return "input";
     } else if ($element.hasClass('ui-draggable-handle')) {
         return "drag";
+    } else if (typeof run === 'string' && run.indexOf('drag_and_drop') === 0) {
+        // this is a heuristic: the element has to be dragged and dropped but it
+        // doesn't have class 'ui-draggable-handle', so we check if it has an
+        // ui-sortable parent, and if so, we conclude that its event type is 'sort'
+        if ($element.closest('.ui-sortable').length) {
+            return 'sort';
+        }
     }
     return "click";
 };

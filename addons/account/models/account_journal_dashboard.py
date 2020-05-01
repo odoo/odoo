@@ -78,6 +78,7 @@ class account_journal(models.Model):
     # Below method is used to get data of bank and cash statemens
     def get_line_graph_datas(self):
         """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
+        currency = self.currency_id or self.company_id.currency_id
 
         def build_graph_data(date, amount):
             #display date in locale format
@@ -117,7 +118,7 @@ class account_journal(models.Model):
             date = val['date']
             if date != today.strftime(DF):  # make sure the last point in the graph is today
                 data[:0] = [build_graph_data(date, amount)]
-            amount -= val['amount']
+            amount = currency.round(amount - val['amount'])
 
         # make sure the graph starts 1 month ago
         if date.strftime(DF) != last_month.strftime(DF):
@@ -495,10 +496,13 @@ class account_journal(models.Model):
 
         domain_type_field = action['res_model'] == 'account.move.line' and 'move_id.type' or 'type' # The model can be either account.move or account.move.line
 
-        if self.type == 'sale':
-            action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
-        elif self.type == 'purchase':
-            action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
+        # Override the domain only if the action was not explicitly specified in order to keep the
+        # original action domain.
+        if not self._context.get('action_name'):
+            if self.type == 'sale':
+                action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
+            elif self.type == 'purchase':
+                action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
 
         return action
 

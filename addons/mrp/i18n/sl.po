@@ -8,13 +8,13 @@
 # Vida Potočnik <vida.potocnik@mentis.si>, 2020
 # Simon Hohler <simon.hohler@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
 # matjaz k <matjaz@mentis.si>, 2020
 # Simon Gorše <simon@gorse.org>, 2020
 # Boris Kodelja <boris@hbs.si>, 2020
 # Grega Vavtar <grega@hbs.si>, 2020
 # Tadej Lupšina <tadej@hbs.si>, 2020
 # Jasmina Macur <jasmina@hbs.si>, 2020
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2020\n"
+"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2020\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -495,6 +495,8 @@ msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
 msgstr ""
+"Nalog za razgradnjo se uporablja za razgradnjo dokončanega proizvoda v "
+"komponente."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
@@ -1089,7 +1091,7 @@ msgstr "Ustvarite novo uspešnost delovnih nalog"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "Create an unbuild order"
-msgstr ""
+msgstr "Ustvari nalog za razgradnjo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -3848,6 +3850,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
 msgid "The quantity to produce must be positive!"
 msgstr "Količina za proizvodnjo mora biti pozitivna!"
 
@@ -4160,26 +4164,26 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
-msgstr ""
+msgstr "Razgradi"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Order"
-msgstr ""
+msgstr "Nalog za razgradnjo"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
-msgstr ""
+msgstr "Količina proizvodov v nalogu za razgradnjo mora biti pozitivna."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr ""
+msgstr "Nalogi za razgradnjo"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -4391,7 +4395,7 @@ msgstr "Skladišče"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr ""
+msgstr "Opozorilo o nezadostni količini razgradnje"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4766,7 +4770,7 @@ msgstr "Tukaj ne morete ustvariti nove kosovnice"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr ""
+msgstr "Naloga za razgradnjo v stanju 'Opravljeno' ni mogoče brisati."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4808,7 +4812,7 @@ msgstr "Ne morete dvakrat izdelati iste serijske številke."
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr ""
+msgstr "Ne morete razgraditi neopravljenega proizvodnega naloga."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:0

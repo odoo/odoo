@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_round
+from odoo.tools import float_round, float_compare
 
 from itertools import groupby
 
@@ -118,6 +118,21 @@ class MrpBom(models.Model):
     def onchange_routing_id(self):
         for line in self.bom_line_ids:
             line.operation_id = False
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        for bom in res:
+            if float_compare(bom.product_qty, 0, precision_rounding=bom.product_uom_id.rounding) <= 0:
+                raise UserError(_('The quantity to produce must be positive!'))
+        return res
+
+    def write(self, values):
+        res = super().write(values)
+        for bom in self:
+            if float_compare(bom.product_qty, 0, precision_rounding=bom.product_uom_id.rounding) <= 0:
+                raise UserError(_('The quantity to produce must be positive!'))
+        return res
 
     @api.model
     def name_create(self, name):
@@ -354,6 +369,8 @@ class MrpBomLine(models.Model):
         them has to be found on the variant.
         """
         self.ensure_one()
+        if product._name == 'product.template':
+            return False
         if self.bom_product_template_attribute_value_ids:
             for ptal, iter_ptav in groupby(self.bom_product_template_attribute_value_ids.sorted('attribute_line_id'), lambda ptav: ptav.attribute_line_id):
                 if not any([ptav in product.product_template_attribute_value_ids for ptav in iter_ptav]):

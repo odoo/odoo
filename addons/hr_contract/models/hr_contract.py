@@ -79,7 +79,7 @@ class Contract(models.Model):
     @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
     def _check_current_contract(self):
         """ Two contracts in state [incoming | open | close] cannot overlap """
-        for contract in self.filtered(lambda c: c.state not in ['draft', 'cancel'] or c.state == 'draft' and c.kanban_state == 'done'):
+        for contract in self.filtered(lambda c: (c.state not in ['draft', 'cancel'] or c.state == 'draft' and c.kanban_state == 'done') and c.employee_id):
             domain = [
                 ('id', '!=', contract.id),
                 ('employee_id', '=', contract.employee_id.id),
@@ -183,7 +183,7 @@ class Contract(models.Model):
             contracts._assign_open_contract()
         open_contracts = contracts.filtered(lambda c: c.state == 'open' or c.state == 'draft' and c.kanban_state == 'done')
         # sync contract calendar -> calendar employee
-        for contract in open_contracts.filtered(lambda c: c.resource_calendar_id):
+        for contract in open_contracts.filtered(lambda c: c.employee_id and c.resource_calendar_id):
             contract.employee_id.resource_calendar_id = contract.resource_calendar_id
         return contracts
 

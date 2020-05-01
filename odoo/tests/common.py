@@ -20,6 +20,7 @@ import shutil
 import signal
 import socket
 import subprocess
+import sys
 import tempfile
 import threading
 import time
@@ -424,19 +425,16 @@ class TransactionCase(BaseCase):
     def setUp(self):
         super(TransactionCase, self).setUp()
         self.registry = odoo.registry(get_db_name())
+        self.addCleanup(self.registry.reset_changes)
+        self.addCleanup(self.registry.clear_caches)
+
         #: current transaction's cursor
         self.cr = self.cursor()
+        self.addCleanup(self.cr.close)
+
         #: :class:`~odoo.api.Environment` for the current test case
         self.env = api.Environment(self.cr, odoo.SUPERUSER_ID, {})
-
-        @self.addCleanup
-        def reset():
-            # rollback and close the cursor, and reset the environments
-            self.registry.clear_caches()
-            self.registry.reset_changes()
-            self.env.reset()
-            self.cr.rollback()
-            self.cr.close()
+        self.addCleanup(self.env.reset)
 
         self.patch(type(self.env['res.partner']), '_get_gravatar_image', lambda *a: False)
 
@@ -525,21 +523,18 @@ class ChromeBrowser():
         self.ws = None  # websocket
         self.request_id = 0
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
-        self.chrome_process = None
+        self.chrome_pid = None
 
         otc = odoo.tools.config
         self.screenshots_dir = os.path.join(otc['screenshots'], get_db_name(), 'screenshots')
         self.screencasts_dir = None
         if otc['screencasts']:
-            if otc['screencasts'] in ('1', 'true', 't'):
-                self.screencasts_dir = os.path.join(otc['screenshots'], get_db_name(), 'screencasts')
-            else:
-                self.screencasts_dir =os.path.join(otc['screencasts'], get_db_name(), 'screencasts')
-
+            self.screencasts_dir = os.path.join(otc['screencasts'], get_db_name(), 'screencasts')
         self.screencast_frames = []
         os.makedirs(self.screenshots_dir, exist_ok=True)
 
         self.window_size = window_size
+        self.sigxcpu_handler = None
         self._chrome_start()
         self._find_websocket()
         self._logger.info('Websocket url found: %s', self.ws_url)
@@ -548,7 +543,6 @@ class ChromeBrowser():
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
-        self.sigxcpu_handler = None
         if os.name == 'posix':
             self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
             signal.signal(signal.SIGXCPU, self.signal_handler)
@@ -560,13 +554,11 @@ class ChromeBrowser():
             os._exit(0)
 
     def stop(self):
-        if self.chrome_process is not None:
-            self._logger.info("Closing chrome headless with pid %s", self.chrome_process.pid)
+        if self.chrome_pid is not None:
+            self._logger.info("Closing chrome headless with pid %s", self.chrome_pid)
             self._websocket_send('Browser.close')
-            if self.chrome_process.poll() is None:
-                self._logger.info("Terminating chrome headless with pid %s", self.chrome_process.pid)
-                self.chrome_process.terminate()
-                self.chrome_process.wait()
+            self._logger.info("Terminating chrome headless with pid %s", self.chrome_pid)
+            os.kill(self.chrome_pid, signal.SIGTERM)
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
             shutil.rmtree(self.user_data_dir, ignore_errors=True)
@@ -599,8 +591,27 @@ class ChromeBrowser():
 
         raise unittest.SkipTest("Chrome executable not found")
 
+    def _spawn_chrome(self, cmd):
+        if os.name != 'posix':
+            return
+        pid = os.fork()
+        if pid != 0:
+            return pid
+        else:
+            if platform.system() != 'Darwin':
+                # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
+                # the memory reservation algorithm requires more than 8GiB of virtual mem for alignment
+                # this exceeds our default memory limits.
+                # OSX already reserve huge memory for processes
+                import resource
+                resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
+            # redirect browser stderr to /dev/null
+            with open(os.devnull, 'wb', 0) as stderr_replacement:
+                os.dup2(stderr_replacement.fileno(), sys.stderr.fileno())
+            os.execv(cmd[0], cmd)
+
     def _chrome_start(self):
-        if self.chrome_process is not None:
+        if self.chrome_pid is not None:
             return
         with socket.socket() as s:
             s.bind(('localhost', 0))
@@ -610,7 +621,6 @@ class ChromeBrowser():
 
         switches = {
             '--headless': '',
-            '--enable-logging': 'stderr',
             '--no-default-browser-check': '',
             '--no-first-run': '',
             '--disable-extensions': '',
@@ -633,17 +643,18 @@ class ChromeBrowser():
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.devtools_port),
             '--no-sandbox': '',
+            '--disable-crash-reporter': '',
+            '--disable-gpu': '',
         }
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
         url = 'about:blank'
         cmd.append(url)
-        self._logger.info('chrome_run executing %s', ' '.join(cmd))
         try:
-            self.chrome_process = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            self.chrome_pid = self._spawn_chrome(cmd)
         except OSError:
             raise unittest.SkipTest("%s not found" % cmd[0])
-        self._logger.info('Chrome pid: %s', self.chrome_process.pid)
+        self._logger.info('Chrome pid: %s', self.chrome_pid)
 
     def _find_websocket(self):
         version = self._json_command('version')
@@ -676,8 +687,10 @@ class ChromeBrowser():
         tries = 0
         failure_info = None
         while tries * delay < timeout:
-            if self.chrome_process.poll() is not None:
-                self._logger.error('Chrome crashed at startup with return code', self.chrome_process.returncode)
+            try:
+                os.kill(self.chrome_pid, 0)
+            except ProcessLookupError:
+                self._logger.error('Chrome crashed at startup')
                 break
             try:
                 r = requests.get(url, timeout=3)
@@ -707,6 +720,8 @@ class ChromeBrowser():
         """
         send chrome devtools protocol commands through websocket
         """
+        if self.ws is None:
+            return
         sent_id = self.request_id
         payload = {
             'method': method,
@@ -867,7 +882,7 @@ class ChromeBrowser():
 
         if ffmpeg_path:
             framerate = int(len(self.screencast_frames) / (self.screencast_frames[-1].get('timestamp') - self.screencast_frames[0].get('timestamp')))
-            r = subprocess.run([ffmpeg_path, '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % self.screencasts_dir, outfile])
+            r = subprocess.run([ffmpeg_path, '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % self.screencasts_frames_dir, outfile])
             self._logger.log(25, 'Screencast in: %s', outfile)
         else:
             outfile = outfile.strip('.mp4')
@@ -982,23 +997,32 @@ class ChromeBrowser():
         """ attempts to make a CDT RemoteObject comprehensible
         """
         objtype = arg['type']
-        klass = arg.get('className', '')
         subtype = arg.get('subtype')
         if objtype == 'undefined':
             # the undefined remoteobject is literally just {type: undefined}...
             return 'undefined'
-        elif objtype != 'object' or subtype:
+        elif objtype != 'object' or subtype not in (None, 'array'):
             # value is the json representation for json object
             # otherwise fallback on the description which is "a string
             # representation of the object" e.g. the traceback for errors, the
             # source for functions, ... finally fallback on the entire arg mess
             return arg.get('value', arg.get('description', arg))
-
+        elif subtype == 'array':
+            # apparently value is *not* the JSON representation for arrays
+            # instead it's just Array(3) which is useless, however the preview
+            # properties are the same as object which is useful (just ignore the
+            # name which is the index)
+            return '[%s]' % ', '.join(
+                repr(p['value']) if p['type'] == 'string' else str(p['value'])
+                for p in arg.get('preview', {}).get('properties', [])
+                if re.match(r'\d+', p['name'])
+            )
         # all that's left is type=object, subtype=None aka custom or
         # non-standard objects, print as TypeName(param=val, ...), sadly because
         # of the way Odoo widgets are created they all appear as Class(...)
+        # nb: preview properties are *not* recursive, the value is *all* we get
         return '%s(%s)' % (
-            klass or objtype,
+            arg.get('className') or 'object',
             ', '.join(
                 '%s=%s' % (p['name'], repr(p['value']) if p['type'] == 'string' else p['value'])
                 for p in arg.get('preview', {}).get('properties', [])
@@ -1678,12 +1702,12 @@ class Form(object):
                 r.write(values)
         else:
             r = self._model.create(values)
-            self._values.update(
-                record_to_values(self._view['fields'], r)
-            )
+        self._values.update(
+            record_to_values(self._view['fields'], r)
+        )
         self._changed.clear()
         self._model.flush()
-        self._model.invalidate_cache()
+        self._model.env.clear()  # discard cache and pending recomputations
         return r
 
     def _values_to_save(self, all_fields=False):
@@ -1771,7 +1795,7 @@ class Form(object):
         record = self._model.browse(self._values.get('id'))
         result = record.onchange(self._onchange_values(), fields, spec)
         self._model.flush()
-        self._model.invalidate_cache()
+        self._model.env.clear()  # discard cache and pending recomputations
         if result.get('warning'):
             _logger.getChild('onchange').warning("%(title)s %(message)s" % result.get('warning'))
         values = result.get('value', {})

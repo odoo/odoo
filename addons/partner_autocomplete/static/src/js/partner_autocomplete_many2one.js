@@ -51,7 +51,7 @@ var PartnerField = FieldMany2One.extend(AutocompleteMixin, {
             });
 
             // if(data.company.street_name && !data.company.street_number) context.default_street_number = '';
-            if (data.logo) context.default_image = data.logo;
+            if (data.logo) context.default_image_1920 = data.logo;
 
             return self._searchCreatePopup("form", false, context);
         });

@@ -52,9 +52,8 @@ class ServerActions(models.Model):
 
     @api.onchange('template_id')
     def on_change_template_id(self):
-        """ Render the raw template in the server action fields. """
-        if self.template_id and not self.template_id.email_from:
-            raise UserError(_('Your template should define email_from'))
+        # TODO: remove in master
+        pass
 
     @api.constrains('state', 'model_id')
     def _check_mail_thread(self):

@@ -199,6 +199,8 @@ class WebsitePayment(http.Controller):
         acquirers = None
         if acquirer_id:
             acquirers = env['payment.acquirer'].browse(int(acquirer_id))
+        if order_id:
+            acquirers = env['payment.acquirer'].search([('state', 'in', ['enabled', 'test']), ('company_id', '=', order.company_id.id)])
         if not acquirers:
             acquirers = env['payment.acquirer'].search([('state', 'in', ['enabled', 'test']), ('company_id', '=', user.company_id.id)])
 
@@ -329,6 +331,9 @@ class WebsitePayment(http.Controller):
             elif tx.state == 'pending':
                 status = 'warning'
                 message = tx.acquirer_id.pending_msg
+            else:
+                status = 'danger'
+                message = tx.state_message or _('An error occured during the processing of this payment')
             PaymentProcessing.remove_payment_transaction(tx)
             return request.render('payment.confirm', {'tx': tx, 'status': status, 'message': message})
         else:

@@ -1332,7 +1332,7 @@ var FieldPercentage = FieldFloat.extend({
 var FieldText = InputField.extend(TranslatableFieldMixin, {
     description: _lt("Multiline Text"),
     className: 'o_field_text',
-    supportedFieldTypes: ['text'],
+    supportedFieldTypes: ['text', 'html'],
     tagName: 'span',
 
     /**
@@ -1871,6 +1871,10 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             } else {
                 $img = this.$('img');
             }
+            var zoomDelay = 0;
+            if (this.nodeOptions.zoom_delay) {
+                zoomDelay = this.nodeOptions.zoom_delay;
+            }
 
             if(this.recordData[imageField]) {
                 $img.attr('data-zoom', 1);
@@ -1878,6 +1882,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
 
                 $img.zoomOdoo({
                     event: 'mouseenter',
+                    timer: zoomDelay,
                     attach: '.o_content',
                     attachToTarget: true,
                     onShow: function () {
@@ -2296,7 +2301,7 @@ var StateSelectionWidget = AbstractField.extend({
             .addClass(currentState.state_class)
             .prop('special_click', true)
             .parent().attr('title', currentState.state_name)
-            .attr('aria-label', currentState.state_name);
+            .attr('aria-label', this.string + ": " + currentState.state_name);
 
         // Render "FormSelection.Items" and move it into "FormSelection"
         var $items = $(qweb.render('FormSelection.items', {

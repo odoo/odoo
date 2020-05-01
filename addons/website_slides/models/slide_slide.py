@@ -169,7 +169,7 @@ class Slide(models.Model):
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
-    public_views = fields.Integer('# of Public Views')
+    public_views = fields.Integer('# of Public Views', copy=False)
     total_views = fields.Integer("Views", default="0", compute='_compute_total', store=True)
     # comments
     comments_count = fields.Integer('Number of comments', compute="_compute_comments_count")
@@ -432,6 +432,11 @@ class Slide(models.Model):
         rec = super(Slide, self).copy(default)
         rec.sequence = 0
         return rec
+
+    def unlink(self):
+        if self.question_ids and self.channel_id.channel_partner_ids:
+            raise UserError(_("People already took this quiz. To keep course progression it should not be deleted."))
+        super(Slide, self).unlink()
 
     # ---------------------------------------------------------
     # Mail/Rating

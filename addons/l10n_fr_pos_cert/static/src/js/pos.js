@@ -15,6 +15,13 @@ var _super_posmodel = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
     is_french_country: function(){
       var french_countries = ['FR', 'MF', 'MQ', 'NC', 'PF', 'RE', 'GF', 'GP', 'TF'];
+      if (!this.company.country) {
+        this.gui.show_popup("error", {
+            'title': _t("Missing Country"),
+            'body':  _.str.sprintf(_t('The company %s doesn\'t have a country set.'), this.company.name),
+        });
+        return false;
+      }
       return _.contains(french_countries, this.company.country.code);
     },
     delete_current_order: function () {
@@ -60,7 +67,7 @@ models.Orderline = models.Orderline.extend({
     set_quantity: function (quantity, keep_price) {
         var current_quantity = this.get_quantity();
         var new_quantity = parseFloat(quantity) || 0;
-        if (this.pos.is_french_country() && (new_quantity === 0 || new_quantity < current_quantity)) {
+        if (this.pos.is_french_country() && (new_quantity === 0 || new_quantity < current_quantity) && !this.reward_id) {
             var quantity_to_decrease = current_quantity - new_quantity;
             this.pos.gui.show_popup("number", {
                 'title': _t("Decrease the quantity by"),
@@ -68,6 +75,7 @@ models.Orderline = models.Orderline.extend({
                     if (qty_decrease) {
                         var order = this.pos.get_order();
                         var selected_orderline = order.get_selected_orderline();
+                        qty_decrease = qty_decrease.replace(_t.database.parameters.decimal_point, '.');
                         qty_decrease = parseFloat(qty_decrease);
                         var decimals = this.pos.dp['Product Unit of Measure'];
                         qty_decrease = round_di(qty_decrease, decimals);

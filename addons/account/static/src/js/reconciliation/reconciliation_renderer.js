@@ -334,7 +334,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         var to_check_checked = !!(state.to_check);
         this.$('caption .o_buttons button.o_validate').toggleClass('d-none', !!state.balance.type && !to_check_checked);
         this.$('caption .o_buttons button.o_reconcile').toggleClass('d-none', state.balance.type <= 0 || to_check_checked);
-        this.$('caption .o_buttons .o_no_valid').toggleClass('d-none', state.balance.type >= 0);
+        this.$('caption .o_buttons .o_no_valid').toggleClass('d-none', state.balance.type >= 0 || to_check_checked);
         self.$('caption .o_buttons button.o_validate').toggleClass('text-warning', to_check_checked);
 
         // partner_id
