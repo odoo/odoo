@@ -370,6 +370,7 @@ class MrpProduction(models.Model):
             'location_dest_id': self.location_dest_id.id,
             'company_id': self.company_id.id,
             'production_id': self.id,
+            'warehouse_id': self.location_dest_id.get_warehouse().id,
             'origin': self.name,
             'group_id': self.procurement_group_id.id,
             'propagate': self.propagate,
