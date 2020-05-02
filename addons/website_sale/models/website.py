@@ -3,10 +3,11 @@
 
 import logging
 
-from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 
 from odoo.http import request
 from odoo.addons.website.models import ir_http
+from odoo.addons.http_routing.models.ir_http import url_for
 
 _logger = logging.getLogger(__name__)
 
@@ -364,3 +365,8 @@ class Website(models.Model):
         if self.env.user.has_group('sales_team.group_sale_salesman'):
             return self.env.ref('website.backend_dashboard').read()[0]
         return super(Website, self).action_dashboard_redirect()
+
+    def get_suggested_controllers(self):
+        suggested_controllers = super(Website, self).get_suggested_controllers()
+        suggested_controllers.append((_('eCommerce'), url_for('/shop'), 'website_sale'))
+        return suggested_controllers

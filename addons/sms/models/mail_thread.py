@@ -129,7 +129,12 @@ class MailThread(models.AbstractModel):
                     'field_store': fname,
                 }
             else:
-                value, fname = next(((value, fname) for value, fname in zip(all_numbers, tocheck_fields) if value), (0, False))
+                # did not find any sanitized number -> take first set value as fallback;
+                # if none, just assign False to the first available number field
+                value, fname = next(
+                    ((value, fname) for value, fname in zip(all_numbers, tocheck_fields) if value),
+                    (0, tocheck_fields[0] if tocheck_fields else False)
+                )
                 result[record.id] = {
                     'partner': self.env['res.partner'],
                     'sanitized': False,
@@ -210,8 +215,12 @@ class MailThread(models.AbstractModel):
                 sms_pid_to_number[info_partner_ids[0]] = info_number
             if info_partner_ids:
                 partner_ids = info_partner_ids + (partner_ids or [])
-            if info_number and not info_partner_ids:
-                sms_numbers = [info_number] + (sms_numbers or [])
+            if not info_partner_ids:
+                if info_number:
+                    sms_numbers = [info_number] + (sms_numbers or [])
+                    # will send a falsy notification allowing to fix it through SMS wizards
+                elif not sms_numbers:
+                    sms_numbers = [False]
 
         if subtype_id is False:
             subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
@@ -279,9 +288,14 @@ class MailThread(models.AbstractModel):
             tocreate_numbers = [
                 value['sanitized'] or original
                 for original, value in sanitized.items()
-                if value['code'] != 'empty'
             ]
-            sms_create_vals += [dict(sms_base_vals, partner_id=False, number=n) for n in tocreate_numbers]
+            sms_create_vals += [dict(
+                sms_base_vals,
+                partner_id=False,
+                number=n,
+                state='outgoing' if n else 'error',
+                error_code='' if n else 'sms_number_missing',
+            ) for n in tocreate_numbers]
 
         # create sms and notification
         existing_pids, existing_numbers = [], []
@@ -308,7 +322,8 @@ class MailThread(models.AbstractModel):
                 'notification_type': 'sms',
                 'sms_id': sms.id,
                 'is_read': True,  # discard Inbox notification
-                'notification_status': 'ready',
+                'notification_status': 'ready' if sms.state == 'outgoing' else 'exception',
+                'failure_type': '' if sms.state == 'outgoing' else sms.error_code,
             } for sms in sms_all if (sms.partner_id and sms.partner_id.id not in existing_pids) or (not sms.partner_id and sms.number not in existing_numbers)]
             if notif_create_values:
                 self.env['mail.notification'].sudo().create(notif_create_values)
@@ -327,6 +342,6 @@ class MailThread(models.AbstractModel):
                         })
 
         if sms_all and not put_in_queue:
-            sms_all.send(auto_commit=False, raise_exception=False)
+            sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
 
         return True

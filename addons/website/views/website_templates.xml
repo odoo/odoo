@@ -328,7 +328,6 @@
                             <div class="o_footer_about_us">
                                 <h5>
                                     <span>YourCompany</span>
-                                    <small> - <a href="/aboutus">About us</a></small>
                                 </h5>
                                 <p>
                                     We are a team of passionate people whose goal is to improve everyone's
@@ -366,7 +365,6 @@
                             <div class="o_footer_about_us">
                                 <h5>
                                     <span>YourCompany</span>
-                                    <small> - <a href="/aboutus">About us</a></small>
                                 </h5>
                                 <p>
                                     We are a team of passionate people whose goal is to improve everyone's
@@ -413,7 +411,6 @@
                     <ul class="list-inline">
                         <li class="list-inline-item"><a href="/">Home</a></li>
                         <li class="list-inline-item"><a href="/contactus">Contact us</a></li>
-                        <li class="list-inline-item"><a href="/aboutus">About us</a></li>
                     </ul>
                     <div class="o_footer_address">
                         250 Executive Park Blvd, Suite 3400<br/>San Francisco CA 94134<br/>United States
@@ -452,11 +449,10 @@
                             <ul class="list-inline">
                                 <li class="list-inline-item"><a href="/">Home</a></li>
                                 <li class="list-inline-item"><a href="/contactus">Contact us</a></li>
-                                <li class="list-inline-item"><a href="/aboutus">About us</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-6 text-lg-right">
-                            <p class="text-lg-right">
+                            <p>
                                 We are a team of passionate people whose goal is to improve everyone's
                                 life through disruptive products. We build great products to solve your
                                 business problems. Our products are designed for small to medium size
@@ -1088,9 +1084,9 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         </td>
         <td class="text-center">
             <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
-            <i t-if="page.is_visible" class="fa fa-check" title="Visible"/>
-            <i t-elif="page.website_published" class="fa fa-eye-slash" t-attf-title="This page will be visible on {{ date_formatted }}"/>
-            <i t-else="" class="fa fa-times text-muted" title="Not visible"/>
+            <i t-if="page.is_visible" class="fa fa-check" title="Published"/>
+            <i t-elif="page.website_published" class="fa fa-eye-slash" t-attf-title="This page will be published on {{ date_formatted }}"/>
+            <i t-else="" class="fa fa-times text-muted" title="Not published"/>
         </td>
         <td class="text-center">
             <i t-if="page.website_indexed" class="fa fa-check" title="Indexed"/>

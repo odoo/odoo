@@ -5,4 +5,10 @@
             <script type="text/javascript" src="/crm/static/src/js/tours/crm.js"></script>
         </xpath>
     </template>
+
+    <template id="assets_backend" name="CRM assets backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/crm/static/src/js/systray_activity_menu.js"/>
+        </xpath>
+    </template>
 </odoo>

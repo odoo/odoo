@@ -1,4 +1,4 @@
-odoo.define('lunch.LunchKanbanWidget', function (require) {
+odoo.define('lunch.LunchWidget', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -17,8 +17,8 @@ var LunchMany2One = FieldMany2One.extend({
     }
 });
 
-var LunchKanbanWidget = Widget.extend({
-    template: 'LunchKanbanWidget',
+var LunchWidget = Widget.extend({
+    template: 'LunchWidget',
     custom_events: {
         field_changed: '_onFieldChanged',
     },
@@ -125,7 +125,6 @@ var LunchKanbanWidget = Widget.extend({
     _onAddProduct: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-
         this.trigger_up('add_product', {lineId: $(ev.currentTarget).data('id')});
     },
     _onOrderNow: function (ev) {
@@ -164,6 +163,6 @@ var LunchKanbanWidget = Widget.extend({
     },
 });
 
-return LunchKanbanWidget;
+return LunchWidget;
 
 });

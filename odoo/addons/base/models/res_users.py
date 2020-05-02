@@ -1271,8 +1271,10 @@ class UsersView(models.Model):
     def write(self, values):
         values = self._remove_reified_groups(values)
         res = super(UsersView, self).write(values)
+        if 'company_ids' not in values:
+            return res
         group_multi_company = self.env.ref('base.group_multi_company', False)
-        if group_multi_company and 'company_ids' in values:
+        if group_multi_company:
             for user in self:
                 if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
                     user.write({'groups_id': [(3, group_multi_company.id)]})

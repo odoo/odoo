@@ -111,6 +111,13 @@ class MockSMS(common.BaseCase):
         if content is not None:
             self.assertEqual(sms.body, content)
 
+    def assertNoSMSNotification(self, messages=None):
+        base_domain = [('notification_type', '=', 'sms')]
+        if messages is not None:
+            base_domain += [('mail_message_id', 'in', messages.ids)]
+        self.assertEqual(self.env['mail.notification'].search(base_domain), self.env['mail.notification'])
+        self.assertEqual(self._sms, [])
+
     def assertSMSNotification(self, recipients_info, content, messages=None, check_sms=True):
         """ Check content of notifications.
 
@@ -123,6 +130,9 @@ class MockSMS(common.BaseCase):
         """
         partners = self.env['res.partner'].concat(*list(p['partner'] for p in recipients_info if p.get('partner')))
         numbers = [p['number'] for p in recipients_info if p.get('number')]
+        # special case of void notifications: check for False / False notifications
+        if not partners and not numbers:
+            numbers = [False]
         base_domain = [
             '|', ('res_partner_id', 'in', partners.ids),
             '&', ('res_partner_id', '=', False), ('sms_number', 'in', numbers),
