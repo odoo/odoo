@@ -64,13 +64,13 @@
 # Alexandra Jubert <aju@odoo.com>, 2020
 # Frédéric GILSON <frederic.gilson@logicasoft.eu>, 2020
 # Martin Trigaux, 2020
-# Julien Goergen <jgo@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
-# Priscilla Sanchez <prs@odoo.com>, 2020
 # Christelle Pinchart <cpi@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
+# Julien Goergen <jgo@odoo.com>, 2020
+# Priscilla Sanchez <prs@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -78,7 +78,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Vallen Delobel <edv@odoo.com>, 2020\n"
+"Last-Translator: Priscilla Sanchez <prs@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1476,6 +1476,96 @@ msgid ""
 "    file from which you can click on the file to download locally.  This\n"
 "    file can then be uploaded to the bank.\n"
 msgstr ""
+"\n"
+"Transfert de crédit ABA\n"
+"===================\n"
+"\n"
+"Ce module permet la génération de lots de paiement en ABA (Australian\n"
+"Bankers Association) fichiers texte. Le fichier 'aba' généré peut être téléchargé\n"
+"à de nombreuses banques australiennes.\n"
+"\n"
+"Configuration\n"
+"-----\n"
+"\n"
+"- *Configuration > Journaux*\n"
+"\n"
+"    Si nécessaire, créez un nouveau journal ou choisissez un journal existant de ** Type ** * \"Banque\" *.\n"
+"\n"
+"    Sur ** Paramètres avancés **, assurez-vous que ABA Credit Transfer est coché.\n"
+"\n"
+"    Dans l'onglet ** Compte bancaire **, entrez le ** Numéro de compte **.\n"
+"\n"
+"- * Configuration> Comptes bancaires *\n"
+"\n"
+"   Le compte apparaîtra dans la liste comme nom de journal.\n"
+"\n"
+"    L'édition affichera le ** Numéro de compte **. Ceci est important car il est utilisé par     le processus ABA.\n"
+"\n"
+"    **Banque** est optionel.\n"
+"\n"
+"- * Ventes> Configuration> Comptes bancaires> Comptes bancaires *\n"
+"\n"
+"    Le compte apparaîtra dans la liste comme numéro de compte.\n"
+"\n"
+"    ** Paiements ABA ** - Réglez sur * «Compte pour effectuer des paiements ABA» *.\n"
+"\n"
+"   ** BSB ** - Obligatoire, 6 chiffres, et sera automatiquement formaté.\n"
+"\n"
+"    ** Titulaire du compte ** - Facultatif.\n"
+"\n"
+"    ** Nom du compte / bénéficiaire ** - Obligatoire. Généralement non validé par les banques     sur les transferts de fichiers ABA, et peut apparaître sur le relevé bancaire du paiement.\n"
+"\n"
+"    ** Code de l'institution financière ** - Obligatoire (fourni par la banque ou peut être trouvé\n"
+"    sur Google). Il s'agit de trois caractères majuscules 3.\n"
+"\n"
+"    ** Fournir le nom d'utilisateur ** - Certaines banques autorisent ce format libre, certaines banques peuvent rejeter le fichier ABA si le nom d'utilisateur fournisseur n'est pas celui attendu. Il ne peut pas dépasser 26 caractères.\n"
+"\n"
+"   ** Numéro d'identification (APCA) ** - Le numéro d'identification de l'utilisateur est une alloué par une banque. Il est composé de 6 chiffres.\n"
+"\n"
+"    ** Inclure les transactions d'auto-équilibrage ** - Certaines institutions exigent qu'une transaction d'auto-équilibrage qui est utilisée comme vérification.\n"
+"\n"
+"- Les comptes bancaires des fournisseurs peuvent être créés au même endroit, mais il est\n"
+"généralement plus facile à mettre en place à partir du partenaire qu'à partir du vendeur.\n"
+"\n"
+"- *Comptabilité > Achats > Vendeurs*\n"
+"\n"
+"    Dans l'onglet ** Ventes et achats **, cliquez sur * \"Compte (s) bancaire (s)\" * d'où un compte bancaire du fournisseur peut être créé ou modifié.\n"
+"\n"
+"    **Numéro de compte** - Requis.\n"
+"\n"
+"    ** Paiements ABA ** - Réglez sur * «Autoriser les paiements ABA sur ce compte» *.\n"
+"  \n"
+"  ** BSB ** - Obligatoire, 6 chiffres, et sera automatiquement formaté.\n"
+"\n"
+"    ** Titulaire du compte ** - Facultatif\n"
+"\n"
+"    ** Nom du compte / bénéficiaire ** - Obligatoire. Généralement non validé par le\n"
+"    banques.\n"
+"\n"
+"Utilisation\n"
+"---\n"
+"\n"
+"- Créez un paiement fournisseur de la manière habituelle.\n"
+"\n"
+"    Assurez-vous que le ** fournisseur ** ne possède qu'un compte de paiement ABA valide.\n"
+"\n"
+"    Choisissez le ** Journal des paiements ** correct qui est défini pour les paiements ABA.\n"
+"\n"
+"    Sélectionnez le bouton radio ** ABA Credit Transfer **\n"
+"\n"
+"    Si le fournisseur possède plusieurs comptes bancaires, vous devrez peut-être sélectionner\n"
+"    correct ** Compte bancaire du destinataire **.\n"
+"\n"
+"    Entrez le montant du paiement, etc.\n"
+"\n"
+"- *Achats > Paiements*\n"
+"\n"
+"    Une fois les paiements confirmés, ils apparaîtront dans la liste des paiements.\n"
+"\n"
+"    À l'aide de filtres ou de tri, sélectionnez les paiements à inclure. En dessous de\n"
+"    *Actions* choisissez * Télécharger le paiement ABA *. Un pop-up apparaît avec le fichier\n"
+"    à partir duquel vous pouvez cliquer sur le fichier à télécharger localement. Ce\n"
+"    fichier peut ensuite être téléchargé vers la banque.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -6309,6 +6399,11 @@ msgid ""
 "    - a generic chart of accounts\n"
 "    - SARS VAT Ready Structure"
 msgstr ""
+"\n"
+"C'est la dernière localisation de base sud-africaine nécessaire pour faire fonctionner Odoo dans ZA:\n"
+"================================================================================\n"
+"- Un plan comptable générique\n"
+"- Structure de préparation à la TVA pour le SRAS"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -9372,7 +9467,7 @@ msgstr "Séparateur d'adresses"
 #. module: base
 #: model:ir.module.module,description:base.module_contacts_enterprise
 msgid "Adds notably the map view of contact"
-msgstr ""
+msgstr "Ajoute notamment la vue cartographique du contact"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_ldap
@@ -10043,7 +10138,7 @@ msgstr "Argentine"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar
 msgid "Argentinian Accounting"
-msgstr ""
+msgstr "Comptabilité Argentine"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports
@@ -10197,12 +10292,12 @@ msgstr "Intermédiaire de paiement Authorize.Net"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__auto_install_required
 msgid "Auto Install Required"
-msgstr ""
+msgstr "Installation automatique requise"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete
 msgid "Auto-complete partner companies' data"
-msgstr ""
+msgstr "Compléter automatiquement les données des sociétés partenaires"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete_address_extended
@@ -10445,7 +10540,7 @@ msgstr "Lecture de code-barres sur mobile"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Barcode symbology"
-msgstr ""
+msgstr "Symbologie du code-barres"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -10650,7 +10745,7 @@ msgstr "Bhoutan"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_delivery_ups
 msgid "Bill to your UPS account number"
-msgstr ""
+msgstr "Facturez sur votre numéro de compte UPS"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__binary
@@ -12459,7 +12554,7 @@ msgstr "Signe de la devise, utilisé lors de l'impression des montants"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Current Arch"
-msgstr ""
+msgstr "Arche Actuelle"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__current_line_id
@@ -13261,7 +13356,7 @@ msgstr "Champs affichés"
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
 msgid "Displays cohort analysis on attendees."
-msgstr ""
+msgstr "Affiche l'analyse des cohortes sur les participants."
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -13420,7 +13515,7 @@ msgstr "Menu déroulant"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_dropshipping
 msgid "Dropship and Subcontracting Management"
-msgstr ""
+msgstr "Gestion du Dépôt et de la Sous-traitance"
 
 #. module: base
 #: code:addons/base/models/res_company.py:0
@@ -13700,7 +13795,7 @@ msgstr "Approvisionnement en énergie"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_lead_enrich
 msgid "Enrich Leads/Opportunities using email address domain"
-msgstr ""
+msgstr "Enrichir les Pistes/Opportunités utilisant un domaine d'adresses mail"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -13733,7 +13828,7 @@ msgstr "Caractéristiques des entreprises sur les contacts"
 #. module: base
 #: model:ir.module.module,summary:base.module_website
 msgid "Enterprise website builder"
-msgstr ""
+msgstr "Constructeur de sites web d'entreprise"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_R
@@ -13825,7 +13920,7 @@ msgstr "Type d'Évaluation"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_sms
 msgid "Event Attendees SMS Marketing"
-msgstr ""
+msgstr "Participants à l'événement Marketing par SMS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_barcode
@@ -13856,7 +13951,7 @@ msgstr "Organisation d'événements"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_enterprise
 msgid "Events Organization Add-on"
-msgstr ""
+msgstr "Complément d'Organisation d'Evènements"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale
@@ -14406,7 +14501,7 @@ msgstr "Description de Champs"
 #: model:ir.model,name:base.model_ir_model_fields_selection
 #: model:ir.ui.menu,name:base.ir_model_model_fields_selection
 msgid "Fields Selection"
-msgstr ""
+msgstr "Sélection des Champs"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -14975,6 +15070,11 @@ msgid ""
 "\n"
 "OFX and QIF imports are available in Enterprise version."
 msgstr ""
+"Assistant générique pour l'import des relevés bancaires.\n"
+"\n"
+"(Ce module n'inclut aucun type de format d'importation.)\n"
+"\n"
+"Les imports OFX et QIF sont disponible dans la version Entreprise."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_gengo
@@ -15026,7 +15126,7 @@ msgstr "Allemagne SKR04 - Comptabilité"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_dashboard
 msgid "Get a new dashboard view in the Website App"
-msgstr ""
+msgstr "Obtenez une nouvelle vue du tableau de bord dans l'application Web"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_fleet
@@ -15036,7 +15136,7 @@ msgstr "Obtenez l'histoire des voitures conduites par les employés"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_enterprise
 msgid "Get the enterprise look and feel"
-msgstr ""
+msgstr "Obtenez l’aspect et la convivialité de l’entreprise"
 
 #. module: base
 #: model:res.country,name:base.gh
@@ -16302,12 +16402,12 @@ msgstr "Inde"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_purchase_stock
 msgid "India Purchase and Warehouse Management"
-msgstr ""
+msgstr "Gestion des Achats et des Entrepôts en Inde"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_sale_stock
 msgid "India Sales and Warehouse Management"
-msgstr ""
+msgstr "Gestion des Ventes et des Entrepôts en Inde"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in
@@ -16791,7 +16891,7 @@ msgstr "Fonctionnalités IoT pour l'ordre de travail"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_posbox_upgrade
 msgid "IoTBox Software Upgrader"
-msgstr ""
+msgstr "Mise à niveau du Logiciel IoTBox"
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -17572,7 +17672,7 @@ msgstr "Suivi de liens"
 #. module: base
 #: model:ir.module.module,summary:base.module_voip_crm
 msgid "Link between voip and crm"
-msgstr ""
+msgstr "Lien entre voip et crm"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr
@@ -17763,7 +17863,7 @@ msgstr "Fonctionnalités de MRP pour le module Contrôle qualité"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp_workorder_iot
 msgid "MRP features for Quality Control with IoT"
-msgstr ""
+msgstr "Fonctionnalités de MRP pour le Contrôle Qualité avec IoT"
 
 #. module: base
 #: model:res.country,name:base.mo
@@ -17794,7 +17894,7 @@ msgstr "Échec d'envoi de l'email"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_enterprise
 msgid "Mail Enterprise"
-msgstr ""
+msgstr "E-Mail Entreprise"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_mail_server
@@ -18067,7 +18167,7 @@ msgstr "Gérez vos dossiers de paie salariale"
 #. module: base
 #: model:ir.module.module,summary:base.module_planning
 msgid "Manage your employees' schedule"
-msgstr ""
+msgstr "Gérer l'horaire de vos employés"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
@@ -22333,7 +22433,7 @@ msgstr "Tableau croisé dynamique"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
 msgid "Plan your resources on project tasks"
-msgstr ""
+msgstr "Planifiez vos ressources sur les tâches du projet"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_planning
@@ -22968,7 +23068,7 @@ msgstr "Bons de commande, reçus, factures fournisseurs pour le stock"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition_stock
 msgid "Purchase Requisition Stock"
-msgstr ""
+msgstr "Stocker les Appels d'Offres"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
@@ -23333,7 +23433,7 @@ msgstr "Récursivité trouvée dans l'arbre des actions du serveur"
 #: code:addons/models.py:0
 #, python-format
 msgid "Recursion Detected."
-msgstr ""
+msgstr "Récursion Détectée."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__reference
@@ -23595,7 +23695,7 @@ msgstr "Réinitialiser l'architecture de vue"
 #. module: base
 #: model:ir.model,name:base.model_reset_view_arch_wizard
 msgid "Reset View Architecture Wizard"
-msgstr ""
+msgstr "Assistant de réinitialisation de l'architecture de la vue"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__hard
@@ -23896,7 +23996,7 @@ msgstr "Distribution de coupons de vente"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_intrastat
 msgid "Sale Intrastat"
-msgstr ""
+msgstr "Vente Intrastat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_product_matrix
@@ -24041,7 +24141,7 @@ msgstr "Enregistrer comme préfixe de pièce jointe"
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes
 msgid "Scan and Parse Barcodes"
-msgstr ""
+msgstr "Scanner et Analyser les Codes-Barres"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_sms
@@ -24125,7 +24225,7 @@ msgstr "Rechercher un partenaire"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_category_view_search
 msgid "Search Partner Category"
-msgstr ""
+msgstr "Rechercher la Catégorie du Partenaire"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
@@ -24246,7 +24346,7 @@ msgstr "Options de sélection"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__selection
 msgid "Selection Options (Deprecated)"
-msgstr ""
+msgstr "Options de sélection (Dépréciée)"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_fields_selection_selection_field_uniq
@@ -24308,7 +24408,7 @@ msgstr "Envoyer un MSG aux visiteurs"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_sms
 msgid "Send SMS to Visitor with leads"
-msgstr ""
+msgstr "Envoyer un SMS au Visiteur avec des pistes"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sign
@@ -25462,7 +25562,7 @@ msgstr "Test de connexion"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website_slides_full
 msgid "Test Full eLearning Flow"
-msgstr ""
+msgstr "Testez le flux complet d'eLearning"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_main_flows
@@ -25472,7 +25572,7 @@ msgstr "Tester le flux principal"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_test
 msgid "Test Payment Acquirer"
-msgstr ""
+msgstr "Tester Intermédiaire de Paiement"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_performance
@@ -25492,7 +25592,7 @@ msgstr "Suites de tests pour les campagnes d'Automatisation Marketing"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_testing_utilities
 msgid "Test testing utilities"
-msgstr ""
+msgstr "Tester les utilitaires de test"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_access_rights
@@ -26395,7 +26495,7 @@ msgstr "Validation de feuille de temps et vue Grille"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast
 msgid "Timesheet and Planning"
-msgstr ""
+msgstr "Feuilles de temps et Planning"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_holidays
@@ -26752,7 +26852,7 @@ msgstr "Tuvalu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter
 msgid "Twitter Snippet"
-msgstr ""
+msgstr "Extrait Twitter"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter_wall
@@ -27201,7 +27301,7 @@ msgstr "Utilisez les programmes de promotion et de coupon sur votre eCommerce"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon
 msgid "Use discount coupons in sales orders"
-msgstr ""
+msgstr "Utiliser des bons de réduction dans les bons commandes"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_tax_python
@@ -27317,7 +27417,7 @@ msgstr "Types d'utilisateur"
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
 msgid "User, Change Password Wizard"
-msgstr ""
+msgstr "Utilisateur, Assistant de changement de mot de passe"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_default_menu_action
@@ -27447,6 +27547,8 @@ msgid ""
 "Validate stock moves for product added on sales orders through Field Service"
 " Management App"
 msgstr ""
+"Valider les mouvements de stock pour les produits ajoutés sur les commandes "
+"de vente via l'application Field Service Management"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter__value
@@ -27836,7 +27938,7 @@ msgstr "Configurateur de produits pour la vente"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock_product_configurator
 msgid "Website Sale Stock Product Configurator"
-msgstr ""
+msgstr "Configurateur du Stock de Produits pour la Vente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_dashboard
