@@ -194,9 +194,9 @@ var SearchPanel = Widget.extend({
         if (filter.groupBy) {
             var groups = {};
             values.forEach(function (value) {
-                var groupId = value.group_id;
+                var groupId = JSON.stringify(value.group_id);
                 if (!groups[groupId]) {
-                    if (groupId) {
+                    if (groupId !== 'false') {
                         groupIds.push(groupId);
                     }
                     groups[groupId] = {
