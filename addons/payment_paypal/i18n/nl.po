@@ -3,17 +3,18 @@
 # 	* payment_paypal
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Martin Trigaux, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Antoine Gilard <ang@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Antoine Gilard <ang@odoo.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +63,11 @@ msgid ""
 "                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
 "                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
 msgstr ""
+"Hallo,\n"
+"<br/><br/>\n"
+"U heeft een betaling ontvangen via PayPal. <br/>\n"
+"Gelieve de de instructies van PayPal volgen om uw account aan te maken. <br/>\n"
+"Help ons dan met het invullen van uw Paypal-gegevens in Odoo.<br/><br/>"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
@@ -81,7 +87,7 @@ msgstr "PDT identiteitstoken"
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betalingsprovider"
+msgstr "Betaling verwerver"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
@@ -111,7 +117,7 @@ msgstr "Directe betaling notificatie Paypal"
 #: code:addons/payment_paypal/models/payment.py:0
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
-msgstr "Paypal: data ontvangen met ontbrekende referentie (%s) of txn_id (%s)"
+msgstr "Paypal: data ontvangen met missende referentie (%s) of txn_id (%s)"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
@@ -130,7 +136,7 @@ msgid ""
 "valid and secured."
 msgstr ""
 "De Merchant ID wordt gebruikt om communicatie afkomstig van Paypal te "
-"bevestigen en beveiligen."
+"valideren en beveiligen."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_txn_type

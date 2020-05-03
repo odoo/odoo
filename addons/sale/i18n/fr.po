@@ -59,11 +59,12 @@
 # Vincent Luba <vincent@biz-4-africa.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
-# Priscilla Sanchez <prs@odoo.com>, 2020
 # 31c77b784710e4a287a92d851a40e039, 2020
 # Martin Trigaux, 2020
 # Xavier Belmere <Info@cartmeleon.com>, 2020
 # thomas quertinmont <tqu@odoo.com>, 2020
+# Priscilla Sanchez <prs@odoo.com>, 2020
+# Jonathan Quique <jqu@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -71,7 +72,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: thomas quertinmont <tqu@odoo.com>, 2020\n"
+"Last-Translator: Jonathan Quique <jqu@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1423,7 +1424,7 @@ msgstr "Taux de la devise"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_value
 msgid "Custom Value"
-msgstr ""
+msgstr "Valeur personnalisée"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
@@ -2707,6 +2708,8 @@ msgstr ""
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"Une seule valeur personnalisée est autorisée par valeur d'attribut pour "
+"chaque ligne de commande"
 
 #. module: sale
 #. openerp-web
@@ -3378,7 +3381,7 @@ msgstr "Avertissements sur les commandes clients"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Assistant intégration d'acquéreur de paiement pour les Ventes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3388,7 +3391,7 @@ msgstr "Avertissements de vente"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Intégration de la méthode de paiement à Ventes"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -3764,7 +3767,7 @@ msgstr "Signer &amp; Payer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign &amp; Pay Quotation"
-msgstr ""
+msgstr "Signer &amp; payer le devis"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
@@ -3837,16 +3840,18 @@ msgstr "Étape"
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
 msgstr ""
+"État de l'étape de confirmation de la commande dans la barre de "
+"configuration"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr ""
+msgstr "État de l'étape d'example de devis dans la barre de configuration"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr ""
+msgstr "État de la barre de configuration des Ventes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -4005,7 +4010,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_product_attribute_value__display_type
 #: model:ir.model.fields,help:sale.field_product_template_attribute_value__display_type
 msgid "The display type used in the Product Configurator."
-msgstr ""
+msgstr "Le type d'affichage utilisé dans le configurateur d'article"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
@@ -4058,6 +4063,8 @@ msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
 msgstr ""
+"La commande n'a pas été confirmée en dépit de la réponse de l'acquéreur "
+"(%s): le montant de la commande est de %r mais l'acquéreur a répondu %r."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4103,6 +4110,8 @@ msgid ""
 "The rate of the currency to the currency of rate 1 applicable at the date of"
 " the order"
 msgstr ""
+"Le taux de conversion de la devise vers la devise de taux 1 applicable à la "
+"date de la commande"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4253,6 +4262,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Pour envoyer des invitations en mode B2B, ouvrez un contact ou sélectionnez-"
+"en plusieurs dans la liste et cliquez sur l'option 'Portal Access "
+"Management' dans le menu déroulant * Action *."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4412,6 +4424,8 @@ msgid ""
 "Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a"
 " href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 msgstr ""
+"Monter en gamme <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> pour "
+"le client <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling

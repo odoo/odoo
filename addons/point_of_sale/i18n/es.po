@@ -40,7 +40,7 @@
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
 # Carlos Liébana Anero <carlosliebana@gmail.com>, 2019
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Jairo Llopis <yajo.sk8@gmail.com>, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2019
 # Miquel Torner <miq@odoo.com>, 2019
@@ -53,6 +53,7 @@
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
 # Antonio Trueba, 2020
+# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # 
 msgid ""
 msgstr ""
@@ -60,7 +61,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:07+0000\n"
-"Last-Translator: Antonio Trueba, 2020\n"
+"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,7 +105,7 @@ msgstr "$ 8.50"
 #: code:addons/point_of_sale/models/pos_payment.py:0
 #, python-format
 msgid "%s %s"
-msgstr ""
+msgstr "%s %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -325,6 +326,9 @@ msgid ""
 "install a Chart of Accounts through the Invoicing/Accounting settings before"
 " launching a PoS session."
 msgstr ""
+"Un plan de cuentas aún no está instalado en su empresa actual. Instale un "
+"plan de cuentas a través de la configuración de facturación / contabilidad "
+"antes de iniciar una sesión de Punto de venta."
 
 #. module: point_of_sale
 #. openerp-web
@@ -574,7 +578,7 @@ msgstr "Permitir descuentos globales en los pedidos"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__allowed_pricelist_ids
 msgid "Allowed Pricelists"
-msgstr ""
+msgstr "Lista de precios permitidos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
@@ -720,7 +724,7 @@ msgstr "Retroceso"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Balance control"
-msgstr ""
+msgstr "Control de Balance"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -1046,6 +1050,8 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
+"Elija una posición fiscal específica en el pedido en función del tipo de "
+"cliente (exento de impuestos, \"en el lugar\" vs. \"para llevar\", etc.)."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1186,7 +1192,7 @@ msgstr "Confirmar"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect Devices"
-msgstr ""
+msgstr "Conectar dispositivos"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2522,7 +2528,7 @@ msgstr "Método"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
-msgstr ""
+msgstr "Módulo Punto de venta para Recursos humanos"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -2843,7 +2849,7 @@ msgstr "Pedido"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Order %s"
-msgstr ""
+msgstr "Orden %s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -3160,7 +3166,7 @@ msgstr "Recuento de albaranes"
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr ""
+msgstr "Seleccionar punto de venta"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -3351,7 +3357,7 @@ msgstr "Reporte de Facturas del Punto de Venta"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr ""
+msgstr "Asistente de pago de punto de venta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
@@ -3760,7 +3766,7 @@ msgstr "¿Listo para lanzar su <b>punto de venta</b>?"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Receipt %s"
-msgstr ""
+msgstr "Recibo %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
@@ -4033,7 +4039,7 @@ msgstr "Seleccionar la lista de precios"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__selectable_categ_ids
 msgid "Selectable Categ"
-msgstr ""
+msgstr "Categoría seleccionable"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4245,7 +4251,7 @@ msgstr "Saltar pantalla de vista previa"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Slash"
-msgstr ""
+msgstr "barra oblicua"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4256,6 +4262,9 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Algunas órdenes no se pudieron enviar al servidor debido a errores de "
+"configuración. Puede salir del punto de venta, pero no cierre la sesión "
+"antes de que se resuelva el problema."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4266,6 +4275,9 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Algunos pedidos no se pudieron enviar al servidor debido a problemas de "
+"conexión a Internet. Puede salir del punto de venta, pero no cierre la "
+"sesión antes de que se resuelva el problema."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
@@ -4629,6 +4641,8 @@ msgid ""
 "The order has been synchronized earlier. To print the invoice please refer "
 "to the order in the backend"
 msgstr ""
+"El pedido se ha sincronizado anteriormente. Para imprimir la factura, consulte el pedido en el backend\n"
+" "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_precompute_cash
@@ -4909,7 +4923,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__allowed_pricelist_ids
 msgid "This is a technical field used for the domain of pricelist_id."
-msgstr ""
+msgstr "Este es un campo técnico utilizado para el dominio de pricelist_id."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -5421,6 +5435,8 @@ msgstr ""
 msgid ""
 "You cannot delete a bank statement used in an open Point of Sale session."
 msgstr ""
+"No puede eliminar un extracto bancario utilizado en una sesión abierta de "
+"Punto de Venta."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:0

@@ -14,9 +14,9 @@
 # Jonathan <jcs@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
-# Priscilla Sanchez <prs@odoo.com>, 2020
 # Christelle Pinchart <cpi@odoo.com>, 2020
 # Martin Trigaux, 2020
+# Priscilla Sanchez <prs@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2019-12-16 11:05+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Priscilla Sanchez <prs@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,6 +110,8 @@ msgstr "<strong>Ce numéro semble être invalide.</strong>"
 msgid ""
 "Blacklist through SMS Marketing unsubscribe (mailing ID: %s - model: %s)"
 msgstr ""
+"Liste noire via SMS Marketing se désinscrire (ID de diffusion : %s - model: "
+"%s)"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_blacklist
@@ -247,12 +249,15 @@ msgid ""
 "related sms.sms can be deleted separately from its statistics. However the "
 "ID is needed for several action and controllers."
 msgstr ""
+"ID des sms.sms associés. Ce champ est un champ entier car les sms.sms "
+"associés peuvent être supprimés séparément de ces statistiques. Cependant, "
+"l'ID est nécessaire pour plusieurs actions et contrôleurs."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_allow_unsubscribe
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mass_sms_allow_unsubscribe
 msgid "Include opt-out link"
-msgstr ""
+msgstr "Inclure un lien de désinscription"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_credit
@@ -298,7 +303,7 @@ msgstr "Publipostage"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_contact
 msgid "Mailing Contact"
-msgstr ""
+msgstr "Contact du courriel de masse"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_list
@@ -313,7 +318,7 @@ msgstr "Statistiques de courriels"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__mailing_type
 msgid "Mailing Type"
-msgstr ""
+msgstr "Type d'envoi"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_mailing
@@ -356,12 +361,12 @@ msgstr "Nombre %s non trouvé"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__mailing_sms_count
 msgid "Number of Mass SMS"
-msgstr ""
+msgstr "Nombre de SMS de masse"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__numbers
 msgid "Number(s)"
-msgstr ""
+msgstr "Nombre"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_sms_sms
@@ -395,7 +400,7 @@ msgstr "SMS"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__body_plaintext
 msgid "SMS Body"
-msgstr ""
+msgstr "Corps du SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -405,7 +410,7 @@ msgstr "Contenu du SMS"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_sms_id_int
 msgid "SMS ID (tech)"
-msgstr ""
+msgstr "ID du SMS (tech)"
 
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/models/res_users.py:0
@@ -420,7 +425,7 @@ msgstr "Marketing par SMS"
 #. module: mass_mailing_sms
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_trace_report_action_sms
 msgid "SMS Marketing Analysis"
-msgstr ""
+msgstr "Analyse marketing SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
@@ -445,12 +450,12 @@ msgstr "Modèle SMS"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "SMS Trace"
-msgstr ""
+msgstr "Trace SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_tree_sms
 msgid "SMS Traces"
-msgstr ""
+msgstr "Traces SMS"
 
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
@@ -515,7 +520,7 @@ msgstr "Statistiques"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_sms_test
 msgid "Test SMS Mailing"
-msgstr ""
+msgstr "Test de l'envoi de SMS"
 
 #. module: mass_mailing_sms
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_sms_test_action
@@ -526,7 +531,7 @@ msgstr "Tester la campagne de marketing par SMS"
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "Test SMS marketing"
-msgstr ""
+msgstr "Tester la campagne de marketing par SMS"
 
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
@@ -537,7 +542,7 @@ msgstr "Aucun destinataire sélectionné."
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "There was an error when trying to unsubscribe"
-msgstr ""
+msgstr "Une erreur s'est produite lors de la tentative de désabonnement"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_form
@@ -551,6 +556,8 @@ msgid ""
 "This will schedule an SMS marketing to all recipients. Do you still want to "
 "proceed ?"
 msgstr ""
+"Cela permettra de planifier un marketing par SMS à tous les destinataires. "
+"Voulez-vous toujours continuer ?"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -573,7 +580,7 @@ msgstr "Campagne UTM"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_has_insufficient_credit
 msgid "UX Field to propose to buy IAP credits"
-msgstr ""
+msgstr "UX Field pour proposer d'acheter des crédits IAP"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
@@ -584,7 +591,7 @@ msgstr "Désinscrivez-moi"
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "Unsupported %s for mass SMS"
-msgstr ""
+msgstr "Non pris en cahrge %s pour les SMS de masse"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
@@ -599,7 +606,7 @@ msgstr "Utilisateurs"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
 msgid "Valid SMS Recipients"
-msgstr ""
+msgstr "Destinataires SMS valides"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_format
@@ -625,9 +632,9 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "has been successfully blacklisted"
-msgstr ""
+msgstr "a été mis sur liste noire avec succès"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "has been successfully removed from"
-msgstr ""
+msgstr "a bien été supprimé de"
