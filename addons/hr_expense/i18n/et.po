@@ -6,12 +6,12 @@
 # Wanradt Koell <wanradt@gmail.com>, 2018
 # Ahto Reinaru <ahto.reinaru@gmail.com>, 2018
 # Marek Pontus, 2018
+# Martin Aavastik <martin@avalah.ee>, 2018
 # Helen Sulaoja <helen@avalah.ee>, 2018
 # Rivo Zängov <eraser@eraser.ee>, 2018
 # Martin Trigaux, 2018
 # Arma Gedonsky <armagedonsky@hot.ee>, 2018
 # Egon Raamat <egon@avalah.ee>, 2018
-# Martin Aavastik <martin@avalah.ee>, 2018
 # Eneli Õigus <enelioigus@gmail.com>, 2018
 # Algo Kärp <algokarp@gmail.com>, 2020
 # 
@@ -171,7 +171,7 @@ msgstr "Tegelikud kuluaruanded, mitte tagasilükatud"
 #: code:addons/hr_expense/models/hr_expense.py:158
 #, python-format
 msgid "Add a new expense,"
-msgstr ""
+msgstr "Lisage uus kulu,"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -325,7 +325,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Create a new expense category"
-msgstr ""
+msgstr "Looge uus kulukategooria"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
@@ -638,7 +638,7 @@ msgstr "Kulud arveks"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_hr_expense
 msgid "Expenses to Process"
-msgstr ""
+msgstr "Töötlemiskulud\n"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_refused
@@ -917,7 +917,7 @@ msgstr "Töötajal %s ei leitud kodust aadressi, palun seadista üks."
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_approved_expense
 msgid "No approved employee expenses"
-msgstr ""
+msgstr "Kinnitatud töötaja kulud puuduvad"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:257
@@ -930,6 +930,8 @@ msgstr "Kandes %s ei leitud kreeditkontot, palun seadista üks."
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
 msgid "No expense reports to approve"
 msgstr ""
+"\n"
+"Kinnitatavaid kuluaruandeid pole"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_unsubmitted_expense
@@ -1017,6 +1019,8 @@ msgstr ""
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
 msgstr ""
+"\n"
+"Ainult juhid ja personalijuhid saavad kulud heaks kiita"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1039,7 +1043,7 @@ msgstr "Makstud"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_mode
 msgid "Paid By"
-msgstr ""
+msgstr "Maksis"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__partner_id
@@ -1070,7 +1074,7 @@ msgstr "Makse tüüp"
 #: selection:hr.expense,activity_state:0
 #: selection:hr.expense.sheet,activity_state:0
 msgid "Planned"
-msgstr "Planned"
+msgstr "Planeeritud"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:248
@@ -1397,7 +1401,7 @@ msgstr "Esitamise ootel"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "To report"
-msgstr ""
+msgstr "Teatada"
 
 #. module: hr_expense
 #: selection:hr.expense,activity_state:0
@@ -1419,7 +1423,7 @@ msgstr "Kokku"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
 msgid "Total (Company Currency)"
-msgstr ""
+msgstr "Kokku (Ettevõtte valuuta)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount
@@ -1514,7 +1518,7 @@ msgstr "Veebilehe suhtluse ajalugu"
 #: code:addons/hr_expense/models/hr_expense.py:675
 #, python-format
 msgid "You can only approve your department expenses"
-msgstr ""
+msgstr "Te saate kinnitada ainult oma osakonna kulud."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:620
@@ -1554,13 +1558,15 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:672
 #, python-format
 msgid "You cannot approve your own expenses"
-msgstr ""
+msgstr "Sa ei saa enda kulusid kinnitada"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:145
 #, python-format
 msgid "You cannot delete a posted or approved expense."
 msgstr ""
+"\n"
+"Postitatud või kinnitatud kulu ei saa kustutada."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:587

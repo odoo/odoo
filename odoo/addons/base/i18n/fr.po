@@ -66,12 +66,13 @@
 # Martin Trigaux, 2019
 # lcaodoo <lca@odoo.com>, 2019
 # Alexandra Jubert <aju@odoo.com>, 2020
-# Julien Goergen <jgo@odoo.com>, 2020
-# Vallen Delobel <edv@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
-# Priscilla Sanchez <prs@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
+# Christelle Pinchart <cpi@odoo.com>, 2020
+# Vallen Delobel <edv@odoo.com>, 2020
+# Julien Goergen <jgo@odoo.com>, 2020
+# Priscilla Sanchez <prs@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -79,7 +80,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-10 14:44+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Pauline Thiry <pth@odoo.com>, 2020\n"
+"Last-Translator: Priscilla Sanchez <prs@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1514,6 +1515,96 @@ msgid ""
 "    file from which you can click on the file to download locally.  This\n"
 "    file can then be uploaded to the bank.\n"
 msgstr ""
+"\n"
+"Transfert de crédit ABA\n"
+"===================\n"
+"\n"
+"Ce module permet la génération de lots de paiement en ABA (Australian\n"
+"Bankers Association) fichiers texte. Le fichier 'aba' généré peut être téléchargé\n"
+"à de nombreuses banques australiennes.\n"
+"\n"
+"Configuration\n"
+"-----\n"
+"\n"
+"- *Configuration > Journaux*\n"
+"\n"
+"    Si nécessaire, créez un nouveau journal ou choisissez un journal existant de ** Type ** * \"Banque\" *.\n"
+"\n"
+"    Sur ** Paramètres avancés **, assurez-vous que ABA Credit Transfer est coché.\n"
+"\n"
+"    Dans l'onglet ** Compte bancaire **, entrez le ** Numéro de compte **.\n"
+"\n"
+"- * Configuration> Comptes bancaires *\n"
+"\n"
+"   Le compte apparaîtra dans la liste comme nom de journal.\n"
+"\n"
+"    L'édition affichera le ** Numéro de compte **. Ceci est important car il est utilisé par     le processus ABA.\n"
+"\n"
+"    **Banque** est optionel.\n"
+"\n"
+"- * Ventes> Configuration> Comptes bancaires> Comptes bancaires *\n"
+"\n"
+"    Le compte apparaîtra dans la liste comme numéro de compte.\n"
+"\n"
+"    ** Paiements ABA ** - Réglez sur * «Compte pour effectuer des paiements ABA» *.\n"
+"\n"
+"   ** BSB ** - Obligatoire, 6 chiffres, et sera automatiquement formaté.\n"
+"\n"
+"    ** Titulaire du compte ** - Facultatif.\n"
+"\n"
+"    ** Nom du compte / bénéficiaire ** - Obligatoire. Généralement non validé par les banques     sur les transferts de fichiers ABA, et peut apparaître sur le relevé bancaire du paiement.\n"
+"\n"
+"    ** Code de l'institution financière ** - Obligatoire (fourni par la banque ou peut être trouvé\n"
+"    sur Google). Il s'agit de trois caractères majuscules 3.\n"
+"\n"
+"    ** Fournir le nom d'utilisateur ** - Certaines banques autorisent ce format libre, certaines banques peuvent rejeter le fichier ABA si le nom d'utilisateur fournisseur n'est pas celui attendu. Il ne peut pas dépasser 26 caractères.\n"
+"\n"
+"   ** Numéro d'identification (APCA) ** - Le numéro d'identification de l'utilisateur est une alloué par une banque. Il est composé de 6 chiffres.\n"
+"\n"
+"    ** Inclure les transactions d'auto-équilibrage ** - Certaines institutions exigent qu'une transaction d'auto-équilibrage qui est utilisée comme vérification.\n"
+"\n"
+"- Les comptes bancaires des fournisseurs peuvent être créés au même endroit, mais il est\n"
+"généralement plus facile à mettre en place à partir du partenaire qu'à partir du vendeur.\n"
+"\n"
+"- *Comptabilité > Achats > Vendeurs*\n"
+"\n"
+"    Dans l'onglet ** Ventes et achats **, cliquez sur * \"Compte (s) bancaire (s)\" * d'où un compte bancaire du fournisseur peut être créé ou modifié.\n"
+"\n"
+"    **Numéro de compte** - Requis.\n"
+"\n"
+"    ** Paiements ABA ** - Réglez sur * «Autoriser les paiements ABA sur ce compte» *.\n"
+"  \n"
+"  ** BSB ** - Obligatoire, 6 chiffres, et sera automatiquement formaté.\n"
+"\n"
+"    ** Titulaire du compte ** - Facultatif\n"
+"\n"
+"    ** Nom du compte / bénéficiaire ** - Obligatoire. Généralement non validé par le\n"
+"    banques.\n"
+"\n"
+"Utilisation\n"
+"---\n"
+"\n"
+"- Créez un paiement fournisseur de la manière habituelle.\n"
+"\n"
+"    Assurez-vous que le ** fournisseur ** ne possède qu'un compte de paiement ABA valide.\n"
+"\n"
+"    Choisissez le ** Journal des paiements ** correct qui est défini pour les paiements ABA.\n"
+"\n"
+"    Sélectionnez le bouton radio ** ABA Credit Transfer **\n"
+"\n"
+"    Si le fournisseur possède plusieurs comptes bancaires, vous devrez peut-être sélectionner\n"
+"    correct ** Compte bancaire du destinataire **.\n"
+"\n"
+"    Entrez le montant du paiement, etc.\n"
+"\n"
+"- *Achats > Paiements*\n"
+"\n"
+"    Une fois les paiements confirmés, ils apparaîtront dans la liste des paiements.\n"
+"\n"
+"    À l'aide de filtres ou de tri, sélectionnez les paiements à inclure. En dessous de\n"
+"    *Actions* choisissez * Télécharger le paiement ABA *. Un pop-up apparaît avec le fichier\n"
+"    à partir duquel vous pouvez cliquer sur le fichier à télécharger localement. Ce\n"
+"    fichier peut ensuite être téléchargé vers la banque.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -6120,6 +6211,11 @@ msgid ""
 "    - a generic chart of accounts\n"
 "    - SARS VAT Ready Structure"
 msgstr ""
+"\n"
+"C'est la dernière localisation de base sud-africaine nécessaire pour faire fonctionner Odoo dans ZA:\n"
+"================================================================================\n"
+"- Un plan comptable générique\n"
+"- Structure de préparation à la TVA pour le SRAS"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -10239,7 +10335,7 @@ msgstr "Lecture de code-barres sur mobile"
 #: code:addons/base/models/ir_qweb_fields.py:607
 #, python-format
 msgid "Barcode symbology"
-msgstr ""
+msgstr "Symbologie du code-barres"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:607
@@ -10445,7 +10541,7 @@ msgstr "Bhoutan"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_delivery_ups
 msgid "Bill to your UPS account number"
-msgstr ""
+msgstr "Facturez sur votre numéro de compte UPS"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -11807,7 +11903,7 @@ msgstr "Créer le menu"
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
 msgid "Create Menu Wizard"
-msgstr ""
+msgstr "Créer un menu"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -12619,7 +12715,7 @@ msgstr "Données de démonstration"
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure_wizard
 msgid "Demo Failure wizard"
-msgstr ""
+msgstr "Échec de la démo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failure_ids
@@ -13018,7 +13114,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
 msgid "Displays cohort analysis on attendees."
-msgstr ""
+msgstr "Affiche l'analyse des cohortes sur les participants."
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -13801,7 +13897,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website
 msgid "Enterprise website builder"
-msgstr ""
+msgstr "Constructeur de sites web d'entreprise"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_R
@@ -13915,7 +14011,7 @@ msgstr "Organisation d'événements"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_enterprise
 msgid "Events Organization Add-on"
-msgstr ""
+msgstr "Complément d'Organisation d'Evènements"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale
@@ -14314,7 +14410,7 @@ msgstr "Outils supplémentaires"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_invoice_extract
 msgid "Extract data from invoice scans to fill them automatically"
-msgstr ""
+msgstr "Extraire les données des scans de facture automatiquement"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_U
@@ -15013,7 +15109,7 @@ msgstr "Plein écran"
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp_workorder_quality
 #: model:ir.module.module,summary:base.module_purchase_mrp_workorder_quality
 msgid "Full Traceability Report Demo Data"
-msgstr ""
+msgstr "Données de démo pour le rapport de traçabilité"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__func
@@ -15165,6 +15261,11 @@ msgid ""
 "\n"
 "OFX and QIF imports are available in Enterprise version."
 msgstr ""
+"Assistant générique pour l'import des relevés bancaires.\n"
+"\n"
+"(Ce module n'inclut aucun type de format d'importation.)\n"
+"\n"
+"Les imports OFX et QIF sont disponible dans la version Entreprise."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -15210,12 +15311,12 @@ msgstr "Allemagne SKR04 - Comptabilité"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_dashboard
 msgid "Get a new dashboard view in the Website App"
-msgstr ""
+msgstr "Obtenez une nouvelle vue du tableau de bord dans l'application Web"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_enterprise
 msgid "Get the enterprise look and feel"
-msgstr ""
+msgstr "Obtenez l’aspect et la convivialité de l’entreprise"
 
 #. module: base
 #: model:res.country,name:base.gh
@@ -15864,7 +15965,7 @@ msgstr "Action page d'accueil"
 #. module: base
 #: model:ir.actions.act_url,name:base.action_open_website
 msgid "Home Menu"
-msgstr ""
+msgstr "Acceuil"
 
 #. module: base
 #: model:res.country,name:base.hn
@@ -16928,7 +17029,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_posbox_upgrade
 msgid "IoTBox Software Upgrader"
-msgstr ""
+msgstr "Mise à niveau du Logiciel IoTBox"
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -17884,7 +17985,7 @@ msgstr "Échec d'envoi du courriel"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_enterprise
 msgid "Mail Enterprise"
-msgstr ""
+msgstr "E-Mail Entreprise"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_mail_server
@@ -21989,7 +22090,7 @@ msgstr "Format de papier"
 #. module: base
 #: model:ir.model,name:base.model_report_paperformat
 msgid "Paper Format Config"
-msgstr ""
+msgstr "Configuration du format papier"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.paper_format_action
@@ -23047,7 +23148,7 @@ msgstr "Champ Qweb image"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_integer
 msgid "Qweb Field Integer"
-msgstr ""
+msgstr "Champ entier Qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2one
@@ -23062,7 +23163,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_relative
 msgid "Qweb Field Relative"
-msgstr ""
+msgstr "Relatif au champ Qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_selection
@@ -23705,7 +23806,7 @@ msgstr "Distribution de coupons de vente"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_intrastat
 msgid "Sale Intrastat"
-msgstr ""
+msgstr "Vente Intrastat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase
@@ -25689,7 +25790,7 @@ msgstr "Suites de tests pour les campagnes d'Automatisation Marketing"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_testing_utilities
 msgid "Test testing utilities"
-msgstr ""
+msgstr "Tester les utilitaires de test"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_access_rights
@@ -27446,7 +27547,7 @@ msgstr "Types d'utilisateur"
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
 msgid "User, Change Password Wizard"
-msgstr ""
+msgstr "Utilisateur, Assistant de changement de mot de passe"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_default_menu_action
