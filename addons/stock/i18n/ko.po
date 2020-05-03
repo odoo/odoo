@@ -11,16 +11,16 @@
 # Martin Trigaux, 2019
 # Goh Gangtai <gangtai.goh@gmail.com>, 2019
 # Link Up링크업 <linkup.way@gmail.com>, 2019
-# Linkup <link-up@naver.com>, 2020
 # JH CHOI <hwangtog@gmail.com>, 2020
+# Linkup <link-up@naver.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1108,6 +1108,12 @@ msgid "Changing the operation type of this record is forbidden at this point."
 msgstr "이 시점에서는 이 레코드의 작업 유형을 변경할 수 없습니다."
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr "상품 변경은 '초안' 상태에서만 허용됩니다."
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
 msgstr "사용 가능 확인"
@@ -1149,6 +1155,13 @@ msgstr "목적지 위치 선택"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Choose your date"
 msgstr "날짜 선택"
+
+#. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
+#, python-format
+msgid "Close"
+msgstr "닫기"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
@@ -1768,7 +1781,7 @@ msgstr "배송 주소"
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
-msgstr "배송 주문서"
+msgstr "출고"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_lot
@@ -3735,6 +3748,8 @@ msgid "Number of unread messages"
 msgstr "읽지 않은 메시지 수"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "On Hand"
 msgstr "보유량"
@@ -3790,6 +3805,12 @@ msgstr "반품 작업 유형"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
 msgstr "작업 유형"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "지원되지 않는 작업"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
@@ -6419,6 +6440,7 @@ msgstr "추적 명세"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
+#: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Transfer"
@@ -6483,6 +6505,11 @@ msgstr "이송 위치"
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule"
 msgstr "다른 규칙 실행"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+msgid "Trigger Another Rule If No Stock"
+msgstr "재고가 없을 경우 다른 규칙을 실행"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -7010,7 +7037,7 @@ msgid "Wizard"
 msgstr "마법사"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree_lot_name_as_textarea
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Write your SN/LN one by one or copy paste a list."
 msgstr "SN/LN을 하나씩 쓰거나 목록을 복사하여 붙여 넣습니다."
 
@@ -7441,9 +7468,3 @@ msgstr "다음 대신 처리됨"
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph
 msgid "report_stock_quantity_graph"
 msgstr "report_stock_quantity_graph"
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:223
-#, python-format
-msgid "Changing the product is only allowed in 'Draft' state."
-msgstr "상품 변경은 '초안' 상태에서만 허용됩니다."

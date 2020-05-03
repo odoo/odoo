@@ -5,15 +5,15 @@
 # Translators:
 # ТАрас <tratatuta@i.ua>, 2019
 # Zoriana Zaiats, 2019
-# Martin Trigaux, 2019
 # Bohdan Lisnenko, 2019
+# Martin Trigaux, 2020
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -1138,6 +1138,12 @@ msgid "Changing the operation type of this record is forbidden at this point."
 msgstr "На даний момент зміна типу операції цього запису заборонена."
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr "Зміна товару дозволена лише у стані 'Чернетки'."
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
 msgstr "Перевірте наявність"
@@ -1183,6 +1189,13 @@ msgstr "Виберіть місцезнаходження призначення
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Choose your date"
 msgstr "Оберіть вашу дату"
+
+#. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
+#, python-format
+msgid "Close"
+msgstr "Закрити"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
@@ -3827,6 +3840,8 @@ msgid "Number of unread messages"
 msgstr "Кількість непрочитаних повідомлень"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "On Hand"
 msgstr " В наявності"
@@ -3882,6 +3897,12 @@ msgstr "Тип операції для повернення"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
 msgstr "Типи операції"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Операція не підтримується"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
@@ -6618,6 +6639,7 @@ msgstr "Рядок відстеження"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
+#: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Transfer"
@@ -6684,6 +6706,11 @@ msgstr "Транзитні розташування"
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule"
 msgstr "Запустити інше правило"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+msgid "Trigger Another Rule If No Stock"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -7230,7 +7257,7 @@ msgid "Wizard"
 msgstr "Помічник"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree_lot_name_as_textarea
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Write your SN/LN one by one or copy paste a list."
 msgstr ""
 "Напишіть ваш серійний/партійний номер один за одним або скопіюйте та вставте"
@@ -7714,9 +7741,3 @@ msgstr "обробляється замість"
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph
 msgid "report_stock_quantity_graph"
 msgstr "report_stock_quantity_graph"
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:223
-#, python-format
-msgid "Changing the product is only allowed in 'Draft' state."
-msgstr "Зміна товару дозволена лише у стані 'Чернетки'."

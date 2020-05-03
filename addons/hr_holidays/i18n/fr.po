@@ -19,6 +19,7 @@
 # Cécile Collart <cco@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
+# Julien Goergen <jgo@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
 # 
 msgid ""
@@ -139,13 +140,13 @@ msgstr "%s sur %s: %.2f jours"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on Time Off : %.2f day(s)"
-msgstr ""
+msgstr "%s sur les jours de congé : %.2f jour(s)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on Time Off : %.2f hour(s)"
-msgstr ""
+msgstr "%s sur les heures de congés : %.2fheure(s)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1365,7 +1366,7 @@ msgstr "Tout le monde"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "Extra days"
-msgstr ""
+msgstr "Jours Extra"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__duration_display
@@ -1570,6 +1571,8 @@ msgid ""
 "If Accrual Allocation: Number of days allocated in addition to the ones you "
 "will get via the accrual' system."
 msgstr ""
+"Si Allocation de Régularisation: Nombre de jours alloués en plus de ceux que"
+" vous obtiendrez via le système de \"régularisation\"."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
@@ -1577,6 +1580,8 @@ msgid ""
 "If Accrual Allocation: Number of hours allocated in addition to the ones you"
 " will get via the accrual' system."
 msgstr ""
+"Si Allocation de Régularisation: Nombre d'heures allouées en plus de ceux "
+"que vous obtiendrez via le système de \"régularisation\"."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -2953,7 +2958,7 @@ msgstr "L'utilisateur est en ligne"
 #: code:addons/hr_holidays/static/src/xml/discuss.xml:0
 #, python-format
 msgid "User is out of office"
-msgstr ""
+msgstr "Utilisateur est absent du bureau"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee__leave_manager_id

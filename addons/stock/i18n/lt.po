@@ -9,20 +9,20 @@
 # Rolandas <info@paninfo.lt>, 2019
 # Naglis Jonaitis, 2019
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# Arminas Grigonis <arminas@versada.lt>, 2019
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
 # Silvija Butko <silvija.butko@gmail.com>, 2019
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
 # Martin Trigaux, 2019
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Arminas Grigonis <arminas@versada.lt>, 2020
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Arunas Vaitekunas <vaitekunas@gmail.com>, 2020\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -1081,6 +1081,12 @@ msgid "Changing the operation type of this record is forbidden at this point."
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
 msgstr "Tikrinti pasiekiamumą"
@@ -1125,6 +1131,13 @@ msgstr "Pasirinkti tikslo vietą"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Choose your date"
 msgstr "Pasirinkite datą"
+
+#. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
+#, python-format
+msgid "Close"
+msgstr "Uždaryti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
@@ -3718,7 +3731,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Klaidų kiekis"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -3742,6 +3755,8 @@ msgid "Number of unread messages"
 msgstr "Neperskaitytų žinučių skaičius"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "On Hand"
 msgstr "Turima:"
@@ -3797,6 +3812,12 @@ msgstr "Grąžinimo operacijų tipai"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
 msgstr "Operacijos tipai"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
@@ -6494,6 +6515,7 @@ msgstr "Sekimo eilutė"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
+#: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Transfer"
@@ -6558,6 +6580,11 @@ msgstr "Tranzitinės vietos"
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule"
 msgstr "Suaktyvinti kitą taisyklę"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+msgid "Trigger Another Rule If No Stock"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -7094,7 +7121,7 @@ msgid "Wizard"
 msgstr "Vedlys"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree_lot_name_as_textarea
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Write your SN/LN one by one or copy paste a list."
 msgstr ""
 
@@ -7566,10 +7593,4 @@ msgstr "apdorota vietoje"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph
 msgid "report_stock_quantity_graph"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:223
-#, python-format
-msgid "Changing the product is only allowed in 'Draft' state."
 msgstr ""
