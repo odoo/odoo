@@ -14,6 +14,7 @@ var time = require('web.time');
 
 var QWeb = core.qweb;
 var _t = core._t;
+const _lt = core._lt;
 
 /**
  * Fetches activities and postprocesses them.
@@ -646,6 +647,7 @@ var Activity = BasicActivity.extend({
 // Activities Widget for Kanban views ('kanban_activity' widget)
 // -----------------------------------------------------------------------------
 var KanbanActivity = BasicActivity.extend({
+    description: _lt("Kanban Activity"),
     className: 'o_mail_activity_kanban',
     template: 'mail.KanbanActivity',
     events:_.extend({}, BasicActivity.prototype.events, {
