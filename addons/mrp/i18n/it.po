@@ -20,9 +20,10 @@
 # mbo_odoo <mbo@odoo.com>, 2018
 # Mario Riva <mario.riva@gmail.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Paolo Valier, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Iacopo Simonelli <lsi@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:19+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Iacopo Simonelli <lsi@odoo.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2918,7 +2919,7 @@ msgstr "Campo tecnico per verificare se si può pubblicare"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_unreserve_visible
 msgid "Technical field to check when we can unreserve"
-msgstr ""
+msgstr "Campo tecnico per verificare se si può annullare la prenotazione"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_consumed_less_than_planned
@@ -3031,6 +3032,10 @@ msgid ""
 "production orders will  be executed through work orders, otherwise "
 "everything is processed in the production order itself. "
 msgstr ""
+"Le operazioni per produrre questa distinta dei materiali. Quando viene "
+"specificato un routing, gli ordini di produzione verranno eseguiti tramite "
+"ordini di lavoro, altrimenti tutto verrà elaborato nell'ordine di produzione"
+" stesso."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:95
@@ -3055,6 +3060,9 @@ msgid ""
 "create work orders afterwards which alters the execution of the "
 "manufacturing order."
 msgstr ""
+"Il routing contiene tutti i centri di lavoro utilizzati e per quanto tempo. "
+"Ciò creerà in seguito ordini di lavoro che alterano l'esecuzione dell'ordine"
+" di produzione."
 
 #. module: mrp
 #: code:addons/mrp/models/procurement.py:20
@@ -3087,6 +3095,11 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Questo campo viene utilizzato per calcolare la durata prevista di un ordine "
+"di lavoro nel centro di lavoro. Ad esempio, se un ordine di lavoro richiede "
+"un'ora e il fattore di efficienza è del 100%, la durata prevista sarà di "
+"un'ora. Se il fattore di efficienza è del 200%, tuttavia la durata prevista "
+"sarà di 30 minuti."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_production_location_id
@@ -3150,6 +3163,8 @@ msgid ""
 "Time in minutes. Is the time used in manual mode, or the first time supposed"
 " in real time when there are not any work orders yet."
 msgstr ""
+"Tempo in minuti. È il tempo utilizzato in modalità manuale, se non ci sono "
+"ancora ordini di lavoro inserire il tempo supposto."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -3267,19 +3282,21 @@ msgstr "Sblocca"
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild_unbuild_id
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
-msgstr ""
+msgstr "Smonta"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Order"
-msgstr ""
+msgstr "Ordine di Smontaggio"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:77
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
 msgstr ""
+"La quantità del prodotto nell'ordine di smontaggio deve essere strettamente "
+"positiva."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
@@ -3303,7 +3320,7 @@ msgstr "Costo unitario"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_unit_factor
 msgid "Unit Factor"
-msgstr ""
+msgstr "Fattore unitario"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_uom_id
@@ -3404,6 +3421,9 @@ msgid ""
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
 msgstr ""
+"L'utilizzo del report MPS per pianificare le operazioni di riordino e "
+"produzione è utile se si ha tempi di consegna lunghi e se si produce in base"
+" alle previsioni di vendita."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_valid_until
@@ -3546,6 +3566,10 @@ msgid ""
 "                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
 msgstr ""
+"I centri di lavoro ti consentono di creare e gestire la produzione.\n"
+"Sono costituiti da lavoratori e / o macchine, che sono\n"
+"considerate come unità per l'assegnazione di compiti e\n"
+"per le previsioni di pianificazione."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -3631,6 +3655,9 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones"
 msgstr ""
+"Gli ordini di lavoro sono operazioni che devono essere elaborate in un\n"
+"            ordine di produzione. Gli ordini di lavoro sono attivati dagli ordini di produzione,\n"
+"             si basano sul routing definito sugli ordini di produzione"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workorder_todo
@@ -3789,7 +3816,7 @@ msgstr "Impossibile produrre due volte lo stesso numero di serie. "
 #: code:addons/mrp/models/mrp_unbuild.py:93
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr ""
+msgstr "Non è possibile smontare un ordine di produzione annullato."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:47

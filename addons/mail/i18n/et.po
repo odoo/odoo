@@ -12,6 +12,7 @@
 # Helen Sulaoja <helen@avalah.ee>, 2018
 # Martin Aavastik <martin@avalah.ee>, 2019
 # Eneli Õigus <enelioigus@gmail.com>, 2019
+# Algo Kärp <algokarp@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:19+0000\n"
-"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2019\n"
+"Last-Translator: Algo Kärp <algokarp@gmail.com>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -453,7 +454,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong> Feedback</strong>"
-msgstr ""
+msgstr "<strong> Tagasiside</strong>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1027,7 +1028,7 @@ msgstr "Allikas"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_message_ids
 msgid "Channel Message"
-msgstr ""
+msgstr "Kanali sõnum"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_type
@@ -1659,7 +1660,7 @@ msgstr "E-posti otsing"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_email_status
 msgid "Email Status"
-msgstr ""
+msgstr "E-posti olek"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_template_id
@@ -1801,7 +1802,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_starred_partner_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_starred_partner_ids
 msgid "Favorited By"
-msgstr ""
+msgstr "Soositud"
 
 #. module: mail
 #. openerp-web
@@ -2156,7 +2157,7 @@ msgstr "Odoos"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has Mentions"
-msgstr ""
+msgstr "Kas mainib"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
@@ -2485,7 +2486,7 @@ msgstr "Kutse"
 #: code:addons/mail/wizard/invite.py:53
 #, python-format
 msgid "Invitation to follow %s: %s"
-msgstr ""
+msgstr "Kutse jälgida %s: %s"
 
 #. module: mail
 #. openerp-web
@@ -2525,7 +2526,7 @@ msgstr "Invite wizard"
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Invited people only"
-msgstr ""
+msgstr "Ainult kutsutud inimesed"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_is_follower
@@ -2907,7 +2908,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
 msgid "Mail Tracking Value"
-msgstr ""
+msgstr "E-kirjade jälgimisväärtus"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_notification
@@ -2992,6 +2993,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
+"Grupi keskmise suurusega foto. Selle suurust muudetakse automaatselt 128x128"
+" pikslise suurusega pildiks, kuvasuhe säilitatakse. Kasutage seda välja "
+"vormivaate või mõne kanbani vaatena."
 
 #. module: mail
 #: selection:mail.activity.type,category:0
@@ -3028,7 +3032,7 @@ msgstr "Sõnumi ID"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
 msgid "Message Notifications"
-msgstr ""
+msgstr "Sõnumi teavitused"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_record_name
@@ -3808,6 +3812,8 @@ msgid ""
 "Once a message has been starred, you can come back and review it at any time"
 " here."
 msgstr ""
+"Kui sõnum on märgistatud tähega, võite iga hetk siia tagasi tulla ja seda "
+"vaadata."
 
 #. module: mail
 #. openerp-web
@@ -3943,7 +3949,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_mail_server_id
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_mail_server_id
 msgid "Outgoing mail server"
-msgstr ""
+msgstr "Väljuvate kirjade server"
 
 #. module: mail
 #: selection:account.invoice,activity_state:0
@@ -4051,7 +4057,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_needaction_partner_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_needaction_partner_ids
 msgid "Partners with Need Action"
-msgstr ""
+msgstr "Partnerid, kellel on vaja tegutseda"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_auto_delete
@@ -4111,7 +4117,7 @@ msgstr "Planeeritud"
 #: code:addons/mail/static/src/xml/activity.xml:6
 #, python-format
 msgid "Planned activities"
-msgstr ""
+msgstr "Planeeritud tegevus"
 
 #. module: mail
 #. openerp-web
@@ -4139,7 +4145,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/composer.js:667
 #, python-format
 msgid "Please, wait while the file is uploading."
-msgstr ""
+msgstr "Oodake, kuni fail üles laaditakse."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_notification_type
@@ -4293,7 +4299,7 @@ msgstr "Viited"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_res_id
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_res_id
 msgid "Related Document ID"
-msgstr ""
+msgstr "Seotud dokumendi ID"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model
@@ -4306,12 +4312,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_res_model
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_model
 msgid "Related Document Model"
-msgstr ""
+msgstr "Seotud dokumendi mudel"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_res_model
 msgid "Related Document Model Name"
-msgstr ""
+msgstr "Seotud dokumendi mudel"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -4470,7 +4476,7 @@ msgstr "Planeeritud kuupäev"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "Ajastatud saatmiskuupäev"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -4489,11 +4495,13 @@ msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
+"Valige dokumendimudelist sihtväli. Kui see on seotud väli, saate seotud "
+"välja sihtkohas valida sihtvälja. "
 
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Selected group of users"
-msgstr ""
+msgstr "Valitud kasutajarühm"
 
 #. module: mail
 #. openerp-web
@@ -4512,7 +4520,7 @@ msgstr "Saada kiri"
 #: code:addons/mail/models/mail_template.py:264
 #, python-format
 msgid "Send Mail (%s)"
-msgstr ""
+msgstr "Saada kiri (%s)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -4537,7 +4545,7 @@ msgstr "Saada sõnum"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_email_send
 msgid "Send messages by email"
-msgstr ""
+msgstr "Saatke sõnumid e-kirjaga"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_email_from
@@ -4628,6 +4636,8 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
+"Külgriba toiming selle malli kättesaadavaks tegemiseks seotud "
+"dokumendimudeli kirjetel."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_author_avatar
@@ -5027,6 +5037,8 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Jälgitavad väärtused salvestatakse eraldi mudelis. See väli võimaldab "
+"taastada jälgimist ja  mudeli kohta statistikat genereerida."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields_track_visibility
@@ -5044,7 +5056,7 @@ msgstr "Jälgitav väärtus"
 #: model:ir.actions.act_window,name:mail.action_view_mail_tracking_value
 #: model:ir.ui.menu,name:mail.menu_mail_tracking_value
 msgid "Tracking Values"
-msgstr ""
+msgstr "Jälgimisväärtused"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_tracking_value_ids
@@ -5052,7 +5064,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_tracking_value_ids
 msgid "Tracking values"
-msgstr ""
+msgstr "Jälgimisväärtused"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_message_type
@@ -5284,7 +5296,7 @@ msgstr "Üleslaadimine"
 #: code:addons/mail/static/src/js/composer.js:667
 #, python-format
 msgid "Uploading error"
-msgstr ""
+msgstr "Üleslaadimise viga"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_use_active_domain
@@ -5372,6 +5384,8 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
+"Kui esimese väljana valitakse suhteväli(seotud väli), võimaldab see väli "
+"valida sihtdokumendi mudelis(alammudelis) sihtvälja."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_object
@@ -5380,6 +5394,8 @@ msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
+"Kui seotud väli(suhteväli) on valitud esimesena, näitab see väli "
+"dokumendimudelit, kuhu suhe läheb."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_model_fields_track_visibility
@@ -5396,7 +5412,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_model_is_mail_thread
 msgid "Whether this model supports messages and notifications."
-msgstr ""
+msgstr "Kas see mudel toetab sõnumeid ja teatisi."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -5408,7 +5424,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/activity.xml:75
 #, python-format
 msgid "Write Feedback"
-msgstr ""
+msgstr "Kirjuta tagasiside"
 
 #. module: mail
 #. openerp-web
@@ -5485,7 +5501,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "You have been assigned to the"
-msgstr ""
+msgstr "Sulle on määratud"
 
 #. module: mail
 #. openerp-web
@@ -5611,19 +5627,19 @@ msgstr "üldine"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been"
-msgstr ""
+msgstr "on olnud"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:282
 #, python-format
 msgid "incorrectly configured alias"
-msgstr ""
+msgstr "Valesti loodud alias."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:278
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
-msgstr ""
+msgstr "Valesti loodud alias."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
