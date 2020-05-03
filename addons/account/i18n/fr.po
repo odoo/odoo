@@ -44,10 +44,11 @@
 # Cécile Collart <cco@odoo.com>, 2020
 # Valaeys Stéphane <svalaeys@fiefmanage.ch>, 2020
 # Sylvain Dubuisson <sylvain@orderly.fr>, 2020
-# Christelle Pinchart <cpi@odoo.com>, 2020
 # Jonathan <jcs@odoo.com>, 2020
 # Priscilla Sanchez <prs@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
+# Christelle Pinchart <cpi@odoo.com>, 2020
+# Jonathan Quique <jqu@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -55,7 +56,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Vallen Delobel <edv@odoo.com>, 2020\n"
+"Last-Translator: Jonathan Quique <jqu@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1328,12 +1329,12 @@ msgstr "Affectation des comptes"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Accounts Mapping Template of Fiscal Position"
-msgstr ""
+msgstr "Modèle de mappage des comptes de position fiscale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr ""
+msgstr "Moappage des comptes de position fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_needaction
@@ -3136,7 +3137,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Common Journal Report"
-msgstr ""
+msgstr "Rapport du journal courant"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
@@ -3219,7 +3220,7 @@ msgstr "Complétez le jeu de taxes."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composer_id
 msgid "Composer"
-msgstr ""
+msgstr "Compositeur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composition_mode
@@ -4953,12 +4954,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__force_second_tax_included
 msgid "Force the second tax to be managed as a price included tax."
 msgstr ""
+"Forcer la deuxième taxe à être gérée comme une taxe incluse dans le prix."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__force_tax_included
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__force_tax_included
 msgid "Force the tax to be managed as a price included tax."
-msgstr ""
+msgstr "Forcer la taxe à être gérée comme une taxe incluse dans le prix."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -5369,6 +5371,8 @@ msgid ""
 "If set, the accounting entries created during the bank statement reconciliation process will be created at this date.\n"
 "This is useful if the accounting period in which the entries should normally be booked is already closed."
 msgstr ""
+"Si cette option est activée, les écritures comptables créées lors du processus de réconciliation des relevés bancaires seront créées à cette date.\n"
+"Ceci est utile si l'exercice comptable dans lequel les écritures devraient normalement être comptabilisées est déjà clôturé."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__analytic
@@ -6263,7 +6267,7 @@ msgstr "Écritures comptables"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_select_tax_audit
 msgid "Journal Items for Tax Audit"
-msgstr ""
+msgstr "Ecritures comptables pour audit fiscal"
 
 #. module: account
 #. openerp-web
@@ -6402,7 +6406,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
 msgid "Kpi Account Total Revenue Value"
-msgstr ""
+msgstr "Valeur des revenus totaux du compte Kpi"
 
 #. module: account
 #. openerp-web
@@ -7040,7 +7044,7 @@ msgstr "Opérations diverses"
 #. module: account
 #: sql_constraint:account.invoice.line:0
 msgid "Missing required account on accountable invoice line."
-msgstr ""
+msgstr "Absence du compte requis sur la ligne de facture imputable."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__moderator_id
@@ -7342,6 +7346,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note it to do it "
 "directly from the vendor bill."
 msgstr ""
+"Notez que la façon la plus simple de créer une note de crédit fournisseur "
+"est de le faire directement à partir de la facture fournisseur."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__note
@@ -8310,12 +8316,12 @@ msgstr "Préfixe pour les comptes de trésorerie principaux"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__transfer_account_code_prefix
 msgid "Prefix of the main transfer accounts"
-msgstr ""
+msgstr "Préfixe des principaux comptes de transfert"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__transfer_account_code_prefix
 msgid "Prefix of the transfer accounts"
-msgstr ""
+msgstr "Préfixe des comptes de transfert"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_prepayments
@@ -8602,7 +8608,7 @@ msgstr "Lettrer les écritures"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_template
 msgid "Reconcile Model Template"
-msgstr ""
+msgstr "Modèle de lettrage"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -8659,7 +8665,7 @@ msgstr "Enregistrer des transactions dans des devises étrangères"
 #: code:addons/account/models/account.py:930
 #, python-format
 msgid "Recursion found for tax '%s'."
-msgstr ""
+msgstr "Récursion trouvée pour la taxe '%s'."
 
 #. module: account
 #. openerp-web
@@ -8823,7 +8829,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
 msgid "Res Partner Bank"
-msgstr ""
+msgstr "Res Banque Partenaire"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
@@ -8881,6 +8887,8 @@ msgstr "Limitez les partenaires à"
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
 msgstr ""
+"Limitez-vous aux propositions ayant la même devise que la ligne de "
+"déclaration."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
@@ -9833,7 +9841,7 @@ msgstr "Ajustements fiscaux"
 #. module: account
 #: model:ir.model,name:account.model_tax_adjustments_wizard
 msgid "Tax Adjustments Wizard"
-msgstr ""
+msgstr "Assistant d'ajustements fiscaux"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__price_tax
@@ -9926,12 +9934,12 @@ msgstr "Correspondance des taxes"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Tax Mapping Template of Fiscal Position"
-msgstr ""
+msgstr "Modèle de mappage de taxes de la position fiscale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr ""
+msgstr "Mappage de taxes de la position fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -11262,7 +11270,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:169
 #, python-format
 msgid "To speed up reconciliation, define"
-msgstr ""
+msgstr "Pour accélérer la réconciliation, définir"
 
 #. module: account
 #: selection:account.invoice,activity_state:0
@@ -11292,7 +11300,7 @@ msgstr "Montant total"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Total Base Amount"
-msgstr ""
+msgstr "Montant de base total"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12379,6 +12387,8 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
+"Vous ne pouvez changer de compte pour empêcher la réconciliation dans le cas"
+" où des rapprochements partiels sont toujours en suspens. "
 
 #. module: account
 #: code:addons/account/models/account_move.py:1112
@@ -12427,6 +12437,8 @@ msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
 msgstr ""
+"Vous devez avoir défini un \"compte de transfert interne\" dans votre "
+"journal de caisse."
 
 #. module: account
 #: code:addons/account/models/account.py:142
@@ -12554,7 +12566,7 @@ msgstr "ex Bank of America"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g Checking account"
-msgstr ""
+msgstr "ex: Compte courant"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
