@@ -1,0 +1,67 @@
+<odoo>
+
+    <!-- Main window, chatbot list -->
+    <record model="ir.actions.act_window" id="chatbots_main">
+        <field name="name">Chatbots</field>
+        <field name="res_model">im_chatbot.chatbot</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create the first chatbot !
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="im_chatbot.list">
+        <field name="name">im_chatbot list</field>
+        <field name="model">im_chatbot.chatbot</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="subject"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="im_chatbot.form">
+        <field name="name">im_chatbot form</field>
+        <field name="model">im_chatbot.chatbot</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field
+                        name="image_1920"
+                        widget="image"
+                        class="oe_avatar"
+                        options="{'preview_image': 'image_256'}"
+                    />
+                    <div class="oe_title">
+                        <label for="subject" />
+                        <h1>
+                            <field name="subject" />
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="name" string="Bot name" />
+                    </group>
+                    <notebook>
+                        <page string="Script">
+                            <field name="message_ids" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Main windows inside the livechat configuration module -->
+    <menuitem
+        id="chatbots"
+        name="Chatbots"
+        parent="im_livechat.livechat_config"
+        action="chatbots_main"
+        groups="im_livechat.im_livechat_group_user"
+        sequence="20"
+    />
+
+</odoo>
