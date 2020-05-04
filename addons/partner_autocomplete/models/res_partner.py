@@ -4,9 +4,9 @@
 import logging
 import json
 from odoo import api, fields, models, exceptions, _
-from odoo.addons.iap import jsonrpc
+from odoo.addons.iap.tools import iap_tools
+# TDE FIXME: check those errors at iap level ?
 from requests.exceptions import ConnectionError, HTTPError
-from odoo.addons.iap.models.iap import InsufficientCreditError
 
 _logger = logging.getLogger(__name__)
 
@@ -96,11 +96,11 @@ class ResPartner(models.Model):
             'zip': self.env.company.zip,
         })
         try:
-            return jsonrpc(url=url, params=params, timeout=timeout), False
+            return iap_tools.iap_jsonrpc(url=url, params=params, timeout=timeout), False
         except (ConnectionError, HTTPError, exceptions.AccessError, exceptions.UserError) as exception:
             _logger.error('Autocomplete API error: %s' % str(exception))
             return False, str(exception)
-        except InsufficientCreditError as exception:
+        except iap_tools.InsufficientCreditError as exception:
             _logger.warning('Insufficient Credits for Autocomplete Service: %s' % str(exception))
             return False, 'Insufficient Credit'
 
