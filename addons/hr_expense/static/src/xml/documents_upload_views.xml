@@ -15,11 +15,6 @@
 
     <t t-extend="ListView.buttons" t-name="ExpensesListView.buttons">
         <t t-jquery="button.o_list_button_add" t-operation="after">
-            <t t-js="ctx">
-                if (window.odoo._modules.indexOf("base_import") >= 0) {
-                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
-                };
-            </t>
             <button type="button" class="btn btn-secondary o_button_upload_expense">
                 Upload
             </button>
@@ -28,11 +23,6 @@
 
     <t t-extend="KanbanView.buttons" t-name="ExpensesKanbanView.buttons">
         <t t-jquery="button" t-operation="after">
-            <t t-js="ctx">
-                if (window.odoo._modules.indexOf("base_import") >= 0) {
-                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
-                };
-            </t>
             <button type="button" class="btn btn-secondary o_button_upload_expense">
                 Upload
             </button>
