@@ -338,7 +338,7 @@ QUnit.test('Credit Error', async function (assert) {
                     return Promise.resolve();
                 }
             }
-            if (args.method === 'get_credits_url' && args.model === 'iap.account') {
+            if (args.method === 'iap_get_service_credits_url' && args.model === 'iap.services') {
                 return Promise.resolve('credits_url');
             }
             return this._super.apply(this, arguments);
@@ -407,7 +407,7 @@ QUnit.test('Trial Error', async function (assert) {
                     return Promise.resolve();
                 }
             }
-            if (args.method === 'get_credits_url' && args.model === 'iap.account') {
+            if (args.method === 'iap_get_service_credits_url' && args.model === 'iap.services') {
                 return Promise.resolve('credits_url');
             }
             return this._super.apply(this, arguments);

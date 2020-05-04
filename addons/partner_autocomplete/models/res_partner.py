@@ -86,7 +86,7 @@ class ResPartner(models.Model):
         if self.env.registry.in_test_mode() :
             return False, 'Insufficient Credit'
         url = '%s/%s' % (self.get_endpoint(), action)
-        account = self.env['iap.account'].get('partner_autocomplete')
+        account = self.env['iap.services']._iap_get_account('partner_autocomplete', force_create=False)
         if not account.account_token:
             return False, 'No Account Token'
         params.update({

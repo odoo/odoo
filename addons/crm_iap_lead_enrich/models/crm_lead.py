@@ -62,7 +62,7 @@ class Lead(models.Model):
                 _logger.info('Sent batch %s enrich requests: failed because of credit', len(lead_emails))
                 if not from_cron:
                     data = {
-                        'url': self.env['iap.account'].get_credits_url('reveal'),
+                        'url': self.env['iap.services'].iap_get_service_credits_url('reveal'),
                     }
                     self[0].message_post_with_view(
                         'crm_iap_lead_enrich.mail_message_lead_enrich_no_credit',

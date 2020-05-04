@@ -30,11 +30,10 @@ CrashManager.include({
         if (error.data.name === "odoo.addons.iap.models.iap.InsufficientCreditError") {
             var error_data = JSON.parse(error.data.message);
             ajax.jsonRpc('/web/dataset/call_kw', 'call', {
-                model:  'iap.account',
-                method: 'get_credits_url',
+                model:  'iap.services',
+                method: 'iap_get_service_credits_url',
                 args: [],
                 kwargs: {
-                    base_url: error_data.base_url,
                     service_name: error_data.service_name,
                     credit: error_data.credit,
                     trial: error_data.trial

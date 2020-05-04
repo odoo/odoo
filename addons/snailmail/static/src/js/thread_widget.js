@@ -87,8 +87,8 @@ ThreadWidget.include({
         var self = this;
         var messageID = $(ev.currentTarget).data('message-id');
         this._rpc({
-            model: 'iap.account',
-            method: 'get_credits_url',
+            model: 'iap.services',
+            method: 'iap_get_service_credits_url',
             args: ['snailmail'],
         }).then(function (link) {
             var content = _.str.sprintf(_t(
@@ -186,10 +186,14 @@ ThreadWidget.include({
         var self = this;
         var messageID = $(ev.currentTarget).data('message-id');
         this._rpc({
-            model: 'iap.account',
-            method: 'get_credits_url',
-            args: ['snailmail', '', 0, true],
-        }).then(function (link) {
+            model: 'iap.services',
+            method: 'iap_get_service_credits_url',
+            args: ['snailmail'],
+            kwargs: {
+                credit: 0,
+                trial: true,
+            },
+            }).then(function (link) {
             var content = _.str.sprintf(_t(
                 '<p>You need credits on your IAP account to send a letter.</p>' +
                 '<div class= "text-right">' +

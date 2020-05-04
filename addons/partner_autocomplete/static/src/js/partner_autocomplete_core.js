@@ -320,8 +320,8 @@ var PartnerAutocompleteMixin = {
     _notifyNoCredits: function () {
         var self = this;
         return this._rpc({
-            model: 'iap.account',
-            method: 'get_credits_url',
+            model: 'iap.services',
+            method: 'iap_get_service_credits_url',
             args: ['partner_autocomplete'],
         }).then(function (url) {
             var title = _t('Not enough credits for Partner Autocomplete');
@@ -335,9 +335,9 @@ var PartnerAutocompleteMixin = {
     _notifyAccountToken: function () {
         var self = this;
         return this._rpc({
-            model: 'iap.account',
-            method: 'get_config_account_url',
-            args: []
+            model: 'iap.services',
+            method: 'iap_get_service_backend_url',
+            args: ['partner_autocomplete']
         }).then(function (url) {
             var title = _t('IAP Account Token missing');
             if (url){

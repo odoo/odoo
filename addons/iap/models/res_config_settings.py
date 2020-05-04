@@ -11,5 +11,5 @@ class ResConfigSettings(models.TransientModel):
     def _redirect_to_iap_account(self):
         return {
             'type': 'ir.actions.act_url',
-            'url': self.env['iap.account'].get_account_url(),
+            'url': self.env['iap.services']._iap_get_my_services_url(),
         }

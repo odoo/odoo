@@ -39,8 +39,8 @@ var IAPBuyMoreCreditsWidget = Widget.extend({
     _getLink: function () {
         var self = this;
         return rpc.query({
-            model: 'iap.account',
-            method: 'get_credits_url',
+            model: 'iap.services',
+            method: 'iap_get_service_credits_url',
             args: [this.service_name],
         }, {
             shadow: true,
