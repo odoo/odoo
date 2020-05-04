@@ -2,4 +2,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import iap_account
+from . import iap_services
 from . import res_config_settings

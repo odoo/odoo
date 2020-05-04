@@ -5,7 +5,7 @@ import logging
 import uuid
 import werkzeug.urls
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
@@ -19,8 +19,18 @@ class IapAccount(models.Model):
     _description = 'IAP Account'
 
     service_name = fields.Char()
+    brand_name = fields.Char(
+        'Name', compute='_compute_brand_name', store=False,
+        help='Get commercial branding name for a given IAP service.')
     account_token = fields.Char(default=lambda s: uuid.uuid4().hex)
     company_ids = fields.Many2many('res.company')
+
+    def _compute_brand_name(self):
+        for account in self:
+            account.brand_name = self._get_brand_name_from_service_name(account.service_name)
+
+    def _get_brand_name_from_service_name(self, service_name):
+        return _('IAP Service')
 
     @api.model
     def get(self, service_name, force_create=True):

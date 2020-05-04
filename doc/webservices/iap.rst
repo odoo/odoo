@@ -179,7 +179,7 @@ The service has *seven* important fields:
 
 * :samp:`name` - :class:`ServiceName`: This is the string you will need to provide inside
   the client's :ref:`app <iap-odoo-app>` when requesting a transaction from Odoo. (e.g.
-  :class:`self.env['iap.account].get(name)`). As good practice, this should match the
+  :class:`self.env['iap.services]._iap_get_account(name)`). As good practice, this should match the
   technical name of your app.
 
 * :samp:`label` - :class:`Label`: The name displayed on the shopping portal for the
@@ -299,7 +299,7 @@ In that call, we will need to provide:
 * any relevant client parameter (none here),
 * the :class:`token <UserToken>` of the current client that is provided by
   the ``iap.account`` model's ``account_token`` field. You can retrieve the
-  account for your service by calling :samp:`env['iap.account'].get({service_name})`
+  account for your service by calling :samp:`env['iap.services']._iap_get_account({service_name})`
   where :class:`service_name <ServiceName>` is the name of the service registered
   on IAP endpoint.
 
