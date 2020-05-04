@@ -11,6 +11,7 @@ import werkzeug
 from odoo import http, _
 from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, consteq, ustr
+from odoo.tools.float_utils import float_repr
 from datetime import datetime, timedelta
 
 
@@ -262,7 +263,7 @@ class WebsitePayment(http.Controller):
         values['reference'] = request.env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
         tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
         secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
-        token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+        token_str = '%s%s%s' % (tx.id, tx.reference, float_repr(tx.amount, precision_digits=tx.currency_id.decimal_places))
         token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
         tx.return_url = '/website_payment/confirm?tx_id=%d&access_token=%s' % (tx.id, token)
 
@@ -304,7 +305,7 @@ class WebsitePayment(http.Controller):
         try:
             tx.s2s_do_transaction()
             secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
-            token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+            token_str = '%s%s%s' % (tx.id, tx.reference, float_repr(tx.amount, precision_digits=tx.currency_id.decimal_places))
             token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
             tx.return_url = return_url or '/website_payment/confirm?tx_id=%d&access_token=%s' % (tx.id, token)
         except Exception as e:
@@ -319,7 +320,7 @@ class WebsitePayment(http.Controller):
             if access_token:
                 tx = request.env['payment.transaction'].sudo().browse(tx_id)
                 secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
-                valid_token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+                valid_token_str = '%s%s%s' % (tx.id, tx.reference, float_repr(tx.amount, precision_digits=tx.currency_id.decimal_places))
                 valid_token = hmac.new(secret.encode('utf-8'), valid_token_str.encode('utf-8'), hashlib.sha256).hexdigest()
                 if not consteq(ustr(valid_token), access_token):
                     raise werkzeug.exceptions.NotFound
