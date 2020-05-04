@@ -39,6 +39,7 @@ odoo.define('web.FavoriteMenu', function (require) {
                     if (Component.shouldBeDisplayed(this.env)) {
                         menus.push({
                             key: Component.name,
+                            groupNumber: Component.groupNumber,
                             Component,
                         });
                     }
