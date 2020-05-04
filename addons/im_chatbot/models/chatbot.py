@@ -11,3 +11,5 @@ class ChatBot(models.Model):
     name = fields.Char(String="Bot name")
     subject = fields.Char(String="Subject")
     message_ids = fields.One2many("im_chatbot.message", "chatbot_id")
+
+    channel_ids = fields.Many2many("im_livechat.channel")
