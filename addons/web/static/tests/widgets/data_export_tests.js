@@ -325,8 +325,6 @@ QUnit.module('widgets', {
             },
         });
 
-        // select a record => should not be taken into account
-        await testUtils.dom.click(list.$('.o_data_row .o_list_record_selector input')[0]);
         // Download
         await testUtils.dom.click(list.$buttons.find('.o_list_export_xlsx'));
 

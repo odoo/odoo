@@ -253,6 +253,30 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('export button in list view', async function (assert) {
+        assert.expect(5);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.isVisible(list.$('.o_list_export_xlsx'));
+
+        await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
+
+        assert.isNotVisible(list.$('.o_list_export_xlsx'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+
+        await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
+        assert.isVisible(list.$('.o_list_export_xlsx'));
+
+        list.destroy();
+    });
+
     QUnit.test('simple editable rendering', async function (assert) {
         assert.expect(15);
 

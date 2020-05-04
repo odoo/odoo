@@ -812,6 +812,7 @@ var ListController = BasicController.extend({
         this.selectedRecords = ev.data.selection;
         this.isPageSelected = ev.data.allChecked;
         this.isDomainSelected = false;
+        this.$('.o_list_export_xlsx').toggle(!this.selectedRecords.length);
         this._updateSelectionBox();
         this._updateControlPanel();
     },
