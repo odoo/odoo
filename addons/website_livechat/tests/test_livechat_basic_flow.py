@@ -41,7 +41,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
         channel_1 = self.env['mail.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
 
         # Check Channel naming
-        self.assertEqual(channel_1.name, "%s, %s" % (self.visitor.display_name, self.operator.livechat_username))
+        self.assertEqual(channel_1.name, "%s %s" % (self.visitor.display_name, self.operator.livechat_username))
         channel_1.unlink()
 
         # Remove livechat_username
@@ -53,7 +53,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
         channel_2 = self.env['mail.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
 
         # Check Channel naming
-        self.assertEqual(channel_2.name, "%s, %s" % (self.visitor.display_name, self.operator.name))
+        self.assertEqual(channel_2.name, "%s %s" % (self.visitor.display_name, self.operator.name))
 
     def test_basic_flow_with_rating(self):
         channel = self._common_basic_flow()
@@ -86,7 +86,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
 
         # Check Channel and Visitor naming
         self.assertEqual(self.visitor.display_name, "%s #%s" % (_("Website Visitor"), self.visitor.id))
-        self.assertEqual(channel.name, "%s, %s" % (self.visitor.display_name, self.operator.livechat_username))
+        self.assertEqual(channel.name, "%s %s" % (self.visitor.display_name, self.operator.livechat_username))
 
         # Post Message from visitor
         self._send_message(channel, self.visitor.display_name, "Message from Visitor")
