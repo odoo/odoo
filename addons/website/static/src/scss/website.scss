@@ -37,7 +37,7 @@ $-font-numbers: (
     // 3) The values in the $colors map are also printed by Bootstrap.
 
     // 4) The Odoo values map, $o-website-values, must be printed.
-    @each $key, $value in $o-website-values {
+    @each $key, $value in o-map-omit($o-website-values) {
         --#{$key}: #{$value};
     }
 
