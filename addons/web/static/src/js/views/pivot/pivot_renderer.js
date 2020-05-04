@@ -74,6 +74,7 @@ odoo.define('web.PivotRenderer', function (require) {
             return formatter(cell.value, this.props.fields[cell.measure]);
         }
 
+<<<<<<< HEAD
         /**
          * Get the formatted variation of a cell
          *
@@ -85,6 +86,57 @@ odoo.define('web.PivotRenderer', function (require) {
             const value = cell.value;
             return isNaN(value) ? '-' : field_utils.format.percentage(value, this.props.fields[cell.measure]);
         }
+=======
+        this.state.table.headers.forEach(function (row, rowIndex) {
+            var $tr = $('<tr>');
+            row.forEach(function (cell) {
+                var cellParams = {
+                    text: cell.title,
+                    colspan: cell.width,
+                    rowspan: cell.height,
+                    data: {
+                        groupId: cell.groupId,
+                        type: 'col',
+                    }
+                }
+                var className;
+                if (cell.measure) {
+                    if (cell.originIndexes) {
+                        cellParams.data.originIndexes = cell.originIndexes
+                        className = 'o_pivot_origin_row';
+                    } else {
+                        className = 'o_pivot_measure_row';
+                    }
+                    className += ' text-muted';
+                    if (cell.order) {
+                        className += ' o_pivot_sort_order_' + cell.order;
+                        if (cell.order === 'asc') {
+                            cellParams['aria-sorted'] = 'ascending'
+                        } else {
+                            cellParams['aria-sorted'] = 'descending'
+                        }
+                    }
+                    cellParams.data.measure = cell.measure;
+                } else if ('isLeaf' in cell) {
+                    if (rowIndex > 0) {
+                        cellParams.title = groupbyLabels[rowIndex - 1];
+                    }
+                    className = 'o_pivot_header_cell' + (cell.isLeaf ? '_closed' : '_opened');
+                }
+                cellParams.class = className;
+
+                $tr.append($('<th>', cellParams));
+            });
+            $thead.append($tr);
+        });
+    },
+    /**
+     * @private
+     * @param {jQuery} $tbody
+     */
+    _renderRows: function ($tbody) {
+        var self = this;
+>>>>>>> 90b8c18d838... temp
 
         /**
          * Retrieves the padding of a left header
@@ -176,6 +228,30 @@ odoo.define('web.PivotRenderer', function (require) {
             }
             this.trigger(cell.isLeaf ? 'closed_header_click' : 'opened_header_click', { cell, type });
         }
+<<<<<<< HEAD
+=======
+        var tds = this.el.querySelectorAll("td:nth-child(" + (index + 1) + ")");
+        for (var td of tds) {
+            td.classList.add("o_cell_hover");
+        }
+    },
+    /**
+     * @private
+     */
+    _onMouseleaveCell: function () {
+        this.$('.o_cell_hover').removeClass('o_cell_hover');
+    },
+    /**
+     * This method is called when someone clicks on an open header.  When that
+     * happens, we want to close the header, then redisplay the view.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onOpenHeaderClick: function (ev) {
+        ev.preventDefault();
+        ev.stopImmediatePropagation();
+>>>>>>> 90b8c18d838... temp
 
         /**
          * Hover the column in which the mouse is.
