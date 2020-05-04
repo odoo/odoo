@@ -70,24 +70,6 @@
             </field>
         </record>
 
-        <record id="hr_employee_view_kanban" model="ir.ui.view">
-            <field name="name">hr.employee.view.kanban</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="after">
-                    <field name="contract_warning" invisible="1"/>
-                        <t t-if="record.contract_warning.raw_value">
-                            <i class="fa fa-exclamation-triangle text-danger" role="img"
-                            title="There is something wrong with the contract. Either there is no running contract for this employee or employee's contract is about to expire."
-                            aria-label="There is something wrong with the contract. Either there is no running contract for this employee or employee's contract is about to expire."></i>
-                        </t>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
         <record id="hr_employee_view_search" model="ir.ui.view">
             <field name="name">hr.employee.view.search</field>
             <field name="model">hr.employee</field>

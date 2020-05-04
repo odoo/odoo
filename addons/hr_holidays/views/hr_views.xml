@@ -83,6 +83,35 @@
         </field>
     </record>
 
+    <!-- hr_employee_public_view_kanban -->
+    <record id="hr_kanban_view_public_employees_kanban" model="ir.ui.view">
+        <field name="name">hr.employee.public.kanban.leaves.status</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="is_absent"/>
+            </xpath>
+            <xpath expr="//span[@name='presence_absent_active']/.." position="replace">
+                <div class="float-right" t-if="record.hr_presence_state.raw_value == 'absent' and record.last_activity.raw_value and !record.is_absent.raw_value">
+                    <span class="fa fa-circle-o text-success" role="img" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"></span>
+                </div>
+                <div class="float-right" t-if="record.hr_presence_state.raw_value == 'absent' and record.last_activity.raw_value and record.is_absent.raw_value">
+                    <span class="fa fa-plane text-success" role="img" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"></span>
+                </div>
+            </xpath>
+            <xpath expr="//span[@name='presence_absent']/.." position="replace">
+                <div class="float-right" t-if="record.hr_presence_state.raw_value == 'absent' and !record.last_activity.raw_value and !record.is_absent.raw_value" name="presence_absent">
+                    <span class="fa fa-circle-o text-muted" role="img" aria-label="Absent" title="Absent"></span>
+                </div>
+                <div class="float-right" t-if="record.hr_presence_state.raw_value == 'absent' and !record.last_activity.raw_value and record.is_absent.raw_value" name="presence_absent">
+                    <span class="fa fa-plane text-warning" role="img" aria-label="To define" title="On Leave"></span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+
     <record id="hr_kanban_view_employees_kanban" model="ir.ui.view">
         <field name="name">hr.employee.kanban.leaves.status</field>
         <field name="model">hr.employee</field>
@@ -93,7 +122,24 @@
                 <field name="current_leave_state"/>
                 <field name="leave_date_from"/>
                 <field name="leave_date_to"/>
+                <field name="is_absent"/>
             </xpath>
+            <xpath expr="//span[@name='presence_absent_active']/.." position="replace">
+                <div class="float-right" t-if="record.hr_presence_state.raw_value == 'absent' and record.last_activity.raw_value and !record.is_absent.raw_value">
+                    <span class="fa fa-circle-o text-success" role="img" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"></span>
+                </div>
+                <div class="float-right" t-if="record.hr_presence_state.raw_value == 'absent' and record.last_activity.raw_value and record.is_absent.raw_value">
+                    <span class="fa fa-plane text-success" role="img" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"></span>
+                </div>
+            </xpath>
+            <xpath expr="//span[@name='presence_absent']/.." position="replace">
+                <div class="float-right" t-if="record.hr_presence_state.raw_value == 'absent' and !record.last_activity.raw_value and !record.is_absent.raw_value" name="presence_absent">
+                    <span class="fa fa-circle-o text-muted" role="img" aria-label="Absent" title="Absent"></span>
+                </div>
+                <div class="float-right" t-if="record.hr_presence_state.raw_value == 'absent' and !record.last_activity.raw_value and record.is_absent.raw_value" name="presence_absent">
+                    <span class="fa fa-plane text-warning" role="img" aria-label="To define" title="On Leave"></span>
+                </div>
+           </xpath>
             <xpath expr="//li[@id='last_login']" position="inside">
                 <span t-if="record.current_leave_id.raw_value" style="font-size: 100%%"
                         t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_button oe_kanban_color_3':'oe_kanban_button oe_kanban_color_2'"

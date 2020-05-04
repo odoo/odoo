@@ -21,9 +21,9 @@ class Employee(models.AbstractModel):
     # Stored field used in the presence kanban reporting view
     # to allow group by state.
     hr_presence_state_display = fields.Selection([
-        ('present', 'Present'),
-        ('absent', 'Absent'),
-        ('to_define', 'To Define')])
+        ('to_define', 'Absence To Check'),
+        ('absent', 'Justified Absence'),
+        ('present', 'Present')])
 
     def _compute_presence_state(self):
         super()._compute_presence_state()
@@ -103,7 +103,8 @@ class Employee(models.AbstractModel):
             'view_mode': 'kanban,tree,form',
             "domain": [],
             "name": "Employee's Presence to Define",
-            "context": {'search_default_group_hr_presence_state': 1},
+            "search_view_id": [self.env.ref('hr_presence.hr_employee_view_presence_search').id, 'search'],
+            "context": {'search_default_group_hr_presence_state': 1, 'searchpanel_default_hr_presence_state_display': 'to_define'},
         }
 
     def action_set_present(self):
