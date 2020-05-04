@@ -20,7 +20,8 @@
     "data": [
         # 'security/ir.model.access.csv',
         "views/chatbot.xml",
+        "views/message.xml",
     ],
     # only loaded in demonstration mode
-    "demo": ["demo/demo.xml",],
+    "demo": ["demo/demo.xml"],
 }
