@@ -57,6 +57,10 @@ class AccountChartTemplate(models.Model):
                 'country_id': self.env.ref('base.ar').id,
                 'tax_calculation_rounding_method': 'round_globally',
             })
+            # set CUIT identification type (which is the argentinian vat) in the created company partner instead of
+            # the default VAT type.
+            company.partner_id.l10n_latam_identification_type_id = self.env.ref('l10n_ar.it_cuit')
+
         res = super()._load(sale_tax_rate, purchase_tax_rate, company)
 
         # If Responsable Monotributista remove the default purchase tax
