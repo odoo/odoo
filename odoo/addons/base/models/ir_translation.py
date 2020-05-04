@@ -752,7 +752,7 @@ class IrTranslation(models.Model):
             self.insert_missing(fld, rec)
 
         action = {
-            'name': 'Translate',
+            'name': _('Translate'),
             'res_model': 'ir.translation',
             'type': 'ir.actions.act_window',
             'view_mode': 'tree',
