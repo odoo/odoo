@@ -189,7 +189,7 @@ class ProductTemplate(models.Model):
     website_size_y = fields.Integer('Size Y', default=1)
     website_style_ids = fields.Many2many('product.style', string='Styles')
     website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
-                                      default=lambda self: self._default_website_sequence())
+                                      default=lambda self: self._default_website_sequence(), copy=False)
     public_categ_ids = fields.Many2many(
         'product.public.category', relation='product_public_category_product_template_rel',
         string='Website Product Category',
