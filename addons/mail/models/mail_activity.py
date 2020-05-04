@@ -10,7 +10,6 @@ import pytz
 from odoo import api, exceptions, fields, models, _
 
 from odoo.tools.misc import clean_context
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 _logger = logging.getLogger(__name__)
 

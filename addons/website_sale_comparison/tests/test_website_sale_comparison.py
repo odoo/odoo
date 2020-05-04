@@ -29,7 +29,7 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
 
         # Create a generic inherited view, with a key not starting with
         # `website_sale_comparison` otherwise the unlink will work just based on
-        # the key, but we want to test also for `MODULE_UNINSTALL_FLAG`.
+        # the key, but we want to test also for `Registry.module_uninstall`
         product_add_to_compare = Website0.viewref('website_sale_comparison.product_add_to_compare')
         test_view_key = 'my_test.my_key'
         self.env['ir.ui.view'].with_context(website_id=None).create({
