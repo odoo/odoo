@@ -248,7 +248,7 @@ QUnit.test('messaging initially ready', async function (assert) {
 });
 
 QUnit.test('searchview options visibility', async function (assert) {
-    assert.expect(5);
+    assert.expect(2);
 
     var discuss = await createDiscuss({
         id: 1,
@@ -258,18 +258,10 @@ QUnit.test('searchview options visibility', async function (assert) {
         services: this.services,
     });
 
-    assert.containsOnce(discuss, '.o_control_panel .o_search_options',
-        "should have search options");
-    assert.hasClass(discuss.$('.o_control_panel .o_searchview_more.fa'), 'fa-search-minus',
-        "should have a button to toggle search options");
-
+    assert.hasClass(discuss.$('.o_control_panel .o_searchview_icon.fa'), 'fa-search',
+        "should have a search icon");
     assert.isVisible(discuss.$('.o_control_panel .o_search_options'),
-        "search options should be visible by default");
-    await testUtils.dom.click(discuss.$('.o_control_panel .o_searchview_more.fa'));
-    assert.hasClass(discuss.$('.o_control_panel .o_searchview_more.fa'), 'fa-search-plus',
-        "should have a button to toggle search options");
-    assert.isNotVisible(discuss.$('.o_control_panel .o_search_options'),
-        "search options should be hidden after clicking on search option toggler");
+        "search options should always be visible");
 
     discuss.destroy();
 });

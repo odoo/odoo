@@ -13,7 +13,7 @@ odoo.define('web.ControlPanel', function (require) {
     const { useModel } = require('web.model');
 
     const { Component, hooks } = owl;
-    const { useRef, useState, useSubEnv } = hooks;
+    const { useRef, useSubEnv } = hooks;
 
     /**
      * TODO: remove this whole mechanism as soon as `cp_content` is completely removed.
@@ -116,9 +116,6 @@ odoo.define('web.ControlPanel', function (require) {
             if (this.env.controlPanelModel) {
                 this.model = useModel('controlPanelModel');
             }
-            this.state = useState({
-                displayDropdowns: true,
-            });
 
             // Reference hooks
             this.contentRefs = {
