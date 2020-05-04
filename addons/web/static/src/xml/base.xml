@@ -163,7 +163,7 @@
             <i t-if="props.icon" t-att-class="props.icon"/>
             <span class="o_dropdown_title" t-esc="title"/>
             <i t-if="displayCaret" t-attf-class="o_dropdown_caret fa fa-caret-{{ state.open ? 'down' : 'right' }}"/>
-            <i t-else="" t-attf-class="fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
+            <i t-elif="displayChevron" t-attf-class="fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
         </button>
         <ul t-if="state.open" class="o_dropdown_menu dropdown-menu show" role="menu"
             t-on-item-selected="_onItemSelected"
@@ -631,10 +631,12 @@
         <DropdownMenu t-if="printItems.length"
             title="env._t('Print')"
             items="printItems"
+            icon="'fa fa-print'"
         />
         <DropdownMenu t-if="actionItems.length"
             title="env._t('Action')"
             items="actionItems"
+            icon="'fa fa-cog'"
         />
     </div>
 </t>

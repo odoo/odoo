@@ -32,7 +32,7 @@ odoo.define('web.dropdown_menu_tests', function (require) {
         QUnit.module('DropdownMenu');
 
         QUnit.test('simple rendering and basic interactions', async function (assert) {
-            assert.expect(10);
+            assert.expect(8);
 
             const dropdown = await createComponent(DropdownMenu, {
                 props: {
@@ -42,14 +42,12 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             });
 
             assert.strictEqual(dropdown.el.querySelector('button').innerText.trim(), "Dropdown");
-            assert.containsOnce(dropdown, 'button i.fa.fa-caret-right');
             assert.containsNone(dropdown, 'ul.o_dropdown_menu');
 
             await testUtils.dom.click(dropdown.el.querySelector('button'));
 
             assert.containsN(dropdown, '.dropdown-divider, .dropdown-item', 3,
                 'should have 3 elements counting the divider');
-            assert.containsOnce(dropdown, 'button i.fa.fa-caret-down');
             const itemEls = dropdown.el.querySelectorAll('.o_menu_item > .dropdown-item');
             assert.strictEqual(itemEls[0].innerText.trim(), 'Some Item');
             assert.doesNotHaveClass(itemEls[0], 'selected');
