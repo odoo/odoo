@@ -289,9 +289,9 @@ server*.
 
 There are no requirements when it comes to the server or the communication
 protocol between the app and our server, but ``iap`` provides a
-:func:`~odoo.addons.iap.jsonrpc` helper to call a JSON-RPC2_ endpoint on an
+:func:`~odoo.addons.iap.tools.iap_tools.iap_jsonrpc` helper to call a JSON-RPC2_ endpoint on an
 other Odoo instance and transparently re-raise relevant Odoo exceptions
-(:class:`~odoo.addons.iap.models.iap.InsufficientCreditError`,
+(:class:`~odoo.addons.iap.tools.iap_tools.InsufficientCreditError`,
 :class:`odoo.exceptions.AccessError` and :class:`odoo.exceptions.UserError`).
 
 In that call, we will need to provide:
@@ -308,17 +308,17 @@ In that call, we will need to provide:
 .. note::
 
     ``iap`` automatically handles
-    :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` coming from the action
+    :class:`~odoo.addons.iap.tools.iap_tools.InsufficientCreditError` coming from the action
     and prompts the user to add credits to their account.
 
-    :func:`~odoo.addons.iap.jsonrpc` takes care of re-raising
+    :func:`~odoo.addons.iap.tools.iap_tools.iap_jsonrpc` takes care of re-raising
     :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` for you.
 
 .. danger::
 
-    If you are not using :func:`~odoo.addons.iap.jsonrpc` you *must* be
+    If you are not using :func:`~odoo.addons.iap.tools.iap_tools.iap_jsonrpc` you *must* be
     careful to re-raise
-    :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` in your handler
+    :class:`~odoo.addons.iap.tools.iap_tools.InsufficientCreditError` in your handler
     otherwise the user will not be prompted to credit their account, and the
     next call will fail the same way.
 
@@ -330,14 +330,14 @@ Service
 .. queue:: iap_service/series
 
 Though that is not *required*, since ``iap`` provides both a client helper
-for JSON-RPC2_ calls (:func:`~odoo.addons.iap.jsonrpc`) and a service helper
-for transactions (:class:`~odoo.addons.iap.models.iap.charge`) we will also be
+for JSON-RPC2_ calls (:func:`~odoo.addons.iap.tools.iap_tools.iap_jsonrpc`) and a service helper
+for transactions (:class:`~odoo.addons.iap.tools.iap_tools.iap_charge`) we will also be
 implementing the service side as an Odoo module:
 
 .. patch::
 
 Since the query from the client comes as JSON-RPC2_ we will need the
-corresponding controller which can call :class:`~odoo.addons.iap.models.iap.charge` and
+corresponding controller which can call :class:`~odoo.addons.iap.tools.iap_tools.iap_charge` and
 perform the service within:
 
 .. patch::
@@ -347,7 +347,7 @@ perform the service within:
 .. todo:: "My Account" > "Your InApp Services"?
 
 
-The :class:`~odoo.addons.iap.models.iap.charge` helper will:
+The :class:`~odoo.addons.iap.tools.iap_tools.iap_charge` helper will:
 
 1. authorize (create) a transaction with the specified number of credits,
    if the account does not have enough credits it will raise the relevant
@@ -361,7 +361,7 @@ The :class:`~odoo.addons.iap.models.iap.charge` helper will:
 
 .. danger::
 
-    By default, :class:`~odoo.addons.iap.models.iap.charge` contacts the *production*
+    By default, :class:`~odoo.addons.iap.tools.iap_tools.iap_charge` contacts the *production*
     IAP endpoint, https://iap.odoo.com. While developing and testing your
     service you may want to point it towards the *development* IAP endpoint
     https://iap-sandbox.odoo.com.
@@ -371,7 +371,7 @@ The :class:`~odoo.addons.iap.models.iap.charge` helper will:
     Parameters --> System Parameters`, just define an entry for the key
     ``iap.endpoint`` if none already exists).
 
-The :class:`~odoo.addons.iap.models.iap.charge` helper has two additional optional
+The :class:`~odoo.addons.iap.tools.iap_tools.iap_charge` helper has two additional optional
 parameters we can use to make things clearer to the end-user.
 
 ``description``
@@ -543,7 +543,7 @@ care how they are implemented.
     Transaction identifier, returned by the authorization process and consumed
     by either capturing or cancelling the transaction.
 
-.. exception:: odoo.addons.iap.models.iap.InsufficientCreditError
+.. exception:: odoo.addons.iap.tools.iap_tools.InsufficientCreditError
 
     Raised during transaction authorization if the credits requested are not
     currently available on the account (either not enough credits or too many
@@ -555,7 +555,7 @@ care how they are implemented.
     Raised by:
 
     * any operation to which a service token is required, if the service token is invalid; or
-    * any failure in an inter-server call. (typically, in :func:`~odoo.addons.iap.jsonrpc`).
+    * any failure in an inter-server call. (typically, in :func:`~odoo.addons.iap.tools.iap_tools.iap_jsonrpc`).
 
 .. exception:: odoo.exceptions.UserError
     :noindex:
@@ -576,9 +576,9 @@ In order to test the developped app, we propose a sandbox platform that allows y
 The latter consists in specific tokens that will work on **IAP-Sandbox only**.
 
 * Token ``000000``: Represents a non-existing account. Returns
-  an :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` on authorize attempt.
+  an :class:`~odoo.addons.iap.tools.iap_tools.InsufficientCreditError` on authorize attempt.
 * Token ``000111``: Represents an account without sufficient credits to perform any service.
-  Returns an :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` on authorize attempt.
+  Returns an :class:`~odoo.addons.iap.tools.iap_tools.InsufficientCreditError` on authorize attempt.
 * Token ``111111``: Represents an account with enough credits to perform any service.
   An authorize attempt will return a dummy transacion token that is processed by the capture
   and cancel routes.
@@ -600,7 +600,7 @@ module provides a few helpers to make IAP flow even simpler.
 Charging
 --------
 
-.. class:: odoo.addons.iap.models.iap.charge(env, key, account_token, credit[, dbuuid, description, credit_template])
+.. class:: odoo.addons.iap.tools.iap_tools.iap_charge(env, key, account_token, credit[, dbuuid, description, credit_template])
 
     A *context manager* for authorizing and automatically capturing or
     cancelling transactions for use in the backend/proxy.
@@ -633,7 +633,7 @@ Charging
         """
         credits = int(MAXIMUM_POWER * factor)
         description = "We will demonstrate the power of this station on your home planet of Alderaan."
-        with charge(request.env, SERVICE_KEY, user_account, credits, description) as transaction:
+        with iap_charge(request.env, SERVICE_KEY, user_account, credits, description) as transaction:
             # TODO: allow other targets
             transaction.credit = max(credits, 2)
             # Sales ongoing one the energy price,
@@ -647,7 +647,7 @@ Charging
 Authorize
 ---------
 
-.. class:: odoo.addons.iap.models.iap.authorize(env, key, account_token, credit[, dbuuid, description, credit_template])
+.. class:: odoo.addons.iap.tools.iap_tools.iap_authorize(env, key, account_token, credit[, dbuuid, description, credit_template])
 
     Will authorize everything.
 
@@ -688,7 +688,7 @@ Authorize
 Cancel
 ------
 
-.. class:: odoo.addons.iap.models.iap.cancel(env, transaction_token, key)
+.. class:: odoo.addons.iap.tools.iap_tools.iap_cancel(env, transaction_token, key)
 
     Will cancel an authorized transaction.
 
@@ -726,7 +726,7 @@ Cancel
 Capture
 -------
 
-.. class:: odoo.addons.iap.models.iap.capture(env, transaction_token, key, credit)
+.. class:: odoo.addons.iap.tools.iap_tools.iap_capture(env, transaction_token, key, credit)
 
     Will capture the amount ``credit`` on the given transaction.
 
