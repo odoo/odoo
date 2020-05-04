@@ -313,9 +313,24 @@ $o-theme-color-palettes: (
 $o-theme-color-palette-number: 1 !default;
 
 // Greyscale transparent colours
+
+// Note: BS values are forced by default in every palette as the values can
+// be used in bootstrap_overridden.scss files through the palette-gray function.
+// Also, all of the gray colors generates bg- classes in Odoo so black and white
+// are added for the same reason.
+
 $o-base-gray-color-palette: (
-    'white': #FFFFFF, // Those two will enforce the creation of bg-white
-    'black': #000000, // and bg-black classes.
+    'white': #FFFFFF,
+    '100': #F8F9FA,
+    '200': #E9ECEF,
+    '300': #DEE2E6,
+    '400': #CED4DA,
+    '500': #ADB5BD,
+    '600': #6C757D,
+    '700': #495057,
+    '800': #343A40,
+    '900': #212529,
+    'black': #000000,
 ) !default;
 $o-transparent-grays: (
     'black-15': rgba(black, 0.15),
