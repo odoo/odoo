@@ -9,7 +9,11 @@
                         <field name="name" string="Message" />
                         <group>
                             <field name="answer_type" />
-                            <field name="answer_ids" attrs="{'invisible': [('answer_type', '!=', 'selection' )] }" />
+                            <field
+                                name="answer_ids"
+                                attrs="{'invisible': [('answer_type', '!=', 'selection' )] }"
+                                widget="many2many_tags"
+                            />
                         </group>
                         <group>
 
