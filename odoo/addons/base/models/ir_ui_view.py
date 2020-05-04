@@ -277,7 +277,11 @@ actual arch.
                 if fullpath:
                     arch_fs = get_view_arch_from_file(fullpath, xml_id)
                     # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
-                    arch_fs = arch_fs and resolve_external_ids(arch_fs, xml_id).replace('%%', '%')
+                    if arch_fs:
+                        arch_fs = resolve_external_ids(arch_fs, xml_id).replace('%%', '%')
+                        if self.env.context.get('lang'):
+                            tr = self._fields['arch_db'].get_trans_func(view)
+                            arch_fs = tr(view.id, arch_fs)
                 else:
                     _logger.warning("View %s: Full path [%s] cannot be found.", xml_id, view.arch_fs)
                     arch_fs = False
@@ -319,10 +323,10 @@ actual arch.
             if mode == 'soft':
                 arch = view.arch_prev
             elif mode == 'hard' and view.arch_fs:
-                arch = view.with_context(read_arch_from_file=True).arch
+                arch = view.with_context(read_arch_from_file=True, lang=None).arch
             if arch:
                 # Don't save current arch in previous since we reset, this arch is probably broken
-                view.with_context(no_save_prev=True).write({'arch_db': arch})
+                view.with_context(no_save_prev=True, lang=None).write({'arch_db': arch})
 
     @api.depends('write_date')
     def _compute_model_data_id(self):
