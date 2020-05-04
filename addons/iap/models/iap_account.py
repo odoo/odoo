@@ -56,6 +56,7 @@ class IapAccount(models.Model):
 
     @api.model
     def get_credits_url(self, service_name, base_url='', credit=0, trial=False):
+        """ Called notably by ajax crash manager, buy more widget, partner_autocomplete, sanilmail. """
         dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         if not base_url:
             endpoint = iap_tools.iap_get_endpoint(self.env)
@@ -74,6 +75,7 @@ class IapAccount(models.Model):
 
     @api.model
     def get_account_url(self):
+        """ Called only by res settings """
         route = '/iap/services'
         endpoint = iap_tools.iap_get_endpoint(self.env)
         d = {'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid')}
@@ -82,6 +84,7 @@ class IapAccount(models.Model):
 
     @api.model
     def get_config_account_url(self):
+        """ Called notably by ajax partner_autocomplete. """
         account = self.env['iap.account'].get('partner_autocomplete')
         action = self.env.ref('iap.iap_account_action')
         menu = self.env.ref('iap.iap_account_menu')

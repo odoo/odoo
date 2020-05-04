@@ -30,10 +30,6 @@ class InsufficientCreditError(Exception):
     pass
 
 
-class AuthenticationError(Exception):
-    pass
-
-
 def iap_jsonrpc(url, method='call', params=None, timeout=15):
     """
     Calls the provided JSON-RPC endpoint, unwraps the result and
