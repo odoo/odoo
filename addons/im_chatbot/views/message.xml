@@ -23,4 +23,18 @@
             </form>
         </field>
     </record>
+
+    <record id="message_view_tree" model="ir.ui.view">
+        <field name="name">Message Tree view</field>
+        <field name="model">im_chatbot.message</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name" />
+                <field name="answer_type" />
+                <field name="answer_ids" widget="many2many_tags" />
+            </tree>
+        </field>
+    </record>
+
 </odoo>
