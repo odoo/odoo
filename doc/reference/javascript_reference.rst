@@ -1768,8 +1768,8 @@ order.
     Options:
 
     - website_path: (default:false) by default, the widget forces (if not already
-    the case) the href value to begin with http:// except if this option is set
-    to true, thus allowing redirections to the database's own website.
+      the case) the href value to begin with http:// except if this option is set
+      to true, thus allowing redirections to the database's own website.
 
     - Supported field types: *char*
 
