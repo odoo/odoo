@@ -841,12 +841,14 @@ msgstr "Sottoprodotti"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_id
 msgid "By-product"
-msgstr ""
+msgstr "sottoprodotto"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__byproduct_id
 msgid "By-product line that generated the move in a manufacturing order"
 msgstr ""
+"La riga del sottoprodotto che ha generato il movimento in un ordine di "
+"produzione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__byproduct_ids
@@ -856,7 +858,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "By-products"
-msgstr ""
+msgstr "Sottoprodotti"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_byproduct
@@ -888,7 +890,7 @@ msgstr "Annullato"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Cannot delete a manufacturing order in done state."
-msgstr ""
+msgstr "Non è possibile eliminare un ordine di produzione in uno stato \"Pronto\""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity
@@ -983,12 +985,12 @@ msgstr "Componenti"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Component Available"
-msgstr ""
+msgstr "Componente disponibile"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__raw_workorder_id
 msgid "Component for Workorder"
-msgstr ""
+msgstr "Componente per ordine di lavoro"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__raw_product_produce_id
@@ -1009,7 +1011,7 @@ msgstr "Componenti"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
 msgid "Components Location"
-msgstr ""
+msgstr "Ubicazione dei componenti"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
@@ -1029,7 +1031,7 @@ msgstr "Configurazione"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__confirm_cancel
 msgid "Confirm Cancel"
-msgstr ""
+msgstr "Conferma \"Cancella\""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__confirmed
@@ -1042,6 +1044,8 @@ msgstr "Confermato"
 msgid ""
 "Consume components and build finished products using bills of materials"
 msgstr ""
+"Consumare i componenti per costruire i prodotti finiti utilizzando le "
+"distinte materiali"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder_line__qty_done
@@ -1078,7 +1082,7 @@ msgstr "Consumato nell'Operazione"
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__consumption
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__consumption
 msgid "Consumption"
-msgstr ""
+msgstr "Consumo"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
@@ -1117,7 +1121,7 @@ msgstr "Informazioni sui Costi"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__use_create_components_lots
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Create New Lots/Serial Numbers for Components"
-msgstr ""
+msgstr "Crea nuovi numeri di lotti/serie per i componenti"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1127,7 +1131,7 @@ msgstr "Crea una bill of materials"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Create a new manufacturing order <br>"
-msgstr ""
+msgstr "Crea un nuovo ordine di produzione <br>"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -1203,7 +1207,7 @@ msgstr "Creato il"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Creates a new serial/lot number"
-msgstr ""
+msgstr "Crea un nuovo numero di lotto/serie"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -1225,13 +1229,13 @@ msgstr "Dati database"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_planned_finished
 msgid "Date at which you plan to finish the production."
-msgstr ""
+msgstr "Data in cui si prevede di terminare la produzione."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_planned_start
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_date
 msgid "Date at which you plan to start the production."
-msgstr ""
+msgstr "Data in cui si prevede di iniziare la produzione."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
@@ -1259,12 +1263,16 @@ msgid ""
 "Defines if you can consume more or less components than the quantity defined"
 " on the BoM."
 msgstr ""
+"Definisce se è possibile consumare più o meno componenti rispetto alla "
+"quantità definita nel BoM."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__worksheet_type
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__worksheet_type
 msgid "Defines if you want to use a PDF or a Google Slide as work sheet."
 msgstr ""
+"Definisce se si desidera utilizzare un PDF o una Google Slide come foglio di"
+" lavoro."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__ready_to_produce
@@ -1512,7 +1520,7 @@ msgstr "Lotti finiti esistenti"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
 msgid "Finished Moves"
-msgstr ""
+msgstr "Movimenti completati"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__finished_move_line_ids
@@ -1533,7 +1541,7 @@ msgstr "Etichetta prodotto finito (ZPL)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__finished_workorder_id
 msgid "Finished Product for Workorder"
-msgstr ""
+msgstr "Prodotto finito per ordine di lavoro"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__finished_product_produce_id
@@ -1819,6 +1827,8 @@ msgid ""
 "Impossible to plan the workorder. Please check the workcenter "
 "availabilities."
 msgstr ""
+"Impossibile pianificare l'ordine di lavoro. Verificare le disponibilità dei "
+"centri di lavoro."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__progress
@@ -1843,6 +1853,8 @@ msgid ""
 "Informative date allowing to define when the manufacturing order should be "
 "processed at the latest to fulfill delivery on time."
 msgstr ""
+"Indica una data limite che consente di definire quando l'ordine di "
+"produzione debba essere elaborato per evadere puntualmente la consegna."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line__lot_produced_qty
@@ -1884,7 +1896,7 @@ msgstr "È bloccato"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__is_pending_production
 msgid "Is Pending Production"
-msgstr ""
+msgstr "In attesa di produzione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__manual
@@ -2013,7 +2025,7 @@ msgstr "Ultime attività"
 #: model:product.product,description:mrp.product_product_wood_ply
 #: model:product.template,description:mrp.product_product_wood_ply_product_template
 msgid "Layers that are stick together to assemble wood panels."
-msgstr ""
+msgstr "Strati che si uniscono per assemblare pannelli di legno."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__leave_id
@@ -2037,7 +2049,7 @@ msgstr "Ubicazione"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
 msgid "Location where the product you want to unbuild is."
-msgstr ""
+msgstr "Ubicazione in cui si trova il prodotto che si desidera smontare."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_src_id
@@ -2055,6 +2067,8 @@ msgid ""
 "Location where you want to send the components resulting from the unbuild "
 "order."
 msgstr ""
+"Ubicazione in cui si desidera inviare i componenti derivati dall'ordine di "
+"smontaggio."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2091,7 +2105,7 @@ msgstr "Numero di serie/lotto"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__lot_id
 msgid "Lot/Serial Number of the product to unbuild."
-msgstr ""
+msgstr "Lotto / numero di serie del prodotto da smontare."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_finisehd_move_line
@@ -2121,7 +2135,7 @@ msgstr "Ordini di produzione manufatturieri"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
 msgid "MRP Workorder productivity losses"
-msgstr ""
+msgstr "Perdite di produttività dell'ordine di lavoro (MRP)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_main_attachment_id
@@ -2321,7 +2335,7 @@ msgstr "Piano Generale di Produzione"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_availability
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Material Availability"
-msgstr ""
+msgstr "Disponibilita' dei materiali"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_error
@@ -2533,6 +2547,10 @@ msgid ""
 "has a capacity of 5 and you have to produce 10 units on your work order, the"
 " usual operation time will be multiplied by 2."
 msgstr ""
+"Numero di pezzi che possono essere prodotti in parallelo. Nel caso in cui il"
+" centro di lavoro abbia una capacità di 5 e si debbano produrre 10 unità "
+"nell'ordine di lavoro, il tempo di funzionamento normale verrà moltiplicato "
+"per 2."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread_counter
@@ -2565,7 +2583,7 @@ msgstr "Quando tutti i prodotti sono processati"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__batch__yes
 msgid "Once some products are processed"
-msgstr ""
+msgstr "Quando alcuni prodotti sono processati"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__name
@@ -2635,7 +2653,7 @@ msgstr "Quantita' originale di produzione"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
 msgid "Overall Effective Efficiency Target in percentage"
-msgstr ""
+msgstr "OEE Target in percentuale"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
@@ -2669,7 +2687,7 @@ msgstr "PDF"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__move_raw_ids
 msgid "PO Components"
-msgstr ""
+msgstr "Componenti dell'ordine di acquisto"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -2693,6 +2711,8 @@ msgid ""
 "Paste the url of your Google Slide. Make sure the access to the document is "
 "public."
 msgstr ""
+"Incolla l'URL della tua Google slide. Assicurarti che l'accesso al documento"
+" sia pubblico."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2784,7 +2804,7 @@ msgstr "Pianificazione"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_start_wo
 msgid "Plan From"
-msgstr ""
+msgstr "Pianifica da"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -2813,7 +2833,7 @@ msgstr "Data pianificata"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished
 msgid "Planned End Date"
-msgstr ""
+msgstr "Data finale pianificata"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
@@ -2929,11 +2949,13 @@ msgid ""
 "Produce : Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce : Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"Produci: sposta i componenti direttamente nel luogo di produzione e avvia il processo di produzione.\n"
+"Seleziona / Produci: scarica prima i componenti dal magazzino alla posizione di input, quindi trasferiscili nella posizione di produzione."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
 msgid "Produce residual products"
-msgstr ""
+msgstr "Produci prodotti residuali"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -2951,7 +2973,7 @@ msgstr "Prodotto"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__operation_id
 msgid "Produced in Operation"
-msgstr ""
+msgstr "Prodotto durante l'operazione"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -2977,7 +2999,7 @@ msgstr "Prodotto"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Product Attachments"
-msgstr ""
+msgstr "Allegati del prodotto"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -3038,7 +3060,7 @@ msgstr "Documento di produzione"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Production Information"
-msgstr ""
+msgstr "Informazioni prodotto"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_location_id
@@ -3056,7 +3078,7 @@ msgstr "Ordine di produzione"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__raw_material_production_id
 msgid "Production Order for components"
-msgstr ""
+msgstr "Ordine di produzione per i componenti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
@@ -3092,7 +3114,7 @@ msgstr "Tempo di produzione"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__productive_time
 msgid "Productive hours over the last month"
-msgstr ""
+msgstr "Ore di produzione nell'ultimo mese"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3119,7 +3141,7 @@ msgstr "Prodotti da Utilizzare"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
 msgid "Progress Done (%)"
-msgstr ""
+msgstr "Avanzamento (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_date
@@ -3192,7 +3214,7 @@ msgstr "Quantita' da produrre"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_produce_line_kanban
 msgid "Quantity To Consume"
-msgstr ""
+msgstr "Quantità da utilizzare"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__product_qty
@@ -3203,7 +3225,7 @@ msgstr "Quantità da Produrre"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Quantity in Production"
-msgstr ""
+msgstr "Quantità in produzione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__batch_size
@@ -3243,7 +3265,7 @@ msgstr "Registrare la produzione"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Record production line"
-msgstr ""
+msgstr "Record delle linee di produzione"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -3304,7 +3326,7 @@ msgstr "Richiede numeri di serie"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_date_minimum_delta
 msgid "Reschedule if Higher Than"
-msgstr ""
+msgstr "Rischedula se maggiore di"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder_line__qty_reserved
@@ -3560,7 +3582,7 @@ msgstr "Mostra tutti i record con data prossima azione precedente a oggi"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
-msgstr ""
+msgstr "Inserisci nel calendario del centro di lavoro una volta pianificato"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_head
@@ -3581,6 +3603,8 @@ msgid ""
 "Some components have been consumed for a lot/serial number that has not been produced. Unlock the MO and click on the components lines to correct it.\n"
 "List of the components:\n"
 msgstr ""
+"Alcune materie prime sono state consumate per un numero di lotto/ di serie che non è stato prodotto. Sbloccare l'OP e cliccare sulle righe dei componenti per correggere il problema.\n"
+"Elenco dei componenti:\n"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -3589,6 +3613,8 @@ msgid ""
 "Some of your byproducts are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct byproducts."
 msgstr ""
+"Alcuni dei tuoi sottoprodotti sono tracciati, devi specificare un ordine di "
+"produzione per selezionare i sottoprodotti corretti."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -3597,6 +3623,8 @@ msgid ""
 "Some of your components are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct components."
 msgstr ""
+"Alcuni dei tuoi componenti sono tracciati, devi specificare un ordine di "
+"produzione per selezionare i componenti corretti."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3604,6 +3632,9 @@ msgid ""
 "Some product moves have already been confirmed, this manufacturing order "
 "can't be completely cancelled. Are you still sure you want to process ?"
 msgstr ""
+"Alcuni spostamenti di prodotti sono già stati confermati, questo ordine di "
+"produzione non può essere completamente annullato. Sei sicuro di voler "
+"continuare?"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3612,6 +3643,8 @@ msgid ""
 "Some work orders are already done, you cannot unplan this manufacturing "
 "order."
 msgstr ""
+"Alcuni ordini di lavoro sono già stati eseguiti, non è possibile annullare "
+"la pianificazione di questo ordine di produzione."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3620,6 +3653,8 @@ msgid ""
 "Some work orders have already started, you cannot unplan this manufacturing "
 "order."
 msgstr ""
+"Alcuni ordini di lavoro sono già iniziati, non è possibile annullare la "
+"pianificazione di questo ordine di produzione."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -3658,7 +3693,7 @@ msgstr "Data inizio"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__batch
 msgid "Start Next Operation"
-msgstr ""
+msgstr "Inizia la prossima operazione"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3746,7 +3781,7 @@ msgstr "Resoconto regola magazzino"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Store Finished Product"
-msgstr ""
+msgstr "Immagazina il prodotto finito"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__store_fname
@@ -3791,7 +3826,7 @@ msgstr "Tabella (MTO)"
 #: model:product.product,name:mrp.product_product_table_kit
 #: model:product.template,name:mrp.product_product_table_kit_product_template
 msgid "Table Kit"
-msgstr ""
+msgstr "Tabella Kit"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_leg
@@ -3809,7 +3844,7 @@ msgstr "Piano del tavolo"
 #: model:product.product,description:mrp.product_product_table_kit
 #: model:product.template,description:mrp.product_product_table_kit_product_template
 msgid "Table kit"
-msgstr ""
+msgstr "Tabella Kit"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__is_done
@@ -3830,7 +3865,7 @@ msgstr "Campo tecnico per verificare se si può pubblicare"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__unreserve_visible
 msgid "Technical field to check when we can unreserve"
-msgstr ""
+msgstr "Campo tecnico per verificare se si può annullare la prenotazione"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_availability
@@ -3863,6 +3898,8 @@ msgstr ""
 msgid ""
 "The attribute value %s set on product %s does not match the BoM product %s."
 msgstr ""
+"Il valore dell'attributo %s impostato sul prodotto %s non corrisponde al "
+"prodotto %s della distinda dei materiali."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -3874,6 +3911,7 @@ msgstr "La capacità deve essere strettamente positiva."
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_date_minimum_delta
 msgid "The change must be higher than this value to be propagated"
 msgstr ""
+"La modifica deve essere superiore a questo valore per essere propagata"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model
@@ -3927,6 +3965,10 @@ msgid ""
 "production orders will  be executed through work orders, otherwise "
 "everything is processed in the production order itself. "
 msgstr ""
+"Le operazioni per produrre questa distinta dei materiali. Quando viene "
+"specificato un routing, gli ordini di produzione verranno eseguiti tramite "
+"ordini di lavoro, altrimenti tutto verrà elaborato nell'ordine di produzione"
+" stesso."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -3935,6 +3977,9 @@ msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
 msgstr ""
+"La data di fine produzione pianificata dell'ordine di lavoro non può essere "
+"antecedente alla data di inizio pianificata, correggerla per poter salvare "
+"l'ordine di lavoro."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
@@ -3966,6 +4011,9 @@ msgid ""
 "create work orders afterwards which alters the execution of the "
 "manufacturing order."
 msgstr ""
+"Il routing contiene tutti i centri di lavoro utilizzati e per quanto tempo. "
+"Ciò creerà in seguito ordini di lavoro che alterano l'esecuzione dell'ordine"
+" di produzione."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -3974,6 +4022,8 @@ msgid ""
 "The unit of measure you choose is in a different category than the product "
 "unit of measure."
 msgstr ""
+"L'unità di misura scelta appartiene a una categoria diversa da quella del "
+"prodotto."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -3982,6 +4032,8 @@ msgid ""
 "There is no Bill of Material of type manufacture or kit found for the "
 "product %s. Please define a Bill of Material for this product."
 msgstr ""
+"Nessuna distinta base trovata per il prodotto %s. Definire una distinta base"
+" per questo prodotto. "
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_move_line
@@ -4006,11 +4058,16 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Questo campo viene utilizzato per calcolare la durata prevista di un ordine "
+"di lavoro nel centro di lavoro. Ad esempio, se un ordine di lavoro richiede "
+"un'ora e il fattore di efficienza è del 100%, la durata prevista sarà di "
+"un'ora. Se il fattore di efficienza è del 200%, tuttavia la durata prevista "
+"sarà di 30 minuti."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
 msgid "This is a BoM of type Kit!"
-msgstr ""
+msgstr "Questa é una distinta di materiali di tipo Kit!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4033,6 +4090,8 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                    You can filter on the product to see all the past movements for the product."
 msgstr ""
+"Questo menu offre una completa tracciabilità delle operazioni di magazzino per un determinato prodotto.\n"
+"Si può filtrare sul prodotto per visualizzare tutti i movimenti passati del prodotto. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__production_location_id
@@ -4095,6 +4154,8 @@ msgid ""
 "Time in minutes. Is the time used in manual mode, or the first time supposed"
 " in real time when there are not any work orders yet."
 msgstr ""
+"Tempo in minuti. È il tempo utilizzato in modalità manuale, se non ci sono "
+"ancora ordini di lavoro inserire il tempo supposto."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -4152,6 +4213,11 @@ msgid ""
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
 msgstr ""
+"Per produrre o assemblare i prodotti e utilizzare componenti e\n"
+"prodotti finiti è necessario gestire anche le operazioni di produzione.\n"
+"Le operazioni di produzione sono spesso chiamate \"ordini di lavoro\".\n"
+"Le varie operazioni avranno impatti diversi sui costi di produzione\n"
+"e sulla pianificazione a seconda del carico di lavoro disponibile. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -4165,12 +4231,12 @@ msgstr "Attività odierne"
 #: model:product.product,description:mrp.product_product_wood_wear
 #: model:product.template,description:mrp.product_product_wood_wear_product_template
 msgid "Top layer of a wood panel."
-msgstr ""
+msgstr "Strato superiore di un pannello di legno."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration"
-msgstr ""
+msgstr "Durata totale"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
@@ -4250,7 +4316,7 @@ msgstr "Tipo di operazione"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_decoration
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Tipo di attività di eccezione nel record."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -4261,19 +4327,21 @@ msgstr "Sblocca"
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
-msgstr ""
+msgstr "Smonta"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Order"
-msgstr ""
+msgstr "Ordine di Smontaggio"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
 msgstr ""
+"La quantità del prodotto nell'ordine di smontaggio deve essere strettamente "
+"positiva."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
@@ -4290,7 +4358,7 @@ msgstr "Deminimizza"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unit_factor
 msgid "Unit Factor"
-msgstr ""
+msgstr "Fattore unitario"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder__product_uom_id
@@ -4396,7 +4464,7 @@ msgstr "Aggiorna"
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__worksheet
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__worksheet
 msgid "Upload your PDF file."
-msgstr ""
+msgstr "Carica il tuo file PDF"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__2
@@ -4437,6 +4505,9 @@ msgid ""
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
 msgstr ""
+"L'utilizzo del report MPS per pianificare le operazioni di riordino e "
+"produzione è utile se si ha tempi di consegna lunghi e se si produce in base"
+" alle previsioni di vendita."
 
 #. module: mrp
 #. openerp-web
@@ -4481,12 +4552,12 @@ msgstr "In attesa di materiali"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Waiting for Component"
-msgstr ""
+msgstr "In attesa del componente"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__pending
 msgid "Waiting for another WO"
-msgstr ""
+msgstr "In attesa di altro ordine di lavoro"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -4496,7 +4567,7 @@ msgstr "Magazzino"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr ""
+msgstr "Avviso quantità smontata insufficiente"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4639,6 +4710,10 @@ msgid ""
 "                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
 msgstr ""
+"I centri di lavoro ti consentono di creare e gestire la produzione.\n"
+"Sono costituiti da lavoratori e / o macchine, che sono\n"
+"considerate come unità per l'assegnazione di compiti e\n"
+"per le previsioni di pianificazione."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -4663,6 +4738,10 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required components."
 msgstr ""
+"Le operazioni degli ordini di lavoro consentono di creare e gestire le "
+"operazioni di produzione che devono essere seguite all'interno dei centri di"
+" lavoro al fine di produrre un prodotto. Sono collegati a distinte materiali"
+" che definiranno i componenti richiesti."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -4710,6 +4789,9 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones"
 msgstr ""
+"Gli ordini di lavoro sono operazioni che devono essere elaborate in un\n"
+"            ordine di produzione. Gli ordini di lavoro sono attivati dagli ordini di produzione,\n"
+"             si basano sul routing definito sugli ordini di produzione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_type
@@ -4737,6 +4819,9 @@ msgid ""
 "              starting from this date. If empty, the work orders will be "
 "planned as soon as possible."
 msgstr ""
+"Gli ordini di lavoro saranno pianificati in base alla disponibilità dei "
+"centri di lavoro a partire da questa data. Se i centri di lavoro sono "
+"liberi, gli ordini di lavoro verranno pianificati al più presto."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
@@ -4802,7 +4887,7 @@ msgstr "Foglio di lavoro"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet_google_slide
 msgid "Worksheet URL"
-msgstr ""
+msgstr "URL del foglio di lavoro"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_production_lot.py:0
@@ -4813,6 +4898,10 @@ msgid ""
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
 msgstr ""
+"Non è consentito creare o modificare un numero di lotto o di serie per i "
+"componenti con selezionato come tipo di operazione \"Produzione\". Per "
+"cambiarlo, vai sul tipo di operazione e spunta la casella \"Crea nuovi lotti"
+" / numeri di serie per i componenti\"."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__type
@@ -4860,6 +4949,8 @@ msgid ""
 "You cannot change the workcenter of a work order that is in progress or "
 "done."
 msgstr ""
+"Non è possibile modificare il centro di lavoro di un ordine di lavoro in "
+"corso o completato."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4882,6 +4973,8 @@ msgstr "Impossibile creare una nuova distinta base da qui."
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
 msgstr ""
+"Non è possibile eliminare un ordine di smontaggio se lo stato è "
+"\"Completato\"."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4894,24 +4987,30 @@ msgstr "Impossibile avere %s sia come prodotto finito che come sottoprodotto"
 #, python-format
 msgid "You cannot link this work order to another manufacturing order."
 msgstr ""
+"Non è possibile collegare questo ordine di lavoro a un altro ordine di "
+"produzione."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot move a manufacturing order once it is cancelled or done."
 msgstr ""
+"Non è possibile spostare un ordine di produzione una volta annullato o "
+"eseguito."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot move a planned manufacturing order."
-msgstr ""
+msgstr "Non è possibile spostare un ordine di produzione pianificato."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot produce a MO with a bom kit product."
 msgstr ""
+"Non è possibile produrre un ordine di produzione con una distinta dei "
+"materiali di tipo kit."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4923,7 +5022,7 @@ msgstr "Impossibile produrre due volte lo stesso numero di serie. "
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr ""
+msgstr "Non è possibile smontare un ordine di produzione annullato."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:0
@@ -4938,12 +5037,14 @@ msgid ""
 "You have produced %s %s of lot %s in the previous workorder. You are trying "
 "to produce %s in this one"
 msgstr ""
+"Hai prodotto molto %s di %s%s nel precendente ordine di lavoro. Stai "
+"provando a produrre %s in questo ordine di lavoro"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
 #, python-format
 msgid "You have to produce at least one %s."
-msgstr ""
+msgstr "Devi produrne almeno uno di %s."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -4994,6 +5095,9 @@ msgid ""
 "You should consume the quantity of %s defined in the BoM. If you want to "
 "consume more or less components, change the consumption setting on the BoM."
 msgstr ""
+"Dovresti consumare la quantità di %s definita nella distinta dei materiali. "
+"Se si desidera consumare più o meno componenti, modificarne l'impostazione "
+"del consumo sulla distinta."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -5007,6 +5111,8 @@ msgstr "Fornire un numero di lotto per il prodotto finale."
 msgid ""
 "You should provide either a product or a product template to search a BoM"
 msgstr ""
+"È necessario fornire un prodotto o un modello di prodotto per fare una "
+"ricerca nella distinta dei materiali"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -5015,6 +5121,8 @@ msgid ""
 "You will get here statistics about the\n"
 "              work orders duration related to this routing."
 msgstr ""
+"Riceverai qui le statistiche sulla durata degli\n"
+" ordini di lavoro relative a questo routing."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
