@@ -30,7 +30,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         this.progressBarWeight = this.el.dataset.progressBarWeight;
 
         this.textColor = this._ensureCssColor(this.el.dataset.textColor);
-        this.layoutBackgroundColor = this._ensureCssColor(this.el.dataset.layoutBackgroundColor);
+        this.layoutBackgroundColor = this._ensureCssColor(this.el.dataset.layoutBackgroundColor || 'rgba(0, 0, 0, 0)');
         this.progressBarColor = this._ensureCssColor(this.el.dataset.progressBarColor);
 
         this.onlyOneUnit = this.display === 'd';
@@ -121,6 +121,10 @@ const CountdownWidget = publicWidget.Widget.extend({
     _initTimeDiff: function () {
         const delta = this._getDelta();
         this.diff = [];
+        if (this.$wrapper.find('canvas').length) {
+            // avoid duplication of the canvas
+            this.$wrapper.find('canvas').remove();
+        }
         if (this._isUnitVisible('d') && !(this.onlyOneUnit && delta < 86400)) {
             this.diff.push({
                 canvas: $('<canvas/>').appendTo(this.$wrapper)[0],
