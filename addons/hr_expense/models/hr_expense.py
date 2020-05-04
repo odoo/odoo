@@ -85,6 +85,7 @@ class HrExpense(models.Model):
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", domain="[('employee_id', '=', employee_id), ('company_id', '=', company_id)]", readonly=True, copy=False)
     reference = fields.Char("Bill Reference")
     is_refused = fields.Boolean("Explicitely Refused by manager or acccountant", readonly=True, copy=False)
+    display_warning = fields.Boolean("Employee_id and sheet_id.employee_id !=", readonly=True, copy=False, compute='_compute_display_warning', store=False)
 
     is_editable = fields.Boolean("Is Editable By Current User", compute='_compute_is_editable')
     is_ref_editable = fields.Boolean("Reference Is Editable By Current User", compute='_compute_is_ref_editable')
@@ -146,6 +147,11 @@ class HrExpense(models.Model):
                 expense.is_ref_editable = True
             else:
                 expense.is_ref_editable = is_account_manager
+
+    @api.depends('employee_id', 'sheet_id')
+    def _compute_display_warning(self):
+        for expense in self:
+            expense.display_warning = expense.employee_id != expense.sheet_id.employee_id
 
     @api.onchange('product_id', 'company_id')
     def _onchange_product_id(self):
@@ -510,15 +516,14 @@ class HrExpense(models.Model):
                                              values={'reason': reason, 'is_sheet': False, 'name': self.name})
 
     @api.model
+    def get_default_dashbord(self, expense_state):
+        currency = self.env.user.company_id.currency_id.id
+        for val in expense_state.values():
+            val['amount'].append((currency, 0))
+        return expense_state
+
+    @api.model
     def get_expense_dashbord(self):
-        if not self.env.user.employee_ids:
-            return
-        expenses = self.read_group(
-            [
-                ('employee_id', 'in', self.env.user.employee_ids.ids),
-                ('payment_mode', '=', 'own_account'),
-                ('state', 'in', ['draft', 'reported', 'approved'])
-            ], ['total_amount', 'currency_id', 'state'], ['state', 'currency_id'], lazy=False)
         expense_state = {
             'draft': {
                 'description': _('to report'),
@@ -533,6 +538,15 @@ class HrExpense(models.Model):
                 'amount': list(),
             }
         }
+
+        if not self.env.user.employee_ids:
+            return self.get_default_dashbord(expense_state)
+        expenses = self.read_group(
+            [
+                ('employee_id', 'in', self.env.user.employee_ids.ids),
+                ('payment_mode', '=', 'own_account'),
+                ('state', 'in', ['draft', 'reported', 'approved'])
+            ], ['total_amount', 'currency_id', 'state'], ['state', 'currency_id'], lazy=False)
         for expense in expenses:
             state = expense['state']
             currency = expense['currency_id'][0]
@@ -726,10 +740,10 @@ class HrExpenseSheet(models.Model):
         ('done', 'Paid'),
         ('cancel', 'Refused')
     ], string='Status', index=True, readonly=True, tracking=True, copy=False, default='draft', required=True, help='Expense Report State')
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, tracking=True, states={'draft': [('readonly', False)]}, default=_default_employee_id, check_company=True)
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, tracking=True, states={'draft': [('readonly', False)]}, default=_default_employee_id, check_company=True, domain= lambda self: self.env['hr.expense']._get_employee_id_domain())
     address_id = fields.Many2one('res.partner', string="Employee Home Address", check_company=True)
     payment_mode = fields.Selection(related='expense_line_ids.payment_mode', default='own_account', readonly=True, string="Paid By", tracking=True)
-    user_id = fields.Many2one('res.users', 'Manager', readonly=True, copy=False, states={'draft': [('readonly', False)]}, tracking=True)
+    user_id = fields.Many2one('res.users', 'Manager', readonly=True, copy=False, states={'draft': [('readonly', False)]}, tracking=True, domain=lambda self: [('groups_id', 'in', self.env.ref('hr_expense.group_hr_expense_team_approver').id)])
     total_amount = fields.Monetary('Total Amount', currency_field='currency_id', compute='_compute_amount', store=True, tracking=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
