@@ -166,6 +166,12 @@
                 <xpath expr="/form/sheet/div[hasclass('oe_button_box')]" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
+                <field name="employee_id" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </field>
+                <field name="company_id" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </field>
             </field>
         </record>
 
@@ -512,7 +518,7 @@
                     </group>
                      <notebook>
                         <page name="expenses" string="Expense">
-                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id}">
+                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}">
                             <tree decoration-danger="is_refused" editable="bottom">
                                 <field name="date" optional="show"/>
                                 <field name="name"/>
@@ -696,7 +702,7 @@
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
             <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
-            <field name="domain">[('employee_id.user_id', '=', uid), ('state', '!=', 'cancel')]</field>
+            <field name="domain">[('state', '!=', 'cancel')]</field>
             <field name="context">{'search_default_my_reports': 1}</field>
             <field name="view_id" ref="view_hr_expense_sheet_dashboard_tree"/>
             <field name="help" type="html">
@@ -760,6 +766,7 @@
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
+            <field name="view_id" ref="view_hr_expense_sheet_tree"/>
             <field name="domain">[]</field>
             <field name="context">{
                 'search_default_approved': 1,
@@ -824,6 +831,32 @@
             <field name="code">
 if records:
     action = records.action_submit_expenses()
+            </field>
+        </record>
+
+        <record id="hr_expense_sheet_approve_action_server" model="ir.actions.server">
+            <field name="name">Approve Report</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_hr_expense_sheet"/>
+            <field name="binding_model_id" ref="model_hr_expense_sheet"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.approve_expense_sheets()
+            </field>
+        </record>
+
+        <record id="hr_expense_sheet_post_action_server" model="ir.actions.server">
+            <field name="name">Post Entries</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_hr_expense_sheet"/>
+            <field name="binding_model_id" ref="model_hr_expense_sheet"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.action_sheet_move_create()
             </field>
         </record>
 
