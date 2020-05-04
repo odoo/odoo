@@ -6,6 +6,7 @@
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Antoine Gilard <ang@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
+"Last-Translator: Antoine Gilard <ang@odoo.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,11 @@ msgid ""
 "                        configuration to a Cross-border account on the Alipay payment acquirer in Odoo.\n"
 "                    "
 msgstr ""
+"\n"
+"Alleen transacties in Chinese Yuan (CNY) zijn toegestaan voor Alipay Express Checkout.\n"
+"\n"
+"Als u een andere valuta dan CNY wilt gebruiken voor uw transacties, schakel dan uw\n"
+"configuratie op een Grensoverschrijdende rekening op de Alipay payment acquirer in Odoo."
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_payment_method
@@ -39,6 +45,8 @@ msgid ""
 "  * Cross-border: For the Overseas seller \n"
 "  * Express Checkout: For the Chinese Seller"
 msgstr ""
+"* Grensoverschrijdend: Voor de overzeese verkoper \n"
+"* Express Checkout: Voor de Chinese verkoper"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment.py:0
@@ -71,7 +79,7 @@ msgstr "Alipay verkoper e-mail"
 #: code:addons/payment_alipay/models/payment.py:0
 #, python-format
 msgid "Alipay: invalid sign, received %s, computed %s, for data %s"
-msgstr ""
+msgstr "Alipay: ongeldig teken%s, ontvangen%s, berekend, voor gegevens %s"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment.py:0
@@ -126,6 +134,8 @@ msgid ""
 "The MD5 private key is the 32-byte string which is composed of English "
 "letters and numbers."
 msgstr ""
+"De MD5 privésleutel is de 32-bytes string die bestaat uit Engelse letters en"
+" cijfers."
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
@@ -133,3 +143,5 @@ msgid ""
 "The Merchant Partner ID is used to ensure communications coming from Alipay "
 "are valid and secured."
 msgstr ""
+"De Merchant Partner ID wordt gebruikt om ervoor te zorgen dat de "
+"communicatie van Alipay geldig en beveiligd is."

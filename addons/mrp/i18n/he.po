@@ -1022,7 +1022,7 @@ msgstr "צרוך רכיבים ובנה מוצרים מוגמרים באמצעו�
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
 #: model_terms:ir.ui.view,arch_db:mrp.view_stock_move_raw_tree
 msgid "Consumed"
-msgstr "נצרך"
+msgstr "בשימוש"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__consume_line_ids
@@ -1042,7 +1042,7 @@ msgstr "מוצרים שנצרכו"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__operation_id
 msgid "Consumed in Operation"
-msgstr "נצרך בפעילות"
+msgstr "בשימוש בפעולה"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder__consumption
@@ -2540,7 +2540,7 @@ msgstr "פעולה"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__operation_id
 msgid "Operation To Consume"
-msgstr "פעולה לצריכה"
+msgstr "פעולה נדרשת"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__picking_type_id
@@ -3074,7 +3074,7 @@ msgstr "מוצרים"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Products to Consume"
-msgstr "מוצרים לצריכה"
+msgstr "מוצרים נדרשים"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
@@ -3152,13 +3152,13 @@ msgstr "כמות לייצור"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_produce_line_kanban
 msgid "Quantity To Consume"
-msgstr "כמות לצריכה"
+msgstr "כמות נדרשת"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_qty
 msgid "Quantity To Produce"
-msgstr "כמות לייצר"
+msgstr "כמות לייצור"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3872,7 +3872,7 @@ msgstr "מספר המוצרים שכבר טופלו בהוראת עבודה זו
 msgid ""
 "The operation where the components are consumed, or the finished products "
 "created."
-msgstr "הפעולה בה נצרכים הרכיבים או נוצרו המוצרים המוגמרים."
+msgstr "הפעולה בה השתמשו ברכיבים או שנוצרו בה המוצרים המוגמרים."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__routing_id
@@ -3901,6 +3901,8 @@ msgstr "בהוראת הייצור עבור '%s' לא מפורטת הכמות ל�
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
 msgid "The quantity to produce must be positive!"
 msgstr "הכמות לייצור חייב להיות חיובית!"
 
@@ -4079,7 +4081,7 @@ msgstr "לסגור"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__qty_to_consume
 #: model_terms:ir.ui.view,arch_db:mrp.view_stock_move_raw_tree
 msgid "To Consume"
-msgstr "לצרוך"
+msgstr "נדרש"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4791,7 +4793,7 @@ msgstr "לא ניתן לשנוות הוראת עבודה שהסתיימה."
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
-msgstr "אתה לא יכול לצרוך בלי לציין את האצווה הרלוונטית"
+msgstr "אתה לא יכול להשתמש בלי לציין את האצווה הרלוונטית"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
