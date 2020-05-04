@@ -119,6 +119,19 @@ class MailActivity(models.Model):
             res['res_model_id'] = self.env['ir.model']._get(res['res_model']).id
         return res
 
+    @api.model
+    def _default_activity_type_id(self):
+        ActivityType = self.env["mail.activity.type"]
+        activity_type_todo = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
+        current_model_id = self.default_get(['res_model_id', 'res_model'])['res_model_id']
+        if activity_type_todo and activity_type_todo.active and (activity_type_todo.res_model_id.id == current_model_id or not activity_type_todo.res_model_id):
+            return activity_type_todo
+        activity_type_model = ActivityType.search([('res_model_id', '=', current_model_id)], limit=1)
+        if activity_type_model:
+            return activity_type_model
+        activity_type_generic = ActivityType.search([('res_model_id','=', False)], limit=1)
+        return activity_type_generic
+
     # owner
     res_model_id = fields.Many2one(
         'ir.model', 'Document Model',
@@ -133,7 +146,8 @@ class MailActivity(models.Model):
     # activity
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
-        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict')
+        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict',
+        default=_default_activity_type_id)
     activity_category = fields.Selection(related='activity_type_id.category', readonly=True)
     activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=True)
     icon = fields.Char('Icon', related='activity_type_id.icon', readonly=True)
