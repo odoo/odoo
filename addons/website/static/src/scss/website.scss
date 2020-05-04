@@ -1251,3 +1251,9 @@ table.table_desc tr td {
 .o_perk span {
     display: block;
 }
+
+// safari transform phone number in link black by default (opw-2230301)
+a[href^=tel] {
+ text-decoration:inherit;
+ color: inherit;
+}
