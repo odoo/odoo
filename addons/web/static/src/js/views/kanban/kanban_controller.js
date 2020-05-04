@@ -522,7 +522,10 @@ var KanbanController = BasicController.extend({
             prom.then(function (dbID) {
                 var data = self.model.get(dbID);
                 if (data) {  // Could be null if a wizard is returned for example
-                    self.renderer.updateColumn(dbID, data);
+                    self.model.reload(self.handle).then(function () {
+                        const state = self.model.get(self.handle);
+                        self.renderer.updateColumn(dbID, data, { state });
+                    });
                 }
             });
         }

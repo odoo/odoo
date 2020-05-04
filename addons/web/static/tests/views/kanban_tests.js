@@ -3716,6 +3716,61 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('no content helper when archive all records in kanban group', async function (assert) {
+        assert.expect(3);
+
+        // add active field on partner model to have archive option
+        this.data.partner.fields.active = {string: 'Active', type: 'boolean', default: true};
+        // remove last records to have only one column
+        this.data.partner.records = this.data.partner.records.slice(0, 3);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `<kanban class="o_kanban_test">
+                        <field name="active"/>
+                        <field name="bar"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                               <div><field name="foo"/></div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="hello">click to add a partner</p>'
+                }
+            },
+            groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/action_archive') {
+                    const partnerIDS = args.args[0];
+                    const records = this.data.partner.records;
+                    _.each(partnerIDS, function (partnerID) {
+                        _.find(records, function (record) {
+                            return record.id === partnerID;
+                        }).active = false;
+                    });
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // check that the (unique) column contains 3 records
+        assert.containsN(kanban, '.o_kanban_group:last .o_kanban_record', 3);
+
+        // archive the records of the last column
+        testUtils.kanban.toggleGroupSettings($(kanban.el.querySelector('.o_kanban_group'))); // we should change the helper
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_group .o_column_archive_records'));
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.modal.clickButton('Ok');
+        // check no content helper is exist
+        assert.containsOnce(kanban, '.o_view_nocontent');
+        kanban.destroy();
+    });
+
     QUnit.test('no content helper when no data', async function (assert) {
         assert.expect(3);
 
