@@ -133,7 +133,7 @@ class Partner(models.Model):
         for group_tpl_values in [group for group in recipients.values() if group['recipients']]:
             # generate notification email content
             template_ctx = {**base_template_ctx, **group_tpl_values}
-            mail_body = base_template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+            mail_body = base_template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True) if base_template else message.body
             mail_body = self.env['mail.thread']._replace_local_links(mail_body)
             mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name)
 
