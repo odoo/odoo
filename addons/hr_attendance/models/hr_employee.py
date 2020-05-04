@@ -20,18 +20,22 @@ class HrEmployeeBase(models.AbstractModel):
     hours_today = fields.Float(compute='_compute_hours_today')
     hours_last_month_display = fields.Char(compute='_compute_hours_last_month')
 
+    @api.depends('user_id.im_status', 'attendance_state')
     def _compute_presence_state(self):
         """
         Override to include checkin/checkout in the presence state
         Attendance has the second highest priority after login
         """
         super()._compute_presence_state()
-        employees = self.filtered(lambda employee: employee.hr_presence_state != 'present')
+        employees = self.filtered(lambda e: e.hr_presence_state != 'present')
+        employee_to_check_working = self.filtered(lambda e: e.attendance_state == 'checked_out'
+                                                            and e.hr_presence_state == 'to_define')
+        working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in employees:
-            if employee.attendance_state == 'checked_out' and employee.hr_presence_state == 'to_define':
+            if employee.attendance_state == 'checked_out' and employee.hr_presence_state == 'to_define' and \
+                    employee.id not in working_now_list:
                 employee.hr_presence_state = 'absent'
-        for employee in employees:
-            if employee.attendance_state == 'checked_in':
+            elif employee.attendance_state == 'checked_in':
                 employee.hr_presence_state = 'present'
 
     def _compute_hours_last_month(self):
@@ -161,3 +165,10 @@ class HrEmployeeBase(models.AbstractModel):
         if 'pin' in groupby or 'pin' in self.env.context.get('group_by', '') or self.env.context.get('no_group_by'):
             raise exceptions.UserError(_('Such grouping is not allowed.'))
         return super(HrEmployeeBase, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
+    def _compute_presence_icon(self):
+        res = super()._compute_presence_icon()
+        # All employee must chek in or check out. Everybody must have an icon
+        employee_to_define = self.filtered(lambda e: e.hr_icon_display == 'presence_undetermined')
+        employee_to_define.hr_icon_display = 'presence_to_define'
+        return res
