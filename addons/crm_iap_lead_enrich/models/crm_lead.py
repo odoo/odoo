@@ -5,7 +5,7 @@ import datetime
 import logging
 
 from odoo import _, api, fields, models, tools
-from odoo.addons.iap import InsufficientCreditError
+from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ class Lead(models.Model):
         if lead_emails:
             try:
                 iap_response = self.env['iap.enrich.api']._request_enrich(lead_emails)
-            except InsufficientCreditError:
+            except iap_tools.InsufficientCreditError:
                 _logger.info('Sent batch %s enrich requests: failed because of credit', len(lead_emails))
                 if not from_cron:
                     data = {
