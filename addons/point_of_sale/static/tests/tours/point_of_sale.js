@@ -46,7 +46,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
 
     var steps = [{ // Leave category displayed by default
         content: 'waiting for loading to finish',
-        trigger: 'body:has(.loader:hidden)',
+        trigger: 'body:not(:has(.loader))',
         run: function () {
             var product_wall_shelf = posmodel.db.search_product_in_category(0, 'Wall Shelf Unit')[0];
             var product_small_shelf = posmodel.db.search_product_in_category(0, 'Small Shelf')[0];
@@ -93,7 +93,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         run: function () {}, // it's a check
     }, {
         content: "click category switch",
-        trigger: ".js-category-switch",
+        trigger: ".breadcrumb-home",
         run: 'click',
     }, {
         content: "click pricelist button",
@@ -258,7 +258,11 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
                 trigger: keypad_selector + ' .input-button:contains("' + current_char + '"):visible'
             });
         }
-
+        steps.push({
+            content: 'do nothing check',
+            trigger: '.pos',
+            run: function () {},
+        })
         return steps;
     }
 
@@ -313,38 +317,38 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
             // sending email should be checked in different test
             content: "deactivate email",
             trigger: '.button.js_email',
+        }, {
+            content: "email button should not be highlighted after deactivating",
+            trigger: '.button.js_email:not(.highlight)',
+            run: function() {},
         }];
     }
 
     function finish_order() {
         return [{
             content: "validate the order",
-            trigger: '.button.next:visible',
-        }, {
-            content: "verify that the order is being sent to the backend",
-            trigger: ".js_connecting:visible",
-            run: function () {}, // it's a check
+            trigger: '.payment-screen .button.next.highlight:visible',
         }, {
             content: "verify that the order has been successfully sent to the backend",
             trigger: ".js_connected:visible",
             run: function () {}, // it's a check
         }, {
-            content: "next order",
-            trigger: '.button.next:visible',
-        }, { // Leave category displayed by default
-            content: "click category switch",
-            trigger: ".js-category-switch",
-            run: 'click',
+            content: "click Next Order",
+            trigger: '.receipt-screen .button.next.highlight:visible',
+        }, {
+            content: "check if we left the receipt screen",
+            trigger: '.pos-content .screen:not(:has(.receipt-screen))',
+            run: function () {},
         }];
     }
 
     var steps = [{
             content: 'waiting for loading to finish',
-            trigger: 'body:has(.loader:hidden)',
+            trigger: 'body:not(:has(.loader))',
             run: function () {}, // it's a check
         }, { // Leave category displayed by default
             content: "click category switch",
-            trigger: ".js-category-switch",
+            trigger: ".breadcrumb-home",
             run: 'click',
         }];
 
@@ -420,7 +424,7 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         trigger: ".header-button",
     }, {
         content: "confirm closing the frontend",
-        trigger: ".header-button",
+        trigger: ".header-button.confirm",
         run: function() {}, //it's a check,
     }]);
 
