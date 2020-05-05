@@ -266,8 +266,7 @@ class MrpBomLine(models.Model):
         else:
             self.child_bom_id = self.env['mrp.bom']._bom_find(
                 product_tmpl=self.product_id.product_tmpl_id,
-                product=self.product_id,
-                picking_type=self.bom_id.picking_type_id)
+                product=self.product_id)
 
     @api.one
     @api.depends('product_id')
