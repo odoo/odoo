@@ -3275,19 +3275,21 @@ Record ids: %(records)s
         if not self._ids:
             return self
 
-        where_clause, where_params, tables = self.env['ir.rule'].domain_get(self._name, operation)
-        if not where_clause:
+        quoted_table = '"%s"' % self._table
+        query = Query([quoted_table])
+        self._apply_ir_rules(query, operation)
+        if not query.where_clause:
             return self
 
         # detemine ids in database that satisfy ir.rules
-        # TODO: we should add a flush here, based on domain's arguments
         valid_ids = set()
-        query = "SELECT {}.id FROM {} WHERE {}.id IN %s AND {}".format(
-            self._table, ",".join(tables), self._table, " AND ".join(where_clause),
+        from_clause, where_clause, where_params = query.get_sql()
+        query_str = "SELECT {}.id FROM {} WHERE {} AND {}.id IN %s".format(
+            quoted_table, from_clause, where_clause, quoted_table,
         )
         self._flush_search([])
         for sub_ids in self._cr.split_for_in_conditions(self.ids):
-            self._cr.execute(query, [sub_ids] + where_params)
+            self._cr.execute(query_str, where_params + [sub_ids])
             valid_ids.update(row[0] for row in self._cr.fetchall())
 
         # return new ids without origin and ids with origin in valid_ids
@@ -4131,41 +4133,19 @@ Record ids: %(records)s
         if self.env.su:
             return
 
-        def apply_rule(clauses, params, tables, parent_model=None):
-            """ :param parent_model: name of the parent model, if the added
-                    clause comes from a parent model
-            """
-            if clauses:
-                if parent_model:
-                    # as inherited rules are being applied, we need to add the
-                    # missing JOIN to reach the parent table (if not JOINed yet)
-                    parent_table = '"%s"' % self.env[parent_model]._table
-                    parent_alias = '"%s"' % self._inherits_join_add(self, parent_model, query)
-                    # inherited rules are applied on the external table, replace
-                    # parent_table by parent_alias
-                    clauses = [clause.replace(parent_table, parent_alias) for clause in clauses]
-                    # replace parent_table by parent_alias, and introduce
-                    # parent_alias if needed
-                    tables = [
-                        (parent_table + ' as ' + parent_alias) if table == parent_table \
-                            else table.replace(parent_table, parent_alias)
-                        for table in tables
-                    ]
-                query.where_clause += clauses
-                query.where_clause_params += params
-                for table in tables:
-                    if table not in query.tables:
-                        query.tables.append(table)
-
         # apply main rules on the object
         Rule = self.env['ir.rule']
-        where_clause, where_params, tables = Rule.domain_get(self._name, mode)
-        apply_rule(where_clause, where_params, tables)
+        domain = Rule._compute_domain(self._name, mode)
+        if domain:
+            expression.expression(domain, self.sudo(), self._table, query)
 
         # apply ir.rules from the parents (through _inherits)
-        for parent_model in self._inherits:
-            where_clause, where_params, tables = Rule.domain_get(parent_model, mode)
-            apply_rule(where_clause, where_params, tables, parent_model)
+        for parent_model_name in self._inherits:
+            domain = Rule._compute_domain(parent_model_name, mode)
+            if domain:
+                parent_model = self.env[parent_model_name]
+                parent_alias = self._inherits_join_add(self, parent_model_name, query)
+                expression.expression(domain, parent_model.sudo(), parent_alias, query)
 
     @api.model
     def _generate_translated_field(self, table_alias, field, query):
