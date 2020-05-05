@@ -1726,6 +1726,10 @@ actual arch.
             except Exception as e:
                 view.handle_view_error("Can't validate view:\n%s" % e)
 
+    def _create_all_specific_views(self, processed_modules):
+        """To be overriden and have specific view behaviour on create"""
+        pass
+
     def _get_specific_views(self):
         """ Given a view, return a record set containing all the specific views
             for that view's key.

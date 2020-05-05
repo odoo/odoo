@@ -754,8 +754,7 @@ class TestCowViewSaving(common.TransactionCase):
         })])
 
         # Simulate end of installation/update
-        self.registry.create_duplicated_views_for_modules = ['_website_sale_comparison']
-        View._validate_custom_views('')
+        View._create_all_specific_views(['_website_sale_comparison'])
 
         specific_view = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product')
         specific_view_arch = specific_view.read_combined(['arch'])['arch']

@@ -133,40 +133,38 @@ class View(models.Model):
 
         return True
 
-    def _validate_custom_views(self, model):
+    def _create_all_specific_views(self, processed_modules):
         """ When creating a generic child view, we should
             also create that view under specific view trees (COW'd).
             Top level view (no inherit_id) do not need that behavior as they
             will be shared between websites since there is no specific yet.
         """
-        if self.pool.create_duplicated_views_for_modules:
-            # Only for the modules being processed
-            regex = '^(%s)[.]' % '|'.join(self.pool.create_duplicated_views_for_modules)
+        # Only for the modules being processed
+        regex = '^(%s)[.]' % '|'.join(processed_modules)
 
-            query = """SELECT generic.id, ARRAY[array_agg(spec_parent.id), array_agg(spec_parent.website_id)]
-                FROM ir_ui_view generic
-                INNER JOIN ir_ui_view generic_parent ON generic_parent.id = generic.inherit_id
-                INNER JOIN ir_ui_view spec_parent ON spec_parent.key = generic_parent.key
-                LEFT JOIN ir_ui_view specific ON specific.key = generic.key AND specific.website_id = spec_parent.website_id
-                WHERE generic.type='qweb'
-                AND generic.website_id IS NULL
-                AND generic.key ~ %s
-                AND spec_parent.website_id IS NOT NULL
-                AND specific.id IS NULL
-                GROUP BY generic.id
-            """
-            self.flush()
-            self.env.cr.execute(query, (regex, ))
-            result = dict(self.env.cr.fetchall())
+        query = """SELECT generic.id, ARRAY[array_agg(spec_parent.id), array_agg(spec_parent.website_id)]
+            FROM ir_ui_view generic
+            INNER JOIN ir_ui_view generic_parent ON generic_parent.id = generic.inherit_id
+            INNER JOIN ir_ui_view spec_parent ON spec_parent.key = generic_parent.key
+            LEFT JOIN ir_ui_view specific ON specific.key = generic.key AND specific.website_id = spec_parent.website_id
+            WHERE generic.type='qweb'
+            AND generic.website_id IS NULL
+            AND generic.key ~ %s
+            AND spec_parent.website_id IS NOT NULL
+            AND specific.id IS NULL
+            GROUP BY generic.id
+        """
+        self.flush()
+        self.env.cr.execute(query, (regex, ))
+        result = dict(self.env.cr.fetchall())
 
-            for record in self.browse(result.keys()):
-                specific_parent_view_ids, website_ids = result[record.id]
-                for specific_parent_view_id, website_id in zip(specific_parent_view_ids, website_ids):
-                    record.with_context(website_id=website_id).write({
-                        'inherit_id': specific_parent_view_id,
-                    })
-            self.pool.create_duplicated_views_for_modules = None
-        super(View, self)._validate_custom_views(model)
+        for record in self.browse(result.keys()):
+            specific_parent_view_ids, website_ids = result[record.id]
+            for specific_parent_view_id, website_id in zip(specific_parent_view_ids, website_ids):
+                record.with_context(website_id=website_id).write({
+                    'inherit_id': specific_parent_view_id,
+                })
+        super(View, self)._create_all_specific_views(processed_modules)
 
     def unlink(self):
         '''This implements COU (copy-on-unlink). When deleting a generic page
@@ -174,19 +172,18 @@ class View(models.Model):
         website is affected.
         '''
         current_website_id = self._context.get('website_id')
-
-        if current_website_id and not self._context.get('no_cow'):
-            for view in self.filtered(lambda view: not view.website_id):
-                for website in self.env['website'].search([('id', '!=', current_website_id)]):
-                    # reuse the COW mechanism to create
-                    # website-specific copies, it will take
-                    # care of creating pages and menus.
-                    view.with_context(website_id=website.id).write({'name': view.name})
-
         specific_views = self.env['ir.ui.view']
+
         if self and self.pool._init:
             for view in self.filtered(lambda view: not view.website_id):
                 specific_views += view._get_specific_views()
+        elif current_website_id and not self._context.get('no_cow'):
+            for view in self.filtered(lambda view: not view.website_id):
+                for other_website in self.env['website'].search([('id', '!=', current_website_id)]):
+                    # reuse the COW mechanism to create
+                    # website-specific copies, it will take
+                    # care of creating pages and menus.
+                    view.with_context(website_id=other_website.id).write({'name': view.name})
 
         result = super(View, self + specific_views).unlink()
         self.clear_caches()

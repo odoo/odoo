@@ -482,6 +482,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             env['ir.model.data']._process_end(processed_modules)
             env['base'].flush()
 
+            env['ir.ui.view']._create_all_specific_views(processed_modules)
+
         for kind in ('init', 'demo', 'update'):
             tools.config[kind] = {}
 
@@ -529,7 +531,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             env = api.Environment(cr, SUPERUSER_ID, {})
             env['res.groups']._update_user_groups_view()
             View = env['ir.ui.view']
-            registry.create_duplicated_views_for_modules = processed_modules
             for model in registry:
                 try:
                     View._validate_custom_views(model)
