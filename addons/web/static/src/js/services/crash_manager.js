@@ -354,7 +354,18 @@ core.crash_registry.add('odoo.exceptions.RedirectWarning', RedirectWarningHandle
 function session_expired(cm) {
     return {
         display: function () {
-            cm.show_warning({type: _t("Odoo Session Expired"), message: _t("Your Odoo session expired. Please refresh the current web page.")});
+            const notif = {
+                type: _t("Odoo Session Expired"),
+                message: _t("Your Odoo session expired. The current page is about to be refreshed."),
+            };
+            const options = {
+                buttons: [{
+                    text: _t("Ok"),
+                    click: () => window.location.reload(true),
+                    close: true
+                }],
+            };
+            cm.show_warning(notif, options);
         }
     };
 }
