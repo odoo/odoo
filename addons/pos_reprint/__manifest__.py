@@ -18,7 +18,9 @@ Allow cashier to reprint receipts
         'views/pos_config_views.xml'
     ],
     'qweb': [
-        'static/src/xml/reprint.xml',
+        'static/src/xml/OrderReceipt.xml',
+        'static/src/xml/ReprintButton.xml',
+        'static/src/xml/ReprintScreen.xml',
     ],
     'installable': True,
 }
