@@ -6,17 +6,17 @@
 # heejun lee <tkm01b@gmail.com>, 2019
 # Mark Lee <odoos@soti.33mail.com>, 2019
 # 방상우 <mrroom@gmail.com>, 2019
-# Link Up링크업 <linkup.way@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Seongseok Shin <shinss61@hotmail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
+# Link Up링크업 <linkup.way@gmail.com>, 2020
 # JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-04-27 10:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
 "Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -205,7 +205,7 @@ msgstr "(문자열 없음)"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "(nolabel)"
-msgstr "(라벨 없음)"
+msgstr "(꼬리표 없음)"
 
 #. module: web
 #. openerp-web
@@ -253,7 +253,7 @@ msgstr "좋아하는 이름이 필요합니다."
 msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page."
-msgstr "팝업 창이 차단되었습니다. 이 페이지에 팝업 창이 표시되도록 브라우저 설정을 변경해야 할 수도 있습니다."
+msgstr "팝업 창이 차단되었습니다. 이 페이지에 팝업 창이 표시되도록 브라우저 설정을 변경해야 할 수도 있습니다."
 
 #. module: web
 #. openerp-web
@@ -262,7 +262,7 @@ msgstr "팝업 창이 차단되었습니다. 이 페이지에 팝업 창이 표
 msgid ""
 "A popup window with your report was blocked. You may need to change your "
 "browser settings to allow popup windows for this page."
-msgstr "보고서가있는 팝업 창이 차단되었습니다. 이 페이지에 팝업 창이 표시되도록 브라우저 설정을 변경해야 할 수도 있습니다."
+msgstr "보고서가 있는 팝업 창이 차단되었습니다. 이 페이지에 팝업 창이 표시되도록 브라우저 설정을 변경해야 할 수도 있습니다."
 
 #. module: web
 #. openerp-web
@@ -382,7 +382,7 @@ msgstr "조건 추가"
 #: code:addons/web/static/src/js/views/list/list_editable_renderer.js:0
 #, python-format
 msgid "Add a line"
-msgstr "줄 추가"
+msgstr "항목 추가하기"
 
 #. module: web
 #. openerp-web
@@ -393,6 +393,7 @@ msgstr "분기 추가"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add column"
@@ -675,7 +676,6 @@ msgstr "사용 가능한 필드"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
@@ -799,6 +799,13 @@ msgstr "일정표"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/web_calendar.xml:0
+#, python-format
+msgid "Calendar toolbar"
+msgstr "일정표 툴바"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_view.js:0
 #, python-format
 msgid "Calendar view has not defined 'date_start' attribute."
@@ -854,6 +861,14 @@ msgstr "기본 값 변경 :"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Change graph"
+msgstr "그래프 변경"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Checkbox"
@@ -904,6 +919,9 @@ msgstr "서명 지우기"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector_dialog.js:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/dialog.xml:0
+#: code:addons/web/static/src/xml/notification.xml:0
 #, python-format
 msgid "Close"
 msgstr "닫기"
@@ -921,6 +939,11 @@ msgstr "%s 열"
 #, python-format
 msgid "Column title"
 msgstr "열 제목"
+
+#. module: web
+#: model:ir.model,name:web.model_res_company
+msgid "Companies"
+msgstr "회사"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
@@ -992,6 +1015,14 @@ msgstr "문맥 :"
 #, python-format
 msgid "Control"
 msgstr "제어"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Control panel toolbar"
+msgstr "제어판 툴바"
 
 #. module: web
 #. openerp-web
@@ -1078,7 +1109,7 @@ msgstr "횟수"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Create"
-msgstr "신규"
+msgstr "만들기"
 
 #. module: web
 #. openerp-web
@@ -1333,6 +1364,13 @@ msgstr "도메인 오류"
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
+msgid "Domain node"
+msgstr "도메인 노드"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
 msgid "Domain:"
 msgstr "도메인 :"
 
@@ -1342,6 +1380,13 @@ msgstr "도메인 :"
 #, python-format
 msgid "Don't leave yet,<br />it's still loading..."
 msgstr "잠시만 기다리세요. <br />아직 불러오는 중입니다..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Download"
+msgstr "내려받기"
 
 #. module: web
 #. openerp-web
@@ -1746,7 +1791,7 @@ msgstr "그룹별"
 #: code:addons/web/static/src/js/views/control_panel/search/search_bar_autocomplete_sources.js:0
 #, python-format
 msgid "Group by: %s"
-msgstr "그룹 분류 기준 : %s"
+msgstr "그룹별 : %s"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_http
@@ -2119,6 +2164,17 @@ msgstr "메일 :"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Main actions"
+msgstr "주요 활동"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
@@ -2143,14 +2199,14 @@ msgstr "필터 관리"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Many2many"
-msgstr "다대다"
+msgstr "Many2many"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Many2one"
-msgstr "다대일"
+msgstr "Many2one"
 
 #. module: web
 #. openerp-web
@@ -2558,7 +2614,7 @@ msgstr "변경 시 :"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "One2many"
-msgstr "일대다"
+msgstr "One2many"
 
 #. module: web
 #. openerp-web
@@ -2603,6 +2659,13 @@ msgstr "개인용"
 #, python-format
 msgid "Opacity %"
 msgstr "불투명도 %"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
+msgid "Open Developer Tools#{widget.debug_mode_help}"
+msgstr "개발자 도구 열기#{widget.debug_mode_help}"
 
 #. module: web
 #. openerp-web
@@ -2674,6 +2737,13 @@ msgid "PDF Viewer"
 msgstr "PDF 뷰어"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "PDF controls"
+msgstr "PDF 컨트롤"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid ""
 "Page:\n"
@@ -2691,6 +2761,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
 msgstr "페이지 : <span class=\"page\"/> / <span class=\"topage\"/>"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pager"
+msgstr "휴대용 소형 무선 호출기"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2761,6 +2839,13 @@ msgstr "원형 차트는 양수와 음수를 혼합할 수 없습니다. 긍정�
 #, python-format
 msgid "Pivot"
 msgstr "피벗 테이블"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pivot settings"
+msgstr "피벗 설정"
 
 #. module: web
 #. openerp-web
@@ -3452,6 +3537,13 @@ msgstr "지원"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Switch to this company"
+msgstr "이 회사로 전환"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Syntax error"
@@ -3470,13 +3562,6 @@ msgstr "태그"
 #, python-format
 msgid "Take a minute to get a coffee,<br />because it's loading..."
 msgstr "커피를 마시면서 잠시 기다려주세요. <br /> 로딩 중입니다..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Tap on the list to change company"
-msgstr "회사를 변경하려면 목록을 탭하십시오"
 
 #. module: web
 #. openerp-web
@@ -3979,6 +4064,13 @@ msgstr "기본으로 사용"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "User"
+msgstr "사용자"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "User Error"
@@ -4024,6 +4116,13 @@ msgstr "메타데이타 보기"
 #: model:ir.model.fields,field_description:web.field_ir_actions_act_window_view__view_mode
 msgid "View Type"
 msgstr "화면 유형"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View switcher"
+msgstr "스위처 보기"
 
 #. module: web
 #. openerp-web
@@ -4596,6 +4695,13 @@ msgstr "레코드 ?"
 #, python-format
 msgid "remaining)"
 msgstr "남음)"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "search"
+msgstr "검색"
 
 #. module: web
 #. openerp-web

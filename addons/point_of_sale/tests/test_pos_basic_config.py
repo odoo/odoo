@@ -12,6 +12,7 @@ class TestPoSBasicConfig(TestPoSCommon):
     def setUp(self):
         super(TestPoSBasicConfig, self).setUp()
         self.config = self.basic_config
+        self.product0 = self.create_product('Product 0', self.categ_basic, 0.0, 0.0)
         self.product1 = self.create_product('Product 1', self.categ_basic, 10.0, 5)
         self.product2 = self.create_product('Product 2', self.categ_basic, 20.0, 10)
         self.product3 = self.create_product('Product 3', self.categ_basic, 30.0, 15)
@@ -271,6 +272,21 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         # matching number of the receivable lines should be the same
         self.assertEqual(receivable_line.full_reconcile_id, invoice_receivable_line.full_reconcile_id)
+
+    def test_orders_with_zero_valued_invoiced(self):
+        """One invoiced order but with zero receivable line balance."""
+
+        self.open_new_session()
+        orders = [self.create_ui_order_data([(self.product0, 1)], payments=[(self.bank_pm, 0)], customer=self.customer, is_invoiced=True)]
+        self.env['pos.order'].create_from_ui(orders)
+        self.pos_session.action_pos_session_validate()
+
+        invoice = self.pos_session.order_ids.account_move
+        invoice_receivable_line = invoice.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
+        receivable_line = self.pos_session.move_id.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
+
+        self.assertTrue(invoice_receivable_line.reconciled)
+        self.assertTrue(receivable_line.reconciled)
 
     def test_return_order(self):
         """ Test return order

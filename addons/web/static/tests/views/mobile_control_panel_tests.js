@@ -83,7 +83,7 @@ QUnit.module('Mobile Search view Screen', {
         await testUtils.nextTick();
 
         // close quick search
-        await testUtils.dom.click($('button.o_enable_searchview.fa-close'));
+        await testUtils.dom.click($('button.o_enable_searchview.fa-arrow-left'));
         assert.deepEqual($('.o_toggle_searchview_full:visible').length, 0,
             "Expand icon shoud be hidden");
         assert.deepEqual($('.o_searchview_input_container:visible').length, 0,

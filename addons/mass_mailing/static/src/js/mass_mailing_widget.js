@@ -58,21 +58,23 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
         var $editable = this.wysiwyg.getEditable();
 
-        return this.wysiwyg.save().then(function (result) {
-            self._isDirty = result.isDirty;
+        return this.wysiwyg.saveCroppedImages(this.$content).then(function () {
+            return self.wysiwyg.save().then(function (result) {
+                self._isDirty = result.isDirty;
 
-            convertInline.attachmentThumbnailToLinkImg($editable);
-            convertInline.fontToImg($editable);
-            convertInline.classToStyle($editable);
+                convertInline.attachmentThumbnailToLinkImg($editable);
+                convertInline.fontToImg($editable);
+                convertInline.classToStyle($editable);
 
-            self.trigger_up('field_changed', {
-                dataPointID: self.dataPointID,
-                changes: _.object([fieldName], [self._unWrap($editable.html())])
+                self.trigger_up('field_changed', {
+                    dataPointID: self.dataPointID,
+                    changes: _.object([fieldName], [self._unWrap($editable.html())])
+                });
+
+                if (self._isDirty && self.mode === 'edit') {
+                    return self._doAction();
+                }
             });
-
-            if (self._isDirty && self.mode === 'edit') {
-                return self._doAction();
-            }
         });
     },
     /**

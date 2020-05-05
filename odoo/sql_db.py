@@ -63,7 +63,8 @@ from inspect import currentframe
 def flush_env(cr):
     """ Retrieve and flush an environment corresponding to the given cursor """
     for env in list(Environment.envs):
-        if env.cr is cr:
+        # don't flush() on another cursor or with a RequestUID
+        if env.cr is cr and (isinstance(env.uid, int) or env.uid is None):
             env['base'].flush()
             break
 

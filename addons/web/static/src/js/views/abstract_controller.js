@@ -219,7 +219,11 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
                 this._searchPanel.importState(controllerState.spState);
                 this.searchPanelDomain = this._searchPanel.getDomain();
             } else {
-                searchPanelUpdateProm =  this._searchPanel.update({searchDomain: this._getSearchDomain()});
+                const viewDomain = await this._getViewDomain();
+                searchPanelUpdateProm =  this._searchPanel.update({
+                    searchDomain: this.controlPanelDomain,
+                    viewDomain,
+                });
                 postponeRendering = !params.noRender;
                 params.noRender = true; // wait for searchpanel to be ready to render
             }
@@ -302,16 +306,13 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     //--------------------------------------------------------------------------
 
     /**
-     * Return the current search domain. This is the searchDomain used to update
-     * the searchpanel. It returns the domain coming from the controlpanel. This
-     * function can be overridden to add sub-domains coming from other parts of
-     * the interface.
+     * Get the domain defined by the view. It is meant to be overridden.
      *
      * @private
-     * @returns {Array[]}
+     * @returns {Promise<Array[]>}
      */
-    _getSearchDomain: function () {
-        return this.controlPanelDomain;
+    _getViewDomain: async function () {
+        return [];
     },
     /**
      * This method is the way a view can notifies the outside world that

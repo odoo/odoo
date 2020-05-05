@@ -177,7 +177,7 @@ class configmanager(object):
 
         group.add_option("--screencasts", dest="screencasts", action="store", my_default=None,
                          metavar='DIR',
-                         help="Screencasts will go in DIR/{db_name}/screencasts. '1' can be used to force the same dir as for screenshots.")
+                         help="Screencasts will go in DIR/{db_name}/screencasts.")
         temp_tests_dir = os.path.join(tempfile.gettempdir(), 'odoo_tests')
         group.add_option("--screenshots", dest="screenshots", action="store", my_default=temp_tests_dir,
                          metavar='DIR',

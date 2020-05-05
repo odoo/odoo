@@ -511,7 +511,7 @@ class Post(models.Model):
 
     def post_notification(self):
         for post in self:
-            tag_partners = post.tag_ids.mapped('message_partner_ids')
+            tag_partners = post.tag_ids.sudo().mapped('message_partner_ids')
 
             if post.state == 'active' and post.parent_id:
                 post.parent_id.message_post_with_view(
@@ -720,7 +720,8 @@ class Post(models.Model):
             'subtype': 'mail.mt_comment',
             'date': self.create_date,
         }
-        new_message = question.with_context(mail_create_nosubscribe=True).message_post(**values)
+        # done with the author user to have create_uid correctly set
+        new_message = question.with_user(self_sudo.create_uid.id).with_context(mail_create_nosubscribe=True).message_post(**values)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
         self.sudo().unlink()

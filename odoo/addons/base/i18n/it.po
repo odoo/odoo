@@ -507,6 +507,11 @@ msgid ""
 "        Colloquially known as \"Month 13\"\n"
 "    "
 msgstr ""
+"\n"
+"        Consente di generare il bilancio di verifica per la registrazione di chiusura.\n"
+"\n"
+"        Conosciuto anche come \"13° mese\"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents
@@ -7439,6 +7444,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Warning</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
+"<code>Warning</code>: eccezione di avviso da usare con <code>raise</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -7455,7 +7461,7 @@ msgstr "<code>dateutil</code> (Modulo python)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: Odoo Environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: ambiente Odoo nel quale l'azione viene attivata"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -7955,7 +7961,7 @@ msgstr "Un modulo per generare le eccezioni."
 #. module: base
 #: model:ir.module.module,description:base.module_test_lint
 msgid "A module to test Odoo code with various linters."
-msgstr ""
+msgstr "Modulo per effettuare test del codice Odoo usando vari linter."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_impex
@@ -10522,6 +10528,13 @@ msgid ""
 "\n"
 "Modules time, datetime, dateutil are available."
 msgstr ""
+"Codice per calcolare il valore del campo.\n"
+"Itera sul set di record \"self\" e assegna il valore al campo:\n"
+"\n"
+"    for record in self:\n"
+"        record['size'] = len(record.name)\n"
+"\n"
+"Sono disponibili i moduli time, datetime e dateutil."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_cohort
@@ -10740,6 +10753,8 @@ msgid ""
 "Company used for the original currency (only used for t-esc). By default use"
 " the user company"
 msgstr ""
+"Azienda utilizzata per la valuta originaria (solo per t-esc). Come "
+"predefinita viene usata quella dell'utente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast_sale
@@ -11847,6 +11862,8 @@ msgid ""
 "Date used for the original currency (only used for t-esc). by default use "
 "the current date."
 msgstr ""
+"Data utilizzata per la valuta originaria (solo per t-esc). Come predefinita "
+"viene usata la data corrente."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__datetime
@@ -14162,6 +14179,8 @@ msgid ""
 "Global rules are combined together with a logical AND operator, and with the"
 " result of the following steps"
 msgstr ""
+"Le regole globali sono combinate usando un operatore logico AND insieme al "
+"risultato dei seguenti passi"
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -15117,6 +15136,8 @@ msgid ""
 "If user belongs to several groups, the results from step 2 are combined with"
 " logical OR operator"
 msgstr ""
+"Se l'utente appartiene a gruppi diversi, i risultati del passo 2 vengono "
+"combinati con l'operatore logico OR"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_base_language_install__overwrite
@@ -16542,6 +16563,8 @@ msgid ""
 "Let the system try to select the right account and/or product for your "
 "vendor bills"
 msgstr ""
+"Permette al sistema di selezionare il conto e/o il prodotto corretto per le "
+"fatture fornitore"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_referral
@@ -21103,7 +21126,7 @@ msgstr "Prima di scegliere i valori, impostare il modello da creare"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Please specify a valid model for the object relation"
-msgstr ""
+msgstr "Specificare un modello valido per la relazione oggetto"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -21197,7 +21220,7 @@ msgstr "Nome tabella PostgreSQL che implementa una relazione molti a molti."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_predictive_bills
 msgid "Predictive vendor bill data"
-msgstr ""
+msgstr "Dati predittivi fattura fornitore"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -25433,7 +25456,7 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
 "Tipologia azione server. Sono disponibili i seguenti valori:\n"
-"- \"Esegui codice Python\": esegue un blocco di codice Python\n"
+"- \"Esegui codice python\": esegue un blocco di codice python\n"
 "- \"Crea\": crea un nuovo record con nuovi valori\n"
 "- \"Aggiorna record\": aggiorna i valori di un record\n"
 "- \"Esegui alcune azioni\": definisce un'azione che attiva diverse altre azioni server\n"
@@ -26499,12 +26522,12 @@ msgstr "Website Studio"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website
 msgid "Website Test"
-msgstr ""
+msgstr "Test sito web"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_website
 msgid "Website Test, mainly for module install/uninstall tests"
-msgstr ""
+msgstr "Test installazione/disinstallazione moduli per il sito web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_theme_install

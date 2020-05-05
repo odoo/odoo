@@ -25,6 +25,10 @@ $-font-numbers: (
     // customized by themes, the user or anything else (so there is no file to
     // parse to get them). Those will be printed here as CSS variables.
 
+    // 0) does this theme enforce primary = alpha or secondary = beta
+    --is-alpha-primary: #{$-is-alpha-primary};
+    --is-beta-secondary: #{$-is-beta-secondary};
+
     // 1) Handle default values
     --header-font-size: #{$font-size-base};
 
@@ -33,7 +37,7 @@ $-font-numbers: (
     // 3) The values in the $colors map are also printed by Bootstrap.
 
     // 4) The Odoo values map, $o-website-values, must be printed.
-    @each $key, $value in $o-website-values {
+    @each $key, $value in o-map-omit($o-website-values) {
         --#{$key}: #{$value};
     }
 
@@ -893,8 +897,9 @@ table.table_desc tr td {
                     display: inline-block;
                     width: 40px;
                     height: 40px;
+                    line-height: 40px;
                     margin: 2.5px 2.5px 2.5px 2.5px;
-                    padding: 0;
+                    padding: 0 !important;
                     border: 1px solid #aaa;
                     text-indent: initial;
                     background-size: cover;
@@ -1181,16 +1186,15 @@ table.table_desc tr td {
         > .navbar {
             background-color: transparent !important;
             border-color: transparent;
+            color: inherit;
 
             .nav-item {
                 > .nav-link {
                     background-color: transparent;
                     color: inherit;
-                }
-                &.show, &.active {
-                    > .nav-link {
-                        background-color: white;
-                        color: black;
+
+                    &.active {
+                        font-weight: bolder;
                     }
                 }
             }
@@ -1241,4 +1245,9 @@ table.table_desc tr td {
         background-position: center;
         background-repeat: no-repeat;
     }
+}
+
+// Fixing job perks icons in website_hr_recruitement by making them full-width
+.o_perk span {
+    display: block;
 }

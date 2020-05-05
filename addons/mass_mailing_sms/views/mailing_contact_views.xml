@@ -32,7 +32,7 @@
                 <field name="create_date"/>
                 <field name="name"/>
                 <field name="company_name"/>
-                <field name="mobile"/>
+                <field name="mobile" class="o_force_ltr"/>
                 <field name="phone_sanitized" invisible="1"/>
                 <field name="phone_blacklisted"/>
                 <field name="opt_out" invisible="'default_list_ids' not in context"/>
@@ -64,7 +64,7 @@
         <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_contact_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='email']" position="after">
-                <field name="mobile"/>
+                <field name="mobile" class="o_force_ltr"/>
                 <field name="phone_sanitized" invisible="1"/>
             </xpath>
             <xpath expr="//t[@t-esc='record.email.value']" position="after">

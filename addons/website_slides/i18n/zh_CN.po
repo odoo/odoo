@@ -20,7 +20,6 @@
 # Youfu Sheng <wdmsyf@sina.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
-# ChinaMaker <liuct@chinamaker.net>, 2019
 # Martin Trigaux, 2019
 # v2exerer <9010446@qq.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
@@ -28,15 +27,18 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
+# as co02 <asco02@163.com>, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# ChinaMaker <liuct@chinamaker.net>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:34+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
+"Last-Translator: ChinaMaker <liuct@chinamaker.net>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,6 +77,14 @@ msgstr "${user.name} 向你分享了 ${object.slide_type}!"
 #, python-format
 msgid "&times;"
 msgstr "&times;"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_slides_list.js:0
+#: code:addons/website_slides/static/src/js/slides_slide_archive.js:0
+#, python-format
+msgid "(empty)"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_5
@@ -490,7 +500,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz
 msgid "<span aria-hidden=\"true\">&amp;times;</span>"
-msgstr "<span aria-hidden=\"true\">&amp;次数;</span>"
+msgstr "<span aria-hidden=\"true\">&amp;times;</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -630,7 +640,7 @@ msgstr "<span> 小时</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 msgid "<span>&amp;times;</span>"
-msgstr "<span>&amp;次数：</span>"
+msgstr "<span>&amp;times;</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -741,18 +751,18 @@ msgstr "访问权限"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction
 msgid "Action Needed"
-msgstr "需要采取行动"
+msgstr "需要行动"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Actions"
-msgstr "动作"
+msgstr "操作"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__active
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__active
 msgid "Active"
-msgstr "有效"
+msgstr "启用"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_slide_comment
@@ -807,6 +817,13 @@ msgstr "高级"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "All Courses"
 msgstr "所有课程"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
+#, python-format
+msgid "All completed classes and earned karma will be lost."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__partner_ids
@@ -1165,8 +1182,13 @@ msgid "Click on \"New\" in the top-right corner to write your first course."
 msgstr "单击右上角的“新建”以编写您的第一个课程。"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz
+#, python-format
 msgid "Close"
 msgstr "关闭"
 
@@ -1692,6 +1714,16 @@ msgid "Done Count"
 msgstr "完成计数"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Download"
+msgstr "下载"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Download Content"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "Dropdown menu"
 msgstr "下拉菜单"
@@ -2009,6 +2041,11 @@ msgstr "组序列"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__html_content
 msgid "HTML Content"
 msgstr "HTML内容"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP 路由"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_5_1
@@ -2747,7 +2784,7 @@ msgstr "没有足够的贡献值進行审查"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction_counter
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction_counter
 msgid "Number of Actions"
-msgstr "操作次数"
+msgstr "动作个数"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_document
@@ -2835,6 +2872,14 @@ msgstr "选项"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__partner_id
 msgid "Partner"
 msgstr "业务伙伴"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_slide.py:0
+#, python-format
+msgid ""
+"People already took this quiz. To keep course progression it should not be "
+"deleted."
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
@@ -3306,7 +3351,7 @@ msgstr "发送EMail"
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__sequence
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__sequence
 msgid "Sequence"
-msgstr "单号规则"
+msgstr "序号"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -3502,7 +3547,10 @@ msgid "Start Course"
 msgstr "开始课程"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/channel_management.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+#, python-format
 msgid "Start Course Channel"
 msgstr "开始课程频道"
 

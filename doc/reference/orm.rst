@@ -144,22 +144,27 @@ Advanced Fields
 Date(time) Fields
 '''''''''''''''''
 
-Dates and Datetimes are very important fields in any kind of business
-application, they are heavily used in many popular Odoo applications such as
-logistics or accounting and their misuse can create invisible yet painful
-bugs, this excerpt aims to provide Odoo developers with the knowledge required
+:class:`Dates <odoo.fields.Date>` and :class:`Datetimes <odoo.fields.Datetime>`
+are very important fields in any kind of business application.
+Their misuse can create invisible yet painful bugs, this section
+aims to provide Odoo developers with the knowledge required
 to avoid misusing these fields.
 
 When assigning a value to a Date/Datetime field, the following options are valid:
 
 * A `date` or `datetime` object.
-* A string in the proper server format *(YYYY-MM-DD)* for Date fields,
-  *(YYYY-MM-DD HH:MM:SS)* for Datetime fields.
+* A string in the proper server format:
+
+  * ``YYYY-MM-DD`` for :class:`~odoo.fields.Date` fields,
+  * ``YYYY-MM-DD HH:MM:SS`` for :class:`~odoo.fields.Datetime` fields.
+
 * `False` or `None`.
 
 The Date and Datetime fields class have helper methods to attempt conversion
-into a compatible type: :func:`~odoo.fields.Date.to_date` will convert to a `datetime.date`
-object while :func:`~odoo.fields.Datetime.to_datetime` will convert to a `datetime.datetime`.
+into a compatible type:
+
+* :func:`~odoo.fields.Date.to_date` will convert to a :class:`datetime.date`
+* :func:`~odoo.fields.Datetime.to_datetime` will convert to a :class:`datetime.datetime`.
 
 .. admonition:: Example
 

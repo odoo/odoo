@@ -2,8 +2,11 @@
 
 # Copyright 2015 Eezee-It
 
+import datetime
+from dateutil import parser
 import json
 import logging
+import pytz
 import re
 import time
 from hashlib import sha256
@@ -73,7 +76,7 @@ class AcquirerSips(models.Model):
         currency_code = CURRENCY_CODES.get(currency.name, False)
         if not currency_code:
             raise ValidationError(_('Currency not supported by Wordline'))
-        amount = int(values['amount'] * 100)
+        amount = round(values['amount'] * 100)
         if self.state == 'enabled':
             # For production environment, key version 2 is required
             merchant_id = getattr(self, 'sips_merchant_id')
@@ -180,10 +183,22 @@ class TxSips(models.Model):
     def _sips_form_validate(self, data):
         data = self._sips_data_to_object(data.get('Data'))
         status = data.get('responseCode')
+        date = data.get('transactionDateTime')
+        if date:
+            try:
+                # dateutil.parser 2.5.3 and up should handle dates formatted as
+                # '2020-04-08T05:54:18+02:00', which strptime does not
+                # (+02:00 does not work as %z expects +0200 before Python 3.7)
+                # See odoo/odoo#49160
+                date = parser.parse(date).astimezone(pytz.utc).replace(tzinfo=None)
+            except:
+                # will fallback on now in the write to avoid failing to
+                # register the payment because a provider formats their 
+                # dates badly or because some local library is not behaving
+                date = False
         data = {
             'acquirer_reference': data.get('transactionReference'),
-            'date': data.get('transactionDateTime',
-                                      fields.Datetime.now())
+            'date': date or fields.Datetime.now(),
         }
         res = False
         if status in self._sips_valid_tx_status:

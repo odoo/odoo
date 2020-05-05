@@ -1059,7 +1059,7 @@ msgstr "계속 생산"
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "측정 단위 사이의 변환은 동일 분류 항목에서만 가능합니다. 변환은 비율에 따라 이루어집니다."
+msgstr "단위 사이의 변환은 동일 분류 항목에서만 가능합니다. 변환은 비율에 따라 이루어집니다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__costs_hour
@@ -2955,7 +2955,7 @@ msgstr "상품 서식"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_id
 msgid "Product Unit of Measure"
-msgstr "상품 측정 단위"
+msgstr "상품 단위"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_id
@@ -3620,7 +3620,7 @@ msgstr "신규 작업 지시 시작"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
 msgid "State"
-msgstr "주/도"
+msgstr "시/도"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__state
@@ -3881,6 +3881,8 @@ msgstr "'%s'에 대한 생산 주문서에 지정된 수량이 없습니다."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
 msgid "The quantity to produce must be positive!"
 msgstr "생산량은 양수입니다!"
 
@@ -4252,7 +4254,7 @@ msgstr "단위"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr "측정 단위(UOM)는 재고 관리를 위한 측정 단위입니다."
+msgstr "단위(UOM)는 재고 관리를 위한 단위입니다."
 
 #. module: mrp
 #: model:product.product,uom_name:mrp.product_product_computer_desk

@@ -1889,6 +1889,56 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('Does not confuse false and "false" groupby values', async function (assert) {
+        assert.expect(6);
+
+        this.data.company.fields.char_field = {string: "Char Field", type: 'char'};
+
+        this.data.company.records = [
+            {id: 3, name: 'A', char_field: false, },
+            {id: 5, name: 'B', char_field: 'false', }
+        ];
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            services: this.services,
+            arch: `<kanban>
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="foo"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" select="multi" groupby="char_field"/>
+                        </searchpanel>
+                    </search>`,
+            },
+        });
+
+        assert.containsOnce(kanban, '.o_search_panel_section');
+        var $firstSection = kanban.$('.o_search_panel_section');
+
+        // There should be a group 'false' displayed with only value B inside it.
+        assert.containsOnce($firstSection, '.o_search_panel_filter_group');
+        assert.strictEqual($firstSection.find('.o_search_panel_filter_group').text().replace(/\s/g, ''),
+            'falseB2');
+        assert.containsOnce($firstSection.find('.o_search_panel_filter_group'), '.o_search_panel_filter_value');
+
+        // Globally, there should be two values, one displayed in the group 'false', and one at the end of the section
+        // (the group false is not displayed and its values are displayed at the first level)
+        assert.containsN($firstSection, '.o_search_panel_filter_value', 2);
+        assert.strictEqual($firstSection.find('.o_search_panel_filter_value').text().replace(/\s/g, ''),
+            'B2A2');
+
+        kanban.destroy();
+    });
+
     QUnit.test('tests conservation of category record order', async function (assert) {
         assert.expect(1);
 

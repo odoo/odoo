@@ -8,14 +8,15 @@
 # Martin Trigaux, 2019
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# Sammie Wu <gssammiewu@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 09:46+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Last-Translator: Sammie Wu <gssammiewu@gmail.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -361,6 +362,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
+"                                            Enable billing on your Google Project"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
 "                                            How to get my Client ID"
 msgstr ""
 "<i class=\"fa fa-arrow-right\"/>\n"
@@ -378,7 +386,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "<i class=\"fa fa-diamond\"/> Features"
-msgstr "<i class=\"fa fa-diamond\">特徵"
+msgstr "<i class=\"fa fa-diamond\"/>特徵"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -602,7 +610,7 @@ msgstr "<i class=\"fa fa-info-circle mr-1\"/> <small>附加資訊</small>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "<i class=\"fa fa-magic icon-fix\"/> Effects"
-msgstr "<i class=\"fa fa-magic icon-fix\">影響"
+msgstr "<i class=\"fa fa-magic icon-fix\"/>影響"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector
@@ -616,7 +624,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "<i class=\"fa fa-puzzle-piece\"/> Mega Menu"
-msgstr "<i class=\"fa fa-puzzle-piece\">巨型功能表"
+msgstr "<i class=\"fa fa-puzzle-piece\"/>巨型功能表"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -655,7 +663,7 @@ msgstr "<i title=\"Is the page published?\" class=\"fa fa-eye\"/>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<i>Instant setup, satisfied or reimbursed.</i>"
-msgstr "<i>立即安裝，不滿意就退款。"
+msgstr "<i>立即安裝，不滿意就退款。</i>"
 
 #. module: website
 #. openerp-web
@@ -1362,6 +1370,13 @@ msgid "Change Icons"
 msgstr "更改圖示"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/widgets/theme.js:0
+#, python-format
+msgid "Changing this color will regenerate the default theme color scheme"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__field_parent
 msgid "Child Field"
 msgstr "子欄位"
@@ -1476,6 +1491,7 @@ msgstr "複製此頁面"
 #. openerp-web
 #: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
+#: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
@@ -2803,7 +2819,10 @@ msgid "Indexed"
 msgstr "有索引"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#, python-format
 msgid "Info"
 msgstr "信息"
 
@@ -5240,15 +5259,6 @@ msgid "User need to be at least in one of these groups to see the menu"
 msgstr "使用者需要至少處於這些組中之一才能看到功能表"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid ""
-"User-agent: *\n"
-"Sitemap:"
-msgstr ""
-"User-agent: *\n"
-"Sitemap:"
-
-#. module: website
 #: model:ir.model,name:website.model_res_users
 msgid "Users"
 msgstr "使用者"
@@ -5921,11 +5931,6 @@ msgstr "px"
 #, python-format
 msgid "signs to get your website ready in no time."
 msgstr "立刻讓您的網站上線的跡象。"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid "sitemap.xml"
-msgstr "sitemap.xml"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search

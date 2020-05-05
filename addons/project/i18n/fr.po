@@ -14,20 +14,21 @@
 # Nathan Grognet <ngr@odoo.com>, 2019
 # Olivier ANDRE <frsw194@gmail.com>, 2019
 # Celia Tydgat <cty@odoo.com>, 2019
-# Cécile Collart <cco@odoo.com>, 2019
 # gdp Odoo <gdp@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Frédéric LIETART <stuff@tifred.fr>, 2019
 # Clo <clo@odoo.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2020
 # Alexandra Jubert <aju@odoo.com>, 2020
+# Priscilla Sanchez <prs@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2020\n"
+"Last-Translator: Priscilla Sanchez <prs@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -292,22 +293,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
 msgstr "<i class=\"fa fa-smile-o\"/> Aucune évaluation pour le moment"
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Documents are attached to the tasks of your project.</p><p>\n"
-"                        Send messages or log internal notes with attachments to link\n"
-"                        documents to your project.\n"
-"                    </p>"
-msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Des documents sont attachés aux tâches de votre projet.</p><p>\n"
-"                        Envoyer des messages ou laisser une note interne avec des pièces jointes pour lier\n"
-"                        des documents à votre projet.\n"
-"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -617,12 +602,6 @@ msgstr "Compte des pièces jointes"
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachment that don't come from message."
 msgstr "Les pièces jointes ne provenant pas d'un message."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Attachments"
-msgstr "Pièces jointes"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
@@ -1180,7 +1159,7 @@ msgstr "Edition"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
 msgid "Email"
-msgstr "Courriel"
+msgstr "Email"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1190,17 +1169,17 @@ msgstr "Alias d'email"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
-msgstr "Modèle de courriel"
+msgstr "Modèle d'email"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Email cc"
-msgstr "Courriel cc"
+msgstr "Email cc"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Emails"
-msgstr "Courriels"
+msgstr "Emails"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_end
@@ -1424,8 +1403,8 @@ msgid ""
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
 "Comment avoir un retour client?\n"
-"- évaluation lors d'un changement d'étape: un courriel sera envoyé lorsqu'une tâche est poussée dans une autre étape.\n"
-"- évaluation périodique: courriel sera envoyé périodiquement.\n"
+"- évaluation lors d'un changement d'étape: un email sera envoyé lorsqu'une tâche est poussée dans une autre étape.\n"
+"- évaluation périodique: des emails seront envoyés périodiquement.\n"
 "\n"
 "N'oubliez pas de configurer les modèles d'emails sur les étapes auxquelles vous désirez les retours clients."
 
@@ -1759,7 +1738,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
 msgid "List of cc from incoming emails."
-msgstr "Liste de cc des courriels entrant."
+msgstr "Liste de cc des emails entrants."
 
 #. module: project
 #. openerp-web
@@ -1841,7 +1820,7 @@ msgstr "Mes favoris"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Tasks"
-msgstr "Mes tâches par zone de temps"
+msgstr "Mes Tâches"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -2909,6 +2888,9 @@ msgstr "Tâche prête pour la prochaine étape"
 #: model_terms:ir.ui.view,arch_db:project.view_task_partner_info_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
+#: model:project.project,label_tasks:project.project_project_1
+#: model:project.project,label_tasks:project.project_project_2
+#: model:project.project,label_tasks:project.project_project_data
 msgid "Tasks"
 msgstr "Tâches"
 
@@ -2976,17 +2958,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Le propriétaire d'enregistrements créés lors de la réception de courriel sur"
-" cet alias. Si ce champ n'est pas renseigné, le système essaiera de trouver "
+"Le propriétaire d'enregistrements créés lors de la réception d'emails sur "
+"cet alias. Si ce champ n'est pas renseigné, le système essaiera de trouver "
 "le propriétaire approprié à partir de l'adresse de l'expéditeur (De) ou "
 "utilisera le compte Administrateur si aucun utilisateur du système n'est "
 "trouvé pour cette adresse."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "The parent task belongs to a company you do not have access to."
-msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3000,12 +2976,6 @@ msgstr ""
 "confidentialité du projet est trop restreinte. Définissez la confidentialité"
 " sur \"Visible par les clients suiveurs\" afin de le rendre accessible au(x)"
 " destinataire(s)."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "The subtasks belong to a company you do not have access to."
-msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3038,7 +3008,7 @@ msgstr "Il n'y a pas de tâches."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
 msgid "These people will receive email."
-msgstr "Ces personnes recevront un courriel."
+msgstr "Ces personnes recevront un email."
 
 #. module: project
 #. openerp-web
@@ -3229,7 +3199,7 @@ msgstr "Utilisateur"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_email
 msgid "User Email"
-msgstr "Courriel de l'utilisateur"
+msgstr "Email de l'utilisateur"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
@@ -3342,6 +3312,16 @@ msgid ""
 msgstr ""
 "Vous pouvez aussi ajouter une description pour aider vos co-équipiers à "
 "comprendre la signification et le but de cette étape."
+
+#. module: project
+#: code:addons/project/models/analytic_account.py:0
+#, python-format
+msgid ""
+"You cannot change the company of an analytical account if it is related to a"
+" project."
+msgstr ""
+"Vous ne pouvez pas modifier la société d'un compte analytique s'il est lié à"
+" un projet."
 
 #. module: project
 #: code:addons/project/models/project.py:0

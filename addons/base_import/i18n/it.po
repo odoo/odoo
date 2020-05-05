@@ -12,6 +12,7 @@
 # mymage <stefano.consolaro@mymage.it>, 2019
 # Petra <bop@odoo.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Iacopo Simonelli <lsi@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Iacopo Simonelli <lsi@odoo.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,14 +33,14 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported..."
-msgstr ""
+msgstr "%d record importati con successo..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records tested..."
-msgstr ""
+msgstr "%d record testati..."
 
 #. module: base_import
 #. openerp-web
@@ -102,14 +103,14 @@ msgstr "Mappatura importazione di base"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "Limite di batch"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Between rows %d and %d"
-msgstr ""
+msgstr "Tra le righe %d e %d"
 
 #. module: base_import
 #. openerp-web
@@ -124,6 +125,8 @@ msgstr "Annulla"
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
 msgstr ""
+"Fai clic su \"Riprendi\" per procedere con l'importazione, riprendendo dalla"
+" riga"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -309,7 +312,7 @@ msgstr "Dt"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Due to its large size, the file will be imported by batches."
-msgstr ""
+msgstr "A causa delle sue dimensioni, il file verrà importato in batch."
 
 #. module: base_import
 #. openerp-web
@@ -400,6 +403,8 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"Trovati dati immagine non validi, le immagini devono essere importate come "
+"URL o come dati con codifica base64."
 
 #. module: base_import
 #. openerp-web
@@ -452,6 +457,10 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"Se il modello è dotato di una cronologia delle conversazioni,"
+"                            esso registrerà le modifiche apportate durante "
+"l'importazione, terrà conto delle sottoscrizioni automatiche e invierà le "
+"notifiche corrispondenti. Ciò potrebbe rallentare l'importazione. "
 
 #. module: base_import
 #. openerp-web
@@ -507,6 +516,7 @@ msgstr ""
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
+"Valore cella non valido alla riga %(row)s, colonna %(col)s: %(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -665,7 +675,7 @@ msgstr "Riprendi"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Row %d%s"
-msgstr ""
+msgstr "Riga %d%s"
 
 #. module: base_import
 #. openerp-web
@@ -673,7 +683,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "See possible values"
-msgstr ""
+msgstr "Visualizzare tutti i valori possibili"
 
 #. module: base_import
 #. openerp-web
@@ -720,7 +730,7 @@ msgstr "Spazio"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "Inizia alla riga"
 
 #. module: base_import
 #. openerp-web
@@ -764,7 +774,7 @@ msgstr "Test : Modello importazione base, carattere obbligatorio"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "Test : modello importazione di base, stato carattere"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
@@ -779,7 +789,7 @@ msgstr "Test: modello importazione base, molti a uno"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "Test: modello importazione di base, relazione molti a uno"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
@@ -790,6 +800,7 @@ msgstr "Test: modello importazione base, molti a uno obbligatorio"
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
 msgstr ""
+"Test: modello importazione di base, relazione molti a uno obbligatoria"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
@@ -826,13 +837,15 @@ msgid ""
 "The first row\n"
 "                         contains the label of the column"
 msgstr ""
+"La prima riga\n"
+"                 contiene l'etichetta della colonna"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
-msgstr ""
+msgstr "Il file é stato importato con successo fino alla linea %d."
 
 #. module: base_import
 #. openerp-web
@@ -900,6 +913,8 @@ msgid ""
 "Warning: ignores the labels line, empty lines and"
 "                             lines composed only of empty cells"
 msgstr ""
+"Attenzione: ignora la linea delle etichette, le linee vuote e le linee "
+"composte solo da celle vuote"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -917,6 +932,7 @@ msgstr ""
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
+"È possibile testare o ricaricare il file prima di riprendere l'importazione."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -929,14 +945,14 @@ msgstr "Deve essere configurato almeno un campo da importare"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at %d different rows:"
-msgstr ""
+msgstr "Alla %d righe diverse:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at row %d%s"
-msgstr ""
+msgstr "Alla riga %d%s"
 
 #. module: base_import
 #. openerp-web
@@ -949,4 +965,4 @@ msgstr "tra le righe %d e %d"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr ""
+msgstr "Errore sconosciuto codice %s"

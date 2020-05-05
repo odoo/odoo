@@ -140,7 +140,7 @@ class SaleOrderTemplateOption(models.Model):
         if not self.product_id:
             return
         product = self.product_id
-        self.price_unit = product.list_price
+        self.price_unit = product.lst_price
         name = product.name
         if self.product_id.description_sale:
             name += '\n' + self.product_id.description_sale
@@ -157,4 +157,4 @@ class SaleOrderTemplateOption(models.Model):
             self.price_unit = 0.0
             return
         if self.uom_id.id != self.product_id.uom_id.id:
-            self.price_unit = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id)
+            self.price_unit = self.product_id.uom_id._compute_price(self.product_id.lst_price, self.uom_id)

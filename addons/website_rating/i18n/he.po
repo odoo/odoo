@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Yihya Hugirat <hugirat@gmail.com>, 2019
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
+# Yihya Hugirat <hugirat@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
+"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,13 +29,15 @@ msgid ""
 "#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : "
 "'/mail/chatter_post'}"
 msgstr ""
+"#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : "
+"'/mail/chatter_post'}"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
 msgid "&times;"
-msgstr "&פעמים;"
+msgstr "&times;"
 
 #. module: website_rating
 #. openerp-web
@@ -43,7 +45,7 @@ msgstr "&פעמים;"
 #: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
 msgid "Add a review"
-msgstr ""
+msgstr "הוסף ביקורת"
 
 #. module: website_rating
 #. openerp-web
@@ -61,6 +63,13 @@ msgstr "בטל"
 
 #. module: website_rating
 #. openerp-web
+#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
+#, python-format
+msgid "Close"
+msgstr "סגור"
+
+#. module: website_rating
+#. openerp-web
 #: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Comment"
@@ -69,12 +78,12 @@ msgstr "הערה"
 #. module: website_rating
 #: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_id
 msgid "Commented by"
-msgstr ""
+msgstr "תגובה על ידי"
 
 #. module: website_rating
 #: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_datetime
 msgid "Commented on"
-msgstr ""
+msgstr "הגיב ב"
 
 #. module: website_rating
 #. openerp-web
@@ -103,48 +112,48 @@ msgstr "ערוך"
 #: code:addons/website_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Half a star"
-msgstr ""
+msgstr "חצי כוכב"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I don't like it"
-msgstr ""
+msgstr "אני לא אוהב את זה"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I hate it"
-msgstr ""
+msgstr "אני שונא את זה"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I like it"
-msgstr ""
+msgstr "אני מחבב את זה"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I love it"
-msgstr ""
+msgstr "אני אוהב את זה"
 
 #. module: website_rating
 #: code:addons/website_rating/controllers/portal_rating.py:0
 #, python-format
 msgid "Invalid rating"
-msgstr ""
+msgstr "דירוג לא חוקי"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "It's okay"
-msgstr ""
+msgstr "זה בסדר"
 
 #. module: website_rating
 #: model:ir.model,name:website_rating.model_mail_message
@@ -157,7 +166,7 @@ msgstr "הודעה"
 #: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
 msgid "Modify your review"
-msgstr ""
+msgstr "שנה את הביקורת שלך"
 
 #. module: website_rating
 #. openerp-web
@@ -165,20 +174,20 @@ msgstr ""
 #: code:addons/website_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "One star"
-msgstr ""
+msgstr "כוכב אחד"
 
 #. module: website_rating
 #: code:addons/website_rating/models/rating.py:0
 #, python-format
 msgid "Only the publisher of the website can change the rating comment"
-msgstr ""
+msgstr "רק המפרסם באתר האינטרנט יכול לשנות את הערת הדירוג"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Post comment"
-msgstr ""
+msgstr "פרסם תגובה"
 
 #. module: website_rating
 #: model:ir.model.fields,field_description:website_rating.field_rating_rating__website_published
@@ -191,17 +200,17 @@ msgstr "פורסם"
 #: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Published on"
-msgstr ""
+msgstr "פורסם ב"
 
 #. module: website_rating
 #: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_comment
 msgid "Publisher Comment"
-msgstr ""
+msgstr "הערת המפרסם"
 
 #. module: website_rating
 #: model_terms:ir.ui.view,arch_db:website_rating.rating_rating_view_form
 msgid "Publisher comment"
-msgstr ""
+msgstr "הערת המפרסם"
 
 #. module: website_rating
 #: model:ir.model,name:website_rating.model_rating_rating
@@ -211,28 +220,29 @@ msgstr "דירוג"
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Remove Selection"
-msgstr ""
+msgstr "הסר את הבחירה"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Update comment"
-msgstr ""
+msgstr "עדכן תגובה"
 
 #. module: website_rating
 #: model:ir.model.fields,help:website_rating.field_rating_rating__website_published
 msgid "Visible on the website as a comment"
-msgstr ""
+msgstr "גלוי באתר האינטרנט כתגובה"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/js/portal_chatter.js:0
 #, python-format
 msgid "Write your comment"
-msgstr ""
+msgstr "כתוב את התגובה שלך"
 
 #. module: website_rating
 #. openerp-web
@@ -240,18 +250,18 @@ msgstr ""
 #: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "אווטר"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
 msgid "ratings)"
-msgstr ""
+msgstr "דירוגים)"
 
 #. module: website_rating
 #. openerp-web
 #: code:addons/website_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "stars"
-msgstr ""
+msgstr "כוכבים"

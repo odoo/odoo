@@ -1,6 +1,7 @@
 odoo.define('web.action_manager_tests', function (require) {
 "use strict";
 
+var ActionManager = require('web.ActionManager');
 var ReportClientAction = require('report.client_action');
 var Notification = require('web.Notification');
 var NotificationService = require('web.NotificationService');
@@ -4206,6 +4207,53 @@ QUnit.module('ActionManager', {
             "there should be a form view in dom");
 
         actionManager.destroy();
+    });
+
+    QUnit.test('data-mobile attribute on action button, in desktop', async function (assert) {
+        assert.expect(2);
+
+        testUtils.mock.patch(ActionManager, {
+            doAction(action, options) {
+                assert.strictEqual(options.plop, undefined);
+                return this._super(...arguments);
+            },
+        });
+
+        this.archs['partner,75,kanban'] = `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="display_name"/>
+                            <button 
+                                name="1"
+                                string="Execute action"
+                                type="action"
+                                data-mobile='{"plop": 28}'/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`;
+
+        this.actions.push({
+            id: 100,
+            name: 'action 100',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[75, 'kanban']],
+        });
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data
+        });
+
+        await actionManager.doAction(100, {});
+        await testUtils.dom.click(actionManager.$('button[data-mobile]:first'));
+
+        actionManager.destroy();
+        testUtils.mock.unpatch(ActionManager);
     });
 
     QUnit.module('Search View Action');

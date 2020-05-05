@@ -16,21 +16,21 @@
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
 # Paweł Wodyński <pw@myodoo.pl>, 2019
 # Natalia Gros <nag@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2019
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
 # Tomasz Leppich <t.leppich@gmail.com>, 2019
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
 # Karol Rybak <karolrybak85@gmail.com>, 2019
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2019
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2019\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -433,7 +433,7 @@ msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "<i class=\"fa fa-chevron-left mr-1\"/>All Forums"
+msgid "<i class=\"fa fa-chevron-left mr-1\"/>Back"
 msgstr ""
 
 #. module: website_forum
@@ -727,6 +727,11 @@ msgid "All"
 msgstr "Wszystko"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "All Forums"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "All Tags"
 msgstr "Wszystkie tagi"
@@ -858,6 +863,8 @@ msgstr "Pojawia się w"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_view_search
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Archived"
 msgstr "Archiwalne"
@@ -946,6 +953,11 @@ msgstr "Autobiografista"
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
 msgid "Avatar"
 msgstr "Awatar"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "Back"
+msgstr "Powrót"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -1114,8 +1126,12 @@ msgid "Click to post your question."
 msgstr "Kliknij aby opublikować swoje pytanie."
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__close
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#, python-format
 msgid "Close"
 msgstr "Zamknij"
 
@@ -2590,6 +2606,7 @@ msgid "Ranks"
 msgstr "Rankingi"
 
 #. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "Re: %s"

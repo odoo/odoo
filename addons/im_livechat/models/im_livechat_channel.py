@@ -122,7 +122,7 @@ class ImLivechatChannel(models.Model):
             'anonymous_name': False if user_id else anonymous_name,
             'country_id': country_id,
             'channel_type': 'livechat',
-            'name': ', '.join([visitor_user.display_name if visitor_user else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
+            'name': ' '.join([visitor_user.display_name if visitor_user else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
             'public': 'private',
             'email_send': False,
         }
@@ -259,7 +259,9 @@ class ImLivechatChannelRule(models.Model):
         """
         def _match(rules):
             for rule in rules:
-                if re.search(rule.regex_url or '', url):
+                # url might not be set because it comes from referer, in that
+                # case match the first rule with no regex_url
+                if re.search(rule.regex_url or '', url or ''):
                     return rule
             return False
         # first, search the country specific rules (the first match is returned)

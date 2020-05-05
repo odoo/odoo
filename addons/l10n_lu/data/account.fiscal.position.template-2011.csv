@@ -1,5 +1,6 @@
-id,name,chart_template_id:id
-account_fiscal_position_template_LU_NO,Not liable to VAT,lu_2011_chart_1
-account_fiscal_position_template_LU_LU,Luxembourgish Taxable Person,lu_2011_chart_1
-account_fiscal_position_template_LU_IC,Intra-Community Taxable Person,lu_2011_chart_1
-account_fiscal_position_template_LU_EC,Extra-Community Taxable Person,lu_2011_chart_1
+id,name,chart_template_id:id,sequence,auto_apply,vat_required,country_id:id,country_group_id:id
+account_fiscal_position_template_LU_NO,Not liable to VAT,lu_2011_chart_1,,,,,
+account_fiscal_position_template_LU_LU,Luxembourgish Taxable Person,lu_2011_chart_1,1,1,1,base.lu,
+account_fiscal_position_template_private_LU_IC,EU private,lu_2011_chart_1,2,1,,,base.europe
+account_fiscal_position_template_LU_IC,Intra-Community Taxable Person,lu_2011_chart_1,3,1,1,,base.europe
+account_fiscal_position_template_LU_EC,Extra-Community Taxable Person,lu_2011_chart_1,4,1,,,

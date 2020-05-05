@@ -22,6 +22,7 @@
             <field name="discount_percentage">10.0</field>
             <field name="program_type">promotion_program</field>
             <field name="discount_line_product_id" ref="sale_coupon.product_product_10_percent_discount"/>
+            <field name="validity_duration">0</field>
         </record>
 
         <record id="product_product_free_large_cabinet" model="product.product">
@@ -46,6 +47,7 @@
             <field name="rule_min_quantity">3</field>
             <field name="rule_products_domain">[["name","ilike","large cabinet"]]</field>
             <field name="discount_line_product_id" ref="sale_coupon.product_product_free_large_cabinet"/>
+            <field name="validity_duration">0</field>
         </record>
 
         <record id="10_percent_coupon" model="sale.coupon.program">

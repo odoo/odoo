@@ -16,6 +16,7 @@ import time
 import types
 import unittest
 import threading
+import warnings
 from operator import itemgetter
 from os.path import join as opj
 
@@ -24,6 +25,7 @@ import odoo.tools as tools
 import odoo.release as release
 from odoo import SUPERUSER_ID, api
 from odoo.tools import pycompat
+from odoo.tools.misc import mute_logger
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
@@ -34,11 +36,9 @@ _logger = logging.getLogger(__name__)
 # ad_paths is a deprecated alias, please use odoo.addons.__path__
 @tools.lazy
 def ad_paths():
-    _logger.warning('"odoo.modules.module.ad_paths" is a deprecated '
-                    'proxy to "odoo.addons.__path__". Please consider '
-                    'using the latter as the former is going to be '
-                    'removed in the next version.',
-                    exc_info=DeprecationWarning(), stack_info=True)
+    warnings.warn(
+        '"odoo.modules.module.ad_paths" is a deprecated proxy to '
+        '"odoo.addons.__path__".', DeprecationWarning, stacklevel=2)
     return odoo.addons.__path__
 
 # Modules already loaded
@@ -49,11 +49,9 @@ class AddonsHook(object):
 
     def find_module(self, name, path=None):
         if name.startswith('openerp.addons.') and name.count('.') == 2:
-            _logger.warning('"openerp.addons" is a deprecated alias to '
-                            '"odoo.addons". Please consider using the '
-                            'latter as the former is going to be removed '
-                            'in the next version.',
-                            exc_info=DeprecationWarning(), stack_info=True)
+            warnings.warn(
+                '"openerp.addons" is a deprecated alias to "odoo.addons".',
+                DeprecationWarning, stacklevel=2)
             return self
 
     def load_module(self, name):
@@ -80,11 +78,9 @@ class OdooHook(object):
         # openerp.addons.<identifier> should already be matched by AddonsHook,
         # only framework and subdirectories of modules should match
         if re.match(r'^openerp\b', name):
-            _logger.warning('openerp is a deprecated alias to odoo. '
-                            'Please consider using the latter as the '
-                            'former is going to be removed in the next '
-                            'version.',
-                            exc_info=DeprecationWarning(), stack_info=True)
+            warnings.warn(
+                'openerp is a deprecated alias to odoo.',
+                DeprecationWarning, stacklevel=2)
             return self
 
     def load_module(self, name):
@@ -442,7 +438,19 @@ def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
     feed unittest.TestLoader.loadTestsFromModule() """
     # Try to import the module
-    modpath = 'odoo.addons.' + module
+    results = _get_tests_modules('odoo.addons', module)
+
+    try:
+        importlib.import_module('odoo.upgrade.%s' % module)
+    except ImportError:
+        pass
+    else:
+        results += _get_tests_modules('odoo.upgrade', module)
+
+    return results
+
+def _get_tests_modules(path, module):
+    modpath = '%s.%s' % (path, module)
     try:
         mod = importlib.import_module('.tests', modpath)
     except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6

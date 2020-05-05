@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import hashlib
-import json
 import logging
 import os
 import re
@@ -150,7 +148,7 @@ def url_lang(path_or_uri, lang_code=None):
         location = werkzeug.urls.url_join(request.httprequest.path, location)
         lang_url_codes = [url_code for _, url_code, _ in Lang.get_available()]
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
-        lang_url_code = Lang._lang_get(lang_code).url_code
+        lang_url_code = Lang._lang_code_to_urlcode(lang_code)
         lang_url_code = lang_url_code if lang_url_code in lang_url_codes else lang_code
 
         if (len(lang_url_codes) > 1 or force_lang) and is_multilang_url(location, lang_url_codes):
@@ -300,18 +298,12 @@ class IrHttp(models.AbstractModel):
         modules = IrHttpModel.get_translation_frontend_modules()
         user_context = request.session.get_context() if request.session.uid else {}
         lang = user_context.get('lang')
-        translations, lang_params = request.env['ir.translation'].get_translations_for_webclient(modules, lang)
-        translation_cache = {
-            'lang_parameters': lang_params,
-            'modules': translations,
-            'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
-            'lang': lang,
-        }
+        translation_hash = request.env['ir.translation'].get_web_translations_hash(modules, lang)
 
         session_info.update({
             'translationURL': '/website/translations',
             'cache_hashes': {
-                'translations': hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest(),
+                'translations': translation_hash,
             },
         })
         return session_info
@@ -319,17 +311,28 @@ class IrHttp(models.AbstractModel):
     @api.model
     def get_translation_frontend_modules(self):
         Modules = request.env['ir.module.module'].sudo()
-        domain = self._get_translation_frontend_modules_domain()
-        return Modules.search(
-            expression.AND([domain, [('state', '=', 'installed')]])
-        ).mapped('name')
+        extra_modules_domain = self._get_translation_frontend_modules_domain()
+        extra_modules_name = self._get_translation_frontend_modules_name()
+        if extra_modules_domain:
+            new = Modules.search(
+                expression.AND([extra_modules_domain, [('state', '=', 'installed')]])
+            ).mapped('name')
+            extra_modules_name += new
+        return extra_modules_name
 
     @classmethod
     def _get_translation_frontend_modules_domain(cls):
         """ Return a domain to list the domain adding web-translations and
             dynamic resources that may be used frontend views
         """
-        return [('name', '=', 'web')]
+        return []
+
+    @classmethod
+    def _get_translation_frontend_modules_name(cls):
+        """ Return a list of module name where web-translations and
+            dynamic resources may be used in frontend views
+        """
+        return ['web']
 
     bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
 
@@ -584,7 +587,7 @@ class IrHttp(models.AbstractModel):
             code = exception.code
 
         values.update(
-            status_message=werkzeug.http.HTTP_STATUS_CODES[code],
+            status_message=werkzeug.http.HTTP_STATUS_CODES.get(code,''),
             status_code=code,
         )
 

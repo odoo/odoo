@@ -450,3 +450,21 @@ class Web_Editor(http.Controller):
                 be found
         """
         request.env['web_editor.assets'].reset_asset(url, bundle_xmlid)
+
+    @http.route("/web_editor/public_render_template", type="json", auth="public", website=True)
+    def public_render_template(self, args):
+        # args[0]: xml id of the template to render
+        # args[1]: optional dict of rendering values, only trusted keys are supported
+        len_args = len(args)
+        assert len_args >= 1 and len_args <= 2, 'Need a xmlID and potential rendering values to render a template'
+
+        trusted_value_keys = ('debug',)
+
+        xmlid = args[0]
+        values = len_args > 1 and args[1] or {}
+
+        View = request.env['ir.ui.view']
+        if request.env.user._is_public() \
+                and xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
+            View = View.sudo()
+        return View.render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})

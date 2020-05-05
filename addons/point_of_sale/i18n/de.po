@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Rudolf Schnapka <rs@techno-flex.de>, 2019
-# Philipp Hug <philipp@hug.cx>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Gab_Odoo <gab@odoo.com>, 2019
 # Niki Waibel, 2019
@@ -20,14 +19,17 @@
 # Martin Trigaux, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# JEK Odoo <jek@odoo.com>, 2020
+# Florian Pose <fp@igh.de>, 2020
+# Kevin Harrings <kha@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"Last-Translator: Kevin Harrings <kha@odoo.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1124,7 +1126,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Connection to IoT Box failed"
-msgstr ""
+msgstr "Verbindung zur IoT Box fehlgeschlagen"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2494,8 +2496,8 @@ msgstr "Keine Steuern"
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
 msgstr ""
-"Es wurde kein Kassenbuch für diese Sitzung gefunden. Es kann keine "
-"Aufzeichnung einer Geldrückgabe erfolgen."
+"Es wurde kein Kassenbuch für diese Sitzung gefunden. Es kann keine Buchung "
+"einer Geldrückgabe erfolgen."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/report/pos_invoice.py:0
@@ -3049,14 +3051,14 @@ msgstr "Bitte bestätigen Sie den hohen Betrag"
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the IoT Box is still connected."
-msgstr ""
+msgstr "Bitte überprüfen Sie, ob die IoT Box noch angeschlossen ist."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the printer is still connected."
-msgstr ""
+msgstr "Bitte überprüfen Sie, ob der Drucker noch angeschlossen ist."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/res_company.py:0
@@ -3242,7 +3244,7 @@ msgstr "Bericht über Point of Sale Aufträge"
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__pos_payment_method_ids
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Point of Sale Zahlungsmethoden"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
@@ -3391,16 +3393,12 @@ msgid "Pricing"
 msgstr "Preiskalkulation"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
-msgid "Print"
-msgstr "Drucken"
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
 #, python-format
-msgid "Print Invoice"
-msgstr "Rechnung drucken"
+msgid "Print"
+msgstr "Drucken"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4425,6 +4423,15 @@ msgstr ""
 "aus dem Backend für die Bestellung:"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid ""
+"The order has been synchronized earlier. To print the invoice please refer "
+"to the order in the backend"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_precompute_cash
 msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
@@ -5265,18 +5272,6 @@ msgid "You have to select a pricelist in the sale form."
 msgstr "Sie müssen eine Preisliste im Verkaufsformular auswählen."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_details.py:0
-#, python-format
-msgid "You have to set a logo or a layout for your company."
-msgstr "Sie müssen ein Logo oder ein Layout für Ihr Unternehmen festlegen."
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_details.py:0
-#, python-format
-msgid "You have to set your reports's header and footer layout."
-msgstr "Sie müssen das Kopf- und Fußzeilenlayout Ihres Berichts festlegen."
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:0
 #, python-format
@@ -5437,7 +5432,7 @@ msgstr "nicht genutzt"
 #. module: point_of_sale
 #: model:mail.activity.type,summary:point_of_sale.mail_activity_old_session
 msgid "note"
-msgstr ""
+msgstr "Notiz"
 
 #. module: point_of_sale
 #. openerp-web

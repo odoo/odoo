@@ -46,7 +46,7 @@
                 <tree string="Contacts">
                     <field name="display_name" string="Name"/>
                     <field name="function" invisible="1"/>
-                    <field name="phone" optional="show"/>
+                    <field name="phone" class="o_force_ltr" optional="show"/>
                     <field name="email" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="city" optional="hide"/>
@@ -234,7 +234,7 @@
 
                     <group>
                         <group>
-                            <field name="type" groups="base.group_no_one"/>
+                            <field name="type" groups="base.group_no_one" attrs="{'invisible': [('is_company','=', True)], 'readonly': [('user_ids', '!=', [])]}"/>
                             <label for="" name="address_name">
                                 <b attrs="{'invisible': [('type', '!=', 'contact')]}">Company Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'invoice')]}">Invoice Address</b>

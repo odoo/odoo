@@ -93,5 +93,5 @@ class ResConfigSettings(models.TransientModel):
                 ('code', '!=', 'incoming'),
                 ('show_operations', '=', False)
             ])
-            picking_types.write({'show_operations': True})
+            picking_types.sudo().write({'show_operations': True})
         return res

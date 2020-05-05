@@ -174,7 +174,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         serial number.
         """
         lines = []
-        is_tracked = move.product_id.tracking != 'none'
+        is_tracked = move.product_id.tracking == 'serial'
         if move in self.move_raw_ids._origin:
             # Get the inverse_name (many2one on line) of raw_workorder_line_ids
             initial_line_values = {self.raw_workorder_line_ids._get_raw_workorder_inverse_name(): self.id}
@@ -401,6 +401,8 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
     def _create_extra_move_lines(self):
         """Create new sml if quantity produced is bigger than the reserved one"""
         vals_list = []
+        # apply putaway
+        location_dest_id = self.move_id.location_dest_id._get_putaway_strategy(self.product_id) or self.move_id.location_dest_id
         quants = self.env['stock.quant']._gather(self.product_id, self.move_id.location_id, lot_id=self.lot_id, strict=False)
         # Search for a sub-locations where the product is available.
         # Loop on the quants to get the locations. If there is not enough
@@ -417,7 +419,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                 'move_id': self.move_id.id,
                 'product_id': self.product_id.id,
                 'location_id': quant.location_id.id,
-                'location_dest_id': self.move_id.location_dest_id.id,
+                'location_dest_id': location_dest_id.id,
                 'product_uom_qty': 0,
                 'product_uom_id': self.product_uom_id.id,
                 'qty_done': min(quantity, self.qty_done),
@@ -437,7 +439,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                 'move_id': self.move_id.id,
                 'product_id': self.product_id.id,
                 'location_id': self.move_id.location_id.id,
-                'location_dest_id': self.move_id.location_dest_id.id,
+                'location_dest_id': location_dest_id.id,
                 'product_uom_qty': 0,
                 'product_uom_id': self.product_uom_id.id,
                 'qty_done': self.qty_done,

@@ -352,8 +352,8 @@ class TestTranslation(TransactionCase):
         translations = self.env['ir.translation'].search([('name', '=', 'res.partner.category,name'), ('res_id', '=', cheese.id)], order='lang')
         self.assertEqual(len(translations), 2)
         self.assertRecordValues(translations,
-            [{'lang': 'en_US', 'src': 'Cheese', 'value': 'Cheese'},
-             {'lang': 'fr_FR', 'src': 'Cheese', 'value': 'Cheese'}])
+            [{'lang': 'en_US', 'src': 'Cheese', 'value': ''},
+             {'lang': 'fr_FR', 'src': 'Cheese', 'value': ''}])
 
         # Translate in both language
         translations[0].value = 'The Cheese'
@@ -364,7 +364,6 @@ class TestTranslation(TransactionCase):
         self.assertEqual(cheese.with_context(lang='fr_FR').name, 'Fromage')
         self.assertEqual(cheese.with_context(lang='en_US').name, 'The Cheese')
         cheese.flush()
-        cheese.invalidate_cache()
 
         # set a new master value
         cheese.with_context(lang='en_US').write({'name': 'Delicious Cheese'})
@@ -555,6 +554,28 @@ class TestTranslationWrite(TransactionCase):
         ])
         self.assertEqual(len(translations), 0, "Translations were not removed")
 
+        # simulate remove the English translation in the interface
+        belgium.with_context(lang='fr_FR').write({'vat_label': 'TVA'})
+        belgium.with_context(lang='en_US').write({'vat_label': 'VAT'})
+        self.env['ir.translation'].translate_fields('res.country', belgium.id, 'vat_label')
+        en_translation = self.env['ir.translation'].search([
+            ('name', '=', 'res.country,vat_label'),
+            ('res_id', '=', belgium.id),
+            ('lang', '=', 'en_US'),
+        ])
+        en_translation.write({'value': ''})
+
+        # should recover the initial value from db
+        self.assertEqual(
+            "TVA", belgium.with_context(lang='fr_FR').vat_label,
+            "French translation was not kept"
+        )
+        self.assertEqual(
+            "VAT", belgium.with_context(lang='en_US').vat_label,
+            "Did not fallback to source when reset"
+        )
+
+
     def test_field_selection(self):
         """ Test translations of field selections. """
         field = self.env['ir.model']._fields['state']
@@ -661,7 +682,6 @@ class TestXMLTranslation(TransactionCase):
         # modify source term in view (fixed type in 'cheeze')
         terms_en = ('Bread and cheese',)
         view.with_env(env_en).write({'arch_db': archf % terms_en})
-        view.invalidate_cache(fnames=['arch_db'], ids=view.ids)
 
         # check whether translations have been synchronized
         self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
@@ -673,7 +693,6 @@ class TestXMLTranslation(TransactionCase):
         # modify source term in view in another language with close term
         new_terms_fr = ('Pains et fromage',)
         view.with_env(env_fr).write({'arch_db': archf % new_terms_fr})
-        view.invalidate_cache(fnames=['arch_db'], ids=view.ids)
 
         # check whether translations have been synchronized
         self.assertEqual(view.with_env(env_nolang).arch_db, archf % new_terms_fr)
@@ -682,7 +701,7 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
     def test_sync_update(self):
-        """ Check translations after minor change in source terms. """
+        """ Check translations after major changes in source terms. """
         archf = '<form string="X"><div>%s</div><div>%s</div></form>'
         terms_src = ('Subtotal', 'Subtotal:')
         terms_en = ('', 'Sub total:')
@@ -696,9 +715,8 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(len(translations), 2)
 
         # modifying the arch should sync existing translations without errors
-        view.write({
-            "arch": archf % ('Subtotal', 'Subtotal:<br/>')
-        })
+        new_arch = archf % ('Subtotal', 'Subtotal:<br/>')
+        view.write({"arch_db": new_arch})
 
         translations = self.env['ir.translation'].search([
             ('type', '=', 'model_terms'),
@@ -708,3 +726,18 @@ class TestXMLTranslation(TransactionCase):
         # 'Subtotal' being src==value, it will be discared
         # 'Subtotal:' will be discarded as it match 'Subtotal' instead of 'Subtotal:<br/>'
         self.assertEqual(len(translations), 0)
+
+    def test_cache_consistency(self):
+        view = self.env["ir.ui.view"].create({
+            "name": "test_translate_xml_cache_invalidation",
+            "model": "res.partner",
+            "arch": "<form><b>content</b></form>",
+        })
+        view_fr = view.with_context({"lang": "fr_FR"})
+        self.assertIn("<b>", view.arch_db)
+        self.assertIn("<b>", view_fr.arch_db)
+
+        # write with no lang, and check consistency in other languages
+        view.write({"arch_db": "<form><i>content</i></form>"})
+        self.assertIn("<i>", view.arch_db)
+        self.assertIn("<i>", view_fr.arch_db)

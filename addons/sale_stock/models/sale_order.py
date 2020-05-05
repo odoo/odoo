@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
 from odoo.exceptions import UserError
 
 
@@ -91,6 +91,7 @@ class SaleOrder(models.Model):
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
                 if to_log:
                     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
+                    documents = {k:v for k, v in documents.items() if k[0].state != 'cancel'}
                     order._log_decrease_ordered_quantity(documents)
         return res
 
@@ -224,7 +225,7 @@ class SaleOrderLine(models.Model):
             else:
                 line.display_qty_widget = False
 
-    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'order_id.warehouse_id', 'order_id.commitment_date')
+    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'order_id.warehouse_id', 'order_id.commitment_date')
     def _compute_qty_at_date(self):
         """ Compute the quantity forecasted of product at delivery date. There are
         two cases:
@@ -235,6 +236,7 @@ class SaleOrderLine(models.Model):
         grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
         # We first loop over the SO lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
+        now = fields.Datetime.now()
         for line in self:
             if not line.display_qty_widget:
                 continue
@@ -242,7 +244,7 @@ class SaleOrderLine(models.Model):
             if line.order_id.commitment_date:
                 date = line.order_id.commitment_date
             else:
-                confirm_date = line.order_id.date_order if line.order_id.state in ['sale', 'done'] else datetime.now()
+                confirm_date = line.order_id.date_order if line.order_id.state in ['sale', 'done'] else now
                 date = confirm_date + timedelta(days=line.customer_lead or 0.0)
             grouped_lines[(line.warehouse_id.id, date)] |= line
 
@@ -263,6 +265,10 @@ class SaleOrderLine(models.Model):
                 line.qty_available_today = qty_available_today - qty_processed_per_product[line.product_id.id]
                 line.free_qty_today = free_qty_today - qty_processed_per_product[line.product_id.id]
                 line.virtual_available_at_date = virtual_available_at_date - qty_processed_per_product[line.product_id.id]
+                if line.product_uom and line.product_id.uom_id and line.product_uom != line.product_id.uom_id:
+                    line.qty_available_today = line.product_id.uom_id._compute_quantity(line.qty_available_today, line.product_uom)
+                    line.free_qty_today = line.product_id.uom_id._compute_quantity(line.free_qty_today, line.product_uom)
+                    line.virtual_available_at_date = line.product_id.uom_id._compute_quantity(line.virtual_available_at_date, line.product_uom)
                 qty_processed_per_product[line.product_id.id] += line.product_uom_qty
             treated |= lines
         remaining = (self - treated)
@@ -509,7 +515,18 @@ class SaleOrderLine(models.Model):
         pack = self.product_packaging
         qty = self.product_uom_qty
         q = default_uom._compute_quantity(pack.qty, self.product_uom)
-        if qty and q and (qty % q):
+        # We do not use the modulo operator to check if qty is a mltiple of q. Indeed the quantity
+        # per package might be a float, leading to incorrect results. For example:
+        # 8 % 1.6 = 1.5999999999999996
+        # 5.4 % 1.8 = 2.220446049250313e-16
+        if (
+            qty
+            and q
+            and float_compare(
+                qty / q, float_round(qty / q, precision_rounding=1.0), precision_rounding=0.001
+            )
+            != 0
+        ):
             newqty = qty - (qty % q) + q
             return {
                 'warning': {

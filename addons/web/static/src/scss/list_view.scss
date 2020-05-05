@@ -125,7 +125,7 @@
                 padding-bottom: ($table-cell-padding-sm*2);
             }
             .o_group_name {
-                white-space: nowrap;
+                @include o-text-overflow(table-cell);
             }
             .o_group_buttons {
                 display: inline-block;

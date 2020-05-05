@@ -3,7 +3,6 @@
 
 from odoo.tests.common import TransactionCase
 from odoo.tools import float_compare, test_reports
-from odoo.exceptions import UserError
 
 
 class TestProductPricelist(TransactionCase):
@@ -125,9 +124,6 @@ class TestProductPricelist(TransactionCase):
             'qty5': 30,
             'price_list': self.customer_pricelist.id,
         }
-
-        with self.assertRaises(UserError):
-            test_reports.try_report_action(self.cr, self.uid, 'action_product_price_list', wiz_data=data_dict, context=ctx, our_module='product')
 
         self.env.company.external_report_layout_id = self.env.ref('web.external_layout_standard').id
         test_reports.try_report_action(self.cr, self.uid, 'action_product_price_list', wiz_data=data_dict, context=ctx, our_module='product')

@@ -428,7 +428,7 @@ class ResPartner(models.Model):
     invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
     invoice_warn_msg = fields.Text('Message for Invoice')
     # Computed fields to order the partners as suppliers/customers according to the
-    # amount of their generated incoming/outgoing account moves 
+    # amount of their generated incoming/outgoing account moves
     supplier_rank = fields.Integer(default=0)
     customer_rank = fields.Integer(default=0)
 
@@ -467,7 +467,6 @@ class ResPartner(models.Model):
         action = self.env.ref('account.action_move_out_invoice_type').read()[0]
         action['domain'] = [
             ('type', 'in', ('out_invoice', 'out_refund')),
-            ('state', '=', 'posted'),
             ('partner_id', 'child_of', self.id),
         ]
         action['context'] = {'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}

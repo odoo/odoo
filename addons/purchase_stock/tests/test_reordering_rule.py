@@ -4,6 +4,9 @@
 from odoo.tests.common import TransactionCase
 from odoo.tests import Form
 
+from datetime import datetime as dt, timedelta as td
+
+
 class TestReorderingRule(TransactionCase):
 
     def test_reordering_rule(self):
@@ -59,3 +62,84 @@ class TestReorderingRule(TransactionCase):
 
         # On the po generated, the source document should be the name of the reordering rule
         self.assertEqual(order_point.name, purchase_order.origin, 'Source document on purchase order should be the name of the reordering rule.')
+
+    def test_procure_not_default_partner(self):
+        """Define a product with 2 vendors. First run a "standard" procurement,
+        default vendor should be used. Then, call a procurement with
+        `partner_id` specified in values, the specified vendor should be
+        used."""
+        purchase_route = self.env.ref("purchase_stock.route_warehouse0_buy")
+        uom_unit = self.env.ref("uom.product_uom_unit")
+        warehouse = self.env['stock.warehouse'].search(
+            [('company_id', '=', self.env.company.id)], limit=1)
+        product = self.env["product.product"].create({
+            "name": "product TEST",
+            "standard_price": 100.0,
+            "type": "product",
+            "uom_id": uom_unit.id,
+            "default_code": "A",
+            "route_ids": [(6, 0, purchase_route.ids)],
+        })
+        default_vendor = self.env["res.partner"].create({
+            "name": "Supplier A",
+        })
+        secondary_vendor = self.env["res.partner"].create({
+            "name": "Supplier B",
+        })
+        self.env["product.supplierinfo"].create({
+            "name": default_vendor.id,
+            "product_tmpl_id": product.product_tmpl_id.id,
+            "delay": 7,
+        })
+        self.env["product.supplierinfo"].create({
+            "name": secondary_vendor.id,
+            "product_tmpl_id": product.product_tmpl_id.id,
+            "delay": 10,
+        })
+
+        # Test standard procurement.
+        po_line = self.env["purchase.order.line"].search(
+            [("product_id", "=", product.id)])
+        self.assertFalse(po_line)
+        self.env["procurement.group"].run(
+            [self.env["procurement.group"].Procurement(
+                product, 100, uom_unit,
+                warehouse.lot_stock_id, "Test default vendor", "/",
+                self.env.company,
+                {
+                    "warehouse_id": warehouse,
+                    "date_planned": dt.today() + td(days=15),
+                    "rule_id": warehouse.buy_pull_id,
+                    "group_id": False,
+                    "route_ids": [],
+                }
+            )])
+        po_line = self.env["purchase.order.line"].search(
+            [("product_id", "=", product.id)])
+        self.assertTrue(po_line)
+        self.assertEqual(po_line.partner_id, default_vendor)
+        po_line.order_id.button_cancel()
+        po_line.order_id.unlink()
+
+        # now force the vendor:
+        po_line = self.env["purchase.order.line"].search(
+            [("product_id", "=", product.id)])
+        self.assertFalse(po_line)
+        self.env["procurement.group"].run(
+            [self.env["procurement.group"].Procurement(
+                product, 100, uom_unit,
+                warehouse.lot_stock_id, "Test default vendor", "/",
+                self.env.company,
+                {
+                    "warehouse_id": warehouse,
+                    "date_planned": dt.today() + td(days=15),
+                    "rule_id": warehouse.buy_pull_id,
+                    "group_id": False,
+                    "route_ids": [],
+                    "supplier_id": secondary_vendor,
+                }
+            )])
+        po_line = self.env["purchase.order.line"].search(
+            [("product_id", "=", product.id)])
+        self.assertTrue(po_line)
+        self.assertEqual(po_line.partner_id, secondary_vendor)

@@ -61,6 +61,10 @@
                                                                         <t t-if="rule[0].procure_method == 'make_to_order'">
                                                                             <t t-call="stock.report_stock_rule_suspension_points"/>
                                                                         </t>
+                                                                        <t t-if="rule[0].procure_method == 'mts_else_mto'">
+                                                                            <t t-call="stock.report_stock_rule_suspension_points"/>
+                                                                            <t t-call="stock.report_stock_rule_vertical_bar"/>
+                                                                        </t>
                                                                         <t t-if="rule[0].action in ('push', 'pull_push')">
                                                                             <t t-call="stock.report_stock_rule_right_arrow"/>
                                                                         </t>
@@ -131,6 +135,14 @@
                                     <t t-call="stock.report_stock_rule_line"/>
                                 </div>
                             </div>
+                            <div class="o_report_stock_rule_legend_line">
+                                <div class="o_report_stock_rule_legend_label">Trigger Another Rule If No Stock</div>
+                                <div class="o_report_stock_rule_rule o_report_stock_rule_legend_symbol">
+                                    <t t-call="stock.report_stock_rule_suspension_points"/>
+                                    <t t-call="stock.report_stock_rule_vertical_bar"/>
+                                    <t t-call="stock.report_stock_rule_line"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -141,6 +153,13 @@
         <div class="o_report_stock_rule_line">
             <svg width="100%" height="100%" viewBox="0 0 100 10" preserveAspectRatio="none">
                 <line x1="0" y1="5" x2="100" y2="5" t-attf-style="stroke: #{color};"/>
+            </svg>
+        </div>
+    </template>
+    <template id="report_stock_rule_vertical_bar">
+        <div class="o_report_stock_rule_vertical_bar">
+            <svg width="100%" height="100%" viewBox="0 0 1 1">
+                <line y1="-12" x2="0" y2="12" x1="0" t-attf-style="stroke: #{color};"/>
             </svg>
         </div>
     </template>

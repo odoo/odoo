@@ -46,7 +46,7 @@
                             </group>
                             <group>
                                 <field name="code"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' name="return_picking_type_id"/>
                                 <field name="show_operations"/>
                                 <field name="show_reserved" attrs="{'invisible': [('code', '!=', 'incoming')]}"/>
@@ -230,7 +230,6 @@
                     <button name="do_print_picking" string="Print" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('state', 'not in', ('assigned', 'partially_available')), ('is_locked', '=', False)]}"/>
                     <button name="%(action_report_delivery)d" string="Print" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('is_locked', '=', False)]}" type="action" groups="base.group_user"/>
                     <button name="%(act_stock_return_picking)d" string="Return" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('is_locked', '=', False)]}" type="action" groups="base.group_user"/>
-                    <field name="picking_type_code" invisible="1"/>
                     <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|', '|', '|', '|', ('picking_type_code', '=', 'incoming'), ('immediate_transfer', '=', True), ('is_locked', '=', False), '&amp;', ('state', 'not in', ('assigned', 'partially_available')), ('move_type', '!=', 'one'), '&amp;', ('state', 'not in', ('assigned', 'partially_available', 'confirmed')), ('move_type', '=', 'one')]}"/>
                     <field name="show_operations" invisible="1" readonly="1"/>
                     <field name="show_reserved" invisible="1" readonly="1"/>
@@ -267,7 +266,7 @@
                             </div>
                         </button>
                     </div>
-                    <h1 class="d-none d-md-block">
+                    <h1>
                         <field name="name" attrs="{'invisible': [('name','=','/')]}"/>
                     </h1>
                     <group>
@@ -316,7 +315,9 @@
                         </page>
 
                         <page string="Operations">
-                            <field name="move_ids_without_package" attrs="{'readonly': ['&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'default_company_id': company_id, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref':'stock.view_move_form', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                            <field name="move_ids_without_package" mode="tree,kanban"
+                                attrs="{'readonly': ['&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"
+                                context="{'default_company_id': company_id, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref':'stock.view_move_form', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                                 <tree decoration-danger="not parent.immediate_transfer and state != 'done' and quantity_done > reserved_availability and show_reserved_availability" decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
                                     <field name="company_id" invisible="1"/>
                                     <field name="name" invisible="1"/>

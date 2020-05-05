@@ -261,9 +261,9 @@ the login.
 .. code-block:: json
 
     {
-        "server_version": "8.0",
-        "server_version_info": [8, 0, 0, "final", 0],
-        "server_serie": "8.0",
+        "server_version": "13.0",
+        "server_version_info": [13, 0, 0, "final", 0],
+        "server_serie": "13.0",
         "protocol_version": 1,
     }
 
@@ -375,20 +375,19 @@ companies for instance:
 
             models.execute_kw(db, uid, password,
                 'res.partner', 'search',
-                [[['is_company', '=', True], ['customer', '=', True]]])
+                [[['is_company', '=', True]]])
 
         .. code-block:: ruby
 
             models.execute_kw(db, uid, password,
                 'res.partner', 'search',
-                [[['is_company', '=', true], ['customer', '=', true]]])
+                [[['is_company', '=', true]]])
 
         .. code-block:: php
 
             $models->execute_kw($db, $uid, $password,
                 'res.partner', 'search', array(
-                    array(array('is_company', '=', true),
-                          array('customer', '=', true))));
+                    array(array('is_company', '=', true))));
 
         .. code-block:: java
 
@@ -396,8 +395,7 @@ companies for instance:
                 db, uid, password,
                 "res.partner", "search",
                 asList(asList(
-                    asList("is_company", "=", true),
-                    asList("customer", "=", true)))
+                    asList("is_company", "=", true)))
             )));
 
     .. code-block:: json
@@ -419,22 +417,21 @@ available to only retrieve a subset of all matched records.
 
             models.execute_kw(db, uid, password,
                 'res.partner', 'search',
-                [[['is_company', '=', True], ['customer', '=', True]]],
+                [[['is_company', '=', True]]],
                 {'offset': 10, 'limit': 5})
 
         .. code-block:: ruby
 
             models.execute_kw(db, uid, password,
                 'res.partner', 'search',
-                [[['is_company', '=', true], ['customer', '=', true]]],
+                [[['is_company', '=', true]]],
                 {offset: 10, limit: 5})
 
         .. code-block:: php
 
             $models->execute_kw($db, $uid, $password,
                 'res.partner', 'search',
-                array(array(array('is_company', '=', true),
-                            array('customer', '=', true))),
+                array(array(array('is_company', '=', true))),
                 array('offset'=>10, 'limit'=>5));
 
         .. code-block:: java
@@ -443,8 +440,7 @@ available to only retrieve a subset of all matched records.
                 db, uid, password,
                 "res.partner", "search",
                 asList(asList(
-                    asList("is_company", "=", true),
-                    asList("customer", "=", true))),
+                    asList("is_company", "=", true))),
                 new HashMap() {{ put("offset", 10); put("limit", 5); }}
             )));
 
@@ -469,20 +465,19 @@ only the number of records matching the query. It takes the same
 
             models.execute_kw(db, uid, password,
                 'res.partner', 'search_count',
-                [[['is_company', '=', True], ['customer', '=', True]]])
+                [[['is_company', '=', True]]])
 
         .. code-block:: ruby
 
             models.execute_kw(db, uid, password,
                 'res.partner', 'search_count',
-                [[['is_company', '=', true], ['customer', '=', true]]])
+                [[['is_company', '=', true]]])
 
         .. code-block:: php
 
             $models->execute_kw($db, $uid, $password,
                 'res.partner', 'search_count',
-                array(array(array('is_company', '=', true),
-                            array('customer', '=', true))));
+                array(array(array('is_company', '=', true))));
 
         .. code-block:: java
 
@@ -490,8 +485,7 @@ only the number of records matching the query. It takes the same
                 db, uid, password,
                 "res.partner", "search_count",
                 asList(asList(
-                    asList("is_company", "=", true),
-                    asList("customer", "=", true)))
+                    asList("is_company", "=", true)))
             ));
 
     .. code-block:: json
@@ -521,7 +515,7 @@ which tends to be a huge amount.
 
             ids = models.execute_kw(db, uid, password,
                 'res.partner', 'search',
-                [[['is_company', '=', True], ['customer', '=', True]]],
+                [[['is_company', '=', True]]],
                 {'limit': 1})
             [record] = models.execute_kw(db, uid, password,
                 'res.partner', 'read', [ids])
@@ -532,7 +526,7 @@ which tends to be a huge amount.
 
             ids = models.execute_kw(db, uid, password,
                 'res.partner', 'search',
-                [[['is_company', '=', true], ['customer', '=', true]]],
+                [[['is_company', '=', true]]],
                 {limit: 1})
             record = models.execute_kw(db, uid, password,
                 'res.partner', 'read', [ids]).first
@@ -543,8 +537,7 @@ which tends to be a huge amount.
 
             $ids = $models->execute_kw($db, $uid, $password,
                 'res.partner', 'search',
-                array(array(array('is_company', '=', true),
-                            array('customer', '=', true))),
+                array(array(array('is_company', '=', true))),
                 array('limit'=>1));
             $records = $models->execute_kw($db, $uid, $password,
                 'res.partner', 'read', array($ids));
@@ -558,8 +551,7 @@ which tends to be a huge amount.
                     db, uid, password,
                     "res.partner", "search",
                     asList(asList(
-                        asList("is_company", "=", true),
-                        asList("customer", "=", true))),
+                        asList("is_company", "=", true))),
                     new HashMap() {{ put("limit", 1); }})));
             final Map record = (Map)((Object[])models.execute(
                 "execute_kw", asList(
@@ -722,22 +714,21 @@ if that list is not provided it will fetch all fields of matched records):
 
             models.execute_kw(db, uid, password,
                 'res.partner', 'search_read',
-                [[['is_company', '=', True], ['customer', '=', True]]],
+                [[['is_company', '=', True]]],
                 {'fields': ['name', 'country_id', 'comment'], 'limit': 5})
 
         .. code-block:: ruby
 
             models.execute_kw(db, uid, password,
                 'res.partner', 'search_read',
-                [[['is_company', '=', true], ['customer', '=', true]]],
+                [[['is_company', '=', true]]],
                 {fields: %w(name country_id comment), limit: 5})
 
         .. code-block:: php
 
             $models->execute_kw($db, $uid, $password,
                 'res.partner', 'search_read',
-                array(array(array('is_company', '=', true),
-                            array('customer', '=', true))),
+                array(array(array('is_company', '=', true))),
                 array('fields'=>array('name', 'country_id', 'comment'), 'limit'=>5));
 
         .. code-block:: java
@@ -746,8 +737,7 @@ if that list is not provided it will fetch all fields of matched records):
                 db, uid, password,
                 "res.partner", "search_read",
                 asList(asList(
-                    asList("is_company", "=", true),
-                    asList("customer", "=", true))),
+                    asList("is_company", "=", true))),
                 new HashMap() {{
                     put("fields", asList("name", "country_id", "comment"));
                     put("limit", 5);

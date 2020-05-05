@@ -3472,5 +3472,38 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     form.destroy();
 });
 
+QUnit.test('many2many_tags_email widget can load more than 40 records', async function (assert) {
+    assert.expect(3);
+
+    this.data.partner.fields.partner_ids = {string: "Partner", type: "many2many", relation: 'partner'};
+    this.data.partner.records[0].partner_ids = [];
+    for (let i = 100; i < 200; i++) {
+        this.data.partner.records.push({id: i, display_name: `partner${i}`});
+        this.data.partner.records[0].partner_ids.push(i);
+    }
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form><field name="partner_ids" widget="many2many_tags"/></form>',
+        res_id: 1,
+    });
+
+    assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 100);
+
+    await testUtils.form.clickEdit(form);
+
+    assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+
+    // add a record to the relation
+    await testUtils.fields.many2one.clickOpenDropdown('partner_ids');
+    await testUtils.fields.many2one.clickHighlightedItem('partner_ids');
+
+    assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 101);
+
+    form.destroy();
+});
+
 });
 });

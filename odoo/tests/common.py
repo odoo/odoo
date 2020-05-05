@@ -529,11 +529,7 @@ class ChromeBrowser():
         self.screenshots_dir = os.path.join(otc['screenshots'], get_db_name(), 'screenshots')
         self.screencasts_dir = None
         if otc['screencasts']:
-            if otc['screencasts'] in ('1', 'true', 't'):
-                self.screencasts_dir = os.path.join(otc['screenshots'], get_db_name(), 'screencasts')
-            else:
-                self.screencasts_dir =os.path.join(otc['screencasts'], get_db_name(), 'screencasts')
-
+            self.screencasts_dir = os.path.join(otc['screencasts'], get_db_name(), 'screencasts')
         self.screencast_frames = []
         os.makedirs(self.screenshots_dir, exist_ok=True)
 
@@ -886,7 +882,7 @@ class ChromeBrowser():
 
         if ffmpeg_path:
             framerate = int(len(self.screencast_frames) / (self.screencast_frames[-1].get('timestamp') - self.screencast_frames[0].get('timestamp')))
-            r = subprocess.run([ffmpeg_path, '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % self.screencasts_dir, outfile])
+            r = subprocess.run([ffmpeg_path, '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % self.screencasts_frames_dir, outfile])
             self._logger.log(25, 'Screencast in: %s', outfile)
         else:
             outfile = outfile.strip('.mp4')
@@ -1019,10 +1015,12 @@ class ChromeBrowser():
             return '[%s]' % ', '.join(
                 repr(p['value']) if p['type'] == 'string' else str(p['value'])
                 for p in arg.get('preview', {}).get('properties', [])
+                if re.match(r'\d+', p['name'])
             )
         # all that's left is type=object, subtype=None aka custom or
         # non-standard objects, print as TypeName(param=val, ...), sadly because
         # of the way Odoo widgets are created they all appear as Class(...)
+        # nb: preview properties are *not* recursive, the value is *all* we get
         return '%s(%s)' % (
             arg.get('className') or 'object',
             ', '.join(
@@ -1704,12 +1702,12 @@ class Form(object):
                 r.write(values)
         else:
             r = self._model.create(values)
-            self._values.update(
-                record_to_values(self._view['fields'], r)
-            )
+        self._values.update(
+            record_to_values(self._view['fields'], r)
+        )
         self._changed.clear()
         self._model.flush()
-        self._model.invalidate_cache()
+        self._model.env.clear()  # discard cache and pending recomputations
         return r
 
     def _values_to_save(self, all_fields=False):
@@ -1797,7 +1795,7 @@ class Form(object):
         record = self._model.browse(self._values.get('id'))
         result = record.onchange(self._onchange_values(), fields, spec)
         self._model.flush()
-        self._model.invalidate_cache()
+        self._model.env.clear()  # discard cache and pending recomputations
         if result.get('warning'):
             _logger.getChild('onchange').warning("%(title)s %(message)s" % result.get('warning'))
         values = result.get('value', {})

@@ -52,7 +52,8 @@
                                 <!-- TODO: remove in master -->
                                 <t t-set="colspan" t-value="6"/>
                                 <th name="th_description" class="text-left"><span>Description</span></th>
-                                <th name="th_source" class="d-none text-left"><span>Source Document</span></th>
+                                <!-- TODO: remove in master -->
+                                <th name="th_source" class="d-none text-left" t-if="0"><span>Source Document</span></th>
                                 <th name="th_quantity" class="text-right"><span>Quantity</span></th>
                                 <th name="th_priceunit" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Unit Price</span></th>
                                 <th name="th_price_unit" t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
@@ -69,8 +70,9 @@
                         </thead>
                         <tbody class="invoice_tbody">
                             <t t-set="current_subtotal" t-value="0"/>
+                            <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
 
-                            <t t-foreach="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)" t-as="line">
+                            <t t-foreach="lines" t-as="line">
                                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
 
@@ -82,17 +84,17 @@
                                             <span t-field="line.product_uom_id"  groups="uom.group_uom"/>
                                         </td>
                                         <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                            <span t-field="line.price_unit"/>
+                                            <span class="text-nowrap" t-field="line.price_unit"/>
                                         </td>
                                         <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                            <span t-field="line.discount"/>
+                                            <span class="text-nowrap" t-field="line.discount"/>
                                         </td>
                                         <td t-attf-class="text-left {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                             <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))" id="line_tax_ids"/>
                                         </td>
                                         <td class="text-right o_price_total">
-                                            <span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                            <span t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                                            <span class="text-nowrap" t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                            <span class="text-nowrap" t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
                                         </td>
                                     </t>
                                     <t t-if="line.display_type == 'line_section'">
@@ -109,7 +111,7 @@
                                     </t>
                                 </tr>
 
-                                <t t-if="current_section and (line_last or o.invoice_line_ids[line_index+1].display_type == 'line_section')">
+                                <t t-if="current_section and (line_last or lines[line_index+1].display_type == 'line_section')">
                                     <tr class="is-subtotal text-right">
                                         <td colspan="99">
                                             <strong class="mr16">Subtotal</strong>
@@ -126,8 +128,8 @@
 
                     <div class="clearfix">
                         <div id="total" class="row">
-                            <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
-                                <table class="table table-sm;page-break-inside: avoid;">
+                            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ml-auto">
+                                <table class="table table-sm" style="page-break-inside: avoid;">
                                     <tr class="border-black o_subtotal" style="">
                                         <td><strong>Subtotal</strong></td>
                                         <td class="text-right">
@@ -137,20 +139,20 @@
                                     <t t-foreach="o.amount_by_group" t-as="amount_by_group">
                                         <tr style="">
                                             <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) == 1 and o.amount_untaxed == amount_by_group[2]">
-                                                <td><span t-esc="amount_by_group[0]"/></td>
+                                                <td><span class="text-nowrap" t-esc="amount_by_group[0]"/></td>
                                                 <td class="text-right o_price_total">
-                                                    <span t-esc="amount_by_group[3]" />
+                                                    <span class="text-nowrap" t-esc="amount_by_group[3]" />
                                                 </td>
                                             </t>
                                             <t t-else="">
                                                 <td>
                                                     <span t-esc="amount_by_group[0]"/>
-                                                    <span>&amp;nbsp;<span>on</span>
+                                                    <span class="text-nowrap"> on
                                                         <t t-esc="amount_by_group[4]"/>
                                                     </span>
                                                 </td>
                                                 <td class="text-right o_price_total">
-                                                    <span t-esc="amount_by_group[3]"/>
+                                                    <span class="text-nowrap" t-esc="amount_by_group[3]"/>
                                                 </td>
                                             </t>
                                         </tr>
@@ -158,7 +160,7 @@
                                     <tr class="border-black o_total">
                                         <td><strong>Total</strong></td>
                                         <td class="text-right">
-                                            <span t-field="o.amount_total"/>
+                                            <span class="text-nowrap" t-field="o.amount_total"/>
                                         </td>
                                     </tr>
                                 </table>
@@ -192,7 +194,7 @@
 
         <template id="report_invoice_document_with_payments" inherit_id="account.report_invoice_document" primary="True">
             <xpath expr="//div[@id='total']/div/table" position="inside">
-                <t t-set="payments_vals" t-value="o._get_reconciled_info_JSON_values()"/>
+                <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
                 <t t-foreach="payments_vals" t-as="payment_vals">
                     <tr>
                         <td>

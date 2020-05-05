@@ -48,6 +48,10 @@ class ResUsers(models.Model):
         return super(ResUsers, self)._get_login_domain(login) + website.website_domain()
 
     @api.model
+    def _get_login_order(self):
+        return 'website_id, ' + super(ResUsers, self)._get_login_order()
+
+    @api.model
     def _signup_create_user(self, values):
         current_website = self.env['website'].get_current_website()
         if request and current_website.specific_user_account:

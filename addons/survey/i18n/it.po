@@ -11,7 +11,7 @@
 # Manuela Feliciani <mfeliciani@alice.it>, 2019
 # David Minneci <david@numeko.it>, 2019
 # Paolo Valier, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2019
 # Federico Zanuttini <fza@odoo.com>, 2019
 # Petra <bop@odoo.com>, 2019
@@ -21,7 +21,9 @@
 # Luigi Di Naro <gigidn@gmail.com>, 2019
 # Niccolò Lubello <nlubello@gmail.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Lorenzo Battistini <lb@takobi.online>, 2020
+# Iacopo Simonelli <lsi@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -29,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"Last-Translator: Iacopo Simonelli <lsi@odoo.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -944,13 +946,13 @@ msgstr ""
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Creating token for archived surveys is not allowed."
-msgstr ""
+msgstr "Non è consentita la creazione di token per i sondaggi archiviati."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Creating token for closed surveys is not allowed."
-msgstr ""
+msgstr "Non è consentita la creazione di token per i sondaggi chiusi."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -1191,12 +1193,12 @@ msgstr "Chi segue"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Chi segue (canali)"
+msgstr "Chi sta seguendo (canali)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Chi segue (partner)"
+msgstr "Chi sta seguendo (partner)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -1320,7 +1322,7 @@ msgstr "Icona"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Icona per indicare un'attività di eccezione."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__token
@@ -1546,12 +1548,12 @@ msgstr "Numero limitato di tentativi"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_users_login_required
 #: model:ir.model.fields,field_description:survey.field_survey_survey__users_login_required
 msgid "Login Required"
-msgstr "Accesso obbligatorio"
+msgstr "È richiesto l'accesso"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.auth_required
 msgid "Login required"
-msgstr "Accesso obbligatorio"
+msgstr "È richiesto l'accesso"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_main_attachment_id
@@ -1627,7 +1629,7 @@ msgstr "Valore massimo"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
 msgid "Maybe you were looking for"
-msgstr ""
+msgstr "La pagina richiesta era forse"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error
@@ -1764,12 +1766,12 @@ msgstr "Nessuna etichetta trovata per il sondaggio"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input_line
 msgid "No user input lines found"
-msgstr ""
+msgstr "Nessuna riga input utente trovata"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
 msgid "Nobody has replied to your surveys yet"
-msgstr ""
+msgstr "Nessuno ha ancora risposto ai sondaggi"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input__state__new
@@ -2021,7 +2023,7 @@ msgstr "Prodotti"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_url
 #: model:ir.model.fields,field_description:survey.field_survey_survey__public_url
 msgid "Public link"
-msgstr ""
+msgstr "Collegamento pubblico"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__question_id
@@ -2127,7 +2129,7 @@ msgstr "Premi per sfide"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested_row
 msgid "Row answer"
-msgstr ""
+msgstr "Risposta alla riga"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2199,7 +2201,7 @@ msgstr "Punteggio senza risposte al termine"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_label_search
 msgid "Search Label"
-msgstr ""
+msgstr "Ricerca etichetta"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
@@ -2317,11 +2319,14 @@ msgid ""
 "danger\">Your answers have probably not been recorded.</strong> Try "
 "refreshing."
 msgstr ""
+"Si è verificato un problema contattando il server del sondaggio. <strong "
+"class=\"text-danger\">È probabile che la risposta non sia stata "
+"registrata.</strong> Provare ad aggiornare la pagina."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Sorry, No one answered this question."
-msgstr ""
+msgstr "Nessuno ha risposto a questa domanda."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -2490,13 +2495,13 @@ msgstr "Input degli utenti del sondaggio"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input_line
 msgid "Survey User Input Line"
-msgstr ""
+msgstr "Riga input utente del sondaggio"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_tree
 msgid "Survey User inputs"
-msgstr ""
+msgstr "Input utente sondaggio"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_matrix
@@ -2569,7 +2574,7 @@ msgstr "Messaggio di ringraziamento"
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
 msgid "The answer must be in the right type"
-msgstr ""
+msgstr "Il tipo di risposta deve essere corretto"
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
@@ -2594,7 +2599,7 @@ msgstr ""
 #: model:survey.question,validation_error_msg:survey.vendor_certification_page_2_question_3
 #, python-format
 msgid "The answer you entered is not valid."
-msgstr "La risposta fornita non è valida."
+msgstr "La risposta inserita non è valida."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_attempts_limit_check
@@ -2611,6 +2616,20 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q2_row4
 msgid "The checkout process is clear and secure"
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey.js:0
+#, python-format
+msgid "The date you selected is greater than the maximum date: "
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey.js:0
+#, python-format
+msgid "The date you selected is lower than the minimum date: "
 msgstr ""
 
 #. module: survey
@@ -2649,7 +2668,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
 msgid "The page you were looking for could not be authorized."
-msgstr "Non sei autorizzato ad accedere alla pagina che stavi cercando."
+msgstr "Nessuna autorizzazione per accedere alla pagina."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_time_limited
@@ -2714,6 +2733,8 @@ msgid ""
 "This list of emails of recipients will not be converted in contacts.        "
 "Emails must be separated by commas, semicolons or newline."
 msgstr ""
+"Questo elenco e-mail destinatario non verrà convertito in contatti.        "
+"Le e-mail devono essere separare da virgole, punti e virgola oppure a capo."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__thank_you_message
@@ -2725,7 +2746,7 @@ msgstr ""
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
 msgid "This question cannot be unanswered or skipped."
-msgstr ""
+msgstr "Questa domanda non può essere ignorata o saltata."
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
@@ -2787,7 +2808,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.auth_required
 msgid "This survey is open only to registered people. Please"
-msgstr ""
+msgstr "Questo sondaggio è aperto solo a persone registrate. "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -2832,7 +2853,7 @@ msgstr "Tipo di risposte"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Tipo di attività di eccezione nel record."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__labels_ids
@@ -2907,13 +2928,13 @@ msgstr "Utente"
 #. module: survey
 #: model:survey.survey,title:survey.survey_feedback
 msgid "User Feedback Form"
-msgstr ""
+msgstr "Modulo riscontro dell'utente"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__user_input_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
 msgid "User Input"
-msgstr ""
+msgstr "Input utente"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
@@ -2925,7 +2946,7 @@ msgstr "Risposte utenti"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_form
 msgid "User input line details"
-msgstr ""
+msgstr "Dettagli riga input utente"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__user_input_ids
@@ -3038,6 +3059,9 @@ msgid ""
 "feedback, recruitment interviews, employee's periodical evaluations, "
 "marketing campaigns, etc."
 msgstr ""
+"Puoi creare sondaggi per diversi scopi: opinioni dei clienti, feedback sui "
+"servizi, interviste di reclutamento, valutazioni periodiche dei dipendenti, "
+"campagne di merketing, etc."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_certificate_check
@@ -3051,12 +3075,13 @@ msgstr ""
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr ""
+"Impossibile spedire un invito per un sondaggio che non contiene domande."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "You cannot send invitations for closed surveys."
-msgstr ""
+msgstr "Impossibile spedire inviti per sondaggi chiusi."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
@@ -3101,4 +3126,4 @@ msgstr "sondaggio nullo"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
 msgid "this page"
-msgstr ""
+msgstr "questa"

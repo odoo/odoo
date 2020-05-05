@@ -14,22 +14,22 @@
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2019
 # Petra <bop@odoo.com>, 2019
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Manuela Feliciani <mfeliciani@alice.it>, 2019
 # Martin Trigaux, 2019
 # Giovanni Perteghella <giovanni@perteghella.org>, 2019
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2019
 # Paolo Valier, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 09:46+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -385,6 +385,13 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            Crea un progetto Google e ricevi una chiave"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            Enable billing on your Google Project"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1263,7 +1270,7 @@ msgstr "Base"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_base
 msgid "Base View Architecture"
-msgstr ""
+msgstr "Architettura vista base"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1364,7 +1371,7 @@ msgstr "Annulla"
 #: code:addons/website/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used on a website."
-msgstr ""
+msgstr "Impossibile disattivare una lingua attualmente in uso in un sito web."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -1414,6 +1421,13 @@ msgstr "Modifica Copertina"
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Change Icons"
 msgstr "Modifica delle icone"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/widgets/theme.js:0
+#, python-format
+msgid "Changing this color will regenerate the default theme color scheme"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__field_parent
@@ -1534,6 +1548,7 @@ msgstr "Clona pagina"
 #. openerp-web
 #: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
+#: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
@@ -1591,7 +1606,7 @@ msgstr "Configurazione"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_social_network
 msgid "Configure Social Network"
-msgstr "Configurazione dei \"social network\""
+msgstr "Configurazione social network"
 
 #. module: website
 #. openerp-web
@@ -2878,7 +2893,10 @@ msgid "Indexed"
 msgstr "Indicizzata"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#, python-format
 msgid "Info"
 msgstr "Informazioni"
 
@@ -4159,12 +4177,12 @@ msgstr "Qualità"
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb
 msgid "Qweb"
-msgstr "Qweb"
+msgstr "QWeb"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr "Campo qweb contatto"
+msgstr "Campo QWeb contatto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_btn
@@ -5107,7 +5125,7 @@ msgstr ""
 #: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #, python-format
 msgid "Translate Attribute"
-msgstr ""
+msgstr "Attributo traduzione"
 
 #. module: website
 #. openerp-web
@@ -6031,11 +6049,6 @@ msgstr "px"
 #, python-format
 msgid "signs to get your website ready in no time."
 msgstr "per configurare rapidamente il tuo sito web."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid "sitemap.xml"
-msgstr "sitemap.xml"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search

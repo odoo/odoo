@@ -12,10 +12,11 @@
 # snow wang <147156565@qq.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
 # Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
+# as co02 <asco02@163.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +76,7 @@ msgid ""
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">添加</span>\n"
-"                                <span class=\"o_stat_text\">上下文动作</span>"
+"                                <span class=\"o_stat_text\">上下文操作</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -84,7 +85,7 @@ msgid ""
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">移除</span>\n"
-"                                <span class=\"o_stat_text\">上下文动作</span>"
+"                                <span class=\"o_stat_text\">上下文操作</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -103,7 +104,7 @@ msgstr "后置操作"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__active_domain
 msgid "Active domain"
-msgstr "有效域名"
+msgstr "启用域名"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__active_domain_count
@@ -1004,20 +1005,28 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"服务器操作的类型。 提供以下值：\n"
+"-“执行Python代码”：将要执行的python代码块\n"
+"-'创建'：使用新值创建新记录\n"
+"-“更新记录”：更新记录的值\n"
+"-“执行多个动作”：定义一个触发其他几个服务器动作的动作\n"
+"-“发送电子邮件”：自动发送电子邮件（讨论）\n"
+"-“添加关注者”：将关注者添加到记录中（讨论）\n"
+"-“创建下一个活动”：创建活动（讨论）"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
 msgid ""
 "UX field computing the number of recipients in mass mode based on given "
 "active domain"
-msgstr "UX字段基于给定的活动域计算质量模式中的接收者数量"
+msgstr "UX字段基于给定的启用域计算质量模式中的接收者数量"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
 msgid ""
 "UX field computing the number of recipients in mass mode without active "
 "domain"
-msgstr "UX字段计算没有活动域的领域发模式下的收件人数"
+msgstr "UX字段计算没有启用域的域发模式下的收件人数"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
@@ -1027,7 +1036,7 @@ msgstr "使用模版"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__use_active_domain
 msgid "Use active domain"
-msgstr "使用有效域名"
+msgstr "使用启用域名"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_use_blacklist

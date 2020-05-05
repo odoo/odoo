@@ -528,7 +528,7 @@ class TestAccessRightsRead(TestLeavesRights):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_read_by_user_other(self):
-        """ Users should be able to read other people requests except name field """
+        """ Users should not be able to read other people requests """
         other_leave = self.env['hr.leave'].with_user(self.user_hruser).create({
             'name': 'Test',
             'holiday_status_id': self.leave_type.id,
@@ -538,15 +538,12 @@ class TestAccessRightsRead(TestLeavesRights):
             'date_to': datetime.now() + relativedelta(days=1),
             'number_of_days': 1,
         })
-        res = other_leave.with_user(self.user_employee_id).read(['number_of_days', 'state', 'name'])
-        self.assertEqual(
-            res[0]['name'], '*****',
-            'Private information should have been stripped, received %s instead' % res[0]['name']
-        )
+        with self.assertRaises(AccessError), self.cr.savepoint():
+            res = other_leave.with_user(self.user_employee_id).read(['number_of_days', 'state', 'name'])
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_read_by_user_other_browse(self):
-        """ Users should be able to browse other people requests except name field """
+        """ Users should not be able to browse other people requests """
         other_leave = self.env['hr.leave'].with_user(self.user_hruser).create({
             'name': 'Test',
             'holiday_status_id': self.leave_type.id,
@@ -556,11 +553,9 @@ class TestAccessRightsRead(TestLeavesRights):
             'date_to': datetime.now() + relativedelta(days=1),
             'number_of_days': 1,
         })
-        other_leave.invalidate_cache(['name'])
-        self.assertEqual(
-            other_leave.with_user(self.user_employee_id).name, '*****',
-            'Private information should have been stripped, received %s instead' % other_leave.with_user(self.user_employee_id).name
-        )
+        with self.assertRaises(AccessError), self.cr.savepoint():
+            other_leave.invalidate_cache(['name'])
+            name = other_leave.with_user(self.user_employee_id).name
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_read_by_user_own(self):

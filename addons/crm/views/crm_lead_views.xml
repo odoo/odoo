@@ -240,8 +240,9 @@
                                     <group string="Email" groups="base.group_no_one">
                                         <field name="message_bounce" readonly="1"/>
                                     </group>
-                                    <group string="Tracking" groups="base.group_multi_company" name="categorization">
+                                    <group string="Tracking" name="categorization">
                                         <field name="company_id"
+                                            groups="base.group_multi_company"
                                             options="{'no_create': True}"/>
                                         <field name="campaign_id" />
                                         <field name="medium_id"/>
@@ -325,7 +326,7 @@
                     <field name="contact_name" optional="show"/>
                     <field name="partner_name" optional="hide"/>
                     <field name="email_from" optional="show"/>
-                    <field name="phone" optional="show"/>
+                    <field name="phone" optional="show" class="o_force_ltr"/>
                     <field name="city" optional="show"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
@@ -585,7 +586,7 @@
                     <field name="name" string="Opportunity"/>
                     <field name="partner_id" string="Customer" optional="show"/>
                     <field name="email_from" optional="hide"/>
-                    <field name="phone" optional="hide"/>
+                    <field name="phone" class="o_force_ltr" optional="hide"/>
                     <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>

@@ -210,6 +210,55 @@ class TestVariants(common.TestProductCommon):
         self.assertEqual(variant_copy.name, 'Test Copy (copy) (copy)')
         self.assertEqual(len(variant_copy.product_variant_ids), 2)
 
+    def test_standard_price(self):
+        """ Ensure template values are correctly (re)computed depending on the context """
+        one_variant_product = self.product_1
+        self.assertEqual(one_variant_product.product_variant_count, 1)
+
+        company_a = self.env.company
+        company_b = self.env['res.company'].create({'name': 'CB', 'currency_id': self.env.ref('base.VEF').id})
+
+        self.assertEqual(one_variant_product.cost_currency_id, company_a.currency_id)
+        self.assertEqual(one_variant_product.with_context(force_company=company_b.id).cost_currency_id, company_b.currency_id)
+
+        one_variant_template = one_variant_product.product_tmpl_id
+        self.assertEqual(one_variant_product.standard_price, one_variant_template.standard_price)
+        one_variant_product.with_context(force_company=company_b.id).standard_price = 500.0
+        self.assertEqual(
+            one_variant_product.with_context(force_company=company_b.id).standard_price,
+            one_variant_template.with_context(force_company=company_b.id).standard_price
+        )
+        self.assertEqual(
+            500.0,
+            one_variant_template.with_context(force_company=company_b.id).standard_price
+        )
+
+    def test_archive_variant(self):
+        template = self.env['product.template'].create({
+            'name': 'template'
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+
+        template.write({
+            'attribute_line_ids': [(0, False, {
+                'attribute_id': self.size_attr.id,
+                'value_ids': [
+                    (4, self.size_attr.value_ids[0].id, self.size_attr_value_s),
+                    (4, self.size_attr.value_ids[1].id, self.size_attr_value_m)
+                ],
+            })]
+        })
+        self.assertEqual(len(template.product_variant_ids), 2)
+        variant_1 = template.product_variant_ids[0]
+        variant_1.toggle_active()
+        self.assertFalse(variant_1.active)
+        self.assertEqual(len(template.product_variant_ids), 1)
+        self.assertEqual(len(template.with_context(
+            active_test=False).product_variant_ids), 2)
+        variant_1.toggle_active()
+        self.assertTrue(variant_1.active)
+        self.assertTrue(template.active)
+
 
 class TestVariantsNoCreate(common.TestProductCommon):
 

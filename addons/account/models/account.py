@@ -58,6 +58,12 @@ class AccountAccountTag(models.Model):
     tax_negate = fields.Boolean(string="Negate Tax Balance", help="Check this box to negate the absolute value of the balance of the lines associated with this tag in tax report computation.")
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="Country for which this tag is available, when applied on taxes.")
 
+    @api.constrains('country_id', 'applicability')
+    def _validate_tag_country(self):
+        for record in self:
+            if record.applicability == 'taxes' and not record.country_id:
+                raise ValidationError(_("A tag defined to be used on taxes must always have a country set."))
+
 
 class AccountTaxReportLine(models.Model):
     _name = "account.tax.report.line"
@@ -306,7 +312,7 @@ class AccountAccount(models.Model):
         # This field should have been a char, but the aim is to use it in a side panel view with hierarchy, and it's only supported by many2one fields so far.
         # So instead, we make it a many2one to a psql view with what we need as records.
         for record in self:
-            record.root_id = (ord(record.code[0]) * 1000 + ord(record.code[1:2] or ' ')) if record.code else False
+            record.root_id = (ord(record.code[0]) * 1000 + ord(record.code[1:2] or '\x00')) if record.code else False
 
     def _search_used(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
@@ -974,7 +980,7 @@ class AccountJournal(models.Model):
             draft_moves = self.env['account.move'].search([('journal_id', 'in', self.ids), ('state', '=', 'draft')])
             pending_payments = draft_moves.mapped('line_ids.payment_id')
             pending_payments.mapped('move_line_ids.move_id').post()
-            pending_payments.mapped('reconciled_invoice_ids').filtered(lambda x: x.state == 'in_payment').write({'state': 'paid'})
+            pending_payments.mapped('reconciled_invoice_ids').filtered(lambda x: x.invoice_payment_state == 'in_payment').write({'invoice_payment_state': 'paid'})
         for record in self:
             if record.restrict_mode_hash_table and not record.secure_sequence_id:
                 record._create_secure_sequence(['secure_sequence_id'])
@@ -1351,9 +1357,9 @@ class AccountTax(models.Model):
             JOIN account_tax tax ON tax.id = line.tax_line_id
             WHERE line.tax_line_id IN %s
             AND line.company_id != tax.company_id
-            
+
             UNION ALL
-            
+
             SELECT line.id
             FROM account_move_line_account_tax_rel tax_rel
             JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
@@ -1564,7 +1570,7 @@ class AccountTax(models.Model):
         # || tax_3 |   ..   |          |
         # ||  ...  |   ..   |    ..    |
         #    ----------------------------
-        def recompute_base(base_amount, fixed_amount, percent_amount, division_amount):
+        def recompute_base(base_amount, fixed_amount, percent_amount, division_amount, prec):
             # Recompute the new base amount based on included fixed/percent amounts and the current base amount.
             # Example:
             #  tax  |  amount  |   type   |  price_include  |
@@ -1577,7 +1583,7 @@ class AccountTax(models.Model):
 
             # if base_amount = 145, the new base is computed as:
             # (145 - 15) / (1.0 + 30%) * 90% = 130 / 1.3 * 90% = 90
-            return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100
+            return round((base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100, prec)
 
         base = round(price_unit * quantity, prec)
 
@@ -1606,7 +1612,7 @@ class AccountTax(models.Model):
                 sum_repartition_factor = sum(tax_repartition_lines.mapped("factor"))
 
                 if tax.include_base_amount:
-                    base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
+                    base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, prec)
                     incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
                     store_included_tax_total = True
                 if tax.price_include or self._context.get('force_price_include'):
@@ -1618,7 +1624,7 @@ class AccountTax(models.Model):
                         incl_fixed_amount += quantity * tax.amount * sum_repartition_factor
                     else:
                         # tax.amount_type == other (python)
-                        tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner) * sum_repartition_factor
+                        tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner) * sum_repartition_factor
                         incl_fixed_amount += tax_amount
                         # Avoid unecessary re-computation
                         cached_tax_amounts[i] = tax_amount
@@ -1627,7 +1633,7 @@ class AccountTax(models.Model):
                         store_included_tax_total = False
                 i -= 1
 
-        total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
+        total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, prec)
 
         # 5) Iterate the taxes in the sequence order to compute missing tax amounts.
         # Start the computation of accumulated amounts at the total_excluded value.

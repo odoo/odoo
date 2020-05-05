@@ -8,7 +8,6 @@
 # bower Guo <124358678@qq.com>, 2019
 # roye w <159820@qq.com>, 2019
 # snow wang <147156565@qq.com>, 2019
-# Martin Trigaux, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2019
 # Summer Xia <sxi@odoo.com>, 2019
 # John An <johnxan@163.com>, 2019
@@ -17,7 +16,6 @@
 # Felix Yuen <fyu@odoo.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # Xia Fajin <xia.fajin@elico-corp.com>, 2019
-# liulixia <liu.lixia@elico-corp.com>, 2019
 # Gary Wei <Gary.wei@elico-corp.com>, 2019
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2019
 # Bo Cao, 2019
@@ -26,16 +24,18 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # niulin lnc. <admin@niulin.net>, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 笔 陈 <cowboycb@qq.com>, 2020
+# as co02 <asco02@163.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: 笔 陈 <cowboycb@qq.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,7 +128,7 @@ msgstr "日历进度的60%"
 msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
-msgstr "<b>恭喜！</b> 我可以建议您设置<a href=\"%s\">入门计划吗？</a>"
+msgstr "<b>恭喜您！</b> 您可以设置<a href=\"%s\">入职计划</a>了。"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -150,7 +150,7 @@ msgstr "<b>灵活的</b>工作小时"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<br>What do we offer?"
-msgstr ""
+msgstr "<br>我们能提供什么?"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -165,7 +165,7 @@ msgid ""
 "title=\"Absent\" name=\"presence_absent\"/>"
 msgstr ""
 "<span class=\"fa fa-circle text-danger\" role=\"img\" aria-label=\"Absent\" "
-"title=\"Absent\" name=\"presence_absent\"/>"
+"title=\"缺勤\" name=\"presence_absent\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -175,7 +175,7 @@ msgid ""
 "label=\"Present\" title=\"Present\" name=\"presence_present\"/>"
 msgstr ""
 "<span class=\"fa fa-circle text-success\" role=\"img\" aria-"
-"label=\"Present\" title=\"Present\" name=\"presence_present\"/>"
+"label=\"Present\" title=\"出勤\" name=\"presence_present\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -211,7 +211,7 @@ msgstr "<span class=\"ml8 mr-2\">要发送的最少电子邮件数量</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Presence Control</span>"
-msgstr "<span class=\"o_form_label\">出席控制</span>"
+msgstr "<span class=\"o_form_label\">出勤控制</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -233,7 +233,7 @@ msgstr "<span class=\"o_stat_text\">连接以来</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span class=\"o_stat_text\">Present Since</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">连接以来</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -339,7 +339,7 @@ msgstr "缺勤"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
 msgid "Action Needed"
-msgstr "需要采取行动"
+msgstr "需要行动"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -348,7 +348,7 @@ msgstr "需要采取行动"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__active
 #: model:ir.model.fields,field_description:hr.field_hr_plan__active
 msgid "Active"
-msgstr "有效"
+msgstr "启用"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
@@ -429,12 +429,12 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
 msgid "Advanced Presence Control"
-msgstr "高级出席控制"
+msgstr "高级出勤控制"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Advanced presence of employees"
-msgstr "高级员工出席控制"
+msgstr "员工高级出勤控制"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
@@ -503,7 +503,7 @@ msgstr "自动将这些部门的成员订阅到该频道。"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Autonomy:"
-msgstr ""
+msgstr "独立:"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -533,7 +533,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__bachelor
 msgid "Bachelor"
-msgstr "学士"
+msgstr "本科"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -544,7 +544,7 @@ msgstr "学士"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Bachelor or Master Degree"
-msgstr ""
+msgstr "本科或硕士"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
@@ -613,7 +613,7 @@ msgstr "证书等级"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.res_users_action_my
 msgid "Change my Preferences"
-msgstr "更改我的个人资料"
+msgstr "更改个人资料"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -628,12 +628,12 @@ msgstr "聊天"
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
 msgid "Chief Executive Officer"
-msgstr "首席执行官"
+msgstr "CEO"
 
 #. module: hr
 #: model:hr.job,name:hr.job_cto
 msgid "Chief Technical Officer"
-msgstr "首席技术官"
+msgstr "CTO"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
@@ -653,13 +653,13 @@ msgstr "国籍"
 #: model:ir.model.fields,field_description:hr.field_res_users__coach_id
 #: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__coach
 msgid "Coach"
-msgstr "教练"
+msgstr "师傅"
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "Coach of employee %s is not set."
-msgstr "没有设置%s员工的辅导員。"
+msgstr "未设置员工%s的师傅。"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -670,7 +670,7 @@ msgstr "没有设置%s员工的辅导員。"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Coach small distributed dev teams"
-msgstr ""
+msgstr "指导小型分布式开发团队"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__color
@@ -774,7 +774,7 @@ msgstr "联系信息"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Contribution to Open Source Projects"
-msgstr ""
+msgstr "贡献到开源项目"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
@@ -836,7 +836,7 @@ msgstr "当前员工数量"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Customer Relationship:"
-msgstr ""
+msgstr "客户关系:"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
@@ -1125,18 +1125,18 @@ msgstr "在此处输入员工的家庭地址，非办公地址"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Evolution"
-msgstr ""
+msgstr "发展"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
 msgid "Expected New Employees"
-msgstr "期望的新员工"
+msgstr "所需员工数"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
-msgstr "招聘后期望的新员工数"
+msgstr "招聘后此岗位期望的新员工数"
 
 #. module: hr
 #: model:hr.job,name:hr.job_developer
@@ -1172,7 +1172,7 @@ msgstr "关注者"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_channel_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "关注者(渠道)"
+msgstr "关注者(频道)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_partner_ids
@@ -1241,7 +1241,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Great Work Place"
-msgstr ""
+msgstr "很棒的工作场所"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -1277,7 +1277,7 @@ msgstr "已雇用员工"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
 #: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
 msgid "Hr Presence State"
-msgstr "人力资源出席状态"
+msgstr "人力资源出勤状态"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -1317,7 +1317,7 @@ msgstr "图标"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "表示一个例外活动的图标。"
+msgstr "表示异常活动的图标。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
@@ -1347,7 +1347,7 @@ msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "如设置为无效，不需删除就可以隐藏。"
+msgstr "如设置为未启用，不需删除就可以隐藏。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -1411,7 +1411,7 @@ msgstr "工作"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__description
 msgid "Job Description"
-msgstr "工作说明"
+msgstr "工作描述"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
@@ -1596,7 +1596,7 @@ msgstr "男性"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Manager"
-msgstr "管理员"
+msgstr "经理"
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
@@ -1655,14 +1655,14 @@ msgstr "消息"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Must Have"
-msgstr ""
+msgstr "必备"
 
 #. module: hr
 #. openerp-web
 #: code:addons/hr/static/src/xml/hr_templates.xml:0
 #, python-format
 msgid "My Profile"
-msgstr "我的配置"
+msgstr "个人资料"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__name
@@ -1781,7 +1781,7 @@ msgstr "备注"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction_counter
 msgid "Number of Actions"
-msgstr "操作次数"
+msgstr "动作个数"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
@@ -2002,12 +2002,12 @@ msgstr "个人设置"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence of employees"
-msgstr "员工出席"
+msgstr "员工出勤"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence reporting screen, email and IP address control."
-msgstr "出席状态报告屏幕，电子邮件和IP地址控制。"
+msgstr "出勤状态报告屏幕，电子邮件和IP地址控制。"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__present
@@ -2054,7 +2054,7 @@ msgstr "私人电话"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Product Complexity:"
-msgstr ""
+msgstr "产品复杂度:"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2181,6 +2181,7 @@ msgstr "相关的员工"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
+#: model:ir.model.fields,help:hr.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
 msgstr "管理资源访问权限的相关用户名"
 
@@ -2224,6 +2225,11 @@ msgstr "资源"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_calendar_id
 msgid "Resource Calendar"
 msgstr "资源日历"
+
+#. module: hr
+#: model:ir.model,name:hr.model_resource_resource
+msgid "Resources"
+msgstr "资源"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2435,7 +2441,7 @@ msgstr "标签"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Team Size:"
-msgstr ""
+msgstr "团队规模:"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2569,6 +2575,7 @@ msgstr "未读消息计数器"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_id
+#: model:ir.model.fields,field_description:hr.field_resource_resource__user_id
 msgid "User"
 msgstr "用户"
 
@@ -2609,7 +2616,7 @@ msgstr "用户"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Users of the Product:"
-msgstr ""
+msgstr "产品的用户:"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
@@ -2668,6 +2675,8 @@ msgid ""
 "Who is your\n"
 "                            manager?"
 msgstr ""
+"谁是你的\n"
+"                            经理？"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
@@ -2766,7 +2775,7 @@ msgstr "办公电话"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Working Environment"
-msgstr ""
+msgstr "工作环境"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id

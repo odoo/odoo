@@ -8,17 +8,19 @@
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
 # Paolo Valier, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Luana Andronico <andronicoluana@gmail.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Iacopo Simonelli <lsi@odoo.com>, 2020
+# Pietro Della Notte <pdellanotte@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Pietro Della Notte <pdellanotte@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,6 +65,13 @@ msgid ""
 "    <p>Odoo S.A.</p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>Gentile,</p>\n"
+"   <p> Non ci sono più crediti nel suo conto IAP per la generazione di contatti.<br/>\n"
+"    Può ricaricare il suo conto IAP per la generazione di contatti dal menu configurazione dell' applicazione CRM.<br/></p>\n"
+"   <p> Distinti saluti,</p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
@@ -90,6 +99,11 @@ msgid ""
 "            No opportunities could be generated according to your search criteria\n"
 "        </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_empty_folder\">\n"
+"            Nessuna opportunità trovata\n"
+"        </p><p>\n"
+"            In base ai criteri di ricerca non può essere generata alcuna opportunità\n"
+"        </p>"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
@@ -266,6 +280,11 @@ msgid "Error"
 msgstr "Errore"
 
 #. module: crm_iap_lead
+#: model:ir.model,name:crm_iap_lead.model_ir_model_fields
+msgid "Fields"
+msgstr "Campi"
+
+#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_filter_type
 msgid "Filter on"
 msgstr "Filtra per"
@@ -322,7 +341,7 @@ msgstr "Attrezzatura e servizi per assistenza sanitaria"
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_helpers
 msgid "Helper methods for crm_iap_lead modules"
-msgstr ""
+msgstr "Metodi di supporto per i moduli crm_iap_lead"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_155
@@ -403,12 +422,12 @@ msgstr "Contatto"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_contacts_credits
 msgid "Lead Contacts Credits"
-msgstr ""
+msgstr "Crediti per ricerca contatti"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_credits
 msgid "Lead Credits"
-msgstr ""
+msgstr "Crediti contatti"
 
 #. module: crm_iap_lead
 #: model:ir.ui.menu,name:crm_iap_lead.crm_menu_lead_generation
@@ -435,7 +454,7 @@ msgstr "Richieste estrazione contatto"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_total_credits
 msgid "Lead Total Credits"
-msgstr ""
+msgstr "Totale dei crediti contatti"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_lead
@@ -453,6 +472,8 @@ msgid ""
 "Make sure you know if you have to be GDPR compliant for storing personal "
 "data."
 msgstr ""
+"Assicurati di informarti se devi essere conforme alla normativa GDPR per "
+"l'archiviazione dei dati personali."
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_148
@@ -462,7 +483,7 @@ msgstr "Materiali"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_86
 msgid "Media"
-msgstr ""
+msgstr "Media"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__name
@@ -574,12 +595,12 @@ msgstr "Riprova"
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__reveal_id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__reveal_id
 msgid "Reveal"
-msgstr ""
+msgstr "Rivela"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__reveal_id
 msgid "Reveal ID"
-msgstr ""
+msgstr "Rivela ID"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__contact_filter_type__role
@@ -683,7 +704,7 @@ msgstr "Servizi di telecomunicazione"
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "This makes a total of %d credits for this request."
-msgstr ""
+msgstr "Il totale per questa richiesta é di %d crediti"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
@@ -708,6 +729,8 @@ msgid ""
 "Up to %d additional credits will be consumed to identify %d contacts per "
 "company."
 msgstr ""
+"Fino a %d crediti aggiuntivi verrano utilizzati per identificare %d contatti"
+" per azienda."
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138
@@ -732,7 +755,7 @@ msgstr "Consulenza"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_4
 msgid "customer_service"
-msgstr ""
+msgstr "customer_service"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.seniority,name:crm_iap_lead.crm_iap_lead_seniority_1
@@ -757,12 +780,12 @@ msgstr "ingegneria"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.seniority,name:crm_iap_lead.crm_iap_lead_seniority_2
 msgid "executive"
-msgstr ""
+msgstr "executive"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_7
 msgid "finance"
-msgstr ""
+msgstr "Finanza"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_8
@@ -777,12 +800,12 @@ msgstr "health_professional"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_10
 msgid "human_resources"
-msgstr ""
+msgstr "human_resources"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_11
 msgid "information_technology"
-msgstr ""
+msgstr "information_technology"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_12
@@ -822,7 +845,7 @@ msgstr "prodotto"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_18
 msgid "public_relations"
-msgstr ""
+msgstr "Relazioni pubbliche"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_19

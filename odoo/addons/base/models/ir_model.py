@@ -583,12 +583,16 @@ class IrModelFields(models.Model):
                 continue
             model = self.env.get(field.model)
             is_model = model is not None
-            if is_model and tools.column_exists(self._cr, model._table, field.name) and \
-                    tools.table_kind(self._cr, model._table) == 'r':
-                self._cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (model._table, field.name))
-            if field.state == 'manual' and field.ttype == 'many2many':
-                rel_name = field.relation_table or (is_model and model._fields[field.name].relation)
-                tables_to_drop.add(rel_name)
+            if field.store:
+                # TODO: Refactor this brol in master
+                if is_model and tools.column_exists(self._cr, model._table, field.name) and \
+                        tools.table_kind(self._cr, model._table) == 'r':
+                    self._cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (
+                        model._table, field.name,
+                    ))
+                if field.state == 'manual' and field.ttype == 'many2many':
+                    rel_name = field.relation_table or (is_model and model._fields[field.name].relation)
+                    tables_to_drop.add(rel_name)
             if field.state == 'manual' and is_model:
                 model._pop_field(field.name)
             if field.translate:
@@ -1184,7 +1188,8 @@ class IrModelSelection(models.Model):
                               'preferably through a custom addon!'))
 
         for selection in self:
-            if selection.field_id.store:
+            if selection.field_id.store and \
+                    not self.env[selection.field_id.model]._abstract:
                 # replace the value by NULL in the field's corresponding column
                 query = 'UPDATE "{table}" SET "{field}"=NULL WHERE "{field}"=%s'.format(
                     table=self.env[selection.field_id.model]._table,

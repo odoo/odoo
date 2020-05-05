@@ -91,7 +91,7 @@
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
-                    <field name="work_phone"/>
+                    <field name="work_phone" class="o_force_ltr"/>
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
@@ -136,7 +136,7 @@
                                 <ul>
                                     <li id="last_login"/>
                                     <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
-                                    <li t-if="record.work_phone.raw_value"><field name="work_phone" /></li>
+                                    <li t-if="record.work_phone.raw_value" class="o_force_ltr"><field name="work_phone" /></li>
                                 </ul>
                             </div>
                         </div>

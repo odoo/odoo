@@ -301,7 +301,7 @@
                                     </div>
                                 </div>
                                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile" widget ="phone"/><br/></t>
+                                <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile" widget="phone"/><br/></t>
                                 <div class="o_kanban_record_bottom mt4">
                                     <div class="oe_kanban_bottom_left">
                                         <div class="float-left mr4" groups="base.group_user">

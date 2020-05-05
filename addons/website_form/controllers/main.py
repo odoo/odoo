@@ -182,7 +182,7 @@ class WebsiteForm(http.Controller):
         model_name = model.sudo().model
         if model_name == 'mail.mail':
             values.update({'reply_to': values.get('email_from')})
-        record = request.env[model_name].sudo().with_context(mail_create_nosubscribe=True).create(values)
+        record = request.env[model_name].with_user(SUPERUSER_ID).with_context(mail_create_nosubscribe=True).create(values)
 
         if custom or meta:
             _custom_label = "%s\n___________\n\n" % _("Other Information:")  # Title for custom fields
@@ -208,7 +208,7 @@ class WebsiteForm(http.Controller):
                     'no_auto_thread': False,
                     'res_id': record.id,
                 }
-                mail_id = request.env['mail.message'].sudo().create(values)
+                mail_id = request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
 
         return record.id
 

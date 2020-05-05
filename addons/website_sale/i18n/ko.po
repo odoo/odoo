@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 09:01+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
 "Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -124,7 +124,7 @@ msgid ""
 "                            Resume order\n"
 "                        </a>\n"
 "                    </div>\n"
-"                    <div style=\"text-align: center;\"><strong>Thank you for shopping with ${user.company_id.name}!</strong></div>\n"
+"                    <div style=\"text-align: center;\"><strong>Thank you for shopping with ${company.name}!</strong></div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
 "                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
@@ -194,7 +194,7 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <h1 style=\"color:#A9A9A9;\">장바구니에 무언가 남아 있습니다.</h1>\n"
-"                    구매를 완료 하시겠습니까?<br/><br/>\n"
+"                    구매를 완료하시겠습니까?<br/><br/>\n"
 "                    % if object.order_line:\n"
 "                        % for line in object.website_order_line:\n"
 "                            <hr/>\n"
@@ -219,7 +219,7 @@ msgstr ""
 "                            주문 재개\n"
 "                        </a>\n"
 "                    </div>\n"
-"                    <div style=\"text-align: center;\"><strong>${user.company_id.name}에서 쇼핑해 주셔서 감사합니다!</strong></div>\n"
+"                    <div style=\"text-align: center;\"><strong>${company.name}에서 쇼핑해 주셔서 감사합니다!</strong></div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
 "                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
@@ -895,12 +895,12 @@ msgstr "이 지연 이후에는 장바구니는 취소된 것으로 표시됩니
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: High to Low"
-msgstr "범주별 가격 : 높은가격순"
+msgstr "상품안내서 가격 : 높은가격순"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: Low to High"
-msgstr "범주별 가격 : 낮은가격순"
+msgstr "상품안내서 가격 : 낮은가격순"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -958,7 +958,7 @@ msgstr "크리스마스"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "City"
-msgstr "시"
+msgstr "시/군/구"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1102,7 +1102,7 @@ msgstr "국가..."
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
 msgid "Create a new product"
-msgstr "신규 상품 생성"
+msgstr "새 상품 만들기"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__create_uid
@@ -1421,7 +1421,7 @@ msgstr "그리드"
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Group By"
-msgstr "그룹화"
+msgstr "그룹별"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style__html_class
@@ -1553,7 +1553,7 @@ msgstr "초안 상태가 아닌 판매 주문을 수정하는 것은 금지되�
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
 msgid "Journal Entries"
-msgstr "분개"
+msgstr "분개장 기입 항목"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__just_done
@@ -2190,12 +2190,12 @@ msgstr "상품 서식"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "상품 속성 범주 명세"
+msgstr "상품 서식 속성 명세"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr "상품 Tmpl"
+msgstr "상품 서식"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_variant_id
@@ -2225,7 +2225,7 @@ msgstr "상품이 없습니다!"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product prices displaying in web catalog"
-msgstr "웹 카달로그에 표시되는 상품 가격"
+msgstr "웹 상품안내서에 표시되는 상품 가격"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
@@ -2730,7 +2730,7 @@ msgstr "소계 :"
 msgid ""
 "Suggest alternatives to your customer (upsell strategy). Those products show"
 " up on the product page."
-msgstr "고객에게 보다 비싼 대안을 제시합니다(상향판매 전략). 해당 상품은 상품 페이지에 표시됩니다."
+msgstr "고객에게 보다 비싼 대안을 제시합니다(연쇄판매 전략). 해당 상품은 상품 페이지에 표시됩니다."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -3042,7 +3042,7 @@ msgstr "우리 가게에 놀라운 제품을 가지고 있습니다. 지금 확�
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Website"
-msgstr "웹사이트 관리"
+msgstr "웹사이트"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard

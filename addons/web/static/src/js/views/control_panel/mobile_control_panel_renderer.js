@@ -46,14 +46,15 @@ ControlPanelRenderer.include({
      * @private
      * @override
      */
-    _renderSearchBar: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self._renderSearchviewInput();
-        });
+    _renderSearchBar: async function () {
+        await this._super.apply(this, arguments);
+        this._renderSearchviewInput();
+        if (!this.withBreadcrumbs) {
+            this._mobileQuickSearchView();
+        }
     },
     _renderSearchviewInput: function () {
-        if (this.$('.o_toggle_searchview_full').is(':visible') && !this.$('.o_mobile_search').is(':visible')) {
+        if (!this.withBreadcrumbs || (this.$('.o_toggle_searchview_full').is(':visible') && !this.$('.o_mobile_search').is(':visible'))) {
             this.$('.o_toggle_searchview_full').toggleClass('btn-secondary', !!this.state.query.length);
             this.searchBar.$el.detach().insertAfter(this.$('.o_mobile_search'));
         } else {
@@ -70,6 +71,18 @@ ControlPanelRenderer.include({
         this._renderSearchviewInput();
     },
     /**
+     * Display mobile quick search on screen
+     */
+    _mobileQuickSearchView() {
+        this.$('.o_cp_searchview').addClass('o_searchview_quick');
+        this.$('.breadcrumb').addClass('o_hidden');
+        this.$('.o_toggle_searchview_full')
+            .removeClass('o_hidden')
+            .toggleClass('btn-secondary', !!this.state.query.length);
+        this._renderSearchviewInput();
+        this.$('.o_enable_searchview').hide();
+    },
+    /**
      * Toggles mobile quick search view on screen.
      *
      * @private
@@ -82,7 +95,9 @@ ControlPanelRenderer.include({
             .toggleClass('o_hidden')
             .toggleClass('btn-secondary', !!this.state.query.length);
         this._renderSearchviewInput();
-        this.$('.o_enable_searchview').toggleClass("fa-search").toggleClass("fa-close");
+        this.$('.o_enable_searchview')
+            .toggleClass("fa-search")
+            .toggleClass("fa-arrow-left")
     },
 
     //--------------------------------------------------------------------------

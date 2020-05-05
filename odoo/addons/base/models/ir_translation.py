@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import hashlib
 import itertools
+import json
 import logging
 import operator
 from collections import defaultdict
@@ -237,9 +239,11 @@ class IrTranslation(models.Model):
                         record = model.browse(trans.res_id)
                         record.modified([field.name])
         for trans in self:
-            if trans.type != 'model' or trans.name.split(',')[0] in self.CACHED_MODELS:
-                self.clear_caches()
-                break
+            if (trans.type != 'model' or
+               (trans.name.split(',')[0] in self.CACHED_MODELS) or
+               (trans.comments and 'openerp-web' in trans.comments)):  # clear get_web_trans_hash
+                        self.clear_caches()
+                        break
 
     @api.model
     def _set_ids(self, name, tt, lang, ids, value, src=None):
@@ -594,7 +598,7 @@ class IrTranslation(models.Model):
         if callable(field.translate):
             # insert missing translations for each term in src
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module, state)
-                        SELECT l.code, 'model_terms', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s, 'to_translate'
+                        SELECT l.code, 'model_terms', %(name)s, %(res_id)s, %(src)s, '', %(module)s, 'to_translate'
                         FROM res_lang l
                         WHERE l.active AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
@@ -615,7 +619,7 @@ class IrTranslation(models.Model):
         else:
             # insert missing translations for src
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module, state)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s, 'to_translate'
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, '', %(module)s, 'to_translate'
                         FROM res_lang l
                         WHERE l.active AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
@@ -747,7 +751,7 @@ class IrTranslation(models.Model):
             self.insert_missing(fld, rec)
 
         action = {
-            'name': 'Translate',
+            'name': _('Translate'),
             'res_model': 'ir.translation',
             'type': 'ir.actions.act_window',
             'view_mode': 'tree',
@@ -875,9 +879,16 @@ class IrTranslation(models.Model):
         langs = self.env['res.lang']._lang_get(lang)
         lang_params = None
         if langs:
-            lang_params = langs.read([
-                "name", "direction", "date_format", "time_format",
-                "grouping", "decimal_point", "thousands_sep", "week_start"])[0]
+            lang_params = {
+                "name": langs.name,
+                "direction": langs.direction,
+                "date_format": langs.date_format,
+                "time_format": langs.time_format,
+                "grouping": langs.grouping,
+                "decimal_point": langs.decimal_point,
+                "thousands_sep": langs.thousands_sep,
+                "week_start": langs.week_start,
+            }
             lang_params['week_start'] = int(lang_params['week_start'])
             lang_params['code'] = lang
 
@@ -897,3 +908,15 @@ class IrTranslation(models.Model):
                 for m in msg_group)
 
         return translations_per_module, lang_params
+
+    @api.model
+    @tools.ormcache('frozenset(mods)', 'lang')
+    def get_web_translations_hash(self, mods, lang):
+        translations, lang_params = self.get_translations_for_webclient(mods, lang)
+        translation_cache = {
+            'lang_parameters': lang_params,
+            'modules': translations,
+            'lang': lang,
+            'multi_lang': len(self.env['res.lang'].sudo().get_installed()) > 1,
+        }
+        return hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest()

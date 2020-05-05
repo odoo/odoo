@@ -747,7 +747,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     @property
     def _description_sortable(self):
-        return self.store or (self.inherited and self.related_field._description_sortable)
+        return (self.column_type and self.store) or (self.inherited and self.related_field._description_sortable)
 
     def _description_string(self, env):
         if self.string and env.lang:
@@ -1015,7 +1015,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     value = self.convert_to_cache(False, record, validate=False)
                     env.cache.set(record, self, value)
                 else:
-                    recs = record if self.recursive or not record.id else record._in_cache_without(self)
+                    recs = record if self.recursive else record._in_cache_without(self)
                     try:
                         self.compute_value(recs)
                     except AccessError:
@@ -1129,6 +1129,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
 
 class Boolean(Field):
+    """ Encapsulates a :class:`bool`. """
     type = 'boolean'
     column_type = ('bool', 'bool')
 
@@ -1143,6 +1144,7 @@ class Boolean(Field):
 
 
 class Integer(Field):
+    """ Encapsulates an :class:`int`. """
     type = 'integer'
     column_type = ('int4', 'int4')
     _slots = {
@@ -1181,7 +1183,9 @@ class Integer(Field):
 
 
 class Float(Field):
-    """The precision digits are given by the (optional) digits attribute.
+    """ Encapsulates a :class:`float`.
+
+    The precision digits are given by the (optional) ``digits`` attribute.
 
     :param digits: a pair (total, decimal) or a string referencing a
         :class:`~odoo.addons.base.models.decimal_precision.DecimalPrecision` record name.
@@ -1246,9 +1250,13 @@ class Float(Field):
 
 
 class Monetary(Field):
-    """ The decimal precision and currency symbol are taken from the attribute
+    """ Encapsulates a :class:`float` expressed in a given
+    :class:`res_currency<odoo.addons.base.models.res_currency.Currency>`.
 
-    :param str currency_field: name of the field holding the currency
+    The decimal precision and currency symbol are taken from the ``currency_field`` attribute.
+
+    :param str currency_field: name of the :class:`Many2one` field
+        holding the :class:`res_currency <odoo.addons.base.models.res_currency.Currency>`
         this monetary field is expressed in (default: `\'currency_id\'`)
     """
     type = 'monetary'
@@ -1293,7 +1301,9 @@ class Monetary(Field):
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
-            currency = record[:1][self.currency_field]
+            # BEWARE: do not prefetch other fields, because 'value' may be in
+            # cache, and would be overridden by the value read from database!
+            currency = record[:1].with_context(prefetch_fields=False)[self.currency_field]
 
         value = float(value or 0.0)
         if currency:
@@ -1306,7 +1316,9 @@ class Monetary(Field):
         if value and validate:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
-            currency = record.sudo()[self.currency_field]
+            # BEWARE: do not prefetch other fields, because 'value' may be in
+            # cache, and would be overridden by the value read from database!
+            currency = record.sudo().with_context(prefetch_fields=False)[self.currency_field]
             if len(currency) > 1:
                 raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
             elif currency:
@@ -1431,7 +1443,10 @@ class _String(Field):
             if self.translate is True and cache_value is not None:
                 tname = "%s,%s" % (records._name, self.name)
                 records.env['ir.translation']._set_source(tname, real_recs._ids, value)
-                records.invalidate_cache(fnames=[self.name], ids=records.ids)
+            if self.translate:
+                # invalidate the field in the other languages
+                cache.invalidate([(self, records.ids)])
+                cache.update(records, self, [cache_value] * len(records))
 
         if update_trans:
             if callable(self.translate):
@@ -1531,7 +1546,7 @@ class Char(_String):
 
 
 class Text(_String):
-    """ Very similar to :class:`~.Char` but used for longer contents, does not
+    """ Very similar to :class:`Char` but used for longer contents, does not
     have a size and usually displayed as a multiline text box.
 
     :param translate: enable the translation of the field's values; use
@@ -1552,6 +1567,18 @@ class Text(_String):
 
 
 class Html(_String):
+    """ Encapsulates an html code content.
+
+    :param bool sanitize: whether value must be sanitized (default: ``True``)
+    :param bool sanitize_tags: whether to sanitize tags
+        (only a white list of attributes is accepted, default: ``True``)
+    :param bool sanitize_attributes: whether to sanitize attributes
+        (only a white list of attributes is accepted, default: ``True``)
+    :param bool sanitize_style: whether to sanitize style attributes (default: ``True``)
+    :param bool strip_style: whether to strip style attributes
+        (removed and therefore not sanitized, default: ``False``)
+    :param bool strip_classes: whether to strip classes attributes (default: ``False``)
+    """
     type = 'html'
     column_type = ('text', 'text')
     _slots = {
@@ -1613,9 +1640,7 @@ class Html(_String):
 
 
 class Date(Field):
-    """ This field type encapsulates a python date object.
-    :type date:
-    """
+    """ Encapsulates a python :class:`date <datetime.date>` object. """
     type = 'date'
     column_type = ('date', 'date')
     column_cast_from = ('timestamp',)
@@ -1714,9 +1739,7 @@ class Date(Field):
 
 
 class Datetime(Field):
-    """ This field type encapsulates a python datetime object.
-    :type datetime:
-    """
+    """ Encapsulates a python :class:`datetime <datetime.datetime>` object. """
     type = 'datetime'
     column_type = ('timestamp', 'timestamp')
     column_cast_from = ('date',)
@@ -1825,6 +1848,11 @@ _BINARY = memoryview
 
 
 class Binary(Field):
+    """Encapsulates a binary content (e.g. a file).
+
+    :param bool attachment: whether the field should be stored as `ir_attachment`
+        or in a column of the model's table (default: ``True``).
+    """
     type = 'binary'
     _slots = {
         'prefetch': False,                  # not prefetched by default
@@ -1849,8 +1877,17 @@ class Binary(Field):
             return None
         # Detect if the binary content is an SVG for restricting its upload
         # only to system users.
-        if value[:1] in (b'P', 'P'):  # Fast detection of first 6 bits of '<' (0x3C)
-            decoded_value = base64.b64decode(value)
+        magic_bytes = {
+            b'P',  # first 6 bits of '<' (0x3C) b64 encoded
+            b'<',  # plaintext XML tag opening
+        }
+        if isinstance(value, str):
+            value = value.encode()
+        if value[:1] in magic_bytes:
+            try:
+                decoded_value = base64.b64decode(value.translate(None, delete=b'\r\n'), validate=True)
+            except binascii.Error:
+                decoded_value = value
             # Full mimetype detection
             if (guess_mimetype(decoded_value).startswith('image/svg') and
                     not record.env.is_system()):
@@ -2000,6 +2037,14 @@ class Binary(Field):
 
 
 class Image(Binary):
+    """Encapsulates an image, extending :class:`Binary`.
+
+    :param int max_width: the maximum width of the image
+    :param int max_height: the maximum height of the image
+    :param bool verify_resolution: whether the image resolution should be verified
+        to ensure it doesn't go over the maximum image resolution (default: ``True``).
+        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+    """
     _slots = {
         'max_width': 0,
         'max_height': 0,
@@ -2040,7 +2085,8 @@ class Image(Binary):
 
 
 class Selection(Field):
-    """
+    """ Encapsulates an exclusive choice between different values.
+
     :param selection: specifies the possible values for this field.
         It is given as either a list of pairs ``(value, label)``, or a model
         method, or a method name.
@@ -2190,6 +2236,11 @@ class Selection(Field):
 
 
 class Reference(Selection):
+    """ Pseudo-relational field (no FK in database).
+
+    The field value is stored as a :class:`string <str>` following the pattern
+    ``"res_model.res_id"`` in database.
+    """
     type = 'reference'
 
     @property
@@ -2526,6 +2577,16 @@ class Many2one(_Relational):
 
 
 class Many2oneReference(Integer):
+    """ Pseudo-relational field (no FK in database).
+
+    The field value is stored as an :class:`integer <int>` id in database.
+
+    Contrary to :class:`Reference` fields, the model has to be specified
+    in a :class:`Char` field, whose name has to be specified in the
+    `model_field` attribute for the current :class:`Many2oneReference` field.
+
+    :param str model_field: name of the :class:`Char` where the model name is stored.
+    """
     type = 'many2one_reference'
     _slots = {
         'model_field': None,
@@ -2561,6 +2622,8 @@ class Many2oneReference(Integer):
 
     def _update_inverses(self, records, value):
         """ Add `records` to the cached values of the inverse fields of `self`. """
+        if not value:
+            return
         cache = records.env.cache
         model_ids = self._record_ids_per_res_model(records)
 

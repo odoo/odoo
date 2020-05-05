@@ -587,6 +587,33 @@ class TestFields(common.TransactionCase):
             for record in records:
                 self.check_monetary(record, amount, currency, 'multi write(amount)')
 
+    def test_20_monetary_opw_2223134(self):
+        """ test monetary fields with cache override """
+        model = self.env['test_new_api.monetary_order']
+        currency = self.env.ref('base.USD')
+
+        def check(value):
+            self.assertEqual(record.total, value)
+            record.flush()
+            self.cr.execute('SELECT total FROM test_new_api_monetary_order WHERE id=%s', [record.id])
+            [total] = self.cr.fetchone()
+            self.assertEqual(total, value)
+
+        # create, and compute amount
+        record = model.create({
+            'currency_id': currency.id,
+            'line_ids': [(0, 0, {'subtotal': 1.0})],
+        })
+        check(1.0)
+
+        # delete and add a line: the deletion of the line clears the cache, then
+        # the recomputation of 'total' must prefetch record.currency_id without
+        # screwing up the new value in cache
+        record.write({
+            'line_ids': [(2, record.line_ids.id), (0, 0, {'subtotal': 1.0})],
+        })
+        check(1.0)
+
     def test_21_date(self):
         """ test date fields """
         record = self.env['test_new_api.mixed'].create({})
@@ -1412,6 +1439,27 @@ class TestFields(common.TransactionCase):
         self.assertEqual(count(message), 1)
         self.assertEqual(count(message1), 0)
 
+    def test_85_binary_guess_zip(self):
+        from odoo.addons.base.tests.test_mimetypes import ZIP
+        # Regular ZIP files can be uploaded by non-admin users
+        self.env['test_new_api.binary_svg'].with_user(
+            self.env.ref('base.user_demo'),
+        ).create({
+            'name': 'Test without attachment',
+            'image_wo_attachment': base64.b64decode(ZIP),
+        })
+
+    def test_86_text_base64_guess_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        with self.assertRaises(UserError) as e:
+            self.env['test_new_api.binary_svg'].with_user(
+                self.env.ref('base.user_demo'),
+            ).create({
+                'name': 'Test without attachment',
+                'image_wo_attachment': SVG.decode("utf-8"),
+            })
+        self.assertEqual(e.exception.name, 'Only admins can upload SVG files.')
+
     def test_90_binary_svg(self):
         from odoo.addons.base.tests.test_mimetypes import SVG
         # This should work without problems
@@ -1689,6 +1737,53 @@ class TestFields(common.TransactionCase):
         belgium.name = "Belgium"
         self.assertEqual(cities.sorted().mapped('name'), ["Brussels", "Kinshasa"])
 
+    def test_97_ir_rule_m2m_field(self):
+        """Ensures m2m fields can't be read if the left records can't be read.
+        Also makes sure reading m2m doesn't take more queries than necessary."""
+        tag = self.env['test_new_api.multi.tag'].create({})
+        record = self.env['test_new_api.multi.line'].create({
+            'name': 'image',
+            'tags': [(4, tag.id)],
+        })
+
+        # only one query as admin: reading pivot table
+        with self.assertQueryCount(1):
+            record.read(['tags'])
+
+        user = self.env['res.users'].create({'name': "user", 'login': "user"})
+        record_user = record.with_user(user)
+
+        # prep the following query count by caching access check related data
+        record_user.read(['tags'])
+
+        # only one query as user: reading pivot table
+        with self.assertQueryCount(1):
+            record_user.read(['tags'])
+
+        # create a passing ir.rule
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get(record._name).id,
+            'domain_force': "[('id', '=', %d)]" % record.id,
+        })
+
+        # prep the following query count by caching access check related data
+        record_user.read(['tags'])
+
+        # still only 1 query: reading pivot table
+        # access rules are checked in python in this case
+        with self.assertQueryCount(1):
+            record_user.read(['tags'])
+
+        # create a blocking ir.rule
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get(record._name).id,
+            'domain_force': "[('id', '!=', %d)]" % record.id,
+        })
+
+        # ensure ir.rule is applied even when reading m2m
+        with self.assertRaises(AccessError):
+            record_user.read(['tags'])
+
 
 class TestX2many(common.TransactionCase):
     def test_definition_many2many(self):
@@ -1932,6 +2027,18 @@ class TestX2many(common.TransactionCase):
         self.assertEqual(len(lines), 3)
         for line in lines:
             self.assertEqual(len(line.tags), 3)
+
+    def test_custom_m2m(self):
+        model_id = self.env['ir.model']._get_id('res.partner')
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_foo',
+            'field_description': 'Foo',
+            'model_id': model_id,
+            'ttype': 'many2many',
+            'relation': 'res.country',
+            'store': False,
+        })
+        self.assertTrue(field.unlink())
 
 
 class TestHtmlField(common.TransactionCase):
@@ -2245,3 +2352,16 @@ class TestMany2oneReference(common.TransactionCase):
         # fake record to emulate the unlink of a non-existant record
         foo = m.browse(1 if not ids[0] else (ids[0] + 1))
         self.assertTrue(foo.unlink())
+
+
+@common.tagged('selection_abstract')
+class TestSelectionDeleteUpdate(common.TransactionCase):
+
+    MODEL_ABSTRACT = 'test_new_api.state_mixin'
+
+    def test_unlink_asbtract(self):
+        self.env['ir.model.fields.selection'].search([
+            ('field_id.model', '=', self.MODEL_ABSTRACT),
+            ('field_id.name', '=', 'state'),
+            ('value', '=', 'confirmed'),
+        ], limit=1).unlink()

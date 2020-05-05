@@ -590,6 +590,28 @@ class MonetaryInherits(models.Model):
     currency_id = fields.Many2one('res.currency')
 
 
+class MonetaryOrder(models.Model):
+    _name = 'test_new_api.monetary_order'
+    _description = 'Sales Order'
+
+    currency_id = fields.Many2one('res.currency')
+    line_ids = fields.One2many('test_new_api.monetary_order_line', 'order_id')
+    total = fields.Monetary(compute='_compute_total', store=True)
+
+    @api.depends('line_ids.subtotal')
+    def _compute_total(self):
+        for record in self:
+            record.total = sum(line.subtotal for line in record.line_ids)
+
+
+class MonetaryOrderLine(models.Model):
+    _name = 'test_new_api.monetary_order_line'
+    _description = 'Sales Order Line'
+
+    order_id = fields.Many2one('test_new_api.monetary_order', required=True, ondelete='cascade')
+    subtotal = fields.Float(digits=(10, 2))
+
+
 class FieldWithCaps(models.Model):
     _name = 'test_new_api.field_with_caps'
     _description = 'Model with field defined with capital letters'
@@ -832,3 +854,14 @@ class City(models.Model):
 
     name = fields.Char()
     country_id = fields.Many2one('test_new_api.country')
+
+# abstract model with a selection field
+class StateMixin(models.AbstractModel):
+    _name = 'test_new_api.state_mixin'
+    _description = 'Dummy state mixin model'
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+        ('done', 'Done'),
+    ])

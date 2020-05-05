@@ -57,3 +57,19 @@ class User(models.Model):
                             AND res_users.active = 't'
                             AND date_from <= %%s AND date_to >= %%s''' % field, (now, now))
         return [r[0] for r in self.env.cr.fetchall()]
+
+    def _clean_leave_responsible_users(self):
+        # self = old bunch of leave responsibles
+        # This method compares the current leave managers
+        # and remove the access rights to those who don't
+        # need them anymore
+        approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
+        if not self or not approver_group:
+            return
+        res = self.env['hr.employee'].read_group(
+            [('leave_manager_id', 'in', self.ids)],
+            ['leave_manager_id'],
+            ['leave_manager_id'])
+        responsibles_to_remove_ids = set(self.ids) - {x['leave_manager_id'][0] for x in res}
+        approver_group.sudo().write({
+            'users': [(3, manager_id) for manager_id in responsibles_to_remove_ids]})

@@ -81,4 +81,19 @@ class SlidesCase(common.SavepointCase):
             'is_published': True,
             'completion_time': 1.5,
             'sequence': 4,
+            'quiz_first_attempt_reward': 42,
+        })
+        cls.question_1 = cls.env['slide.question'].with_user(cls.user_publisher).create({
+            'question': 'How long should be cooked a human?',
+            'slide_id': cls.slide_3.id,
+        })
+        cls.answer_1 = cls.env['slide.answer'].with_user(cls.user_publisher).create({
+            'question_id': cls.question_1.id,
+            'text_value': "25' at 180°C",
+            'is_correct': True,
+        })
+        cls.answer_2 = cls.env['slide.answer'].with_user(cls.user_publisher).create({
+            'question_id': cls.question_1.id,
+            'text_value': "Raw",
+            'is_correct': False,
         })

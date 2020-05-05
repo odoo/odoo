@@ -57,23 +57,24 @@
 # José Vicente <txusev@gmail.com>, 2019
 # Jimmy Ramos <jimmybanegas93@gmail.com>, 2019
 # Samuel Perez <samuel@itlighten.com>, 2019
-# Martin Trigaux, 2019
 # Luciano Nahuel Vitale <lucianonahuelvitale@gmail.com>, 2019
 # Pablo Rojas <rojaspablo88@gmail.com>, 2019
 # Francis Peña <francisca.e@gmx.com>, 2019
 # Platon BJS <raul.caballero.girol@gmail.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Juventino Villegas <2tino480@gmail.com>, 2020
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
+"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -241,7 +242,23 @@ msgid ""
 "        % endif\n"
 "    </p>\n"
 "</div>\n"
-msgstr "<div style=\"margin: 0px; padding: 0px;\"><?xml version=\"1.0\"?>\n"
+msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Estimado/a ${object.partner_id.name}<br/><br/>\n"
+"        Gracias por tu pago.\n"
+"        Aquí está su recibo de pago <strong>${(object.name or '').replace('/','-')}</strong> costando\n"
+"        para <strong>${format_amount(object.amount, object.currency_id)}</strong> de ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        No dude en contactarnos si tiene alguna pregunta.\n"
+"        <br/><br/>\n"
+"        Sludos cordiales,<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -679,6 +696,11 @@ msgid "<span>Quantity</span>"
 msgstr "<span>Cantidad</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Reference</span>"
+msgstr "<span>Referencia</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
 msgstr "<span>Informes</span>"
@@ -953,6 +975,14 @@ msgid "A selected statement line was already reconciled with an account move."
 msgstr ""
 "Una línea del estado de cuenta ya se encuentra conciliada con un movimiento "
 "contable."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid "A tag defined to be used on taxes must always have a country set."
+msgstr ""
+"Una etiqueta definida para ser usada en los impuestos debe tener siempre un "
+"país establecido."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -1251,7 +1281,7 @@ msgstr "Tipos de cuenta permitidos"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "Desconciliar cuenta"
+msgstr "Romper conciliación de cuenta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_root
@@ -1426,11 +1456,20 @@ msgstr "Asignación de cuentas de Posición Fiscal"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
+#, python-format
+msgid ""
+"Accrual Adjusting Entries ({percent}%% recognized) have been created for "
+"this invoice on {date}"
+msgstr ""
+"Entrada de ajuste devengado ({percent}%% reconocido) se han creado para esta"
+" factura el {date}"
+
+#. module: account
+#: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
-msgid "Accrual Adjusting Entry (%s recognized) for invoice: %s"
-msgstr ""
-"Asiento de ajuste de periodificación (%s reconocido) para la factura: %s"
+msgid "Accrual Adjusting Entry (%s%% recognized) for invoice: %s"
+msgstr "Entrada de ajuste devengado (%s%% reconocido) para la factura: %s"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
@@ -1988,6 +2027,7 @@ msgid "Analytic Acc."
 msgstr "Cuenta analítica"
 
 #. module: account
+#: model:ir.model,name:account.model_account_analytic_account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__analytic_account_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_account_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__analytic_account_id
@@ -2033,6 +2073,7 @@ msgid "Analytic Lines"
 msgstr "Líneas analíticas"
 
 #. module: account
+#: model:ir.model,name:account.model_account_analytic_tag
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_tag_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__analytic_tag_ids
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_analytic_tags
@@ -2427,6 +2468,7 @@ msgstr "Estado de Cuenta Bancario.pdf"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
+#: model_terms:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Bank Statements"
 msgstr "Extractos bancarios"
 
@@ -3235,6 +3277,7 @@ msgstr "Compañías que se refieren a la empresa"
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_id
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__company_id
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__company_id
 #: model:ir.model.fields,field_description:account.field_account_common_report__company_id
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__company_id
@@ -5435,7 +5478,7 @@ msgstr "Tiene Entradas Reconciliadas"
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr "Tiene entradas no conciliadas"
+msgstr "Tiene apuntes no conciliados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__qr_code_valid
@@ -5924,6 +5967,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
 msgstr "Indica que este apunte de diario es una línea de impuesto"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_payment.xml:0
+#, python-format
+msgid "Info"
+msgstr "Información"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -7458,6 +7508,14 @@ msgid "No attachment was provided"
 msgstr "No se proporcionó ningún archivo adjunto"
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "No default debit and credit account defined on journal %s (ids: %s)."
+msgstr ""
+"No hay una cuenta de débito y crédito predeterminada definida en el diario "
+"%s (identificadores: %s)."
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "No move from this reconciliation model"
@@ -7541,6 +7599,7 @@ msgstr "No Vencido"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "No pagadas"
 
@@ -7845,6 +7904,7 @@ msgid "Opening Unit Numbers"
 msgstr "Números unitarios de apertura"
 
 #. module: account
+#: code:addons/account/models/account.py:0
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Opening balance"
@@ -8228,6 +8288,7 @@ msgid "Payment Method Type"
 msgstr "Tipo de método de pago"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_bank_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Method Types"
 msgstr "Tipos de métodos de pago"
@@ -8640,6 +8701,13 @@ msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr ""
 "Preajuste para crear asientos durante la conciliación de facturas y pagos"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:0
+#, python-format
+msgid "Presets config"
+msgstr "Configuración de preajustes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9841,10 +9909,13 @@ msgstr ""
 " generar cuentas de esta plantilla sólo al cargar su plantilla hija."
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #: model:ir.actions.act_window,name:account.action_account_config
 #: model:ir.actions.act_window,name:account.action_open_settings
 #: model:ir.ui.menu,name:account.menu_account_config
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, python-format
 msgid "Settings"
 msgstr "Ajustes"
 
@@ -10196,11 +10267,6 @@ msgstr "Sugerir valores de contrapartida. "
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_rank
 msgid "Supplier Rank"
 msgstr "Rango de proveedor"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.res_partner_action_supplier
-msgid "Suppliers"
-msgstr "Proveedores"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
@@ -11638,6 +11704,8 @@ msgid ""
 "There is more than one receivable/payable account in the concerned invoices."
 " You cannot group payments in that case."
 msgstr ""
+"Hay más de una cuenta por cobrar/a pagar en las facturas involucradas. No "
+"puede agrupar pagos en ese caso."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12544,6 +12612,7 @@ msgid "Vendor Taxes"
 msgstr "Impuestos de proveedor"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #: model:ir.ui.menu,name:account.menu_finance_payables
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
@@ -12832,6 +12901,56 @@ msgstr ""
 "esa factura en particular al realizar el pago."
 
 #. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your account since there are some journal "
+"items linked to it."
+msgstr ""
+"No puede cambiar la compañía de su cuenta ya que hay algunos elementos de "
+"diario vinculados a ella."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your journal since there are some journal "
+"entries linked to it."
+msgstr ""
+"No puede cambiar la compañía de su diario ya que hay algunas entradas de "
+"diario vinculadas a él."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your tax since there are some journal items "
+"linked to it."
+msgstr ""
+"No puede cambiar la compañía de su impuesto ya que hay algunos elementos de "
+"diario vinculados a él."
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic account since there are "
+"some journal items linked to it."
+msgstr ""
+"No puede establecer una compañía diferente en su cuenta analítica ya que hay"
+" algunos elementos de diario vinculados a ella."
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic tags since there are some"
+" journal items linked to it."
+msgstr ""
+"No puede establecer una compañía diferente en sus etiquetas analíticas ya "
+"que hay algunos elementos de diario vinculados a ella."
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12910,7 +13029,7 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
-"No puede hacer esta modificación en una entrada de diario conciliada. Puede cambiar algunos campos no legales o primero debe no reconciliarse.\n"
+"No puede hacer esta modificación en una entrada de diario conciliada. Puede cambiar algunos campos no legales o primero debe romper conciliación.\n"
 "Entrada de diario (id): %s (%s)"
 
 #. module: account
@@ -13119,6 +13238,12 @@ msgstr ""
 "No puede validar una factura con un importe total negativo. En su lugar, "
 "debe crear una factura rectificativa. Use el menú de acciones para "
 "transformarlo en una factura rectificativa o reembolso."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You don't have the access rights to post an invoice."
+msgstr "No tiene los derechos de acceso para contabilizar una factura."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13408,7 +13533,7 @@ msgstr "facturas sin pago"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "unreconciled entries"
-msgstr "entradas sin conciliar"
+msgstr "apuntes sin conciliar"
 
 #. module: account
 #. openerp-web
@@ -13421,53 +13546,3 @@ msgstr "facturas de proveedor"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Cuenta"
-
-#. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid ""
-"You can't change the company of your account since there are some journal "
-"items linked to it."
-msgstr ""
-"No puede cambiar la compañía de su cuenta ya que hay algunos elementos de "
-"diario vinculados a ella."
-
-#. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid ""
-"You can't change the company of your journal since there are some journal "
-"entries linked to it."
-msgstr ""
-"No puede cambiar la compañía de su diario ya que hay algunas entradas de "
-"diario vinculadas a él."
-
-#. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid ""
-"You can't change the company of your tax since there are some journal items "
-"linked to it."
-msgstr ""
-"No puede cambiar la compañía de su impuesto ya que hay algunos elementos de "
-"diario vinculados a él."
-
-#. module: account
-#: code:addons/account/models/account_analytic_line.py:0
-#, python-format
-msgid ""
-"You can't set a different company on your analytic account since there are "
-"some journal items linked to it."
-msgstr ""
-"No puede establecer una compañía diferente en su cuenta analítica ya que hay"
-" algunos elementos de diario vinculados a ella."
-
-#. module: account
-#: code:addons/account/models/account_analytic_line.py:0
-#, python-format
-msgid ""
-"You can't set a different company on your analytic tags since there are some"
-" journal items linked to it."
-msgstr ""
-"No puede establecer una compañía diferente en sus etiquetas analíticas ya "
-"que hay algunos elementos de diario vinculados a ella."

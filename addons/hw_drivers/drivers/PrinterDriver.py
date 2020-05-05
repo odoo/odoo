@@ -12,7 +12,6 @@ import base64
 import re
 import subprocess
 import tempfile
-from uuid import getnode as get_mac
 from PIL import Image, ImageOps
 
 from odoo import http, _
@@ -251,14 +250,10 @@ class PrinterDriver(Driver):
         else:
             ip = '\nIP Addresses:\n%s\n' % '\n'.join(ips)
 
-        mac_addr = get_mac()
-        h = iter(hex(mac_addr)[2:].zfill(12))
-        mac_addr = ":".join(i + next(h) for i in h)
-
         if len(ips) >= 1:
             ips_filtered = [i for i in ips if i != '127.0.0.1']
             main_ips = ips_filtered and ips_filtered[0] or '127.0.0.1'
-            mac = '\nMAC Address:\n%s\n' % mac_addr
+            mac = '\nMAC Address:\n%s\n' % helpers.get_mac_address()
             homepage = '\nHomepage:\nhttp://%s:8069\n\n' % main_ips
 
         center = b'\x1b\x61\x01'

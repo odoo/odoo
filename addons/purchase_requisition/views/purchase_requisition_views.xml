@@ -163,7 +163,8 @@
                     <page string="Products">
                         <field name="line_ids">
                             <tree string="Products" editable="bottom">
-                                <field name="product_id" context="{'default_purchase_requisition': 'tenders'}" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                <field name="product_id" context="{'default_purchase_requisition': 'tenders'}"
+                                       domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 <field name="product_qty"/>
                                 <field name="qty_ordered" optional="show"/>
                                 <field name="product_uom_category_id" invisible="1"/>
@@ -175,7 +176,8 @@
                             </tree>
                             <form string="Products">
                                 <group>
-                                    <field name="product_id" />
+                                    <field name="product_id" context="{'default_purchase_requisition': 'tenders'}"
+                                           domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
                                     <field name="product_qty"/>
                                     <field name="qty_ordered"/>
                                     <field name="product_uom_category_id" invisible="1"/>

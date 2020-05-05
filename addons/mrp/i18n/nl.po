@@ -11,8 +11,9 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Melroy van den Berg <webmaster1989@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Antoine Gilard <ang@odoo.com>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -514,6 +515,8 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
+"Alternatieve werkplek die kunnen worden vervangen door deze om de productie "
+"te verzenden."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -793,6 +796,8 @@ msgid ""
 "BoM cannot concern product %s and have a line with attributes (%s) at the "
 "same time."
 msgstr ""
+"Stuklijst kan geen betrekking hebben op product en heeft tegelijkertijd %s "
+"een lijn met attributen (%s)."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
@@ -2530,6 +2535,9 @@ msgid ""
 "has a capacity of 5 and you have to produce 10 units on your work order, the"
 " usual operation time will be multiplied by 2."
 msgstr ""
+"Aantal stuks dat parallel kan worden geproduceerd. In het geval dat het "
+"werkcentrum een capaciteit heeft van 5 en u 10 stuks op uw werkorder moet "
+"produceren, wordt de gebruikelijke bewerkingstijd met 2 vermenigvuldigd."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread_counter
@@ -2857,7 +2865,7 @@ msgstr "Houtfineer"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__possible_bom_product_template_attribute_value_ids
 msgid "Possible Bom Product Template Attribute Value"
-msgstr ""
+msgstr "Mogelijke Stuklijst Product Template Attribuut Waarde"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2928,6 +2936,8 @@ msgid ""
 "Produce : Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce : Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"Produceer : Verplaats de componenten direct naar de productielocatie en start het productieproces.\n"
+"Pick / Produce : Laad de componenten eerst van de Voorraad naar de Invoerlocatie en breng ze dan over naar de Productielocatie."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -3582,6 +3592,8 @@ msgid ""
 "Some components have been consumed for a lot/serial number that has not been produced. Unlock the MO and click on the components lines to correct it.\n"
 "List of the components:\n"
 msgstr ""
+"Sommige componenten zijn verbruikt voor een partij/serienummer dat niet is geproduceerd. Deblokkeer de productieorder en klik op de componentregels om deze te corrigeren.\n"
+"Lijst van de componenten:\n"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -3609,6 +3621,9 @@ msgid ""
 "Some product moves have already been confirmed, this manufacturing order "
 "can't be completely cancelled. Are you still sure you want to process ?"
 msgstr ""
+"Sommige productverplaatsingen zijn al bevestigd, deze productieorder kan "
+"niet volledig worden geannuleerd. Weet u nog steeds zeker dat u wilt "
+"verwerken?"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3874,6 +3889,8 @@ msgstr ""
 msgid ""
 "The attribute value %s set on product %s does not match the BoM product %s."
 msgstr ""
+"De attribuutwaarde %s ingesteld op product %s komt niet overeen met het "
+"stuklijst-product %s."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -3960,6 +3977,8 @@ msgstr "De productieorder voor  '%s' heeft geen hoeveelheid gespecificeerd."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
 msgid "The quantity to produce must be positive!"
 msgstr "De hoeveelheid moet positief zijn!"
 
@@ -4001,6 +4020,8 @@ msgid ""
 "There is no Bill of Material of type manufacture or kit found for the "
 "product %s. Please define a Bill of Material for this product."
 msgstr ""
+"Er is geen stuklijst van het type 'produceer dit product' of 'kit' gevonden "
+"voor het product %s. Definieer een stuklijst voor dit product."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_move_line
@@ -4178,6 +4199,11 @@ msgid ""
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
 msgstr ""
+"Om producten te produceren of te assembleren, en om componenten en\n"
+"gereed producten te gebruiken moet u ook de productiewerkzaamheden afhandelen.\n"
+"Productiebewerkingen worden vaak werkorders genoemd. De verschillende\n"
+"bewerkingen zullen verschillende gevolgen hebben voor de kosten van\n"
+"productie en planning, afhankelijk van de beschikbare werklast."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -4698,6 +4724,8 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required components."
 msgstr ""
+"Werkorder bewerkingen staan u toe om productie bewerkingen aan te maken en te beheren die gevolgd moeten worden in werkplekken om\n"
+"het product te produceren. Ze zijn gekoppeld aan de stuklijst die de vereiste ruwe materialen definieert."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -4773,6 +4801,9 @@ msgid ""
 "              starting from this date. If empty, the work orders will be "
 "planned as soon as possible."
 msgstr ""
+"Werkorders worden gepland op basis van de beschikbaarheid van de werkplek "
+"vanaf deze datum. Indien deze leeg zijn, worden de werkorders zo snel "
+"mogelijk ingepland."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
@@ -4991,6 +5022,8 @@ msgid ""
 "You have produced %s %s of lot %s in the previous workorder. You are trying "
 "to produce %s in this one"
 msgstr ""
+"U hebt %s%s van de partij %s in de vorige werkorder geproduceerd. U probeert"
+" %s te produceren in deze opdracht."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -5047,6 +5080,9 @@ msgid ""
 "You should consume the quantity of %s defined in the BoM. If you want to "
 "consume more or less components, change the consumption setting on the BoM."
 msgstr ""
+"U dient de hoeveelheid %s te verbruiken die in de stuklijst is gedefinieerd."
+" Als u meer of minder componenten wilt verbruiken, wijzigt u de "
+"verbruiksinstelling op de stuklijst."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -5060,6 +5096,8 @@ msgstr "U dient een partijnummer in te geven voor het uiteindelijke product."
 msgid ""
 "You should provide either a product or a product template to search a BoM"
 msgstr ""
+"U moet een product of een productsjabloon aanleveren om een stuklijst te "
+"zoeken"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -5121,7 +5159,7 @@ msgstr "hoeveelheid is geüpdatet."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "to"
-msgstr "tot"
+msgstr "t/m"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
