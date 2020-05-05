@@ -1772,6 +1772,21 @@ td {
     margin-left: 120px;
 }
 
+/* These css declarations is to make sure that the list of clients
+ * always occupies the remaining space regardless when the client
+ * details is displayed or not.
+ */
+ .clientlist-screen .client-window {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+.clientlist-screen .client-window section.list {
+    flex: 1;
+    overflow: auto;
+}
+
 
 /*  ********* The OrderWidget  ********* */
 
@@ -2102,6 +2117,9 @@ td {
 .pos .debug-widget .content{
     overflow: hidden;
 }
+.pos .debug-widget header {
+    position: relative;
+}
 .pos .debug-widget h1{
     background:black;
     padding-top: 10px;
@@ -2164,9 +2182,11 @@ td {
     background-color: rgba(0,0,0,0.5);
     z-index:1000;
 }
+.pos .modal-dialog header{
+    position: relative;
+}
 .pos .modal-dialog .popup{
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
     margin: auto;
     width:500px;
     height:400px;
@@ -2179,6 +2199,10 @@ td {
     z-index:1200;
     font-family: 'Lato';
     font-family: Lato;
+    /* position the popup at center and and still making it draggable*/
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 .pos .modal-dialog .popup-confirm{
     height: 250px;
@@ -2238,6 +2262,11 @@ td {
 
     background: rgba(0,0,0,0.05);
 }
+
+.pos .popup .button.dont-show-again {
+    width: 130px;
+}
+
 .pos .popup .button.icon {
     width: 40px;
     font-size: 20px;
@@ -2287,12 +2316,12 @@ td {
     box-sizing: border-box;
     width: 80%;
 }
-.pos .popup .packlot-lines{
+.pos .popup .list-lines{
     overflow: auto;
     height: 250px;
     margin: 10px;
 }
-.pos .popup .packlot-line-input {
+.pos .popup .list-line-input {
     margin: 3px;
 }
 
@@ -2387,7 +2416,6 @@ td {
 }
 .pos .popup-password .popup-numpad {
     width: 190px;
-    text-align: left;
 }
 .pos .popup-password .popup-input {
     width: 70%;
@@ -2473,4 +2501,47 @@ td {
 }
 .pos .not-supported-browser img{
     border-collapse: separate;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .2s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+
+.swing-enter-active, .swing-leave-active {
+    transition: opacity 0.8s;
+}
+
+.swing-enter, .swing-leave-to {
+    opacity: 0;
+}
+
+/*
+    We block the top-header when a temp screen is displayed.
+    Similar to blocking the whole ui when a popup is displayed.
+*/
+.pos .block-top-header {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height:100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index:1000;
+}
+
+.drag-handle {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
 }
