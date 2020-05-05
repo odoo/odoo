@@ -35,7 +35,7 @@ models.PosModel = models.PosModel.extend({
                     method: 'get_products_from_cache',
                     args: [self.pos_session.config_id[0], product_fields, product_domain],
                 });
-            self.chrome.loading_message(_t('Loading') + ' product.product', 1);
+            self.setLoadingMessage(_t('Loading') + ' product.product', 1);
             return records.then(function (products) {
                 self.db.add_products(_.map(products, function (product) {
                     product.categ = _.findWhere(self.product_categories, {'id': product.categ_id[0]});
