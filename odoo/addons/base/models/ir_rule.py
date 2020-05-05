@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import time
+import warnings
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, ValidationError
@@ -174,6 +175,13 @@ class IrRule(models.Model):
 
     @api.model
     def domain_get(self, model_name, mode='read'):
+        # this method is now unsafe, since it returns a list of tables which
+        # does not contain the joins present in the generated Query object
+        warnings.warn(
+            "Unsafe and deprecated IrRule.domain_get(), "
+            "use IrRule._compute_domain() and expression().query instead",
+            DeprecationWarning,
+        )
         dom = self._compute_domain(model_name, mode)
         if dom:
             # _where_calc is called as superuser. This means that rules can

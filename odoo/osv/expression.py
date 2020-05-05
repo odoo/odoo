@@ -478,12 +478,14 @@ class expression(object):
         For more info: http://christophe-simonis-at-tiny.blogspot.com/2008/08/new-new-domain-notation.html
     """
 
-    def __init__(self, domain, model):
+    def __init__(self, domain, model, alias=None, query=None):
         """ Initialize expression object and automatically parse the expression
             right after initialization.
 
             :param domain: expression (using domain ('foo', '=', 'bar') format)
             :param model: root model
+            :param alias: alias for the model table if query is provided
+            :param query: optional query object holding the final result
 
             :attr root_model: base model for the query
             :attr expression: the domain to parse, normalized and prepared
@@ -492,12 +494,13 @@ class expression(object):
         """
         self._unaccent = get_unaccent_wrapper(model._cr)
         self.root_model = model
+        self.root_alias = alias or model._table
 
         # normalize and prepare the expression for parsing
         self.expression = distribute_not(normalize_domain(domain))
 
         # this object handles all the joins
-        self.query = Query(['"%s"' % model._table])
+        self.query = Query(['"%s"' % model._table]) if query is None else query
 
         # parse the domain expression
         self.parse()
@@ -651,7 +654,7 @@ class expression(object):
         # the form: (leaf, corresponding model, corresponding table alias)
         stack = []
         for leaf in self.expression:
-            push(leaf, self.root_model, self.root_model._table)
+            push(leaf, self.root_model, self.root_alias)
 
         # stack of SQL expressions in the form: (expr, params)
         result_stack = []
