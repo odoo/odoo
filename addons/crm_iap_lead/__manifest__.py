@@ -3,11 +3,12 @@
 
 {
     'name': 'Lead Generation',
-    'summary': 'Create Leads/Opportunities based on country, industries, size, etc.',
+    'summary': 'Generate Leads/Opportunities based on country, industries, size, etc.',
+    'version': '1.1',
     'category': 'Sales/CRM',
     'depends': [
+        'iap_crm',
         'iap_mail',
-        'crm',
     ],
     'data': [
         'data/crm.iap.lead.industry.csv',

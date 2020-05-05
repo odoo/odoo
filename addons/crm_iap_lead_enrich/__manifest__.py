@@ -4,10 +4,11 @@
 {
     'name': 'Lead Enrichment',
     'summary': 'Enrich Leads/Opportunities using email address domain',
+    'version': '1.1',
     'category': 'Sales/CRM',
     'depends': [
+        'iap_crm',
         'iap_mail',
-        'crm',
     ],
     'data': [
         'data/ir_cron.xml',
