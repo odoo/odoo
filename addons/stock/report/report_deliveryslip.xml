@@ -44,7 +44,7 @@
                             <tr t-foreach="lines" t-as="move">
                                 <td>
                                     <span t-field="move.product_id"/>
-                                    <p t-if="move.description_picking != move.product_id.description and move.description_picking != move.product_id.name">
+                                    <p t-if="move.description_picking != move.product_id.name">
                                         <span t-field="move.description_picking"/>
                                     </p>
                                 </td>
@@ -70,7 +70,7 @@
                             <tr t-foreach="o.move_line_ids" t-as="move_line">
                                 <td>
                                     <span t-field="move_line.product_id"/>
-                                    <p t-if="move_line.move_id.description_picking != move_line.product_id.description and move_line.move_id.description_picking != move_line.product_id.name">
+                                    <p t-if="move_line.move_id.description_picking != move_line.product_id.name">
                                         <span t-field="move_line.move_id.description_picking"/>
                                     </p>
                                 </td>
