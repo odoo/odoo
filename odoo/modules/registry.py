@@ -120,6 +120,8 @@ class Registry(Mapping):
         self.updated_modules = []       # installed/updated modules
         self.loaded_xmlids = set()
 
+        self.create_duplicated_views_for_modules = None
+
         self.db_name = db_name
         self._db = odoo.sql_db.db_connect(db_name)
 

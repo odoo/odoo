@@ -753,6 +753,10 @@ class TestCowViewSaving(common.TransactionCase):
             'key': '_website_sale_comparison.product_add_to_compare',
         })])
 
+        # Simulate end of installation/update
+        self.registry.create_duplicated_views_for_modules = ['_website_sale_comparison']
+        View._validate_custom_views('')
+
         specific_view = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product')
         specific_view_arch = specific_view.read_combined(['arch'])['arch']
         self.assertEqual(specific_view.website_id.id, 1, "Ensure we got specific view to perform the checks against")
@@ -801,6 +805,7 @@ class TestCowViewSaving(common.TransactionCase):
             'model': self.base_view._name,
             'res_id': self.base_view.id,
         })
+        View.invalidate_cache(fnames=['xml_id'], ids=self.base_view.ids)
         View._load_records([dict(xml_id='_website_sale.product', values={
             'website_meta_title': 'A bug got fixed by updating this field',
         })])

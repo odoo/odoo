@@ -529,6 +529,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             env = api.Environment(cr, SUPERUSER_ID, {})
             env['res.groups']._update_user_groups_view()
             View = env['ir.ui.view']
+            registry.create_duplicated_views_for_modules = processed_modules
             for model in registry:
                 try:
                     View._validate_custom_views(model)
