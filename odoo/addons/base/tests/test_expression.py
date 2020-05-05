@@ -1010,19 +1010,7 @@ class TestQueries(TransactionCase):
                  AND "res_partner_title__name"."name" = %s
                  AND "res_partner_title__name"."lang" = %s
                  AND "res_partner_title__name"."value" != %s)
-            WHERE ("res_partner_title"."id" IN (
-                WITH temp_irt_current (id, name) AS (
-                    SELECT ct.id, coalesce(it.value, ct."name")
-                    FROM res_partner_title ct
-                    LEFT JOIN ir_translation it ON
-                        (it.name = %s AND it.lang = %s AND it.type = %s
-                        AND it.res_id = ct.id AND it.value != '')
-                )
-                SELECT id
-                FROM temp_irt_current
-                WHERE name LIKE %s
-                ORDER BY name
-            ))
+            WHERE COALESCE("res_partner_title__name"."value", "res_partner_title"."name") LIKE %s
             ORDER BY COALESCE("res_partner_title__name"."value", "res_partner_title"."name")
         ''']):
             Model.search([('name', 'like', 'foo')])
