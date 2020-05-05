@@ -154,16 +154,16 @@ class TestUiFeedback(HttpCaseWithUserDemo):
 
     def test_01_admin_survey_tour(self):
         access_token = self.survey_feedback.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey', login="admin")
+        self.start_tour("/survey/%s/start" % access_token, 'test_survey', login="admin")
 
     def test_02_demo_survey_tour(self):
         access_token = self.survey_feedback.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey', login="demo")
+        self.start_tour("/survey/%s/start" % access_token, 'test_survey', login="demo")
 
     def test_03_public_survey_tour(self):
         access_token = self.survey_feedback.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey')
+        self.start_tour("/survey/%s/start" % access_token, 'test_survey')
 
     def test_06_survey_prefill(self):
         access_token = self.survey_feedback.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey_prefill')
+        self.start_tour("/survey/%s/start" % access_token, 'test_survey_prefill')

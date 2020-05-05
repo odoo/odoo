@@ -8,7 +8,7 @@
             <t t-set="no_livechat" t-value="True"/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="attributes">
-            <attribute name="t-att-style" add="(('height: 100%; overflow: auto; background: url(' + '/survey/get_background_image/%s/%s' % (survey.access_token, answer.access_token) + ') no-repeat fixed center; box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7); background-size: cover;') if survey and survey.background_image and answer else 'height: 100%; overflow: auto;')"/>
+            <attribute name="t-att-style" add="(('height: 100%; overflow: auto; background: url(' + '/survey/%s/%s/get_background_image' % (survey.access_token, answer.access_token) + ') no-repeat fixed center; box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7); background-size: cover;') if survey and survey.background_image and answer else 'height: 100%; overflow: auto;')"/>
         </xpath>
         <xpath expr="//head/t[@t-call-assets][last()]" position="after">
             <t t-call-assets="survey.survey_assets" lazy_load="True"/>
@@ -262,7 +262,7 @@
                         </t>
                         <t t-call="survey.survey_button_retake"/>
                         <div t-if="survey.scoring_type != 'scoring_without_answers'">
-                            If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.access_token)">review your answers</a>
+                            If you wish, you can <a t-att-href="'/survey/%s/%s/print?review=True' % (survey.access_token, answer.access_token)">review your answers</a>
                         </div>
                     </div>
                     <div class="col-6 text-center" t-if="survey.certification_give_badge and answer.scoring_success">
@@ -382,7 +382,7 @@
             <!-- Directly use field or route if the user doesn't have access rights -->
             <div t-if="not env.user.has_group('survey.group_survey_user')"
                 class="d-flex my-3 justify-content-center">
-                <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s' % (survey.access_token, answer.access_token, question.id, label.id)"/>
+                <img t-att-src="'/survey/%s/%s/get_question_image?question_id=%s&amp;suggested_answer_id=%s' % (survey.access_token, answer.access_token, question.id, label.id)"/>
             </div>
             <div t-else=""  t-field="label.value_image"
                 class="d-flex my-3 justify-content-center"

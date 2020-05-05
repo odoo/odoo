@@ -45,7 +45,10 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
         }
 
         var leaderboardPromise = this._rpc({
-            route: _.str.sprintf('/survey/session/leaderboard/%s', this.surveyAccessToken)
+            route: '/survey/session/leaderboard',
+            params: {
+                survey_token: this.surveyAccessToken
+            }
         });
 
         Promise.all([fadeOutPromise, leaderboardPromise]).then(function (results) {

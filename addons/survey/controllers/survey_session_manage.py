@@ -40,7 +40,7 @@ class UserInputSession(http.Controller):
     # SURVEY SESSION MANAGEMENT
     # ------------------------------------------------------------
 
-    @http.route('/survey/session/manage/<string:survey_token>', type='http', auth='user', website=True)
+    @http.route('/survey/<string:survey_token>/session/manage/', type='http', auth='user', website=True)
     def survey_session_manage(self, survey_token, **kwargs):
         """ Main route used by the host to 'manager' the session.
         - If the state of the session is 'ready'
@@ -64,7 +64,7 @@ class UserInputSession(http.Controller):
             template_values = self._prepare_manage_session_values(survey)
             return request.render('survey.user_input_session_manage', template_values)
 
-    @http.route('/survey/session/next_question/<string:survey_token>', type='json', auth='user', website=True)
+    @http.route('/survey/session/next_question', type='json', auth='user', website=True)
     def survey_session_next_question(self, survey_token, **kwargs):
         """ This route is called when the host goes to the next question of the session.
 
@@ -112,7 +112,7 @@ class UserInputSession(http.Controller):
         else:
             return False
 
-    @http.route('/survey/session/results/<string:survey_token>', type='json', auth='user', website=True)
+    @http.route('/survey/session/results', type='json', auth='user', website=True)
     def survey_session_results(self, survey_token, **kwargs):
         """ This route is called when the host shows the current question's results.
 
@@ -133,7 +133,7 @@ class UserInputSession(http.Controller):
 
         return self._prepare_question_results_values(survey, user_input_lines)
 
-    @http.route('/survey/session/leaderboard/<string:survey_token>', type='json', auth='user', website=True)
+    @http.route('/survey/session/leaderboard', type='json', auth='user', website=True)
     def survey_session_leaderboard(self, survey_token, **kwargs):
         """ This route is called when the host shows the current question's attendees leaderboard.
 
@@ -170,18 +170,18 @@ class UserInputSession(http.Controller):
 
         survey = self._fetch_from_session_code(session_code)
         if survey:
-            return werkzeug.utils.redirect("/survey/start/%s" % survey.access_token)
+            return werkzeug.utils.redirect("/survey/%s/start" % survey.access_token)
 
         return werkzeug.utils.redirect("/s")
 
-    @http.route('/survey/check_session_code/<string:session_code>', type='json', auth='public', website=True)
+    @http.route('/survey/check_session_code', type='json', auth='public', website=True)
     def survey_check_session_code(self, session_code):
         """ Checks if the given code is matching a survey session_code.
         If yes, redirect to /s/code route.
         If not, return error. The user is invited to type again the code. """
         survey = self._fetch_from_session_code(session_code)
         if survey:
-            return {"survey_url": "/survey/start/%s" % survey.access_token}
+            return {"survey_url": "/survey/%s/start" % survey.access_token}
 
         return {"error": "survey_wrong"}
 

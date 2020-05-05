@@ -275,8 +275,8 @@ class TestUiCertification(HttpCaseWithUserDemo):
 
     def test_04_certification_success_tour(self):
         access_token = self.survey_certification.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_certification_success', login="demo")
+        self.start_tour("/survey/%s/start" % access_token, 'test_certification_success', login="demo")
 
     def test_05_certification_failure_tour(self):
         access_token = self.survey_certification.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_certification_failure', login="demo")
+        self.start_tour("/survey/%s/start" % access_token, 'test_certification_failure', login="demo")

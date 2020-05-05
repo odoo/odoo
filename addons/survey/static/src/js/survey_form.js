@@ -338,7 +338,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             this.readonly = false;
             this._nextScreen(
                 this._rpc({
-                    route: `/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`,
+                    route: '/survey/next_question',
+                    params: {
+                        survey_token: this.options.surveyToken,
+                        answer_token: this.options.answerToken
+                    }
                 }), {
                     initTimer: true,
                     isFinish: nextPageEvent.type === 'end_session'
@@ -404,7 +408,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         }
 
         var submitPromise = self._rpc({
-            route: _.str.sprintf('%s/%s/%s', route, self.options.surveyToken, self.options.answerToken),
+            route: _.str.sprintf('%s?survey_token=%s&amp;answer_token=%s', route, self.options.surveyToken, self.options.answerToken),
             params: params,
         });
         this._nextScreen(submitPromise, options);

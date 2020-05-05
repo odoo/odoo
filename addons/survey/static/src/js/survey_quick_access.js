@@ -52,7 +52,10 @@ publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
         this.$('.o_survey_error').addClass("d-none");
         var $sessionCodeInput = this.$('input#session_code');
         this._rpc({
-            route: `/survey/check_session_code/${$sessionCodeInput.val()}`,
+            route: '/survey/check_session_code',
+            params: {
+                session_code: $sessionCodeInput.val(),
+            }
         }).then(function (response) {
             if (response.survey_url) {
                 window.location = response.survey_url;

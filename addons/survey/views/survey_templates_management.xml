@@ -89,12 +89,12 @@
                     <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email, answer.invite_token)" />
                     <t t-if="attempts_left > 0">
                         <p><span>Number of attemps left</span>: <span t-esc="attempts_left"></span></p>
-                        <p><a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
+                        <p><a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/%s/%s/retry' % (survey.access_token, answer.access_token)">
                         Retry</a></p>
                     </t>
                 </t>
                 <t t-else="">
-                    <p><a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
+                    <p><a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/%s/%s/retry' % (survey.access_token, answer.access_token)">
                         Retry</a></p>
                 </t>
             </t>
