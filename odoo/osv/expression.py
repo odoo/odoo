@@ -709,6 +709,7 @@ class expression(object):
                 parent_fname = model._inherits[parent_model._name]
                 parent_alias, _ = self.query.add_join(
                     (alias, parent_model._table, parent_fname, 'id', parent_fname),
+                    implicit=False, outer=True,
                 )
                 push(leaf, parent_model, parent_alias)
 
@@ -735,6 +736,7 @@ class expression(object):
                 # res_partner.state_id = res_partner__state_id.id
                 coalias, _ = self.query.add_join(
                     (alias, comodel._table, path[0], 'id', path[0]),
+                    implicit=False, outer=True,
                 )
                 push((path[1], operator, right), comodel, coalias)
 
@@ -742,6 +744,7 @@ class expression(object):
                 # res_partner.id = res_partner__bank_ids.partner_id
                 coalias, _ = self.query.add_join(
                     (alias, comodel._table, 'id', field.inverse_name, path[0]),
+                    implicit=False, outer=True,
                 )
                 domain = field.get_domain_list(model)
                 if domain:
