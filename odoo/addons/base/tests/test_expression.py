@@ -846,8 +846,7 @@ class TestAutoJoin(TransactionCase):
         partners = partner_obj.search(['|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', name_test)])
         self.assertIn(p_aa, partners,
             "_auto_join on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
-        # TO FIX: this is not correct
-        self.assertNotIn(p_c, partners,
+        self.assertIn(p_c, partners,
             "_auto_join on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
 
         # Do: one2many with _auto_join, test final leaf is an id
@@ -885,8 +884,7 @@ class TestAutoJoin(TransactionCase):
 
         partners = partner_obj.search(['|', ('state_id.code', '=', states[0].code), ('name', 'like', 'C')])
         self.assertIn(p_a, partners, '_auto_join: disjunction incorrect result')
-        # TO FIX: this is not correct
-        self.assertNotIn(p_c, partners, '_auto_join: disjunction incorrect result')
+        self.assertIn(p_c, partners, '_auto_join: disjunction incorrect result')
 
         # Do: many2one with 1 _auto_join on the second many2one
         patch_auto_join(partner_obj, 'state_id', False)
@@ -1073,9 +1071,10 @@ class TestMany2one(TransactionCase):
     def test_inherited(self):
         with self.assertQueries(['''
             SELECT "res_users".id
-            FROM "res_users", "res_partner" AS "res_users__partner_id"
-            WHERE ("res_users"."partner_id" = "res_users__partner_id"."id")
-            AND ("res_users__partner_id"."name"::text LIKE %s)
+            FROM "res_users"
+            LEFT JOIN "res_partner" AS "res_users__partner_id" ON
+                ("res_users"."partner_id" = "res_users__partner_id"."id")
+            WHERE ("res_users__partner_id"."name"::text LIKE %s)
             ORDER BY "res_users__partner_id"."name", "res_users"."login"
         ''']):
             self.User.search([('name', 'like', 'foo')])
@@ -1153,9 +1152,10 @@ class TestMany2one(TransactionCase):
 
         with self.assertQueries(['''
             SELECT "res_partner".id
-            FROM "res_partner", "res_company" AS "res_partner__company_id"
-            WHERE ("res_partner"."company_id" = "res_partner__company_id"."id")
-            AND ("res_partner__company_id"."name"::text LIKE %s)
+            FROM "res_partner"
+            LEFT JOIN "res_company" AS "res_partner__company_id" ON
+                ("res_partner"."company_id" = "res_partner__company_id"."id")
+            WHERE ("res_partner__company_id"."name"::text LIKE %s)
             ORDER BY "res_partner"."display_name"
         ''']):
             self.Partner.search([('company_id.name', 'like', self.company.name)])
@@ -1167,9 +1167,10 @@ class TestMany2one(TransactionCase):
             ORDER BY "res_partner"."display_name"
         ''', '''
             SELECT "res_partner".id
-            FROM "res_partner", "res_company" AS "res_partner__company_id"
-            WHERE ("res_partner"."company_id" = "res_partner__company_id"."id")
-            AND ("res_partner__company_id"."partner_id" IN (%s))
+            FROM "res_partner"
+            LEFT JOIN "res_company" AS "res_partner__company_id" ON
+                ("res_partner"."company_id" = "res_partner__company_id"."id")
+            WHERE ("res_partner__company_id"."partner_id" IN (%s))
             ORDER BY "res_partner"."display_name"
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -1181,9 +1182,10 @@ class TestMany2one(TransactionCase):
 
         with self.assertQueries(['''
             SELECT "res_company".id
-            FROM "res_company", "res_partner" AS "res_company__partner_id"
-            WHERE ("res_company"."partner_id" = "res_company__partner_id"."id")
-            AND ("res_company__partner_id"."name"::text LIKE %s)
+            FROM "res_company"
+            LEFT JOIN "res_partner" AS "res_company__partner_id" ON
+                ("res_company"."partner_id" = "res_company__partner_id"."id")
+            WHERE ("res_company__partner_id"."name"::text LIKE %s)
             ORDER BY "res_company"."sequence", "res_company"."name"
         ''', '''
             SELECT "res_partner".id
@@ -1200,11 +1202,12 @@ class TestMany2one(TransactionCase):
 
         with self.assertQueries(['''
             SELECT "res_partner".id
-            FROM "res_partner", "res_company" AS "res_partner__company_id",
-                 "res_partner" AS "res_partner__company_id__partner_id"
-            WHERE ("res_partner"."company_id" = "res_partner__company_id"."id")
-            AND ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
-            AND ("res_partner__company_id__partner_id"."name"::text LIKE %s)
+            FROM "res_partner"
+            LEFT JOIN "res_company" AS "res_partner__company_id" ON
+                ("res_partner"."company_id" = "res_partner__company_id"."id")
+            LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON
+                ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
+            WHERE ("res_partner__company_id__partner_id"."name"::text LIKE %s)
             ORDER BY "res_partner"."display_name"
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -1218,14 +1221,14 @@ class TestMany2one(TransactionCase):
             ('country_id.code', 'like', 'BE'),
         ])
 
-        # WRONG QUERY: it discards results where company_id or country_id are NULL
         with self.assertQueries(['''
             SELECT "res_partner".id
-            FROM "res_partner", "res_country" AS "res_partner__country_id",
-                 "res_company" AS "res_partner__company_id"
-            WHERE ("res_partner"."country_id" = "res_partner__country_id"."id")
-            AND ("res_partner"."company_id" = "res_partner__company_id"."id")
-            AND (("res_partner__company_id"."name"::text LIKE %s)
+            FROM "res_partner"
+            LEFT JOIN "res_country" AS "res_partner__country_id" ON
+                ("res_partner"."country_id" = "res_partner__country_id"."id")
+            LEFT JOIN "res_company" AS "res_partner__company_id" ON
+                ("res_partner"."company_id" = "res_partner__company_id"."id")
+            WHERE (("res_partner__company_id"."name"::text LIKE %s)
                 OR ("res_partner__country_id"."code"::text LIKE %s))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1346,9 +1349,10 @@ class TestOne2many(TransactionCase):
 
         with self.assertQueries(['''
             SELECT "res_partner".id
-            FROM "res_partner", "res_partner_bank" AS "res_partner__bank_ids"
-            WHERE ("res_partner"."id" = "res_partner__bank_ids"."partner_id")
-            AND ("res_partner__bank_ids"."sanitized_acc_number"::text LIKE %s)
+            FROM "res_partner"
+            LEFT JOIN "res_partner_bank" AS "res_partner__bank_ids" ON
+                ("res_partner"."id" = "res_partner__bank_ids"."partner_id")
+            WHERE ("res_partner__bank_ids"."sanitized_acc_number"::text LIKE %s)
             ORDER BY "res_partner"."display_name"
         ''']):
             self.Partner.search([('bank_ids.sanitized_acc_number', 'like', '12')])
@@ -1357,9 +1361,10 @@ class TestOne2many(TransactionCase):
         # and having some line matching '45', but not necessarily the same line!
         with self.assertQueries(['''
             SELECT "res_partner".id
-            FROM "res_partner", "res_partner_bank" AS "res_partner__bank_ids"
-            WHERE ("res_partner"."id" = "res_partner__bank_ids"."partner_id")
-            AND (("res_partner__bank_ids"."sanitized_acc_number"::text LIKE %s)
+            FROM "res_partner"
+            LEFT JOIN "res_partner_bank" AS "res_partner__bank_ids" ON
+                ("res_partner"."id" = "res_partner__bank_ids"."partner_id")
+            WHERE (("res_partner__bank_ids"."sanitized_acc_number"::text LIKE %s)
             AND ("res_partner__bank_ids"."sanitized_acc_number"::text LIKE %s))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1370,11 +1375,12 @@ class TestOne2many(TransactionCase):
 
         with self.assertQueries(['''
             SELECT "res_partner".id
-            FROM "res_partner", "res_partner" AS "res_partner__child_ids",
-                 "res_partner_bank" AS "res_partner__child_ids__bank_ids"
-            WHERE ("res_partner"."id" = "res_partner__child_ids"."parent_id")
-            AND ("res_partner__child_ids"."id" = "res_partner__child_ids__bank_ids"."partner_id")
-            AND (("res_partner__child_ids"."active" = %s)
+            FROM "res_partner"
+            LEFT JOIN "res_partner" AS "res_partner__child_ids" ON
+                ("res_partner"."id" = "res_partner__child_ids"."parent_id")
+            LEFT JOIN "res_partner_bank" AS "res_partner__child_ids__bank_ids" ON
+                ("res_partner__child_ids"."id" = "res_partner__child_ids__bank_ids"."partner_id")
+            WHERE (("res_partner__child_ids"."active" = %s)
             AND ("res_partner__child_ids__bank_ids"."sanitized_acc_number"::text LIKE %s))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1388,11 +1394,12 @@ class TestOne2many(TransactionCase):
 
         with self.assertQueries(['''
             SELECT "res_partner".id
-            FROM "res_partner", "res_partner" AS "res_partner__child_ids",
-                 "res_partner_bank" AS "res_partner__child_ids__bank_ids"
-            WHERE ("res_partner"."id" = "res_partner__child_ids"."parent_id")
-            AND ("res_partner__child_ids"."id" = "res_partner__child_ids__bank_ids"."partner_id")
-            AND ((NOT (("res_partner__child_ids"."name" = %s)))
+            FROM "res_partner"
+            LEFT JOIN "res_partner" AS "res_partner__child_ids" ON
+                ("res_partner"."id" = "res_partner__child_ids"."parent_id")
+            LEFT JOIN "res_partner_bank" AS "res_partner__child_ids__bank_ids" ON
+                ("res_partner__child_ids"."id" = "res_partner__child_ids__bank_ids"."partner_id")
+            WHERE ((NOT (("res_partner__child_ids"."name" = %s)))
             AND (("res_partner__child_ids__bank_ids"."sanitized_acc_number"::text LIKE %s)
             AND ("res_partner__child_ids__bank_ids"."id" in (%s,%s,%s))))
             ORDER BY "res_partner"."display_name"
@@ -1407,13 +1414,14 @@ class TestOne2many(TransactionCase):
 
         with self.assertQueries(['''
             SELECT "res_partner".id
-            FROM "res_partner", "res_partner" AS "res_partner__child_ids",
-                 "res_country_state" AS "res_partner__child_ids__state_id",
-                 "res_country" AS "res_partner__child_ids__state_id__country_id"
-            WHERE ("res_partner"."id" = "res_partner__child_ids"."parent_id")
-            AND ("res_partner__child_ids"."state_id" = "res_partner__child_ids__state_id"."id")
-            AND ("res_partner__child_ids__state_id"."country_id" = "res_partner__child_ids__state_id__country_id"."id")
-            AND (("res_partner__child_ids"."active" = %s)
+            FROM "res_partner"
+            LEFT JOIN "res_partner" AS "res_partner__child_ids" ON
+                ("res_partner"."id" = "res_partner__child_ids"."parent_id")
+            LEFT JOIN "res_country_state" AS "res_partner__child_ids__state_id" ON
+                ("res_partner__child_ids"."state_id" = "res_partner__child_ids__state_id"."id")
+            LEFT JOIN "res_country" AS "res_partner__child_ids__state_id__country_id" ON
+                ("res_partner__child_ids__state_id"."country_id" = "res_partner__child_ids__state_id__country_id"."id")
+            WHERE (("res_partner__child_ids"."active" = %s)
             AND ("res_partner__child_ids__state_id__country_id"."code"::text LIKE %s))
             ORDER BY "res_partner"."display_name"
         ''']):
