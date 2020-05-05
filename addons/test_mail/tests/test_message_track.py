@@ -4,6 +4,7 @@
 from unittest.mock import patch
 
 from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.tests import Form
 
 
 class TestTracking(TestMailCommon):
@@ -170,6 +171,17 @@ class TestTracking(TestMailCommon):
         msg_sudo = self.record.sudo()._notify_prepare_template_context(self.record.message_ids, {})
         self.assertFalse(msg_emp.get('tracking_values'), "should not have protected tracking values")
         self.assertTrue(msg_sudo.get('tracking_values'), "should have protected tracking values")
+
+        # test editing the record with user not in the group of the field
+        self.record.invalidate_cache()
+        self.record.clear_caches()
+        record_form = Form(self.record.with_user(self.user_employee))
+        record_form.name = 'TestDoNoCrash'
+        # the employee user must be able to save the fields on which he can write
+        # if we fetch all the tracked fields, ignoring the group of the current user
+        # it will crash and it shouldn't
+        record = record_form.save()
+        self.assertEqual(record.name, 'TestDoNoCrash')
 
     def test_unlinked_field(self):
         record_sudo = self.record.sudo()
