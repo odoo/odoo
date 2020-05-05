@@ -7,4 +7,4 @@ from odoo import fields, models
 class Lead(models.Model):
     _inherit = 'crm.lead'
 
-    lead_mining_request_id = fields.Many2one('crm.iap.lead.mining.request', string='Lead Mining Request', index=True)
+    reveal_id = fields.Char(string='Reveal ID', help="Technical ID of reveal request done by IAP.")
