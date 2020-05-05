@@ -114,7 +114,7 @@ class Lead(models.Model):
             template_values = iap_data
             template_values['flavor_text'] = _("Lead enriched based on email address")
             lead.message_post_with_view(
-                'partner_autocomplete.enrich_service_information',
+                'iap_mail.enrich_company',
                 values=template_values,
                 subtype_id=self.env.ref('mail.mt_note').id
             )
