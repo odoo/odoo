@@ -757,6 +757,9 @@ class TestCowViewSaving(common.TransactionCase):
             'key': '_website_sale_comparison.product_add_to_compare',
         })])
 
+        # Simulate end of installation/update
+        View._create_all_specific_views(['_website_sale_comparison'])
+
         specific_view = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product')
         specific_view_arch = specific_view.read_combined(['arch'])['arch']
         self.assertEqual(specific_view.website_id.id, 1, "Ensure we got specific view to perform the checks against")
