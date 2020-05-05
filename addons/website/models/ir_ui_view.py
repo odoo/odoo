@@ -114,49 +114,40 @@ class View(models.Model):
 
         return True
 
-    def _get_specific_views(self):
-        """ Given a view, return a record set containing all the specific views
-            for that view's key.
-            If the given view is already specific, it will also return itself.
-        """
-        self.ensure_one()
-        domain = [('key', '=', self.key), ('website_id', '!=', False)]
-        return self.with_context(active_test=False).search(domain)
-
-    def _load_records_write(self, values):
-        """ During module update, when updating a generic view, we should also
-            update its specific views (COW'd).
-            Note that we will only update unmodified fields. That will mimic the
-            noupdate behavior on views having an ir.model.data.
-        """
-        if self.type == 'qweb' and not self.website_id:
-            # Update also specific views
-            for cow_view in self._get_specific_views():
-                authorized_vals = {}
-                for key in values:
-                    if cow_view[key] == self[key]:
-                        authorized_vals[key] = values[key]
-                cow_view.write(authorized_vals)
-        super(View, self)._load_records_write(values)
-
-    def _load_records_create(self, values):
-        """ During module install, when creating a generic child view, we should
+    def _create_all_specific_views(self, processed_modules):
+        """ When creating a generic child view, we should
             also create that view under specific view trees (COW'd).
             Top level view (no inherit_id) do not need that behavior as they
             will be shared between websites since there is no specific yet.
         """
-        records = super(View, self)._load_records_create(values)
-        for record in records:
-            if record.type == 'qweb' and record.inherit_id and not record.website_id and not record.inherit_id.website_id:
-                specific_parent_views = record.with_context(active_test=False).search([
-                    ('key', '=', record.inherit_id.key),
-                    ('website_id', '!=', None),
-                ])
-                for specific_parent_view in specific_parent_views:
-                    record.with_context(website_id=specific_parent_view.website_id.id).write({
-                        'inherit_id': specific_parent_view.id,
-                    })
-        return records
+        # Only for the modules being processed
+        regex = '^(%s)[.]' % '|'.join(processed_modules)
+        # Retrieve the views through a SQl query to avoid ORM queries inside of for loop
+        # Retrieves all the views that are missing their specific counterpart with all the
+        # specific view parent id and their website id in one query
+        query = """
+            SELECT generic.id, ARRAY[array_agg(spec_parent.id), array_agg(spec_parent.website_id)]
+              FROM ir_ui_view generic
+        INNER JOIN ir_ui_view generic_parent ON generic_parent.id = generic.inherit_id
+        INNER JOIN ir_ui_view spec_parent ON spec_parent.key = generic_parent.key
+         LEFT JOIN ir_ui_view specific ON specific.key = generic.key AND specific.website_id = spec_parent.website_id
+             WHERE generic.type='qweb'
+               AND generic.website_id IS NULL
+               AND generic.key ~ %s
+               AND spec_parent.website_id IS NOT NULL
+               AND specific.id IS NULL
+          GROUP BY generic.id
+        """
+        self.env.cr.execute(query, (regex, ))
+        result = dict(self.env.cr.fetchall())
+
+        for record in self.browse(result.keys()):
+            specific_parent_view_ids, website_ids = result[record.id]
+            for specific_parent_view_id, website_id in zip(specific_parent_view_ids, website_ids):
+                record.with_context(website_id=website_id).write({
+                    'inherit_id': specific_parent_view_id,
+                })
+        super(View, self)._create_all_specific_views(processed_modules)
 
     def unlink(self):
         '''This implements COU (copy-on-unlink). When deleting a generic page
@@ -175,7 +166,7 @@ class View(models.Model):
 
         specific_views = self.env['ir.ui.view']
         if self and self.pool._init:
-            for view in self:
+            for view in self.filtered(lambda view: not view.website_id):
                 specific_views += view._get_specific_views()
 
         result = super(View, self + specific_views).unlink()
