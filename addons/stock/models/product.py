@@ -218,7 +218,7 @@ class Product(models.Model):
         if picking_code == 'incoming':
             return self.description_pickingin or description
         if picking_code == 'outgoing':
-            return self.description_pickingout or description
+            return self.description_pickingout or self.name
         if picking_code == 'internal':
             return self.description_picking or description
 
