@@ -204,7 +204,7 @@ class CRMLeadMiningRequest(models.Model):
         leads = self.env['crm.lead'].create(lead_vals_list)
         for lead in leads:
             if messages_to_post.get(lead.reveal_id):
-                lead.message_post_with_view('partner_autocomplete.enrich_service_information', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
+                lead.message_post_with_view('iap_mail.enrich_company', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
 
     # Methods responsible for format response data into valid odoo lead data
     @api.model
