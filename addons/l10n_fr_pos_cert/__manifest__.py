@@ -36,6 +36,6 @@ The module adds following features:
         'security/ir.model.access.csv',
         'security/account_closing_intercompany.xml',
     ],
-    'qweb': ['static/src/xml/pos.xml'],
+    'qweb': ['static/src/xml/OrderReceipt.xml'],
     'post_init_hook': '_setup_inalterability',
 }
