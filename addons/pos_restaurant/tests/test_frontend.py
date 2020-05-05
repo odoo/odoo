@@ -5,9 +5,10 @@ import odoo.tests
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontend(odoo.tests.HttpCase):
-    def test_01_pos_restaurant(self):
-        env = self.env(user=self.env.ref('base.user_admin'))
-        account_obj = env['account.account']
+    def setUp(self):
+        super().setUp()
+        self.env = self.env(user=self.env.ref('base.user_admin'))
+        account_obj = self.env['account.account']
 
         printer = self.env['restaurant.printer'].create({
             'name': 'Kitchen Printer',
@@ -38,23 +39,51 @@ class TestFrontend(odoo.tests.HttpCase):
             'name': 'T5',
             'floor_id': main_floor.id,
             'seats': 4,
+            'position_h': 100,
+            'position_v': 100,
         })
         table_04 = self.env['restaurant.table'].create({
             'name': 'T4',
             'floor_id': main_floor.id,
             'seats': 4,
+            'shape': 'square',
+            'position_h': 150,
+            'position_v': 100,
         })
         table_02 = self.env['restaurant.table'].create({
             'name': 'T2',
             'floor_id': main_floor.id,
             'seats': 4,
+            'position_h': 250,
+            'position_v': 100,
         })
 
-        main_company = env.ref('base.main_company')
+        second_floor = self.env['restaurant.floor'].create({
+            'name': 'Second Floor',
+            'pos_config_id': pos_config.id,
+        })
+
+        table_01 = self.env['restaurant.table'].create({
+            'name': 'T1',
+            'floor_id': second_floor.id,
+            'seats': 4,
+            'shape': 'square',
+            'position_h': 100,
+            'position_v': 150,
+        })
+        table_03 = self.env['restaurant.table'].create({
+            'name': 'T3',
+            'floor_id': second_floor.id,
+            'seats': 4,
+            'position_h': 100,
+            'position_v': 250,
+        })
+
+        main_company = self.env.ref('base.main_company')
 
         account_receivable = account_obj.create({'code': 'X1012',
                                                  'name': 'Account Receivable - Test',
-                                                 'user_type_id': env.ref('account.data_account_type_receivable').id,
+                                                 'user_type_id': self.env.ref('account.data_account_type_receivable').id,
                                                  'reconcile': True})
 
         self.env['ir.property'].set_default(
@@ -64,14 +93,14 @@ class TestFrontend(odoo.tests.HttpCase):
             main_company,
         )
 
-        test_sale_journal = env['account.journal'].create({
+        test_sale_journal = self.env['account.journal'].create({
             'name': 'Sales Journal - Test',
             'code': 'TSJ',
             'type': 'sale',
             'company_id': main_company.id
             })
 
-        cash_journal = env['account.journal'].create({
+        cash_journal = self.env['account.journal'].create({
             'name': 'Cash Test',
             'code': 'TCJ',
             'type': 'sale',
@@ -120,15 +149,25 @@ class TestFrontend(odoo.tests.HttpCase):
             'taxes_id': [(6, 0, [])],
         })
 
-        pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
+        self.pos_config = pos_config
 
-        self.start_tour("/pos/web?config_id=%d" % pos_config.id, 'pos_restaurant_sync', login="admin")
+    def test_01_pos_restaurant(self):
 
-        self.assertEqual(1, env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
-        self.assertEqual(1, env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
 
-        self.start_tour("/pos/web?config_id=%d" % pos_config.id, 'pos_restaurant_sync_second_login', login="admin")
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync', login="admin", step_delay=50)
 
-        self.assertEqual(0, env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
-        self.assertEqual(1, env['pos.order'].search_count([('amount_total', '=', 2.2), ('state', '=', 'draft')]))
-        self.assertEqual(2, env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
+        self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
+        self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
+
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync_second_login', login="admin", step_delay=50)
+
+        self.assertEqual(0, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
+        self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 2.2), ('state', '=', 'draft')]))
+        self.assertEqual(2, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
+
+    def test_02_others(self):
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour', login="admin", step_delay=50)
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'ControlButtonsTour', login="admin", step_delay=50)
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'FloorScreenTour', login="admin", step_delay=50)

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderSelector" t-inherit="point_of_sale.OrderSelector" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('order-selector')]//span[hasclass('orders')]//t" position="before">
+            <BackToFloorButton t-if="backToFloorButtonIsShown" table="currentTable" />
+        </xpath>
+        <xpath expr="//span[hasclass('order-sequence')]" position="replace">
+            <span class="order-sequence">
+                <t t-if="order.server_id and env.pos.pos_session.login_number != order.uid.split('-')[1]">
+                    <t t-esc="order.uid.substring(order.uid.indexOf('-') +1)" />
+                </t>
+                <t t-else="">
+                    <t t-esc="order.sequence_number" />
+                </t>
+            </span>
+        </xpath>
+    </t>
+
+</templates>
