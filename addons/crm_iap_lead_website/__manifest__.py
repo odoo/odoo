@@ -3,14 +3,14 @@
 
 {
     'name': 'Lead Generation From Website Visits',
-    'summary': 'Create Leads/Opportunities from your website\'s traffic',
+    'summary': 'Generate Leads/Opportunities from your website\'s traffic',
     'version': '1.1',
     'category': 'Sales/CRM',
     'depends': [
+        'iap_crm',
         'iap_mail',
-        'crm',
         'crm_iap_lead',
-        'website_form',
+        'website_form'
     ],
     'data': [
         'data/reveal_data.xml',
