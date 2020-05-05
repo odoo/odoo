@@ -50,7 +50,7 @@ class CrmPartnerReportAssign(models.Model):
                     p.team_id,
                     (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS nbr_opportunities,
                     i.price_subtotal as turnover,
-                    i.invoice_date
+                    i.invoice_date as date
                 FROM
                     res_partner p
                     left join account_invoice_report i
