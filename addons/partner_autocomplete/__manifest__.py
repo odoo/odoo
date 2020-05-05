@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
 {
     'name': "Partner Autocomplete",
     'summary': "Auto-complete partner companies' data",
@@ -11,7 +12,6 @@
     'author': "Odoo SA",
     'category': 'Hidden/Tools',
     'version': '1.0',
-
     'depends': [
         'iap_mail',
     ],

@@ -13,7 +13,6 @@ _logger = logging.getLogger(__name__)
 class Lead(models.Model):
     _inherit = 'crm.lead'
 
-    reveal_id = fields.Char(string='Reveal ID', index=True)
     iap_enrich_done = fields.Boolean(string='Enrichment done', help='Whether IAP service for lead enrichment based on email has been performed on this lead.')
     show_enrich_button = fields.Boolean(string='Allow manual enrich', compute="_compute_show_enrich_button")
 
