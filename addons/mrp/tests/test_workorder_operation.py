@@ -36,6 +36,7 @@ class TestWorkOrderProcessCommon(TestMrpCommon):
             'product_tmpl_id': cls.product_4.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 4.0,
+            'consumption': 'flexible',
             'operation_ids': [
                 (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
             ],
@@ -377,7 +378,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         # ---------------------------------------------------------------
         # Check consume quants and produce quants after posting inventory
         # ---------------------------------------------------------------
-        production_table.post_inventory()
+        production_table._post_inventory()
         self.assertEqual(sum(move_table_sheet.mapped('quantity_done')), 1, "Wrong quantity of consumed product %s" % move_table_sheet.product_id.name)
         self.assertEqual(sum(move_leg.mapped('quantity_done')), 4, "Wrong quantity of consumed product %s" % move_leg.product_id.name)
         self.assertEqual(sum(move_table_bolt.mapped('quantity_done')), 4, "Wrong quantity of consumed product %s" % move_table_bolt.product_id.name)
@@ -556,6 +557,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
             'product_tmpl_id': custom_laptop.product_tmpl_id.id,
             'product_qty': 10,
             'product_uom_id': unit,
+            'consumption': 'flexible',
             'bom_line_ids': [(0, 0, {
                 'product_id': product_charger.id,
                 'product_qty': 20,
@@ -691,6 +693,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
             'product_tmpl_id': laptop.product_tmpl_id.id,
             'product_qty': 1,
             'product_uom_id': unit.id,
+            'consumption': 'flexible',
             'bom_line_ids': [(0, 0, {
                 'product_id': graphics_card.id,
                 'product_qty': 1,
@@ -773,6 +776,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': drawer.product_tmpl_id.id,
             'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'consumption': 'flexible',
             'sequence': 2,
             'operation_ids': [
                 (0, 0, {
@@ -1274,6 +1278,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
             'product_tmpl_id': self.product_4.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 1.0,
+            'consumption': 'flexible',
             'type': 'phantom',
             'bom_line_ids': [
                 (0, 0, {'product_id': self.product_2.id, 'product_qty': 1}),
@@ -1286,6 +1291,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
             'product_tmpl_id': self.product_5.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 1.0,
+            'consumption': 'flexible',
             'operation_ids': [
                 (0, 0, {
                     'workcenter_id': self.mrp_workcenter_1.id,
@@ -1465,6 +1471,7 @@ class TestRoutingAndKits(SavepointCase):
             'product_id': cls.finished1.id,
             'product_tmpl_id': cls.finished1.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
+            'consumption': 'flexible',
             'product_qty': 1,
             'type': 'normal',
             'bom_line_ids': [

@@ -83,7 +83,7 @@ class StockPicking(models.Model):
                 productions |= production
             for subcontracted_production in productions:
                 if subcontracted_production.state == 'progress':
-                    subcontracted_production.post_inventory()
+                    subcontracted_production._post_inventory()
                 else:
                     subcontracted_production.button_mark_done()
                 # For concistency, set the date on production move before the date

@@ -79,7 +79,7 @@ class TestMrpByProduct(common.TransactionCase):
         self.assertEqual(consume_move_c.product_uom_qty, 4, "Wrong consumed quantity of product c.")
         self.assertEqual(by_product_move.product_uom_qty, 2, "Wrong produced quantity of sub product.")
 
-        mnf_product_a.post_inventory()
+        mnf_product_a._post_inventory()
 
         # I see that stock moves of External Hard Disk including Headset USB are done now.
         self.assertFalse(any(move.state != 'done' for move in moves), 'Moves are not done!')

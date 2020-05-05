@@ -198,9 +198,6 @@ class MrpProduction(models.Model):
     reserve_visible = fields.Boolean(
         'Allowed to Reserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can reserve quantities')
-    post_visible = fields.Boolean(
-        'Allowed to Post Inventory', compute='_compute_post_visible',
-        help='Technical field to check when we can post')
     user_id = fields.Many2one(
         'res.users', 'Responsible', default=lambda self: self.env.user,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -236,11 +233,12 @@ class MrpProduction(models.Model):
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     confirm_cancel = fields.Boolean(compute='_compute_confirm_cancel')
     consumption = fields.Selection([
-        ('strict', 'Strict'),
-        ('flexible', 'Flexible')],
+        ('flexible', 'Allowed'),
+        ('warning', 'Allowed with warning'),
+        ('strict', 'Blocked')],
         required=True,
         readonly=True,
-        default='strict',
+        default='flexible',
     )
 
     mrp_production_child_count = fields.Integer("Number of generated MO", compute='_compute_mrp_production_child_count')
@@ -404,7 +402,10 @@ class MrpProduction(models.Model):
         for production in self:
             production.workorder_done_count = count_data.get(production.id, 0)
 
-    @api.depends('move_raw_ids.state', 'move_finished_ids.state', 'workorder_ids', 'workorder_ids.state', 'qty_produced', 'move_raw_ids.quantity_done', 'product_qty')
+    @api.depends(
+        'move_raw_ids.state', 'move_finished_ids.state', 'workorder_ids',
+        'workorder_ids.date_planned_start', 'workorder_ids.date_planned_finished',
+        'workorder_ids.state', 'move_raw_ids.quantity_done', 'product_qty', 'qty_producing')
     def _compute_state(self):
         """ Compute the production state. It use the same process than stock
         picking. It exists 3 extra steps for production:
@@ -424,17 +425,16 @@ class MrpProduction(models.Model):
             elif all(move.state in ['cancel', 'done'] for move in production.move_raw_ids):
                 if (
                     production.bom_id.consumption == 'flexible'
-                    and float_compare(production.qty_produced, production.product_qty, precision_rounding=production.product_uom_id.rounding) == -1
+                    and float_compare(production.qty_producing, production.product_qty, precision_rounding=production.product_uom_id.rounding) == -1
                 ):
                     production.state = 'progress'
                 else:
                     production.state = 'done'
-            elif production.move_finished_ids.filtered(lambda m: m.state not in ('cancel', 'done') and m.product_id.id == production.product_id.id)\
-                 and (production.qty_produced >= production.product_qty)\
-                 and (not production.bom_id.operation_ids or all(wo_state in ('cancel', 'done') for wo_state in production.workorder_ids.mapped('state'))):
+            elif production.qty_producing >= production.product_qty:
                 production.state = 'to_close'
-            elif production.workorder_ids and any(wo_state in ('progress') for wo_state in production.workorder_ids.mapped('state'))\
-                 or production.qty_produced > 0 and production.qty_produced < production.product_qty:
+            elif production.workorder_ids and any(wo_state == 'progress' for wo_state in production.workorder_ids.mapped('state')):
+                production.state = 'progress'
+            elif not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding) and production.qty_producing < production.product_qty:
                 production.state = 'progress'
             elif production.workorder_ids:
                 production.state = 'planned'
@@ -463,11 +463,6 @@ class MrpProduction(models.Model):
 
             order.unreserve_visible = not any_quantity_done and already_reserved
             order.reserve_visible = order.state in ('confirmed', 'progress', 'to_close') and any(move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids.filtered(lambda m: m.product_uom_qty))
-
-    @api.depends('move_finished_ids.quantity_done', 'move_finished_ids.state', 'is_locked')
-    def _compute_post_visible(self):
-        for order in self:
-            order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
 
     @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity_done', 'is_locked')
     def _get_produced_qty(self):
@@ -909,9 +904,7 @@ class MrpProduction(models.Model):
     def action_confirm(self):
         self._check_company()
         for production in self:
-            if not production.bom_id:
-                production.consumption = 'flexible'
-            else:
+            if production.bom_id:
                 production.consumption = production.bom_id.consumption
             if not production.move_raw_ids:
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
@@ -1060,7 +1053,7 @@ class MrpProduction(models.Model):
                 'operation_id': operation.id,
                 'state': len(workorders) == 0 and 'ready' or 'pending',
                 'qty_producing': quantity,
-                'consumption': self.bom_id.consumption,
+                'consumption': self.consumption,
             })
             if workorders:
                 workorders[-1].next_work_order_id = workorder.id
@@ -1090,22 +1083,60 @@ class MrpProduction(models.Model):
             workorder._generate_wo_lines()
         return workorders
 
-    def _check_lots(self):
-        # Check that the components were consumed for lots that we have produced.
-        if self.product_id.tracking != 'none':
-            finished_lots = self.finished_move_line_ids.mapped('lot_id')
-            raw_finished_lots = self.move_raw_ids.mapped('move_line_ids.lot_produced_ids')
-            if (raw_finished_lots - finished_lots):
-                lots_short = raw_finished_lots - finished_lots
-                error_msg = _(
-                    'Some components have been consumed for a lot/serial number that has not been produced. '
-                    'Unlock the MO and click on the components lines to correct it.\n'
-                    'List of the components:\n'
-                )
-                move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda ml: lots_short & ml.lot_produced_ids)
-                for ml in move_lines:
-                    error_msg += ml.product_id.display_name + ' (' + ', '.join((lots_short & ml.lot_produced_ids).mapped('name')) + ')\n'
-                raise UserError(error_msg)
+    def _get_consumption_issues(self):
+        """Compare the quantity consumed of the components, the expected quantity
+        on the BoM and the consumption parameter on the order.
+
+        :return: list of tuples (order_id, product_id, consumed_qty, expected_qty) where the
+            consumption isn't honored. order_id and product_id are recordset of mrp.production
+            and product.product respectively
+        :rtype: list
+        """
+        issues = []
+        if self.env.context.get('skip_consumption', False):
+            return issues
+        for order in self:
+            if order.consumption == 'flexible' or not order.bom_id or not order.bom_id.bom_line_ids:
+                continue
+            expected_move_values = order._get_moves_raw_values()
+            expected_qty_by_product = defaultdict(float)
+            for move_values in expected_move_values:
+                move_product = self.env['product.product'].browse(move_values['product_id'])
+                move_uom = self.env['uom.uom'].browse(move_values['product_uom'])
+                move_product_qty = move_uom._compute_quantity(move_values['product_uom_qty'], move_product.uom_id)
+                expected_qty_by_product[move_product] += move_product_qty * order.qty_producing / order.product_qty
+
+            done_qty_by_product = defaultdict(float)
+            for move in order.move_raw_ids:
+                qty_done = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)
+                if move.product_id not in expected_qty_by_product:
+                    issues.append((order, move.product_id, qty_done, 0.0))
+                    continue
+                done_qty_by_product[move.product_id] += qty_done
+
+            for product, qty_to_consume in expected_qty_by_product.items():
+                qty_done = done_qty_by_product.get(product, 0.0)
+                if float_compare(qty_to_consume, qty_done, precision_rounding=product.uom_id.rounding) != 0:
+                    issues.append((order, product, qty_done, qty_to_consume))
+
+        return issues
+
+    def _action_generate_consumption_wizard(self, consumption_issues):
+        ctx = self.env.context.copy()
+        lines = []
+        for order, product_id, consumed_qty, expected_qty in consumption_issues:
+            lines.append((0, 0, {
+                'mrp_production_id': order.id,
+                'product_id': product_id.id,
+                'consumption': order.consumption,
+                'product_uom_id': product_id.uom_id.id,
+                'product_consumed_qty_uom': consumed_qty,
+                'product_expected_qty_uom': expected_qty
+            }))
+        ctx.update({'default_mrp_production_ids': self.ids, 'default_mrp_consumption_warning_line_ids': lines})
+        action = self.env.ref('mrp.action_mrp_consumption_warning').read()[0]
+        action['context'] = ctx
+        return action
 
     def _get_quantity_produced_issues(self):
         quantity_issues = []
@@ -1268,8 +1299,7 @@ class MrpProduction(models.Model):
     def button_mark_done(self):
         self._check_company()
         for order in self:
-            # TODO : multi _check_lots and _check_sn_uniqueness + error message with MO name
-            order._check_lots()
+            # TODO : multi _check_sn_uniqueness + error message with MO name
             order._check_sn_uniqueness()
 
         res = self._pre_button_mark_done()
@@ -1338,6 +1368,10 @@ class MrpProduction(models.Model):
         return action
 
     def _pre_button_mark_done(self):
+        consumption_issues = self._get_consumption_issues()
+        if consumption_issues:
+            return self._action_generate_consumption_wizard(consumption_issues)
+
         quantity_issues = self._get_quantity_produced_issues()
         if quantity_issues:
             return self._action_generate_backorder_wizard(quantity_issues)
@@ -1455,7 +1489,7 @@ class MrpProduction(models.Model):
 
     def _get_quantity_to_backorder(self):
         self.ensure_one()
-        return max(self.product_qty - self.qty_produced, 0)
+        return max(self.product_qty - self.qty_producing, 0)
 
     def _check_sn_uniqueness(self):
         """ Alert the user if the serial number as already been consumed/produced """
@@ -1530,10 +1564,3 @@ class MrpProduction(models.Model):
                 duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == move_line.lot_id) - move_line
                 if duplicates:
                     raise UserError(message)
-
-    def _strict_consumption_check(self):
-        if self.consumption == 'strict':
-            for move in self.move_raw_ids:
-                rounding = move.product_uom.rounding
-                if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=rounding) != 0:
-                    raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % move.product_id.name)

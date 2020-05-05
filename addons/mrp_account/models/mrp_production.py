@@ -71,7 +71,6 @@ class MrpProduction(models.Model):
                 AccountAnalyticLine.create(vals)
 
     def button_mark_done(self):
-        self.ensure_one()
         res = super(MrpProduction, self).button_mark_done()
         for order in self:
             order._costs_generate()

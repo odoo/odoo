@@ -58,7 +58,7 @@ class TestMrpCancelMO(TestMrpCommon):
         mo_form.qty_producing = 2
         manufacturing_order = mo_form.save()
         # Post Inventory
-        manufacturing_order.post_inventory()
+        manufacturing_order._post_inventory()
         # Cancel the MO
         manufacturing_order.action_cancel()
         # Check MO is marked as done and its SML are done or cancelled
@@ -108,7 +108,7 @@ class TestMrpCancelMO(TestMrpCommon):
         workorder._apply_update_workorder_lines()
         workorder.record_production()
         # Post Inventory
-        manufacturing_order.post_inventory()
+        manufacturing_order._post_inventory()
         # Cancel it
         manufacturing_order.action_cancel()
         # Check MO is done, WO is cancelled and its SML are done or cancelled
@@ -147,7 +147,7 @@ class TestMrpCancelMO(TestMrpCommon):
         mo_form.qty_producing = 2
         manufacturing_order = mo_form.save()
         # Post Inventory
-        manufacturing_order.post_inventory()
+        manufacturing_order._post_inventory()
         # Unlink the MO must raises an UserError since it cannot be really cancelled
         self.assertEqual(manufacturing_order.exists().state, 'progress')
         with self.assertRaises(UserError):

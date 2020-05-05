@@ -42,6 +42,7 @@ class TestWarehouse(common.TestMrpCommon):
             'product_tmpl_id': self.laptop.product_tmpl_id.id,
             'product_qty': 1,
             'product_uom_id': unit.id,
+            'consumption': 'flexible',
             'bom_line_ids': [(0, 0, {
                 'product_id': self.graphics_card.id,
                 'product_qty': 1,
