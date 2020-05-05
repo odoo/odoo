@@ -1790,8 +1790,6 @@ class IrModelData(models.Model):
     module = fields.Char(default='', required=True)
     res_id = fields.Many2oneReference(string='Record ID', help="ID of the target record in the database", model_field='model')
     noupdate = fields.Boolean(string='Non Updatable', default=False)
-    date_update = fields.Datetime(string='Update Date', default=fields.Datetime.now)
-    date_init = fields.Datetime(string='Init Date', default=fields.Datetime.now)
     reference = fields.Char(string='Reference', compute='_compute_reference', readonly=True, store=False)
 
     _sql_constraints = [
@@ -1988,12 +1986,12 @@ class IrModelData(models.Model):
     # NOTE: this method is overriden in web_studio; if you need to make another
     #  override, make sure it is compatible with the one that is there.
     def _build_update_xmlids_query(self, sub_rows, update):
-        rowf = "(%s, %s, %s, %s, %s, now() at time zone 'UTC', now() at time zone 'UTC')"
+        rowf = "(%s, %s, %s, %s, %s)"
         return """
-            INSERT INTO ir_model_data (module, name, model, res_id, noupdate, date_init, date_update)
+            INSERT INTO ir_model_data (module, name, model, res_id, noupdate)
             VALUES {rows}
             ON CONFLICT (module, name)
-            DO UPDATE SET date_update=(now() at time zone 'UTC') {where}
+            DO UPDATE SET write_date=(now() at time zone 'UTC') {where}
         """.format(
             rows=", ".join([rowf] * len(sub_rows)),
             where="WHERE NOT ir_model_data.noupdate" if update else "",
