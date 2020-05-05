@@ -20,7 +20,7 @@ discount to a customer.
         'views/pos_discount_templates.xml'
     ],
     'qweb': [
-        'static/src/xml/discount_templates.xml',
+        'static/src/xml/DiscountButton.xml',
     ],
     'installable': True,
 }
