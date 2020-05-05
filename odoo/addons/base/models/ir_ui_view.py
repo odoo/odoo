@@ -570,7 +570,8 @@ actual arch.
         # retrieve all the views transitively inheriting from view_id
         domain = self._get_inheriting_views_arch_domain(model)
         e = expression(domain, self.env['ir.ui.view'])
-        where_clause, where_params = e.to_sql()
+        from_clause, where_clause, where_params = e.query.get_sql()
+        assert from_clause == '"ir_ui_view"'
         self.flush(['active'])
         query = """
             WITH RECURSIVE ir_ui_view_inherits AS (

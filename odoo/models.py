@@ -4112,14 +4112,9 @@ Record ids: %(records)s
                 domain = [(self._active_name, '=', 1)] + domain
 
         if domain:
-            e = expression.expression(domain, self)
-            tables = e.get_tables()
-            where_clause, where_params = e.to_sql()
-            where_clause = [where_clause] if where_clause else []
+            return expression.expression(domain, self).query
         else:
-            where_clause, where_params, tables = [], [], ['"%s"' % self._table]
-
-        return Query(tables, where_clause, where_params)
+            return Query(['"%s"' % self._table])
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
