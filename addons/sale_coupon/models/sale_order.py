@@ -25,9 +25,6 @@ class SaleOrder(models.Model):
     def _get_no_effect_on_threshold_lines(self):
         self.ensure_one()
         lines = self.env['sale.order.line']
-        # Do not count already applied promo_code discount; Do not substract itself
-        if self.code_promo_program_id and self.code_promo_program_id.reward_type == 'discount':
-            lines = self.order_line.filtered(lambda l: l.product_id == self.code_promo_program_id.discount_line_product_id)
         return lines
 
     def recompute_coupon_lines(self):
