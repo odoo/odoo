@@ -1032,12 +1032,6 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT COUNT(1)
             FROM "res_partner_title"
-            LEFT JOIN "ir_translation" AS "res_partner_title__name" ON
-                ("res_partner_title"."id" = "res_partner_title__name"."res_id"
-                 AND "res_partner_title__name"."type" = 'model'
-                 AND "res_partner_title__name"."name" = %s
-                 AND "res_partner_title__name"."lang" = %s
-                 AND "res_partner_title__name"."value" != %s)
             WHERE ("res_partner_title"."id" = %s)
         ''']):
             Model.search_count([('id', '=', 1)])

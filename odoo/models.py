@@ -4376,19 +4376,20 @@ Record ids: %(records)s
 
         query = self._where_calc(args)
         self._apply_ir_rules(query, 'read')
-        order_by = self._generate_order_by(order, query)
-        from_clause, where_clause, where_clause_params = query.get_sql()
-
-        where_str = where_clause and (" WHERE %s" % where_clause) or ''
 
         if count:
             # Ignore order, limit and offset when just counting, they don't make sense and could
             # hurt performance
+            from_clause, where_clause, where_clause_params = query.get_sql()
+            where_str = where_clause and (" WHERE %s" % where_clause) or ''
             query_str = 'SELECT count(1) FROM ' + from_clause + where_str
             self._cr.execute(query_str, where_clause_params)
             res = self._cr.fetchone()
             return res[0]
 
+        order_by = self._generate_order_by(order, query)
+        from_clause, where_clause, where_clause_params = query.get_sql()
+        where_str = where_clause and (" WHERE %s" % where_clause) or ''
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
