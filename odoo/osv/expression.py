@@ -583,12 +583,13 @@ class ExtendedLeaf(object):
         return conditions
 
     def get_tables(self):
-        tables = set()
+        tables = []
         links = []
         for context in self.join_context:
             links.append((context[1]._table, context[4]))
             alias, alias_statement = generate_table_alias(self._models[0]._table, links)
-            tables.add(alias_statement)
+            if alias_statement not in tables:
+                tables.append(alias_statement)
         return tables
 
     def _get_context_debug(self):
@@ -676,14 +677,11 @@ class expression(object):
 
     def get_tables(self):
         """ Returns the list of tables for SQL queries, like select from ... """
-        tables = []
+        tables = [_quote(self.root_model._table)]
         for leaf in self.result:
             for table in leaf.get_tables():
                 if table not in tables:
                     tables.append(table)
-        table_name = _quote(self.root_model._table)
-        if table_name not in tables:
-            tables.append(table_name)
         return tables
 
     # ----------------------------------------
@@ -1158,10 +1156,11 @@ class expression(object):
         # -> generate joins
         # ----------------------------------------
 
-        joins = set()
-        for leaf in self.result:
-            joins |= set(leaf.get_join_conditions())
-        self.joins = list(joins)
+        self.joins = list(tools.unique(
+            join
+            for leaf in self.result
+            for join in leaf.get_join_conditions()
+        ))
 
     def __leaf_to_sql(self, eleaf):
         model = eleaf.model

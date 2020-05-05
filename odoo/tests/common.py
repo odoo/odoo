@@ -40,6 +40,7 @@ from xmlrpc import client as xmlrpclib
 
 from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
+from odoo.sql_db import Cursor
 from odoo.tools import float_compare, single_email_re
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
@@ -378,6 +379,37 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                 func(*args, **kwargs)
         else:
             return self._assertRaises(exception, **kwargs)
+
+    @contextmanager
+    def assertQueries(self, expected):
+        """ Check the queries made by the current cursor. ``expected`` is a list
+        of strings representing the expected queries being made. Query strings
+        are matched against each other, ignoring case and whitespaces.
+        """
+        Cursor_execute = Cursor.execute
+        actual_queries = []
+
+        def execute(self, query, params=None, log_exceptions=None):
+            actual_queries.append(query)
+            return Cursor_execute(self, query, params, log_exceptions)
+
+        def get_unaccent_wrapper(cr):
+            return lambda x: x
+
+        with patch('odoo.sql_db.Cursor.execute', execute):
+            with patch('odoo.osv.expression.get_unaccent_wrapper', get_unaccent_wrapper):
+                yield actual_queries
+
+        self.assertEqual(
+            len(actual_queries), len(expected),
+            "%d queries done, %d expected" % (len(actual_queries), len(expected)),
+        )
+        for actual_query, expect_query in zip(actual_queries, expected):
+            self.assertEqual(
+                "".join(actual_query.lower().split()),
+                "".join(expect_query.lower().split()),
+                "\n---- actual query:\n%s\n---- not like:\n%s" % (actual_query, expect_query),
+            )
 
     @contextmanager
     def assertQueryCount(self, default=0, flush=True, **counters):
