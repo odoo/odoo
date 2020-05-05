@@ -966,40 +966,14 @@ class expression(object):
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
                         right = '%%%s%%' % right
-
-                    inselect_operator = 'inselect'
-                    if sql_operator in NEGATIVE_TERM_OPERATORS:
-                        # negate operator (fix lp:1071710)
-                        sql_operator = sql_operator[4:] if sql_operator[:3] == 'not' else '='
-                        inselect_operator = 'not inselect'
-
-                    unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
-
-                    instr = unaccent('%s')
-
                     if sql_operator == 'in':
                         right = tuple(right)
 
-                    subselect = """WITH temp_irt_current (id, name) as (
-                            SELECT ct.id, coalesce(it.value,ct.{quote_left})
-                            FROM {current_table} ct
-                            LEFT JOIN ir_translation it ON (it.name = %s and
-                                        it.lang = %s and
-                                        it.type = %s and
-                                        it.res_id = ct.id and
-                                        it.value != '')
-                            )
-                            SELECT id FROM temp_irt_current WHERE {name} {operator} {right} order by name
-                            """.format(current_table=model._table, quote_left=_quote(left), name=unaccent('name'),
-                                       operator=sql_operator, right=instr)
+                    unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
 
-                    params = (
-                        model._name + ',' + left,
-                        get_lang(model.env).code,
-                        'model',
-                        right,
-                    )
-                    push(('id', inselect_operator, (subselect, params)), model, alias, internal=True)
+                    left = unaccent(model._generate_translated_field(alias, left, self.query))
+                    instr = unaccent('%s')
+                    push_result(f"{left} {sql_operator} {instr}", [right])
 
                 else:
                     expr, params = self.__leaf_to_sql(leaf, model, alias)
