@@ -282,12 +282,23 @@ var KanbanRenderer = BasicRenderer.extend({
      * @private
      */
     _getGhostColumns: function () {
-        if (this.examples && this.examples.ghostColumns) {
-            return this.examples.ghostColumns;
+        if(!this.examples) {
+            this.examples = {};
         }
-        return _.map(_.range(1, 5), function (num) {
-            return _.str.sprintf(_t("Column %s"), num);
-        });
+
+        if (!this.examples.ghostRecords) {
+            if (!this.examples.ghostColumns) {
+                this.examples.ghostColumns =  _.map(_.range(1, 5), function (num) {
+                    return _.str.sprintf(_t("Column %s"), num);
+                });
+            }
+
+            this.examples.ghostRecords = this.examples.ghostColumns.map((col, i) => {
+                return {name: col, records: 2+Math.floor(Math.random() * 6)};
+            });
+        }
+
+        return this.examples.ghostRecords;
     },
     /**
      * Render the Example Ghost Kanban card on the background

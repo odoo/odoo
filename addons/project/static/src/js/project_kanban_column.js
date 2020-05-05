@@ -68,7 +68,7 @@ odoo.define('project.project_kanban_column', function (require) {
             } else if(rand > 0.8) {
                 rating = 'fa-meh-o text-warning';
             } else if(rand > 0.7) {
-                rating = 'fa-frown-o text-danger'
+                rating = 'fa-frown-o text-danger';
             }
 
             return {
@@ -79,7 +79,7 @@ odoo.define('project.project_kanban_column', function (require) {
                 tag: Math.random() < 0.7 ? '' : Math.floor(Math.random() * 11),
                 user: 'user' + Math.floor(Math.random() * 4),
                 title: 25 + (Math.floor(Math.random() * 5) * 15),
-            }
+            };
         },
 
         _addDemoRecord(record_data) {
