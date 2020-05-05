@@ -43,6 +43,21 @@ class PosController(http.Controller):
         }
         return request.render('point_of_sale.index', qcontext=context)
 
+    @http.route('/pos/web/tests', type='http', auth="user")
+    def test_suite(self, mod=None, **kwargs):
+        domain = [
+            ('state', '=', 'opened'),
+            ('user_id', '=', request.session.uid),
+            ('rescue', '=', False)
+        ]
+        pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
+        session_info = request.env['ir.http'].session_info()
+        session_info['user_context']['allowed_company_ids'] = pos_session.company_id.ids
+        context = {
+            'session_info': session_info,
+        }
+        return request.render('point_of_sale.qunit_suite', qcontext=context)
+
     @http.route('/pos/sale_details_report', type='http', auth='user')
     def print_sale_details(self, date_start=False, date_stop=False, **kw):
         r = request.env['report.point_of_sale.report_saledetails']

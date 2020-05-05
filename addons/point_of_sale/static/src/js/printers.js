@@ -5,31 +5,75 @@ var Session = require('web.Session');
 var core = require('web.core');
 var _t = core._t;
 
+// IMPROVEMENT: This is too much. We can get away from this class.
+class PrintResult {
+    constructor({ successful, message }) {
+        this.successful = successful;
+        this.message = message;
+    }
+}
+
+class PrintResultGenerator {
+    IoTActionError() {
+        return new PrintResult({
+            successful: false,
+            message: {
+                title: _t('Connection to IoT Box failed'),
+                body: _t('Please check if the IoT Box is still connected.'),
+            },
+        });
+    }
+    IoTResultError() {
+        return new PrintResult({
+            successful: false,
+            message: {
+                title: _t('Connection to the printer failed'),
+                body: _t('Please check if the printer is still connected.'),
+            },
+        });
+    }
+    Successful() {
+        return new PrintResult({
+            successful: true,
+        });
+    }
+}
+
 var PrinterMixin = {
-    init: function () {
+    init: function() {
         this.receipt_queue = [];
+        this.printResultGenerator = new PrintResultGenerator();
     },
 
     /**
      * Add the receipt to the queue of receipts to be printed and process it.
+     * We clear the print queue if printing is not successful.
      * @param {String} receipt: The receipt to be printed, in HTML
+     * @returns {PrintResult}
      */
-    print_receipt: function (receipt) {
-        var self = this;
+    print_receipt: async function(receipt) {
         if (receipt) {
             this.receipt_queue.push(receipt);
         }
-        function process_next_job() {
-            if (self.receipt_queue.length > 0) {
-                var r = self.receipt_queue.shift();
-                return self.htmlToImg(r)
-                    .then(self.send_printing_job.bind(self))
-                    .then(self._onIoTActionResult.bind(self))
-                    .then(process_next_job)
-                    .guardedCatch(self._onIoTActionFail.bind(self));
+        let image, sendPrintResult;
+        while (this.receipt_queue.length > 0) {
+            receipt = this.receipt_queue.shift();
+            image = await this.htmlToImg(receipt);
+            try {
+                sendPrintResult = await this.send_printing_job(image);
+            } catch (error) {
+                // Error in communicating to the IoT box.
+                this.receipt_queue.length = 0;
+                return this.printResultGenerator.IoTActionError();
+            }
+            // rpc call is okay but printing failed because
+            // IoT box can't find a printer.
+            if (!sendPrintResult) {
+                this.receipt_queue.length = 0;
+                return this.printResultGenerator.IoTResultError();
             }
         }
-        return process_next_job();
+        return this.printResultGenerator.Successful();
     },
 
     /**
@@ -64,7 +108,7 @@ var PrinterMixin = {
 
     _onIoTActionResult: function (data){
         if (this.pos && (data === false || data.result === false)) {
-            this.pos.gui.show_popup('error',{
+            Gui.showPopup('ErrorPopup',{
                 'title': _t('Connection to the printer failed'),
                 'body':  _t('Please check if the printer is still connected.'),
             });
@@ -73,7 +117,7 @@ var PrinterMixin = {
 
     _onIoTActionFail: function () {
         if (this.pos) {
-            this.pos.gui.show_popup('error',{
+            Gui.showPopup('ErrorPopup',{
                 'title': _t('Connection to IoT Box failed'),
                 'body':  _t('Please check if the IoT Box is still connected.'),
             });
@@ -120,5 +164,7 @@ var Printer = core.Class.extend(PrinterMixin, {
 return {
     PrinterMixin: PrinterMixin,
     Printer: Printer,
+    PrintResult,
+    PrintResultGenerator,
 }
 });
