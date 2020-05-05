@@ -1124,15 +1124,15 @@ class TestMany2one(TransactionCase):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
 
         with self.assertQueries(['''
-            SELECT "res_company".id
-            FROM "res_company"
-            WHERE ("res_company"."name"::text LIKE %s)
-            ORDER BY "res_company"."sequence", "res_company"."name"
-        ''', '''
             SELECT "res_country".id
             FROM "res_country"
             WHERE ("res_country"."code"::text LIKE %s)
             ORDER BY "res_country"."name"
+        ''', '''
+            SELECT "res_company".id
+            FROM "res_company"
+            WHERE ("res_company"."name"::text LIKE %s)
+            ORDER BY "res_company"."sequence", "res_company"."name"
         ''', '''
             SELECT "res_partner".id
             FROM "res_partner"
@@ -1202,8 +1202,8 @@ class TestMany2one(TransactionCase):
             SELECT "res_partner".id
             FROM "res_partner", "res_company" AS "res_partner__company_id",
                  "res_partner" AS "res_partner__company_id__partner_id"
-            WHERE ("res_partner"."company_id" = "res_partner__company_id"."id"
-            AND "res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
+            WHERE ("res_partner"."company_id" = "res_partner__company_id"."id")
+            AND ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
             AND ("res_partner__company_id__partner_id"."name"::text LIKE %s)
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1221,10 +1221,10 @@ class TestMany2one(TransactionCase):
         # WRONG QUERY: it discards results where company_id or country_id are NULL
         with self.assertQueries(['''
             SELECT "res_partner".id
-            FROM "res_partner", "res_company" AS "res_partner__company_id",
-                 "res_country" AS "res_partner__country_id"
-            WHERE ("res_partner"."company_id" = "res_partner__company_id"."id"
-            AND "res_partner"."country_id" = "res_partner__country_id"."id")
+            FROM "res_partner", "res_country" AS "res_partner__country_id",
+                 "res_company" AS "res_partner__company_id"
+            WHERE ("res_partner"."country_id" = "res_partner__country_id"."id")
+            AND ("res_partner"."company_id" = "res_partner__company_id"."id")
             AND (("res_partner__company_id"."name"::text LIKE %s)
                 OR ("res_partner__country_id"."code"::text LIKE %s))
             ORDER BY "res_partner"."display_name"
@@ -1372,8 +1372,8 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner".id
             FROM "res_partner", "res_partner" AS "res_partner__child_ids",
                  "res_partner_bank" AS "res_partner__child_ids__bank_ids"
-            WHERE ("res_partner"."id" = "res_partner__child_ids"."parent_id"
-            AND "res_partner__child_ids"."id" = "res_partner__child_ids__bank_ids"."partner_id")
+            WHERE ("res_partner"."id" = "res_partner__child_ids"."parent_id")
+            AND ("res_partner__child_ids"."id" = "res_partner__child_ids__bank_ids"."partner_id")
             AND (("res_partner__child_ids"."active" = %s)
             AND ("res_partner__child_ids__bank_ids"."sanitized_acc_number"::text LIKE %s))
             ORDER BY "res_partner"."display_name"
@@ -1390,8 +1390,8 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner".id
             FROM "res_partner", "res_partner" AS "res_partner__child_ids",
                  "res_partner_bank" AS "res_partner__child_ids__bank_ids"
-            WHERE ("res_partner"."id" = "res_partner__child_ids"."parent_id"
-            AND "res_partner__child_ids"."id" = "res_partner__child_ids__bank_ids"."partner_id")
+            WHERE ("res_partner"."id" = "res_partner__child_ids"."parent_id")
+            AND ("res_partner__child_ids"."id" = "res_partner__child_ids__bank_ids"."partner_id")
             AND ((NOT (("res_partner__child_ids"."name" = %s)))
             AND (("res_partner__child_ids__bank_ids"."sanitized_acc_number"::text LIKE %s)
             AND ("res_partner__child_ids__bank_ids"."id" in (%s,%s,%s))))
@@ -1410,9 +1410,9 @@ class TestOne2many(TransactionCase):
             FROM "res_partner", "res_partner" AS "res_partner__child_ids",
                  "res_country_state" AS "res_partner__child_ids__state_id",
                  "res_country" AS "res_partner__child_ids__state_id__country_id"
-            WHERE ("res_partner"."id" = "res_partner__child_ids"."parent_id"
-            AND "res_partner__child_ids"."state_id" = "res_partner__child_ids__state_id"."id"
-            AND "res_partner__child_ids__state_id"."country_id" = "res_partner__child_ids__state_id__country_id"."id")
+            WHERE ("res_partner"."id" = "res_partner__child_ids"."parent_id")
+            AND ("res_partner__child_ids"."state_id" = "res_partner__child_ids__state_id"."id")
+            AND ("res_partner__child_ids__state_id"."country_id" = "res_partner__child_ids__state_id__country_id"."id")
             AND (("res_partner__child_ids"."active" = %s)
             AND ("res_partner__child_ids__state_id__country_id"."code"::text LIKE %s))
             ORDER BY "res_partner"."display_name"
