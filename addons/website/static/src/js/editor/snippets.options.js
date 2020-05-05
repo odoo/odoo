@@ -1609,9 +1609,11 @@ options.registry.CoverProperties = options.Class.extend({
             this.$target.removeClass('o_record_has_cover');
         } else {
             this.$image.css('background-image', `url('${widgetValue}')`);
-            const $defaultSizeBtn = this.$el.find('.o_record_cover_opt_size_default');
-            $defaultSizeBtn.click();
-            $defaultSizeBtn.closest('we-select').click();
+            if (this.$target.data('use_size') === 'True') {
+                const $defaultSizeBtn = this.$el.find('.o_record_cover_opt_size_default');
+                $defaultSizeBtn.click();
+                $defaultSizeBtn.closest('we-select').click();
+            }
         }
     },
     /**
@@ -1633,7 +1635,7 @@ options.registry.CoverProperties = options.Class.extend({
         await this._super(...arguments);
 
         // Update saving dataset
-        this.$target[0].dataset.coverClass = this.$el.find('[data-cover-opt-name="size"] we-button.active').data('selectClass') || '';
+        this.$target[0].dataset.coverClass = this.$el.find('[data-cover-opt-name="size"] we-button.active').data('selectClass') || this.$target[0].dataset.coverClass;
         this.$target[0].dataset.textAlignClass = this.$el.find('[data-cover-opt-name="text_align"] we-button.active').data('selectClass') || '';
         this.$target[0].dataset.filterValue = this.$filterValueOpts.filter('.active').data('filterValue') || 0.0;
         let colorPickerWidget = null;

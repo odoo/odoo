@@ -333,6 +333,7 @@
     <t t-set="default_cover_name">Cover</t>
     <div t-att-data-name="display_opt_name or default_cover_name"
          t-att-style="_cp.get('background_color_style')"
+         t-att-data-cover-class="_cp.get('resize_class')"
          t-att-data-use_size="use_size"
          t-att-data-use_filters="use_filters"
          t-att-data-use_text_align="use_text_align"
