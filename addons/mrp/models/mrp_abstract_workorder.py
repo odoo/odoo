@@ -23,6 +23,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
     product_tracking = fields.Selection(related="product_id.tracking")
     consumption = fields.Selection([
         ('strict', 'Strict'),
+        ('warning', 'Warning'),
         ('flexible', 'Flexible')],
         required=True,
     )

@@ -49,6 +49,7 @@ class TestStockProductionLot(TestStockCommon):
             'product_tmpl_id': cls.product_apple_pie.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 1.0,
+            'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_apple.id, 'product_qty': 3}),

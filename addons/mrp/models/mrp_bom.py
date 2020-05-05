@@ -63,11 +63,15 @@ class MrpBom(models.Model):
         'res.company', 'Company', index=True,
         default=lambda self: self.env.company)
     consumption = fields.Selection([
-        ('strict', 'Strict'),
-        ('flexible', 'Flexible')],
-        help="Defines if you can consume more or less components than the quantity defined on the BoM.",
-        default='flexible',
-        string='Consumption',
+        ('flexible', 'Allowed'),
+        ('warning', 'Allowed with warning'),
+        ('strict', 'Blocked')],
+        help="Defines if you can consume more or less components than the quantity defined on the BoM:\n"
+             "  * Allowed: allowed for all manufacturing users.\n"
+             "  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
+             "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected.",
+        default='warning',
+        string='Flexible Consumption',
         required=True
     )
 

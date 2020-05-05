@@ -100,6 +100,7 @@ class TestMrpCommon(common2.TestStockCommon):
             'product_tmpl_id': cls.product_4.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 4.0,
+            'consumption': 'flexible',
             'operation_ids': [
             ],
             'type': 'normal',
@@ -111,6 +112,7 @@ class TestMrpCommon(common2.TestStockCommon):
             'product_id': cls.product_5.id,
             'product_tmpl_id': cls.product_5.product_tmpl_id.id,
             'product_uom_id': cls.product_5.uom_id.id,
+            'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
                 (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
@@ -125,6 +127,7 @@ class TestMrpCommon(common2.TestStockCommon):
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
             'product_uom_id': cls.uom_dozen.id,
+            'consumption': 'flexible',
             'product_qty': 2.0,
             'operation_ids': [
                 (0, 0, {'name': 'Cutting Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
