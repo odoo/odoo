@@ -32,5 +32,5 @@ class TestBlogPerformance(UtilPerf):
         for blog_post in blog_posts:
             blog_post.write({'tag_ids': [[6, 0, random.choices(blog_tags.ids, k=random.randint(0, len(blog_tags)))]]})
 
-        self.assertEqual(self._get_url_hot_query('/blog'), 26)
-        self.assertEqual(self._get_url_hot_query(blog_post[0].website_url), 29)
+        self.assertLessEqual(self._get_url_hot_query('/blog'), 26)
+        self.assertLessEqual(self._get_url_hot_query(blog_post[0].website_url), 29)
