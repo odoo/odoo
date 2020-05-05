@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ClientDetails" owl="1">
+        <section class="client-details">
+            <div class="client-picture">
+                <img t-att-src="partnerImageUrl" alt="Partner logo"
+                     style="width: 64px; height: 64px; object-fit: cover;" />
+            </div>
+            <div class="client-name">
+                <t t-esc="props.partner.name" />
+            </div>
+            <div class="edit-buttons">
+                <div class="button edit">
+                    <i class="fa fa-pencil-square"
+                       t-on-click="trigger('activate-edit-mode', {isNewClient: false})" role="img"
+                       aria-label="Edit" title="Edit" />
+                </div>
+            </div>
+            <div class="client-details-box clearfix">
+                <div class="client-details-left">
+                    <div class="client-detail">
+                        <span class="label">Address</span>
+                        <t t-if="props.partner.address">
+                            <span class="detail client-address">
+                                <t t-esc="props.partner.address" />
+                            </span>
+                        </t>
+                        <t t-else="">
+                            <span class="detail client-address empty">N/A</span>
+                        </t>
+                    </div>
+                    <div class="client-detail">
+                        <span class="label">Email</span>
+                        <t t-if="props.partner.email">
+                            <span class="detail client-email">
+                                <t t-esc="props.partner.email" />
+                            </span>
+                        </t>
+                        <t t-else="">
+                            <span class="detail client-email empty">N/A</span>
+                        </t>
+                    </div>
+                    <div class="client-detail">
+                        <span class="label">Phone</span>
+                        <t t-if="props.partner.phone">
+                            <span class="detail client-phone">
+                                <t t-esc="props.partner.phone" />
+                            </span>
+                        </t>
+                        <t t-else="">
+                            <span class="detail client-phone empty">N/A</span>
+                        </t>
+                    </div>
+                </div>
+                <div class="client-details-right">
+                    <div class="client-detail">
+                        <span class="label">Barcode</span>
+                        <t t-if="props.partner.barcode">
+                            <span class="detail client-id">
+                                <t t-esc="props.partner.barcode" />
+                            </span>
+                        </t>
+                        <t t-else="">
+                            <span class="detail client-id empty">N/A</span>
+                        </t>
+                    </div>
+                    <div class="client-detail">
+                        <span class="label">Tax ID</span>
+                        <t t-if="props.partner.vat">
+                            <span class="detail vat">
+                                <t t-esc="props.partner.vat" />
+                            </span>
+                        </t>
+                        <t t-else="">
+                            <span class="detail vat empty">N/A</span>
+                        </t>
+                    </div>
+                    <div t-if="env.pos.pricelists.length lte 1" class="client-detail">
+                        <span class='label'>Pricelist</span>
+                        <t t-if="props.partner.property_product_pricelist">
+                            <span class="detail property_product_pricelist">
+                                <t t-esc="props.partner.property_product_pricelist[1]" />
+                            </span>
+                        </t>
+                        <t t-else="">
+                            <span class="detail property_product_pricelist empty">N/A</span>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+
+</templates>
