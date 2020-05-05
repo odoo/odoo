@@ -106,6 +106,8 @@ class ChangeProductionQty(models.TransientModel):
                     wo.state = 'progress'
                 if wo.qty_produced == wo.qty_production and wo.state == 'progress':
                     wo.state = 'done'
+                    if wo.next_work_order_id.state == 'pending':
+                        wo.next_work_order_id.state = 'ready'
                 # assign moves; last operation receive all unassigned moves
                 # TODO: following could be put in a function as it is similar as code in _workorders_create
                 # TODO: only needed when creating new moves
