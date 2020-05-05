@@ -6,9 +6,8 @@
     'summary': 'Enrich Leads/Opportunities using email address domain',
     'category': 'Sales/CRM',
     'depends': [
-        'iap',
+        'iap_mail',
         'crm',
-        'partner_autocomplete'
     ],
     'data': [
         'data/ir_cron.xml',
