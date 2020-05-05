@@ -1286,9 +1286,12 @@ var GlobalJSignatureObjectInitializer = function(window){
     };
 
     function _clearDrawingArea( data, dontClear ) {
-        this.find('canvas.'+apinamespace)
+        var canvas = this.find('canvas.'+apinamespace)
             .add(this.filter('canvas.'+apinamespace))
-            .data(apinamespace+'.this').resetCanvas( data, dontClear );
+            .data(apinamespace+'.this');
+        if(canvas) {
+            canvas.resetCanvas( data, dontClear );
+        }
         return this;
     }
 
