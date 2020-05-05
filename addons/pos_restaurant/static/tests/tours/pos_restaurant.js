@@ -20,7 +20,7 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
                 if (orders.length === order_count) {
                     return
                 } else {
-                    throw "sync failed";
+                    throw `sync failed 'there should be ${order_count} orders, however, ${orders.length} orders are displayed' `;
                 }
             },
         }];
@@ -100,11 +100,11 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
     function finish_order() {
         var steps = [{
             content: "validate the order",
-            trigger: '.button.next:visible',
+            trigger: '.payment-screen .button.next:visible',
         }];
         steps = steps.concat([{
             content: "next order",
-            trigger: '.button.next:visible',
+            trigger: '.receipt-screen .button.next:visible',
         }]);
         return steps;
     }
@@ -115,7 +115,7 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
      */
     var steps = [{
         content: 'waiting for loading to finish',
-        trigger: 'body:has(.loader:hidden)',
+        trigger: 'body:not(:has(.loader))',
         run: function () {},
     }]
 
@@ -163,6 +163,10 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
         content: 'back to floor',
         trigger: '.floor-button',
         run: 'click',
+    }, {
+        content: 'back to floor',
+        trigger: '.oe_status .js_connected',
+        run: function() {},
     }]);
     steps = steps.concat(open_table('T5', 1));
 
@@ -175,7 +179,7 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
      */
     var steps = [{
         content: 'waiting for loading to finish',
-        trigger: 'body:has(.loader:hidden)',
+        trigger: 'body:not(:has(.loader))',
         run: function () {},
     }];
     steps = steps.concat(open_table('T5', 1));
@@ -233,6 +237,14 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
         content: 'back to floor',
         trigger: '.floor-button',
         run: 'click',
+    }, {
+        content: 'check if in floor screen',
+        trigger: '.pos-content .floor-screen',
+        run: function() {},
+    }, {
+        content: 'wait for sync to finish',
+        trigger: '.oe_status .js_connected',
+        run: function() {},
     }]);
 
     Tour.register('pos_restaurant_sync_second_login', { test: true, url: '/pos/web' }, steps);
