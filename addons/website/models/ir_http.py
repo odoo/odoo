@@ -227,12 +227,6 @@ class Http(models.AbstractModel):
         return super(Http, cls)._get_default_lang()
 
     @classmethod
-    def _get_translation_frontend_modules_name(cls):
-        mods = super(Http, cls)._get_translation_frontend_modules_name()
-        installed = request.registry._init_modules | set(odoo.conf.server_wide_modules)
-        return mods + [mod for mod in installed if mod.startswith('website')]
-
-    @classmethod
     def _serve_page(cls):
         req_page = request.httprequest.path
         page_domain = [('url', '=', req_page)] + request.website.website_domain()

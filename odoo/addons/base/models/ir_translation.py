@@ -57,7 +57,8 @@ class IrTranslationImport(object):
         self._rows.append((params['name'], params['lang'], params['res_id'],
                            params['src'], params['type'], params['imd_model'],
                            params['module'], params['imd_name'], params['value'],
-                           params['state'], params['comments']))
+                           params['state'], params['comments'],
+                           params.get('web', False), params.get('frontend', False)))
 
     def finish(self):
         """ Transfer the data from the temp table to ir.translation """
@@ -65,7 +66,8 @@ class IrTranslationImport(object):
 
         # Step 0: insert rows in batch
         query = """ INSERT INTO %s (name, lang, res_id, src, type, imd_model,
-                                    module, imd_name, value, state, comments)
+                                    module, imd_name, value, state, comments,
+                                    web, frontend)
                     VALUES """ % self._table
         for rows in cr.split_for_in_conditions(self._rows):
             cr.execute(query + ", ".join(["%s"] * len(rows)), rows)
@@ -103,15 +105,16 @@ class IrTranslationImport(object):
         count = 0
         # Step 2: insert new or upsert non-noupdate translations
         if self._overwrite:
-            cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
+            cr.execute(""" INSERT INTO %(tr)s(name, lang, res_id, src, type, value, module, state, comments)
                            SELECT name, lang, res_id, src, type, value, module, state, comments
-                           FROM %s
+                           FROM %(temp)s
                            WHERE type = 'code'
                            AND noupdate IS NOT TRUE
                            ON CONFLICT (type, lang, md5(src)) WHERE type = 'code'
-                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
+                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = 
+                                (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
                             WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
-                       """ % (self._model_table, self._table))
+                       """ % {'tr': self._model_table, 'temp': self._table})
             count += cr.rowcount
             cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
                            SELECT name, lang, res_id, src, type, value, module, state, comments
@@ -134,12 +137,24 @@ class IrTranslationImport(object):
                             WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
                        """ % (self._model_table, self._table))
             count += cr.rowcount
+        # always merge web & frontend flags on code translations
+        cr.execute(""" INSERT INTO %(tr)s(name, lang, res_id, src, type, value, module, state, comments, web, frontend)
+                       SELECT name, lang, res_id, src, type, value, module, state, comments, web, frontend
+                       FROM %(table)s
+                       WHERE type = 'code'
+                       ON CONFLICT (type, lang, md5(src)) WHERE type = 'code'
+                       DO UPDATE SET (web, frontend) = (
+                           coalesce(EXCLUDED.web, false) or coalesce(%(tr)s.web, false),
+                           coalesce(EXCLUDED.frontend, false) or coalesce(%(tr)s.frontend, false)
+                       );
+                   """ % {'tr': self._model_table, 'table': self._table})
         cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
                        SELECT name, lang, res_id, src, type, value, module, state, comments
                        FROM %s
-                       WHERE %s
+                       WHERE %s AND type != 'code'
                        ON CONFLICT DO NOTHING;
                    """ % (self._model_table, self._table, 'noupdate IS TRUE' if self._overwrite else 'TRUE'))
+
         count += cr.rowcount
 
         if self._debug:
@@ -171,7 +186,9 @@ class IrTranslation(models.Model):
                               ('translated', 'Translated')],
                              string="Status", default='to_translate',
                              help="Automatically set to let administators find new terms that might need to be translated")
-
+    # FIXME: index these? Maybe index (web, frontend) or something?
+    web = fields.Boolean()
+    frontend = fields.Boolean()
     # aka gettext extracted-comments - we use them to flag openerp-web translation
     # cfr: http://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/PO-Files.html
     comments = fields.Text(string='Translation comments', index=True)
@@ -864,7 +881,7 @@ class IrTranslation(models.Model):
         }
 
     @api.model
-    def get_translations_for_webclient(self, mods, lang):
+    def get_translations_for_webclient(self, mods, lang, frontend=False):
         if not mods:
             mods = [x['name'] for x in self.env['ir.module.module'].sudo().search_read(
                 [('state', '=', 'installed')], ['name'])]
@@ -881,18 +898,18 @@ class IrTranslation(models.Model):
                 "grouping": langs.grouping,
                 "decimal_point": langs.decimal_point,
                 "thousands_sep": langs.thousands_sep,
-                "week_start": langs.week_start,
+                "week_start": int(langs.week_start),
+                "code": lang,
             }
-            lang_params['week_start'] = int(lang_params['week_start'])
-            lang_params['code'] = lang
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
         translations_per_module = {}
         messages = self.env['ir.translation'].sudo().search_read([
             ('module', 'in', mods), ('lang', '=', lang),
-            ('comments', 'like', 'openerp-web'), ('value', '!=', False),
-            ('value', '!=', '')],
+            ('web', '=', True),
+            ('frontend', '=', True) if frontend else (1, '=', 1),
+            ('value', '!=', False), ('value', '!=', '')],
             ['module', 'src', 'value', 'lang'], order='module')
         for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
             translations_per_module.setdefault(mod, {'messages': []})
@@ -904,9 +921,9 @@ class IrTranslation(models.Model):
         return translations_per_module, lang_params
 
     @api.model
-    @tools.ormcache('frozenset(mods)', 'lang')
-    def get_web_translations_hash(self, mods, lang):
-        translations, lang_params = self.get_translations_for_webclient(mods, lang)
+    @tools.ormcache('frozenset(mods)', 'lang', 'frontend')
+    def get_web_translations_hash(self, mods, lang, frontend=False):
+        translations, lang_params = self.get_translations_for_webclient(mods, lang, frontend=frontend)
         translation_cache = {
             'lang_parameters': lang_params,
             'modules': translations,

@@ -296,11 +296,9 @@ class IrHttp(models.AbstractModel):
     def get_frontend_session_info(self):
         session_info = super(IrHttp, self).get_frontend_session_info()
 
-        IrHttpModel = request.env['ir.http'].sudo()
-        modules = IrHttpModel.get_translation_frontend_modules()
         user_context = request.session.get_context() if request.session.uid else {}
         lang = user_context.get('lang')
-        translation_hash = request.env['ir.translation'].get_web_translations_hash(modules, lang)
+        translation_hash = request.env['ir.translation'].get_web_translations_hash(mods=[], lang=lang, frontend=True)
 
         session_info.update({
             'translationURL': '/website/translations',
@@ -309,32 +307,6 @@ class IrHttp(models.AbstractModel):
             },
         })
         return session_info
-
-    @api.model
-    def get_translation_frontend_modules(self):
-        Modules = request.env['ir.module.module'].sudo()
-        extra_modules_domain = self._get_translation_frontend_modules_domain()
-        extra_modules_name = self._get_translation_frontend_modules_name()
-        if extra_modules_domain:
-            new = Modules.search(
-                expression.AND([extra_modules_domain, [('state', '=', 'installed')]])
-            ).mapped('name')
-            extra_modules_name += new
-        return extra_modules_name
-
-    @classmethod
-    def _get_translation_frontend_modules_domain(cls):
-        """ Return a domain to list the domain adding web-translations and
-            dynamic resources that may be used frontend views
-        """
-        return []
-
-    @classmethod
-    def _get_translation_frontend_modules_name(cls):
-        """ Return a list of module name where web-translations and
-            dynamic resources may be used in frontend views
-        """
-        return ['web']
 
     bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
 
@@ -661,3 +633,9 @@ class IrHttp(models.AbstractModel):
                 code, html = 418, env['ir.ui.view'].render_template('http_routing.http_error', values)
 
         return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
+
+class IrModuleModule(models.Model):
+    _inherit = 'ir.module.module'
+
+    def _frontend_roots(self):
+        return super()._frontend_roots() + ['web']

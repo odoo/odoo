@@ -2,7 +2,7 @@
 
 from . import im_livechat
 from . import im_livechat_channel
-from . import ir_http
+from . import ir_module_module
 from . import mail_channel
 from . import res_config_settings
 from . import website

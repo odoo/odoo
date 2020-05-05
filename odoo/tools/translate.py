@@ -600,6 +600,8 @@ class PoFileReader:
             comments = "\n".join([c for c in entry.comment.split('\n') if not c.startswith('module:')])
             source = entry.msgid
             translation = entry.msgstr
+            # if any of the `code` occurrence is a webclient path, flag entry as web
+            web = any(re.match(r'code:.*/static/src/(js|xml)', occurrence) for occurrence, _ in entry.occurrences)
             found_code_occurrence = False
             for occurrence, line_number in entry.occurrences:
                 match = re.match(r'(model|model_terms):([\w.]+),([\w]+):(\w+)\.([\w-]+)', occurrence)
@@ -633,6 +635,7 @@ class PoFileReader:
                         'comments': comments,
                         'res_id': int(line_number),
                         'module': module,
+                        'web': web,
                     }
                     continue
 
@@ -1071,7 +1074,7 @@ class TranslationModuleReader:
 
     def _export_translatable_resources(self):
         """ Export translations for static terms
-        
+
         This will include:
         - the python strings marked with _() or _lt()
         - the javascript strings marked with _t() or _lt() inside static/src/js/
@@ -1096,13 +1099,11 @@ class TranslationModuleReader:
                 if fnmatch.fnmatch(root, '*/static/src/js*'):
                     for fname in fnmatch.filter(files, '*.js'):
                         self._babel_extract_terms(fname, path, root, 'javascript',
-                                                  extra_comments=[WEB_TRANSLATION_COMMENT],
                                                   extract_keywords={'_t': None, '_lt': None})
                 # QWeb template files
                 if fnmatch.fnmatch(root, '*/static/src/xml*'):
                     for fname in fnmatch.filter(files, '*.xml'):
-                        self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
-                                                  extra_comments=[WEB_TRANSLATION_COMMENT])
+                        self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb')
                 if not recursive:
                     # due to topdown, first iteration is in first level
                     break
@@ -1141,7 +1142,6 @@ def trans_load_data(cr, fileobj, fileformat, lang,
         _logger.info('loading translation file for language %s', lang)
 
     env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
-
     try:
         if not env['res.lang']._lang_get(lang):
             _logger.error("Couldn't read translation for lang '%s', language not found", lang)
@@ -1155,6 +1155,7 @@ def trans_load_data(cr, fileobj, fileformat, lang,
         Translation = env['ir.translation']
         irt_cursor = Translation._get_import_cursor(overwrite)
 
+        is_frontend = {}
         def process_row(row):
             """Process a single PO (or POT) entry."""
             # dictionary which holds values for this line of the csv file
@@ -1164,6 +1165,13 @@ def trans_load_data(cr, fileobj, fileformat, lang,
                                  'comments', 'imd_model', 'imd_name', 'module'))
             dic['lang'] = lang
             dic.update(row)
+            if dic['type'] == 'code':
+                f = is_frontend.get(row['module'])
+                if f is None:
+                    f = is_frontend[row['module']] = env['ir.module.module'].search([
+                        ('name', '=', row['module']),
+                    ]).is_frontend
+                dic['frontend'] = f
 
             # do not import empty values
             if not create_empty_translation and not dic['value']:

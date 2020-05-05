@@ -296,6 +296,7 @@ class Module(models.Model):
     icon_image = fields.Binary(string='Icon', compute='_get_icon_image')
     to_buy = fields.Boolean('Odoo Enterprise Module', default=False)
     has_iap = fields.Boolean(compute='_compute_has_iap')
+    is_frontend = fields.Boolean(compute='_compute_is_frontend')
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE (name)', 'The name of the module must be unique!'),
@@ -954,6 +955,26 @@ class Module(models.Model):
             }
         return super(Module, self).search_panel_select_range(field_name)
 
+    def _frontend_roots(self):
+        return []
+
+    @api.depends('dependencies_id')
+    def _compute_is_frontend(self):
+        self.env.cr.execute("""
+            SELECT d.name, array_agg(m.name)
+            FROM ir_module_module_dependency d
+            JOIN ir_module_module m ON (d.module_id = m.id)
+            GROUP BY d.name;
+        """)
+        dmap = dict(self.env.cr.fetchall())
+        roots = list(self._frontend_roots())
+        is_frontend = dict.fromkeys(self.mapped('name'), False)
+        while roots:
+            root = roots.pop()
+            is_frontend[root] = True
+            roots.extend(dmap.pop(root, []))
+        for mod in self:
+            self.is_frontend = is_frontend[mod.name]
 
 DEP_STATES = STATES + [('unknown', 'Unknown')]
 
