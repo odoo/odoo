@@ -304,12 +304,11 @@ class PurchaseOrderLine(models.Model):
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                 line.qty_received = total
 
-    @api.model
-    def create(self, values):
-        line = super(PurchaseOrderLine, self).create(values)
-        if line.order_id.state == 'purchase':
-            line._create_or_update_picking()
-        return line
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super(PurchaseOrderLine, self).create(vals_list)
+        lines.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
+        return lines
 
     def write(self, values):
         for line in self.filtered(lambda l: not l.display_type):

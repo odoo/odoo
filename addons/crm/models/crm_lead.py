@@ -219,7 +219,7 @@ class Lead(models.Model):
         others = self - leads
         others.day_open = None
         for lead in leads:
-            date_create = fields.Datetime.from_string(lead.create_date)
+            date_create = fields.Datetime.from_string(lead.create_date).replace(microsecond=0)
             date_open = fields.Datetime.from_string(lead.date_open)
             lead.day_open = abs((date_open - date_create).days)
 
@@ -374,12 +374,12 @@ class Lead(models.Model):
                            self._table, ['create_date', 'team_id'])
         return res
 
-    @api.model
-    def create(self, vals):
-        lead = super(Lead, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        leads = super().create(vals_list)
         # Compute new probability for each lead separately
-        lead._update_probability()
-        return lead
+        leads._update_probability()
+        return leads
 
     def write(self, vals):
         # stage change:

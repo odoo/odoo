@@ -29,12 +29,10 @@
                     t-ref="searchView"
                     >
                     <div t-if="props.withSearchBar" class="o_searchview" role="search" aria-autocomplete="list" >
-                        <i t-if="props.searchMenuTypes.length"
-                            t-attf-class="o_searchview_more fa fa-search-{{ state.displayDropdowns ? 'minus' : 'plus' }}"
-                            title="Advanced Search..."
+                        <i class="o_searchview_icon fa fa-search"
+                            title="Search..."
                             role="img"
-                            aria-label="Advanced Search..."
-                            t-on-click.prevent="state.displayDropdowns = !state.displayDropdowns"
+                            aria-label="Search..."
                         />
                         <SearchBar t-if="props.withSearchBar" fields="fields"/>
                     </div>
@@ -55,7 +53,7 @@
                     role="search"
                     t-ref="searchViewButtons"
                     >
-                    <t t-if="props.withSearchBar and state.displayDropdowns">
+                    <t t-if="props.withSearchBar">
                         <FilterMenu t-if="props.searchMenuTypes.includes('filter')"
                             class="o_filter_menu"
                             fields="fields"
@@ -165,7 +163,7 @@
             <i t-if="props.icon" t-att-class="props.icon"/>
             <span class="o_dropdown_title" t-esc="title"/>
             <i t-if="displayCaret" t-attf-class="o_dropdown_caret fa fa-caret-{{ state.open ? 'down' : 'right' }}"/>
-            <i t-else="" t-attf-class="fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
+            <i t-elif="displayChevron" t-attf-class="fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
         </button>
         <ul t-if="state.open" class="o_dropdown_menu dropdown-menu show" role="menu"
             t-on-item-selected="_onItemSelected"
@@ -633,10 +631,12 @@
         <DropdownMenu t-if="printItems.length"
             title="env._t('Print')"
             items="printItems"
+            icon="'fa fa-print'"
         />
         <DropdownMenu t-if="actionItems.length"
             title="env._t('Action')"
             items="actionItems"
+            icon="'fa fa-cog'"
         />
     </div>
 </t>
