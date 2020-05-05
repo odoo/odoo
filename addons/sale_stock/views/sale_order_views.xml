@@ -25,16 +25,16 @@
                     <field name="incoterm" widget="selection" groups="sale_stock.group_display_incoterm"/>
                     <field name="picking_policy" required="True"/>
                 </xpath>
-                <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
-                    <field name="show_json_popover" invisible="1"/>
-                    <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
-                </xpath>
                 <xpath expr="//div[@name='commitment_date_div']" position="replace">
                     <div class="o_row">
                         <field name="commitment_date"/>
                         <span class="text-muted" attrs="{'invisible': [('effective_date', '!=', False), ('commitment_date', '!=', False)]}">Expected: <field name="expected_date" widget="date"/></span>
                     </div>
                     <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
+                    <field name="show_json_popover" invisible="1"/>
+                    <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
                 </xpath>
                 <xpath expr="//page/field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
                     <field name="product_packaging" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging" />
