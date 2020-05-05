@@ -1934,12 +1934,14 @@ options.registry.SnippetMove = options.Class.extend({
                 if (isNavItem) {
                     $tabPane.prev().before($tabPane);
                 }
+                $('html,body').animate({scrollTop: this.$target.next().position().top - this.$target.innerHeight() - 200}, 500);
                 break;
             case 'next':
                 this.$target.next().after(this.$target);
                 if (isNavItem) {
                     $tabPane.next().after($tabPane);
                 }
+                $('html,body').animate({scrollTop: this.$target.prev().position().top + this.$target.prev().innerHeight() - 200}, 500);
                 break;
         }
     },
