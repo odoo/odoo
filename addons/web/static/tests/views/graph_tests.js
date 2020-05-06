@@ -772,6 +772,52 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('measure dropdown consistency', async function (assert) {
+        assert.expect(2);
+
+        const actionManager = await testUtils.createActionManager({
+            archs: {
+                'foo,false,graph': `
+                    <graph string="Partners" type="bar">
+                        <field name="foo" type="measure"/>
+                    </graph>`,
+                'foo,false,search': `<search/>`,
+                'foo,false,kanban': `
+                    <kanban>
+                        <templates>
+                            <div t-name="kanban-box">
+                                <field name="foo"/>
+                            </div>
+                        </templates>
+                    </kanban>`,
+            },
+            data: this.data,
+        });
+        await actionManager.doAction({
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[false, 'graph'], [false, 'kanban']],
+            flags: {
+                graph: {
+                    additionalMeasures: ['product_id'],
+                }
+            },
+        });
+
+        assert.containsOnce(actionManager, '.o_control_panel .o_graph_measures_list',
+            "Measures dropdown is present at init"
+        );
+
+        await cpHelpers.switchView(actionManager, 'kanban');
+        await cpHelpers.switchView(actionManager, 'graph');
+
+        assert.containsOnce(actionManager, '.o_control_panel .o_graph_measures_list',
+            "Measures dropdown is present after reload"
+        );
+
+        actionManager.destroy();
+    });
+
     QUnit.test('graph view crash when moving from search view using Down key', async function (assert) {
         assert.expect(1);
 
