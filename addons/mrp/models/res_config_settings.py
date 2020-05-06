@@ -18,6 +18,7 @@ class ResConfigSettings(models.TransientModel):
     module_mrp_subcontracting = fields.Boolean("Subcontracting")
     group_mrp_routings = fields.Boolean("MRP Work Orders",
         implied_group='mrp.group_mrp_routings')
+    group_locked_by_default = fields.Boolean("Lock Quantities To Consume", implied_group='mrp.group_locked_by_default')
 
     @api.onchange('use_manufacturing_lead')
     def _onchange_use_manufacturing_lead(self):

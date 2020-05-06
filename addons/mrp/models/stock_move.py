@@ -139,12 +139,14 @@ class StockMove(models.Model):
         for move in self:
             move.needs_lots = move.product_id.tracking != 'none'
 
-    @api.depends('raw_material_production_id.is_locked', 'picking_id.is_locked')
+    @api.depends('raw_material_production_id.is_locked', 'production_id.is_locked')
     def _compute_is_locked(self):
         super(StockMove, self)._compute_is_locked()
         for move in self:
             if move.raw_material_production_id:
                 move.is_locked = move.raw_material_production_id.is_locked
+            if move.production_id:
+                move.is_locked = move.production_id.is_locked
 
     @api.depends('state')
     def _compute_is_done(self):

@@ -61,21 +61,22 @@
                 <header>
                     <field name="bom_has_operations" invisible="1"/>
                     <field name="confirm_cancel" invisible="1"/>
+                    <field name="show_lock" invisible="1"/>
                     <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('qty_producing', '=', 0)]}" string="Backorder" type="object" class="oe_highlight"/>
                     <button name="button_mark_done" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
-                    <button name="action_confirm" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_locked', '=', False)]}" string="Confirm" type="object" class="oe_highlight"/>
-                    <button name="action_assign" attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object" class="oe_highlight"/>
+                    <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object" class="oe_highlight"/>
                     <button name="button_plan" attrs="{'invisible': ['|', '|', ('state', 'not in', ('confirmed', 'progress')), ('workorder_ids', '=', []), ('is_planned', '=', True)]}" type="object" string="Plan" class="oe_highlight"/>
                     <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', '|', ('state', '!=', 'planned'), ('date_planned_start', '=', False), ('date_planned_finished', '=', False)]}"/>
-                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', ('state', 'in', ('cancel', 'draft')), ('is_locked', '=', False)]}"/>
                     <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
+                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done"/>
-                    <button name="action_toggle_is_locked" attrs="{'invisible': ['|', '|', ('state', 'in', ('cancel', 'draft')), ('id', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="Unlock the manufacturing order to correct what has been consumed or produced."/>
-                    <button name="action_toggle_is_locked" attrs="{'invisible': [('is_locked', '=', True)]}" string="Lock" class="oe_highlight" groups="mrp.group_mrp_manager" type="object"/>
+                    <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="Unlock the manufacturing order to adjust what has been consumed or produced."/>
+                    <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', True)]}" string="Lock" groups="mrp.group_mrp_manager" type="object" help="Lock the manufacturing order to prevent changes to what has been consumed or produced."/>/>
                     <button name="action_cancel" type="object" string="Cancel"
-                            attrs="{'invisible': ['|', '|', '|', ('id', '=', False), ('is_locked', '=', False), ('state', 'in', ('done','cancel')), ('confirm_cancel', '=', True)]}"/>
+                            attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', 'in', ('done', 'cancel')), ('confirm_cancel', '=', True)]}"/>
                     <button name="action_cancel" type="object" string="Cancel"
-                            attrs="{'invisible': ['|', '|', '|', ('id', '=', False), ('is_locked', '=', False), ('state', 'in', ('done','cancel')), ('confirm_cancel', '=', False)]}"
+                            attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', 'in', ('done', 'cancel')), ('confirm_cancel', '=', False)]}"
                             confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process ?"/>
                     <button name="button_unbuild" type="object" string="Unbuild" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                 </header>
@@ -133,7 +134,7 @@
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row no-gutters d-flex">
                                 <div attrs="{'invisible': [('state', '=', 'draft')]}" class="o_row">
-                                    <field name="qty_producing" digits="[12,3]" class="text-left"/>
+                                    <field name="qty_producing" digits="[12,3]" class="text-left"  attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"/>
                                     /
                                 </div>
                                 <field name="product_qty" class="oe_inline text-left" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -250,6 +251,8 @@
                                     <field name="sequence" invisible="1"/>
                                     <field name="location_id" invisible="1"/>
                                     <field name="warehouse_id" invisible="1"/>
+                                    <field name="is_locked" invisible="1"/>
+                                    <field name="has_move_lines" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="should_consume_qty" invisible="1"/>
@@ -266,7 +269,7 @@
                             </field>
                         </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
-                            <field name="move_byproduct_ids" context="{'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': [('state', '=', 'done'), ('is_locked', '=', True)]}">
+                            <field name="move_byproduct_ids" context="{'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
                                 <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
                                     <field name="product_id" domain="[('id', '!=', parent.product_id)]" required="1"/>
 
@@ -305,6 +308,8 @@
                                     <field name="sequence" invisible="1"/>
                                     <field name="location_id" invisible="1"/>
                                     <field name="warehouse_id" invisible="1"/>
+                                    <field name="is_locked" invisible="1"/>
+                                    <field name="has_move_lines" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="product_uom_qty" string="To Produce" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', ('parent.state', 'not in', ('confirmed', 'planned', 'progress', 'to_close')), ('parent.is_locked', '=', True)]}"/>
