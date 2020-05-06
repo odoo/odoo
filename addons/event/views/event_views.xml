@@ -362,10 +362,9 @@
                                         <div class="text-right">
                                             <div class="float-left"><field name="activity_ids" widget="kanban_activity"/></div>
                                             <field name="kanban_state" widget="state_selection"/>
-                                            <img t-if="record.user_id.raw_value"
-                                                 class="oe_kanban_avatar o_event_fit_20 ml-2 rounded-circle"
-                                                 t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
-                                                 t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
+                                            <span class="ml-2">
+                                                <field name="user_id" widget="many2one_avatar_user"/>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

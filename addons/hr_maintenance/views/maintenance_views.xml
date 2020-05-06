@@ -98,12 +98,8 @@
                 <field name="employee_id"/>
                 <field name="department_id"/>
             </xpath>
-            <xpath expr="//img[@t-att-title='record.owner_user_id.value']" position='replace'>
-                <img t-if="record.employee_id.raw_value"
-                     class="oe_kanban_avatar"
-                     t-att-alt="record.employee_id.value"
-                     t-att-title="record.employee_id.value"
-                     t-att-src="kanban_image('hr.employee', 'image_128', record.employee_id.raw_value)"/>
+            <xpath expr="//field[@name='owner_user_id']" position='replace'>
+                <field name="employee_id" widget="many2one_avatar_employee"/>
             </xpath>
             <div t-if="record.serial_no.raw_value" position='after'>
                 <div t-if="!record.employee_id.raw_value">Unassigned</div>

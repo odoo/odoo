@@ -91,7 +91,9 @@
                                     </a>
                                 </div>
                                 <div class="col-6">
-                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar o_image_24_cover float-right"/>
+                                    <span class="float-right">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                    </span>
                                 </div>
                             </div>
                         </div>
