@@ -106,3 +106,5 @@ class ResConfigSettings(models.TransientModel):
                 'alias_model_id': self.env['ir.model']._get('crm.lead').id,
                 'alias_parent_model_id': self.env['ir.model']._get('crm.team').id,
             })
+        for team in self.env['crm.team'].search([]):
+            team.alias_id.write(team._alias_get_creation_values())
