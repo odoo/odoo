@@ -376,13 +376,18 @@ class Lead(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        leads = super().create(vals_list)
+        for vals in vals_list:
+            if vals.get('website'):
+                vals['website'] = self.env['res.partner']._clean_website(vals['website'])
+        leads = super(Lead, self).create(vals_list)
         # Compute new probability for each lead separately
         leads._update_probability()
         return leads
 
     def write(self, vals):
-        # stage change:
+        if vals.get('website'):
+            vals['website'] = self.env['res.partner']._clean_website(vals['website'])
+        # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             stage_id = self.env['crm.stage'].browse(vals['stage_id'])
             if stage_id.is_won:
