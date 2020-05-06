@@ -3,9 +3,7 @@ odoo.define('web.basic_fields_owl', function (require) {
 
     const AbstractField = require('web.AbstractFieldOwl');
     const CustomCheckbox = require('web.CustomCheckbox');
-    const core = require('web.core');
-
-    const _lt = core._lt;
+    const { _lt } = require('web.translation');
 
 
     /**
