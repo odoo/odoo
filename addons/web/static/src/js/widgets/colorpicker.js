@@ -1,22 +1,22 @@
-odoo.define('web.ColorpickerDialog', function (require) {
+odoo.define('web.Colorpicker', function (require) {
 'use strict';
 
 var core = require('web.core');
 var utils = require('web.utils');
 var Dialog = require('web.Dialog');
+var Widget = require('web.Widget');
 
 var _t = core._t;
 
-var ColorpickerDialog = Dialog.extend({
-    xmlDependencies: (Dialog.prototype.xmlDependencies || [])
-        .concat(['/web/static/src/xml/colorpicker.xml']),
-    template: 'ColorpickerDialog',
-    events: _.extend({}, Dialog.prototype.events || {}, {
+var ColorpickerWidget = Widget.extend({
+    xmlDependencies: ['/web/static/src/xml/colorpicker.xml'],
+    template: 'Colorpicker',
+    events: {
         'mousedown .o_color_pick_area': '_onMouseDownPicker',
         'mousedown .o_color_slider': '_onMouseDownSlider',
         'mousedown .o_opacity_slider': '_onMouseDownOpacitySlider',
         'change .o_color_picker_inputs': '_onChangeInputs',
-    }),
+    },
 
     /**
      * @constructor
@@ -26,17 +26,8 @@ var ColorpickerDialog = Dialog.extend({
      * @param {string} [options.noTransparency=false]
      */
     init: function (parent, options) {
+        this._super(...arguments);
         options = options || {};
-
-        this._super(parent, _.extend({
-            size: 'small',
-            title: _t('Pick a color'),
-            buttons: [
-                {text: _t('Choose'), classes: 'btn-primary', close: true, click: this._onFinalPick.bind(this)},
-                {text: _t('Discard'), close: true},
-            ],
-        }, options));
-
         this.trigger_up('getRecordInfo', {
             recordInfo: options,
             callback: function (recordInfo) {
@@ -76,12 +67,11 @@ var ColorpickerDialog = Dialog.extend({
         this.$opacitySliderPointer = this.$('.o_opacity_pointer');
 
         var defaultColor = this.options.defaultColor || '#FF0000';
-        var rgba = ColorpickerDialog.convertCSSColorToRgba(defaultColor);
+        var rgba = ColorpickerWidget.convertCSSColorToRgba(defaultColor);
         if (rgba) {
             this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
         }
-        this.opened().then(this._updateUI.bind(this));
-
+        this._updateUI();
         return this._super.apply(this, arguments);
     },
     /**
@@ -143,14 +133,14 @@ var ColorpickerDialog = Dialog.extend({
      * @param {string} hex - hexadecimal code
      */
     _updateHex: function (hex) {
-        var rgb = ColorpickerDialog.convertCSSColorToRgba(hex);
+        var rgb = ColorpickerWidget.convertCSSColorToRgba(hex);
         if (!rgb) {
             return;
         }
         _.extend(this.colorComponents,
             {hex: hex},
             rgb,
-            ColorpickerDialog.convertRgbToHsl(rgb.red, rgb.green, rgb.blue)
+            ColorpickerWidget.convertRgbToHsl(rgb.red, rgb.green, rgb.blue)
         );
         this._updateCssColor();
     },
@@ -167,7 +157,7 @@ var ColorpickerDialog = Dialog.extend({
         // We update the hexadecimal code by transforming into a css color and
         // ignoring the opacity (we don't display opacity component in hexa as
         // not supported on all browsers)
-        var hex = ColorpickerDialog.convertRgbaToCSSColor(r, g, b);
+        var hex = ColorpickerWidget.convertRgbaToCSSColor(r, g, b);
         if (!hex) {
             return;
         }
@@ -175,7 +165,7 @@ var ColorpickerDialog = Dialog.extend({
             {red: r, green: g, blue: b},
             a === undefined ? {} : {opacity: a},
             {hex: hex},
-            ColorpickerDialog.convertRgbToHsl(r, g, b)
+            ColorpickerWidget.convertRgbToHsl(r, g, b)
         );
         this._updateCssColor();
     },
@@ -188,12 +178,12 @@ var ColorpickerDialog = Dialog.extend({
      * @param {integer} l
      */
     _updateHsl: function (h, s, l) {
-        var rgb = ColorpickerDialog.convertHslToRgb(h, s, l);
+        var rgb = ColorpickerWidget.convertHslToRgb(h, s, l);
         if (!rgb) {
             return;
         }
         // We receive an hexa as we ignore the opacity
-        const hex = ColorpickerDialog.convertRgbaToCSSColor(rgb.red, rgb.green, rgb.blue);
+        const hex = ColorpickerWidget.convertRgbaToCSSColor(rgb.red, rgb.green, rgb.blue);
         _.extend(this.colorComponents,
             {hue: h, saturation: s, lightness: l},
             rgb,
@@ -227,7 +217,7 @@ var ColorpickerDialog = Dialog.extend({
         const b = this.colorComponents.blue;
         const a = this.colorComponents.opacity;
         _.extend(this.colorComponents,
-            {cssColor: ColorpickerDialog.convertRgbaToCSSColor(r, g, b, a)}
+            {cssColor: ColorpickerWidget.convertRgbaToCSSColor(r, g, b, a)}
         );
     },
 
@@ -355,12 +345,6 @@ var ColorpickerDialog = Dialog.extend({
         }
         this._updateUI();
     },
-    /**
-     * @private
-     */
-    _onFinalPick: function () {
-        this.trigger_up('colorpicker:saved', this.colorComponents);
-    },
 });
 
 //--------------------------------------------------------------------------
@@ -379,7 +363,7 @@ var ColorpickerDialog = Dialog.extend({
  *          - saturation [0, 100]
  *          - lightness [0, 100]
  */
-ColorpickerDialog.convertRgbToHsl = function (r, g, b) {
+ColorpickerWidget.convertRgbToHsl = function (r, g, b) {
     if (typeof (r) !== 'number' || isNaN(r) || r < 0 || r > 255
             || typeof (g) !== 'number' || isNaN(g) || g < 0 || g > 255
             || typeof (b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
@@ -428,7 +412,7 @@ ColorpickerDialog.convertRgbToHsl = function (r, g, b) {
  *          - green [0, 255]
  *          - blue [0, 255]
  */
-ColorpickerDialog.convertHslToRgb = function (h, s, l) {
+ColorpickerWidget.convertHslToRgb = function (h, s, l) {
     if (typeof (h) !== 'number' || isNaN(h) || h < 0 || h > 360
             || typeof (s) !== 'number' || isNaN(s) || s < 0 || s > 100
             || typeof (l) !== 'number' || isNaN(l) || l < 0 || l > 100) {
@@ -507,7 +491,7 @@ ColorpickerDialog.convertHslToRgb = function (h, s, l) {
  * @param {float} a - [0, 100]
  * @returns {string}
  */
-ColorpickerDialog.convertRgbaToCSSColor = function (r, g, b, a) {
+ColorpickerWidget.convertRgbaToCSSColor = function (r, g, b, a) {
     if (typeof (r) !== 'number' || isNaN(r) || r < 0 || r > 255
             || typeof (g) !== 'number' || isNaN(g) || g < 0 || g > 255
             || typeof (b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
@@ -535,7 +519,7 @@ ColorpickerDialog.convertRgbaToCSSColor = function (r, g, b, a) {
  *          - blue [0, 255]
  *          - opacity [0, 100.0]
  */
-ColorpickerDialog.convertCSSColorToRgba = function (cssColor) {
+ColorpickerWidget.convertCSSColorToRgba = function (cssColor) {
     // Check if cssColor is a rgba() or rgb() color
     const rgba = cssColor.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
     if (rgba) {
@@ -576,12 +560,12 @@ ColorpickerDialog.convertCSSColorToRgba = function (cssColor) {
  * @returns {string} - the normalized css color or the given css color if it
  *                     failed to be normalized
  */
-ColorpickerDialog.normalizeCSSColor = function (cssColor) {
-    const rgba = ColorpickerDialog.convertCSSColorToRgba(cssColor);
+ColorpickerWidget.normalizeCSSColor = function (cssColor) {
+    const rgba = ColorpickerWidget.convertCSSColorToRgba(cssColor);
     if (!rgba) {
         return cssColor;
     }
-    return ColorpickerDialog.convertRgbaToCSSColor(rgba.red, rgba.green, rgba.blue, rgba.opacity);
+    return ColorpickerWidget.convertRgbaToCSSColor(rgba.red, rgba.green, rgba.blue, rgba.opacity);
 };
 /**
  * Checks if a given string is a css color.
@@ -590,9 +574,49 @@ ColorpickerDialog.normalizeCSSColor = function (cssColor) {
  * @param {string} cssColor
  * @returns {boolean}
  */
-ColorpickerDialog.isCSSColor = function (cssColor) {
-    return ColorpickerDialog.convertCSSColorToRgba(cssColor) !== false;
+ColorpickerWidget.isCSSColor = function (cssColor) {
+    return ColorpickerWidget.convertCSSColorToRgba(cssColor) !== false;
 };
 
-return ColorpickerDialog;
+const ColorpickerDialog = Dialog.extend({
+    /**
+     * @override
+     */
+    init: function (parent, options) {
+        this.options = options || {};
+        this._super(parent, _.extend({
+            size: 'small',
+            title: _t('Pick a color'),
+            buttons: [
+                {text: _t('Choose'), classes: 'btn-primary', close: true, click: this._onFinalPick.bind(this)},
+                {text: _t('Discard'), close: true},
+            ],
+        }, this.options));
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        const proms = [this._super(...arguments)];
+        this.colorPicker = new ColorpickerWidget(this, this.options);
+        proms.push(this.colorPicker.appendTo(this.$el));
+        return Promise.all(proms);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onFinalPick: function () {
+        this.trigger_up('colorpicker:saved', this.colorPicker.colorComponents);
+    },
+});
+
+return {
+    ColorpickerDialog: ColorpickerDialog,
+    ColorpickerWidget: ColorpickerWidget,
+};
 });

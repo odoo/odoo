@@ -6,7 +6,7 @@ var AltDialog = require('wysiwyg.widgets.AltDialog');
 var MediaDialog = require('wysiwyg.widgets.MediaDialog');
 var LinkDialog = require('wysiwyg.widgets.LinkDialog');
 var CropImageDialog = require('wysiwyg.widgets.CropImageDialog');
-var ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerDialog} = require('web.Colorpicker');
 
 var media = require('wysiwyg.widgets.media');
 

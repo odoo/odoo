@@ -2,7 +2,7 @@ odoo.define('website.s_chart_options', function (require) {
 'use strict';
 
 var core = require('web.core');
-const ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerWidget} = require('web.Colorpicker');
 var options = require('web_editor.snippets.options');
 
 var _t = core._t;
@@ -81,7 +81,7 @@ options.registry.InnerChart = options.Class.extend({
             const color = el.dataset.backgroundColor || el.dataset.borderColor;
             if (color) {
                 el.style.border = '2px solid';
-                el.style.borderColor = ColorpickerDialog.isCSSColor(color) ? color : this.style.getPropertyValue(`--${color}`).trim();
+                el.style.borderColor = ColorpickerWidget.isCSSColor(color) ? color : this.style.getPropertyValue(`--${color}`).trim();
             }
         });
     },
