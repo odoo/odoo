@@ -371,13 +371,17 @@ class Lead(models.Model):
 
     @api.model
     def create(self, vals):
+        if vals.get('website'):
+            vals['website'] = self.env['res.partner']._clean_website(vals['website'])
         lead = super(Lead, self).create(vals)
         # Compute new probability for each lead separately
         lead._update_probability()
         return lead
 
     def write(self, vals):
-        # stage change:
+        if vals.get('website'):
+            vals['website'] = self.env['res.partner']._clean_website(vals['website'])
+        # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             stage_id = self.env['crm.stage'].browse(vals['stage_id'])
             if stage_id.is_won:
