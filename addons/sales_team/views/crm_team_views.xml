@@ -177,5 +177,21 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', '=', 'res.partner')]</field>
         </record>
+
+        <record id="view_partner_form_inherit_sales_team" model="ir.ui.view">
+            <field name="name">res.partner.sales.team.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//group[@name='sale']" position="inside">
+                        <field name='salesman_user_ids' invisible="1"/>
+                    </xpath>
+                    <xpath expr="//group[@name='sale']/field[@name='user_id']" position="attributes">
+                        <attribute name="domain">[('id', 'in', salesman_user_ids)]</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
     </data>
 </odoo>
