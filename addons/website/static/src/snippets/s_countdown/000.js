@@ -1,7 +1,7 @@
 odoo.define('website.s_countdown', function (require) {
 'use strict';
 
-const ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerWidget} = require('web.Colorpicker');
 const core = require('web.core');
 const publicWidget = require('web.public.widget');
 
@@ -72,7 +72,7 @@ const CountdownWidget = publicWidget.Widget.extend({
      * @returns {string}
      */
     _ensureCssColor: function (color) {
-        if (ColorpickerDialog.isCSSColor(color)) {
+        if (ColorpickerWidget.isCSSColor(color)) {
             return color;
         }
         const style = window.getComputedStyle(document.documentElement);
