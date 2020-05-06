@@ -110,7 +110,7 @@ var Chatter = Widget.extend({
             .then(this._updateMentionSuggestions.bind(this))
             .then(() => {
                 if (this.openAttachments) {
-                    this._openAttachmentBox();
+                    this._fetchAttachments().then(() => this._openAttachmentBox());
                 }
             });
 
