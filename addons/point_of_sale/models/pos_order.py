@@ -852,7 +852,7 @@ class PosOrder(models.Model):
                     if self.env.user.partner_id.email:
                         return_picking.message_post(body=message)
                     else:
-                        return_picking.message_post(body=message)
+                        return_picking.sudo().message_post(body=message)
 
             for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_rounding=l.product_id.uom_id.rounding)):
                 moves |= Move.create({
