@@ -121,6 +121,78 @@ class TestFields(common.TransactionCase):
         field = self.env['test_new_api.message']._fields['x_bool_false_computed']
         self.assertFalse(field.depends)
 
+    def test_10_computed_custom_invalid_transitive_depends(self):
+        self.patch(type(self.env["ir.model.fields"]), "_check_depends", lambda self: True)
+        self.env["ir.model.fields"].create(
+            {
+                "name": "x_computed_custom_valid_depends",
+                "model_id": self.env.ref("test_new_api.model_test_new_api_foo").id,
+                "state": "manual",
+                "field_description": "A compute with a valid depends",
+                "compute": "for r in self: r['x_computed_custom_valid_depends'] = False",
+                "depends": "value1",
+                "store": False,
+                "ttype": "boolean",
+            }
+        )
+        self.env["ir.model.fields"].create(
+            {
+                "name": "x_computed_custom_valid_transitive_depends",
+                "model_id": self.env.ref("test_new_api.model_test_new_api_foo").id,
+                "state": "manual",
+                "field_description": "A compute with a valid transitive depends",
+                "compute": "for r in self: r['x_computed_custom_valid_transitive_depends'] = False",
+                "depends": "x_computed_custom_valid_depends",
+                "store": False,
+                "ttype": "boolean",
+            }
+        )
+        self.env["ir.model.fields"].create(
+            {
+                "name": "x_computed_custom_invalid_depends",
+                "model_id": self.env.ref("test_new_api.model_test_new_api_foo").id,
+                "state": "manual",
+                "field_description": "A compute with an invalid depends",
+                "compute": "for r in self: r['x_computed_custom_invalid_depends'] = False",
+                "depends": "bar",
+                "store": False,
+                "ttype": "boolean",
+            }
+        )
+        self.env["ir.model.fields"].create(
+            {
+                "name": "x_computed_custom_invalid_transitive_depends",
+                "model_id": self.env.ref("test_new_api.model_test_new_api_foo").id,
+                "state": "manual",
+                "field_description": "A compute with an invalid transitive depends",
+                "compute": "for r in self: r['x_computed_custom_invalid_transitive_depends'] = False",
+                "depends": "x_computed_custom_invalid_depends",
+                "store": False,
+                "ttype": "boolean",
+            }
+        )
+        fields = self.env["test_new_api.foo"]._fields
+        triggers = self.env.registry.field_triggers
+        value1 = fields["value1"]
+        valid_depends = fields["x_computed_custom_valid_depends"]
+        valid_transitive_depends = fields["x_computed_custom_valid_transitive_depends"]
+        invalid_depends = fields["x_computed_custom_invalid_depends"]
+        invalid_transitive_depends = fields["x_computed_custom_invalid_transitive_depends"]
+        # `x_computed_custom_valid_depends` in the triggers of the field `value1`
+        self.assertTrue(valid_depends in triggers[value1][None])
+        # `x_computed_custom_valid_transitive_depends` in the triggers `x_computed_custom_valid_depends` and `value1`
+        self.assertTrue(valid_transitive_depends in triggers[valid_depends][None])
+        self.assertTrue(valid_transitive_depends in triggers[value1][None])
+        # `x_computed_custom_invalid_depends` not in any triggers, as it was invalid and was skipped
+        self.assertEqual(
+            sum(invalid_depends in field_triggers.get(None, []) for field_triggers in triggers.values()), 0
+        )
+        # `x_computed_custom_invalid_transitive_depends` in the triggers of `x_computed_custom_invalid_depends` only
+        self.assertTrue(invalid_transitive_depends in triggers[invalid_depends][None])
+        self.assertEqual(
+            sum(invalid_transitive_depends in field_triggers.get(None, []) for field_triggers in triggers.values()), 1
+        )
+
     def test_10_display_name(self):
         """ test definition of automatic field 'display_name' """
         field = type(self.env['test_new_api.discussion']).display_name
