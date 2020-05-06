@@ -3541,6 +3541,57 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('nocontent helper after adding a record(kanban with progressbar)', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                '<field name="int_field"/>' +
+                '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum_field="int_field"/>' +
+                '<templates><t t-name="kanban-box">' +
+                '<div><field name="name"/></div>' +
+                '</t></templates>' +
+                '</kanban>',
+            groupBy: ['product_id'],
+            domain: [['name', '=', 'abcdef']],
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    var result = [
+                        { __domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello'] },
+                    ];
+                    return $.when(result);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                action: {
+                    help: "No content helper",
+                },
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 1,
+            "there should be a nocontent helper");
+
+        // add a record
+        kanban.$('.o_kanban_quick_add').click();
+        kanban.$('.o_kanban_quick_create .o_input').val('twilight sparkle').trigger('input');
+        kanban.$('button.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
+            "there should be no nocontent helper (there is now one record)");
+
+        // cancel quick create
+        kanban.$('button.o_kanban_cancel').click();
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
+            "there should be no nocontent helper after cancelling quick create");
+
+        kanban.destroy();
+    });
+
     QUnit.test('remove nocontent helper when adding a record', function (assert) {
         assert.expect(2);
 

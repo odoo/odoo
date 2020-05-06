@@ -201,7 +201,10 @@ var KanbanRenderer = BasicRenderer.extend({
             }
             return $.when(def).then(function () {
                 newColumn.$el.insertAfter(column.$el);
-                self._toggleNoContentHelper();
+                // if openQuickCreate is true then do not show no content helper
+                if (!options || !options.openQuickCreate) {
+                    self._toggleNoContentHelper();
+                }
                 // When a record has been quick created, the new column directly
                 // renders the quick create widget (to allow quick creating several
                 // records in a row). However, as we render this column in a
@@ -516,7 +519,10 @@ var KanbanRenderer = BasicRenderer.extend({
         if (this.state.groupedBy.length) {
             _.invoke(this.widgets, 'cancelQuickCreate');
         }
-        this._toggleNoContentHelper();
+        // if quick create adds a record then do not show no content helper
+        if (!this.$('.o_kanban_record').length) {
+            this._toggleNoContentHelper();
+        }
     },
     /**
      * @private
