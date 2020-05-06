@@ -164,10 +164,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <field name="kanban_state" widget="state_selection"/>
-                                        <img t-if="record.user_id.raw_value"
-                                             t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
-                                             t-att-title="record.user_id.value"
-                                             t-att-alt="record.user_id.value" class="oe_kanban_avatar float-right"/>
+                                        <field name="user_id" widget="many2one_avatar_user"/>
                                     </div>
                                 </div>
                             </div>
@@ -471,10 +468,7 @@
                                         <div class="o_kanban_inline_block" t-if="!selection_mode">
                                             <field name="activity_ids" widget="kanban_activity" />
                                         </div>
-                                        <img t-if="record.owner_user_id.raw_value"
-                                             t-att-title="record.owner_user_id.value"
-                                             t-att-src="kanban_image('res.users', 'image_128', record.owner_user_id.raw_value)"
-                                             t-att-alt="record.owner_user_id.value" class="oe_kanban_avatar"/>
+                                        <field name="owner_user_id" widget="many2one_avatar_user"/>
                                     </div>
                                 </div>
                             </div>
@@ -666,11 +660,6 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div class="mb4">
                                 <strong><field name="name"/></strong>
-                                <img t-if="record.technician_user_id.raw_value"
-                                     t-att-alt="record.technician_user_id.value"
-                                     t-att-title="record.technician_user_id.value"
-                                     t-att-src="kanban_image('res.users', 'image_128', record.technician_user_id.raw_value)"
-                                     class="oe_kanban_avatar o_image_24_cover float-right"/>
                             </div>
                             <div class="row mt4">
                                 <div class="col-6">
@@ -682,6 +671,7 @@
                                     <span class="badge badge-pill">
                                         <strong>Maintenance:</strong> <field name="maintenance_count"/>
                                     </span>
+                                    <field name="technician_user_id" widget="many2one_avatar_user"/>
                                 </div>
                             </div>
                         </div>
