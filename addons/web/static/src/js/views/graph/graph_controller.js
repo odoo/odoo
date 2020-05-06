@@ -51,6 +51,7 @@ var GraphController = AbstractController.extend({
         // that may be used within the groupby menu available when
         // the view is embedded
         this.groupableFields = params.groupableFields;
+        this.buttonDropdownPromises = [];
     },
     /**
      * @override
@@ -120,8 +121,6 @@ var GraphController = AbstractController.extend({
         this.$buttons.click(ev => this._onButtonClick(ev));
 
         if (this.withButtons) {
-            const actionsContainer = this.$buttons[0];
-            const promises = [];
             const state = this.model.get();
             const fragment = document.createDocumentFragment();
             // Instantiate and append MeasureMenu
@@ -130,10 +129,7 @@ var GraphController = AbstractController.extend({
                 title: "Measures",
                 items: this.measures,
             });
-            promises.push(this.measureMenu.mount(fragment).then(() => {
-                actionsContainer.appendChild(this.measureMenu.el);
-                this.measureMenu.el.classList.add('o_graph_measures_list');
-            }));
+            this.buttonDropdownPromises = [this.measureMenu.mount(fragment)];
             if ($node) {
                 if (this.isEmbedded) {
                     // Instantiate and append GroupBy menu
@@ -142,26 +138,10 @@ var GraphController = AbstractController.extend({
                         icon: 'fa fa-bars',
                         items: this._getGroupBys(state.groupBy),
                     });
-                    promises.push(this.groupByMenu.mount(fragment).then(() => {
-                        actionsContainer.appendChild(this.groupByMenu.el);
-                        this.groupByMenu.el.classList.add('o_group_by_menu');
-                    }));
+                    this.buttonDropdownPromises.push(this.groupByMenu.mount(fragment));
                 }
                 this.$buttons.appendTo($node);
             }
-            Promise.all(promises).then(() => {
-                // Similar behaviour for all buttons
-                const buttons = actionsContainer.querySelectorAll('.o_dropdown_toggler_btn');
-                for (const button of buttons) {
-                    button.classList.remove('o_dropdown_toggler_btn', 'btn-secondary');
-                    if (this.isEmbedded) {
-                        button.classList.add('btn-outline-secondary');
-                    } else {
-                        button.classList.add('btn-primary');
-                        button.tabIndex = 0;
-                    }
-                }
-            });
         }
     },
     /**
@@ -189,11 +169,44 @@ var GraphController = AbstractController.extend({
             .toggleClass('o_hidden', state.mode === 'pie' || !!Object.keys(state.timeRanges).length)
             .filter('.o_graph_button[data-order="' + state.orderBy + '"]')
             .toggleClass('active', !!state.orderBy);
+
+        if (this.withButtons) {
+            this._attachDropdownComponents();
+        }
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * Attaches the different dropdown components to the buttons container.
+     *
+     * @returns {Promise}
+     */
+    async _attachDropdownComponents() {
+        await Promise.all(this.buttonDropdownPromises);
+        const actionsContainer = this.$buttons[0];
+        // Attach "measures" button
+        actionsContainer.appendChild(this.measureMenu.el);
+        this.measureMenu.el.classList.add('o_graph_measures_list');
+        if (this.isEmbedded) {
+            // Attach "groupby" button
+            actionsContainer.appendChild(this.groupByMenu.el);
+            this.groupByMenu.el.classList.add('o_group_by_menu');
+        }
+        // Update button classes accordingly to the current mode
+        const buttons = actionsContainer.querySelectorAll('.o_dropdown_toggler_btn');
+        for (const button of buttons) {
+            button.classList.remove('o_dropdown_toggler_btn', 'btn-secondary');
+            if (this.isEmbedded) {
+                button.classList.add('btn-outline-secondary');
+            } else {
+                button.classList.add('btn-primary');
+                button.tabIndex = 0;
+            }
+        }
+    },
 
     /**
      * Returns the items used by the Group By menu in embedded mode.
