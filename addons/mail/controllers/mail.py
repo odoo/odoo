@@ -18,7 +18,7 @@ class MailController(http.Controller):
 
     @classmethod
     def _redirect_to_messaging(cls):
-        url = '/web#%s' % url_encode({'action': 'mail.action_discuss'})
+        url = '/web?' + url_encode({'redirect': '/web#%s' % url_encode({'action': 'mail.action_discuss'})})
         return request.redirect(url)
 
     @classmethod
