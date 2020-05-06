@@ -590,16 +590,11 @@ class ChromeBrowser():
     def _find_websocket(self):
         version = self._json_command('version')
         self._logger.info('Browser version: %s', version['Browser'])
-        try:
-            infos = self._json_command('')[0]  # Infos about the first tab
-        except IndexError:
-            self._logger.warning('No tab found in Chrome')
-            self.stop()
-            raise unittest.SkipTest('No tab found in Chrome')
+        infos = self._json_command('', get_key=0)  # Infos about the first tab
         self.ws_url = infos['webSocketDebuggerUrl']
         self._logger.info('Chrome headless temporary user profile dir: %s', self.user_data_dir)
 
-    def _json_command(self, command, timeout=3):
+    def _json_command(self, command, timeout=3, get_key=None):
         """
         Inspect dev tools with get
         Available commands:
@@ -613,21 +608,31 @@ class ChromeBrowser():
         """
         self._logger.info("Issuing json command %s", command)
         command = os.path.join('json', command).strip('/')
+        url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
+        self._logger.info('Url : %s', url)
+        delay = 0.1
         while timeout > 0:
             try:
-                url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
-                self._logger.info('Url : %s', url)
                 r = requests.get(url, timeout=3)
                 if r.ok:
-                    return r.json()
-                return {'status_code': r.status_code}
+                    res = r.json()
+                    if get_key is None:
+                        return res
+                    else:
+                        return res[get_key]
             except requests.ConnectionError:
-                time.sleep(0.1)
-                timeout -= 0.1
+                message = 'Connection Error while trying to connect to Chrome debugger'
             except requests.exceptions.ReadTimeout:
+                message = 'Connection Timeout while trying to connect to Chrome debugger'
                 break
-        self._logger.error('Could not connect to chrome debugger')
-        raise unittest.SkipTest("Cannot connect to chrome headless")
+            except (KeyError, IndexError):
+                message = 'Key "%s" not found in json result "%s" after connecting to Chrome debugger' % (get_key, res)
+            time.sleep(delay)
+            timeout -= delay
+            delay = delay * 1.5
+        self._logger.error(message)
+        self.stop()
+        raise unittest.SkipTest("Error during Chrome headless connection")
 
     def _open_websocket(self):
         self.ws = websocket.create_connection(self.ws_url)
