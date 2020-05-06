@@ -3,7 +3,7 @@ odoo.define('web_editor.ColorPalette', function (require) {
 
 const core = require('web.core');
 const session = require('web.session');
-const ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerDialog, ColorpickerWidget} = require('web.Colorpicker');
 const Widget = require('web.Widget');
 const summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 
@@ -121,24 +121,20 @@ const ColorPaletteWidget = Widget.extend({
             $color.addClass('bg-' + colorName);
             this.colorNames.push(colorName);
             if (!elem.classList.contains('d-none')) {
-                const color = ColorpickerDialog.normalizeCSSColor(this.style.getPropertyValue('--' + colorName).trim());
+                const color = ColorpickerWidget.normalizeCSSColor(this.style.getPropertyValue('--' + colorName).trim());
                 this.colorToColorNames[color] = colorName;
             }
         });
 
-        // Compute selected color
-        if (this.options.selectedColor) {
-            const selectedColor = ColorpickerDialog.normalizeCSSColor(this.options.selectedColor);
-            if (selectedColor !== 'rgba(0, 0, 0, 0)') {
-                this.selectedColor = this.colorToColorNames[selectedColor] || selectedColor;
-            }
-        }
-
         // Render custom colors
         this._buildCustomColors();
 
-        // Select selected Color
+        // Compute selected color
         if (this.options.selectedColor) {
+            const selectedColor = ColorpickerWidget.normalizeCSSColor(this.options.selectedColor);
+            if (selectedColor !== 'rgba(0, 0, 0, 0)') {
+                this.selectedColor = this.colorToColorNames[selectedColor] || selectedColor;
+            }
             const selectedButton = this.el.querySelector(`button[data-color="${this.selectedColor}"], button[style*="background-color:${this.selectedColor};"]`);
             if (selectedButton) {
                 selectedButton.classList.add('selected');
@@ -200,7 +196,7 @@ const ColorPaletteWidget = Widget.extend({
         });
         this.style.getPropertyValue(`--custom-colors`).trim().split(' ').forEach(v => {
             const color = this.style.getPropertyValue(`--${v}`).trim();
-            if (ColorpickerDialog.isCSSColor(color)) {
+            if (ColorpickerWidget.isCSSColor(color)) {
                 this._addCustomColor(existingColors, color);
             }
         });
@@ -223,10 +219,10 @@ const ColorPaletteWidget = Widget.extend({
         if (!color) {
             return;
         }
-        if (!ColorpickerDialog.isCSSColor(color)) {
+        if (!ColorpickerWidget.isCSSColor(color)) {
             color = this.style.getPropertyValue('--' + color).trim();
         }
-        const normColor = ColorpickerDialog.normalizeCSSColor(color);
+        const normColor = ColorpickerWidget.normalizeCSSColor(color);
         if (!existingColors.has(normColor)) {
             this._addCustomColorButton(normColor);
             existingColors.add(normColor);
@@ -267,7 +263,7 @@ const ColorPaletteWidget = Widget.extend({
      */
     _getButtonInfo: function (buttonEl) {
         const bgColor = buttonEl.style.backgroundColor;
-        const color = bgColor ? ColorpickerDialog.normalizeCSSColor(bgColor) : buttonEl.dataset.color;
+        const color = bgColor ? ColorpickerWidget.normalizeCSSColor(bgColor) : buttonEl.dataset.color;
         return {
             color: color,
             target: buttonEl,
@@ -349,8 +345,8 @@ const ColorPaletteWidget = Widget.extend({
     _onCustomColorButtonClick: async function (ev) {
         const target = ev.target;
         let selectedColor = this.selectedColor;
-        if (!ColorpickerDialog.isCSSColor(selectedColor)) {
-            selectedColor = ColorpickerDialog.normalizeCSSColor(this.style.getPropertyValue('--' + selectedColor).trim());
+        if (!ColorpickerWidget.isCSSColor(selectedColor)) {
+            selectedColor = ColorpickerWidget.normalizeCSSColor(this.style.getPropertyValue('--' + selectedColor).trim());
         }
         const colorpicker = new ColorpickerDialog(this, {
             defaultColor: selectedColor,

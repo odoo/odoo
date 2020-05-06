@@ -9,7 +9,7 @@ var core = require('web.core');
 // the bus by summernote in an iframe will be caught by the wysiwyg's SummernoteManager
 // outside the iframe.
 const topBus = window.top.odoo.__DEBUG__.services['web.core'].bus;
-const ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerWidget} = require('web.Colorpicker');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 var mixins = require('web.mixins');
 const session = require('web.session');
@@ -64,7 +64,7 @@ renderer.createPalette = function ($container, options) {
                 });
                 colorpicker.on('color_picked', null, ev => {
                     let color = ev.data.color;
-                    if (!ColorpickerDialog.isCSSColor(color)) {
+                    if (!ColorpickerWidget.isCSSColor(color)) {
                         color = (eventName === "foreColor" ? 'text-' : 'bg-') + color;
                     }
                     applyColor(ev.data.target, eventName, color);

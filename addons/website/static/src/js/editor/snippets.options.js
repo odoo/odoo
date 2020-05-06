@@ -1,7 +1,7 @@
 odoo.define('website.editor.snippets.options', function (require) {
 'use strict';
 
-const ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerWidget} = require('web.Colorpicker');
 const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
@@ -338,10 +338,10 @@ options.Class.include({
         const colorType = params.colorType ? (params.colorType + '_') : '';
         const url = `${baseURL}user_${colorType}color_palette.scss`;
 
-        if (!ColorpickerDialog.isCSSColor(color)) {
+        if (!ColorpickerWidget.isCSSColor(color)) {
             const style = window.getComputedStyle(document.documentElement);
             color = style.getPropertyValue('--' + color).trim();
-            color = ColorpickerDialog.normalizeCSSColor(color);
+            color = ColorpickerWidget.normalizeCSSColor(color);
         }
         const colors = {};
         colors[params.color] = color;
@@ -386,7 +386,7 @@ options.Class.include({
     _getCSSColorFromName: function (colorName) {
         const style = window.getComputedStyle(document.documentElement);
         const color = style.getPropertyValue('--' + colorName).trim();
-        return ColorpickerDialog.normalizeCSSColor(color);
+        return ColorpickerWidget.normalizeCSSColor(color);
     },
     /**
      * @private
@@ -1824,7 +1824,7 @@ options.registry.CoverProperties = options.Class.extend({
             onSuccess: _widget => colorPickerWidget = _widget,
         });
         const color = colorPickerWidget._value;
-        const isCSSColor = ColorpickerDialog.isCSSColor(color);
+        const isCSSColor = ColorpickerWidget.isCSSColor(color);
         this.$target[0].dataset.bgColorClass = isCSSColor ? '' : 'bg-' + color;
         this.$target[0].dataset.bgColorStyle = isCSSColor ? `background-color:${color};` : '';
     },
