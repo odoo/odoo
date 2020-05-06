@@ -59,6 +59,10 @@ class MrpProduction(models.Model):
             return fields.Datetime.to_datetime(self.env.context.get('default_date_planned_start')) + datetime.timedelta(hours=1)
         return datetime.datetime.now() + datetime.timedelta(hours=1)
 
+    @api.model
+    def _get_default_is_locked(self):
+        return self.user_has_groups('mrp.group_locked_by_default')
+
     name = fields.Char(
         'Reference', copy=False, readonly=True, default=lambda x: _('New'))
     backorder_sequence = fields.Integer("Backorder Sequence", default=0, help="Backorder sequence, if equals to 0 means there is not related backorder")
@@ -223,7 +227,7 @@ class MrpProduction(models.Model):
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     priority = fields.Selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
                                 readonly=True, states={'draft': [('readonly', False)]}, default='1')
-    is_locked = fields.Boolean('Is Locked', default=True, copy=False)
+    is_locked = fields.Boolean('Is Locked', default=_get_default_is_locked, copy=False)
     is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned")
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", compute="_compute_production_location", store=True)
@@ -242,6 +246,7 @@ class MrpProduction(models.Model):
     mrp_production_child_count = fields.Integer("Number of generated MO", compute='_compute_mrp_production_child_count')
     mrp_production_source_count = fields.Integer("Number of source MO", compute='_compute_mrp_production_source_count')
     mrp_production_backorder_count = fields.Integer("Count of linked backorder", compute='_compute_mrp_production_backorder')
+    show_lock = fields.Boolean('Show Lock/unlock buttons', compute='_compute_show_lock')
 
     @api.depends('product_id', 'bom_id', 'company_id')
     def _compute_allowed_product_ids(self):
@@ -277,8 +282,9 @@ class MrpProduction(models.Model):
     @api.depends('move_raw_ids.date_expected', 'move_finished_ids.date_expected')
     def _compute_dates_planned(self):
         for production in self:
-            production.date_planned_start = max(production.mapped('move_raw_ids.date_expected') or [fields.Datetime.now()])
-            production.date_planned_finished = max(production.mapped('move_finished_ids.date_expected') or [production.date_deadline or fields.Datetime.now()])
+            if production.state != 'done':
+                production.date_planned_start = max(production.mapped('move_raw_ids.date_expected') or [fields.Datetime.now()])
+                production.date_planned_finished = max(production.mapped('move_finished_ids.date_expected') or [production.date_deadline or fields.Datetime.now()])
 
     def _set_date_planned_start(self):
         self.move_raw_ids.write({'date_expected': self.date_planned_start})
@@ -465,16 +471,16 @@ class MrpProduction(models.Model):
                 elif relevant_move_state != 'draft':
                     production.reservation_state = relevant_move_state
 
-    @api.depends('move_raw_ids', 'is_locked', 'state', 'move_raw_ids.quantity_done')
+    @api.depends('move_raw_ids', 'state', 'move_raw_ids.product_uom_qty')
     def _compute_unreserve_visible(self):
         for order in self:
-            already_reserved = order.is_locked and order.state not in ('done', 'cancel') and order.mapped('move_raw_ids.move_line_ids')
+            already_reserved = order.state not in ('done', 'cancel') and order.mapped('move_raw_ids.move_line_ids')
             any_quantity_done = any([m.quantity_done > 0 for m in order.move_raw_ids])
 
             order.unreserve_visible = not any_quantity_done and already_reserved
-            order.reserve_visible = order.state in ('confirmed', 'progress', 'to_close') and any(move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids.filtered(lambda m: m.product_uom_qty))
+            order.reserve_visible = (order.is_planned or order.state in ('confirmed', 'progress', 'to_close')) and any(move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids.filtered(lambda m: m.product_uom_qty))
 
-    @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity_done', 'is_locked')
+    @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity_done')
     def _get_produced_qty(self):
         for production in self:
             done_moves = production.move_finished_ids.filtered(lambda x: x.state != 'cancel' and x.product_id.id == production.product_id.id)
@@ -495,6 +501,11 @@ class MrpProduction(models.Model):
 
     def _set_move_byproduct_ids(self):
         self.move_finished_ids |= self.move_byproduct_ids
+
+    @api.depends('state')
+    def _compute_show_lock(self):
+        for order in self:
+            order.show_lock = self.env.user.has_group('mrp.group_locked_by_default') and order.id is not False and order.state not in {'cancel', 'draft'}
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
@@ -628,10 +639,29 @@ class MrpProduction(models.Model):
             if 'date_planned_start' in vals:
                 if production.state in ['done', 'cancel']:
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
-                if production.state not in ('draft', 'confirmed') and production.workorder_ids and not self.env.context.get('force_date', False):
-                    raise UserError(_('You cannot move a planned manufacturing order.'))
+                if production.state == 'done' and not self.env.context.get('force_date', False):
+                    raise UserError(_('You cannot move a done manufacturing order.'))
             if ('move_raw_ids' in vals or 'move_finished_ids' in vals) and production.state != 'draft':
+                if production.state == 'done':
+                    # for some reason moves added after state = 'done' won't save group_id, reference if added in
+                    # "stock_move.default_get()"
+                    production.move_raw_ids.filtered(lambda move: move.additional and move.date_expected > production.date_planned_start).write({
+                        'group_id': production.procurement_group_id.id,
+                        'reference': production.name,
+                        'date_expected': production.date_planned_start,
+                    })
+                    production.move_finished_ids.filtered(lambda move: move.additional and move.date_expected > production.date_planned_finished).write({
+                        'reference': production.name,
+                        'date_expected': production.date_planned_finished,
+                    })
                 production._autoconfirm_production()
+            if production.state == 'done' and ('lot_producing_id' in vals or 'qty_producing' in vals):
+                finished_move_lines = production.move_finished_ids.filtered(
+                    lambda move: move.product_id == self.product_id and move.state == 'done').mapped('move_line_ids')
+                if 'lot_producing_id' in vals:
+                    finished_move_lines.write({'lot_id': vals.get('lot_producing_id')})
+                if 'qty_producing' in vals:
+                    finished_move_lines.write({'qty_done': vals.get('qty_producing')})
             if not production.bom_id.operation_ids and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
                 new_date_planned_start = fields.Datetime.to_datetime(vals.get('date_planned_start'))
                 if not production.date_planned_finished or new_date_planned_start >= production.date_planned_finished:
