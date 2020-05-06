@@ -10,7 +10,10 @@
                   <field name="l10n_sg_unique_entity_number" attrs="{'invisible': [('country_code', '!=', 'SG')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='vat']" position="attributes">
-                  <attribute name="string" >GST No.</attribute>
+                  <attribute name="attrs">{'invisible': [('country_code','in', ['SG', 'IN'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_registry']" position="before">
+                  <field name="vat" attrs="{'invisible': [('country_code', '!=', 'SG')]}" string="GST No."/>
                 </xpath>
             </field>
         </record>
