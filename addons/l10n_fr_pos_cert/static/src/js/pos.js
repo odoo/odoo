@@ -57,6 +57,13 @@ models.Order = models.Order.extend({
 
 var orderline_super = models.Orderline.prototype;
 models.Orderline = models.Orderline.extend({
+    isLastLine: function() {
+        var order = this.pos.get_order();
+        var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1];
+        var selectedLine = order? order.selected_orderline: null;
+
+        return last_id === selectedLine.cid;
+    },
     set_quantity: function (quantity, keep_price) {
         var order = this.pos.get_order();
         var selectedLine = order? order.selected_orderline: null;
@@ -67,13 +74,12 @@ models.Orderline = models.Orderline.extend({
 
             var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1];
 
-            if(last_id !== selectedLine.cid && keep_price !== "new product")
-                this.showDecreaseQuantityPopup();
-            else if(newQuantity < currentQuantity && currentQuantity !== 1 && keep_price !== "new product")
-                this.showDecreaseQuantityPopup();
-            else if(quantity === "" && last_id === selectedLine.cid)
-                this.showDecreaseQuantityPopup();
-            else
+            if(newQuantity < currentQuantity) {
+                if(this.isLastLine() && newQuantity > 0)
+                    orderline_super.set_quantity.apply(this, arguments);
+                else
+                    this.showDecreaseQuantityPopup();
+            } else
                 orderline_super.set_quantity.apply(this, arguments);
         } else {
             orderline_super.set_quantity.apply(this, arguments);
@@ -90,6 +96,7 @@ models.Orderline = models.Orderline.extend({
         }
     },
     showDecreaseQuantityPopup: function() {
+        var self = this;
         this.pos.gui.show_popup("number", {
             'title': _t("Decrease the quantity by"),
             'confirm': function (qty_decrease) {
@@ -110,11 +117,13 @@ models.Orderline = models.Orderline.extend({
                         }
                     });
 
-                    if (qty_decrease > current_total_quantity_remaining) {
-                      this.pos.gui.show_popup("error", {
-                          'title': _t("Order error"),
-                          'body':  _t("Not allowed to take back more than was ordered."),
-                      });
+                    if (qty_decrease > current_total_quantity_remaining && selected_orderline.get_quantity() === 1 && self.isLastLine()) {
+                        orderline_super.set_quantity.apply(selected_orderline, [1-qty_decrease]);
+                    } else if(qty_decrease > current_total_quantity_remaining) {
+                        this.pos.gui.show_popup("error", {
+                            'title': _t("Order error"),
+                            'body':  _t("Not allowed to take back more than was ordered."),
+                        });
                     } else {
                         var decrease_line = selected_orderline.clone();
                         decrease_line.order = order;
@@ -159,35 +168,31 @@ screens.PaymentScreenWidget.include({
     },
 });
 
-screens.ProductScreenWidget.include({
-    _onKeypadKeyDown: function (event) {
-        if (this.pos.is_french_country()) {
-            var order = this.pos.get_order();
-            var orderline = this.pos.get_order().selected_orderline;
-            var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1];
-
-             if( !orderline || (last_id === orderline.cid && orderline.quantity > 0)){
-                this._super(event);
-            }
-        } else {
-            this._super(event);
-        }
-        },
-   });
-
 screens.NumpadWidget.include({
-    start: function(event) {
-        this._super(event);
-        if (this.pos.is_french_country()) {
-            this.$el.find('.numpad-minus').prop("disabled",true);
-        }
-    },
     clickChangeMode: function (event) {
         if (this.pos.is_french_country() && event.currentTarget.attributes['data-mode'].nodeValue === "price") {
             this.gui.show_popup("error", {
                'title': _t("Module error"),
                'body':  _t("Adjusting the price is not allowed."),
             });
+        } else {
+           this._super(event);
+        }
+    },
+    clickDeleteLastChar: function() {
+        if (this.pos.is_french_country() ) {
+            var order = this.pos.get_order();
+            var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1];
+            var selectedLine = order? order.selected_orderline: null;
+
+            if(selectedLine && !selectedLine.isLastLine() && selectedLine.get_quantity() <= 0) {
+                this.gui.show_popup("error", {
+                   'title': _t("Module error"),
+                   'body':  _t("Can't modify this value"),
+                });
+            } else {
+                this._super(event);
+            }
         } else {
            this._super(event);
         }
