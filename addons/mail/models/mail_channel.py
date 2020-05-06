@@ -108,6 +108,7 @@ class Channel(models.Model):
     image_128 = fields.Image("Image", max_width=128, max_height=128, default=_get_default_image)
     is_subscribed = fields.Boolean(
         'Is Subscribed', compute='_compute_is_subscribed')
+    anonymous_name = fields.Char('Anonymous Name', help='Name used when a message has no author and no email from')
     # moderation
     moderation = fields.Boolean(string='Moderate this channel')
     moderator_ids = fields.Many2many('res.users', 'mail_channel_moderator_rel', string='Moderators')
@@ -559,6 +560,7 @@ class Channel(models.Model):
                 'is_moderator': self.env.uid in channel.moderator_ids.ids,
                 'group_based_subscription': bool(channel.group_ids),
                 'create_uid': channel.create_uid.id,
+                'anonymous_name': channel.anonymous_name,
             }
             if extra_info:
                 info['info'] = extra_info

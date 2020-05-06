@@ -60,6 +60,19 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
     //--------------------------------------------------------------------------
 
     /**
+     * Get anonymous name of the message
+     *
+     * @override
+     * @return {string}
+     */
+    getAnonymousName: function () {
+        let originalChannelId = this.getOriginChannelID();
+        if (originalChannelId >= 0) {
+            return this.call('mail_service', 'getThread', originalChannelId).getAnonymousName();
+        }
+        return _t("Anonymous");
+    },
+    /**
      * @override
      * @return {string|undefined}
      */
@@ -109,8 +122,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         if (res) {
             return res;
         } else {
-            return  this.hasEmailFrom() ? this.getEmailFrom() :
-                _t("Anonymous");
+            return this.hasEmailFrom() ? this.getEmailFrom() : this.getAnonymousName();
         }
     },
     /**

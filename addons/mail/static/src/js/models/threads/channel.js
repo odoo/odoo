@@ -79,6 +79,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         this._serverType = data.channel_type;
         // unique identifier for this channel, which is required for some rpc
         this._uuid = data.uuid;
+        this._anonymousName = data.anonymous_name;
 
         // * list of commands available for this channel
         this._commands = _.filter(commands, function (command) {
@@ -178,6 +179,14 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
                 method: 'channel_fold',
                 kwargs: args,
             }, {shadow: true});
+    },
+    /**
+     * Get the anonymous name of the channel.
+     *
+     * @returns {string}
+     */
+    getAnonymousName: function () {
+        return this._anonymousName || _t("Anonymous");
     },
     /**
      * Show the list of available commands on this channel (e.g. '/help')
