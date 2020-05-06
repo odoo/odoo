@@ -6749,7 +6749,7 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: '<form>' +
-                    '<header><field name="trululu" widget="statusbar" clickable="True"/></header>' +
+                    '<header><field name="trululu" widget="statusbar" clickable="true"/></header>' +
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
