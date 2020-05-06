@@ -2151,6 +2151,7 @@ class Selection(Field):
                     labels.update(selection)
                 else:
                     self.selection = selection
+                    values = None
 
             if 'selection_add' in field.args:
                 selection_add = field.args['selection_add']
