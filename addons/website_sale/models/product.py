@@ -54,7 +54,7 @@ class ProductPricelist(models.Model):
 
     def write(self, data):
         res = super(ProductPricelist, self).write(data)
-        if data.keys() & {'code', 'active', 'website_id', 'selectable'}:
+        if data.keys() & {'code', 'active', 'website_id', 'selectable', 'company_id'}:
             self._check_website_pricelist()
         self.clear_cache()
         return res
