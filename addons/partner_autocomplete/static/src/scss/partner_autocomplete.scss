@@ -44,3 +44,25 @@
         color: white !important;
     }
 }
+
+@media (max-height: 700px) {
+    .ui-autocomplete.o_partner_autocomplete_dropdown {
+        > .ui-menu-item:nth-of-type(1n+13) {
+            display: none;
+        }
+    }
+}
+@media (max-height: 620px) {
+    .ui-autocomplete.o_partner_autocomplete_dropdown {
+        > .ui-menu-item:nth-of-type(1n+12) {
+            display: none;
+        }
+    }
+}
+@media (max-height: 570px) {
+    .ui-autocomplete.o_partner_autocomplete_dropdown {
+        > .ui-menu-item:nth-of-type(1n+11) {
+            display: none;
+        }
+    }
+}
