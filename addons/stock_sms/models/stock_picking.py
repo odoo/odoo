@@ -41,6 +41,9 @@ class Picking(models.Model):
         super(Picking, self)._send_confirmation_email()
         if not getattr(threading.currentThread(), 'testing', False) and not self.env.registry.in_test_mode():
             pickings = self.filtered(lambda p: p.company_id.stock_move_sms_validation and p.picking_type_id.code == 'outgoing' and (p.partner_id.mobile or p.partner_id.phone))
+            # Avoid sending SMS for POS deliveries
+            if 'pos_type_id' in self.env['stock.warehouse']:
+                pickings = pickings.filtered(lambda p: p.picking_type_id != p.picking_type_id.warehouse_id.pos_type_id)
 
             for picking in pickings:
                 # Sudo as the user has not always the right to read this sms template.

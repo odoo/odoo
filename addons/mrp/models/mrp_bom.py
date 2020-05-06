@@ -320,8 +320,7 @@ class MrpBomLine(models.Model):
             else:
                 line.child_bom_id = self.env['mrp.bom']._bom_find(
                     product_tmpl=line.product_id.product_tmpl_id,
-                    product=line.product_id,
-                    picking_type=line.bom_id.picking_type_id)
+                    product=line.product_id)
 
     @api.depends('product_id')
     def _compute_attachments_count(self):

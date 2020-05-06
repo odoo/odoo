@@ -790,7 +790,7 @@ class payment_register(models.TransientModel):
         '''Define the value for communication field
         Append all invoice's references together.
         '''
-        " ".join(i.invoice_payment_ref or i.ref or i.name for i in invoices)
+        return " ".join(i.invoice_payment_ref or i.ref or i.name for i in invoices)
 
     def _prepare_payment_vals(self, invoices):
         '''Create the payment values.
