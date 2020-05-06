@@ -3,11 +3,12 @@ odoo.define("web.env", function (require) {
 
     const { jsonRpc } = require('web.ajax');
     const { device, isDebug } = require("web.config");
-    const { _lt, _t, bus, serviceRegistry } = require("web.core");
+    const { bus, serviceRegistry } = require("web.core");
     const dataManager = require('web.data_manager');
     const { blockUI, unblockUI } = require("web.framework");
     const rpc = require("web.rpc");
     const session = require("web.session");
+    const { _t } = require('web.translation');
     const utils = require("web.utils");
 
     const qweb = new owl.QWeb({ translateFn: _t });
@@ -131,7 +132,6 @@ odoo.define("web.env", function (require) {
     // See https://github.com/odoo/owl/blob/master/doc/reference/environment.md#content-of-an-environment
     // for more information on environments.
     return {
-        _lt,
         _t,
         bus,
         dataManager,
