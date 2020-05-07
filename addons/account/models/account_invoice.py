@@ -867,7 +867,8 @@ class AccountInvoice(models.Model):
                     self.partner_id = False
 
         self.account_id = account_id
-        self.payment_term_id = payment_term_id
+        if payment_term_id:
+            self.payment_term_id = payment_term_id
         self.date_due = False
         self.fiscal_position_id = fiscal_position
 
