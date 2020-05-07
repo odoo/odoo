@@ -245,9 +245,6 @@ Possible children elements of the list view are:
             unexpected results as domains are combined with a logical AND.
     ``context``
         merged into the view's context when performing the button's Odoo call
-    ``confirm``
-        confirmation message to display (and for the user to accept) before
-        performing the button's Odoo call
 
     .. declared but unused: help
 
@@ -362,6 +359,9 @@ system. Available semantic components are:
   ``special``
     for form views opened in dialogs: ``save`` to save the record and close the
     dialog, ``cancel`` to close the dialog without saving.
+  ``confirm``
+    confirmation message to display (and for the user to accept) before
+    performing the button's Odoo call (also works in Kanban views).
 
 ``field``
   renders (and allow edition of, possibly) a single field of the current
