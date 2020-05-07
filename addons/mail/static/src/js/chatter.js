@@ -348,6 +348,7 @@ var Chatter = Widget.extend({
             defaultBody: oldComposer && oldComposer.$input && oldComposer.$input.val(),
             defaultMentionSelections: oldComposer && oldComposer.getMentionListenerSelections(),
             attachmentIds: (oldComposer && oldComposer.get('attachment_ids')) || [],
+            placeholder: options && options.isLog ? _t('Log an internal note...') : _t('Send a message to followers...'),
         });
         this._composer.on('input_focused', this, function () {
             this._composer.mentionSetPrefetchedPartners(this._mentionSuggestions || []);
