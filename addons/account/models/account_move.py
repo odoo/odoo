@@ -4023,6 +4023,11 @@ class AccountMoveLine(models.Model):
         if not self:
             return
 
+        # List unpaid invoices
+        not_paid_invoices = self.mapped('move_id').filtered(
+            lambda m: m.is_invoice(include_receipts=True) and m.payment_state not in ('paid', 'in_payment')
+        )
+
         self._check_reconcile_validity()
         #reconcile everything that can be
         remaining_moves = self.auto_reconcile_lines()
@@ -4042,6 +4047,11 @@ class AccountMoveLine(models.Model):
             remaining_moves = (remaining_moves + writeoff_to_reconcile).auto_reconcile_lines()
         # Check if reconciliation is total or needs an exchange rate entry to be created
         (self + writeoff_to_reconcile).check_full_reconcile()
+
+        # Trigger action for paid invoices
+        not_paid_invoices.filtered(
+            lambda m: m.payment_state in ('paid', 'in_payment')
+        ).action_invoice_paid()
 
         return True
 
