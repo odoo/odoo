@@ -24,36 +24,36 @@
     </record>
 
     <!-- Extend the livechat_channel form view to add chatbot counter -->
-    <record id="extend_channel_form_view" model="ir.ui.view">
-        <field name="name">Channel Chatbot</field>
-        <field name="model">im_livechat.channel</field>
-        <field name="inherit_id" ref="im_livechat.im_livechat_channel_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button class="oe_stat_button" icon="fa-android">
-                    <field
-                        string="Chatbots"
-                        name="nb_chatbot"
-                        widget="statinfo"
-                    />
-                </button>
-            </xpath>
-        </field>
-    </record>
+    <!-- <record id="extend_channel_form_view" model="ir.ui.view">
+         <field name="name">Channel Chatbot</field>
+         <field name="model">im_livechat.channel</field>
+         <field name="inherit_id" ref="im_livechat.im_livechat_channel_view_form"/>
+         <field name="arch" type="xml">
+         <xpath expr="//div[@name='button_box']" position="inside">
+         <button class="oe_stat_button" icon="fa-android">
+         <field
+         string="Chatbots"
+         name="nb_chatbot"
+         widget="statinfo"
+         />
+         </button>
+         </xpath>
+         </field>
+         </record> -->
 
     <record model="ir.ui.view" id="im_chatbot.form">
         <field name="name">im_chatbot form</field>
         <field name="model">im_chatbot.chatbot</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="test_bot" type="object" class="btn btn-secondary" string="Test this bot" />
+                </header>
                 <sheet>
-                    <field
-                        name="image_1920"
-                        widget="image"
-                        class="oe_avatar"
-                        options="{'preview_image': 'image_256'}"
-                    />
                     <div class="oe_title">
+                        <div class="chatbot_id">
+                            <field name="id" />
+                        </div>
                         <label for="subject" />
                         <h1>
                             <field name="subject" />
@@ -66,9 +66,9 @@
                         <page string="Script">
                             <field name="message_ids" />
                         </page>
-                        <page string="Channel">
-                            <field name="channel_ids" />
-                        </page>
+                        <!-- <page string="Channel">
+                             <field name="channel_ids" />
+                             </page> -->
                     </notebook>
                 </sheet>
             </form>

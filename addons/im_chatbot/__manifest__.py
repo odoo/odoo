@@ -18,10 +18,12 @@
     "depends": ["base", "im_livechat"],
     # always loaded
     "data": [
-        # 'security/ir.model.access.csv',
+        "security/ir.model.access.csv",
+        "views/templates.xml",
         "views/chatbot.xml",
         "views/message.xml",
     ],
     # only loaded in demonstration mode
     "demo": ["demo/demo.xml"],
+    "qweb": ["static/src/xml/template.xml"],
 }

@@ -1,24 +1,9 @@
 <odoo>
     <data>
-<!--
-        <template id="listing">
-          <ul>
-            <li t-foreach="objects" t-as="object">
-              <a t-attf-href="#{ root }/objects/#{ object.id }">
-                <t t-esc="object.display_name"/>
-              </a>
-            </li>
-          </ul>
+        <template id="assets_backend" name="im_chatbot_assets" inherit_id="web.assets_backend">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/im_chatbot/static/src/js/test_bot_button.js"/>
+            </xpath>
         </template>
-        <template id="object">
-          <h1><t t-esc="object.display_name"/></h1>
-          <dl>
-            <t t-foreach="object._fields" t-as="field">
-              <dt><t t-esc="field"/></dt>
-              <dd><t t-esc="object[field]"/></dd>
-            </t>
-          </dl>
-        </template>
--->
     </data>
 </odoo>
