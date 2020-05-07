@@ -227,7 +227,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         }
         let postponeRendering = false;
         if (this.withSearchPanel) {
-            this.controlPanelDomain = params.domain || this.controlPanelDomain;
+            if (params.domain) {
+                this.controlPanelDomain = params.domain;
+            }
             if (controllerState.spState) {
                 this._searchPanel.importState(controllerState.spState);
                 this.searchPanelDomain = this._searchPanel.getDomain();

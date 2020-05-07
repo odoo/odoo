@@ -21,8 +21,6 @@ const qweb = core.qweb;
 const defaultViewTypes = ['kanban', 'tree'];
 let nextSectionId = 1;
 
-const SEARCH_PANEL_LIMIT = 200;
-
 /**
  * Given a <searchpanel> arch node, iterate over its children to generate the
  * description of each section (being either a category or a filter).
@@ -45,14 +43,16 @@ function _processSearchPanelNode(node, fields) {
             color: childNode.attrs.color,
             description: childNode.attrs.string || fields[fieldName].string,
             enableCounters: !!pyUtils.py_eval(childNode.attrs.enable_counters || '0'),
-            fieldName: fieldName,
+            expand: !!pyUtils.py_eval(childNode.attrs.expand || '0'),
+            fieldName,
             icon: childNode.attrs.icon,
             id: sectionId,
-            index: index,
-            type: type,
+            index,
+            type,
         };
         if (section.type === 'category') {
             section.icon = section.icon || 'fa-folder';
+            section.hierarchize = !!pyUtils.py_eval(childNode.attrs.hierarchize || '1');
         } else if (section.type === 'filter') {
             section.domain = childNode.attrs.domain || '[]';
             section.groupBy = childNode.attrs.groupby;
@@ -271,14 +271,8 @@ const SearchPanel = Widget.extend({
      */
     _createCategoryTree(categoryId, values) {
         const category = this.categories[categoryId];
-        let parentField = category.parentField;
-        if (values.length === SEARCH_PANEL_LIMIT) {
-            category.limitAttained = true;
-            if (parentField) {
-                // we do not hierarchize values
-                parentField = false;
-            }
-        }
+        const parentField = category.parentField;
+
         const unfoldedIds = Object.values(category.values || {})
             .filter(c => c.folded === false)
             .map(c => c.id);
@@ -325,10 +319,6 @@ const SearchPanel = Widget.extend({
      */
     _createFilterTree(filterId, values) {
         const filter = this.filters[filterId];
-
-        if (values.length === SEARCH_PANEL_LIMIT) {
-            filter.limitAttained = true;
-        }
 
         // restore checked property
         values.forEach(value => {
@@ -389,19 +379,22 @@ const SearchPanel = Widget.extend({
     _fetchCategories(force) {
         const proms = [];
         for (const category of Object.values(this.categories)) {
+            const { enableCounters, expand, hierarchize } = category;
             const field = this.fields[category.fieldName];
-            if (force || category.enableCounters) {
+            if (force || enableCounters || !expand) {
                 const prom = this._rpc({
                     method: 'search_panel_select_range',
                     model: this.model,
                     args: [category.fieldName],
                     kwargs: {
                         category_domain: this._getCategoryDomain(category.id),
-                        enable_counters: category.enableCounters,
+                        enable_counters: enableCounters,
+                        expand,
+                        hierarchize,
                         search_domain: this.searchDomain,
                     },
                 }).then(({ parent_field, values }) => {
-                    if (field.type === 'many2one') {
+                    if (field.type === 'many2one' && hierarchize) {
                         category.parentField = parent_field;
                     }
                     this._createCategoryTree(category.id, values);
@@ -426,6 +419,7 @@ const SearchPanel = Widget.extend({
         const categoryDomain = this._getCategoryDomain();
         const proms = [];
         for (const filter of Object.values(this.filters)) {
+            const { enableCounters, expand, groupBy } = filter;
             const prom = this._rpc({
                 method: 'search_panel_select_multi_range',
                 model: this.model,
@@ -433,9 +427,10 @@ const SearchPanel = Widget.extend({
                 kwargs: {
                     category_domain: categoryDomain,
                     comodel_domain: Domain.prototype.stringToArray(filter.domain, evalContext),
-                    enable_counters: filter.enableCounters,
+                    enable_counters: enableCounters,
                     filter_domain: this._getFilterDomain(filter.id),
-                    group_by: filter.groupBy || false,
+                    expand,
+                    group_by: groupBy || false,
                     group_domain: this._getGroupDomain(filter),
                     search_domain: [...this.searchDomain, ...this.viewDomain],
                 },

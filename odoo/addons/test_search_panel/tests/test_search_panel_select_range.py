@@ -47,7 +47,128 @@ class TestSelectRange(odoo.tests.TransactionCase):
 
         r1_id, _, r3_id, _ = records.ids
 
-        # counters
+        # counters, expand, and hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            enable_counters=True,
+            expand=True,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 2, 'display_name': 'Folder 1',
+                    'id': f1_id, 'parent_name_id': False, },
+                {'__count': 1, 'display_name': 'Folder 2',
+                    'id': f2_id, 'parent_name_id': False, },
+                {'__count': 1, 'display_name': 'Folder 3',
+                    'id': f3_id, 'parent_name_id': f1_id, },
+                {'__count': 1, 'display_name': 'Folder 4',
+                    'id': f4_id, 'parent_name_id': f2_id, },
+            ]
+        )
+
+        # counters, expand, hierarchization, and search domain
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            enable_counters=True,
+            expand=True,
+            search_domain=[['id', 'in', [r1_id, r3_id]]],  # impact expected
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 1, 'display_name': 'Folder 1',
+                    'id': f1_id, 'parent_name_id': False, },
+                {'__count': 1, 'display_name': 'Folder 2',
+                    'id': f2_id, 'parent_name_id': False, },
+                {'__count': 0, 'display_name': 'Folder 3',
+                    'id': f3_id, 'parent_name_id': f1_id, },
+                {'__count': 1, 'display_name': 'Folder 4',
+                    'id': f4_id, 'parent_name_id': f2_id, },
+            ]
+        )
+
+        # counters, expand, and no hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            enable_counters=True,
+            expand=True,
+            hierarchize=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 1, 'display_name': 'Folder 1', 'id': f1_id, },
+                {'__count': 0, 'display_name': 'Folder 2', 'id': f2_id, },
+                {'__count': 1, 'display_name': 'Folder 3', 'id': f3_id, },
+                {'__count': 1, 'display_name': 'Folder 4', 'id': f4_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
+        )
+
+        # no counters, expand, and hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            expand=True,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1',
+                    'id': f1_id, 'parent_name_id': False, },
+                {'display_name': 'Folder 2',
+                    'id': f2_id, 'parent_name_id': False, },
+                {'display_name': 'Folder 3',
+                    'id': f3_id, 'parent_name_id': f1_id, },
+                {'display_name': 'Folder 4',
+                    'id': f4_id, 'parent_name_id': f2_id, },
+            ]
+        )
+
+        # no counters, expand, hierarchization, and search domain
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            expand=True,
+            search_domain=[['id', 'in', [r1_id, r3_id]]],  # no impact expected
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1',
+                    'id': f1_id, 'parent_name_id': False, },
+                {'display_name': 'Folder 2',
+                    'id': f2_id, 'parent_name_id': False, },
+                {'display_name': 'Folder 3',
+                    'id': f3_id, 'parent_name_id': f1_id, },
+                {'display_name': 'Folder 4',
+                    'id': f4_id, 'parent_name_id': f2_id, },
+            ]
+        )
+
+        # no counters, expand, and no hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            expand=True,
+            hierarchize=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1',
+                    'id': f1_id, },
+                {'display_name': 'Folder 2',
+                    'id': f2_id, },
+                {'display_name': 'Folder 3',
+                    'id': f3_id, },
+                {'display_name': 'Folder 4',
+                    'id': f4_id, },
+            ]
+        )
+
+        # counters, no expand, and hierarchization
         result = self.SourceModel.search_panel_select_range(
             'folder_id',
             enable_counters=True,
@@ -65,61 +186,89 @@ class TestSelectRange(odoo.tests.TransactionCase):
                     'id': f4_id, 'parent_name_id': f2_id, },
             ]
         )
+        self.assertEqual(
+            result['parent_field'],
+            'parent_name_id'
+        )
 
-        # counters and search domain
+        # counters, no expand, and no hierarchization
         result = self.SourceModel.search_panel_select_range(
             'folder_id',
             enable_counters=True,
-            search_domain=[['id', 'in', [r1_id, r3_id]]],
+            hierarchize=False,
         )
         self.assertEqual(
             result['values'],
             [
-                {'__count': 1, 'display_name': 'Folder 1',
-                    'id': f1_id, 'parent_name_id': False, },
-                {'__count': 1, 'display_name': 'Folder 2',
-                    'id': f2_id, 'parent_name_id': False, },
-                {'__count': 0, 'display_name': 'Folder 3',
-                    'id': f3_id, 'parent_name_id': f1_id, },
-                {'__count': 1, 'display_name': 'Folder 4',
-                    'id': f4_id, 'parent_name_id': f2_id, },
+                {'__count': 1, 'display_name': 'Folder 1', 'id': f1_id, },
+                {'__count': 1, 'display_name': 'Folder 3', 'id': f3_id, },
+                {'__count': 1, 'display_name': 'Folder 4', 'id': f4_id, },
             ]
         )
-
-        # no counters
-        result = self.SourceModel.search_panel_select_range('folder_id')
         self.assertEqual(
-            result['values'],
-            [
-                {'__count': 0, 'display_name': 'Folder 1',
-                    'id': f1_id, 'parent_name_id': False, },
-                {'__count': 0, 'display_name': 'Folder 2',
-                    'id': f2_id, 'parent_name_id': False, },
-                {'__count': 0, 'display_name': 'Folder 3',
-                    'id': f3_id, 'parent_name_id': f1_id, },
-                {'__count': 0, 'display_name': 'Folder 4',
-                    'id': f4_id, 'parent_name_id': f2_id, },
-            ]
+            result['parent_field'],
+            False
         )
 
-        # no counters and search domain
+        # no counters, no expand, and hierarchization
         result = self.SourceModel.search_panel_select_range(
             'folder_id',
-            search_domain=[['id', 'in', [r1_id, r3_id]]],
+            hierarchize=True,
         )
         self.assertEqual(
             result['values'],
             [
-                {'__count': 0, 'display_name': 'Folder 1',
+                {'display_name': 'Folder 1',
                     'id': f1_id, 'parent_name_id': False, },
-                {'__count': 0, 'display_name': 'Folder 2',
+                {'display_name': 'Folder 2',
                     'id': f2_id, 'parent_name_id': False, },
-                {'__count': 0, 'display_name': 'Folder 3',
+                {'display_name': 'Folder 3',
                     'id': f3_id, 'parent_name_id': f1_id, },
-                {'__count': 0, 'display_name': 'Folder 4',
+                {'display_name': 'Folder 4',
                     'id': f4_id, 'parent_name_id': f2_id, },
             ]
         )
+        self.assertEqual(
+            result['parent_field'],
+            'parent_name_id'
+        )
+
+        # no counters, no expand, and no hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            hierarchize=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1', 'id': f1_id, },
+                {'display_name': 'Folder 3', 'id': f3_id, },
+                {'display_name': 'Folder 4', 'id': f4_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
+        )
+
+        # no counters, no expand, no hierarchization, and comodel_domain
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            hierarchize=False,
+            comodel_domain=[['id', 'in', [f1_id, f4_id]]]
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1', 'id': f1_id, },
+                {'display_name': 'Folder 4', 'id': f4_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
+        )
+
 
     def test_many2one_deep_hierarchy(self):
         folders_level_0 = self.TargetModel.create([
@@ -161,10 +310,23 @@ class TestSelectRange(odoo.tests.TransactionCase):
             {'name': 'Rec 6', 'folder_id': f10_id, },
         ])
 
-        # counters
+        """
+        The folder tree is like this (the numbers are the local counts)
+
+                f1_id (1)       f2_id (0)           f3_id (0)
+                    |          /         \
+                f4_id (0)  f5_id (0)  f6_id (1)
+                    |                     |
+                f7_id (2)             f8_id (0)
+                                     /         \
+                                f9_id (1)  f10_id (1)
+        """
+
+        # counters, expand, and hierarchization
         result = self.SourceModel.search_panel_select_range(
             'folder_id',
             enable_counters=True,
+            expand=True,
         )
         self.assertEqual(
             result['values'],
@@ -189,6 +351,36 @@ class TestSelectRange(odoo.tests.TransactionCase):
                     'id': f8_id, 'parent_name_id': f6_id, },
                 {'__count': 1, 'display_name': 'Folder 9',
                     'id': f9_id, 'parent_name_id': f8_id, },
+            ]
+        )
+
+        # no counters, no expand, hierarchization, and comodel_domain
+
+        # We add a folder with a single record in it and declare it out of
+        # comodel_domain. That folder should not appear in the final values.
+        extra_folder_level_0 = self.TargetModel.create([
+            {'name': 'Folder 11', 'parent_name_id': False, },
+        ])
+
+        f11_id = extra_folder_level_0.id
+
+        self.SourceModel.create([
+            {'name': 'Rec 7', 'folder_id': f11_id, },
+        ])
+
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            comodel_domain=[('id', 'not in', [f8_id, f11_id])
+                            ],  # impact expected
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1', 'id': f1_id, 'parent_name_id': False, },
+                {'display_name': 'Folder 2', 'id': f2_id, 'parent_name_id': False, },
+                {'display_name': 'Folder 4', 'id': f4_id, 'parent_name_id': f1_id, },
+                {'display_name': 'Folder 6', 'id': f6_id, 'parent_name_id': f2_id, },
+                {'display_name': 'Folder 7', 'id': f7_id, 'parent_name_id': f4_id, },
             ]
         )
 
@@ -222,10 +414,11 @@ class TestSelectRange(odoo.tests.TransactionCase):
 
         r1_id, _, r3_id, _ = records.ids
 
-        # counters
+        # counters and expand
         result = self.SourceModel.search_panel_select_range(
             'categ_id',
             enable_counters=True,
+            expand=True,
         )
         self.assertEqual(
             result['values'],
@@ -236,11 +429,12 @@ class TestSelectRange(odoo.tests.TransactionCase):
             ]
         )
 
-        # counters and search domain
+        # counters, expand, and search domain
         result = self.SourceModel.search_panel_select_range(
             'categ_id',
             enable_counters=True,
-            search_domain=[['id', 'in', [r1_id, r3_id]]],
+            expand=True,
+            search_domain=[['id', 'in', [r1_id, r3_id]]],  # impact expected
         )
         self.assertEqual(
             result['values'],
@@ -251,42 +445,82 @@ class TestSelectRange(odoo.tests.TransactionCase):
             ]
         )
 
-        # no counters
-        result = self.SourceModel.search_panel_select_range('categ_id')
+        # no counters and expand
+        result = self.SourceModel.search_panel_select_range(
+            'categ_id',
+            expand=True,
+        )
         self.assertEqual(
             result['values'],
             [
-                {'__count': 0, 'display_name': 'Cat 3', 'id': c3_id, },
-                {'__count': 0, 'display_name': 'Cat 2', 'id': c2_id, },
-                {'__count': 0, 'display_name': 'Cat 1', 'id': c1_id, },
+                {'display_name': 'Cat 3', 'id': c3_id, },
+                {'display_name': 'Cat 2', 'id': c2_id, },
+                {'display_name': 'Cat 1', 'id': c1_id, },
             ]
         )
 
-        # no counters and search domain
+        # no counters, expand, and search domain
         result = self.SourceModel.search_panel_select_range(
             'categ_id',
-            search_domain=[['id', 'in', [r1_id, r3_id]]],
+            expand=True,
+            search_domain=[['id', 'in', [r1_id, r3_id]]],  # no impact expected
         )
         self.assertEqual(
             result['values'],
             [
-                {'__count': 0, 'display_name': 'Cat 3', 'id': c3_id, },
-                {'__count': 0, 'display_name': 'Cat 2', 'id': c2_id, },
-                {'__count': 0, 'display_name': 'Cat 1', 'id': c1_id, },
+                {'display_name': 'Cat 3', 'id': c3_id, },
+                {'display_name': 'Cat 2', 'id': c2_id, },
+                {'display_name': 'Cat 1', 'id': c1_id, },
             ]
+        )
+
+        # counters and no expand
+        result = self.SourceModel.search_panel_select_range(
+            'categ_id',
+            enable_counters=True,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 2, 'display_name': 'Cat 2', 'id': c2_id, },
+                {'__count': 1, 'display_name': 'Cat 1', 'id': c1_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
+        )
+
+        # no counters and no expand
+        result = self.SourceModel.search_panel_select_range(
+            'categ_id',
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Cat 2', 'id': c2_id, },
+                {'display_name': 'Cat 1', 'id': c1_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
         )
 
     # Selection case
 
     def test_selection_empty(self):
-        result = self.SourceModel.search_panel_select_range('state')
+        result = self.SourceModel.search_panel_select_range(
+            'state',
+            expand=True,
+        )
         self.assertEqual(
             result,
             {
                 'parent_field': False,
                 'values': [
-                    {'display_name': 'A', 'id': 'a', '__count': 0, },
-                    {'display_name': 'B', 'id': 'b', '__count': 0, },
+                    {'display_name': 'A', 'id': 'a', },
+                    {'display_name': 'B', 'id': 'b', },
                 ]
             }
         )
@@ -299,10 +533,11 @@ class TestSelectRange(odoo.tests.TransactionCase):
 
         r1_id, _ = records.ids
 
-        # counters
+        # counters and expand
         result = self.SourceModel.search_panel_select_range(
             'state',
             enable_counters=True,
+            expand=True,
         )
         self.assertEqual(
             result['values'],
@@ -312,21 +547,12 @@ class TestSelectRange(odoo.tests.TransactionCase):
             ]
         )
 
-        # no counters
-        result = self.SourceModel.search_panel_select_range('state')
-        self.assertEqual(
-            result['values'],
-            [
-                {'display_name': 'A', 'id': 'a', '__count': 0, },
-                {'display_name': 'B', 'id': 'b', '__count': 0, },
-            ]
-        )
-
-        # counters and search domain
+        # counters, expand, and search domain
         result = self.SourceModel.search_panel_select_range(
             'state',
             enable_counters=True,
-            search_domain=[['id', '=', r1_id]],
+            expand=True,
+            search_domain=[['id', '=', r1_id]],  # impact expected
         )
         self.assertEqual(
             result['values'],
@@ -336,15 +562,52 @@ class TestSelectRange(odoo.tests.TransactionCase):
             ]
         )
 
-        # no counters and search domain
+        # no counters and expand
         result = self.SourceModel.search_panel_select_range(
             'state',
-            search_domain=[['id', '=', r1_id]],
+            expand=True,
         )
         self.assertEqual(
             result['values'],
             [
-                {'display_name': 'A', 'id': 'a', '__count': 0, },
-                {'display_name': 'B', 'id': 'b', '__count': 0, },
+                {'display_name': 'A', 'id': 'a', },
+                {'display_name': 'B', 'id': 'b', },
+            ]
+        )
+
+        # no counters, expand, and search domain
+        result = self.SourceModel.search_panel_select_range(
+            'state',
+            expand=True,
+            search_domain=[['id', '=', r1_id]],  # no impact expected
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'A', 'id': 'a', },
+                {'display_name': 'B', 'id': 'b', },
+            ]
+        )
+
+        # counters and no expand
+        result = self.SourceModel.search_panel_select_range(
+            'state',
+            enable_counters=True,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 2, 'display_name': 'A', 'id': 'a', },
+            ]
+        )
+
+        # no counters and no expand
+        result = self.SourceModel.search_panel_select_range(
+            'state',
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'A', 'id': 'a', },
             ]
         )

@@ -235,10 +235,6 @@
                 <t t-set="values" t-value="category.rootIds"/>
             </t>
         </ul>
-        <div t-if="category.limitAttained" class="alert alert-warning">
-            <span>For performance reasons, only 200 values were fetched. Some values might be missing.</span>
-            <span t-if="category.parentField">The values have not been hierarchized.</span>
-        </div>
     </section>
 </t>
 <t t-name="SearchPanel.CategoryValues">
@@ -253,7 +249,7 @@
                     <span class="o_search_panel_label_title"><t t-esc="value.display_name"/></span>
                 </label>
                 <span t-if="category.enableCounters and value.__count > 0"
-                    class="text-muted ml-2 small"
+                    class="o_search_panel_counter text-muted ml-2 small"
                     t-esc="value.__count"
                 />
             </header>
@@ -280,9 +276,6 @@
                 <t t-set="values" t-value="filter.values"/>
             </t>
         </ul>
-        <div t-if="filter.limitAttained" class="alert alert-warning">
-            <span>For performance reasons, only 200 values were fetched. Some values might be missing.</span>
-        </div>
     </section>
 </t>
 <t t-name="SearchPanel.FilterGroups">
@@ -327,7 +320,7 @@
                 <label t-att-for="inputId" class="o_search_panel_label custom-control-label" t-att-title="group &amp;&amp; group.tooltip">
                     <span class="o_search_panel_label_title" t-esc="value.display_name"/>
                     <span t-if="filter.enableCounters and value.__count > 0"
-                        class="text-muted ml-2 small"
+                        class="o_search_panel_counter text-muted ml-2 small"
                         t-esc="value.__count"
                     />
                 </label>

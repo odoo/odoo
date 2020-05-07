@@ -2003,7 +2003,18 @@ Possible children elements of the search view are:
     Another way to solve performance issues is to properly override the
     ``search_panel_select_range`` and ``search_panel_select_multi_range`` methods.
 
-  Additional optional attributes are available in the ``multi`` case:
+  * ``expand``: default is false. If set to false categories or filters with 0 records will be hidden.
+
+  Additional optional attributes are available according to the chosen case:
+
+  For the ``one`` case:
+
+  * ``hierarchize``: (only available for many2one fields) default is true. Handles the display style of categories :
+
+    If set to true child categories will appear under their related parent.
+    If not, all categories will be displayed on the same level.
+
+  For the ``multi`` case:
 
   * ``domain``: determines conditions that the comodel records have to satisfy.
 
