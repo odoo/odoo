@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_sponsors" name="Sponsors">
+        <section class="s_wevent_track_our_sponsors o_sponsors pt32 pb32" t-att-data-sponsors="sponsor_ids">
+	        <div class="container mt32 mb16 d-print-none">
+	            <h2 class="text-center mb32">Our Sponsors</h2>
+	            <div class="o_our_sponsors o_not_editable"/>
+	        </div>
+        </section>
+</template>
+
+<template id="s_sponsors_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="sponsors" data-selector=".s_wevent_track_our_sponsors">
+            <we-title>Add Sponsor</we-title>
+            <we-select data-name="add_sponsor" data-no-preview="true">
+            </we-select>
+        </div>
+        <div data-js="remove_sponsors" data-selector=".o_sponsors .img">
+            <we-title>Remove Sponsor</we-title>
+            <we-button data-name="remove_sponsor" data-no-preview="true" data-remove-sponsor="0">Remove Sponsor</we-button>
+        </div>
+    </xpath>
+</template>
+
+<template id="website_sponsors_snippet" inherit_id="website.snippets">
+    <xpath expr="//t[@id='event_sponsors_hook']" position="replace">
+        <t t-snippet="website_event_track.s_sponsors" t-thumbnail="/website_event_track/static/src/img/s_sponsors.png"/>
+    </xpath>
+</template>
+
+<template id="assets_wysiwyg_sponsors" inherit_id="website.assets_wysiwyg" name="sponsors snippet options">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_event_track/static/src/js/options.js"></script>
+    </xpath>
+</template>
+
+</odoo>

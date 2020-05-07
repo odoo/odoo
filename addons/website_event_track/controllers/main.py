@@ -162,3 +162,16 @@ class WebsiteEventTrackController(http.Controller):
             if partner:
                 track.sudo().message_subscribe(partner_ids=partner.ids)
         return request.render("website_event_track.event_track_proposal", {'track': track, 'event': event})
+
+    @http.route('/event/our_sponsors', type='json', auth='public', website=True)
+    def our_sponsors(self, sponsor_ids=''):
+        """
+        Returns list of sponsors for event
+        """
+        res = []
+        if sponsor_ids:
+            sponsors = request.env['event.sponsor'].search([('id','in', sponsor_ids)])
+            for sponsor in sponsors:
+                res.append(sponsor.read(['id', 'url', 'partner_name', 'sponsor_type_id'])[0])
+            return res
+        return {}

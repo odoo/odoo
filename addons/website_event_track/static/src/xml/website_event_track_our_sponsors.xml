@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_event_track.ourSponsors">
+        <div t-if="sponsors.length">
+            <div t-att-id="uniqueId" class="row">
+               <div t-attf-class="col-sm-6 col-lg-#{(sponsors.length > 4)  and 2 or (12 / sponsors.length)} text-center mb16" t-foreach="sponsors" t-as="sponsor">
+                    <span style="position: relative; display: inline-block;" class="bg-white">
+                        <t t-if="sponsor.url">
+                            <a t-att-href="sponsor.url" style="position: relative; display: inline-block;" class="bg-white">
+                                <img class="img img-fluid shadow" t-att-data-sponsor-id="sponsor.id" t-attf-src="/web/image/event.sponsor/#{sponsor.id}/image_128" t-att-alt="sponsor.partner_name"/>
+                                <span t-esc="sponsor.sponsor_type_id[1]" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id[1]}"/>
+                            </a>
+                        </t>
+                        <t t-if="!sponsor.url">
+                            <img class="img img-fluid shadow" t-attf-src="/web/image/event.sponsor/#{sponsor.id}/image_128" t-att-data-sponsor-id="sponsor.id" t-att-alt="sponsor.partner_name"/>
+                            <span t-esc="sponsor.sponsor_type_id[1]" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id[1]}"/>
+                        </t>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div t-if="!sponsors.length">
+            <div class="alert alert-info">
+                <p class="mb-0">No sponsors. Please add sponsors.</p>
+            </div>
+        </div>
+    </t>
+</templates>
