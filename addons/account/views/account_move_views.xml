@@ -366,7 +366,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group" position="after">
                     <searchpanel class="account_root">
-                        <field name="account_root_id" icon="fa-filter"/>
+                        <field name="account_root_id" disable_counters="1" icon="fa-filter"/>
                     </searchpanel>
                 </xpath>
             </field>
@@ -397,33 +397,32 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <tree string="Invoices"
-                      decoration-info="state == 'draft'"
-                      decoration-muted="state == 'cancel'"
                       banner_route="/account/account_invoice_onboarding"
                       js_class="account_tree">
-                    <field name="name"/>
+                    <field name="name" decoration-bf="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="invoice_source_email" invisible="1"/>
                     <field name="invoice_partner_display_name" invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund','in_receipt')" groups="base.group_user" string="Vendor" />
                     <field name="invoice_partner_display_name" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" groups="base.group_user" string="Customer" />
                     <field name="invoice_date" optional="show" invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund','in_receipt')" string="Bill Date"/>
                     <field name="invoice_date" optional="show" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Invoice Date"/>
+                    <field name="invoice_date_due" widget="remaining_days" optional="show" attrs="{'invisible': [['payment_state', '=', 'paid']]}"/>
                     <field name="invoice_origin" optional="hide" string="Source Document"/>
                     <field name="payment_reference" optional="hide" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund','out_receipt')"/>
                     <field name="ref" optional="hide"/>
-                    <field name="invoice_user_id" optional="hide" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
+                    <field name="invoice_user_id" optional="hide" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person" widget="many2one_avatar_user"/>
+                    <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
-                    <field name="invoice_date_due" optional="show"/>
                     <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
                     <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
-                    <field name="amount_total_signed" string="Total" sum="Total" optional="show"/>
-                    <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="show"/>
+                    <field name="amount_total_signed" string="Total" sum="Total" decoration-bf="1" optional="show"/>
+                    <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="hide"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state" optional="hide"/>
-                    <field name="payment_state"/>
+                    <field name="payment_state" decoration-success="payment_state == 'paid'" decoration-info="payment_state == 'partial' or payment_state == 'not_paid'" decoration-warning="payment_state == 'in_payment'" widget="badge"/>
                     <field name="move_type" invisible="context.get('default_move_type', True)"/>
-                </tree>
+                  </tree>
             </field>
         </record>
 
@@ -996,7 +995,7 @@
                                            attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}">
                                         <label for="ref" string="Customer Reference" />
                                         <field name="ref" nolabel="1"/>
-                                        <field name="invoice_user_id" domain="[('share', '=', False)]"/>
+                                        <field name="invoice_user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                         <field name="invoice_origin" string="Source Document" force_save="1"
                                                attrs="{'invisible': [('invoice_origin', '=', False)]}"/>
                                         <field name="partner_bank_id"

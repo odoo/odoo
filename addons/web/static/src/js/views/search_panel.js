@@ -6,18 +6,20 @@ odoo.define('web.SearchPanel', function (require) {
  * filter/manage data easily.
  */
 
-var core = require('web.core');
-var Domain = require('web.Domain');
-var pyUtils = require('web.py_utils');
-var viewUtils = require('web.viewUtils');
-var Widget = require('web.Widget');
+const core = require('web.core');
+const Domain = require('web.Domain');
+const pyUtils = require('web.py_utils');
+const { sortBy } = require('web.utils');
+const viewUtils = require('web.viewUtils');
+const Widget = require('web.Widget');
 
-var qweb = core.qweb;
+const qweb = core.qweb;
 
 // defaultViewTypes is the list of view types for which the searchpanel is
 // present by default (if not explicitly stated in the 'view_types' attribute
 // in the arch)
-var defaultViewTypes = ['kanban', 'tree'];
+const defaultViewTypes = ['kanban', 'tree'];
+let nextSectionId = 1;
 
 const SEARCH_PANEL_LIMIT = 200;
 
@@ -30,21 +32,19 @@ const SEARCH_PANEL_LIMIT = 200;
  * @returns {Object}
  */
 function _processSearchPanelNode(node, fields) {
-    var sections = {};
+    const sections = {};
     node.children.forEach((childNode, index) => {
-        if (childNode.tag !== 'field') {
+        if (childNode.tag !== 'field' || childNode.attrs.invisible === "1") {
             return;
         }
-        if (childNode.attrs.invisible === "1") {
-            return;
-        }
-        var fieldName = childNode.attrs.name;
-        var type = childNode.attrs.select === 'multi' ? 'filter' : 'category';
+        const fieldName = childNode.attrs.name;
+        const type = childNode.attrs.select === 'multi' ? 'filter' : 'category';
 
-        var sectionId = _.uniqueId('section_');
-        var section = {
+        const sectionId = `section_${nextSectionId++}`;
+        const section = {
             color: childNode.attrs.color,
             description: childNode.attrs.string || fields[fieldName].string,
+            disableCounters: !!pyUtils.py_eval(childNode.attrs.disable_counters || '0'),
             fieldName: fieldName,
             icon: childNode.attrs.icon,
             id: sectionId,
@@ -54,7 +54,6 @@ function _processSearchPanelNode(node, fields) {
         if (section.type === 'category') {
             section.icon = section.icon || 'fa-folder';
         } else if (section.type === 'filter') {
-            section.disableCounters = !!pyUtils.py_eval(childNode.attrs.disable_counters || '0');
             section.domain = childNode.attrs.domain || '[]';
             section.groupBy = childNode.attrs.groupby;
             section.icon = section.icon || 'fa-filter';
@@ -64,7 +63,7 @@ function _processSearchPanelNode(node, fields) {
     return sections;
 }
 
-var SearchPanel = Widget.extend({
+const SearchPanel = Widget.extend({
     className: 'o_search_panel',
     events: {
         'click .o_search_panel_category_value header': '_onCategoryValueClicked',
@@ -75,7 +74,7 @@ var SearchPanel = Widget.extend({
     },
 
     /**
-     * @override
+     * @constructor
      * @param {Object} params
      * @param {Object} [params.defaultValues={}] the value(s) to activate by
      *   default, for each filter and category
@@ -90,66 +89,65 @@ var SearchPanel = Widget.extend({
      * @param {Object} [params.state] state exported by another searchpanel
      *   instance
      */
-    init: function (parent, params) {
-        this._super.apply(this, arguments);
+    init(parent, params) {
+        this._super(...arguments);
 
-        this.categories = _.pick(params.sections, function (section) {
-            return section.type === 'category';
-        });
-        this.filters = _.pick(params.sections, function (section) {
-            return section.type === 'filter';
-        });
+        this.categories = {};
+        this.filters = {};
+        for (const section of Object.values(params.sections)) {
+            const key = section.type === 'category' ? 'categories' : 'filters';
+            this[key][section.id] = section;
+        }
 
         this.initialState = params.state;
         this.scrollTop = this.initialState && this.initialState.scrollTop || null;
         this.defaultValues = params.defaultValues || {};
         if (params.defaultNoFilter) {
-            Object.keys(this.categories).forEach((categoryId) => {
-                var fieldName = this.categories[categoryId].fieldName;
+            Object.values(this.categories).forEach(({ fieldName }) => {
                 this.defaultValues[fieldName] = this.defaultValues[fieldName] || false;
             });
         }
         this.fields = params.fields;
         this.model = params.model;
         this.className = params.classes.concat(['o_search_panel']).join(' ');
+        this.reloadOptions = null;
         this.searchDomain = params.searchDomain;
         this.viewDomain = params.viewDomain;
     },
     /**
      * @override
      */
-    willStart: function () {
-        var self = this;
-        var loadCategoriesProm;
+    async willStart() {
+        const _super = this._super;
         if (this.initialState) {
             this.filters = this.initialState.filters;
             this.categories = this.initialState.categories;
         } else {
-            loadCategoriesProm = this._fetchCategories().then(function () {
-                return self._fetchFilters().then(self._applyDefaultFilterValues.bind(self));
-            });
+            await this._fetchCategories(true);
+            await this._fetchFilters();
+            await this._applyDefaultFilterValues();
         }
-        return Promise.all([loadCategoriesProm, this._super.apply(this, arguments)]);
+        return _super.call(this, ...arguments);
     },
     /**
      * @override
      */
-    start: function () {
+    start() {
         this._render();
-        return this._super.apply(this, arguments);
+        return this._super(...arguments);
     },
     /**
      * Called each time the searchPanel is attached into the DOM.
      */
-    on_attach_callback: function () {
+    on_attach_callback() {
         if (this.scrollTop !== null) {
             this.el.scrollTop = this.scrollTop;
         }
     },
 
-    //--------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Public
-    //--------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
     /**
      * Parse a given search view arch to extract the searchpanel information
@@ -163,44 +161,40 @@ var SearchPanel = Widget.extend({
      * or may not instantiate a SearchPanel.
      *
      * @static
-     * @params {Object} viewInfo the viewInfo of a search view
-     * @params {string} viewInfo.arch
-     * @params {Object} viewInfo.fields
-     * @params {string} viewType the type of the current view (e.g. 'kanban')
-     * @returns {Object|undefined}
+     * @param {Object} viewInfo the viewInfo of a search view
+     * @param {string} viewInfo.arch
+     * @param {Object} viewInfo.fields
+     * @param {string} viewType the type of the current view (e.g. 'kanban')
+     * @returns {Object}
      */
-    computeSearchPanelParams: function (arch, fields, viewType) {
-        var searchPanelSections;
-        var classes;
+    computeSearchPanelParams(arch, fields, viewType) {
+        const searchPanelParams = {};
         if (arch && fields) {
-            viewType = viewType === 'list' ? 'tree' : viewType;
-            arch  = viewUtils.parseArch(arch);
-            const searchPanelNode = arch.children.find(child => child.tag === 'searchpanel');
+            const parsedArch = viewUtils.parseArch(arch);
+            const searchPanelNode = parsedArch.children.find(child => child.tag === 'searchpanel');
             if (searchPanelNode) {
-                var attrs = searchPanelNode.attrs;
-                var viewTypes = defaultViewTypes;
+                const { attrs } = searchPanelNode;
+                const type = viewType === 'list' ? 'tree' : viewType;
+                let viewTypes = defaultViewTypes;
                 if (attrs.view_types) {
                     viewTypes = attrs.view_types.split(',');
                 }
                 if (attrs.class) {
-                    classes = attrs.class.split(' ');
+                    searchPanelParams.classes = attrs.class.split(' ');
                 }
-                if (viewTypes.includes(viewType)) {
-                    searchPanelSections = _processSearchPanelNode(searchPanelNode, fields);
+                if (viewTypes.includes(type)) {
+                    searchPanelParams.sections = _processSearchPanelNode(searchPanelNode, fields);
                 }
             }
         }
-        return {
-            sections: searchPanelSections,
-            classes: classes,
-        };
+        return searchPanelParams;
     },
     /**
      * Export the current state (categories and filters) of the searchpanel.
      *
      * @returns {Object}
      */
-    exportState: function () {
+    exportState() {
         return {
             categories: this.categories,
             filters: this.filters,
@@ -211,7 +205,7 @@ var SearchPanel = Widget.extend({
      * @returns {Array[]} the current searchPanel domain based on active
      *   categories and checked filters
      */
-    getDomain: function () {
+    getDomain() {
         return this._getCategoryDomain().concat(this._getFilterDomain());
     },
     /**
@@ -221,37 +215,39 @@ var SearchPanel = Widget.extend({
      * @param {Object} state.filters.
      * @param {Object} state.categories
      */
-    importState: function (state) {
+    importState(state) {
         this.categories = state.categories || this.categories;
         this.filters = state.filters || this.filters;
         this.scrollTop = state.scrollTop;
         this._render();
     },
     /**
-     * Reload the filters and re-render. Note that we only reload the filters if
-     * the controlPanel domain or searchPanel domain has changed.
+     * Reload the filters and categories and re-render. Note that we only reload them
+     * if the controlPanel domain or searchPanel domain has changed.
      *
      * @param {Object} params
      * @param {Array[]} params.searchDomain domain coming from controlPanel
      * @param {Array[]} params.viewDomain domain coming from view
      * @returns {Promise}
      */
-    update: function (params) {
+    async update(params) {
         const currentDomain = JSON.stringify([...this.searchDomain, ...this.viewDomain]);
         const newDomain = JSON.stringify([...params.searchDomain, ...params.viewDomain]);
-        var filtersProm;
-        if (this.needReload || (currentDomain !== newDomain)) {
-            this.needReload = false;
+        if (this.reloadOptions || (currentDomain !== newDomain)) {
             this.searchDomain = params.searchDomain;
             this.viewDomain = params.viewDomain;
-            filtersProm = this._fetchFilters();
+            if (!this.reloadOptions || this.reloadOptions.shouldFetchCategories) {
+                await this._fetchCategories();
+            }
+            await this._fetchFilters();
+            this.reloadOptions = null;
         }
-        return Promise.resolve(filtersProm).then(this._render.bind(this));
+        return this._render();
     },
 
-    //--------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Private
-    //--------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
     /**
      * Set active values for each filter (coming from context). This needs to be
@@ -259,19 +255,15 @@ var SearchPanel = Widget.extend({
      *
      * @private
      */
-    _applyDefaultFilterValues: function () {
-        var self = this;
-        Object.keys(this.filters).forEach(function (filterId) {
-            var filter = self.filters[filterId];
-            var defaultValues = self.defaultValues[filter.fieldName] || [];
-            defaultValues.forEach(function (value) {
+    _applyDefaultFilterValues() {
+        Object.values(this.filters).forEach(filter => {
+            const defaultValues = this.defaultValues[filter.fieldName] || [];
+            defaultValues.forEach(value => {
                 if (filter.values[value]) {
                     filter.values[value].checked = true;
                 }
             });
-            Object.keys(filter.groups || []).forEach(function (groupId) {
-                self._updateFilterGroupState(filter.groups[groupId]);
-            });
+            Object.values(filter.groups || []).forEach(this._updateFilterGroupState);
         });
     },
     /**
@@ -279,9 +271,8 @@ var SearchPanel = Widget.extend({
      * @param {string} categoryId
      * @param {Object[]} values
      */
-    _createCategoryTree: function (categoryId, values) {
-        var category = this.categories[categoryId];
-
+    _createCategoryTree(categoryId, values) {
+        const category = this.categories[categoryId];
         let parentField = category.parentField;
         if (values.length === SEARCH_PANEL_LIMIT) {
             category.limitAttained = true;
@@ -290,38 +281,41 @@ var SearchPanel = Widget.extend({
                 parentField = false;
             }
         }
+        const unfoldedIds = Object.values(category.values || {})
+            .filter(c => c.folded === false)
+            .map(c => c.id);
 
         category.values = {};
-        _.each(values, function (value) {
-            category.values[value.id] = _.extend({}, value, {
+        values.forEach(value => {
+            category.values[value.id] = Object.assign({}, value, {
                 childrenIds: [],
-                folded: true,
-                parentId: value[parentField] && value[parentField][0] || false,
+                folded: !unfoldedIds.includes(value.id),
+                parentId: value[parentField] || false,
             });
         });
-        _.map(values, function (value) {
-            var value = category.values[value.id];
-            var parentCategoryId = value.parentId;
+        values.forEach(value => {
+            const { parentId: parentCategoryId } = category.values[value.id];
             if (parentCategoryId && parentCategoryId in category.values) {
                 category.values[parentCategoryId].childrenIds.push(value.id);
             }
         });
-        category.rootIds = _.filter(_.map(values, function (value) {
-            return value.id;
-        }), function (valueId) {
-            var value = category.values[valueId];
-            return value.parentId === false;
-        });
+        category.rootIds = [];
+        for (const value of values) {
+            const { parentId } = category.values[value.id];
+            if (!parentId) {
+                category.rootIds.push(value.id);
+            }
+        }
 
         // set active value
-        var validValues = _.pluck(category.values, 'id').concat([false]);
-        var value = this._getCategoryDefaultValue(category, validValues);
-        category.activeValueId = _.contains(validValues, value) ? value : false;
+        const validValues = [...Object.values(category.values).map(v => v.id), false];
+        const value = this._getCategoryDefaultValue(category, validValues);
+        category.activeValueId = validValues.includes(value) ? value : false;
 
         // unfold ancestor values of active value to make it is visible
         if (category.activeValueId) {
-            var parentValueIds = this._getAncestorValueIds(category, category.activeValueId);
-            parentValueIds.forEach(function (parentValue) {
+            const parentValueIds = this._getAncestorValueIds(category, category.activeValueId);
+            parentValueIds.forEach(parentValue => {
                 category.values[parentValue].folded = false;
             });
         }
@@ -331,27 +325,27 @@ var SearchPanel = Widget.extend({
      * @param {string} filterId
      * @param {Object[]} values
      */
-    _createFilterTree: function (filterId, values) {
-        var filter = this.filters[filterId];
+    _createFilterTree(filterId, values) {
+        const filter = this.filters[filterId];
 
         if (values.length === SEARCH_PANEL_LIMIT) {
             filter.limitAttained = true;
         }
 
         // restore checked property
-        values.forEach(function (value) {
-            var oldValue = filter.values && filter.values[value.id];
+        values.forEach(value => {
+            const oldValue = filter.values && filter.values[value.id];
             value.checked = oldValue && oldValue.checked || false;
         });
 
         filter.values = {};
-        var groupIds = [];
+        const groupIds = [];
         if (filter.groupBy) {
-            var groups = {};
-            values.forEach(function (value) {
-                var groupId = value.group_id;
+            const groups = {};
+            values.forEach(value => {
+                const groupId = JSON.stringify(value.group_id);
                 if (!groups[groupId]) {
-                    if (groupId) {
+                    if (groupId !== 'false') {
                         groupIds.push(groupId);
                     }
                     groups[groupId] = {
@@ -365,7 +359,7 @@ var SearchPanel = Widget.extend({
                         sortedValueIds: [],
                     };
                     // restore former checked and folded state
-                    var oldGroup = filter.groups && filter.groups[groupId];
+                    const oldGroup = filter.groups && filter.groups[groupId];
                     groups[groupId].state = oldGroup && oldGroup.state || false;
                     groups[groupId].folded = oldGroup && oldGroup.folded || false;
                 }
@@ -373,52 +367,50 @@ var SearchPanel = Widget.extend({
                 groups[groupId].sortedValueIds.push(value.id);
             });
             filter.groups = groups;
-            filter.sortedGroupIds = _.sortBy(groupIds, function (groupId) {
-                return groups[groupId].sequence || groups[groupId].name;
-            });
-            Object.keys(filter.groups).forEach(function (groupId) {
-                filter.values = _.extend(filter.values, filter.groups[groupId].values);
+            filter.sortedGroupIds = sortBy(groupIds,
+                id => groups[id].sequence || groups[id].name
+            );
+            Object.values(filter.groups).forEach(group => {
+                Object.assign(filter.values, group.values);
             });
         } else {
-            values.forEach(function (value) {
+            values.forEach(value => {
                 filter.values[value.id] = value;
             });
-            filter.sortedValueIds = values.map(function (value) {
-                return value.id;
-            });
+            filter.sortedValueIds = values.map(value => value.id);
         }
     },
     /**
-     * Fetch values for each category. This is done only once, at startup.
+     * Fetch values for each category at startup. At reload a category is only
+     * fetched if the searchDomain changes and displayCounters is true for it.
      *
      * @private
+     * @param {boolean} [force]
      * @returns {Promise} resolved when all categories have been fetched
      */
-    _fetchCategories: function () {
-        var self = this;
-        var proms = Object.keys(this.categories).map(function (categoryId) {
-            var category = self.categories[categoryId];
-            var field = self.fields[category.fieldName];
-            var categoriesProm;
-            if (field.type === 'selection') {
-                var values = field.selection.map(function (value) {
-                    return {id: value[0], display_name: value[1]};
-                });
-                categoriesProm = Promise.resolve(values);
-            } else {
-                categoriesProm = self._rpc({
+    _fetchCategories(force) {
+        const proms = [];
+        for (const category of Object.values(this.categories)) {
+            const field = this.fields[category.fieldName];
+            if (force || !category.disableCounters) {
+                const prom = this._rpc({
                     method: 'search_panel_select_range',
-                    model: self.model,
+                    model: this.model,
                     args: [category.fieldName],
-                }).then(function (result) {
-                    category.parentField = result.parent_field;
-                    return result.values;
+                    kwargs: {
+                        category_domain: this._getCategoryDomain(category.id),
+                        disable_counters: category.disableCounters,
+                        search_domain: this.searchDomain,
+                    },
+                }).then(({ parent_field, values }) => {
+                    if (field.type === 'many2one') {
+                        category.parentField = parent_field;
+                    }
+                    this._createCategoryTree(category.id, values);
                 });
+                proms.push(prom);
             }
-            return categoriesProm.then(function (values) {
-                self._createCategoryTree(categoryId, values);
-            });
-        });
+        }
         return Promise.all(proms);
     },
     /**
@@ -428,48 +420,45 @@ var SearchPanel = Widget.extend({
      * @private
      * @returns {Promise} resolved when all filters have been fetched
      */
-    _fetchFilters: function () {
-        var self = this;
-        var evalContext = {};
-        Object.keys(this.categories).forEach(function (categoryId) {
-            var category = self.categories[categoryId];
+    _fetchFilters() {
+        const evalContext = {};
+        for (const category of Object.values(this.categories)) {
             evalContext[category.fieldName] = category.activeValueId;
-        });
-        var categoryDomain = this._getCategoryDomain();
-        var filterDomain = this._getFilterDomain();
-        var proms = Object.keys(this.filters).map(function (filterId) {
-            var filter = self.filters[filterId];
-            return self._rpc({
+        }
+        const categoryDomain = this._getCategoryDomain();
+        const proms = [];
+        for (const filter of Object.values(this.filters)) {
+            const prom = this._rpc({
                 method: 'search_panel_select_multi_range',
-                model: self.model,
+                model: this.model,
                 args: [filter.fieldName],
                 kwargs: {
                     category_domain: categoryDomain,
                     comodel_domain: Domain.prototype.stringToArray(filter.domain, evalContext),
                     disable_counters: filter.disableCounters,
-                    filter_domain: filterDomain,
+                    filter_domain: this._getFilterDomain(filter.id),
                     group_by: filter.groupBy || false,
-                    search_domain: [...self.searchDomain, ...self.viewDomain],
+                    group_domain: this._getGroupDomain(filter),
+                    search_domain: [...this.searchDomain, ...this.viewDomain],
                 },
-            }).then(function (values) {
-                self._createFilterTree(filterId, values);
-            });
-        });
+            }).then(values => { this._createFilterTree(filter.id, values); });
+            proms.push(prom);
+        }
         return Promise.all(proms);
     },
     /**
      * @private
      * @param {Object} category
      * @param {Array} validValues
-     * @returns id of the default item of the category or false
+     * @returns {(number|boolean)} id of the default item of the category or false
      */
-    _getCategoryDefaultValue: function (category, validValues) {
+    _getCategoryDefaultValue(category, validValues) {
         // set active value from context
-        var value = this.defaultValues[category.fieldName];
+        const value = this.defaultValues[category.fieldName];
         // if not set in context, or set to an unknown value, set active value
         // from localStorage
-        if (!_.contains(validValues, value)) {
-            var storageKey = this._getLocalStorageKey(category);
+        if (!validValues.includes(value)) {
+            const storageKey = this._getLocalStorageKey(category);
             return this.call('local_storage', 'getItem', storageKey);
         }
         return value;
@@ -478,22 +467,22 @@ var SearchPanel = Widget.extend({
      * Compute and return the domain based on the current active categories.
      *
      * @private
+     * @param {string} [excludedCategoryId]
      * @returns {Array[]}
      */
-    _getCategoryDomain: function () {
-        var self = this;
-
-        function categoryToDomain(domain, categoryId) {
-            var category = self.categories[categoryId];
+    _getCategoryDomain(excludedCategoryId) {
+        const domain = [];
+        for (const category of Object.values(this.categories)) {
+            if (category.id === excludedCategoryId) {
+                continue;
+            }
             if (category.activeValueId) {
-                var field = self.fields[category.fieldName];
-                var op = (field.type === 'many2one' && category.parentField) ? 'child_of' : '=';
+                const field = this.fields[category.fieldName];
+                const op = (field.type === 'many2one' && category.parentField) ? 'child_of' : '=';
                 domain.push([category.fieldName, op, category.activeValueId]);
             }
-            return domain;
         }
-
-        return Object.keys(this.categories).reduce(categoryToDomain, []);
+        return domain;
     },
     /**
      * Compute and return the domain based on the current checked filters.
@@ -504,40 +493,111 @@ var SearchPanel = Widget.extend({
      * a group (and grouped using an 'OR').
      *
      * @private
+     * @param {string} [excludedFilterId]
      * @returns {Array[]}
      */
-    _getFilterDomain: function () {
-        var self = this;
+    _getFilterDomain(excludedFilterId) {
+        const domain = [];
 
-        function getCheckedValueIds(values) {
-            return Object.keys(values).reduce(function (checkedValues, valueId) {
-                if (values[valueId].checked) {
-                    checkedValues.push(values[valueId].id);
-                }
-                return checkedValues;
-            }, []);
+        function addCondition(fieldName, checkedValues) {
+            if (checkedValues.length) {
+                const ids = checkedValues.map(v => v.id);
+                domain.push([fieldName, 'in', ids]);
+            }
         }
 
-        function filterToDomain(domain, filterId) {
-            var filter = self.filters[filterId];
+        for (const filter of Object.values(this.filters)) {
+            if (filter.id === excludedFilterId) {
+                continue;
+            }
+            const { fieldName } = filter;
+            let checkedValues;
             if (filter.groups) {
-                Object.keys(filter.groups).forEach(function (groupId) {
-                    var group = filter.groups[groupId];
-                    var checkedValues = getCheckedValueIds(group.values);
-                    if (checkedValues.length) {
-                        domain.push([filter.fieldName, 'in', checkedValues]);
-                    }
-                });
+                for (const group of Object.values(filter.groups)) {
+                    checkedValues = Object.values(group.values).filter(v => v.checked);
+                    addCondition(fieldName, checkedValues);
+                }
             } else if (filter.values) {
-                var checkedValues = getCheckedValueIds(filter.values);
-                if (checkedValues.length) {
-                    domain.push([filter.fieldName, 'in', checkedValues]);
+                checkedValues = Object.values(filter.values).filter(v => v.checked);
+                addCondition(fieldName, checkedValues);
+            }
+        }
+        return domain;
+    },
+    /**
+     * Returns a domain or an object of domains used to complement
+     * the filter domains to accurately describe the constraints on
+     * records when computing record counts associated with the filter
+     * values (if a groupBy is provided). The idea is that the checked values
+     * within a group should not impact the counts for the other values
+     * in the same group.
+     *
+     * @private
+     * @param {string} filter
+     * @returns {(Array{}|Array[]|undefined)}
+     */
+    _getGroupDomain(filter) {
+        const { fieldName, groups, disableCounters } = filter;
+        const { type: fieldType } = this.fields[fieldName];
+
+        if (disableCounters || !groups) {
+            switch (fieldType) {
+                case 'many2one': return [];
+                case 'many2many': return {};
+                default: return;
+            }
+        }
+
+        let groupDomain;
+        if (fieldType === 'many2one') {
+            for (const group of Object.values(groups)) {
+                const valueIds = [];
+                let active = false;
+                for (const value of Object.values(group.values || {})) {
+                    const { id, checked } = value;
+                    valueIds.push(id);
+                    if (checked) {
+                        active = true;
+                    }
+                }
+                if (active) {
+                    if (groupDomain) {
+                        groupDomain = Domain.FALSE_DOMAIN;
+                        break;
+                    } else {
+                        groupDomain = [[fieldName, 'in', valueIds]];
+                    }
                 }
             }
-            return domain;
+        } else if (fieldType === 'many2many') {
+            const checkedValueIds = {};
+            for (const group of Object.values(groups)) {
+                for (const value of Object.values(group.values || {})) {
+                    const { id, checked } = value;
+                    if (checked) {
+                        if (!checkedValueIds[group.id]) {
+                            checkedValueIds[group.id] = [];
+                        }
+                        checkedValueIds[group.id].push(id);
+                    }
+                }
+            }
+            groupDomain = {};
+            for (const gId in checkedValueIds) {
+                const ids = checkedValueIds[gId];
+                for (const group of Object.values(groups)) {
+                    if (gId !== group.id) {
+                        if (!groupDomain[group.id]) {
+                            groupDomain[group.id] = [];
+                        }
+                        groupDomain[group.id].push(
+                            [fieldName, 'in', ids]
+                        );
+                    }
+                }
+            }
         }
-
-        return Object.keys(this.filters).reduce(filterToDomain, []);
+        return groupDomain;
     },
     /**
      * The active id of each category is stored in the localStorage, s.t. it
@@ -547,19 +607,18 @@ var SearchPanel = Widget.extend({
      * @param {Object} category
      * @returns {string}
      */
-    _getLocalStorageKey: function (category) {
+    _getLocalStorageKey(category) {
         return 'searchpanel_' + this.model + '_' + category.fieldName;
     },
     /**
      * @private
      * @param {Object} category
-     * @param {integer} categoryValueId
-     * @returns {integer[]} list of ids of the ancestors of the given value in
+     * @param {number} categoryValueId
+     * @returns {number[]} list of ids of the ancestors of the given value in
      *   the given category
      */
-    _getAncestorValueIds: function (category, categoryValueId) {
-        var categoryValue = category.values[categoryValueId];
-        var parentId = categoryValue.parentId;
+    _getAncestorValueIds(category, categoryValueId) {
+        const { parentId } = category.values[categoryValueId];
         if (parentId) {
             return [parentId].concat(this._getAncestorValueIds(category, parentId));
         }
@@ -574,9 +633,10 @@ var SearchPanel = Widget.extend({
      * the searchPanel and the reloading of the data.
      *
      * @private
+     * @param {Object} [reloadOptions={}]
      */
-    _notifyDomainUpdated: function () {
-        this.needReload = true;
+    _notifyDomainUpdated(reloadOptions = {}) {
+        this.reloadOptions = reloadOptions;
         this.trigger_up('search_panel_domain_updated', {
             domain: this.getDomain(),
         });
@@ -584,27 +644,20 @@ var SearchPanel = Widget.extend({
     /**
      * @private
      */
-    _render: function () {
-        var self = this;
+    _render() {
         this.$el.empty();
 
         // sort categories and filters according to their index
-        var categories = Object.keys(this.categories).map(function (categoryId) {
-            return self.categories[categoryId];
-        });
-        var filters = Object.keys(this.filters).map(function (filterId) {
-            return self.filters[filterId];
-        });
-        var sections = categories.concat(filters).sort(function (s1, s2) {
-            return s1.index - s2.index;
-        });
+        const categories = Object.values(this.categories);
+        const filters = Object.values(this.filters);
+        const sections = categories.concat(filters).sort((s1, s2) => s1.index - s2.index);
 
-        sections.forEach(function (section) {
+        sections.forEach(section => {
             if (Object.keys(section.values).length) {
                 if (section.type === 'category') {
-                    self.$el.append(self._renderCategory(section));
+                    this.$el.append(this._renderCategory(section));
                 } else {
-                    self.$el.append(self._renderFilter(section));
+                    this.$el.append(this._renderFilter(section));
                 }
             }
         });
@@ -614,30 +667,29 @@ var SearchPanel = Widget.extend({
      * @param {Object} category
      * @returns {string}
      */
-    _renderCategory: function (category) {
-        return qweb.render('SearchPanel.Category', {category: category});
+    _renderCategory(category) {
+        return qweb.render('SearchPanel.Category', { category });
     },
     /**
      * @private
      * @param {Object} filter
-     * @returns {jQuery}
+     * @returns {HTMLElement}
      */
-    _renderFilter: function (filter) {
-        var $filter = $(qweb.render('SearchPanel.Filter', {filter: filter}));
+    _renderFilter(filter) {
+        const filterElement = $(qweb.render('SearchPanel.Filter', { filter }))[0];
 
         // set group inputs in indeterminate state when necessary
-        Object.keys(filter.groups || {}).forEach(function (groupId) {
-            var state = filter.groups[groupId].state;
+        Object.keys(filter.groups || {}).forEach(groupId => {
+            const group = filter.groups[groupId];
+            const { state } = group;
             // group 'false' is not displayed
             if (groupId !== 'false' && state === 'indeterminate') {
-                $filter
-                    .find('.o_search_panel_filter_group[data-group-id=' + groupId + '] input')
-                    .get(0)
-                    .indeterminate = true;
+                const sel = `.o_search_panel_filter_group[data-group-id="${groupId}"] input`;
+                filterElement.querySelector(sel).indeterminate = true;
             }
         });
 
-        return $filter;
+        return filterElement;
     },
     /**
      * Updates the state property of a given filter's group according to the
@@ -646,53 +698,58 @@ var SearchPanel = Widget.extend({
      * @private
      * @param {Object} group
      */
-    _updateFilterGroupState: function (group) {
-        var valuePartition = _.partition(Object.keys(group.values), function (valueId) {
-            return group.values[valueId].checked;
-        });
-        if (valuePartition[0].length && valuePartition[1].length) {
-            group.state = 'indeterminate';
-        } else if (valuePartition[0].length) {
-            group.state = 'checked';
+    _updateFilterGroupState(group) {
+        if (Object.values(group.values).some(v => v.checked)) {
+            if (Object.values(group.values).some(v => !v.checked)) {
+                group.state = 'indeterminate';
+            } else {
+                group.state = 'checked';
+            }
         } else {
             group.state = 'unchecked';
         }
     },
 
-    //--------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Handlers
-    //--------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
     /**
      * @private
      * @param {MouseEvent} ev
      */
-    _onCategoryValueClicked: function (ev) {
+    _onCategoryValueClicked(ev) {
         ev.stopPropagation();
-        var $item = $(ev.currentTarget).closest('.o_search_panel_category_value');
-        var category = this.categories[$item.data('categoryId')];
-        var valueId = $item.data('id') || false;
+        const item = ev.currentTarget.closest('.o_search_panel_category_value');
+        const category = this.categories[item.dataset.categoryId];
+        const valueId = !isNaN(item.dataset.id) ?
+            Number(item.dataset.id) :
+            item.dataset.id || false;
+        const hasChanged = category.activeValueId !== valueId;
         category.activeValueId = valueId;
         if (category.values[valueId]) {
             category.values[valueId].folded = !category.values[valueId].folded;
         }
-        var storageKey = this._getLocalStorageKey(category);
-        this.call('local_storage', 'setItem', storageKey, valueId);
-        this._notifyDomainUpdated();
+        if (hasChanged) {
+            const storageKey = this._getLocalStorageKey(category);
+            this.call('local_storage', 'setItem', storageKey, valueId);
+            this._notifyDomainUpdated({ shouldFetchCategories: true });
+        } else {
+            this._render();
+        }
     },
     /**
      * @private
      * @param {MouseEvent} ev
      */
-    _onFilterGroupChanged: function (ev) {
+    _onFilterGroupChanged(ev) {
         ev.stopPropagation();
-        var $item = $(ev.target).closest('.o_search_panel_filter_group');
-        var filter = this.filters[$item.data('filterId')];
-        var groupId = $item.data('groupId');
-        var group = filter.groups[groupId];
+        const item = ev.target.closest('.o_search_panel_filter_group');
+        const filter = this.filters[item.dataset.filterId];
+        const group = filter.groups[item.dataset.groupId];
         group.state = group.state === 'checked' ? 'unchecked' : 'checked';
-        Object.keys(group.values).forEach(function (valueId) {
-            group.values[valueId].checked = group.state === 'checked';
+        Object.values(group.values).forEach(value => {
+            value.checked = group.state === 'checked';
         });
         this._notifyDomainUpdated();
     },
@@ -700,14 +757,14 @@ var SearchPanel = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onFilterValueChanged: function (ev) {
+    _onFilterValueChanged(ev) {
         ev.stopPropagation();
-        var $item = $(ev.target).closest('.o_search_panel_filter_value');
-        var valueId = $item.data('valueId');
-        var filter = this.filters[$item.data('filterId')];
-        var value = filter.values[valueId];
+        const item = ev.target.closest('.o_search_panel_filter_value');
+        const filter = this.filters[item.dataset.filterId];
+        const value = filter.values[item.dataset.valueId];
         value.checked = !value.checked;
-        var group = filter.groups && filter.groups[value.group_id];
+        const groupId = JSON.stringify(value.group_id);
+        const group = filter.groups && filter.groups[groupId];
         if (group) {
             this._updateFilterGroupState(group);
         }
@@ -717,12 +774,12 @@ var SearchPanel = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onToggleFoldCategory: function (ev) {
+    _onToggleFoldCategory(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        var $item = $(ev.currentTarget).closest('.o_search_panel_category_value');
-        var category = this.categories[$item.data('categoryId')];
-        var valueId = $item.data('id');
+        const item = ev.currentTarget.closest('.o_search_panel_category_value');
+        const category = this.categories[item.dataset.categoryId];
+        const valueId = item.dataset.id;
         category.values[valueId].folded = !category.values[valueId].folded;
         this._render();
     },
@@ -730,12 +787,12 @@ var SearchPanel = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onToggleFoldFilterGroup: function (ev) {
+    _onToggleFoldFilterGroup(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        var $item = $(ev.currentTarget).closest('.o_search_panel_filter_group');
-        var filter = this.filters[$item.data('filterId')];
-        var groupId = $item.data('groupId');
+        const item = ev.currentTarget.closest('.o_search_panel_filter_group');
+        const filter = this.filters[item.dataset.filterId];
+        const groupId = item.dataset.groupId;
         filter.groups[groupId].folded = !filter.groups[groupId].folded;
         this._render();
     },

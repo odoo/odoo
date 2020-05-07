@@ -42,6 +42,9 @@
                 width: 17px;
                 height: 17px;
             }
+            &.o_list_button .o_button_icon {
+                margin-right: 3px;
+            }
         }
 
         tfoot {
@@ -286,6 +289,9 @@
             }
             > .o_row_handle {
                 visibility: hidden; // hide sequence when editing
+            }
+            > .o_field_badge {
+                width: auto; // override width: 100% to keep the optimal badge width
             }
         }
 

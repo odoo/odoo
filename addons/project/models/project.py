@@ -894,11 +894,12 @@ class Task(models.Model):
         self.ensure_one()
 
         project_user_group_id = self.env.ref('project.group_project_user').id
-        new_group = (
-            'group_project_user',
-            lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'],
-            {},
-        )
+
+        group_func = lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups']
+        if self.project_id.privacy_visibility == 'followers':
+            allowed_user_ids = self.project_id.allowed_internal_user_ids.partner_id.ids
+            group_func = lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'] and pdata['id'] in allowed_user_ids
+        new_group = ('group_project_user', group_func, {})
 
         if not self.user_id and not self.stage_id.fold:
             take_action = self._notify_get_action_link('assign')
@@ -907,9 +908,17 @@ class Task(models.Model):
 
         groups = [new_group] + groups
 
+        if self.project_id.privacy_visibility == 'portal':
+            allowed_user_ids = self.project_id.allowed_portal_user_ids.partner_id.ids
+            groups.insert(0, (
+                'allowed_portal_users',
+                lambda pdata: pdata['type'] == 'portal' and pdata['id'] in allowed_user_ids,
+                {}
+            ))
+
         for group_name, group_method, group_data in groups:
-            if group_name != 'customer':
-                group_data['has_button_access'] = True
+            if group_name in ('customer', 'portal_customer', 'user'):
+                group_data['has_button_access'] = False
 
         return groups
 

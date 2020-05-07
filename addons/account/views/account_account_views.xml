@@ -63,7 +63,7 @@
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                    <button name="action_read_account" type="object" icon="fa-expand" title="Open" aria-label="Open" class="float-right"/>
+                    <button name="action_read_account" type="object" icon="fa-expand" string="Open" aria-label="Open" class="float-right"/>
                 </tree>
             </field>
         </record>
@@ -119,7 +119,7 @@
                         <filter string="Account Type" name="accounttype" domain="" context="{'group_by':'user_type_id'}"/>
                     </group>
                     <searchpanel class="account_root">
-                        <field name="root_id" icon="fa-filter"/>
+                        <field name="root_id" disable_counters="1" icon="fa-filter"/>
                     </searchpanel>
                 </search>
             </field>

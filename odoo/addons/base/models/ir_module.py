@@ -921,7 +921,7 @@ class Module(models.Model):
         }
 
     @api.model
-    def search_panel_select_range(self, field_name):
+    def search_panel_select_range(self, field_name, **kwargs):
         if field_name == 'category_id':
             domain = [('module_ids', '!=', False)]
 
@@ -946,13 +946,15 @@ class Module(models.Model):
                 ]])
             categories = self.env['ir.module.category'].search(domain)
             categories = categories | categories.mapped('parent_id')
-            return {
-                'parent_field': 'parent_id',
-                'values': self.env['ir.module.category'].search_read(
-                    [('id', 'in', categories.ids)],
-                    ['display_name', 'parent_id']),
-            }
-        return super(Module, self).search_panel_select_range(field_name)
+
+            comodel_domain = [('id', 'in', categories.ids)]
+
+            return super(Module, self).search_panel_select_range(
+                field_name,
+                comodel_domain=comodel_domain,
+                **kwargs
+            )
+        return super(Module, self).search_panel_select_range(field_name, **kwargs)
 
 
 DEP_STATES = STATES + [('unknown', 'Unknown')]

@@ -82,6 +82,11 @@ var AbstractField = Widget.extend({
      */
     noLabel: false,
     /**
+     * Currently only used in list view.
+     * If set, this value will be displayed as column name.
+     */
+    label: '',
+    /**
      * Abstract field class
      *
      * @constructor
@@ -370,7 +375,8 @@ var AbstractField = Widget.extend({
             var isToggled = py.PY_isTrue(
                 py.evaluate(dec.expression, self.record.evalContext)
             );
-            self.$el.toggleClass(dec.className, isToggled);
+            const className = self._getClassFromDecoration(dec.name);
+            self.$el.toggleClass(className, isToggled);
         });
     },
     /**
@@ -378,11 +384,24 @@ var AbstractField = Widget.extend({
      *
      * @private
      * @param {any} value (from the field type)
+     * @param {string} [formatType=this.formatType] the formatter to use
      * @returns {string}
      */
-    _formatValue: function (value) {
+    _formatValue: function (value, formatType) {
         var options = _.extend({}, this.nodeOptions, { data: this.recordData }, this.formatOptions);
-        return field_utils.format[this.formatType](value, this.field, options);
+        return field_utils.format[formatType || this.formatType](value, this.field, options);
+    },
+    /**
+     * Returns the className corresponding to a given decoration. A
+     * decoration is of the form 'decoration-%s'. By default, replaces
+     * 'decoration' by 'text'.
+     *
+     * @private
+     * @param {string} decoration must be of the form 'decoration-%s'
+     * @returns {string}
+     */
+    _getClassFromDecoration: function (decoration) {
+        return `text-${decoration.split('-')[1]}`;
     },
     /**
      * This method check if a value is the same as the current value of the

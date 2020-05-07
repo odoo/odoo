@@ -1346,6 +1346,12 @@
         <button type="button" t-if="!widget.noOpen" class="fa fa-external-link btn btn-secondary o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
     </div>
 </t>
+
+<t t-name="web.Many2OneAvatar">
+    <img t-att-src="url" t-att-alt="value" class="o_m2o_avatar"/>
+    <span t-esc="value"/>
+</t>
+
 <t t-name="FieldReference" t-extend="FieldMany2One">
     <t t-jquery=".o_input_dropdown" t-operation="before">
         <select t-att-class="'o_input o_field_widget' + (widget.nodeOptions.hide_model and ' d-none' or '')">
@@ -1724,8 +1730,7 @@
 </t>
 <t t-name="M2ODialog">
     <div>
-        <p/>
-        Name: <input class="o_input" type="text"/>
+        Do you want to create <strong t-esc="widget.value"/> as a new <t t-esc="widget.name"/>?
     </div>
 </t>
 <t t-name="FieldMany2ManyCheckBoxes">

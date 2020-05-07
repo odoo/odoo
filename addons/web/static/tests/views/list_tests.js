@@ -277,6 +277,65 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list view with icon buttons', async function (assert) {
+        assert.expect(5);
+
+        this.data.foo.records.splice(1);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <button name="x" type="object" icon="fa-asterisk"/>
+                    <button name="x" type="object" icon="fa-star" class="o_yeah"/>
+                    <button name="x" type="object" icon="fa-refresh" string="Refresh" class="o_yeah"/>
+                    <button name="x" type="object" icon="fa-exclamation" string="Danger" class="o_yeah btn-danger"/>
+                </tree>`,
+        });
+
+        assert.containsOnce(list, 'button.btn.btn-link i.fa.fa-asterisk');
+        assert.containsOnce(list, 'button.btn.btn-link.o_yeah i.fa.fa-star');
+        assert.containsOnce(list, 'button.btn.btn-link.o_yeah:contains("Refresh") i.fa.fa-refresh');
+        assert.containsOnce(list, 'button.btn.btn-danger.o_yeah:contains("Danger") i.fa.fa-exclamation');
+        assert.containsNone(list, 'button.btn.btn-link.btn-danger');
+
+        list.destroy();
+    });
+
+    QUnit.test('column names (noLabel, label, string and default)', async function (assert) {
+        assert.expect(4);
+
+        const FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('nolabel_char', FieldChar.extend({
+            noLabel: true,
+        }));
+        fieldRegistry.add('label_char', FieldChar.extend({
+            label: "Some static label",
+        }));
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <field name="display_name" widget="nolabel_char"/>
+                    <field name="foo" widget="label_char"/>
+                    <field name="int_field" string="My custom label"/>
+                    <field name="text"/>
+                </tree>`,
+        });
+
+        assert.strictEqual(list.$('thead th[data-name=display_name]').text(), '');
+        assert.strictEqual(list.$('thead th[data-name=foo]').text(), 'Some static label');
+        assert.strictEqual(list.$('thead th[data-name=int_field]').text(), 'My custom label');
+        assert.strictEqual(list.$('thead th[data-name=text]').text(), 'text field');
+
+        list.destroy();
+    });
+
     QUnit.test('simple editable rendering', async function (assert) {
         assert.expect(15);
 
@@ -3326,6 +3385,27 @@ QUnit.module('Views', {
             "should have 0 columns with text-danger class with wrong timezone datetime");
 
         assert.containsN(list, 'tbody tr', 4, "should have 4 rows");
+        list.destroy();
+    });
+
+    QUnit.test('support field decoration', async function (assert) {
+        assert.expect(3);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <field name="foo" decoration-danger="int_field > 5"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsN(list, 'tbody tr', 4, "should have 4 rows");
+        assert.containsN(list, 'tbody td.o_list_char.text-danger', 3);
+        assert.containsNone(list, 'tbody td.o_list_number.text-danger');
+
         list.destroy();
     });
 

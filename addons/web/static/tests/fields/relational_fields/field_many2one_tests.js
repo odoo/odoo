@@ -2183,7 +2183,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('quick create on a many2one', async function (assert) {
-            assert.expect(1);
+            assert.expect(2);
 
             var form = await createView({
                 View: FormView,
@@ -2207,6 +2207,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
             'new partner', ['keyup', 'blur']);
             await testUtils.dom.click($('.modal .modal-footer .btn-primary').first());
+            assert.strictEqual($('.modal .modal-body').text().trim(), "Do you want to create new partner as a new Product?");
 
             form.destroy();
         });
@@ -3203,6 +3204,108 @@ QUnit.module('fields', {}, function () {
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
+        });
+
+        QUnit.module('Many2OneAvatar');
+
+        QUnit.test('many2one_avatar widget in form view', async function (assert) {
+            assert.expect(10);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="user_id" widget="many2one_avatar"/></form>',
+                res_id: 1,
+            });
+
+            assert.hasClass(form.$('.o_form_view'), 'o_form_readonly');
+            assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Aline');
+            assert.containsOnce(form, 'img.o_m2o_avatar[data-src="/web/image/user/17/image_128"]');
+
+            await testUtils.form.clickEdit(form);
+
+            assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+            assert.containsOnce(form, '.o_input_dropdown');
+            assert.strictEqual(form.$('.o_input_dropdown input').val(), 'Aline');
+            assert.containsOnce(form, '.o_external_button');
+
+            await testUtils.fields.many2one.clickOpenDropdown("user_id");
+            await testUtils.fields.many2one.clickItem("user_id", "Christine");
+            await testUtils.form.clickSave(form);
+
+            assert.hasClass(form.$('.o_form_view'), 'o_form_readonly');
+            assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Christine');
+            assert.containsOnce(form, 'img.o_m2o_avatar[data-src="/web/image/user/19/image_128"]');
+
+            form.destroy();
+        });
+
+        QUnit.test('many2one_avatar widget in form view, with onchange', async function (assert) {
+            assert.expect(7);
+
+            this.data.partner.onchanges = {
+                int_field: function (obj) {
+                    if (obj.int_field === 1) {
+                        obj.user_id = [19, 'Christine'];
+                    } else if (obj.int_field === 2) {
+                        obj.user_id = false;
+                    } else {
+                        obj.user_id = [17, 'Aline']; // default value
+                    }
+                },
+            };
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="int_field"/>
+                        <field name="user_id" widget="many2one_avatar" readonly="1"/>
+                    </form>`,
+            });
+
+            assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+            assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Aline');
+            assert.containsOnce(form, 'img.o_m2o_avatar[data-src="/web/image/user/17/image_128"]');
+
+            await testUtils.fields.editInput(form.$('.o_field_widget[name=int_field]'), 1);
+
+            assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Christine');
+            assert.containsOnce(form, 'img.o_m2o_avatar[data-src="/web/image/user/19/image_128"]');
+
+            await testUtils.fields.editInput(form.$('.o_field_widget[name=int_field]'), 2);
+
+            assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), '');
+            assert.containsNone(form, 'img.o_m2o_avatar');
+
+            form.destroy();
+        });
+
+        QUnit.test('many2one_avatar widget in list view', async function (assert) {
+            assert.expect(5);
+
+            this.data.partner.records = [
+                { id: 1, user_id: 17, },
+                { id: 2, user_id: 19, },
+                { id: 3, user_id: 17, },
+                { id: 3, user_id: false, },
+            ];
+            const list = await createView({
+                View: ListView,
+                model: 'partner',
+                data: this.data,
+                arch: '<tree><field name="user_id" widget="many2one_avatar"/></tree>',
+            });
+
+            assert.strictEqual(list.$('.o_data_cell span').text(), 'AlineChristineAline');
+            assert.containsOnce(list.$('.o_data_cell:nth(0)'), 'img.o_m2o_avatar[data-src="/web/image/user/17/image_128"]');
+            assert.containsOnce(list.$('.o_data_cell:nth(1)'), 'img.o_m2o_avatar[data-src="/web/image/user/19/image_128"]');
+            assert.containsOnce(list.$('.o_data_cell:nth(2)'), 'img.o_m2o_avatar[data-src="/web/image/user/17/image_128"]');
+            assert.containsNone(list.$('.o_data_cell:nth(3)'), 'img.o_m2o_avatar');
+
+            list.destroy();
         });
     });
 });
