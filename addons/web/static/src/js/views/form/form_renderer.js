@@ -325,6 +325,11 @@ var FormRenderer = BasicRenderer.extend({
      */
     _enableSwipe: function () {
         var self = this;
+
+        if (!$.fn.swipe) {
+            return;
+        }
+
         this.$('.o_form_sheet').swipe({
             swipeLeft: function () {
                 this.css({
