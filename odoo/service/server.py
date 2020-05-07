@@ -61,6 +61,8 @@ from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 _logger = logging.getLogger(__name__)
 
 SLEEP_INTERVAL = 60     # 1 min
+LONGPOLLING_TIMEOUT = 50
+
 
 def memory_info(process):
     """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
@@ -470,8 +472,12 @@ class GeventServer(CommonServer):
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             gevent.spawn(self.watchdog)
-        
-        self.httpd = WSGIServer((self.interface, self.port), self.app)
+
+        def _app(*args, **kwargs):
+            # Ensure longpolling requests respect their hardcoded time limit
+            return gevent.with_timeout(LONGPOLLING_TIMEOUT + 5, self.app, *args, **kwargs)
+
+        self.httpd = WSGIServer((self.interface, self.port), _app)
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
         try:
             self.httpd.serve_forever()

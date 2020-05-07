@@ -10,11 +10,9 @@ import time
 import odoo
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.service.server import LONGPOLLING_TIMEOUT as TIMEOUT
 
 _logger = logging.getLogger(__name__)
-
-# longpolling timeout connection
-TIMEOUT = 50
 
 #----------------------------------------------------------
 # Bus
