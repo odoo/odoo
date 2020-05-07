@@ -28,8 +28,6 @@ const GalleryWidget = publicWidget.Widget.extend({
         var self = this;
         var $cur = $(ev.currentTarget);
 
-        var urls = [];
-        var idx = undefined;
         var milliseconds = undefined;
         var params = undefined;
         var $images = $cur.closest('.o_gallery').find('img');
@@ -43,16 +41,12 @@ const GalleryWidget = publicWidget.Widget.extend({
             height: Math.round(window.innerHeight * size)
         };
 
-        $images.each(function () {
-            urls.push($(this).attr('src'));
-        });
         var $img = ($cur.is('img') === true) ? $cur : $cur.closest('img');
-        idx = urls.indexOf($img.attr('src'));
 
         milliseconds = $cur.closest('.o_gallery').data('interval') || false;
         var $modal = $(qweb.render('website.gallery.slideshow.lightbox', {
-            srcs: urls,
-            index: idx,
+            images: $images.get(),
+            index: $images.index($img),
             dim: dimensions,
             interval: milliseconds || 0,
             id: _.uniqueId('slideshow_'),
