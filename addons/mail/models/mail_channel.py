@@ -973,7 +973,7 @@ class Channel(models.Model):
         })
 
     def _define_command_help(self):
-        return {'help': _("Show an helper message")}
+        return {'help': _("Show a helper message")}
 
     def _execute_command_help(self, **kwargs):
         partner = self.env.user.partner_id
@@ -987,9 +987,9 @@ class Channel(models.Model):
             msg = _("You are in a private conversation with <b>@%s</b>.") % (channel_partners[0].partner_id.name if channel_partners else _('Anonymous'))
         msg += _("""<br><br>
             Type <b>@username</b> to mention someone, and grab his attention.<br>
-            Type <b>#channel</b>.to mention a channel.<br>
+            Type <b>#channel</b> to mention a channel.<br>
             Type <b>/command</b> to execute a command.<br>
-            Type <b>:shortcut</b> to insert canned responses in your message.<br>""")
+            Type <b>:shortcut</b> to insert a canned response in your message.<br>""")
 
         self._send_transient_message(partner, msg)
 
