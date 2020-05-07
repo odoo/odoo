@@ -22,7 +22,7 @@ FormEditorRegistry.add('send_mail', {
         required: true,
         name: 'Your Name',
     }, {
-        type: 'char',
+        type: 'tel',
         custom: true,
         name: 'Phone Number',
     }, {

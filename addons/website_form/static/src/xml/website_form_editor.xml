@@ -86,7 +86,7 @@
     <t t-name="website_form.field_char">
         <t t-call="website_form.field">
             <input
-                type="text"
+                t-att-type="field.inputType || 'text'"
                 class="form-control s_website_form_input"
                 t-att-name="field.name"
                 t-att-required="field.required || field.modelRequired || None"
@@ -95,6 +95,24 @@
                 t-att-id="field.id"
             />
         </t>
+    </t>
+
+    <!-- Email Field -->
+    <t t-name="website_form.field_email">
+        <t t-set="field.inputType" t-value="'email'"/>
+        <t t-call="website_form.field_char"/>
+    </t>
+
+    <!-- Telephone Field -->
+    <t t-name="website_form.field_tel">
+        <t t-set="field.inputType" t-value="'tel'"/>
+        <t t-call="website_form.field_char"/>
+    </t>
+
+    <!-- Url Field -->
+    <t t-name="website_form.field_url">
+        <t t-set="field.inputType" t-value="'url'"/>
+        <t t-call="website_form.field_char"/>
     </t>
 
     <!-- Text Field -->
@@ -107,20 +125,6 @@
                 t-att-placeholder="field.placeholder"
                 t-att-id="field.id"
                 t-att-rows="field.rows || 3"
-            />
-        </t>
-    </t>
-
-    <!-- Email Field -->
-    <t t-name="website_form.field_email">
-        <t t-call="website_form.field">
-            <input
-                type="email"
-                class="form-control s_website_form_input"
-                t-att-name="field.name"
-                t-att-required="field.required || field.modelRequired || None"
-                t-att-placeholder="field.placeholder"
-                t-att-id="field.id"
             />
         </t>
     </t>

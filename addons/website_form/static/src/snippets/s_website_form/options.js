@@ -242,7 +242,7 @@ const FieldEditor = FormEditor.extend({
      * @returns {HTMLElement}
      */
     _getPlaceholderInput: function () {
-        return this.$target[0].querySelector('input[type="text"], input[type="email"], input[type="number"] , textarea');
+        return this.$target[0].querySelector('input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea');
     },
     /**
      * Returns true if the field is a custom field, false if it is an existing field
@@ -860,6 +860,11 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         await this._replaceField(field);
         this.rerender = true;
     },
+    selectType: async function (previewMode, value, params) {
+        const field = this._getActiveField();
+        field.type = value;
+        await this._replaceField(field);
+    },
     /**
      * Select the display of the multicheckbox field (vertical & horizontal)
      */
@@ -906,6 +911,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return this._getPlaceholder();
             case 'selectLabelPosition':
                 return this._getLabelPosition();
+            case 'selectType':
+                return this._getFieldType();
             case 'multiCheckboxDisplay': {
                 const target = this._getMultipleInputs();
                 return target ? target.dataset.display : '';
@@ -920,6 +927,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _computeWidgetVisibility: function (widgetName, params) {
         switch (widgetName) {
+            case 'char_input_type_opt':
+                return !this.$target[0].classList.contains('s_website_form_custom') && ['char', 'email', 'tel', 'url'].includes(this.$target[0].dataset.type);
             case 'multi_check_display_opt':
                 return !!this._getMultipleInputs();
             case 'placeholder_opt':
