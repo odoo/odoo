@@ -3277,16 +3277,6 @@ Record ids: %(records)s
         if not self._ids:
             return self
 
-        if self.is_transient():
-            # Only one single implicit access rule for transient models: owner only!
-            # This is ok to hardcode because we assert that TransientModels always
-            # have log_access enabled so that the create_uid column is always there.
-            # And even with _inherits, these fields are always present in the local
-            # table too, so no need for JOINs.
-            query = "SELECT id FROM {} WHERE id IN %s AND create_uid=%s".format(self._table)
-            self._cr.execute(query, (tuple(self.ids), self._uid))
-            return self.browse([row[0] for row in self._cr.fetchall()])
-
         where_clause, where_params, tables = self.env['ir.rule'].domain_get(self._name, operation)
         if not where_clause:
             return self
