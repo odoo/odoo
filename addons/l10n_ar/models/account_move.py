@@ -186,3 +186,47 @@ class AccountMove(models.Model):
                 'l10n_ar_afip_service_end': move.l10n_ar_afip_service_end,
             })
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
+
+    def _l10n_ar_get_amounts(self):
+        """ Method used to prepare data to present amounts and taxes related amounts when creating an
+        electronic invoice for argentinian. Only take into account the argentinian taxes """
+        self.ensure_one()
+        tax_lines = self.line_ids.filtered('tax_line_id')
+        vat_taxes = tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_vat_afip_code)
+
+        vat_taxable = self.env['account.move.line']
+        for line in self.invoice_line_ids:
+            if any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_ids):
+                vat_taxable |= line
+
+        return {'vat_amount': sum(vat_taxes.mapped('price_subtotal')),
+                # For invoices of letter C should not pass VAT
+                'vat_taxable_amount': sum(vat_taxable.mapped('price_subtotal'))
+                if self.l10n_latam_document_type_id.l10n_ar_letter != 'C' else self.amount_untaxed,
+                'vat_exempt_base_amount': sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '2')).mapped('price_subtotal')),
+                'vat_untaxed_base_amount': sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '1')).mapped('price_subtotal')),
+                'other_taxes_amount': sum((tax_lines - vat_taxes).mapped('price_subtotal')),
+                'iibb_perc_amount': sum(tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_tribute_afip_code == '07').mapped('price_subtotal')),
+                'mun_perc_amount': sum(tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_tribute_afip_code == '08').mapped('price_subtotal')),
+                'intern_tax_amount': sum(tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_tribute_afip_code == '04').mapped('price_subtotal')),
+                'other_perc_amount': sum(tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_tribute_afip_code == '09').mapped('price_subtotal'))}
+
+    def _get_vat(self):
+        """ Applies on wsfe web service """
+        res = []
+        vat_taxable = self.env['account.move.line']
+        for line in self.line_ids:
+            if any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_line_id) and line.price_subtotal:
+                vat_taxable |= line
+        for vat in vat_taxable:
+            base_imp = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == vat.tax_line_id.tax_group_id.l10n_ar_vat_afip_code)).mapped('price_subtotal'))
+            res += [{'Id': vat.tax_line_id.tax_group_id.l10n_ar_vat_afip_code,
+                     'BaseImp': float_repr(base_imp, precision_digits=2),
+                     'Importe': float_repr(vat.price_subtotal, precision_digits=2)}]
+
+        # Report vat 0%
+        vat_base_0 = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '3')).mapped('price_subtotal'))
+        if vat_base_0:
+            res += [{'Id': '3', 'BaseImp': float_repr(vat_base_0, precision_digits=2), 'Importe': float_repr(0.0, precision_digits=2)}]
+
+        return res if res else None
