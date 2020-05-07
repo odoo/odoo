@@ -183,7 +183,6 @@
                 <field name="available_toppings_1" invisible="1"/>
                 <field name="available_toppings_2" invisible="1"/>
                 <field name="available_toppings_3" invisible="1"/>
-                <field name="edit" invisible="1"/>
                 <div class="d-flex">
                     <div class="flex-grow-0 pr-5">
                         <field name="image_1920" widget="image" class="o_lunch_image" options="{'image_preview': 'image_128'}"/>
@@ -236,8 +235,8 @@
                     </div>
                 </div>
                 <footer>
-                    <button string="Save" special="save" class="oe_highlight" attrs="{'invisible': [('edit', '=', False)]}"/>
-                    <button string="Add To Cart" name="add_to_cart" type="object" class="oe_highlight" attrs="{'invisible': [('edit', '=', True)]}"/>
+                    <button string="Save" special="save" class="oe_highlight" invisible="not context.get('active_id', False)"/>
+                    <button string="Add To Cart" name="add_to_cart" type="object" class="oe_highlight" invisible="context.get('active_id', False)"/>
                     <button string="Discard" special="cancel"/>
                 </footer>
             </form>
