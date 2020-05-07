@@ -206,7 +206,7 @@ More parameters can be passed as a query string
 .. code-block:: html
 
     <img t-att-src="'/report/barcode/?
-        type=%s&value=%s&width=%s&height=%s'%('QR', 'text', 200, 200)"/>
+        type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', 'text', 200, 200)"/>
 
 
 Useful Remarks
