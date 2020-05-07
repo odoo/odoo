@@ -337,6 +337,35 @@ var FormRenderer = BasicRenderer.extend({
         });
     },
     /**
+<<<<<<< HEAD
+=======
+     * Enable swipe event to allow navigating through records
+     *
+     * @private
+     */
+    _enableSwipe: function () {
+        var self = this;
+
+        if (!$.fn.swipe) {
+            return;
+        }
+
+        this.$('.o_form_sheet').swipe({
+            swipeLeft: function () {
+                this.css({
+                    transform: 'translateX(-100%)',
+                    transition: '350ms'
+                });
+                self.trigger_up('swipe_left');
+            },
+            swipeRight: function () {
+                this.css({
+                    transform: 'translateX(100%)',
+                    transition: '350ms'
+                });
+                self.trigger_up('swipe_right');
+            },
+>>>>>>> f6a7009e9a8... temp
             excludedElements: ".o_notebook .nav.nav-tabs",
      * @private
      * @param {string} name
