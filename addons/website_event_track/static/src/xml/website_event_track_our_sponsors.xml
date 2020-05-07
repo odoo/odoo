@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_event_track.ourSponsors">
+        <div t-att-id="uniqueId" class="row">
+           <div t-attf-class="col-sm-6 col-lg-#{(sponsorsGroups.length > 4)  and 2 or (12 / sponsorsGroups.length)} text-center mb16" t-foreach="sponsorsGroups" t-as="sponsor">
+                <span style="position: relative; display: inline-block;" class="bg-white">
+                    <t t-if="sponsor.url">
+                        <a t-att-href="sponsor.url" style="position: relative; display: inline-block;" class="bg-white">
+                            <img class="img img-fluid shadow" t-attf-src="/web/image/event.sponsor/#{sponsor.id}/image_128" t-att-alt="sponsor.partner_name"/>
+                            <div class="ribbon-wrapper">
+                                <div t-esc="sponsor.sponsor_type_id[1]" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id[1]}"/>
+                            </div>
+                        </a>
+                    </t>
+                    <t t-if="!sponsor.url">
+                        <img class="img img-fluid shadow" t-attf-src="/web/image/event.sponsor/#{sponsor.id}/image_128" t-att-alt="sponsor.partner_name"/>
+                        <div class="ribbon-wrapper">
+                            <div t-esc="sponsor.sponsor_type_id[1]" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id[1]}"/>
+                        </div>
+                    </t>
+                </span>
+            </div>
+        </div>
+    </t>
+</templates>
