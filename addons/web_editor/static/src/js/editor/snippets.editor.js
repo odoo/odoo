@@ -71,6 +71,7 @@ var SnippetEditor = Widget.extend({
         if (this.isTargetMovable) {
             this.dropped = false;
             this.$el.draggable({
+                scroll: false,
                 greedy: true,
                 appendTo: this.$body,
                 cursor: 'move',
@@ -85,6 +86,7 @@ var SnippetEditor = Widget.extend({
                     return $clone;
                 },
                 start: this._onDragAndDropStart.bind(this),
+                drag: this._onDragAndDropDrag.bind(this),
                 stop: (...args) => {
                     // Delay our stop handler so that some summernote handlers
                     // which occur on mouseup (and are themself delayed) are
@@ -552,6 +554,10 @@ var SnippetEditor = Widget.extend({
      * @private
      */
     _onDragAndDropStart: function () {
+        // Disable the fact that the user can scroll lower than the scrollHeight with the drag
+        this.$scrollableParent = getClosestScrollableParent(this.$target.parent());
+        this.scrollHeightLimit = this.$scrollableParent ? this.$scrollableParent[0].scrollHeight - this.$target.innerHeight() : undefined;
+
         var self = this;
         this.dropped = false;
         self.size = {
@@ -599,6 +605,48 @@ var SnippetEditor = Widget.extend({
                 self.dropped = false;
             },
         });
+    },
+    /**
+     *
+     * @param {*} ev
+     * @param {*} ui
+     */
+    _onDragAndDropDrag: function (ev, ui) {
+        let topOffset;
+        let scroll;
+        let $scrollableParent = this.$scrollableParent;
+
+        // OSU TODO : replace this code by something that find the closest scrollable parent
+        if ($scrollableParent.is('body')) {
+            $scrollableParent = $(window);
+            topOffset = window.pageYOffset;
+            scroll = window.scrollY;
+        } else {
+            topOffset = $scrollableParent.offset().top;
+            scroll = $scrollableParent.scrollTop();
+        }
+
+        // 1. Find the closest srollable parent
+        // 2. Get its offset and height values
+        // 3. Depending on the mouse position, create an interval to go up or down
+        // -> Check on internet how to properly delete an interval and avoid to create 2 at the same tile
+        // 4. Test it, and do the same for the snippet dragger.
+        if (topOffset + 70 >= ui.position.top) {
+            if (!this.scrollInterval) {
+                this.scrollInterval = setInterval(() => {
+                    $scrollableParent.scrollTop($scrollableParent.scrollTop() - 5, 100);
+                });
+            }
+        } else if (topOffset + $scrollableParent.innerHeight() - 70 <= ui.position.top && this.scrollHeightLimit > scroll + $scrollableParent.innerHeight()) {
+            if (!this.scrollInterval) {
+                this.scrollInterval = setInterval(() => {
+                    $scrollableParent.scrollTop($scrollableParent.scrollTop() + 5, 100);
+                });
+            }
+        } else {
+            clearInterval(this.scrollInterval);
+            this.scrollInterval = undefined;
+        }
     },
     /**
      * Called when the snippet is dropped after being dragged thanks to the
@@ -1789,6 +1837,9 @@ var SnippetsMenu = Widget.extend({
                     },
                 });
             },
+            drag: function (ev, ui) {
+                // OSU TODO : Reproduce what is done in SnippetEditor
+            },
             stop: function (ev, ui) {
                 $toInsert.removeClass('oe_snippet_body');
 
@@ -2216,6 +2267,29 @@ var SnippetsMenu = Widget.extend({
         this._closeWidgets();
     },
 });
+
+function getClosestScrollableParent($target) {
+    if ($target.is("html,body")) {
+        return $(document.body);
+    }
+
+    let o;
+    let p;
+    do {
+        $target = $target.parent();
+        o = $target.css("overflow");
+        p = $target.css("position");
+    } while (
+        $target.hasClass('dropdown-menu') ||
+        $target.hasClass('o_notebook_headers') ||
+        (
+            (o === "visible" || o.includes("hidden")) && // Possible case where the overflow = "hidden auto"
+            p !== "fixed" &&
+            $target[0].tagName.toUpperCase() !== 'BODY'
+        )
+    );
+    return $target;
+}
 
 return {
     Class: SnippetsMenu,

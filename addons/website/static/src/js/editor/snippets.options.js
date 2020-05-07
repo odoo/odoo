@@ -1914,6 +1914,17 @@ options.registry.SnippetMove = options.Class.extend({
         if ($allOptions.find('we-customizeblock-option').length <= 1) {
             $allOptions.addClass('d-none');
         }
+        // OSU TODO : Something put back the buttons in a visible state but I don't know what. Otherwise the code works.
+        let $overlayArea = this.$overlay.find('.o_overlay_move_options');
+        $overlayArea.find('we-button').removeClass('d-none');
+
+        if (!this.$target.prev().length) {
+            $overlayArea.find('we-button').first().addClass('d-none');
+        }
+
+        if (!this.$target.next().length) {
+            $overlayArea.find('we-button').last().addClass('d-none');
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1928,20 +1939,25 @@ options.registry.SnippetMove = options.Class.extend({
     moveSnippet: function (previewMode, widgetValue, params) {
         const isNavItem = this.$target[0].classList.contains('nav-item');
         const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
+        const $buttons = this.$overlay.find('.o_overlay_move_options').find('we-button');
         switch (widgetValue) {
             case 'prev':
                 this.$target.prev().before(this.$target);
                 if (isNavItem) {
                     $tabPane.prev().before($tabPane);
                 }
-                $('html,body').animate({scrollTop: this.$target.next().position().top - this.$target.innerHeight() - 200}, 500);
+                if ($buttons.data().autoScroll) {
+                    $('html,body').animate({scrollTop: this.$target.next().position().top - this.$target.innerHeight() - 200}, 500);
+                }
                 break;
             case 'next':
                 this.$target.next().after(this.$target);
                 if (isNavItem) {
                     $tabPane.next().after($tabPane);
                 }
-                $('html,body').animate({scrollTop: this.$target.prev().position().top + this.$target.prev().innerHeight() - 200}, 500);
+                if ($buttons.data().autoScroll) {
+                    $('html,body').animate({scrollTop: this.$target.prev().position().top + this.$target.prev().innerHeight() - 200}, 500);
+                }
                 break;
         }
     },
