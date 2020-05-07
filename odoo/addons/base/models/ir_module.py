@@ -943,10 +943,10 @@ class Module(models.Model):
                 excluded_category_ids.append(categ.id)
 
             if excluded_category_ids:
-                domain = expression.AND([domain, [
-                    ('id', 'not in', excluded_category_ids),
-                    ('parent_id', 'not in', excluded_category_ids),
-                ]])
+                domain = expression.AND([
+                    domain,
+                    [('id', 'not in', excluded_category_ids)],
+                ])
             categories = self.env['ir.module.category'].search(domain)
             categories = categories | categories.mapped('parent_id')
 

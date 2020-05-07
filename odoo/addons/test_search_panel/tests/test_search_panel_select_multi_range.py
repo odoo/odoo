@@ -47,63 +47,12 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
 
         r1_id, r2_id, _, _ = records.ids
 
-        # counters
+        # counters, expand, and group_by (many2one case)
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_id',
             enable_counters=True,
-        )
-        self.assertEqual(
-            result,
-            [
-                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id, },
-            ]
-        )
-
-        # counters and search domain
-        result = self.SourceModel.search_panel_select_multi_range(
-            'tag_id',
-            enable_counters=True,
-            search_domain=[['id', 'in', [r1_id, r2_id]]],
-        )
-        self.assertEqual(
-            result,
-            [
-                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 0, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id, },
-            ],
-        )
-
-        # no counters
-        result = self.SourceModel.search_panel_select_multi_range('tag_id')
-        self.assertEqual(
-            result,
-            [
-                {'__count': 0, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 0, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id, },
-            ],
-        )
-
-        result = self.SourceModel.search_panel_select_multi_range(
-            'tag_id',
-            search_domain=[['id', 'in', [r1_id, r2_id]]],
-        )
-        self.assertEqual(
-            result,
-            [
-                {'__count': 0, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 0, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id, },
-            ]
-        )
-
-        result = self.SourceModel.search_panel_select_multi_range(
-            'tag_id',
-            enable_counters=True,
-            group_by='folder_id',
+            expand=True,
+            group_by='folder_id'
         )
         self.assertEqual(
             result,
@@ -117,10 +66,11 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
-        # selection group_by
+        # counters, expand, and group_by (selection case)
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_id',
             enable_counters=True,
+            expand=True,
             group_by='status'
         )
         self.assertEqual(
@@ -135,10 +85,11 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
-        # other group_by
+        # counters, expand, and group_by (other cases)
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_id',
             enable_counters=True,
+            expand=True,
             group_by='color'
         )
         self.assertEqual(
@@ -150,6 +101,152 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
                     'group_id': False, 'group_name': 'Not Set', },
                 {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id,
                     'group_id': 'Green', 'group_name': 'Green', },
+            ]
+        )
+
+        # counters, expand, and no group_by
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_id',
+            enable_counters=True,
+            expand=True,
+        )
+        self.assertEqual(
+            result,
+            [
+                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
+                {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id, },
+                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id, },
+            ]
+        )
+
+        # counters, expand, no group_by, and search domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_id',
+            enable_counters=True,
+            expand=True,
+            search_domain=[['id', 'in', [r1_id, r2_id]]],
+        )
+        self.assertEqual(
+            result,
+            [
+                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
+                {'__count': 0, 'display_name': 'Tag 2', 'id': t2_id, },
+                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id, },
+            ],
+        )
+
+        # no counters, expand, and group_by (many2one case)
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_id',
+            expand=True,
+            group_by='folder_id',
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'Tag 1', 'id': t1_id,
+                    'group_id': f2_id, 'group_name': 'Folder 2', },
+                {'display_name': 'Tag 2', 'id': t2_id,
+                    'group_id': f1_id, 'group_name': 'Folder 1', },
+                {'display_name': 'Tag 3', 'id': t3_id,
+                    'group_id': False, 'group_name': 'Not Set', },
+            ]
+        )
+
+        # no counters, expand, and no group_by
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_id',
+            expand=True,
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'Tag 1', 'id': t1_id, },
+                {'display_name': 'Tag 2', 'id': t2_id, },
+                {'display_name': 'Tag 3', 'id': t3_id, },
+            ],
+        )
+
+        # no counters, expand, no group_by, and search domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_id',
+            expand=True,
+            search_domain=[['id', 'in', [r1_id, r2_id]]],
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'Tag 1', 'id': t1_id, },
+                {'display_name': 'Tag 2', 'id': t2_id, },
+                {'display_name': 'Tag 3', 'id': t3_id, },
+            ]
+        )
+
+        # counters, no expand, and group_by (many2one case)
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_id',
+            enable_counters=True,
+            group_by='folder_id',
+        )
+        self.assertEqual(
+            result,
+            [
+                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id,
+                    'group_id': f2_id, 'group_name': 'Folder 2', },
+                {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id,
+                    'group_id': f1_id, 'group_name': 'Folder 1', },
+            ]
+        )
+
+        # counters, no expand, no group_by, and search_domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_id',
+            enable_counters=True,
+            search_domain=[['id', 'in', [r1_id, r2_id]]],
+        )
+        self.assertEqual(
+            result,
+            [
+                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
+            ]
+        )
+
+        # no counters, no expand, group_by (many2one case), and search domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_id',
+            group_by='folder_id',
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'Tag 1', 'id': t1_id,
+                    'group_id': f2_id, 'group_name': 'Folder 2', },
+                {'display_name': 'Tag 2', 'id': t2_id,
+                    'group_id': f1_id, 'group_name': 'Folder 1', },
+            ]
+        )
+
+        # no counters, no expand, no group_by, and search domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_id',
+            search_domain=[['id', 'in', [r1_id, r2_id]]],
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'Tag 1', 'id': t1_id, },
+            ]
+        )
+
+        # no counters, no expand, no group_by, and comodel domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_id',
+            comodel_domain=[['id', 'in', [t2_id, t3_id]]],
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'Tag 2', 'id': t2_id, },
             ]
         )
 
@@ -189,64 +286,11 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
 
         r1_id, r2_id, _, _ = records.ids
 
-        # counters
+        # counters, expand, and group_by (many2one case)
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
             enable_counters=True,
-        )
-        self.assertEqual(
-            result,
-            [
-                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 2, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 2, 'display_name': 'Tag 3', 'id': t3_id, },
-            ]
-        )
-
-        # counters and search domain
-        result = self.SourceModel.search_panel_select_multi_range(
-            'tag_ids',
-            enable_counters=True,
-            search_domain=[['id', 'in', [r1_id, r2_id]]],
-        )
-        self.assertEqual(
-            result,
-            [
-                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 1, 'display_name': 'Tag 3', 'id': t3_id, },
-            ],
-        )
-
-        # no counters
-        result = self.SourceModel.search_panel_select_multi_range('tag_ids')
-        self.assertEqual(
-            result,
-            [
-                {'__count': 0, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 0, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id, },
-            ],
-        )
-
-        # no counters and search domain
-        result = self.SourceModel.search_panel_select_multi_range(
-            'tag_ids',
-            search_domain=[['id', 'in', [r1_id, r2_id]]],
-        )
-        self.assertEqual(
-            result,
-            [
-                {'__count': 0, 'display_name': 'Tag 1', 'id': t1_id, },
-                {'__count': 0, 'display_name': 'Tag 2', 'id': t2_id, },
-                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id, },
-            ]
-        )
-
-        # many2one group_by
-        result = self.SourceModel.search_panel_select_multi_range(
-            'tag_ids',
-            enable_counters=True,
+            expand=True,
             group_by='folder_id'
         )
         self.assertEqual(
@@ -261,10 +305,11 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
-        # selection group_by
+        # counters, expand, and group_by (selection case)
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
             enable_counters=True,
+            expand=True,
             group_by='status'
         )
         self.assertEqual(
@@ -279,10 +324,11 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
-        # other group_by
+        # counters, expand, and group_by (other cases)
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
             enable_counters=True,
+            expand=True,
             group_by='color'
         )
         self.assertEqual(
@@ -297,10 +343,11 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
-        # group_domain and many2one groupby
+        # counters, expand, group_by (many2one case), and group_domain
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
             enable_counters=True,
+            expand=True,
             group_by='folder_id',
             group_domain={
                 json.dumps(f1_id): [('tag_ids', 'in', [t1_id]), ],
@@ -320,10 +367,11 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
-        # group_domain and other group_by
+        # counters, expand, group_by (other cases), and group_domain
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
             enable_counters=True,
+            expand=True,
             group_by='color',
             group_domain={
                 json.dumps(False): [('tag_ids', 'in', [t1_id]), ],
@@ -342,15 +390,150 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
-    # Selection case
-
-    def test_selection_empty(self):
-        result = self.SourceModel.search_panel_select_multi_range('state')
+        # counters, expand, and no group_by
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            enable_counters=True,
+            expand=True,
+        )
         self.assertEqual(
             result,
             [
-                {'display_name': 'A', 'id': 'a', '__count': 0, },
-                {'display_name': 'B', 'id': 'b', '__count': 0, },
+                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
+                {'__count': 2, 'display_name': 'Tag 2', 'id': t2_id, },
+                {'__count': 2, 'display_name': 'Tag 3', 'id': t3_id, },
+            ]
+        )
+
+        # counters, expand, no group_by, and search domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            enable_counters=True,
+            expand=True,
+            search_domain=[['id', 'in', [r1_id, r2_id]]],
+        )
+        self.assertEqual(
+            result,
+            [
+                {'__count': 2, 'display_name': 'Tag 1', 'id': t1_id, },
+                {'__count': 1, 'display_name': 'Tag 2', 'id': t2_id, },
+                {'__count': 1, 'display_name': 'Tag 3', 'id': t3_id, },
+            ],
+        )
+
+        # no counters, expand, and group_by (many2one case)
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            expand=True,
+            group_by='folder_id',
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'Tag 1', 'id': t1_id,
+                    'group_id': f2_id, 'group_name': 'Folder 2', },
+                {'display_name': 'Tag 2', 'id': t2_id,
+                    'group_id': f1_id, 'group_name': 'Folder 1', },
+                {'display_name': 'Tag 3', 'id': t3_id,
+                    'group_id': False, 'group_name': 'Not Set', },
+            ]
+        )
+
+        # no counters, expand, and no group_by
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            expand=True,
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'Tag 1', 'id': t1_id, },
+                {'display_name': 'Tag 2', 'id': t2_id, },
+                {'display_name': 'Tag 3', 'id': t3_id, },
+            ],
+        )
+
+        # no counters, expand, no group_by, and search_domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            expand=True,
+            search_domain=[['id', 'in', [r1_id, r2_id]]],
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'Tag 1', 'id': t1_id, },
+                {'display_name': 'Tag 2', 'id': t2_id, },
+                {'display_name': 'Tag 3', 'id': t3_id, },
+            ]
+        )
+
+        # counters, no expand, group_by (many2one case), and search_domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            enable_counters=True,
+            group_by='folder_id',
+            search_domain=[['id', '=', r2_id]],
+        )
+        self.assertEqual(
+            result,
+            [
+                {'__count': 1, 'display_name': 'Tag 1', 'id': t1_id,
+                    'group_id': f2_id, 'group_name': 'Folder 2', },
+            ]
+        )
+
+        # counters, no expand, no group_by, and search_domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            enable_counters=True,
+            search_domain=[['id', '=', r2_id]],
+        )
+        self.assertEqual(
+            result,
+            [
+                {'__count': 1, 'display_name': 'Tag 1', 'id': t1_id, },
+            ]
+        )
+
+        # no counters, no expand, group_by (many2one case), and search_domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            group_by='folder_id',
+            search_domain=[['id', '=', r2_id]],
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'Tag 1', 'id': t1_id,
+                    'group_id': f2_id, 'group_name': 'Folder 2', },
+            ]
+        )
+
+        # no counters, no expand, no group_by, and search_domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            search_domain=[['id', '=', r2_id]],
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'Tag 1', 'id': t1_id, },
+            ]
+        )
+
+    # Selection case
+
+    def test_selection_empty(self):
+        result = self.SourceModel.search_panel_select_multi_range(
+            'state',
+            expand=True,
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'A', 'id': 'a', },
+                {'display_name': 'B', 'id': 'b', },
             ]
         )
 
@@ -362,10 +545,12 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
 
         r1_id, _ = records.ids
 
-        # counters
+        # counters, expand, and group_by
         result = self.SourceModel.search_panel_select_multi_range(
             'state',
             enable_counters=True,
+            expand=True,
+            group_by='not_possible_to_group',  # no impact expected
         )
         self.assertEqual(
             result,
@@ -375,23 +560,26 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
-        # no counters
+        # counters, expand, and no group_by
         result = self.SourceModel.search_panel_select_multi_range(
             'state',
+            enable_counters=True,
+            expand=True,
         )
         self.assertEqual(
             result,
             [
-                {'display_name': 'A', 'id': 'a', '__count': 0, },
+                {'display_name': 'A', 'id': 'a', '__count': 2, },
                 {'display_name': 'B', 'id': 'b', '__count': 0, },
             ]
         )
 
-        # counters and search domain
+        # counters, expand, and search domain
         result = self.SourceModel.search_panel_select_multi_range(
             'state',
             enable_counters=True,
-            search_domain=[['id', '=', r1_id]],
+            expand=True,
+            search_domain=[['id', '=', r1_id]],  # impact expected
         )
         self.assertEqual(
             result,
@@ -401,15 +589,52 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
-        # no counters and search domain
+        # no counters and expand
         result = self.SourceModel.search_panel_select_multi_range(
             'state',
-            search_domain=[['id', '=', r1_id]],
+            expand=True,
         )
         self.assertEqual(
             result,
             [
-                {'display_name': 'A', 'id': 'a', '__count': 0, },
-                {'display_name': 'B', 'id': 'b', '__count': 0, },
+                {'display_name': 'A', 'id': 'a', },
+                {'display_name': 'B', 'id': 'b', },
+            ]
+        )
+
+        # no counters, expand, and search domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'state',
+            expand=True,
+            search_domain=[['id', '=', r1_id]],  # no impact expected
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'A', 'id': 'a', },
+                {'display_name': 'B', 'id': 'b', },
+            ]
+        )
+
+        # counters and no expand
+        result = self.SourceModel.search_panel_select_multi_range(
+            'state',
+            enable_counters=True,
+        )
+        self.assertEqual(
+            result,
+            [
+                {'__count': 2, 'display_name': 'A', 'id': 'a', },
+            ]
+        )
+
+        # no counters and no expand
+        result = self.SourceModel.search_panel_select_multi_range(
+            'state',
+        )
+        self.assertEqual(
+            result,
+            [
+                {'display_name': 'A', 'id': 'a', },
             ]
         )
