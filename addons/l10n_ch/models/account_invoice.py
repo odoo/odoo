@@ -188,12 +188,25 @@ class AccountMove(models.Model):
                                    - associate this bank with a postal reference for the currency used in this invoice\n
                                    - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."""))
 
+    def can_generate_qr_bill(self):
+        """ Returns True iff the invoice can be used to generate a QR-bill.
+        """
+        self.ensure_one()
+
+        # First part of this condition is due to fix commit https://github.com/odoo/odoo/commit/719f087b1b5be5f1f276a0f87670830d073f6ef4
+        # We do that to ensure not to try generating QR-bills for modules that haven't been
+        # updated yet. Not doing that could crash when trying to send an invoice by mail,
+        # as the QR report data haven't been loaded.
+        # TODO: remove this in master
+        return not self.env.ref('l10n_ch.l10n_ch_swissqr_template').inherit_id \
+               and self.invoice_partner_bank_id._eligible_for_qr_code('ch_qr', self.partner_id, self.currency_id)
+
     def print_ch_qr_bill(self):
         """ Triggered by the 'Print QR-bill' button.
         """
         self.ensure_one()
 
-        if not self.invoice_partner_bank_id._eligible_for_qr_code('ch_qr', self.partner_id, self.currency_id):
+        if not self.can_generate_qr_bill():
             raise UserError(_("Cannot generate the QR-bill. Please check you have configured the address of your company and debtor. If you are using a QR-IBAN, also check the invoice's payment reference is a QR reference."))
 
         self.l10n_ch_isr_sent = True
