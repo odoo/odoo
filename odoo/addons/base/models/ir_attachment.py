@@ -209,6 +209,9 @@ class IrAttachment(models.Model):
 
     def _get_datas_related_values(self, data, mimetype):
         # compute the fields that depend on datas
+        padding = len(data) % 4
+        if padding:
+            data += ('=' if isinstance(data, str) else b'=') * (4 - padding)
         bin_data = base64.b64decode(data) if data else b''
         values = {
             'file_size': len(bin_data),
