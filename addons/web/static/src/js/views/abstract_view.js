@@ -208,7 +208,7 @@ var AbstractView = Factory.extend({
         var cpDef = this.withControlPanel && this._createControlPanel(parent);
         var spDef;
         if (this.withSearchPanel) {
-            var spProto = this.config.SearchPanel.prototype;
+            var spProto = SearchPanel.prototype;
             var viewInfo = this.controlPanelParams.viewInfo;
             var searchPanelParams = spProto.computeSearchPanelParams(viewInfo, this.viewType);
             if (searchPanelParams.sections) {
