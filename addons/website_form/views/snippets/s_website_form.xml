@@ -67,6 +67,8 @@
                 <we-button data-custom-field="char">Text</we-button>
                 <we-button data-custom-field="text">Long Text</we-button>
                 <we-button data-custom-field="email">Email</we-button>
+                <we-button data-custom-field="tel">Telephone</we-button>
+                <we-button data-custom-field="url">Url</we-button>
                 <we-button data-custom-field="integer">Number</we-button>
                 <we-button data-custom-field="float">Decimal Number</we-button>
                 <we-button data-custom-field="boolean">Checkbox</we-button>
@@ -76,6 +78,12 @@
                 <we-button data-custom-field="date">Date</we-button>
                 <we-button data-custom-field="datetime">Date &amp; Time</we-button>
                 <we-button data-custom-field="binary">File Upload</we-button>
+            </we-select>
+            <we-select data-name="char_input_type_opt" string="Input Type" data-no-preview="true">
+                <we-button data-select-type="char">Text</we-button>
+                <we-button data-select-type="email">Email</we-button>
+                <we-button data-select-type="tel">Telephone</we-button>
+                <we-button data-select-type="url">Url</we-button>
             </we-select>
             <t t-set="unit_textarea_height">rows</t>
             <we-input string="Height" data-step="1" t-attf-data-select-attribute="3#{unit_textarea_height}" t-att-data-unit="unit_textarea_height"
