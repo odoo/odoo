@@ -82,7 +82,8 @@ class MailChannel(models.Model):
             if channel.channel_type == 'livechat':
                 # add the operator id
                 if channel.livechat_operator_id:
-                    channel_infos_dict[channel.id]['operator_pid'] = channel.livechat_operator_id.with_context(im_livechat_use_username=True).name_get()[0]
+                    res = channel.livechat_operator_id.with_context(im_livechat_use_username=True).name_get()[0]
+                    channel_infos_dict[channel.id]['operator_pid'] = (res[0], res[1].replace(',', ''))
                 # add the anonymous or partner name
                 channel_infos_dict[channel.id]['correspondent_name'] = channel._channel_get_livechat_partner_name()
                 last_msg = self.env['mail.message'].search([("channel_ids", "in", [channel.id])], limit=1)

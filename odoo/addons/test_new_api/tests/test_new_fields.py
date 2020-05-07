@@ -1406,6 +1406,22 @@ class TestFields(common.TransactionCase):
         self.assertEqual(discussion.messages, messages + message)
         self.assertEqual(demo_discussion.messages, discussion.messages)
 
+    def test_71_relational_inverse(self):
+        """ Check the consistency of relational fields with inverse(s). """
+        move1 = self.env['test_new_api.move'].create({})
+        move2 = self.env['test_new_api.move'].create({})
+        line = self.env['test_new_api.move_line'].create({'move_id': move1.id})
+        line.flush()
+
+        self.env.cache.invalidate()
+        line.with_context(prefetch_fields=False).move_id
+
+        # Setting 'move_id' updates the one2many field that is based on it,
+        # which has a domain.  Here we check that evaluating the domain does not
+        # accidentally override 'move_id' (by prefetch).
+        line.move_id = move2
+        self.assertEqual(line.move_id, move2)
+
     def test_80_copy(self):
         Translations = self.env['ir.translation']
         discussion = self.env.ref('test_new_api.discussion_0')

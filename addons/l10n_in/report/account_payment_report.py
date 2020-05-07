@@ -140,11 +140,11 @@ class AdvancesPaymentReport(models.Model):
             ap.payment_date as date,
             (SELECT sum(amount) FROM account_partial_reconcile AS apr
                 WHERE (apr.credit_move_id = aml.id OR apr.debit_move_id = aml.id)
-                AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date_maturity, 'MM-YYYY'))
+                AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date, 'MM-YYYY'))
             ) AS reconcile_amount,
             (am.amount_total - (SELECT (CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END) FROM account_partial_reconcile AS apr
                 WHERE (apr.credit_move_id = aml.id OR apr.debit_move_id = aml.id)
-                AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date_maturity, 'MM-YYYY'))
+                AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date, 'MM-YYYY'))
             )) AS amount"""
         return select_str
 
@@ -191,6 +191,6 @@ class L10nInAdvancesPaymentAdjustmentReport(models.Model):
     def _where(self):
         where_str = super(L10nInAdvancesPaymentAdjustmentReport, self)._where()
         where_str += """
-            AND (apr.max_date > aml.date_maturity)
+            AND (apr.max_date > aml.date)
         """
         return where_str
