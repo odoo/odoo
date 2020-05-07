@@ -139,10 +139,20 @@ class PortalChatter(http.Controller):
                 'res_id': res_id,
                 'message': message,
                 'send_after_commit': False,
-                'attachment_ids': attachment_ids,
+                'attachment_ids': False,  # will be added afterward
             }
             post_values.update((fname, kw.get(fname)) for fname in self._portal_post_filter_params())
             message = _message_post_helper(**post_values)
+
+            if attachment_ids:
+                # sudo write the attachment to bypass the read access
+                # verification in mail message
+                record = request.env[res_model].browse(res_id)
+                message_values = {'res_id': res_id, 'model': res_model}
+                attachments = record._message_post_process_attachments([], attachment_ids, message_values)
+
+                if attachments.get('attachment_ids'):
+                    message.sudo().write(attachments)
 
         return request.redirect(url)
 
