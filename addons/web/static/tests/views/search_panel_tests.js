@@ -11,6 +11,12 @@ const cpHelpers = testUtils.controlPanel;
 var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 
+function getCounters(view) {
+    return [...view.el.querySelectorAll('.o_search_panel_counter')].map(
+        counter => Number(counter.innerText.trim())
+    );
+}
+
 QUnit.module('Views', {
     beforeEach: function () {
         this.data = {
@@ -20,14 +26,15 @@ QUnit.module('Views', {
                     bar: {string: "Bar", type: 'boolean'},
                     int_field: {string: "Int Field", type: 'integer', group_operator: 'sum'},
                     company_id: {string: "company", type: 'many2one', relation: 'company'},
+                    company_ids: { string: "Companies", type: 'many2many', relation: 'company' },
                     category_id: { string: "category", type: 'many2one', relation: 'category' },
                     state: { string: "State", type: 'selection', selection: [['abc', "ABC"], ['def', "DEF"], ['ghi', "GHI"]]},
                 },
                 records: [
-                    {id: 1, bar: true, foo: "yop", int_field: 1, company_id: 3, state: 'abc', category_id: 6},
-                    {id: 2, bar: true, foo: "blip", int_field: 2, company_id: 5, state: 'def', category_id: 7},
-                    {id: 3, bar: true, foo: "gnap", int_field: 4, company_id: 3, state: 'ghi', category_id: 7},
-                    {id: 4, bar: false, foo: "blip", int_field: 8, company_id: 5, state: 'ghi', category_id: 7},
+                    {id: 1, bar: true, foo: "yop", int_field: 1, company_ids: [3], company_id: 3, state: 'abc', category_id: 6},
+                    {id: 2, bar: true, foo: "blip", int_field: 2, company_ids: [3], company_id: 5, state: 'def', category_id: 7},
+                    {id: 3, bar: true, foo: "gnap", int_field: 4, company_ids: [], company_id: 3, state: 'ghi', category_id: 7},
+                    {id: 4, bar: false, foo: "blip", int_field: 8, company_ids: [5], company_id: 5, state: 'ghi', category_id: 7},
                 ]
             },
             company: {
@@ -83,8 +90,8 @@ QUnit.module('Views', {
             'partner,false,search':
                 `<search>
                     <searchpanel>
-                        <field name="company_id" enable_counters="1"/>
-                        <field name="category_id" select="multi" enable_counters="1"/>
+                        <field name="company_id" enable_counters="1" expand="1"/>
+                        <field name="category_id" select="multi" enable_counters="1" expand="1"/>
                     </searchpanel>
                 </search>`,
         };
@@ -749,7 +756,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id" enable_counters="1"/>
+                            <field name="company_id" enable_counters="1" expand="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -900,7 +907,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id" enable_counters="1"/>
+                            <field name="company_id" enable_counters="1" expand="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -953,7 +960,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id" enable_counters="1"/>
+                            <field name="company_id" enable_counters="1" expand="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1340,7 +1347,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="state" select="multi" enable_counters="1"/>
+                            <field name="state" select="multi" enable_counters="1" expand="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1432,8 +1439,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="state"/>
-                            <field name="company_id" select="multi" enable_counters="1"/>
+                            <field name="state" expand="1"/>
+                            <field name="company_id" select="multi" enable_counters="1" expand="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1500,8 +1507,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="category_id"/>
-                            <field name="company_id" select="multi" enable_counters="1"/>
+                            <field name="category_id" expand="1"/>
+                            <field name="company_id" select="multi" enable_counters="1" expand="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1542,6 +1549,54 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test("Always reload categories when domains change and expand is false (many2one)", async function (assert) {
+        assert.expect(6);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+            services: this.services,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="category_id"/>
+                        </searchpanel>
+                    </search>`,
+            },
+        });
+
+        assert.verifySteps([
+            'search_panel_select_range',
+            '/web/dataset/search_read',
+        ]);
+
+        // reload with another domain, so the filters should be reloaded
+        await kanban.reload({domain: [['id', '<', 5]]});
+
+        assert.verifySteps([
+            'search_panel_select_range',
+            '/web/dataset/search_read',
+        ]);
+
+        kanban.destroy();
+    });
+
     QUnit.test('category counters', async function (assert) {
         assert.expect(20);
 
@@ -1571,8 +1626,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="state" enable_counters="1"/>
-                            <field name="company_id"/>
+                            <field name="state" enable_counters="1" expand="1"/>
+                            <field name="company_id" expand="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1614,8 +1669,8 @@ QUnit.module('Views', {
         await kanban.reload({domain: [['id', '<', 3]]});
 
         assert.verifySteps([
-            "search_panel_select_range",
-            "state",
+            'search_panel_select_range',
+            'state',
             '/web/dataset/search_read',
         ]);
 
@@ -1644,7 +1699,6 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
-
 
     QUnit.test('category selection without counters', async function (assert) {
         assert.expect(14);
@@ -1675,7 +1729,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="state"/>
+                            <field name="state" expand="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1785,7 +1839,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id" select="multi" groupby="category_id" enable_counters="1"/>
+                            <field name="company_id" select="multi" groupby="category_id" enable_counters="1" expand="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -1888,6 +1942,7 @@ QUnit.module('Views', {
                     assert.deepEqual(args.kwargs, {
                         group_by: false,
                         category_domain: [],
+                        expand: true,
                         filter_domain: [],
                         search_domain: [],
                         comodel_domain: [['parent_id', '=', false]],
@@ -1912,7 +1967,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id" select="multi" domain="[('parent_id','=',False)]" enable_counters="1"/>
+                            <field name="company_id" select="multi" domain="[('parent_id','=',False)]" enable_counters="1" expand="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -2124,7 +2179,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id" select="multi" groupby="category_id" enable_counters="1"/>
+                            <field name="company_id" select="multi" groupby="category_id" enable_counters="1" expand="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -2220,8 +2275,8 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="company_id" enable_counters="1"/>
-                            <field name="category_id" select="multi" enable_counters="1"/>
+                            <field name="company_id" enable_counters="1" expand="1"/>
+                            <field name="category_id" select="multi" enable_counters="1" expand="1"/>
                         </searchpanel>
                     </search>`,
             },
@@ -2590,6 +2645,1194 @@ QUnit.module('Views', {
         assert.containsNone(document.body, '.modal .o_search_panel');
 
         form.destroy();
+    });
+
+    QUnit.test("many2one: select one, expand, hierarchize, counters", async function (assert) {
+        assert.expect(5);
+
+        this.data.company.records.push({ id: 50, name: 'agrobeurre', parent_id: 5 });
+        this.data.company.records.push({ id: 51, name: 'agrocrèmefraiche', parent_id: 5 });
+        this.data.partner.records[1].company_id = 50;
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" enable_counters="1" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 3);
+        assert.containsOnce(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [2 ,1]);
+
+        await testUtils.dom.click(kanban.el.querySelector('.o_toggle_fold > i'));
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 5);
+        assert.deepEqual(getCounters(kanban), [2, 1, 1]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select one, no expand, hierarchize, counters", async function (assert) {
+        assert.expect(5);
+
+        this.data.company.records.push({ id: 50, name: 'agrobeurre', parent_id: 5 });
+        this.data.company.records.push({ id: 51, name: 'agrocrèmefraiche', parent_id: 5 });
+        this.data.partner.records[1].company_id = 50;
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 3);
+        assert.containsOnce(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [2, 1]);
+
+        await testUtils.dom.click(kanban.el.querySelector('.o_toggle_fold > i'));
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 4);
+        assert.deepEqual(getCounters(kanban), [2, 1, 1]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select one, expand, no hierarchize, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 50, name: 'agrobeurre', parent_id: 5 });
+        this.data.company.records.push({ id: 51, name: 'agrocrèmefraiche', parent_id: 5 });
+        this.data.partner.records[1].company_id = 50;
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" hierarchize="0" enable_counters="1" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 5);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [2, 1, 1]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select one, no expand, no hierarchize, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 50, name: 'agrobeurre', parent_id: 5 });
+        this.data.company.records.push({ id: 51, name: 'agrocrèmefraiche', parent_id: 5 });
+        this.data.partner.records[1].company_id = 50;
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" hierarchize="0" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 4);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [2, 1, 1]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select one, expand, hierarchize, no counters", async function (assert) {
+        assert.expect(5);
+
+        this.data.company.records.push({ id: 50, name: 'agrobeurre', parent_id: 5 });
+        this.data.company.records.push({ id: 51, name: 'agrocrèmefraiche', parent_id: 5 });
+        this.data.partner.records[1].company_id = 50;
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 3);
+        assert.containsOnce(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        await testUtils.dom.click(kanban.el.querySelector('.o_toggle_fold > i'));
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 5);
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select one, no expand, hierarchize, no counters", async function (assert) {
+        assert.expect(5);
+
+        this.data.company.records.push({ id: 50, name: 'agrobeurre', parent_id: 5 });
+        this.data.company.records.push({ id: 51, name: 'agrocrèmefraiche', parent_id: 5 });
+        this.data.partner.records[1].company_id = 50;
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 3);
+        assert.containsOnce(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        await testUtils.dom.click(kanban.el.querySelector('.o_toggle_fold > i'));
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 4);
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select one, expand, no hierarchize, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 50, name: 'agrobeurre', parent_id: 5 });
+        this.data.company.records.push({ id: 51, name: 'agrocrèmefraiche', parent_id: 5 });
+        this.data.partner.records[1].company_id = 50;
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" hierarchize="0" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 5);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select one, no expand, no hierarchize, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 50, name: 'agrobeurre', parent_id: 5 });
+        this.data.company.records.push({ id: 51, name: 'agrocrèmefraiche', parent_id: 5 });
+        this.data.partner.records[1].company_id = 50;
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" hierarchize="0"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 4);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select multi, expand, groupby, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" select="multi" groupby="category_id" enable_counters="1" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 5);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [2, 2]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select multi, no expand, groupby, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" select="multi" groupby="category_id" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 4);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [2, 2]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select multi, expand, no groupby, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" select="multi" enable_counters="1" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 3);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [2, 2]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select multi, no expand, no groupby, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" select="multi" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 2);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [2, 2]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select multi, expand, groupby, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" select="multi" groupby="category_id" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 5);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select multi, no expand, groupby, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" select="multi" groupby="category_id"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 4);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select multi, expand, no groupby, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" select="multi" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 3);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2one: select multi, no expand, no groupby, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" select="multi"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 2);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2many: select multi, expand, groupby, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_ids" select="multi" groupby="category_id" enable_counters="1" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 5);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [2, 1]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2many: select multi, no expand, groupby, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_ids" select="multi" groupby="category_id" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 4);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [2, 1]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2many: select multi, expand, no groupby, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_ids" select="multi" enable_counters="1" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 3);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [2, 1]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2many: select multi, no expand, no groupby, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_ids" select="multi" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 2);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [2, 1]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2many: select multi, expand, groupby, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_ids" select="multi" groupby="category_id" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 5);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2many: select multi, no expand, groupby, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_ids" select="multi" groupby="category_id"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 4);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2many: select multi, expand, no groupby, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_ids" select="multi" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 3);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("many2many: select multi, no expand, no groupby, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.company.records.push({ id: 666, name: "Mordor Inc.", category_id: 6 });
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_ids" select="multi"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 2);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("selection: select one, expand, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records.shift();
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="state" enable_counters="1" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 4);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [1, 2]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("selection: select one, no expand, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records.shift();
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="state" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 3);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [1, 2]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("selection: select one, expand, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records.shift();
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="state" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 4);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("selection: select one, no expand, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records.shift();
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="state"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 3);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("selection: select multi, expand, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records.shift();
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="state" select="multi" enable_counters="1" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 3);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [1, 2]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("selection: select multi, no expand, counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records.shift();
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="state" select="multi" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 2);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [1, 2]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("selection: select multi, expand, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records.shift();
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="state" select="multi" expand="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 3);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("selection: select multi, no expand, no counters", async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records.shift();
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="state" select="multi"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 2);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
     });
 });
 });
