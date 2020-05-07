@@ -36,23 +36,6 @@ odoo.define('pos_hr.chrome', function (require) {
         },
     });
 
-    var HeaderCloseButtonWidget = chrome.HeaderButtonWidget.extend({
-        start: function(){
-            if (this.pos.config.module_pos_hr) {
-                var self = this;
-                this.pos.bind('change:cashier', this._show_hide_close_button , this);
-            }
-            return this._super();
-        },
-        _show_hide_close_button: function(){
-            if (this.pos.get('cashier').role == 'manager') {
-                this.show();
-            } else {
-                this.hide();
-            }
-        }
-    });
-
     var HeaderLockButtonWidget = chrome.HeaderButtonWidget.extend({
         init: function(parent, options) {
         this._super(parent, options);
@@ -103,9 +86,8 @@ odoo.define('pos_hr.chrome', function (require) {
             var self = this;
                 this.widgets.some(function(widget, index){
                     if (widget.name === 'close_button'){
-                        widget.widget = HeaderCloseButtonWidget;
                         self.widgets.splice(index, 0, self.lock_button_widget);
-                            return true;
+                        return true;
                     }
                     return false;
                 });
@@ -119,6 +101,5 @@ odoo.define('pos_hr.chrome', function (require) {
 
     return {
         HeaderLockButtonWidget: HeaderLockButtonWidget,
-        HeaderCloseButtonWidget: HeaderCloseButtonWidget,
     };
 });

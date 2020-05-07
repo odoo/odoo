@@ -18,14 +18,9 @@ models.load_models([{
                 self.employees = employees;
             }
             self.employees.forEach(function(employee) {
-                var hasUser = self.users.some(function(user) {
-                    if (user.id === employee.user_id[0]) {
-                        employee.role = user.role;
-                        return true;
-                    }
-                    return false;
-                });
-                if (!hasUser) {
+                if (self.user.id === employee.user_id[0]) {
+                    employee.role = 'manager';
+                } else {
                     employee.role = 'cashier';
                 }
             });
