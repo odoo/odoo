@@ -38,7 +38,7 @@ class Base(models.AbstractModel):
                 'length': 0,
                 'records': []
             }
-        if limit and (len(records) == limit or self.env.context.get('force_search_count')):
+        if limit and (len(records) >= limit and self.env.context.get('force_search_count')):
             length = self.search_count(domain)
         else:
             length = len(records) + offset
