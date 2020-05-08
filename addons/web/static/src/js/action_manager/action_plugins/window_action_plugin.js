@@ -379,6 +379,7 @@ odoo.define('web.WindowActionPlugin', function (require) {
          *   (only relevant for form views)
          */
         _onSwitchView(payload) {
+            this.actionManager.trigger('cancel');
             const viewType = payload.view_type;
             const { action } = this._getMainActionDescriptors();
             // TODO: find a way to save/restore state

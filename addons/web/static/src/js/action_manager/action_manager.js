@@ -38,6 +38,9 @@ class ActionManager extends core.EventBus {
                     }
                 });
         });
+        this.on('cancel', null, () => {
+            this._transaction.add(Promise.resolve());
+        });
         // Before switching views, an event is triggered
         // containing the state of the current controller
         this.env.bus.on('legacy-export-state', this, this._onLegacyExportState);

@@ -2243,6 +2243,103 @@ QUnit.module('ActionManager', {
         webClient.destroy();
     });
 
+    QUnit.test('switching when doing an action -- load_views slow', async function (assert) {
+        assert.expect(11);
+
+        let def;
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                assert.step(args.method || route);
+                if (args.method === 'load_views') {
+                    return Promise.resolve(def).then(() => result);
+                }
+                return result;
+            },
+        });
+        await doAction(3);
+
+        assert.containsOnce(webClient, '.o_list_view',
+            "should display the list view of action 3");
+
+        def = testUtils.makeTestPromise();
+        doAction(4, {clear_breadcrumbs: true});
+        await testUtils.nextTick();
+        await testUtils.controlPanel.switchView(webClient, 'kanban');
+        def.resolve();
+        await testUtils.owlCompatibilityExtraNextTick();
+
+        assert.containsOnce(webClient, '.o_kanban_view');
+        assert.strictEqual(
+            webClient.el.querySelector('.o_control_panel .breadcrumb-item').textContent,
+            'Partners',
+        );
+        assert.containsNone(webClient, '.o_list_view');
+
+        assert.verifySteps([
+            '/web/action/load', // action 3
+            'load_views', // action 3
+            '/web/dataset/search_read', // action 3 list fetch
+            '/web/action/load', // action 4
+            'load_views', // action 4 Hanging
+            '/web/dataset/search_read', // action 3 kanban fetch
+        ]);
+        webClient.destroy();
+    });
+
+    QUnit.test('switching when doing an action -- search_read slow', async function (assert) {
+        assert.expect(12);
+
+        const def = testUtils.makeTestPromise();
+        const defs = [null, def, null];
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                assert.step(args.method || route);
+                if (route === "/web/dataset/search_read") {
+                    return Promise.resolve(defs.shift()).then(() => result);
+                }
+                return result;
+            },
+        });
+        await doAction(3);
+
+        assert.containsOnce(webClient, '.o_list_view',
+            "should display the list view of action 3");
+
+        doAction(4, {clear_breadcrumbs: true});
+        await testUtils.nextTick();
+        await testUtils.controlPanel.switchView(webClient, 'kanban');
+        //def.resolve();
+        await testUtils.owlCompatibilityExtraNextTick();
+
+        assert.containsOnce(webClient, '.o_kanban_view');
+        assert.strictEqual(
+            webClient.el.querySelector('.o_control_panel .breadcrumb-item').textContent,
+            'Partners',
+        );
+        assert.containsNone(webClient, '.o_list_view');
+
+        assert.verifySteps([
+            '/web/action/load', // action 3
+            'load_views', // action 3
+            '/web/dataset/search_read', // action 3 list fetch
+            '/web/action/load', // action 4
+            'load_views', // action 4
+            '/web/dataset/search_read', // action 4 kanban fetch Hanging
+            '/web/dataset/search_read', // action 3 kanban fetch
+        ]);
+        webClient.destroy();
+    });
+
     QUnit.test('execute a new action while loading views', async function (assert) {
         assert.expect(10);
 
