@@ -35,6 +35,24 @@ class TestORM(TransactionCase):
         # Deleting an already deleted record should be simply ignored
         self.assertTrue(p1.unlink(), "Re-deleting should be a no-op")
 
+    @mute_logger('odoo.models')
+    def test_access_partial_deletion(self):
+        """ Check accessing a record from a recordset where another record has been deleted. """
+        Model = self.env['res.country']
+        self.assertTrue(type(Model).display_name.automatic, "test assumption not satisfied")
+
+        # access regular field when another record from the same prefetch set has been deleted
+        records = Model.create([{'name': name} for name in ('Foo', 'Bar', 'Baz')])
+        for record in records:
+            record.name
+            record.unlink()
+
+        # access computed field when another record from the same prefetch set has been deleted
+        records = Model.create([{'name': name} for name in ('Foo', 'Bar', 'Baz')])
+        for record in records:
+            record.display_name
+            record.unlink()
+
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_filtered_records(self):
         """ Verify that accessing filtered records works as expected for non-admin user """
