@@ -1534,9 +1534,9 @@ var FieldX2Many = AbstractField.extend({
                 if (ev.data.onSuccess) {
                     ev.data.onSuccess();
                 }
-            }).guardedCatch(function () {
+            }).guardedCatch(function (reason) {
                 if (ev.data.onFailure) {
-                    ev.data.onFailure();
+                    ev.data.onFailure(reason);
                 }
             });
         }

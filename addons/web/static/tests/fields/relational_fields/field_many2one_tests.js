@@ -2165,6 +2165,80 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('failing quick create on a many2one', async function (assert) {
+            assert.expect(4);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="product_id"/></form>',
+                archs: {
+                    'product,false,form': '<form><field name="name"/></form>',
+                },
+                mockRPC(route, args) {
+                    if (args.method === 'name_create') {
+                        return Promise.reject();
+                    }
+                    if (args.method === 'create') {
+                        assert.deepEqual(args.args[0], { name: 'xyz' });
+                    }
+                    return this._super(...arguments);
+                },
+            });
+
+            await testUtils.fields.many2one.searchAndClickItem('product_id', {
+                search: 'abcd',
+                item: 'Create "abcd"',
+            });
+            assert.containsOnce(document.body, '.modal .o_form_view');
+            assert.strictEqual($('.o_field_widget[name=name]').val(), 'abcd');
+
+            await testUtils.fields.editInput($('.modal .o_field_widget[name=name]'), 'xyz');
+            await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+            assert.strictEqual(form.$('.o_field_widget[name=product_id] input').val(), 'xyz');
+
+            form.destroy();
+        });
+
+        QUnit.test('failing quick create on a many2one inside a one2many', async function (assert) {
+            assert.expect(4);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="p"/></form>',
+                archs: {
+                    'partner,false,list': '<tree editable="bottom"><field name="product_id"/></tree>',
+                    'product,false,form': '<form><field name="name"/></form>',
+                },
+                mockRPC(route, args) {
+                    if (args.method === 'name_create') {
+                        return Promise.reject();
+                    }
+                    if (args.method === 'create') {
+                        assert.deepEqual(args.args[0], { name: 'xyz' });
+                    }
+                    return this._super(...arguments);
+                },
+            });
+
+            await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            await testUtils.fields.many2one.searchAndClickItem('product_id', {
+                search: 'abcd',
+                item: 'Create "abcd"',
+            });
+            assert.containsOnce(document.body, '.modal .o_form_view');
+            assert.strictEqual($('.o_field_widget[name=name]').val(), 'abcd');
+
+            await testUtils.fields.editInput($('.modal .o_field_widget[name=name]'), 'xyz');
+            await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+            assert.strictEqual(form.$('.o_field_widget[name=product_id] input').val(), 'xyz');
+
+            form.destroy();
+        });
+
         QUnit.test('slow create on a many2one', async function (assert) {
             assert.expect(11);
 
