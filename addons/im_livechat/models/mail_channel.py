@@ -194,3 +194,14 @@ class MailChannel(models.Model):
             'body_html': mail_body,
         })
         mail.send()
+
+    def notify_typing(self, is_typing, is_website_user=False, im_status='offline', notifications=[]):
+        for channel in self:
+            operator_im_status = channel.livechat_operator_id.im_status
+            if channel.channel_type == 'livechat' and operator_im_status != im_status:
+                data = {
+                    '_type': 'operator_status',
+                    'im_status': operator_im_status,
+                }
+                notifications.append([channel.uuid, data])
+        super(MailChannel, self).notify_typing(is_typing, is_website_user, im_status, notifications)

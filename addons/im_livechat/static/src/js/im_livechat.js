@@ -191,6 +191,13 @@ var LivechatButton = Widget.extend({
                 } else {
                     this._livechat.unregisterTyping({ partnerID: partnerID });
                 }
+            }  else if (notification[1]._type === 'operator_status') {
+                this._livechat.im_status = notification[1].im_status;
+                if (notification[1].im_status === 'offline') {
+                    this._chatWindow.$el.find('.o_thread_window_header').after(QWeb.render('im_livechat.ThreadWindow.NoOperatorMessage'));
+                } else {
+                    this._chatWindow.$el.find('.o_no_operator_available').remove();
+                }
             } else { // normal message
                 // If message from notif is already in chatter messages, stop handling
                 if (this._messages.some(message => message.getID() === notification[1].id)) {
