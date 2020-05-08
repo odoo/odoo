@@ -384,7 +384,9 @@ class Lead(models.Model):
 
     @api.model
     def create(self, vals):
-        # set up context used to find the lead's Sales Team which is needed
+        if vals.get('website'):
+            vals['website'] = self.env['res.partner']._clean_website(vals['website'])
+        # set up context used to find the lead's sales channel which is needed
         # to correctly set the default stage_id
         context = dict(self._context or {})
         if vals.get('type') and not self._context.get('default_type'):
@@ -406,7 +408,9 @@ class Lead(models.Model):
         return result
 
     def write(self, vals):
-        # stage change:
+        if vals.get('website'):
+            vals['website'] = self.env['res.partner']._clean_website(vals['website'])
+        # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
             stage_id = self.env['crm.stage'].browse(vals['stage_id'])

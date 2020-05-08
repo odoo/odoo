@@ -99,3 +99,6 @@ class ResConfigSettings(models.TransientModel):
             self.env['mail.alias'].with_context(
                 alias_model_name='crm.lead',
                 alias_parent_model_name='crm.team').create({'alias_name': self.crm_alias_prefix})
+
+        for team in self.env['crm.team'].search([]):
+            team.alias_id.write(team.get_alias_values())
