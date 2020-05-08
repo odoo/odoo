@@ -49,23 +49,24 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ Link the timesheet from the SO lines to the corresponding draft invoice.
             NOTE: only the timesheets linked to an Sale Line with a product invoiced on delivered quantity
             are concerned, since in ordered quantity, the timesheet quantity is not invoiced, but is simply
             to compute the delivered one (for reporting).
         """
-        invoice_line = super(AccountInvoiceLine, self).create(values)
-        if invoice_line.invoice_id.type == 'out_invoice' and invoice_line.invoice_id.state == 'draft':
-            sale_line_delivery = invoice_line.sale_line_ids.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
-            if sale_line_delivery:
-                domain = self._timesheet_domain_get_invoiced_lines(sale_line_delivery)
-                timesheets = self.env['account.analytic.line'].search(domain).sudo()
-                timesheets.write({
-                    'timesheet_invoice_id': invoice_line.invoice_id.id,
-                })
-        return invoice_line
+        invoice_lines = super(AccountInvoiceLine, self).create(vals_list)
+        for invoice_line in invoice_lines:
+            if invoice_line.invoice_id.type == 'out_invoice' and invoice_line.invoice_id.state == 'draft':
+                sale_line_delivery = invoice_line.sale_line_ids.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
+                if sale_line_delivery:
+                    domain = self._timesheet_domain_get_invoiced_lines(sale_line_delivery)
+                    timesheets = self.env['account.analytic.line'].search(domain).sudo()
+                    timesheets.write({
+                        'timesheet_invoice_id': invoice_line.invoice_id.id,
+                    })
+        return invoice_lines
 
     @api.model
     def _timesheet_domain_get_invoiced_lines(self, sale_line_delivery):
