@@ -58,7 +58,7 @@ class PaymentAcquirerStripeSCA(models.Model):
         # cfr https://stripe.com/docs/error-codes
         # these can be made customer-facing, as they usually indicate a problem with the payment
         # (e.g. insufficient funds, expired card, etc.)
-        if not resp.ok and not (400 <= resp.status_code < 500 and resp.json().get('error', {}).get('code')):
+        if not resp.ok and (400 <= resp.status_code < 500 and resp.json().get('error', {}).get('code')):
             try:
                 resp.raise_for_status()
             except HTTPError:
