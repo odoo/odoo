@@ -16,6 +16,7 @@
     'installable': True,
     'auto_install': True,
     'data': [
+        'data/mail_template_data.xml',
         'views/mail_templates.xml',
     ],
 }

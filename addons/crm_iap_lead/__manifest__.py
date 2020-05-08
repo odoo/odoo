@@ -14,7 +14,6 @@
         'data/crm.iap.lead.industry.csv',
         'data/crm.iap.lead.role.csv',
         'data/crm.iap.lead.seniority.csv',
-        'data/crm_iap_lead_data.xml',
         'data/ir_sequence_data.xml',
         'security/ir.model.access.csv',
         'views/assets.xml',

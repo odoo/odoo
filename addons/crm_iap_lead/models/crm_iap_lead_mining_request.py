@@ -169,9 +169,22 @@ class CRMLeadMiningRequest(models.Model):
         """ This method will get the response from the service and create the leads accordingly """
         self.ensure_one()
         lead_vals_list = []
+        base_lead_values = {
+            'lead_type': self.lead_type,
+            'team_id': self.team_id.id,
+            'tag_ids': [(6, 0, self.tag_ids.ids)],
+            'user_id': self.user_id.id,
+            'lead_mining_request_id': self.id,
+        }
         messages_to_post = {}
         for data in result:
-            lead_vals_list.append(self._lead_vals_from_response(data))
+            lead_vals_list.append(
+                self.env['iap.services']._iap_get_lead_vals_from_clearbit_data(
+                    data.get('company_data'),
+                    data.get('people_data'),
+                    **base_lead_values
+                )
+            )
 
             template_values = data['company_data']
             template_values.update({
@@ -183,16 +196,6 @@ class CRMLeadMiningRequest(models.Model):
         for lead in leads:
             if messages_to_post.get(lead.reveal_id):
                 lead.message_post_with_view('iap_mail.enrich_company', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
-
-    # Methods responsible for format response data into valid odoo lead data
-    @api.model
-    def _lead_vals_from_response(self, data):
-        self.ensure_one()
-        company_data = data.get('company_data')
-        people_data = data.get('people_data')
-        lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data, people_data)
-        lead_vals['lead_mining_request_id'] = self.id
-        return lead_vals
 
     @api.model
     def get_empty_list_help(self, help):
