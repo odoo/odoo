@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="homepage" model="ir.ui.view">
+        <field name="name">Welcome to Dummy</field>
+        <field name="inherit_id" ref="website.homepage"/>
+        <field name="type">qweb</field>
+        <field name="key">dummy_module.homepage</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+    <xpath expr="//t[@t-call='website.layout']" position="replace">
+      <t t-call="website.layout">
+        <div class="oe_structure oe_empty" id="wrap">
+          <data data-transparent="transparent" id="transparency"/>
+          <!-- services -->
+          <section id="services-section">
+            <div class="container">
+              <div class="mt48">
+                <!-- title -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                      <h2 class="o_default_snippet_text section-title">SERVICES</h2>
+                    </div>
+                </div>
+                <!-- contenido -->
+                <div class="row m48">
+                  <!-- desarrollo -->
+                  <div class="col-lg-4 col-12 text-center service">
+                    <div class="row">
+                      <div class="col-lg-12 col-md-8 col-12 service-content">
+                        <h4 class="o_default_snippet_text mt32 mb-3">APPS</h4>
+                        <p class="o_default_snippet_text text-center div-size">
+                          We develop apps to optimize your workflow in Odoo.
+                        </p>
+                        <!-- TODO Remove d-none after the /shop it's ready-->
+                        <a class="btn btn-secondary btn-lg o_default_snippet_text btn btn-primary mt-4 mt-md-1 mt-lg-4 mb-4 mx-0 d-none" href="/shop"><span>KNOW OUR APPS</span></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </t>
+    </xpath>
+        </field>
+    </record>
+</odoo>
+

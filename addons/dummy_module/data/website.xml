@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="menu_services" model="website.menu">
+		<field name="name">Services</field>
+	        <field name="url">#</field>
+	        <field name="parent_id" ref="website.main_menu"/>
+	        <field name="sequence" type="int">50</field>
+	</record>
+
+	<record id="menu_apps" model="website.menu">
+	        <field name="name">Apps</field>
+	        <field name="url">#</field>
+	        <field name="parent_id" ref="menu_services"/>
+	        <field name="sequence" type="int">50</field>
+	</record>
+
+</odoo>
+

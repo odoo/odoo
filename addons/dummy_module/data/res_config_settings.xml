@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+	<record id="lang_settings" model="base.language.install">
+        	<field name="lang">es_ES</field>
+	        <field name="website_ids" model="website"
+        	    eval="[(6, 0, obj().search([
+			('id', 'in', [ref('website.default_website')])]).ids)]"
+            	/>
+    	</record>
+	<function model="base.language.install" name="lang_install">
+		<value model="base.language.install" search="[
+			('id', 'in', [ref('lang_settings')])
+			]"/>
+	</function>
+</odoo>
