@@ -347,19 +347,14 @@ class TestMrpWorkorderBackorder(SavepointCase):
         self.assertEqual(workorder1.raw_workorder_line_ids.product_id, self.compfinished1)
         self.assertEqual(workorder1.raw_workorder_line_ids.qty_to_consume, 2)
 
-        #mrp_production_workorder_form_view_inherit
         workorder1.button_start()
-        with Form(workorder1) as w:
-            w.qty_producing = 1
-        workorder1.record_production()
+        workorder1.button_finish()
 
         self.assertEqual(workorder2.raw_workorder_line_ids.product_id, self.compfinished2)
         self.assertEqual(workorder2.raw_workorder_line_ids.qty_to_consume, 2)
 
         workorder2.button_start()
-        with Form(workorder2) as w:
-            w.qty_producing = 1
-        workorder2.record_production()
+        workorder2.button_finish()
 
         action = mo.with_context(debug=True).button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))

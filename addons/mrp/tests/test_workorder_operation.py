@@ -995,6 +995,53 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
 
         self.assertEqual(production_table.workorder_ids[0].qty_producing, 2, "Quantity to produce not updated")
 
+    def test_expected_duration_workorder(self):
+        """ Test that the expected_duration is editable and change when other
+        workcenter is set or product quantity to produce is increased
+        Also this expected duration need to be recalculate correctly during the planning
+        if it used a alternative workcenter
+        """
+        planned_date = datetime(2023, 5, 15, 9, 0)
+        self.mrp_workcenter_3.write({'capacity': 1, 'time_start': 0, 'time_stop': 2, 'time_efficiency': 50})
+        self.workcenter_1.write({'capacity': 2, 'time_start': 2, 'time_stop': 1, 'time_efficiency': 80, 'alternative_workcenter_ids': [(6, 0, [self.mrp_workcenter_3.id])]})
+        self.planning_bom.operation_ids[0].write({'time_cycle_manual': 10})
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.planning_bom
+        mo_form.date_planned_start = planned_date
+        mo = mo_form.save()
+
+        # TEST Default/onchange duration_expected
+        self.assertEqual(len(mo.workorder_ids), 1)
+        self.assertEqual(mo.workorder_ids.workcenter_id, self.workcenter_1, "wrong workcenter")
+        # time_cycle = 10, product_qty = 4.0, capacity = 2, time_start = 2, time_stop = 1, time_efficiency = 80%
+        # => 2 + 1 + (4 / 2 * 10) * (100 / 80) = 28.0
+        self.assertEqual(mo.workorder_ids.duration_expected, 28.0, "wrong duration_expected")
+        mo_form = Form(mo)
+        with mo_form.workorder_ids.edit(0) as wo_form:
+            wo_form.workcenter_id = self.mrp_workcenter_3
+        mo = mo_form.save()
+        # time_cycle = 10, product_qty = 4.0, capacity = 1, time_start = 0, time_stop = 2, time_efficiency = 50%
+        # => 0 + 2 + (4 / 1 * 10) * (100 / 50) = 82.0
+        self.assertEqual(mo.workorder_ids.duration_expected, 82.0, "wrong duration_expected")
+
+        # TEST Manual change of duration_expected
+        with mo_form.workorder_ids.edit(0) as wo_form:
+            wo_form.workcenter_id = self.workcenter_1
+            self.assertEqual(wo_form.duration_expected, 28.0, "wrong duration_expected")
+            wo_form.duration_expected = 40.0
+        mo = mo_form.save()
+
+        self.assertEqual(mo.workorder_ids.duration_expected, 40.0, "wrong duration_expected")
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+        self.assertEqual(mo.workorder_ids.duration_expected, 40.0, "duration_expected doesn't reset")
+
+        self.assertAlmostEqual(mo.date_planned_start, mo.workorder_ids.date_planned_start, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(mo.date_planned_finished, mo.workorder_ids.date_planned_finished, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(mo.date_planned_start, planned_date, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(mo.date_planned_finished, planned_date + timedelta(minutes=40), delta=timedelta(seconds=10))
+
     def test_planning_0(self):
         """ Test alternative conditions
         1. alternative relation is directionnal
@@ -1253,7 +1300,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         self.assertEqual(bool(leave.exists()), True)
         # Unplans the MO and checks the workorder and its leave no more exist.
         mo.button_unplan()
-        self.assertEqual(bool(mo.workorder_ids.exists()), False)
+        self.assertEqual(bool(mo.workorder_ids.exists()), True)
         self.assertEqual(bool(leave.exists()), False)
         # Plans (again) the MO and checks the date is still the same.
         mo.button_plan()

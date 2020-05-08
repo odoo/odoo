@@ -17,11 +17,12 @@ class MrpRoutingWorkcenter(models.Model):
         help="Gives the sequence order when displaying a list of routing Work Centers.")
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
-        index=True, ondelete='cascade', required=True,
+        index=True, ondelete='cascade',
         help="The Bill of Material this operation is linked to")
     company_id = fields.Many2one(
         'res.company', 'Company',
-        readonly=True, related='bom_id.company_id', store=True)
+        readonly=True, related='bom_id.company_id', store=True,
+        default=lambda self: self.env.company)
     worksheet_type = fields.Selection([
         ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
         string="Work Sheet", default="pdf",
