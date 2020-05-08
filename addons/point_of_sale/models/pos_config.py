@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from uuid import uuid4
+import pytz
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
@@ -266,7 +267,8 @@ class PosConfig(models.Model):
                 ['cash_register_balance_end_real', 'stop_at', 'cash_register_id'],
                 order="stop_at desc", limit=1)
             if session:
-                pos_config.last_session_closing_date = session[0]['stop_at'].date()
+                timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+                pos_config.last_session_closing_date = session[0]['stop_at'].astimezone(timezone).date()
                 if session[0]['cash_register_id']:
                     pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
                     pos_config.last_session_closing_cashbox = self.env['account.bank.statement'].browse(session[0]['cash_register_id'][0]).cashbox_end_id
