@@ -663,7 +663,7 @@ class AccountMoveLine(models.Model):
         help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
     tax_base_amount = fields.Monetary(string="Base Amount", compute='_compute_tax_base_amount', currency_field='company_currency_id', store=True)
     account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
-        ondelete="cascade", domain=[('deprecated', '=', False)], default=lambda self: self._context.get('account_id', False))
+        ondelete='restrict', domain=[('deprecated', '=', False)], default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade",
         help="The move of this entry line.", index=True, required=True, auto_join=True)
     narration = fields.Text(related='move_id.narration', string='Narration', readonly=False)
