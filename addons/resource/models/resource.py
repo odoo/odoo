@@ -177,6 +177,8 @@ class ResourceCalendar(models.Model):
         return res
 
     name = fields.Char(required=True)
+    active = fields.Boolean("Active", default=True,
+                            help="If the active field is set to false, it will allow you to hide the Working Time without removing it.")
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company)
