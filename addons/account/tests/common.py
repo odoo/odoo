@@ -636,10 +636,11 @@ class AccountTestInvoicingCommon(SavepointCase):
         cls.env = cls.env(user=user)
         cls.cr = cls.env.cr
 
+        cls.company_data_2 = cls.setup_company_data('company_2_data')
         cls.company_data = cls.setup_company_data('company_1_data')
 
         user.write({
-            'company_ids': [(6, 0, cls.company_data['company'].ids)],
+            'company_ids': [(6, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)],
             'company_id': cls.company_data['company'].id,
         })
 
