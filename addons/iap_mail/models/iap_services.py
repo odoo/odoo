@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import uuid
 
 from requests.exceptions import HTTPError
 
-from odoo import api, exceptions, models, _
+from odoo import api, exceptions, models, release, _
 from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
@@ -20,6 +21,8 @@ class IapServices(models.AbstractModel):
 
     @api.model
     def _iap_get_endpoint_netloc(self, account_name):
+        if account_name == 'ocn':
+            return self.env['ir.config_parameter'].sudo().get_param('odoo_ocn.endpoint', 'https://ocn.odoo.com')
         if account_name == 'partner_autocomplete':
             return self.env['ir.config_parameter'].sudo().get_param('iap.partner_autocomplete.endpoint', 'https://partner-autocomplete.odoo.com')
         if account_name == 'sms':
@@ -30,6 +33,8 @@ class IapServices(models.AbstractModel):
 
     @api.model
     def _iap_get_service_account_match(self, service_name):
+        if service_name in ('ocn', 'ocn_enable_service', 'ocn_register_device'):
+            return 'ocn'
         if service_name in ('partner_autocomplete',
                             'partner_autocomplete_enrich',
                             'partner_autocomplete_search',
@@ -43,6 +48,10 @@ class IapServices(models.AbstractModel):
 
     @api.model
     def _iap_get_service_url_scheme(self, service_name):
+        if service_name == 'ocn_enable_service':
+            return 'iap/ocn/enable_service'
+        if service_name == 'ocn_register_device':
+            return 'iap/ocn/register_device'
         if service_name == 'partner_autocomplete_enrich':
             return 'iap/partner_autocomplete/enrich'
         if service_name == 'partner_autocomplete_search':
@@ -60,6 +69,36 @@ class IapServices(models.AbstractModel):
     # ------------------------------------------------------------
     # REQUESTS
     # ------------------------------------------------------------
+
+    @api.model
+    def _iap_ocn_get_uuid(self):
+        push_uuid = self.env['ir.config_parameter'].sudo().get_param('ocn.uuid')
+        if not push_uuid:
+            push_uuid = str(uuid.uuid4())
+            self.env['ir.config_parameter'].sudo().set_param('ocn.uuid', push_uuid)
+        return push_uuid
+
+    @api.model
+    def _iap_request_ocn_enable_service(self):
+        params = {
+            'ocnuuid': self._iap_ocn_get_uuid(),
+            'server_version': release.version,
+            'db': self.env.cr.dbname,
+            'company_name': self.env.company.name,
+            'url': self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
+        }
+        return iap_tools.iap_jsonrpc(self._iap_get_service_url('ocn_enable_service'), params=params)
+
+    @api.model
+    def _iap_request_ocn_register_device(self, device_name, device_key):
+        params = {
+            'ocn_uuid': self._iap_ocn_get_uuid(),
+            'user_name': self.env.user.partner_id.name,
+            'user_login': self.env.user.login,
+            'device_name': device_name,
+            'device_key': device_key,
+        }
+        return iap_tools.iap_jsonrpc(self._iap_get_service_url('ocn_register_device'), params=params)
 
     def _iap_partner_autocomplete_params(self):
         return {
