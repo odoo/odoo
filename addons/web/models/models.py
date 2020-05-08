@@ -12,6 +12,7 @@ from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
 
+SEARCH_PANEL_ERROR_MESSAGE = "Too many items to display."
 
 class lazymapping(defaultdict):
     def __missing__(self, key):
@@ -223,13 +224,14 @@ class Base(models.AbstractModel):
 
 
     @api.model
-    def _search_panel_domain_image(self, field_name, domain, set_count=False):
+    def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
         """
         Return the values in the image of the provided domain by field_name.
 
         :param domain: domain whose image is returned
         :param field_name: the name of a field (type many2one or selection)
         :param set_count: whether to set the key '__count' in image values. Default is False.
+        :param limit: integer, maximal number of values to fetch. Default is False.
         :return: a dict of the form
                     {
                         id: { 'id': id, 'display_name': display_name, ('__count': c,) },
@@ -253,7 +255,8 @@ class Base(models.AbstractModel):
             domain,
             [(field_name, '!=', False)],
         ])
-        groups = self.read_group(domain, [field_name], [field_name])
+        groups = self.read_group(domain, [field_name], [field_name], limit=limit)
+
         domain_image = {}
         for group in groups:
             id, display_name = group_id_name(group[field_name])
@@ -312,7 +315,7 @@ class Base(models.AbstractModel):
                         { 'id': id, parent_name: False or (id, display_name),... }
         :param parent_name, string, indicates which key determines the parent
         :param ids: list of record ids
-        :return: the sublist (as a filter object) of records with the above properties
+        :return: the sublist of records with the above properties
         }
         """
         def get_parent_id(record):
@@ -342,7 +345,7 @@ class Base(models.AbstractModel):
                 records_to_keep[id] = chain_is_fully_included
 
         # we keep initial order
-        return filter(lambda rec: records_to_keep.get(rec['id']), records)
+        return [rec for rec in records if records_to_keep.get(rec['id'])]
 
 
     @api.model
@@ -412,7 +415,9 @@ class Base(models.AbstractModel):
                             (if possible). If set to true and _parent_name is set on the
                             comodel field, the information necessary for the hierarchization will
                             be returned. Default is True.
+        :param limit: integer, maximal number of values to fetch. Default is None.
         :param search_domain: base domain of search. Default is [].
+                        with parents if hierarchize is set)
         :return: {
             'parent_field': parent field on the comodel of field, or False
             'values': array of dictionaries containing some info on the records
@@ -420,6 +425,7 @@ class Base(models.AbstractModel):
                         The display name, the __count (how many records with that value)
                         and possibly parent_field are fetched.
         }
+        or an object with an error message when limit is defined and is reached.
         """
         field = self._fields[field_name]
         supported_types = ['many2one', 'selection']
@@ -439,12 +445,6 @@ class Base(models.AbstractModel):
                 'values': self._search_panel_selection_range(field_name, model_domain=model_domain,**kwargs),
             }
 
-        enable_counters = kwargs.get('enable_counters')
-        expand = kwargs.get('expand')
-        domain_image = {}
-        if enable_counters or not expand:
-            domain_image = self._search_panel_domain_image(field_name, model_domain, enable_counters)
-
         Comodel = self.env[field.comodel_name].with_context(hierarchical_naming=False)
         field_names = ['display_name']
         hierarchize = kwargs.get('hierarchize', True)
@@ -460,10 +460,21 @@ class Base(models.AbstractModel):
             hierarchize = False
 
         comodel_domain = kwargs.get('comodel_domain', [])
+        enable_counters = kwargs.get('enable_counters')
+        expand = kwargs.get('expand')
+        limit = kwargs.get('limit')
+        domain_image = {}
+        if enable_counters or not expand:
+            domain_image = self._search_panel_domain_image(field_name, model_domain, enable_counters,
+                                    limit if not (expand or hierarchize or comodel_domain) else False
+                                )
         if not (expand or hierarchize or comodel_domain):
+            values = list(domain_image.values())
+            if limit and len(values) == limit:
+                return {'error_msg': _(SEARCH_PANEL_ERROR_MESSAGE)}
             return {
                 'parent_field': parent_name,
-                'values': list(domain_image.values()),
+                'values': values,
             }
 
         if not expand:
@@ -473,11 +484,14 @@ class Base(models.AbstractModel):
             else:
                 condition = [('id', 'in', image_element_ids)]
             comodel_domain = AND([comodel_domain, condition])
-        comodel_records = Comodel.search_read(comodel_domain, field_names)
+        comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
 
         if hierarchize:
             ids = [rec['id'] for rec in comodel_records] if expand else image_element_ids
             comodel_records = self._search_panel_sanitized_parent_hierarchy(comodel_records, parent_name, ids)
+
+        if limit and len(comodel_records) == limit:
+            return {'error_msg': _(SEARCH_PANEL_ERROR_MESSAGE)}
 
         field_range = {}
         for record in comodel_records:
@@ -522,13 +536,17 @@ class Base(models.AbstractModel):
                                 for the group_by (if any). Those domains are
                                 used to fech accurate counters for values in each group.
                                 Default is [] (many2one case) or None.
+        :param limit: integer, maximal number of values to fetch. Default is None.
         :param search_domain: base domain of search. Default is [].
-        :return: a list of possible values, each being a dict with keys
-            'id' (value),
-            'name' (value label),
-            '__count' (how many records with that value),
-            'group_id' (value of group), set if a group_by has been provided,
-            'group_name' (label of group), set if a group_by has been provided
+        :return: {
+            'values': a list of possible values, each being a dict with keys
+                'id' (value),
+                'name' (value label),
+                '__count' (how many records with that value),
+                'group_id' (value of group), set if a group_by has been provided,
+                'group_name' (label of group), set if a group_by has been provided
+        }
+        or an object with an error message when limit is defined and reached.
         """
         field = self._fields[field_name]
         supported_types = ['many2one', 'many2many', 'selection']
@@ -544,11 +562,14 @@ class Base(models.AbstractModel):
         ])
 
         if field.type == 'selection':
-            return self._search_panel_selection_range(field_name, model_domain=model_domain, **kwargs)
+            return {
+                'values': self._search_panel_selection_range(field_name, model_domain=model_domain, **kwargs)
+            }
 
         Comodel = self.env.get(field.comodel_name).with_context(hierarchical_naming=False)
         field_names = ['display_name']
         group_by = kwargs.get('group_by')
+        limit = kwargs.get('limit')
         if group_by:
             group_by_field = Comodel._fields[group_by]
 
@@ -575,7 +596,9 @@ class Base(models.AbstractModel):
         expand = kwargs.get('expand')
 
         if field.type == 'many2many':
-            comodel_records = Comodel.search_read(comodel_domain, field_names)
+            comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
+            if expand and limit and len(comodel_records) == limit:
+                return {'error_msg': _(SEARCH_PANEL_ERROR_MESSAGE)}
 
             group_domain = kwargs.get('group_domain')
             field_range = []
@@ -608,7 +631,10 @@ class Base(models.AbstractModel):
                         values['__count'] = count
                     field_range.append(values)
 
-            return field_range
+            if not expand and limit and len(field_range) == limit:
+                return {'error_msg': _(SEARCH_PANEL_ERROR_MESSAGE)}
+
+            return { 'values': field_range, }
 
         if field.type == 'many2one':
             domain_image = {}
@@ -617,10 +643,15 @@ class Base(models.AbstractModel):
                     model_domain,
                     kwargs.get('group_domain', []),
                 ])
-                domain_image = self._search_panel_domain_image(field_name, model_domain, enable_counters)
+                domain_image = self._search_panel_domain_image(field_name, model_domain, enable_counters,
+                                    limit if not (expand or group_by or comodel_domain) else False
+                                )
 
             if not (expand or group_by or comodel_domain):
-                return list(domain_image.values())
+                values = list(domain_image.values())
+                if limit and len(values) == limit:
+                    return {'error_msg': _(SEARCH_PANEL_ERROR_MESSAGE)}
+                return {'values': values, }
 
             if not expand:
                 image_element_ids = list(domain_image.keys())
@@ -628,7 +659,9 @@ class Base(models.AbstractModel):
                     comodel_domain,
                     [('id', 'in', image_element_ids)],
                 ])
-            comodel_records = Comodel.search_read(comodel_domain, field_names)
+            comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
+            if limit and len(comodel_records) == limit:
+                return {'error_msg': _(SEARCH_PANEL_ERROR_MESSAGE)}
 
             field_range = []
             for record in comodel_records:
@@ -649,7 +682,7 @@ class Base(models.AbstractModel):
 
                 field_range.append(values)
 
-            return field_range
+            return { 'values': field_range, }
 
 
 class ResCompany(models.Model):

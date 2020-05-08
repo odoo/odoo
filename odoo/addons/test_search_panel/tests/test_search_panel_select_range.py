@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import odoo.tests
 
+SEARCH_PANEL_ERROR = {'error_msg': "Too many items to display.", }
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestSelectRange(odoo.tests.TransactionCase):
@@ -86,6 +88,39 @@ class TestSelectRange(odoo.tests.TransactionCase):
                 {'__count': 1, 'display_name': 'Folder 4',
                     'id': f4_id, 'parent_name_id': f2_id, },
             ]
+        )
+
+        # counters, expand, hierarchization, and reached limit
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            enable_counters=True,
+            expand=True,
+            limit=2,
+        )
+        self.assertEqual(result, SEARCH_PANEL_ERROR, )
+
+        # counters, expand, hierarchization, and unreached limit
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            enable_counters=True,
+            expand=True,
+            limit=200,
+        )
+        self.assertEqual(
+            result,
+            {
+                'parent_field': 'parent_name_id',
+                'values': [
+                    {'__count': 2, 'display_name': 'Folder 1',
+                        'id': f1_id, 'parent_name_id': False, },
+                    {'__count': 1, 'display_name': 'Folder 2',
+                        'id': f2_id, 'parent_name_id': False, },
+                    {'__count': 1, 'display_name': 'Folder 3',
+                        'id': f3_id, 'parent_name_id': f1_id, },
+                    {'__count': 1, 'display_name': 'Folder 4',
+                        'id': f4_id, 'parent_name_id': f2_id, },
+                ],
+            }
         )
 
         # counters, expand, and no hierarchization
@@ -210,6 +245,15 @@ class TestSelectRange(odoo.tests.TransactionCase):
             False
         )
 
+        # counters, no expand, no hierarchization, and limit
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            enable_counters=True,
+            hierarchize=False,
+            limit=2,
+        )
+        self.assertEqual(result, SEARCH_PANEL_ERROR, )
+
         # no counters, no expand, and hierarchization
         result = self.SourceModel.search_panel_select_range(
             'folder_id',
@@ -231,6 +275,16 @@ class TestSelectRange(odoo.tests.TransactionCase):
         self.assertEqual(
             result['parent_field'],
             'parent_name_id'
+        )
+
+        # no counters, no expand, and hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            search_domain=[(0, '=', 1)],
+        )
+        self.assertEqual(
+            result,
+            {'parent_field': 'parent_name_id', 'values': [], } # should not be a SEARCH_PANEL_ERROR
         )
 
         # no counters, no expand, and no hierarchization

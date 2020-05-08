@@ -1948,6 +1948,7 @@ QUnit.module('Views', {
                         comodel_domain: [['parent_id', '=', false]],
                         group_domain: [],
                         enable_counters: true,
+                        limit: 200,
                     });
                 }
                 return result;
@@ -3831,6 +3832,82 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_search_panel_label', 2);
         assert.containsNone(kanban, '.o_toggle_fold > i');
         assert.deepEqual(getCounters(kanban), []);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("reached limit for a category", async function (assert) {
+        assert.expect(6);
+
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" limit="2"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsOnce(kanban, '.o_search_panel_section');
+        assert.containsOnce(kanban, '.o_search_panel_section_header');
+        assert.strictEqual(kanban.el.querySelector('.o_search_panel_section_header').innerText, " COMPANY");
+        assert.containsOnce(kanban, 'section div.alert.alert-warning');
+        assert.strictEqual(kanban.el.querySelector('section div.alert.alert-warning').innerText, "Too many items to display.");
+        assert.containsNone(kanban, '.o_search_panel_category_value');
+
+        kanban.destroy();
+    });
+
+    QUnit.test("reached limit for a filter", async function (assert) {
+        assert.expect(6);
+
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" select="multi" limit="2"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsOnce(kanban, '.o_search_panel_section');
+        assert.containsOnce(kanban, '.o_search_panel_section_header');
+        assert.strictEqual(kanban.el.querySelector('.o_search_panel_section_header').innerText, " COMPANY");
+        assert.containsOnce(kanban, 'section div.alert.alert-warning');
+        assert.strictEqual(kanban.el.querySelector('section div.alert.alert-warning').innerText, "Too many items to display.");
+        assert.containsNone(kanban, '.o_search_panel_filter_value');
 
         kanban.destroy();
     });
