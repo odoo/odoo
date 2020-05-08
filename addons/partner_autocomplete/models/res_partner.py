@@ -73,7 +73,7 @@ class ResPartner(models.Model):
 
     @api.model
     def autocomplete(self, query):
-        suggestions, error = self.env['iap.services']._iap_partner_autocomplete('partner_autocomplete_search', query=query)
+        suggestions, error = self.env['iap.services']._iap_get_partner_autocomplete('partner_autocomplete_search', query=query)
         if suggestions:
             results = []
             for suggestion in suggestions:
@@ -84,7 +84,7 @@ class ResPartner(models.Model):
 
     @api.model
     def enrich_company(self, company_domain, partner_gid, vat):
-        response, error = self.env['iap.services']._iap_partner_autocomplete(
+        response, error = self.env['iap.services']._iap_get_partner_autocomplete(
             'partner_autocomplete_search_enrich', domain=company_domain,
             partner_gid=partner_gid, vat=vat)
         if response and response.get('company_data'):
@@ -107,7 +107,7 @@ class ResPartner(models.Model):
 
     @api.model
     def read_by_vat(self, vat):
-        vies_vat_data, error = self.env['iap.services']._iap_partner_autocomplete('partner_autocomplete_search_enrich', vat=vat)
+        vies_vat_data, error = self.env['iap.services']._iap_get_partner_autocomplete('partner_autocomplete_search_enrich', vat=vat)
         if vies_vat_data:
             return [self._format_data_company(vies_vat_data)]
         else:
