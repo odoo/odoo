@@ -633,14 +633,14 @@ class Channel(models.Model):
             partners_to.append(self.env.user.partner_id.id)
             # determine type according to the number of partner in the channel
             self.env.cr.execute("""
-                SELECT P.channel_id as channel_id
+                SELECT P.channel_id
                 FROM mail_channel C, mail_channel_partner P
                 WHERE P.channel_id = C.id
                     AND C.public LIKE 'private'
                     AND P.partner_id IN %s
-                    AND channel_type LIKE 'chat'
+                    AND C.channel_type LIKE 'chat'
                 GROUP BY P.channel_id
-                HAVING array_agg(P.partner_id ORDER BY P.partner_id) = %s
+                HAVING ARRAY_AGG(DISTINCT P.partner_id ORDER BY P.partner_id) = %s
             """, (tuple(partners_to), sorted(list(partners_to)),))
             result = self.env.cr.dictfetchall()
             if result:
