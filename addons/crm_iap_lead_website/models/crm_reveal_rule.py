@@ -9,13 +9,11 @@ from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, tools, _
-from odoo.addons.iap.tools import iap_tools
 from odoo.addons.crm.models import crm_stage
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
-DEFAULT_ENDPOINT = 'https://iap-services.odoo.com'
 DEFAULT_REVEAL_BATCH_LIMIT = 25
 DEFAULT_REVEAL_MONTH_VALID = 6
 
@@ -317,13 +315,7 @@ class CRMRevealRule(models.Model):
 
     def _perform_reveal_service(self, server_payload):
         result = False
-        account_token = self.env['iap.account'].get('reveal')
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/iap/clearbit/1/reveal'
-        params = {
-            'account_token': account_token.account_token,
-            'data': server_payload
-        }
-        result = iap_tools.iap_jsonrpc(endpoint, params=params, timeout=300)
+        result = self.env['iap.services']._iap_request_reveal(server_payload)
         for res in result.get('reveal_data', []):
             if not res.get('not_found'):
                 lead = self._create_lead_from_response(res)

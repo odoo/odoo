@@ -56,7 +56,7 @@ class Lead(models.Model):
 
         if lead_emails:
             try:
-                iap_response = self.env['iap.enrich.api']._request_enrich(lead_emails)
+                iap_response = self.env['iap.services']._iap_request_enrich(lead_emails)
             except iap_tools.InsufficientCreditError:
                 _logger.info('Sent batch %s enrich requests: failed because of credit', len(lead_emails))
                 if not from_cron:

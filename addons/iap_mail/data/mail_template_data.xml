@@ -9,10 +9,9 @@
             <field name="model_id" ref="iap.model_iap_account"/>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
-    % set service_fullname = object.env['iap.services']._iap_get_service_name(object.service_name)
     <p>Dear,</p>
-    <p>There are no more credits on your IAP ${service_fullname} account.<br/>
-    You can charge your IAP ${service_fullname} account in the settings of the CRM app.<br/></p>
+    <p>There are no more credits on your IAP ${object.brand_name} account.<br/>
+    You can charge your IAP ${object.brand_name} account in the settings of the CRM app.<br/></p>
     <p>Best regards,</p>
     <p>Odoo S.A.</p>
 </div></field>
