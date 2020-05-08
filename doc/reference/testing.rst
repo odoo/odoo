@@ -526,6 +526,105 @@ Two new command line arguments were added since Odoo 13.0 to control this behavi
 :option:`--screenshots <odoo-bin --screenshots>` and :option:`--screencasts <odoo-bin --screencasts>`
 
 
+Performance Testing
+===================
+
+Query counts
+------------
+
+One of the ways to test performance is to measure database queries. Manually, this can be tested with the
+`--log-sql` CLI parameter. If you want to establish the maximum number of queries for an operation,
+you can use the :meth:`~odoo.tests.common.BaseCase.assertQueryCount` method, integrated in Odoo test classes.
+
+.. code-block:: python
+
+    with self.assertQueryCount(11):
+        do_something()
+
+.. _reference/testing/populate:
+
+Database population
+-------------------
+
+Odoo CLI offers a :ref:`database population<reference/cmdline/populate>` feature.
+
+.. code-block:: console
+
+    odoo-bin populate
+
+Instead of the tedious manual, or programmatic, specification of test data,
+one can use this feature to fill a database on demand with the desired number of test data.
+This can be used to detect diverse bugs or performance issues in tested flows.
+
+To specify this feature for a given model, the following methods and attributes can be defined.
+
+.. _reference/testing/populate/methods:
+
+.. currentmodule:: odoo.models
+
+.. autoattribute:: Model._populate_sizes
+.. autoattribute:: Model._populate_dependencies
+.. automethod:: Model._populate
+.. automethod:: Model._populate_factories
+
+.. note::
+
+    You have to define at least :meth:`~odoo.models.Model._populate` or :meth:`~odoo.models.Model._populate_factories`
+    on the model to enable database population.
+
+Example model
+^^^^^^^^^^^^^
+
+.. code-block:: python
+
+    from odoo.tools import populate
+
+    class CustomModel(models.Model)
+        _inherit = "custom.some_model"
+        _populate_sizes = {"small": 100, "medium": 2000, "large": 10000}
+        _populate_dependencies = ["custom.some_other_model"]
+
+        def _populate_factories(self):
+            # Record ids of previously populated models are accessible in the registry
+            some_other_ids = self.env.registry.populated_models["custom.some_other_model"]
+
+            def get_some_field(values=None, random=None, **kwargs):
+                """ Choose a value for some_field depending on other fields values.
+
+                    :param dict values:
+                    :param random: seeded :class:`random.Random` object
+                """
+                field_1 = values['field_1']
+                if field_1 in [value2, value3]:
+                    return random.choice(some_field_values)
+                return False
+
+            return [
+                ("field_1", populate.randomize([value1, value2, value3])),
+                ("field_2", populate.randomize([value_a, value_b], [0.5, 0.5])),
+                ("some_other_id", populate.randomize(some_other_ids)),
+                ("some_field", populate.compute(get_some_field, seed="some_field")),
+                ('active', populate.cartesian([True, False])),
+            ]
+
+        def _populate(self, size):
+            records = super()._populate(size)
+
+            # If you want to update the generated records
+            # E.g setting the parent-child relationships
+            records.do_something()
+
+            return records
+
+Population tools
+^^^^^^^^^^^^^^^^
+
+Multiple population tools are available to easily create
+the needed data generators.
+
+.. automodule:: odoo.tools.populate
+    :members: cartesian, compute, constant, iterate, randint, randomize
+
 .. _qunit: https://qunitjs.com/
 .. _qunit_config.js: https://github.com/odoo/odoo/blob/51ee0c3cb59810449a60dae0b086b49b1ed6f946/addons/web/static/tests/helpers/qunit_config.js#L49
 .. _web.tests_assets: https://github.com/odoo/odoo/blob/51ee0c3cb59810449a60dae0b086b49b1ed6f946/addons/web/views/webclient_templates.xml#L594

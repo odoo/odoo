@@ -6150,22 +6150,41 @@ Record ids: %(records)s
         return 'placeholder.png'
 
     def _populate_factories(self):
-        """ Return a list of pairs ``(field_name, factory)``, ``factory`` is a function that creates
-        a generator of values (dict of field values).  Its API suggested by::
+        """ Generates a factory for the different fields of the model.
 
-            # generator yield values by iterating on base_generator and adding a value
-            # for the given field in the dicts yielded by base_generator
-            generator = factory(base_generator, field_name, model_name)
-            # suggested usage
-            for values in generator:
-                model.create(values)
+        ``factory`` is a generator of values (dict of field values).
+
+        Factory skeleton::
+
+            def generator(iterator, field_name, model_name):
+                for counter, values in enumerate(iterator):
+                    # values.update(dict())
+                    yield values
+
+        See :mod:`odoo.tools.populate` for population tools and applications.
+
+        :returns: list of pairs(field_name, factory) where `factory` is a generator function.
+        :rtype: list(tuple(str, generator))
+
+        .. note::
+
+            It is the responsibility of the generator to handle the field_name correctly.
+            The generator could generate values for multiple fields together. In this case,
+            the field_name should be more a "field_group", covering the different fields
+            updated by the generator (e.g. "_address" for a generator updating multiple address fields).
         """
         return []
 
     @property
     def _populate_sizes(self):
         """ Return a dict mapping symbolic sizes (``'small'``, ``'medium'``, ``'large'``) to integers,
-        giving the minimal number of records that method ``_populate`` should create.
+        giving the minimal number of records that :meth:`_populate` should create.
+
+        The default population sizes are:
+
+        * ``small`` : 10
+        * ``medium`` : 100
+        * ``large`` : 1000
         """
         return {
             'small': 10,  # minimal representative set
@@ -6175,12 +6194,16 @@ Record ids: %(records)s
 
     @property
     def _populate_dependencies(self):
+        """ Return the list of models which have to be populated before the current one.
+
+        :rtype: list
+        """
         return []
 
     def _populate(self, size):
         """ Create records to populate this model.
-        
-        :param size: symbolic size for the number of records: ``'small'``, ``'medium'`` or ``'large'``
+
+        :param str size: symbolic size for the number of records: ``'small'``, ``'medium'`` or ``'large'``
         """
         batch_size = 1000
         min_size = self._populate_sizes[size]

@@ -17,7 +17,7 @@ def format_str(val, counter, values):
     return val
 
 
-def chain_factories(field_factories, model_name): 
+def chain_factories(field_factories, model_name):
     """ Instanciate a generator by calling all the field factories. """
     generator = root_factory()
     for (fname, field_factory) in field_factories:
@@ -35,6 +35,14 @@ def root_factory():
 def randomize(vals, weights=None, seed=False, formatter=format_str, counter_offset=0):
     """ Return a factory for an iterator of values dicts with pseudo-randomly
     chosen values (among ``vals``) for a field.
+
+    :param list vals: list in which a value will be chosen, depending on `weights`
+    :param list weights: list of probabilistic weights
+    :param seed: optional initialization of the random number generator
+    :param function formatter: (val, counter, values) --> formatted_value
+    :param int counter_offset:
+    :returns: function of the form (iterator, field_name, model_name) -> values
+    :rtype: function (iterator, str, str) -> dict
     """
     def generate(iterator, field_name, model_name):
         r = Random('%s+field+%s' % (model_name, seed or field_name))
@@ -48,6 +56,14 @@ def randomize(vals, weights=None, seed=False, formatter=format_str, counter_offs
 def cartesian(vals, weights=None, seed=False, formatter=format_str, then=None):
     """ Return a factory for an iterator of values dicts that combines all ``vals`` for
     the field with the other field values in input.
+
+    :param list vals: list in which a value will be chosen, depending on `weights`
+    :param list weights: list of probabilistic weights
+    :param seed: optional initialization of the random number generator
+    :param function formatter: (val, counter, values) --> formatted_value
+    :param function then: if defined, factory used when vals has been consumed.
+    :returns: function of the form (iterator, field_name, model_name) -> values
+    :rtype: function (iterator, str, str) -> dict
     """
     def generate(iterator, field_name, model_name):
         counter = 0
@@ -64,8 +80,16 @@ def cartesian(vals, weights=None, seed=False, formatter=format_str, then=None):
 
 def iterate(vals, weights=None, seed=False, formatter=format_str, then=None):
     """ Return a factory for an iterator of values dicts that picks a value among ``vals``
-    for each input.  Once all ``vals`` have been used once, resume as a ``randomize``
-    generator.
+    for each input.  Once all ``vals`` have been used once, resume as ``then`` or as a
+    ``randomize`` generator.
+
+    :param list vals: list in which a value will be chosen, depending on `weights`
+    :param list weights: list of probabilistic weights
+    :param seed: optional initialization of the random number generator
+    :param function formatter: (val, counter, values) --> formatted_value
+    :param function then: if defined, factory used when vals has been consumed.
+    :returns: function of the form (iterator, field_name, model_name) -> values
+    :rtype: function (iterator, str, str) -> dict
     """
     def generate(iterator, field_name, model_name):
         counter = 0
@@ -83,6 +107,9 @@ def iterate(vals, weights=None, seed=False, formatter=format_str, then=None):
 def constant(val, formatter=format_str):
     """ Return a factory for an iterator of values dicts that sets the field
     to the given value in each input dict.
+
+    :returns: function of the form (iterator, field_name, model_name) -> values
+    :rtype: function (iterator, str, str) -> dict
     """
     def generate(iterator, field_name, _):
         for counter, values in enumerate(iterator):
@@ -95,6 +122,11 @@ def compute(function, seed=None):
     """ Return a factory for an iterator of values dicts that computes the field value
     as ``function(values, counter, random)``, where ``values`` is the other field values,
     ``counter`` is an integer, and ``random`` is a pseudo-random number generator.
+
+    :param function function: (values, counter, random) --> field_values
+    :param seed: optional initialization of the random number generator
+    :returns: function of the form (iterator, field_name, model_name) -> values
+    :rtype: function (iterator, str, str) -> dict
     """
     def generate(iterator, field_name, model_name):
         r = Random('%s+field+%s' % (model_name, seed or field_name))
@@ -107,6 +139,11 @@ def compute(function, seed=None):
 def randint(a, b, seed=None):
     """ Return a factory for an iterator of values dicts that sets the field
     to the random integer between a and b included in each input dict.
+
+    :param int a: minimal random value
+    :param int b: maximal random value
+    :returns: function of the form (iterator, field_name, model_name) -> values
+    :rtype: function (iterator, str, str) -> dict
     """
     def get_rand_int(random=None, **kwargs):
         random.randint(a, b)

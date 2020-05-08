@@ -536,6 +536,10 @@ starting requirements are.
 
 Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
 
+.. code-block:: console
+
+    $ odoo_bin scaffold my_module /addons/
+
 .. option:: name (required)
 
     the name of the module to create, may munged in various manners to
@@ -551,8 +555,34 @@ Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
     a template directory, files are passed through jinja2_ then copied to
     the ``destination`` directory
 
-.. code-block:: console
-
-    $ odoo_bin scaffold my_module /addons/
 
 This will create module *my_module* in directory */addons/*.
+
+.. _reference/cmdline/populate:
+
+Database Population
+===================
+
+.. program:: odoo-bin populate
+
+Odoo CLI supports database population features. If the feature is
+:ref:`implemented on a given model<reference/testing/populate/methods>`, it allows automatic data
+generation of the model's records to test your modules in databases containing non-trivial amounts of records.
+
+.. code-block:: console
+
+    $ odoo_bin populate
+
+.. option:: --models
+
+    list of models for which the database should be filled
+
+.. option:: --size (small|medium|large)
+
+    population size, the actual records number depends on the model's `_populate_sizes` attribute.
+    The generated records content is specified by the :meth:`~odoo.models._populate_factories` method
+    of a given model (cf. the :file:`populate` folder of modules for further details).
+
+.. seealso::
+
+    :ref:`reference/testing/populate`
