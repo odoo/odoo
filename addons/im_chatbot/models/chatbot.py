@@ -54,7 +54,10 @@ class ChatBot(models.Model):
                 .with_context(mail_create_nosubscribe=True).create(
                     {
                         "name": "test",
-                        "channel_partner_ids": [(4, bot_partner[0]["id"]), (4, partner.id)],
+                        "channel_partner_ids": [
+                            (4, bot_partner[0]["id"]),
+                            (4, partner.id),
+                        ],
                         "livechat_channel_id": 1,
                         "livechat_operator_id": bot_partner[0]["id"],
                         "channel_type": "livechat",
