@@ -93,7 +93,11 @@ odoo.define('web.DropdownMenu', function (require) {
          * @private
          * @param {OwlEvent} ev
          */
-        _onItemSelected(ev) { }
+        _onItemSelected(/* ev */) {
+            if (this.props.closeOnSelected) {
+                this.state.open = false;
+            }
+        }
 
         /**
          * @private
@@ -126,6 +130,7 @@ odoo.define('web.DropdownMenu', function (require) {
             optional: 1,
         },
         title: { type: String, optional: 1 },
+        closeOnSelected: { type: Boolean, optional: 1 },
     };
     DropdownMenu.template = 'web.DropdownMenu';
 
