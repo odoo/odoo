@@ -914,7 +914,7 @@ class Field(MetaField('DummyField', (object,), {})):
             recs = record if self.recursive else env.records_to_compute(self)
             try:
                 self.compute_value(recs)
-            except AccessError:
+            except (AccessError, MissingError):
                 self.compute_value(record)
 
         try:
@@ -949,7 +949,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     recs = record if self.recursive else record._in_cache_without(self)
                     try:
                         self.compute_value(recs)
-                    except AccessError:
+                    except (AccessError, MissingError):
                         self.compute_value(record)
                     value = env.cache.get(record, self)
 
