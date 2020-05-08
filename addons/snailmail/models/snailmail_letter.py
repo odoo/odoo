@@ -4,11 +4,7 @@ import re
 import base64
 
 from odoo import fields, models, api, _
-from odoo.addons.iap.tools import iap_tools
 from odoo.tools.safe_eval import safe_eval
-
-DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
-PRINT_ENDPOINT = '/iap/snailmail/1/print'
 
 ERROR_CODES = [
     'MISSING_REQUIRED_FIELDS',
@@ -157,7 +153,6 @@ class SnailmailLetter(models.Model):
 
         :return: Dict in the form:
         {
-            account_token: string,    //IAP Account token of the user
             documents: [{
                 pages: int,
                 pdf_bin: pdf file
@@ -189,8 +184,6 @@ class SnailmailLetter(models.Model):
             }
         }
         """
-        account_token = self.env['iap.services']._iap_get_account('snailmail', force_create=True).account_token
-        dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         documents = []
 
         batch = len(self) > 1
@@ -250,8 +243,6 @@ class SnailmailLetter(models.Model):
             documents.append(document)
 
         return {
-            'account_token': account_token,
-            'dbuuid': dbuuid,
             'documents': documents,
             'options': {
                 'color': self and self[0].color,
@@ -331,9 +322,8 @@ class SnailmailLetter(models.Model):
             }
         }
         """
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('snailmail.endpoint', DEFAULT_ENDPOINT)
         params = self._snailmail_create('print')
-        response = iap_tools.iap_jsonrpc(endpoint + PRINT_ENDPOINT, params=params)
+        response = self.env['iap.services']._iap_request_snailmail_print(**params)
         for doc in response['request']['documents']:
             if doc.get('sent') and response['request_code'] == 200:
                 note = _('The document was correctly sent by post.<br>The tracking id is %s' % doc['send_id'])

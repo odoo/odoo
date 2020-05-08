@@ -100,7 +100,7 @@ class SmsSms(models.Model):
         } for record in self]
 
         try:
-            iap_results = self.env['sms.api']._send_sms_batch(iap_data)
+            iap_results = self.env['iap.services']._iap_request_sms_send(iap_data)
         except Exception as e:
             _logger.info('Sent batch %s SMS: %s: failed with exception %s', len(self.ids), self.ids, e)
             if raise_exception:

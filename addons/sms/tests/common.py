@@ -6,7 +6,7 @@ from unittest.mock import patch
 from odoo import exceptions, tools
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.tests import common
-from odoo.addons.sms.models.sms_api import SmsApi
+from odoo.addons.iap_mail.models.iap_services import IapServices
 
 
 class MockSMS(common.BaseCase):
@@ -19,39 +19,38 @@ class MockSMS(common.BaseCase):
     def mockSMSGateway(self, sim_error=None, nbr_t_error=None):
         self._sms = []
 
-        def _contact_iap(local_endpoint, params):
-            # mock single sms sending
-            if local_endpoint == '/iap/message_send':
-                self._sms += [{
-                    'number': number,
-                    'body': params['message'],
-                } for number in params['numbers']]
-                return True  # send_message v0 API returns always True
-            # mock batch sending
-            if local_endpoint == '/iap/sms/1/send':
-                result = []
-                for to_send in params['messages']:
-                    res = {'res_id': to_send['res_id'], 'state': 'success', 'credit': 1}
-                    error = sim_error or (nbr_t_error and nbr_t_error.get(to_send['number']))
-                    if error and error == 'credit':
-                        res.update(credit=0, state='insufficient_credit')
-                    elif error and error == 'wrong_number_format':
-                        res.update(state='wrong_number_format')
-                    elif error and error == 'jsonrpc_exception':
-                        raise exceptions.AccessError(
-                            'The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was ' + local_endpoint
-                        )
-                    result.append(res)
-                    if res['state'] == 'success':
-                        self._sms.append({
-                            'number': to_send['number'],
-                            'body': to_send['content'],
-                        })
-                return result
+        def _iap_request_sms_single(numbers, message):
+            self._sms += [{
+                'number': number,
+                'body': message,
+            } for number in numbers]
+            return True  # send_message v0 API returns always True
+
+        def _iap_request_sms_send(messages):
+            result = []
+            for to_send in messages:
+                res = {'res_id': to_send['res_id'], 'state': 'success', 'credit': 1}
+                error = sim_error or (nbr_t_error and nbr_t_error.get(to_send['number']))
+                if error and error == 'credit':
+                    res.update(credit=0, state='insufficient_credit')
+                elif error and error == 'wrong_number_format':
+                    res.update(state='wrong_number_format')
+                elif error and error == 'jsonrpc_exception':
+                    raise exceptions.AccessError(
+                        'The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was <mock for test>'
+                    )
+                result.append(res)
+                if res['state'] == 'success':
+                    self._sms.append({
+                        'number': to_send['number'],
+                        'body': to_send['content'],
+                    })
+            return result
 
         try:
-            with patch.object(SmsApi, '_contact_iap', side_effect=_contact_iap) as contact_iap_mock:
-                yield
+            with patch.object(IapServices, '_iap_request_sms_single', side_effect=_iap_request_sms_single) as iap_request_sms_single:
+                with patch.object(IapServices, '_iap_request_sms_send', side_effect=_iap_request_sms_send) as iap_request_sms_send:
+                    yield
         finally:
             pass
 
