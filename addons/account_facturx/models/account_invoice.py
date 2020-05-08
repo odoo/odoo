@@ -156,9 +156,16 @@ class AccountInvoice(models.Model):
             if elements:
                 date_str = elements[0].text
                 date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
+<<<<<<< HEAD
                 # Set to empty record set to avoid readonly on date_due, can not set to False or None in a Form
                 invoice_form.payment_term_id = self.env['account.payment.term']
                 invoice_form.date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
+=======
+                date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
+                if date_due:
+                    invoice_form.payment_term_id = self.env['account.payment.term']
+                    invoice_form.date_due = date_due
+>>>>>>> 1c583d126cf... temp
 
             # Invoice lines.
             elements = tree.xpath('//ram:IncludedSupplyChainTradeLineItem', namespaces=tree.nsmap)
