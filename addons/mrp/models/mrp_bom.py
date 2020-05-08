@@ -336,7 +336,7 @@ class MrpBomLine(models.Model):
     def _compute_child_line_ids(self):
         """ If the BOM line refers to a BOM, return the ids of the child BOM lines """
         for line in self:
-            line.child_line_ids = line.child_bom_id.bom_line_ids.ids
+            line.child_line_ids = line.child_bom_id.bom_line_ids.ids or False
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
