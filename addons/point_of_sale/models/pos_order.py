@@ -53,11 +53,9 @@ class PosOrder(models.Model):
 
     @api.model
     def _payment_fields(self, order, ui_paymentline):
-        payment_date = ui_paymentline['name']
-        payment_date = fields.Date.context_today(self, fields.Datetime.from_string(payment_date))
         return {
             'amount': ui_paymentline['amount'] or 0.0,
-            'payment_date': payment_date,
+            'payment_date': ui_paymentline['name'],
             'payment_method_id': ui_paymentline['payment_method_id'],
             'card_type': ui_paymentline.get('card_type'),
             'transaction_id': ui_paymentline.get('transaction_id'),
