@@ -10,6 +10,42 @@ class PartnerBot(models.Model):
     is_bot = fields.Boolean(default=False)
 
 
+class ChatbotMailMessage(models.Model):
+    _inherit = 'mail.message'
+
+    script_id = fields.Many2one("im_chatbot.script")
+
+
+class ChatbotMessageHook(models.Model):
+    _inherit = "mail.channel"
+
+    def _message_post_after_hook(self, message, msg_vals):
+        super(ChatbotMessageHook, self)._message_post_after_hook(message, msg_vals)
+
+        # Livechat Channel opérator is a bot but not the one who posted
+        # We know the bot can read the message and react to it
+        if (
+            self.channel_type == "livechat"
+            and self.livechat_operator_id.is_bot
+            and not message.author_id.is_bot
+        ):
+            self._bot_answer(message)
+
+    def _bot_answer(self, message):
+        bot_partner = self.livechat_operator_id
+        self._bot_message_post(bot_partner)
+        return True
+
+    def _bot_message_post(self, bot_partner):
+        self.sudo().message_post(
+            body="other message",
+            author_id=bot_partner.id,
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        return True
+
+
 class ChatBot(models.Model):
     _name = "im_chatbot.chatbot"
     _description = "Chabots"
