@@ -3,7 +3,7 @@
 from odoo import models, fields, api
 
 
-class Message(models.Model):
+class Script(models.Model):
     _name = "im_chatbot.script"
     _description = "Message from the chatbot"
     _order = "sequence, id"
