@@ -82,13 +82,32 @@ class TestMrpCancelMO(TestMrpCommon):
         done and the WO must be cancelled.
         """
         # Create MO
-        mo_data = self.generate_mo(consumption='strict')
-        manufacturing_order = mo_data[0]
-        bom = mo_data[1]
-        bom.write({
+        product_to_build = self.env['product.product'].create({
+            'name': 'Young Tom',
+            'type': 'product',
+        })
+        product_to_use_1 = self.env['product.product'].create({
+            'name': 'Botox',
+            'type': 'product',
+        })
+        product_to_use_2 = self.env['product.product'].create({
+            'name': 'Old Tom',
+            'type': 'product',
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_id': product_to_build.id,
+            'product_tmpl_id': product_to_build.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'consumption': 'strict',
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_to_use_2.id, 'product_qty': 4}),
+                (0, 0, {'product_id': product_to_use_1.id, 'product_qty': 1})
+            ],
             'operation_ids': [
                 (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
-            ],
+            ]
         })
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = product_to_build
@@ -96,9 +115,6 @@ class TestMrpCancelMO(TestMrpCommon):
         mo_form.product_qty = 5.0
         manufacturing_order = mo_form.save()
         manufacturing_order.action_confirm()
-        mo_form = Form(manufacturing_order)
-        mo_form.qty_producing = 2
-        manufacturing_order = mo_form.save()
 
         manufacturing_order.button_plan()
         workorder = manufacturing_order.workorder_ids

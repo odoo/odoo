@@ -96,6 +96,15 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Operations"
+                            name="operations"
+                            attrs="{'invisible': [('type','not in',('normal','phantom'))]}"
+                            groups="mrp.group_mrp_routings">
+                                <field name="operation_ids"
+                                    attrs="{'invisible': [('type','not in',('normal','phantom'))]}"
+                                    groups="mrp.group_mrp_routings"
+                                    context="{'default_company_id': company_id}"/>
+                        </page>
                         <page string="By-products"
                             name="by_products"
                             attrs="{'invisible': [('type','!=','normal')]}"
@@ -121,15 +130,6 @@
                                     <field name="picking_type_id" attrs="{'invisible': [('type','!=','normal')]}" string="Operation" groups="stock.group_adv_location"/>
                                 </group>
                             </group>
-                        </page>
-                        <page string="Operations"
-                            name="operations"
-                            attrs="{'invisible': [('type','not in',('normal','phantom'))]}"
-                            groups="mrp.group_mrp_routings">
-                                <field name="operation_ids"
-                                    attrs="{'invisible': [('type','not in',('normal','phantom'))]}"
-                                    groups="mrp.group_mrp_routings"
-                                    context="{'default_company_id': company_id}"/>
                         </page>
                     </notebook>
                     </sheet>
