@@ -1362,6 +1362,35 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('Row selection checkbox can be toggled by clicking on the cell', async function (assert) {
+        assert.expect(9);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+        });
+
+        testUtils.mock.intercept(list, "selection_changed", function (ev) {
+            assert.step(ev.data.selection.length.toString());
+        });
+
+        testUtils.dom.click(list.$('tbody .o_list_record_selector:first'));
+        assert.containsOnce(list, 'tbody .o_list_record_selector input:checked');
+        testUtils.dom.click(list.$('tbody .o_list_record_selector:first'));
+        assert.containsNone(list, '.o_list_record_selector input:checked');
+
+        testUtils.dom.click(list.$('thead .o_list_record_selector'));
+        assert.containsN(list, '.o_list_record_selector input:checked', 5);
+        testUtils.dom.click(list.$('thead .o_list_record_selector'));
+        assert.containsNone(list, '.o_list_record_selector input:checked');
+
+        assert.verifySteps(['1', '0', '4', '0']);
+
+        list.destroy();
+    });
+
     QUnit.test('head selector is toggled by the other selectors', async function (assert) {
         assert.expect(6);
 
