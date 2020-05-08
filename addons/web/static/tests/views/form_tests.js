@@ -2136,6 +2136,58 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('archive/unarchive a record', async function (assert) {
+        assert.expect(10);
+
+        // add active field on partner model to have archive option
+        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            res_id: 1,
+            viewOptions: { hasActionMenus: true },
+            arch: '<form><field name="active"/><field name="foo"/></form>',
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                if (args.method === 'action_archive') {
+                    this.data.partner.records[0].active = false;
+                    return Promise.resolve();
+                }
+                if (args.method === 'action_unarchive') {
+                    this.data.partner.records[0].active = true;
+                    return Promise.resolve();
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await cpHelpers.toggleActionMenu(form);
+        assert.containsOnce(form, '.o_cp_action_menus a:contains(Archive)');
+
+        await cpHelpers.toggleMenuItem(form, "Archive");
+        assert.containsOnce(document.body, '.modal');
+
+        await testUtils.dom.click($('.modal-footer .btn-primary'));
+        await cpHelpers.toggleActionMenu(form);
+        assert.containsOnce(form, '.o_cp_action_menus a:contains(Unarchive)');
+
+        await cpHelpers.toggleMenuItem(form, "Unarchive");
+        await cpHelpers.toggleActionMenu(form);
+        assert.containsOnce(form, '.o_cp_action_menus a:contains(Archive)');
+
+        assert.verifySteps([
+            'read',
+            'action_archive',
+            'read',
+            'action_unarchive',
+            'read',
+        ]);
+
+        form.destroy();
+    });
+
     QUnit.test('can duplicate a record', async function (assert) {
         assert.expect(3);
 
