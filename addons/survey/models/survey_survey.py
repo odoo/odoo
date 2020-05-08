@@ -72,7 +72,7 @@ class Survey(models.Model):
         ('all', 'All questions'),
         ('random', 'Randomized per section')],
         string="Selection", required=True, default='all',
-        help="If randomized is selected, add the number of random questions next to the section.")
+        help="If randomized is selected, you can configure the number of random questions by section. This mode is ignored in live session.")
     progression_mode = fields.Selection([
         ('percent', 'Percentage'),
         ('number', 'Number')], string='Progression Mode', default='percent',
@@ -509,7 +509,7 @@ class Survey(models.Model):
         if self.questions_layout == 'page_per_section':
             result = self.page_ids
         elif self.questions_layout == 'page_per_question':
-            if self.questions_selection == 'random':
+            if self.questions_selection == 'random' and not self.session_state:
                 result = user_input.predefined_question_ids
             else:
                 result = self.question_and_page_ids.filtered(
