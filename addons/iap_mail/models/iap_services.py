@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
+from requests.exceptions import HTTPError
+
 from odoo import api, exceptions, models, _
 from odoo.addons.iap.tools import iap_tools
+
+_logger = logging.getLogger(__name__)
 
 
 class IapServices(models.AbstractModel):
@@ -14,6 +20,8 @@ class IapServices(models.AbstractModel):
 
     @api.model
     def _iap_get_endpoint_netloc(self, account_name):
+        if account_name == 'partner_autocomplete':
+            return self.env['ir.config_parameter'].sudo().get_param('iap.partner_autocomplete.endpoint', 'https://partner-autocomplete.odoo.com')
         if account_name == 'sms':
             return self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', 'https://iap-sms.odoo.com')
         if account_name == 'snailmail':
@@ -22,6 +30,11 @@ class IapServices(models.AbstractModel):
 
     @api.model
     def _iap_get_service_account_match(self, service_name):
+        if service_name in ('partner_autocomplete',
+                            'partner_autocomplete_enrich',
+                            'partner_autocomplete_search',
+                            'partner_autocomplete_search_vat'):
+            return 'partner_autocomplete'
         if service_name in ('sms', 'sms_send', 'sms_single'):
             return 'sms'
         if service_name in ('snailmail', 'snailmail_print'):
@@ -30,6 +43,12 @@ class IapServices(models.AbstractModel):
 
     @api.model
     def _iap_get_service_url_scheme(self, service_name):
+        if service_name == 'partner_autocomplete_enrich':
+            return 'iap/partner_autocomplete/enrich'
+        if service_name == 'partner_autocomplete_search':
+            return 'iap/partner_autocomplete/search'
+        if service_name == 'partner_autocomplete_search_vat':
+            return 'iap/partner_autocomplete/search_vat'
         if service_name == 'sms_send':
             return 'iap/sms/1/send'
         if service_name == 'sms_single':
@@ -41,6 +60,33 @@ class IapServices(models.AbstractModel):
     # ------------------------------------------------------------
     # REQUESTS
     # ------------------------------------------------------------
+
+    def _iap_partner_autocomplete_params(self):
+        return {
+            'account_token': self.env['iap.services']._iap_get_service_account('partner_autocomplete', force_create=False).account_token,
+            'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            'country_code': self.env.company.country_id.code,
+            'zip': self.env.company.z
+        }
+
+    @api.model
+    def _iap_request_partner_autocomplete_enrich(self, domain, partner_gid, vat):
+        """
+
+        :return result: tuple(results, error)
+        """
+        params = dict(self._iap_partner_autocomplete_params(), domain=domain, partner_gid=partner_gid, vat=vat)
+        return iap_tools.iap_jsonrpc(self._iap_get_service_url('partner_autocomplete_enrich'), params=params, timeout=15)
+
+    @api.model
+    def _iap_request_partner_autocomplete_search(self, query):
+        params = dict(self._iap_partner_autocomplete_params(), query=query)
+        return iap_tools.iap_jsonrpc(self._iap_get_service_url('partner_autocomplete_search'), params=params, timeout=15)
+
+    @api.model
+    def _iap_request_partner_autocomplete_search_vat(self, vat):
+        params = dict(self._iap_partner_autocomplete_params(), vat=vat)
+        return iap_tools.iap_jsonrpc(self._iap_get_service_url('partner_autocomplete_search_vat'), params=params, timeout=15)
 
     @api.model
     def _iap_request_snailmail_print(self, documents, options, batch=True):
@@ -108,6 +154,36 @@ class IapServices(models.AbstractModel):
             'messages': messages
         }
         return iap_tools.iap_jsonrpc(self._iap_get_service_url('sms_send'), params=params)
+
+    # ------------------------------------------------------------
+    # PARTNER HELPERS AND TOOLS
+    # ------------------------------------------------------------
+
+    @api.model
+    def _iap_get_partner_autocomplete(self, service_name, **params):
+        """ UPDATE ME, DON'T KNOW WHAT PA IS TRYING TO DO """
+        pa_account = self.env['iap.services']._iap_get_account('partner_autocomplete', force_create=False)
+        if not pa_account.account_token:
+            return False, 'No Account Token'
+        try:
+            if service_name == 'partner_autocomplete_enrich':
+                results = self._iap_request_partner_autocomplete_enrich(**params)
+            elif service_name == 'partner_autocomplete_search':
+                results = self._iap_request_partner_autocomplete_search(**params)
+            elif service_name == 'partner_autocomplete_search_vat':
+                results = self._iap_request_partner_autocomplete_search_vat(**params)
+            else:
+                raise ValueError(_('Invalid partner autocompletion service'))
+
+        except (ConnectionError, HTTPError, exceptions.AccessError, exceptions.UserError) as exception:
+            _logger.error('Autocomplete API error: %s' % str(exception))
+            return False, str(exception)
+
+        except iap_tools.InsufficientCreditError as exception:
+            _logger.warning('Insufficient Credits for Autocomplete Service: %s' % str(exception))
+            return False, 'Insufficient Credit'
+
+        return results, False
 
     # ------------------------------------------------------------
     # MAIL HELPERS AND TOOLS
