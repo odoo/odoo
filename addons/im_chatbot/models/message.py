@@ -4,9 +4,10 @@ from odoo import models, fields, api
 
 
 class Message(models.Model):
-    _name = "im_chatbot.message"
+    _name = "im_chatbot.script"
     _description = "Message from the chatbot"
     _order = "sequence, id"
+    message_ids = fields.One2many("mail.message", "script_id")
 
     name = fields.Char(string="Message")
     sequence = fields.Integer(string="Sequence", default=10)
