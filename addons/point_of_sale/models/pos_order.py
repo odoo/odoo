@@ -381,6 +381,7 @@ class PosOrder(models.Model):
             if not order.partner_id:
                 raise UserError(_('Please provide a partner for the sale.'))
 
+            timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
             move_vals = {
                 'payment_reference': order.name,
                 'invoice_origin': order.name,
@@ -392,7 +393,7 @@ class PosOrder(models.Model):
                 # considering partner's sale pricelist's currency
                 'currency_id': order.pricelist_id.currency_id.id,
                 'invoice_user_id': order.user_id.id,
-                'invoice_date': order.date_order.date(),
+                'invoice_date': order.date_order.astimezone(timezone).date(),
                 'fiscal_position_id': order.fiscal_position_id.id,
                 'invoice_line_ids': [(0, None, order._prepare_invoice_line(line)) for line in order.lines],
                 'invoice_cash_rounding_id': order.config_id.rounding_method.id if order.config_id.cash_rounding else False
