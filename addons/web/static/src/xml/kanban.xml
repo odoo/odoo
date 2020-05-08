@@ -222,7 +222,10 @@
         <t t-call="SearchPanel.SectionHeader">
             <t t-set="section" t-value="category"/>
         </t>
-        <ul class="list-group d-block o_search_panel_field" t-att-data-field-name="category.fieldName">
+        <div t-if="category.errorMsg" class="alert alert-warning">
+            <span><t t-esc="category.errorMsg"/></span>
+        </div>
+        <ul t-else="" class="list-group d-block o_search_panel_field" t-att-data-field-name="category.fieldName">
             <li class="o_search_panel_category_value border-0 list-group-item" t-att-data-category-id="category.id">
                 <header t-att-class="'list-group-item-action' + (!category.activeValueId ? ' active' : '')">
                     <label class="o_search_panel_label mb0">
@@ -267,7 +270,10 @@
         <t t-call="SearchPanel.SectionHeader">
             <t t-set="section" t-value="filter"/>
         </t>
-        <ul class="list-group d-block o_search_panel_field" t-att-data-field-name="filter.fieldName">
+        <div t-if="filter.errorMsg" class="alert alert-warning">
+            <span><t t-esc="filter.errorMsg"/></span>
+        </div>
+        <ul t-else="" class="list-group d-block o_search_panel_field" t-att-data-field-name="filter.fieldName">
             <t t-if="filter.groups" t-call="SearchPanel.FilterGroups">
                 <t t-set="groups" t-value="filter.groups"/>
             </t>

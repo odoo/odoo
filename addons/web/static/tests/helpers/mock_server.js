@@ -539,15 +539,16 @@ var MockServer = Class.extend({
         return modelFields;
     },
     /**
-     * Simulate a call to the server '_search_panel_domain_image' method.
+     * Simulates a call to the server '_search_panel_domain_image' method.
      *
+     * @private
      * @param {string} model
      * @param {Array[]} domain
      * @param {string} fieldName
      * @param {boolean} setCount
      * @returns {Map}
      */
-    _mockSearchPanelDomainImage: function (model, fieldName, domain, setCount=false) {
+    _mockSearchPanelDomainImage: function (model, fieldName, domain, setCount=false, limit=false) {
         const field = this.data[model].fields[fieldName];
         let groupIdName;
         if (field.type === 'many2one') {
@@ -569,6 +570,7 @@ var MockServer = Class.extend({
             domain,
             fields: [fieldName],
             groupby: [fieldName],
+            limit,
         });
         const domainImage = new Map();
         for (const group of groups) {
@@ -582,8 +584,9 @@ var MockServer = Class.extend({
         return domainImage;
     },
     /**
-     * Simulate a call to the server '_search_panel_global_counters' method.
+     * Simulates a call to the server '_search_panel_global_counters' method.
      *
+     * @private
      * @param {Map} valuesRange
      * @param {(string|boolean)} parentName 'parent_id' or false
      */
@@ -602,8 +605,9 @@ var MockServer = Class.extend({
         }
     },
     /**
-     * Simulate a call to the server '_search_panel_sanitized_parent_hierarchy' method.
+     * Simulates a call to the server '_search_panel_sanitized_parent_hierarchy' method.
      *
+     * @private
      * @param {Object[]} records
      * @param {(string|boolean)} parentName 'parent_id' or false
      * @param {number[]} ids
@@ -641,8 +645,9 @@ var MockServer = Class.extend({
         return records.filter(rec => recordsToKeep[rec.id]);
     },
     /**
-     * Simulate a call to the server 'search_panel_selection_range' method.
+     * Simulates a call to the server 'search_panel_selection_range' method.
      *
+     * @private
      * @param {string} model
      * @param {string} fieldName
      * @param {Object} kwargs
@@ -677,8 +682,9 @@ var MockServer = Class.extend({
         return selectionRange;
     },
     /**
-     * Simulate a call to the server 'search_panel_select_range' method.
+     * Simulates a call to the server 'search_panel_select_range' method.
      *
+     * @private
      * @param {string} model
      * @param {string[]} args
      * @param {string} args[fieldName]
@@ -688,6 +694,7 @@ var MockServer = Class.extend({
      * @param {Array[]} [kwargs.comodel_domain] domain of field values (if relational)
      *      (this parameter is used in _search_panel_range)
      * @param {boolean} [kwargs.enable_counters] whether to count records by value
+     * @param {integer} [kwargs.limit] maximal number of values to fetch
      * @param {Array[]} [kwargs.search_domain] base domain of search (this parameter
      *      is used in _search_panel_range)
      * @returns {Object}
@@ -710,12 +717,7 @@ var MockServer = Class.extend({
                 values: this._mockSearchPanelSelectionRange(model, fieldName, kwargs),
             };
         }
-        const enableCounters = kwargs.enable_counters;
-        const expand = kwargs.expand;
-        let domainImage = new Map();
-        if (enableCounters || !expand) {
-            domainImage = this._mockSearchPanelDomainImage(model, fieldName, modelDomain, enableCounters);
-        }
+
         const fieldNames = ['display_name'];
         let hierarchize = 'hierarchize' in kwargs ? kwargs.hierarchize : true;
         let getParentId;
@@ -728,7 +730,20 @@ var MockServer = Class.extend({
             hierarchize = false;
         }
         let comodelDomain = kwargs.comodel_domain || [];
+        const enableCounters = kwargs.enable_counters;
+        const expand = kwargs.expand;
+        const limit = kwargs.limit;
+        let domainImage = new Map();
+        if (enableCounters || !expand) {
+            domainImage = this._mockSearchPanelDomainImage(
+                model, fieldName, modelDomain, enableCounters,
+                !expand && !hierarchize && !comodelDomain.length ? limit : false
+            );
+        }
         if (!expand && !hierarchize && !comodelDomain.length) {
+            if (limit && domainImage.size === limit) {
+                return { error_msg: "Too many items to display." };
+            }
             return {
                 parent_field: parentName,
                 values: [...domainImage.values()],
@@ -759,10 +774,15 @@ var MockServer = Class.extend({
                 condition,
             ]);
         }
-        let comodelRecords = this._mockSearchRead(field.relation, [comodelDomain, fieldNames], {});
+        let comodelRecords = this._mockSearchRead(field.relation, [comodelDomain, fieldNames], { limit });
+
         if (hierarchize) {
             const ids = expand ? comodelRecords.map(rec => rec.id) : imageElementIds;
             comodelRecords = this._mockSearchPanelSanitizedParentHierarchy(comodelRecords, parentName, ids);
+        }
+
+        if (limit && comodelRecords.length === limit) {
+            return { error_msg: "Too many items to display." };
         }
         // A map is used to keep the initial order.
         const fieldRange = new Map();
@@ -790,8 +810,9 @@ var MockServer = Class.extend({
         };
     },
     /**
-     * Simulate a call to the server 'search_panel_select_multi_range' method.
+     * Simulates a call to the server 'search_panel_select_multi_range' method.
      *
+     * @private
      * @param {string} model
      * @param {string[]} args
      * @param {string} args[fieldName]
@@ -806,8 +827,9 @@ var MockServer = Class.extend({
      * @param {Array[]} [kwargs.group_domain] dict, one domain for each activated
      *      group for the group_by (if any). Those domains are used to fech accurate
      *      counters for values in each group
+     * @param {integer} [kwargs.limit] maximal number of values to fetch
      * @param {Array[]} [kwargs.search_domain] base domain of search
-     * @returns {Object[]}
+     * @returns {Object}
      */
     _mockSearchPanelSelectMultiRange: function (model, [fieldName], kwargs) {
         const field = this.data[model].fields[fieldName];
@@ -823,7 +845,9 @@ var MockServer = Class.extend({
         ]);
         if (field.type === 'selection') {
             kwargs.model_domain = modelDomain;
-            return this._mockSearchPanelSelectionRange(model, fieldName, kwargs);
+            return {
+                values: this._mockSearchPanelSelectionRange(model, fieldName, kwargs),
+            };
         }
         const fieldNames = ['display_name'];
         const groupBy = kwargs.group_by;
@@ -844,8 +868,13 @@ var MockServer = Class.extend({
         let comodelDomain = kwargs.comodel_domain || [];
         const enableCounters = kwargs.enable_counters;
         const expand = kwargs.expand;
+        const limit = kwargs.limit;
         if (field.type === 'many2many') {
-            const comodelRecords = this._mockSearchRead(field.relation, [comodelDomain, fieldNames], {});
+            const comodelRecords = this._mockSearchRead(field.relation, [comodelDomain, fieldNames], { limit });
+            if (expand && limit && comodelRecords.length === limit) {
+                return { error_msg: "Too many items to display." };
+            }
+
             const groupDomain = kwargs.group_domain;
             const fieldRange = [];
             for (const record of comodelRecords) {
@@ -881,7 +910,12 @@ var MockServer = Class.extend({
                     fieldRange.push(values);
                 }
             }
-            return fieldRange;
+
+            if (!expand && limit && fieldRange.length === limit) {
+                return { error_msg: "Too many items to display." };
+            }
+
+            return { values: fieldRange };
         }
 
         if (field.type === 'many2one') {
@@ -891,10 +925,16 @@ var MockServer = Class.extend({
                     ...modelDomain,
                     ...(kwargs.group_domain || []),
                 ]);
-                domainImage = this._mockSearchPanelDomainImage(model, fieldName, modelDomain, enableCounters);
+                domainImage = this._mockSearchPanelDomainImage(
+                    model, fieldName, modelDomain, enableCounters,
+                    !expand && !groupBy && !comodelDomain.length ? limit : false,
+                );
             }
             if (!expand && !groupBy && !comodelDomain.length) {
-                return [...domainImage.values()];
+                if (limit && domainImage.size === limit) {
+                    return { error_msg: "Too many items to display." };
+                }
+                return { values: [...domainImage.values()] };
             }
             if (!expand) {
                 const imageElementIds = [...domainImage.keys()].map(Number);
@@ -903,7 +943,11 @@ var MockServer = Class.extend({
                     ['id', 'in', imageElementIds],
                 ]);
             }
-            const comodelRecords = this._mockSearchRead(field.relation, [comodelDomain, fieldNames], {});
+            const comodelRecords = this._mockSearchRead(field.relation, [comodelDomain, fieldNames], { limit });
+            if (limit && comodelRecords.length === limit) {
+                return { error_msg: "Too many items to display." };
+            }
+
             const fieldRange = [];
             for (const record of comodelRecords) {
                 const values= {
@@ -920,7 +964,7 @@ var MockServer = Class.extend({
                 }
                 fieldRange.push(values);
             }
-            return fieldRange;
+            return { values: fieldRange };
         }
     },
     /**

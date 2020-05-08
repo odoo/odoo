@@ -2005,6 +2005,11 @@ Possible children elements of the search view are:
 
   * ``expand``: default is false. If set to false categories or filters with 0 records will be hidden.
 
+  * ``limit``: default is 200. Integer determining the maximal number of values to fetch for the field.
+    If the limit is reached, no values will be displayed in the search panel and an error message will
+    appear instead because we consider that is useless / bad performance-wise. All values will be
+    fetched if set to 0.
+
   Additional optional attributes are available according to the chosen case:
 
   For the ``one`` case:

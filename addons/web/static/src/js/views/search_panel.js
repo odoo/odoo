@@ -21,6 +21,8 @@ const qweb = core.qweb;
 const defaultViewTypes = ['kanban', 'tree'];
 let nextSectionId = 1;
 
+const SEARCH_PANEL_DEFAULT_LIMIT = 200;
+
 /**
  * Given a <searchpanel> arch node, iterate over its children to generate the
  * description of each section (being either a category or a filter).
@@ -31,31 +33,34 @@ let nextSectionId = 1;
  */
 function _processSearchPanelNode(node, fields) {
     const sections = {};
-    node.children.forEach((childNode, index) => {
-        if (childNode.tag !== 'field' || childNode.attrs.invisible === "1") {
+    node.children.forEach(({ attrs, tag }, index) => {
+        if (tag !== 'field' || attrs.invisible === "1") {
             return;
         }
-        const fieldName = childNode.attrs.name;
-        const type = childNode.attrs.select === 'multi' ? 'filter' : 'category';
+        const fieldName = attrs.name;
+        const type = attrs.select === 'multi' ? 'filter' : 'category';
 
         const sectionId = `section_${nextSectionId++}`;
         const section = {
-            color: childNode.attrs.color,
-            description: childNode.attrs.string || fields[fieldName].string,
-            enableCounters: !!pyUtils.py_eval(childNode.attrs.enable_counters || '0'),
-            expand: !!pyUtils.py_eval(childNode.attrs.expand || '0'),
+            color: attrs.color,
+            description: attrs.string || fields[fieldName].string,
+            enableCounters: !!pyUtils.py_eval(attrs.enable_counters || '0'),
+            expand: !!pyUtils.py_eval(attrs.expand || '0'),
             fieldName,
-            icon: childNode.attrs.icon,
+            icon: attrs.icon,
             id: sectionId,
             index,
+            limit: attrs.limit ?
+                pyUtils.py_eval(attrs.limit) :
+                SEARCH_PANEL_DEFAULT_LIMIT,
             type,
         };
         if (section.type === 'category') {
             section.icon = section.icon || 'fa-folder';
-            section.hierarchize = !!pyUtils.py_eval(childNode.attrs.hierarchize || '1');
+            section.hierarchize = !!pyUtils.py_eval(attrs.hierarchize || '1');
         } else if (section.type === 'filter') {
-            section.domain = childNode.attrs.domain || '[]';
-            section.groupBy = childNode.attrs.groupby;
+            section.domain = attrs.domain || '[]';
+            section.groupBy = attrs.groupby;
             section.icon = section.icon || 'fa-filter';
         }
         sections[sectionId] = section;
@@ -267,11 +272,18 @@ const SearchPanel = Widget.extend({
     /**
      * @private
      * @param {string} categoryId
-     * @param {Object[]} values
+     * @param {Object} result
      */
-    _createCategoryTree(categoryId, values) {
+    _createCategoryTree(categoryId, result) {
         const category = this.categories[categoryId];
-        const parentField = category.parentField;
+        let { error_msg, parent_field: parentField, values } = result;
+        if (error_msg) {
+            category.errorMsg = error_msg;
+            values = [];
+        }
+        if (category.hierarchize) {
+            category.parentField = parentField;
+        }
 
         const unfoldedIds = Object.values(category.values || {})
             .filter(c => c.folded === false)
@@ -315,10 +327,15 @@ const SearchPanel = Widget.extend({
     /**
      * @private
      * @param {string} filterId
-     * @param {Object[]} values
+     * @param {Object} result
      */
-    _createFilterTree(filterId, values) {
+    _createFilterTree(filterId, result) {
         const filter = this.filters[filterId];
+        let { error_msg, values } = result;
+        if (error_msg) {
+            filter.errorMsg = error_msg;
+            values = [];
+        }
 
         // restore checked property
         values.forEach(value => {
@@ -379,8 +396,7 @@ const SearchPanel = Widget.extend({
     _fetchCategories(force) {
         const proms = [];
         for (const category of Object.values(this.categories)) {
-            const { enableCounters, expand, hierarchize } = category;
-            const field = this.fields[category.fieldName];
+            const { enableCounters, expand, hierarchize, limit } = category;
             if (force || enableCounters || !expand) {
                 const prom = this._rpc({
                     method: 'search_panel_select_range',
@@ -391,14 +407,12 @@ const SearchPanel = Widget.extend({
                         enable_counters: enableCounters,
                         expand,
                         hierarchize,
+                        limit,
                         search_domain: this.searchDomain,
                     },
-                }).then(({ parent_field, values }) => {
-                    if (field.type === 'many2one' && hierarchize) {
-                        category.parentField = parent_field;
-                    }
-                    this._createCategoryTree(category.id, values);
-                });
+                }).then(
+                    (result) => this._createCategoryTree(category.id, result)
+                );
                 proms.push(prom);
             }
         }
@@ -419,7 +433,7 @@ const SearchPanel = Widget.extend({
         const categoryDomain = this._getCategoryDomain();
         const proms = [];
         for (const filter of Object.values(this.filters)) {
-            const { enableCounters, expand, groupBy } = filter;
+            const { enableCounters, expand, groupBy, limit } = filter;
             const prom = this._rpc({
                 method: 'search_panel_select_multi_range',
                 model: this.model,
@@ -432,9 +446,12 @@ const SearchPanel = Widget.extend({
                     expand,
                     group_by: groupBy || false,
                     group_domain: this._getGroupDomain(filter),
+                    limit,
                     search_domain: [...this.searchDomain, ...this.viewDomain],
                 },
-            }).then(values => { this._createFilterTree(filter.id, values); });
+            }).then(
+                (result) => this._createFilterTree(filter.id, result)
+            );
             proms.push(prom);
         }
         return Promise.all(proms);
@@ -646,7 +663,7 @@ const SearchPanel = Widget.extend({
         const sections = categories.concat(filters).sort((s1, s2) => s1.index - s2.index);
 
         sections.forEach(section => {
-            if (Object.keys(section.values).length) {
+            if (Object.keys(section.values).length || section.errorMsg) {
                 if (section.type === 'category') {
                     this.$el.append(this._renderCategory(section));
                 } else {
