@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from itertools import groupby
 
 from odoo import models
@@ -33,10 +33,6 @@ class LunchProduct(models.Model):
     _populate_dependencies = ['lunch.product.category', 'lunch.supplier']
 
     def _populate_factories(self):
-
-        def get_price(random=None, **kwargs):
-            return random.randint(1, 500) / 10
-
         category_ids = self.env.registry.populated_models['lunch.product.category']
         category_records = self.env['lunch.product.category'].browse(category_ids)
         category_by_company = {k: list(v) for k, v in groupby(category_records, key=lambda rec: rec['company_id'].id)}
@@ -51,7 +47,7 @@ class LunchProduct(models.Model):
         return [
             ('active', populate.iterate([True, False], [0.9, 0.1])),
             ('name', populate.constant('lunch_product_{counter}')),
-            ('price', populate.compute(get_price)),
+            ('price', populate.randfloat(0.1, 50)),
             ('supplier_id', populate.randomize(supplier_ids)),
             ('category_id', populate.compute(get_category)),
         ]
@@ -86,9 +82,6 @@ class LunchSupplier(models.Model):
         partner_ids = self.env.registry.populated_models['res.partner']
         user_ids = self.env.registry.populated_models['res.users']
 
-        def get_email_time(random=None, **kwargs):
-            return random.randint(0, 120) / 10
-
         def get_location_ids(random=None, **kwargs):
             nb_locations = random.randint(0, len(location_ids))
             return [(6, 0, random.choices(location_ids, k=nb_locations))]
@@ -111,7 +104,7 @@ class LunchSupplier(models.Model):
             ('partner_id', populate.randomize(partner_ids)),
             ('responsible_id', populate.randomize(user_ids)),
             ('moment', populate.iterate(['am', 'pm'])),
-            ('automatic_email_time', populate.compute(get_email_time)),
+            ('automatic_email_time', populate.randfloat(0, 12)),
         ]
 
 
@@ -147,13 +140,6 @@ class LunchAlert(models.Model):
 
         location_ids = self.env.registry.populated_models['lunch.location']
 
-        def get_notification_time(random=None, **kwargs):
-            return random.randint(0, 120) / 10
-
-        def get_until_date(random=None, **kwargs):
-            delta = random.randint(-731, 731)
-            return datetime(2020, 1, 1) + timedelta(days=delta)
-
         def get_location_ids(random=None, **kwargs):
             nb_max = len(location_ids)
             start = random.randint(0, nb_max)
@@ -173,8 +159,8 @@ class LunchAlert(models.Model):
             ('recurrency_sunday', populate.iterate([False, True], [0.9, 0.1])),
             ('name', populate.constant('alert_{counter}')),
             ('message', populate.constant('<strong>alert message {counter}</strong>')),
-            ('notification_time', populate.compute(get_notification_time)),
+            ('notification_time', populate.randfloat(0, 12)),
             ('notification_moment', populate.iterate(['am', 'pm'])),
-            ('until', populate.compute(get_until_date)),
+            ('until', populate.randdatetime(relative_before=relativedelta(years=-2), relative_after=relativedelta(years=2))),
             ('location_ids', populate.compute(get_location_ids))
         ]

@@ -14,12 +14,9 @@ class ProductCategory(models.Model):
     _populate_sizes = {"small": 50, "medium": 500, "large": 30000}
 
     def _populate_factories(self):
-        def get_name(values=None, counter=0, complete=False, **kwargs):
-            return "%s_%s_%s" % ("product_category", int(complete), counter)
-
         # quid of parent_id ???
 
-        return [("name", populate.compute(get_name))]
+        return [("name", populate.constant('product_category_{counter}'))]
 
 
 class ProductProduct(models.Model):
