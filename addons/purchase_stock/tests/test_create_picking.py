@@ -546,4 +546,4 @@ class TestCreatePicking(common.TestProductCommon):
 
         po.order_line.product_qty += 2
         backorder = po.picking_ids.filtered(lambda picking: picking.state == 'assigned')
-        self.assertEqual(backorder.move_lines.product_uom_qty, 7)
+        self.assertEqual(backorder.move_lines.product_uom_qty, 9)
