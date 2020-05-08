@@ -10,5 +10,11 @@
             <script type="text/javascript" src="/pos_hr/static/src/js/chrome.js"></script>
         </xpath>
     </template>
+
+    <template id="assets_tests" name="POS HR Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_hr/static/src/js/tours/pos_hr.js"></script>
+        </xpath>
+    </template>
 </odoo>
 
