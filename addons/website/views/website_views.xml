@@ -241,9 +241,9 @@
                     <field name="url"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <group string="Group By">
-                        <filter string="name" name="group_by_name" domain="[]" context="{'group_by':'name'}"/>
-                        <filter string="url" name="group_by_url" domain="[]" context="{'group_by':'url'}"/>
-                        <filter string="website"  name="my_websites" domain="[]" context="{'group_by':'website_id'}"/>
+                        <filter string="Name" name="group_by_name" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Url" name="group_by_url" domain="[]" context="{'group_by':'url'}"/>
+                        <filter string="Website"  name="group_by_website_id" domain="[]" context="{'group_by':'website_id'}"/>
                     </group>
                 </search>
             </field>
@@ -253,7 +253,7 @@
             <field name="name">Website Menu</field>
             <field name="res_model">website.menu</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_my_websites':1}</field>
+            <field name="context">{'search_default_group_by_website_id':1}</field>
             <field name="view_id" ref="menu_tree"/>
             <field name="target">current</field>
         </record>
