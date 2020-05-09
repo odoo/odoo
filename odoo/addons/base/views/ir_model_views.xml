@@ -278,8 +278,8 @@
                                             attrs="{'readonly': [('ttype','!=','many2one')],
                                                     'invisible': [('ttype','!=','many2one')]}"/>
                                         <field name="on_delete" groups="base.group_no_one"
-                                            attrs="{'readonly': [('ttype','!=','many2one')],
-                                                    'invisible': [('ttype','!=','many2one')]}"/>
+                                            attrs="{'readonly': [('ttype', 'not in', ['many2one', 'many2many'])],
+                                                    'invisible': [('ttype', 'not in', ['many2one', 'many2many'])]}"/>
                                         <field name="relation_field"
                                             attrs="{'required': [('ttype','=','one2many')],
                                                     'readonly': [('ttype','!=','one2many')],
