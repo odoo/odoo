@@ -21,7 +21,7 @@
                     <div class="card-body">
                         <div clas="row">
                             <h1 class="mt-5">Thank you for rating our services!</h1>
-                            <form t-attf-action="/rating/#{token}/submit_feedback" method="post">
+                            <form t-attf-action="/rate/#{token}/submit_feedback" method="post">
                                 <div class="btn-group btn-group-toggle row" data-toggle="buttons">
                                     <t t-foreach="rate_names" t-as="rate_name">
                                         <label t-attf-class="col-xs-12 btn o_rating_label shadow-none {{rate == rate_name and 'active' or ''}}">

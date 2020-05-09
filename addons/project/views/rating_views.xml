@@ -12,8 +12,7 @@
             </xpath>
             <xpath expr="/search" position="inside">
                 <filter string="Last 30 Days" name="rating_last_30_days" domain="[
-                    ('create_date', '>=', (datetime.datetime.combine(context_today() + relativedelta(days=-30), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
-                    ('create_date', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"
+                    ('create_date', '>=', (datetime.datetime.combine(context_today() + relativedelta(days=-30), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"
                 />
                 <separator/>
             </xpath>
@@ -28,7 +27,7 @@
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
-                There are no ratings for this object at the moment
+                There are no ratings for this project at the moment
             </p>
         </field>
     </record>

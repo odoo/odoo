@@ -89,6 +89,161 @@
             </field>
         </record>
 
+        <!-- Task types -->
+        <record id="task_type_search" model="ir.ui.view">
+            <field name="name">project.task.type.search</field>
+            <field name="model">project.task.type</field>
+            <field name="arch" type="xml">
+                <search string="Tasks Stages">
+                   <field name="name" string="Tasks Stages"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="task_type_edit" model="ir.ui.view">
+            <field name="name">project.task.type.form</field>
+            <field name="model">project.task.type</field>
+            <field name="arch" type="xml">
+                <form string="Task Stage" delete="0">
+                    <field name="active" invisible="1" />
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="mail_template_id"/>
+                                <field name="rating_template_id" groups="project.group_project_rating"/>
+                                <div class="alert alert-warning" role="alert" colspan='2' attrs="{'invisible': ['|', ('rating_template_id','=', False), ('disabled_rating_warning', '=', False)]}">
+                                    <i class="fa fa-warning" title="Customer disabled on projects"/><b> Customer Ratings</b> are disabled on the following project(s) : <br/>
+                                    <field name="disabled_rating_warning" class="mb-0" />
+                                </div>
+                                <field name="auto_validation_kanban_state" attrs="{'invisible': [('rating_template_id','=', False)]}" groups="project.group_project_rating"/>
+                            </group>
+                            <group>
+                                <field name="fold"/>
+                                <field name="is_closed" groups="base.group_no_one"/>
+                                <field name="project_ids" widget="many2many_tags" groups="base.group_no_one"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                            </group>
+                        </group>
+                        <group string="Stage Description and Tooltips">
+                            <p class="text-muted" colspan="2">
+                                At each stage employees can block or make task/issue ready for next stage.
+                                You can define here labels that will be displayed for the state instead
+                                of the default labels.
+                            </p>
+                            <label for="legend_normal" string=" " class="o_status oe_project_kanban_legend"
+                                title="Task in progress. Click to block or set as done."
+                                aria-label="Task in progress. Click to block or set as done." role="img"/>
+                            <field name="legend_normal" nolabel="1"/>
+                            <label for="legend_blocked" string=" " class="o_status o_status_red oe_project_kanban_legend"
+                                title="Task is blocked. Click to unblock or set as done."
+                                aria-label="Task is blocked. Click to unblock or set as done." role="img"/>
+                            <field name="legend_blocked" nolabel="1"/>
+                            <label for="legend_done" string=" " class="o_status o_status_green oe_project_kanban_legend"
+                                title="This step is done. Click to block or set in progress."
+                                aria-label="This step is done. Click to block or set in progress." role="img"/>
+                            <field name="legend_done" nolabel="1"/>
+
+                            <p class="text-muted" colspan="2">
+                                You can also add a description to help your coworkers understand the meaning and purpose of the stage.
+                            </p>
+                            <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="task_type_tree" model="ir.ui.view">
+            <field name="name">project.task.type.tree</field>
+            <field name="model">project.task.type</field>
+            <field name="arch" type="xml">
+                <tree string="Task Stage" delete="0">
+                    <field name="sequence" widget="handle" optional="show"/>
+                    <field name="name"/>
+                    <field name="fold" optional="show"/>
+                    <field name="mail_template_id" optional="show"/>
+                    <field name="rating_template_id" optional="show"/>
+                    <field name="auto_validation_kanban_state" optional="hide" />
+                    <field name="description" optional="hide"/>
+                    <field name="project_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_project_task_type_kanban" model="ir.ui.view">
+            <field name="name">project.task.type.kanban</field>
+            <field name="model">project.task.type</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="fold"/>
+                    <field name="description"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong><t t-esc="record.name.value"/></strong>
+                                    </div>
+                                </div>
+                                <t t-if="record.description.value">
+                                    <hr class="mt8 mb8"/>
+                                    <t t-esc="record.description.value"/>
+                                </t>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="open_task_type_form" model="ir.actions.act_window">
+            <field name="name">Stages</field>
+            <field name="res_model">project.task.type</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="task_type_tree"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new stage in the task pipeline
+              </p><p>
+                Define the steps that will be used in the project from the
+                creation of the task, up to the closing of the task or issue.
+                You will use these stages in order to track the progress in
+                solving a task or an issue.
+              </p>
+            </field>
+        </record>
+
+        <record id="open_task_type_form_domain" model="ir.actions.act_window">
+            <field name="name">Stages</field>
+            <field name="res_model">project.task.type</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="domain">[('project_ids','=', project_id)]</field>
+            <field name="view_id" ref="task_type_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                Create a new stage in the task pipeline
+                </p><p>
+                Define the steps that will be used in the project from the
+                creation of the task, up to the closing of the task or issue.
+                You will use these stages in order to track the progress in
+                solving a task or an issue.
+                </p>
+            </field>
+        </record>
+
+        <record id="unlink_task_type_action" model="ir.actions.server">
+            <field name="name">Delete</field>
+            <field name="model_id" ref="project.model_project_task_type"/>
+            <field name="binding_model_id" ref="project.model_project_task_type"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.unlink_wizard(stage_view=True)</field>
+        </record>
+
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
             <field name="name">project.project.form</field>
@@ -105,18 +260,19 @@
                         </button>
                         <button class="oe_stat_button" type="action"
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
-                            <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
+                            <field string="Tasks In Progress" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
                         </button>
-                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_status', '=', 'no'), ('rating_percentage_satisfaction', '=', -1)]}" class="oe_stat_button oe_percent" icon="fa-smile-o" groups="project.group_project_rating">
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_percentage_satisfaction', '=', -1)]}" class="oe_stat_button oe_percent oe_read_only" icon="fa-smile-o" groups="project.group_project_rating">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="rating_percentage_satisfaction" nolabel="1"/>
+                                    %
                                 </span>
                                 <span class="o_stat_text">
-                                    % On <field readonly="1" name="label_tasks" options="{'label_field': 'label_tasks'}" />
+                                    Customer Satisfaction
                                 </span>
                             </div>
-                        </button>
+                        </button>                            
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
@@ -151,23 +307,24 @@
                             </group>
                             <div class="row mt16 o_settings_container">
                                 <div id="rating_settings" class="col-lg-6 o_setting_box" groups="project.group_project_rating">
+                                    <div class="o_setting_left_pane">
+                                        <field name="rating_active"/>
+                                    </div>
                                     <div class="o_setting_right_pane">
-                                        <label for="rating_status"/>
+                                        <label for="rating_active" />
                                         <div class="text-muted">
                                             Get customer feedback
                                         </div>
-                                        <div class="mt16">
-                                            <field name="rating_status" widget="radio"/>
-                                            <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
-                                                Edit project's stages and set an email template on the stages on which you want to activate the rating.
-                                            </p>
+                                        <div class="mt16" attrs="{'invisible':[('rating_active','==',False)]}">
+                                            <field name="rating_status" widget="radio" />
                                             <div  attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}">
                                                 <label for="rating_status_period"/>
-                                                <field name="rating_status_period"  class="oe_inline"/>
+                                                <field name="rating_status_period"/>
                                             </div>
-                                            <div attrs="{'invisible': [('rating_status','==','no')]}">
-                                                <label for="portal_show_rating"/>
-                                                <field name="portal_show_rating"/>
+                                            <div class="content-group">
+                                                    <div class="mt8">
+                                                        <button name="%(project.open_task_type_form_domain)d" context="{'project_id':id}" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
+                                                    </div>
                                             </div>
                                         </div>
                                     </div>
@@ -352,6 +509,7 @@
                     <field name="is_favorite"/>
                     <field name="rating_percentage_satisfaction"/>
                     <field name="rating_status"/>
+                    <field name="rating_active" />
                     <field name="analytic_account_id"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -368,16 +526,13 @@
                                             <div t-if="record.alias_name.value and record.alias_domain.value">
                                                 <span><i class="fa fa-envelope" role="img" aria-label="Domain Alias" title="Domain Alias"></i> <t t-esc="record.alias_id.value"/></span>
                                             </div>
-                                            <div t-if="record.rating_status.raw_value != 'no'" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days. Get rating details from the More menu." groups="project.group_project_rating">
+                                            <div t-if="record.rating_active.raw_value" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days." groups="project.group_project_rating">
                                                 <b>
-                                                    <t t-if="record.rating_percentage_satisfaction.value == -1">
-                                                        <i class="fa fa-smile-o"/> No rating yet
-                                                    </t>
-                                                    <t t-if="record.rating_percentage_satisfaction.value != -1">
-                                                        <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}">
+                                                    <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}">
+                                                        <t t-if="record.rating_percentage_satisfaction.value != -1">
                                                             <i class="fa fa-smile-o" role="img" aria-label="Percentage of satisfaction" title="Percentage of satisfaction"/> <t t-esc="record.rating_percentage_satisfaction.value"/>%
-                                                        </a>
-                                                    </t>
+                                                        </t>
+                                                    </a>
                                                 </b>
                                             </div>
                                         </div>
@@ -389,9 +544,6 @@
                                             </div>
                                             <div role="menuitem">
                                                 <a type="edit">Edit</a>
-                                            </div>
-                                            <div role="menuitem" t-if="record.rating_status.raw_value != 'no'">
-                                                <a name="action_view_all_rating" type="object">Customer Ratings</a>
                                             </div>
                                         </div>
                                         <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
@@ -473,6 +625,7 @@
             <field name="arch" type="xml">
                 <form string="Task" class="o_form_project_tasks">
                     <field name="allow_subtasks" invisible="1" />
+                    <field name="is_closed" invisible="1" />
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
                             attrs="{'invisible' : [('user_id', '!=', False)]}"/>
@@ -516,7 +669,7 @@
                                 domain="[('parent_id', '=', False)]"
                                 attrs="{'invisible' : [('allow_subtasks', '=', False)]}"
                             />
-                            <field name="date_deadline"/>
+                            <field name="date_deadline" widget="task_closed_deadline" />
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </group>
                     </group>
@@ -613,6 +766,7 @@
                     <field name="sequence"/>
                     <field name="date_deadline"/>
                     <field name="date_deadline_formatted"/>
+                    <field name="is_closed"/>
                     <field name="partner_is_company"/>
                     <field name="message_needaction_counter"/>
                     <field name="displayed_image_id"/>
@@ -672,18 +826,18 @@
                                             <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments' role="img" aria-label="Unread Messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                         <b t-if="record.rating_ids.raw_value.length">
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Satisfied" role="img" aria-label="Happy face"/>
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Not Satisfied" role="img" aria-label="Neutral face"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 5" title="Latest Rating: Satisfied" role="img" aria-label="Happy face"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 3" title="Latest Rating: Not Satisfied" role="img" aria-label="Neutral face"/>
                                             <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied" role="img" aria-label="Sad face"/>
                                         </b>
                                         <!-- formating of the date -->
                                         <t t-set="date_format" t-value="'MM/DD/YY'" />
                                         <t t-set="date" t-value=""/>
                                         <!-- color of the span -->
-                                        <t t-if="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().startOf('day')">
+                                        <t t-if="!record.is_closed.raw_value and record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().startOf('day')">
                                             <t t-set="deadline_class" t-value="'oe_kanban_text_red'" />
                                         </t>
-                                        <t t-elif="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().endOf('day')">
+                                        <t t-elif="!record.is_closed.raw_value and record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().endOf('day')">
                                             <t t-set="deadline_class" t-value="'text-warning font-weight-bold'" />
                                         </t>
                                         <!-- Date value -->
@@ -709,8 +863,9 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_needaction==True" decoration-danger="date_deadline and (date_deadline&lt;current_date)" string="Tasks" multi_edit="1">
+                <tree decoration-bf="message_needaction==True" decoration-danger="not is_closed and date_deadline and (date_deadline&lt;current_date)" string="Tasks" multi_edit="1">
                     <field name="message_needaction" invisible="1" readonly="1"/>
+                    <field name="is_closed" invisible="1" />
                     <field name="sequence" invisible="not context.get('seq_visible', False)" readonly="1"/>
                     <field name="name"/>
                     <!-- YTI TODO user_invisible and seq_visible seem to be useless -->
@@ -731,7 +886,8 @@
             <field name="name">project.task.tree.activity</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <tree string="Next Activities" decoration-danger="activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
+                <tree string="Next Activities" decoration-danger="not is_closed and activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
+                    <field name="is_closed"/>
                     <field name="name"/>
                     <field name="project_id"/>
                     <field name="activity_date_deadline"/>
@@ -856,7 +1012,7 @@
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
-            <field name="domain">[('date_deadline','&lt;',time.strftime('%Y-%m-%d'))]</field>
+            <field name="domain">[('is_closed', '=', False), ('date_deadline','&lt;',time.strftime('%Y-%m-%d'))]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
@@ -870,134 +1026,7 @@
             <field name="context">{'project_id':active_id}</field>
         </record>
 
-        <!-- Task types -->
-        <record id="task_type_search" model="ir.ui.view">
-            <field name="name">project.task.type.search</field>
-            <field name="model">project.task.type</field>
-            <field name="arch" type="xml">
-                <search string="Tasks Stages">
-                   <field name="name" string="Tasks Stages"/>
-                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                </search>
-            </field>
-        </record>
-
-        <record id="task_type_edit" model="ir.ui.view">
-            <field name="name">project.task.type.form</field>
-            <field name="model">project.task.type</field>
-            <field name="arch" type="xml">
-                <form string="Task Stage" delete="0">
-                    <field name="active" invisible="1" />
-                    <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
-                        <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="mail_template_id"/>
-                                <field name="rating_template_id" groups="project.group_project_rating"/>
-                                <field name="auto_validation_kanban_state" attrs="{'invisible': [('rating_template_id','=', False)]}" groups="project.group_project_rating"/>
-                            </group>
-                            <group>
-                                <field name="fold"/>
-                                <field name="project_ids" widget="many2many_tags" groups="base.group_no_one"/>
-                                <field name="sequence" groups="base.group_no_one"/>
-                            </group>
-                        </group>
-                        <group string="Stage Description and Tooltips">
-                            <p class="text-muted" colspan="2">
-                                At each stage employees can block or make task/issue ready for next stage.
-                                You can define here labels that will be displayed for the state instead
-                                of the default labels.
-                            </p>
-                            <label for="legend_normal" string=" " class="o_status oe_project_kanban_legend"
-                                title="Task in progress. Click to block or set as done."
-                                aria-label="Task in progress. Click to block or set as done." role="img"/>
-                            <field name="legend_normal" nolabel="1"/>
-                            <label for="legend_blocked" string=" " class="o_status o_status_red oe_project_kanban_legend"
-                                title="Task is blocked. Click to unblock or set as done."
-                                aria-label="Task is blocked. Click to unblock or set as done." role="img"/>
-                            <field name="legend_blocked" nolabel="1"/>
-                            <label for="legend_done" string=" " class="o_status o_status_green oe_project_kanban_legend"
-                                title="This step is done. Click to block or set in progress."
-                                aria-label="This step is done. Click to block or set in progress." role="img"/>
-                            <field name="legend_done" nolabel="1"/>
-
-                            <p class="text-muted" colspan="2">
-                                You can also add a description to help your coworkers understand the meaning and purpose of the stage.
-                            </p>
-                            <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="task_type_tree" model="ir.ui.view">
-            <field name="name">project.task.type.tree</field>
-            <field name="model">project.task.type</field>
-            <field name="arch" type="xml">
-                <tree string="Task Stage" delete="0">
-                    <field name="sequence" widget="handle" groups="base.group_no_one"/>
-                    <field name="name"/>
-                    <field name="fold"/>
-                    <field name="description"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_project_task_type_kanban" model="ir.ui.view">
-            <field name="name">project.task.type.kanban</field>
-            <field name="model">project.task.type</field>
-            <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
-                    <field name="name"/>
-                    <field name="fold"/>
-                    <field name="description"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <strong><t t-esc="record.name.value"/></strong>
-                                    </div>
-                                </div>
-                                <t t-if="record.description.value">
-                                    <hr class="mt8 mb8"/>
-                                    <t t-esc="record.description.value"/>
-                                </t>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-
-        <record id="open_task_type_form" model="ir.actions.act_window">
-            <field name="name">Stages</field>
-            <field name="res_model">project.task.type</field>
-            <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="task_type_tree"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new stage in the task pipeline
-              </p><p>
-                Define the steps that will be used in the project from the
-                creation of the task, up to the closing of the task or issue.
-                You will use these stages in order to track the progress in
-                solving a task or an issue.
-              </p>
-            </field>
-        </record>
-
-        <record id="unlink_task_type_action" model="ir.actions.server">
-            <field name="name">Delete</field>
-            <field name="model_id" ref="project.model_project_task_type"/>
-            <field name="binding_model_id" ref="project.model_project_task_type"/>
-            <field name="binding_view_types">form,list</field>
-            <field name="state">code</field>
-            <field name="code">action = records.unlink_wizard(stage_view=True)</field>
-        </record>
-
+        <!-- Menu item for project -->
         <menuitem id="menu_tasks_config" name="GTD" parent="menu_project_config" sequence="2"/>
 
         <menuitem action="open_task_type_form" id="menu_project_config_project" name="Stages" parent="menu_project_config" sequence="3" groups="base.group_no_one"/>

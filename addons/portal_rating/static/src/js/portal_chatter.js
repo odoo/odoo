@@ -9,7 +9,6 @@ var time = require('web.time');
 var _t = core._t;
 var PortalChatter = portalChatter.PortalChatter;
 var qweb = core.qweb;
-var STAR_RATING_RATIO = 2; // conversion factor from the star (1-5) to the db rating range (1-10)
 
 /**
  * PortalChatter
@@ -67,7 +66,7 @@ PortalChatter.include({
         messages = this._super.apply(this, arguments);
         if (this.options['display_rating']) {
             _.each(messages, function (m, i) {
-                m.rating_value = self.roundToHalf(m['rating_value'] / STAR_RATING_RATIO);
+                m.rating_value = self.roundToHalf(m['rating_value']);
                 m.rating = self._preprocessCommentData(m.rating, i);
             });
         }
@@ -114,13 +113,13 @@ PortalChatter.include({
                 return;
             }
             var ratingData = {
-                'avg': Math.round(result['rating_stats']['avg'] / STAR_RATING_RATIO * 100) / 100,
+                'avg': Math.round(result['rating_stats']['avg'] * 100) / 100,
                 'percent': [],
             };
             _.each(_.keys(result['rating_stats']['percent']).reverse(), function (rating) {
                 if (rating % 2 === 0) {
                     ratingData['percent'].push({
-                        'num': rating / STAR_RATING_RATIO,
+                        'num': rating,
                         'percent': utils.round_precision(result['rating_stats']['percent'][rating], 0.01),
                     });
                 }
@@ -347,7 +346,7 @@ PortalChatter.include({
     _onChangeRatingDomain: function () {
         var domain = [];
         if (this.get('rating_value')) {
-            domain = [['rating_value', '=', this.get('rating_value') * STAR_RATING_RATIO]];
+            domain = [['rating_value', '=', this.get('rating_value')]];
         }
         this._changeCurrentPage(1, domain);
     },

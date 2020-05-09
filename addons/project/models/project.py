@@ -50,6 +50,8 @@ class ProjectTaskType(models.Model):
         help="Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
             " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
             " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n")
+    is_closed = fields.Boolean('Closing Stage', help="Tasks in this stage are considered as closed.")
+    disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning')
 
     def unlink_wizard(self, stage_view=False):
         self = self.with_context(active_test=False)
@@ -81,6 +83,15 @@ class ProjectTaskType(models.Model):
             self.env['project.task'].search([('stage_id', 'in', self.ids)]).write({'active': False})
         return super(ProjectTaskType, self).write(vals)
 
+    @api.depends('project_ids', 'project_ids.rating_active')
+    def _compute_disabled_rating_warning(self):
+        for stage in self:
+            disabled_projects = stage.project_ids.filtered(lambda p: not p.rating_active)
+            if disabled_projects:
+                stage.disabled_rating_warning = '\n'.join('- %s' % p.name for p in disabled_projects)
+            else:
+                stage.disabled_rating_warning = False
+
 
 class Project(models.Model):
     _name = "project.project"
@@ -102,7 +113,7 @@ class Project(models.Model):
             ])
 
     def _compute_task_count(self):
-        task_data = self.env['project.task'].read_group([('project_id', 'in', self.ids), '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)], ['project_id'], ['project_id'])
+        task_data = self.env['project.task'].read_group([('project_id', 'in', self.ids), '|', '&', ('stage_id.is_closed', '=', False), ('stage_id.fold', '=', False), ('stage_id', '=', False)], ['project_id'], ['project_id'])
         result = dict((data['project_id'][0], data['project_id_count']) for data in task_data)
         for project in self:
             project.task_count = result.get(project.id, 0)
@@ -171,11 +182,6 @@ class Project(models.Model):
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
-    def _get_default_rating_status(self):
-        if self.user_has_groups('project.group_project_rating'):
-            return 'stage'
-        return 'no'
-
     name = fields.Char("Name", index=True, required=True, tracking=True)
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
@@ -237,20 +243,22 @@ class Project(models.Model):
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
-    rating_status = fields.Selection([
-        ('stage', 'Rating when changing stage'),
-        ('periodic', 'Periodical Rating'),
-        ('no', 'No rating')], string='Customer Ratings', default=_get_default_rating_status, required=True,
+    rating_active = fields.Boolean('Customer Ratings', default=True)
+    rating_status = fields.Selection(
+        [('stage', 'Rating when changing stage'),
+         ('periodic', 'Periodical Rating')
+        ], 'Customer Ratings Status', default="stage", required=True,
         help="How to get customer feedback?\n"
-                 "- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
-                 "- Periodical Rating: email will be sent periodically.\n\n"
-                 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.")
+             "- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
+             "- Periodical Rating: email will be sent periodically.\n\n"
+             "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.")
     rating_status_period = fields.Selection([
-        ('daily', 'Daily'), ('weekly', 'Weekly'), ('bimonthly', 'Twice a Month'),
-        ('monthly', 'Once a Month'), ('quarterly', 'Quarterly'), ('yearly', 'Yearly')
-    ], 'Rating Frequency')
-
-    portal_show_rating = fields.Boolean('Rating visible publicly', copy=False)
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('bimonthly', 'Twice a Month'),
+        ('monthly', 'Once a Month'),
+        ('quarterly', 'Quarterly'),
+        ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
@@ -451,14 +459,7 @@ class Project(models.Model):
         return action
 
     def action_view_all_rating(self):
-        """ return the action to see all the rating of the project, and activate default filters """
-        if self.portal_show_rating:
-            return {
-                'type': 'ir.actions.act_url',
-                'name': "Redirect to the Website Projcet Rating Page",
-                'target': 'self',
-                'url': "/project/rating/%s" % (self.id,)
-            }
+        """ return the action to see all the rating of the project and activate default filters"""
         action = self.env['ir.actions.act_window'].for_xml_id('project', 'rating_rating_action_view_project_rating')
         action['name'] = _('Ratings of %s') % (self.name,)
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
@@ -517,7 +518,7 @@ class Task(models.Model):
         project_id = self.env.context.get('default_project_id')
         if not project_id:
             return False
-        return self.stage_find(project_id, [('fold', '=', False)])
+        return self.stage_find(project_id, [('fold', '=', False), ('is_closed', '=', False)])
 
     @api.model
     def _default_company_id(self):
@@ -592,6 +593,7 @@ class Task(models.Model):
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True, related_sudo=False)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True, related_sudo=False)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True, related_sudo=False)
+    is_closed = fields.Boolean(related="stage_id.is_closed", string="Closing Stage", readonly=True, related_sudo=False)
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", context={'active_test': False})
     subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
@@ -716,7 +718,7 @@ class Task(models.Model):
                 self.partner_id = self.project_id.partner_id
             # find stage
             if self.project_id not in self.stage_id.project_ids:
-                self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
+                self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False), ('is_closed', '=', False)])
             # keep multi company consistency
             self.company_id = self.project_id.company_id
         else:
@@ -795,6 +797,7 @@ class Task(models.Model):
     def create(self, vals):
         # context: no_log, because subtype already handle this
         context = dict(self.env.context)
+        stage_id = vals.get('stage_id') or context.get('default_stage_id') or False
         # for default stage
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
@@ -802,8 +805,8 @@ class Task(models.Model):
         if vals.get('user_id'):
             vals['date_assign'] = fields.Datetime.now()
         # Stage change: Update date_end if folded stage and date_last_stage_update
-        if vals.get('stage_id'):
-            vals.update(self.update_date_end(vals['stage_id']))
+        if stage_id:
+            vals.update(self.update_date_end(stage_id))
             vals['date_last_stage_update'] = fields.Datetime.now()
         task = super(Task, self.with_context(context)).create(vals)
         return task
@@ -831,7 +834,7 @@ class Task(models.Model):
 
     def update_date_end(self, stage_id):
         project_task_type = self.env['project.task.type'].browse(stage_id)
-        if project_task_type.fold:
+        if project_task_type.fold or project_task_type.is_closed:
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
 
