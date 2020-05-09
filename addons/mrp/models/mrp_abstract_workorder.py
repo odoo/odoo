@@ -380,6 +380,9 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
         if self.product_id.tracking != 'none' and not self.lot_id:
             raise UserError(_('Please enter a lot or serial number for %s !' % self.product_id.display_name))
 
+        # unlink move lines having qty_done 0.0 and move is assinged
+        if not move_lines and self.move_id.state == 'assigned':
+            self.move_id.move_line_ids.filtered(lambda ml: ml.qty_done == 0).unlink()
         # Update reservation and quantity done
         for ml in move_lines:
             rounding = ml.product_uom_id.rounding
