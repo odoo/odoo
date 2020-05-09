@@ -215,16 +215,16 @@ td {
     position: relative;
 }
 
-.pos .clientlist-screen .window,
-.pos .clientlist-screen .full-content .subwindow{
+.pos .list-screen .window,
+.pos .list-screen .full-content .subwindow{
     display: block;
 }
-.pos .clientlist-screen .full-content .subwindow-container{
+.pos .list-screen .full-content .subwindow-container{
     display: block;
     height: 100%;
 }
-.pos .clientlist-screen .full-content .subwindow.collapsed,
-.pos .clientlist-screen .full-content .subwindow-container.collapsed{
+.pos .list-screen .full-content .subwindow.collapsed,
+.pos .list-screen .full-content .subwindow-container.collapsed{
     height: auto;
 }
 
@@ -1628,41 +1628,41 @@ td {
 
 /* e) The Client List Screen */
 
-.pos .clientlist-screen .client-list{
+.pos .list-screen .list-table{
     font-size: 16px;
     width: 100%;
     line-height: 40px;
 }
-.pos .clientlist-screen .client-list th,
-.pos .clientlist-screen .client-list td {
+.pos .list-screen .list-table th,
+.pos .list-screen .list-table td {
     padding: 0px 8px;
 }
-.pos .clientlist-screen .client-list tr{
+.pos .list-screen .list-table tr{
     transition: all 150ms linear;
     background: rgb(230,230,230);
 }
-.pos .clientlist-screen .client-list thead > tr,
-.pos .clientlist-screen .client-list tr:nth-child(even) {
+.pos .list-screen .list-table thead > tr,
+.pos .list-screen .list-table tr:nth-child(even) {
     background: rgb(247,247,247);
 }
-.pos .clientlist-screen .client-list tr.highlight{
+.pos .list-screen .list-table tr.highlight{
     transition: all 150ms linear;
     background: rgb(110,200,155) !important;
     color: white;
 }
-.pos .clientlist-screen .client-list tr.lowlight{
+.pos .list-screen .list-table tr.lowlight{
     transition: all 150ms linear;
     background: rgb(216, 238, 227);
 }
-.pos .clientlist-screen .client-list tr.lowlight:nth-child(even){
+.pos .list-screen .list-table tr.lowlight:nth-child(even){
     transition: all 150ms linear;
     background: rgb(227, 246, 237);
 }
-.pos .clientlist-screen .client-details{
+.pos .list-screen .client-details{
     padding: 16px;
     border-bottom: solid 5px rgb(110,200,155);
 }
-.pos .clientlist-screen .client-picture{
+.pos .list-screen .client-picture{
     height: 64px;
     width: 64px;
     border-radius: 32px;
@@ -1673,7 +1673,7 @@ td {
     background: white;
     position: relative;
 }
-.pos .clientlist-screen .client-picture > img {
+.pos .list-screen .client-picture > img {
     position: absolute;
     top: -9999px;
     bottom: -9999px;
@@ -1682,11 +1682,11 @@ td {
     max-height: 64px;
     margin: auto;
 }
-.pos .clientlist-screen .client-picture > .fa {
+.pos .list-screen .client-picture > .fa {
     line-height: 64px;
     font-size: 32px;
 }
-.pos .clientlist-screen .client-picture .image-uploader {
+.pos .list-screen .client-picture .image-uploader {
     position: absolute;
     z-index: 1000;
     top: 0;
@@ -1696,47 +1696,47 @@ td {
     opacity: 0;
     cursor: pointer;
 }
-.pos .clientlist-screen .client-name {
+.pos .list-screen .client-name {
     font-size: 32px;
     line-height: 64px;
     margin-bottom:16px;
 }
-.pos .clientlist-screen .edit-buttons {
+.pos .list-screen .edit-buttons {
     position: absolute;
     right: 16px;
     top: 10px;
 }
-.pos .clientlist-screen .edit-buttons .button{
+.pos .list-screen .edit-buttons .button{
     display: inline-block;
     margin-left: 16px;
     color: rgb(128,128,128);
     cursor: pointer;
     font-size: 36px;
 }
-.pos .clientlist-screen .client-details-box{
+.pos .list-screen .client-details-box{
     position: relative;
     font-size: 16px;
 }
-.pos .clientlist-screen .client-details-left{
+.pos .list-screen .client-details-left{
     width: 50%;
     float: left;
 }
-.pos .clientlist-screen .client-details-right{
+.pos .list-screen .client-details-right{
     width: 50%;
     float: right;
 }
-.pos .clientlist-screen .client-detail{
+.pos .list-screen .client-detail{
     line-height: 24px;
 }
-.pos .clientlist-screen .client-detail > .label{
+.pos .list-screen .client-detail > .label{
     font-weight: bold;
     display: inline-block;
     width: 75px;
     text-align: right;
     margin-right: 8px;
 }
-.pos .clientlist-screen .client-details input,
-.pos .clientlist-screen .client-details select
+.pos .list-screen .client-details input,
+.pos .list-screen .client-details select
 {
     padding: 4px;
     border-radius: 3px;
@@ -1749,25 +1749,25 @@ td {
     font-size: 14px;
     box-sizing: border-box;
 }
-.pos .clientlist-screen .client-details input.client-name {
+.pos .list-screen .client-details input.client-name {
     font-size: 24px;
     line-height: 24px;
     margin: 18px 6px;
     width: 340px;
 }
-.pos .clientlist-screen .client-detail > .empty{
+.pos .list-screen .client-detail > .empty{
     opacity: 0.3;
 }
-.pos .clientlist-screen .searchbox{
+.pos .list-screen .searchbox{
     right: auto;
     margin-left: -90px;
     margin-top:8px;
     left: 50%;
 }
-.pos .clientlist-screen .searchbox input{
+.pos .list-screen .searchbox input{
     width: 120px;
 }
-.pos .clientlist-screen .button.new-customer {
+.pos .list-screen .button.new-customer {
     left: 50%;
     margin-left: 120px;
 }

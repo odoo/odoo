@@ -1216,7 +1216,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             this.display_client_details('show',this.old_client,0);
         }
 
-        this.$('.client-list-contents').on('click', '.client-line', function(event){
+        this.$('.list-table-contents').on('click', '.client-line', function(event){
             self.line_select(event,$(this),parseInt($(this).data('id')));
         });
 
@@ -1276,7 +1276,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
         this.$('.searchbox input').focus();
     },
     render_list: function(partners){
-        var contents = this.$el[0].querySelector('.client-list-contents');
+        var contents = this.$el[0].querySelector('.list-table-contents');
         contents.innerHTML = "";
         for(var i = 0, len = Math.min(partners.length,1000); i < len; i++){
             var partner    = partners[i];
@@ -1340,7 +1340,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
     },
     line_select: function(event,$line,id){
         var partner = this.pos.db.get_partner_by_id(id);
-        this.$('.client-list .lowlight').removeClass('lowlight');
+        this.$('.list-table .lowlight').removeClass('lowlight');
         if ( $line.hasClass('highlight') ){
             $line.removeClass('highlight');
             $line.addClass('lowlight');
@@ -1348,7 +1348,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             this.new_client = null;
             this.toggle_save_button();
         }else{
-            this.$('.client-list .highlight').removeClass('highlight');
+            this.$('.list-table .highlight').removeClass('highlight');
             $line.addClass('highlight');
             var y = event.pageY - $line.parent().offset().top;
             this.display_client_details('show',partner,y);
@@ -1532,7 +1532,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
         var self = this;
         var searchbox = this.$('.searchbox input');
         var contents = this.$('.client-details-contents');
-        var parent   = this.$('.client-list').parent();
+        var parent   = this.$('.list-table').parent();
         var scroll   = parent.scrollTop();
         var height   = contents.height();
 

@@ -854,7 +854,7 @@ models.PosModel = models.PosModel.extend({
     remove_from_server_and_set_sync_state: function(ids_to_remove){
         var self = this;
         this.set_synch('connecting', ids_to_remove.length);
-        self._remove_from_server(ids_to_remove)
+        return self._remove_from_server(ids_to_remove)
             .then(function(server_ids) {
                 self.set_synch('connected');
             }).catch(function(reason){
@@ -905,9 +905,10 @@ models.PosModel = models.PosModel.extend({
         var self = this;
         var ids_to_remove = this.db.get_ids_to_remove_from_server();
         var orders_to_sync = this.db.get_unpaid_orders_to_sync(order_ids);
+        var promise = Promise.resolve();
         if (orders_to_sync.length) {
             this.set_synch('connecting', orders_to_sync.length);
-            this._save_to_server(orders_to_sync, {'draft': true}).then(function (server_ids) {
+            promise = this._save_to_server(orders_to_sync, {'draft': true}).then(function (server_ids) {
                 server_ids.forEach(function(server_id){
                     table_orders.some(function(o){
                         if (o.name === server_id.pos_reference) {
@@ -919,19 +920,25 @@ models.PosModel = models.PosModel.extend({
                 if (!ids_to_remove.length) {
                     self.set_synch('connected');
                 } else {
-                    self.remove_from_server_and_set_sync_state(ids_to_remove);
+                    return self.remove_from_server_and_set_sync_state(ids_to_remove);
                 }
+
+                return Promise.resolve();
             }).catch(function(reason){
                 self.set_synch('error');
             }).finally(function(){
                 self.clean_table_transfer(table);
             });
         } else {
+            var remove_promise = Promise.resolve();
             if (ids_to_remove.length) {
-                self.remove_from_server_and_set_sync_state(ids_to_remove);
+                remove_promise = self.remove_from_server_and_set_sync_state(ids_to_remove);
             }
             self.clean_table_transfer(table);
+            return remove_promise;
         }
+
+        return promise;
     },
 
     set_order_on_table: function() {
@@ -950,7 +957,7 @@ models.PosModel = models.PosModel.extend({
         clearInterval(this.table_longpolling);
 
         this.set_synch('connecting', 1);
-        this._get_from_server(table.id).then(function (server_orders) {
+        return this._get_from_server(table && table.id).then(function (server_orders) {
             var orders = self.get_order_list();
             orders.forEach(function(order){
                 if (order.server_id){
@@ -964,7 +971,7 @@ models.PosModel = models.PosModel.extend({
                     self.get("orders").add(new_order);
                     new_order.save_to_db();
                 }
-            })
+            });
             if (!ids_to_remove.length) {
                 self.set_synch('connected');
             } else {
@@ -973,7 +980,9 @@ models.PosModel = models.PosModel.extend({
         }).catch(function(reason){
             self.set_synch('error');
         }).finally(function(){
-            self.set_order_on_table();
+            if (table) {
+                self.set_order_on_table();
+            }
         });
     },
 
@@ -993,8 +1002,9 @@ models.PosModel = models.PosModel.extend({
      * @param {object} table.
      */
     set_table: function(table) {
+        var promise = Promise.resolve();
         if(!table){
-            this.sync_from_server(table, this.get_order_list(), this.get_order_with_uid());
+            promise = this.sync_from_server(table, this.get_order_list(), this.get_order_with_uid());
             this.set_order(null);
         } else if (this.order_to_transfer_to_different_table) {
             var order_ids = this.get_order_with_uid();
@@ -1002,12 +1012,13 @@ models.PosModel = models.PosModel.extend({
             this.transfer_order_to_table(table);
             this.push_order_for_transfer(order_ids, this.get_order_list());
 
-            this.sync_from_server(table, this.get_order_list(), order_ids);
+            promise = this.sync_from_server(table, this.get_order_list(), order_ids);
             this.set_order(null);
         } else {
             this.table = table;
-            this.sync_to_server(table);
+            promise = this.sync_to_server(table);
         }
+        return promise;
     },
 
     // if we have tables, we do not load a default order, as the default order will be

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_pos_payment_form_inherit_pos_tipping" model="ir.ui.view">
+        <field name="name">pos.payment.form.pos.tipping</field>
+        <field name="model">pos.payment</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_payment_form"></field>
+        <field name="arch" type="xml">
+            <field name="transaction_id" position="after">
+                <field name="captured" attrs="{'invisible': [('transaction_id', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -122,20 +122,20 @@ class PosOrder(models.Model):
 
     def _get_fields_for_draft_order(self):
         return [
-                    'id',
-                    'pricelist_id',
-                    'partner_id',
-                    'sequence_number',
-                    'session_id',
-                    'pos_reference',
-                    'create_uid',
-                    'create_date',
-                    'customer_count',
-                    'fiscal_position_id',
-                    'table_id',
-                    'to_invoice',
-                    'multiprint_resume',
-                    ]
+            'id',
+            'pricelist_id',
+            'partner_id',
+            'sequence_number',
+            'session_id',
+            'pos_reference',
+            'create_uid',
+            'create_date',
+            'customer_count',
+            'fiscal_position_id',
+            'table_id',
+            'to_invoice',
+            'multiprint_resume',
+        ]
 
     @api.model
     def get_table_draft_orders(self, table_id):
@@ -145,11 +145,14 @@ class PosOrder(models.Model):
         front end application.
 
         :param table_id: Id of the selected table.
-        :type table_id: int.
+        :type table_id: int, falsy for all orders
         :returns: list -- list of dict representing the table orders
         """
+        domain = [('state', '=', 'draft')]
+        if table_id:
+            domain += [('table_id', '=', table_id)]
         table_orders = self.search_read(
-                domain = [('state', '=', 'draft'), ('table_id', '=', table_id)],
+                domain = domain,
                 fields = self._get_fields_for_draft_order())
 
         self._get_order_lines(table_orders)
