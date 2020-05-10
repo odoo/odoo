@@ -306,7 +306,7 @@ class HolidaysAllocation(models.Model):
             if allocation.holiday_type == 'company':
                 allocation.employee_id = False
                 if not allocation.mode_company_id:
-                    allocation.mode_company_id = self.env.user.company_id
+                    allocation.mode_company_id = self.env.company
                 allocation.category_id = False
             elif allocation.holiday_type == 'department':
                 allocation.employee_id = False
