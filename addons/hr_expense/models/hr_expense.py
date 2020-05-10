@@ -18,7 +18,7 @@ class HrExpense(models.Model):
 
     @api.model
     def _default_employee_id(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        return self.env.user.employee_id
 
     @api.model
     def _default_product_uom_id(self):
