@@ -15,7 +15,7 @@
 # Minh Nguyen <ndminh210994@gmail.com>, 2018
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # Thang Duong Bao <nothingctrl@gmail.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2019
 # Duy BQ <duybq86@gmail.com>, 2020
 # 
 msgid ""
@@ -23099,6 +23099,14 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_model_inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "Danh sách các model mà mở rộng model hiện hành."
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:522
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters_action_id

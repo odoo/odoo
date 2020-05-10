@@ -48,7 +48,7 @@
 # Shane Tsoi <sso@odoo.com>, 2018
 # KWOKYUK CHEUNG <cheungkwokyuk@gmail.com>, 2018
 # 海飞 Lu <330472962@qq.com>, 2018
-# Jeffery CHEN <jeffery9@gmail.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # niulin lnc. <admin@niulin.net>, 2019
 # keecome <7017511@qq.com>, 2019
 # John An <johnxan@163.com>, 2019
@@ -24431,6 +24431,14 @@ msgstr "如果存在此销售员，则通过该人员内部账号与该客户沟
 #: model:ir.model.fields,help:base.field_ir_model_inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "扩展当前模型的模型清单。"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:522
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters_action_id

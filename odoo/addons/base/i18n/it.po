@@ -28,7 +28,7 @@
 # Simone Rubino <simone.rubino@agilebg.com>, 2018
 # Lorenzo Battistini <lb@takobi.online>, 2018
 # Paolo Valier, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Martin Trigaux, 2019
 # Fabio Genovese <ing.fabiogenovese@gmail.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
@@ -16222,7 +16222,7 @@ msgstr "Varie"
 #: model:res.partner.title,name:base.res_partner_title_miss
 #: model:res.partner.title,shortcut:base.res_partner_title_miss
 msgid "Miss"
-msgstr "Signora"
+msgstr "Sig.ra"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:219
@@ -16521,7 +16521,7 @@ msgstr "Mozambico"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_mister
 msgid "Mr."
-msgstr "Sign."
+msgstr "Sig."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder
@@ -23329,6 +23329,14 @@ msgstr "L'utente responsabile delle comunicazioni con questo contatto."
 #: model:ir.model.fields,help:base.field_ir_model_inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "L'elenco dei modelli che estende il modello attuale."
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:522
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters_action_id

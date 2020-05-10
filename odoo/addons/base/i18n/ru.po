@@ -11,7 +11,7 @@
 # Andrey Skabelin, 2017
 # KingOPl Slav <87slava13@gmail.com>, 2017
 # OstapYakovenko <Ostap.Yakovenko@gmail.com>, 2017
-# Владимир Куряев <istercul@gmail.com>, 2017
+# 6da4f49c4b78e697e34b24b2a66289f5, 2017
 # Evgeny <transingularity@gmail.com>, 2017
 # Alex Puchkov <ap@alteco.co>, 2017
 # Evgeny Kemerov <sintezz777@gmail.com>, 2017
@@ -23095,6 +23095,14 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_model_inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "Список моделей, расширяющих текущую модель."
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:522
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters_action_id
