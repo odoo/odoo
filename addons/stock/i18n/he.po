@@ -2210,7 +2210,7 @@ msgstr "עוקבים (לקוחות/ספקים)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
 msgid "Force Removal Strategy"
-msgstr "אלץ אסטרטגית ניפוק"
+msgstr "אלץ אסטרטגיית ניפוק"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__virtual_available
@@ -4348,7 +4348,7 @@ msgstr "ברקוד מוצר (ZPL)"
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #, python-format
 msgid "Product Categories"
-msgstr "קטגוריות מוצר"
+msgstr "קטגוריות מוצרים"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
@@ -5099,7 +5099,7 @@ msgstr "ליקוט שחזר"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Reverse Transfer"
-msgstr "הפוך החזרה"
+msgstr "החזר העברה"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__name
@@ -5243,7 +5243,7 @@ msgstr "תזמון"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Scrap"
-msgstr "Scrap"
+msgstr "פסול"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_location_id
@@ -5277,8 +5277,8 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
-"הסרת מוצר תסיר אותו מהמלאי שלך. המוצר יהיה\n"
-"בסופו של דבר יופיע במיקום פסילה, ניתן להשתמש בהם לצורך הדיווח."
+"פסילת מוצר תוציא אותו מהמלאי שלך. המוצר יהיה\n"
+"באיתור פסילה ויכול לשמש עבור דוחות."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6368,7 +6368,7 @@ msgstr " לביצוע"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Process"
-msgstr "לעבד"
+msgstr "לביצוע"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6669,7 +6669,7 @@ msgstr "מספר הודעות שלא נקראו"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unreserve"
-msgstr "ללא שמירה"
+msgstr "בטל שמירה"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
@@ -6954,13 +6954,8 @@ msgstr "מוצר משוקלל"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"כאשר מחסן נבחר לנתיב זה, נתיב זה אמור להיראות כנתיב ברירת המחדל, כאשר מוצרים"
-" עוברים דרך מחסן זה. ניתן לבטל את ההתנהגות הזו דרך מסלולים בקטגוריות מוצרים "
-"/ מוצרים או במסלולים המועדפים על הרכש"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -6971,19 +6966,13 @@ msgstr "כאשר כל המוצרים מוכנים"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"כאשר מסומן, המסלול יהיה לבחירה בכרטיסייה מלאי בטופס המוצר. הוא יקבל קדימות "
-"על פני המסלול המחסן."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"כאשר מסומן, המסלול יהיה לבחירה בקטגוריה 'מוצר'. הוא יקבל קדימות על פני "
-"המסלול המחסן."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -7162,7 +7151,7 @@ msgstr "לא ניתן להזין כמויות שליליות."
 #: code:addons/stock/models/stock_inventory.py:0
 #, python-format
 msgid "You can only adjust storable products."
-msgstr "אתה יכול לבצע התאמת מלאי רק למוצרים מנוהלי מלאי."
+msgstr "ניתן לבצע התאמת מלאי רק למוצרים מנוהלי מלאי."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -7327,8 +7316,8 @@ msgid ""
 "You cannot validate a transfer if no quantites are reserved nor done. To "
 "force the transfer, switch in edit more and encode the done quantities."
 msgstr ""
-"לא ניתן לאשר העברה אם אין כמויות שמורות או שבוצעו. כדי לאלץ את ההעברה, עבור "
-"לערוך כמות  והכנס את הכמויות שבוצעו."
+"לא ניתן לאשר העברה אם אין כמויות שמורות או כמויות שבוצעו. כדי לאלץ את "
+"ההעברה,לחץ על \"ערוך\"  ועדכן את הכמויות שבוצעו."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -7343,8 +7332,8 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on <i>apply</i>\n"
 "                        Odoo will process all the quantities."
 msgstr ""
-"לא רשמת עדיין כמויות ש<i>בוצעו</i> , ע\"י לחיצה על <i>החל</i>\n"
-"                        Odoo יעבד את כל הכמויות."
+"לא רשמת עדיין את הכמות ש<i>בוצעה</i> , בלחיצה על <i>החל</i>\n"
+"                        Odoo ירשום את הכמות."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
