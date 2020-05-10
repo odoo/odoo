@@ -11,7 +11,6 @@
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2018
 # Paolo Valier, 2018
-# Manuela Feliciani <mfeliciani@alice.it>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Martin Trigaux, 2018
@@ -153,8 +152,8 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Ciao,<br/>\n"
-"                        Il tuo documento non è stato creato perché il tuo indirizzo email non è riconosciuto. Per favore invia le email con l'indirizzo registrato nelle tue informazioni relative al dipendente, o contatta il tuo responsabile risorse umane.\n"
+"                        Buongiorno,<br/>\n"
+"                        Il documento non è stato creato perché l'indirizzo e-mail è sconosciuto. Inviare le e-mail utilizzando l'indirizzo registrato nelle informazioni del dipendente, oppure contattare il responsabile risorse umane.\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "            </table>\n"
@@ -162,11 +161,11 @@ msgstr ""
 "</tbody>\n"
 "</table>\n"
 "</td></tr>\n"
-"<!-- POWERED BY -->\n"
+"<!-- FORNITO DA -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=hr\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Fornito da <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=hr\" style=\"color: #875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -231,7 +230,7 @@ msgstr "Stato attività"
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
-msgstr "Aggiungi nuovo dipendente"
+msgstr "Aggiungi un nuovo dipendente"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -277,12 +276,12 @@ msgstr "Partner autenticati"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
 msgid "Auto Subscribe Departments"
-msgstr "Dipartimenti ad iscrizione automatica"
+msgstr "Iscrizione automatica uffici"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr "Iscrivere automaticamente al canale i membri di questi reparti."
+msgstr "Iscrizione automatica al canale per gli affiliati a questi uffici."
 
 #. module: hr
 #: selection:hr.employee,certificate:0
@@ -358,7 +357,7 @@ msgstr "Direttore tecnico"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
 msgid "Child Departments"
-msgstr "Reparti secondari"
+msgstr "Uffici secondari"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -443,7 +442,7 @@ msgstr "Informazioni contatto"
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Contributions to open source projects"
-msgstr "Contributi ai progetti open source"
+msgstr "Contributi a progetti open source"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
@@ -453,7 +452,7 @@ msgstr "Nazione di nascita"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
-msgstr "Crea un nuovo reparto"
+msgstr "Crea un nuovo ufficio"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
@@ -650,8 +649,8 @@ msgstr "Nuovi dipendenti previsti"
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr ""
-"Numero atteso di dipendenti per questa posizione lavorativa dopo le nuove "
-"assunzioni."
+"Numero atteso di dipendenti, dopo la nuova selezione, per questa posizione "
+"lavorativa."
 
 #. module: hr
 #: model:hr.job,name:hr.job_developer
@@ -758,12 +757,12 @@ msgstr "Raggruppa per"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "HR Department"
-msgstr "Reparto risorse umane"
+msgstr "Ufficio risorse umane"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr "Reparti risorse umane"
+msgstr "Uffici risorse umane"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -803,7 +802,7 @@ msgstr "Risorse umane"
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr "Direttore risorse umane"
+msgstr "Responsabile risorse umane"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
@@ -1005,7 +1004,7 @@ msgstr "Maschio"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
-msgstr "Manager"
+msgstr "Responsabile"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -1015,7 +1014,7 @@ msgstr "Stato civile"
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
-msgstr "Manager di Marketing e Community"
+msgstr "Responsabile marketing e community"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1118,7 +1117,7 @@ msgstr "Bello avere"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Not Recruiting"
-msgstr "Non assumendo"
+msgstr "Selezione terminata"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -1233,7 +1232,7 @@ msgstr "In ritardo"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
 msgid "Parent Department"
-msgstr "Dipartimento Superiore"
+msgstr "Ufficio superiore"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -1322,17 +1321,17 @@ msgstr "Studente veloce ed autonomo"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
-msgstr "Pronto per assumere più efficientemente?"
+msgstr "Pronto per una selezione più efficiente?"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Recruitment"
-msgstr "Assunzioni"
+msgstr "Selezione del personale"
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment in Progress"
-msgstr "Assunzioni in Corso"
+msgstr "Selezione in corso"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1416,8 +1415,8 @@ msgstr ""
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
 msgstr ""
-"Imposta se il processo di assunzione è aperto o chiuso per questa posizione "
-"lavorativa."
+"Indica se il processo di selezione per questa posizione lavorativa è aperto "
+"o chiuso."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -1495,7 +1494,7 @@ msgstr "Nome completo del coniuge"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Start Recruitment"
-msgstr "Inizia assunzioni"
+msgstr "Avvia selezione"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__state
@@ -1520,7 +1519,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Stop Recruitment"
-msgstr "Ferma Assunzioni"
+msgstr "Termina selezione"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_employee_action_subordinate_hierachy
@@ -1561,8 +1560,7 @@ msgstr "L'indirizzo del dipendente ha un'azienda collegata"
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
 msgstr ""
-"Il nome della posizione lavorativa deve essere unico per dipartimento "
-"nell'azienda!"
+"Il nome della posizione lavorativa deve essere univoco per ufficio aziendale"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
@@ -1919,13 +1917,13 @@ msgstr "Sei pronto a lavorare in un'azienda dinamica"
 #: code:addons/hr/models/hr.py:206
 #, python-format
 msgid "You cannot create a recursive hierarchy."
-msgstr "Non puoi creare una gerarchia ricorsiva."
+msgstr "Impossibile creare una gerarchia ricorsiva."
 
 #. module: hr
 #: code:addons/hr/models/hr.py:331
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr "Non puoi creare dipartimenti ricorsivi."
+msgstr "Impossibile creare uffici ricorsivi."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2059,7 +2057,7 @@ msgstr "Il tuo documento non è stato creato"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
-msgstr "reparto"
+msgstr "ufficio"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form

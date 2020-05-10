@@ -14,7 +14,7 @@
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2019
 # lasch a <bmail440@gmail.com>, 2019
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2019
-# Kristoffer Grundström <hamnisdude@gmail.com>, 2019
+# Kristoffer Grundström <lovaren@gmail.com>, 2019
 # Robert Frykelius <robert.frykelius@linserv.se>, 2019
 # Daniel Osser <danielosser@gmail.com>, 2019
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2019
@@ -21425,6 +21425,14 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_model.py:522
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
 msgstr ""
 
 #. module: base
