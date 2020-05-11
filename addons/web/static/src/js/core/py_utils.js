@@ -89,13 +89,19 @@ function wrap_context(context) {
     for (var k in context) {
         if (!context.hasOwnProperty(k)) { continue; }
         var val = context[k];
+        console.log("CONTEXT ", context)
+        console.log("VAL", val)
 
         if (val === null) { continue; }
+        try{
         if (val.constructor === Array) {
             context[k] = wrapping_list.fromJSON(val);
         } else if (val.constructor === Object
                    && !py.PY_isInstance(val, py.object)) {
             context[k] = wrapping_dict.fromJSON(val);
+        }}
+        catch (ex) {
+            continue;
         }
     }
     return context;
