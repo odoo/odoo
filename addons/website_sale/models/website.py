@@ -112,7 +112,7 @@ class Website(models.Model):
             if country_code:
                 # keep partner_pl only if GeoIP compliant in case of GeoIP enabled
                 partner_pl = partner_pl.filtered(
-                    lambda pl: pl.country_group_ids and country_code in pl.country_group_ids.mapped('country_ids.code')
+                    lambda pl: pl.country_group_ids and country_code in pl.country_group_ids.mapped('country_ids.code') or not pl.country_group_ids
                 )
             pricelists |= partner_pl
 
