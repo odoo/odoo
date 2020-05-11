@@ -189,24 +189,22 @@
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <tree string="Picking list" multi_edit="1"
-                      decoration-info="state == 'draft'" decoration-muted="state == 'cancel'"
-                      decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date">
-                    <field name="name"/>
+                <tree string="Picking list" multi_edit="1">
+                    <field name="name" decoration-bf="1"/>
                     <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations" optional="show"/>
                     <field name="partner_id" optional="show"/>
                     <field name="signature" string="Signed" optional="hide" widget="boolean" groups="stock.group_stock_sign_delivery"/>
-                    <field name="user_id" optional="hide"/>
+                    <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
                     <field name="date" invisible="1"/>
-                    <field name="scheduled_date" optional="show"/>
+                    <field name="scheduled_date" optional="show" decoration-danger="scheduled_date &lt; current_date and state not in ('done', 'cancel')"/>
                     <field name="origin" optional="show"/>
                     <field name="group_id" invisible="1"/>
                     <field name="backorder_id" optional="hide"/>
-                    <field name="state" optional="show"/>
                     <field name="priority" optional="hide"/>
                     <field name="picking_type_id" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="state" optional="show" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                     <field name="delay_alert_date" invisible="1"/>
                     <field name="json_popover" string=" " widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>

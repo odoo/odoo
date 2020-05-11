@@ -44,10 +44,11 @@
         <field name="inherit_id" ref="stock.view_production_lot_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='create_date']" position="after">
+                <field name="product_qty" invisible="1"/>
+                <field name="alert_date" optional="hide" widget='remaining_days' attrs="{'invisible': [('product_qty', '&lt;=', 0)]}"/>
                 <field name="use_date" optional="hide"/>
                 <field name="removal_date" optional="hide"/>
                 <field name="expiration_date" optional="hide"/>
-                <field name="alert_date" optional="hide"/>
             </xpath>
         </field>
     </record>

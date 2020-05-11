@@ -50,8 +50,8 @@
             <field name="model">stock.move</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done')) and date > current_date" string="Moves" create="0">
-                    <field name="date" groups="base.group_no_one"/>
+                <tree string="Moves" create="0">
+                    <field name="date" groups="base.group_no_one" decoration-danger="(state not in ('cancel','done')) and date > current_date" />
                     <field name="reference"/>
                     <field name="picking_type_id" invisible="1"/>
                     <field name="create_date" invisible="1" groups="base.group_no_one"/>
@@ -60,8 +60,8 @@
                     <field name="location_dest_id" options="{'no_create': True}" string="To"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                    <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                 </tree>
             </field>
         </record>
