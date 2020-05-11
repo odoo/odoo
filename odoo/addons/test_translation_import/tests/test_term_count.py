@@ -308,3 +308,32 @@ class TestTranslationFlow(common.TransactionCase):
             ('module', '=', 'test_translation_import')
         ])
         self.assertEqual(init_translation_count, len(import_translation))
+
+    def test_export_import_csv(self):
+        """ Ensure can reimport exported csv """
+        self.env.ref("base.lang_fr").active = True
+
+        module = self.env.ref('base.module_test_translation_import')
+        export = self.env["base.language.export"].create({
+            'lang': 'fr_FR',
+            'format': 'csv',
+            'modules': [(6, 0, [module.id])]
+        })
+        export.act_getfile()
+        po_file = export.data
+        self.assertIsNotNone(po_file)
+
+        self.env["ir.translation"].search([
+            ('lang', '=', 'fr_FR'),
+            ('module', '=', 'test_translation_import')
+        ]).unlink()
+
+        import_fr = self.env["base.language.import"].create({
+            'name': 'French',
+            'code': 'fr_FR',
+            'data': export.data,
+            'filename': export.name,
+            'overwrite': False,
+        })
+        with mute_logger('odoo.addons.base.models.res_lang'):
+            import_fr.with_context(create_empty_translation=True).import_lang()
