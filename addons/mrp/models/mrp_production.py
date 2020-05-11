@@ -114,7 +114,7 @@ class MrpProduction(models.Model):
         help="Date at which you plan to start the production.",
         index=True, required=True, store=True)
     date_planned_finished = fields.Datetime(
-        'Planned End Date',
+        'Scheduled End Date',
         default=_get_default_date_planned_finished,
         compute='_compute_dates_planned', inverse='_set_date_planned_finished',
         help="Date at which you plan to finish the production.",
@@ -995,7 +995,7 @@ class MrpProduction(models.Model):
             start_date = max(start_date, datetime.datetime.now())
             workorder_ids.leave_id.unlink()
         else:
-            workorder_ids = self.workorder_ids
+            workorder_ids = self.workorder_ids.filtered(lambda wo: not wo.date_planned_start)
         for workorder in workorder_ids:
             workcenters = workorder.workcenter_id | workorder.workcenter_id.alternative_workcenter_ids
 
