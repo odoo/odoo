@@ -285,6 +285,10 @@ class AccountMove(models.Model):
                     # N.B. currency_id/amount_currency are not set because if we have two lines with the same tax
                     # and different currencies, we have no idea which currency set on this line.
                     self.env['account.move.line'].new(line_vals)
+                    if tax.price_include and not tax.include_base_amount:
+                        line.debit = line.debit and line.debit - line_vals['debit']
+                        line.credit = line.credit and line.credit - line_vals['credit']
+
 
             # Keep record of the values used as taxes the last time this method has been run.
             line.tax_line_grouping_key = _build_grouping_key(line)
