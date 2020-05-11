@@ -2563,3 +2563,87 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
                 line_form.tax_ids.clear()
                 line_form.price_unit = 0.89500
         move_form.save()
+
+    def test_out_invoice_multi_company(self):
+        ''' Ensure the properties are found on the right company.
+        '''
+
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'lst_price': 1000.0,
+            'standard_price': 800.0,
+            'company_id': False,
+        })
+
+        partner = self.env['res.partner'].create({
+            'name': 'partner',
+            'company_id': False,
+        })
+
+        journal = self.env['account.journal'].create({
+            'name': 'test_out_invoice_multi_company',
+            'code': 'XXXXX',
+            'type': 'sale',
+            'company_id': self.company_data_2['company'].id,
+        })
+
+        product.with_context(force_company=self.company_data['company'].id).write({
+            'property_account_income_id': self.company_data['default_account_revenue'].id,
+        })
+
+        partner.with_context(force_company=self.company_data['company'].id).write({
+            'property_account_receivable_id': self.company_data['default_account_receivable'].id,
+        })
+
+        product.with_context(force_company=self.company_data_2['company'].id).write({
+            'property_account_income_id': self.company_data_2['default_account_revenue'].id,
+        })
+
+        partner.with_context(force_company=self.company_data_2['company'].id).write({
+            'property_account_receivable_id': self.company_data_2['default_account_receivable'].id,
+        })
+
+        def _check_invoice_values(invoice):
+            self.assertInvoiceValues(invoice, [
+                {
+                    'product_id': product.id,
+                    'account_id': self.company_data_2['default_account_revenue'].id,
+                    'debit': 0.0,
+                    'credit': 1000.0,
+                },
+                {
+                    'product_id': False,
+                    'account_id': self.company_data_2['default_account_receivable'].id,
+                    'debit': 1000.0,
+                    'credit': 0.0,
+                },
+            ], {
+                'amount_untaxed': 1000.0,
+                'amount_total': 1000.0,
+            })
+
+        invoice_create = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': partner.id,
+            'journal_id': journal.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': product.id,
+                'price_unit': 1000.0,
+            })],
+        })
+
+        _check_invoice_values(invoice_create)
+
+        move_form = Form(self.env['account.move'].with_context(default_type='out_invoice'))
+        move_form.journal_id = journal
+        move_form.partner_id = partner
+        move_form.invoice_date = fields.Date.from_string('2017-01-01')
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product
+            line_form.tax_ids.clear()
+        invoice_onchange = move_form.save()
+
+        _check_invoice_values(invoice_onchange)

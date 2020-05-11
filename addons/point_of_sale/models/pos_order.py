@@ -54,11 +54,9 @@ class PosOrder(models.Model):
 
     @api.model
     def _payment_fields(self, order, ui_paymentline):
-        payment_date = ui_paymentline['name']
-        payment_date = fields.Date.context_today(self, fields.Datetime.from_string(payment_date))
         return {
             'amount': ui_paymentline['amount'] or 0.0,
-            'payment_date': payment_date,
+            'payment_date': ui_paymentline['name'],
             'payment_method_id': ui_paymentline['payment_method_id'],
             'card_type': ui_paymentline.get('card_type'),
             'transaction_id': ui_paymentline.get('transaction_id'),
@@ -359,6 +357,7 @@ class PosOrder(models.Model):
 
     def _prepare_invoice_vals(self):
         self.ensure_one()
+        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         vals = {
             'invoice_payment_ref': self.name,
             'invoice_origin': self.name,
@@ -370,7 +369,7 @@ class PosOrder(models.Model):
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
             'invoice_user_id': self.user_id.id,
-            'invoice_date': self.date_order.date(),
+            'invoice_date': self.date_order.astimezone(timezone).date(),
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_line_ids': [(0, None, self._prepare_invoice_line(line)) for line in self.lines],
         }

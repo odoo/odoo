@@ -33,9 +33,9 @@
 # as co02 <asco02@163.com>, 2020
 # WK Leong <zsdicky@gmail.com>, 2020
 # 226408 台北 <226408@so8d.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Felix Yang/杨孟泽 <felixyangsh@aliyun.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -43,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Felix Yang/杨孟泽 <felixyangsh@aliyun.com>, 2020\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +66,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"    - 税收组：税收是一组子税。\n"
+"    - 税金组：税金是一组子税。\n"
 "    - 固定: 无论价格如何，税额都保持不变。\n"
 "    - 价格百分比：税额是价格的百分比：\n"
 "       例如100 * 10％= 110（不含价格）\n"
@@ -930,7 +930,7 @@ msgstr "选定的凭证行已经与记账凭证相对账."
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "A tag defined to be used on taxes must always have a country set."
-msgstr "定义用于税收的标签必须始终设置国家/地区。"
+msgstr "定义用于税金的标签必须始终设置国家/地区。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -1140,19 +1140,19 @@ msgstr "账户标签"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
 msgid "Account Tags"
-msgstr "财务标签"
+msgstr "科目标签"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_tree
 msgid "Account Tax"
-msgstr "会计税金"
+msgstr "科目税金"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
-msgstr "会计税组"
+msgstr "科目税组"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
@@ -1618,12 +1618,12 @@ msgstr "高级设置"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__include_base_amount
 msgid "Affect Base of Subsequent Taxes"
-msgstr "影响后续税收的基础"
+msgstr "影响后续税金的基础"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__include_base_amount
 msgid "Affect Subsequent Taxes"
-msgstr "影响后续税收"
+msgstr "影响后续税金"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_aged_partner_balance
@@ -2530,7 +2530,7 @@ msgstr "待付账单"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
-msgstr "受阻消息"
+msgstr "阻塞消息"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type__include_initial_balance
@@ -4106,7 +4106,7 @@ msgstr "默认国际贸易术语"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default taxes applied to local transactions"
-msgstr "适用于本地事务的默认税收"
+msgstr "适用于本地事务的默认税金"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
@@ -4228,7 +4228,7 @@ msgid ""
 "Determines where the tax is selectable. Note : 'None' means a tax can't be "
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
-msgstr "确定税收可选择的位置。注意 : '无'表示税不能单独使用，但仍可在组中使用. '调整' 用于执行税收调整。"
+msgstr "确定税金可选择的位置。注意 : '无'表示税不能单独使用，但仍可在组中使用. '调整' 用于执行税金调整。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__difference
@@ -4909,7 +4909,7 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
-msgstr "财务状况用于调整特定客户的税收和账户或销售订单/发票。 默认值来自客户。"
+msgstr "财务状况用于调整特定客户的税金和账户或销售订单/发票。 默认值来自客户。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -7164,7 +7164,7 @@ msgstr "轻松浏览报告，查看数字背后的内容"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_negate
 msgid "Negate Tax Balance"
-msgstr "抵消税收平衡"
+msgstr "抵消税金平衡"
 
 #. module: account
 #. openerp-web
@@ -7262,7 +7262,7 @@ msgstr "无响应"
 msgid ""
 "No users can edit journal entries related to a tax prior and inclusive of "
 "this date."
-msgstr "没有用户可以编辑与此日期之前和之前相关的税收相关的日记帐分录。"
+msgstr "没有用户可以编辑与此日期之前和之前相关的税金相关的日记帐分录。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -7316,6 +7316,7 @@ msgstr "没有到期"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "未付款"
 
@@ -7704,7 +7705,7 @@ msgstr "发起人税"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_repartition_line_id
 msgid "Originator Tax Repartition Line"
-msgstr "发起人税收再分配线"
+msgstr "发起人税金再分配线"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_group_id
@@ -8266,7 +8267,7 @@ msgstr "请使用以下付款方式："
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__plus_report_line_ids
 msgid "Plus Tax Report Lines"
-msgstr "加上税收报告行"
+msgstr "加上税金报告行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_pos_receivable_account_id
@@ -8712,7 +8713,7 @@ msgstr "用外币记录交易"
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Recursion found for tax '%s'."
-msgstr "用于税收的递归 '%s'."
+msgstr "用于税金的递归 '%s'."
 
 #. module: account
 #. openerp-web
@@ -9424,7 +9425,7 @@ msgid ""
 "block the flow. The Message has to be written in the next field."
 msgstr ""
 "选择此“警告“选项，将通知用户此消息。\r\n"
-"选择“阻止消息“选项，将在流程受阻时将抛出一个消息，并阻止此流程。\r\n"
+"选择“阻塞消息“选项，将在流程阻塞时将抛出一个消息，并阻塞此流程。\r\n"
 "此消息将写入下一个字段。"
 
 #. module: account
@@ -9951,7 +9952,7 @@ msgstr "标签"
 msgid ""
 "Tags assigned to this line by the tax creating it, if any. It determines its"
 " impact on financial reports."
-msgstr "通过创建它的税收分配给此行的标签（如有）。 它决定了它对财务报告的影响。"
+msgstr "通过创建它的税金分配给此行的标签（如有）。 它决定了它对财务报告的影响。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_cash_box_out
@@ -10053,7 +10054,7 @@ msgstr "不含税"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Tax Grids"
-msgstr "税收网"
+msgstr "税金网"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_group
@@ -10084,7 +10085,7 @@ msgstr "含税价"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_lock_date
 msgid "Tax Lock Date"
-msgstr "税收锁定日期"
+msgstr "税金锁定日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__tax_lock_date_message
@@ -10117,12 +10118,12 @@ msgstr "税金名称"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line
 msgid "Tax Repartition Line"
-msgstr "税收再分配线"
+msgstr "税金再分配线"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line_template
 msgid "Tax Repartition Line Template"
-msgstr "税收重新分配线模板"
+msgstr "税金重新分配线模板"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_configure_tax_report
@@ -10143,7 +10144,7 @@ msgstr "税范围"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_tax_signed
 msgid "Tax Signed"
-msgstr "税收签署"
+msgstr "税金签署"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__tax_src_id
@@ -10215,7 +10216,7 @@ msgid ""
 "Tax repartition line templates should apply to either invoices or refunds, "
 "not both at the same time. invoice_tax_id and refund_tax_id should not be "
 "set together."
-msgstr "税收重新分配行模板应适用于发票或退款，而不是同时适用于两者。 invoice_tax_id和refund_tax_id不应该一起设置。"
+msgstr "税金重新分配行模板应适用于发票或退款，而不是同时适用于两者。 invoice_tax_id和refund_tax_id不应该一起设置。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
@@ -10230,21 +10231,21 @@ msgid ""
 "Tax repartition lines should apply to either invoices or refunds, not both "
 "at the same time. invoice_tax_id and refund_tax_id should not be set "
 "together."
-msgstr "税收重新分配行应适用于发票或退款，而不是同时适用于两者。 invoice_tax_id和refund_tax_id不应该一起设置。"
+msgstr "税金重新分配行应适用于发票或退款，而不是同时适用于两者。 invoice_tax_id和refund_tax_id不应该一起设置。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__plus_report_line_ids
 msgid ""
 "Tax report lines whose '+' tag will be assigned to move lines by this "
 "repartition line"
-msgstr "税收报告行，其“+”标记将被指定为通过此重新分区行凭证行"
+msgstr "税金报告行，其“+”标记将被指定为通过此重新分区行凭证行"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__minus_report_line_ids
 msgid ""
 "Tax report lines whose '-' tag will be assigned to move lines by this "
 "repartition line"
-msgstr "税收报告行，其“ - ”标记将被指定为通过此重新分区行凭证行"
+msgstr "税金报告行，其“ - ”标记将被指定为通过此重新分区行凭证行"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__tag_ids
@@ -10390,7 +10391,7 @@ msgstr "技术领域用于确定在何时进行对账需要显示在应收/应�
 msgid ""
 "Technical field used to display a message when the invoice's accounting date"
 " is prior of the tax lock date."
-msgstr "当发票的会计日期是在税收锁定日期之前技术字段用来显示一个信息。"
+msgstr "当发票的会计日期是在税金锁定日期之前技术字段用来显示一个信息。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_has_matching_suspense_amount
@@ -10416,7 +10417,7 @@ msgstr "技术字段，用于适应邮件模板中的通用行为。"
 msgid ""
 "Technical field used to have a dynamic domain on journal / taxes in the form"
 " view."
-msgstr "技术字段用于在表单视图中具有日记帐/税收的动态域。"
+msgstr "技术字段用于在表单视图中具有日记帐/税金的动态域。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method
@@ -10437,7 +10438,7 @@ msgstr "技术字段用于追踪税金现金收付制对账。当取消源单据
 #: model:ir.model.fields,help:account.field_account_move_line__recompute_tax_line
 msgid ""
 "Technical field used to know on which lines the taxes must be recomputed."
-msgstr "技术领域用于了解必须重新计算税收的行。"
+msgstr "技术领域用于了解必须重新计算税金的行。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__show_partner_bank_account
@@ -10461,7 +10462,7 @@ msgid ""
 "items are directly exigible, but with the feature cash_basis on taxes, some "
 "will become exigible only when the payment is recorded."
 msgstr ""
-"在增值税报告中，技术领域被用来标记税收行(只有分录存在时被显示)。默认情况下，所有分录都是直接存在的，但是在税收的基础上，只有付款记录的情况下，一些才会显示。"
+"在增值税报告中，技术领域被用来标记税金行(只有分录存在时被显示)。默认情况下，所有分录都是直接存在的，但是在税金的基础上，只有付款记录的情况下，一些才会显示。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__country_id
@@ -10473,7 +10474,7 @@ msgstr "用于在表单视图中限制标记域的技术字段。"
 msgid ""
 "Technical field used to restrict the domain of account tags for tax "
 "repartition lines created for this tax."
-msgstr "用于限制为此税收创建的税收重新分配行的帐户标记域的技术字段。"
+msgstr "用于限制为此税金创建的税金重新分配行的帐户标记域的技术字段。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__is_rounding_line
@@ -10828,7 +10829,7 @@ msgid ""
 "The following tax report lines are used in some tax repartition template "
 "though they don't generate any tag: %s . This probably means you forgot to "
 "set a tag_name on these lines."
-msgstr "以下税务报告行在某些税收重新分配模板中使用，但它们不生成任何标记 %s 。这可能意味着您忘记在这些行上设置tag_name。"
+msgstr "以下税务报告行在某些税金重新分配模板中使用，但它们不生成任何标记 %s 。这可能意味着您忘记在这些行上设置tag_name。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -11128,7 +11129,7 @@ msgstr "在发票上应用此重新分配的税额。 与refund_tax_id互斥"
 msgid ""
 "The tax set to apply this repartition on refund invoices. Mutually exclusive"
 " with invoice_tax_id"
-msgstr "税收设置适用于退款发票的此重新分配。 与invoice_tax_id互斥"
+msgstr "税金设置适用于退款发票的此重新分配。 与invoice_tax_id互斥"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -11198,7 +11199,7 @@ msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
-"这个公司没有定义税收收付实现制: \"%s\" \n"
+"这个公司没有定义税金收付实现制: \"%s\" \n"
 "在菜单会计/配置/设置下设置"
 
 #. module: account
@@ -11668,7 +11669,7 @@ msgstr "向上"
 msgid ""
 "Unable to mix any taxes being price included with taxes affecting the base "
 "amount but not included in price."
-msgstr "无法混合任何税收，包括影响基本金额但不包含在价格中的税收。"
+msgstr "无法混合任何税金，包括影响基本金额但不包含在价格中的税金。"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12721,7 +12722,7 @@ msgstr "名称"
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line_template__repartition_type__tax
 msgid "of tax"
-msgstr "税收"
+msgstr "税金"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_current_month

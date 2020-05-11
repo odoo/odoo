@@ -317,6 +317,8 @@ class AccountMove(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
+        self = self.with_context(force_company=self.journal_id.company_id.id)
+
         warning = {}
         if self.partner_id:
             rec_account = self.partner_id.property_account_receivable_id
@@ -776,6 +778,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         in_draft_mode = self != self._origin
         today = fields.Date.context_today(self)
+        self = self.with_context(force_company=self.journal_id.company_id.id)
 
         def _get_payment_terms_computation_date(self):
             ''' Get the date from invoice that will be used to compute the payment terms.
@@ -2669,6 +2672,7 @@ class AccountMoveLine(models.Model):
 
     def _get_computed_account(self):
         self.ensure_one()
+        self = self.with_context(force_company=self.move_id.journal_id.company_id.id)
 
         if not self.product_id:
             return

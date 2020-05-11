@@ -84,9 +84,10 @@
             <field name="name">Austria</field>
             <field name="code">at</field>
             <field file="base/static/img/country_flags/at.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
             <field eval="43" name="phone_code" />
-            <field name="vat_label">VAT</field>
+            <field name="vat_label">USt</field>
         </record>
         <record id="au" model="res.country">
             <field name="name">Australia</field>
