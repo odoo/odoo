@@ -16,7 +16,7 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
         pricelist.currency_id = cls._setup_currency(cls.currency_ratio)
 
         # Set all the existing programs to active=False to avoid interference
-        cls.env['sale.coupon.program'].search([]).write({'active': False})
+        cls.env['coupon.program'].search([]).write({'active': False})
 
         # create partner for sale order.
         cls.steve = cls.env['res.partner'].create({
@@ -70,7 +70,7 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
 
         # Immediate Program By A + B: get B free
         # No Conditions
-        cls.immediate_promotion_program = cls.env['sale.coupon.program'].create({
+        cls.immediate_promotion_program = cls.env['coupon.program'].create({
             'name': 'Buy A + 1 B, 1 B are free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
@@ -79,7 +79,7 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
             'active': True,
         })
 
-        cls.code_promotion_program = cls.env['sale.coupon.program'].create({
+        cls.code_promotion_program = cls.env['coupon.program'].create({
             'name': 'Buy 1 A + Enter code, 1 A is free',
             'promo_code_usage': 'code_needed',
             'reward_type': 'product',
@@ -88,7 +88,7 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
             'active': True,
         })
 
-        cls.code_promotion_program_with_discount = cls.env['sale.coupon.program'].create({
+        cls.code_promotion_program_with_discount = cls.env['coupon.program'].create({
             'name': 'Buy 1 C + Enter code, 10 percent discount on C',
             'promo_code_usage': 'code_needed',
             'reward_type': 'discount',

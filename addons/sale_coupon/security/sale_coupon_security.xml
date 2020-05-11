@@ -6,10 +6,5 @@
         <field name="model_id" ref="model_sale_coupon_apply_code"/>
         <field name="domain_force">[('create_uid', '=', user.id)]</field>
     </record>
-    <record id="sale_coupon_generate_rule" model="ir.rule">
-        <field name="name">Generate Sales Coupon Rule</field>
-        <field name="model_id" ref="model_sale_coupon_generate"/>
-        <field name="domain_force">[('create_uid', '=', user.id)]</field>
-    </record>
 
 </odoo>
