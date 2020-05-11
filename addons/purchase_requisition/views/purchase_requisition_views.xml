@@ -193,16 +193,16 @@
         <field name="name">purchase.requisition.tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree decoration-muted="state == 'cancel'" decoration-danger="date_end and date_end&lt;current_date" string="Purchase Agreements">
+            <tree string="Purchase Agreements">
                 <field name="message_needaction" invisible="1"/>
-                <field name="name"/>
-                <field name="user_id" optional="show"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="user_id" optional="show" widget='many2one_avatar_user'/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                 <field name="ordering_date" optional="show"/>
                 <field name="schedule_date" optional="hide"/>
-                <field name="date_end" optional="show"/>
+                <field name="date_end" optional="show" widget='remaining_days' decoration-danger="date_end and date_end&lt;current_date" attrs="{'invisible': [('state','in', ('done', 'cancel'))]}"/>
                 <field name="origin" optional="show"/>
-                <field name="state" optional="show"/>
+                <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
       </field>

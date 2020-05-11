@@ -75,7 +75,7 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree decoration-danger="inventory_quantity &lt; 0" editable="bottom"
+            <tree editable="bottom"
                   create="1" edit="1" import="0" js_class="singleton_list">
                 <field name="id" invisible="1"/>
                 <field name="tracking" invisible="1"/>
@@ -100,7 +100,7 @@
                        options="{'no_create': True}"/>
                 <field name="quantity" string="On Hand Quantity"
                        invisible="1"/>
-                <field name="inventory_quantity" string="On Hand Quantity"
+                <field name="inventory_quantity" string="On Hand Quantity" decoration-danger="inventory_quantity &lt; 0"
                        readonly="0"/>
                 <field name="available_quantity" optional="show"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
@@ -115,7 +115,7 @@
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
             <tree string="Inventory Valuation" js_class="inventory_report_list"
-                  create="0" delete="0" decoration-danger="quantity &lt; 0">
+                  create="0" delete="0">
                 <field name="product_id" invisible="context.get('single_product', False)"/>
                 <field name="location_id" invisible="context.get('hide_location', False)"/>
                 <field name="lot_id" groups="stock.group_production_lot"

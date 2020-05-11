@@ -118,16 +118,16 @@
             <field name="name">stock.scrap.tree</field>
             <field name="model">stock.scrap</field>
             <field name="arch" type="xml">
-                <tree multi_edit="1" decoration-danger="state == 'draft'">
-                    <field name="name"/>
+                <tree multi_edit="1">
+                    <field name="name" decoration-bf="1"/>
                     <field name="date_done"/>
                     <field name="product_id" readonly="1"/>
                     <field name="scrap_qty"/>
                     <field name="product_uom_id" groups="uom.group_uom"/>
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="scrap_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                    <field name="state"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                    <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
                 </tree>
             </field>
         </record>

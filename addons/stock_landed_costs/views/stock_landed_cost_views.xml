@@ -122,10 +122,10 @@
             <field name="model">stock.landed.cost</field>
             <field name="arch" type="xml">
                 <tree string="Landed Costs">
-                    <field name="name"/>
+                    <field name="name" decoration-bf="1"/>
                     <field name="date"/>
-                    <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
