@@ -24,22 +24,28 @@
     </record>
 
     <!-- Extend the livechat_channel form view to add chatbot counter -->
-    <!-- <record id="extend_channel_form_view" model="ir.ui.view">
-         <field name="name">Channel Chatbot</field>
-         <field name="model">im_livechat.channel</field>
-         <field name="inherit_id" ref="im_livechat.im_livechat_channel_view_form"/>
-         <field name="arch" type="xml">
-         <xpath expr="//div[@name='button_box']" position="inside">
-         <button class="oe_stat_button" icon="fa-android">
-         <field
-         string="Chatbots"
-         name="nb_chatbot"
-         widget="statinfo"
-         />
-         </button>
-         </xpath>
-         </field>
-         </record> -->
+    <record id="extend_channel_form_view" model="ir.ui.view">
+        <field name="name">Channel Chatbot</field>
+        <field name="model">im_livechat.channel</field>
+        <field name="inherit_id" ref="im_livechat.im_livechat_channel_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" icon="fa-android">
+                    prout
+                    <!-- <field
+                         string="Chatbots"
+                         name="nb_chatbot"
+                         widget="statinfo"
+                         /> -->
+                </button>
+            </xpath>
+            <xpath expr="//page[last()]" position="after">
+                <page string="Chatbots">
+                    <field name="chatbot_id" />
+                </page>
+            </xpath>
+        </field>
+    </record>
 
     <record model="ir.ui.view" id="im_chatbot.form">
         <field name="name">im_chatbot form</field>
@@ -66,9 +72,6 @@
                         <page string="Script">
                             <field name="message_ids" />
                         </page>
-                        <!-- <page string="Channel">
-                             <field name="channel_ids" />
-                             </page> -->
                     </notebook>
                 </sheet>
             </form>

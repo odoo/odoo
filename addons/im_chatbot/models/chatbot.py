@@ -26,7 +26,7 @@ class ChatBot(models.Model):
     subject = fields.Char(String="Subject")
     message_ids = fields.One2many("im_chatbot.script", "chatbot_id", index=True)
 
-    livechat_channel_id = 1
+    livechat_channel_id = fields.One2many("im_livechat.channel", "chatbot_id")
 
     # Each chat bot must have a one res.partner counterpart to have an identity
     # To chat with
@@ -66,7 +66,7 @@ class ChatBot(models.Model):
                             (4, bot_partner[0]["id"]),
                             (4, partner.id),
                         ],
-                        "livechat_channel_id": 1,
+                        "livechat_channel_id": chatbot.livechat_channel_id[0]["id"],
                         "livechat_operator_id": bot_partner[0]["id"],
                         "channel_type": "livechat",
                         "public": "private",
@@ -156,13 +156,14 @@ class ChatbotMessageHook(models.Model):
         return True
 
 
-# class ImLivechatChannel(models.Model):
-#     _name = "im_livechat.channel"
-#     _inherit = "im_livechat.channel"
+class ImLivechatChannel(models.Model):
+    _inherit = "im_livechat.channel"
 
-#     nb_chatbot = fields.Integer(compute="_compute_nb_chatbot")
+    chatbot_id = fields.Many2one('im_chatbot.chatbot')
 
-#     @api.depends("chatbot_ids")
-#     def _compute_nb_chatbot(self):
-#         for channel in self:
-#             channel.nb_chatbot = len(channel.chatbot_ids)
+    # nb_chatbot = fields.Integer(compute="_compute_nb_chatbot")
+
+    # @api.depends("chatbot_ids")
+    # def _compute_nb_chatbot(self):
+    #     for channel in self:
+    #         channel.nb_chatbot = len(channel.chatbot_ids)
