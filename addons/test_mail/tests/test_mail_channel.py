@@ -206,6 +206,14 @@ class TestChannelModeration(TestMailCommon):
             'channel_partner_ids': [(4, cls.partner_employee.id)],
             'moderator_ids': [(4, cls.user_employee.id)],
         })
+
+        # ensure initial data
+        cls.user_employee_2 = mail_new_test_user(
+            cls.env, login='employee2', groups='base.group_user', company_id=cls.company_admin.id,
+            name='Enguerrand Employee2', notification_type='inbox', signature='--\nEnguerrand'
+        )
+        cls.partner_employee_2 = cls.user_employee_2.partner_id
+
         cls.user_portal = cls._create_portal_user()
 
     def test_moderator_consistency(self):
@@ -328,26 +336,26 @@ class TestChannelModeration(TestMailCommon):
 
     def test_user_is_moderator(self):
         self.assertTrue(self.user_employee.is_moderator)
-        self.assertFalse(self.user_admin.is_moderator)
+        self.assertFalse(self.user_employee_2.is_moderator)
         self.channel_1.write({
-            'channel_partner_ids': [(4, self.partner_admin.id)],
-            'moderator_ids': [(4, self.user_admin.id)],
+            'channel_partner_ids': [(4, self.partner_employee_2.id)],
+            'moderator_ids': [(4, self.user_employee_2.id)],
         })
-        self.assertTrue(self.user_admin.is_moderator)
+        self.assertTrue(self.user_employee_2.is_moderator)
 
     def test_user_moderation_counter(self):
-        self._add_messages(self.channel_1, 'B', moderation_status='pending_moderation', author=self.partner_admin)
-        self._add_messages(self.channel_1, 'B', moderation_status='accepted', author=self.partner_admin)
+        self._add_messages(self.channel_1, 'B', moderation_status='pending_moderation', author=self.partner_employee_2)
+        self._add_messages(self.channel_1, 'B', moderation_status='accepted', author=self.partner_employee_2)
         self._add_messages(self.channel_1, 'B', moderation_status='accepted', author=self.partner_employee)
         self._add_messages(self.channel_1, 'B', moderation_status='pending_moderation', author=self.partner_employee)
         self._add_messages(self.channel_1, 'B', moderation_status='accepted', author=self.partner_employee)
 
         self.assertEqual(self.user_employee.moderation_counter, 2)
-        self.assertEqual(self.user_admin.moderation_counter, 0)
+        self.assertEqual(self.user_employee_2.moderation_counter, 0)
 
         self.channel_1.write({
-            'channel_partner_ids': [(4, self.partner_admin.id)],
-            'moderator_ids': [(4, self.user_admin.id)]
+            'channel_partner_ids': [(4, self.partner_employee_2.id)],
+            'moderator_ids': [(4, self.user_employee_2.id)]
         })
         self.assertEqual(self.user_employee.moderation_counter, 2)
-        self.assertEqual(self.user_admin.moderation_counter, 0)
+        self.assertEqual(self.user_employee_2.moderation_counter, 0)
