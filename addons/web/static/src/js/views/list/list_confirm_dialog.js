@@ -3,6 +3,9 @@ odoo.define('web.ListConfirmDialog', function (require) {
 
 const core = require('web.core');
 const Dialog = require('web.Dialog');
+const FieldWrapper = require('web.FieldWrapper');
+const { WidgetAdapterMixin } = require('web.OwlCompatibility');
+const utils = require('web.utils');
 
 const _t = core._t;
 const qweb = core.qweb;
@@ -15,7 +18,7 @@ const qweb = core.qweb;
  *
  * @class
  */
-const ListConfirmDialog = Dialog.extend({
+const ListConfirmDialog = Dialog.extend(WidgetAdapterMixin, {
     /**
      * @constructor
      * @override
@@ -51,20 +54,33 @@ const ListConfirmDialog = Dialog.extend({
         this._super(parent, options);
 
         const Widget = record.fieldsInfo.list[changes.fieldName].Widget;
-        this.fieldWidget = new Widget(this, changes.fieldName, record, {
+        const widgetOptions = {
             mode: 'readonly',
             viewType: 'list',
             noOpen: true,
-        });
+        };
+        this.isLegacyWidget = !utils.isComponent(Widget);
+        if (this.isLegacyWidget) {
+            this.fieldWidget = new Widget(this, changes.fieldName, record, widgetOptions);
+        } else {
+            this.fieldWidget = new FieldWrapper(this, Widget, {
+                fieldName: changes.fieldName,
+                record,
+                options: widgetOptions,
+            });
+        }
     },
     /**
      * @override
      */
     willStart: function () {
-        return Promise.all([
-            this.fieldWidget.appendTo(document.createDocumentFragment()),
-            this._super.apply(this, arguments)
-        ]);
+        let widgetProm;
+        if (this.isLegacyWidget) {
+            widgetProm = this.fieldWidget._widgetRenderAndInsert(function () {});
+        } else {
+            widgetProm = this.fieldWidget.mount(document.createDocumentFragment());
+        }
+        return Promise.all([widgetProm, this._super.apply(this, arguments)]);
     },
     /**
      * @override
@@ -73,6 +89,13 @@ const ListConfirmDialog = Dialog.extend({
         this.$content.find('.o_changes_widget').replaceWith(this.fieldWidget.$el);
         this.fieldWidget.el.style.pointerEvents = 'none';
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        WidgetAdapterMixin.destroy.call(this);
+        this._super();
     },
 });
 
