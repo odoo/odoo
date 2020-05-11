@@ -50,7 +50,7 @@
 /addons/im_support/models/ir_http.py @odoo/rd-discuss @odoo/rd-website
 
 /addons/mail/ @odoo/rd-discuss
-/addons/mail/**.py @odoo/rd-discuss @odoo/rd-sm
+/addons/mail/**/*.py @odoo/rd-discuss @odoo/rd-sm
 /addons/mail/models/ir_http.py @odoo/rd-discuss @odoo/rd-sm @odoo/rd-website
 
 /addons/mail_bot/ @odoo/rd-discuss
@@ -62,14 +62,14 @@
 /addons/portal/models/ir_http.py @odoo/rd-website
 
 /addons/sms/ @odoo/rd-discuss
-/addons/sms/**.py @odoo/rd-discuss @odoo/rd-sm
+/addons/sms/**/*.py @odoo/rd-discuss @odoo/rd-sm
 
 /addons/snailmail/ @odoo/rd-discuss
 /addons/snailmail/models/ir_qweb_fields.py @odoo/rd-discuss @odoo/rd-website
 
-/addons/test_mail/ @odoo/rd-discuss
-/addons/test_mail_full/ @odoo/rd-discuss
-/addons/test_mass_mailing/ @odoo/rd-discuss
+/addons/test_mail/ @odoo/rd-discuss @odoo/rd-sm
+/addons/test_mail_full/ @odoo/rd-discuss @odoo/rd-sm
+/addons/test_mass_mailing/ @odoo/rd-sm
 /addons/test_website/ @odoo/rd-website
 
 /addons/web/controllers/main.py @odoo/rd-images @odoo/rd-security
@@ -99,7 +99,9 @@
 /odoo/osv/ @odoo/rd-security
 
 # safe_eval, mimetypes, float_utils, mail sanitizer, image utils, ..
-/odoo/tools/ @odoo/rd-images @odoo/rd-security
+/odoo/tools/ @odoo/rd-security
+/odoo/tools/image.py @odoo/rd-images @odoo/rd-security
+/odoo/tools/mimetypes.py @odoo/rd-images @odoo/rd-security
 
 /odoo/http.py @odoo/rd-security @odoo/rd-website
 /odoo/sql_db.py @odoo/rd-security
