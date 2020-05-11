@@ -100,6 +100,7 @@ class ChatBot(models.Model):
 class ChatbotMessageHook(models.Model):
     _inherit = "mail.channel"
 
+    # This is where the bot "catch" the conversation. And the user response
     def _message_post_after_hook(self, message, msg_vals):
         super(ChatbotMessageHook, self)._message_post_after_hook(message, msg_vals)
 
@@ -129,6 +130,7 @@ class ChatbotMessageHook(models.Model):
             .sorted(lambda message: message.id, reverse=True)
         )
 
+        # This get the sequence of the last message send by the bot.
         current_sequence = chatbot_messages[0].script_id.read(["sequence"])[0][
             "sequence"
         ]
@@ -138,6 +140,7 @@ class ChatbotMessageHook(models.Model):
             [("chatbot_id", "=", chatbot.id), ("sequence", ">", current_sequence)]
         )
 
+        # Sent the next message
         self._bot_message_post(self, bot_partner, next_message[0])
         return True
 
