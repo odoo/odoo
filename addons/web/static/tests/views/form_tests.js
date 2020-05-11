@@ -4386,6 +4386,52 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('navigation with tab key selects a value in form view', async function (assert) {
+        assert.expect(5);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="int_field"/>
+                    <field name="qux"/>
+                    <field name="trululu"/>
+                    <field name="date"/>
+                    <field name="datetime"/>
+                </form>`,
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        await testUtils.dom.click(form.$('input[name="display_name"]'));
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "10",
+            "int_field value should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "0.4",
+            "qux field value should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "aaa",
+            "trululu field value should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "01/25/2017",
+            "date field value should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "12/12/2016 10:55:05",
+            "datetime field value should be selected");
+
+        form.destroy();
+    });
+
     QUnit.test('clicking on a stat button with a context', async function (assert) {
         assert.expect(1);
 
