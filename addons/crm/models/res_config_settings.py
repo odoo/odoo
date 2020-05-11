@@ -107,3 +107,8 @@ class ResConfigSettings(models.TransientModel):
 
         for team in self.env['crm.team'].search([]):
             team.alias_id.write(team.get_alias_values())
+
+    # ACTIONS
+    def action_reset_lead_probabilities(self):
+        if self.env.user._is_admin():
+            self.env['crm.lead'].sudo()._cron_update_automated_probabilities()
