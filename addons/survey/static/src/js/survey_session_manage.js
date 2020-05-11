@@ -161,7 +161,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             if (this.isLastQuestion) {
                 this.$('.o_survey_session_navigation_next').addClass('d-none');
             }
-            this.leaderBoard.showLeaderboard(true);
+            this.leaderBoard.showLeaderboard(true, this.isScoredQuestion);
         } else {
             if (!this.isLastQuestion) {
                 this._nextQuestion();
@@ -334,7 +334,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
                     self.$('.o_survey_session_leaderboard_title').text(_('Final Leaderboard'));
                     self.$('.o_survey_session_navigation_next').addClass('d-none');
                     self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
-                    self.leaderBoard.showLeaderboard(false);
+                    self.leaderBoard.showLeaderboard(false, false);
                 });
             } else {
                 self.$('.o_survey_session_close').click();
