@@ -347,7 +347,7 @@ class MassMailing(models.Model):
         elif view_filter == 'open':
             opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.trace_status in ('open', 'reply'))
         elif view_filter == 'click':
-            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.click_done)
+            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.links_click_done)
         elif view_filter == 'delivered':
             opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.trace_status in ('sent', 'open', 'reply'))
         elif view_filter == 'sent':
