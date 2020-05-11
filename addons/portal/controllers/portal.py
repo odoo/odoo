@@ -174,10 +174,12 @@ class CustomerPortal(Controller):
             if not error:
                 values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS}
                 values.update({key: post[key] for key in self.OPTIONAL_BILLING_FIELDS if key in post})
-                values.update({'country_id': int(values.pop('country_id', 0))})
+                for field in set(['country_id', 'state_id']) & set(values.keys()):
+                    try:
+                        values[field] = int(values[field])
+                    except:
+                        values[field] = False
                 values.update({'zip': values.pop('zipcode', '')})
-                if values.get('state_id') == '':
-                    values.update({'state_id': False})
                 partner.sudo().write(values)
                 if redirect:
                     return request.redirect(redirect)
