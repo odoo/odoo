@@ -140,7 +140,7 @@ class TestUi(tests.HttpCase):
         post_data['attachment_tokens'] = attachment.access_token
         res = self.url_open(url=post_url, data=post_data)
         self.assertEqual(res.status_code, 403)
-        self.assertIn("Sorry, you are not allowed to access documents of type 'Journal Entry' (account.move).", res.text)
+        self.assertIn("You are not allowed to access 'Journal Entry' (account.move) records.", res.text)
 
         # Test attachment can't be associated if not "pending" state
         post_data['token'] = invoice._portal_ensure_token()
