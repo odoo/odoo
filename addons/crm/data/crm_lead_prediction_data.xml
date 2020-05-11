@@ -28,21 +28,17 @@
             <field name="key">crm.pls_start_date</field>
             <field name="value" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d')"/>
         </record>
-        <record id="crm_pls_rebuild_threshold_param" model="ir.config_parameter">
-            <field name="key">crm.pls_rebuild_threshold</field>
-            <field name="value">100</field>
-        </record>
     </data>
 
 	<record id="website_crm_score_cron" model="ir.cron">
-        <field name="name">Predictive Lead Scoring: Rebuild Frequencies table</field>
+        <field name="name">Predictive Lead Scoring: Recompute Automated Probabilities</field>
         <field name="model_id" ref="model_crm_lead"/>
         <field name="state">code</field>
         <field name="code">model._cron_update_automated_probabilities()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>
-        <field name="active" eval="True"/>
+        <field name="active" eval="False"/>
         <field name="doall" eval="False"/>
     </record>
 </odoo>
