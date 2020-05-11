@@ -1352,6 +1352,9 @@ class IrModelSelection(models.Model):
         """ Process the 'ondelete' of the given selection values. """
         for selection in self:
             Model = self.env[selection.field_id.model]
+            if selection.field_id.name not in Model:
+                _logger.warning('Not sure what I am doing. Did not find %s in %s' % (selection.field_id.name, Model))
+                continue
             field = Model._fields[selection.field_id.name]
             if not field.store or Model._abstract:
                 continue
