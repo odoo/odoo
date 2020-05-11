@@ -64,9 +64,9 @@
         <field name="name">mrp.production.work.order.tree</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <tree string="Work Orders" delete="0" create="0" decoration-success="date_planned_start&gt;=current_date and state == 'ready'" decoration-muted="state in ('done','cancel')" decoration-danger="date_planned_start&lt;current_date and state in ('ready')">
+            <tree string="Work Orders" delete="0" create="0">
                 <field name="name"/>
-                <field name="date_planned_start"/>
+                <field name="date_planned_start" decoration-danger="date_planned_start&lt;current_date and state in ('ready')"/>
                 <field name="workcenter_id" widget="selection"/>
                 <field name="production_id"/>
                 <field name="product_id"/>
