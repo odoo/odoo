@@ -759,7 +759,11 @@ class Field(MetaField('DummyField', (object,), {})):
         :param bool use_name_get: when True, the value's display name will be
             computed using :meth:`BaseModel.name_get`, if relevant for the field
         """
-        return False if value is None else value
+        allow_none = record.env.context.get('allow_none')
+        if allow_none:
+            return None if value is False else value
+        else:
+            return False if value is None else value
 
     def convert_to_write(self, value, record):
         """ Convert ``value`` from any format to the format of method
@@ -1151,6 +1155,9 @@ class Boolean(Field):
 
     def convert_to_export(self, value, record):
         return value
+
+    def convert_to_read(self, value, record, use_name_get=True):
+        return False if value is None else value
 
 
 class Integer(Field):
@@ -2623,7 +2630,7 @@ class Many2one(_Relational):
                 # Should not happen, unless the foreign key is missing.
                 return False
         else:
-            return value.id
+            return super(Many2one, self).convert_to_read(value.id, record, use_name_get=use_name_get)
 
     def convert_to_write(self, value, record):
         if type(value) in IdType:

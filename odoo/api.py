@@ -285,7 +285,7 @@ def split_context(method, args, kwargs):
     """ Extract the context from a pair of positional and keyword arguments.
         Return a triple ``context, args, kwargs``.
     """
-    return kwargs.pop('context', None), args, kwargs
+    return kwargs.pop('context', {}), args, kwargs
 
 
 def autovacuum(method):
@@ -360,7 +360,7 @@ def model_create_multi(method):
 
 def _call_kw_model(method, self, args, kwargs):
     context, args, kwargs = split_context(method, args, kwargs)
-    recs = self.with_context(context or {})
+    recs = self.with_context(**context)
     _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
     result = method(recs, *args, **kwargs)
     return downgrade(method, result, recs, args, kwargs)
@@ -369,7 +369,7 @@ def _call_kw_model(method, self, args, kwargs):
 def _call_kw_model_create(method, self, args, kwargs):
     # special case for method 'create'
     context, args, kwargs = split_context(method, args, kwargs)
-    recs = self.with_context(context or {})
+    recs = self.with_context(**context)
     _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
     result = method(recs, *args, **kwargs)
     return result.id if isinstance(args[0], Mapping) else result.ids
@@ -378,7 +378,7 @@ def _call_kw_model_create(method, self, args, kwargs):
 def _call_kw_multi(method, self, args, kwargs):
     ids, args = args[0], args[1:]
     context, args, kwargs = split_context(method, args, kwargs)
-    recs = self.with_context(context or {}).browse(ids)
+    recs = self.with_context(**context).browse(ids)
     _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
     result = method(recs, *args, **kwargs)
     return downgrade(method, result, recs, args, kwargs)

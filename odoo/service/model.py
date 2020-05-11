@@ -152,8 +152,13 @@ def check(f):
     return wrapper
 
 def execute_cr(cr, uid, obj, method, *args, **kw):
+    try:
+        from odoo.http import request
+        ctx = request.env.context
+    except Exception:
+        ctx = {}
     odoo.api.Environment.reset()  # clean cache etc if we retry the same transaction
-    recs = odoo.api.Environment(cr, uid, {}).get(obj)
+    recs = odoo.api.Environment(cr, uid, ctx).get(obj)
     if recs is None:
         raise UserError(_("Object %s doesn't exist", obj))
     result = odoo.api.call_kw(recs, method, args, kw)
