@@ -799,6 +799,7 @@ var SnippetsMenu = Widget.extend({
         'click .o_we_add_snippet_btn': '_onBlocksTabClick',
         'click .o_we_invisible_entry': '_onInvisibleEntryClick',
         'click #snippet_custom .o_delete_btn': '_onDeleteBtnClick',
+        'mousedown': '_onMouseDown',
     },
     custom_events: {
         'activate_insertion_zones': '_onActivateInsertionZones',
@@ -2090,6 +2091,24 @@ var SnippetsMenu = Widget.extend({
                 close: true,
             }],
         }).open();
+    },
+    /**
+     * Prevents pointer-events to change the focus when a pointer slide from
+     * left-panel to the editable area.
+     *
+     * @private
+     */
+    _onMouseDown: function () {
+        const $blockedArea = $('#wrapwrap'); // TODO should get that element another way
+        $blockedArea.addClass('o_we_no_pointer_events');
+        const reenable = () => $blockedArea.removeClass('o_we_no_pointer_events');
+        // Use a setTimeout fallback to avoid locking the editor if the mouseup
+        // is fired over an element which stops propagation for example.
+        const enableTimeoutID = setTimeout(() => reenable(), 5000);
+        $(document).one('mouseup', () => {
+            clearTimeout(enableTimeoutID);
+            reenable();
+        });
     },
     /**
      * @private
