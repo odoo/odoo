@@ -2837,7 +2837,7 @@ class MailThread(models.AbstractModel):
             user = self.env['res.users'].sudo().browse(user_id)
             try: # avoid to make an exists, lets be optimistic and try to read it.
                 if user.active:
-                    return [(user.partner_id.id, default_subtype_ids, 'mail.message_user_assigned' if user != self.env.user else False)]
+                    return [(user.partner_id.id, default_subtype_ids, 'mail.message_user_assigned' if user != self.env.user and user.state == 'active' else False)]
             except:
                 pass
         return []

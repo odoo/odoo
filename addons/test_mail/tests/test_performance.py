@@ -260,7 +260,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self._create_test_records()
         test_record = self.env['mail.test.ticket'].browse(self.test_record_full.id)
         customer_id = self.customer.id
-        with self.assertQueryCount(__system__=2, emp=2):
+        with self.assertQueryCount(__system__=3, emp=3):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -270,7 +270,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'partner_ids': [(4, customer_id)],
             })
 
-        with self.assertQueryCount(__system__=29, emp=32):
+        with self.assertQueryCount(__system__=30, emp=33):
             composer.send_mail()
 
     @users('__system__', 'emp')
@@ -281,7 +281,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_record = self.env['mail.test.ticket'].browse(self.test_record_full.id)
         test_template = self.env['mail.template'].browse(self.test_template_full.id)
         # TODO FIXME non deterministic, last check 25 Mar 2020. Runbot at most +7 compared to local.
-        with self.assertQueryCount(__system__=12, emp=14):
+        with self.assertQueryCount(__system__=14, emp=16):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -290,7 +290,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             }).create({})
             composer.onchange_template_id_wrapper()
 
-        with self.assertQueryCount(__system__=39, emp=42):
+        with self.assertQueryCount(__system__=40, emp=43):
             composer.send_mail()
 
         # remove created partner to ensure tests are the same each run
