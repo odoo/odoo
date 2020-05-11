@@ -343,18 +343,18 @@ class MassMailing(models.Model):
 
     def _action_view_documents_filtered(self, view_filter):
         if view_filter in ('reply', 'bounce'):
-            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.trace_status == view_filter)
+            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status == view_filter)
         elif view_filter == 'open':
-            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.trace_status in ('open', 'reply'))
+            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status in ('open', 'reply'))
         elif view_filter == 'click':
-            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.links_click_done)
+            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.links_click_done)
         elif view_filter == 'delivered':
-            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.trace_status in ('sent', 'open', 'reply'))
+            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.trace_status in ('sent', 'open', 'reply'))
         elif view_filter == 'sent':
-            opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.sent_datetime)
+            found_traces = self.mailing_trace_ids.filtered(lambda trace: trace.sent_datetime)
         else:
-            opened_stats = self.env['mailing.trace']
-        res_ids = opened_stats.mapped('res_id')
+            found_traces = self.env['mailing.trace']
+        res_ids = found_traces.mapped('res_id')
         model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
         return {
             'name': model_name,
