@@ -90,6 +90,11 @@
                         </a>
                         &amp;nbsp;
                     </td>
+                    <td width="30%" class="text-right o_mail_no_resize">
+                        <div class="o_mail_header_social">
+                            <t t-call="mass_mailing.social_links"/>
+                        </div>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -109,6 +114,11 @@
                             </a>
                         </h3>
                         &amp;nbsp;
+                    </td>
+                    <td width="30%" class="text-right o_mail_no_resize">
+                        <div class="o_mail_header_social">
+                            <t t-call="mass_mailing.social_links"/>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -730,6 +740,11 @@
             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_full_width_padding">
                 <tbody>
                     <tr>
+                        <td class="o_mail_footer_social">
+                            <t t-call="mass_mailing.social_links"/>
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="o_mail_footer_links">
                             <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                         </td>
@@ -762,11 +777,32 @@
                                 <p class="o_mail_footer_copy"><span class="fa fa-copyright" role="img" aria-label="Copyright" title="Copyright"/> 2016 All Rights Reserved</p>
                             </div>
                         </td>
+                        <td class="o_mail_footer_social">
+                            <t t-call="mass_mailing.social_links"/>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+</template>
+
+<template id="social_links">
+
+    <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
+
+    <a t-if="social_links.get('social_facebook')" t-att-href="social_links.get('social_facebook')" aria-label="Facebook" title="Facebook">
+        <span class="fa fa-facebook"></span>
+    </a>
+    <a t-if="social_links.get('social_linkedin')" t-att-href="social_links.get('social_linkedin')" style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn">
+        <span class="fa fa-linkedin"></span>
+    </a>
+    <a t-if="social_links.get('social_twitter')" t-att-href="social_links.get('social_twitter')" style="margin-left:10px" aria-label="Twitter" title="Twitter">
+        <span class="fa fa-twitter"></span>
+    </a>
+    <a t-if="social_links.get('social_instagram')" t-att-href="social_links.get('social_instagram')" style="margin-left:10px" aria-label="Instagram" title="Instagram">
+        <span class="fa fa-instagram"></span>
+    </a>
 </template>
 
 <!-- Snippet themes Options -->
