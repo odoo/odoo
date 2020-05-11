@@ -11,7 +11,7 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
         this.questionType = options.questionType;
         this.answersValidity = options.answersValidity;
         this.hasCorrectAnswers = options.hasCorrectAnswers;
-        this.attendeesCount = options.attendeesCount;
+        this.attendeesCount = options.attendeesCount || 0;
         this.questionStatistics = this._processQuestionStatistics(options.questionStatistics);
         this.showInputs = options.showInputs;
         this.showAnswers = false;
@@ -121,7 +121,7 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                     datalabels: {
                         color: this._getLabelColor.bind(this),
                         font: {
-                            size: '25',
+                            size: '50',
                             weight: 'bold',
                         },
                         anchor: 'end',
@@ -145,12 +145,13 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                     xAxes: [{
                         ticks: {
                             maxRotation: 0,
-                            fontSize: '25',
+                            fontSize: '35',
                             fontStyle: 'bold',
                             fontColor: '#212529'
                         },
                         gridLines: {
-                            display: false
+                            drawOnChartArea: false,
+                            color: 'rgba(0, 0, 0, 0.2)'
                         }
                     }]
                 },
@@ -200,7 +201,7 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
         var opacity = '0.8';
         if (this.showAnswers && this.hasCorrectAnswers) {
             if (!this._isValidAnswer(metaData.dataIndex)){
-                opacity = '0.3';
+                opacity = '0.2';
             }
         }
         var rgb = SESSION_CHART_COLORS[metaData.dataIndex];
