@@ -770,8 +770,9 @@ var ListController = BasicController.extend({
             this.fieldChangedPrevented = ev;
         } else if (this.renderer.isInMultipleRecordEdition(recordId)) {
             const saveMulti = () => {
+                const target = ev.data.__targetComponent || ev.target;
                 this.multipleRecordsSavingPromise =
-                    this._saveMultipleRecords(ev.data.dataPointID, ev.target.__node, ev.data.changes);
+                    this._saveMultipleRecords(ev.data.dataPointID, target.__node, ev.data.changes);
             };
             // deal with edition of multiple lines
             ev.data.onSuccess = saveMulti; // will ask confirmation, and save

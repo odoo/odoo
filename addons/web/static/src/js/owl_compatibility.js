@@ -473,6 +473,7 @@ odoo.define('web.OwlCompatibility', function () {
                     // stopImmediatePropagation to prevent from getting here)
                     if (!ev.cancelBubble) {
                         ev.stopPropagation();
+                        ev.detail.__targetComponent = ev.originalComponent;
                         this.parentWidget.trigger_up(ev.type.replace(/-/g, '_'), ev.detail);
                     }
                 });

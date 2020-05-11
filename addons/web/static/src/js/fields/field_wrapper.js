@@ -58,6 +58,11 @@ odoo.define('web.FieldWrapper', function (require) {
             }
         }
 
+        mounted() {
+            super.mounted(...arguments);
+            this.componentRef.comp.__node = this.__node;
+        }
+
         //----------------------------------------------------------------------
         // Getters
         //----------------------------------------------------------------------
