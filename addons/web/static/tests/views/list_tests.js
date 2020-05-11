@@ -9521,6 +9521,34 @@ QUnit.module('Views', {
         assert.strictEqual(mountedCalls, 4);
         assert.strictEqual(willUnmountCalls, 4);
     });
+
+    QUnit.test('editable list view: multi edition of owl field component', async function (assert) {
+        // this test could be removed as soon as all field widgets will be written in owl
+        assert.expect(5);
+
+        const list = await createView({
+            arch: '<tree multi_edit="1"><field name="bar"/></tree>',
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsN(list, '.o_data_cell .custom-checkbox input:checked', 3);
+
+        // select all records and edit the boolean field
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        assert.containsN(list, '.o_data_row .o_list_record_selector input:checked', 4);
+        await testUtils.dom.click(list.$('.o_data_cell:first'));
+        await testUtils.dom.click(list.$('.o_data_cell .o_field_boolean input'));
+
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+        assert.containsNone(list, '.o_data_cell .custom-checkbox input:checked');
+
+        list.destroy();
+    });
 });
 
 });
