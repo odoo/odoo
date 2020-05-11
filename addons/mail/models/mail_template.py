@@ -190,33 +190,34 @@ class MailTemplate(models.Model):
 
     def reset_mail_template(self):
         record=self.get_xmlrecords()
-        for field in record:
-            if self.env.context.get('lang')=="en_US":
-                if field.get('name')=='body_html':
-                    html=self.get_xmltohtml(field)
-                    self.write({'body_html': html})
-                if field.get('name')=='subject':
-                    self.write({'subject': field.text})
-            else:
-                po_file_values=self.get_pofile_dic()
-                for template in self:
-                    template_id=self.browse(template.id).get_external_id()
-                    template_id=template_id.get(template.id)
-                    template_id=template_id[template_id.find('.')+1:]
-                    for dic in po_file_values:
-                        if dic.get('imd_name')==template_id and dic.get('name')=="mail.template,body_html":
-                            self.write({'body_html':dic.get('value')})
-                        if dic.get('imd_name')==template_id and dic.get('name')=="mail.template,subject":
-                            self.write({'subject':dic.get('value')})
+        if record:
+            for field in record:
+                if self.env.context.get('lang')=="en_US":
+                    if field.get('name')=='body_html':
+                        html=self.get_xmltohtml(field)
+                        self.write({'body_html': html})
+                    if field.get('name')=='subject':
+                        self.write({'subject': field.text})
+                else:
+                    po_file_values=self.get_pofile_dic()
+                    for template in self:
+                        template_id=self.browse(template.id).get_external_id()
+                        template_id=template_id.get(template.id)
+                        template_id=template_id[template_id.find('.')+1:]
+                        for dic in po_file_values:
+                            if dic.get('imd_name')==template_id and dic.get('name')=="mail.template,body_html":
+                                self.write({'body_html':dic.get('value')})
+                            if dic.get('imd_name')==template_id and dic.get('name')=="mail.template,subject":
+                                self.write({'subject':dic.get('value')})
         
-            if field.get('name')=='name':
+                if field.get('name')=='name':
                     self.write({'name': field.text})
-            if field.get('name')=='email_to':
-                self.write({'email_to': field.text})
-            if field.get('name')=='email_from':
-                self.write({'email_from': field.text})
-            if field.get('name')=='lang':
-                self.write({'lang': field.text})
+                if field.get('name')=='email_to':
+                    self.write({'email_to': field.text})
+                if field.get('name')=='email_from':
+                    self.write({'email_from': field.text})
+                if field.get('name')=='lang':
+                    self.write({'lang': field.text})
             
     # ------------------------------------------------------------
     # MESSAGE/EMAIL VALUES GENERATION
