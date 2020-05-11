@@ -4,51 +4,23 @@ from odoo import _, api, fields, models
 
 
 class PartnerBot(models.Model):
-    _name = "res.partner"
     _inherit = "res.partner"
+    _description = "Add chatbot information on the res.partner model"
 
     is_bot = fields.Boolean(default=False)
+    chatbot_ids = fields.One2many("im_chatbot.chatbot", "partner_id")
 
 
 class ChatbotMailMessage(models.Model):
-    _inherit = 'mail.message'
+    _inherit = "mail.message"
+    _description = "Add script information for the chatbots"
 
     script_id = fields.Many2one("im_chatbot.script")
 
 
-class ChatbotMessageHook(models.Model):
-    _inherit = "mail.channel"
-
-    def _message_post_after_hook(self, message, msg_vals):
-        super(ChatbotMessageHook, self)._message_post_after_hook(message, msg_vals)
-
-        # Livechat Channel opérator is a bot but not the one who posted
-        # We know the bot can read the message and react to it
-        if (
-            self.channel_type == "livechat"
-            and self.livechat_operator_id.is_bot
-            and not message.author_id.is_bot
-        ):
-            self._bot_answer(message)
-
-    def _bot_answer(self, message):
-        bot_partner = self.livechat_operator_id
-        self._bot_message_post(bot_partner)
-        return True
-
-    def _bot_message_post(self, bot_partner):
-        self.sudo().message_post(
-            body="other message",
-            author_id=bot_partner.id,
-            message_type="comment",
-            subtype_xmlid="mail.mt_comment",
-        )
-        return True
-
-
 class ChatBot(models.Model):
     _name = "im_chatbot.chatbot"
-    _description = "Chabots"
+    _description = "Chabots main table"
 
     name = fields.Char(String="Bot name")
     subject = fields.Char(String="Subject")
@@ -111,20 +83,74 @@ class ChatBot(models.Model):
             )
 
             # Get the messages sequence.
-            messages = chatbot.message_ids.read()
+            messages = chatbot.message_ids
 
             # Extract the first message. Since messages are ordered by
             # sequence, the [0] containt the first message.
-            first_message = messages[0]["name"]
+            first_message = messages[0]
 
             # Post a message to the channel
-            channel.sudo().message_post(
-                body=first_message,
-                author_id=bot_partner[0]["id"],
-                message_type="comment",
-                subtype_xmlid="mail.mt_comment",
+            ChatbotMessageHook()._bot_message_post(
+                channel, bot_partner[0], first_message
             )
+
             return channel
+
+
+class ChatbotMessageHook(models.Model):
+    _inherit = "mail.channel"
+
+    def _message_post_after_hook(self, message, msg_vals):
+        super(ChatbotMessageHook, self)._message_post_after_hook(message, msg_vals)
+
+        # Livechat Channel opérator is a bot but not the one who posted
+        # We know the bot can read the message and react to it
+        if (
+            self.channel_type == "livechat"
+            and self.livechat_operator_id.is_bot
+            and not message.author_id.is_bot
+        ):
+            self._bot_answer(message)
+
+    def _bot_answer(self, user_message):
+        # Get the "bot operator"
+        bot_partner = self.livechat_operator_id
+
+        # We need to know witch script is next
+        chatbot = bot_partner.chatbot_ids[0]
+
+        # Exctract the message from the chatbot
+        # They are linked to a script_id
+        chatbot_messages = (
+            self.channel_message_ids
+            # Only the chatbot message
+            .filtered(lambda message: message.script_id)
+            # First message is the last message send by the bot
+            .sorted(lambda message: message.id, reverse=True)
+        )
+
+        current_sequence = chatbot_messages[0].script_id.read(["sequence"])[0][
+            "sequence"
+        ]
+
+        # Get the next message in the squence
+        next_message = self.env["im_chatbot.script"].search(
+            [("chatbot_id", "=", chatbot.id), ("sequence", ">", current_sequence)]
+        )
+
+        self._bot_message_post(self, bot_partner, next_message[0])
+        return True
+
+    @staticmethod
+    def _bot_message_post(channel, bot_partner, message):
+        channel.sudo().message_post(
+            body=message.name,
+            author_id=bot_partner.id,
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        ).write({"script_id": message.id})
+
+        return True
 
 
 # class ImLivechatChannel(models.Model):
