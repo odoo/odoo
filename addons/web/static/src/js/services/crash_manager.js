@@ -222,7 +222,12 @@ var CrashManager = AbstractService.extend({
             return;
         }
         var message = error.data ? error.data.message : error.message;
-        var title = _.str.capitalize(error.type) || _t("Something went wrong !");
+        var title = _t("Something went wrong !");
+        if (error.type) {
+            title = _.str.capitalize(error.type);
+        } else if (error.data && error.data.title) {
+            title = _.str.capitalize(error.data.title);
+        }
         return this._displayWarning(message, title, options);
     },
     show_error: function (error) {

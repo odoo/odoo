@@ -117,7 +117,11 @@ class TestACLFeedback(Feedback):
             self.record.with_user(self.user).write({'val': 10})
         self.assertEqual(
             ctx.exception.args[0],
-            """Sorry, you are not allowed to modify documents of type 'Object For Test Access Right' (test_access_right.some_obj). No group currently allows this operation. - (Operation: write, User: %d)""" % self.user.id
+            """You are not allowed to modify 'Object For Test Access Right' (test_access_right.some_obj) records.
+
+No group currently allows this operation.
+
+Contact your administrator to request access if necessary."""
         )
 
     def test_one_group(self):
@@ -127,12 +131,20 @@ class TestACLFeedback(Feedback):
             })
         self.assertEqual(
             ctx.exception.args[0],
-            """Sorry, you are not allowed to create documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0 - (Operation: create, User: %d)""" % self.user.id
+            """You are not allowed to create 'Object For Test Access Right' (test_access_right.some_obj) records.
+
+This operation is allowed for the following groups:\n\t- Group 0
+
+Contact your administrator to request access if necessary."""
         )
 
     def test_two_groups(self):
         r = self.record.with_user(self.user)
-        expected = """Sorry, you are not allowed to access documents of type 'Object For Test Access Right' (test_access_right.some_obj). This operation is allowed for the groups:\n\t- Group 0\n\t- Group 1 - (Operation: read, User: %d)""" % self.user.id
+        expected = """You are not allowed to access 'Object For Test Access Right' (test_access_right.some_obj) records.
+
+This operation is allowed for the following groups:\n\t- Group 0\n\t- Group 1
+
+Contact your administrator to request access if necessary."""
         with self.assertRaises(AccessError) as ctx:
             # noinspection PyStatementEffect
             r.val
@@ -171,19 +183,26 @@ class TestIRRuleFeedback(Feedback):
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            'The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: "Object For Test Access Right" (test_access_right.some_obj), Operation: write)'
-        )
+            """Due to security restrictions, you are not allowed to modify 'Object For Test Access Right' (test_access_right.some_obj) records.
+
+Contact your administrator to request access if necessary.""")
 
         # debug mode
         self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
+            """Due to security restrictions, you are not allowed to modify 'Object For Test Access Right' (test_access_right.some_obj) records.
+
+Records: %s (id=%s)
+User: %s (id=%s)
+
+This restriction is due to the following rules:
 - rule 0
 
-(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
+Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
 
@@ -196,58 +215,73 @@ class TestIRRuleFeedback(Feedback):
             p.with_user(self.user).write({'val': 1})
 
     def test_locals(self):
-        self.env.ref('base.group_no_one').write(
-            {'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]')
         self._make_rule('rule 1', '[("val", "=", 78)]')
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
+            """Due to security restrictions, you are not allowed to modify 'Object For Test Access Right' (test_access_right.some_obj) records.
+
+Records: %s (id=%s)
+User: %s (id=%s)
+
+This restriction is due to the following rules:
 - rule 0
 - rule 1
 
-(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
+Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_globals_all(self):
-        self.env.ref('base.group_no_one').write(
-            {'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[("val", "=", 78)]', global_=True)
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
+            """Due to security restrictions, you are not allowed to modify 'Object For Test Access Right' (test_access_right.some_obj) records.
+
+Records: %s (id=%s)
+User: %s (id=%s)
+
+This restriction is due to the following rules:
 - rule 0
 - rule 1
 
-(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
+Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_globals_any(self):
         """ Global rules are AND-eded together, so when an access fails it
         might be just one of the rules, and we want an exact listing
         """
-        self.env.ref('base.group_no_one').write(
-            {'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
+            """Due to security restrictions, you are not allowed to modify 'Object For Test Access Right' (test_access_right.some_obj) records.
+
+Records: %s (id=%s)
+User: %s (id=%s)
+
+This restriction is due to the following rules:
 - rule 0
 
-(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
+Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_combination(self):
-        self.env.ref('base.group_no_one').write(
-            {'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
         self._make_rule('rule 2', '[(0, "=", 1)]')
@@ -256,53 +290,68 @@ class TestIRRuleFeedback(Feedback):
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
+            """Due to security restrictions, you are not allowed to modify 'Object For Test Access Right' (test_access_right.some_obj) records.
+
+Records: %s (id=%s)
+User: %s (id=%s)
+
+This restriction is due to the following rules:
 - rule 0
 - rule 2
 - rule 3
 
-(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
+Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_warn_company(self):
         """ If one of the failing rules mentions company_id, add a note that
         this might be a multi-company issue.
         """
-        self.env.ref('base.group_no_one').write(
-            {'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
         self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]")
         self._make_rule('rule 1', '[("val", "=", 0)]', global_=True)
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
+            """Due to security restrictions, you are not allowed to modify 'Object For Test Access Right' (test_access_right.some_obj) records.
+
+Records: %s (id=%s)
+User: %s (id=%s)
+
+This restriction is due to the following rules:
 - rule 0
 
 Note: this might be a multi-company issue.
 
-(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
+Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_read(self):
         """ because of prefetching, read() goes through a different codepath
         to apply rules
         """
-        self.env.ref('base.group_no_one').write(
-            {'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
         self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]", attr='read')
         self._make_rule('rule 1', '[("val", "=", 1)]', global_=True, attr='read')
         with self.assertRaises(AccessError) as ctx:
             _ = self.record.val
         self.assertEqual(
             ctx.exception.args[0],
-            """The requested operation ("read" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
+            """Due to security restrictions, you are not allowed to access 'Object For Test Access Right' (test_access_right.some_obj) records.
+
+Records: %s (id=%s)
+User: %s (id=%s)
+
+This restriction is due to the following rules:
 - rule 0
 - rule 1
 
 Note: this might be a multi-company issue.
 
-(Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
+Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
