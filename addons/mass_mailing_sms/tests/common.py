@@ -6,8 +6,6 @@ from unittest.mock import patch
 from odoo import exceptions, tools
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sms.tests import common as sms_common
-from odoo.tests import common
-from odoo.addons.sms.models.sms_api import SmsApi
 
 
 class MockSMS(sms_common.MockSMS):

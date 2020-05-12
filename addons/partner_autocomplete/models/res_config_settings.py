@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 
+
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
@@ -10,12 +11,11 @@ class ResConfigSettings(models.TransientModel):
 
     def _compute_partner_autocomplete_insufficient_credit(self):
         for config in self:
-            config.partner_autocomplete_insufficient_credit = self.env['iap.account'].get_credits('partner_autocomplete') <= 0
+            config.partner_autocomplete_insufficient_credit = self.env['iap.services']._iap_get_service_credits_balance('partner_autocomplete') <= 0
 
     def redirect_to_buy_autocomplete_credit(self):
-        Account = self.env['iap.account']
         return {
             'type': 'ir.actions.act_url',
-            'url': Account.get_credits_url('partner_autocomplete'),
+            'url': self.env['iap.services'].iap_get_service_credits_url('partner_autocomplete'),
             'target': '_new',
         }

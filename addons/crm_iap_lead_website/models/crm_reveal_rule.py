@@ -9,13 +9,11 @@ from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, tools, _
-from odoo.addons.iap import jsonrpc
 from odoo.addons.crm.models import crm_stage
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
-DEFAULT_ENDPOINT = 'https://iap-services.odoo.com'
 DEFAULT_REVEAL_BATCH_LIMIT = 25
 DEFAULT_REVEAL_MONTH_VALID = 6
 
@@ -317,13 +315,7 @@ class CRMRevealRule(models.Model):
 
     def _perform_reveal_service(self, server_payload):
         result = False
-        account_token = self.env['iap.account'].get('reveal')
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/iap/clearbit/1/reveal'
-        params = {
-            'account_token': account_token.account_token,
-            'data': server_payload
-        }
-        result = jsonrpc(endpoint, params=params, timeout=300)
+        result = self.env['iap.services']._iap_request_reveal(server_payload)
         for res in result.get('reveal_data', []):
             if not res.get('not_found'):
                 lead = self._create_lead_from_response(res)
@@ -333,7 +325,7 @@ class CRMRevealRule(models.Model):
                     'reveal_state': 'not_found'
                 })
         if result.get('credit_error'):
-            self.env['crm.iap.lead.helpers'].notify_no_more_credit('reveal', self._name, 'reveal.already_notified')
+            self.env['iap.services']._iap_notify_nocredit('reveal', self._name, 'reveal.already_notified')
             return False
         else:
             self.env['ir.config_parameter'].sudo().set_param('reveal.already_notified', False)
@@ -357,7 +349,27 @@ class CRMRevealRule(models.Model):
             return False
         lead_vals = rule._lead_vals_from_response(result)
 
+        base_lead_values = {
+            'lead_type': self.lead_type,
+            'team_id': self.team_id.id,
+            'tag_ids': [(6, 0, self.tag_ids.ids)],
+            'user_id': self.user_id.id,
+            'lead_mining_request_id': self.id,
+            'priority': self.priority,
+            'reveal_ip': result['ip'],
+            'reveal_rule_id': self.id,
+            'referred': 'Website Visitor',
+            'reveal_iap_credits': result['credit'],
+        }
+        lead_vals = self.env['iap.services']._iap_get_lead_vals_from_clearbit_data(
+            result['reveal_data'],
+            result.get('people_data'),
+            **base_lead_values
+        )
+
         lead = self.env['crm.lead'].create(lead_vals)
+        if self.suffix:
+            lead_vals['name'] = '%s - %s' % (lead_vals['name'], self.suffix)
 
         template_values = result['reveal_data']
         template_values.update({
@@ -365,29 +377,9 @@ class CRMRevealRule(models.Model):
             'people_data': result.get('people_data'),
         })
         lead.message_post_with_view(
-            'partner_autocomplete.enrich_service_information',
+            'iap_mail.enrich_company',
             values=template_values,
             subtype_id=self.env.ref('mail.mt_note').id
         )
 
         return lead
-
-    # Methods responsible for format response data in to valid odoo lead data
-    def _lead_vals_from_response(self, result):
-        self.ensure_one()
-        company_data = result['reveal_data']
-        people_data = result.get('people_data')
-        lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data, people_data)
-
-        lead_vals.update({
-            'priority': self.priority,
-            'reveal_ip': result['ip'],
-            'reveal_rule_id': self.id,
-            'referred': 'Website Visitor',
-            'reveal_iap_credits': result['credit'],
-        })
-
-        if self.suffix:
-            lead_vals['name'] = '%s - %s' % (lead_vals['name'], self.suffix)
-
-        return lead_vals

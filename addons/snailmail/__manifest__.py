@@ -7,7 +7,10 @@ Allows users to send documents by post
         """,
     'category': 'Hidden/Tools',
     'version': '0.2',
-    'depends': ['iap', 'mail'],
+    'depends': [
+        'iap_mail',
+        'mail'
+    ],
     'data': [
         'data/snailmail_data.xml',
         'views/report_assets.xml',

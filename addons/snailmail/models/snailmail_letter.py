@@ -4,11 +4,7 @@ import re
 import base64
 
 from odoo import fields, models, api, _
-from odoo.addons.iap import jsonrpc
 from odoo.tools.safe_eval import safe_eval
-
-DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
-PRINT_ENDPOINT = '/iap/snailmail/1/print'
 
 ERROR_CODES = [
     'MISSING_REQUIRED_FIELDS',
@@ -157,7 +153,6 @@ class SnailmailLetter(models.Model):
 
         :return: Dict in the form:
         {
-            account_token: string,    //IAP Account token of the user
             documents: [{
                 pages: int,
                 pdf_bin: pdf file
@@ -189,8 +184,6 @@ class SnailmailLetter(models.Model):
             }
         }
         """
-        account_token = self.env['iap.account'].get('snailmail').account_token
-        dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         documents = []
 
         batch = len(self) > 1
@@ -250,8 +243,6 @@ class SnailmailLetter(models.Model):
             documents.append(document)
 
         return {
-            'account_token': account_token,
-            'dbuuid': dbuuid,
             'documents': documents,
             'options': {
                 'color': self and self[0].color,
@@ -265,10 +256,10 @@ class SnailmailLetter(models.Model):
 
     def _get_error_message(self, error):
         if error == 'CREDIT_ERROR':
-            link = self.env['iap.account'].get_credits_url(service_name='snailmail')
+            link = self.env['iap.services'].iap_get_service_credits_url('snailmail')
             return _('You don\'t have enough credits to perform this operation.<br>Please go to your <a href=%s target="new">iap account</a>.' % link)
         if error == 'TRIAL_ERROR':
-            link = self.env['iap.account'].get_credits_url(service_name='snailmail', trial=True)
+            link = self.env['iap.services'].iap_get_service_credits_url('snailmail', trial=True)
             return _('You don\'t have an IAP account registered for this service.<br>Please go to <a href=%s target="new">iap.odoo.com</a> to claim your free credits.' % link)
         if error == 'NO_PRICE_AVAILABLE':
             return _('The country of the partner is not covered by Snailmail.')
@@ -331,9 +322,8 @@ class SnailmailLetter(models.Model):
             }
         }
         """
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('snailmail.endpoint', DEFAULT_ENDPOINT)
         params = self._snailmail_create('print')
-        response = jsonrpc(endpoint + PRINT_ENDPOINT, params=params)
+        response = self.env['iap.services']._iap_request_snailmail_print(**params)
         for doc in response['request']['documents']:
             if doc.get('sent') and response['request_code'] == 200:
                 note = _('The document was correctly sent by post.<br>The tracking id is %s' % doc['send_id'])

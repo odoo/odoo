@@ -205,7 +205,7 @@ class SendSMS(models.TransientModel):
             return self._action_send_sms_mass(records)
 
     def _action_send_sms_numbers(self):
-        self.env['sms.api']._send_sms_batch([{
+        self.env['iap.services']._iap_request_sms_send([{
             'res_id': 0,
             'number': number,
             'content': self.body,

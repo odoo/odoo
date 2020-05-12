@@ -4,12 +4,9 @@
 import logging
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
-from odoo.addons.iap import jsonrpc, InsufficientCreditError
+from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
-
-DEFAULT_ENDPOINT = 'https://iap-services.odoo.com'
 
 MAX_LEAD = 200
 MAX_CONTACT = 5
@@ -143,36 +140,26 @@ class CRMLeadMiningRequest(models.Model):
                 payload['seniority'] = self.seniority_id.reveal_id
         return payload
 
-    def _perform_request(self):
-        """
-        This will perform the request and create the corresponding leads.
-        The user will be notified if he hasn't enough credits.
-        """
-        server_payload = self._prepare_iap_payload()
-        reveal_account = self.env['iap.account'].get('reveal')
-        dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/iap/clearbit/1/lead_mining_request'
-        params = {
-            'account_token': reveal_account.account_token,
-            'dbuuid': dbuuid,
-            'data': server_payload
-        }
-        try:
-            response = jsonrpc(endpoint, params=params, timeout=300)
-            return response['data']
-        except InsufficientCreditError as e:
-            self.error = 'Insufficient credits. Recharge your account and retry.'
-            self.state = 'error'
-            self._cr.commit()
-            raise e
-
     def _create_leads_from_response(self, result):
         """ This method will get the response from the service and create the leads accordingly """
         self.ensure_one()
         lead_vals_list = []
+        base_lead_values = {
+            'lead_type': self.lead_type,
+            'team_id': self.team_id.id,
+            'tag_ids': [(6, 0, self.tag_ids.ids)],
+            'user_id': self.user_id.id,
+            'lead_mining_request_id': self.id,
+        }
         messages_to_post = {}
         for data in result:
-            lead_vals_list.append(self._lead_vals_from_response(data))
+            lead_vals_list.append(
+                self.env['iap.services']._iap_get_lead_vals_from_clearbit_data(
+                    data.get('company_data'),
+                    data.get('people_data'),
+                    **base_lead_values
+                )
+            )
 
             template_values = data['company_data']
             template_values.update({
@@ -183,17 +170,7 @@ class CRMLeadMiningRequest(models.Model):
         leads = self.env['crm.lead'].create(lead_vals_list)
         for lead in leads:
             if messages_to_post.get(lead.reveal_id):
-                lead.message_post_with_view('partner_autocomplete.enrich_service_information', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
-
-    # Methods responsible for format response data into valid odoo lead data
-    @api.model
-    def _lead_vals_from_response(self, data):
-        self.ensure_one()
-        company_data = data.get('company_data')
-        people_data = data.get('people_data')
-        lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data, people_data)
-        lead_vals['lead_mining_request_id'] = self.id
-        return lead_vals
+                lead.message_post_with_view('iap_mail.enrich_company', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
 
     @api.model
     def get_empty_list_help(self, help):
@@ -207,16 +184,31 @@ class CRMLeadMiningRequest(models.Model):
         self.state = 'draft'
 
     def action_submit(self):
+        """
+        This will perform the request and create the corresponding leads.
+        The user will be notified if he hasn't enough credits.
+        """
         self.ensure_one()
         if self.name == _('New'):
             self.name = self.env['ir.sequence'].next_by_code('crm.iap.lead.mining.request') or _('New')
-        results = self._perform_request()
+
+        server_payload = self._prepare_iap_payload()
+        try:
+            response = self.env['iap.services']._iap_request_lead_mining(server_payload)
+        except iap_tools.InsufficientCreditError as e:
+            self.error = 'Insufficient credits. Recharge your account and retry.'
+            self.state = 'error'
+            self._cr.commit()
+            raise e
+        else:
+            results = response['data']
+
         if results:
             self._create_leads_from_response(results)
             self.state = 'done'
         if self.lead_type == 'lead':
             return self.action_get_lead_action()
-        elif self.lead_type == 'opportunity':
+        if self.lead_type == 'opportunity':
             return self.action_get_opportunity_action()
 
     def action_get_lead_action(self):

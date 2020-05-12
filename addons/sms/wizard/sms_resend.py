@@ -103,8 +103,7 @@ class SMSResend(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def action_buy_credits(self):
-        url = self.env['iap.account'].get_credits_url(service_name='sms')
         return {
             'type': 'ir.actions.act_url',
-            'url': url,
+            'url': self.env['iap.services'].iap_get_service_credits_url('sms'),
         }

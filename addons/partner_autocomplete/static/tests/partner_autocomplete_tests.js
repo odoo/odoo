@@ -401,7 +401,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
                 notification: NotificationService,
             },
             mockRPC: function (route, args) {
-                if (args.method === "get_credits_url"){
+                if (args.method === "iap_get_service_credits_url"){
                     return Promise.resolve('credits_url');
                 }
                 return this._super.apply(this, arguments);
