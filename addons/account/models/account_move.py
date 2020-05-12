@@ -2036,6 +2036,7 @@ class AccountMove(models.Model):
             'in_receipt': 'entry',
         }
 
+<<<<<<< HEAD
         move_vals_list = []
         for move, default_values in zip(self, default_values_list):
             default_values.update({
@@ -2066,6 +2067,90 @@ class AccountMove(models.Model):
                         .reconcile()
 
         return reverse_moves
+=======
+        self.ensure_one()
+        for line in self.line_ids.filtered(lambda x: x.recompute_tax_line):
+            # Retrieve old field values.
+            parsed_key = _parse_grouping_key(line)
+
+            # Unmark the line.
+            line.recompute_tax_line = False
+
+            # Manage group of taxes.
+            group_taxes = line.tax_ids.filtered(lambda t: t.amount_type == 'group')
+            children_taxes = group_taxes.mapped('children_tax_ids')
+            if children_taxes:
+                line.tax_ids += children_taxes - line.tax_ids
+                # Because the taxes on the line changed, we need to recompute them.
+                processed_taxes -= children_taxes
+
+            # Get the taxes to process.
+            taxes = self.env['account.tax'].browse(parsed_key['tax_ids'])
+            taxes += line.tax_ids.filtered(lambda t: t not in taxes)
+            taxes += children_taxes.filtered(lambda t: t not in taxes)
+            to_process_taxes = (taxes - processed_taxes).filtered(lambda t: t.amount_type != 'group')
+            processed_taxes += to_process_taxes
+
+            # Apply tags on base line
+            line.tag_ids = line.tax_ids.mapped('invoice_repartition_line_ids').filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids')
+
+            # Process taxes.
+            for tax in to_process_taxes:
+                if tax.price_include:
+                    tax = tax.with_context(handle_price_include=False)
+                lines_to_sum = _get_lines_to_sum(self.line_ids, tax, parsed_key['tag_ids'], parsed_key['analytic_account_id'])
+
+                balance = sum([l.balance for l in lines_to_sum])
+
+                # Compute the tax amount one by one.
+                if self.company_id.tax_calculation_rounding_method == 'round_globally':
+                    quantity = len(lines_to_sum) if tax.amount_type == 'fixed' else 1
+                    taxes_vals = tax.compute_all(balance, quantity=quantity, currency=line.currency_id, product=line.product_id, partner=line.partner_id)
+                else:
+                    taxes_vals_line = [
+                        tax.compute_all(
+                            lts.balance, quantity=1.0, currency=line.currency_id,
+                            product=line.product_id, partner=line.partner_id
+                        )
+                        for lts in lines_to_sum
+                    ]
+                    taxes_vals = {
+                        'total_void': 0.0,
+                        'total_excluded': 0.0,
+                        'total_included': 0.0,
+                        'taxes': deepcopy(taxes_vals_line[0]['taxes']) if taxes_vals_line else [],
+                    }
+                    if taxes_vals_line:
+                        taxes_vals['taxes'][0]['base'] = 0.0
+                        taxes_vals['taxes'][0]['amount'] = 0.0
+                    for val in taxes_vals_line:
+                        taxes_vals['total_void'] += val['total_void']
+                        taxes_vals['total_excluded'] += val['total_excluded']
+                        taxes_vals['total_included'] += val['total_included']
+                        taxes_vals['taxes'][0]['base'] += sum([v['base'] for v in val['taxes']])
+                        taxes_vals['taxes'][0]['amount'] += sum([v['amount'] for v in val['taxes']])
+
+                if taxes_vals.get('taxes'):
+                    for line_vals in taxes_vals['taxes']:
+                        tax_line = _find_existing_tax_line(self.line_ids, line_vals['tax_repartition_line_id'], parsed_key['tag_ids'], parsed_key['analytic_account_id'])
+                        if tax_line:
+                            if not lines_to_sum:
+                                # Drop tax line because the originator tax is no longer used.
+                                self.line_ids -= tax_line
+                            elif balance:
+                                # Update the existing tax_line.
+                                # Update the debit/credit amount according to the new balance.
+                                amount = line_vals['amount']
+                                account = line_vals['account_id'] or line.account_id
+                                tax_line.debit = amount > 0 and amount or 0.0
+                                tax_line.credit = amount < 0 and -amount or 0.0
+                                tax_line.account_id = account
+                            else:
+                                # Reset debit/credit in case of the originator line is temporary set to 0 in both debit/credit.
+                                tax_line.debit = tax_line.credit = 0.0
+                        else:
+                             # Create a new tax_line.
+>>>>>>> 208a1cebf56... temp
 
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()

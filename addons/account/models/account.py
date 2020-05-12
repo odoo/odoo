@@ -1449,7 +1449,14 @@ class AccountTax(models.Model):
             else:
                 return quantity * self.amount
 
+<<<<<<< HEAD
         price_include = self._context.get('force_price_include', self.price_include)
+=======
+        if self._context.get('handle_price_include', True):
+            price_include = self._context['force_price_include'] if 'force_price_include' in self._context else self.price_include
+        else:
+            price_include = False
+>>>>>>> 208a1cebf56... temp
 
         # base * (1 + tax_amount) = new_base
         if self.amount_type == 'percent' and not price_include:
@@ -1602,6 +1609,7 @@ class AccountTax(models.Model):
         incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
         # Store the tax amounts we compute while searching for the total_excluded
         cached_tax_amounts = {}
+<<<<<<< HEAD
         if handle_price_include:
             for tax in reversed(taxes):
                 tax_repartition_lines = (
@@ -1632,6 +1640,37 @@ class AccountTax(models.Model):
                         total_included_checkpoints[i] = base
                         store_included_tax_total = False
                 i -= 1
+=======
+        for tax in reversed(taxes):
+            tax_repartition_lines = (is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids).filtered(lambda x: x.repartition_type == 'tax')
+            sum_repartition_factor = sum(tax_repartition_lines.mapped('factor'))
+
+            if tax.include_base_amount:
+                base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, prec)
+                incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
+                store_included_tax_total = True
+            if self._context.get('handle_price_include', True):
+                price_include = tax.price_include or self._context.get('force_price_include')
+            else:
+                price_include = False
+            if price_include:
+                if tax.amount_type == 'percent':
+                    incl_percent_amount += tax.amount * sum_repartition_factor
+                elif tax.amount_type == 'division':
+                    incl_division_amount += tax.amount * sum_repartition_factor
+                elif tax.amount_type == 'fixed':
+                    incl_fixed_amount += quantity * tax.amount * sum_repartition_factor
+                else:
+                    # tax.amount_type == other (python)
+                    tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner) * sum_repartition_factor
+                    incl_fixed_amount += tax_amount
+                    # Avoid unecessary re-computation
+                    cached_tax_amounts[i] = tax_amount
+                if store_included_tax_total:
+                    total_included_checkpoints[i] = base
+                    store_included_tax_total = False
+            i -= 1
+>>>>>>> 208a1cebf56... temp
 
         total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, prec)
 
@@ -1647,7 +1686,11 @@ class AccountTax(models.Model):
             sum_repartition_factor = sum(tax_repartition_lines.mapped('factor'))
 
             #compute the tax_amount
-            if (self._context.get('force_price_include') or tax.price_include) and total_included_checkpoints.get(i):
+            if self._context.get('handle_price_include', True):
+                price_include = self._context.get('force_price_include') or tax.price_include
+            else:
+                price_include = False
+            if price_include and total_included_checkpoints.get(i):
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
                 tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
                 cumulated_tax_included_amount = 0
@@ -1698,7 +1741,7 @@ class AccountTax(models.Model):
                     'sequence': tax.sequence,
                     'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
                     'analytic': tax.analytic,
-                    'price_include': tax.price_include or self._context.get('force_price_include'),
+                    'price_include': self._context.get('handle_price_include', True) and (tax.price_include or self._context.get('force_price_include')),
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
                     'tag_ids': (repartition_line.tag_ids + subsequent_tags).ids,
