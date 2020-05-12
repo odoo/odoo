@@ -102,8 +102,8 @@ class ResourceMixin(models.AbstractModel):
         day_total = calendar._get_day_total(from_datetime, to_datetime, resource)
 
         # compute actual hours per day
-        attendances = calendar._attendance_intervals(from_datetime, to_datetime, resource)
-        leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)
+        attendances = calendar._attendance_intervals(from_datetime, to_datetime, resource)[resource.id]
+        leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)[resource.id]
 
         return calendar._get_days_data(attendances & leaves, day_total)
 
@@ -153,8 +153,8 @@ class ResourceMixin(models.AbstractModel):
         if not to_datetime.tzinfo:
             to_datetime = to_datetime.replace(tzinfo=utc)
 
-        attendances = calendar._attendance_intervals(from_datetime, to_datetime, resource)
-        leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)
+        attendances = calendar._attendance_intervals(from_datetime, to_datetime, resource)[resource.id]
+        leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)[resource.id]
         result = []
         for start, stop, leave in (leaves & attendances):
             hours = (stop - start).total_seconds() / 3600

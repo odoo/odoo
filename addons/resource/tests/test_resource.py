@@ -296,7 +296,7 @@ class TestCalendar(TestResourceCommon):
             'hour_from': 0,
             'hour_to': 24
         })
-        res = self.calendar_jean.get_work_hours_count(
+        res = self.calendar_jean.with_context(caca=True).get_work_hours_count(
             datetime_tz(2018, 6, 19, 23, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 6, 21, 1, 0, 0, tzinfo=self.jean.tz),
             compute_leaves=True)
