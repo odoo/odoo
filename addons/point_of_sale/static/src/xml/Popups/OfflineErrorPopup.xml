@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OfflineErrorPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup popup-error">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title" />
+                    </header>
+                    <main class="body traceback"><t t-esc="props.body"/></main>
+                    <footer class="footer">
+                        <div class="button cancel" t-on-click="cancel">
+                            Ok
+                        </div>
+                        <div class="button dont-show-again" t-on-click="dontShowAgain">
+                            Don't show again
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

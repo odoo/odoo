@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ProductsWidgetControlPanel" owl="1">
+        <div>
+            <header class="rightpane-header">
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs">
+                    <HomeCategoryBreadcrumb />
+                    <t t-foreach="props.breadcrumbs" t-as="category" t-key="category.id">
+                        <CategoryBreadcrumb category="category" />
+                    </t>
+                </div>
+                <!-- Searchbox -->
+                <div class="searchbox">
+                    <input t-ref="search-word-input" placeholder="Search Products"
+                           t-on-keyup="updateSearch" />
+                    <span class="search-clear left">
+                        <i class="fa fa-search" />
+                    </span>
+                    <span class="search-clear right" t-on-click="clearSearch">
+                        <i class="fa fa-remove" />
+                    </span>
+                </div>
+            </header>
+            <!-- Subcategories -->
+            <t t-if="props.subcategories.length > 0">
+                <div class="categories">
+                    <div class="category-list-scroller touch-scrollable">
+                        <div class="category-list"
+                             t-att-class="{simple: !env.pos.config.iface_display_categ_images}">
+                            <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
+                                <t t-if="env.pos.config.iface_display_categ_images">
+                                    <CategoryButton category="category" />
+                                </t>
+                                <t t-else="">
+                                    <CategorySimpleButton category="category" />
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

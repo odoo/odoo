@@ -180,6 +180,7 @@ var PosDB = core.Class.extend({
         }
         for(var i = 0, len = products.length; i < len; i++){
             var product = products[i];
+            if (product.id in this.product_by_id) continue;
             var search_string = utils.unaccent(this._product_search_string(product));
             var categ_id = product.pos_categ_id ? product.pos_categ_id[0] : this.root_category_id;
             product.product_tmpl_id = product.product_tmpl_id[0];

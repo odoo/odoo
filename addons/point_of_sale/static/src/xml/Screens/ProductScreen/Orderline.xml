@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="Orderline" owl="1">
+        <li t-on-click="selectLine" class="orderline" t-att-class="addedClasses">
+            <span class="product-name">
+                <t t-esc="props.line.get_product().display_name"/>
+                <span> </span>
+                <t t-if="props.line.get_product().tracking!=='none'">
+                    <t t-if="props.line.has_valid_product_lot()">
+                        <i  t-on-click.stop="lotIconClicked"
+                            class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green"
+                            aria-label="Valid product lot"
+                            role="img"
+                            title="Valid product lot"
+                        />
+                    </t>
+                    <t t-else="">
+                        <i  t-on-click.stop="lotIconClicked"
+                            class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red"
+                            aria-label="Invalid product lot"
+                            role="img"
+                            title="Invalid product lot"
+                        />
+                    </t>
+                </t>
+            </span>
+            <span class="price">
+                <t t-esc="env.pos.format_currency(props.line.get_display_price())"/>
+            </span>
+            <ul class="info-list">
+                <t t-if="props.line.get_quantity_str() !== '1' || props.line.selected ">
+                    <li class="info">
+                        <em>
+                            <t t-esc="props.line.get_quantity_str()" />
+                        </em>
+                        <t t-esc="props.line.get_unit().name" />
+                        at
+                        <t t-if="props.line.display_discount_policy() == 'without_discount' and
+                            props.line.get_unit_display_price() != props.line.get_lst_price()">
+                            <s>
+                                <t t-esc="env.pos.format_currency(props.line.get_fixed_lst_price(),'Product Price')" />
+                            </s>
+                            <t t-esc="env.pos.format_currency(props.line.get_unit_display_price(),'Product Price')" />
+                        </t>
+                        <t t-else="">
+                            <t t-esc="env.pos.format_currency(props.line.get_unit_display_price(),'Product Price')" />
+                        </t>
+                        /
+                        <t t-esc="props.line.get_unit().name" />
+                    </li>
+                </t>
+                <t t-if="props.line.get_discount_str() !== '0'">
+                    <li class="info">
+                        With a
+                        <em>
+                            <t t-esc="props.line.get_discount_str()" />%
+                        </em>
+                        discount
+                    </li>
+                </t>
+            </ul>
+        </li>
+    </t>
+
+</templates>
