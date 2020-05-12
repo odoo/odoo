@@ -17,7 +17,7 @@ class TestMenu(common.TransactionCase):
             'parent_id': self.menu_root.id,
         })
 
-        self.assertEqual(total_menu_items + 4, Menu.search_count([]), "Creating a menu without a website_id should create this menu for every website_id")
+        self.assertEqual(total_menu_items + 6, Menu.search_count([]), "Creating a menu without a website_id should create this menu for every website_id")
 
     def test_menu_count(self):
         Menu = self.env['website.menu']

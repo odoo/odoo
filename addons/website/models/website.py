@@ -1248,10 +1248,8 @@ class Menu(models.Model):
                     'parent_id': website.menu_id.id,
                 })
                 res = super(Menu, self).create(w_vals)
-            # if creating a default menu, we should also save it as such
-            default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
-            if default_menu and vals.get('parent_id') == default_menu.id:
-                res = super(Menu, self).create(vals)
+            # also save menu as template menu for data that would use it (translation, submenu, ...)
+            res = super(Menu, self).create(vals)
         return res  # Only one record is returned but multiple could have been created
 
     @api.multi
