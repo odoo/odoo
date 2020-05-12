@@ -333,6 +333,7 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
     # Computation API
     # --------------------------------------------------
+    @profile
     def _attendance_intervals(self, start_dt, end_dt, resources=None, domain=None, tz=None):
         """ Return the attendance intervals in the given datetime range.
             The returned intervals are expressed in specified tz or in the resource's timezone.
@@ -354,7 +355,10 @@ class ResourceCalendar(models.Model):
             ('display_type', '=', False),
         ]])
 
+
         # for each attendance spec, generate the intervals in the date range
+        cache_dates = defaultdict(lambda: {})
+        cache_deltas = defaultdict(lambda: {})
         result = defaultdict(lambda: [])
         for attendance in self.env['resource.calendar.attendance'].search(domain):
             for resource in resources_list:
@@ -362,8 +366,16 @@ class ResourceCalendar(models.Model):
                     continue
                 # express all dates and times in specified tz or in the resource's timezone
                 tz = tz if tz else timezone((resource or self).tz)
-                start_dt = start_dt.astimezone(tz)
-                end_dt = end_dt.astimezone(tz)
+                if start_dt in cache_dates[tz]:
+                    start_dt = cache_dates[tz][start_dt]
+                else:
+                    start_dt = start_dt.astimezone(tz)
+                    cache_dates[tz][start_dt] = start_dt
+                if end_dt in cache_dates[tz]:
+                    end_dt = cache_dates[tz][end_dt]
+                else:
+                    end_dt = end_dt.astimezone(tz)
+                    cache_dates[tz][end_dt] = end_dt
 
                 start = start_dt.date()
                 if attendance.date_from:
@@ -386,9 +398,24 @@ class ResourceCalendar(models.Model):
 
                 for day in days:
                     # attendance hours are interpreted in the resource's timezone
-                    dt0 = tz.localize(combine(day, float_to_time(attendance.hour_from)))
-                    dt1 = tz.localize(combine(day, float_to_time(attendance.hour_to)))
+                    if tz not in cache_deltas[day]:
+                        cache_deltas[day][tz] = {}
+
+                    hour_from = attendance.hour_from
+                    if hour_from in cache_deltas[day][tz]:
+                        dt0 = cache_deltas[day][tz][hour_from]
+                    else:
+                        dt0 = tz.localize(combine(day, float_to_time(hour_from)))
+                        cache_deltas[day][tz][hour_from] = dt0
+
+                    hour_to = attendance.hour_to
+                    if hour_to in cache_deltas[day][tz]:
+                        dt1 = cache_deltas[day][tz][hour_to]
+                    else:
+                        dt1 = tz.localize(combine(day, float_to_time(hour_to)))
+                        cache_deltas[day][tz][hour_to] = dt1
                     result[resource.id].append((max(start_dt, dt0), min(end_dt, dt1), attendance))
+
 
         result = {r.id: Intervals(result[r.id]) for r in resources_list}
         if len(resources_list) == 1:
@@ -781,7 +808,6 @@ class ResourceResource(models.Model):
                 resource_mapping[resource.id] = (None, None)
         return resource_mapping
 
-    @profile
     def _get_unavailable_intervals(self, start, end):
         """ Compute the intervals during which employee is unavailable with hour granularity between start and end
             Note: this method is used in enterprise (forecast and planning)
