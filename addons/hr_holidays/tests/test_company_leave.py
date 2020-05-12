@@ -6,6 +6,7 @@ from datetime import date, datetime
 from odoo.tests import tagged
 from odoo.tests.common import SavepointCase
 
+
 @tagged('company_leave')
 class TestCompanyLeave(SavepointCase):
     """ Test leaves for a whole company, conflict resolutions """

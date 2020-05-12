@@ -355,20 +355,28 @@ class ResourceCalendar(models.Model):
         ]])
 
         # for each attendance spec, generate the intervals in the date range
-        result = defaultdict(lambda: [])
+        cache_dates = defaultdict(dict)
+        cache_deltas = defaultdict(dict)
+        result = defaultdict(list)
         for attendance in self.env['resource.calendar.attendance'].search(domain):
-            for resource in resources_list:
-                if attendance.resource_id.id not in [False, resource.id]:
-                    continue
+            for resource in (attendance.resource_id or resources_list):
                 # express all dates and times in specified tz or in the resource's timezone
                 tz = tz if tz else timezone((resource or self).tz)
-                start_dt = start_dt.astimezone(tz)
-                end_dt = end_dt.astimezone(tz)
+                if (tz, start_dt) in cache_dates:
+                    start = cache_dates[(tz, start_dt)]
+                else:
+                    start = start_dt.astimezone(tz)
+                    cache_dates[(tz, start_dt)] = start
+                if (tz, end_dt) in cache_dates:
+                    end = cache_dates[(tz, end_dt)]
+                else:
+                    end = end_dt.astimezone(tz)
+                    cache_dates[(tz, end_dt)] = end
 
-                start = start_dt.date()
+                start = start.date()
                 if attendance.date_from:
                     start = max(start, attendance.date_from)
-                until = end_dt.date()
+                until = end.date()
                 if attendance.date_to:
                     until = min(until, attendance.date_to)
                 if attendance.week_type:
@@ -386,14 +394,24 @@ class ResourceCalendar(models.Model):
 
                 for day in days:
                     # attendance hours are interpreted in the resource's timezone
-                    dt0 = tz.localize(combine(day, float_to_time(attendance.hour_from)))
-                    dt1 = tz.localize(combine(day, float_to_time(attendance.hour_to)))
+                    hour_from = attendance.hour_from
+                    if (tz, day, hour_from) in cache_deltas:
+                        dt0 = cache_deltas[(tz, day, hour_from)]
+                    else:
+                        dt0 = tz.localize(combine(day, float_to_time(hour_from)))
+                        cache_deltas[(tz, day, hour_from)] = dt0
+
+                    hour_to = attendance.hour_to
+                    if (tz, day, hour_to) in cache_deltas:
+                        dt1 = cache_deltas[(tz, day, hour_to)]
+                    else:
+                        dt1 = tz.localize(combine(day, float_to_time(hour_to)))
+                        cache_deltas[(tz, day, hour_to)] = dt1
                     result[resource.id].append((max(start_dt, dt0), min(end_dt, dt1), attendance))
 
-        result = {r.id: Intervals(result[r.id]) for r in resources_list}
-        if len(resources_list) == 1:
-            return result[resources_list[0].id]
-        return result
+        if len(resources) <= 1: # 1 resource or None
+            return Intervals(result[resources.id])
+        return {r.id: Intervals(result[r.id]) for r in resources}
 
     def _leave_intervals(self, start_dt, end_dt, resources=None, domain=None, tz=None):
         """ Return the leave intervals in the given datetime range.
@@ -431,10 +449,9 @@ class ResourceCalendar(models.Model):
                 dt1 = string_to_datetime(leave.date_to).astimezone(tz)
                 result[resource.id].append((max(start_dt, dt0), min(end_dt, dt1), leave))
 
-        result = {r.id: Intervals(result[r.id]) for r in resources_list}
-        if len(resources_list) == 1:
-            return result[resources_list[0].id]
-        return result
+        if len(resources) <= 1: # 1 resource or None
+            return Intervals(result[resources.id])
+        return {r.id: Intervals(result[r.id]) for r in resources}
 
     def _work_intervals(self, start_dt, end_dt, resources=None, domain=None, tz=None):
         """ Return the effective work intervals between the given datetimes. """
@@ -446,10 +463,8 @@ class ResourceCalendar(models.Model):
 
         attendance_intervals = self._attendance_intervals(start_dt, end_dt, resources, tz=tz)
         leave_intervals = self._leave_intervals(start_dt, end_dt, resources, domain, tz=tz)
-        if not resources:
+        if len(resources) <= 1:
             return attendance_intervals - leave_intervals
-        if len(resources_list) == 1:
-            return attendance_intervals[resources_list[0].id] - leave_intervals[resources_list[0].id]
         return {
             r.id: (attendance_intervals[r.id] - leave_intervals[r.id]) for r in resources_list
         }
@@ -489,7 +504,7 @@ class ResourceCalendar(models.Model):
         # in order to compute the total hours on the first and last days
         from_full = from_datetime - timedelta(days=1)
         to_full = to_datetime + timedelta(days=1)
-        intervals = self._attendance_intervals(from_full, to_full, resources=resource)[resource.id]
+        intervals = self._attendance_intervals(from_full, to_full, resources=resource)
         day_total = defaultdict(float)
         for start, stop, meta in intervals:
             day_total[start.date()] += (stop - start).total_seconds() / 3600
@@ -551,7 +566,7 @@ class ResourceCalendar(models.Model):
 
         return self._get_days_data(intervals, day_total)
 
-    def plan_hours(self, hours, day_dt, compute_leaves=False, domain=None, resources=None):
+    def plan_hours(self, hours, day_dt, compute_leaves=False, domain=None, resource=None):
         """
         `compute_leaves` controls whether or not this method is taking into
         account the global leaves.
@@ -565,7 +580,7 @@ class ResourceCalendar(models.Model):
 
         # which method to use for retrieving intervals
         if compute_leaves:
-            get_intervals = partial(self._work_intervals, domain=domain, resources=resources)
+            get_intervals = partial(self._work_intervals, domain=domain, resources=resource)
         else:
             get_intervals = self._attendance_intervals
 
@@ -781,7 +796,6 @@ class ResourceResource(models.Model):
                 resource_mapping[resource.id] = (None, None)
         return resource_mapping
 
-    @profile
     def _get_unavailable_intervals(self, start, end):
         """ Compute the intervals during which employee is unavailable with hour granularity between start and end
             Note: this method is used in enterprise (forecast and planning)
