@@ -207,6 +207,7 @@ class ReportInvoiceWithoutPayment(models.AbstractModel):
     _description = 'Account report without payment lines'
 
     @api.model
+<<<<<<< HEAD
     def _get_report_values(self, docids, data=None):
         docs = self.env['account.move'].browse(docids)
 
@@ -216,6 +217,56 @@ class ReportInvoiceWithoutPayment(models.AbstractModel):
                 new_code_url = invoice.generate_qr_code()
                 if new_code_url:
                     qr_code_urls[invoice.id] = new_code_url
+=======
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        @lru_cache(maxsize=32)  # cache to prevent a SQL query for each data point
+        def get_rate(currency_id):
+            return self.env['res.currency']._get_conversion_rate(
+                self.env['res.currency'].browse(currency_id),
+                self.env.company.currency_id,
+                self.env.company,
+                self._fields['invoice_date'].today()
+            )
+
+        # First we get the structure of the results. The results won't be correct in multi-currency,
+        # but we need this result structure.
+        # By adding 'ids:array_agg(id)' to the fields, we will be able to map the results of the
+        # second step in the structure of the first step.
+        result_ref = super(AccountInvoiceReport, self).read_group(
+            domain, fields + ['ids:array_agg(id)'], groupby, offset, limit, orderby, False
+        )
+
+        # In mono-currency, the results are correct, so we don't need the second step.
+        if len(self.env.companies.mapped('currency_id')) <= 1:
+            return result_ref
+
+        # Reset all fields needing recomputation.
+        for res_ref in result_ref:
+            for field in {'amount_total', 'price_average', 'price_subtotal', 'residual'} & set(res_ref):
+                res_ref[field] = 0.0
+
+        # Then we perform another read_group, but this time we group by 'currency_id'. This way, we
+        # are able to convert in batch in the current company currency.
+        # During the process, we fill in the result structure we got in the previous step. To make
+        # the mapping, we use the aggregated ids.
+        result = super(AccountInvoiceReport, self).read_group(
+            domain, fields + ['ids:array_agg(id)'], set(groupby) | {'currency_id'}, offset, limit, orderby, False
+        )
+        for res in result:
+            if self.env.company.currency_id.id != res['currency_id'][0]:
+                for field in {'amount_total', 'price_average', 'price_subtotal', 'residual'} & set(res):
+                    res[field] = self.env.company.currency_id.round((res[field] or 0.0) * get_rate(res['currency_id'][0]))
+            # Since the size of result_ref should be resonable, it should be fine to loop inside a
+            # loop.
+            for res_ref in result_ref:
+                if set(res['ids']) <= set(res_ref['ids']):
+                    for field in {'amount_total', 'price_subtotal', 'residual'} & set(res_ref):
+                        res_ref[field] += res[field]
+                    for field in {'price_average'} & set(res_ref):
+                        res_ref[field] = (res_ref[field] + res[field]) / 2 if res_ref[field] else res[field]
+
+        return result_ref
+>>>>>>> 07586d4043b... temp
 
         return {
             'doc_ids': docids,
