@@ -194,7 +194,10 @@ def get_view_arch_from_file(filename, xmlid):
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
 
-TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
+translated_attrs = TRANSLATED_ATTRS - {'src'}
+TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(translated_attrs))
+translated_img_src_re = re.compile(r"img\[[^\]]*@src\b")
+
 WRONGCLASS = re.compile(r"(@class\s*=|=\s*@class|contains\(@class)")
 
 
@@ -361,6 +364,9 @@ actual arch.
                 if match:
                     message = "View inheritance may not use attribute %r as a selector." % match.group(1)
                     self.handle_view_error(message)
+                if translated_img_src_re.search(node.get('expr', '')):
+                    message = "View inheritance may not use @src as a selector on image elements."
+                    self.handle_view_error(message)
                 if WRONGCLASS.search(node.get('expr', '')):
                     _logger.warning(
                         "Error-prone use of @class in view %s (%s): use the "
@@ -368,7 +374,10 @@ actual arch.
                         "their classes", self.name, self.xml_id
                     )
             else:
-                for attr in TRANSLATED_ATTRS:
+                if node.tag == 'img' and node.get('src'):
+                    message = "View inheritance may not use @src as a selector on image elements."
+                    self.handle_view_error(message)
+                for attr in translated_attrs:
                     if node.get(attr):
                         message = "View inheritance may not use attribute %r as a selector." % attr
                         self.handle_view_error(message)

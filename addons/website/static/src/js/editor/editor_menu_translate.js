@@ -81,7 +81,8 @@ var TranslatorMenu = EditorMenu.extend({
         	'[data-oe-model][data-oe-id][data-oe-field], ' +
         	'[placeholder*="data-oe-translation-id="], ' +
         	'[title*="data-oe-translation-id="], ' +
-        	'[alt*="data-oe-translation-id="]';
+        	'[alt*="data-oe-translation-id="], ' +
+            '[src*="data-oe-translation-id="]';
         var $edit = $wrapwrap.find(selector);
         $edit.filter(':has(' + selector + ')').attr('data-oe-readonly', true);
         return $edit.not('[data-oe-readonly]');
