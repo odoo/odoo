@@ -1569,6 +1569,69 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('input field: change value before pending onchange returns (with fieldDebounce)', async function (assert) {
+        // this test is exactly the same as the previous one, except that we set
+        // here a fieldDebounce to accurately reproduce what happens in practice:
+        // the field doesn't notify the changes on 'input', but on 'change' event.
+        assert.expect(5);
+
+        this.data.partner.onchanges = {
+            product_id: function (obj) {
+                obj.int_field = obj.product_id ? 7 : false;
+            },
+        };
+
+        let def;
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="foo"/>
+                            <field name="int_field"/>
+                        </tree>
+                    </field>
+                </form>`,
+            async mockRPC(route, args) {
+                const result = this._super(...arguments);
+                if (args.method === "onchange") {
+                    await Promise.resolve(def);
+                }
+                return result;
+            },
+            fieldDebounce: 5000,
+        });
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'My little Foo Value',
+            'should contain the default value');
+
+        def = testUtils.makeTestPromise();
+
+        await testUtils.fields.many2one.clickOpenDropdown('product_id');
+        await testUtils.fields.many2one.clickHighlightedItem('product_id');
+
+        // set foo before onchange
+        await testUtils.fields.editInput(form.$('input[name="foo"]'), "tralala");
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala');
+        assert.strictEqual(form.$('input[name="int_field"]').val(), '');
+
+        // complete the onchange
+        def.resolve();
+        await testUtils.nextTick();
+
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
+            'foo should contain the same value as before onchange');
+        assert.strictEqual(form.$('input[name="int_field"]').val(), '7',
+            'int_field should contain the value returned by the onchange');
+
+        form.destroy();
+    });
+
     QUnit.test('input field: change value before pending onchange renaming', async function (assert) {
         assert.expect(3);
 
