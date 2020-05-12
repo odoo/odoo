@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ClientListScreen" owl="1">
+        <div class="clientlist-screen screen" t-on-activate-edit-mode="activateEditMode">
+            <div class="screen-content">
+                <section class="top-content">
+                    <span class="button back" t-on-click="back">
+                        <i class="fa fa-angle-double-left"></i>
+                        Cancel
+                    </span>
+                    <span class="searchbox">
+                        <input placeholder="Search Customers" t-on-keyup="updateClientList" />
+                        <span class="search-clear"></span>
+                    </span>
+                    <span class="searchbox"></span>
+                    <span class="button new-customer" role="img" aria-label="Add a customer"
+                          t-on-click="trigger('activate-edit-mode', { isNewClient: true })"
+                          title="Add a customer">
+                        <i class="fa fa-user"></i>
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <span t-if="isNextButtonVisible" t-on-click="clickNext"
+                          class="button next highlight">
+                        <t t-esc="nextButton.text" />
+                    </span>
+                </section>
+                <section class="full-content">
+                    <div class="client-window">
+                        <section class="subwindow collapsed">
+                            <div class="subwindow-container collapsed">
+                                <div t-if="state.detailIsShown" class="client-details-contents subwindow-container-fix">
+                                    <t t-if="state.isEditMode">
+                                        <ClientDetailsEdit t-props="state.editModeProps"
+                                                           t-on-cancel-edit="cancelEdit"
+                                                           t-on-save-changes="saveChanges" />
+                                    </t>
+                                    <t t-else="">
+                                        <ClientDetails partner="state.selectedClient" />
+                                    </t>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="subwindow list">
+                            <div class="subwindow-container">
+                                <div class="subwindow-container-fix touch-scrollable scrollable-y">
+                                    <table class="client-list">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Address</th>
+                                                <th>Phone</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="client-list-contents">
+                                            <t t-foreach="clients" t-as="partner"
+                                               t-key="partner.id">
+                                                <ClientLine partner="partner"
+                                                            selectedClient="state.selectedClient"
+                                                            detailIsShown="state.detailIsShown"
+                                                            t-on-click-client="clickClient" />
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+
+</templates>

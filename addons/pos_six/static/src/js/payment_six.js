@@ -1,6 +1,7 @@
 odoo.define('pos_six.payment', function (require) {
 "use strict";
 
+const { Gui } = require('point_of_sale.Gui');
 var core = require('web.core');
 var PaymentInterface = require('point_of_sale.PaymentInterface');
 
@@ -81,7 +82,7 @@ var PaymentSix = PaymentInterface.extend({
         timapi.DefaultTerminalListener.prototype.transactionCompleted(event, data);
 
         if (event.exception) {
-            this.pos.gui.show_popup('error', {
+            Gui.showPopup('ErrorPopup', {
                 title: _t('Terminal Error'),
                 body: _t('Transaction was not processed correctly'),
             });
