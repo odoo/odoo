@@ -20,7 +20,10 @@
         <rng:element name="value">
             <rng:optional><rng:attribute name="model" /></rng:optional>
             <rng:choice>
-                <rng:attribute name="search" />
+                <rng:group>
+                    <rng:attribute name="search" />
+                    <rng:optional><rng:attribute name="multi" /></rng:optional>
+                </rng:group>
                 <rng:attribute name="eval" />
                 <rng:group>
                     <rng:optional><rng:attribute name="type" /></rng:optional>

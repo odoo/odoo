@@ -89,6 +89,7 @@ def _eval_xml(self, node, env):
             f_search = node.get("search")
             f_use = node.get("use",'id')
             f_name = node.get("name")
+            f_multi = node.get("multi", False)
             idref2 = {}
             if f_search:
                 idref2 = _get_idref(self, env, f_model, self.idref)
@@ -101,9 +102,12 @@ def _eval_xml(self, node, env):
                 return ids
             f_val = False
             if len(ids):
-                f_val = ids[0]
-                if isinstance(f_val, tuple):
-                    f_val = f_val[0]
+                if f_multi:
+                    f_val = ids
+                else:
+                    f_val = ids[0]
+                    if isinstance(f_val, tuple):
+                        f_val = f_val[0]
             return f_val
         a_eval = node.get('eval')
         if a_eval:
