@@ -1351,8 +1351,13 @@ class IrModelSelection(models.Model):
         """ Process the 'ondelete' of the given selection values. """
         for selection in self:
             Model = self.env[selection.field_id.model]
-            field = Model._fields[selection.field_id.name]
-            if not field.store or Model._abstract:
+            # The field may exist in database but not in registry. In this case
+            # we allow the field to be skipped, but for production this should
+            # be handled through a migration script. The ORM will take care of
+            # the orphaned 'ir.model.fields' down the stack, and will log a
+            # warning prompting the developer to write a migration script.
+            field = Model._fields.get(selection.field_id.name)
+            if not field or not field.store or Model._abstract:
                 continue
 
             ondelete = (field.ondelete or {}).get(selection.value) or 'set null'
