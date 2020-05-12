@@ -2212,6 +2212,22 @@ class AccountMove(models.Model):
 
             move.message_subscribe([p.id for p in [move.partner_id] if p not in move.sudo().message_partner_ids])
 
+<<<<<<< HEAD
+=======
+            to_write = {'state': 'posted'}
+
+            if move.name == '/':
+                # Get the journal's sequence.
+                sequence = move._get_sequence()
+                if not sequence:
+                    raise UserError(_('Please define a sequence on your journal.'))
+
+                # Consume a new number.
+                to_write['name'] = sequence.with_context(ir_sequence_date=move.date).next_by_id()
+
+            move.write(to_write)
+
+>>>>>>> 2379dbfd6f6... temp
             # Compute 'ref' for 'out_invoice'.
             if move._auto_compute_invoice_reference():
                 to_write = {
