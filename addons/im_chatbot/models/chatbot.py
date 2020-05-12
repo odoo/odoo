@@ -53,12 +53,11 @@ class ChatBot(models.Model):
             # Look like this return a collection of res.partner. Since Odoo doesn't
             # support One2one relation, lets say it will always be the first in
             # this collection
-            bot_partner = chatbot.partner_id.read()
+            bot_partner = chatbot.partner_id
 
             # Create a discution channel between a bot and the current user.
             channel = (
                 self.env["mail.channel"]
-                # this "with_context" was present on odoobot code. Copy/past and hope it's ok
                 .with_context(mail_create_nosubscribe=True).create(
                     {
                         "name": "test",
@@ -90,10 +89,7 @@ class ChatBot(models.Model):
             first_message = messages[0]
 
             # Post a message to the channel
-            ChatbotMessageHook()._bot_message_post(
-                channel, bot_partner[0], first_message
-            )
-
+            channel._bot_message_post(bot_partner[0], first_message)
             return channel
 
 
@@ -141,12 +137,11 @@ class ChatbotMessageHook(models.Model):
         )
 
         # Sent the next message
-        self._bot_message_post(self, bot_partner, next_message[0])
+        self._bot_message_post(bot_partner, next_message[0])
         return True
 
-    @staticmethod
-    def _bot_message_post(channel, bot_partner, message):
-        channel.sudo().message_post(
+    def _bot_message_post(self, bot_partner, message):
+        self.sudo().message_post(
             body=message.name,
             author_id=bot_partner.id,
             message_type="comment",
