@@ -6,6 +6,7 @@
         <field name="reason">Mercadería defectuosa</field>
         <field name="refund_method">refund</field>
         <field name="move_id" ref="demo_invoice_3"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
     </record>
 
         <function model="account.move.reversal" name="_onchange_move_id"
@@ -19,6 +20,7 @@
         <field name="reason">Venta cancelada</field>
         <field name="refund_method">cancel</field>
         <field name="move_id" ref="demo_invoice_4"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
     </record>
 
         <function model="account.move.reversal" name="_onchange_move_id"
@@ -32,6 +34,7 @@
         <field name="reason">Venta cancelada</field>
         <field name="refund_method">cancel</field>
         <field name="move_id" ref="demo_invoice_16"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
     </record>
 
         <function model="account.move.reversal" name="_onchange_move_id"
