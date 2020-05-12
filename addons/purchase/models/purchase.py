@@ -78,7 +78,7 @@ class PurchaseOrder(models.Model):
              "It's used to do the matching when you receive the "
              "products as this reference is usually written on the "
              "delivery order sent by your vendor.")
-    date_order = fields.Datetime('Order By', required=True, states=READONLY_STATES, index=True, copy=False, default=fields.Datetime.now,\
+    date_order = fields.Datetime('Order Deadline', required=True, states=READONLY_STATES, index=True, copy=False, default=fields.Datetime.now,\
         help="Depicts the date where the Quotation should be validated and converted into a purchase order.")
     date_approve = fields.Datetime('Confirmation Date', readonly=1, index=True, copy=False)
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True, states=READONLY_STATES, change_default=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
@@ -215,6 +215,10 @@ class PurchaseOrder(models.Model):
         elif 'state' in init_values and self.state == 'done':
             return self.env.ref('purchase.mt_rfq_done')
         return super(PurchaseOrder, self)._track_subtype(init_values)
+
+    def _get_report_base_filename(self):
+        self.ensure_one()
+        return 'Purchase Order-%s' % (self.name)
 
     @api.onchange('partner_id', 'company_id')
     def onchange_partner_id(self):

@@ -18,7 +18,7 @@ tour.register('website_links_tour', {
             content: "fill the form and submit it",
             trigger: '#o_website_links_link_tracker_form input#url',
             run: function () {
-                var url = window.location.host + '/aboutus';
+                var url = window.location.host + '/contactus';
                 $('#o_website_links_link_tracker_form input#url').val(url);
                 $('.o_website_links_utm_forms input#campaign-select').val(1).change();
                 $('.o_website_links_utm_forms input#channel-select').val(1).change();
@@ -32,7 +32,7 @@ tour.register('website_links_tour', {
             // Depending of the speed of `requests.get` from `_get_title_from_url`,
             // the link name will either be "About us" (page title) or
             // "http://url/aboutus" (page url).
-            extra_trigger: '#o_website_links_recent_links .truncate_text:first():contains("About us"), #o_website_links_recent_links .truncate_text:first():contains("aboutus")',
+            extra_trigger: '#o_website_links_recent_links .truncate_text:first():contains("Contact us"), #o_website_links_recent_links .truncate_text:first():contains("contactus")',
             trigger: '#o_website_links_link_tracker_form #generated_tracked_link:contains("/r/")',
             run: function () {
                 window.location.href = $('#generated_tracked_link').text();
@@ -40,9 +40,9 @@ tour.register('website_links_tour', {
         },
         {
             content: "check that we landed on correct page with correct query strings",
-            trigger: '.s_title h1:containsExact("About us")',
+            trigger: '.s_title h1:containsExact("Contact us")',
             run: function () {
-                var expectedUrl = "/aboutus?utm_campaign=Sale&utm_source=Search+engine&utm_medium=Website";
+                var expectedUrl = "/contactus?utm_campaign=Sale&utm_source=Search+engine&utm_medium=Website";
                 if (window.location.pathname + window.location.search !== expectedUrl) {
                     console.error("The link was not correctly created.");
                 }

@@ -90,7 +90,7 @@ class HrEmployeeBase(models.AbstractModel):
         employee = self.sudo().search([('barcode', '=', barcode)], limit=1)
         if employee:
             return employee._attendance_action('hr_attendance.hr_attendance_action_kiosk_mode')
-        return {'warning': _('No employee corresponding to barcode %(barcode)s') % {'barcode': barcode}}
+        return {'warning': _("No employee corresponding to Badge ID '%(barcode)s.'") % {'barcode': barcode}}
 
     def attendance_manual(self, next_action, entered_pin=None):
         self.ensure_one()

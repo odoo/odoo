@@ -1686,7 +1686,7 @@ order.
         <field name="datetimefield" options='{"datepicker": {"daysOfWeekDisabled": [0, 6]}}'/>
 
 - daterange (FieldDateRange)
-    This widget allow user to select start and end date into single picker.
+    This widget allows the user to select start and end date into a single picker.
 
     - Supported field types: *date*, *datetime*
 
@@ -1701,6 +1701,13 @@ order.
     .. code-block:: xml
 
         <field name="start_date" widget="daterange" options='{"related_end_date": "end_date"}'/>
+
+- remaining_days (RemainingDays)
+    This widget can be used on date and datetime fields. In readonly, it displays
+    the delta (in days) between the value of the field and today. It edit, it
+    behaves like a regular date(time) widget.
+
+    - Supported field types: *date*, *datetime*
 
 - monetary (FieldMonetary)
     This is the default field type for fields of type 'monetary'. It is used to
@@ -2028,6 +2035,19 @@ order.
 
     - Supported field types: *char, text*
 
+- badge (FieldBadge)
+    Displays the value inside a bootstrap badge pill.
+
+    - Supported field types: *char*, *selection*, *many2one*
+
+    By default, the badge has a lightgrey background, but it can be customized
+    by using the decoration-X mechanism. For instance, to display a red badge
+    under a given condition:
+
+    .. code-block:: xml
+
+        <field name="foo" widget"badge" decoration-danger="state == 'cancel'"/>
+
 Relational fields
 -----------------
 
@@ -2118,6 +2138,27 @@ Relational fields
     it will fallback to regular many2one (FieldMany2One)
 
     - Supported field types: *many2one*
+
+- many2one_avatar (Many2OneAvatar)
+    This widget is only supported on many2one fields pointing to a model which
+    inherits from 'image.mixin'. In readonly, it displays the image of the
+    related record next to its display_name. Note that the display_name isn't a
+    clickable link in this case. In edit, it behaves exactly like the regular
+    many2one.
+
+    - Supported field types: *many2one*
+
+- many2one_avatar_user (Many2OneAvatarUser)
+    This widget is a specialization of the Many2OneAvatar. When the avatar is
+    clicked, we open a chat window with the corresponding user. This widget can
+    only be set on many2one fields pointing to the 'res.users' model.
+
+    - Supported field types: *many2one* (pointing to 'res.users')
+
+- many2one_avatar_employee (Many2OneAvatarEmployee)
+    Same as Many2OneAvatarUser, but for many2one fields pointing to 'hr.employee'.
+
+    - Supported field types: *many2one* (pointing to 'hr.employee')
 
 - kanban.many2one (KanbanFieldMany2One)
     Default widget for many2one fields (in kanban view). We need to disable all

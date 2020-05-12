@@ -36,6 +36,12 @@ options.registry.mailing_list_subscribe = options.Class.extend({
                     context: self.options.recordInfo.context,
                 }).then(function (data) {
                     $(dialog).find('.btn-primary').prop('disabled', !data.length);
+                    var list_id = self.$target.attr("data-list-id");
+                    $(dialog).on('show.bs.modal', function () {
+                        if (list_id !== "0"){
+                            $(dialog).find('select').val(list_id);
+                        };
+                    });
                     return data;
                 });
             },

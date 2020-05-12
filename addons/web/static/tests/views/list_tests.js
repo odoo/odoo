@@ -1,11 +1,13 @@
 odoo.define('web.list_tests', function (require) {
 "use strict";
 
+var AbstractFieldOwl = require('web.AbstractFieldOwl');
 var AbstractStorageService = require('web.AbstractStorageService');
 var BasicModel = require('web.BasicModel');
 var core = require('web.core');
 var basicFields = require('web.basic_fields');
 var fieldRegistry = require('web.field_registry');
+var fieldRegistryOwl = require('web.field_registry_owl');
 var FormView = require('web.FormView');
 var ListRenderer = require('web.ListRenderer');
 var ListView = require('web.ListView');
@@ -247,6 +249,89 @@ QUnit.module('Views', {
             ['Export', 'Delete'],
             'action menu should have Export button'
         );
+
+        list.destroy();
+    });
+
+    QUnit.test('export button in list view', async function (assert) {
+        assert.expect(5);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.isVisible(list.$('.o_list_export_xlsx'));
+
+        await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
+
+        assert.isNotVisible(list.$('.o_list_export_xlsx'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+
+        await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
+        assert.isVisible(list.$('.o_list_export_xlsx'));
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with icon buttons', async function (assert) {
+        assert.expect(5);
+
+        this.data.foo.records.splice(1);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <button name="x" type="object" icon="fa-asterisk"/>
+                    <button name="x" type="object" icon="fa-star" class="o_yeah"/>
+                    <button name="x" type="object" icon="fa-refresh" string="Refresh" class="o_yeah"/>
+                    <button name="x" type="object" icon="fa-exclamation" string="Danger" class="o_yeah btn-danger"/>
+                </tree>`,
+        });
+
+        assert.containsOnce(list, 'button.btn.btn-link i.fa.fa-asterisk');
+        assert.containsOnce(list, 'button.btn.btn-link.o_yeah i.fa.fa-star');
+        assert.containsOnce(list, 'button.btn.btn-link.o_yeah:contains("Refresh") i.fa.fa-refresh');
+        assert.containsOnce(list, 'button.btn.btn-danger.o_yeah:contains("Danger") i.fa.fa-exclamation');
+        assert.containsNone(list, 'button.btn.btn-link.btn-danger');
+
+        list.destroy();
+    });
+
+    QUnit.test('column names (noLabel, label, string and default)', async function (assert) {
+        assert.expect(4);
+
+        const FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('nolabel_char', FieldChar.extend({
+            noLabel: true,
+        }));
+        fieldRegistry.add('label_char', FieldChar.extend({
+            label: "Some static label",
+        }));
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <field name="display_name" widget="nolabel_char"/>
+                    <field name="foo" widget="label_char"/>
+                    <field name="int_field" string="My custom label"/>
+                    <field name="text"/>
+                </tree>`,
+        });
+
+        assert.strictEqual(list.$('thead th[data-name=display_name]').text(), '');
+        assert.strictEqual(list.$('thead th[data-name=foo]').text(), 'Some static label');
+        assert.strictEqual(list.$('thead th[data-name=int_field]').text(), 'My custom label');
+        assert.strictEqual(list.$('thead th[data-name=text]').text(), 'text field');
 
         list.destroy();
     });
@@ -1196,6 +1281,46 @@ QUnit.module('Views', {
             "save button should be invisible after applying groupby");
 
         actionManager.destroy();
+    });
+
+    QUnit.test('list view not groupable', async function (assert) {
+        assert.expect(2);
+
+        const searchMenuTypesOriginal = ListView.prototype.searchMenuTypes;
+        ListView.prototype.searchMenuTypes = ['filter', 'favorite'];
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top">
+                    <field name="display_name"/>
+                    <field name="foo"/>
+                </tree>
+            `,
+            archs: {
+                'foo,false,search': `
+                    <search>
+                        <filter context="{'group_by': 'foo'}" name="foo"/>
+                    </search>
+                `,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    throw new Error("Should not do a read_group RPC");
+                }
+                return this._super.apply(this, arguments);
+            },
+            context: { search_default_foo: 1, },
+        });
+
+        assert.containsNone(list, '.o_control_panel div.o_search_options div.o_group_by_menu',
+        "there should not be groupby menu");
+        assert.deepEqual(cpHelpers.getFacetTexts(list), []);
+
+        list.destroy();
+        ListView.prototype.searchMenuTypes = searchMenuTypesOriginal;
     });
 
     QUnit.test('selection changes are triggered correctly', async function (assert) {
@@ -3300,6 +3425,53 @@ QUnit.module('Views', {
             "should have 0 columns with text-danger class with wrong timezone datetime");
 
         assert.containsN(list, 'tbody tr', 4, "should have 4 rows");
+        list.destroy();
+    });
+
+    QUnit.test('support field decoration', async function (assert) {
+        assert.expect(3);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <field name="foo" decoration-danger="int_field > 5"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsN(list, 'tbody tr', 4, "should have 4 rows");
+        assert.containsN(list, 'tbody td.o_list_char.text-danger', 3);
+        assert.containsNone(list, 'tbody td.o_list_number.text-danger');
+
+        list.destroy();
+    });
+
+    QUnit.test('bounce create button when no data and click on empty area', async function (assert) {
+        assert.expect(4);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+            viewOptions: {
+                action: {
+                    help: '<p class="hello">click to add a record</p>'
+                }
+            },
+        });
+
+        assert.containsNone(list, '.o_view_nocontent');
+        await testUtils.dom.click(list.$('.o_list_view'));
+        assert.doesNotHaveClass(list.$('.o_list_button_add'), 'o_catch_attention');
+
+        await list.reload({ domain: [['id', '<', 0]] });
+        assert.containsOnce(list, '.o_view_nocontent');
+        await testUtils.dom.click(list.$('.o_view_nocontent'));
+        assert.hasClass(list.$('.o_list_button_add'), 'o_catch_attention');
         list.destroy();
     });
 
@@ -9355,6 +9527,65 @@ QUnit.module('Views', {
         // click on int_field cell of first row
         await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:nth(0)'));
         assert.strictEqual(document.activeElement.name, "int_field");
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with field component: mounted and willUnmount calls', async function (assert) {
+        // this test could be removed as soon as the list view will be written in Owl
+        assert.expect(3);
+
+        let mountedCalls = 0;
+        let willUnmountCalls = 0;
+        class MyField extends AbstractFieldOwl {
+            mounted() {
+                mountedCalls++;
+            }
+            willUnmount() {
+                willUnmountCalls++;
+            }
+        }
+        MyField.template = owl.tags.xml`<span>Hello World</span>`;
+        fieldRegistryOwl.add('my_owl_field', MyField);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo" widget="my_owl_field"/></tree>',
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        list.destroy();
+
+        assert.strictEqual(mountedCalls, 4);
+        assert.strictEqual(willUnmountCalls, 4);
+    });
+
+    QUnit.test('editable list view: multi edition of owl field component', async function (assert) {
+        // this test could be removed as soon as all field widgets will be written in owl
+        assert.expect(5);
+
+        const list = await createView({
+            arch: '<tree multi_edit="1"><field name="bar"/></tree>',
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsN(list, '.o_data_cell .custom-checkbox input:checked', 3);
+
+        // select all records and edit the boolean field
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        assert.containsN(list, '.o_data_row .o_list_record_selector input:checked', 4);
+        await testUtils.dom.click(list.$('.o_data_cell:first'));
+        await testUtils.dom.click(list.$('.o_data_cell .o_field_boolean input'));
+
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+        assert.containsNone(list, '.o_data_cell .custom-checkbox input:checked');
 
         list.destroy();
     });

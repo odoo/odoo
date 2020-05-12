@@ -7,7 +7,6 @@ QUnit.module('core', {}, function () {
 
     QUnit.module('utils');
 
-
     QUnit.test('intersperse', function (assert) {
         assert.expect(27);
 
@@ -195,6 +194,69 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(String(round_pr(457.3, 5)), '455');
         assert.strictEqual(String(round_pr(457.5, 5)), '460');
         assert.strictEqual(String(round_pr(457.1, 3)), '456');
+    });
+
+    QUnit.test('sortBy', function (assert) {
+        assert.expect(27);
+        const { sortBy } = utils;
+        const bools = [true, false, true];
+        const ints = [2, 1, 5];
+        const strs = ['b', 'a', 'z'];
+        const objbools = [{ x: true }, { x: false }, { x: true }];
+        const objints = [{ x: 2 }, { x: 1 }, { x: 5 }];
+        const objstrss = [{ x: 'b' }, { x: 'a' }, { x: 'z' }];
+
+        // Invalid
+        assert.throws(
+            () => sortBy({}),
+            new TypeError(`array.slice is not a function`)
+        );
+        assert.throws(
+            () => sortBy([Symbol('b'), Symbol('a')]),
+            new TypeError(`Cannot convert a Symbol value to a number`)
+        );
+        assert.throws(
+            () => sortBy(ints, true),
+            new Error(`Expected criterion of type 'string' or 'function' and got 'boolean'`)
+        );
+        assert.throws(
+            () => sortBy(ints, 3),
+            new Error(`Expected criterion of type 'string' or 'function' and got 'number'`)
+        );
+        assert.throws(
+            () => sortBy(ints, {}),
+            new Error(`Expected criterion of type 'string' or 'function' and got 'object'`)
+        );
+        // Do not sort in place
+        const toSort = [2, 3, 1];
+        sortBy(toSort);
+        assert.deepEqual(toSort, [2, 3, 1]);
+        // Sort (no criterion)
+        assert.deepEqual(sortBy([]), []);
+        assert.deepEqual(sortBy(ints), [1, 2, 5]);
+        assert.deepEqual(sortBy(bools), [false, true, true]);
+        assert.deepEqual(sortBy(strs), ['a', 'b', 'z']);
+        assert.deepEqual(sortBy(objbools), [{ x: true }, { x: false }, { x: true }]);
+        assert.deepEqual(sortBy(objints), [{ x: 2 }, { x: 1 }, { x: 5 }]);
+        assert.deepEqual(sortBy(objstrss), [{ x: 'b' }, { x: 'a' }, { x: 'z' }]);
+        // Sort by property
+        const prop = 'x';
+        assert.deepEqual(sortBy([], prop), []);
+        assert.deepEqual(sortBy(ints, prop), [2, 1, 5]);
+        assert.deepEqual(sortBy(bools, prop), [true, false, true]);
+        assert.deepEqual(sortBy(strs, prop), ['b', 'a', 'z']);
+        assert.deepEqual(sortBy(objbools, prop), [{ x: false }, { x: true }, { x: true }]);
+        assert.deepEqual(sortBy(objints, prop), [{ x: 1 }, { x: 2 }, { x: 5 }]);
+        assert.deepEqual(sortBy(objstrss, prop), [{ x: 'a' }, { x: 'b' }, { x: 'z' }]);
+        // Sort by getter
+        const getter = obj => obj.x;
+        assert.deepEqual(sortBy([], getter), []);
+        assert.deepEqual(sortBy(ints, getter), [2, 1, 5]);
+        assert.deepEqual(sortBy(bools, getter), [true, false, true]);
+        assert.deepEqual(sortBy(strs, getter), ['b', 'a', 'z']);
+        assert.deepEqual(sortBy(objbools, getter), [{ x: false }, { x: true }, { x: true }]);
+        assert.deepEqual(sortBy(objints, getter), [{ x: 1 }, { x: 2 }, { x: 5 }]);
+        assert.deepEqual(sortBy(objstrss, getter), [{ x: 'a' }, { x: 'b' }, { x: 'z' }]);
     });
 });
 

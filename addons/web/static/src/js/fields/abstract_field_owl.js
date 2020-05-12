@@ -9,13 +9,13 @@ odoo.define('web.AbstractFieldOwl', function (require) {
     /**
      * This file defines the Owl version of the AbstractField. Specific fields
      * written in Owl should override this component.
-     * 
+     *
      * =========================================================================
-     * 
+     *
      * /!\ This api works almost exactly like the legacy one but
      * /!\ it still could change! There are already a few methods that will be
      * /!\ removed like setIdForLabel, setInvalidClass, etc..
-     * 
+     *
      * =========================================================================
      *
      * This is the basic field component used by all the views to render a field in a view.
@@ -105,7 +105,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
 
         /**
          * This contains the attributes to pass through the context.
-         * 
+         *
          * @returns {Object}
          */
         get additionalContext() {
@@ -113,7 +113,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         }
         /**
          * This contains the attributes of the xml 'field' tag, the inner views...
-         * 
+         *
          * @returns {Object}
          */
         get attrs() {
@@ -124,7 +124,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
          * Id corresponding to the current record in the model.
          * Its intended use is to be able to tag any messages going upstream,
          * so the view knows which records was changed for example.
-         * 
+         *
          * @returns {string}
          */
         get dataPointId() {
@@ -133,7 +133,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         /**
          * This is a description of all the various field properties,
          * such as the type, the comodel (relation), ...
-         * 
+         *
          * @returns {string}
          */
         get field() {
@@ -150,7 +150,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         /**
          * Returns the additional options pass to the format function.
          * Override this getter to add options.
-         * 
+         *
          * @returns {Object}
          */
         get formatOptions() {
@@ -164,7 +164,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
          * the 'widget' attrs if is is given, and if it is a valid key, with a
          * fallback on the field type, ensuring that the value is formatted and
          * displayed according to the chosen widget, if any.
-         * 
+         *
          * @returns {string}
          */
         get formatType() {
@@ -205,7 +205,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
          * Tracks if the component is in a valid state, meaning that the current
          * value represented in the DOM is a value that can be parsed and saved.
          * For example, a float field can only use a number and not a string.
-         * 
+         *
          * @returns {boolean}
          */
         get isValid() {
@@ -213,7 +213,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         }
         /**
          * Fields can be in two modes: 'edit' or 'readonly'.
-         * 
+         *
          * @returns {string}
          */
         get mode() {
@@ -221,7 +221,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         }
         /**
          * Useful mostly to trigger rpcs on the correct model.
-         * 
+         *
          * @returns {string}
          */
         get model() {
@@ -229,7 +229,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         }
         /**
          * The field name displayed by this component.
-         * 
+         *
          * @returns {string}
          */
         get name() {
@@ -238,7 +238,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         /**
          * Component can often be configured in the 'options' attribute in the
          * xml 'field' tag. These options are saved (and evaled) in nodeOptions.
-         * 
+         *
          * @returns {Object}
          */
         get nodeOptions() {
@@ -253,7 +253,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         /**
          * Returns the additional options passed to the parse function.
          * Override this getter to add options.
-         * 
+         *
          * @returns {Object}
          */
         get parseOptions() {
@@ -261,7 +261,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         }
         /**
          * The datapoint fetched from the model.
-         * 
+         *
          * @returns {Object}
          */
         get record() {
@@ -273,7 +273,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
          * use this to try to change other fields value, this is not how it is
          * supposed to work. Also, do not use this.recordData[this.name] to get
          * the current value, this could be out of sync after a _setValue.
-         * 
+         *
          * @returns {Object}
          */
         get recordData() {
@@ -283,10 +283,10 @@ odoo.define('web.AbstractFieldOwl', function (require) {
          * If this flag is set to true, the field component will be reset on
          * every change which is made in the view (if the view supports it).
          * This is currently a form view feature.
-         * 
+         *
          * /!\ This getter could be removed when basic views (form, list, kanban)
          * are converted.
-         * 
+         *
          * @returns {boolean}
          */
         get resetOnAnyFieldChange() {
@@ -298,7 +298,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
          * When the record will be created, the field component will
          * be destroyed (when the form view switches to readonly mode) and a
          * new component with a res_id in mode readonly will be created.
-         * 
+         *
          * @returns {Number}
          */
         get resId() {
@@ -308,7 +308,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
          * Human readable (and translated) description of the field.
          * Mostly useful to be displayed in various places in the
          * UI, such as tooltips or create dialogs.
-         * 
+         *
          * @returns {string}
          */
         get string() {
@@ -316,7 +316,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         }
         /**
          * Tracks the current (parsed if needed) value of the field.
-         * 
+         *
          * @returns {any}
          */
         get value() {
@@ -325,7 +325,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         /**
          * The type of the view in which the field component is instantiated.
          * For standalone components, a 'default' viewType is set.
-         * 
+         *
          * @returns {string}
          */
         get viewType() {
@@ -378,7 +378,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         commitChanges() {}
         /**
          * Remove the invalid class on a field
-         * 
+         *
          * This function should be removed when BasicRenderer will be rewritten in owl
          */
         removeInvalidClass() {
@@ -388,7 +388,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         /**
          * Sets the given id on the focusable element of the field and as 'for'
          * attribute of potential internal labels.
-         * 
+         *
          * This function should be removed when BasicRenderer will be rewritten in owl
          *
          * @param {string} id
@@ -400,7 +400,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         }
         /**
          * add the invalid class on a field
-         * 
+         *
          * This function should be removed when BasicRenderer will be rewritten in owl
          */
         setInvalidClass() {
@@ -417,7 +417,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
          * defined in an attribute).
          *
          * This function should be removed when BasicRenderer will be rewritten in owl
-         * 
+         *
          * @private
          */
         _applyDecorations() {
@@ -425,7 +425,8 @@ odoo.define('web.AbstractFieldOwl', function (require) {
                 const isToggled = py.PY_isTrue(
                     py.evaluate(dec.expression, this.record.evalContext)
                 );
-                this.el.classList.toggle(dec.className, isToggled);
+                const className = this._getClassFromDecoration(dec.name);
+                this.el.classList.toggle(className, isToggled);
             }
         }
         /**
@@ -439,6 +440,18 @@ odoo.define('web.AbstractFieldOwl', function (require) {
             const options = Object.assign({}, this.nodeOptions,
                 { data: this.recordData }, this.formatOptions);
             return field_utils.format[this.formatType](value, this.field, options);
+        }
+        /**
+         * Returns the className corresponding to a given decoration. A
+         * decoration is of the form 'decoration-%s'. By default, replaces
+         * 'decoration' by 'text'.
+         *
+         * @private
+         * @param {string} decoration must be of the form 'decoration-%s'
+         * @returns {string}
+         */
+        _getClassFromDecoration(decoration) {
+            return `text-${decoration.split('-')[1]}`;
         }
         /**
          * This method check if a value is the same as the current value of the
@@ -614,6 +627,11 @@ odoo.define('web.AbstractFieldOwl', function (require) {
      * If this flag is set to true, the list column name will be empty.
      */
     AbstractField.noLabel = false;
+    /**
+     * Currently only used in list view.
+     * If set, this value will be displayed as column name.
+     */
+    AbstractField.label = "";
 
     return AbstractField;
 });

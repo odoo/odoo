@@ -167,7 +167,7 @@ publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
             $content: $('<div/>').html(content),
             $parentNode: this.$target,
             backdrop: !this.editableMode,
-            dialogClass: 'p-0' + (this.editableMode ? ' o_editable oe_structure oe_empty' : ''),
+            dialogClass: 'p-0' + (this.editableMode ? ' oe_structure oe_empty' : ''),
             renderFooter: false,
             size: 'medium',
         });

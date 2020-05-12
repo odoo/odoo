@@ -292,7 +292,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
 
         # search partners matching current search parameters
         partner_ids = partner_obj.sudo().search(
-            base_partner_domain, order="grade_sequence DESC, implemented_count DESC, display_name ASC, id ASC",
+            base_partner_domain, order="grade_sequence ASC, implemented_count DESC, display_name ASC, id ASC",
             offset=pager['offset'], limit=self._references_per_page)
         partners = partner_ids.sudo()
 

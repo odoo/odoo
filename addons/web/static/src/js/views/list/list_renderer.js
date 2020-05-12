@@ -58,12 +58,12 @@ var ListRenderer = BasicRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this.columnInvisibleFields = params.columnInvisibleFields;
-        this.rowDecorations = _.chain(this.arch.attrs)
-            .pick(function (value, key) {
-                return DECORATIONS.indexOf(key) >= 0;
-            }).mapObject(function (value) {
-                return py.parse(py.tokenize(value));
-            }).value();
+        this.rowDecorations = this._extractDecorationAttrs(this.arch);
+        this.fieldDecorations = {};
+        for (const field of this.arch.children.filter(c => c.tag === 'field')) {
+            const decorations = this._extractDecorationAttrs(field);
+            this.fieldDecorations[field.attrs.name] = decorations;
+        }
         this.hasSelectors = params.hasSelectors;
         this.selection = params.selectedRecords || [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
@@ -185,6 +185,24 @@ var ListRenderer = BasicRenderer.extend({
                 value: aggregateValue,
             };
         }
+    },
+    /**
+     * Extract the decoration attributes (e.g. decoration-danger) of a node. The
+     * condition is processed such that it is ready to be evaluated.
+     *
+     * @private
+     * @param {Object} node the <tree> or a <field> node
+     * @returns {Object}
+     */
+    _extractDecorationAttrs: function (node) {
+        const decorations = {};
+        for (const [key, expr] of Object.entries(node.attrs)) {
+            if (DECORATIONS.includes(key)) {
+                const cssClass = key.replace('decoration', 'text');
+                decorations[cssClass] = py.parse(py.tokenize(expr));
+            }
+        }
+        return decorations;
     },
     /**
      *
@@ -440,6 +458,8 @@ var ListRenderer = BasicRenderer.extend({
             return $td.append($el);
         }
         this._handleAttributes($td, node);
+        this._setDecorationClasses($td, this.fieldDecorations[node.attrs.name], record);
+
         var name = node.attrs.name;
         var field = this.state.fields[name];
         var value = record.data[name];
@@ -469,9 +489,18 @@ var ListRenderer = BasicRenderer.extend({
         var self = this;
         var nodeWithoutWidth = Object.assign({}, node);
         delete nodeWithoutWidth.attrs.width;
+
+        let extraClass = '';
+        if (node.attrs.icon) {
+            // if there is an icon, we force the btn-link style, unless a btn-xxx
+            // style class is explicitely provided
+            const btnStyleRegex = /\bbtn-[a-z]+\b/;
+            if (!btnStyleRegex.test(nodeWithoutWidth.attrs.class)) {
+                extraClass = 'btn-link o_icon_button';
+            }
+        }
         var $button = viewUtils.renderButtonFromNode(nodeWithoutWidth, {
-            extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
-            textAsTitle: !!node.attrs.icon,
+            extraClass: extraClass,
         });
         this._handleAttributes($button, node);
         this._registerModifiers(node, record, $button);
@@ -783,8 +812,11 @@ var ListRenderer = BasicRenderer.extend({
         var description = string || field.string;
         if (node.attrs.widget) {
             $th.addClass(' o_' + node.attrs.widget + '_cell');
-            if (this.state.fieldsInfo.list[name].Widget.prototype.noLabel) {
+            const FieldWidget = this.state.fieldsInfo.list[name].Widget;
+            if (FieldWidget.prototype.noLabel) {
                 description = '';
+            } else if (FieldWidget.prototype.label) {
+                description = FieldWidget.prototype.label;
             }
         }
         $th.text(description)
@@ -834,7 +866,7 @@ var ListRenderer = BasicRenderer.extend({
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td', !record.res_id));
         }
-        this._setDecorationClasses(record, $tr);
+        this._setDecorationClasses($tr, this.rowDecorations, record);
         return $tr;
     },
     /**
@@ -997,22 +1029,24 @@ var ListRenderer = BasicRenderer.extend({
         return Promise.all([this._super.apply(this, arguments), prom]);
     },
     /**
-     * Each line can be decorated according to a few simple rules. The arch
-     * description of the list may have one of the decoration-X attribute with
-     * a domain as value.  Then, for each record, we check if the domain matches
-     * the record, and add the text-X css class to the element.  This method is
-     * concerned with the computation of the list of css classes for a given
-     * record.
+     * Each line or cell can be decorated according to a few simple rules. The
+     * arch description of the list or the field nodes may have one of the
+     * decoration-X attributes with a python expression as value. Then, for each
+     * record, we evaluate the python expression, and conditionnaly add the
+     * text-X css class to the element.  This method is concerned with the
+     * computation of the list of css classes for a given record.
      *
      * @private
+     * @param {jQueryElement} $el the element to which to add the classes (a tr
+     *   or td)
+     * @param {Object} decorations keys are the decoration classes (e.g.
+     *   'text-bf') and values are the python expressions to evaluate
      * @param {Object} record a basic model record
-     * @param {jQueryElement} $tr a jquery <tr> element (the row to add decoration)
      */
-    _setDecorationClasses: function (record, $tr) {
-        _.each(this.rowDecorations, function (expr, decoration) {
-            var cssClass = decoration.replace('decoration', 'text');
-            $tr.toggleClass(cssClass, py.PY_isTrue(py.evaluate(expr, record.evalContext)));
-        });
+    _setDecorationClasses: function ($el, decorations, record) {
+        for (const [cssClass, expr] of Object.entries(decorations)) {
+            $el.toggleClass(cssClass, py.PY_isTrue(py.evaluate(expr, record.evalContext)));
+        }
     },
     /**
      * @private

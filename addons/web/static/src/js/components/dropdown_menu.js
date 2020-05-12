@@ -34,8 +34,6 @@ odoo.define('web.DropdownMenu', function (require) {
             this.dropdownMenu = useRef('dropdown');
             this.state = useState({ open: false });
 
-            this.symbol = this.env.device.isMobile ? 'fa fa-chevron-right float-right mt4' : false;
-
             useExternalListener(window, 'click', this._onWindowClick);
             useExternalListener(window, 'keydown', this._onWindowKeydown);
         }
@@ -45,11 +43,22 @@ odoo.define('web.DropdownMenu', function (require) {
         //---------------------------------------------------------------------
 
         /**
-         * Overriden in case we want to keep the caret style on the button in mobile.
+         * In desktop, by default, we do not display a caret icon next to the
+         * dropdown.
          * @returns {boolean}
          */
         get displayCaret() {
-            return !this.env.device.isMobile;
+            return false;
+        }
+
+        /**
+         * In mobile, by default, we display a chevron icon next to the dropdown
+         * button. Note that when 'displayCaret' is true, we display a caret
+         * instead of a chevron, no matter the value of 'displayChevron'.
+         * @returns {boolean}
+         */
+        get displayChevron() {
+            return this.env.device.isMobile;
         }
 
         /**

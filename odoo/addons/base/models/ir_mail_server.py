@@ -16,7 +16,7 @@ import html2text
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools import ustr, pycompat
+from odoo.tools import ustr, pycompat, formataddr
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -52,7 +52,7 @@ def extract_rfc2822_addresses(text):
     if not text:
         return []
     candidates = address_pattern.findall(ustr(text))
-    return [c for c in candidates if is_ascii(c)]
+    return [formataddr(('', c), charset='ascii') for c in candidates]
 
 
 class IrMailServer(models.Model):
@@ -415,13 +415,21 @@ class IrMailServer(models.Model):
                 smtp_server, smtp_port, smtp_user, smtp_password,
                 smtp_encryption, smtp_debug, mail_server_id=mail_server_id)
 
-            message_str = message.as_string()
-            # header folding code is buggy and adds redundant carriage
-            # returns, it got fixed in 3.7.4 thanks to bpo-34424
             if sys.version_info < (3, 7, 4):
-                message_str = re.sub('\r+', '\r', message_str)
+                # header folding code is buggy and adds redundant carriage
+                # returns, it got fixed in 3.7.4 thanks to bpo-34424
+                message_str = message.as_string()
+                message_str = re.sub('\r+(?!\n)', '', message_str)
 
-            smtp.sendmail(smtp_from, smtp_to_list, message_str)
+                mail_options = []
+                if any((not is_ascii(addr) for addr in smtp_to_list + [smtp_from])):
+                    # non ascii email found, require SMTPUTF8 extension,
+                    # the relay may reject it
+                    mail_options.append("SMTPUTF8")
+                smtp.sendmail(smtp_from, smtp_to_list, message_str, mail_options=mail_options)
+            else:
+                smtp.send_message(message, smtp_from, smtp_to_list)
+
             # do not quit() a pre-established smtp_session
             if not smtp_session:
                 smtp.quit()

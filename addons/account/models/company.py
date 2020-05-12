@@ -227,12 +227,22 @@ class ResCompany(models.Model):
 
     def _validate_fiscalyear_lock(self, values):
         if values.get('fiscalyear_lock_date'):
+
             nb_draft_entries = self.env['account.move'].search([
                 ('company_id', 'in', self.ids),
                 ('state', '=', 'draft'),
                 ('date', '<=', values['fiscalyear_lock_date'])])
             if nb_draft_entries:
                 raise ValidationError(_('There are still unposted entries in the period you want to lock. You should either post or delete them.'))
+
+            has_unreconciled_statement_lines = self.env['account.bank.statement.line'].search_count([
+                ('company_id', 'in', self.ids),
+                ('is_reconciled', '=', False),
+            ])
+            if has_unreconciled_statement_lines:
+                raise ValidationError(_(
+                    "There are still unreconciled bank statement lines in the period you want to lock."
+                    "You should either reconcile or delete them."))
 
     def _get_user_fiscal_lock_date(self):
         """Get the fiscal lock date for this company depending on the user"""

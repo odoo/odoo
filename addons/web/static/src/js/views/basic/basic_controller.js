@@ -16,6 +16,9 @@ var TranslationDialog = require('web.TranslationDialog');
 var _t = core._t;
 
 var BasicController = AbstractController.extend(FieldManagerMixin, {
+    events: Object.assign({}, AbstractController.prototype.events, {
+        'click .o_content': '_onContentClicked',
+    }),
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         discard_changes: '_onDiscardChanges',
         pager_changed: '_onPagerChanged',
@@ -602,6 +605,18 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         return Promise.resolve();
     },
     /**
+     * To override such that it returns true iff the primary action button must
+     * bounce when the user clicked on the given element, according to the
+     * current state of the view.
+     *
+     * @private
+     * @param {HTMLElement} element the node the user clicked on
+     * @returns {boolean}
+     */
+    _shouldBounceOnClick: function (/* element */) {
+        return false;
+    },
+    /**
      * Helper method, to get the current environment variables from the model
      * and notifies the component chain (by bubbling an event up)
      *
@@ -622,6 +637,19 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Called when the user clicks on the 'content' part of the controller
+     * (typically the renderer area). Makes the first primary button in the
+     * control panel bounce, in some situations (see _shouldBounceOnClick).
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onContentClicked(ev) {
+        if (this.$buttons && this._shouldBounceOnClick(ev.target)) {
+            this.$buttons.find('.btn-primary:visible:first').odooBounce();
+        }
+    },
     /**
      * Called when a list element asks to discard the changes made to one of
      * its rows.  It can happen with a x2many (if we are in a form view) or with

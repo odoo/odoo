@@ -128,8 +128,11 @@ ListRenderer.include({
      */
     on_attach_callback: function () {
         this.isInDOM = true;
-        this._freezeColumnWidths();
         this._super();
+        // _freezeColumnWidths requests style information, which produces a
+        // repaint, so we call it after _super to prevent flickering (in case
+        // other code would also modify the DOM post rendering/before repaint)
+        this._freezeColumnWidths();
     },
     /**
      * The list renderer needs to know if it is in the DOM to properly compute
@@ -186,7 +189,7 @@ ListRenderer.include({
             if (widgets.length) {
                 var $row = self._getRow(recordID);
                 var record = self._getRecord(recordID);
-                self._setDecorationClasses(record, $row);
+                self._setDecorationClasses($row, self.rowDecorations, record);
                 self._updateFooter();
             }
             return widgets;

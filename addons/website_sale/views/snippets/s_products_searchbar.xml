@@ -4,6 +4,7 @@
 <template id="s_products_searchbar_input" name="Products Search Input">
     <t t-call="website_sale.website_sale_products_search_box">
         <t t-set="_classes" t-value="'s_wsale_products_searchbar_input mb-3'"/>
+        <t t-set="_snippet" t-value="'s_products_searchbar_input'"/>
     </t>
 </template>
 <template id="s_products_searchbar" name="Products Search">
@@ -13,7 +14,7 @@
                 <div class="col-lg-8 offset-lg-2">
                     <h2>Search for a product</h2>
                     <p>We have amazing products in our shop, check them now !</p>
-                    <t t-call="website_sale.s_products_searchbar_input"/>
+                    <t t-snippet-call="website_sale.s_products_searchbar_input"/>
                 </div>
             </div>
         </div>

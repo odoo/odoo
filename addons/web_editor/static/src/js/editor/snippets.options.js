@@ -863,7 +863,7 @@ const InputUserValueWidget = UserValueWidget.extend({
      * @returns {string}
      */
     _floatToStr: function (value) {
-        return `${parseFloat(value.toFixed(3))}`;
+        return `${parseFloat(value.toFixed(5))}`;
     },
 
     //--------------------------------------------------------------------------
@@ -3095,6 +3095,29 @@ registry.many2one = SnippetOptionWidget.extend({
 
         this._clear();
     }
+});
+
+/**
+ * Allows to display a warning message on outdated snippets.
+ */
+registry.VersionControl = SnippetOptionWidget.extend({
+    xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
+
+    /**
+     * @override
+     */
+    start: function () {
+        this.trigger_up('get_snippet_versions', {
+            snippetName: this.$target[0].dataset.snippet,
+            onSuccess: snippetVersions => {
+                const isUpToDate = snippetVersions && ['vjs', 'vcss', 'vxml'].every(key => this.$target[0].dataset[key] === snippetVersions[key]);
+                if (!isUpToDate) {
+                    this.$el.prepend(qweb.render('web_editor.outdated_block_message'));
+                }
+            },
+        });
+        return this._super(...arguments);
+    },
 });
 
 /**

@@ -58,7 +58,7 @@ class TestMassSMS(test_mail_full_common.TestSMSCommon):
         })
 
     def test_mass_sms_internals(self):
-        with self.with_user('marketing'):
+        with self.with_user('user_marketing'):
             mailing = self.env['mailing.mailing'].create({
                 'name': 'Xmas Spam',
                 'subject': 'Xmas Spam',
@@ -105,7 +105,7 @@ class TestMassSMS(test_mail_full_common.TestSMSCommon):
         })
         records_numbers = self.records_numbers + ['+32456999999']
 
-        with self.with_user('marketing'):
+        with self.with_user('user_marketing'):
             with self.mockSMSGateway():
                 self.mailing.action_send_sms()
 
@@ -119,7 +119,7 @@ class TestMassSMS(test_mail_full_common.TestSMSCommon):
         )
 
     def test_mass_sms_internals_done_ids(self):
-        with self.with_user('marketing'):
+        with self.with_user('user_marketing'):
             with self.mockSMSGateway():
                 self.mailing.action_send_sms(res_ids=self.records[:5].ids)
 
@@ -131,7 +131,7 @@ class TestMassSMS(test_mail_full_common.TestSMSCommon):
             self.mailing, self.records[:5], check_sms=True
         )
 
-        with self.with_user('marketing'):
+        with self.with_user('user_marketing'):
             with self.mockSMSGateway():
                 self.mailing.action_send_sms(res_ids=self.records.ids)
 

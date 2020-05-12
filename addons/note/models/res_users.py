@@ -12,13 +12,13 @@ class Users(models.Model):
     _name = 'res.users'
     _inherit = ['res.users']
 
-    @api.model
-    def create(self, values):
-        user = super(Users, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        users = super().create(vals_list)
+        user_group_id = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')
         # for new employee, create his own 5 base note stages
-        if user.has_group('base.group_user'):
-            user._create_note_stages()
-        return user
+        users.filtered_domain([('groups_id', 'in', [user_group_id])])._create_note_stages()
+        return users
 
     @api.model
     def _init_data_user_note_stages(self):

@@ -33,7 +33,6 @@
         'views/mail_activity_views.xml',
         'views/project_assets.xml',
         'views/project_portal_templates.xml',
-        'views/project_rating_templates.xml',
         'data/digest_data.xml',
         'data/project_mail_template_data.xml',
         'data/project_data.xml',

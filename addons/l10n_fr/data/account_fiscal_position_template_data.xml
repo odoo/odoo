@@ -303,11 +303,6 @@
             <field name="tax_dest_id" ref="tva_import_outside_eu_20" />
         </record>
 <!-- Taux DOM-TOM -->
-        <record id="fp_tax_template_impexp_ha_encaissement" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_import_export" />
-            <field name="tax_src_id" ref="tva_acq_encaissement" />
-            <field name="tax_dest_id" ref="tva_import_0" />
-        </record>
         <record id="fp_tax_template_impexp_ha_specifique" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_import_export" />
             <field name="tax_src_id" ref="tva_acq_specifique" />
@@ -319,26 +314,11 @@
             <field name="tax_src_id" ref="tva_acq_intermediaire" />
             <field name="tax_dest_id" ref="tva_import_outside_eu_10" />
         </record>
-        <record id="fp_tax_template_impexp_ha_intermediaire" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_import_export" />
-            <field name="tax_src_id" ref="tva_acq_intermediaire_encaissement" />
-            <field name="tax_dest_id" ref="tva_import_0" />
-        </record>
 <!-- Taux Réduit -->
         <record id="fp_tax_template_impexp_ha_reduite" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_import_export" />
             <field name="tax_src_id" ref="tva_acq_reduite" />
             <field name="tax_dest_id" ref="tva_import_outside_eu_5_5" />
-        </record>
-        <record id="fp_tax_template_impexp_ha_encaissement_super_reduite" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_import_export" />
-            <field name="tax_src_id" ref="tva_acq_encaissement_super_reduite" />
-            <field name="tax_dest_id" ref="tva_import_0" />
-        </record>
-        <record id="fp_tax_template_impexp_ha_encaissement_reduite" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_import_export" />
-            <field name="tax_src_id" ref="tva_acq_encaissement_reduite" />
-            <field name="tax_dest_id" ref="tva_import_0" />
         </record>
 <!-- Taux super réduit -->
         <record id="fp_tax_template_impexp_ha_super_reduite" model="account.fiscal.position.tax.template">

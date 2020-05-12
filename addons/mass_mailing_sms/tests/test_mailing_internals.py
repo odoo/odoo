@@ -5,7 +5,6 @@ from ast import literal_eval
 
 from odoo.addons.mass_mailing.tests.common import TestMassMailCommon
 from odoo.tests.common import users
-from odoo.tools import mute_logger
 
 
 class TestMassMailValues(TestMassMailCommon):
@@ -14,6 +13,7 @@ class TestMassMailValues(TestMassMailCommon):
     def setUpClass(cls):
         super(TestMassMailValues, cls).setUpClass()
 
+        cls._create_mailing_list()
         cls.sms_template_partner = cls.env['sms.template'].create({
             'name': 'Test Template',
             'model_id': cls.env['ir.model']._get('res.partner').id,

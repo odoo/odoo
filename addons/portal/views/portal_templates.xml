@@ -43,8 +43,8 @@
     </template>
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
-        <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1">
-            <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
+        <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1 row">
+            <li class="breadcrumb-item ml-1"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
             <li t-if="page_name == 'my_details'" class="breadcrumb-item">Details</li>
         </ol>
     </template>
@@ -64,10 +64,10 @@
 
             <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container mt-3">
                 <div class="row align-items-center bg-white no-gutters border rounded">
-                    <div class="col">
+                    <div class="col-10">
                         <t t-call="portal.portal_breadcrumbs"></t>
                     </div>
-                    <div t-if="prev_record or next_record" class="col flex-grow-0">
+                    <div t-if="prev_record or next_record" class="col-2 flex-grow-0 text-center">
                         <t t-call='portal.record_pager'/>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                             <div t-attf-class="col-12 col-md col-lg-6">
                                 <t t-raw="0"/>
                             </div>
-                            <div id="o_my_sidebar" class="col-12 col-md col-lg-4 col-xl-3 o_my_sidebar">
+                            <div id="o_my_sidebar" class="pt-3 pt-lg-0 col-12 col-md col-lg-4 col-xl-3 o_my_sidebar">
                                 <div class="o_my_contact" t-if="sales_user">
                                     <t t-call="portal.portal_contact"/>
                                 </div>

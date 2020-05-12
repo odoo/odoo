@@ -291,16 +291,24 @@ class PurchaseOrderLine(models.Model):
                             # receive the product physically in our stock. To avoid counting the
                             # quantity twice, we do nothing.
                             pass
+                        elif (
+                            move.location_dest_id.usage == "internal"
+                            and move.to_refund
+                            and move.location_dest_id
+                            not in self.env["stock.location"].search(
+                                [("id", "child_of", move.warehouse_id.view_location_id.id)]
+                            )
+                        ):
+                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                         else:
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                 line.qty_received = total
 
-    @api.model
-    def create(self, values):
-        line = super(PurchaseOrderLine, self).create(values)
-        if line.order_id.state == 'purchase':
-            line._create_or_update_picking()
-        return line
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super(PurchaseOrderLine, self).create(vals_list)
+        lines.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
+        return lines
 
     def write(self, values):
         for line in self.filtered(lambda l: not l.display_type):

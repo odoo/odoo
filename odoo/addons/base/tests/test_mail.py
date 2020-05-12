@@ -313,6 +313,8 @@ class TestHtmlTools(BaseCase):
              '<!DOCTYPE...><html encoding="blah">some <b>content</b>\n<pre>--\nYours truly</pre>\n</html>'),
             ('<!DOCTYPE...><HTML encoding="blah">some <b>content</b></HtMl>', '--\nYours truly', True, False, False,
              '<!DOCTYPE...><html encoding="blah">some <b>content</b>\n<p>--<br/>Yours truly</p>\n</html>'),
+            ('<html><body>some <b>content</b></body></html>', '--\nYours & <truly>', True, True, False,
+             '<html><body>some <b>content</b>\n<pre>--\nYours &amp; &lt;truly&gt;</pre>\n</body></html>'),
             ('<html><body>some <b>content</b></body></html>', '<!DOCTYPE...>\n<html><body>\n<p>--</p>\n<p>Yours truly</p>\n</body>\n</html>', False, False, False,
              '<html><body>some <b>content</b>\n\n\n<p>--</p>\n<p>Yours truly</p>\n\n\n</body></html>'),
         ]
@@ -349,6 +351,7 @@ class TestEmailTools(BaseCase):
 
     def test_email_formataddr(self):
         email = 'joe@example.com'
+        email_idna = 'joe@examplé.com'
         cases = [
             # (name, address),          charsets            expected
             (('', email),               ['ascii', 'utf-8'], 'joe@example.com'),
@@ -357,17 +360,17 @@ class TestEmailTools(BaseCase):
             (('joe"doe', email),        ['ascii', 'utf-8'], '"joe\\"doe" <joe@example.com>'),
             (('joé', email),            ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@example.com>'),
             (('joé', email),            ['utf-8'],          '"joé" <joe@example.com>'),
-            (('', 'joé@example.com'),   ['ascii', 'utf-8'], UnicodeEncodeError),  # need SMTPUTF8 support
-            (('', 'joe@examplé.com'),   ['ascii', 'utf-8'], UnicodeEncodeError),  # need IDNA support
+            (('', email_idna),          ['ascii'],          'joe@xn--exampl-gva.com'),
+            (('', email_idna),          ['utf-8'],          'joe@examplé.com'),
+            (('joé', email_idna),       ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@xn--exampl-gva.com>'),
+            (('joé', email_idna),       ['utf-8'],          '"joé" <joe@examplé.com>'),
+            (('', 'joé@example.com'),   ['ascii', 'utf-8'], 'joé@example.com'),
         ]
 
         for pair, charsets, expected in cases:
             for charset in charsets:
                 with self.subTest(pair=pair, charset=charset):
-                    if isinstance(expected, str):
-                        self.assertEqual(formataddr(pair, charset), expected)
-                    else:
-                        self.assertRaises(expected, formataddr, pair, charset)
+                    self.assertEqual(formataddr(pair, charset), expected)
 
 
 class EmailConfigCase(SavepointCase):
@@ -401,7 +404,19 @@ class TestEmailMessage(TransactionCase):
             def __init__(this):
                 this.email_sent = False
 
-            def sendmail(this, smtp_from, smtp_to_list, message_str):
+            def sendmail(this, smtp_from, smtp_to_list, message_str,
+                         mail_options=(), rcpt_options=()):
+                this.email_sent = True
+                message_truth = (
+                    r'From: .+? <joe@example\.com>\r\n'
+                    r'To: .+? <joe@example\.com>\r\n'
+                    r'\r\n'
+                )
+                self.assertRegex(message_str, message_truth)
+
+            def send_message(this, message, smtp_from, smtp_to_list,
+                             mail_options=(), rcpt_options=()):
+                message_str = message.as_string()
                 this.email_sent = True
                 message_truth = (
                     r'From: .+? <joe@example\.com>\r\n'

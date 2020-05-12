@@ -204,6 +204,7 @@
                 <field name="hour_to" widget="float_time"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
+                <field name="week_type" readonly="1" force_save="1" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>
@@ -239,6 +240,8 @@
             <search string="Search Working Time">
                <field name="name" string="Working Time"/>
                <field name="company_id" groups="base.group_multi_company"/>
+               <separator/>
+               <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
            </search>
         </field>
     </record>
@@ -249,6 +252,7 @@
         <field name="arch" type="xml">
             <form string="Working Time">
                 <sheet string="Working Time">
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(resource_calendar_leaves_action_from_calendar)d" type="action"
                                 string="Time Off" icon="fa-plane"
@@ -264,8 +268,9 @@
                     </h1>
                     <group name="resource_details">
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="hours_per_day"/>
+                            <field name="hours_per_day" widget="float_time"/>
                             <field name="tz"/>
                         </group>
                     </group>

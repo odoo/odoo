@@ -1,17 +1,53 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.test_mail.tests import common
+import datetime
+import random
+
+from odoo.addons.mass_mailing.tests.common import TestMassMailCommon
+from odoo.addons.test_mail.tests.common import TestMailCommon
 
 
-class TestMailCommon(common.TestMailCommon):
+class TestMassMailCommon(TestMassMailCommon, TestMailCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMailCommon, cls).setUpClass()
+        super(TestMassMailCommon, cls).setUpClass()
 
-        cls.user_marketing = mail_new_test_user(
-            cls.env, login='marketing',
-            groups='base.group_user,base.group_partner_manager,mass_mailing.group_mass_mailing_user',
-            name='Martial Marketing', signature='--\nMartial')
+        cls.mailing_bl = cls.env['mailing.mailing'].create({
+            'name': 'SourceName',
+            'subject': 'MailingSubject',
+            'body_html': '<p>Hello ${object.name}</p>',
+            'mailing_type': 'mail',
+            'mailing_model_id': cls.env['ir.model']._get('mailing.test.blacklist').id,
+        })
+
+    @classmethod
+    def _create_test_blacklist_records(cls, model='mailing.test.blacklist', count=1):
+        """ Helper to create data. Currently simple, to be improved. """
+        records = cls.env[model].create([{
+            'name': 'TestRecord_%02d' % x,
+            'email_from': '"TestCustomer %02d" <test.record.%02d@test.example.com>' % (x, x),
+        } for x in range(0, count)])
+        return records
+
+    @classmethod
+    def _create_bounce_trace(cls, record, dt=None):
+        if dt is None:
+            dt = datetime.datetime.now() - datetime.timedelta(days=1)
+        randomized = random.random()
+        if 'email_normalized' in record:
+            trace_email = record.email_normalized
+        elif 'email_from' in record:
+            trace_email = record.email_from
+        else:
+            trace_email = record.email
+        trace = cls.env['mailing.trace'].create({
+            'model': record._name,
+            'res_id': record.id,
+            'bounced': dt,
+            # TDE FIXME: improve this with a mail-enabled heuristics
+            'email': trace_email,
+            'message_id': '<%5f@gilbert.boitempomils>' % randomized,
+        })
+        return trace

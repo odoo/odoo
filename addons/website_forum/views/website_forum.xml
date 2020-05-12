@@ -50,7 +50,7 @@
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-if="forum.active" t-call="website_forum.layout">
-        <section t-attf-class="s_cover parallax s_parallax_is_fixed py-3 #{forum.image_1920 and 'bg-black-50' or 'o_wforum_forum_card_bg text-white'}" data-scroll-background-ratio="1">
+        <section t-attf-class="s_cover parallax s_parallax_is_fixed py-3 #{forum.image_1920 and 'bg-black-50' or 'o_wforum_forum_card_bg text-white'}" data-scroll-background-ratio="1" data-snippet="s_cover">
             <span t-if="forum.image_1920" class="s_parallax_bg oe_img_bg" t-attf-style="background-image: url('#{website.image_url(forum, 'image_1920')}'); background-position: center;"/>
             <div class="container">
                 <div class="row s_nb_column_fixed">
@@ -470,7 +470,7 @@
 <template id="forum_all_oe_structure_forum_all_top" inherit_id="website_forum.forum_all" name="Forum Navigation (oe_structure_forum_all_top)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_forum_all_top']" position="replace">
         <div class="oe_structure oe_empty" id="oe_structure_forum_all_top">
-            <section class="s_cover parallax s_parallax_is_fixed bg-black-50 py-5" data-scroll-background-ratio="1">
+            <section class="s_cover parallax s_parallax_is_fixed bg-black-50 py-5" data-scroll-background-ratio="1" data-snippet="s_cover">
                 <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;"/>
                 <div class="container">
                     <div class="row s_nb_column_fixed">

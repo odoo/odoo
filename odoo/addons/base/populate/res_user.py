@@ -16,7 +16,7 @@ class Users(models.Model):
     _populate_dependencies = ["res.partner"]
 
     def _populate_factories(self):
-        partner_ids = self.env.registry.populated_models["res.partner"]
+        partner_ids = list(self.env.registry.populated_models["res.partner"])
 
         def get_partner_id(random=None, **kwargs):
             partner_id = random.choice(partner_ids)

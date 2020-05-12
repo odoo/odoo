@@ -15,7 +15,6 @@ var FormRenderer = BasicRenderer.extend({
     events: _.extend({}, BasicRenderer.prototype.events, {
         'click .o_notification_box .oe_field_translate': '_onTranslate',
         'click .o_notification_box .close': '_onTranslateNotificationClose',
-        'click .oe_title, .o_inner_group': '_onClick',
         'shown.bs.tab a[data-toggle="tab"]': '_onNotebookTabChanged',
     }),
     custom_events: _.extend({}, BasicRenderer.prototype.custom_events, {
@@ -1066,16 +1065,6 @@ var FormRenderer = BasicRenderer.extend({
         ev.stopPropagation();
         var index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
         this._activateNextFieldWidget(this.state, index);
-    },
-    /**
-     * Makes the Edit button bounce in readonly
-     *
-     * @private
-     */
-    _onClick: function () {
-        if (this.mode === 'readonly') {
-            this.trigger_up('bounce_edit');
-        }
     },
     /**
      * @override

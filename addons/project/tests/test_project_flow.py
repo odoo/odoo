@@ -142,7 +142,7 @@ class TestProjectFlow(TestProjectCommon):
             'parent_res_id': self.project_pigs.id,
             'rated_partner_id': self.partner_2.id,
             'partner_id': self.partner_2.id,
-            'rating': 10,
+            'rating': 5,
             'consumed': False,
         })
 
@@ -153,7 +153,7 @@ class TestProjectFlow(TestProjectCommon):
             'parent_res_id': self.project_pigs.id,
             'rated_partner_id': self.partner_2.id,
             'partner_id': self.partner_2.id,
-            'rating': 5,
+            'rating': 3,
             'consumed': True,
         })
 
@@ -170,7 +170,7 @@ class TestProjectFlow(TestProjectCommon):
         self.assertEqual(self.project_pigs.rating_percentage_satisfaction, 0)  # There is a rating but not a "great" on, just an "okay".
 
         # Consuming rating_good
-        first_task.rating_apply(10, rating_good.access_token)
+        first_task.rating_apply(5, rating_good.access_token)
 
         # We need to invalidate cache since it is not done automatically by the ORM
         # Our One2Many is linked to a res_id (int) for which the orm doesn't create an inverse

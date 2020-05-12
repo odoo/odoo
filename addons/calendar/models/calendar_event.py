@@ -196,9 +196,6 @@ class Meeting(models.Model):
     stop_date = fields.Date(
         'End Date', store=True, tracking=True,
         compute='_compute_dates', inverse='_inverse_dates')
-    event_tz = fields.Selection(
-        '_event_tz_get', string='Timezone',
-        default=lambda self: self.env.context.get('tz') or self.user_id.tz)
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
     description = fields.Text('Description')
     privacy = fields.Selection(
@@ -794,7 +791,7 @@ class Meeting(models.Model):
                 if 'name' in fields:
                     activity_values['summary'] = event.name
                 if 'description' in fields:
-                    activity_values['note'] = event.description
+                    activity_values['note'] = tools.plaintext2html(event.description)
                 if 'start' in fields:
                     # self.start is a datetime UTC *only when the event is not allday*
                     # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)

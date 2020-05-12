@@ -27,5 +27,6 @@ odoo.define('web._field_registry_owl', function (require) {
 
     // Basic fields
     registry
+        .add('badge', basicFields.FieldBadge)
         .add('boolean', basicFields.FieldBoolean);
 });

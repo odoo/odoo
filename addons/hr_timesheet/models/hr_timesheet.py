@@ -219,7 +219,7 @@ class AccountAnalyticLine(models.Model):
             self._add_timesheet_time(minutes_spent)
 
     def _add_timesheet_time(self, minutes_spent):
-        if self.unit_amount == 0 and minutes_spent < 1:
+        if self.unit_amount == 0 and minutes_spent < 1 and not self._context.get('prevent_deletion', False):
             # Check if unit_amount equals 0 and minutes_spent is less than 1 minute,
             # if yes, then remove the timesheet
             self.unlink()
