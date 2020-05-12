@@ -209,6 +209,11 @@ class AccountMove(models.Model):
 
             # Process taxes.
             for tax in to_process_taxes:
+                new_tax = tax
+                if tax.price_include and not tax.include_base_amount:
+                    new_tax = tax.new(tax.read()[0])
+                    new_tax.price_include = False
+                    new_tax.include_base_amount = False
                 tax_line = _find_existing_tax_line(self.line_ids, tax, parsed_key['tag_ids'], parsed_key['analytic_account_id'])
                 lines_to_sum = _get_lines_to_sum(self.line_ids, tax, parsed_key['tag_ids'], parsed_key['analytic_account_id'])
 
@@ -222,11 +227,11 @@ class AccountMove(models.Model):
                 # Compute the tax amount one by one.
                 if self.company_id.tax_calculation_rounding_method == 'round_globally':
                     quantity = len(lines_to_sum) if tax.amount_type == 'fixed' else 1
-                    taxes_vals = tax.compute_all(balance,
+                    taxes_vals = new_tax.compute_all(balance,
                         quantity=quantity, currency=line.currency_id, product=line.product_id, partner=line.partner_id)
                 else:
                     taxes_vals_line = [
-                        tax.compute_all(
+                        new_tax.compute_all(
                             lts.balance, quantity=1.0, currency=line.currency_id,
                             product=line.product_id, partner=line.partner_id
                         )
@@ -266,6 +271,8 @@ class AccountMove(models.Model):
                     amount = taxes_vals['taxes'][0]['amount']
                     account = _get_tax_account(tax, amount) or line.account_id
                     tax_vals = taxes_vals['taxes'][0]
+                    if tax.price_include and not tax.include_base_amount:
+                        tax_vals['id'] = tax.id
 
                     name = tax_vals['name']
                     line_vals = {
