@@ -1743,6 +1743,54 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('input field: set and remove value, then wait for onchange', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.onchanges = {
+            product_id(obj) {
+                obj.foo = obj.product_id ? "onchange value" : false;
+            },
+        };
+
+        let def;
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            async mockRPC(route, args) {
+                const result = this._super(...arguments);
+                if (args.method === "onchange") {
+                    await Promise.resolve(def);
+                }
+                return result;
+            },
+            fieldDebounce: 1000, // needed to accurately mock what really happens
+        });
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        assert.strictEqual(form.$('input[name="foo"]').val(), "");
+
+        await testUtils.fields.editInput(form.$('input[name="foo"]'), "test"); // set value for foo
+        await testUtils.fields.editInput(form.$('input[name="foo"]'), ""); // remove value for foo
+
+        // trigger the onchange by setting a product
+        await testUtils.fields.many2one.clickOpenDropdown('product_id');
+        await testUtils.fields.many2one.clickHighlightedItem('product_id');
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'onchange value',
+            'input should contain correct value after onchange');
+
+        form.destroy();
+    });
+
     QUnit.module('UrlWidget');
 
     QUnit.test('url widget in form view', async function (assert) {

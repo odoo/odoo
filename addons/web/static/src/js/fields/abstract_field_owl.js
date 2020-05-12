@@ -454,6 +454,18 @@ odoo.define('web.AbstractFieldOwl', function (require) {
             return `text-${decoration.split('-')[1]}`;
         }
         /**
+         * Compares the given value with the last value that has been set.
+         * Note that we compare unparsed values. Handles the special case where no
+         * value has been set yet, and the given value is the empty string.
+         *
+         * @private
+         * @param {any} value
+         * @returns {boolean} true iff values are the same
+         */
+        _isLastSetValue(value) {
+            return this._lastSetValue === value || (this.value === false && value === '');
+        }
+        /**
          * This method check if a value is the same as the current value of the
          * field. For example, a fieldDate component might want to use the moment
          * specific value isSame instead of ===.
@@ -498,9 +510,8 @@ odoo.define('web.AbstractFieldOwl', function (require) {
          * @returns {Promise}
          */
         _setValue(value, options) {
-            // we try to avoid doing useless work, if the value given has not
-            // changed.  Note that we compare the unparsed values.
-            if (this._lastSetValue === value || (this.value === false && value === '')) {
+            // we try to avoid doing useless work, if the value given has not changed.
+            if (this._isLastSetValue(value)) {
                 return Promise.resolve();
             }
             this._lastSetValue = value;
