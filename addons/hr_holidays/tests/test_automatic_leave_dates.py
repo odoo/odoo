@@ -6,7 +6,6 @@ from odoo.tests.common import Form, tagged
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
 
 
-@tagged('prout')
 class TestAutomaticLeaveDates(TestHrHolidaysBase):
     def setUp(self):
         super(TestAutomaticLeaveDates, self).setUp()
