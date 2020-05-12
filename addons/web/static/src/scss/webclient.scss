@@ -82,6 +82,11 @@ div.o_boolean_toggle.custom-control.custom-checkbox {
     background-color: #dee2e6;
 }
 
+// Light version of contextual bg colors (e.g. bg-danger-light)
+@each $name in ('primary', 'secondary', 'success', 'danger', 'warning', 'info') {
+    @include bg-variant('.bg-#{$name}-light', rgba(theme-color($name), .5), #333);
+}
+
 .o_web_accesskey_overlay {
     font-family: $font-family-sans-serif;
 }

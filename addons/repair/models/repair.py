@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from random import randint
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
@@ -794,8 +795,11 @@ class RepairTags(models.Model):
     _name = "repair.tags"
     _description = "Repair Tags"
 
+    def _get_default_color(self):
+        return randint(1, 11)
+
     name = fields.Char('Tag Name', required=True)
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', default=_get_default_color)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists!"),

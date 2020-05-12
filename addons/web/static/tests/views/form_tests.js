@@ -4472,6 +4472,52 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('navigation with tab key selects a value in form view', async function (assert) {
+        assert.expect(5);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="int_field"/>
+                    <field name="qux"/>
+                    <field name="trululu"/>
+                    <field name="date"/>
+                    <field name="datetime"/>
+                </form>`,
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        await testUtils.dom.click(form.el.querySelector('input[name="display_name"]'));
+        await testUtils.fields.triggerKeydown(document.activeElement, 'tab');
+        assert.strictEqual(document.getSelection().toString(), "10",
+            "int_field value should be selected");
+
+        await testUtils.fields.triggerKeydown(document.activeElement, 'tab');
+        assert.strictEqual(document.getSelection().toString(), "0.4",
+            "qux field value should be selected");
+
+        await testUtils.fields.triggerKeydown(document.activeElement, 'tab');
+        assert.strictEqual(document.getSelection().toString(), "aaa",
+            "trululu field value should be selected");
+
+        await testUtils.fields.triggerKeydown(document.activeElement, 'tab');
+        assert.strictEqual(document.getSelection().toString(), "01/25/2017",
+            "date field value should be selected");
+
+        await testUtils.fields.triggerKeydown(document.activeElement, 'tab');
+        assert.strictEqual(document.getSelection().toString(), "12/12/2016 10:55:05",
+            "datetime field value should be selected");
+
+        form.destroy();
+    });
+
     QUnit.test('clicking on a stat button with a context', async function (assert) {
         assert.expect(1);
 
@@ -6822,7 +6868,7 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: '<form>' +
-                    '<header><field name="trululu" widget="statusbar" clickable="True"/></header>' +
+                    '<header><field name="trululu" widget="statusbar" clickable="true"/></header>' +
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
@@ -7499,7 +7545,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('bounce edit button in readonly mode', async function (assert) {
-        assert.expect(3);
+        assert.expect(2);
 
         var form = await createView({
             View: FormView,
@@ -7511,21 +7557,17 @@ QUnit.module('Views', {
                     '</div>' +
                 '</form>',
             res_id: 1,
-            intercepts: {
-                bounce_edit: function() {
-                    assert.step('bounce');
-                },
-            },
         });
 
         // in readonly
         await testUtils.dom.click(form.$('[name="display_name"]'));
-        assert.verifySteps(['bounce']);
+        assert.hasClass(form.$('.o_form_button_edit'), 'o_catch_attention');
 
         // in edit
         await testUtils.form.clickEdit(form);
         await testUtils.dom.click(form.$('[name="display_name"]'));
-        assert.verifySteps([]);
+        // await testUtils.nextTick();
+        assert.containsNone(form, 'button.o_catch_attention:visible');
 
         form.destroy();
     });

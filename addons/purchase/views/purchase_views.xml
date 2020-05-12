@@ -348,7 +348,7 @@
                                     </div>
                                 </group>
                                 <group name="other_info">
-                                    <field name="user_id" domain="[('share', '=', False)]"/>
+                                    <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                     <field name="invoice_status" attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'to approve', 'cancel'))]}"/>
                                     <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}" options="{'no_create': True}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
@@ -518,22 +518,25 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
-                      decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" class="o_purchase_order" js_class="purchase_list_dashboard">
+                      class="o_purchase_order" js_class="purchase_list_dashboard">
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
-                    <field name="name" string="Reference" readonly="1"/>
-                    <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
+                    <field name="name" string="Reference" readonly="1" decoration-bf="1"/>
+                    <field name="date_order" attrs="{'invisible': ['|', '|', ('state', '=', 'purchase'), ('state', '=', 'done'), ('state', '=', 'cancel')]}"
+                        invisible="not context.get('quotation_only', False)" widget="remaining_days" optional="show"/>
                     <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="partner_id" readonly="1"/>
                     <field name="company_id" readonly="1" options="{'no_create': True}"
                         groups="base.group_multi_company" optional="show"/>
                     <field name="date_planned" invisible="context.get('quotation_only', False)" optional="show"/>
-                    <field name="user_id" optional="show"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
-                    <field name="amount_total" sum="Total amount" widget="monetary" optional="show"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="1"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="state" optional="show"/>
+                    <field name="state" optional="show" widget="badge" decoration-success="state == 'purchase' or state == 'done'"
+                        decoration-warning="state == 'to approve'" decoration-info="state == 'draft' or state == 'sent'"/>
                     <field name="invoice_status" optional="hide"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
@@ -547,19 +550,20 @@
                 <tree decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" string="Purchase Order" class="o_purchase_order">
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
-                    <field name="name" string="Reference" readonly="1"/>
+                    <field name="name" string="Reference" readonly="1" decoration-bf="1"/>
                     <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
-                    <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
+                    <field name="date_approve" widget="date" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                     <field name="date_planned" invisible="context.get('quotation_only', False)" optional="show"/>
-                    <field name="user_id" optional="show"/>
+                    <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                    <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
-                    <field name="amount_total" sum="Total amount" widget="monetary" optional="show"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="1"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state" invisible="1"/>
-                    <field name="invoice_status" optional="show"/>
+                    <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to invoice'" optional="show"/>
                 </tree>
             </field>
         </record>

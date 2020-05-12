@@ -1,4 +1,12 @@
 <templates>
+    <t t-name="base_import.ImportMenu" owl="1">
+        <li class="o_menu_item o_import_menu" role="menuitem">
+            <button type="button" class="dropdown-item" t-on-click="_onImportClick">
+                Import Records
+            </button>
+        </li>
+    </t>
+
     <t t-name="ImportView">
         <t t-set="_id" t-value="_.uniqueId('export')"/>
         <form action="" method="post" enctype="multipart/form-data" class="oe_import">
@@ -216,20 +224,5 @@
         </span>
         <t t-if="error.rows"  t-esc="at(error.rows)"/>
         <t t-if="error.moreinfo" t-raw="info(error.moreinfo)"/>
-    </t>
-    <t t-name="ImportView.import_button">
-        <button t-if='widget and widget.importEnabled' type="button" class="btn btn-secondary o_button_import">
-            Import
-        </button>
-    </t>
-    <t t-extend="ListView.buttons">
-        <t t-jquery="button.o_list_button_add" t-operation="after">
-           <t t-call="ImportView.import_button"/>
-        </t>
-    </t>
-    <t t-extend="KanbanView.buttons">
-        <t t-jquery="button" t-operation="after">
-            <t t-call="ImportView.import_button"/>
-        </t>
     </t>
 </templates>

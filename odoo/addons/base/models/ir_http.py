@@ -241,8 +241,6 @@ class IrHttp(models.AbstractModel):
             # Replace uid placeholder by the current request.uid
             if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
                 arguments[key] = val.with_user(request.uid)
-                if not val.exists():
-                    return cls._handle_exception(werkzeug.exceptions.NotFound())
 
     @classmethod
     def _generate_routing_rules(cls, modules, converters):

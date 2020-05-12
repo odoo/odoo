@@ -233,8 +233,9 @@
                                     <group string="Email" groups="base.group_no_one">
                                         <field name="message_bounce" readonly="1"/>
                                     </group>
-                                    <group string="Tracking" groups="base.group_multi_company" name="categorization">
+                                    <group string="Tracking" name="categorization">
                                         <field name="company_id"
+                                            groups="base.group_multi_company"
                                             options="{'no_create': True}"/>
                                         <field name="campaign_id" />
                                         <field name="medium_id"/>
@@ -384,8 +385,9 @@
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
-                                        <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value" class="oe_kanban_avatar float-right"/>
+                                        <img t-if="record.user_id.raw_value"
+                                             t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
+                                             t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar float-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -498,16 +500,19 @@
                                     </div>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <div>
-                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                    <div class="o_kanban_record_title">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="o_kanban_record_subtitle">
+                                        <t t-if="record.planned_revenue.raw_value">
+                                            <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                            <span t-if="record.partner_id.value"> - </span>
+                                        </t>
+                                        <span t-if="record.partner_id.value" t-esc="record.partner_id.value"></span>
                                     </div>
                                     <div>
                                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
-                                    <div class="text-muted o_kanban_record_subtitle">
-                                        <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/><span t-if="record.partner_id.value">,</span></t> <span t-if="record.partner_id.value"> <t t-esc="record.partner_id.value"/></span>
-                                    </div>
-
                                     <div class="o_kanban_record_bottom">
                                         <div class="oe_kanban_bottom_left">
                                             <field name="priority" widget="priority" groups="base.group_user"/>
@@ -517,8 +522,7 @@
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
                                         <div class="oe_kanban_bottom_right">
-                                            <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
-                                            <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value" class="oe_kanban_avatar"/>
+                                            <field name="user_id" widget="many2one_avatar_user"/>
                                         </div>
                                     </div>
                                 </div>

@@ -59,7 +59,7 @@
                 <field name="location_dest_id" options="{'no_create': True}"  attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations"/>
                 <field name="state"/>
                 <field name="is_done" attrs="{'readonly': ['|', ('parent.state', 'in', ('draft', 'new', 'done')), ('is_fresh_package', '=', True)]}"/>
-                <button name="action_show_package_details" string="Display package content" type="object" icon="fa-list" />
+                <button name="action_show_package_details" title="Display package content" type="object" icon="fa-list" />
             </tree>
         </field>
     </record>

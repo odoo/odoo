@@ -22,12 +22,12 @@ class WebsiteBlog(http.Controller):
     _post_comment_per_page = 10
 
     def tags_list(self, tag_ids, current_tag):
-        tag_ids = list(tag_ids) # required to avoid using the same list
+        tag_ids = list(tag_ids)  # required to avoid using the same list
         if current_tag in tag_ids:
             tag_ids.remove(current_tag)
         else:
             tag_ids.append(current_tag)
-        tag_ids = request.env['blog.tag'].browse(tag_ids).exists()
+        tag_ids = request.env['blog.tag'].browse(tag_ids)
         return ','.join(slug(tag) for tag in tag_ids)
 
     def nav_list(self, blog=None):
@@ -57,6 +57,7 @@ class WebsiteBlog(http.Controller):
     def _prepare_blog_values(self, blogs, blog=False, date_begin=False, date_end=False, tags=False, state=False, page=False):
         """ Prepare all values to display the blogs index page or one specific blog"""
         BlogPost = request.env['blog.post']
+        BlogTag = request.env['blog.tag']
 
         # prepare domain
         domain = request.website.website_domain()
@@ -66,15 +67,16 @@ class WebsiteBlog(http.Controller):
 
         if date_begin and date_end:
             domain += [("post_date", ">=", date_begin), ("post_date", "<=", date_end)]
-
         active_tag_ids = tags and [unslug(tag)[1] for tag in tags.split(',')] or []
+        active_tags = BlogTag
         if active_tag_ids:
-            fixed_tag_slug = ",".join(slug(t) for t in request.env['blog.tag'].browse(active_tag_ids).exists())
+            active_tags = BlogTag.browse(active_tag_ids).exists()
+            fixed_tag_slug = ",".join(slug(t) for t in active_tags)
             if fixed_tag_slug != tags:
                 new_url = request.httprequest.full_path.replace("/tag/%s" % tags, "/tag/%s" % fixed_tag_slug, 1)
                 if new_url != request.httprequest.full_path:  # check that really replaced and avoid loop
                     return request.redirect(new_url, 301)
-            domain += [('tag_ids', 'in', active_tag_ids)]
+            domain += [('tag_ids', 'in', active_tags.ids)]
 
         if request.env.user.has_group('website.group_website_designer'):
             count_domain = domain + [("website_published", "=", True), ("post_date", "<=", fields.Datetime.now())]
@@ -88,8 +90,8 @@ class WebsiteBlog(http.Controller):
         else:
             domain += [("post_date", "<=", fields.Datetime.now())]
 
-        use_cover = request.website.viewref('website_blog.opt_blog_cover_post').active
-        fullwidth_cover = request.website.viewref('website_blog.opt_blog_cover_post_fullwidth_design').active
+        use_cover = request.website.is_view_active('website_blog.opt_blog_cover_post')
+        fullwidth_cover = request.website.is_view_active('website_blog.opt_blog_cover_post_fullwidth_design')
 
         # if blog, we show blog title, if use_cover and not fullwidth_cover we need pager + latest always
         offset = (page - 1) * self._blog_post_per_page
@@ -127,7 +129,7 @@ class WebsiteBlog(http.Controller):
             'pager': pager,
             'posts': posts.with_prefetch(post_ids),
             'tag': tags,
-            'active_tag_ids': active_tag_ids,
+            'active_tag_ids': active_tags.ids,
             'domain': domain,
             'state_info': state and {"state": state, "published": published_count, "unpublished": unpublished_count},
             'blogs': blogs,
@@ -204,19 +206,6 @@ class WebsiteBlog(http.Controller):
         BlogPost = request.env['blog.post']
         date_begin, date_end = post.get('date_begin'), post.get('date_end')
 
-        pager_url = "/blogpost/%s" % blog_post.id
-
-        pager = request.website.pager(
-            url=pager_url,
-            total=len(blog_post.website_message_ids),
-            page=page,
-            step=self._post_comment_per_page,
-            scope=7
-        )
-        pager_begin = (page - 1) * self._post_comment_per_page
-        pager_end = page * self._post_comment_per_page
-        comments = blog_post.website_message_ids[pager_begin:pager_end]
-
         domain = request.website.website_domain()
         blogs = blog.search(domain, order="create_date, id asc")
 
@@ -259,16 +248,18 @@ class WebsiteBlog(http.Controller):
             'next_post': next_post,
             'date': date_begin,
             'blog_url': blog_url,
-            'pager': pager,
-            'comments': comments,
         }
         response = request.render("website_blog.blog_post_complete", values)
 
-        request.session[request.session.sid] = request.session.get(request.session.sid, [])
-        if not (blog_post.id in request.session[request.session.sid]):
-            request.session[request.session.sid].append(blog_post.id)
+        if blog_post.id not in request.session.get('posts_viewed', []):
+            if not request.session.get('posts_viewed'):
+                request.session['posts_viewed'] = []
+
+            request.session['posts_viewed'].append(blog_post.id)
+            request.session.modified = True
+
             # Increase counter
-            blog_post.sudo().write({
+            blog_post.sudo()._write({
                 'visits': blog_post.visits + 1,
                 'write_date': blog_post.write_date,
             })

@@ -32,13 +32,19 @@ $o-searchpanel-filter-default-color: #D59244;
         }
 
         .o_search_panel_label {
-            display: flex;
+            align-items: center;
             cursor: pointer;
+            display: flex;
+            justify-content: space-between;
             user-select: none;
 
+            // Without counters: the caret is set at the right border
+            &:not(.o_with_counters) {
+                width: 100%;
+            }
+
             .o_toggle_fold {
-                margin-left: auto;
-                padding: 3px;
+                width: 2rem;
             }
         }
         .o_search_panel_section_header {
@@ -64,14 +70,17 @@ $o-searchpanel-filter-default-color: #D59244;
         }
         .o_search_panel_category_value {
             cursor: pointer;
+
             header {
+                align-items: center;
+                display: flex;
+                justify-content: space-between;
                 margin-top: -4px;
                 margin-bottom: -4px;
-                padding: 4px 7px;
-
-                .o_toggle_fold {
-                    padding-left: 11px;
-                }
+                padding: 4px 6px;
+            }
+            .o_search_panel_label.o_with_counters {
+                overflow: hidden;
             }
             .o_search_panel_category_value {
                 position: relative;
@@ -97,6 +106,13 @@ $o-searchpanel-filter-default-color: #D59244;
                         top: 11px;
                     }
                 }
+            }
+        }
+        .o_search_panel_filter_group {
+            padding-right: 6px;
+
+            .o_search_panel_label.o_with_counters {
+                justify-content: flex-start;
             }
         }
     }

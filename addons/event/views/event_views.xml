@@ -152,7 +152,7 @@
             <field name="res_model">event.registration</field>
             <field name="name">Attendees</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
-            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'search_default_expected': True}</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Add a new attendee
@@ -186,6 +186,7 @@
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
                             <button name="%(event.act_event_registration_from_event)d"
                                     type="action"
+                                    context="{'search_default_expected': True}"
                                     class="oe_stat_button"
                                     icon="fa-users"
                                     help="Total Registrations for this Event">
@@ -321,7 +322,6 @@
                     <field name="seats_reserved"/>
                     <field name="seats_used"/>
                     <field name="seats_expected"/>
-                    <field name="color"/>
                     <field name="legend_blocked"/>
                     <field name="legend_normal"/>
                     <field name="legend_done"/>
@@ -329,7 +329,7 @@
                     <field name="activity_state"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="d-flex flex-column p-0 {{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
+                            <div t-attf-class="d-flex flex-column p-0 oe_kanban_card oe_kanban_global_click">
                                 <div class="o_kanban_content p-0 m-0 position-relative row d-flex flex-fill">
                                     <div class="col-3 bg-primary p-2 text-center d-flex flex-column justify-content-center">
                                         <div t-esc="record.date_begin.raw_value.getDate()" class="o_event_fontsize_20"/>
@@ -349,22 +349,23 @@
                                             <div><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-esc="record.address_id.value"/></div>
                                         </div>
                                         <h5 class="o_event_fontsize_11 p-0">
-                                            <a name="%(act_event_registration_from_event)d" type="action">
+                                            <a name="%(act_event_registration_from_event)d" type="action" context="{'search_default_expected': True}">
                                                 <t t-esc="record.seats_expected.raw_value"/> Expected attendees
                                             </a>
                                             <t t-set="total_seats" t-value="record.seats_reserved.raw_value + record.seats_used.raw_value"/>
-                                            <t t-if="total_seats > 0 "><br/>
-                                                <a class="pl-2" name="%(event_event_action_pivot)d" type="action">
+                                            <div class="pt-2 pt-md-0" t-if="total_seats > 0">
+                                                <a class="pl-2" name="%(act_event_registration_from_event)d" type="action" context="{'search_default_confirmed': True}">
                                                     <i class="fa fa-level-up fa-rotate-90" title="Confirmed"/><span class="pl-2"><t t-esc="total_seats"/> Confirmed</span>
                                                 </a>
-                                            </t>
+                                            </div>
                                         </h5>
                                         <div class="text-right">
                                             <div class="float-left"><field name="activity_ids" widget="kanban_activity"/></div>
                                             <field name="kanban_state" widget="state_selection"/>
-                                            <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
-                                            <img class="oe_kanban_avatar o_event_fit_20 ml-2 rounded-circle" t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
-                                                t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value"/>
+                                            <img t-if="record.user_id.raw_value"
+                                                 class="oe_kanban_avatar o_event_fit_20 ml-2 rounded-circle"
+                                                 t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
+                                                 t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
                                         </div>
                                     </div>
                                 </div>
@@ -435,7 +436,6 @@
                 <pivot string="Event">
                     <field name="name" type="row"/>
                     <field name="seats_reserved" type="measure"/>
-                    <field name="color" invisible="1"/>
                 </pivot>
             </field>
         </record>
@@ -495,9 +495,9 @@
                     <field name="state" readonly="0"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="message_needaction" invisible="1"/>
-                    <button name="action_confirm" string="Confirm Registration" states="draft" type="object" icon="fa-check text-success"/>
-                    <button name="action_set_done" string="Attended the Event" states="open" type="object" icon="fa-level-down text-success"/>
-                    <button name="action_cancel" string="Cancel Registration" states="draft,open" type="object" icon="fa-times-circle text-danger"/>
+                    <button name="action_confirm" string="Confirm" states="draft" type="object" icon="fa-check"/>
+                    <button name="action_set_done" string="Mark as Attending" states="open" type="object" icon="fa-level-down"/>
+                    <button name="action_cancel" string="Cancel" states="draft,open" type="object" icon="fa-times"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>

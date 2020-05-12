@@ -14,3 +14,20 @@
     @include o-position-absolute($top: 50%, $left: 50%);
     transform: translate(-50%, -50%)
 }
+
+.ui-autocomplete {
+    max-height: 50vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .ui-menu-item {
+        padding: 0;
+        > a {
+            &.ui-state-active {
+                border: none;
+                font-weight: normal;
+                margin: 0;
+            }
+        }
+    }
+}

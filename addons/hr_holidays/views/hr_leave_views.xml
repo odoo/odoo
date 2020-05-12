@@ -499,15 +499,15 @@
                 <field name="user_id" invisible="1"/>
                 <field name="message_needaction" invisible="1"/>
                 <button string="Approve" name="action_approve" type="object"
-                    icon="fa-check text-success"
+                    icon="fa-thumbs-up"
                     states="confirm"
                     groups="hr_holidays.group_hr_holidays_responsible"/>
                 <button string="Validate" name="action_validate" type="object"
-                    icon="fa-check text-success"
+                    icon="fa-check"
                     states="validate1"
                     groups="hr_holidays.group_hr_holidays_manager"/>
                 <button string="Refuse" name="action_refuse" type="object"
-                    icon="fa-ban text-danger"
+                    icon="fa-times"
                     states="confirm,validate,validate1"
                     groups="hr_holidays.group_hr_holidays_manager"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>

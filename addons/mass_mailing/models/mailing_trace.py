@@ -25,7 +25,7 @@ class MailingTrace(models.Model):
              'However the ID is needed for several action and controllers.',
         index=True,
     )
-    email = fields.Char(string="Email")
+    email = fields.Char(string="Email", help="Normalized email address")
     message_id = fields.Char(string='Message-ID')
     # document
     model = fields.Char(string='Document model')

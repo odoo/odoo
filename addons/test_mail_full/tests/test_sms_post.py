@@ -105,9 +105,8 @@ class TestSMSPost(test_mail_full_common.TestSMSCommon, test_mail_full_common.Tes
             with self.mockSMSGateway():
                 messages = record._message_sms(self._test_body)
 
-        # should not crash but no sms / no recipients
-        notifs = self.env['mail.notification'].search([('mail_message_id', 'in', messages.ids)])
-        self.assertFalse(notifs)
+        # should not crash but have a failed notification
+        self.assertSMSNotification([{'partner': self.env['res.partner'], 'number': False, 'state': 'exception', 'failure_type': 'sms_number_missing'}], self._test_body, messages)
 
     def test_message_sms_on_field_w_partner(self):
         with self.with_user('employee'), self.mockSMSGateway():
@@ -124,6 +123,21 @@ class TestSMSPost(test_mail_full_common.TestSMSCommon, test_mail_full_common.Tes
             messages = test_record._message_sms(self._test_body, number_field='mobile_nbr')
 
         self.assertSMSNotification([{'number': self.test_record.mobile_nbr}], self._test_body, messages)
+
+    def test_message_sms_on_field_wo_partner_wo_value(self):
+        """ Test record without a partner and without phone values. """
+        self.test_record.write({
+            'customer_id': False,
+            'phone_nbr': False,
+            'mobile_nbr': False,
+        })
+
+        with self.with_user('employee'), self.mockSMSGateway():
+            test_record = self.env['mail.test.sms'].browse(self.test_record.id)
+            messages = test_record._message_sms(self._test_body)
+
+        # should not crash but have a failed notification
+        self.assertSMSNotification([{'partner': self.env['res.partner'], 'number': False, 'state': 'exception', 'failure_type': 'sms_number_missing'}], self._test_body, messages)
 
     def test_message_sms_on_field_wo_partner_default_field(self):
         self.test_record.write({'customer_id': False})

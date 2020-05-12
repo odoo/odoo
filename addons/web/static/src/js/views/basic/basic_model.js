@@ -91,6 +91,7 @@ var Domain = require('web.Domain');
 var session = require('web.session');
 var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
+var localStorage = require('web.local_storage');
 
 var _t = core._t;
 
@@ -3762,7 +3763,7 @@ var BasicModel = AbstractModel.extend({
      *
      * Reloads the currencies if the main model is 'res.currency'.
      * Reloads the webclient if we modify a res.company, to (un)activate the
-     * multi-company environment.
+     * multi-company environment if we are not in a tour test.
      *
      * @private
      * @param {Object} dataPoint
@@ -3774,7 +3775,7 @@ var BasicModel = AbstractModel.extend({
         if (dataPoint.model === 'res.currency') {
             session.reloadCurrencies();
         }
-        if (dataPoint.model === 'res.company') {
+        if (dataPoint.model === 'res.company' && !localStorage.getItem('running_tour')) {
             this.do_action('reload_context');
         }
         if (_.contains(this.noCacheModels, dataPoint.model)) {

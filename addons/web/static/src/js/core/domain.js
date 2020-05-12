@@ -5,6 +5,15 @@ var collections = require("web.collections");
 var pyUtils = require("web.py_utils");
 var py = window.py; // look py.js
 
+const TRUE_LEAF = [1, '=', 1];
+const FALSE_LEAF = [0, '=', 1];
+const TRUE_DOMAIN = [TRUE_LEAF];
+const FALSE_DOMAIN = [FALSE_LEAF];
+
+function compare(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+}
+
 /**
  * The Domain Class allows to work with a domain as a tree and provides tools
  * to manipulate array and string representations of domains.
@@ -58,23 +67,24 @@ var Domain = collections.Tree.extend({
             var fieldName = this._data[0];
             // We split the domain first part and check if it's a match
             // for the syntax 'parent.field'.
-            var parentField = this._data[0].split('.');
-            if ('parent' in values && parentField.length === 2) {
-                fieldName = parentField[1];
-                isParentField = parentField[0] === 'parent' &&
-                    fieldName in values.parent;
-            }
-            if (!(this._data[0] in values) && !(isParentField)) {
-                throw new Error(_.str.sprintf(
-                    "Unknown field %s in domain",
-                    this._data[0]
-                ));
-            }
-            var fieldValue;
-            if (!isParentField) {
-                fieldValue = values[fieldName];
+
+            let fieldValue;
+            if (compare(this._data, FALSE_LEAF) || compare(this._data, TRUE_LEAF)) {
+                fieldValue = this._data[0];
             } else {
-                fieldValue = values.parent[fieldName];
+                var parentField = this._data[0].split('.');
+                if ('parent' in values && parentField.length === 2) {
+                    fieldName = parentField[1];
+                    isParentField = parentField[0] === 'parent' &&
+                        fieldName in values.parent;
+                }
+                if (!(this._data[0] in values) && !(isParentField)) {
+                    throw new Error(_.str.sprintf(
+                        "Unknown field %s in domain",
+                        this._data[0]
+                    ));
+                }
+                fieldValue = isParentField ? values.parent[fieldName] : values[fieldName];
             }
 
             switch (this._data[1]) {
@@ -517,6 +527,11 @@ var Domain = collections.Tree.extend({
         return astToStack(ast);
     },
 });
+
+Domain.TRUE_LEAF = TRUE_LEAF;
+Domain.FALSE_LEAF = FALSE_LEAF;
+Domain.TRUE_DOMAIN = TRUE_DOMAIN;
+Domain.FALSE_DOMAIN = FALSE_DOMAIN;
 
 return Domain;
 });

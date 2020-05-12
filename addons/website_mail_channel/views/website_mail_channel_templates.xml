@@ -37,7 +37,8 @@
                     <div class="s_channel"
                               t-att-data-id="group.id"
                               data-object="mail.channel"
-                              t-att-data-follow="'on' if 'unsubscribe' in request.params else 'off'">
+                              t-att-data-follow="'on' if 'unsubscribe' in request.params else 'off'"
+                              data-snippet="s_channel">
                         <div class="input-group js_mg_follow_form">
                             <input
                                   type="email"

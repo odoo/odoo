@@ -1030,9 +1030,9 @@ links to the rating object. A very basic email template could look like this:
     <p>Hi,</p>
     <p>How satsified are you?</p>
     <ul>
-        <li><a href="/rating/${access_token}/10">Satisfied</a></li>
-        <li><a href="/rating/${access_token}/5">Not satisfied</a></li>
-        <li><a href="/rating/${access_token}/1">Very unsatisfied</a></li>
+        <li><a href="/rate/${access_token}/5">Satisfied</a></li>
+        <li><a href="/rate/${access_token}/3">Not satisfied</a></li>
+        <li><a href="/rate/${access_token}/1">Very unsatisfied</a></li>
     </ul>
     ]]></field>
     </record>

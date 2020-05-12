@@ -234,8 +234,10 @@
                                     <field name="vendor_id"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
-                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value" class="oe_kanban_avatar float-right"/>
+                                    <img t-if="record.user_id.raw_value"
+                                         t-att-title="record.user_id.value"
+                                         t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
+                                         t-att-alt="record.user_id.value" class="oe_kanban_avatar float-right"/>
                                 </div>
                             </div>
                         </div>

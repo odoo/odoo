@@ -124,15 +124,15 @@ class Attendee(models.Model):
                                 'mimetype': 'text/calendar',
                                 'datas': base64.b64encode(ics_file)})
                     ]
-                body = self.env['mail.template'].with_context(rendering_context)._render_template(
-                    invitation_template.body_html,
-                    self._name,
-                    attendee.ids)
-                # TODO check lang
-                subject = self.env['mail.template']._render_template(
-                    invitation_template.subject,
-                    self._name,
-                    attendee.ids)
+                body = invitation_template.with_context(rendering_context)._render_field(
+                    'body_html',
+                    attendee.ids,
+                    compute_lang=True,
+                    post_process=True)[attendee.id]
+                subject = invitation_template._render_field(
+                    'subject',
+                    attendee.ids,
+                    compute_lang=True)[attendee.id]
                 attendee.event_id.with_context(no_document=True).message_notify(
                     body=body,
                     subject=subject,

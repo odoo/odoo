@@ -3,10 +3,11 @@
 
 import logging
 
-from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 
 from odoo.http import request
 from odoo.addons.website.models import ir_http
+from odoo.addons.http_routing.models.ir_http import url_for
 
 _logger = logging.getLogger(__name__)
 
@@ -55,12 +56,9 @@ class Website(models.Model):
                 Pricelist._get_website_pricelists_domain(website.id)
             )
 
-    @api.depends_context('website_id')
     def _compute_pricelist_id(self):
         for website in self:
-            if website._context.get('website_id') != website.id:
-                website = website.with_context(website_id=website.id)
-            website.pricelist_id = website.get_current_pricelist()
+            website.pricelist_id = website.with_context(website_id=website.id).get_current_pricelist()
 
     # This method is cached, must not return records! See also #8795
     @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl', 'partner_pl', 'order_pl')
@@ -364,3 +362,8 @@ class Website(models.Model):
         if self.env.user.has_group('sales_team.group_sale_salesman'):
             return self.env.ref('website.backend_dashboard').read()[0]
         return super(Website, self).action_dashboard_redirect()
+
+    def get_suggested_controllers(self):
+        suggested_controllers = super(Website, self).get_suggested_controllers()
+        suggested_controllers.append((_('eCommerce'), url_for('/shop'), 'website_sale'))
+        return suggested_controllers

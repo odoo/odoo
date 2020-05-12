@@ -11,6 +11,7 @@ var AbstractRenderer = require('web.AbstractRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
+const utils = require('web.utils');
 var widgetRegistry = require('web.widget_registry');
 
 const { WidgetAdapterMixin } = require('web.OwlCompatibility');
@@ -49,26 +50,30 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      * Called each time the renderer is attached into the DOM.
      */
     on_attach_callback: function () {
+        // call on_attach_callback on field widgets
         for (const handle in this.allFieldWidgets) {
             this.allFieldWidgets[handle].forEach(widget => {
-                if (widget.on_attach_callback) {
+                if (!utils.isComponent(widget.constructor) && widget.on_attach_callback) {
                     widget.on_attach_callback();
                 }
             });
         }
+        // call on_attach_callback on child components (including field components)
         WidgetAdapterMixin.on_attach_callback.call(this);
     },
     /**
      * Called each time the renderer is detached from the DOM.
      */
     on_detach_callback: function () {
+        // call on_detach_callback on field widgets
         for (const handle in this.allFieldWidgets) {
             this.allFieldWidgets[handle].forEach(widget => {
-                if (widget.on_detach_callback) {
+                if (!utils.isComponent(widget.constructor) && widget.on_detach_callback) {
                     widget.on_detach_callback();
                 }
             });
         }
+        // call on_detach_callback on child components (including field components)
         WidgetAdapterMixin.on_detach_callback.call(this);
     },
 

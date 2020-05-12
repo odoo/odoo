@@ -914,7 +914,7 @@ class Field(MetaField('DummyField', (object,), {})):
             recs = record if self.recursive else env.records_to_compute(self)
             try:
                 self.compute_value(recs)
-            except AccessError:
+            except (AccessError, MissingError):
                 self.compute_value(record)
 
         try:
@@ -949,7 +949,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     recs = record if self.recursive else record._in_cache_without(self)
                     try:
                         self.compute_value(recs)
-                    except AccessError:
+                    except (AccessError, MissingError):
                         self.compute_value(record)
                     value = env.cache.get(record, self)
 
@@ -1446,7 +1446,10 @@ class _String(Field):
             if self.translate is True and cache_value is not None:
                 tname = "%s,%s" % (records._name, self.name)
                 records.env['ir.translation']._set_source(tname, real_recs._ids, value)
-                records.invalidate_cache(fnames=[self.name], ids=records.ids)
+            if self.translate:
+                # invalidate the field in the other languages
+                cache.invalidate([(self, records.ids)])
+                cache.update(records, self, [cache_value] * len(records))
 
         if update_trans:
             if callable(self.translate):
@@ -2597,15 +2600,15 @@ class Many2one(_Relational):
         # update the cache of self
         cache.update(records, self, [cache_value] * len(records))
 
-        # update the cache of one2many fields of new corecord
-        self._update_inverses(records, cache_value)
-
         # update towrite
         if self.store:
             towrite = records.env.all.towrite[self.model_name]
             for record in records.filtered('id'):
                 # cache_value is already in database format
                 towrite[record.id][self.name] = cache_value
+
+        # update the cache of one2many fields of new corecord
+        self._update_inverses(records, cache_value)
 
         return records
 

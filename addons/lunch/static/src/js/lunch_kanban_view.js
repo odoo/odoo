@@ -2,7 +2,7 @@ odoo.define('lunch.LunchKanbanView', function (require) {
 "use strict";
 
 var LunchKanbanController = require('lunch.LunchKanbanController');
-var LunchKanbanModel = require('lunch.LunchKanbanModel');
+var LunchModel = require('lunch.LunchModel');
 var LunchKanbanRenderer = require('lunch.LunchKanbanRenderer');
 
 var core = require('web.core');
@@ -14,7 +14,7 @@ var _lt = core._lt;
 var LunchKanbanView = KanbanView.extend({
     config: _.extend({}, KanbanView.prototype.config, {
         Controller: LunchKanbanController,
-        Model: LunchKanbanModel,
+        Model: LunchModel,
         Renderer: LunchKanbanRenderer,
     }),
     display_name: _lt('Lunch Kanban'),
