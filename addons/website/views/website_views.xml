@@ -346,7 +346,7 @@
                         <div t-name="kanban-box" t-attf-class="o_theme_preview mb16 mt16 #{record.is_installed_on_current_website.raw_value? 'o_theme_installed' : ''}">
                             <t t-set="has_image" t-value="record.image_ids.raw_value.length > 0"/>
                             <t t-set="has_screenshot" t-value="record.image_ids.raw_value.length > 1"/>
-                            <t t-set="image_url" t-value="has_image ? 'web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
+                            <t t-set="image_url" t-value="has_image ? '/web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
 
                             <div class="o_theme_preview_top bg-white mb4">
                                 <div t-attf-class="bg-gray-lighter #{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')}" t-attf-style="background-image: url(#{image_url});"/>

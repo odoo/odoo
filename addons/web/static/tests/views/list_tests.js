@@ -1283,6 +1283,46 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
+    QUnit.test('list view not groupable', async function (assert) {
+        assert.expect(2);
+
+        const searchMenuTypesOriginal = ListView.prototype.searchMenuTypes;
+        ListView.prototype.searchMenuTypes = ['filter', 'favorite'];
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top">
+                    <field name="display_name"/>
+                    <field name="foo"/>
+                </tree>
+            `,
+            archs: {
+                'foo,false,search': `
+                    <search>
+                        <filter context="{'group_by': 'foo'}" name="foo"/>
+                    </search>
+                `,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    throw new Error("Should not do a read_group RPC");
+                }
+                return this._super.apply(this, arguments);
+            },
+            context: { search_default_foo: 1, },
+        });
+
+        assert.containsNone(list, '.o_control_panel div.o_search_options div.o_group_by_menu',
+        "there should not be groupby menu");
+        assert.deepEqual(cpHelpers.getFacetTexts(list), []);
+
+        list.destroy();
+        ListView.prototype.searchMenuTypes = searchMenuTypesOriginal;
+    });
+
     QUnit.test('selection changes are triggered correctly', async function (assert) {
         assert.expect(8);
 
@@ -9520,6 +9560,34 @@ QUnit.module('Views', {
 
         assert.strictEqual(mountedCalls, 4);
         assert.strictEqual(willUnmountCalls, 4);
+    });
+
+    QUnit.test('editable list view: multi edition of owl field component', async function (assert) {
+        // this test could be removed as soon as all field widgets will be written in owl
+        assert.expect(5);
+
+        const list = await createView({
+            arch: '<tree multi_edit="1"><field name="bar"/></tree>',
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsN(list, '.o_data_cell .custom-checkbox input:checked', 3);
+
+        // select all records and edit the boolean field
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        assert.containsN(list, '.o_data_row .o_list_record_selector input:checked', 4);
+        await testUtils.dom.click(list.$('.o_data_cell:first'));
+        await testUtils.dom.click(list.$('.o_data_cell .o_field_boolean input'));
+
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+        assert.containsNone(list, '.o_data_cell .custom-checkbox input:checked');
+
+        list.destroy();
     });
 });
 

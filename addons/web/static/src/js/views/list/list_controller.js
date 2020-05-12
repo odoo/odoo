@@ -777,8 +777,12 @@ var ListController = BasicController.extend({
             this.fieldChangedPrevented = ev;
         } else if (this.renderer.isInMultipleRecordEdition(recordId)) {
             const saveMulti = () => {
+                // if ev.data.__originalComponent is set, it is the field Component
+                // that triggered the event, otherwise ev.target is the legacy field
+                // Widget that triggered the event
+                const target = ev.data.__originalComponent || ev.target;
                 this.multipleRecordsSavingPromise =
-                    this._saveMultipleRecords(ev.data.dataPointID, ev.target.__node, ev.data.changes);
+                    this._saveMultipleRecords(ev.data.dataPointID, target.__node, ev.data.changes);
             };
             // deal with edition of multiple lines
             ev.data.onSuccess = saveMulti; // will ask confirmation, and save

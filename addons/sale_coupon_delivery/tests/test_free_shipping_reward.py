@@ -57,7 +57,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # Test case 1: The minimum amount is not reached, the reward should
         # not be created
         self.immediate_promotion_program.active = False
-        self.env['sale.coupon.program'].create({
+        self.env['coupon.program'].create({
             'name': 'Free Shipping if at least 100 euros',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'free_shipping',
@@ -133,14 +133,14 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
     def test_shipping_cost(self):
         # Free delivery should not be taken into account when checking for minimum required threshold
-        p_minimum_threshold_free_delivery = self.env['sale.coupon.program'].create({
+        p_minimum_threshold_free_delivery = self.env['coupon.program'].create({
             'name': 'free shipping if > 872 tax exl',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'free_shipping',
             'program_type': 'promotion_program',
             'rule_minimum_amount': 872,
         })
-        p_minimum_threshold_discount = self.env['sale.coupon.program'].create({
+        p_minimum_threshold_discount = self.env['coupon.program'].create({
             'name': '10% reduction if > 872 tax exl',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'discount',
@@ -186,7 +186,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
     def test_shipping_cost_numbers(self):
         # Free delivery should not be taken into account when checking for minimum required threshold
-        p_minimum_threshold_free_delivery = self.env['sale.coupon.program'].create({
+        p_minimum_threshold_free_delivery = self.env['coupon.program'].create({
             'name': 'free shipping if > 872 tax exl',
             'promo_code_usage': 'code_needed',
             'promo_code': 'free_shipping',
@@ -194,7 +194,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             'program_type': 'promotion_program',
             'rule_minimum_amount': 872,
         })
-        self.p2 = self.env['sale.coupon.program'].create({
+        self.p2 = self.env['coupon.program'].create({
             'name': 'Buy 4 large cabinet, get one for free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
@@ -240,7 +240,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self.assertEqual(sum([line.price_total for line in order._get_no_effect_on_threshold_lines()]), 0)
         self.assertEqual(order.amount_untaxed, 872.73)
 
-        p_specific_product = self.env['sale.coupon.program'].create({
+        p_specific_product = self.env['coupon.program'].create({
             'name': '20% reduction on large cabinet in cart',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'discount',

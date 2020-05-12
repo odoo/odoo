@@ -9,7 +9,7 @@ class MailComposeMessage(models.TransientModel):
 
     def send_mail(self, **kwargs):
         for wizard in self:
-            if self._context.get('mark_coupon_as_sent') and wizard.model == 'sale.coupon' and wizard.partner_ids:
+            if self._context.get('mark_coupon_as_sent') and wizard.model == 'coupon.coupon' and wizard.partner_ids:
                 # Mark coupon as sent in sudo, as helpdesk users don't have the right to write on coupons
                 self.env[wizard.model].sudo().browse(wizard.res_id).state = 'sent'
         return super().send_mail(**kwargs)
