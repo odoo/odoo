@@ -16,7 +16,6 @@
 # 卓忆科技 <zhanghao@jointd.com>, 2019
 # Rona Lin <ssauapw@qq.com>, 2019
 # 0023d6d916c2d56e4d76ed7a6e80ad5b, 2019
-# 卫安琪 <weianqi1991@gmail.com>, 2019
 # bower Guo <124358678@qq.com>, 2019
 # v2exerer <9010446@qq.com>, 2019
 # Gary Wei <Gary.wei@elico-corp.com>, 2019
@@ -36,9 +35,9 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # Jerry Pan <panjianyu@inspur.com>, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # ryan ryan <itechr@outlook.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -46,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: ryan ryan <itechr@outlook.com>, 2020\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -940,7 +939,7 @@ msgstr "批量拣货"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
-msgstr "受阻消息"
+msgstr "阻塞消息"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__quant_ids
@@ -2350,7 +2349,7 @@ msgstr "从供应商到客户获得全面的追溯性"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get informative or blocking warnings on partners"
-msgstr "基于合作伙伴获取信息或者阻止警告"
+msgstr "基于合作伙伴获取信息或者阻塞警告"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_putaway_rule__sequence
@@ -5298,7 +5297,7 @@ msgid ""
 "block the flow. The Message has to be written in the next field."
 msgstr ""
 "选择此“警告“选项，将通知用户此消息。\r\n"
-"选择“阻止消息“选项，将在流程受阻时将抛出一个消息，并阻止此流程。\r\n"
+"选择“阻塞消息“选项，将在流程阻塞时将抛出一个消息，并阻塞此流程。\r\n"
 "此消息将写入下一个字段。"
 
 #. module: stock
@@ -6873,10 +6872,8 @@ msgstr "称重的产品"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
-msgstr "当仓库中此路线被勾选, 那么经过此仓库的所有产品都会被设为默认此路线。但此行为能够被产品／产品类别的路线或者补货规则优先路线所覆盖。"
+"the default route when products pass through this warehouse."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -6887,15 +6884,13 @@ msgstr "当所有产品就绪时"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
-msgstr "一旦勾选了，此路径在产品表格中的库存页面将会显示为可选的。这将会比仓库路径的优先级更高。"
+"Product form."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
-msgstr "一旦勾选了，此路径在产品类别中将会显示为可选的。这将会比仓库路径的优先级更高。"
+msgid "When checked, the route will be selectable on the Product Category."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id

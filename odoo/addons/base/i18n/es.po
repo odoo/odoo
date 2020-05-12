@@ -20,7 +20,6 @@
 # Vivian Montana <vmo@odoo.com>, 2019
 # Alejandro Santana <alejandrosantana@anubia.es>, 2019
 # Carlos Lopez <celm1990@hotmail.com>, 2019
-# Manuel Gómez <nuelgoz@gmail.com>, 2019
 # pepito alialabs <pepitoalialabs@gmail.com>, 2019
 # David Perez <david@closemarketing.es>, 2019
 # AleEscandon <alejandra.escandon@jarsa.com.mx>, 2019
@@ -69,11 +68,11 @@
 # Pablo Rojas <rojaspablo88@gmail.com>, 2019
 # Marco Alejandro Martinez <martinezsuarezmarcoalejandro@gmail.com>, 2020
 # Jesse Garza <jga@odoo.com>, 2020
-# Elena Aguirre Claeyssens <eac@odoo.com>, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # gpi odoo <gpi@odoo.com>, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Elena Aguirre Claeyssens <eac@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -81,7 +80,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
+"Last-Translator: Elena Aguirre Claeyssens <eac@odoo.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1581,6 +1580,44 @@ msgid ""
 "\n"
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Agregue un nuevo modelo denominado \"Tipo de identificación\" que amplíe la funcionalidad del campo de número de identificación fiscal(NIF) en el socio y permita que el usuario identifique (eventualmente una factura) a los contactos no solo con su número identificación fiscal fiscal (NIF) sino con otros tipos de identificaciones como documento nacional , pasaporte, identificación extranjera, etc. Con este módulo instalado, verá ahora en la vista de formulario asociado dos campos:\n"
+"\n"
+"* Tipo de identificación\n"
+"* Número de identificación\n"
+"\n"
+"Este comportamiento es un requisito común para algunos países latinoamericanos como Argentina y Chile. Si su localización tiene estos requisitos, entonces debe depender de este módulo y definir en su módulo de localización los tipos de identificación que se utilizan en su país. En general, este tipo de identificaciones son definidas por las autoridades gubernamentales que regulan las operaciones fiscales. Por ejemplo:\n"
+"\n"
+"* AFIP en Argentina define el DNI, CUIT (número de identificación fiscal(NIF) para entidades legales), CUIL (número de identificación fiscal(NIF) para personas naturales), y otros 80 tipos de identificación válidos.\n"
+"\n"
+"Cada identificación contiene esta información:\n"
+"\n"
+"* nombre: nombre corto de la identificación\n"
+"* descripción: podría ser el mismo nombre corto o un nombre largo\n"
+"* id_pais(country_id): el país al que pertenece esta identificación\n"
+"* es_identificacionFiscal(is_vat): identifica este registro como el número de identificación fiscal(NIF) correspondiente para el país específico.\n"
+"* secuencia: permítanos ordenar los tipos de identificación según los más utilizados.\n"
+"* activo: podemos activar / desactivar identificaciones para que sea más fácil para nuestros clientes\n"
+"\n"
+"Con el fin de hacer que este módulo sea compatible con entornos de empresas múltiples donde tenemos compañías que no necesitan / no admiten este requisito, hemos agregado tipos de identificación genéricos y reglas genéricas para administrar la información de contacto y hacerla transparente para el usuario cuando solo use el número de identificación fiscal(NIF) como lo conocíamos anteriormente.\n"
+"\n"
+"Identificaciones genéricas:\n"
+"\n"
+"* identificación Fiscal: la identificación fiscal o el número de identificación fiscal(NIF), de forma predeterminada, se seleccionará como tipo de identificación, por lo que el usuario solo tendrá que agregar el número de identificación fiscal relacionado.\n"
+"* Pasaporte\n"
+"* Identificación extranjera (Documento nacional extranjero)\n"
+"\n"
+"Reglas al crear un nuevo socio: solo veremos los tipos de identificación que son significativos, teniendo en cuenta estas reglas:\n"
+"\n"
+"* Si el socio no tiene establecida la dirección del país: mostrará los tipos de identificación genéricos más los definidos en el país de la compañía relacionada del socio (si el socio no tiene una compañía específica, mostrará los tipos de identificación relacionados con la compañía de usuario actual)\n"
+"\n"
+"* Si el socio tiene la dirección del país: mostrará los tipos de identificación genéricos más los definidos para el país del socio.\n"
+"\n"
+"Al crear una nueva empresa, se establecerá en el socio relacionado siempre el tipo de identificación es_identificacionFiscal(is_vat) del país relacionado.\n"
+"\n"
+"Todos los tipos de identificación definidos se pueden revisar y activar / desactivar en el menú \"Contactos / Configuración / Tipo de identificación\".\n"
+"\n"
+"Este módulo es compatible con el módulo base_vat para poder validar los números de identificación fiscal(NIF) para cada país que tenga o no la posibilidad de administrar múltiples tipos de identificación.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -7080,23 +7117,23 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Validación del n.º de IVA de las empresas.\n"
+"Validación del número de identificación fiscal(NIF) de las empresas.\n"
 "=========================================\n"
 "\n"
-"Tras instalar este módulo, se validarán los valores introducidos en el campo del IVA de las\n"
+"Tras instalar este módulo, se validarán los valores introducidos en el campo de número de identificación fiscal(NIF) de las\n"
 "empresas para todos los países admitidos. Se deduce el país por las 2 letras del código que\n"
-"preceden al número de IVA. Por ejemplo, \"BE0477472701\" se validará usando la normativa\n"
+"preceden al número de número de identificación fiscal(NIF). Por ejemplo, \"BE0477472701\" se validará usando la normativa\n"
 "belga.\n"
 "\n"
-"Hay dos niveles diferentes para validar el número de IVA:\n"
+"Hay dos niveles diferentes para validar el número de identificación fiscal(NIF):\n"
 "--------------------------------------------------------\n"
 "* Por defecto, se realiza una simple comprobación sin conexión usando las reglas de\n"
 "validación conocidas de un país, normalmente mediante una sencilla comprobación de\n"
 "dígitos. Es rápido y se puede hacer en cualquier momento, pero admite números que quizá\n"
 "no estén realmente asociados o que ya no sean válidos.\n"
 "\n"
-"* Cuando se habilita la opción de \"Comprobación del IVA en VIES\" (en la configuración de la\n"
-"empresa del usuario), los números del IVA se enviarán en su lugar a la base electrónica de\n"
+"* Cuando se habilita la opción de \"Comprobación del número de identificación fiscal(NIF) en VIES\" (en la configuración de la\n"
+"empresa del usuario), los números del número de identificación fiscal(NIF) se enviarán en su lugar a la base electrónica de\n"
 "datos VIES de la Unión Europea, que verificará realmente si el número es válido y si\n"
 "actualmente está asociado a una empresa. Esto es un poco más lento que una simple\n"
 "comprobación sin conexión, pues requiere tener conexión a internet y puede que no esté\n"
@@ -8334,8 +8371,8 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Tax "
 "ID</span></span> already exists ("
 msgstr ""
-"Ya existe un socio con la misma <span><span "
-"class=\"o_vat_label\">identificación fiscal</span></span> ("
+"Ya existe un socio con el mismo <span><span class=\"o_vat_label\">número de "
+"identificación fiscal(NIF)</span></span> ("
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -8751,7 +8788,7 @@ msgstr "Acciones"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Activate Language and Update Translations"
-msgstr ""
+msgstr "Activar idioma y Actualizar traducciones"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -10303,7 +10340,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon_taxcloud
 msgid "Bridge module between Amazon Connector and TaxCloud"
-msgstr ""
+msgstr "Módulo puente entre Amazon Connector y TaxCloud"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_purchase
@@ -13439,7 +13476,7 @@ msgstr "Gastos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_expense
 msgid "Expenses in Payslips"
-msgstr ""
+msgstr "Gastos en las nóminas"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat__report_ids
@@ -13603,6 +13640,7 @@ msgstr "Permisos extra"
 #: model:ir.module.module,summary:base.module_account_invoice_extract
 msgid "Extract data from invoice scans to fill them automatically"
 msgstr ""
+"Extraiga datos de los escaneos de facturas para rellenarlas automáticamente"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_U
@@ -14504,7 +14542,7 @@ msgstr "Alemania SKR04 - Contabilidad"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_dashboard
 msgid "Get a new dashboard view in the Website App"
-msgstr ""
+msgstr "Obtenga una nueva vista de tablero en la aplicación Sitio web"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_fleet
@@ -14514,7 +14552,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_enterprise
 msgid "Get the enterprise look and feel"
-msgstr ""
+msgstr "Obtenga el aspecto y experiencia Enterprise"
 
 #. module: base
 #: model:res.country,name:base.gh
@@ -15067,7 +15105,7 @@ msgstr "Le ayuda a gestionar sus contrataciones."
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_time_off
 msgid "Helps you manage your time off."
-msgstr ""
+msgstr "Le ayuda a manejar su tiempo libre."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_sign
@@ -20892,7 +20930,7 @@ msgstr "Módulo de empresas para el sitio web"
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
-msgstr ""
+msgstr "Socio con la misma identificación de impuestos"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
@@ -21221,7 +21259,7 @@ msgstr "Reimpresion del ticket del punto de venta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_enterprise
 msgid "Point of Sale enterprise"
-msgstr ""
+msgstr "Punto de Venta Enterprise"
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -26155,12 +26193,12 @@ msgstr "Uzbekistán"
 #: model:res.country,vat_label:base.se model:res.country,vat_label:base.si
 #: model:res.country,vat_label:base.sk model:res.country,vat_label:base.uk
 msgid "VAT"
-msgstr "NIF"
+msgstr "número de identificación fiscal(NIF)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
 msgid "VAT Number Validation"
-msgstr "Validación de número CIF"
+msgstr "Validación de número de identificación fiscal(NIF)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip
@@ -26265,7 +26303,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__vat_label
 msgid "Vat Label"
-msgstr "Etiqueta del IVA"
+msgstr "Etiqueta del número de identificación fiscal(NIF)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
