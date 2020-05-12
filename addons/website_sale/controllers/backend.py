@@ -87,7 +87,6 @@ class WebsiteSaleBackend(WebsiteBackend):
             ]),
             order_carts_abandoned_count=request.env['sale.order'].search_count(sale_order_domain + [
                 ('is_abandoned_cart', '=', True),
-                ('cart_recovery_email_sent', '=', False)
             ]),
             payment_to_capture_count=request.env['payment.transaction'].search_count([
                 ('state', '=', 'authorized'),
