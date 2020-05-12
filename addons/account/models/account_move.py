@@ -247,6 +247,8 @@ class AccountMove(models.Model):
 
             # Process taxes.
             for tax in to_process_taxes:
+                if tax.price_include:
+                    tax = tax.with_context(handle_price_include=False)
                 lines_to_sum = _get_lines_to_sum(self.line_ids, tax, parsed_key['tag_ids'], parsed_key['analytic_account_id'])
 
                 balance = sum([l.balance for l in lines_to_sum])
