@@ -17,8 +17,8 @@
         <field name="model">im_chatbot.chatbot</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="livechat_username"/>
                 <field name="name"/>
-                <field name="subject"/>
             </tree>
         </field>
     </record>
@@ -57,16 +57,13 @@
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <div class="chatbot_id">
-                            <field name="id" />
-                        </div>
-                        <label for="subject" />
+                        <label for="name" />
                         <h1>
-                            <field name="subject" />
+                            <field name="name" />
                         </h1>
                     </div>
                     <group>
-                        <field name="name" string="Bot name" />
+                        <field name="livechat_username" string="Bot name" />
                     </group>
                     <notebook>
                         <page string="Script">

@@ -22,8 +22,8 @@ class ChatBot(models.Model):
     _name = "im_chatbot.chatbot"
     _description = "Chabots main table"
 
-    name = fields.Char(String="Bot name")
-    subject = fields.Char(String="Subject")
+    name = fields.Char(Required = True, String="Subject")
+    livechat_username = fields.Char(Required = True, String="Bot name")
     message_ids = fields.One2many("im_chatbot.script", "chatbot_id", index=True)
 
     livechat_channel_id = fields.One2many("im_livechat.channel", "chatbot_id")
@@ -58,7 +58,8 @@ class ChatBot(models.Model):
             # Create a discution channel between a bot and the current user.
             channel = (
                 self.env["mail.channel"]
-                .with_context(mail_create_nosubscribe=True).create(
+                .with_context(mail_create_nosubscribe=True)
+                .create(
                     {
                         "name": "test",
                         "channel_partner_ids": [
@@ -82,14 +83,14 @@ class ChatBot(models.Model):
             )
 
             # Get the messages sequence.
-            messages = chatbot.message_ids
+            # messages = chatbot.message_ids
 
             # Extract the first message. Since messages are ordered by
             # sequence, the [0] containt the first message.
-            first_message = messages[0]
+            # first_message = messages[0]
 
             # Post a message to the channel
-            channel._bot_message_post(bot_partner[0], first_message)
+            # channel._bot_message_post(bot_partner[0], first_message)
             return channel
 
 
@@ -98,16 +99,17 @@ class ChatbotMessageHook(models.Model):
 
     # This is where the bot "catch" the conversation. And the user response
     def _message_post_after_hook(self, message, msg_vals):
-        super(ChatbotMessageHook, self)._message_post_after_hook(message, msg_vals)
-
         # Livechat Channel opérator is a bot but not the one who posted
         # We know the bot can read the message and react to it
-        if (
-            self.channel_type == "livechat"
-            and self.livechat_operator_id.is_bot
-            and not message.author_id.is_bot
-        ):
-            self._bot_answer(message)
+        # if (
+        #     self.channel_type == "livechat"
+        #     and self.livechat_operator_id.is_bot
+        #     and not message.author_id.is_bot
+        # ):
+
+        # self._bot_answer(message)
+
+        super(ChatbotMessageHook, self)._message_post_after_hook(message, msg_vals)
 
     def _bot_answer(self, user_message):
         # Get the "bot operator"
@@ -126,15 +128,19 @@ class ChatbotMessageHook(models.Model):
             .sorted(lambda message: message.id, reverse=True)
         )
 
-        # This get the sequence of the last message send by the bot.
-        current_sequence = chatbot_messages[0].script_id.read(["sequence"])[0][
-            "sequence"
-        ]
+        # Handle the first response for the bot
+        if not len(chatbot_messages):
+            next_message = chatbot.message_ids[0]
+        else:
+            # This get the sequence of the last message send by the bot.
+            current_sequence = chatbot_messages[0].script_id.read(["sequence"])[0][
+                "sequence"
+            ]
 
-        # Get the next message in the squence
-        next_message = self.env["im_chatbot.script"].search(
-            [("chatbot_id", "=", chatbot.id), ("sequence", ">", current_sequence)]
-        )
+            # Get the next message in the squence
+            next_message = self.env["im_chatbot.script"].search(
+                [("chatbot_id", "=", chatbot.id), ("sequence", ">", current_sequence)]
+            )
 
         # Sent the next message
         self._bot_message_post(bot_partner, next_message[0])
@@ -154,11 +160,41 @@ class ChatbotMessageHook(models.Model):
 class ImLivechatChannel(models.Model):
     _inherit = "im_livechat.channel"
 
-    chatbot_id = fields.Many2one('im_chatbot.chatbot')
+    chatbot_id = fields.Many2one("im_chatbot.chatbot")
 
-    # nb_chatbot = fields.Integer(compute="_compute_nb_chatbot")
+    def _open_livechat_mail_channel(
+        self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None
+    ):
+        print("override's working")
+        operator = super(ImLivechatChannel, self)._open_livechat_mail_channel(
+            anonymous_name,
+            previous_operator_id,
+            user_id,
+            country_id,
+        )
 
-    # @api.depends("chatbot_ids")
-    # def _compute_nb_chatbot(self):
-    #     for channel in self:
-    #         channel.nb_chatbot = len(channel.chatbot_ids)
+        # Assign the bot if no operator are available
+        if not operator:
+            print("operator")
+            operator = self.chatbot_id
+            mail_channel_vals = self._get_livechat_mail_channel_vals(
+                anonymous_name, operator, user_id=user_id, country_id=country_id
+            )
+            mail_channel = (
+                self.env["mail.channel"]
+                .with_context(mail_create_nosubscribe=False)
+                .sudo()
+                .create(mail_channel_vals)
+            )
+            mail_channel._broadcast([operator.partner_id.id])
+            return mail_channel.sudo().channel_info()[0]
+        else:
+            return operator
+
+    # Add the chatbot to the user available
+    def _get_available_users(self):
+        available = super(ImLivechatChannel, self)._get_available_users()
+        if not len(available):
+            available = self.chatbot_id
+
+        return available

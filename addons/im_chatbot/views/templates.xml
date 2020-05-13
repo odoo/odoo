@@ -1,8 +1,8 @@
 <odoo>
     <data>
-        <template id="assets_backend" name="im_chatbot_assets" inherit_id="web.assets_backend">
+        <template id="assets_backend" name="im_chatbot_assets" inherit_id="web.assets_frontend">
             <xpath expr="//script[last()]" position="after">
-                <script type="text/javascript" src="/im_chatbot/static/src/js/test_bot_button.js"/>
+                <script type="text/javascript" src="/im_chatbot/static/src/js/im_chatbot.js"/>
             </xpath>
         </template>
     </data>

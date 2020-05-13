@@ -1,30 +1,15 @@
 odoo.define('im_chatbot.chatBot', function (require) {
     "use strict";
 
-    var FormController = require('web.FormController');
-    var FormView = require('web.FormView');
-    var FormRenderer = require('web.FormRenderer');
-    var viewRegistry = require('web.view_registry');
+    var LivechatButton = require('im_livechat.im_livechat').LivechatButton;
 
-    var test_button = require("im_chatbot.test_button");
-
-    var chatbotFormRenderer = FormRenderer.extend({
-        _render: function () {
-            var self = this;
-            return this._super.apply(this, arguments).then(function () {
-                console.log("test");
-            });
+    LivechatButton.include({
+        init: function (parent, serverURL, options) {
+            this._super(...arguments);
         }
     });
 
-    var chatbotChat = FormView.extend({
-        config: _.extend({}, FormView.prototype.config, {
-            Controller: FormController,
-            Renderer: chatbotFormRenderer
-        }),
-    });
-
-    viewRegistry.add('im_chatbot.chatBot', chatbotChat);
-
-    return chatbotChat;
+    return {
+        LivechatButton: LivechatButton,
+    };
 });
