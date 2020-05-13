@@ -3,6 +3,7 @@
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools import float_compare, float_round, float_is_zero
 
 
@@ -290,6 +291,46 @@ class StockMove(models.Model):
                 continue
             production._action_cancel()
         return res
+
+    def _get_consuming_document(self):
+        """ WIP """
+        res = super()._get_consuming_document()
+        return res or self.raw_material_production_id
+
+    @api.model
+    def _get_consuming_domain(self, location_ids):
+        consuming_domain = super()._get_consuming_domain(location_ids)
+        consuming_domain = expression.OR([
+            consuming_domain,
+            [('raw_material_production_id', '!=', False)]
+        ])
+        return consuming_domain
+
+    def _get_replenishment_document(self):
+        """ TODO WIP """
+        res = super()._get_replenishment_document()
+        return res or self.production_id
+
+    @api.model
+    def _get_replenishment_domain(self, location_ids):
+        replenishment_domain = super()._get_replenishment_domain(location_ids)
+        replenishment_domain = expression.OR([
+            replenishment_domain,
+            [('production_id', '!=', False)]
+        ])
+        return replenishment_domain
+
+    def _is_consuming(self, wh_location_ids):
+        """ TODO WIP """
+        res = super()._is_consuming(wh_location_ids)
+        # return res or (self.picking_code == 'mrp_operation' and self.raw_material_production_id)
+        return res or self.raw_material_production_id
+
+    def _is_replenishing(self, wh_location_ids):
+        """ TODO WIP """
+        res = super()._is_replenishing(wh_location_ids)
+        # return res or (self.picking_code == 'mrp_operation' and self.production_id)
+        return res or self.production_id
 
     def _prepare_move_split_vals(self, qty):
         defaults = super()._prepare_move_split_vals(qty)
