@@ -112,7 +112,7 @@ class ExceptionLogger:
 
     def write(self, message):
         if message != '\n':
-            self.logger.err(message)
+            self.logger.error(message)
 
     def flush(self):
         pass
