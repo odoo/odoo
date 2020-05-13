@@ -370,10 +370,31 @@ class Picking(models.Model):
     immediate_transfer = fields.Boolean(default=False)
     package_level_ids = fields.One2many('stock.package_level', 'picking_id')
     package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
+    products_availability = fields.Char(compute='_compute_products_availability')
+    products_availability_state = fields.Selection([
+        ('available', 'Available'),
+        ('waiting', 'Should be available on time'),
+        ('late', 'Will not be available at time'),
+    ], compute='_compute_products_availability')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
+
+    @api.depends('move_lines')
+    def _compute_products_availability(self):
+        inactive_pickings = self.filtered(lambda picking: picking.state in ['cancel', 'draft', 'done'])
+        inactive_pickings.write({
+            'products_availability': '',
+            'products_availability_state': 'available'
+        })
+        active_pickings = (self - inactive_pickings)
+        for picking in active_pickings:
+            availability_state, availability = picking.move_lines._get_availability_vals()
+            picking.write({
+                'products_availability': availability,
+                'products_availability_state': availability_state
+            })
 
     def _compute_has_tracking(self):
         for picking in self:

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime
+from datetime import date
 from itertools import groupby
 from operator import itemgetter
 from re import findall as regex_findall
@@ -10,9 +10,11 @@ from re import split as regex_split
 
 from dateutil import relativedelta
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, _, api, fields, models, registry as odoo_registry
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero, float_repr, float_round
+from odoo.tools.misc import format_date as odoo_format_date
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
@@ -178,12 +180,55 @@ class StockMove(models.Model):
     next_serial = fields.Char('First SN')
     next_serial_count = fields.Integer('Number of SN')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', check_company=True)
+    availability_indication = fields.Char('Availability', compute='_compute_availability_indication')
+    availability_state = fields.Selection([
+        ('available', 'Available'),
+        ('waiting', 'Should be available on time'),
+        ('partial', 'Only a part can be reserved'),
+        ('late', 'Will not be available at time'),
+    ], compute='_compute_availability_indication')
 
     @api.onchange('product_id', 'picking_type_id')
     def onchange_product(self):
         if self.product_id:
             product = self.product_id.with_context(lang=self.picking_id.partner_id.lang or self.env.user.lang)
             self.description_picking = product._get_description(self.picking_type_id)
+
+    @api.depends('date', 'date_expected', 'product_id.route_ids', 'product_type', 'product_uom_qty', 'reserved_availability')
+    def _compute_availability_indication(self):
+        today = date.today()
+        to_partially_available, to_assign = self._action_assign_dry_run()
+        for move in self:
+            if move.product_type != 'product' or move.state == 'assigned':
+                move.availability_state = 'available'
+                precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+                move.availability_indication = float_repr(move.reserved_availability, precision)
+            # SVS: Not sure it make sens to mark it as partially available when nothing is actually reserved.
+            # elif move in to_partially_available:
+            #     move.availability_state = 'partial'
+            #     move.availability_indication = 'Partially Available'
+            elif move in to_assign:
+                move.availability_state = 'available'
+                move.availability_indication = 'Available'
+            elif move.state == 'partially_available':
+                move.availability_indication = move.reserved_availability
+                move.availability_state = 'partial'
+            elif move.procure_method == 'make_to_order':
+                move_orig = move.move_orig_ids.filtered(lambda mv: mv.state not in ['cancel', 'done'])
+                if move_orig:
+                    move.availability_indication = 'Exp %s' % (odoo_format_date(self.env, move_orig.date_expected))
+                    move_datetime = move.move_orig_ids.date_expected
+                    move_date = date(day=move_datetime.day, month=move_datetime.month, year=move_datetime.year)
+                    if move_date >= today:
+                        move.availability_state = 'waiting'
+                    else:
+                        move.availability_state = 'late'
+                else:
+                    move.availability_state = 'late'
+                    move.availability_indication = 'Not Available'
+            else:
+                move.availability_indication = 'Not Available'
+                move.availability_state = 'late'
 
     @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
     def _compute_display_assign_serial(self):
@@ -1456,6 +1501,29 @@ class StockMove(models.Model):
         # With the non plannified picking, draft moves could have some move lines.
         self.with_context(prefetch_fields=False).mapped('move_line_ids').unlink()
         return super(StockMove, self).unlink()
+
+    def _get_availability_vals(self):
+        """ Defines the availability of the product, based on the worst move's
+        availability. These values are used by pickings and production orders (MRP).
+
+        :return: the `availability_state` and the `availability_indication`
+        :rtype: tuple
+        """
+        vals = ('available', 'Available')
+        worst_move = self.sorted(key=lambda move: (
+            move.availability_state == 'late',
+            move.availability_state == 'partial',
+            move.availability_state == 'waiting'
+        ))[:1]
+        if worst_move:
+            if worst_move.availability_state == 'partial':
+                vals = ('late', 'Not Available')
+            else:
+                vals = (
+                    worst_move.availability_state,
+                    worst_move.availability_indication
+                )
+        return vals
 
     def _get_consuming_document(self):
         """ TODO WIP """

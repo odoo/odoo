@@ -201,6 +201,11 @@
                     <field name="origin" optional="show"/>
                     <field name="group_id" invisible="1"/>
                     <field name="backorder_id" optional="hide"/>
+                    <field name="products_availability_state" invisible="1"/>
+                    <field name="products_availability" optional="show"
+                        decoration-bf="products_availability_state in ['waiting', 'late']"
+                        decoration-warning="products_availability_state == 'waiting'"
+                        decoration-danger="products_availability_state == 'late'"/>
                     <field name="priority" optional="hide"/>
                     <field name="picking_type_id" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
@@ -305,6 +310,7 @@
                                 <field name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
                             </div>
                             <field name="date_done" string="Effective Date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                            <field name="products_availability"/>
                             <field name="origin" placeholder="e.g. PO0032"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"
                                    attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
@@ -363,8 +369,18 @@
                                     <field name="date_expected" optional="hide" attrs="{'readonly': [('show_operations', '=', True), ('is_locked', '=', True)]}"/>
                                     <field name="is_initial_demand_editable" invisible="1"/>
                                     <field name="is_quantity_done_editable" invisible="1"/>
+                                    <field name="reserved_availability" invisible="1"/>
+                                    <field name="availability_state" invisible="1"/>
                                     <field name="product_uom_qty" string="Demand" attrs="{'column_invisible': [('parent.immediate_transfer', '=', True)], 'readonly': ['|', ('is_initial_demand_editable', '=', False), '&amp;', '&amp;', ('show_operations', '=', True), ('is_locked', '=', True), ('is_initial_demand_editable', '=', False)]}"/>
-                                    <field name="reserved_availability" string="Reserved" attrs="{'column_invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming'), ('parent.immediate_transfer', '=', True)])}"/>
+                                    <field name="availability_indication"
+                                        decoration-bf="availability_state in ['late', 'partial', 'waiting']"
+                                        decoration-warning="availability_state in ['partial', 'waiting']"
+                                        decoration-danger="availability_state == 'late'"
+                                        attrs="{'column_invisible': ([
+                                            '|','|',
+                                                ('parent.state','=', 'done'),
+                                                ('parent.picking_type_code', '=', 'incoming'),
+                                                ('parent.immediate_transfer', '=', True)])}"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                                     <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" width="0.1"
