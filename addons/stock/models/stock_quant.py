@@ -244,7 +244,7 @@ class StockQuant(models.Model):
     def check_location_id(self):
         for quant in self:
             if quant.location_id.usage == 'view':
-                raise ValidationError(_('You cannot take products from or deliver products to a location of type "view".'))
+                raise ValidationError(_('You cannot take products from or deliver products to a location of type "view" (%s).') % quant.location_id.name)
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
