@@ -1,0 +1,18 @@
+@mixin media-breakpoint-up($name, $breakpoints: $grid-breakpoints) {
+  @if $name == xs {
+    @content;
+  }
+}
+@mixin media-breakpoint-down($name, $breakpoints: $grid-breakpoints) {
+    @content;
+}
+@mixin media-breakpoint-between($lower, $upper, $breakpoints: $grid-breakpoints) {
+  @if not $lower or $lower == xs {
+    @content;
+  }
+}
+@mixin media-breakpoint-only($name, $breakpoints: $grid-breakpoints) {
+  @if $name == xs {
+    @content;
+  }
+}
