@@ -2,6 +2,7 @@ odoo.define('website.s_share', function (require) {
 'use strict';
 
 const publicWidget = require('web.public.widget');
+var config = require('web.config');
 
 const ShareWidget = publicWidget.Widget.extend({
     selector: '.s_share, .oe_share', // oe_share for compatibility
@@ -10,22 +11,30 @@ const ShareWidget = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        var urlRegex = /(\?(?:|.*&)(?:u|url|body)=)(.*?)(&|#|$)/;
-        var titleRegex = /(\?(?:|.*&)(?:title|text|subject)=)(.*?)(&|#|$)/;
-        var url = encodeURIComponent(window.location.href);
-        var title = encodeURIComponent($('title').text());
-        this.$('a').each(function () {
-            var $a = $(this);
-            $a.attr('href', function (i, href) {
-                return href.replace(urlRegex, function (match, a, b, c) {
+        let urlRegex = /(\?(?:|.*&)(?:u|url|body)=)(.*?)(&|#|$)/,
+            titleRegex = /(\?(?:|.*&)(?:title|text|subject|description)=)(.*?)(&|#|$)/,
+            mediaRegex = /(\?(?:|.*&)(?:media)=)(.*?)(&|#|$)/,
+            url = encodeURIComponent(window.location.href),
+            title = encodeURIComponent($('title').text()),
+            media = encodeURIComponent($('meta[property="og:image"]').attr('content'));
+
+        this.$('a').each((index, element) => {
+            let $a = $(element);
+            $a.attr('href', (i, href) => {
+                return href.replace(urlRegex, (match, a, b, c) => {
                     return a + url + c;
-                }).replace(titleRegex, function (match, a, b, c) {
-                    return a + title + c;
+                }).replace(titleRegex, (match, a, b, c) => {
+                    return ($a.hasClass('s_share_whatsapp') ? a + title + url + c : a + title + c);
+                }).replace(mediaRegex, (match, a, b, c) => {
+                    return a + media + c;
                 });
             });
             if ($a.attr('target') && $a.attr('target').match(/_blank/i) && !$a.closest('.o_editable').length) {
-                $a.on('click', function () {
-                    window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
+                $a.on('click', (ev) => {
+                    if ($a.hasClass('s_share_whatsapp') && config.device.isMobileDevice){
+                       ev.currentTarget.href = ev.currentTarget.href.replace('https://web.whatsapp.com', 'whatsapp:/');
+                    }
+                    window.open(ev.currentTarget.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
                     return false;
                 });
             }
