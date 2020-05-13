@@ -646,6 +646,7 @@ class Selection(models.Model):
     _description = "Selection"
 
     state = fields.Selection([('foo', 'Foo'), ('bar', 'Bar')])
+    other = fields.Selection([('foo', 'Foo'), ('bar', 'Bar')])
 
 
 class RequiredM2O(models.Model):
