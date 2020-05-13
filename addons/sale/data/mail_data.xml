@@ -144,13 +144,17 @@
             <tr style="border-bottom: 2px solid #dee2e6;">
                 <td width="18%"><strong>Products</strong></td>
                 <td></td>
-                <td><strong>Quantity</strong></td>
-                <td width="10%" align="center"><strong>Price</strong></td>
+                <td align="center"><strong>Quantity</strong></td>
+                % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):
+                    <td align="right"><strong>VAT Excl.</strong></td>
+                % endif
+                % if object.user_id.has_group('account.group_show_line_subtotals_tax_included'):
+                    <td align="right"><strong>VAT Incl.</strong></td>
+                % endif
             </tr>
-        </table>
         % for line in object.order_line:
-            % if not line.is_delivery and line.display_type in ['line_section', 'line_note']:
-                <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
+            % if not line.is_delivery:
+                % if line.display_type in ['line_section', 'line_note']:
                     <tr style="${loop.cycle('background-color: #f2f2f2', 'background-color: #ffffff')}">
                         <td colspan="4">
                             % if line.display_type == 'line_section':
@@ -160,15 +164,13 @@
                             % endif
                         </td>
                     </tr>
-                </table>
-            % elif not line.is_delivery
-                <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
+                % else:
                     <tr style="${loop.cycle('background-color: #f2f2f2', 'background-color: #ffffff')}">
                         <td style="width: 150px;">
                             <img src="/web/image/product.product/${line.product_id.id}/image_128" style="width: 64px; height: 64px; object-fit: contain;" alt="Product image"></img>
                         </td>
                         <td align="left">${line.product_id.name}</td>
-                        <td>${line.product_uom_qty}</td>
+                        <td align="center">${line.product_uom_qty}</td>
                         % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):
                             <td align="right">${format_amount(line.price_reduce_taxexcl, object.currency_id)}</td>
                         % endif
@@ -176,9 +178,10 @@
                             <td align="right">${format_amount(line.price_reduce_taxinc, object.currency_id)}</td>
                         % endif
                     </tr>
-                </table>
+                % endif
             % endif
         % endfor
+        </table>
     </div>
     % if object.carrier_id:
     <div style="margin: 0px; padding: 0px;">
