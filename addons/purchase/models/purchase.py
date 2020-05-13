@@ -47,7 +47,16 @@ class PurchaseOrder(models.Model):
                 order.invoice_status = 'to invoice'
             elif (
                 all(
+<<<<<<< HEAD
                     float_is_zero(line.qty_to_invoice, precision_digits=precision)
+=======
+                    float_compare(
+                        line.qty_invoiced,
+                        line.product_qty if line.product_id.purchase_method == "purchase" else line.qty_received,
+                        precision_digits=precision,
+                    )
+                    >= 0
+>>>>>>> 48a779714d5... temp
                     for line in order.order_line.filtered(lambda l: not l.display_type)
                 )
                 and order.invoice_ids
