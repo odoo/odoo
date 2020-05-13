@@ -31,6 +31,7 @@ Preferences
         'views/report_invoice.xml',
         'views/res_users_views.xml',
         'report/sale_order_report_templates.xml',
+        'report/report_replenishment.xml',
         'report/stock_report_deliveryslip.xml',
         'data/sale_stock_data.xml',
         'wizard/stock_rules_report_views.xml',

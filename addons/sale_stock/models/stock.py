@@ -26,6 +26,9 @@ class StockMove(models.Model):
         keys_sorted.append(move.sale_line_id.id)
         return keys_sorted
 
+    def _get_consuming_document(self):
+        return self.sale_line_id.order_id or super()._get_consuming_document()
+
     def _get_related_invoices(self):
         """ Overridden from stock_account to return the customer invoices
         related to this stock move.

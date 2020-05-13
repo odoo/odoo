@@ -263,7 +263,7 @@ class SaleOrderLine(models.Model):
     scheduled_date = fields.Datetime(compute='_compute_qty_at_date')
     free_qty_today = fields.Float(compute='_compute_qty_at_date')
     qty_available_today = fields.Float(compute='_compute_qty_at_date')
-    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_qty_at_date')
+    warehouse_id = fields.Many2one(related='order_id.warehouse_id')
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
@@ -278,7 +278,7 @@ class SaleOrderLine(models.Model):
             else:
                 line.display_qty_widget = False
 
-    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'order_id.warehouse_id', 'order_id.commitment_date')
+    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'order_id.commitment_date')
     def _compute_qty_at_date(self):
         """ Compute the quantity forecasted of product at delivery date. There are
         two cases:
@@ -292,7 +292,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.display_qty_widget:
                 continue
-            line.warehouse_id = line.order_id.warehouse_id
             if line.order_id.commitment_date:
                 date = line.order_id.commitment_date
             else:
@@ -327,7 +326,6 @@ class SaleOrderLine(models.Model):
         remaining.scheduled_date = False
         remaining.free_qty_today = False
         remaining.qty_available_today = False
-        remaining.warehouse_id = False
 
     @api.depends('product_id', 'route_id', 'order_id.warehouse_id', 'product_id.route_ids')
     def _compute_is_mto(self):
