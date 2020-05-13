@@ -53,6 +53,9 @@ class StockMove(models.Model):
             return price_unit
         return super(StockMove, self)._get_price_unit()
 
+    def _get_replenishment_document(self):
+        return self.purchase_line_id.order_id or super()._get_replenishment_document()
+
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description):
         """ Overridden from stock_account to support amount_currency on valuation lines generated from po
         """
