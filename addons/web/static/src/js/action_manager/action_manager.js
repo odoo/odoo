@@ -233,7 +233,15 @@ class ActionManager extends core.EventBus {
             prom = Promise.reject();
         }
 
-        let action = await this._transaction.add(prom);
+        let action;
+        try {
+            action = await this._transaction.add(prom);
+        } catch (e) {
+            if (params.on_fail) {
+                params.on_fail();
+            }
+            return;
+        }
         // show effect if button have effect attribute
         // rainbowman can be displayed from two places: from attribute on a button or from python
         // code below handles the first case i.e 'effect' attribute on button.

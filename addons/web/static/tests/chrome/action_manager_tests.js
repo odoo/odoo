@@ -3834,6 +3834,74 @@ QUnit.module('ActionManager', {
         webClient.destroy();
     });
 
+    QUnit.test('requests for execute_action of type object raises error: re-enables buttons', async function (assert) {
+        assert.expect(3);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_button') {
+                    // the crash manager is not triggered
+                    // in tests (low level AJAX)
+                    return Promise.reject();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await doAction(3, {viewType: 'form'});
+        assert.containsOnce(webClient, '.o_form_view');
+
+        // click on 'Execute action', to execute action 4 in a dialog
+        testUtils.dom.click(webClient.el.querySelector('.o_form_view button[name="object"]'));
+        assert.ok(webClient.el.querySelector('.o_cp_buttons button').disabled);
+        await testUtils.nextTick();
+        await testUtils.owlCompatibilityExtraNextTick();
+        assert.notOk(webClient.el.querySelector('.o_cp_buttons button').disabled);
+        webClient.destroy();
+    });
+
+    QUnit.test('requests for execute_action of type object raises error in modal: re-enables buttons', async function (assert) {
+        assert.expect(5);
+
+        this.archs['partner,false,form'] = `
+            <form>
+                <field name="display_name"/>
+                <footer>
+                    <button name="object" string="Call method" type="object"/>
+                </footer>
+            </form>
+        `;
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_button') {
+                    // the crash manager is not triggered
+                    // in tests (low level AJAX)
+                    return Promise.reject();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await doAction(5);
+        assert.containsOnce(webClient, '.modal .o_form_view');
+
+        testUtils.dom.click(webClient.el.querySelector('.modal footer button[name="object"]'));
+        assert.containsOnce(webClient, '.modal .o_form_view');
+        assert.ok(webClient.el.querySelector('.modal footer button').disabled);
+        await testUtils.nextTick();
+        await testUtils.owlCompatibilityExtraNextTick();
+        assert.containsOnce(webClient, '.modal .o_form_view');
+        assert.notOk(webClient.el.querySelector('.modal footer button').disabled);
+        webClient.destroy();
+    });
+
     QUnit.test('can open different records from a multi record view', async function (assert) {
         assert.expect(11);
 
