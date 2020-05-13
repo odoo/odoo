@@ -1783,8 +1783,6 @@ class IrModelData(models.Model):
         if not data_list:
             return
 
-        # rows to insert
-        rowf = "(%s, %s, %s, %s, %s, now() at time zone 'UTC', now() at time zone 'UTC')"
         rows = tools.OrderedSet()
         for data in data_list:
             prefix, suffix = data['xml_id'].split('.', 1)
@@ -1802,15 +1800,7 @@ class IrModelData(models.Model):
 
         for sub_rows in self.env.cr.split_for_in_conditions(rows):
             # insert rows or update them
-            query = """
-                INSERT INTO ir_model_data (module, name, model, res_id, noupdate, date_init, date_update)
-                VALUES {rows}
-                ON CONFLICT (module, name)
-                DO UPDATE SET date_update=(now() at time zone 'UTC') {where}
-            """.format(
-                rows=", ".join([rowf] * len(sub_rows)),
-                where="WHERE NOT ir_model_data.noupdate" if update else "",
-            )
+            query = self._build_update_xmlids_query(sub_rows, update)
             try:
                 self.env.cr.execute(query, [arg for row in sub_rows for arg in row])
             except Exception:
@@ -1819,6 +1809,20 @@ class IrModelData(models.Model):
 
         # update loaded_xmlids
         self.pool.loaded_xmlids.update("%s.%s" % row[:2] for row in rows)
+
+    # NOTE: this method is overriden in web_studio; if you need to make another
+    #  override, make sure it is compatible with the one that is there.
+    def _build_update_xmlids_query(self, sub_rows, update):
+        rowf = "(%s, %s, %s, %s, %s, now() at time zone 'UTC', now() at time zone 'UTC')"
+        return """
+            INSERT INTO ir_model_data (module, name, model, res_id, noupdate, date_init, date_update)
+            VALUES {rows}
+            ON CONFLICT (module, name)
+            DO UPDATE SET date_update=(now() at time zone 'UTC') {where}
+        """.format(
+            rows=", ".join([rowf] * len(sub_rows)),
+            where="WHERE NOT ir_model_data.noupdate" if update else "",
+        )
 
     @api.model
     def _load_xmlid(self, xml_id):
