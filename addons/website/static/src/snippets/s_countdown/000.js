@@ -112,6 +112,18 @@ const CountdownWidget = publicWidget.Widget.extend({
             this.$('.s_countdown_end_message').removeClass('d-none');
         }
     },
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+    * @override
+    */
+    cleanForSave: function () {
+        if (this.$wrapper.find('canvas').length) {
+            this.$wrapper.find('canvas').addClass('d-none');
+        }
+    },
     /**
      * Initializes the `diff` object. It will contains every visible time unit
      * which will each contain its related canvas, total step, label..
@@ -121,10 +133,7 @@ const CountdownWidget = publicWidget.Widget.extend({
     _initTimeDiff: function () {
         const delta = this._getDelta();
         this.diff = [];
-        if (this.$wrapper.find('canvas').length) {
-            // avoid duplication of the canvas
-            this.$wrapper.find('canvas').remove();
-        }
+        this.cleanForSave();
         if (this._isUnitVisible('d') && !(this.onlyOneUnit && delta < 86400)) {
             this.diff.push({
                 canvas: $('<canvas/>').appendTo(this.$wrapper)[0],
