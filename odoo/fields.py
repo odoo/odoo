@@ -2199,9 +2199,11 @@ class Selection(Field):
                     ):
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
                     values = [kv[0] for kv in selection]
-                    labels.update(selection)
+                    labels = dict(selection)
                 else:
                     self.selection = selection
+                    values = None
+                    labels = {}
 
             if 'selection_add' in field.args:
                 selection_add = field.args['selection_add']
