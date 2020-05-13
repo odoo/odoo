@@ -68,8 +68,11 @@
         <span t-if="widget.isMobile()">
             <a href="#" class="o_thread_window_close fa fa-1x fa-arrow-left" aria-label="Close chat window" title="Close chat window"/>
         </span>
+        <div t-if="thread and thread.getType() === 'dm_chat'" class="o_thread_window_avatar">
+            <img alt="" t-att-src="'/web/image/res.partner/' + thread.getDirectPartnerID() + '/image_128'"/>
+            <t t-call="mail.UserStatus"/>
+        </div>
         <span class="o_thread_window_title">
-            <t t-if="status" t-call="mail.UserStatus"/>
             <t t-esc="title"/>
             <span t-if="unreadCounter"> (<t t-esc="unreadCounter"/>)</span>
             <t t-if="thread and thread.hasTypingNotification() and thread.isSomeoneTyping()" t-call="mail.ThreadTypingIcon"/>
