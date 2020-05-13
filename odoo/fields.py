@@ -2174,9 +2174,11 @@ class Selection(Field):
                     if values is not None and values != [kv[0] for kv in selection]:
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
                     values = [kv[0] for kv in selection]
-                    labels.update(selection)
+                    labels = dict(selection)
                     self.ondelete = {}
                 else:
+                    values = None
+                    labels = {}
                     self.selection = selection
                     self.ondelete = None
 
