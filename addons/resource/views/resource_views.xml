@@ -204,6 +204,7 @@
                 <field name="hour_to" widget="float_time"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
+                <field name="week_type" readonly="1" force_save="1" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>
@@ -265,7 +266,7 @@
                     <group name="resource_details">
                         <group>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="hours_per_day"/>
+                            <field name="hours_per_day" widget="float_time"/>
                             <field name="tz"/>
                         </group>
                     </group>

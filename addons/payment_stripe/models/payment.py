@@ -38,7 +38,7 @@ class PaymentAcquirerStripe(models.Model):
 
         base_url = self.get_base_url()
         stripe_session_data = {
-            'payment_method_types[]': 'card',
+            'payment_method_types[0]': 'card',
             'line_items[][amount]': int(tx_values['amount'] if tx_values['currency'].name in INT_CURRENCIES else float_round(tx_values['amount'] * 100, 2)),
             'line_items[][currency]': tx_values['currency'].name,
             'line_items[][quantity]': 1,
@@ -49,6 +49,9 @@ class PaymentAcquirerStripe(models.Model):
             'payment_intent_data[description]': tx_values['reference'],
             'customer_email': tx_values.get('partner_email') or tx_values.get('billing_partner_email'),
         }
+        if tx_values.get('billing_partner_country').code.lower() == 'nl' and tx_values.get('currency').name.lower() == 'eur':
+            # enable iDEAL for NL-based customers (€ payments only)
+            stripe_session_data['payment_method_types[1]'] = 'ideal'
         tx_values['session_id'] = self._create_stripe_session(stripe_session_data)
 
         return tx_values
@@ -66,7 +69,7 @@ class PaymentAcquirerStripe(models.Model):
         # cfr https://stripe.com/docs/error-codes
         # these can be made customer-facing, as they usually indicate a problem with the payment
         # (e.g. insufficient funds, expired card, etc.)
-        if not resp.ok and not (400 <= resp.status_code < 500 and resp.json().get('error', {}).get('code')):
+        if not resp.ok and (400 <= resp.status_code < 500 and resp.json().get('error', {}).get('code')):
             try:
                 resp.raise_for_status()
             except HTTPError:
@@ -102,7 +105,10 @@ class PaymentAcquirerStripe(models.Model):
 
     @api.model
     def stripe_s2s_form_process(self, data):
-        last4 = data.get('card', {}).get('last4')
+        if not data.get('card'):
+            # can't save the token if it's not a card (e.g. iDEAL)
+            return self.env['payment.token']
+        last4 = data.get('card').get('last4')
         if not last4:
             # PM was created with a setup intent, need to get last4 digits through
             # yet another call -_-

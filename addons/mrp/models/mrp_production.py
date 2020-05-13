@@ -505,7 +505,8 @@ class MrpProduction(models.Model):
             else:
                 values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
         if not values.get('procurement_group_id'):
-            values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id
+            procurement_group_vals = self._prepare_procurement_group_vals(values)
+            values['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
         production = super(MrpProduction, self).create(values)
         production.move_raw_ids.write({
             'group_id': production.procurement_group_id.id,
@@ -806,16 +807,9 @@ class MrpProduction(models.Model):
             quantity = 1.0
 
         for operation in bom.routing_id.operation_ids:
-            workorder = workorders.create({
-                'name': operation.name,
-                'production_id': self.id,
-                'workcenter_id': operation.workcenter_id.id,
-                'product_uom_id': self.product_id.uom_id.id,
-                'operation_id': operation.id,
-                'state': len(workorders) == 0 and 'ready' or 'pending',
-                'qty_producing': quantity,
-                'consumption': self.bom_id.consumption,
-            })
+            workorder_vals = self._prepare_workorder_vals(
+                operation, workorders, quantity)
+            workorder = workorders.create(workorder_vals)
             if workorders:
                 workorders[-1].next_work_order_id = workorder.id
                 workorders[-1]._start_nextworkorder()
@@ -1045,3 +1039,20 @@ class MrpProduction(models.Model):
             return self.env.ref('mrp.exception_on_mo').render(values=values)
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
+
+    def _prepare_workorder_vals(self, operation, workorders, quantity):
+        self.ensure_one()
+        return {
+            'name': operation.name,
+            'production_id': self.id,
+            'workcenter_id': operation.workcenter_id.id,
+            'product_uom_id': self.product_id.uom_id.id,
+            'operation_id': operation.id,
+            'state': len(workorders) == 0 and 'ready' or 'pending',
+            'qty_producing': quantity,
+            'consumption': self.bom_id.consumption,
+        }
+
+    @api.model
+    def _prepare_procurement_group_vals(self, values):
+        return {'name': values['name']}

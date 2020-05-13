@@ -34,7 +34,8 @@ msgstr "${(object.name or '').replace('/','_')}"
 #. module: repair
 #: model:mail.template,subject:repair.mail_template_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
-msgstr "${object.partner_id.name} הזמנות תיקון (Ref ${object.name or 'n/a' })"
+msgstr ""
+"${object.partner_id.name} הזמנות תיקונים (מזהה ${object.name או 'n/a' })"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
@@ -209,7 +210,7 @@ msgstr "הוסף"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes..."
-msgstr "הוסף הערות פנימיות ..."
+msgstr "הוסף הערות פנימיות..."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -525,7 +526,7 @@ msgid ""
 "                operations."
 msgstr ""
 "בהזמנת תיקון, תוכל לפרט את הרכיבים שאתה מסיר,\n"
-"               מוסיף או מחליף ולתעד את הזמן שהקדשת לפעולות\n"
+"               מוסיף או מחליף ולתעד את זמן העבודה עבור הפעולות\n"
 "                השונות."
 
 #. module: repair
@@ -702,7 +703,7 @@ msgstr "סוג הפעילות הבאה"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__none
 msgid "No Invoice"
-msgstr "אין חשבונית"
+msgstr "ללא חיוב"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
@@ -932,12 +933,12 @@ msgstr "מזהה הזמנת תיקון"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_graph
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_pivot
 msgid "Repair Orders"
-msgstr "הזמנות תיקון"
+msgstr "הזמנות תיקונים"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_tag
 msgid "Repair Orders Tags"
-msgstr "תגיות הזמנות תיקון"
+msgstr "תגיות הזמנות תיקונים"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1032,7 +1033,7 @@ msgstr "שגיאת שליחת SMS"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr "חפש הזמנות תיקון"
+msgstr "חפש הזמנות תיקונים"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__invoice_method
@@ -1165,9 +1166,9 @@ msgid ""
 "                order to know if whether the repair should be invoiced to the\n"
 "                customer or not."
 msgstr ""
-"הזמנת התיקון משתמשת בתאריך האחריות של המספר הסידורי\n"
+"הזמנת התיקון משתמשת בתאריך האחריות שעל המספר הסידורי בהזמנה\n"
 "                כדי לדעת אם הלקוח צריך להיות מחויב\n"
-"                או לא."
+"                על התיקון."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_line__state

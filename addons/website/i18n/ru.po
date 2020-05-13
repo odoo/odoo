@@ -18,6 +18,7 @@
 # Oleg Kuryan <oleg@ventor.tech>, 2019
 # ILMIR <karamov@it-projects.info>, 2020
 # Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Сергей Шебанин <sergey@shebanin.ru>, 2020
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +39,7 @@ msgstr ""
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid " Add Images"
-msgstr "Добавить изображение"
+msgstr "Добавить изображения"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -86,7 +87,7 @@ msgstr "&nbsp;"
 #: code:addons/website/static/src/xml/website.gallery.xml:0
 #, python-format
 msgid "&times;"
-msgstr "&раз;"
+msgstr "&times;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -203,7 +204,7 @@ msgstr "4/5"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__404
 msgid "404 Not Found"
-msgstr ""
+msgstr "404 Страница не найдена"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -619,7 +620,7 @@ msgid ""
 "<i class=\"fa fa-info-circle mr-1\"/> <small>Additional information</small>"
 msgstr ""
 "<i class=\"fa fa-info-circle mr-1\"/><small>Дополнительная "
-"информация</small></i>"
+"информация</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -648,7 +649,7 @@ msgstr "<i class=\"fa fa-th-large\"/> Структура"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<i class=\"fa fa-th-large\"/> WEBSITE"
-msgstr "<i class=\"fa fa-th-large\"/>САЙТ</i>"
+msgstr "<i class=\"fa fa-th-large\"/>САЙТ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -734,7 +735,7 @@ msgid ""
 "            <span class=\"sr-only\">Next</span>"
 msgstr ""
 "<span class=\"carousel-control-next-icon\"/><span class=\"sr-"
-"only\">Дальше</span></span>"
+"only\">Дальше</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -744,7 +745,7 @@ msgid ""
 "            <span class=\"sr-only\">Previous</span>"
 msgstr ""
 "<span class=\"carousel-control-prev-icon\"/><span class=\"sr-"
-"only\">назад</span></span>"
+"only\">Назад</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -787,7 +788,7 @@ msgid ""
 "            </span>"
 msgstr ""
 "<span class=\"o_add_facebook_page\"><i class=\"fa fa-plus-circle\"/>Добавить"
-" страницу Facebook</i></span>"
+" страницу Facebook</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
@@ -852,25 +853,27 @@ msgid ""
 "                            <span class=\"css_publish\">Unpublished</span>\n"
 "                            <span class=\"css_unpublish\">Published</span>"
 msgstr ""
-"<span/><span class=\"css_publish\">неопубликованные</span> <span "
-"class=\"css_unpublish\">Опубликовано</span></span>"
+"<span/><span class=\"css_publish\">Неопубликовано</span> <span "
+"class=\"css_unpublish\">Опубликовано</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action
 msgid ""
 "<span>Contact us</span>\n"
 "                        <i class=\"fa fa-1x fa-fw fa-arrow-circle-right ml-1\"/>"
-msgstr "<span>Свяжитесь с нами</span>"
+msgstr ""
+"<span>Свяжитесь с нами</span> <i class=\"fa fa-1x fa-fw fa-arrow-circle-"
+"right ml-1\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
 msgid "<span>— Jane DOE, CEO of <b>MyCompany</b></span>"
-msgstr "<span>- Jane DOE, CEO <b>MyCompany</b></span>"
+msgstr "<span>— Jane DOE, CEO <b>MyCompany</b></span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
 msgid "<span>— John DOE, CEO of <b>MyCompany</b></span>"
-msgstr "<span>- John DOE, CEO <b>MyCompany</b></span>"
+msgstr "<span>— John DOE, CEO <b>MyCompany</b></span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1189,7 +1192,8 @@ msgstr "Архивировано"
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__specific_user_account
 msgid "Are newly created user accounts website specific"
-msgstr "Есть ли вновь учетную запись пользователя сайта специфическим"
+msgstr ""
+"Будут ли вновь создаваемые учетные записи пользователей привязанными к сайту"
 
 #. module: website
 #. openerp-web
@@ -1280,7 +1284,7 @@ msgstr "Содержимое"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Border"
-msgstr "рамка"
+msgstr "Рамка"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1290,7 +1294,7 @@ msgstr "С рамкой"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Bottom"
-msgstr "снизу"
+msgstr "Снизу"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1302,7 +1306,7 @@ msgstr "В коробке"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Breadcrumb"
-msgstr "хлебные крошки"
+msgstr "Хлебные крошки"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -1346,7 +1350,7 @@ msgstr "Отменить"
 #: code:addons/website/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used on a website."
-msgstr "Невозможно удалить язык, которая сейчас используется на сайте."
+msgstr "Невозможно удалить язык, который сейчас используется на сайте."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -1364,7 +1368,7 @@ msgstr "тело карточки"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Card Footer"
-msgstr "фу карточки"
+msgstr "Низ карточки"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -1418,7 +1422,7 @@ msgstr "Дочерние меню"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Choose a pattern"
-msgstr "шаблон"
+msgstr "Выберите шаблон"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
@@ -1549,7 +1553,7 @@ msgstr "Компания"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Company team"
-msgstr "команда компании"
+msgstr "Команда компании"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1632,14 +1636,14 @@ msgid ""
 "Contact us about anything related to our company or services.<br/>\n"
 "                                                                We'll do our best to get back to you as soon as possible."
 msgstr ""
-"Свяжитесь с нами по чему-либо, связанного с нашей компанией или услугами. "
-"<br/> Мы сделаем все возможное, чтобы как можно скорее обратиться к вам."
+"Свяжитесь с нами по любому вопросу о компании или услугах. <br/>\n"
+"Мы ответим вам в кратчайшие сроки."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_activated
 #: model:ir.model.fields,field_description:website.field_website__cdn_activated
 msgid "Content Delivery Network (CDN)"
-msgstr "Сеть доставки контента"
+msgstr "Сеть доставки контента (CDN)"
 
 #. module: website
 #. openerp-web
@@ -2013,7 +2017,7 @@ msgstr "Перетащите еще один блок на вашей стран
 #: code:addons/website/static/src/js/tours/banner.js:0
 #, python-format
 msgid "Drag the <i>Cover</i> block and drop it in your page."
-msgstr "Перетащите <i>Обложка</i> блок и поместите его на страницу."
+msgstr "Перетащите блок <i>Обложка</i> и поместите его на страницу."
 
 #. module: website
 #. openerp-web
@@ -2142,12 +2146,12 @@ msgstr "Email поддержка"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Enter email"
-msgstr "ввести email"
+msgstr "Введите email"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Equal height"
-msgstr "ровная высота"
+msgstr "Равная высота"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
@@ -2318,7 +2322,7 @@ msgstr "Число с плавающей точкой"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Folded list"
-msgstr "Сложенный список"
+msgstr "Свернутый список"
 
 #. module: website
 #. openerp-web
@@ -2371,8 +2375,8 @@ msgid ""
 "                                marketing and the Customer Experience strategies."
 msgstr ""
 "Основатель и главный визионер Тони является движущей силой компании. Он "
-"любит держать работу в полной мере, участвуя в разработке программного "
-"обеспечения, маркетинга и стратегии развития клиентов."
+"любит погружаться с головой в маркетинг, разработку программного обеспечения"
+" и стратегии развития клиентов."
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website__auth_signup_uninvited__b2c
@@ -2472,13 +2476,13 @@ msgid ""
 "customers. Simple words communicate better than big words and pompous "
 "language."
 msgstr ""
-"Копирование начинается с понимания того, как ваш товар или услуга помогает "
-"вашим клиентам. Простыми словами общаться лучше, чем помпезной языке."
+"Хорошо бы начать с понимания того, как ваш товар или услуга помогает вашим "
+"клиентам. Лучше описать простыми словами, а не длинными помпезными фразами."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
 msgid "Google Analytics"
-msgstr "Google Аналитика"
+msgstr "Google Analytics"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics_dashboard
@@ -2499,8 +2503,8 @@ msgid ""
 "Google Analytics initialization failed. Maybe this domain is not whitelisted"
 " in your Google Analytics project for this client ID."
 msgstr ""
-"Ошибка инициализации Google Аналитики. Возможно, этот домен не входит в "
-"белый список в вашем проекте Google Аналитики для этого идентификатора "
+"Ошибка инициализации Google Analytics. Возможно, этот домен не входит в "
+"белый список в вашем проекте Google Analytics для этого идентификатора "
 "клиента."
 
 #. module: website
@@ -2661,8 +2665,7 @@ msgstr "заголовок 6"
 #, python-format
 msgid "Here are the visuals used to help you translate efficiently:"
 msgstr ""
-"Вот визуальные инструменты, используемые, чтобы помочь вам эффективно "
-"перевести:"
+"Вот визуальные инструменты, используемые, чтобы помочь вам легко переводить:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2681,7 +2684,7 @@ msgstr "Скрыть изображения обложки"
 #: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #, python-format
 msgid "Hide this page from search results"
-msgstr "Скрыть эту страницу от результатов поиска"
+msgstr "Скрыть эту страницу из результатов поиска"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2769,7 +2772,7 @@ msgstr "ID действия, если он определен в файле XML"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__xml_id
 msgid "ID of the view defined in xml file"
-msgstr "ID вида определенного в файле xml"
+msgstr "ID вида, определенного в файле XML"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2779,7 +2782,7 @@ msgstr "Иконка"
 #. module: website
 #: model:ir.model.fields,help:website.field_website__specific_user_account
 msgid "If True, new accounts will be associated to the current website"
-msgstr "Если Верно, новые учетные записи будут связаны с текущим сайтом"
+msgstr "Если Верно, новые учетные записи будут привязаны к текущему сайту"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__social_default_image
@@ -2787,8 +2790,8 @@ msgstr "Если Верно, новые учетные записи будут �
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "If set, replaces the company logo as the default social share image."
 msgstr ""
-"Если установлено, заменяет логотип компании как типичное изображение на "
-"`Поделиться в соцсети`."
+"Если установлено, заменяет логотип компании на изображение `Поделиться в "
+"соцсети`."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -2926,7 +2929,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_website__theme_id
 msgid "Installed theme"
-msgstr "установлена тема"
+msgstr "Установлена тема"
 
 #. module: website
 #. openerp-web
@@ -3008,8 +3011,8 @@ msgid ""
 "It might be possible to edit the relevant items or fix the issue in <a "
 "href=\"%s\">the classic Odoo interface</a>"
 msgstr ""
-"Возможно, можно будет редактировать соответствующие элементы или исправить "
-"проблему в <a href=\"%s\">классическом интерфейсе Odoo</a>"
+"Можно будет редактировать соответствующие элементы или исправить проблему в "
+"<a href=\"%s\">классическом интерфейсе Odoo</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -3423,8 +3426,8 @@ msgid ""
 "                                is today. Mich is among the best minds."
 msgstr ""
 "Мич любит заниматься проблемами. С его многолетним опытом коммерческого "
-"директора по индустрии программного обеспечения, Мич помог компании стать "
-"такой, какой она является сегодня. Miч является одним из лучших умов."
+"директора в индустрии программного обеспечения, Мич помог компании стать "
+"такой, какой она является сейчас. Мич - один из лучших умов."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options

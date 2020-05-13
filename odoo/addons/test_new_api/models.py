@@ -437,6 +437,28 @@ class MultiComputeInverse(models.Model):
             record.write({'foo': '/'.join([record.bar1, record.bar2, record.bar3])})
 
 
+class Move(models.Model):
+    _name = 'test_new_api.move'
+    _description = 'Move'
+
+    line_ids = fields.One2many('test_new_api.move_line', 'move_id', domain=[('visible', '=', True)])
+    quantity = fields.Integer(compute='_compute_quantity', store=True)
+
+    @api.depends('line_ids.quantity')
+    def _compute_quantity(self):
+        for record in self:
+            record.quantity = sum(line.quantity for line in record.line_ids)
+
+
+class MoveLine(models.Model):
+    _name = 'test_new_api.move_line'
+    _description = 'Move Line'
+
+    move_id = fields.Many2one('test_new_api.move', required=True, ondelete='cascade')
+    visible = fields.Boolean(default=True)
+    quantity = fields.Integer()
+
+
 class CompanyDependent(models.Model):
     _name = 'test_new_api.company'
     _description = 'Test New API Company'

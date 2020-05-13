@@ -191,18 +191,26 @@ class SaleCouponProgram(models.Model):
 
     @api.model
     def _filter_on_mimimum_amount(self, order):
-        untaxed_amount = order.amount_untaxed
-        tax_amount = order.amount_tax
+        filtered_programs = self.env['sale.coupon.program']
 
-        # Some lines should not be considered when checking if threshold is met like delivery
-        untaxed_amount -= sum([line.price_subtotal for line in order._get_no_effect_on_threshold_lines()])
-        tax_amount -= sum([line.price_tax for line in order._get_no_effect_on_threshold_lines()])
+        no_effect_lines = order._get_no_effect_on_threshold_lines()
+        order_amount = {
+            'amount_untaxed' : order.amount_untaxed - sum([line.price_subtotal for line in no_effect_lines]),
+            'amount_tax' : order.amount_tax - sum([line.price_tax for line in no_effect_lines])
+        }
+        for program in self:
+            lines = order.order_line.filtered(lambda line:
+                program.reward_type == 'discount' and
+                (line.product_id == program.discount_line_product_id or
+                line.product_id == program.reward_id.discount_line_product_id
+            ))
+            untaxed_amount = order_amount['amount_untaxed'] - sum([line.price_subtotal for line in lines])
+            tax_amount = order_amount['amount_tax'] - sum([line.price_tax for line in lines])
+            program_amount = program._compute_program_amount('rule_minimum_amount', order.currency_id)
+            if program.rule_minimum_amount_tax_inclusion == 'tax_included' and program_amount <= (untaxed_amount + tax_amount) or program.rule_minimum_amount_tax_inclusion == 'tax_excluded' and program_amount <= untaxed_amount:
+                filtered_programs |= program
 
-        return self.filtered(lambda program:
-            program.rule_minimum_amount_tax_inclusion == 'tax_included' and
-            program._compute_program_amount('rule_minimum_amount', order.currency_id) <= untaxed_amount + tax_amount or
-            program.rule_minimum_amount_tax_inclusion == 'tax_excluded' and
-            program._compute_program_amount('rule_minimum_amount', order.currency_id) <= untaxed_amount)
+        return filtered_programs
 
     @api.model
     def _filter_on_validity_dates(self, order):

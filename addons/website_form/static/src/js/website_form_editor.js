@@ -434,6 +434,14 @@ odoo.define('website_form_editor', function (require) {
                     }
                 }
             });
+
+            // Clear default values coming from data-for/data-values attributes
+            this.$target.find('input[name],textarea[name]').each(function () {
+                var original = $(this).data('website_form_original_default_value');
+                if (original !== undefined && $(this).val() === original) {
+                    $(this).val('').removeAttr('value');
+                }
+            });
         }
     });
 

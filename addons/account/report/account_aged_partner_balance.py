@@ -95,8 +95,8 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             total.append(0)
 
         # Build a string like (1,2,3) for easy use in SQL query
-        partner_ids = [partner['partner_id'] for partner in partners if partner['partner_id']]
-        lines = dict((partner['partner_id'] or False, []) for partner in partners)
+        partner_ids = [partner['partner_id'] for partner in partners]
+        lines = dict((partner['partner_id'], []) for partner in partners)
         if not partner_ids:
             return [], [], {}
 

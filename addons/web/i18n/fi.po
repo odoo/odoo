@@ -14,7 +14,6 @@
 # Miku Laitinen <miku.laitinen@gmail.com>, 2019
 # Mikko Salmela <salmemik@gmail.com>, 2019
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2019
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
 # Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2019
 # Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2019
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2019
@@ -22,8 +21,9 @@
 # Retropikzel, 2019
 # Martin Trigaux, 2019
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2020
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 10:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020\n"
+"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -235,17 +235,17 @@ msgstr "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
@@ -257,7 +257,7 @@ msgstr "<span>Copyright &amp;copy;</span>"
 #: code:addons/web/static/src/js/views/control_panel/search/add_new_favorite_menu.js:0
 #, python-format
 msgid "A name for your favorite is required."
-msgstr ""
+msgstr "Suosikille täytyy antaa nimi"
 
 #. module: web
 #. openerp-web
@@ -334,7 +334,7 @@ msgstr "Toiminnon ID:"
 #. module: web
 #: model:ir.model,name:web.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
+msgstr "Action Window View"
 
 #. module: web
 #. openerp-web
@@ -348,7 +348,7 @@ msgstr "Ota käyttöön Assets Debugging"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Activate Tests Assets Debugging"
-msgstr ""
+msgstr "Ota käyttöön Tests Assets Debugging"
 
 #. module: web
 #. openerp-web
@@ -471,14 +471,14 @@ msgstr "Lisää: "
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "Adopt Your Signature"
-msgstr ""
+msgstr "Hyväksy allekirjoituksesi"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "Adopt and Sign"
-msgstr ""
+msgstr "Hyväksy ja allekirjoita"
 
 #. module: web
 #. openerp-web
@@ -538,7 +538,7 @@ msgstr "Kaikki käyttäjät"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Alt"
-msgstr ""
+msgstr "Alt"
 
 #. module: web
 #. openerp-web
@@ -624,7 +624,7 @@ msgstr "Oletko varma, että haluat arkistoida kaikki valitut tietueet?"
 #: code:addons/web/static/src/js/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
-msgstr ""
+msgstr "Oletko varma että haluat arkistoida tämän tietueen?"
 
 #. module: web
 #. openerp-web
@@ -653,7 +653,7 @@ msgstr "Oletko varma että haluat poistaa tämän tietueen ?"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Are you sure you want to perform the following update on those"
-msgstr ""
+msgstr "Oletko varma että halaut päivittää nämä"
 
 #. module: web
 #. openerp-web
@@ -682,7 +682,7 @@ msgstr "Liite:"
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "Auto"
-msgstr ""
+msgstr "Automaattinen"
 
 #. module: web
 #. openerp-web
@@ -792,13 +792,17 @@ msgid ""
 "for all purposes when it is used on documents, including legally binding "
 "contracts."
 msgstr ""
+"Klikkaamalla Hyväksy ja allekirjoita, sitoudun siihen että valittu "
+"allekirjoitus/nimikirjaimet on pätevä sähköinen esitys käsin kirjoitetusta "
+"allekirjoituksestani/nimikirjaimistani kaikkiin tarkoituksiin kun sitä "
+"käytetään dokumenteilla, mukaanlukien laillisesti sitovat sopimukset."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/utils.js:0
 #, python-format
 msgid "Bytes|Kb|Mb|Gb|Tb|Pb|Eb|Zb|Yb"
-msgstr ""
+msgstr "Bytes|Kb|Mb|Gb|Tb|Pb|Eb|Zb|Yb"
 
 #. module: web
 #. openerp-web
@@ -819,7 +823,7 @@ msgstr "Kalenteri"
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Calendar toolbar"
-msgstr ""
+msgstr "Kalenterin työkalupalkki"
 
 #. module: web
 #. openerp-web
@@ -882,7 +886,7 @@ msgstr "Vaihda oletusarvo:"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Change graph"
-msgstr ""
+msgstr "Vaihda graafi"
 
 #. module: web
 #. openerp-web
@@ -896,7 +900,7 @@ msgstr "Valintaruutu"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Checkboxes"
-msgstr ""
+msgstr "Valintalaatikot"
 
 #. module: web
 #. openerp-web
@@ -927,7 +931,7 @@ msgstr "Tyhjennä tapahtumat"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Clear Signature"
-msgstr ""
+msgstr "Pyyhi allekirjoitus"
 
 #. module: web
 #. openerp-web
@@ -948,7 +952,7 @@ msgstr "Sulje"
 #: code:addons/web/static/src/js/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Column %s"
-msgstr ""
+msgstr "Sarake %s"
 
 #. module: web
 #. openerp-web
@@ -1039,7 +1043,7 @@ msgstr "Hallinta"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Control panel toolbar"
-msgstr ""
+msgstr "Hallintapaneelin työkalupalkki"
 
 #. module: web
 #. openerp-web
@@ -1102,6 +1106,8 @@ msgid ""
 "Could not set the cover image: incorrect field (\"%s\") is provided in the "
 "view."
 msgstr ""
+"Kansikuvaa ei voitu asettaa: virheellinen kenttä (\"%s\") on annettu "
+"näkymässä."
 
 #. module: web
 #. openerp-web
@@ -1248,7 +1254,7 @@ msgstr "Päivämäärä"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Date & Time"
-msgstr ""
+msgstr "Päiväys ja aika"
 
 #. module: web
 #. openerp-web
@@ -1264,13 +1270,15 @@ msgstr "Päivä"
 msgid ""
 "Debug mode is activated#{debug_mode_help}. Click here to exit debug mode."
 msgstr ""
+"Debug-tila on aktivoitu#{debug_mode_help}. Klikkaa tästä poistuaksesi debug-"
+"tilasta."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Decimal"
-msgstr ""
+msgstr "Desimaali"
 
 #. module: web
 #. openerp-web
@@ -1382,7 +1390,7 @@ msgstr "Toimialue virhe"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Domain node"
-msgstr ""
+msgstr "Toimialueen solmu"
 
 #. module: web
 #. openerp-web
@@ -1465,7 +1473,7 @@ msgstr "Muokkaa vaihetta"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Edit ControlPanelView"
-msgstr ""
+msgstr "Muokkaa hallintapaneelinäkymää"
 
 #. module: web
 #. openerp-web
@@ -1564,7 +1572,7 @@ msgstr "Vienti"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Export All"
-msgstr ""
+msgstr "Vie kaikki"
 
 #. module: web
 #. openerp-web
@@ -1584,7 +1592,7 @@ msgstr "Vientiformaatti"
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "Exporting grouped data to csv is not supported."
-msgstr ""
+msgstr "Ryhmitellyn datan vienti csv-tiedostoon ei ole tuettu."
 
 #. module: web
 #. openerp-web
@@ -1713,7 +1721,7 @@ msgstr "Laskosta"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Followed by"
-msgstr ""
+msgstr "Seuraajat"
 
 #. module: web
 #. openerp-web
@@ -1822,7 +1830,7 @@ msgstr "HTTP-reititys"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Handle"
-msgstr ""
+msgstr "Kahva"
 
 #. module: web
 #. openerp-web
@@ -1843,7 +1851,7 @@ msgstr "Paina ALAS navigoidaksesi alapuolella olevaan listaan"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to"
-msgstr ""
+msgstr "Paina ENTER"
 
 #. module: web
 #. openerp-web
@@ -2220,14 +2228,14 @@ msgstr "Hallitse suodattimia"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Many2many"
-msgstr ""
+msgstr "Many2many"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Many2one"
-msgstr ""
+msgstr "Many2one"
 
 #. module: web
 #. openerp-web
@@ -2448,7 +2456,7 @@ msgstr "Ei väriä"
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "No data"
-msgstr ""
+msgstr "Ei tietoja"
 
 #. module: web
 #. openerp-web
@@ -2462,7 +2470,7 @@ msgstr "Ei näytettävää dataa"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "No match found."
-msgstr ""
+msgstr "Tulosta ei löydy."
 
 #. module: web
 #. openerp-web
@@ -2483,7 +2491,7 @@ msgstr "Ei tietueita"
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #, python-format
 msgid "No records found!"
-msgstr ""
+msgstr "Tietueita ei löydy!"
 
 #. module: web
 #. openerp-web
@@ -2525,7 +2533,7 @@ msgstr "Ei mitään"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Not Set"
-msgstr ""
+msgstr "Ei asetettu"
 
 #. module: web
 #. openerp-web
@@ -2633,7 +2641,7 @@ msgstr "Vaihdettaessa:"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "One2many"
-msgstr ""
+msgstr "One2many"
 
 #. module: web
 #. openerp-web
@@ -2755,14 +2763,14 @@ msgstr "Muu"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "PDF Viewer"
-msgstr ""
+msgstr "PDF-lukija"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "PDF controls"
-msgstr ""
+msgstr "PDF-hallinta"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
@@ -2789,7 +2797,7 @@ msgstr "Sivu: <span class=\"page\"/> / <span class=\"topage\"/>"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Pager"
-msgstr ""
+msgstr "Sivutus"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2808,7 +2816,7 @@ msgstr "Prosenttia"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Percentage Pie"
-msgstr ""
+msgstr "Ympyrädiagrammi"
 
 #. module: web
 #. openerp-web
@@ -2920,7 +2928,7 @@ msgstr "Käytä kopioi-painiketta ilmoittaaksesi virheestä tukipalvelullesi."
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
 msgid "Powered by %s%s"
-msgstr ""
+msgstr "Järjestelmää pyörittää %s%s"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
@@ -2987,7 +2995,7 @@ msgstr "Prioriteetti"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Progress Bar"
-msgstr ""
+msgstr "Edistymispalkki"
 
 #. module: web
 #. openerp-web
@@ -3003,28 +3011,28 @@ msgstr "Violetti"
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
 #, python-format
 msgid "Q1"
-msgstr ""
+msgstr "Q1"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
 #, python-format
 msgid "Q2"
-msgstr ""
+msgstr "Q2"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
 #, python-format
 msgid "Q3"
-msgstr ""
+msgstr "Q3"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
 #, python-format
 msgid "Q4"
-msgstr ""
+msgstr "Q4"
 
 #. module: web
 #: model:ir.model.fields.selection,name:web.selection__ir_actions_act_window_view__view_mode__qweb
@@ -3051,12 +3059,12 @@ msgstr "Nopea lisäys"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Quick search: %s"
-msgstr ""
+msgstr "Pikahaku: %s"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_qweb_field_image
 msgid "Qweb Field Image"
-msgstr ""
+msgstr "Qweb kentän kuva"
 
 #. module: web
 #. openerp-web
@@ -3087,7 +3095,7 @@ msgstr "Punainen"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Regenerate Assets Bundles"
-msgstr ""
+msgstr "Luo Asset-paketit uudelleen"
 
 #. module: web
 #. openerp-web
@@ -3130,7 +3138,7 @@ msgstr "Poista kansikuva"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Remove field"
-msgstr ""
+msgstr "Poista kenttä"
 
 #. module: web
 #. openerp-web
@@ -3200,7 +3208,7 @@ msgstr "KATSO TULOS"
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "SIGNATURE"
-msgstr ""
+msgstr "ALLEKIRJOITUS"
 
 #. module: web
 #. openerp-web
@@ -3270,7 +3278,7 @@ msgstr "Tallenna tietue"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Save as :"
-msgstr ""
+msgstr "Tallenna nimellä :"
 
 #. module: web
 #. openerp-web
@@ -3335,7 +3343,7 @@ msgstr "Katso lisätiedot"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "See examples"
-msgstr ""
+msgstr "Katso esimerkit"
 
 #. module: web
 #. openerp-web
@@ -3355,13 +3363,15 @@ msgid ""
 "Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
 "title=\"Database\"/>"
 msgstr ""
+"Valitse <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
+"title=\"Database\"/>"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select Signature Style"
-msgstr ""
+msgstr "Valitse allekirjoituksen tyyli"
 
 #. module: web
 #. openerp-web
@@ -3382,7 +3392,7 @@ msgstr "Valitse näkymä"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select field"
-msgstr ""
+msgstr "Valitse kenttä"
 
 #. module: web
 #. openerp-web
@@ -3431,7 +3441,7 @@ msgstr "Aseta kansikuva"
 #: code:addons/web/static/src/js/fields/special_fields.js:0
 #, python-format
 msgid "Set a timezone on your user"
-msgstr ""
+msgstr "Aseta käyttäjän aikavyöhyke"
 
 #. module: web
 #. openerp-web
@@ -3459,7 +3469,7 @@ msgstr "Pikavalinnat"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Show sub-fields"
-msgstr ""
+msgstr "Näytä alikentät"
 
 #. module: web
 #. openerp-web
@@ -3493,7 +3503,7 @@ msgstr "Jotain kamalaa tapahtui"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Something went wrong !"
-msgstr ""
+msgstr "Jotain meni pieleen !"
 
 #. module: web
 #. openerp-web
@@ -3564,7 +3574,7 @@ msgstr "Tuki"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Switch to this company"
-msgstr ""
+msgstr "Vaihda tähän yritykseen"
 
 #. module: web
 #. openerp-web
