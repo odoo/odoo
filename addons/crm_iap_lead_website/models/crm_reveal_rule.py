@@ -58,7 +58,7 @@ class CRMRevealRule(models.Model):
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority')
     lead_ids = fields.One2many('crm.lead', 'reveal_rule_id', string='Generated Lead / Opportunity')
     lead_count = fields.Integer(compute='_compute_lead_count', string='Number of Generated Leads')
-    opportunity_count = fields.Integer(compute='_compute_leads_count', string='Number of Generated Opportunity')
+    opportunity_count = fields.Integer(compute='_compute_lead_count', string='Number of Generated Opportunity')
 
     # This limits the number of extra contact.
     # Even if more than 5 extra contacts provided service will return only 5 contacts (see service module for more)
@@ -107,7 +107,7 @@ class CRMRevealRule(models.Model):
         ], fields=['reveal_rule_id', 'type'], groupby=['reveal_rule_id', 'type'], lazy=False)
         mapping = {(lead['reveal_rule_id'][0], lead['type']): lead['__count'] for lead in leads}
         for rule in self:
-            rule.leads_count = mapping.get((rule.id, 'lead'), 0)
+            rule.lead_count = mapping.get((rule.id, 'lead'), 0)
             rule.opportunity_count = mapping.get((rule.id, 'opportunity'), 0)
 
     def action_get_lead_tree_view(self):
