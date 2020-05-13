@@ -12,7 +12,11 @@
             <button class="input-button number-char" t-on-click="sendInput('4')">4</button>
             <button class="input-button number-char" t-on-click="sendInput('5')">5</button>
             <button class="input-button number-char" t-on-click="sendInput('6')">6</button>
-            <button class="mode-button" t-att-class="{'selected-mode': state.mode === 'discount'}"
+            <button class="mode-button" t-att-class="{
+                        'selected-mode': state.mode === 'discount',
+                        'disabled-mode': !hasManualDiscount
+                    }"
+                    t-att-disabled="!hasManualDiscount"
                     t-on-click="changeMode('discount')">Disc</button>
             <br />
             <button class="input-button number-char" t-on-click="sendInput('7')">7</button>
