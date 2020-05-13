@@ -26,37 +26,84 @@ odoo.define('web.Popover', function () {
             this.state = useState({
                 displayed: false,
             });
+
+            this._onClickDocument = this._onClickDocument.bind(this);
+            this._onScrollDocument = this._onScrollDocument.bind(this);
+            this._onResizeWindow = this._onResizeWindow.bind(this);
+
+            this._onScrollDocument = _.throttle(this._onScrollDocument, 50);
+            this._onResizeWindow = _.debounce(this._onResizeWindow, 250);
+
+            /**
+             * Those events are only necessary if the popover is currently open,
+             * so we decided for performance reasons to avoid binding them while
+             * it is closed. This allows to have many popover instantiated while
+             * keeping the count of global handlers low.
+             */
+            this._hasGlobalEventListeners = false;
+        }
+
+        mounted() {
+            this._compute();
         }
 
         patched() {
-            super.patched(...arguments);
-            this.show();
+            this._compute();
+        }
+
+        willUnmount() {
+            if (this._hasGlobalEventListeners) {
+                this._removeGlobalEventListeners();
+            }
+        }
+
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
+
+        /**
+         * @private
+         */
+        _addGlobalEventListeners() {
+            /**
+             * Use capture for the following events to ensure no other part of
+             * the code can stop its propagation from reaching here.
+             */
+            document.addEventListener('click', this._onClickDocument, {
+                capture: true,
+            });
+            document.addEventListener('scroll', this._onScrollDocument, {
+                capture: true,
+            });
+            window.addEventListener('resize', this._onResizeWindow);
+            this._hasGlobalEventListeners = true;
         }
 
         /**
-         * Show the popover according to its props. This method will try to position the
+         * Computes the popover according to its props. This method will try to position the
          * popover as requested (according to the `position` props). If the requested position
          * does not fit the viewport, other positions will be tried in a clockwise order starting
          * a the requested position (e.g. starting from left: top, right, bottom). If no position
          * is found that fits the viewport, 'bottom' is used.
+         *
+         * @private
          */
-        show() {
+        _compute() {
+            if (!this._hasGlobalEventListeners && this.state.displayed) {
+                this._addGlobalEventListeners();
+            }
+            if (this._hasGlobalEventListeners && !this.state.displayed) {
+                this._removeGlobalEventListeners();
+            }
             if (!this.state.displayed) {
                 return;
-            }
-            // get the target from the dom
-            // we don't want to do this early, since the target might not
-            // be in the dom when the component is instanciated
-            if (!this.constructor._isInViewport(this.el)) {
-                // target is no longer in the viewport, close the popover
-                return this._close();
             }
 
             const positionIndex = this.orderedPositions.indexOf(
                 this.props.position
             );
 
-            const positioningData = this.constructor._computePositioningData(
+            const positioningData = this.constructor.computePositioningData(
                 this.popoverRef.el,
                 this.el
             );
@@ -70,7 +117,14 @@ odoo.define('web.Popover', function () {
                 .find((pos) => {
                     this.popoverRef.el.style.top = `${pos.top}px`;
                     this.popoverRef.el.style.left = `${pos.left}px`;
-                    return this.constructor._isInViewport(this.popoverRef.el);
+                    const rect = this.popoverRef.el.getBoundingClientRect();
+                    const html = document.documentElement;
+                    return (
+                        rect.top >= 0 &&
+                        rect.left >= 0 &&
+                        rect.bottom <= (window.innerHeight || html.clientHeight) &&
+                        rect.right <= (window.innerWidth || html.clientWidth)
+                    );
                 });
 
             // remove all positioning classes
@@ -90,46 +144,93 @@ odoo.define('web.Popover', function () {
             }
         }
 
-        //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
-
         /**
          * @private
          */
-        _close() {
+        _removeGlobalEventListeners() {
+            document.removeEventListener('click', this._onClickDocument, true);
+            document.removeEventListener('scroll', this._onScrollDocument, true);
+            window.removeEventListener('resize', this._onResizeWindow);
+            this._hasGlobalEventListeners = false;
+        }
+
+        //----------------------------------------------------------------------
+        // Handlers
+        //----------------------------------------------------------------------
+
+        /**
+         * Toggles the popover depending on its current state.
+         *
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClick(ev) {
+            this.state.displayed = !this.state.displayed;
+        }
+
+        /**
+         * A click outside the popover will dismiss the current popover.
+         *
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClickDocument(ev) {
+            // Handled by `_onClick`.
+            if (this.el.contains(ev.target)) {
+                return;
+            }
+            // Ignore click inside the popover.
+            if (this.popoverRef.el && this.popoverRef.el.contains(ev.target)) {
+                return;
+            }
             this.state.displayed = false;
         }
 
-        //--------------------------------------------------------------------------
-        // Handlers
-        //--------------------------------------------------------------------------
-
         /**
-         * Call the static method to display the popover, ensuring all others
-         * popover are closed first. This prevents having more than one popover
-         * open at a time.
-         * @param {DOMEvent} e
+         * @private
+         * @param {Event} ev
          */
-        openPopover(e) {
-            this.constructor.display(this);
+        _onPopoverClose(ev) {
+            this.state.displayed = false;
         }
 
-        //--------------------------------------------------------------------------
+        /**
+         * A resize event will need to 'reposition' the popover close to its
+         * target.
+         *
+         * @private
+         * @param {Event} ev
+         */
+        _onResizeWindow(ev) {
+            this._compute();
+        }
+
+        /**
+         * A scroll event will need to 'reposition' the popover close to its
+         * target.
+         *
+         * @private
+         * @param {Event} ev
+         */
+        _onScrollDocument(ev) {
+            this._compute();
+        }
+
+        //----------------------------------------------------------------------
         // Static
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
 
         /**
          * Compute the expected positioning coordinates for each possible
          * positioning based on the target and popover sizes.
-         * @private
+         *
          * @static
          * @param {HTMLElement} popoverElement The popover element
          * @param {HTMLElement} targetElement The target element, to which
          *  the popover will be visually 'bound'
          * @returns {Object}
          */
-        static _computePositioningData(popoverElement, targetElement) {
+        static computePositioningData(popoverElement, targetElement) {
             const boundingRectangle = targetElement.getBoundingClientRect();
             const targetTop = boundingRectangle.top;
             const targetLeft = boundingRectangle.left;
@@ -140,143 +241,29 @@ odoo.define('web.Popover', function () {
             return {
                 top: {
                     name: 'top',
-                    top: targetTop - popoverHeight,
-                    left: targetLeft - (popoverWidth - targetWidth) / 2,
+                    top: Math.round(targetTop - popoverHeight),
+                    left: Math.round(targetLeft - (popoverWidth - targetWidth) / 2),
                 },
                 right: {
                     name: 'right',
-                    top: targetTop - (popoverHeight - targetHeight) / 2,
-                    left: targetLeft + targetWidth,
+                    top: Math.round(targetTop - (popoverHeight - targetHeight) / 2),
+                    left: Math.round(targetLeft + targetWidth),
                 },
                 bottom: {
                     name: 'bottom',
-                    top: targetTop + targetHeight,
-                    left: targetLeft - (popoverWidth - targetWidth) / 2,
+                    top: Math.round(targetTop + targetHeight),
+                    left: Math.round(targetLeft - (popoverWidth - targetWidth) / 2),
                 },
                 left: {
                     name: 'left',
-                    top: targetTop - (popoverHeight - targetHeight) / 2,
-                    left: targetLeft - popoverWidth,
+                    top: Math.round(targetTop - (popoverHeight - targetHeight) / 2),
+                    left: Math.round(targetLeft - popoverWidth),
                 },
             };
         }
 
-        /**
-         * Check if the element is in the viewport.
-         * @private
-         * @static
-         * @param {HTMLElement} element
-         * @returns {Boolean} True if the element currently fits inside
-         *                    the viewport, false otherwise.
-         */
-        static _isInViewport(element) {
-            const rect = element.getBoundingClientRect();
-            const html = document.documentElement;
-            return (
-                rect.top >= 0 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || html.clientHeight) &&
-                rect.right <= (window.innerWidth || html.clientWidth)
-            );
-        }
-
-        /**
-         * Hide any displayed popover, display the popover in argument and mark
-         * it as the one being displayed in the class attribute. Add an event
-         * listener on the document to detect any click outside the popover as a
-         * closing event.
-         * Note that the event listener is added for the capture phase, meaning
-         * that it will *always* run before the click listener set on a popover
-         * template. This means that there can be no race condition regarding
-         * clicking on another popover trigger: any existing popover will be
-         * removed during the capture phase, then a new listener will be added
-         * in the bubbling phase of the new popover's trigger click event.
-         * @static
-         * @param {Popover} popover The popover component to display.
-         */
-        static display(popover) {
-            // this should never happen because of the way the events are handled,
-            // but in case an imaginative dev puts a popover inside another one, i'd
-            // prefer the first one to be hidden anyway, causing the second one to
-            // never display itself (since its target won't be in the viewport)
-            if (this.displayed) {
-                this.displayed._close();
-            }
-            if (!this.isListening) {
-                document.addEventListener('click', documentClickHandler, {
-                    capture: true,
-                });
-                document.addEventListener('scroll', documentScrollHandler, {
-                    capture: true,
-                });
-                window.addEventListener('resize', windowResizeHandler);
-                this.isListening = true;
-            }
-            this.displayed = popover;
-            popover.state.displayed = true;
-        }
-
-        /**
-         * Hide any displayed popover and remove event listeners if no popover is
-         * about to replace the current one.
-         * @static
-         * @param {Boolean} nextPopover: whether a new popover is about to be opened; if true,
-         * the document click listener will not be removed.
-         */
-        static hide(nextPopover) {
-            const popover = this.displayed;
-            // only remove the listener if we are not about to open a new popover
-            if (this.isListening && !nextPopover) {
-                document.removeEventListener('click', documentClickHandler, {
-                    capture: true,
-                });
-                document.removeEventListener('scroll', documentScrollHandler, {
-                    capture: true,
-                });
-                window.removeEventListener('resize', windowResizeHandler);
-                this.isListening = false;
-            }
-            popover.state.displayed = false;
-            this.displayed = null;
-        }
     }
 
-    /**
-     * Global handler added on the document for when a popover is currently displayed.
-     * A click outside the popover will dismiss the current popover.
-     * @param {MouseEvent} e
-     */
-    const documentClickHandler = function (e) {
-        const popover = Popover.displayed.popoverRef;
-        if (!popover.el.contains(e.target)) {
-            const nextPopover = !!e.target.closest('*[data-popover]');
-            Popover.hide(nextPopover);
-        }
-    };
-
-    /**
-     * Reposition the currently displayed popover relative to its traget.
-     * @param {Event} e
-     */
-    const _reposition = function (e) {
-        const popover = Popover.displayed;
-        popover.show();
-    };
-
-    /**
-     * Global handler added on the document for when a popover is currently displayed.
-     * A scroll event will need to 'reposition' the popover close to its target.
-     */
-    const documentScrollHandler = _.throttle(_reposition, 50);
-
-    /**
-     * Global handler added on the document for when a popover is currently displayed.
-     * A resize event will need to 'reposition' the popover close to its target.
-     */
-    const windowResizeHandler = _.debounce(_reposition, 250);
-
-    Popover.displayed = null;
-    Popover.isListening = false;
     Popover.components = { Portal };
     Popover.template = 'Popover';
     Popover.defaultProps = {

@@ -508,7 +508,7 @@
 </t>
 
 <t t-name="Popover" owl="1">
-    <div t-on-click="openPopover" data-popover="1">
+    <div t-att-class="{ 'o_is_open': state.displayed }" t-on-click="_onClick" t-on-o-popover-close="_onPopoverClose">
         <t t-slot="default"/>
         <Portal t-if="state.displayed" target="'body'">
             <div role="tooltip" class="o_popover" t-ref="popover">

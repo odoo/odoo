@@ -16,7 +16,9 @@ odoo.define('web.popover_tests', function (require) {
             assert.expect(11);
 
             class SubComponent extends Component {}
-            SubComponent.template = xml`<div class="o_subcomponent" t-esc="props.text"/>`;
+            SubComponent.template = xml`
+                <div class="o_subcomponent" style="width: 280px;" t-esc="props.text"/>
+            `;
 
             class Parent extends Component {
                 constructor() {
@@ -50,11 +52,11 @@ odoo.define('web.popover_tests', function (require) {
 
             const parent = new Parent();
             const fixture = testUtils.prepareTarget();
-            /*
-            the component being tested behaves differently based on its visibility
-            (or not) in the viewport. I have to absolutely position the qunit fixture
-            in the view port for these tests to be meaningful.
-            */
+            /**
+             * The component being tested behaves differently based on its
+             * visibility (or not) in the viewport. The qunit fixture has to be
+             * in the view port for these tests to be meaningful.
+             */
             fixture.style.top = '300px';
             fixture.style.left = '150px';
             fixture.style.width = '300px';
@@ -68,7 +70,7 @@ odoo.define('web.popover_tests', function (require) {
                 const hasCorrectClass = popover.classList.contains(
                     `o_popover--${position}`
                 );
-                const expectedPosition = Popover._computePositioningData(
+                const expectedPosition = Popover.computePositioningData(
                     popover,
                     element
                 )[position];
@@ -169,14 +171,6 @@ odoo.define('web.popover_tests', function (require) {
 
             const parent = new Parent();
             const fixture = testUtils.prepareTarget();
-            /*
-            the component being tested behaves differently based on its visibility
-            (or not) in the viewport. I have to absolutely position the qunit fixture
-            in the view port for these tests to be meaningful.
-            */
-            fixture.style.top = '300px';
-            fixture.style.left = '150px';
-            fixture.style.width = '300px';
 
             const body = document.querySelector('body');
             await parent.mount(fixture);
@@ -196,6 +190,90 @@ odoo.define('web.popover_tests', function (require) {
             assert.containsOnce(body, '#secondContent');
             await testUtils.dom.click('#dismissPopovers');
             assert.containsNone(body, '.o_popover');
+            parent.destroy();
+        });
+
+        QUnit.test('toggle', async function (assert) {
+            assert.expect(4);
+
+            class Parent extends Component {}
+            // Popover should be included as a globally available Component
+            Object.assign(Parent, {
+                env: makeTestEnvironment(),
+                template: xml`
+                    <div>
+                        <Popover>
+                            <button id="open">Open</button>
+                            <t t-set="opened">
+                                Opened!
+                            </t>
+                        </Popover>
+                    </div>
+                `,
+            });
+
+            const parent = new Parent();
+            const fixture = testUtils.prepareTarget();
+            await parent.mount(fixture);
+
+            const body = document.querySelector('body');
+            assert.containsOnce(body, '#open');
+            assert.containsNone(body, '.o_popover');
+
+            await testUtils.dom.click('#open');
+            assert.containsOnce(body, '.o_popover');
+
+            await testUtils.dom.click('#open');
+            assert.containsNone(body, '.o_popover');
+
+            parent.destroy();
+        });
+
+        QUnit.test('close event', async function (assert) {
+            assert.expect(7);
+
+            // Needed to trigger the event from inside the Popover slot.
+            class Content extends Component {}
+            Content.template = xml`
+                <button id="close" t-on-click="trigger('o-popover-close')">
+                    Close
+                </button>
+            `;
+
+            class Parent extends Component {}
+            // Popover should be included as a globally available Component
+            Object.assign(Parent, {
+                components: { Content },
+                env: makeTestEnvironment(),
+                template: xml`
+                    <div>
+                        <Popover>
+                            <button id="open">Open</button>
+                            <t t-set="opened">
+                                <Content/>
+                            </t>
+                        </Popover>
+                    </div>
+                `,
+            });
+
+            const parent = new Parent();
+            const fixture = testUtils.prepareTarget();
+            await parent.mount(fixture);
+
+            const body = document.querySelector('body');
+            assert.containsOnce(body, '#open');
+            assert.containsNone(body, '.o_popover');
+            assert.containsNone(body, '#close');
+
+            await testUtils.dom.click('#open');
+            assert.containsOnce(body, '.o_popover');
+            assert.containsOnce(body, '#close');
+
+            await testUtils.dom.click('#close');
+            assert.containsNone(body, '.o_popover');
+            assert.containsNone(body, '#close');
+
             parent.destroy();
         });
     });
