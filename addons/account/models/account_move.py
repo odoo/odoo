@@ -209,7 +209,7 @@ class AccountMove(models.Model):
 
             # Process taxes.
             for tax in to_process_taxes:
-                if tax.price_include and not tax.include_base_amount:
+                if tax.price_include:
                     tax = tax.with_context(handle_price_include=False)
                 tax_line = _find_existing_tax_line(self.line_ids, tax, parsed_key['tag_ids'], parsed_key['analytic_account_id'])
                 lines_to_sum = _get_lines_to_sum(self.line_ids, tax, parsed_key['tag_ids'], parsed_key['analytic_account_id'])
