@@ -187,7 +187,7 @@ class Website(models.Model):
         homepage_page = Page.search([
             ('website_id', '=', self.id),
             ('key', '=', standard_homepage.key),
-        ])
+        ], limit=1)
         if not homepage_page:
             homepage_page = Page.create({
                 'website_published': True,
