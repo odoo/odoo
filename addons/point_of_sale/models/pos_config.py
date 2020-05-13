@@ -218,6 +218,7 @@ class PosConfig(models.Model):
     only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
     has_active_session = fields.Boolean(compute='_compute_current_session')
     show_allow_invoicing_alert = fields.Boolean(compute="_compute_show_allow_invoicing_alert")
+    manual_discount = fields.Boolean(string="Manual Discounts", default=True)
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):
@@ -634,7 +635,7 @@ class PosConfig(models.Model):
     def setup_defaults(self, company):
         """Extend this method to customize the existing pos.config of the company during the installation
         of a localisation.
-        
+
         :param self pos.config: pos.config records present in the company during the installation of localisation.
         :param company res.company: the single company where the pos.config defaults will be setup.
         """
