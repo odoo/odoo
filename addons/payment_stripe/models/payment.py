@@ -107,10 +107,14 @@ class PaymentAcquirerStripe(models.Model):
 
     @api.model
     def stripe_s2s_form_process(self, data):
-        if not data.get('card'):
-            # can't save the token if it's not a card (e.g. iDEAL)
+        if 'card' in data and not data.get('card'):
+            # coming back from a checkout payment and iDeal (or another non-card pm)
+            # can't save the token if it's not a card
+            # note that in the case of a s2s payment, 'card' wont be
+            # in the data dict because we need to fetch it from the stripe server
+            _logger.info('unable to save card info from Stripe since the payment was not done with a card')
             return self.env['payment.token']
-        last4 = data.get('card').get('last4')
+        last4 = data.get('card', {}).get('last4')
         if not last4:
             # PM was created with a setup intent, need to get last4 digits through
             # yet another call -_-
