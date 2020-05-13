@@ -29,6 +29,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     }
 
     .o_thread_window_header {
+        align-items: center;
         display: flex;
         flex: 0 0 auto;
         color: white;
@@ -53,6 +54,25 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 padding: (($o-mail-chat-header-height - $o-close-font-size) / 2);
                 font-size: $o-close-font-size;
                 color: white;
+            }
+        }
+        .o_thread_window_avatar {
+            margin: -6px 6px -6px 0;
+            position: relative;
+
+            img {
+                height: 25px;
+                width: 25px;
+                border-radius: 50%;
+            }
+            span {
+                bottom: -4px;
+                right: -2px;
+                position: absolute;
+
+                .fa-circle-o {
+                    display: none;
+                }
             }
         }
 
