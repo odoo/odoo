@@ -21,13 +21,6 @@ class TestAccountMoveTaxesEdition(AccountingTestCase):
             'price_include': True,
             'include_base_amount': False,
         })
-        self.base_included_percent_tax = self.env['account.tax'].create({
-            'name': 'base_included_tax_line',
-            'amount_type': 'percent',
-            'amount': 30,
-            'price_include': True,
-            'include_base_amount': True,
-        })
         self.account = self.env['account.account'].search([('deprecated', '=', False)], limit=1)
         self.journal = self.env['account.journal'].search([], limit=1)
 
@@ -215,16 +208,12 @@ class TestAccountMoveTaxesEdition(AccountingTestCase):
             - Save the move.
 
         included tax = 20%
-        base_included tax = 30%
 
         Name                   | Debit     | Credit    | Tax_ids       | Tax_line_id's name
         -----------------------|-----------|-----------|---------------|-------------------
         debit_line_1           | 1000      |           | tax           |
         included_tax_line      | 200       |           |               | included_tax_line
         credit_line_1          |           | 1200      |               |
-        debit_line_2           | 2000      |           | tax           |
-        base_included_tax_line | 461.54    |           |               | base_included_tax_line
-        credit_line_2          |           | 2461.54   |               |
         '''
         move_form = Form(self.env['account.move'], view='account.view_move_form')
         move_form.ref = 'azerty'
@@ -248,28 +237,7 @@ class TestAccountMoveTaxesEdition(AccountingTestCase):
 
         move = move_form.save()
 
-        move_form = Form(move, view='account.view_move_form')
-        # Create a new account.move.line with debit amount.
-        with move_form.line_ids.new() as debit_line2:
-            debit_line2.name = 'debit_line_2'
-            debit_line2.account_id = self.account
-            debit_line2.debit = 2000
-            debit_line2.tax_ids.clear()
-            debit_line2.tax_ids.add(self.base_included_percent_tax)
-
-            self.assertTrue(debit_line2.recompute_tax_line)
-
-        with move_form.line_ids.new() as credit_line2:
-            credit_line2.name = 'credit_line_2'
-            credit_line2.account_id = self.account
-            credit_line2.credit = 2461.54
-
-        move = move_form.save()
-
         self.assertRecordValues(move.line_ids, [
-            {'name': 'credit_line_2',            'debit': 0.0,       'credit': 2461.54,  'tax_ids': [],                                  'tax_line_id': False},
-            {'name': 'base_included_tax_line',   'debit': 461.54,    'credit': 0.0,      'tax_ids': [],                                  'tax_line_id': self.base_included_percent_tax.id},
-            {'name': 'debit_line_2',             'debit': 2000.0,    'credit': 0.0,      'tax_ids': [self.base_included_percent_tax.id], 'tax_line_id': False},
             {'name': 'credit_line_1',            'debit': 0.0,       'credit': 1200.0,   'tax_ids': [],                                  'tax_line_id': False},
             {'name': 'included_tax_line',        'debit': 200.0,     'credit': 0.0,      'tax_ids': [],                                  'tax_line_id': self.included_percent_tax.id},
             {'name': 'debit_line_1',             'debit': 1000.0,    'credit': 0.0,      'tax_ids': [self.included_percent_tax.id],      'tax_line_id': False},
