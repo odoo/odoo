@@ -4,6 +4,7 @@
 import time
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class ProductMargin(models.TransientModel):
@@ -21,6 +22,9 @@ class ProductMargin(models.TransientModel):
     def action_open_window(self):
         self.ensure_one()
         context = dict(self.env.context, create=False, edit=False)
+        
+        if self.from_date and self.to_date and self.from_date > self.to_date:
+            raise ValidationError(_("""The 'To' date cannot be earlier than the 'From' date."""))
 
         def ref(module, xml_id):
             proxy = self.env['ir.model.data']
