@@ -148,14 +148,15 @@ class StockMoveLine(models.Model):
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
 
-    @api.onchange('qty_done')
+    @api.onchange('qty_done', 'product_uom_id')
     def _onchange_qty_done(self):
         """ When the user is encoding a move line for a tracked product, we apply some logic to
         help him. This onchange will warn him if he set `qty_done` to a non-supported value.
         """
         res = {}
         if self.qty_done and self.product_id.tracking == 'serial':
-            if float_compare(self.qty_done, 1.0, precision_rounding=self.product_id.uom_id.rounding) != 0:
+            qty_done = self.product_uom_id._compute_quantity(self.qty_done, self.product_id.uom_id)
+            if float_compare(qty_done, 1.0, precision_rounding=self.product_id.uom_id.rounding) != 0:
                 message = _('You can only process 1.0 %s of products with unique serial number.') % self.product_id.uom_id.name
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
