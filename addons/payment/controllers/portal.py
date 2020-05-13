@@ -208,8 +208,6 @@ class WebsitePayment(http.Controller):
                 cid = user.company_id.id
         else:
             cid = user.company_id.id
-
-        # Check partner
         if not user._is_public():
             # NOTE: this means that if the partner was set in the GET param, it gets overwritten here
             # This is something we want, since security rules are based on the partner - assuming the
@@ -233,12 +231,11 @@ class WebsitePayment(http.Controller):
             acquirer_domain,
             ['|', ('country_ids', '=', False), ('country_ids', 'in', [partner.country_id.id])]
         ])
+        acquirers = env['payment.acquirer'].search(acquirer_domain)
         if acquirer_id:
-            acquirers = env['payment.acquirer'].browse(int(acquirer_id))
-        if order_id:
-            acquirers = env['payment.acquirer'].search(acquirer_domain)
-        if not acquirers:
-            acquirers = env['payment.acquirer'].search(acquirer_domain)
+            filtered_acq = acquirers.filtered(lambda acq: acq.id == int(acquirer_id))
+            if filtered_acq:
+                acquirers = filtered_acq
 
         # s2s mode will always generate a token, which we don't want for public users
         valid_flows = ['form', 's2s'] if not user._is_public() else ['form']
