@@ -80,6 +80,7 @@
         'data/stock_sequence_data.xml',
     ],
     'qweb': [
+        'static/src/xml/forecast_button_widget.xml',
         'static/src/xml/inventory_report.xml',
         'static/src/xml/inventory_lines.xml',
         'static/src/xml/popover_widget.xml',

@@ -3,6 +3,7 @@
 
     <template id="stock_assets_backend" name="mrp_workorder assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
+            <script type="text/javascript" src="/stock/static/src/js/forecast_button_widget.js"></script>
             <script type="text/javascript" src="/stock/static/src/js/inventory_report_list_controller.js"></script>
             <script type="text/javascript" src="/stock/static/src/js/inventory_report_list_view.js"></script>
             <script type="text/javascript" src="/stock/static/src/js/inventory_singleton_list_controller.js"></script>
@@ -19,6 +20,7 @@
             <script type="text/javascript" src="/stock/static/src/js/basic_model.js"></script>
             <script type="text/javascript" src="/stock/static/src/js/stock_rescheduling_popover.js"></script>
             <link rel="stylesheet" type="text/scss" href="/stock/static/src/scss/stock_traceability_report.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/stock/static/src/scss/stock_widget.scss"/>
         </xpath>
    </template>
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="forecastButton">
+    <div>
+        <span t-esc="value"/>
+        <t t-if="displayButton">
+            <button class="o_forecast_report_button btn btn-link o_icon_button ml-2" title="Forecasted Report">
+                <i class="fa fa-fw fa-area-chart"/>
+            </button>
+        </t>
+    </div>
+</t>
+
+</templates>

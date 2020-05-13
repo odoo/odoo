@@ -665,6 +665,11 @@ class StockMove(models.Model):
         }
         return action
 
+    def action_open_replenishment_report(self):
+        self.ensure_one()
+        report = self.env.ref('stock.stock_replenishment_report_product_product_action')
+        return report.with_context(discard_logo_check=True).report_action(self.product_id)
+
     def _do_unreserve(self):
         moves_to_unreserve = self.env['stock.move']
         moves_not_to_recompute = self.env['stock.move']
