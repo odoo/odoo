@@ -234,6 +234,24 @@ class MailTemplate(models.Model):
     # RENDERING
     # ----------------------------------------
 
+    @api.onchange('body_html')
+    def _adjust_code(self):
+        # Make rendering IF statement possible and without errors when adding them from HTML Editor
+        body_code=self.body_html
+        if '%if' in body_code or '%endif' in body_code:
+            body_code=body_code.replace('%if','% if').replace('%endif','% endif')
+        if '% if' in body_code:
+            # raise Warning('yes')
+            array=body_code.split('% if')
+            new_body=array[0]
+            for item in array[1:len(array)]:
+                if ':' not in item:
+                    raise Warning("Please add ':' in IF statement: % if",item)
+                else:
+                    new_body+='% if'+item.replace(':\n',':',1).replace(':',':\n',1)
+            body_code=new_body.replace('\n% if','% if').replace('% if','\n% if').replace('\n% endif\n','% endif').replace('% endif','\n% endif\n')
+            self.write({'body_html': body_code})
+    
     @api.model
     def render_post_process(self, html):
         html = self.env['mail.thread']._replace_local_links(html)
