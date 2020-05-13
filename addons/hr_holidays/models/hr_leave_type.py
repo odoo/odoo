@@ -257,7 +257,7 @@ class HolidaysType(models.Model):
         elif 'default_employee_id' in self._context:
             employee_id = self._context['default_employee_id']
         else:
-            employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.user.id), ('company_id', '=', self.env.company.id)], limit=1).id
+            employee_id = self.env.user.employee_id.id
         return employee_id
 
     def _compute_leaves(self):

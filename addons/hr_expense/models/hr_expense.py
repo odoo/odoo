@@ -18,7 +18,7 @@ class HrExpense(models.Model):
 
     @api.model
     def _default_employee_id(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        return self.env.user.employee_id
 
     @api.model
     def _default_product_uom_id(self):
@@ -35,7 +35,7 @@ class HrExpense(models.Model):
             res = "['|', ('company_id', '=', False), ('company_id', '=', company_id)]"  # Then, domain accepts everything
         elif self.user_has_groups('hr_expense.group_hr_expense_team_approver') and self.env.user.employee_ids:
             user = self.env.user
-            employee = user.employee_ids[0]
+            employee = self.env.user.employee_id
             res = [
                 '|', '|', '|',
                 ('department_id.manager_id', '=', employee.id),
@@ -44,8 +44,8 @@ class HrExpense(models.Model):
                 ('expense_manager_id', '=', user.id),
                 '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id),
             ]
-        elif self.env.user.employee_ids:
-            employee = self.env.user.employee_ids[0]
+        elif self.env.user.employee_id:
+            employee = self.env.user.employee_id
             res = [('id', '=', employee.id), '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]
         return res
 
