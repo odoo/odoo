@@ -44,13 +44,13 @@ class ReportBomStructure(models.AbstractModel):
         res['lines']['report_type'] = 'html'
         res['lines']['report_structure'] = 'all'
         res['lines']['has_attachments'] = res['lines']['attachments'] or any(component['attachments'] for component in res['lines']['components'])
-        res['lines'] = self.env.ref('mrp.report_mrp_bom').render({'data': res['lines']})
+        res['lines'] = self.env.ref('mrp.report_mrp_bom')._render({'data': res['lines']})
         return res
 
     @api.model
     def get_bom(self, bom_id=False, product_id=False, line_qty=False, line_id=False, level=False):
         lines = self._get_bom(bom_id=bom_id, product_id=product_id, line_qty=line_qty, line_id=line_id, level=level)
-        return self.env.ref('mrp.report_mrp_bom_line').render({'data': lines})
+        return self.env.ref('mrp.report_mrp_bom_line')._render({'data': lines})
 
     @api.model
     def get_operations(self, bom_id=False, qty=0, level=0):
@@ -61,7 +61,7 @@ class ReportBomStructure(models.AbstractModel):
             'currency': self.env.company.currency_id,
             'operations': lines,
         }
-        return self.env.ref('mrp.report_mrp_operation_line').render({'data': values})
+        return self.env.ref('mrp.report_mrp_operation_line')._render({'data': values})
 
     @api.model
     def _get_report_data(self, bom_id, searchQty=0, searchVariant=False):

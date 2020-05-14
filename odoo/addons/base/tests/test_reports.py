@@ -28,6 +28,6 @@ class TestReports(odoo.tests.TransactionCase):
                     report_records = report_records[:1]
 
                 # Test report generation
-                report.render_qweb_html(report_records.ids)
+                report._render_qweb_html(report_records.ids)
             else:
                 continue

@@ -76,7 +76,7 @@ class CalendarController(http.Controller):
         # - we need a template rendering which is not lazy, to render before cursor closing
         # - we need to display the template in the language of the user (not possible with
         #   request.render())
-        response_content = request.env['ir.ui.view'].with_context(lang=lang).render_template(
+        response_content = request.env['ir.ui.view'].with_context(lang=lang)._render_template(
             'calendar.invitation_page_anonymous', {
                 'event': event,
                 'attendee': attendee,

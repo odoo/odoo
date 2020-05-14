@@ -1219,7 +1219,7 @@ class Response(werkzeug.wrappers.Response):
         """
         env = request.env(user=self.uid or request.uid or odoo.SUPERUSER_ID)
         self.qcontext['request'] = request
-        return env["ir.ui.view"].render_template(self.template, self.qcontext)
+        return env["ir.ui.view"]._render_template(self.template, self.qcontext)
 
     def flatten(self):
         """ Forces the rendering of the response's template, sets the result

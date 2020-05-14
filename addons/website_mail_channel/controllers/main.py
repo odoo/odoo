@@ -203,7 +203,7 @@ class MailGroup(http.Controller):
             'msg_more_count': message_count - self._replies_per_page,
             'replies_per_page': self._replies_per_page,
         }
-        return request.env.ref('website_mail_channel.messages_short').render(values, engine='ir.qweb')
+        return request.env.ref('website_mail_channel.messages_short')._render(values, engine='ir.qweb')
 
     @http.route("/groups/<int:group_id>/get_alias_info", type='json', auth='public', website=True)
     def get_alias_info(self, group_id, **post):

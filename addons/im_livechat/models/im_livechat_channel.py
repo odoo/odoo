@@ -65,7 +65,7 @@ class ImLivechatChannel(models.Model):
         }
         for record in self:
             values["channel_id"] = record.id
-            record.script_external = view.render(values)
+            record.script_external = view._render(values)
 
     def _compute_web_page_link(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')

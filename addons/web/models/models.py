@@ -192,7 +192,7 @@ class Base(models.AbstractModel):
     @api.model
     def qweb_render_view(self, view_id, domain):
         assert view_id
-        return self.env['ir.qweb'].render(
+        return self.env['ir.qweb']._render(
             view_id, {
             **self.env['ir.ui.view']._prepare_qcontext(),
             **self._qweb_prepare_qcontext(view_id, domain),
@@ -526,7 +526,7 @@ class ResCompany(models.Model):
         # One bundle for everyone, so this method
         # necessarily updates the style for every company at once
         company_ids = self.sudo().search([])
-        company_styles = template_style.render({
+        company_styles = template_style._render({
             'company_ids': company_ids,
         })
         return base64.b64encode((company_styles))

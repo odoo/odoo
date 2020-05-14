@@ -94,7 +94,7 @@ def authorize(env, key, account_token, credit, dbuuid=False, description=None, c
     except InsufficientCreditError as e:
         if credit_template:
             arguments = json.loads(e.args[0])
-            arguments['body'] = pycompat.to_text(env['ir.qweb'].render(credit_template))
+            arguments['body'] = pycompat.to_text(env['ir.qweb']._render(credit_template))
             e.args = (json.dumps(arguments),)
         raise e
     return transaction_token
