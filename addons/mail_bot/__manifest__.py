@@ -11,7 +11,7 @@
     'depends': ['mail'],
     'installable': True,
     'application': False,
-    'auto_install': True,
+    'auto_install': False,
     'data': [
         'views/assets.xml',
         'views/res_users_views.xml',
