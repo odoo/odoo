@@ -559,7 +559,6 @@ class Task(models.Model):
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
     date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
-    date_deadline_formatted = fields.Char(compute='_compute_date_deadline_formatted')
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         index=True,
         copy=False,
@@ -623,11 +622,6 @@ class Task(models.Model):
             if portal_users:
                 user_names = ', '.join(portal_users[:10].mapped('name'))
                 raise ValidationError(_("The project visibility setting doesn't allow portal users to see the project's tasks. (%s)") % user_names)
-
-    @api.depends('date_deadline')
-    def _compute_date_deadline_formatted(self):
-        for task in self:
-            task.date_deadline_formatted = format_date(self.env, task.date_deadline) if task.date_deadline else None
 
     def _compute_attachment_ids(self):
         for task in self:
