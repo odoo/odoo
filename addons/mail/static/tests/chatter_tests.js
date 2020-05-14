@@ -32,7 +32,10 @@ QUnit.module('Chatter', {
                     im_status: {
                         string: "im_status",
                         type: "char",
-                    }
+                    },
+                    display_name: {
+                        string: "Name",
+                        type: "char"},
                 },
                 records: [{
                     id: 1,
@@ -1133,6 +1136,161 @@ QUnit.test('list activity exception widget with activity', async function (asser
         "there is an exception on a record");
 
     list.destroy();
+});
+
+QUnit.test('chatter: click on avatar of thread messages and activities to open DM tab for related user', async function (assert) {
+    assert.expect(11);
+
+    this.data['res.partner'].fields.active = {string: "Active", type: "boolean"};
+    this.data['res.partner'].records.push(
+        {id: 2, display_name: "Me", active: true},
+        {id: 3, display_name: "Not Me", active: true},
+        {id: 4, display_name: "Someone", active: true},
+        {id: 5, display_name: "Archived", active: false},
+    );
+    this.data['res.users'] = {
+        fields: {
+            display_name: {string: "Name", type: "char"},
+            partner_id: {string: "Partner", type: "many2one", relation: 'res.partner'},
+            active: {string: "Active", type: "boolean"},
+        },
+        records: [
+            {id: 2, name: "Me", partner_id: 2, active: true},
+            {id: 3, name: "Not Me", partner_id: 3, active: true},
+            {id: 5, name: "Archived", partner_id: 5, active: false},
+        ],
+    };
+    this.data['mail.message'].records.push({
+        author_id: [2, "Me"],
+        body: "A message",
+        date: "2020-05-27 09:35:41",
+        id: 21,
+        is_note: false,
+        is_discussion: true,
+        model: 'partner',
+        res_id: 2,
+    }, {
+        author_id: [3, "Not Me"],
+        body: "Reply to a message",
+        date: "2020-05-27 09:42:10",
+        id: 22,
+        is_note: false,
+        is_discussion: true,
+        model: 'partner',
+        res_id: 2,
+    }, {
+        author_id: [4, "Someone"],
+        body: "notes",
+        date: "2020-05-28 10:17:18",
+        id: 23,
+        is_note: true,
+        is_discussion: false,
+        model: 'partner',
+        res_id: 2,
+    }, {
+        author_id: [5, "Archived"],
+        body: "legacy notes",
+        date: "2020-05-28 10:17:18",
+        id: 24,
+        is_note: true,
+        is_discussion: false,
+        model: 'partner',
+        res_id: 2,
+    });
+    this.data['mail.activity'].fields.user_id = { string: "Assigned to", type: "many2one", relation: 'res.partner'};
+    this.data['mail.activity'].records = [{
+        id: 21,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: 3,
+        create_uid: 2,
+        activity_type_id: 1,
+        note: 'Activity scheduled for today and for another active user',
+    }, {
+        id: 22,
+        display_name: "Another activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: 2,
+        create_uid: 2,
+        activity_type_id: 1,
+        note: 'Activity scheduled for today and for logged in user',
+    }, {
+        id: 23,
+        display_name: "Yet another activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: 5,
+        create_uid: 2,
+        activity_type_id: 1,
+        note: 'Activity scheduled for today and for another archived user',
+    }];
+
+    this.data.partner.records[0].message_ids = [21, 22, 23, 24];
+    this.data.partner.records[0].activity_ids = [21, 22, 23];
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        session: {partner_id: 2, uid: 2},
+        arch: `<form string="Partners">
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>`,
+        res_id: 2,
+    });
+
+    testUtils.mock.intercept(form, 'call_service', ev => {
+        if (ev.data.service === 'mail_service') {
+            assert.step(`call service ${ev.data.method} for partnerID ${ev.data.args[0]}`);
+        }
+        if (ev.data.service === 'notification') {
+            assert.step(`display ${ev.data.service} "${ev.data.args[0].title}"`);
+        }
+    }, true);
+
+    // basic rendering
+    const $mailThread = form.$('.o_mail_thread');
+    const $mailActivities = form.$('.o_mail_activity');
+
+
+    assert.containsOnce(form, '.o_chatter', "there should be a chatter widget");
+    assert.containsN($mailThread, '.o_thread_message', 4, "chatter should contain four messages");
+    assert.containsN($mailActivities, '.o_thread_message', 3, "chatter should contain three activities");
+
+    // click events to open DM tab for thread messages
+    await testUtils.dom.click($mailThread.find('.o_thread_message_avatar:first')); // 'Archived' (partner associated with archived user other than logged in user)
+    await testUtils.dom.click($mailThread.find('.o_thread_message_avatar:nth(1)')); // 'Someone' (partner with no associated user)
+    await testUtils.dom.click($mailThread.find('.o_thread_message_avatar:nth(2)')); // 'Not Me' (partner associated with active user other than logged in user)
+    await testUtils.dom.click($mailThread.find('.o_thread_message_avatar:nth(3)')); // 'Me' (partner associated with logged in user)
+
+    // click events to open DM tab for activities
+    await testUtils.dom.click($mailActivities.find('.o_thread_message_avatar:first')); // 'Not Me' (user other than logged in user)
+    await testUtils.dom.click($mailActivities.find('.o_thread_message_avatar:nth(1)')); // 'Me' (logged in user)
+    await testUtils.dom.click($mailActivities.find('.o_thread_message_avatar:nth(2)')); // 'Archived' (archived user other than logged in user)
+
+    assert.verifySteps([
+        'call service openDMChatWindow for partnerID 5',
+        'display notification "No user to chat with"',
+        'call service openDMChatWindow for partnerID 3',
+        'display notification "Cannot chat with yourself"',
+        'call service openDMChatWindow for partnerID 3',
+        'display notification "Cannot chat with yourself"',
+        'call service openDMChatWindow for partnerID 5',
+    ]);
+
+    form.destroy();
 });
 
 QUnit.test('chatter: post, receive and star messages', async function (assert) {

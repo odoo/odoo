@@ -30,7 +30,7 @@ var ThreadWidget = Widget.extend({
 
     events: {
         'click a': '_onClickRedirect',
-        'click img': '_onClickRedirect',
+        'click img.o_mail_redirect': '_onClickRedirect',
         'click strong': '_onClickRedirect',
         'click .o_thread_show_more': '_onClickShowMore',
         'click .o_attachment_download': '_onAttachmentDownload',

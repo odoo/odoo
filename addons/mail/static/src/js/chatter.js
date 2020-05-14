@@ -34,6 +34,7 @@ var Chatter = Widget.extend({
         reset_suggested_partners: '_onResetSuggestedPartners',
     },
     events: {
+        'click .o_thread_message_avatar': '_onClickAvatar',
         'click .o_chatter_button_new_message': '_onOpenComposerMessage',
         'click .o_chatter_button_log_note': '_onOpenComposerNote',
         'click .o_chatter_button_attachment': '_onClickAttachmentButton',
@@ -385,6 +386,60 @@ var Chatter = Widget.extend({
         });
     },
     /**
+     * Opens the DM Chat window when user clicks on avatar of
+     * a thread message (or notifies with appropriate message)
+     *
+     * @private
+     * @param {integer} partnerId
+     */
+    _openDMChatWindowFromPartner(partnerId) {
+        const self = this;
+        this._rpc({
+            model: 'res.users',
+            method: 'search',
+            args: [[['partner_id', '=', partnerId], '|', ['active', '=', true], ['active', '=', false]]],
+        }).then(function (users) {
+            if (users.length) {
+                self.call('mail_service', 'openDMChatWindow', partnerId);
+            }
+            else {
+                // partner without a dedicated user
+                self.displayNotification({
+                    title: _t('No user to chat with'),
+                    message: _t('You can only chat with partners who have a dedicated user.'),
+                    type: 'info',
+                });
+            }
+        });
+    },
+    /**
+     * Opens the DM Chat window when user clicks on avatar of
+     * an activity (or notifies with appropriate message)
+     *
+     * @private
+     * @param {integer} userId
+     */
+    _openDMChatWindowFromUser(userId) {
+        const self = this;
+        this._rpc({
+            model: 'res.users',
+            method: 'read',
+            args: [userId, ['partner_id']],
+        }).then(function (users) {
+            if (users.length) {
+                self.call('mail_service', 'openDMChatWindow', users[0].partner_id.shift());
+            }
+            else {
+                // deleted user
+                self.displayNotification({
+                    title: _t('No user to chat with'),
+                    message: _t('The user you are trying to chat with is deleted.'),
+                    type: 'info',
+                });
+            }
+        });
+    },
+    /**
      * State if the record will be reloaded after posting a message.
      * Useful to warn the user of unsaved changes if the record is dirty.
      *
@@ -536,6 +591,28 @@ var Chatter = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickAvatar(ev) {
+        const messageResponsibleId = $(ev.currentTarget).data('oe-id');
+        const messageResponsibleModel = $(ev.currentTarget).data('oe-model');
+
+        if (!messageResponsibleId) {
+            this.displayNotification({
+                title: _t('Cannot chat with yourself'),
+                message: _t('Click on the avatar of other users to chat with them.'),
+                type: 'info',
+            });
+        } else {
+            if (messageResponsibleModel === 'res.users') {
+                this._openDMChatWindowFromUser(messageResponsibleId);
+            } else {
+                this._openDMChatWindowFromPartner(messageResponsibleId);
+            }
+        }
+    },
     /**
      * @private
      * @param {OdooEvent} ev

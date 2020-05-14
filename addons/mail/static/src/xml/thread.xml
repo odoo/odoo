@@ -278,7 +278,7 @@
                             t-att-src="message.getAvatarSource()"
                             data-oe-model="res.partner"
                             t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
-                            t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
+                            t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() and !message.isLinkedToDocumentThread() ? 'o_mail_redirect' : ''}"/>
                         <t t-call="mail.UserStatus">
                             <t t-set="status" t-value="message.getAuthorImStatus()"/>
                             <t t-set="partnerID" t-value="message.getAuthorID()"/>
