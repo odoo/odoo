@@ -88,18 +88,8 @@
                     <field name="reserve_visible" invisible="1"/>
                     <field name="consumption" invisible="1"/>
                     <field name="is_planned" invisible="1"/>
+                    <field name="workorder_ids" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(stock.action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action" states="done" groups="stock.group_production_lot"/>
-                        <button name="%(action_mrp_production_moves)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
-                        <button type="object" name="action_view_mo_delivery" class="oe_stat_button" icon="fa-truck"  groups="base.group_user" attrs="{'invisible': [('delivery_count', '=', 0)]}">
-                            <field name="delivery_count" widget="statinfo" string="Transfers"/>
-                        </button>
-                        <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value"><field name="scrap_count"/></span>
-                                <span class="o_stat_text">Scraps</span>
-                            </div>
-                        </button>
                         <button class="oe_stat_button" name="action_view_mrp_production_childs" type="object" icon="fa-wrench" attrs="{'invisible': [('mrp_production_child_count', '=', 0)]}">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="mrp_production_child_count"/></span>
@@ -118,7 +108,17 @@
                                 <span class="o_stat_text">Backorder MO's</span>
                             </div>
                         </button>
-                        <field name="workorder_ids" invisible="1"/>
+                        <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="scrap_count"/></span>
+                                <span class="o_stat_text">Scraps</span>
+                            </div>
+                        </button>
+                        <button type="object" name="action_view_mo_delivery" class="oe_stat_button" icon="fa-truck"  groups="base.group_user" attrs="{'invisible': [('delivery_count', '=', 0)]}">
+                            <field name="delivery_count" widget="statinfo" string="Transfers"/>
+                        </button>
+                        <button name="%(stock.action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action" states="done" groups="stock.group_production_lot"/>
+                        <button name="%(action_mrp_production_moves)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
                     </div>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Manufacturing Reference" nolabel="1"/></h1>
