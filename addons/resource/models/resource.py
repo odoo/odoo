@@ -421,6 +421,18 @@ class ResourceCalendar(models.Model):
         return (self._attendance_intervals(start_dt, end_dt, resource, tz=tz) -
                 self._leave_intervals(start_dt, end_dt, resource, domain, tz=tz))
 
+    def _unavailable_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
+        """ Return the unavailable intervals between the given datetimes. """
+        work_intervals = self._work_intervals(start_dt, end_dt, resource, domain, tz)
+        work_intervals = [(start, stop) for start, stop, meta in work_intervals]
+        # start + flatten(intervals) + end
+        work_intervals = [start_dt] + list(chain.from_iterable(work_intervals)) + [end_dt]
+        # put it back to UTC
+        work_intervals = list(map(lambda dt: dt.astimezone(utc), work_intervals))
+        # pick groups of two
+        work_intervals = list(zip(work_intervals[0::2], work_intervals[1::2]))
+        return work_intervals
+
     # --------------------------------------------------
     # Private Methods / Helpers
     # --------------------------------------------------
@@ -801,15 +813,7 @@ class ResourceResource(models.Model):
         resource_mapping = {}
         for resource in self:
             calendar = resource.calendar_id
-            resource_work_intervals = calendar._work_intervals(start_datetime, end_datetime, resource)
-            resource_work_intervals = [(start, stop) for start, stop, meta in resource_work_intervals]
-            # start + flatten(intervals) + end
-            resource_work_intervals = [start_datetime] + list(chain.from_iterable(resource_work_intervals)) + [end_datetime]
-            # put it back to UTC
-            resource_work_intervals = list(map(lambda dt: dt.astimezone(utc), resource_work_intervals))
-            # pick groups of two
-            resource_work_intervals = list(zip(resource_work_intervals[0::2], resource_work_intervals[1::2]))
-            resource_mapping[resource.id] = resource_work_intervals
+            resource_mapping[resource.id] = calendar._unavailable_intervals(start_datetime, end_datetime, resource)
         return resource_mapping
 
 
