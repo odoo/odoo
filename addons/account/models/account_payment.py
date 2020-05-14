@@ -211,10 +211,27 @@ class AccountPayment(models.Model):
         else:
             liquidity_line_name = self.payment_reference
 
+        # Compute a default label to set on the journal items.
+
+        payment_display_name = {
+            'outbound-customer': _("Customer Reimbursement"),
+            'inbound-customer': _("Customer Payment"),
+            'outbound-supplier': _("Vendor Payment"),
+            'inbound-supplier': _("Vendor Reimbursement"),
+        }
+
+        default_line_name = self.env['account.move.line']._get_default_line_name(
+            payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
+            self.amount,
+            self.currency_id,
+            self.date,
+            partner=self.partner_id,
+        )
+
         line_vals_list = [
             # Liquidity line.
             {
-                'name': liquidity_line_name,
+                'name': liquidity_line_name or default_line_name,
                 'date_maturity': self.date,
                 'amount_currency': -counterpart_amount_currency,
                 'currency_id': currency_id,
@@ -225,7 +242,7 @@ class AccountPayment(models.Model):
             },
             # Receivable / Payable.
             {
-                'name': self.payment_reference,
+                'name': self.payment_reference or default_line_name,
                 'date_maturity': self.date,
                 'amount_currency': counterpart_amount_currency + write_off_amount_currency if currency_id else 0.0,
                 'currency_id': currency_id,
@@ -238,7 +255,7 @@ class AccountPayment(models.Model):
         if write_off_balance:
             # Write-off line.
             line_vals_list.append({
-                'name': write_off_line_vals.get('name'),
+                'name': write_off_line_vals.get('name') or default_line_name,
                 'amount_currency': -write_off_amount_currency,
                 'currency_id': currency_id,
                 'debit': write_off_balance < 0.0 and -write_off_balance or 0.0,
@@ -607,7 +624,6 @@ class AccountPayment(models.Model):
                 payment_vals_to_write.update({
                     'amount': abs(liquidity_amount),
                     'payment_type': 'inbound' if liquidity_amount > 0.0 else 'outbound',
-                    'payment_reference': liquidity_lines.name,
                     'partner_type': partner_type,
                     'currency_id': liquidity_lines.currency_id.id or liquidity_lines.company_currency_id.id,
                     'destination_account_id': counterpart_lines.account_id.id,
@@ -625,7 +641,7 @@ class AccountPayment(models.Model):
             return
 
         if not any(field_name in changed_fields for field_name in (
-            'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
+            'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
             'currency_id', 'partner_id', 'destination_account_id',
         )):
             return
