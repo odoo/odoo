@@ -121,18 +121,18 @@
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
                             <field name="user_id" invisible="1"/>
-                            <field name="employee_id" required="1"/>
+                            <field name="employee_id" required="1" widget="many2one_avatar_employee"/>
                             <field name="name" required="0"/>
-                            <field name="unit_amount" widget="timesheet_uom"/>
+                            <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
                             <field name="project_id" invisible="1"/>
                             <field name="company_id" invisible="1"/>
                         </tree>
                         <kanban class="o_kanban_mobile">
                             <field name="date"/>
                             <field name="user_id"/>
-                            <field name="employee_id"/>
+                            <field name="employee_id" widget="many2one_avatar_employee"/>
                             <field name="name"/>
-                            <field name="unit_amount"/>
+                            <field name="unit_amount" decoration-danger="unit_amount &gt; 24"/>
                             <field name="project_id"/>
                             <templates>
                                 <t t-name="kanban-box">
@@ -164,9 +164,9 @@
                                  <group>
                                     <field name="date"/>
                                     <field name="user_id" invisible="1"/>
-                                    <field name="employee_id" required="1"/>
+                                    <field name="employee_id" required="1" widget="many2one_avatar_employee"/>
                                     <field name="name"/>
-                                    <field name="unit_amount" string="Duration" widget="float_time"/>
+                                    <field name="unit_amount" string="Duration" widget="float_time" decoration-danger="unit_amount &gt; 24"/>
                                     <field name="project_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
                                 </group>
@@ -193,13 +193,10 @@
             <field name="inherit_id" ref="project.view_task_tree2" />
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
-                    <attribute name="decoration-warning">planned_hours and (effective_hours&gt;planned_hours)</attribute>
-                </xpath>
                 <field name="user_id" position="after">
                     <field name="planned_hours" widget="float_time" sum="Initially Planned Hours" optional="show"/>
                     <field name="effective_hours" widget="float_time" sum="Effective Hours" optional="show"/>
-                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" optional="show"/>
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" optional="show" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
                     <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </field>
             </field>
@@ -240,7 +237,7 @@
                 </templates>
                 <div class="oe_kanban_bottom_left" position="inside">
                    <t t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value">
-                        <t t-set="badge" t-value="" t-if="record.progress.raw_value &lt; 80"/>
+                        <t t-set="badge" t-value=""/>
                         <t t-set="badge" t-value="'badge-warning'" t-if="record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100"/>
                         <t t-set="badge" t-value="'badge-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
                        <div t-attf-class="oe_kanban_align badge {{ badge }}" title="Remaining hours">
@@ -302,7 +299,7 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_kanban"/>
             <field name="arch" type="xml">
-                <xpath expr="//span[@name='date']" position="before">
+                <xpath expr="//div[@name='date_deadline']" position="before">
                     <field name="display_timesheet_timer" invisible="1"/>
                     <field name="timer_start" invisible="1"/>
                     <field name="timer_pause" invisible="1"/>

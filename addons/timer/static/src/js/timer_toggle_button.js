@@ -3,6 +3,7 @@ odoo.define('timer.timer_toggle_button', function (require) {
 
 const fieldRegistry = require('web.field_registry');
 const { FieldToggleBoolean } = require("web.basic_fields");
+const { _lt } = require('web.core');
 
 /**
  * The TimerToggleButton is used to display correctly the button
@@ -16,9 +17,9 @@ const TimerToggleButton = FieldToggleBoolean.extend({
      */
     _render: function () {
         // When the is_timer_running field is false, then the button is used to start the timer
-        const title = this.value ? 'stop' : 'play';
+        const title = this.value ? _lt('Stop') : _lt('Play');
         const name = this.value ? 'action_timer_stop' : 'action_timer_start';
-        const label = this.value ? 'stop' : 'start';
+        const label = this.value ? _lt('Stop') : _lt('Start');
 
         this.$('i')
             .addClass('fa')

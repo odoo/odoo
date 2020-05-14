@@ -26,8 +26,8 @@
                     <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                     <field name="task_id" optional="show" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                     <field name="name" optional="show" required="0"/>
-                    <field name="is_timer_running" string="Timer" optional="show" widget="timer_toggle_button" readonly="1" attrs="{ 'invisible': [('display_timer', '=', False)] }" invisible="not context.get('my_timesheet_display_timer')" />
-                    <field name="unit_amount" optional="show" widget="timesheet_uom" sum="Total" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}"/>
+                    <field name="is_timer_running" invisible="1"/>
+                    <field name="unit_amount" optional="show" widget="timesheet_uom_timer" sum="Total" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}" decoration-danger="unit_amount &gt; 24"/>
                     <field name="company_id" invisible="1"/>
                     <field name="timer_start" invisible="1"/>
                     <field name="display_timer" invisible="1"/>
@@ -93,7 +93,7 @@
                             </group>
                             <group>
                                 <field name="amount"/>
-                                <field name="unit_amount" widget="timesheet_uom" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}"/>
+                                <field name="unit_amount" widget="timesheet_uom" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}" decoration-danger="unit_amount &gt; 24"/>
                                 <field name="currency_id" invisible="1"/>
                                 <field name="timer_start" invisible="1"/>
                             </group>
@@ -196,7 +196,7 @@
                                     <t t-esc="record.date.value"/>
                                 </span>
                                 <span class="float-right">
-                                    <strong>Duration: </strong><field name="unit_amount" widget="timesheet_uom"/>
+                                    <strong>Duration: </strong><field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
                                 </span>
                             </div>
                         </t>

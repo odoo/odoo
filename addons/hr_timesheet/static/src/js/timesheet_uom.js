@@ -121,7 +121,11 @@ const FieldTimesheetTime = basicFields.FieldFloatTime.extend({
         if (this.time) {
             this.timer = setInterval(() => {
                 this.time.addSecond();
-                this.$el.text(this.time.toString());
+                if (this.$el.children().length) {
+                    this.$el.contents()[1].replaceWith(this.time.toString());
+                } else {
+                    this.$el.text(this.time.toString());
+                }
                 this.$el.addClass('font-weight-bold text-danger');
             }, 1000);
         } else {
@@ -155,7 +159,6 @@ if (widgetName === 'float_toggle') {
             fieldRegistry.get(widgetName).extend({})
         ) || FieldTimesheetFactor;
 }
-
 fieldRegistry.add('timesheet_uom', FieldTimesheetUom);
 
 
