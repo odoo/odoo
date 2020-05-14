@@ -581,9 +581,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'price_include': True,
             'include_base_amount': False,
         })
-        self.account = self.env['account.account'].search([('deprecated', '=', False)], limit=1)
+        self.account = self.company_data['default_account_revenue']
 
-        move_form = Form(self.env['account.move'])
+        move_form = Form(self.env['account.move'].with_context(default_move_type='entry'))
 
         # Create a new account.move.line with debit amount.
         with move_form.line_ids.new() as debit_line:
