@@ -341,6 +341,7 @@ class ResourceCalendar(models.Model):
             The returned intervals are expressed in specified tz or in the resource's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
+        self.ensure_one()
         combine = datetime.combine
 
         resource_ids = [resource.id, False] if resource else [False]
@@ -503,6 +504,7 @@ class ResourceCalendar(models.Model):
 
             Counts the number of work hours between two datetimes.
         """
+        self.ensure_one()
         # Set timezone in UTC if no timezone is explicitly given
         if not start_dt.tzinfo:
             start_dt = start_dt.replace(tzinfo=utc)
