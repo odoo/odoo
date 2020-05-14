@@ -80,10 +80,10 @@ class MailingTrace(models.Model):
                 stat.state = 'ignored'
             elif stat.exception:
                 stat.state = 'exception'
-            elif stat.opened or stat.clicked:
-                stat.state = 'opened'
             elif stat.replied:
                 stat.state = 'replied'
+            elif stat.opened or stat.clicked:
+                stat.state = 'opened'
             elif stat.bounced:
                 stat.state = 'bounced'
             elif stat.sent:
