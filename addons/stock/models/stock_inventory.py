@@ -194,6 +194,7 @@ class Inventory(models.Model):
         # as they will be moved to inventory loss, and other quants will be created to the encoded quant location. This is a normal behavior
         # as quants cannot be reuse from inventory location (users can still manually move the products before/after the inventory if they want).
         self.mapped('move_ids').filtered(lambda move: move.state != 'done')._action_done()
+        return True
 
     def action_check(self):
         """ Checks the inventory and computes the stock move to do """
