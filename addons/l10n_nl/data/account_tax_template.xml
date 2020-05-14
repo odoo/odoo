@@ -794,7 +794,7 @@
                     'factor_percent': -100,
                     'repartition_type': 'tax',
                     'account_id': ref('vat_payable_v'),
-                    'plus_report_line_ids': [ref('tax_report_rub_btw_5b')],
+                    'minus_report_line_ids': [ref('tax_report_rub_btw_5b')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -813,7 +813,7 @@
                     'factor_percent': -100,
                     'repartition_type': 'tax',
                     'account_id': ref('vat_payable_v'),
-                    'minus_report_line_ids': [ref('tax_report_rub_btw_5b')],
+                    'plus_report_line_ids': [ref('tax_report_rub_btw_5b')],
                 }),
             ]"/>
         </record>
