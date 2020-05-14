@@ -224,6 +224,7 @@ class AccountMove(models.Model):
     # ==== Reverse feature fields ====
     reversed_entry_id = fields.Many2one('account.move', string="Reversal of", readonly=True, copy=False,
         check_company=True)
+    reversal_move_id = fields.One2many('account.move', 'reversed_entry_id')
 
     # =========================================================
     # Invoice related fields
