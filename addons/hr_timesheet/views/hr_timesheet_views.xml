@@ -24,7 +24,7 @@
                 <tree editable="top" string="Timesheet Activities">
                     <field name="date"/>
                     <field name="project_id" required="1" options="{'no_create_edit': True}" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
-                    <field name="task_id" optional="show" options="{'no_create_edit': True}" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
+                    <field name="task_id" optional="show" options="{'no_create_edit': True, 'no_open': True}" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                     <field name="name" optional="show" required="0"/>
                     <field name="unit_amount" optional="show" widget="timesheet_uom" sum="Total" decoration-danger="unit_amount &gt; 24"/>
                     <field name="company_id" invisible="1"/>
@@ -158,6 +158,7 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <field name="date"/>
+                    <field name="employee_id"/>
                     <field name="user_id"/>
                     <field name="name"/>
                     <field name="project_id"/>
@@ -168,7 +169,7 @@
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="row">
                                     <div class="col-2">
-                                        <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar o_image_40_cover float-left"/>
+                                        <img t-att-src="kanban_image('hr.employee', 'image_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" class="o_image_40_cover float-left"/>
                                     </div>
                                     <div class="col-10">
                                         <div>
@@ -203,7 +204,7 @@
         <record id="act_hr_timesheet_line" model="ir.actions.act_window">
             <field name="name">My Timesheets</field>
             <field name="res_model">account.analytic.line</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="domain">[('project_id', '!=', False), ('user_id', '=', uid)]</field>
             <field name="context">{
                 "search_default_week":1,
@@ -213,9 +214,7 @@
               <p class="o_view_nocontent_smiling_face">
                 Record a new activity
               </p><p>
-                You can register and track your workings hours by project every
-                day. Every time spent on a project will become a cost and can be re-invoiced to
-                customers if required.
+                Track your working hours by projects every day and invoice this time to your customers.
               </p>
             </field>
         </record>
@@ -265,6 +264,7 @@
         <record id="timesheet_action_all" model="ir.actions.act_window">
             <field name="name">All Timesheets</field>
             <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">tree,form,pivot,kanban</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="domain">[('project_id', '!=', False)]</field>
             <field name="context">{
@@ -274,9 +274,7 @@
                 <p class="o_view_nocontent_smiling_face">
                     Record a new activity
                 </p><p>
-                    You can register and track your workings hours by project every
-                    day. Every time spent on a project will become a cost and can be re-invoiced to
-                    customers if required.
+                    Track your working hours by projects every day and invoice this time to your customers.
                 </p>
             </field>
         </record>
@@ -299,6 +297,13 @@
             <field name="sequence" eval="6"/>
             <field name="view_mode">pivot</field>
             <field name="view_id" ref="view_hr_timesheet_line_pivot"/>
+            <field name="act_window_id" ref="timesheet_action_all"/>
+        </record>
+
+        <record id="timesheet_action_view_all_kanban" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="sequence">7</field>
+            <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
             <field name="act_window_id" ref="timesheet_action_all"/>
         </record>
 
