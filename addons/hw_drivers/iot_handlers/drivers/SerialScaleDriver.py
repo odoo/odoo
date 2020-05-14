@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
-import threading
+from collections import namedtuple
 import logging
 import re
-import time
-from collections import namedtuple
-
 import serial
+import threading
+import time
 
 from odoo import http
-from odoo.addons.hw_proxy.controllers.main import drivers as old_drivers
-from odoo.addons.hw_drivers.controllers.driver import event_manager
+from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
+from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.iot_handlers.drivers.SerialBaseDriver import SerialDriver, SerialProtocol, serial_connection
 
 
@@ -95,9 +93,9 @@ class ScaleDriver(SerialDriver):
     """Abstract base class for scale drivers."""
     last_sent_value = None
 
-    def __init__(self, device):
-        self._device_type = 'scale'
-        super().__init__(device)
+    def __init__(self, identifier, device):
+        super(ScaleDriver, self).__init__(identifier, device)
+        self.device_type = 'scale'
         self._set_actions()
         self._is_reading = True
 
@@ -105,7 +103,7 @@ class ScaleDriver(SerialDriver):
         # Only the last scale connected is kept
         global ACTIVE_SCALE
         ACTIVE_SCALE = self
-        old_drivers['scale'] = ACTIVE_SCALE
+        proxy_drivers['scale'] = ACTIVE_SCALE
 
     # Ensures compatibility with older versions of Odoo
     # and allows using the `ProxyDevice` in the point of sale to retrieve the status
@@ -212,9 +210,9 @@ class Toledo8217Driver(ScaleDriver):
     """Driver for the Toldedo 8217 serial scale."""
     _protocol = Toledo8217Protocol
 
-    def __init__(self, device):
-        super().__init__(device)
-        self._device_manufacturer = 'Toledo'
+    def __init__(self, identifier, device):
+        super(Toledo8217Driver, self).__init__(identifier, device)
+        self.device_manufacturer = 'Toledo'
 
     @classmethod
     def supported(cls, device):
@@ -249,11 +247,11 @@ class AdamEquipmentDriver(ScaleDriver):
     _protocol = ADAMEquipmentProtocol
     priority = 0  # Test the supported method of this driver last, after all other serial drivers
 
-    def __init__(self, device):
-        super().__init__(device)
+    def __init__(self, identifier, device):
+        super(AdamEquipmentDriver, self).__init__(identifier, device)
         self._is_reading = False
         self._last_weight_time = 0
-        self._device_manufacturer = 'Adam'
+        self.device_manufacturer = 'Adam'
 
     def _check_last_weight_time(self):
         """The ADAM doesn't make the difference between a value of 0 and "the same value as last time":

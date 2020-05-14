@@ -1,17 +1,22 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import jinja2
 import json
 import logging
 import netifaces as ni
 import os
-from pathlib import Path
 import subprocess
 import threading
 import time
 import urllib3
 
 from odoo import http
+from odoo.addons.hw_drivers.connection_manager import connection_manager
+from odoo.addons.hw_drivers.driver import Driver
+from odoo.addons.hw_drivers.event_manager import event_manager
+from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
-from odoo.addons.hw_drivers.controllers.driver import Driver, event_manager, iot_devices, cm
 
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '../../views'))
 loader = jinja2.FileSystemLoader(path)
@@ -27,21 +32,17 @@ _logger = logging.getLogger(__name__)
 class DisplayDriver(Driver):
     connection_type = 'display'
 
-    def __init__(self, device):
-        super(DisplayDriver, self).__init__(device)
-        self._device_type = 'display'
-        self._device_connection = 'hdmi'
-        self._device_name = device['name']
+    def __init__(self, identifier, device):
+        super(DisplayDriver, self).__init__(identifier, device)
+        self.device_type = 'display'
+        self.device_connection = 'hdmi'
+        self.device_name = device['name']
         self.event_data = threading.Event()
         self.owner = False
         self.rendered_html = ''
         if self.device_identifier != 'distant_display':
             self._x_screen = device.get('x_screen', '0')
             self.load_url()
-
-    @property
-    def device_identifier(self):
-        return self.dev['identifier']
 
     @classmethod
     def supported(cls, device):
@@ -93,7 +94,7 @@ class DisplayDriver(Driver):
             urllib3.disable_warnings()
             http = urllib3.PoolManager(cert_reqs='CERT_NONE')
             try:
-                response = http.request('GET', "%s/iot/box/%s/screen_url" % (helpers.get_odoo_server_url(), helpers.get_mac_address()))
+                response = http.request('GET', "%s/iot/box/%s/display_url" % (helpers.get_odoo_server_url(), helpers.get_mac_address()))
                 if response.status == 200:
                     data = json.loads(response.data.decode('utf8'))
                     url = data[self.device_identifier]
@@ -215,5 +216,5 @@ class DisplayController(http.Controller):
             'cust_js': cust_js,
             'display_ifaces': display_ifaces,
             'display_identifier': display_identifier,
-            'pairing_code': cm.pairing_code,
+            'pairing_code': connection_manager.pairing_code,
         })

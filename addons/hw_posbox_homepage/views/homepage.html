@@ -27,7 +27,7 @@
     .device-status {
         margin: 6px 0;
     }
-    .device-status .message {
+    .device-status .identifier {
         font-size: 0.8rem;
         max-width: 350px;
     }
@@ -130,7 +130,7 @@
                                 {% for device in iot_devices.list %}
                                     <div class="device-status">
                                         <span class="device">{{ device['name'] }}</span>
-                                        <div class="message">{{ device['message'] }}</div>
+                                        <div class="identifier">{{ device['identifier'] }}</div>
                                     </div>
                                 {% endfor %}
                             </div>
