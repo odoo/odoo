@@ -6452,9 +6452,6 @@ QUnit.module('Views', {
         var currentController = actionManager.getCurrentController().widget;
         await actionManager.doAction(2, {
             on_reverse_breadcrumb: function () {
-                if (!_.isEmpty(currentController.renderer.alertFields)) {
-                    currentController.renderer.displayTranslationAlert();
-                }
                 return false;
             },
         });
