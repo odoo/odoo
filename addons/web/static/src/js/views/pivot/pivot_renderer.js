@@ -3,8 +3,6 @@ odoo.define('web.PivotRenderer', function (require) {
 
     const OwlAbstractRenderer = require('web.AbstractRendererOwl');
     const field_utils = require('web.field_utils');
-    const core = require('web.core');
-    const _t = core._t;
 
     const { useExternalListener, useState, onMounted, onPatched } = owl.hooks;
 
@@ -50,9 +48,6 @@ odoo.define('web.PivotRenderer', function (require) {
 
             if (!this.env.device.isMobile) {
                 useExternalListener(window, 'click', this._resetState);
-            }
-            if (!props.hasData || !props.measures.length) {
-                this.description = _t("Try to add some records, or make sure that there is at least one measure and no active filter in the search bar.");
             }
         }
 
