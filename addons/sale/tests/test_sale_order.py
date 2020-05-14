@@ -3,7 +3,7 @@
 
 import odoo
 from odoo.exceptions import UserError, AccessError
-from odoo.tests import Form
+from odoo.tests import Form, TransactionCase, tagged
 from odoo.tools import float_compare
 
 from .test_sale_common import TestCommonSaleNoChart
@@ -500,3 +500,10 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertEqual(so_line_1.price_unit, 100.0)
         self.assertEqual(so_line_2.discount, 10)
         self.assertEqual(so_line_2.price_unit, 20)
+
+
+@tagged('post_install', '-at_install')
+class TestPerformance(TransactionCase):
+    def test_so_line_create_batch(self):
+        """Enforce sale.order.line create overrides support batch record creation."""
+        self.assertModelCreateMulti("sale.order.line")

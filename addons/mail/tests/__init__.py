@@ -3,3 +3,4 @@
 from . import common
 from . import test_res_partner
 from . import test_update_notification
+from . import test_mail

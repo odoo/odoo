@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import SavepointCase, TransactionCase, tagged
 
 
 class TestRobustness(SavepointCase):
@@ -221,3 +221,12 @@ class TestRobustness(SavepointCase):
                 'location_dest_id': move2.location_dest_id.id,
             })]})
 
+
+@tagged('post_install', '-at_install')
+class TestPerformance(TransactionCase):
+    def test_sml_create_batch(self):
+        """Enforce stock main models create overrides support batch record creation."""
+        self.assertModelCreateMulti("stock.move")
+        self.assertModelCreateMulti("stock.move.line")
+        self.assertModelCreateMulti("stock.inventory.line", [dict(theoretical_qty=2.0), dict(theoretical_qty=4.0)])
+        self.assertModelCreateMulti("stock.production.lot")

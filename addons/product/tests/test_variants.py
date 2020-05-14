@@ -8,7 +8,8 @@ from PIL import Image
 
 from . import common
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
+
 
 
 class TestVariantsSearch(TransactionCase):
@@ -1022,3 +1023,11 @@ class TestVariantsArchive(common.TestProductCommon):
         variants = variants or self.template.product_variant_ids
         self.assertEqual(len(variants), 1)
         self.assertFalse(variants[0].product_template_attribute_value_ids)
+
+
+@tagged('post_install', '-at_install')
+class TestPerformance(TransactionCase):
+    def test_products_create_batch(self):
+        """Enforce product create overrides support batch record creation."""
+        self.assertModelCreateMulti("product.product")
+        self.assertModelCreateMulti("product.template")

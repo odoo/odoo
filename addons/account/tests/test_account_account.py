@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import tagged,TransactionCase
 from odoo.exceptions import UserError
 
 
@@ -34,3 +34,16 @@ class TestAccountAccount(AccountTestInvoicingCommon):
 
         with self.assertRaises(UserError), self.cr.savepoint():
             self.company_data['default_account_revenue'].company_id = self.company_data_2['company']
+
+
+@tagged('post_install', '-at_install')
+class TestPerformance(TransactionCase):
+    def test_create_batch(self):
+        """Enforce some models create overrides support batch record creation."""
+        self.assertModelCreateMulti("account.move")
+        self.assertModelCreateMulti("account.move.line", [dict(move_id=i) for i in range(2)])
+        self.assertModelCreateMulti("account.account")
+        self.assertModelCreateMulti("account.payment")
+        # TODO account.bank.statement.line
+        # account.bank.statement.line needs a more advanced setup to be tested
+        # self.env["account.bank.statement.line"].create([dict(statement_id=i) for i in range(2)])

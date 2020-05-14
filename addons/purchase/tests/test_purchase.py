@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import SavepointCase, TransactionCase, tagged
 from odoo.tests import Form
 
 
@@ -79,3 +79,10 @@ class TestPurchase(SavepointCase):
         vals['date_order'] = '2019-12-31 23:30:00'
         purchase_order = PurchaseOrder.with_context(tz='Europe/Brussels').create(vals.copy())
         self.assertTrue(purchase_order.name.startswith('PO/2020/'))
+
+
+@tagged('post_install', '-at_install')
+class TestPerformance(TransactionCase):
+    def test_pur_order_line_create_batch(self):
+        """Enforce purchase.order.line create overrides support batch record creation."""
+        self.assertModelCreateMulti("purchase.order.line")

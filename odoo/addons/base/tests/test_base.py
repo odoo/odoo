@@ -5,7 +5,7 @@ import ast
 
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import TransactionCase, BaseCase
+from odoo.tests.common import TransactionCase, BaseCase, tagged
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
 
@@ -670,3 +670,10 @@ class TestUsers(TransactionCase):
         self.assertFalse(user.active)
         with self.assertRaises(UserError):
             user.write({'active': True})
+
+@tagged('post_install', '-at_install')
+class TestPerformance(TransactionCase):
+    def test_partner_user_create_batch(self):
+        """Enforce user/partner create overrides support batch record creation."""
+        self.assertModelCreateMulti("res.partner")
+        self.assertModelCreateMulti("res.users", [dict(login="a"), dict(login="b")])
