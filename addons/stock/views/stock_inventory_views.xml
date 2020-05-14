@@ -168,6 +168,7 @@
                 <button name="action_open_inventory_lines" states="confirm" string="Continue Inventory" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
                 <button name="action_validate" string="Validate Inventory" type="object" attrs="{'invisible': ['|', ('state', '!=', 'confirm'), ('line_ids', '!=', [])]}" groups="stock.group_stock_manager"/>
                 <button name="action_validate" string="Validate Inventory" type="object" attrs="{'invisible': ['|', ('state', '!=', 'confirm'), ('line_ids', '=', [])]}" class="oe_highlight" groups="stock.group_stock_manager"/>
+                <button name="action_print" string="Print Count Sheet" type="object" attrs="{'invisible': [('state', '=', 'draft')]}" groups="stock.group_stock_user"/>
                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                 <button name="action_cancel_draft" states="confirm" string="Cancel Inventory" type="object"
                     confirm="If you cancel this inventory adjustment, all its inventory adjustment lines will be lost. Are you sure you want to discard it ?"/>

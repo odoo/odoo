@@ -214,6 +214,9 @@ class Inventory(models.Model):
         }
         return action
 
+    def action_print(self):
+        return self.env.ref('stock.action_report_inventory').report_action(self)
+
     def _get_quantities(self):
         """Return quantities group by product_id, location_id, lot_id, package_id and owner_id
 
