@@ -11,6 +11,7 @@ var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
+const widgetRegistryOwl = require('web.widgetRegistry');
 
 var makeTestPromise = testUtils.makeTestPromise;
 var nextTick = testUtils.nextTick;
@@ -4704,6 +4705,8 @@ QUnit.module('Views', {
     });
 
     QUnit.test('basic support for widgets', async function (assert) {
+        // This test could be removed as soon as we drop the support of legacy widgets (see test
+        // below, which is a duplicate of this one, but with an Owl Component instead).
         assert.expect(1);
 
         var MyWidget = Widget.extend({
@@ -4734,6 +4737,41 @@ QUnit.module('Views', {
 
         kanban.destroy();
         delete widgetRegistry.map.test;
+    });
+
+    QUnit.test('basic support for widgets (being Owl Components)', async function (assert) {
+        assert.expect(1);
+
+        class MyComponent extends owl.Component {
+            get value() {
+                return JSON.stringify(this.props.record.data);
+            }
+        }
+        MyComponent.template = owl.tags.xml`<div t-esc="value"/>`;
+        widgetRegistryOwl.add('test', MyComponent);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <field name="foo"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <t t-esc="record.foo.value"/>
+                                <widget name="test"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.strictEqual(kanban.$('.o_widget:eq(2)').text(), '{"foo":"gnap","id":3}');
+
+        kanban.destroy();
+        delete widgetRegistryOwl.map.test;
     });
 
     QUnit.test('subwidgets with on_attach_callback when changing record color', async function (assert) {

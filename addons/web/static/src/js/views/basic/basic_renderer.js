@@ -13,8 +13,9 @@ var core = require('web.core');
 var dom = require('web.dom');
 const utils = require('web.utils');
 var widgetRegistry = require('web.widget_registry');
+const widgetRegistryOwl = require('web.widgetRegistry');
 
-const { WidgetAdapterMixin } = require('web.OwlCompatibility');
+const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');
 const FieldWrapper = require('web.FieldWrapper');
 
 var qweb = core.qweb;
@@ -785,13 +786,25 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      * @returns {jQueryElement}
      */
     _renderWidget: function (record, node) {
-        var Widget = widgetRegistry.get(node.attrs.name);
-        var widget = new Widget(this, record, node);
+        const name = node.attrs.name;
+        const Widget = widgetRegistryOwl.get(name) || widgetRegistry.get(name);
+        const legacy = !(Widget.prototype instanceof owl.Component);
+        let widget;
+        if (legacy) {
+            widget = new Widget(this, record, node);
+        } else {
+            widget = new ComponentWrapper(this, Widget, { node, record });
+        }
 
         this.widgets.push(widget);
 
         // Prepare widget rendering and save the related promise
-        var def = widget._widgetRenderAndInsert(function () {});
+        let def;
+        if (legacy) {
+            def = widget._widgetRenderAndInsert(function () {});
+        } else {
+            def = widget.mount(document.createDocumentFragment());
+        }
         this.defs.push(def);
         var $el = $('<div>');
 

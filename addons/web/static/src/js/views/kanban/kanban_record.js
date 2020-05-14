@@ -11,9 +11,11 @@ var Domain = require('web.Domain');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
 const FieldWrapper = require('web.FieldWrapper');
+const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
+const widgetRegistryOwl = require('web.widgetRegistry');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -21,7 +23,7 @@ var QWeb = core.qweb;
 var KANBAN_RECORD_COLORS = require('web.basic_fields').FieldColorPicker.prototype.RECORD_COLORS;
 var NB_KANBAN_RECORD_COLORS = KANBAN_RECORD_COLORS.length;
 
-var KanbanRecord = Widget.extend({
+var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
     events: {
         'click .oe_kanban_action': '_onKanbanActionClicked',
         'click .o_kanban_manage_toggle_button': '_onManageTogglerClicked',
@@ -55,11 +57,20 @@ var KanbanRecord = Widget.extend({
         return Promise.all([this._super.apply(this, arguments), this._render()]);
     },
     /**
+     * @override
+     */
+    destroy: function () {
+        this._super(...arguments);
+        WidgetAdapterMixin.destroy.call(this);
+    },
+    /**
      * Called each time the record is attached to the DOM.
      */
     on_attach_callback: function () {
         this.isInDOM = true;
         _.invoke(this.subWidgets, 'on_attach_callback');
+        // call on_attach_callback on child components (tag <widget>)
+        WidgetAdapterMixin.on_attach_callback.call(this);
     },
     /**
      * Called each time the record is detached from the DOM.
@@ -67,6 +78,8 @@ var KanbanRecord = Widget.extend({
     on_detach_callback: function () {
         this.isInDOM = false;
         _.invoke(this.subWidgets, 'on_detach_callback');
+        // call on_detach_callback on child components (tag <widget>)
+        WidgetAdapterMixin.on_detach_callback.call(this);
     },
 
     //--------------------------------------------------------------------------
@@ -330,10 +343,24 @@ var KanbanRecord = Widget.extend({
         var self = this;
         this.$("widget").each(function () {
             var $field = $(this);
-            var Widget = widgetRegistry.get($field.attr('name'));
-            var widget = new Widget(self, self.state);
 
-            var def = widget._widgetRenderAndInsert(function () { });
+            const name = $field.attr('name');
+            const Widget = widgetRegistryOwl.get(name) || widgetRegistry.get(name);
+            const legacy = !(Widget.prototype instanceof owl.Component);
+            let widget;
+            if (legacy) {
+                widget = new Widget(self, self.state);
+            } else {
+                widget = new ComponentWrapper(this, Widget, { record: self.state });
+            }
+            // Prepare widget rendering and save the related promise
+            let def;
+            if (legacy) {
+                def = widget._widgetRenderAndInsert(function () {});
+            } else {
+                def = widget.mount(document.createDocumentFragment());
+            }
+
             self.defs.push(def);
             def.then(function () {
                 $field.replaceWith(widget.$el);
