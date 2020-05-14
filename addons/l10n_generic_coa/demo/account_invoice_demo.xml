@@ -18,6 +18,7 @@
         <record id="demo_invoice_2" model="account.move">
             <field name="move_type">out_invoice</field>
             <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="invoice_user_id" eval="False"/>
             <field name="invoice_date" eval="time.strftime('%Y-%m')+'-08'"/>
             <field name="invoice_line_ids" eval="[
                 (0, 0, {'product_id': ref('product.consu_delivery_03'), 'price_unit': 50.0, 'quantity': 5}),
@@ -29,6 +30,7 @@
         <record id="demo_invoice_3" model="account.move">
             <field name="move_type">out_invoice</field>
             <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="invoice_user_id" eval="False"/>
             <field name="invoice_date" eval="time.strftime('%Y-%m')+'-08'"/>
             <field name="invoice_line_ids" eval="[
                 (0, 0, {'product_id': ref('product.consu_delivery_01'), 'price_unit': 90.0, 'quantity': 5}),
@@ -75,6 +77,7 @@
             <field name="move_type">in_invoice</field>
             <field name="ref">INV/2018/0057</field>
             <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="invoice_user_id" eval="False"/>
             <field name="invoice_date">2018-09-17</field>
             <field name="invoice_line_ids" eval="[
                 (0, 0, {'name': 'Redeem Reference Number: PO02529', 'quantity': 1, 'price_unit': 541.10})
@@ -215,5 +218,42 @@
             <field name="author_id" ref="base.partner_demo"/>
             <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_in_invoice_2')])]"/>
         </record>
+
+        <record id="invoice_activity_1" model="mail.activity">
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_3"/>
+            <field name="res_model_id" ref="account.model_account_move"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Follow-up on payment</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="invoice_activity_2" model="mail.activity">
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_2"/>
+            <field name="res_model_id" ref="account.model_account_move"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="invoice_activity_3" model="mail.activity">
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_1"/>
+            <field name="res_model_id" ref="account.model_account_move"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Include upsell</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="invoice_activity_4" model="mail.activity">
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_extract"/>
+            <field name="res_model_id" ref="account.model_account_move"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Update address</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
     </data>
 </odoo>

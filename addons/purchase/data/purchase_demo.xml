@@ -188,5 +188,42 @@
         ]"/>
     </record>
 
+    <record id="purchase_activity_1" model="mail.activity">
+        <field name="res_id" ref="purchase.purchase_order_2"/>
+        <field name="res_model_id" ref="purchase.model_purchase_order"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+        <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+        <field name="summary">Send specifications</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="purchase_activity_2" model="mail.activity">
+        <field name="res_id" ref="purchase.purchase_order_5"/>
+        <field name="res_model_id" ref="purchase.model_purchase_order"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+        <field name="summary">Get approval</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="purchase_activity_3" model="mail.activity">
+        <field name="res_id" ref="purchase.purchase_order_6"/>
+        <field name="res_model_id" ref="purchase.model_purchase_order"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        <field name="date_deadline" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+        <field name="summary">Check optional products</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="purchase_activity_4" model="mail.activity">
+        <field name="res_id" ref="purchase.purchase_order_7"/>
+        <field name="res_model_id" ref="purchase.model_purchase_order"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+        <field name="summary">Check competitors</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
 </odoo>
 

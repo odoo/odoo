@@ -14,6 +14,7 @@
         <field name="date_order" eval="DateTime.now() - relativedelta(days=30)"/>
         <field name="team_id" ref="sales_team.salesteam_website_sales"/>
         <field name="website_id" eval="1"/>
+        <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor2')), (4, ref('sales_team.categ_oppor5'))]"/>
         <field name="state">sale</field>
     </record>
     <record id="sale_order_course_1_line_1" model="sale.order.line">
@@ -52,6 +53,25 @@
         <field name="product_uom_qty">1</field>
         <field name="product_uom" ref="uom.product_uom_unit"/>
         <field name="price_unit">100.0</field>
+    </record>
+
+    <record id="website_sale_slides_activity_1" model="mail.activity">
+        <field name="res_id" ref="website_sale_slides.sale_order_course_1"/>
+        <field name="res_model_id" ref="sale.model_sale_order"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+        <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+        <field name="summary">Suggest optional products</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="website_sale_slides_activity_2" model="mail.activity">
+        <field name="res_id" ref="website_sale_slides.sale_order_course_2"/>
+        <field name="res_model_id" ref="sale.model_sale_order"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+        <field name="date_deadline" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+        <field name="summary">Discuss discount</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
 
     <!-- Confirm sales -->
