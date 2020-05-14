@@ -531,7 +531,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 setattr(self, attr, getattr(field, prop))
 
         for attr, value in field._attrs.items():
-            if attr not in self._attrs:
+            if attr not in self._attrs and attr != 'oldname':
                 setattr(self, attr, value)
 
         # special case for states: copy it only for inherited fields
