@@ -9,13 +9,11 @@ from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 import odoo
 import os.path
-from lxml import etree, builder
 from odoo.tools.misc import file_open
 import xml.etree.ElementTree as ET
 import re
-from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception, Response
-from odoo.modules import get_module_path, get_module_resource
-from odoo.tools.translate import _, _lt, TranslationFileReader, TranslationModuleReader
+from odoo.modules import  get_module_resource
+from odoo.tools.translate import _, _lt, TranslationFileReader
 
 _logger = logging.getLogger(__name__)
 
