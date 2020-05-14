@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
-from odoo.tools import float_is_zero, float_compare, date_utils, email_split, email_escape_char, email_re
+from odoo.tools import float_is_zero, float_repr, float_compare, date_utils, email_split, email_escape_char, email_re
 from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
@@ -2807,6 +2807,25 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
+
+    @api.model
+    def _get_default_line_name(self, document, amount, currency, date, partner=None):
+        ''' Helper to construct a default label to set on journal items.
+
+        E.g. Vendor Reimbursement $ 1,555.00 - Azure Interior - 05/14/2020.
+
+        :param document:    A string representing the type of the document.
+        :param amount:      The document's amount.
+        :param currency:    The document's currency.
+        :param date:        The document's date.
+        :param partner:     The optional partner.
+        :return:            A string.
+        '''
+        values = ['%s %s' % (document, formatLang(self.env, amount, currency_obj=currency))]
+        if partner:
+            values.append(partner.display_name)
+        values.append(format_date(self.env, fields.Date.to_string(date)))
+        return ' - '.join(values)
 
     @api.model
     def _get_default_tax_account(self, repartition_line):
