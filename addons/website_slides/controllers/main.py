@@ -858,7 +858,7 @@ class WebsiteSlides(WebsiteProfile):
                 'comment': answer['comment']
             }) for answer in answer_ids]
         })
-        return request.env.ref('website_slides.lesson_content_quiz_question').render({
+        return request.env.ref('website_slides.lesson_content_quiz_question')._render({
             'slide': slide,
             'question': slide_question,
         })

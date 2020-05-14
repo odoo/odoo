@@ -542,7 +542,7 @@ class PosOrder(models.Model):
         }
 
         if self.mapped('account_move'):
-            report = self.env.ref('point_of_sale.pos_invoice_report').render_qweb_pdf(self.ids[0])
+            report = self.env.ref('point_of_sale.pos_invoice_report')._render_qweb_pdf(self.ids[0])
             filename = name + '.pdf'
             attachment = self.env['ir.attachment'].create({
                 'name': filename,

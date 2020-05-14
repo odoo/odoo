@@ -42,7 +42,7 @@ class Job(models.Model):
 
     def _get_default_website_description(self):
         default_description = self.env["ir.model.data"].xmlid_to_object("website_hr_recruitment.default_website_description")
-        return (default_description.render() if default_description else "")
+        return (default_description._render() if default_description else "")
 
     website_description = fields.Html('Website description', translate=html_translate, sanitize_attributes=False, default=_get_default_website_description, prefetch=False, sanitize_form=False)
 

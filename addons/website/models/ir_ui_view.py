@@ -359,10 +359,7 @@ class View(models.Model):
         """
         error = False
 
-        try:
-            self.visibility  # avoid useless sudo() in case page is public
-        except AccessError:
-            self = self.sudo()
+        self = self.sudo()
 
         if self.visibility and not request.env.user.has_group('website.group_website_designer'):
             if (self.visibility == 'connected' and request.website.is_public_user()):
@@ -387,7 +384,7 @@ class View(models.Model):
                 return False
         return True
 
-    def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
+    def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
         self._handle_visibility(do_raise=True)
         new_context = dict(self._context)
@@ -414,7 +411,7 @@ class View(models.Model):
 
         if self._context != new_context:
             self = self.with_context(new_context)
-        return super(View, self).render(values, engine=engine, minimal_qcontext=minimal_qcontext)
+        return super(View, self)._render(values, engine=engine, minimal_qcontext=minimal_qcontext)
 
     @api.model
     def _prepare_qcontext(self):

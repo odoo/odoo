@@ -9,7 +9,7 @@ from lxml import etree
 from lxml.builder import E
 from psycopg2 import IntegrityError
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger, view_validation
 from odoo.addons.base.models.ir_ui_view import (
@@ -2855,8 +2855,8 @@ class TestQWebRender(ViewCase):
         })
 
         # render view and child view with an id
-        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id]).render(view1.id)
-        content2 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id]).render(view2.id)
+        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id])._render(view1.id)
+        content2 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id])._render(view2.id)
 
         self.assertEqual(content1, content2)
 
@@ -2866,14 +2866,14 @@ class TestQWebRender(ViewCase):
         self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
                             "VALUES ('dummy_ext', 'ir.ui.view', %s, 'base')" % view2.id)
 
-        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id]).render('base.dummy')
-        content2 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id]).render('base.dummy_ext')
+        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id])._render('base.dummy')
+        content2 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id])._render('base.dummy_ext')
 
         self.assertEqual(content1, content2)
 
         # render view and primary extension with an id
-        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render(view1.id)
-        content3 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render(view3.id)
+        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id])._render(view1.id)
+        content3 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id])._render(view3.id)
 
         self.assertNotEqual(content1, content3)
 
@@ -2881,8 +2881,8 @@ class TestQWebRender(ViewCase):
         self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
                             "VALUES ('dummy_primary_ext', 'ir.ui.view', %s, 'base')" % view3.id)
 
-        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render('base.dummy')
-        content3 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render('base.dummy_primary_ext')
+        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id])._render('base.dummy')
+        content3 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id])._render('base.dummy_primary_ext')
 
         self.assertNotEqual(content1, content3)
 
@@ -2923,6 +2923,20 @@ class TestValidationTools(common.BaseCase):
             {'x', 'y', 'z'},
         )
 
+class TestAccessRights(common.TransactionCase):
+
+    @common.users('demo')
+    def test_access(self):
+        # a user can not access directly a view
+        with self.assertRaises(AccessError):
+            self.env['ir.ui.view'].search([("model", '=', "res.partner"), ('type', '=', 'form')])
+
+        # but can call fields_view_get
+        self.env['res.partner'].fields_view_get(view_type='form')
+
+        # unless he does not have access to the model
+        with self.assertRaises(AccessError):
+            self.env['ir.ui.view'].fields_view_get(view_type='form')
 
 @common.tagged('post_install', '-at_install', '-standard', 'migration')
 class TestAllViews(common.TransactionCase):

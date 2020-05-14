@@ -478,7 +478,7 @@ class PaymentAcquirer(models.Model):
         })
 
         _logger.info('payment.acquirer.render: <%s> values rendered for form payment:\n%s', self.provider, pprint.pformat(values))
-        return self.view_template_id.render(values, engine='ir.qweb')
+        return self.view_template_id._render(values, engine='ir.qweb')
 
     def get_s2s_form_xml_id(self):
         if self.registration_view_template_id:

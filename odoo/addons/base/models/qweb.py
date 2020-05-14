@@ -240,7 +240,7 @@ class QWeb(object):
         'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
     _name_gen = count()
 
-    def render(self, template, values=None, **options):
+    def _render(self, template, values=None, **options):
         """ render(template, values, **options)
 
         Render the template specified by the given name.
@@ -351,7 +351,7 @@ class QWeb(object):
             return (document, template)
         else:
             try:
-                document = options.get('load', self.load)(template, options)
+                document = options.get('load', self._load)(template, options)
             except QWebException as e:
                 raise e
             except Exception as e:
@@ -375,7 +375,7 @@ class QWeb(object):
                 return (node, document)
         return (element, document)
 
-    def load(self, template, options):
+    def _load(self, template, options):
         """ Load a given template. """
         return template
 

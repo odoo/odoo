@@ -83,7 +83,6 @@
 
         <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/compatibility.js"/>
-        <script type="text/javascript" src="/website/static/src/js/content/lazy_template_call.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/menu.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/snippets.animation.js"/>
 
@@ -109,7 +108,7 @@
     </xpath>
 </template>
 
-<template id="website.compiled_assets_wysiwyg" name="Website Editor Assets (used in website editor)">
+<template id="website.compiled_assets_wysiwyg" name="Website Editor Assets (used in website editor)" groups="website.group_website_publisher">
     <t t-call-assets="website.assets_wysiwyg"/>
 </template>
 

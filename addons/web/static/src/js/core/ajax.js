@@ -456,7 +456,7 @@ var loadAsset = (function () {
         if (tplRoute === '/web/dataset/call_kw/') {
             Object.assign(params, {
                 model: 'ir.ui.view',
-                method: 'render_template',
+                method: 'render_public_asset',
             });
         }
         cache[xmlId] = rpc(tplRoute, params).then(function (xml) {

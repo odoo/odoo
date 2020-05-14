@@ -104,7 +104,7 @@ class StockPicking(models.Model):
                 'origin_picking': origin_picking,
                 'moves_information': moves_information.values(),
             }
-            return self.env.ref('sale_stock.exception_on_picking').render(values=values)
+            return self.env.ref('sale_stock.exception_on_picking')._render(values=values)
 
         documents = self._log_activity_get_documents(moves, 'sale_line_id', 'DOWN', _keys_in_sorted, _keys_in_groupby)
         self._log_activity(_render_note_exception_quantity, documents)

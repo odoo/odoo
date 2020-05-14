@@ -64,7 +64,7 @@ class QWeb(models.AbstractModel):
         key = el.attrib.pop('t-snippet')
         el.set('t-call', key)
         el.set('t-call-options', "{'snippet-key': '" + key + "'}")
-        View = self.env['ir.ui.view']
+        View = self.env['ir.ui.view'].sudo()
         view_id = View.get_view_id(key)
         name = View.browse(view_id).name
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")

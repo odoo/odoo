@@ -194,7 +194,7 @@ class TxPaypal(models.Model):
         if not self.acquirer_id.paypal_pdt_token and not self.acquirer_id.paypal_seller_account and status in ['Completed', 'Processed', 'Pending']:
             template = self.env.ref('payment_paypal.mail_template_paypal_invite_user_to_configure', False)
             if template:
-                render_template = template.render({
+                render_template = template._render({
                     'acquirer': self.acquirer_id,
                 }, engine='ir.qweb')
                 mail_body = self.env['mail.render.mixin']._replace_local_links(render_template)

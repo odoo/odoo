@@ -406,11 +406,14 @@ actual arch.
 
         return True
 
-    @api.constrains('type', 'groups_id')
+    @api.constrains('type', 'groups_id', 'inherit_id')
     def _check_groups(self):
         for view in self:
-            if view.type == 'qweb' and view.groups_id:
-                raise ValidationError(_("Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"))
+            if (view.type == 'qweb' and
+                view.groups_id and
+                view.inherit_id and
+                view.mode != 'primary'):
+                raise ValidationError(_("Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"))
 
     @api.constrains('inherit_id')
     def _check_000_inheritance(self):
@@ -605,6 +608,21 @@ actual arch.
             return not view.groups_id or (view.groups_id & self.env.user.groups_id)
 
         return self.browse(view_ids).sudo().filtered(accessible)
+
+    def _check_view_access(self):
+        """ Verify that a view is accessible by the current user based on the
+        groups attribute. Views with no groups are considered private.
+        """
+        if self.inherit_id and self.mode != 'primary':
+            return self.inherit_id._check_view_access()
+        if self.groups_id & self.env.user.groups_id:
+            return True
+        if self.groups_id:
+            error = _("View '%s' accessible only to groups %s ") % \
+                     (self.key, ", ".join([g.name for g in self.groups_id]))
+        else:
+            error = _("View '%s' is private") % self.key
+        raise AccessError(error)
 
     def handle_view_error(self, message, *, raise_exception=True, from_exception=None, from_traceback=None):
         """ Handle a view error by raising an exception or logging a warning,
@@ -864,7 +882,8 @@ actual arch.
         """ Compute and set on node access rights based on view type. Specific
         views can add additional specific rights like creating columns for
         many2one-based grouping views. """
-        Model = self.env[model]
+        # testing ACL as real user
+        Model = self.env[model].sudo(False)
         is_base_model = self.env.context.get('base_model_name', model) == model
 
         if node.tag in ('kanban', 'tree', 'form', 'activity'):
@@ -971,7 +990,7 @@ actual arch.
                         }
                 attrs['views'] = views
                 if field.comodel_name in self.env:
-                    Comodel = self.env[field.comodel_name]
+                    Comodel = self.env[field.comodel_name].sudo(False)
                     node_info['attr_model'] = Comodel
                     if field.type in ('many2one', 'many2many'):
                         can_create = Comodel.check_access_rights('create', raise_exception=False)
@@ -1490,7 +1509,12 @@ actual arch.
 
     @api.model
     def read_template(self, xml_id):
-        return self._read_template(self.get_view_id(xml_id))
+        """ Return a template content based on external id
+        Read access on ir.ui.view required
+        """
+        template_id = self.get_view_id(xml_id)
+        self.browse(template_id)._check_view_access()
+        return self._read_template(template_id)
 
     @api.model
     def get_view_id(self, template):
@@ -1505,7 +1529,7 @@ actual arch.
             return template
         if '.' not in template:
             raise ValueError('Invalid template id: %r' % template)
-        view = self.search([('key', '=', template)], limit=1)
+        view = self.sudo().search([('key', '=', template)], limit=1)
         return view and view.id or self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
 
     def clear_cache(self):
@@ -1598,16 +1622,21 @@ actual arch.
         return '%s.%s' % (xmlid['module'], xmlid['name'])
 
     @api.model
-    def render_template(self, template, values=None, engine='ir.qweb'):
-        return self.browse(self.get_view_id(template)).render(values, engine)
+    def render_public_asset(self, template, values=None):
+        template = self.sudo().browse(self.get_view_id(template))
+        template._check_view_access()
+        return template.sudo()._render(values, engine="ir.qweb")
 
-    def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
+    def _render_template(self, template, values=None, engine='ir.qweb'):
+        return self.browse(self.get_view_id(template))._render(values, engine)
+
+    def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         assert isinstance(self.id, int)
 
         qcontext = dict() if minimal_qcontext else self._prepare_qcontext()
         qcontext.update(values or {})
 
-        return self.env[engine].render(self.id, qcontext)
+        return self.env[engine]._render(self.id, qcontext)
 
     @api.model
     def _prepare_qcontext(self):
@@ -1627,7 +1656,7 @@ actual arch.
             time=time,
             datetime=datetime,
             relativedelta=relativedelta,
-            xmlid=self.key,
+            xmlid=self.sudo().key,
             viewid=self.id,
             to_text=pycompat.to_text,
             image_data_uri=image_data_uri,

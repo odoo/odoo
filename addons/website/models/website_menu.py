@@ -25,7 +25,7 @@ class Menu(models.Model):
         for menu in self:
             if menu.is_mega_menu:
                 if not menu.mega_menu_content:
-                    default_content = self.env['ir.ui.view'].render_template('website.s_mega_menu_multi_menus')
+                    default_content = self.env['ir.ui.view']._render_template('website.s_mega_menu_multi_menus')
                     menu.mega_menu_content = default_content.decode()
             else:
                 menu.mega_menu_content = False

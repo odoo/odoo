@@ -234,7 +234,7 @@ class SurveyInvite(models.TransientModel):
                     'model_description': self.env['ir.model']._get('survey.survey').display_name,
                     'company': self.env.company,
                 }
-                body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+                body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
                 mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
 
         return self.env['mail.mail'].sudo().create(mail_values)

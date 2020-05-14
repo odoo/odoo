@@ -7,7 +7,7 @@
     <t t-call-assets="web_editor.assets_wysiwyg"/>
 </template>
 
-<template id="compiled_assets_wysiwyg" name="Wysiwyg Editor">
+<template id="compiled_assets_wysiwyg" name="Wysiwyg Editor" groups="base.group_user,base.group_portal">
     <t t-call-assets="web_editor.assets_wysiwyg"/>
 </template>
 
@@ -209,7 +209,7 @@
     If a color is no longer used you need to add the d-none class to it and not remove it from this file !!
     Else you will no longer be able to use them.
 -->
-<template id="web_editor.colorpicker" name="Color-Picker">
+<template id="web_editor.colorpicker" name="Color-Picker" groups="base.group_user">
     <colorpicker>
         <div class="o_colorpicker_section" data-name="theme">
             <button data-color="alpha"></button>
