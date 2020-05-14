@@ -9,7 +9,7 @@ var _t = core._t;
 
 var ColorpickerDialog = Dialog.extend({
     xmlDependencies: (Dialog.prototype.xmlDependencies || [])
-        .concat(['/web/static/src/xml/colorpicker_dialog.xml']),
+        .concat(['/web/static/src/xml/colorpicker.xml']),
     template: 'ColorpickerDialog',
     events: _.extend({}, Dialog.prototype.events || {}, {
         'mousedown .o_color_pick_area': '_onMouseDownPicker',
