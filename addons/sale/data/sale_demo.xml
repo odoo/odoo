@@ -76,6 +76,7 @@
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor7'))]"/>
         </record>
 
         <record id="sale_order_line_4" model="sale.order.line">
@@ -106,6 +107,7 @@
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="sale.utm_source_sale_order_0"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor1')), (4, ref('sales_team.categ_oppor2'))]"/>
         </record>
 
         <record id="sale_order_line_6" model="sale.order.line">
@@ -206,6 +208,7 @@
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="sale.utm_source_sale_order_0"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor6'))]"/>
         </record>
 
         <record id="sale_order_line_15" model="sale.order.line">
@@ -227,6 +230,7 @@
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="sale.utm_source_sale_order_0"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor4'))]"/>
         </record>
 
         <record id="sale_order_line_16" model="sale.order.line">
@@ -340,6 +344,7 @@
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor3'))]"/>
         </record>
 
         <record id="sale_order_line_24" model="sale.order.line">
@@ -403,6 +408,7 @@
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="sale.utm_source_sale_order_0"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=28)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor1'))]"/>
         </record>
 
         <record id="sale_order_line_28" model="sale.order.line">
@@ -710,6 +716,7 @@ Thanks!</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="message_partner_ids" eval="[(4, ref('base.partner_demo_portal'))]"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor4'))]"/>
         </record>
 
         <record id="portal_sale_order_line_1" model="sale.order.line">
@@ -865,5 +872,76 @@ Thanks!</field>
         <record id="product.product_4_attribute_1_value_1" model="product.template.attribute.value">
             <field name="exclude_for" eval="[(6,0,[ref('sale.product_template_attribute_exclusion_3')])]" />
         </record>
+
+        <!-- Activities of sales order -->
+        <record id="sale_activity_2" model="mail.activity">
+            <field name="res_id" ref="sale.sale_order_3"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Answer questions</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="sale_activity_3" model="mail.activity">
+            <field name="res_id" ref="sale.sale_order_4"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="sale.mail_act_sale_upsell"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="sale_activity_4" model="mail.activity">
+            <field name="res_id" ref="sale.sale_order_5"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="sale_activity_6" model="mail.activity">
+            <field name="res_id" ref="sale.sale_order_7"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Check delivery requirements</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="sale_activity_7" model="mail.activity">
+            <field name="res_id" ref="sale.sale_order_10"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Confirm Delivery</field>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="sale_activity_8" model="mail.activity">
+            <field name="res_id" ref="sale.sale_order_12"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="sale_activity_9" model="mail.activity">
+            <field name="res_id" ref="sale.sale_order_16"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="sale.mail_act_sale_upsell"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="sale_activity_10" model="mail.activity">
+            <field name="res_id" ref="sale.portal_sale_order_1"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Get quote confirmation</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
     </data>
 </odoo>
