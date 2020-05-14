@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from cups import Connection as cups_connection
 from re import sub
 from threading import Lock
 
-from odoo.addons.hw_drivers.controllers.driver import Interface
+from odoo.addons.hw_drivers.interface import Interface
 
 conn = cups_connection()
 PPDs = conn.getPPDs()

@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import namedtuple
+from contextlib import contextmanager
 import logging
+import serial
+from threading import Lock
 import time
 import traceback
-from collections import namedtuple
-from threading import Lock
-from contextlib import contextmanager
 
-import serial
-
-from odoo.tools.translate import _
-from odoo.addons.hw_drivers.controllers.driver import Driver, event_manager
+from odoo import _
+from odoo.addons.hw_drivers.event_manager import event_manager
+from odoo.addons.hw_drivers.driver import Driver
 
 _logger = logging.getLogger(__name__)
 
@@ -58,25 +58,21 @@ class SerialDriver(Driver):
     STATUS_ERROR = 'error'
     STATUS_CONNECTING = 'connecting'
 
-    def __init__(self, device):
+    def __init__(self, identifier, device):
         """ Attributes initialization method for `SerialDriver`.
 
         :param device: path to the device
         :type device: str
         """
 
-        super().__init__(device)
+        super(SerialDriver, self).__init__(identifier, device)
         self._actions = {
             'get_status': self._push_status,
         }
-        self._device_connection = 'serial'
+        self.device_connection = 'serial'
         self._device_lock = Lock()
         self._status = {'status': self.STATUS_CONNECTING, 'message_title': '', 'message_body': ''}
         self._set_name()
-
-    @property
-    def device_identifier(self):
-        return self.dev['identifier']
 
     def _get_raw_response(connection):
         pass
@@ -91,10 +87,10 @@ class SerialDriver(Driver):
         """Tries to build the device's name based on its type and protocol name but falls back on a default name if that doesn't work."""
 
         try:
-            name = ('%s serial %s' % (self._protocol.name, self._device_type)).title()
+            name = ('%s serial %s' % (self._protocol.name, self.device_type)).title()
         except Exception:
             name = 'Unknown Serial Device'
-        self._device_name = name
+        self.device_name = name
 
     def _take_measure(self):
         pass
@@ -126,7 +122,7 @@ class SerialDriver(Driver):
         if self._connection and self._connection.isOpen():
             self._do_action(data)
         else:
-            with serial_connection(self.dev['identifier'], self._protocol) as connection:
+            with serial_connection(self.device_identifier, self._protocol) as connection:
                 self._connection = connection
                 self._do_action(data)
 
@@ -134,7 +130,7 @@ class SerialDriver(Driver):
         """Continuously gets new measures from the device."""
 
         try:
-            with serial_connection(self.dev['identifier'], self._protocol) as connection:
+            with serial_connection(self.device_identifier, self._protocol) as connection:
                 self._connection = connection
                 self._status['status'] = self.STATUS_CONNECTED
                 self._push_status()
