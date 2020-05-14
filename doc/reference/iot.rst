@@ -61,7 +61,7 @@ determined connection type. Creating a new interface requires
 
 .. code-block:: python
 
-    from odoo.addons.hw_drivers.controllers.driver import Interface
+    from odoo.addons.hw_drivers.interface import Interface
 
     class InterfaceName(Interface):
         connection_type = 'ConnectionType'
@@ -96,16 +96,16 @@ Creating a new Driver requires:
 
 .. code-block:: python
 
-    from odoo.addons.hw_drivers.controllers.driver import Driver
+    from odoo.addons.hw_drivers.driver import Driver
 
     class DriverName(Driver):
         connection_type = 'ConnectionType'
 
-        def __init__(self, device):
-            super(NewDriver, self).__init__(device)
-            self._device_type = 'DeviceType'
-            self._device_connection = 'DeviceConnection'
-            self._device_name = 'DeviceName'
+        def __init__(self, identifier, device):
+            super(NewDriver, self).__init__(identifier, device)
+            self.device_type = 'DeviceType'
+            self.device_connection = 'DeviceConnection'
+            self.device_name = 'DeviceName'
 
         @classmethod
         def supported(cls, device):
@@ -128,7 +128,7 @@ instantiated using the IP of the IoT Box and the device identifier.
 
 .. code-block:: javascript
 
-    var DeviceProxy = require('iot.widgets').DeviceProxy;
+    var DeviceProxy = require('iot.DeviceProxy');
 
     var iot_device = new DeviceProxy({
         iot_ip: iot_ip,
@@ -182,7 +182,7 @@ with `self.data` as argument.
 
 .. code-block:: python
 
-    from odoo.addons.hw_drivers.controllers.driver import event_manager
+    from odoo.addons.hw_drivers.event_manager import event_manager
 
     class DriverName(Driver):
         connection_type = 'ConnectionType'

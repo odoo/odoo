@@ -27,77 +27,65 @@ apt-get update && apt-get -y upgrade
 # Firmware 4.44 seems to prevent the LED mechanism from working
 
 PKGS_TO_INSTALL="
-    fswebcam \
-    nginx-full \
-    dnsmasq \
+    console-data \
+    cups \
+    cups-ipp-utils \
     dbus \
     dbus-x11 \
-    cups \
-    printer-driver-all \
-    cups-ipp-utils \
-    libcups2-dev \
-    pcscd \
-    localepurge \
-    vim \
-    mc \
-    mg \
-    screen \
-    iw \
-    hostapd \
-    git \
-    rsync \
-    kpartx \
-    swig \
-    console-data \
-    lightdm \
-    xserver-xorg-video-fbdev \
-    xserver-xorg-input-evdev \
+    dnsmasq \
     firefox-esr \
-    xdotool \
-    unclutter \
-    x11-utils \
-    xserver-xorg-video-dummy \
-    openbox \
-    rpi-update \
-    adduser \
+    fswebcam \
+    git \
+    hostapd \
+    iw \
+    kpartx \
+    libcups2-dev \
     libpq-dev \
+    lightdm \
+    localepurge \
+    nginx-full \
+    openbox \
+    printer-driver-all \
     python-cups \
     python3 \
-    python3-pyscard \
-    python3-urllib3 \
+    python3-babel \
     python3-dateutil \
     python3-decorator \
+    python3-dev \
     python3-docutils \
     python3-feedparser \
-    python3-pil \
+    python3-html2text \
     python3-jinja2 \
     python3-ldap \
+    python3-libsass \
     python3-lxml \
     python3-mako \
     python3-mock \
-    python3-openid \
+    python3-netifaces \
+    python3-passlib \
+    python3-pil \
+    python3-pip \
     python3-psutil \
     python3-psycopg2 \
-    python3-babel \
     python3-pydot \
     python3-pyparsing \
     python3-pypdf2 \
+    python3-qrcode \
     python3-reportlab \
     python3-requests \
-    python3-simplejson \
-    python3-stdnum \
-    python3-tz \
-    python3-werkzeug \
     python3-serial \
-    python3-pip \
-    python3-dev \
-    python3-netifaces \
-    python3-passlib \
-    python3-libsass \
-    python3-qrcode \
-    python3-html2text \
-    python3-unittest2 \
-    python3-simplejson"
+    python3-tz \
+    python3-urllib3 \
+    python3-werkzeug \
+    rsync \
+    screen \
+    unclutter \
+    vim \
+    x11-utils \
+    xdotool \
+    xserver-xorg-input-evdev \
+    xserver-xorg-video-dummy \
+    xserver-xorg-video-fbdev"
 
 echo "Acquire::Retries "16";" > /etc/apt/apt.conf.d/99acquire-retries
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
@@ -114,12 +102,12 @@ rm -rfv /usr/share/doc
 # so we install the latest pyusb that works with this libusb.
 # Even in stretch, we had an error with langid (but worked otherwise)
 PIP_TO_INSTALL="
-    pyusb==1.0.0b1 \
     evdev \
     gatt \
-    v4l2 \
     polib \
-    pycups"
+    pycups \
+    pyusb \
+    v4l2"
 
 pip3 install ${PIP_TO_INSTALL}
 

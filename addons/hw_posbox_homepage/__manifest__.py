@@ -19,6 +19,5 @@ If you activate this module, you won't be able to access the
 regular Odoo interface anymore.
 
 """,
-    'depends': ['hw_proxy'],
     'installable': False,
 }

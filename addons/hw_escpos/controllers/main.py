@@ -27,7 +27,7 @@ except ImportError:
     usb = None
 
 from odoo import http, _
-from odoo.addons.hw_proxy.controllers import main as hw_proxy
+from odoo.addons.hw_drivers.controllers import proxy
 
 _logger = logging.getLogger(__name__)
 
@@ -78,10 +78,7 @@ class EscposDriver(Thread):
 
         for printer in printers:
             try:
-                if usb.__version__ == '1.0.0b1':
-                    description = usb.util.get_string(printer, 256, printer.iManufacturer) + " " + usb.util.get_string(printer, 256, printer.iProduct)
-                else:
-                    description = usb.util.get_string(printer, printer.iManufacturer) + " " + usb.util.get_string(printer, printer.iProduct)
+                description = usb.util.get_string(printer, printer.iManufacturer) + " " + usb.util.get_string(printer, printer.iProduct)
             except Exception as e:
                 _logger.error("Can not get printer description: %s" % e)
                 description = 'Unknown printer'
@@ -326,9 +323,10 @@ class EscposDriver(Thread):
 
 driver = EscposDriver()
 
-hw_proxy.drivers['escpos'] = driver
+proxy.proxy_drivers['escpos'] = driver
 
-class EscposProxy(hw_proxy.Proxy):
+
+class EscposProxy(proxy.ProxyController):
     
     @http.route('/hw_proxy/open_cashbox', type='json', auth='none', cors='*')
     def open_cashbox(self):
