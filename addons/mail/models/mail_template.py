@@ -2,11 +2,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import json
 import logging
-
-
+import odoo.modules.graph
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
+import odoo
+import os.path
+from odoo.tools.misc import file_open
+import xml.etree.ElementTree as ET
+import re
+from odoo.modules import  get_module_resource
+from odoo.tools.translate import _, _lt, TranslationFileReader
 
 _logger = logging.getLogger(__name__)
 
@@ -46,6 +53,7 @@ class MailTemplate(models.Model):
     reply_to = fields.Char('Reply-To', help="Preferred response address (placeholders may be used here)")
     # content
     body_html = fields.Html('Body', translate=True, sanitize=False)
+    original_template_vals = fields.Text(help="This field is used to reset the templates(created through demo data) to it's initial state")
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
@@ -66,6 +74,12 @@ class MailTemplate(models.Model):
     ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
+
+    @api.model
+    def create(self, vals):
+        if self.env.context.get('install_mode'):
+            vals['original_template_vals'] = json.dumps(vals)
+        return super().create(vals)
 
     def unlink(self):
         self.unlink_action()
@@ -103,6 +117,106 @@ class MailTemplate(models.Model):
 
         return True
 
+    def get_files(self):
+        graph = odoo.modules.graph.Graph()
+        module_list= self.env['ir.module.module'].search([('state', '=', 'installed')])
+        module_list = [module.name for module in module_list]
+        graph.add_modules(self.env.cr, module_list, ['demo'])
+        files = []
+        for package in graph:
+            for filename in package.data['data']:
+                pathname =None
+                if filename.endswith('.xml') and filename.count('data'):
+                    pathname = os.path.join(package.name, filename)
+                    files.append(pathname)
+        return files
+
+
+    def get_xmlrecords(self):
+        files=self.get_files()
+        for template in self:
+            template_id=self.browse(template.id).get_external_id()
+            template_id=template_id.get(template.id)
+            template_id=template_id[template_id.find('.')+1:]
+            for file in files:
+                with file_open(file, 'rb') as fp:
+                    tree = ET.parse(fp)
+                    root = tree.getroot()
+                    for record in root.iter('record'):
+                        if record.get('id')==template_id:
+                            return record
+                      
+
+    def get_xmltohtml(self,field):
+        xml_str=ET.tostring(field, encoding="utf-8", method="xml")
+        html = xml_str.decode('ISO-8859-1')      
+        html=re.sub('<field name="body_html" type="html">',"",html)
+        html=re.sub("</field>","",html)
+        return html
+
+    def process_row(self, row):
+            """Process a single PO (or POT) entry."""
+            # dictionary which holds values for this line of the csv file
+            # {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
+            #  'src': ..., 'value': ..., 'module':...}
+            dic = dict.fromkeys(('type', 'name', 'res_id', 'src', 'value',
+                                 'comments', 'imd_model', 'imd_name', 'module'))
+            dic['lang'] = self.env.context.get('lang')
+            dic.update(row)
+            return dic
+
+   
+    def get_pofile_dic(self):
+        pofile_values=[]
+        module_list= self.env['ir.module.module'].search([('state', '=', 'installed')])
+        module_list = [module.name for module in module_list]
+        lang_code = tools.get_iso_codes(self.env.context.get('lang'))
+        base_lang_code = lang_code.split('_')[0]
+        for module_name in module_list:
+            trans_file = get_module_resource(module_name, 'i18n', base_lang_code + '.po')
+            if trans_file:
+                with file_open(trans_file,'rb') as fileobj:
+                    fileformat = os.path.splitext(trans_file)[-1][1:].lower()
+                    fileobj.seek(0)
+                    reader = TranslationFileReader(fileobj, fileformat=fileformat)
+                    for row in reader:
+                        dic= self.process_row(row)
+                        pofile_values.append(dic)
+        return pofile_values
+
+
+
+    def reset_mail_template(self):
+        record=self.get_xmlrecords()
+        if record:
+            for field in record:
+                if self.env.context.get('lang')=="en_US":
+                    if field.get('name')=='body_html':
+                        html=self.get_xmltohtml(field)
+                        self.write({'body_html': html})
+                    if field.get('name')=='subject':
+                        self.write({'subject': field.text})
+                else:
+                    po_file_values=self.get_pofile_dic()
+                    for template in self:
+                        template_id=self.browse(template.id).get_external_id()
+                        template_id=template_id.get(template.id)
+                        template_id=template_id[template_id.find('.')+1:]
+                        for dic in po_file_values:
+                            if dic.get('imd_name')==template_id and dic.get('name')=="mail.template,body_html":
+                                self.write({'body_html':dic.get('value')})
+                            if dic.get('imd_name')==template_id and dic.get('name')=="mail.template,subject":
+                                self.write({'subject':dic.get('value')})
+        
+                if field.get('name')=='name':
+                    self.write({'name': field.text})
+                if field.get('name')=='email_to':
+                    self.write({'email_to': field.text})
+                if field.get('name')=='email_from':
+                    self.write({'email_from': field.text})
+                if field.get('name')=='lang':
+                    self.write({'lang': field.text})
+            
     # ------------------------------------------------------------
     # MESSAGE/EMAIL VALUES GENERATION
     # ------------------------------------------------------------
