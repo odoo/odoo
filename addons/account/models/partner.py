@@ -257,12 +257,14 @@ class ResPartner(models.Model):
             partner = self.browse(pid)
             if type == 'receivable':
                 partner.credit = val
-                partner.debit = False
-                treated |= partner
+                if partner not in treated:
+                    partner.debit = False
+                    treated |= partner
             elif type == 'payable':
                 partner.debit = -val
-                partner.credit = False
-                treated |= partner
+                if partner not in treated:
+                    partner.credit = False
+                    treated |= partner
         remaining = (self - treated)
         remaining.debit = False
         remaining.credit = False
