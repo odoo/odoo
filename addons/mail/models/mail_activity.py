@@ -210,7 +210,8 @@ class MailActivity(models.Model):
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
         if self.activity_type_id:
-            self.summary = self.activity_type_id.summary
+            if self.activity_type_id.summary:
+                self.summary = self.activity_type_id.summary
             # Date.context_today is correct because date_deadline is a Date and is meant to be
             # expressed in user TZ
             base = fields.Date.context_today(self)
