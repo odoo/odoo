@@ -2026,6 +2026,15 @@ options.registry.SnippetMove = options.Class.extend({
                 }
                 break;
         }
+        if (params.name === 'move_up_opt' || params.name === 'move_down_opt') {
+            $('html, body').animate(
+                {
+                    scrollTop: this.$target.offset().top - $(window).height() / 2,
+                },
+                500,
+                'linear',
+            );
+        }
     },
 });
 
