@@ -928,6 +928,16 @@
     </xpath>
 </template>
 
+<template id="mobile_override_assets">
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/mixins/_breakpoints.scss"/>
+</template>
+
+<template id="mobile_override">
+    <t t-call-assets="website.mobile_override_assets"/>
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/mixins/_breakpoints.scss"/>
+</template>
+
+
 <template id="robots">
 <t t-translation="off">
 User-agent: *

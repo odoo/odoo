@@ -161,6 +161,9 @@
                             </div>
                         </div>
                     </li>
+                    <li t-if="not translatable" id="edit-mobile-menu">
+                        <a data-action="edit_mobile" href="#"><span class="fa fa-pencil mr-2"/>Edit Mobile</a>
+                    </li>
                     <li t-if="not translatable" id="edit-page-menu">
                         <a data-action="edit" href="#" accesskey="a"><span class="fa fa-pencil mr-2"/>Edit</a>
                     </li>

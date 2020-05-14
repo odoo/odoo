@@ -1,6 +1,7 @@
 odoo.define('website.editMenu', function (require) {
 'use strict';
 
+const ajax = require('web.ajax');
 var core = require('web.core');
 var EditorMenu = require('website.editor.menu');
 var websiteNavbarData = require('website.navbar');
@@ -11,11 +12,12 @@ var _t = core._t;
  * Adds the behavior when clicking on the 'edit' button (+ editor interaction)
  */
 var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
-    assetLibs: ['web_editor.compiled_assets_wysiwyg', 'website.compiled_assets_wysiwyg'],
+    assetLibs: ['web_editor.compiled_assets_wysiwyg', 'website.compiled_assets_wysiwyg', 'website.mobile_override'],
 
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions, {
         edit: '_startEditMode',
+        edit_mobile: '_startEditMobile',
         on_save: '_onSave',
     }),
     custom_events: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.custom_events || {}, {
@@ -81,6 +83,12 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     // Actions
     //--------------------------------------------------------------------------
 
+    async _startEditMobile() {
+        //const asset = await ajax.loadAsset('website.mobile_override');
+        //await ajax.loadLibs(asset);
+        $('#wrapwrap').css({'max-height': '800px', 'max-width': '500px'}).addClass('o_mobile_editor');
+        return this._startEditMode();
+    },
     /**
      * Creates an editor instance and appends it to the DOM. Also remove the
      * welcome message if necessary.
