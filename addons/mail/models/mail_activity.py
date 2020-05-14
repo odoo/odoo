@@ -45,6 +45,7 @@ class MailActivityType(models.Model):
         ('days', 'days'),
         ('weeks', 'weeks'),
         ('months', 'months')], string="Delay units", help="Unit of delay", required=True, default='days')
+    delay_label = fields.Char(compute='_compute_delay_label')
     delay_from = fields.Selection([
         ('current_date', 'after validation date'),
         ('previous_activity', 'after previous activity deadline')], string="Delay Type", help="Type of delay", required=True, default='previous_activity')
@@ -90,6 +91,14 @@ class MailActivityType(models.Model):
     def _compute_initial_res_model_id(self):
         for activity_type in self:
             activity_type.initial_res_model_id = activity_type.res_model_id
+
+    @api.depends('delay_unit', 'delay_count')
+    def _compute_delay_label(self):
+        selection_description_values = {
+            e[0]: e[1] for e in self._fields['delay_unit']._description_selection(self.env)}
+        for activity_type in self:
+            unit = selection_description_values[activity_type.delay_unit]
+            activity_type.delay_label = '%s %s' % (activity_type.delay_count, unit)
 
 
 class MailActivity(models.Model):

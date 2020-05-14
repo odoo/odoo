@@ -116,15 +116,14 @@
         <field name="model">crm.iap.lead.mining.request</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name"/>
-                <field name="lead_number"/>
-                <field name="lead_type"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="display_lead_label" string="Number of Leads"/>
                 <field name="search_type"/>
                 <field name="country_ids" widget="many2many_tags"/>
                 <field name="team_id"/>
                 <field name="user_id"/>
                 <field name="tag_ids" widget="many2many_tags"/>
-                <field name="state" readonly="1"/>
+                <field name="state" readonly="1" decoration-info="state == 'draft'" decoration-success="state == 'done'" decoration-danger="state == 'error'" widget="badge"/>
             </tree>
         </field>
     </record>
