@@ -797,7 +797,7 @@ class ProductTemplate(models.Model):
             return self.env.ref('stock.action_report_stock_rule').report_action(None, data={
                 'product_id': products.id,
                 'warehouse_ids': warehouse.ids,
-            })
+            }, config=False)
         action = self.env.ref('stock.action_stock_rules_report').read()[0]
         action['context'] = self.env.context
         return action
