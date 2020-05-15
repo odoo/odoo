@@ -233,11 +233,8 @@ class PurchaseOrder(models.Model):
             self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
         return {}
 
-    @api.onchange('fiscal_position_id')
     def _compute_tax_id(self):
-        """
-        Trigger the recompute of the taxes if the fiscal position is changed on the PO.
-        """
+        # TODO: remove in master
         for order in self:
             order.order_line._compute_tax_id()
 
@@ -513,20 +510,23 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_qty', 'price_unit', 'taxes_id')
     def _compute_amount(self):
         for line in self:
-            vals = line._prepare_compute_all_values()
-            taxes = line.taxes_id.compute_all(
-                vals['price_unit'],
-                vals['currency_id'],
-                vals['product_qty'],
-                vals['product'],
-                vals['partner'])
+            price_subtotal, price_total = line.taxes_id._get_price_total_subtotal(
+                line.price_unit,
+                line.product_qty,
+                0.0,
+                line.order_id.currency_id,
+                line.product_id,
+                line.order_id.partner_id,
+            )
+
             line.update({
-                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
-                'price_total': taxes['total_included'],
-                'price_subtotal': taxes['total_excluded'],
+                'price_tax': abs(price_total - price_subtotal),
+                'price_total': price_total,
+                'price_subtotal': price_subtotal,
             })
 
     def _prepare_compute_all_values(self):
+        # TODO: remove in master
         # Hook method to returns the different argument values for the
         # compute_all method, due to the fact that discounts mechanism
         # is not implemented yet on the purchase orders.
@@ -542,6 +542,7 @@ class PurchaseOrderLine(models.Model):
         }
 
     def _compute_tax_id(self):
+        # TODO: remove in master
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.with_context(force_company=line.company_id.id).property_account_position_id
             # If company_id is set, always filter taxes by the company
@@ -641,21 +642,83 @@ class PurchaseOrderLine(models.Model):
         else:
             return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
+    def _get_computed_price_unit(self, seller):
+        self.ensure_one()
+
+        if not self.product_id:
+            return self.price_unit
+
+        product = self.product_id.with_context(
+            lang=get_lang(self.env, self.partner_id.lang).code,
+            partner_id=self.partner_id.id,
+            company_id=self.company_id.id,
+        )
+
+        if seller:
+            price_unit = seller.price
+        else:
+            price_unit = product.standard_price
+
+        if self.product_uom and self.product_uom != self.product_id.uom_id:
+            price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom)
+
+        return price_unit
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         if not self.product_id:
             return
 
-        # Reset date, price and quantity since _onchange_quantity will provide default values
-        self.date_planned = datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        self.price_unit = self.product_qty = 0.0
+        product = self.product_id.with_context(
+            lang=get_lang(self.env, self.partner_id.lang).code,
+            partner_id=self.partner_id.id,
+            company_id=self.company_id.id,
+        )
 
-        self._product_id_change()
+        seller_min_qty = self.product_id.seller_ids\
+            .filtered(lambda r: r.name == self.order_id.partner_id and (not r.product_id or r.product_id == self.product_id))\
+            .sorted(key=lambda r: r.min_qty)
+        seller_min_qty = seller_min_qty and seller_min_qty[0]
+        if seller_min_qty:
+            # Retrieve a default quantity / uom from the seller.
+            self.product_qty = seller_min_qty.min_qty or 1.0
+            self.product_uom = seller_min_qty.product_uom
+        else:
+            self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
 
-        self._suggest_quantity()
-        self._onchange_quantity()
+        # Compute date_planned.
+        if seller_min_qty:
+            self.date_planned = self._get_date_planned(seller_min_qty)
+        else:
+            self.date_planned = fields.Date.today()
+
+        # Compute price_unit and take care about the taxes and the fiscal position.
+        price_unit = self._get_computed_price_unit(seller_min_qty)
+        taxes = product.taxes_id.filtered(lambda tax: tax.company_id == self.order_id.company_id)
+        fiscal_position = self.order_id.fiscal_position_id or self.order_id.partner_id.property_account_position_id
+        business_vals = taxes._get_business_values_from_product(
+            price_unit,
+            self.product_qty or 1.0,
+            0.0,
+            self.order_id.currency_id,
+            product,
+            self.order_id.partner_id,
+            fiscal_position
+        )
+        self.taxes_id = business_vals['taxes']
+        self.name = self._get_product_purchase_description(product)
+
+        # Convert the unit price to the invoice's currency.
+        company = self.order_id.company_id
+        self.price_unit = company.currency_id._convert(
+            business_vals['price_unit'],
+            self.order_id.currency_id,
+            company,
+            self.date_order or fields.Date.today(),
+        )
 
     def _product_id_change(self):
+        # TODO: remove in master
         if not self.product_id:
             return
 
@@ -689,35 +752,42 @@ class PurchaseOrderLine(models.Model):
             return {'warning': warning}
         return {}
 
-    @api.onchange('product_qty', 'product_uom')
-    def _onchange_quantity(self):
-        if not self.product_id:
+    @api.onchange('product_uom')
+    def _onchange_product_uom(self):
+        # Do nothing in case of missing uom.
+        if not self.product_uom:
             return
+
         params = {'order_id': self.order_id}
         seller = self.product_id._select_seller(
             partner_id=self.partner_id,
-            quantity=self.product_qty,
+            quantity=self.product_qty or 1.0,
             date=self.order_id.date_order and self.order_id.date_order.date(),
             uom_id=self.product_uom,
             params=params)
 
-        if seller or not self.date_planned:
-            self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        # Compute price_unit and take care about the taxes and the fiscal position.
+        price_unit = self._get_computed_price_unit(seller)
+        taxes = self.product_id.taxes_id.filtered(lambda tax: tax.company_id == self.order_id.company_id)
+        fiscal_position = self.order_id.fiscal_position_id or self.order_id.partner_id.property_account_position_id
+        business_vals = taxes._get_business_values_from_product(
+            price_unit,
+            self.product_qty or 1.0,
+            0.0,
+            self.order_id.currency_id,
+            self.product_id,
+            self.order_id.partner_id,
+            fiscal_position
+        )
 
-        if not seller:
-            if self.product_id.seller_ids.filtered(lambda s: s.name.id == self.partner_id.id):
-                self.price_unit = 0.0
-            return
-
-        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, self.product_id.supplier_taxes_id, self.taxes_id, self.company_id) if seller else 0.0
-        if price_unit and seller and self.order_id.currency_id and seller.currency_id != self.order_id.currency_id:
-            price_unit = seller.currency_id._convert(
-                price_unit, self.order_id.currency_id, self.order_id.company_id, self.date_order or fields.Date.today())
-
-        if seller and self.product_uom and seller.product_uom != self.product_uom:
-            price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
-
-        self.price_unit = price_unit
+        # Convert the unit price to the invoice's currency.
+        company = self.order_id.company_id
+        self.price_unit = company.currency_id._convert(
+            business_vals['price_unit'],
+            self.order_id.currency_id,
+            company,
+            self.date_order or fields.Date.today(),
+        )
 
     @api.depends('product_uom', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):
@@ -728,6 +798,7 @@ class PurchaseOrderLine(models.Model):
                 line.product_uom_qty = line.product_qty
 
     def _suggest_quantity(self):
+        # TODO: remove in master
         '''
         Suggest a minimal quantity based on the seller
         '''

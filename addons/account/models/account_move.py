@@ -2672,7 +2672,7 @@ class AccountMoveLine(models.Model):
         else:
             return self.price_unit
 
-        if self.product_uom_id != self.product_id.uom_id:
+        if self.product_uom_id and self.product_uom_id != self.product_id.uom_id:
             price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom_id)
 
         return price_unit
@@ -2943,9 +2943,9 @@ class AccountMoveLine(models.Model):
 
             line.name = line._get_computed_name()
             line.account_id = line._get_computed_account()
-            line.tax_ids = line._get_computed_taxes()
+            taxes = line._get_computed_taxes()
             line.product_uom_id = line._get_computed_uom()
-            line.price_unit = line._get_computed_price_unit()
+            price_unit = line._get_computed_price_unit()
 
             # Manage the fiscal position after that and adapt the price_unit.
             # E.g. mapping a price-included-tax to a price-excluded-tax must
@@ -2954,16 +2954,25 @@ class AccountMoveLine(models.Model):
             # adapt the price_unit to the new tax.
             # E.g. mapping a 10% price-included tax to a 20% price-included tax for a price_unit of 110 should preserve
             # 100 as balance but set 120 as price_unit.
-            if line.tax_ids and line.move_id.fiscal_position_id:
-                line.price_unit = line._get_price_total_and_subtotal()['price_subtotal']
-                line.tax_ids = line.move_id.fiscal_position_id.map_tax(line.tax_ids._origin, partner=line.move_id.partner_id)
-                accounting_vals = line._get_fields_onchange_subtotal(price_subtotal=line.price_unit, currency=line.move_id.company_currency_id)
-                balance = accounting_vals['debit'] - accounting_vals['credit']
-                line.price_unit = line._get_fields_onchange_balance(balance=balance).get('price_unit', line.price_unit)
+            business_vals = taxes._get_business_values_from_product(
+                price_unit,
+                line.quantity or 1.0,
+                line.discount,
+                line.move_id.company_currency_id,
+                line.product_id,
+                line.move_id.partner_id,
+                line.move_id.fiscal_position_id,
+                is_refund=line.move_id.type in ('out_refund', 'in_refund'),
+            )
+            price_unit = business_vals['price_unit']
+            taxes = business_vals['taxes']
 
             # Convert the unit price to the invoice's currency.
             company = line.move_id.company_id
-            line.price_unit = company.currency_id._convert(line.price_unit, line.move_id.currency_id, company, line.move_id.date)
+            price_unit = company.currency_id._convert(price_unit, line.move_id.currency_id, company, line.move_id.date)
+
+            line.price_unit = price_unit
+            line.tax_ids = taxes
 
         if len(self) == 1:
             return {'domain': {'product_uom_id': [('category_id', '=', self.product_uom_id.category_id.id)]}}
@@ -2971,15 +2980,27 @@ class AccountMoveLine(models.Model):
     @api.onchange('product_uom_id')
     def _onchange_uom_id(self):
         ''' Recompute the 'price_unit' depending of the unit of measure. '''
+
+        # Do nothing in case of missing uom.
+        if not self.product_uom_id:
+            return
+
+        # Restart from the original product's price_unit / line's price_unit to apply the new uom.
         price_unit = self._get_computed_price_unit()
+        taxes = self._get_computed_taxes()
 
         # See '_onchange_product_id' for details.
-        taxes = self._get_computed_taxes()
-        if taxes and self.move_id.fiscal_position_id:
-            price_subtotal = self._get_price_total_and_subtotal(price_unit=price_unit, taxes=taxes)['price_subtotal']
-            accounting_vals = self._get_fields_onchange_subtotal(price_subtotal=price_subtotal, currency=self.move_id.company_currency_id)
-            balance = accounting_vals['debit'] - accounting_vals['credit']
-            price_unit = self._get_fields_onchange_balance(balance=balance).get('price_unit', price_unit)
+        business_vals = taxes._get_business_values_from_product(
+            price_unit,
+            self.quantity or 1.0,
+            self.discount,
+            self.move_id.company_currency_id,
+            self.product_id,
+            self.move_id.partner_id,
+            self.move_id.fiscal_position_id,
+            is_refund=self.move_id.type in ('out_refund', 'in_refund'),
+        )
+        price_unit = business_vals['price_unit']
 
         # Convert the unit price to the invoice's currency.
         company = self.move_id.company_id

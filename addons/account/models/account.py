@@ -1723,6 +1723,123 @@ class AccountTax(models.Model):
             'total_void': sign * (currency.round(total_void) if round_total else total_void),
         }
 
+    def _get_price_total_subtotal(self, price_unit, quantity, discount, currency, product, partner, is_refund=False):
+        ''' This method is used to compute 'price_total' & 'price_subtotal'.
+
+        :param price_unit:  The current price unit.
+        :param quantity:    The current quantity.
+        :param discount:    The current discount.
+        :param currency:    The line's currency.
+        :param product:     The line's product.
+        :param partner:     The line's partner.
+        :param is_refund:   A flag indicating the business document is a refund.
+        :return:            A tuple (price_subtotal, price_total)
+        '''
+        # Compute 'price_subtotal'.
+        price_unit_wo_discount = price_unit * (1 - (discount / 100.0))
+        subtotal = quantity * price_unit_wo_discount
+
+        # Compute 'price_total'.
+        if self:
+            taxes_res = self._origin.compute_all(
+                price_unit_wo_discount,
+                quantity=quantity,
+                currency=currency,
+                product=product,
+                partner=partner,
+                is_refund=is_refund,
+            )
+            return currency.round(taxes_res['total_excluded']), currency.round(taxes_res['total_included'])
+        else:
+            price_subtotal = currency.round(subtotal)
+            return price_subtotal, price_subtotal
+
+    def _get_business_values_from_product(self, price_unit, quantity, discount, currency, product, partner, fiscal_position, is_refund=False):
+
+        if self and fiscal_position:
+            # Manage the fiscal position after that and adapt the price_unit.
+            # E.g. mapping a price-included-tax to a price-excluded-tax must
+            # remove the tax amount from the price_unit.
+            # However, mapping a price-included tax to another price-included tax must preserve the balance but
+            # adapt the price_unit to the new tax.
+            # E.g. mapping a 10% price-included tax to a 20% price-included tax for a price_unit of 110 should preserve
+            # 100 as balance but set 120 as price_unit.
+
+            price_subtotal, price_total = self._get_price_total_subtotal(
+                price_unit,
+                quantity,
+                discount,
+                currency,
+                product,
+                partner,
+                is_refund=is_refund,
+            )
+            if self and fiscal_position:
+                self = fiscal_position.map_tax(self)
+                if self and any(tax.price_include for tax in self.flatten_taxes_hierarchy()):
+                    # Inverse taxes. E.g:
+                    #
+                    # Price Unit    | Taxes         | Originator Tax    |Price Subtotal     | Price Total
+                    # -----------------------------------------------------------------------------------
+                    # 110           | 10% incl, 5%  |                   | 100               | 115
+                    # 10            |               | 10% incl          | 10                | 10
+                    # 5             |               | 5%                | 5                 | 5
+                    #
+                    # When setting the balance to -200, the expected result is:
+                    #
+                    # Price Unit    | Taxes         | Originator Tax    |Price Subtotal     | Price Total
+                    # -----------------------------------------------------------------------------------
+                    # 220           | 10% incl, 5%  |                   | 200               | 230
+                    # 20            |               | 10% incl          | 20                | 20
+                    # 10            |               | 5%                | 10                | 10
+                    taxes_res = self._origin.compute_all(price_subtotal, currency=currency, handle_price_include=False)
+                    for tax_res in taxes_res['taxes']:
+                        tax = self.env['account.tax'].browse(tax_res['id'])
+                        if tax.price_include:
+                            price_subtotal += tax_res['amount']
+
+            vals = {'taxes': self}
+
+            discount_factor = 1 - (discount / 100.0)
+            if price_subtotal and discount_factor:
+                # discount != 100%
+                vals.update({
+                    'quantity': quantity or 1.0,
+                    'discount': discount,
+                    'price_unit': price_subtotal / discount_factor / (quantity or 1.0),
+                })
+            elif price_subtotal and not discount_factor:
+                # discount == 100%
+                vals.update({
+                    'quantity': quantity or 1.0,
+                    'discount': 0.0,
+                    'price_unit': price_subtotal / (quantity or 1.0),
+                })
+            elif not discount_factor:
+                # price_subtotal is 0, but discount  == 100% so we display the normal unit_price
+                vals.update({
+                    'quantity': quantity,
+                    'discount': 0.0,
+                    'price_unit': price_unit,
+                })
+            else:
+                # price_subtotal is 0, so unit price is 0 as well
+                vals.update({
+                    'quantity': quantity,
+                    'discount': discount,
+                    'price_unit': 0.0
+                })
+
+        else:
+            vals = {
+                'quantity': quantity,
+                'discount': discount,
+                'price_unit': price_unit,
+                'taxes': self,
+            }
+
+        return vals
+
     @api.model
     def _fix_tax_included_price(self, price, prod_taxes, line_taxes):
         """Subtract tax amount from price when corresponding "price included" taxes do not apply"""
