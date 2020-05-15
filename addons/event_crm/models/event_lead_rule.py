@@ -33,6 +33,7 @@ class EventLeadRule(models.Model):
         string='Create', default='attendee', required=True,
         help='One per Attendee : A Lead is created for each Attendee (B2C).\n'
             'One per Order : A single Lead is created per Ticket Batch/Sale Order (B2B)')
+    lead_ids = fields.One2many('crm.lead', 'event_lead_rule_id', string='Created Leads')
     event_type_ids = fields.Many2many('event.type',
         string='Event Categories',
         help='Filter the attendees to include those of this specific event category. If not set, no event category restriction will be applied.')
