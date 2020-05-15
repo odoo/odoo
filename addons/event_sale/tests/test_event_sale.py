@@ -1,69 +1,155 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
+from odoo.addons.event_sale.tests.common import TestEventSaleCommon
+from odoo.tests import tagged
+from odoo.tests.common import users
 
 
-class EventSaleTest(common.TransactionCase):
+@tagged('event_flow')
+class TestEventSale(TestEventSaleCommon):
 
-    def setUp(self):
-        super(EventSaleTest, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestEventSale, cls).setUpClass()
 
-        self.EventRegistration = self.env['event.registration']
-
-        # First I create an event product
-        product = self.env['product.product'].create({
-            'name': 'test_formation',
-            'type': 'service',
-            'event_ok': True,
+        cls.event_0.write({
+            'event_ticket_ids': [
+                (5, 0),
+                (0, 0, {
+                    'name': 'First Ticket',
+                    'product_id': cls.event_product.id,
+                    'seats_max': 30,
+                }), (0, 0, {
+                    'name': 'Second Ticket',
+                    'product_id': cls.event_product.id,
+                })
+            ],
         })
 
-        # I create an event from the same type than my product
-        event = self.env['event.event'].create({
-            'name': 'test_event',
-            'event_type_id': 1,
-            'date_end': '2012-01-01 19:05:15',
-            'date_begin': '2012-01-01 18:05:15'
+        # make a SO for a customer, selling some tickets
+        cls.customer_so = cls.env['sale.order'].with_user(cls.user_sales_salesman).create({
+            'partner_id': cls.event_customer.id,
         })
 
-        ticket = self.env['event.event.ticket'].create({
-            'name': 'test_ticket',
-            'product_id': product.id,
-            'event_id': event.id,
-        })
+    @users('user_sales_salesman')
+    def test_event_crm_sale(self):
+        TICKET1_COUNT, TICKET2_COUNT = 3, 1
+        customer_so = self.customer_so.with_user(self.env.user)
+        ticket1 = self.event_0.event_ticket_ids[0]
+        ticket2 = self.event_0.event_ticket_ids[1]
 
-        # I create a sales order
-        self.sale_order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'My Attendee'}).id,
-            'note': 'Invoice after delivery',
-            'payment_term_id': self.env.ref('account.account_payment_term_end_following_month').id
-        })
+        # PREPARE SO DATA
+        # ------------------------------------------------------------
 
-        # In the sales order I add some sales order lines. i choose event product
-        self.env['sale.order.line'].create({
-            'product_id': product.id,
-            'price_unit': 190.50,
-            'product_uom': self.env.ref('uom.product_uom_unit').id,
-            'product_uom_qty': 8.0,
-            'order_id': self.sale_order.id,
-            'name': 'sales order line',
-            'event_id': event.id,
-            'event_ticket_id': ticket.id,
+        # adding some tickets to SO
+        customer_so.write({
+            'order_line': [
+                (0, 0, {
+                    'event_id': self.event_0.id,
+                    'event_ticket_id': ticket1.id,
+                    'product_id': ticket1.product_id.id,
+                    'product_uom_qty': TICKET1_COUNT,
+                }), (0, 0, {
+                    'event_id': self.event_0.id,
+                    'event_ticket_id': ticket2.id,
+                    'product_id': ticket2.product_id.id,
+                    'product_uom_qty': TICKET2_COUNT,
+                    'price_unit': 50,
+                })
+            ]
         })
+        ticket1_line = customer_so.order_line.filtered(lambda line: line.event_ticket_id == ticket1)
+        ticket2_line = customer_so.order_line.filtered(lambda line: line.event_ticket_id == ticket2)
+        self.assertEqual(customer_so.amount_untaxed, TICKET1_COUNT * 10 + TICKET2_COUNT * 50)
 
-        # In the event registration I add some attendee detail lines. i choose event product
-        self.register_person = self.env['registration.editor'].create({
-            'sale_order_id': self.sale_order.id,
-            'event_registration_ids': [(0, 0, {
-                'event_id': event.id,
-                'name': 'Administrator',
-                'email': 'abc@example.com'
-            })],
+        # one existing registration for first ticket
+        ticket1_reg1 = self.env['event.registration'].create({
+            'event_id': self.event_0.id,
+            'event_ticket_id': ticket1.id,
+            'partner_id': self.event_customer2.id,
+            'sale_order_id': customer_so.id,
+            'sale_order_line_id': ticket1_line.id,
         })
+        self.assertEqual(ticket1_reg1.partner_id, self.event_customer)
+        for field in ['name', 'email', 'phone', 'mobile']:
+            self.assertEqual(ticket1_reg1[field], self.event_customer[field])
 
-    def test_00_create_event_product(self):
-        # I click apply to create attendees
-        self.register_person.action_make_registration()
-        # I check if a registration is created
-        registrations = self.EventRegistration.search([('sale_order_id', '=', self.sale_order.id)])
-        self.assertTrue(registrations, "The registration is not created.")
+        # EVENT REGISTRATION EDITOR
+        # ------------------------------------------------------------
+
+        # use event registration editor to create missing lines and update details
+        editor = self.env['registration.editor'].with_context({
+            'default_sale_order_id': customer_so.id
+        }).create({})
+        self.assertEqual(len(editor.event_registration_ids), TICKET1_COUNT + TICKET2_COUNT)
+        self.assertEqual(editor.sale_order_id, customer_so)
+        self.assertEqual(editor.event_registration_ids.sale_order_line_id, ticket1_line | ticket2_line)
+
+        # check line linked to existing registration (ticket1_reg1)
+        ticket1_editor_reg1 = editor.event_registration_ids.filtered(lambda line: line.registration_id)
+        for field in ['name', 'email', 'phone', 'mobile']:
+            self.assertEqual(ticket1_editor_reg1[field], ticket1_reg1[field])
+
+        # check new lines
+        ticket1_editor_other = editor.event_registration_ids.filtered(lambda line: not line.registration_id and line.event_ticket_id == ticket1)
+        self.assertEqual(len(ticket1_editor_other), 2)
+        ticket2_editor_other = editor.event_registration_ids.filtered(lambda line: not line.registration_id and line.event_ticket_id == ticket2)
+        self.assertEqual(len(ticket2_editor_other), 1)
+
+        # update lines in editor and save them
+        ticket1_editor_other[0].write({
+            'name': 'ManualEntry1',
+            'email': 'manual.email.1@test.example.com',
+            'phone': '+32456111111',
+        })
+        ticket1_editor_other[1].write({
+            'name': 'ManualEntry2',
+            'email': 'manual.email.2@test.example.com',
+            'mobile': '+32456222222',
+        })
+        editor.action_make_registration()
+
+        # check editor correctly created new registrations with information coming from it or SO as fallback
+        self.assertEqual(len(self.event_0.registration_ids), TICKET1_COUNT + TICKET2_COUNT)
+        new_registrations = self.event_0.registration_ids - ticket1_reg1
+        self.assertEqual(new_registrations.sale_order_id, customer_so)
+        ticket1_new_reg = new_registrations.filtered(lambda reg: reg.event_ticket_id == ticket1)
+        ticket2_new_reg = new_registrations.filtered(lambda reg: reg.event_ticket_id == ticket2)
+        self.assertEqual(len(ticket1_new_reg), 2)
+        self.assertEqual(len(ticket2_new_reg), 1)
+        self.assertEqual(
+            set(ticket1_new_reg.mapped('name')),
+            set(['ManualEntry1', 'ManualEntry2'])
+        )
+        self.assertEqual(
+            set(ticket1_new_reg.mapped('email')),
+            set(['manual.email.1@test.example.com', 'manual.email.2@test.example.com'])
+        )
+        self.assertEqual(
+            set(ticket1_new_reg.mapped('phone')),
+            set(['+32456111111', self.event_customer.phone])
+        )
+        self.assertEqual(
+            set(ticket1_new_reg.mapped('mobile')),
+            set(['+32456222222', self.event_customer.mobile])
+        )
+        for field in ['name', 'email', 'phone', 'mobile']:
+            self.assertEqual(ticket2_new_reg[field], self.event_customer[field])
+
+        # ADDING MANUAL LINES ON SO
+        # ------------------------------------------------------------
+
+        ticket2_line.write({'product_uom_qty': 3})
+        editor_action = customer_so.action_confirm()
+        self.assertEqual(customer_so.state, 'sale')
+        self.assertEqual(customer_so.amount_untaxed, TICKET1_COUNT * 10 + (TICKET2_COUNT + 2) * 50)
+
+        # check confirm of SO correctly created new registrations with information coming from SO
+        self.assertEqual(len(self.event_0.registration_ids), 6)  # 3 for each ticket now
+        new_registrations = self.event_0.registration_ids - (ticket1_reg1 | ticket1_new_reg | ticket2_new_reg)
+        self.assertEqual(new_registrations.event_ticket_id, ticket2)
+        self.assertEqual(new_registrations.partner_id, self.customer_so.partner_id)
+
+        self.assertEqual(editor_action['type'], 'ir.actions.act_window')
+        self.assertEqual(editor_action['res_model'], 'registration.editor')
