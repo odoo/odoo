@@ -57,8 +57,8 @@
                 });
 
                 // generate a random master password
-                // removed I1O0 to avoid confusions
-                var charset = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+                // removed l1O0 to avoid confusions
+                var charset = "abcdefghijkmnpqrstuvwxyz23456789";
                 var password = "";
                 for (var i = 0, n = charset.length; i < 12; ++i) {
                     password += charset.charAt(Math.floor(Math.random() * n));
