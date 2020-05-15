@@ -28,4 +28,9 @@ class SalePaymentLink(models.TransientModel):
         """ Override of the base method to add the order_id in the link. """
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for payment_link in self:
-            payment_link.link = '%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s&partner_id=%s&order_id=%s&access_token=%s' % (base_url, urls.url_quote(payment_link.description), payment_link.amount, payment_link.currency_id.id, payment_link.partner_id.id, payment_link.res_id, payment_link.access_token)
+            # only add order_id for SOs,
+            # otherwise the controller might try to link it with an unrelated record
+            if payment_link.res_model == 'sale.order':
+                payment_link.link = '%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s&partner_id=%s&order_id=%s&access_token=%s' % (base_url, urls.url_quote(payment_link.description), payment_link.amount, payment_link.currency_id.id, payment_link.partner_id.id, payment_link.res_id, payment_link.access_token)
+            else:
+                super(SalePaymentLink, payment_link)._generate_link()
