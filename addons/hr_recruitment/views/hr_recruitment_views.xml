@@ -272,7 +272,6 @@
                 <field name="partner_id"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
-                <field name="message_needaction_counter"/>
                 <field name="attachment_number"/>
                 <field name="active"/>
                 <field name="activity_ids" />
@@ -315,9 +314,6 @@
                                         <div class="o_kanban_inline_block mr8">
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
-                                        <t t-if="record.message_needaction_counter.raw_value">
-                                            <span role="alert" class='oe_kanban_mail_new mr4' title='Unread Messages'><i class='fa fa-comments' role="img" aria-label="Unread messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                        </t>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <a name="action_get_attachment_tree_view" type="object">
