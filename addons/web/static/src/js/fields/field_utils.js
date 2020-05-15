@@ -431,9 +431,10 @@ function parseDate(value, field, options) {
         return false;
     }
     var datePattern = time.getLangDateFormat();
-    var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D');
+    var datePatternWoZero = datePattern.replace('MM', 'M').replace('DD', 'D');
     var date;
     if (options && options.isUTC) {
+        value = value.padStart(10, "0"); // server may send "932-10-10" for "0932-10-10" on some OS
         date = moment.utc(value);
     } else {
         date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601]);
@@ -442,12 +443,10 @@ function parseDate(value, field, options) {
         if (date.year() === 0) {
             date.year(moment.utc().year());
         }
-        if (date.year() >= 1900) {
-            date.toJSON = function () {
-                return this.clone().locale('en').format('YYYY-MM-DD');
-            };
-            return date;
-        }
+        date.toJSON = function () {
+            return this.clone().locale('en').format('YYYY-MM-DD');
+        };
+        return date;
     }
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct date"), value));
 }
@@ -489,12 +488,10 @@ function parseDateTime(value, field, options) {
         if (datetime.year() === 0) {
             datetime.year(moment.utc().year());
         }
-        if (datetime.year() >= 1900) {
-            datetime.toJSON = function () {
-                return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
-            };
-            return datetime;
-        }
+        datetime.toJSON = function () {
+            return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
+        };
+        return datetime;
     }
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct datetime"), value));
 }
