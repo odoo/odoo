@@ -270,7 +270,6 @@
             <field name="model">event.event</field>
             <field name="arch" type="xml">
                 <tree string="Events"
-                    decoration-bf="message_needaction==True"
                     decoration-danger="(seats_max and seats_max&lt;seats_reserved)"
                     multi_edit="1">
                     <field name="name"/>
@@ -481,7 +480,7 @@
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <tree string="Registration" decoration-bf="message_needaction==True" multi_edit="1">
+                <tree string="Registration" multi_edit="1">
                     <field name="create_date" optional="hide"/>
                     <field name="date_open" optional="hide"/>
                     <field name="partner_id"/>
