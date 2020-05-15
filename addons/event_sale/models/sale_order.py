@@ -18,16 +18,11 @@ class SaleOrder(models.Model):
             registrations_toupdate.write({'partner_id': vals['partner_id']})
         return result
 
-    def _action_confirm(self):
-        res = super(SaleOrder, self)._action_confirm()
-        for so in self:
-            # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
-            so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
-        return res
-
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
+            # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
+            so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
             if any(so.order_line.filtered(lambda line: line.event_id)):
                 return self.env['ir.actions.act_window'] \
                     .with_context(default_sale_order_id=so.id) \
@@ -87,13 +82,17 @@ class SaleOrderLine(models.Model):
             if cancel_to_draft:
                 existing_registrations.filtered(lambda self: self.state == 'cancel').action_set_draft()
 
+            registrations_vals = []
             for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
-                registration_vals = {}
-                if registration_data:
-                    registration_vals = registration_data.pop()
+                values = {
+                    'sale_order_line_id': so_line.id,
+                    'sale_order_id': so_line.order_id.id
+                }
                 # TDE CHECK: auto confirmation
-                registration_vals['sale_order_line_id'] = so_line.id
-                Registration.create(registration_vals)
+                if registration_data:
+                    values.update(registration_data.pop())
+                registrations_vals.append(values)
+            Registration.create(registrations_vals)
         return True
 
     @api.onchange('product_id')
