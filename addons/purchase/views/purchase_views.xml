@@ -250,7 +250,8 @@
                                 <group>
                                     <label for="date_planned"/>
                                     <div>
-                                        <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
+                                        <!-- Expected to be readonly at creation otherwise recompute will change the value anyway -->
+                                        <field name="date_planned" attrs="{'readonly': ['|', ('id', '=', False), ('state', 'not in', ('draft', 'sent'))]}"/>
                                         <button name="action_set_date_planned" type="object"
                                             states="draft,sent"
                                             string="Set date to all order lines"
