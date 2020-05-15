@@ -83,14 +83,22 @@
                                     <li class="breadcrumb-item">
                                         <a t-attf-href="/forum/#{ slug(forum) }" t-esc="forum.name"/>
                                     </li>
-                                    <li t-if="header.get('is_guidelines')" class="breadcrumb-item">Guidelines</li>
+                                    <t t-if="header.get('is_guidelines')">
+                                        <li class="breadcrumb-item">
+                                            <a t-if="header.get('is_karma')" t-attf-href="/forum/#{ slug(forum) }/faq">Guidelines</a>
+                                            <t t-else="">
+                                                Guidelines
+                                            </t>
+                                        </li>
+                                        <li t-if="header.get('is_karma')" class="breadcrumb-item">Karma</li>
+                                    </t>
                                     <li t-if="queue_type" class="breadcrumb-item">Moderation</li>
                                     <li t-if="queue_type == 'validation'" class="breadcrumb-item">To Validate</li>
                                     <li t-if="queue_type == 'flagged'" class="breadcrumb-item">Flagged</li>
                                     <li t-if="queue_type == 'offensive'" class="breadcrumb-item">Offensive</li>
                                     <li t-if="reasons and offensive" class="breadcrumb-item">Offensive Post</li>
-                                    <li t-if="reasons and not offensive" class="breadcrumb-item">Close post</li>
-                                    <li t-if="new_question" class="breadcrumb-item">Ask a Question</li>
+                                    <li t-if="reasons and not offensive" class="breadcrumb-item">Close Post</li>
+                                    <li t-if="new_question" class="breadcrumb-item">New Post</li>
                                     <t t-if="is_edit">
                                         <t t-set="target" t-value="post.parent_id if is_answer else post"/>
                                         <li class="breadcrumb-item text-truncate" style="max-width:150px">
@@ -149,7 +157,8 @@
                     <a t-attf-href="/forum/#{ slug(forum) }/tag" t-attf-class="nav-link #{searches.get('tags') and 'active'}">Tags</a>
                 </li>
                 <li class="nav-item">
-                    <a t-attf-href="/profile/ranks_badges?badge_category=forum" t-attf-class="nav-link #{searches.get('badges') and 'active'}">Badges</a>
+                    <a t-attf-href="/profile/ranks_badges?badge_category=forum&amp;url_origin=#{request.httprequest.path}&amp;name_origin=#{forum.name}"
+                    t-attf-class="nav-link #{searches.get('badges') and 'active'}">Badges</a>
                 </li>
                 <li class="nav-item">
                     <a t-attf-href="/forum/#{ slug(forum) }/faq" t-attf-class="nav-link #{header.get('is_guidelines') and 'active'}">About</a>
@@ -166,7 +175,7 @@
                         <t t-elif="searches.get('badges')">Badges</t>
                         <t t-elif="header.get('is_guidelines')">About</t>
                         <t t-elif="uid and my == 'favourites'">Favourites</t>
-                        <t t-elif="uid and my == 'mine'">My questions</t>
+                        <t t-elif="uid and my == 'mine'">My Posts</t>
                         <t t-elif="uid and my == 'followed'">Following</t>
                         <t t-elif="question">Question</t>
                         <t t-else="">All Topics</t>
@@ -175,13 +184,13 @@
                         <a t-if="searches or my or question" t-attf-href="/forum/#{ slug(forum) }" class="dropdown-item">All Topics</a>
                         <a t-if="not searches.get('users')" t-attf-href="/profile/users?forum_origin=#{request.httprequest.path}" class="dropdown-item">People</a>
                         <a t-if="not searches.get('tags')" t-attf-href="/forum/#{slug(forum)}/tag" class="dropdown-item">Tags</a>
-                        <a t-if="not searches.get('badges')" t-attf-href="/profile/ranks_badges?badge_category=forum" class="dropdown-item">Badges</a>
+                        <a t-if="not searches.get('badges')" t-attf-href="/profile/ranks_badges?badge_category=forum&amp;url_origin=#{request.httprequest.path}&amp;name_origin=#{forum.name}" class="dropdown-item">Badges</a>
                         <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{ slug(forum) }/faq" class="dropdown-item">About</a>
                         <t t-if="uid">
                             <div class="dropdown-divider"/>
                             <a t-att-href="'/forum/%s/user/%s?forum_origin=%s' % (slug(forum), uid, request.httprequest.path)"
                                 class="dropdown-item">My profile</a>
-                            <a t-if="my != 'mine'" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'filters', my='mine')" class="dropdown-item">My Questions</a>
+                            <a t-if="my != 'mine'" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'filters', my='mine')" class="dropdown-item">My Posts</a>
                             <a t-if="my != 'favourites'" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'filters', my='favourites')" class="dropdown-item">My Favourites</a>
                             <a t-if="my != 'followed'" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'filters', my='followed')" class="dropdown-item">I'm Following</a>
                             <a t-if="my != 'tagged'" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'filters', my='tagged')" class="dropdown-item">Tags I Follow</a>
@@ -362,15 +371,21 @@
     <t t-call="website_forum.header">
         <div t-field="forum.description" class="mb-4"/>
         <div t-field="forum.faq"/>
-        <div class="card mb-2">
-            <a href="#collapseFour" class="card-header" id="headingFour" data-toggle="collapse" aria-expanded="false" aria-controls="collapseFour">
-                <b>Why can other people edit my questions/answers?</b> <i class="fa fa-caret-down float-right"/>
-            </a>
-            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
-              <div class="card-body">
+    </t>
+</template>
+
+<!-- FAQ Karma Layout -->
+<template id="faq_karma" name="Karma">
+    <t t-call="website_forum.header">
+        <div class="card bg-white" data-name="Item">
+            <div role="tab" class="card-header">
+                <b>Why can other people edit my questions/answers?</b>
+            </div>
+            <div role="tabpanel">
+                <div class="card-body">
                 <p>The goal of this site is create a relevant knowledge base that would answer questions related to Odoo.</p>
                 <p>Therefore questions and answers can be edited like wiki pages by experienced users of this site in order to improve the overall quality of the knowledge base content. Such privileges are granted based on user karma level: you will be able to do the same once your karma gets high enough.</p>
-                <p>If this approach is not for you, please respect the community and use Google+ communities instead.</p>
+                <p>If this approach is not for you, please respect the community.</p>
                     <table class="table table-striped mt-4 bg-white">
                         <tbody>
                             <tr>
@@ -417,6 +432,13 @@
 
 <!-- All Forums Layout -->
 <template id="forum_all" name="Forum Navigation">
+
+    <t t-set="col_class" t-valuef="mb-3 col-sm-6"/>
+    <t t-set="img_class" t-valuef="col-md-4"/>
+    <t t-set="content_class" t-valuef="col-md-8"/>
+    <t t-set="last_post_class" t-valuef="col-md-12 pr-md-3 pt-3"/>
+    <t t-set="nb_post_class" t-valuef="col-md-12 pr-md-3 pt-2"/>
+
     <t t-call="website.layout">
         <t t-set="pageName" t-value="'website_forum'"/>
         <div id="wrap">
@@ -444,26 +466,69 @@
     <!-- First, list all forums (those with descriptions first) -->
     <t t-foreach="sorted_forums" t-as="forum">
         <t t-set="has_desc" t-value="forum.description"/>
-        <div t-attf-class="mb-3 col-sm-6 #{not has_desc and 'col-md-3'}">
-            <div t-attf-class="#{has_desc and 'row' or 'd-flex flex-column h-100'} #{no_description_exist and has_desc and 'py-4 bg-200'}">
-                <div t-attf-class="#{has_desc and 'col-md-4 pr-md-0' or 'flex-lg-grow-1'}">
+        <div t-attf-class="#{col_class}">
+            <div class="row py-4 bg-200 mx-1 h-100 o_forum_row">
+                <div t-attf-class="o_forum_image_container pr-md-0 h-100 #{img_class}">
                     <a t-attf-href="/forum/#{slug(forum)}">
-                        <div t-attf-class="oe_img_bg rounded shadow-sm py-4 px-5 o_wforum_forum_card_bg flex-shrink-0 h-100 o_not_editable {not has_desc and 'h-100'}"
-                            t-attf-style="#{forum.image_256 and ('background-image: url(%s);' % website.image_url(forum, 'image_256'))} background-position: center;"/>
+                        <div t-attf-class="h-100 w-100 #{not forum.image_1920 and 'rounded o_wforum_forum_card_bg shadow-sm flex-shrink-0'}">
+                            <div t-if="forum.image_1920 or editable" t-attf-class="h-100"
+                            t-field="forum.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_256', 'class': 'w-100 h-100 o_object_fit_cover rounded'}" />
+                        </div>
                     </a>
                 </div>
-                <div t-attf-class="mt-2 #{has_desc and 'col-md-8 mt-md-0'}">
+                <div t-attf-class="#{content_class} mt-2 mt-md-0 d-flex flex-column h-100">
                     <a t-attf-href="/forum/#{slug(forum)}" class="text-reset" t-att-title="forum.name">
-                        <h3 t-attf-class="#{has_desc and 'h4' or 'h5 m-0'}" t-field="forum.name"/>
+                        <h3 class="h4" t-field="forum.name"/>
                     </a>
-                    <p t-attf-class="m-0 #{has_desc and not no_description_exist and 'text-muted' or not has_desc and 'css_non_editable_mode_hidden'}"
+                    <p class="m-0 flex-grow-1"
                     placeholder="Description"
-                    t-field="forum.description"/>
+                    t-field="forum.teaser"/>
+                    <t t-if="is_view_active('website_forum.opt_post_count') or is_view_active('website_forum.opt_last_post')" t-call="website_forum.forum_post_options"/>
                 </div>
             </div>
         </div>
     </t>
 </template>
+
+<template id="forum_post_options">
+    <div class="row">
+        <div t-attf-class="#{last_post_class}">
+            <div t-if="is_view_active('website_forum.opt_last_post') and forum.post_ids" class="text-truncate">Last Post: <a t-attf-href="/forum/#{slug(forum)}/question/#{slug(forum.last_post_id)}"><t t-esc="forum.last_post_id.name"/></a></div>
+        </div>
+        <div t-attf-class="#{nb_post_class}">
+            <div t-if="is_view_active('website_forum.opt_post_count')">Posts: <strong><t t-esc="forum.total_posts"/></strong></div>
+        </div>
+    </div>
+</template>
+
+<!-- (Options) Forum : List View
+    Display forums as a list  -->
+<template name="List View" id="website_forum.opt_list_view" inherit_id="website_forum.forum_all" active="False" customize_show="True">
+    <xpath expr="//t[@t-set='col_class']" position="attributes">
+        <attribute name="t-valuef">mb-3 col-sm-12</attribute>
+    </xpath>
+    <xpath expr="//t[@t-set='img_class']" position="attributes">
+        <attribute name="t-valuef">col-md-3</attribute>
+    </xpath>
+    <xpath expr="//t[@t-set='content_class']" position="attributes">
+        <attribute name="t-valuef">col-md-9</attribute>
+    </xpath>
+    <xpath expr="//t[@t-set='last_post_class']" position="attributes">
+        <attribute name="t-valuef">col-md-10 pr-md-0 pt-3</attribute>
+    </xpath>
+    <xpath expr="//t[@t-set='nb_post_class']" position="attributes">
+        <attribute name="t-valuef">col-md-2 pr-md-3 pt-3</attribute>
+    </xpath>
+</template>
+
+<!-- (Options) Forum : Show Post Count
+    Show the number of post a forum has  -->
+<template name="Show Post Count" id="website_forum.opt_post_count" inherit_id="website_forum.forum_all" active="False" customize_show="True"/>
+
+<!-- (Options) Forum : Show Last Post
+    Show the title of the latest post in each forum  -->
+<template name="Show Last Post" id="website_forum.opt_last_post" inherit_id="website_forum.forum_all" active="False" customize_show="True"/>
+
 
 <!-- Default content for the "All Forums Layout" header above -->
 <!-- (simulate an oe_structure edition) -->
@@ -503,13 +568,13 @@
 
         <t t-set="location" t-value="url_for('/forum/') + slug(forum) + ( ('/tag/' + slug(tag) + '/questions?') if tag else '?' )"/>
 
-        <!-- My Questions -->
+        <!-- My Posts -->
         <span t-if="my == 'mine'" class="nav-link rounded-pill mb-2 active font-weight-bold">
-            <i class="fa fa-question-circle-o fa-fw"/> My Questions
+            <i class="fa fa-question-circle-o fa-fw"/> My Posts
             <a class="text-reset pull-right no-decoration" t-att-href="location + keep_query('search', 'filters', 'sorting')">&#215;</a>
         </span>
         <a t-else="" class="nav-link rounded-pill mb-2 text-reset" t-att-href="location + keep_query('search', 'filters', 'sorting', my='mine')">
-            <i class="fa fa-question-circle-o fa-fw"/> My Questions
+            <i class="fa fa-question-circle-o fa-fw"/> My Posts
         </a>
 
         <!-- My Favourites -->
@@ -581,7 +646,7 @@
                             <img t-if="uid" class="o_forum_avatar rounded-circle mr-1" t-att-src="website.image_url(user, 'image_128', '16x16')" alt="Avatar"/>
                             <span t-if="my == 'favourites'"> My <b>Favourites</b></span>
                             <span t-elif="my == 'followed'"> I'm <b>Following</b></span>
-                            <span t-elif="my == 'mine'"> My <b>Questions</b></span>
+                            <span t-elif="my == 'mine'"> My <b>Posts</b></span>
                             <span t-elif="my == 'tagged'"> <b>Tags</b> I Follow</span>
                         </div>
                         <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', 'sorting')" class="btn py-1">&#215;</a>
@@ -597,9 +662,9 @@
                 <div t-if="uid and request.env.user.forum_waiting_posts_count"
                     title="You already have a pending post"
                     data-toggle="popover" data-trigger="hover" data-content="Please wait for a moderator to validate your previous post before continuing.">
-                    <a class="disabled btn btn-secondary btn-block mb-3 mb-md-0" t-attf-href="/forum/#{slug(forum)}/ask">Ask a Question</a>
+                    <a class="disabled btn btn-secondary btn-block mb-3 mb-md-0" t-attf-href="/forum/#{slug(forum)}/ask">New Post</a>
                 </div>
-                <a t-else="" role="button" type="button" class="btn btn-primary btn-block o_forum_ask_btn mb-3 mb-md-0" t-att-href="uid and '/forum/' + slug(forum) + '/ask' or '/web/login'">Ask a Question</a>
+                <a t-else="" role="button" type="button" class="btn btn-primary btn-block o_forum_ask_btn mb-3 mb-md-0" t-att-href="uid and '/forum/' + slug(forum) + '/ask' or '/web/login'">New Post</a>
             </div>
 
             <t t-set="no_filters" t-value="not filters in ('solved', 'unsolved', 'unanswered')"/>
@@ -620,12 +685,14 @@
                             </a>
 
                             <div class="dropdown-divider"/>
-                            <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='solved')"
-                                class="dropdown-item">Solved
-                            </a>
-                            <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='unsolved')"
-                                class="dropdown-item">Unsolved
-                            </a>
+                            <t t-if="forum.mode == 'questions'">
+                                <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='solved')"
+                                    class="dropdown-item">Solved
+                                </a>
+                                <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='unsolved')"
+                                    class="dropdown-item">Unsolved
+                                </a>
+                            </t>
                             <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='unanswered')"
                                 class="dropdown-item">Unanswered
                             </a>
@@ -640,13 +707,15 @@
                             t-attf-class="nav-link py-1 rounded-pill #{no_filters and 'active font-weight-bold' or 'pl-0 pr-2'}">
                             All
                         </a>
-                        <span class="mx-1 text-400 d-none d-lg-block">|</span>
-                        <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='solved')"
-                            t-attf-class="nav-link py-1 rounded-pill #{filters == 'solved' and 'active font-weight-bold' or 'px-2'}">Solved
-                        </a>
-                        <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='unsolved')"
-                            t-attf-class="d-none d-lg-block nav-link py-1 rounded-pill #{filters == 'unsolved' and 'active font-weight-bold' or 'px-2'}">Unsolved
-                        </a>
+                        <t t-if="forum.mode == 'questions'">
+                            <span class="mx-1 text-400 d-none d-lg-block">|</span>
+                            <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='solved')"
+                                t-attf-class="nav-link py-1 rounded-pill #{filters == 'solved' and 'active font-weight-bold' or 'px-2'}">Solved
+                            </a>
+                            <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='unsolved')"
+                                t-attf-class="d-none d-lg-block nav-link py-1 rounded-pill #{filters == 'unsolved' and 'active font-weight-bold' or 'px-2'}">Unsolved
+                            </a>
+                        </t>
                         <span class="mx-1 text-400 d-none d-lg-block">|</span>
                         <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='unanswered')"
                             t-attf-class="nav-link py-1 rounded-pill #{filters == 'unanswered' and 'active font-weight-bold' or 'px-2'}">Unanswered
@@ -689,7 +758,7 @@
                 </t>
             </div>
 
-            <!-- No questions or search/filters result -->
+            <!-- No posts or search/filters result -->
             <div t-if="question_count == 0" class="col">
                 <div t-if="search or tag or (not no_filters)" class="alert alert-info">
                     <t t-set="_filters_str">
@@ -700,7 +769,7 @@
                     <t t-set="_my_str">
                         <t t-if="my == 'favourites'">in your favourites</t>
                         <t t-if="my == 'followed'">in your followed list</t>
-                        <t t-if="my == 'mine'">in your questions</t>
+                        <t t-if="my == 'mine'">in your posts</t>
                     </t>
                     <t t-set="_search_str"><t t-if="search">matching "<em class="font-weight-bold" t-esc="search"/>"</t></t>
                     <t t-set="_search_and_tag_str"><t t-if="search and tag">&amp;nbsp;and&amp;nbsp;</t></t>
@@ -721,7 +790,7 @@
                         No favourite questions in this forum (yet).<br/>
                         <a t-attf-href="/forum/#{slug(forum)}/">Browse All</a>
                     </div>
-                    <div t-elif="my == 'mine'" class="alert border">You have no questions in this forum (yet).</div>
+                    <div t-elif="my == 'mine'" class="alert border">You have no posts in this forum (yet).</div>
                 </t>
 
                 <div t-elif="filters == 'unanswered'" class="alert alert-info">Amazing! There are no unanswered questions left!</div>
@@ -765,12 +834,12 @@
             <a t-attf-href="/forum/#{ slug(forum) }" title="All Topics"><i class="fa fa-chevron-left mr-2"/>Back to All Topics</a>
         </div>
 
-        <form t-else="" t-attf-action="/forum/#{slug(forum)}/new" method="post" role="form" class="tag_text js_website_submit_form o_wforum_readable">
+        <form t-else="" t-attf-action="/forum/#{slug(forum)}/new" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable">
             <div class="form-group">
                 <label for="content">Title</label>
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="text" name="post_name" required="required" pattern=".*\S.*" t-attf-value="#{post_name}"
-                    class="form-control form-control-lg" placeholder="A clear, explicit and concise question title" title="Title must not be empty"/>
+                    class="form-control form-control-lg" placeholder="A clear, explicit and concise title" title="Title must not be empty"/>
                 <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
                 <div class="form-text small text-muted">
                     <a data-toggle="collapse" href="#newQuestionExample" role="button" aria-expanded="false" aria-controls="newQuestionExample">
@@ -782,7 +851,7 @@
                             <i class="fa fa-check"/> How to configure TPS and TVQ's canadian taxes?
                         </div>
                         <div class="text-danger">
-                            <i class="fa fa-times"/> Good morning to all! Please, can someone help solve solve my tax computation problem in Canada? Thanks!
+                            <i class="fa fa-times"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!
                         </div>
                     </div>
                 </div>
@@ -801,9 +870,9 @@
                 <input type="hidden" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             </div>
             <div class="mb-5">
-                <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call'} #{(user.karma &lt; forum.karma_ask) and 'karma_required'}"
-                    t-att-data-karma="forum.karma_ask"
-                    data-hashtags="#question" data-social-target-type="question">Post Your Question</button>
+                <button type="submit" t-attf-class="btn btn-primary o_wforum_submit_post #{forum.allow_share and 'oe_social_share_call'} #{(user.karma &lt; forum.karma_ask) and 'karma_required'}"
+                t-att-data-karma="forum.karma_ask"
+                data-hashtags="#question" data-social-target-type="question">Post Your Question</button>
                 <a class="btn btn-secondary" title="Back to Question" t-attf-href="/forum/#{ slug(forum) }"> Discard</a>
             </div>
         </form>
@@ -818,7 +887,7 @@
             <h5 class="mb-1 text-muted" t-esc="post.parent_id.name"/>
             <div t-field="post.parent_id.content" class="o_wforum_post_content text-muted oe_no_empty"/>
         </article>
-        <form t-attf-action="/forum/#{slug(forum)}/post/#{slug(post)}/save" method="post" role="form" class="tag_text js_website_submit_form o_wforum_readable">
+        <form t-attf-action="/forum/#{slug(forum)}/post/#{slug(post)}/save" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <div t-if="not is_answer" class="form-group">
                 <label for="post_name">Title</label>
@@ -830,12 +899,12 @@
                         <i class="fa fa-question-circle"/>
                     </a>
                     <div class="collapse" id="newQuestionExample">
-                        <div class="my-2">Use a clear, explicit and concise question title</div>
+                        <div class="my-2">Use a clear, explicit and concise title</div>
                         <div class="text-success">
                             <i class="fa fa-check"/> How to configure TPS and TVQ's canadian taxes?
                         </div>
                         <div class="text-danger">
-                            <i class="fa fa-times"/> Good morning to all! Please, can someone help solve solve my tax computation problem in Canada? Thanks!
+                            <i class="fa fa-times"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!
                         </div>
                     </div>
                 </div>
@@ -860,7 +929,7 @@
                        t-att-title="edit_tags_karma_fail and edit_tags_karma_error_message"/>
             </div>
             <div class="mb-4">
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="submit" class="btn btn-primary o_wforum_submit_post">Save Changes</button>
                 <a class="btn btn-secondary" title="Back to Question" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post)}">
                     Discard
                 </a>
@@ -912,13 +981,13 @@
 <!-- Edition: post a reply -->
 <template id="post_reply">
     <div class="css_editable_mode_hidden">
-        <form class="collapse js_website_submit_form"
+        <form class="collapse js_website_submit_form js_wforum_submit_form"
             t-attf-action="/forum/#{slug(forum)}/#{slug(object)}/reply" method="post" role="form">
             <h3 class="mt8">Your Reply</h3>
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
-            <textarea name="content" class="form-control o_wysiwyg_loader" required="required" t-att-data-karma="forum.karma_editor"/>
-            <button type="submit" class="btn btn-primary mb16">Post Answer</button>
+            <textarea name="content" class="form-control o_wysiwyg_loader" required="required" minlength="50" t-att-data-karma="forum.karma_editor"/>
+            <button type="submit" class="btn btn-primary mb16 o_wforum_submit_post">Post Answer</button>
         </form>
     </div>
 </template>
@@ -932,19 +1001,24 @@
     <t t-if="request.params.get('nocontent')">
         <p class="alert alert-danger" role="alert">You cannot post an empty answer</p>
     </t>
-    <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" class="js_website_submit_form" role="form">
+    <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" class="js_website_submit_form js_wforum_submit_form" role="form">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
-        <textarea name="content" t-attf-id="content-#{str(question.id)}" class="form-control o_wysiwyg_loader" required="required" t-att-data-karma="forum.karma_editor"/>
+        <textarea name="content" t-attf-id="content-#{str(question.id)}" class="form-control o_wysiwyg_loader" required="required" minlength="50" t-att-data-karma="forum.karma_editor"/>
         <p class="small mt-2 mb-1">
             <b>Please try to give a substantial answer.</b> If you wanted to comment on the question or answer, just
             <b>use the commenting tool.</b> Please remember that you can always <b>revise your answers</b>
             - no need to answer the same question twice. Also, please <b>don't forget to vote</b>
             - it really helps to select the best questions and answers!
         </p>
-        <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call'} my-3 #{not question.can_answer and 'karma_required'}"
+        <button type="submit" t-attf-class="btn btn-primary o_wforum_submit_post #{forum.allow_share and 'oe_social_share_call'} my-3 #{not question.can_answer and 'karma_required'}"
                 t-att-data-karma="question.forum_id.karma_answer"
                 data-social-target-type="answer" data-hashtags="#answer">Post Answer</button>
+        <a href="#"
+        class="btn btn-secondary"
+        data-toggle="collapse"
+        data-target=".answer_collapse"
+        aria-expanded="false">Discard</a>
     </form>
 </template>
 
@@ -958,6 +1032,7 @@
             t-attf-class="btn btn-link vote_up fa fa-caret-up pl-0 #{vertical and 'px-md-0 pt-md-0' or 'pr-2'} #{own_vote == 1 and 'text-success' or 'text-muted'} #{not can_upvote and 'karma_required'}"
             t-att-disabled="own_vote == 1 and 'disabled'"
             t-att-data-karma="forum.karma_upvote"
+            t-att-data-can-upvote="can_upvote"
             aria-label="Positive vote" title="Positive vote"/>
         <b t-attf-class="vote_count #{own_vote == 1 and 'text-success' or (own_vote == -1 and 'text-danger' or 'text-muted')}"
            t-esc="post.vote_count"/>
@@ -965,6 +1040,7 @@
             t-attf-class="btn btn-link vote_down fa fa-caret-down #{vertical and 'px-md-0' or 'px-2'} #{own_vote == -1 and 'text-danger' or 'text-muted'} #{not can_downvote and 'karma_required'}"
             t-att-disabled="own_vote == -1 and 'disabled'"
             t-att-data-karma="forum.karma_downvote"
+            t-att-data-can-downvote="can_downvote"
             aria-label="Negative vote" title="Negative vote"/>
         <t t-raw="0"/>
     </div>
@@ -1074,15 +1150,17 @@
                     </div>
                 </div>
 
-                <div t-field="question.content" class="o_wforum_post_content o_wforum_readable oe_no_empty"/>
+                <div t-field="question.content" class="o_wforum_post_content o_wforum_readable oe_no_empty o_not_editable"/>
 
                 <t t-set="_question_comment_collapse_uid" t-value="'comment_%s_%s' % (question._name.replace('.', '_'), question.id)"/>
                 <div t-if="question.state == 'active' and question.active != False"
                     class="btn-toolbar mb-3" role="toolbar">
                     <div t-if="not question.uid_has_answered and question.can_answer" class="btn-group btn-group-sm mr-2">
-                        <a t-attf-class="btn btn-primary #{not question.can_answer and 'karma_required text-muted'}"
+                        <a t-attf-class="btn btn-primary collapsed #{not question.can_answer and 'karma_required text-muted'}"
                             t-att-data-karma="question.forum_id.karma_answer"
-                            href="#post_reply">
+                            data-toggle="collapse"
+                            data-target=".answer_collapse"
+                            href="#">
                             <i class="fa fa-reply mr-1"/>Answer
                         </a>
                     </div>
@@ -1119,8 +1197,19 @@
                         </div>
                     </t>
                 </section>
+
+                <div t-if="not question.uid_has_answered and question.can_answer and question.child_ids" class="btn-group btn-group-sm mr-2">
+                    <a t-attf-class="btn btn-primary answer_collapse show collapsed collapse #{not question.can_answer and 'karma_required text-muted'}"
+                        t-att-data-karma="question.forum_id.karma_answer"
+                        data-toggle="collapse"
+                        data-target=".answer_collapse"
+                        href="#">
+                        <i class="fa fa-reply mr-1"/>Answer
+                    </a>
+                </div>
+
                 <t t-if="question.state != 'close' and question.active != False and question.can_answer and not request.env.user.forum_waiting_posts_count">
-                    <div id="post_reply" t-if="(not question.uid_has_answered or question.forum_id.mode == 'discussions')">
+                    <div id="post_reply" class="collapse answer_collapse" t-if="(not question.uid_has_answered or question.forum_id.mode == 'discussions')">
                         <t t-call="website_forum.post_answer"/>
                     </div>
                     <div t-elif="uid and request.env.user.forum_waiting_posts_count" class="alert alert-gamma text-center">
@@ -1237,7 +1326,7 @@
                         </span>
                     </div>
 
-                    <div t-field="answer.content" class="mb-2 o_wforum_readable oe_no_empty"/>
+                    <div t-field="answer.content" class="mb-2 o_wforum_readable oe_no_empty o_not_editable"/>
 
                     <t t-set="_answer_comment_collapse_uid" t-value="'comment_%s_%s' % (answer._name.replace('.', '_'), answer.id)"/>
                     <div class="btn-toolbar mb-3">
@@ -1371,7 +1460,7 @@
             </div>
         </div>
         <div class="css_editable_mode_hidden o_wforum_readable">
-            <form t-att-id="_collapse_uid" class="collapse p-1 oe_comment_grey js_website_submit_form"
+            <form t-att-id="_collapse_uid" class="collapse p-1 oe_comment_grey js_website_submit_form js_wforum_submit_form"
                 t-attf-action="/forum/#{slug(forum)}/post/#{slug(object)}/comment" method="POST">
                 <div class="shadow bg-white rounded px-3 pt-3 pb-4 mb-4">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -1381,7 +1470,7 @@
                         <div class="w-100">
                             <textarea name="comment" class="form-control mb-2" placeholder="Comment this post..."/>
                             <div>
-                                <button type="submit" class="btn btn-primary">Post comment</button>
+                                <button type="submit" class="btn btn-primary o_wforum_submit_post">Post Comment</button>
                                 <a t-attf-href="##{_collapse_uid}" data-toggle="collapse" class="btn border">Discard</a>
                             </div>
                         </div>

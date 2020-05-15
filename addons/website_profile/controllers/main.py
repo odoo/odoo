@@ -233,9 +233,11 @@ class WebsiteProfile(http.Controller):
             'group_by': group_by or 'all',
         }
         if search_term:
-            dom = expression.AND([['|', ('name', 'ilike', search_term), ('company_id.name', 'ilike', search_term)], dom])
+            dom = expression.AND([['|', ('name', 'ilike', search_term), ('partner_id.commercial_company_name', 'ilike', search_term)], dom])
 
         user_count = User.sudo().search_count(dom)
+        my_user = request.env.user
+        current_user_values = False
         if user_count:
             page_count = math.ceil(user_count / self._users_per_page)
             pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
@@ -246,11 +248,7 @@ class WebsiteProfile(http.Controller):
 
             # Get karma position for users (only website_published)
             position_domain = [('karma', '>', 1), ('website_published', '=', True)]
-            if group_by:
-                position_map = self._get_user_tracking_karma_gain_position(position_domain, users.ids, group_by)
-            else:
-                position_results = request.env['res.users'].browse(users.ids)._get_karma_position(position_domain)
-                position_map = dict((user_data['user_id'], dict(user_data)) for user_data in position_results)
+            position_map = self._get_position_map(position_domain, users, group_by)
 
             max_position = max([user_data['karma_position'] for user_data in position_map.values()], default=1)
             for user in user_values:
@@ -259,15 +257,34 @@ class WebsiteProfile(http.Controller):
                 user['karma_gain'] = user_data.get('karma_gain_total', 0)
             user_values.sort(key=itemgetter('position'))
 
+            if my_user.website_published and my_user.karma and my_user.id not in users.ids:
+                # Need to keep the dom to search only for users that appear in the ranking page
+                current_user = User.sudo().search(expression.AND([[('id', '=', my_user.id)], dom]))
+                if current_user:
+                    current_user_values = self._prepare_all_users_values(current_user)[0]
+
+                    user_data = self._get_position_map(position_domain, current_user, group_by).get(current_user.id, {})
+                    current_user_values['position'] = user_data.get('karma_position', 0)
+                    current_user_values['karma_gain'] = user_data.get('karma_gain_total', 0)
+
         else:
             user_values = []
             pager = {'page_count': 0}
-
         render_values.update({
             'top3_users': user_values[:3] if not search_term and page == 1 else [],
             'users': user_values,
-            'pager': pager})
+            'my_user': current_user_values,
+            'pager': pager,
+        })
         return request.render("website_profile.users_page_main", render_values)
+
+    def _get_position_map(self, position_domain, users, group_by):
+        if group_by:
+            position_map = self._get_user_tracking_karma_gain_position(position_domain, users.ids, group_by)
+        else:
+            position_results = users._get_karma_position(position_domain)
+            position_map = dict((user_data['user_id'], dict(user_data)) for user_data in position_results)
+        return position_map
 
     def _get_user_tracking_karma_gain_position(self, domain, user_ids, group_by):
         """ Helper method computing boundaries to give to _get_tracking_karma_gain_position.
