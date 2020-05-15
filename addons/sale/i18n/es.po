@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale
-# 
+#
 # Translators:
 # 36700cd705c35e1852bdffcd0b296648, 2018
 # Ana Juaristi <ajuaristio@gmail.com>, 2018
@@ -38,6 +38,7 @@
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Marco Alejandro Martinez <martinezsuarezmarcoalejandro@gmail.com>, 2020
 # Carles Antoli <carlesantoli@hotmail.com>, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Jorge Luis Quinteros <quinterosorellana04@gmail.com>, 2020
 # VivianMontana23 <vivianpvm@gmail.com>, 2020
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
@@ -46,7 +47,7 @@
 # David Vidal <david.vidal@trespinos.es>, 2020
 # Jairo Llopis <yajo.sk8@gmail.com>, 2021
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2021
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
@@ -1498,7 +1499,7 @@ msgstr "Seguidores (Empresas)"
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Forbidden values on non-accountable sale order line"
-msgstr "Valores prohibidos en la línea de pedido de venta virtual"
+msgstr "Valores prohibidos en la línea de orden de venta no contable"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2086,7 +2087,7 @@ msgstr "Método para actualizar la cantidad entregada"
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Missing required fields on accountable sale order line."
-msgstr "Faltan campos obligatorios en la línea completa de pedido de venta."
+msgstr "Faltan campos obligatorios en la línea de orden de venta contable."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__multi_sales_price
@@ -2425,8 +2426,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
-"Cantidad pedida: facturar cantidades pedidas por el cliente.\n"
-"Cantidad entregada: facturar cantidades entregadas al cliente."
+"Cantidad pedida: cantidades de factura ordenadas por el cliente.\n"
+"Cantidad entregada: cantidades de factura entregadas al cliente."
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
@@ -2812,7 +2813,7 @@ msgstr "Productos"
 #. module: sale
 #: model:ir.model,name:sale.model_report_sale_report_saleproforma
 msgid "Proforma Report"
-msgstr "Informe de Proforma"
+msgstr "Reporte de Proforma"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -3668,8 +3669,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
-"El pedido de venta %s vinculado a la cuenta analítica %s está cancelado. No "
-"puede registrar un gasto en un pedido de venta cancelado."
+"La orden de venta %s vinculado a la cuenta analítica %s está cancelado. No "
+"puede registrar un gasto en una orden de venta cancelada."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:115
@@ -3679,9 +3680,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
-"El pedido de venta %s vinculado a la cuenta analítica %s está actualmente "
-"bloqueado. No puede registrar un gasto en un pedido de ventas bloqueado. "
-"Cree un nuevo pedido vinculado a esta cuenta analítica."
+"La orden de venta %s vinculado a la cuenta analítica %s está actualmente "
+"bloqueado No puede registrar un gasto en un pedido de ventas bloqueado. Cree"
+" un nuevo SO vinculado a esta cuenta analítica."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:111
@@ -3863,9 +3864,9 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
-"Ésta es la fecha de entrega prometida al cliente. Si se establece, la orden "
-"de entrega se programará en función de esta fecha en lugar de los plazos de "
-"entrega del producto."
+"Esta es la fecha de entrega prometida al cliente. Si se establece, el pedido"
+" de entrega se programará en función de esta fecha en lugar de los plazos de"
+" entrega del producto."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4316,7 +4317,7 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"No puede cambiar el tipo de una línea de pedido de venta. En su lugar, debe "
+"No puede cambiar el tipo de una línea de orden de venta. En su lugar, debe "
 "eliminar la línea actual y crear una nueva línea del tipo adecuado."
 
 #. module: sale
@@ -4331,7 +4332,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr "Sus comentarios..."
+msgstr "Tu feedback..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
