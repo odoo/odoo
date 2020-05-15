@@ -17,6 +17,7 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
 # e772023659fe6e4b37f82cb41b34237b, 2019
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
+# Hau Dao <hau@quartile.co>, 2020
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # 
 msgid ""
@@ -794,6 +795,7 @@ msgid ""
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
+"デフォルトでは、システムはソースの場所での在庫から取得し、利用可能になるまで受動的に待機します。他の方法としては、ソースの場所で調達を直接作成して（したがって、現在の在庫を無視する）製品を収集することができます。動きを連鎖させて、これを前のものを待つようにしたい場合は、この2番目のオプションを選択した方が良いです。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
@@ -1072,7 +1074,7 @@ msgstr "連絡先"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_ids
 msgid "Contains"
-msgstr "含む"
+msgstr "次を含む"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -1195,7 +1197,7 @@ msgstr "プロダクト新規作成"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
 msgid "Create a new stock movement"
-msgstr ""
+msgstr "在庫移動を作成しましょう"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree
@@ -4779,7 +4781,7 @@ msgstr "補充"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
 msgid "Resupply From"
-msgstr ""
+msgstr "補充元"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
@@ -5334,6 +5336,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"活動に基づく状態\n"
+"延滞：期限は既に過ぎました\n"
+"当日：活動日は本日です\n"
+"予定：将来の活動。"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:443
@@ -6519,12 +6525,8 @@ msgstr "計量対象プロダクト"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"このルートで倉庫を選択すると、製品がこの倉庫を通過する際にこのルートがデフォルトルートとして認識されます。 "
-"この現象は、製品/製品カテゴリのルート、または調達の優先ルートによって上書きすることができます"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -6535,15 +6537,13 @@ msgstr "全プロダクトが準備できてから"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
-msgstr "オンにすると、ルートは製品フォームの在庫タブで選択できます。 倉庫ルートよりも優先されます。"
+"Product form."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
-msgstr "オンにすると、ルートは製品カテゴリで選択可能になります。 倉庫ルートよりも優先されます。"
+msgid "When checked, the route will be selectable on the Product Category."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:113
@@ -6746,6 +6746,8 @@ msgid ""
 "Please first validate the first inventory adjustment before creating another"
 " one."
 msgstr ""
+"同一のプロダクト "
+"(%s)、ロケーション、梱包、所有者およびロットにて、複数の「進行中」の在庫調整を保持することはできません。既存の在庫調整を処理した上で改めて在庫調整を作成してください。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:1134
@@ -6855,7 +6857,7 @@ msgstr "ロット番号のない商品が在庫されています。 インベ�
 #, python-format
 msgid ""
 "You have to define a groupby and sorted method and pass them as arguments."
-msgstr ""
+msgstr "アレンジされたメソッドでグループを定義し、それらを引数として渡す必要があります。"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:911

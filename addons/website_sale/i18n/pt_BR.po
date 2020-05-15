@@ -27,6 +27,9 @@
 # Lauro de Lima <lauro@ciclix.com>, 2019
 # Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2019
 # Fernanda Marques <fem@odoo.com>, 2020
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
+# Caroline Renson <car@odoo.com>, 2020
+# Luiz Fernando <lfpsgs@outlook.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -34,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-04 14:42+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Fernanda Marques <fem@odoo.com>, 2020\n"
+"Last-Translator: Luiz Fernando <lfpsgs@outlook.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -242,6 +245,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart\"/>\n"
 "                    My Cart"
 msgstr ""
+"<i class=\"fa fa-shopping-cart\"/>\n"
+"                    Meu Carrinho"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:58
@@ -571,6 +576,9 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"Aplicar discontos manuais em linhas do pedido ou mostrar descontos "
+"calculados à partir de listas de preço (Ativar opção nas configurações das "
+"listas de preço)."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -599,7 +607,7 @@ msgstr "Atributos"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:92
 #, python-format
 msgid "Average Order"
-msgstr ""
+msgstr "Valor médio dos pedidos"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__journal_name
@@ -651,6 +659,10 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"Aumente as suas vendas com dois tipos de programas de descontos: promoções e"
+" códigos de cupão. Pode definir condições específicas (produtos, clientes, "
+"quantidade mínima de compra, período). As recompensas podem ser descontos (%"
+" ou um montante fixo) ou artigos gratuitos."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes
@@ -706,12 +718,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: High to Low"
-msgstr ""
+msgstr "Preço: Alto a Baixo "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: Low to High"
-msgstr ""
+msgstr "Preço: Baixo a Alto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -920,7 +932,7 @@ msgstr "Moedas"
 #. module: website_sale
 #: selection:website.sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Instruções de pagamento personalizado"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1128,6 +1140,7 @@ msgstr "Gerar uma fatura de pedidos que estão prontos para o faturamento."
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
 msgstr ""
+"Gere a fatura automaticamente quando o pagamento online for confirmado"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -1144,7 +1157,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr ""
+msgstr "Conceder descontos em linhas de pedidos de vendas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1258,7 +1271,7 @@ msgstr ""
 #. module: website_sale
 #: selection:res.company,website_sale_onboarding_payment_acquirer_state:0
 msgid "Just done"
-msgstr ""
+msgstr "Acabei de fazer"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total_value
@@ -1512,7 +1525,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_price
 msgid "Option not available"
-msgstr ""
+msgstr "Opção não disponível"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:238
@@ -1614,22 +1627,22 @@ msgstr "Pagar com"
 #. module: website_sale
 #: selection:website.sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with PayPal"
-msgstr ""
+msgstr "Pague com Paypal"
 
 #. module: website_sale
 #: selection:website.sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Pague com outro adquirente de pagamento"
 
 #. module: website_sale
 #: selection:website.sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with credit card (via Stripe)"
-msgstr ""
+msgstr "Pague com cartão de crédito (via Stripe)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_email_account
 msgid "PayPal Email ID"
-msgstr ""
+msgstr "ID do email do PayPal"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_acquirers
@@ -1644,7 +1657,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Instruções de pagamento"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__payment_method
@@ -1671,7 +1684,7 @@ msgstr "Paypal Merchant ID"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "Paypal PDT Token"
-msgstr ""
+msgstr "Paypal PDT Token"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1911,7 +1924,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Remove one"
-msgstr ""
+msgstr "Remova um"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_reporting
@@ -1973,7 +1986,7 @@ msgstr "Vendas"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Relatório de Análise de Vendas"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
@@ -2109,7 +2122,7 @@ msgstr "Endereço de Entrega"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shipping Costs"
-msgstr ""
+msgstr "Custos de remessa"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__sale_delivery_settings
@@ -2203,7 +2216,7 @@ msgstr "Desculpe, este produto não está mais disponível."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Sorting by :"
-msgstr ""
+msgstr "Ordenando por"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2238,12 +2251,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Chave pública Stripe"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe Secret Key"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style__name
@@ -2369,7 +2382,7 @@ msgstr "Isso permite a escolha da moeda nas listas de preço."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This combination does not exist."
-msgstr ""
+msgstr "Essa combinação não existe."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2393,7 +2406,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This product has no valid combination."
-msgstr ""
+msgstr "Este produto não tem uma combinação válida."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product

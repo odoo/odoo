@@ -22,7 +22,7 @@
 # nle_odoo, 2018
 # Davide Corio <enlightx@gmail.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Lorenzo Battistini <lb@takobi.online>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
@@ -214,7 +214,7 @@ msgid ""
 "title=\"Unfold\"/>"
 msgstr ""
 "<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Unfold\" "
-"title=\"Unfold\"/>"
+"title=\"Deminimizza\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -957,7 +957,7 @@ msgstr "Esiste un movimento concatenato"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
-msgstr "Cambia Quantità Prodotto"
+msgstr "Cambio quantità prodotto"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2070,13 +2070,13 @@ msgstr "Followers"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_channel_ids
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Followers (Canali)"
+msgstr "Chi sta seguendo (canali)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_partner_ids
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Followers (Partner)"
+msgstr "Chi sta seguendo (partner)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
@@ -2498,7 +2498,7 @@ msgstr "In corso"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
-msgstr "Nel tipo"
+msgstr "Tipologia in ingresso"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__exhausted
@@ -2590,7 +2590,7 @@ msgstr "Ubicazione di transito interna"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__int_type_id
 msgid "Internal Type"
-msgstr "Tipo Interno"
+msgstr "Tipologia interna"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot__ref
@@ -2774,7 +2774,7 @@ msgstr "Inventario di"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_is_follower
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_is_follower
 msgid "Is Follower"
-msgstr "È Follower"
+msgstr "Sta seguendo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__is_fresh_package
@@ -3755,7 +3755,7 @@ msgstr "Operazioni"
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Operations Types"
-msgstr "Tipi di operazione"
+msgstr "Tipi di operazioni"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids_without_package
@@ -3833,7 +3833,7 @@ msgstr "Movimento originale"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
 msgid "Out Type"
-msgstr "Tipo Out"
+msgstr "Tipologia in uscita"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
@@ -3931,7 +3931,7 @@ msgstr "Collo"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pack_type_id
 msgid "Pack Type"
-msgstr "Tipo di collo"
+msgstr "Tipologia collo"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
@@ -4106,7 +4106,7 @@ msgstr "Pick"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
 msgid "Pick Type"
-msgstr "Tipo di Scelta"
+msgstr "Tipologia prelievo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__picking_id
@@ -6573,7 +6573,7 @@ msgstr "Messaggi non letti"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_unread_counter
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contatore messaggi non letti"
+msgstr "Numero messaggi non letti"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6860,15 +6860,8 @@ msgstr "Prodotto pesato"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Quando un magazzino è selezionato per questa rotta, la rotta sarà "
-"considerata come la rotta predefinita quando i prodotti passeranno nel "
-"magazzino. Questo comportamento può essere superato dalle rotte nei "
-"prodotti/nelle categorie di prodotti o dalle rotte preferite "
-"nell'approvvigionamento. "
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -6879,20 +6872,13 @@ msgstr "Quando tutti i prodotti sono pronti"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Quando questa opzione è selezionata, la rotta può essere selezionata nella "
-"scheda Inventario del modulo Prodotto. Essa avrà la priorità sulla rotta del"
-" magazzino."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Quando questa opzione è selezionata, la rotta può essere selezionata nella "
-"categoria del prodotto. Essa avrà la priorità sulla rotta del magazzino."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:113
