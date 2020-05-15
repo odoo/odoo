@@ -102,7 +102,8 @@
                             </group>
                             <group string="Options" attrs="{'invisible': [('action', 'not in', ['pull', 'push', 'pull_push'])]}">
                                 <field name="partner_address_id" attrs="{'invisible': [('action', '=', 'push')]}"/>
-                                <field name="delay"/>
+                                <label for="delay"/>
+                                <div><field name="delay" class="oe_inline"/> days</div>
                             </group>
                             <group name="scheduling_group" string="Scheduling" attrs="{'invisible': [('action', '=', 'push')]}">
                                 <field name="delay_alert"/>
