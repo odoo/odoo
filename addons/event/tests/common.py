@@ -42,12 +42,21 @@ class TestEventCommon(common.SavepointCase):
             groups='base.group_user,event.group_event_manager',
         )
 
-        cls.customer = cls.env['res.partner'].create({
+        cls.event_customer = cls.env['res.partner'].create({
             'name': 'Constantin Customer',
             'email': 'constantin@test.example.com',
             'country_id': cls.env.ref('base.be').id,
             'phone': '0485112233',
+            'mobile': False,
         })
+        cls.event_customer2 = cls.env['res.partner'].create({
+            'name': 'Constantin Customer 2',
+            'email': 'constantin2@test.example.com',
+            'country_id': cls.env.ref('base.be').id,
+            'phone': '0456987654',
+            'mobile': '0456654321',
+        })
+
         cls.event_type_complex = cls.env['event.type'].create({
             'name': 'Update Type',
             'auto_confirm': True,
