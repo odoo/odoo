@@ -119,7 +119,6 @@
                 <field name="owner_user_id"/>
                 <field name="category_id"/>
                 <field name="kanban_state"/>
-                <field name="message_needaction_counter"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
@@ -155,9 +154,6 @@
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
-                                        <t t-if="record.message_needaction_counter.raw_value">
-                                            <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments' role="img" aria-label="Unread Messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                        </t>
                                         <div class="o_kanban_inline_block ml4 mr4">
                                             <field name="activity_ids" widget="kanban_activity" />
                                         </div>
