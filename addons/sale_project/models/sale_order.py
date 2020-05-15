@@ -71,6 +71,9 @@ class SaleOrder(models.Model):
                 eval_context = self.env['ir.actions.actions']._get_eval_context()
                 eval_context.update({'active_id': task_projects.id})
                 action['context'] = safe_eval(action['context'], eval_context)
+                # action['context']['search_default_project_id'] = task_projects.id
+                domain = action.get('domain', [])
+                action['domain'] = safe_eval(domain, eval_context)
         else:
             action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
             action['context'] = {}  # erase default context to avoid default filter

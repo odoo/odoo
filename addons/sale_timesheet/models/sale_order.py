@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
 
 
@@ -43,12 +43,33 @@ class SaleOrder(models.Model):
     def action_view_project_ids(self):
         self.ensure_one()
         # redirect to form or kanban view
+        is_manager = self.env.user.has_group('project.group_project_manager')
         billable_projects = self.project_ids.filtered(lambda project: project.sale_line_id)
-        if len(billable_projects) == 1 and self.env.user.has_group('project.group_project_manager'):
-            action = billable_projects[0].action_view_timesheet_plan()
-        else:
-            action = super().action_view_project_ids()
-        return action
+        # Only one project overview available
+        if len(billable_projects) == 1 and is_manager:
+            return billable_projects[0].action_view_timesheet_plan()
+        # Several project overviews available
+        if billable_projects and is_manager:
+            return super().action_view_project_ids()
+        analytic_projects = self.project_ids.filtered(lambda project: project.analytic_account_id)
+        # Only project with analytic account available
+        if len(analytic_projects) == 1:
+            return analytic_projects[0].action_view_account_analytic_line()
+        # Several projects with analytic account available
+        if analytic_projects:
+            return super().action_view_project_ids()
+        # Several projects available
+        if len(self.project_ids) > 1:
+            return super().action_view_project_ids()
+        # Only one project available
+        return {
+            'type': 'ir.actions.act_window',
+            'res_id': self.project_ids.id,
+            'views': [(self.env.ref('project.edit_project').id, 'form')],
+            'view_mode': 'form',
+            'name': _('Projects'),
+            'res_model': 'project.project',
+        }
 
     def action_view_timesheet(self):
         self.ensure_one()
