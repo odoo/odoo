@@ -13,6 +13,7 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2018
 # Martin Aavastik <martin@avalah.ee>, 2018
 # Helen Sulaoja <helen@avalah.ee>, 2018
+# Algo Kärp <algokarp@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Helen Sulaoja <helen@avalah.ee>, 2018\n"
+"Last-Translator: Algo Kärp <algokarp@gmail.com>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -186,7 +187,7 @@ msgstr "<i class=\"fa fa-arrow-circle-right \"/> Vaata tagasisidet"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-calendar\"/> End date :"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\"/> Lõppkuupäev :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -240,6 +241,8 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Create a new project</p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Loo uus projekt</p>"
 
 #. module: project
 #. openerp-web
@@ -256,7 +259,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Status:</small>"
-msgstr ""
+msgstr "<small class=\"text-right\">Staatus:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -331,7 +334,7 @@ msgstr "Võta e-kirju vastu"
 #: model:ir.model.fields,field_description:project.field_project_project__access_warning
 #: model:ir.model.fields,field_description:project.field_project_task__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Juurdepääsu hoiatus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction
@@ -375,6 +378,8 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In "
 "Progress - Done</i>"
 msgstr ""
+"Lisage veerud, et muuta <b>oma ülesannete etappe</b>.<br/><i>e.g. Uus - Töös"
+" - Valmis</i>"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -417,12 +422,12 @@ msgstr "Aliase mudel"
 #: code:addons/project/controllers/portal.py:111
 #, python-format
 msgid "All"
-msgstr "All"
+msgstr "Kõik"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "All Tasks"
-msgstr ""
+msgstr "Kõik ülesanded"
 
 #. module: project
 #. openerp-web
@@ -451,12 +456,12 @@ msgstr "Määramise kuupäev"
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr "Assigned Tasks"
+msgstr "Määratud ülesanded"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_id
 msgid "Assigned To"
-msgstr "Assigned To"
+msgstr "Määratud (kellele)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_id
@@ -497,7 +502,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachment that don't come from message."
-msgstr "Attachment that don't come from message."
+msgstr "Manus, mis ei pärine sõnumist."
 
 #. module: project
 #: code:addons/project/models/project.py:114
@@ -508,7 +513,7 @@ msgstr "Manused"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Kanbani automaatne olek"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_kanban_state
@@ -517,11 +522,14 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Muutke kanbani olekut automaatselt, kui klient vastab selle etapi tagasisidele.\n"
+" * Kliendi hea tagasiside värskendab kanbani oleku „uueks etapiks valmis” (roheline täpp).\n"
+" * Keskmine või halb tagasiside seab kanbani oleku blokeeritud (punane täpp)."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
 msgid "Average"
-msgstr "Average"
+msgstr "Keskmine"
 
 #. module: project
 #. openerp-web
@@ -621,7 +629,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Choose a Project Email"
-msgstr "Choose a Project Email"
+msgstr "Valige projekti e-posti aadress"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__subtask_project_id
@@ -747,23 +755,23 @@ msgstr "Loo"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr "Create a Project"
+msgstr "Looge projekt"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project"
-msgstr ""
+msgstr "Loo uus projekt"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "Loo uus ülesanne müügitorus"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Create a new tag"
-msgstr ""
+msgstr "Loo uus silt"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_task
@@ -773,7 +781,7 @@ msgstr "Loo uus ülesanne"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr ""
+msgstr "Loomise kuupäev"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__create_uid
@@ -839,7 +847,7 @@ msgstr "Kliendi e-post"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:44
 #, python-format
 msgid "Customer Feedback"
-msgstr ""
+msgstr "Kliendi tagasiside"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
@@ -863,6 +871,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Klientide hinnangud ülesannetele. Kui teil pole hindamist, muutke selle "
+"aktiveerimiseks projekti sätteid."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
@@ -879,6 +889,10 @@ msgid ""
 "feedback is accepted %s and which feedback is moved to the \"Refused\" "
 "column."
 msgstr ""
+"Kliendid esitavad tagasisidet e-posti teel; Odoo loob ülesanded automaatselt"
+" ja saate ülesandelt otse suhelda. Teie haldurid otsustavad, millist "
+"tagasisidet aktsepteeritakse% s ja milline tagasiside teisaldatakse veergu "
+"Keeldu."
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -1010,7 +1024,7 @@ msgstr "Mustand"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Rippmenüü"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1197,27 +1211,27 @@ msgstr "Gives the sequence order when displaying a list of Projects."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__sequence
 msgid "Gives the sequence order when displaying a list of tasks."
-msgstr "Gives the sequence order when displaying a list of tasks."
+msgstr "Annab toimingute loendi kuvamisel jadajärjestuse."
 
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Green"
-msgstr "Green"
+msgstr "Roheline"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
 msgid "Green Kanban Label"
-msgstr "Green Kanban Label"
+msgstr "Roheline Kanban´i silt."
 
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Grey"
-msgstr "Grey"
+msgstr "Hall"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_normal
 msgid "Grey Kanban Label"
-msgstr "Grey Kanban Label"
+msgstr "Hall Kanbani silt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1234,18 +1248,18 @@ msgstr "Rahul"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr ""
+msgstr "Rahul % projektist"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr ""
+msgstr "Rahul % ülesandest"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
-msgstr ""
+msgstr "Õnnelik nägu"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -1283,6 +1297,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Kuidas saada kliendi tagasisidet?\n"
+"- Hinnang etapi muutmisel: meilisõnum saadetakse, kui ülesanne / probleem tõmmatakse teise etappi\n"
+"- Perioodiline hinnang: e-kirju saadetakse perioodiliselt\n"
+"\n"
+"Ärge unustage seadistada e-posti mallid etappidele, mille kohta soovite saada klientide tagasisidet."
 
 #. module: project
 #: code:addons/project/models/project.py:808
@@ -1474,7 +1493,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
 msgid "Kanban Valid Explanation"
-msgstr "Kanban Valid Explanation"
+msgstr "Kanban´i kehtiv seletus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -1516,7 +1535,7 @@ msgstr "Viimase etapi värskendus"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "Viimati uuendatud"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__write_uid
@@ -1541,17 +1560,17 @@ msgstr "Hilinenud tegevused"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Viimane hinnang: väga rahul"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Viimane hinnang: Pole rahul"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Viimane hinnang: Rahul"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -1570,7 +1589,7 @@ msgstr "Let's create your first project."
 #: code:addons/project/static/src/js/tour.js:55
 #, python-format
 msgid "Let's create your first task."
-msgstr ""
+msgstr "Loo oma esimene ülesanne."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1591,7 +1610,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Log time on tasks"
-msgstr ""
+msgstr "Logi ülesannetesse aega"
 
 #. module: project
 #. openerp-web
@@ -1617,12 +1636,12 @@ msgstr "Madal"
 #: model:ir.model.fields,field_description:project.field_project_project__message_main_attachment_id
 #: model:ir.model.fields,field_description:project.field_project_task__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Peamine manus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__attachment_ids
 msgid "Main Attachments"
-msgstr "Main Attachments"
+msgstr "Peamine manus"
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -1638,7 +1657,7 @@ msgstr "Liikmed"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Sõnumi edastamise viga"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_ids
@@ -1698,7 +1717,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
-msgstr ""
+msgstr "Neutraalne nägu"
 
 #. module: project
 #. openerp-web
@@ -1767,7 +1786,7 @@ msgstr "Teema puudub"
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "No customer ratings yet"
-msgstr ""
+msgstr "Klientide hinnanguid pole veel"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -1832,7 +1851,7 @@ msgstr "Number of documents attached"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Vigade arv"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
@@ -1914,7 +1933,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:129
 #, python-format
 msgid "Others"
-msgstr ""
+msgstr "Muud"
 
 #. module: project
 #: selection:project.task,activity_state:0
@@ -2002,6 +2021,8 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Rahul hinnangute protsent viimase 30 päeva jooksul. Hinnangu üksikasjad "
+"leiate menüüst Veel."
 
 #. module: project
 #: selection:project.project,rating_status:0
@@ -2017,7 +2038,7 @@ msgstr "Kohatäitja"
 #. module: project
 #: selection:project.task,activity_state:0
 msgid "Planned"
-msgstr "Planned"
+msgstr "Planeeritud"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
@@ -2179,7 +2200,7 @@ msgstr "Hindamise sagedus"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Viimase tagasiside hinnang"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
@@ -2288,7 +2309,7 @@ msgstr "Punane"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
 msgid "Red Kanban Label"
-msgstr "Red Kanban Label"
+msgstr "Punane Kanban´i silt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -2351,7 +2372,7 @@ msgstr "Vastutav kasutaja"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr ""
+msgstr "Kurb nägu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2392,7 +2413,7 @@ msgstr "Otsi sõnumite hulgast"
 #: code:addons/project/controllers/portal.py:117
 #, python-format
 msgid "Search in Stages"
-msgstr "Search in Stages"
+msgstr "Otsing etappides"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -2454,7 +2475,7 @@ msgstr "Jaga"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
 msgid "Show Project on dashboard"
-msgstr "Show Project on dashboard"
+msgstr "Kuva projekt töölaual"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -2528,7 +2549,7 @@ msgstr "Tähistatud"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_priority
 msgid "Starred Explanation"
-msgstr "Starred Explanation"
+msgstr "Tärniga seletus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
@@ -2610,7 +2631,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
 msgid "Task Activities"
-msgstr "Task Activities"
+msgstr "Ülesande tegevused"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
@@ -2650,7 +2671,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr "Task Ready"
+msgstr "Ülesanne on valmis"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -2689,6 +2710,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
+"Ülesanne on blokeeritud. Kliki, et blokeering tühistada või märkida "
+"\"Tehtud\"."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -2743,7 +2766,7 @@ msgstr "Ülesannete etapid"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:35
 #, python-format
 msgid "Testing"
-msgstr "Testing"
+msgstr "Testimine"
 
 #. module: project
 #. openerp-web
@@ -2806,12 +2829,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr "There are no projects."
+msgstr "Ühtegi projekti pole"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr "There are no tasks."
+msgstr "Ühtegi ülesannet pole"
 
 #. module: project
 #. openerp-web
@@ -2904,7 +2927,7 @@ msgstr "Ajatabeli töötunnid, et kohandada gantt diagrammaruannet"
 #: model:ir.model.fields,field_description:project.field_project_task__name
 #, python-format
 msgid "Title"
-msgstr "Tiitel"
+msgstr "Nmi"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_0
@@ -2916,7 +2939,7 @@ msgstr "Tegemiseks"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "To Print"
-msgstr ""
+msgstr "Printimiseks"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2978,7 +3001,7 @@ msgstr "Lugemata sõnumite loendur"
 #: code:addons/project/static/src/js/project.js:72
 #, python-format
 msgid "Upload and Set"
-msgstr ""
+msgstr "Laadige üles ja määrake"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
@@ -2994,7 +3017,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
 msgid "Use Tasks as"
-msgstr "Use Tasks as"
+msgstr "Kasutage ülesandeid, kui"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3092,12 +3115,12 @@ msgstr "Tööaeg"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr "Working Time to Assign"
+msgstr "Määratavad tunnid"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr "Working Time to Close"
+msgstr "Töötunde sulgemiseni"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -3112,12 +3135,12 @@ msgstr "Tööpäevi sulgemiseni"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 msgid "Working hours to assign"
-msgstr "Working hours to assign"
+msgstr "Määratavad töötunnid"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 msgid "Working hours to close"
-msgstr "Working hours to close"
+msgstr "Töötunde sulgemiseni"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -3180,7 +3203,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr "e.g. Office Party"
+msgstr "nt. kontoripidu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks

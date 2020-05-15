@@ -32,12 +32,12 @@
 # Ivan Coro <ivan@iventiva.com>, 2018
 # Miquel Torner <miq@odoo.com>, 2018
 # Nans Lefebvre <len@odoo.com>, 2018
-# Margarita Gutierrez <ana.gutierrez@jarsa.com.mx>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Ana Margarita Gutiérrez Rodríguez <ana.gutierrez@jarsa.com.mx>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Roberto Sierra <betosierra@gmail.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # 
 msgid ""
@@ -100,13 +100,12 @@ msgid ""
 " * Done: has been processed, can't be modified or cancelled anymore.\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore."
 msgstr ""
-" * Borrador: no confirmado aún y no se programará hasta que se confirme.\n"
-" \n"
-" * Esperando otra operación: esperando a que se realice otro movimiento antes de que esté disponible automáticamente (por ejemplo, en los flujos de Make-To-Order).\n"
-" * En espera: si no está listo para enviarse porque los productos requeridos no se pudieron reservar.\n"
-" * Listo: los productos están reservados y listos para ser enviados. Si la política de envío es 'Tan pronto como sea posible', esto ocurre tan pronto como se reserve cualquier cosa.\n"
-" * Hecho: ha sido procesado, no puede ser modificado o cancelado nunca más.\n"
-" * Cancelado: ha sido cancelado, no puede confirmarse más."
+" * Borrador: no confirmado aún y no se programará hasta que se confirme.\n"
+"* Esperando otra operación: esperando a que se realice otro movimiento antes de que esté disponible automáticamente (por ejemplo, en los flujos de bajo pedido).\n"
+"* En espera: si no está listo para enviarse porque los productos requeridos no se pudieron reservar.\n"
+"* Listo: los productos están reservados y listos para ser enviados. Si la política de envío es 'Tan pronto como sea posible', esto ocurre tan pronto como se reserve cualquier cosa.\n"
+"* Hecho: ha sido procesado, no puede ser modificado o cancelado nunca más.\n"
+"* Cancelado: ha sido cancelado, no puede confirmarse más."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -4957,7 +4956,7 @@ msgstr "Reserva"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Reservations"
-msgstr "Reservaciones"
+msgstr "Reservas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_qty
@@ -6882,14 +6881,11 @@ msgstr "Producto Pesado"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
 "Cuando se selecciona un almacén para esta ruta, esta ruta debe considerarse "
 "como la ruta predeterminada cuando los productos pasan a través de este "
-"almacén. Este comportamiento puede ser anulado por las rutas en las "
-"categorías de producto o por las rutas preferidas en el abastecimiento"
+"almacén."
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -6900,19 +6896,16 @@ msgstr "Cuando todos los productos estén listos"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Cuando se selecciona, la ruta será seleccionable en la pestaña Inventario "
-"del formulario de Producto. Tendrá prioridad sobre la ruta del almacén."
+"Cuando se marca, la ruta será seleccionable en la pestaña Inventario del "
+"formulario de producto."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Cuando se selecciona, la ruta será seleccionable en la categoría de "
-"producto. Tendrá prioridad sobre la ruta del almacén."
+"Cuando se marca, la ruta será seleccionable en las categorías de producto."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:113
@@ -6931,7 +6924,7 @@ msgid ""
 "When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them "
 "in <b>%s</b>."
 msgstr ""
-"Cuadno llegan productos en <b>%s</b>, <br/> <b>%s</b> es creado para "
+"Cuando llegan productos en <b>%s</b>, <br/> <b>%s</b> es creado para "
 "enviarlos a <b>%s</b>."
 
 #. module: stock

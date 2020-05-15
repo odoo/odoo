@@ -34,11 +34,11 @@
 # Martin Trigaux, 2018
 # f5f0a0dac17dde787a1d812a6989680e, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
-# Laura Piraux <lap@odoo.com>, 2018
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
 # Rémi CAZENAVE <remi@le-filament.com>, 2019
 # Maxence del Marmol <mdm@odoo.com>, 2019
-# Oriane Malburny <oma@odoo.com>, 2019
+# omaodoo <oma@odoo.com>, 2019
+# Laura Piraux <lap@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -46,7 +46,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Oriane Malburny <oma@odoo.com>, 2019\n"
+"Last-Translator: Laura Piraux <lap@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6881,14 +6881,8 @@ msgstr "Article pesé"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Quand un entrepôt est sélectionné pour cette route, elle sera vu comme la "
-"route par défaut lorsque les produits passeront par cet entrepôt. Ce "
-"comportement peut être modifié par les routes dans les Produits/Catégories "
-"de produits ou par les routes préférées dans l'Approvisionnement"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -6899,20 +6893,13 @@ msgstr "Lorsque tous les produits sont prêts"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Quand elle est vérifiée, la route devient disponible dans l'onglet "
-"Inventaire du formulaire de produits. Elle sera sélectionnée en priorité par"
-" rapport à la route de l'entrepôt."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Quand c'est vérifié, la route sera disponible sur la catégorie de produits. "
-"Elle s'appliquera à la place de la route de l'entrepôt."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:113
@@ -7459,4 +7446,4 @@ msgstr "⇒ Mettre les quantités à 0"
 #: code:addons/stock/models/stock_move_line.py:223
 #, python-format
 msgid "Changing the product is only allowed in 'Draft' state."
-msgstr ""
+msgstr "Modifier le produit est uniquement autorisé en état \"brouillon\"."

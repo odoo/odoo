@@ -10,8 +10,8 @@
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
 # Tamás Belinszky <tamasbelinszky@gmail.com>, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# Tamás Németh <ntomasz81@gmail.com>, 2019
 # gezza <geza.nagy@oregional.hu>, 2020
+# Tamás Németh <ntomasz81@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2020\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2020\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2419,7 +2419,7 @@ msgstr "Azonnali átvitel?"
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
 msgid "Immediately after sales order confirmation"
-msgstr ""
+msgstr "Azonnal a vevői megrendelés visszaigazolása után"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -3656,7 +3656,7 @@ msgstr "Művelet típusok"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
 msgid "Operation type (PDF)"
-msgstr ""
+msgstr "Művelet típusa (PDF)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids
@@ -4414,7 +4414,7 @@ msgstr "Pull innen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Pull Rule"
-msgstr ""
+msgstr "Húzási szabály"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -4842,7 +4842,7 @@ msgstr "Foglalás"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Reservations"
-msgstr ""
+msgstr "Foglalások"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_qty
@@ -5315,7 +5315,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_operations
 msgid "Show Operations"
-msgstr ""
+msgstr "Műveletek mutatása"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
@@ -5839,7 +5839,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "The product"
-msgstr ""
+msgstr "A termék"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:377
@@ -5948,7 +5948,7 @@ msgstr "Elméleti mennyiség"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
-msgstr ""
+msgstr "Még nincs termékmozgás"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.quantsact
@@ -6284,12 +6284,12 @@ msgstr "Művelet típusa"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr ""
+msgstr "UPS összekötő"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr ""
+msgstr "USPS összekötő"
 
 #. module: stock
 #. openerp-web
@@ -6345,7 +6345,7 @@ msgstr "Mértékegység"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
-msgstr ""
+msgstr "Mértékegység"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
@@ -6684,14 +6684,8 @@ msgstr "Súlyozott termék"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Ha egy raktárat kiválasztott ehhez az útvonalhoz, ezt az útvonalat az "
-"alapértelmezett útvonalként kell látnia, ha egy termék áthalad ezen a "
-"raktáron.  Ezt a viselkedést felülírhatja a Termékek/Termék kategóriás vagy "
-"a Beszerzéseknél a Javasolt Útvonalakban az  útvonalazóval "
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -6702,19 +6696,13 @@ msgstr "Amikor minden termék rendelkezésre áll"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Ha bejelölt, az útvonal kiválasztható lesz a Termék űrlap Készlet fülén. "
-"Elsőbbséget élvez a Raktár útvonalával szemben."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Ha bejelölt, az útvonal kiválasztható lesz a Termék Kategórián. Elsőbbséget "
-"élvez a Raktár útvonalával szemben."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:113
@@ -7134,7 +7122,7 @@ msgstr "_Mégsem"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "bpost összekötő"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form

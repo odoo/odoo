@@ -10,8 +10,8 @@
 # Jonathan Stein <cgs@image.dk>, 2018
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2018
 # lhmflexerp <lhm@flexerp.dk>, 2018
-# JonathanStein <jstein@image.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
+# JonathanStein <jstein@image.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2020\n"
+"Last-Translator: JonathanStein <jstein@image.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,6 +92,8 @@ msgid ""
 "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Start date\" "
 "title=\"Start date\"/>"
 msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Start-dato\" title"
+"=\"Start-dato\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -104,11 +106,13 @@ msgid ""
 "<i class=\"fa fa-cloud\" title=\"It is an online event\" role=\"img\" aria-"
 "label=\"It is an online event\"/>"
 msgstr ""
+"<i class=\"fa fa-cloud\" title=\"Dette er et online arrangement\" "
+"role=\"img\" aria-label=\"Dette er et online arrangement\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events
@@ -116,6 +120,8 @@ msgid ""
 "<i class=\"fa fa-flag fa-5x text-muted\" title=\"Local Events\" role=\"img\""
 " aria-label=\"Local Events\"/>"
 msgstr ""
+"<i class=\"fa fa-flag fa-5x text-muted\" title=\"Lokale arrangementer\" "
+"role=\"img\" aria-label=\"Lokale arrangementer\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_right_country_event
@@ -142,6 +148,8 @@ msgid ""
 "<i class=\"fa fa-map-marker\" title=\"It is a physical event\" role=\"img\" "
 "aria-label=\"It is a physical event\"/>"
 msgstr ""
+"<i class=\"fa fa-map-marker\" title=\"Dette er et fysisk arrangement\" "
+"role=\"img\" aria-label=\"Dette er et fysisk arrangement\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -152,11 +160,13 @@ msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone
 #: model_terms:ir.ui.view,arch_db:website_event.index
 msgid "<i class=\"fa fa-tag\" role=\"img\" aria-label=\"Event type\" title=\"Event type\"/>"
 msgstr ""
+"<i class=\"fa fa-tag\" role=\"img\" aria-label=\"Arrangements-type\" title"
+"=\"Arrangements-type\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Name\" title=\"Name\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Navn\" title=\"Navn\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
@@ -175,6 +185,8 @@ msgid ""
 "<span class=\"badge badge-danger\" role=\"img\" aria-label=\"Attention: not "
 "published\" title=\"Not published\"><i class=\"fa fa-ban\"/></span>"
 msgstr ""
+"<span class=\"badge badge-danger\" role=\"img\" aria-label=\"Bemærk: Ikke "
+"publiseret\" title=\"Ikke publiseret\"><i class=\"fa fa-ban\"/></span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events
@@ -217,6 +229,12 @@ msgstr "<span>Online arrangementer</span>"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span>Unlimited</span>"
 msgstr "<span>Ubegrænset</span>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "<strong> You ordered more tickets than available seats</strong>"
+msgstr ""
+"<strong> Du bestilte flere billetter end der er ledige pladser</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -279,6 +297,11 @@ msgstr "Stil spørgsmål til deltagere, når til tilmelder sig online"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Attendee #%s"
 msgstr "Deltagernummer%s"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Available seats: "
+msgstr "Ledige pladser:"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -469,7 +492,7 @@ msgstr "Find ud af hvad folk siger om dette arrangement og følg samtalen."
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.layout
 msgid "Following content will appear on all events"
-msgstr ""
+msgstr "Det følgende indhold vil blive vist på alle arrangementer"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full

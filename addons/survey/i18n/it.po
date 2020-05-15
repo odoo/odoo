@@ -4,6 +4,7 @@
 # 
 # Translators:
 # David Minneci <david@numeko.it>, 2018
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Giovanni Perteghella <giovanni@perteghella.org>, 2018
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
@@ -12,7 +13,6 @@
 # Cécile Collart <cco@odoo.com>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Martin Trigaux, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
@@ -20,6 +20,7 @@
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Petra <bop@odoo.com>, 2019
 # Davide Speranza <dsp@odoo.com>, 2019
+# Lorenzo Battistini <lb@takobi.online>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
@@ -431,7 +432,7 @@ msgstr "Tipo di risposta"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Answered"
-msgstr "Risposto"
+msgstr "Risposte"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input
@@ -918,7 +919,7 @@ msgstr "Gestione finanziaria"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage__fold
 msgid "Folded in kanban view"
-msgstr "Chiuso nella vista kanban"
+msgstr "Minimizzata nella vista kanban"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_follower_ids
@@ -928,12 +929,12 @@ msgstr "Followers"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Followers (Canali)"
+msgstr "Chi sta seguendo (canali)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Followers (Partner)"
+msgstr "Chi sta seguendo (partner)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -977,7 +978,7 @@ msgstr "Come contribuisci o hai intenzione di contribuire a Odoo?"
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
 msgid "Human Resources"
-msgstr "Risorse Umane"
+msgstr "Risorse umane"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
@@ -1133,7 +1134,7 @@ msgstr "Inviti inviati"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_is_follower
 msgid "Is Follower"
-msgstr "È Follower"
+msgstr "Sta seguendo"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_closed
@@ -1235,7 +1236,7 @@ msgstr "Attività in ritardo"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__layout
 msgid "Layout"
-msgstr "Layout"
+msgstr "Struttura"
 
 #. module: survey
 #: selection:survey.user_input,type:0
@@ -1245,7 +1246,7 @@ msgstr "Collegamento"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__multi_email
 msgid "List of emails"
-msgstr "Lista delle email"
+msgstr "Elenco delle e-mail"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__is_log
@@ -1372,7 +1373,7 @@ msgstr "Identificativo univoco messaggio"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__message_id
 msgid "Message-Id"
-msgstr "ID Messaggio"
+msgstr "ID messaggio"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_ids
@@ -1549,7 +1550,7 @@ msgstr "Notifica followers"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__notify
 msgid "Notify followers of the document (mass post only)"
-msgstr "Notifica i followers del documento (solo posta di massa)"
+msgstr "Notifica chi sta seguendo il documento (solo posta massiva)"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -1590,7 +1591,7 @@ msgstr "Numero di messaggi con errore di consegna"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__tot_sent_survey
 msgid "Number of sent surveys"
-msgstr "Numero di questionari inviati"
+msgstr "Numero di sondaggi inviati"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__tot_start_survey
@@ -1660,7 +1661,7 @@ msgstr "Titolo della pagina"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_page__sequence
 msgid "Page number"
-msgstr "Numero della pagina"
+msgstr "Numero pagina"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_pages
@@ -1740,7 +1741,7 @@ msgstr "Stampa collegamento"
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_5
 msgid "Project Management"
-msgstr "Gestione Progetto"
+msgstr "Gestione progetti"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__public_url_html
@@ -1882,7 +1883,7 @@ msgstr "Collegamento ai risultati"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested_row
 msgid "Row answer"
-msgstr ""
+msgstr "Risposta alla riga"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2050,7 +2051,7 @@ msgstr "Casella di testo a riga singola"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__skipped
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Skipped"
-msgstr "Saltata"
+msgstr "Saltate"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__author_avatar
@@ -2141,7 +2142,7 @@ msgstr "Sottotipo"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested
 msgid "Suggested answer"
-msgstr "Domande proposte"
+msgstr "Risposta proposta"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__value
@@ -2239,7 +2240,7 @@ msgstr "Filtro sondaggio"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__page_id
 msgid "Survey page"
-msgstr "Pagina Sondaggio"
+msgstr "Pagina sondaggio"
 
 #. module: survey
 #: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
@@ -2276,7 +2277,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Test Survey"
-msgstr ""
+msgstr "Testa sondaggio"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -2541,7 +2542,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__tracking_value_ids
 msgid "Tracking values"
-msgstr "Valori Tracciamento"
+msgstr "Valori di monitoraggio"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__message_type
@@ -2572,7 +2573,7 @@ msgstr "Messaggi non letti"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contatore messaggi non letti"
+msgstr "Numero messaggi non letti"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -2769,6 +2770,9 @@ msgid ""
 "feedback, recruitment interviews, employee's periodical evaluations, "
 "marketing campaigns, etc."
 msgstr ""
+"Puoi creare sondaggi per diversi scopi: opinioni dei clienti, feedback sui "
+"servizi, interviste di reclutamento, valutazioni periodiche dei dipendenti, "
+"campagne di merketing, etc."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message

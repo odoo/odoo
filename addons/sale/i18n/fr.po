@@ -25,18 +25,21 @@
 # Alain van de Werve <avw@openerp.com>, 2018
 # Nicolas Bayet <nicolas.bayet@gmail.com>, 2018
 # Fred Gilson <fgi@odoo.com>, 2019
-# Martin Trigaux, 2019
 # LEONARD Jean-Christophe <jean-christophe.leonard@myceliandre.fr>, 2019
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2019
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
 # Alex T <alt@odoo.com>, 2019
-# Cécile Collart <cco@odoo.com>, 2019
 # Lucas Deliege <lud@odoo.com>, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
 # Olivier ANDRE <frsw194@gmail.com>, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # Moka Tourisme <hello@mokatourisme.fr>, 2020
-# Corentin Delacroix <edc@odoo.com>, 2020
+# edc <edc@odoo.com>, 2020
+# Martin Trigaux, 2020
+# Vallen Delobel <edv@odoo.com>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Priscilla Sanchez <prs@odoo.com>, 2020
+# Jonathan Quique <jqu@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -44,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Corentin Delacroix <edc@odoo.com>, 2020\n"
+"Last-Translator: Jonathan Quique <jqu@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,7 +106,7 @@ msgstr "&amp;times;"
 #: model:product.product,description_sale:sale.product_product_4f
 #: model:product.template,description_sale:sale.product_product_4e_product_template
 msgid "160x80cm, with large legs."
-msgstr ""
+msgstr "160x80cm, avec des pieds larges."
 
 #. module: sale
 #. openerp-web
@@ -142,7 +145,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        % set doc_name = 'Devis' if object.state in ('draft', 'sent') else 'order'\n"
+"        % set doc_name = 'devis' if object.state in ('draft', 'sent') else 'confirmation de commande'\n"
 "        Bonjour ${object.partner_id.name}\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
@@ -838,7 +841,7 @@ msgstr "Capturer la transaction"
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
 msgid "Chair floor protection"
-msgstr ""
+msgstr "Protection de sol pour chaise"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__use_quotations
@@ -2238,7 +2241,7 @@ msgstr "Nombre de messages non lus"
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it."
-msgstr ""
+msgstr "Les chaises de bureau peuvent endommager votre sol: protégez-le."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2680,7 +2683,7 @@ msgstr "Listes de prix"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__multi_sales_price_method
 msgid "Pricelists Method"
-msgstr ""
+msgstr "Méthode des listes de prix"
 
 #. module: sale
 #: selection:res.config.settings,multi_sales_price_method:0
@@ -3042,7 +3045,7 @@ msgstr "Avertissements sur les commandes clients"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Assistant intégration d'acquéreur de paiement pour les Ventes"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_product_configurator
@@ -3057,7 +3060,7 @@ msgstr "Avertissements de vente"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Intégration de la méthode de paiement à Ventes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
@@ -3520,16 +3523,18 @@ msgstr "Étape"
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
 msgstr ""
+"État de l'étape de confirmation de la commande dans la barre de "
+"configuration"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr ""
+msgstr "État de l'étape d'example de devis dans la barre de configuration"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr ""
+msgstr "État de la barre de configuration des Ventes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -3555,7 +3560,7 @@ msgstr ""
 #: model:product.template.attribute.value,name:sale.product_template_attribute_value_3
 #: model:product.template.attribute.value,name:sale.product_template_attribute_value_4
 msgid "Steel"
-msgstr ""
+msgstr "Acier"
 
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
@@ -3732,6 +3737,8 @@ msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
 msgstr ""
+"La commande n'a pas été confirmée en dépit de la réponse de l'acquéreur "
+"(%s): le montant de la commande est de %r mais l'acquéreur a répondu %r."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -3766,6 +3773,8 @@ msgid ""
 "The rate of the currency to the currency of rate 1 applicable at the date of"
 " the order"
 msgstr ""
+"Le taux de conversion de la devise vers la devise de taux 1 applicable à la "
+"date de la commande"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:80
@@ -3948,6 +3957,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Pour envoyer des invitations en mode B2B, ouvrez un contact ou sélectionnez-"
+"en plusieurs dans la liste et cliquez sur l'option 'Portal Access "
+"Management' dans le menu déroulant * Action *."
 
 #. module: sale
 #: selection:sale.order,activity_state:0
@@ -4113,6 +4125,8 @@ msgid ""
 "Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a"
 " href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 msgstr ""
+"Monter en gamme <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> pour "
+"le client <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -4325,7 +4339,7 @@ msgstr "Votre commande a été signée."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order is not in a state to be rejected."
-msgstr ""
+msgstr "Votre commande n'est pas en état d'être rejetée."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
