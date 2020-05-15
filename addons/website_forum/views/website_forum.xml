@@ -1312,7 +1312,7 @@
                         <div t-if="question.uid_has_answered and answer.create_uid.id == uid"
                             class="btn-group btn-group-sm mr-1 mr-md-2">
                             <a class="btn btn-sm px-2 btn-primary"
-                                title="Only one answer per question is allowed"
+                                t-attf-title="#{'Only one answer per question is allowed' if question.forum_id.mode == 'questions' else ''}"
                                 data-toggle="tooltip"
                                 t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/edit_answer">
                                 <i class="fa fa-pencil"/>
