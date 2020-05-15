@@ -8,15 +8,15 @@
             <field name="name">account.payment.tree</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancelled'" edit="false">
+                <tree edit="false">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="payment_method_id"/>
                     <field name="partner_id" string="Customer"/>
-                    <field name="amount" sum="Amount"/>
-                    <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="amount" sum="Amount"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                 </tree>
             </field>

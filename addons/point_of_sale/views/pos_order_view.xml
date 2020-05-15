@@ -214,16 +214,16 @@
         <field name="name">pos.order.tree</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <tree string="POS Orders" decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')" create="0">
+            <tree string="POS Orders" create="0">
                 <field name="currency_id" invisible="1"/>
-                <field name="state" invisible="1"/>
-                <field name="name"/>
+                <field name="name" decoration-bf="1"/>
                 <field name="session_id" />
                 <field name="date_order"/>
                 <field name="pos_reference"/>
                 <field name="partner_id"/>
                 <field string="Cashier" name="user_id"/>
                 <field name="amount_total" sum="Amount total" widget="monetary"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state not in ('draft','cancel')"/>
             </tree>
         </field>
     </record>
