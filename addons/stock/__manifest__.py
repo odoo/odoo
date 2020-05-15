@@ -38,6 +38,7 @@
 
         'wizard/stock_change_product_qty_views.xml',
         'wizard/stock_picking_return_views.xml',
+        'wizard/product_replenish_multi.xml',
         'wizard/stock_scheduler_compute_views.xml',
         'wizard/stock_immediate_transfer_views.xml',
         'wizard/stock_backorder_confirmation_views.xml',

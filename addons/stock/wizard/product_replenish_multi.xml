@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_replenish_multi" model="ir.ui.view">
+        <field name="name">product_replenish_multi</field>
+        <field name="model">product.replenish.multi</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="warehouse_source_id" groups="stock.group_stock_multi_warehouses"/>
+                    <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
+                    <field name="route_ids" groups="stock.group_adv_location" widget="many2many_tags"/>
+                    <field name="date_planned"/>
+                </group>
+                <group>
+                    <field name="line_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="product_uom_qty"/>
+                            <field name="product_uom_category_id" invisible="1"/>
+                            <field name="product_uom_id" domain="[('category_id', '=', product_uom_category_id)]"
+                                   groups="uom.group_uom"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="launch_replenishment"
+                            string="Confirm"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Discard"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_product_replenish_multi" model="ir.actions.act_window">
+        <field name="name">Warehouse Transfers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.replenish.multi</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_product_replenish_multi"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="menu_product_replenish_multi" parent="stock.menu_stock_warehouse_mgmt"
+              sequence="4" action="action_product_replenish_multi"
+              groups="stock.group_stock_manager,stock.group_stock_user"/>
+</odoo>

@@ -11,5 +11,6 @@ from . import stock_quantity_history
 from . import stock_rules_report
 from . import stock_warn_insufficient_qty
 from . import product_replenish
+from . import product_replenish_multi
 from . import stock_track_confirmation
 from . import stock_package_destination
