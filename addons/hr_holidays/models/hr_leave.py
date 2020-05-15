@@ -767,7 +767,7 @@ class HolidaysRequest(models.Model):
             default['request_date_from'] = default.get('date_from')
             default['request_date_to'] = default.get('date_to')
             return super().copy_data(default)
-        raise UserError(_('A leave cannot be duplicated.'))
+        raise UserError(_('A time off cannot be duplicated.'))
 
     def _get_mail_redirect_suggested_company(self):
         return self.holiday_status_id.company_id
