@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.exceptions import UserError
 from odoo.tools.misc import clean_context
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class ProductReplenishMultiLine(models.TransientModel):
