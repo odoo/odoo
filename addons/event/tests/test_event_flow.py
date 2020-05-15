@@ -27,19 +27,19 @@ class TestEventUI(TestEventCommon):
         self.assertFalse(registration_form.mobile)
 
         # trigger onchange
-        registration_form.partner_id = self.customer
-        self.assertEqual(registration_form.name, self.customer.name)
-        self.assertEqual(registration_form.email, self.customer.email)
-        self.assertEqual(registration_form.phone, self.customer.phone)
-        self.assertEqual(registration_form.mobile, self.customer.mobile)
+        registration_form.partner_id = self.event_customer
+        self.assertEqual(registration_form.name, self.event_customer.name)
+        self.assertEqual(registration_form.email, self.event_customer.email)
+        self.assertEqual(registration_form.phone, self.event_customer.phone)
+        self.assertEqual(registration_form.mobile, self.event_customer.mobile)
 
         # save, check record matches Form values
         registration = registration_form.save()
-        self.assertEqual(registration.partner_id, self.customer)
-        self.assertEqual(registration.name, self.customer.name)
-        self.assertEqual(registration.email, self.customer.email)
-        self.assertEqual(registration.phone, self.customer.phone)
-        self.assertEqual(registration.mobile, self.customer.mobile)
+        self.assertEqual(registration.partner_id, self.event_customer)
+        self.assertEqual(registration.name, self.event_customer.name)
+        self.assertEqual(registration.email, self.event_customer.email)
+        self.assertEqual(registration.phone, self.event_customer.phone)
+        self.assertEqual(registration.mobile, self.event_customer.mobile)
 
         # allow writing on some fields independently from customer config
         registration.write({'phone': False, 'mobile': False})
@@ -49,25 +49,18 @@ class TestEventUI(TestEventCommon):
         # reset partner should not reset other fields
         registration.write({'partner_id': False})
         self.assertEqual(registration.partner_id, self.env['res.partner'])
-        self.assertEqual(registration.name, self.customer.name)
-        self.assertEqual(registration.email, self.customer.email)
+        self.assertEqual(registration.name, self.event_customer.name)
+        self.assertEqual(registration.email, self.event_customer.email)
         self.assertFalse(registration.phone)
         self.assertFalse(registration.mobile)
 
         # update to a new partner not through UI -> update only void feilds
-        customer2 = self.env['res.partner'].create({
-            'name': 'Constantin Customer 2',
-            'email': 'constantin2@test.example.com',
-            'country_id': self.env.ref('base.be').id,
-            'phone': '0456987654',
-            'mobile': '0456654321',
-        })
-        registration.write({'partner_id': customer2.id})
-        self.assertEqual(registration.partner_id, customer2)
-        self.assertEqual(registration.name, self.customer.name)
-        self.assertEqual(registration.email, self.customer.email)
-        self.assertEqual(registration.phone, customer2.phone)
-        self.assertEqual(registration.mobile, customer2.mobile)
+        registration.write({'partner_id': self.event_customer2.id})
+        self.assertEqual(registration.partner_id, self.event_customer2)
+        self.assertEqual(registration.name, self.event_customer.name)
+        self.assertEqual(registration.email, self.event_customer.email)
+        self.assertEqual(registration.phone, self.event_customer2.phone)
+        self.assertEqual(registration.mobile, self.event_customer2.mobile)
 
 
 class TestEventFlow(TestEventCommon):
