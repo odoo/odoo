@@ -27,6 +27,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .o_wforum_favourite_toggle': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
         'click .js_close_intro': '_onCloseIntroClick',
+        'submit .js_wforum_submit_form:has(:not(.karma_required).o_wforum_submit_post)': '_onSubmitForm',
     },
 
     /**
@@ -164,6 +165,12 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             });
         });
 
+        this.$('#post_reply').on('shown.bs.collapse', function (e) {
+            $('html').animate({
+                scrollTop: $('#post_reply').offset().top - ($(window).innerHeight() - $('#post_reply').innerHeight())
+            }, 500);
+        });
+
         return this._super.apply(this, arguments);
     },
 
@@ -171,6 +178,59 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     *
+     * @override
+     * @param {Event} ev
+     */
+    _onSubmitForm: function (ev) {
+        let validForm = true;
+
+        let $form = $(ev.currentTarget);
+        let $title = $form.find('input[name=post_name]');
+        let $textarea = $form.find('textarea[name=content]');
+        // It's not really in the textarea that the user write at first
+        let textareaContent = $form.find('.o_wysiwyg_wrapper .note-editable.panel-body').text().trim();
+
+        if ($title.length && $title[0].required) {
+            if ($title.val()) {
+                $title.removeClass('is-invalid');
+            } else {
+                $title.addClass('is-invalid');
+                validForm = false;
+            }
+        }
+
+        // Because the textarea is hidden, we add the red or green border to its container
+        if ($textarea[0].required) {
+            let $textareaContainer = $form.find('.o_wysiwyg_wrapper .note-editor.panel.panel-default');
+            if (!textareaContent.length) {
+                $textareaContainer.addClass('border border-danger rounded-top');
+                validForm = false;
+            } else {
+                $textareaContainer.removeClass('border border-danger rounded-top');
+            }
+        }
+
+        if (validForm) {
+            // Stores social share data to display modal on next page.
+            if ($form.has('.oe_social_share_call').length) {
+                sessionStorage.setItem('social_share', JSON.stringify({
+                    targetType: $(ev.currentTarget).find('.o_wforum_submit_post').data('social-target-type'),
+                }));
+            }
+        } else {
+            ev.preventDefault();
+            setTimeout(function() {
+                var $buttons = $(ev.currentTarget).find('button[type="submit"], a.a-submit');
+                _.each($buttons, function (btn) {
+                    let $btn = $(btn);
+                    $btn.find('i').remove();
+                    $btn.prop('disabled', false);
+                });
+            }, 0);
+        }
+    },
     /**
      * @private
      * @param {Event} ev
@@ -317,10 +377,20 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 if (userVote === 1) {
                     $voteUp.addClass('text-success');
                     $voteCount.addClass('text-success');
+                    $voteDown.removeClass('karma_required');
                 }
                 if (userVote === -1) {
                     $voteDown.addClass('text-danger');
                     $voteCount.addClass('text-danger');
+                    $voteUp.removeClass('karma_required');
+                }
+                if (userVote === 0) {
+                    if (!$voteDown.data('can-downvote')) {
+                        $voteDown.addClass('karma_required');
+                    }
+                    if (!$voteUp.data('can-upvote')) {
+                        $voteUp.addClass('karma_required');
+                    }
                 }
                 $voteCount.html(data['vote_count']).addClass('o_forum_vote_animate');
             }

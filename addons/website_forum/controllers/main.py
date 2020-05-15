@@ -45,7 +45,10 @@ class WebsiteForum(WebsiteProfile):
         forums = request.env['forum.forum'].search(domain)
         if len(forums) == 1:
             return werkzeug.utils.redirect('/forum/%s' % slug(forums[0]), code=302)
-        return request.render("website_forum.forum_all", {'forums': forums})
+
+        return request.render("website_forum.forum_all", {
+            'forums': forums
+        })
 
     @http.route('/forum/new', type='json', auth="user", methods=['POST'], website=True)
     def forum_create(self, forum_name="New Forum", forum_mode="questions", forum_privacy="public", forum_privacy_group=False, add_menu=False):
@@ -163,6 +166,11 @@ class WebsiteForum(WebsiteProfile):
     def forum_faq(self, forum, **post):
         values = self._prepare_user_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
         return request.render("website_forum.faq", values)
+
+    @http.route(['/forum/<model("forum.forum"):forum>/faq/karma'], type='http', auth="public", website=True, sitemap=False)
+    def forum_faq_karma(self, forum, **post):
+        values = self._prepare_user_values(forum=forum, header={'is_guidelines': True, 'is_karma': True}, **post)
+        return request.render("website_forum.faq_karma", values)
 
     @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True, sitemap=False)
     def tag_read(self, query='', limit=25, **post):

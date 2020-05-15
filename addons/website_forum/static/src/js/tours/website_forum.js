@@ -11,11 +11,11 @@ odoo.define("website_forum.tour_forum", function (require) {
     }, [{
         trigger: ".o_forum_ask_btn",
         position: "left",
-        content: _t("Ask the question in this forum by clicking on the button."),
+        content: _t("Create a new post in this forum by clicking on the button."),
     }, {
         trigger: "input[name=post_name]",
         position: "top",
-        content: _t("Give your question title."),
+        content: _t("Give your post title."),
     }, {
         trigger: ".note-editable p",
         extra_trigger: "input[name=post_name]:not(:propValue(\"\"))",
@@ -31,7 +31,7 @@ odoo.define("website_forum.tour_forum", function (require) {
             actions.auto("input[id=s2id_autogen2]");
         },
     }, {
-        trigger: "button:contains(\"Post Your Question\")",
+        trigger: "button:contains(\"Post\")",
         extra_trigger: "input[id=s2id_autogen2]:not(:propValue(\"Tags\"))",
         content: _t("Click to post your question."),
         position: "bottom",
@@ -39,7 +39,13 @@ odoo.define("website_forum.tour_forum", function (require) {
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.close",
         auto: true,
-    }, {
+    },
+    {
+        trigger: "a:contains(\"Answer\").collapsed",
+        content: _t("Click to answer."),
+        position: "bottom",
+    },
+    {
         trigger: ".note-editable p",
         content: _t("Put your answer here."),
         position: "bottom",
