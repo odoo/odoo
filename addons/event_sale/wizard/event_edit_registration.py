@@ -64,6 +64,7 @@ class RegistrationEditorLine(models.TransientModel):
     """Event Registration"""
     _name = "registration.editor.line"
     _description = 'Edit Attendee Line on Sales Confirmation'
+    _order = "id desc"
 
     editor_id = fields.Many2one('registration.editor')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line')
