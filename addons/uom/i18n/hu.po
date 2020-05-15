@@ -8,6 +8,7 @@
 # Kovács Tibor <kovika@gmail.com>, 2018
 # Ákos Nagy <akos.nagy@oregional.hu>, 2018
 # Tamás Németh <ntomasz81@gmail.com>, 2019
+# gezza <geza.nagy@oregional.hu>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2019\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2020\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +47,7 @@ msgstr "Nagyítási arányszám"
 #. module: uom
 #: selection:uom.uom,uom_type:0
 msgid "Bigger than the reference Unit of Measure"
-msgstr "Nagyobb mint a referencia-mértékegység"
+msgstr "Nagyobb, mint a referencia mértékegység"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
@@ -77,7 +78,7 @@ msgstr "Létrehozva"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_day
 msgid "Day(s)"
-msgstr "Nap"
+msgstr "nap"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
@@ -93,7 +94,7 @@ msgstr "tucat"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
 msgid "Hour(s)"
-msgstr "Óra"
+msgstr "óra"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
@@ -101,7 +102,7 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
-"Hányszor nagyobb ez a mértékegység mint ennek a kategóriának a referencia "
+"Hányszor nagyobb ez a mértékegység, mint ennek a kategóriának a referencia "
 "mértékegysége: 1 * (ez az egység) = arány * (referencia egység)"
 
 #. module: uom
@@ -123,19 +124,19 @@ msgstr "Azonosító"
 #: model:ir.model.fields,field_description:uom.field_uom_category____last_update
 #: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Módosítva"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
 msgid "Last Updated by"
-msgstr "Legutóbb frissítette"
+msgstr "Frissítette"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_date
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_date
 msgid "Last Updated on"
-msgstr "Legutóbb frissítve "
+msgstr "Frissítve "
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -155,17 +156,17 @@ msgstr "liter"
 #. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr "Mértékegységek szervezése"
+msgstr "Mértékegységek kezelése"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "Termék mértékegysége"
+msgstr "Termék mértékegység"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr "Termék ME kategóriák"
+msgstr "Termék m.e. kategóriák"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -175,7 +176,7 @@ msgstr "Arány"
 #. module: uom
 #: selection:uom.uom,uom_type:0
 msgid "Reference Unit of Measure for this category"
-msgstr "Ezen kategória referencia-mértékegysége"
+msgstr "Ezen kategória referencia mértékegysége"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -185,7 +186,7 @@ msgstr "Kerekítési pontosság"
 #. module: uom
 #: selection:uom.uom,uom_type:0
 msgid "Smaller than the reference Unit of Measure"
-msgstr "Kisebb mint a referencia-mértékegység"
+msgstr "Kisebb, mint a referencia mértékegység"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -195,7 +196,7 @@ msgid ""
 msgstr ""
 "A kiszámított mennyiség ezen érték többszöröse lesz. Használja az 1.0 "
 "értéket olyan mértékegységhez, amely nem osztható tovább, mint például egy "
-"árucikk."
+"darab."
 
 #. module: uom
 #: sql_constraint:uom.uom:0
@@ -205,12 +206,12 @@ msgstr "Egy mértékegység átváltási aránya nem lehet 0!"
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr ""
+msgstr "A referencia egység átváltási arányának 1-nek kell lennie."
 
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "A kerekítési pontosság csak pozitív lehet."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:152
@@ -221,6 +222,10 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
+"A rendelési soron megadott %s mértékegyésg nem ugyanabba a kategóriába "
+"tartozik, mint a terméken megadott %s mértékegység. Kérjük javítsa a "
+"rendelési sor vagy a termék mértékegységét, a két mértékegységnek ugyanabba "
+"a kategóriába kell tartoznia."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -235,20 +240,20 @@ msgstr "Típus"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
 msgid "Type of Measure"
-msgstr "Méréstípus"
+msgstr "Mérték típus"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
 msgid "Type of measurement category"
-msgstr "Méréstípus kategória"
+msgstr "Mértéktípus kategória"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Az aktív mező kijelölésének megszüntetésével kikapcsolhat egy "
-"mértékegységet, annak törölése nélkül."
+"Az aktív mező kijelölésének megszüntetésével kikapcsolhat egy mértékegységet"
+" annak törlése nélkül."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -273,12 +278,12 @@ msgstr "Mértékegység kategória"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Unit(s)"
-msgstr "Egység(ek)"
+msgstr "egység"
 
 #. module: uom
 #: selection:uom.category,measure_type:0
 msgid "Units"
-msgstr "Egység"
+msgstr "egység"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -300,9 +305,9 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
-"Ugyanabba a kategóriába tartozó mértékegység \n"
-"            átkonvertálhatóak egymás közt. Például, az\n"
-"            <i>'Idő'</i>, kategóriában, a következő mértékegységek vannak: Órák, Napok."
+"Ugyanabba a kategóriába tartozó mértékegységek \n"
+"            átválthatóak egymás közt. Például, az\n"
+"            <i>'Idő'</i>, kategóriában, a következő mértékegységek találhatók: óra, nap."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:93
@@ -311,12 +316,17 @@ msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
 " a new category, please record the 'reference' unit first."
 msgstr ""
+"A(z) %s mértékegység kategóriának kéne, hogy legyen referencia "
+"mértékegysége. Ha most hozta létre az új kategóriát, akkor először rögzítse "
+"a referencia mértékegységet."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:95
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
+"A(z) %s mértékegység kategória csak egy referencia mértékegységgel kéne, "
+"hogy rendelkezzen."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -338,13 +348,13 @@ msgstr "Munkaidő"
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
-msgstr ""
+msgstr "Mértéktípusonként egy kategória lehet csak."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:28
 #, python-format
 msgid "You cannot delete this UoM Category as it is used by the system."
-msgstr ""
+msgstr "Ez a mértékegység nem törölhető, mivel a rendszer már használja."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:115
@@ -353,6 +363,8 @@ msgid ""
 "You cannot delete this UoM as it is used by the system. You should rather "
 "archive it."
 msgstr ""
+"Ez a mértékegység nem törölhető, mivel a rendszer már használja. Törlés "
+"helyett inkább archíválja."
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -360,8 +372,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
-"Meg kell határoznia egy átváltási arányt egy pár mérték egység\n"
-"            között, ugyanazon kategórián belül."
+"Meg kell határoznia egy átváltási arányt a mértékegységek\n"
+"            között ugyanazon kategórián belül."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm
@@ -391,12 +403,12 @@ msgstr "láb(ft)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal(s)"
-msgstr "gallon(s)"
+msgstr "gallon"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
 msgid "inch(es)"
-msgstr "inch(es)"
+msgstr "inch"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -416,14 +428,14 @@ msgstr "lb(s)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
 msgid "mile(s)"
-msgstr "mile(s)"
+msgstr "mérföld"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "oz(s)"
-msgstr "oz(s)"
+msgstr "uncia"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt"
-msgstr "db"
+msgstr "qt"

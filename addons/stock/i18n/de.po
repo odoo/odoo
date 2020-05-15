@@ -28,10 +28,11 @@
 # Anja Uebermuth <anja.uebermuth@arts.eu>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Felix Schubert <felix.schubert@go-erp.com>, 2019
-# Chris Egal <sodaswed@web.de>, 2019
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
 # Marcel Trotzek <trotzek@rtg-portale.de>, 2019
-# Philip Kuß <philip.kuss@gmx.de>, 2019
+# philku79 <philip.kuss@gmx.de>, 2019
+# Malin Kienke <malin.kienke@initos.com>, 2020
+# Chris Egal <sodaswed@web.de>, 2020
 # 
 msgid ""
 msgstr ""
@@ -39,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Philip Kuß <philip.kuss@gmx.de>, 2019\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1231,7 +1232,7 @@ msgstr "Warten auf Zählung"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Counterpart Locations"
-msgstr "Gegenstück-Orte"
+msgstr "Transaktionslagerorte"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -5991,6 +5992,9 @@ msgid ""
 "                                   rounding precision of your unit of "
 "measure."
 msgstr ""
+"Die für das Produkt%serledigte Menge respektiert nicht die "
+"Rundungsgenauigkeit, die auf der Mengeneinheit%s definiert ist. Bitte ändern"
+" Sie die Bestellmenge oder die Rundungsgenauigkeit Ihrer Mengeneinheit."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:284
@@ -6854,14 +6858,8 @@ msgstr "Gewogenes Produkt"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Wenn ein Lager für diese Route ausgewählt wurde, sollte diese Route als "
-"Standard-Route angesehen werden, wenn Produkte dieses Lager durchlaufen. "
-"Dieses Verhalten kann durch die Routen unter Produktkategorien oder durch "
-"die bevorzugten Routen in der Beschaffung überschrieben werden."
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -6872,19 +6870,13 @@ msgstr "Wenn alle Produkte bereit sind"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Wenn diese Option aktiviert ist, kann die Route über das Bestand-Tab im "
-"Produktformular ausgewählt werden. Sie hat dann Vorrang über die Lagerroute."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Wenn diese Option aktiviert ist, kann die Route über die Produktkategorie "
-"ausgewählt werden. Sie hat dann Priorität über die Lagerroute."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:113
@@ -6961,6 +6953,9 @@ msgid ""
 "if some stock moves have already been created with that number. This would "
 "lead to inconsistencies in your stock."
 msgstr ""
+"Sie dürfen das mit einer Serien- oder Chargennummer verknüpfte Produkt nicht"
+" ändern, wenn bereits einige Lagerbewegungen mit dieser Nummer angelegt "
+"wurden. Dies würde zu Inkonsistenzen in Ihrem Bestand führen."
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:36
@@ -7064,6 +7059,9 @@ msgid ""
 "You cannot change the location type or its use as a scrap location as there "
 "are products reserved in this location. Please unreserve the products first."
 msgstr ""
+"Sie können den Standorttyp oder seine Verwendung als Ausschuss nicht ändern,"
+" da an diesem Standort Produkte reserviert sind. Bitte nehmen Sie zuerst die"
+" Reservierung der Produkte zurück."
 
 #. module: stock
 #: code:addons/stock/models/product.py:647
@@ -7072,6 +7070,8 @@ msgid ""
 "You cannot change the ratio of this unit of mesure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
+"Sie können das Anteil dieser Maßeinheit nicht ändern, da einige Produkte mit"
+" dieser UoM bereits verschoben wurden oder derzeit reserviert sind."
 
 #. module: stock
 #: code:addons/stock/models/product.py:536
@@ -7375,4 +7375,4 @@ msgstr "=> Menge auf 0 setzen"
 #: code:addons/stock/models/stock_move_line.py:223
 #, python-format
 msgid "Changing the product is only allowed in 'Draft' state."
-msgstr ""
+msgstr "Die Änderung des Produkts ist nur im Status 'Entwurf' erlaubt."

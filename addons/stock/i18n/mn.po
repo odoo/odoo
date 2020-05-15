@@ -14,9 +14,9 @@
 # Suren Ch <oyunsuren.ch@gmail.com>, 2019
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # Minj P <pminj322@gmail.com>, 2019
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # Bayarkhuu Bataa, 2019
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3011,7 +3011,7 @@ msgstr "Мөрийн жагсаалт харагдац"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of operations"
-msgstr ""
+msgstr "Баримтын жагсаалт харагдац"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -6047,7 +6047,7 @@ msgstr "Онолын Тоо Хэмжээ"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
-msgstr ""
+msgstr "Барааны ямар нэг хөдөлгөөн одоогоор алга"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.quantsact
@@ -6796,13 +6796,8 @@ msgstr "Жигнэсэн бараа"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Энэ дамжлагад дээр сонгогдсон агуулахын хувьд бараа тус агуулахаар дамжин "
-"өнгөрөх үед  энэхүү дамжлага эхний сонголтоор хэрэглэгдэнэ. Энэ шинж чанар "
-"нь бараа/барааны ангилал дээр тохируулсан дамжлагаар солигдоно."
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -6813,21 +6808,13 @@ msgstr "Бүх бараа бэлэн үед"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Үүнийг сонговол, уг дамжлагыг барааны дэлгэрэнгүй мэдээлэл дээрх Агуулах ТАБ"
-" дотор сонгож ашиглах боломжтой болно. Улмаар агуулах дээр тохируулсан "
-"дамжлагаас илүү өндөр урьтамжаар ашиглагдана."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Үүнийг сонговол, уг дамжлагыг барааны ангилалын мэдээлэл дээр сонгож ашиглах"
-" боломжтой болно. Улмаар агуулах дээр тохируулсан дамжлагаас илүү өндөр "
-"урьтамжаар ашиглагдана."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:113
@@ -6836,6 +6823,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from "
 "<b>%s</b> to fulfill the need."
 msgstr ""
+"<b>%s</b> дээр барааны хэрэгцээ үүсэхэд, <br/> <b>%s</b> баримт</b> "
+"байрлалаас татан авахаар үүснэ."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:114
@@ -7107,6 +7096,10 @@ msgid ""
 "You cannot validate a transfer if no quantites are reserved nor done. To "
 "force the transfer, switch in edit more and encode the done quantities."
 msgstr ""
+"Та бараа шилжүүлгийн баримтын ажиллагааны дэлгэрэнгүй дээр нь ямар нэг "
+"бэлтгэсэн тоо хэмжээ оруулаагүй нөхцөлд энэхүү баримтыг батлах боломжгүй. "
+"Баримтыг батлахын тулд засварлах горимд шилжээд бэлтгэсэн буюу дуусгасан тоо"
+" хэмжээг бөглөж тохируулна уу."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:112

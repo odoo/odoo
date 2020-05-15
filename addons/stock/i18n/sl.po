@@ -13,9 +13,9 @@
 # matjaz k <matjaz@mentis.si>, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
 # Grega Vavtar <grega@hbs.si>, 2019
-# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
 # Jasmina Macur <jasmina@hbs.si>, 2020
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2020\n"
+"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2020\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1008,32 +1008,32 @@ msgstr "Izračunaj"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "Izračunajte stroške dostave in pošljite z DHL"
+msgstr "Obdelava stroškov dostave in odprema preko DHL"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr "Izračunajte stroške pošiljanja in pošiljajte z Easypost"
+msgstr "Obdelava stroškov dostave in odprema preko Easypost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "Izračunajte stroške dostave in pošljite s FedEx"
+msgstr "Obdelava stroškov dostave in odprema preko FedEx"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "Izračunajte stroške dostave in pošljite z UPS"
+msgstr "Obdelava stroškov dostave in odprema preko UPS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr "Izračunajte stroške dostave in pošljite z USPS"
+msgstr "Obdelava stroškov dostave in odprema preko USPS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "Izračunajte stroške dostave in pošljite z bpost"
+msgstr "Obdelava stroškov dostave in odprema preko bpost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -1509,8 +1509,8 @@ msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
 "quotations or draft manufacturing orders to resupply your stock."
 msgstr ""
-"Določite pravilo minimalne zaloge, tako da Odoo samodejno ustvari zahteve za"
-" ponudbe ali osnutke proizvodnih naročil za ponovno dobavo zalog."
+"Določite pravilo minimalne zaloge, tako da Odoo samodejno ustvari zahtevke "
+"po predračunih ali osnutke proizvodnih nalogov za obnovitev zalog."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -1800,7 +1800,7 @@ msgstr "Prikaži Lote & Serijske številke"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__display_name
 msgid "Display Name"
-msgstr "Prikazni naziv"
+msgstr "Prikazani naziv"
 
 #. module: stock
 #: model:res.groups,name:stock.group_lot_on_delivery_slip
@@ -5927,11 +5927,12 @@ msgid ""
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
 msgstr ""
-"To je količina artiklov na zalogi. Za transakcije s statusom \"Opravljeno\","
-" je to količina artiklov, ki so dejansko imeli transakcijo. Za ostale "
-"premike je to količina artikla za transakcije, ki so planirane. Znižanje te "
-"količnine ne kreira preostanka naročila. Sprememba te količine na "
-"transakcijah povzroči rezervacijo artikla. Uporabljati pazljivo!"
+"To je količina proizvodov iz stališča inventarja. Za postavke v stanju "
+"\"Opravljeno\" je to količina proizvodov, ki so se dejansko premaknili. Za "
+"ostale premike je to količina proizvodov, za katere je premik šele "
+"načrtovan. Znižanje te količine ne ustvari nedobavljenega blaga (backorder)."
+" Sprememba te količine na dodeljenih premikih vpliva na rezervacije "
+"proizvoda in se mora uporabljati previdno!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -6372,8 +6373,8 @@ msgid ""
 "                Depending on your product configuration, launching a replenishment may trigger a request for quotation,\n"
 "                a manufacturing order or a transfer."
 msgstr ""
-"S tem pomočnikom lahko napolnite vašo zalogo. \n"
-"                Glede na konfiguracijo izdelka, lahko začetek polnjenja sproži povpraševanje po ponudbi,\n"
+"S tem pomočnikom lahko obnovite zaloge. \n"
+"                Glede na konfiguracijo izdelka, lahko zagon dopolnitve zalog sproži zahtevek po predračunu,\n"
 "                proizvodni nalog ali transfer."
 
 #. module: stock
@@ -6599,9 +6600,7 @@ msgstr "Uteženi izdelek"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
 
 #. module: stock
@@ -6613,14 +6612,12 @@ msgstr "Ko so vsi izdelki pripravljeni"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
 
 #. module: stock
