@@ -332,15 +332,14 @@ class WebsiteEventController(http.Controller):
         return list(registrations.values())
 
     def _create_attendees_from_registration_post(self, event, registration_data):
-        attendees_sudo = request.env['event.registration'].sudo()
-
+        registrations_to_create = []
         for registration_values in registration_data:
             registration_values['event_id'] = event.id
             if not registration_values.get('partner_id'):
                 registration_values['partner_id'] = request.env.user.partner_id.id
-            attendees_sudo += request.env['event.registration'].sudo().create(registration_values)
+            registrations_to_create.append(registration_values)
 
-        return attendees_sudo
+        return request.env['event.registration'].sudo().create(registrations_to_create)
 
     @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
     def registration_confirm(self, event, **post):
