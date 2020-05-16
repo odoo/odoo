@@ -11,7 +11,7 @@
                     <t t-set="locations" t-value="move_line_ids.mapped('location_id').sorted(lambda location: location.complete_name)"/>
                     <t t-call="web.external_layout">
                         <div class="page">
-                            <h3>Summary: <span t-field="o.name"/></h3>
+                            <h3 class="pt16">Summary: <span t-field="o.name"/></h3>
                             <div t-if="o.user_id">
                                 <strong>Responsible:</strong>
                                 <span t-field="o.user_id"/>
