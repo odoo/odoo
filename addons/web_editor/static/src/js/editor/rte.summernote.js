@@ -9,7 +9,7 @@ var core = require('web.core');
 // the bus by summernote in an iframe will be caught by the wysiwyg's SummernoteManager
 // outside the iframe.
 const topBus = window.top.odoo.__DEBUG__.services['web.core'].bus;
-const ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerWidget} = require('web.Colorpicker');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 var mixins = require('web.mixins');
 const session = require('web.session');
@@ -30,11 +30,15 @@ var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
 var tplDropdown = renderer.getTemplate().dropdown;
 
-var applyColor = function (target, eventName, color) {
+const processAndApplyColor = function (target, eventName, color, preview) {
+    if (!color) {
+        color = 'inherit';
+    } else if (!ColorpickerWidget.isCSSColor(color)) {
+        color = (eventName === "foreColor" ? 'text-' : 'bg-') + color;
+    }
     var layoutInfo = dom.makeLayoutInfo(target);
-    $.summernote.pluginEvents[eventName](undefined, eventHandler.modules.editor, layoutInfo, color);
+    $.summernote.pluginEvents[eventName](undefined, eventHandler.modules.editor, layoutInfo, color, preview);
 };
-
 // Update and change the popovers content, and add history button
 renderer.createPalette = function ($container, options) {
     const $dropdownContent = $container.find(".colorPalette");
@@ -46,6 +50,10 @@ renderer.createPalette = function ($container, options) {
         const mutex = new concurrency.MutexedDropPrevious();
         const $dropdown = $(elem).closest('.btn-group, .dropdown');
         let manualOpening = false;
+        // Prevent dropdown closing on colorpicker click
+        $dropdown.on('hide.bs.dropdown', ev => {
+            return !(ev.clickEvent && ev.clickEvent.originalEvent && ev.clickEvent.originalEvent.__isColorpickerClick);
+        });
         $dropdown.on('show.bs.dropdown', () => {
             if (manualOpening) {
                 return true;
@@ -62,14 +70,15 @@ renderer.createPalette = function ($container, options) {
                     $editable: rte.Class.prototype.editable(), // Our parent is the root widget, we can't retrieve the editable section from it...
                     selectedColor: $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor'),
                 });
-                colorpicker.on('color_picked', null, ev => {
-                    let color = ev.data.color;
-                    if (!ColorpickerDialog.isCSSColor(color)) {
-                        color = (eventName === "foreColor" ? 'text-' : 'bg-') + color;
-                    }
-                    applyColor(ev.data.target, eventName, color);
+                colorpicker.on('custom_color_picked color_picked', null, ev => {
+                    processAndApplyColor(ev.data.target, eventName, ev.data.color);
                 });
-                colorpicker.on('color_reset', null, ev => applyColor(ev.data.target, eventName, 'inherit'));
+                colorpicker.on('color_hover color_leave', null, ev => {
+                    processAndApplyColor(ev.data.target, eventName, ev.data.color, true);
+                });
+                colorpicker.on('enter_key_color_colorpicker', null, () => {
+                    $dropdown.children('.dropdown-toggle').dropdown('hide');
+                });
                 return colorpicker.replace(hookEl).then(() => {
                     if (oldColorpicker) {
                         oldColorpicker.destroy();

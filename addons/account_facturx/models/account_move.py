@@ -43,7 +43,7 @@ class AccountMove(models.Model):
             'format_date': format_date,
             'format_monetary': format_monetary,
         }
-        content = self.env.ref('account_facturx.account_invoice_facturx_export').render(template_values)
+        content = self.env.ref('account_facturx.account_invoice_facturx_export')._render(template_values)
         return b"<?xml version='1.0' encoding='UTF-8'?>" + content
 
     def _import_facturx_invoice(self, tree):

@@ -204,7 +204,7 @@ class TestViewSaving(common.TransactionCase):
         )
         self.assertIn(
             replacement,
-            view.render().decode('utf-8'),
+            view._render().decode('utf-8'),
             'inline script should not be escaped when rendering'
         )
         # common text nodes should be be escaped client side
@@ -213,7 +213,7 @@ class TestViewSaving(common.TransactionCase):
         self.assertIn(replacement, view.arch, 'common text node should not be escaped server side')
         self.assertIn(
             replacement,
-            view.render().decode('utf-8').replace(u'&', u'&amp;'),
+            view._render().decode('utf-8').replace(u'&', u'&amp;'),
             'text node characters wrongly unescaped when rendering'
         )
 

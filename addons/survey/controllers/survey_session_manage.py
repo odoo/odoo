@@ -108,7 +108,7 @@ class UserInputSession(http.Controller):
 
             template_values = self._prepare_manage_session_values(survey)
             template_values['is_rpc_call'] = True
-            return request.env.ref('survey.user_input_session_manage_content').render(template_values)
+            return request.env.ref('survey.user_input_session_manage_content')._render(template_values)
         else:
             return False
 
@@ -146,7 +146,7 @@ class UserInputSession(http.Controller):
             # no open session
             return ''
 
-        return request.env.ref('survey.user_input_session_leaderboard').render({
+        return request.env.ref('survey.user_input_session_leaderboard')._render({
             'animate_width': True,
             'leaderboard': survey._prepare_leaderboard_values()
         })

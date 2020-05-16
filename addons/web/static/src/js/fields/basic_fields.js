@@ -23,7 +23,7 @@ var utils = require('web.utils');
 var view_dialogs = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
 var time = require('web.time');
-var ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerDialog} = require('web.Colorpicker');
 
 let FieldBoolean = deprecatedFields.FieldBoolean;
 
@@ -326,7 +326,7 @@ var InputField = DebouncedField.extend({
      * @private
      */
     _onInput: function () {
-        this.isDirty = true;
+        this.isDirty = !this._isLastSetValue(this.$input.val());
         this._doDebouncedAction();
     },
     /**
@@ -1269,7 +1269,7 @@ var FieldPercentage = FieldFloat.extend({
         if (this.mode === 'edit') {
             this.tagName = 'div';
             this.className += ' o_input';
-            
+
             // do not display % in the input in edit
             this.formatOptions.noSymbol = true;
         }

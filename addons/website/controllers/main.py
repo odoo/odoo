@@ -167,15 +167,15 @@ class Website(Home):
             sitemaps.unlink()
 
             pages = 0
-            locs = request.website.with_user(request.website.user_id).enumerate_pages()
+            locs = request.website.with_user(request.website.user_id)._enumerate_pages()
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
                     'url_root': request.httprequest.url_root[:-1],
                 }
-                urls = View.render_template('website.sitemap_locs', values)
+                urls = View._render_template('website.sitemap_locs', values)
                 if urls.strip():
-                    content = View.render_template('website.sitemap_xml', {'content': urls})
+                    content = View._render_template('website.sitemap_xml', {'content': urls})
                     pages += 1
                     last_sitemap = create_sitemap('/sitemap-%d-%d.xml' % (current_website.id, pages), content)
                 else:
@@ -194,7 +194,7 @@ class Website(Home):
                 pages_with_website = ["%d-%d" % (current_website.id, p) for p in range(1, pages + 1)]
 
                 # Sitemaps must be split in several smaller files with a sitemap index
-                content = View.render_template('website.sitemap_index_xml', {
+                content = View._render_template('website.sitemap_index_xml', {
                     'pages': pages_with_website,
                     'url_root': request.httprequest.url_root,
                 })
@@ -238,7 +238,7 @@ class Website(Home):
         matching_urls = set(map(lambda match: match['value'], matching_pages))
 
         matching_last_modified = []
-        last_modified_pages = current_website.get_website_pages(order='write_date desc', limit=5)
+        last_modified_pages = current_website._get_website_pages(order='write_date desc', limit=5)
         for url, name in last_modified_pages.mapped(lambda p: (p.url, p.name)):
             if needle.lower() in name.lower() or needle.lower() in url.lower() and url not in matching_urls:
                 matching_last_modified.append({
@@ -340,7 +340,10 @@ class Website(Home):
 
     @http.route('/website/toggle_switchable_view', type='json', auth='user', website=True)
     def toggle_switchable_view(self, view_key):
-        request.website.viewref(view_key).toggle_active()
+        if request.website.user_has_groups('website.group_website_designer'):
+            request.website.viewref(view_key).toggle_active()
+        else:
+            return werkzeug.exceptions.Forbidden()
 
     @http.route('/website/reset_template', type='http', auth='user', methods=['POST'], website=True, csrf=False)
     def reset_template(self, view_id, mode='soft', redirect='/', **kwargs):
@@ -465,14 +468,6 @@ class Website(Home):
         """
         request.env['web_editor.assets'].make_scss_customization(url, values)
         return True
-
-    @http.route(['/website/multi_render'], type='json', auth="public", website=True)
-    def multi_render(self, ids_or_xml_ids, values=None):
-        View = request.env['ir.ui.view']
-        res = {}
-        for id_or_xml_id in ids_or_xml_ids:
-            res[id_or_xml_id] = View.render_template(id_or_xml_id, values)
-        return res
 
     @http.route(['/website/update_visitor_timezone'], type='json', auth="public", website=True)
     def update_visitor_timezone(self, timezone):

@@ -670,7 +670,7 @@ class Website(models.Model):
             :param raise_if_not_found: should the method raise an error if no view found
             :return: The view record or empty recordset
         '''
-        View = self.env['ir.ui.view']
+        View = self.env['ir.ui.view'].sudo()
         view = View
         if isinstance(view_id, str):
             if 'website_id' in self._context:
@@ -700,7 +700,7 @@ class Website(models.Model):
 
     @tools.ormcache_context(keys=('website_id',))
     def _cache_customize_show_views(self):
-        views = self.env['ir.ui.view'].with_context(active_test=False).search([('customize_show', '=', True)])
+        views = self.env['ir.ui.view'].with_context(active_test=False).sudo().search([('customize_show', '=', True)])
         views = views.filter_duplicate()
         return {v.key: v.active for v in views}
 
@@ -760,7 +760,7 @@ class Website(models.Model):
         return all(p.name in rule._converters for p in params
                    if p.kind in supported_kinds and has_no_default(p))
 
-    def enumerate_pages(self, query_string=None, force=False):
+    def _enumerate_pages(self, query_string=None, force=False):
         """ Available pages in the website/CMS. This is mostly used for links
             generation and can be overridden by modules setting up new HTML
             controllers for dynamic pages (e.g. blog).
@@ -850,7 +850,7 @@ class Website(models.Model):
         if query_string:
             domain += [('url', 'like', query_string)]
 
-        pages = self.get_website_pages(domain)
+        pages = self._get_website_pages(domain)
 
         for page in pages:
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
@@ -860,15 +860,15 @@ class Website(models.Model):
                 record['lastmod'] = page['write_date'].date()
             yield record
 
-    def get_website_pages(self, domain=[], order='name', limit=None):
+    def _get_website_pages(self, domain=[], order='name', limit=None):
         domain += self.get_current_website().website_domain()
-        pages = self.env['website.page'].search(domain, order=order, limit=limit)
+        pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
         return pages
 
     def search_pages(self, needle=None, limit=None):
         name = slugify(needle, max_length=50, path=True)
         res = []
-        for page in self.enumerate_pages(query_string=name, force=True):
+        for page in self._enumerate_pages(query_string=name, force=True):
             res.append(page)
             if len(res) == limit:
                 break

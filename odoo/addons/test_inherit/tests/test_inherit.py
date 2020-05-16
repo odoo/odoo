@@ -69,6 +69,14 @@ class test_inherits(common.TransactionCase):
         self.assertEqual(mother._fields['state'].selection,
                          [('a', 'A'), ('d', 'D'), ('b', 'B'), ('c', 'C')])
 
+    def test_41_selection_extension(self):
+        """ check that attribute selection_add=... extends selection on fields. """
+        model = self.env['test_new_api.selection']
+        field = model._fields['other']
+        self.assertIsInstance(field.selection, str)
+        self.assertEqual(field._description_selection(self.env), [('baz', 'Baz')])
+
+
 class test_inherits_demo(TransactionCaseWithUserDemo):
 
     def test_50_search_one2many(self):

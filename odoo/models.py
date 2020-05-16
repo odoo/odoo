@@ -158,30 +158,17 @@ class MetaModel(api.Meta):
             return
 
         if not hasattr(self, '_module'):
-            self._module = self._get_addon_name(self.__module__)
+            assert self.__module__.startswith('odoo.addons.'), \
+                "Invalid import of %s.%s, it should start with 'odoo.addons'." % (self.__module__, name)
+            self._module = self.__module__.split('.')[2]
 
         # Remember which models to instanciate for this module.
         if self._module:
             self.module_to_models[self._module].append(self)
 
-        # check for new-api conversion error: leave comma after field definition
         for key, val in attrs.items():
-            if type(val) is tuple and len(val) == 1 and isinstance(val[0], Field):
-                _logger.error("Trailing comma after field definition: %s.%s", self, key)
             if isinstance(val, Field):
                 val.args['_module'] = self._module
-
-    def _get_addon_name(self, full_name):
-        # The (OpenERP) module name can be in the ``odoo.addons`` namespace
-        # or not. For instance, module ``sale`` can be imported as
-        # ``odoo.addons.sale`` (the right way) or ``sale`` (for backward
-        # compatibility).
-        module_parts = full_name.split('.')
-        if len(module_parts) > 2 and module_parts[:2] == ['odoo', 'addons']:
-            addon_name = full_name.split('.')[2]
-        else:
-            addon_name = full_name.split('.')[0]
-        return addon_name
 
 
 class NewId(object):
@@ -1463,7 +1450,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        View = self.env['ir.ui.view']
+        View = self.env['ir.ui.view'].sudo()
         result = {
             'model': self._name,
             'field_parent': False,
@@ -1528,7 +1515,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 * if some tag other than 'position' is found in parent view
         :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
         """
-        view = self.env['ir.ui.view'].browse(view_id)
+        self.check_access_rights('read')
+        view = self.env['ir.ui.view'].sudo().browse(view_id)
 
         # Get the view arch and all other attributes describing the composition of the view
         result = self._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
@@ -6150,22 +6138,41 @@ Record ids: %(records)s
         return 'placeholder.png'
 
     def _populate_factories(self):
-        """ Return a list of pairs ``(field_name, factory)``, ``factory`` is a function that creates
-        a generator of values (dict of field values).  Its API suggested by::
+        """ Generates a factory for the different fields of the model.
 
-            # generator yield values by iterating on base_generator and adding a value
-            # for the given field in the dicts yielded by base_generator
-            generator = factory(base_generator, field_name, model_name)
-            # suggested usage
-            for values in generator:
-                model.create(values)
+        ``factory`` is a generator of values (dict of field values).
+
+        Factory skeleton::
+
+            def generator(iterator, field_name, model_name):
+                for counter, values in enumerate(iterator):
+                    # values.update(dict())
+                    yield values
+
+        See :mod:`odoo.tools.populate` for population tools and applications.
+
+        :returns: list of pairs(field_name, factory) where `factory` is a generator function.
+        :rtype: list(tuple(str, generator))
+
+        .. note::
+
+            It is the responsibility of the generator to handle the field_name correctly.
+            The generator could generate values for multiple fields together. In this case,
+            the field_name should be more a "field_group", covering the different fields
+            updated by the generator (e.g. "_address" for a generator updating multiple address fields).
         """
         return []
 
     @property
     def _populate_sizes(self):
         """ Return a dict mapping symbolic sizes (``'small'``, ``'medium'``, ``'large'``) to integers,
-        giving the minimal number of records that method ``_populate`` should create.
+        giving the minimal number of records that :meth:`_populate` should create.
+
+        The default population sizes are:
+
+        * ``small`` : 10
+        * ``medium`` : 100
+        * ``large`` : 1000
         """
         return {
             'small': 10,  # minimal representative set
@@ -6175,12 +6182,16 @@ Record ids: %(records)s
 
     @property
     def _populate_dependencies(self):
+        """ Return the list of models which have to be populated before the current one.
+
+        :rtype: list
+        """
         return []
 
     def _populate(self, size):
         """ Create records to populate this model.
-        
-        :param size: symbolic size for the number of records: ``'small'``, ``'medium'`` or ``'large'``
+
+        :param str size: symbolic size for the number of records: ``'small'``, ``'medium'`` or ``'large'``
         """
         batch_size = 1000
         min_size = self._populate_sizes[size]

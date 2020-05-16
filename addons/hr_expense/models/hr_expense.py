@@ -18,7 +18,7 @@ class HrExpense(models.Model):
 
     @api.model
     def _default_employee_id(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        return self.env.user.employee_id
 
     @api.model
     def _default_product_uom_id(self):
@@ -35,7 +35,7 @@ class HrExpense(models.Model):
             res = "['|', ('company_id', '=', False), ('company_id', '=', company_id)]"  # Then, domain accepts everything
         elif self.user_has_groups('hr_expense.group_hr_expense_team_approver') and self.env.user.employee_ids:
             user = self.env.user
-            employee = user.employee_ids[0]
+            employee = self.env.user.employee_id
             res = [
                 '|', '|', '|',
                 ('department_id.manager_id', '=', employee.id),
@@ -44,8 +44,8 @@ class HrExpense(models.Model):
                 ('expense_manager_id', '=', user.id),
                 '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id),
             ]
-        elif self.env.user.employee_ids:
-            employee = self.env.user.employee_ids[0]
+        elif self.env.user.employee_id:
+            employee = self.env.user.employee_id
             res = [('id', '=', employee.id), '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]
         return res
 
@@ -174,6 +174,17 @@ class HrExpense(models.Model):
     def _compute_employee_id(self):
         for expense in self:
             expense.employee_id = self.env.user.with_company(expense.company_id).employee_id
+
+    @api.onchange('product_id', 'date', 'account_id')
+    def _onchange_product_id_date_account_id(self):
+        rec = self.env['account.analytic.default'].sudo().account_get(
+            product_id=self.product_id.id,
+            account_id=self.account_id.id,
+            company_id=self.company_id.id,
+            date=self.date
+        )
+        self.analytic_account_id = self.analytic_account_id or rec.analytic_id.id
+        self.analytic_tag_ids = self.analytic_tag_ids or rec.analytic_tag_ids.ids
 
     @api.constrains('product_id', 'product_uom_id')
     def _check_product_uom_category(self):
@@ -665,7 +676,7 @@ class HrExpense(models.Model):
     def _send_expense_success_mail(self, msg_dict, expense):
         mail_template_id = 'hr_expense.hr_expense_template_register' if expense.employee_id.user_id else 'hr_expense.hr_expense_template_register_no_user'
         expense_template = self.env.ref(mail_template_id)
-        rendered_body = expense_template.render({'expense': expense}, engine='ir.qweb')
+        rendered_body = expense_template._render({'expense': expense}, engine='ir.qweb')
         body = self.env['mail.render.mixin']._replace_local_links(rendered_body)
         # TDE TODO: seems louche, check to use notify
         if expense.employee_id.user_id.partner_id:

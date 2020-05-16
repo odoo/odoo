@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="EditBar" owl="1">
+        <div class="edit-bar">
+            <span class="edit-button" t-on-click.stop="trigger('create-table')">
+                <i class="fa fa-plus" role="img" aria-label="Add" title="Add"></i>
+            </span>
+            <span class="edit-button" t-att-class="{ disabled: !props.selectedTable }" t-on-click.stop="trigger('duplicate-table')">
+                <i class="fa fa-files-o" role="img" aria-label="Duplicate" title="Duplicate"></i>
+            </span>
+            <span class="edit-button" t-att-class="{ disabled: !props.selectedTable }" t-on-click.stop="trigger('rename-table')">
+                <i class="fa fa-font" role="img" aria-label="Rename" title="Rename"></i>
+            </span>
+            <span class="edit-button" t-att-class="{ disabled: !props.selectedTable }" t-on-click.stop="trigger('change-seats-num')">
+                <i class="fa fa-user" role="img" aria-label="Seats" title="Seats"></i>
+            </span>
+            <span class="edit-button" t-att-class="{ disabled: !props.selectedTable }" t-on-click.stop="trigger('change-shape')">
+                <span t-if="!props.selectedTable or props.selectedTable.shape == 'square'" class="button-option square">
+                    <i class="fa fa-square-o" role="img" aria-label="Square Shape" title="Square Shape"></i>
+                </span>
+                <span t-else="" class="button-option round">
+                    <i class="fa fa-circle-o" role="img" aria-label="Round Shape" title="Round Shape"></i>
+                </span>
+            </span>
+            <span class="edit-button" t-on-click.stop="state.isColorPicker = !state.isColorPicker">
+                <i class="fa fa-tint" role="img" aria-label="Tint" title="Tint"></i>
+            </span>
+            <div t-if="state.isColorPicker and props.selectedTable" class="color-picker fg-picker">
+                <div  class="close-picker" title="Close" role="img" aria-label="Close" t-on-click.stop="state.isColorPicker = false">
+                    <i class="fa fa-times" />
+                </div>
+                <span class="color tl"  style="background-color:#EB6D6D" role="img" aria-label="Red" title="Red" t-on-click.stop="trigger('set-table-color', '#EB6D6D')" />
+                <span class="color"     style="background-color:#35D374" role="img" aria-label="Green" title="Green" t-on-click.stop="trigger('set-table-color', '#35D374')" />
+                <span class="color tr"  style="background-color:#6C6DEC" role="img" aria-label="Blue" title="Blue" t-on-click.stop="trigger('set-table-color', '#6C6DEC')" />
+                <span class="color"     style="background-color:#EBBF6D" role="img" aria-label="Orange" title="Orange" t-on-click.stop="trigger('set-table-color', '#EBBF6D')" />
+                <span class="color"     style="background-color:#EBEC6D" role="img" aria-label="Yellow" title="Yellow" t-on-click.stop="trigger('set-table-color', '#EBEC6D')" />
+                <span class="color"     style="background-color:#AC6DAD" role="img" aria-label="Purple" title="Purple" t-on-click.stop="trigger('set-table-color', '#AC6DAD')" />
+                <span class="color bl"  style="background-color:#6C6D6D" role="img" aria-label="Grey" title="Grey" t-on-click.stop="trigger('set-table-color', '#6C6D6D')" />
+                <span class="color"     style="background-color:#ACADAD" role="img" aria-label="Light grey" title="Light grey" t-on-click.stop="trigger('set-table-color', '#ACADAD')" />
+                <span class="color br"  style="background-color:#4ED2BE" role="img" aria-label="Turquoise" title="Turquoise" t-on-click.stop="trigger('set-table-color', '#4ED2BE')" />
+            </div>
+            <div t-if="state.isColorPicker and !props.selectedTable" class="color-picker bg-picker">
+                <div  class="close-picker" title="Close" role="img" aria-label="Close" t-on-click.stop="state.isColorPicker = false">
+                    <i class="fa fa-times" />
+                </div>
+                <span class="color tl"  style="background-color:rgb(244, 149, 149)" role="img" aria-label="Red" title="Red" t-on-click.stop="trigger('set-floor-color', 'rgb(244, 149, 149)')" />
+                <span class="color"     style="background-color:rgb(130, 233, 171)" role="img" aria-label="Green" title="Green" t-on-click.stop="trigger('set-floor-color', 'rgb(130, 233, 171)')" />
+                <span class="color tr"  style="background-color:rgb(136, 137, 242)" role="img" aria-label="Blue" title="Blue" t-on-click.stop="trigger('set-floor-color', 'rgb(136, 137, 242)')" />
+                <span class="color"     style="background-color:rgb(255, 214, 136)" role="img" aria-label="Orange" title="Orange" t-on-click.stop="trigger('set-floor-color', 'rgb(255, 214, 136)')" />
+                <span class="color"     style="background-color:rgb(254, 255, 154)" role="img" aria-label="Yellow" title="Yellow" t-on-click.stop="trigger('set-floor-color', 'rgb(254, 255, 154)')" />
+                <span class="color"     style="background-color:rgb(209, 171, 210)" role="img" aria-label="Purple" title="Purple" t-on-click.stop="trigger('set-floor-color', 'rgb(209, 171, 210)')" />
+                <span class="color bl"  style="background-color:rgb(75, 75, 75)"    role="img" aria-label="Grey" title="Grey" t-on-click.stop="trigger('set-floor-color', 'rgb(75, 75, 75)')" />
+                <span class="color"     style="background-color:rgb(210, 210, 210)" role="img" aria-label="Light grey" title="Light grey" t-on-click.stop="trigger('set-floor-color', 'rgb(210, 210, 210)')" />
+                <span class="color br"  style="background-color:rgb(127, 221, 236)" role="img" aria-label="Turquoise" title="Turquoise" t-on-click.stop="trigger('set-floor-color', 'rgb(127, 221, 236)')" />
+            </div>
+            <span class="edit-button trash" t-att-class="{ disabled: !props.selectedTable }" t-on-click.stop="trigger('delete-table')">
+                <i class="fa fa-trash" role="img" aria-label="Delete" title="Delete"></i>
+            </span>
+        </div>
+    </t>
+
+</templates>

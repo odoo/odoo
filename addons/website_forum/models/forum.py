@@ -11,6 +11,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import misc
 from odoo.tools.translate import html_translate
+from odoo.addons.http_routing.models.ir_http import slug
 
 _logger = logging.getLogger(__name__)
 
@@ -21,18 +22,13 @@ class Forum(models.Model):
     _inherit = ['mail.thread', 'image.mixin', 'website.seo.metadata', 'website.multi.mixin']
     _order = "sequence"
 
-    @api.model
-    def _get_default_faq(self):
-        with misc.file_open('website_forum/data/forum_default_faq.html', 'r') as f:
-            return f.read()
-
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1)
     mode = fields.Selection([
-        ('questions', 'Questions'),
-        ('discussions', 'Discussions')],
-        string='Forum Mode', required=True, default='questions',
+        ('questions', 'Questions (1 answer)'),
+        ('discussions', 'Discussions (multiple answers)')],
+        string='Mode', required=True, default='questions',
         help='Questions mode: only one answer allowed\n Discussions mode: multiple answers allowed')
     privacy = fields.Selection([
         ('public', 'Public'),
@@ -43,8 +39,9 @@ class Forum(models.Model):
     authorized_group_id = fields.Many2one('res.groups', 'Authorized Group')
     menu_id = fields.Many2one('website.menu', 'Menu', copy=False)
     active = fields.Boolean(default=True)
-    faq = fields.Html('Guidelines', default=_get_default_faq, translate=html_translate, sanitize=False)
+    faq = fields.Html('Guidelines', translate=html_translate, sanitize=False)
     description = fields.Text('Description', translate=True)
+    teaser = fields.Text('Teaser', compute='_compute_teaser', store=True)
     welcome_message = fields.Html(
         'Welcome Message',
         translate=True,
@@ -84,10 +81,11 @@ class Forum(models.Model):
                                       'of the forum content.')
     # posts statistics
     post_ids = fields.One2many('forum.post', 'forum_id', string='Posts')
-    total_posts = fields.Integer('Post Count', compute='_compute_forum_statistics')
-    total_views = fields.Integer('Views Count', compute='_compute_forum_statistics')
-    total_answers = fields.Integer('Answers Count', compute='_compute_forum_statistics')
-    total_favorites = fields.Integer('Favorites Count', compute='_compute_forum_statistics')
+    last_post_id = fields.Many2one('forum.post', compute='_compute_last_post')
+    total_posts = fields.Integer('# Posts', compute='_compute_forum_statistics')
+    total_views = fields.Integer('# Views', compute='_compute_forum_statistics')
+    total_answers = fields.Integer('# Answers', compute='_compute_forum_statistics')
+    total_favorites = fields.Integer('# Favorites', compute='_compute_forum_statistics')
     count_posts_waiting_validation = fields.Integer(string="Number of posts waiting for validation", compute='_compute_count_posts_waiting_validation')
     count_flagged_posts = fields.Integer(string='Number of flagged posts', compute='_compute_count_flagged_posts')
     # karma generation
@@ -128,11 +126,28 @@ class Forum(models.Model):
     karma_post = fields.Integer(string='Ask questions without validation', default=100)
     karma_moderate = fields.Integer(string='Moderate posts', default=1000)
 
+    @api.depends('post_ids')
+    def _compute_last_post(self):
+        for forum in self:
+            forum.last_post_id = forum.post_ids.search([('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')], order='create_date desc', limit=1)
+
+    @api.depends('description')
+    def _compute_teaser(self):
+        for forum in self:
+            if forum.description:
+                desc = forum.description.replace('\n', ' ')
+                if len(forum.description) > 180:
+                    forum.teaser = desc[:180] + '...'
+                else:
+                    forum.teaser = forum.description
+            else:
+                forum.teaser = ""
+
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):
         result = dict((cid, dict(total_posts=0, total_views=0, total_answers=0, total_favorites=0)) for cid in self.ids)
         read_group_res = self.env['forum.post'].read_group(
-            [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close'))],
+            [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close')), ('parent_id', '=', False)],
             ['forum_id', 'views', 'child_count', 'favourite_count'],
             groupby=['forum_id'],
             lazy=False)
@@ -141,7 +156,7 @@ class Forum(models.Model):
             result[cid]['total_posts'] += res_group.get('__count', 0)
             result[cid]['total_views'] += res_group.get('views', 0)
             result[cid]['total_answers'] += res_group.get('child_count', 0)
-            result[cid]['total_favorites'] += res_group.get('favourite_count', 0)
+            result[cid]['total_favorites'] += 1 if res_group.get('favourite_count', 0) else 0
 
         for record in self:
             record.update(result[record.id])
@@ -156,9 +171,14 @@ class Forum(models.Model):
             domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
             forum.count_flagged_posts = self.env['forum.post'].search_count(domain)
 
+    def _set_default_faq(self):
+        self.faq = self.env['ir.ui.view']._render_template('website_forum.faq_accordion', {"forum": self}).decode('utf-8')
+
     @api.model
     def create(self, values):
-        return super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
+        res = super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
+        res._set_default_faq()
+        return res
 
     def write(self, vals):
         if 'privacy' in vals:
@@ -202,11 +222,21 @@ class Forum(models.Model):
         post_tags.insert(0, [6, 0, existing_keep])
         return post_tags
 
+    def _compute_website_url(self):
+        return '/forum/%s' % (slug(self))
+
     def get_tags_first_char(self):
         """ get set of first letter of forum tags """
         tags = self.env['forum.tag'].search([('forum_id', '=', self.id), ('posts_count', '>', 0)])
         return sorted(set([tag.name[0].upper() for tag in tags if len(tag.name)]))
 
+    def go_to_website(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': self._compute_website_url(),
+        }
 
 class Post(models.Model):
 
@@ -220,8 +250,8 @@ class Post(models.Model):
     content = fields.Html('Content', strip_style=True)
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
-    state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Close'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
-    views = fields.Integer('Number of Views', default=0)
+    state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Closed'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
+    views = fields.Integer('Views', default=0, readonly=True)
     active = fields.Boolean('Active', default=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
     website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
@@ -229,7 +259,7 @@ class Post(models.Model):
     # history
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
     create_uid = fields.Many2one('res.users', string='Created by', index=True, readonly=True)
-    write_date = fields.Datetime('Update on', index=True, readonly=True)
+    write_date = fields.Datetime('Updated on', index=True, readonly=True)
     bump_date = fields.Datetime('Bumped on', readonly=True,
                                 help="Technical field allowing to bump a question. Writing on this field will trigger "
                                      "a write on write_date and therefore bump the post. Directly writing on write_date "
@@ -245,14 +275,14 @@ class Post(models.Model):
     # favorite
     favourite_ids = fields.Many2many('res.users', string='Favourite')
     user_favourite = fields.Boolean('Is Favourite', compute='_get_user_favourite')
-    favourite_count = fields.Integer('Favorite Count', compute='_get_favorite_count', store=True)
+    favourite_count = fields.Integer('Favorite', compute='_get_favorite_count', store=True)
 
     # hierarchy
     is_correct = fields.Boolean('Correct', help='Correct answer or answer accepted')
-    parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade')
+    parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade', readonly=True, index=True)
     self_reply = fields.Boolean('Reply to own question', compute='_is_self_reply', store=True)
-    child_ids = fields.One2many('forum.post', 'parent_id', string='Answers')
-    child_count = fields.Integer('Number of answers', compute='_get_child_count', store=True)
+    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers')
+    child_count = fields.Integer('Answers', compute='_get_child_count', store=True)
     uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
     has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
 
@@ -262,7 +292,7 @@ class Post(models.Model):
 
     # closing
     closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
-    closed_uid = fields.Many2one('res.users', string='Closed by', index=True)
+    closed_uid = fields.Many2one('res.users', string='Closed by', index=True, readonly=True)
     closed_date = fields.Datetime('Closed on', readonly=True)
 
     # karma calculation and access
@@ -364,17 +394,10 @@ class Post(models.Model):
         for post in self:
             post.self_reply = post.parent_id.create_uid.id == post._uid
 
-    @api.depends('child_ids.create_uid', 'website_message_ids')
+    @api.depends('child_ids')
     def _get_child_count(self):
         for post in self:
-            children = self.search([('id', 'child_of', post.id)])
-            children_count = len(children)
-            message_count = self.env['mail.message'].search_count([
-                ('model', '=', post._name),
-                ('message_type', 'in', ['email', 'comment']),
-                ('res_id', 'in', children.ids + [post.id]),
-            ])
-            post.child_count = children_count + message_count
+            post.child_count = len(post.child_ids)
 
     def _get_uid_has_answered(self):
         for post in self:
@@ -407,8 +430,8 @@ class Post(models.Model):
             post.can_edit = is_admin or user.karma >= post.karma_edit
             post.can_close = is_admin or user.karma >= post.karma_close
             post.can_unlink = is_admin or user.karma >= post.karma_unlink
-            post.can_upvote = is_admin or user.karma >= post.forum_id.karma_upvote
-            post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote
+            post.can_upvote = is_admin or user.karma >= post.forum_id.karma_upvote or post.user_vote == -1
+            post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote or post.user_vote == 1
             post.can_comment = is_admin or user.karma >= post.karma_comment
             post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
             post.can_view = is_admin or user.karma >= post.karma_close or (post_sudo.create_uid.karma > 0 and (post_sudo.active or post_sudo.create_uid == user))
@@ -869,6 +892,21 @@ class Post(models.Model):
             return
         return super(Post, self)._notify_record_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
+    def _compute_website_url(self):
+        return '/forum/{forum}/question/{post}{anchor}'.format(
+            forum=slug(self.forum_id),
+            post=slug(self),
+            anchor=self.parent_id and '#answer_%d' % self.id or ''
+        )
+
+    def go_to_website(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': self._compute_website_url(),
+        }
+
 
 class PostReason(models.Model):
     _name = "forum.post.reason"
@@ -876,7 +914,7 @@ class PostReason(models.Model):
     _order = 'name'
 
     name = fields.Char(string='Closing Reason', required=True, translate=True)
-    reason_type = fields.Char(string='Reason Type')
+    reason_type = fields.Selection([('basic', 'Basic'), ('offensive', 'Offensive')], string='Reason Type', default='basic')
 
 
 class Vote(models.Model):

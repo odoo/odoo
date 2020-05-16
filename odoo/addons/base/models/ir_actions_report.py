@@ -370,7 +370,7 @@ class IrActionsReport(models.Model):
             # set context language to body language
             if node.get('data-oe-lang'):
                 layout_with_lang = layout_with_lang.with_context(lang=node.get('data-oe-lang'))
-            body = layout_with_lang.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
+            body = layout_with_lang._render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
             bodies.append(body)
             if node.get('data-oe-model') == self.model:
                 res_ids.append(int(node.get('data-oe-id', 0)))
@@ -388,8 +388,8 @@ class IrActionsReport(models.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        header = layout.render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url))
-        footer = layout.render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url))
+        header = layout._render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url))
+        footer = layout._render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url))
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 
@@ -533,7 +533,7 @@ class IrActionsReport(models.Model):
         """
         return {}
 
-    def render_template(self, template, values=None):
+    def _render_template(self, template, values=None):
         """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
         render but embellish it with some variables/methods used in reports.
         :param values: additional methods/variables used in the rendering
@@ -552,7 +552,7 @@ class IrActionsReport(models.Model):
                 website = request.website
                 context = dict(context, translatable=context.get('lang') != request.env['ir.http']._get_default_lang().code)
 
-        view_obj = self.env['ir.ui.view'].with_context(context)
+        view_obj = self.env['ir.ui.view'].sudo().with_context(context)
         values.update(
             time=time,
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
@@ -561,7 +561,7 @@ class IrActionsReport(models.Model):
             website=website,
             web_base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
         )
-        return view_obj.render_template(template, values)
+        return view_obj._render_template(template, values)
 
     def _post_pdf(self, save_in_attachment, pdf_content=None, res_ids=None):
         '''Merge the existing attachments by adding one by one the content of the attachments
@@ -678,7 +678,7 @@ class IrActionsReport(models.Model):
         writer.write(result_stream)
         return result_stream.getvalue()
 
-    def render_qweb_pdf(self, res_ids=None, data=None):
+    def _render_qweb_pdf(self, res_ids=None, data=None):
         if not data:
             data = {}
         data.setdefault('report_type', 'pdf')
@@ -686,7 +686,7 @@ class IrActionsReport(models.Model):
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
         if (tools.config['test_enable'] or tools.config['test_file']) and not self.env.context.get('force_report_rendering'):
-            return self.render_qweb_html(res_ids, data=data)
+            return self._render_qweb_html(res_ids, data=data)
 
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
@@ -713,7 +713,7 @@ class IrActionsReport(models.Model):
         # an asset bundle during the execution of test scenarios. In this case, return
         # the html version.
         if isinstance(self.env.cr, TestCursor):
-            return self.with_context(context).render_qweb_html(res_ids, data=data)[0]
+            return self.with_context(context)._render_qweb_html(res_ids, data=data)[0]
 
         save_in_attachment = OrderedDict()
         if res_ids:
@@ -747,7 +747,7 @@ class IrActionsReport(models.Model):
             # bypassed
             raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
 
-        html = self.with_context(context).render_qweb_html(res_ids, data=data)[0]
+        html = self.with_context(context)._render_qweb_html(res_ids, data=data)[0]
 
         # Ensure the current document is utf-8 encoded.
         html = html.decode('utf-8')
@@ -772,22 +772,22 @@ class IrActionsReport(models.Model):
         return pdf_content, 'pdf'
 
     @api.model
-    def render_qweb_text(self, docids, data=None):
+    def _render_qweb_text(self, docids, data=None):
         if not data:
             data = {}
         data.setdefault('report_type', 'text')
         data = self._get_rendering_context(docids, data)
-        return self.render_template(self.report_name, data), 'text'
+        return self._render_template(self.report_name, data), 'text'
 
     @api.model
-    def render_qweb_html(self, docids, data=None):
+    def _render_qweb_html(self, docids, data=None):
         """This method generates and returns html version of a report.
         """
         if not data:
             data = {}
         data.setdefault('report_type', 'html')
         data = self._get_rendering_context(docids, data)
-        return self.render_template(self.report_name, data), 'html'
+        return self._render_template(self.report_name, data), 'html'
 
     @api.model
     def _get_rendering_context_model(self):
@@ -813,9 +813,9 @@ class IrActionsReport(models.Model):
             })
         return data
 
-    def render(self, res_ids, data=None):
+    def _render(self, res_ids, data=None):
         report_type = self.report_type.lower().replace('-', '_')
-        render_func = getattr(self, 'render_' + report_type, None)
+        render_func = getattr(self, '_render_' + report_type, None)
         if not render_func:
             return None
         return render_func(res_ids, data=data)

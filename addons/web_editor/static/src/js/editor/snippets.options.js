@@ -2,7 +2,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 'use strict';
 
 var core = require('web.core');
-const ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerWidget} = require('web.Colorpicker');
 const Dialog = require('web.Dialog');
 const time = require('web.time');
 var Widget = require('web.Widget');
@@ -726,8 +726,10 @@ const SelectUserValueWidget = UserValueWidget.extend({
     _onClick: function () {
         if (!this.menuTogglerEl.classList.contains('active')) {
             this.trigger_up('user_value_widget_opening');
+            this.menuTogglerEl.classList.add('active');
+        } else {
+            this.close();
         }
-        this.menuTogglerEl.classList.toggle('active');
         const activeButton = this._userValueWidgets.find(widget => widget.isActive());
         if (activeButton) {
             this.menuEl.scrollTop = activeButton.el.offsetTop - (this.menuEl.offsetHeight / 2);
@@ -980,10 +982,11 @@ const MultiUserValueWidget = UserValueWidget.extend({
 const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     className: (SelectUserValueWidget.prototype.className || '') + ' o_we_so_color_palette',
     custom_events: _.extend({}, SelectUserValueWidget.prototype.custom_events, {
+        'custom_color_picked': '_onCustomColorPicked',
         'color_picked': '_onColorPicked',
         'color_hover': '_onColorHovered',
         'color_leave': '_onColorLeft',
-        'color_reset': '_onColorReset',
+        'enter_key_color_colorpicker': '_onEnterKey'
     }),
 
     /**
@@ -1012,6 +1015,17 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     /**
      * @override
      */
+    close: function () {
+        this._super(...arguments);
+        if (this._customColorValue && this._customColorValue !== this._value) {
+            this._value = this._customColorValue;
+            this._customColorValue = false;
+            this._onUserValueChange();
+        }
+    },
+    /**
+     * @override
+     */
     getMethodsParams: function () {
         return _.extend(this._super(...arguments), {
             colorNames: this.colorPalette.getColorNames(),
@@ -1024,9 +1038,12 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (typeof this._previewColor === 'string') {
             return this._previewColor;
         }
+        if (typeof this._customColorValue === 'string') {
+            return this._customColorValue;
+        }
         let value = this._super(...arguments);
         if (value && this.options.dataAttributes.hasOwnProperty('cssCompatible') &&
-            !ColorpickerDialog.isCSSColor(value)) {
+            !ColorpickerWidget.isCSSColor(value)) {
             value = `var(--${value})`;
         }
         return value;
@@ -1079,7 +1096,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         this.colorPreviewEl.style.removeProperty('background-color');
 
         if (this._value) {
-            if (ColorpickerDialog.isCSSColor(this._value)) {
+            if (ColorpickerWidget.isCSSColor(this._value)) {
                 this.colorPreviewEl.style.backgroundColor = this._value;
             } else {
                 this.colorPreviewEl.classList.add('bg-' + this._value);
@@ -1094,6 +1111,16 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Called when a custom color is selected -> preview the color
+     * and set the current value. Update of this value on close
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onCustomColorPicked: function (ev) {
+        this._customColorValue = ev.data.color;
+    },
+    /**
      * Called when a color button is clicked -> confirms the preview.
      *
      * @private
@@ -1101,6 +1128,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onColorPicked: function (ev) {
         this._previewColor = false;
+        this._customColorValue = false;
         this._value = ev.data.color;
         this._onUserValueChange(ev);
     },
@@ -1125,14 +1153,20 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         this._onUserValueReset(ev);
     },
     /**
-     * Called when the color reset button is clicked -> removes all color
-     * classes and color styles.
-     *
      * @private
      */
-    _onColorReset: function (ev) {
-        this._value = '';
-        this._onUserValueChange(ev);
+    _onEnterKey: function () {
+        this.close();
+    },
+    /**
+     * @override
+     */
+    _onClick: function (ev) {
+        // Do not close the colorpalette on colorpicker click
+        if (!ev.originalEvent.__isColorpickerClick) {
+            this._super(...arguments);
+        }
+        ev.stopPropagation();
     },
 });
 
@@ -1939,7 +1973,7 @@ const SnippetOptionWidget = Widget.extend({
      */
     _normalizeWidgetValue: function (value) {
         value = `${value}`.trim(); // Force to a trimmed string
-        value = ColorpickerDialog.normalizeCSSColor(value); // If is a css color, normalize it
+        value = ColorpickerWidget.normalizeCSSColor(value); // If is a css color, normalize it
         return value;
     },
     /**

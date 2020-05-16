@@ -32,6 +32,7 @@ class MailingTrace(models.Model):
         ('sms_number_format', 'Wrong Number Format'),
         ('sms_credit', 'Insufficient Credit'),
         ('sms_server', 'Server Error'),
+        ('sms_acc', 'Unregistered Account'),
         # mass mode specific codes
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),

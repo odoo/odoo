@@ -3,7 +3,7 @@
 
 import logging
 import requests
-from addons.google_calendar.models.google_sync import google_calendar_token
+from odoo.addons.google_calendar.models.google_sync import google_calendar_token
 from datetime import timedelta
 
 
@@ -11,7 +11,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.loglevels import exception_to_unicode
 from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOINT
-from addons.google_calendar.utils.google_calendar import GoogleCalendarService, InvalidSyncToken
+from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService, InvalidSyncToken
 
 _logger = logging.getLogger(__name__)
 

@@ -11,6 +11,7 @@ from . import account_tax_report
 from . import account_reconcile_model
 from . import account_payment_term
 from . import account_move
+from . import account_analytic_default
 from . import account_payment
 from . import account_bank_statement
 from . import chart_template

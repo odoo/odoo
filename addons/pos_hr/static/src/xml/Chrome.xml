@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="Chrome" t-inherit="point_of_sale.Chrome" t-inherit-mode="extension" owl="1">
+        <xpath expr="//HeaderButton" position="replace">
+            <HeaderLockButton t-if="env.pos.config.module_pos_hr" />
+            <HeaderButton t-if="headerButtonIsShown" />
+        </xpath>
+    </t>
+
+</templates>
