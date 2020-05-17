@@ -26,13 +26,13 @@ class HrAttendance(models.Model):
             if not attendance.check_out:
                 result.append((attendance.id, _("%(empl_name)s from %(check_in)s") % {
                     'empl_name': attendance.employee_id.name,
-                    'check_in': fields.Datetime.to_string(fields.Datetime.context_timestamp(attendance, fields.Datetime.from_string(attendance.check_in))),
+                    'check_in': format_datetime(self.env, attendance.check_in, dt_format=False),
                 }))
             else:
                 result.append((attendance.id, _("%(empl_name)s from %(check_in)s to %(check_out)s") % {
                     'empl_name': attendance.employee_id.name,
-                    'check_in': fields.Datetime.to_string(fields.Datetime.context_timestamp(attendance, fields.Datetime.from_string(attendance.check_in))),
-                    'check_out': fields.Datetime.to_string(fields.Datetime.context_timestamp(attendance, fields.Datetime.from_string(attendance.check_out))),
+                    'check_in': format_datetime(self.env, attendance.check_in, dt_format=False),
+                    'check_out': format_datetime(self.env, attendance.check_out, dt_format=False),
                 }))
         return result
 
