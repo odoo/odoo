@@ -28,7 +28,7 @@ class Survey(http.Controller):
         """ Check that given token matches an answer from the given survey_id.
         Returns a sudo-ed browse record of survey in order to avoid access rights
         issues now that access is granted through token. """
-        survey_sudo = request.env['survey.survey'].with_context(active_test=False).sudo().search([('access_token', '=', survey_token)])
+        survey_sudo = request.env['survey.survey'].with_context(active_test=False).sudo().search([('access_token', '=', survey_token)], limit=1)
         if not answer_token:
             answer_sudo = request.env['survey.user_input'].sudo()
         else:
