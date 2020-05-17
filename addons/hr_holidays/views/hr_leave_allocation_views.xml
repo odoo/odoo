@@ -68,7 +68,7 @@
                             attrs="{'invisible': [('holiday_type', '!=', 'employee')]}"
                             name="%(hr_leave_action_all)d"
                             context="{'search_default_employee_id': [employee_id], 'search_default_holiday_status_id': [holiday_status_id], 'default_holiday_status_id': holiday_status_id}"
-                            help="Leaves Taken/Total Allocated">
+                            help="Time off Taken/Total Allocated">
                             <div class="o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="leaves_taken" digits="[42,1]"/>/<field name="max_leaves" digits="[42,1]"/>
