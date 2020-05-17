@@ -9,6 +9,8 @@
 # Martin Trigaux, 2020
 # Cozmin Candea <office@terrabit.ro>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -257,7 +259,7 @@ msgstr ""
 "        % set transaction = object.get_portal_last_transaction()\n"
 "        Comanda dumneavoastră <strong>${object.name}</strong> în valoare de  <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "        % if object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized')) :\n"
-"           a fost confirnată.<br/>\n"
+"           a fost confirmată.<br/>\n"
 "            Mulțumesc pentru încredere!\n"
 "        % elif transaction and transaction.state == 'pending' :\n"
 "            este în așteptare. Acesta va fi confirmată la primirea plății.\n"
@@ -321,7 +323,7 @@ msgstr ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><strong>SubTotal:</strong></td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><strong>Subtotal:</strong></td>\n"
 "                <td style=\"width: 10%;\" align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -331,7 +333,7 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>SubTotal:</strong></td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Subtotal:</strong></td>\n"
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -341,7 +343,7 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><strong>Taxes:</strong></td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><strong>Taxe:</strong></td>\n"
 "                <td style=\"width: 10%;\" align=\"right\">${format_amount(object.amount_tax, object.currency_id)}</td>\n"
 "            </tr>\n"
 "            <tr>\n"
@@ -366,7 +368,7 @@ msgstr ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td>\n"
-"                    <strong>Payment Method:</strong>\n"
+"                    <strong>Metodă de plată:</strong>\n"
 "                    % if transaction.payment_token_id:\n"
 "                        ${transaction.payment_token_id.name}\n"
 "                    % else:\n"
@@ -384,7 +386,7 @@ msgstr ""
 "            <tr>\n"
 "                <td>\n"
 "                    <br/>\n"
-"                    <strong>Ship to:</strong>\n"
+"                    <strong>Livrare la:</strong>\n"
 "                    ${object.partner_shipping_id.street or ''}\n"
 "                    ${object.partner_shipping_id.city or ''}\n"
 "                    ${object.partner_shipping_id.state_id.name or ''}\n"
@@ -1895,6 +1897,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Dacă stocăm informațiile dvs. de plată pe serverul nostru, plățile pentru "
+"abonamente vor fi efectuate automat."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -2675,7 +2679,7 @@ msgstr "Alte informații"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr "Alt colector de plată"
+msgstr "Alt procesator de plată"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -2701,7 +2705,7 @@ msgstr "Țara parteneră"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Plătiți și confirmați"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2723,7 +2727,7 @@ msgstr "Plata cu"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment acquirer"
-msgstr "Plata cu un alt colector de plăți"
+msgstr "Plata cu un alt procesator de plăți"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -2734,12 +2738,12 @@ msgstr "PayPal"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Colector plată"
+msgstr "Procesatori Plăți"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Payment Acquirers"
-msgstr "Colectori plăți"
+msgstr "Procesatori Plăți"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__manual_post_msg

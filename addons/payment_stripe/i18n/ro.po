@@ -2,12 +2,18 @@
 # This file contains the translation of the following modules:
 # 	* payment_stripe
 # 
+# Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2018
+# Cozmin Candea <office@terrabit.ro>, 2018
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +26,7 @@ msgstr ""
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "&times;"
-msgstr ""
+msgstr "&times;"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_image_url
@@ -29,6 +35,9 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
+"O adresă URL relativă sau absolută care să indice o imagine pătratică a "
+"mărcii sau a produsului dvs. După cum este definit în profilul dvs. Stripe. "
+"Consultați: https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
@@ -40,14 +49,14 @@ msgstr ""
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "Închide"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Eroare"
 
 #. module: payment_stripe
 #. openerp-web
@@ -59,7 +68,7 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Procesator Plată"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
@@ -74,7 +83,7 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Tranzacție plată"
 
 #. module: payment_stripe
 #. openerp-web
@@ -94,7 +103,7 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
 msgid "Provider"
-msgstr ""
+msgstr "Furnizor"
 
 #. module: payment_stripe
 #: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
@@ -104,6 +113,11 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
 msgid "Stripe Payment Intent ID"
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent_secret
+msgid "Stripe Payment Intent Secret"
 msgstr ""
 
 #. module: payment_stripe

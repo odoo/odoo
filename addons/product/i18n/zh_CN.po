@@ -30,10 +30,10 @@
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
 # Martin Trigaux, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
 # as co02 <asco02@163.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# liAnGjiA <liangjia@qq.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -41,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -108,10 +108,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
 msgstr ""
-"- 即时: 只要为产品创建了规格，所有规格的单品Sku都会马上创建。\n"
-"        - 动态: 只有当该规格被加入销售订单时，该单品Sku才会自动创建.\n"
-"        - 从不: 即使设定了规格，相关单品Sku也不会创建。\n"
-"        注意: 一旦有相关单品Sku已被创建，则此Sku创建模式将不可改变。"
+"- 即时: 只要为产品创建了规格，所有规格的变体都会马上创建。\n"
+"        - 动态: 只有当该规格被加入销售订单时，该变体才会自动创建.\n"
+"        - 从不: 即使设定了规格，相关变体也不会创建。\n"
+"        注意: 一旦有相关变体已被创建，则此变体创建模式将不可改变。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
@@ -418,7 +418,7 @@ msgstr "可放大缩小的1024图片"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
 msgid "Can Variant Image 1024 be zoomed"
-msgstr "可放大缩小的1024单品Sku图片"
+msgstr "可放大缩小的1024变体图片"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
@@ -1329,7 +1329,7 @@ msgstr "请指定产品适用此规则"
 #, python-format
 msgid ""
 "Please specify the product variant for which this rule should be applied"
-msgstr "请指定单品Sku适用于此规则"
+msgstr "请指定变体适用于此规则"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
@@ -1755,7 +1755,7 @@ msgstr "相关的产品"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
 msgid "Related Variants"
-msgstr "相关单品"
+msgstr "相关变体"
 
 #. module: product
 #. openerp-web
@@ -2192,22 +2192,22 @@ msgstr "变体图像"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
 msgid "Variant Image 1024"
-msgstr "单品图片1024"
+msgstr "变体图片 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
 msgid "Variant Image 128"
-msgstr "单品图片128"
+msgstr "变体图片 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
 msgid "Variant Image 256"
-msgstr "单品图片256"
+msgstr "变体图片 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
 msgid "Variant Image 512"
-msgstr "单品图片512"
+msgstr "变体图片512"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2234,7 +2234,7 @@ msgstr "变体值"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Variant: %s"
-msgstr "单品Sku: %s"
+msgstr "变体: %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
@@ -2448,7 +2448,7 @@ msgstr "不能将规格 %s 从产品 %s 调整至产品 %s"
 msgid ""
 "You cannot update related variants from the values. Please update related "
 "values from the variants."
-msgstr "不能直接在单品Sku中更新规格值。请在规格管理中进行相关更新。"
+msgstr "不能直接在变体中更新规格值。请在规格管理中进行相关更新。"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
