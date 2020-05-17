@@ -1,19 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auth_ldap
+# 	* auth_ldap
 # 
 # Translators:
-# Lluís Dalmau <lluis.dalmau@guifi.net>, 2018
-# Martin Trigaux, 2018
-# Carles Antoli <carlesantoli@hotmail.com>, 2018
+# Lluís Dalmau <lluis.dalmau@guifi.net>, 2020
+# Martin Trigaux, 2020
+# Carles Antoli <carlesantoli@hotmail.com>, 2020
+# M Palau <mpalau@tda.ad>, 2020
+# Arnau Ros, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Arnau Ros, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,8 +29,8 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
-"Compte d'usuari local creat automàticament per nous usuaris autenticats a "
-"través de LDAP"
+"Crear automàticament comptes d'usuari local per a nous usuaris autenticant-"
+"se mitjançant LDAP "
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -43,12 +45,12 @@ msgstr "Companyia"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr ""
+msgstr "Configuració LDAP de l'empresa"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Configuració"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
@@ -90,7 +92,7 @@ msgstr "Paràmetres LDAP"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr ""
+msgstr "Servidor LDAP "
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
@@ -143,10 +145,12 @@ msgid "Login Information"
 msgstr "Informació de connexió"
 
 #. module: auth_ldap
-#: code:addons/auth_ldap/models/res_company_ldap.py:201
+#: code:addons/auth_ldap/models/res_company_ldap.py:202
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
+"No s'han trobat usuaris locals per accedir amb LDAP ni s'ha configurat per a"
+" crear-ne un. "
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -160,7 +164,7 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication"
 " attempts will fail."
 msgstr ""
-"Demana xifratge segur TLS/SSL al connectar al servidor LDAP. Aquesta opció "
+"Demana xifrat segur TLS/SSL al connectar al servidor LDAP. Aquesta opció "
 "necessita un servidor amb STARTTLS actiu, en cas contrari, tots els intents "
 "d'autenticació fallaran."
 
@@ -190,8 +194,8 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
-"Contrasenya del compte d'usuari al servidor LDAP que s'utilitza al consultar"
-" el directori"
+"Contrasenya del compte d'usuari al servidor LDAP que s'utilitza per "
+"consultar el directori"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
@@ -200,7 +204,7 @@ msgid ""
 "Leave empty to connect anonymously."
 msgstr ""
 "Compte d'usuari del servidor LDAP que s'utilitza per consultar el directori."
-" Deixeu-lo buit per a connectar de forma anònima."
+" Deixeu-lo buit per a connectar-se anònimament. "
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
@@ -210,7 +214,7 @@ msgstr "Utilitza TLS"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
-msgstr "Usuari a copiar quan es creen nous usuaris"
+msgstr "Informació d'usuari"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user

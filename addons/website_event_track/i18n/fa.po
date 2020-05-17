@@ -1,22 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event_track
+# 	* website_event_track
 # 
 # Translators:
-# Zahed Alfak <tamass4116@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Morovat Guivi <tarjomac@gmail.com>, 2018
-# Hamid Darabi, 2018
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
-# Maziar Niaki <maziarmn@gmail.com>, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Zahed Alfak <tamass4116@gmail.com>, 2020
+# Morovat Guivi <tarjomac@gmail.com>, 2020
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2020
+# Maziar Niaki <maziarmn@gmail.com>, 2020
+# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
+# Martin Trigaux, 2020
+# Hamid Darabi, 2020
+# Hamed Mohammadi <hamed@dehongi.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2019-12-05 12:34+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2020\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,8 +36,8 @@ msgid ""
 "    <br/>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
-"            View Event\n"
+"        <a href=\"/event/${object.event_id.id}/track/${object.id}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            View Talk\n"
 "        </a>\n"
 "    </div>\n"
 "    <br/><br/>\n"
@@ -78,19 +80,31 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
 msgid ""
 "<br/>\n"
-"                            <b>Duration</b><br/>"
+"                                <b>Duration</b><br/>"
 msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
 msgid ""
 "<br/>\n"
-"                            <b>Location</b><br/>"
+"                                <b>Location</b><br/>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                                You can add multiple speakers by separating names, emails and phones with commas."
 msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda
 msgid "<span id=\"search_number\">0</span> Found"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "<span>hours</span>"
 msgstr ""
 
 #. module: website_event_track
@@ -128,7 +142,7 @@ msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "About The Author"
+msgid "About The Speaker"
 msgstr ""
 
 #. module: website_event_track
@@ -150,6 +164,11 @@ msgstr "فعال"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_ids
 msgid "Activities"
 msgstr "فعالیت‌ها"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
@@ -178,7 +197,7 @@ msgid "Advanced reporting"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:97
+#: code:addons/website_event_track/models/event.py:0
 #, python-format
 msgid "Agenda"
 msgstr "دستور کار"
@@ -206,6 +225,7 @@ msgid "Application"
 msgstr "برنامه"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Archived"
 msgstr "بایگانی شده"
@@ -213,11 +233,16 @@ msgstr "بایگانی شده"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "تعداد پیوست"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__allowed_track_tag_ids
 msgid "Available Track Tags"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
+msgid "Biography"
 msgstr ""
 
 #. module: website_event_track
@@ -228,6 +253,11 @@ msgstr "برنز"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Call for Proposals"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
+msgid "Can Publish"
 msgstr ""
 
 #. module: website_event_track
@@ -244,7 +274,12 @@ msgstr "لغو شد"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
 msgid "Color Index"
-msgstr "رنگ پس زمینه"
+msgstr "شاخص رنگ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
+msgid "Company"
+msgstr "شرکت"
 
 #. module: website_event_track
 #: model:event.type,name:website_event_track.event_type_data_tracks
@@ -303,6 +338,12 @@ msgid "Delete"
 msgstr "حذف"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__description
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Description"
+msgstr "توضیحات"
+
+#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
 msgid "Design contest (entire afternoon)"
 msgstr ""
@@ -354,6 +395,11 @@ msgid "Edit Track"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
+msgid "Email"
+msgstr "پست الکترونیک"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
 msgid "Email Template"
 msgstr "قالب ایمیل"
@@ -385,7 +431,7 @@ msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
-#: selection:website.event.menu,menu_type:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track_proposal
 msgid "Event Proposals Menus"
 msgstr ""
 
@@ -446,7 +492,7 @@ msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
-#: selection:website.event.menu,menu_type:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
 msgid "Event Tracks Menus"
 msgstr ""
 
@@ -498,12 +544,12 @@ msgid "Gold"
 msgstr "طلا"
 
 #. module: website_event_track
-#: selection:event.track,kanban_state:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
 msgid "Green"
 msgstr "سبز"
 
 #. module: website_event_track
-#: selection:event.track,kanban_state:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__normal
 msgid "Grey"
 msgstr "خاکستری"
 
@@ -513,12 +559,12 @@ msgid "Group By"
 msgstr "گروه‌بندی برمبنای"
 
 #. module: website_event_track
-#: selection:event.track,priority:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
 msgid "High"
 msgstr "بالا"
 
 #. module: website_event_track
-#: selection:event.track,priority:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
 msgstr ""
 
@@ -579,21 +625,27 @@ msgid "ID"
 msgstr "شناسه"
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track__message_unread
-msgid "If checked new messages require your attention."
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon"
+msgstr "شمایل"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon to indicate an exception activity."
 msgstr ""
-"اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
 "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "در صورت بررسی ، برخی پیام ها خطای تحویل دارند."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
@@ -619,7 +671,7 @@ msgstr "دنبال می کند"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
-msgid "Is published"
+msgid "Is Published"
 msgstr ""
 
 #. module: website_event_track
@@ -676,17 +728,22 @@ msgid "Latest trends"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
+msgid "Location"
+msgstr "مکان"
+
+#. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
 msgid "Locations"
 msgstr "مکان‌ها"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_medium
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_128
 msgid "Logo"
-msgstr "نشان"
+msgstr "لوگو"
 
 #. module: website_event_track
-#: selection:event.track,priority:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
 msgid "Low"
 msgstr "پایین"
 
@@ -698,21 +755,12 @@ msgstr "ناهار"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "پیوست اصلی"
 
 #. module: website_event_track
-#: selection:event.track,priority:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
 msgid "Medium"
 msgstr "متوسط"
-
-#. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_sponsor__image_medium
-#: model:ir.model.fields,help:website_event_track.field_event_track__image
-msgid ""
-"Medium-sized image of this contact. It is automatically resized as a "
-"128x128px image, with aspect ratio preserved. Use this field in form views "
-"or some kanban views."
-msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_id
@@ -727,7 +775,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "خطای تحویل پیام"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
@@ -745,14 +793,19 @@ msgid "Morning break"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "My Activities"
-msgstr "فعالیتهای من"
-
-#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track27
 msgid "My Company global presentation"
 msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "My Tracks"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
+msgid "Name"
+msgstr "نام"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
@@ -795,13 +848,18 @@ msgid "No tracks found!"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
+msgid "Note that colorless tags won't be available on the website."
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
 msgid "Number of Actions"
 msgstr "تعداد اقدامات"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: website_event_track
@@ -812,7 +870,7 @@ msgstr "تعداد پیام ها که نیاز به عمل"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "تعداد پیامهای با خطای تحویل"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_unread_counter
@@ -825,19 +883,14 @@ msgid "Our Sponsors"
 msgstr ""
 
 #. module: website_event_track
-#: selection:event.track,activity_state:0
-msgid "Overdue"
-msgstr "سررسید گذشته"
-
-#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track14
 msgid "Partnership programs"
 msgstr ""
 
 #. module: website_event_track
-#: selection:event.track,activity_state:0
-msgid "Planned"
-msgstr "برنامه ریزی شده"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
+msgid "Phone"
+msgstr "تلفن"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track3
@@ -883,8 +936,8 @@ msgstr "منتشر شده"
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
 msgid ""
 "Put here the list of documents, like slides of\n"
-"                            the presentations. Remove the above t-if when\n"
-"                            it's implemented."
+"                                the presentations. Remove the above t-if when\n"
+"                                it's implemented."
 msgstr ""
 
 #. module: website_event_track
@@ -893,7 +946,7 @@ msgid "Raising qualitive insights from your customers"
 msgstr ""
 
 #. module: website_event_track
-#: selection:event.track,kanban_state:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__blocked
 msgid "Red"
 msgstr "قرمز"
 
@@ -915,13 +968,17 @@ msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
 msgid "Room"
 msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
 msgid "SEO optimized"
+msgstr "بهینه سازی شده سئو"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
+msgid "SMS Delivery error"
 msgstr ""
 
 #. module: website_event_track
@@ -952,30 +1009,34 @@ msgid "Speaker"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Speaker Biography"
-msgstr ""
-
-#. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:164
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
+#: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "Speaker Email"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
-msgid "Speaker Name"
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Biography"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
-msgid "Speaker Phone"
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Email"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:184
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Name"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Phone"
+msgstr ""
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_track.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #, python-format
 msgid "Speakers"
 msgstr ""
@@ -1054,11 +1115,11 @@ msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
-msgid "Tag"
-msgstr "برچسب"
+msgid "Tag Name"
+msgstr "نام تگ"
 
 #. module: website_event_track
-#: sql_constraint:event.track.tag:0
+#: model:ir.model.constraint,message:website_event_track.constraint_event_track_tag_name_uniq
 msgid "Tag name already exists !"
 msgstr "برچسب نام از قبل وجود دارد!"
 
@@ -1074,7 +1135,7 @@ msgid "Talk Introduction"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:102
+#: code:addons/website_event_track/models/event.py:0
 #, python-format
 msgid "Talk Proposals"
 msgstr ""
@@ -1085,7 +1146,7 @@ msgid "Talk Title"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:96
+#: code:addons/website_event_track/models/event.py:0
 #, python-format
 msgid "Talks"
 msgstr ""
@@ -1103,7 +1164,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "آدرس URL کامل برای دسترسی سند در وبسایت."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track17
@@ -1141,11 +1202,6 @@ msgid "Title"
 msgstr "عنوان"
 
 #. module: website_event_track
-#: selection:event.track,activity_state:0
-msgid "Today"
-msgstr "امروز"
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Today Activities"
 msgstr "فعالیتها امروز"
@@ -1171,8 +1227,8 @@ msgid "Track Date"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__description
-msgid "Track Description"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
+msgid "Track End Date"
 msgstr ""
 
 #. module: website_event_track
@@ -1217,6 +1273,11 @@ msgid "Track blocked"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__duration
+msgid "Track duration in hours."
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__track_ids
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
@@ -1245,6 +1306,11 @@ msgid "Tracks on Website"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_unread
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Unread Messages"
@@ -1268,7 +1334,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "قابل دید در وبسایت حاضر"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1330,22 +1396,7 @@ msgstr "عنوان متا وبسایت"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Your Email"
-msgstr "ایمیل شما"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Your Name"
-msgstr "نام"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Your Phone"
-msgstr ""
+msgstr "تصویر opengraph وب سایت"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -1353,7 +1404,6 @@ msgid "e.g. Inspiring Business Talk"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "hours"
 msgstr "ساعت"

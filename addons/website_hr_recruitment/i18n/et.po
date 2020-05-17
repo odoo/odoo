@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_hr_recruitment
+# 	* website_hr_recruitment
 # 
 # Translators:
-# Rivo Zängov <eraser@eraser.ee>, 2018
-# Martin Trigaux, 2018
-# Arma Gedonsky <armagedonsky@hot.ee>, 2018
-# Eneli Õigus <enelioigus@gmail.com>, 2018
-# Martin Aavastik <martin@avalah.ee>, 2018
+# Rivo Zängov <eraser@eraser.ee>, 2020
+# Martin Trigaux, 2020
+# Arma Gedonsky <armagedonsky@hot.ee>, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2020
+# Algo Kärp <algokarp@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Martin Aavastik <martin@avalah.ee>, 2018\n"
+"POT-Creation-Date: 2019-09-27 09:12+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Algo Kärp <algokarp@gmail.com>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +42,25 @@ msgstr "3 kuud"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "50% YoY"
 msgstr "50% YoY"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
+msgid "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid ""
+"<i class=\"fa fa-clock-o\" title=\"Publication date\" role=\"img\" aria-"
+"label=\"Publication date\"/>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
+msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -97,6 +116,11 @@ msgstr ""
 msgid ""
 "<span class=\"fa fa-2x fa-sun-o\"/>\n"
 "                    PTOs"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
+msgid "<span class=\"o_recruitment_purple\">Published</span>"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -159,6 +183,13 @@ msgid "Applicant"
 msgstr "Kandidaat"
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#, python-format
+msgid "Applied Job"
+msgstr "Kandideeritud ametikoht"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Apply Job"
 msgstr "Kandideeri tööle"
@@ -218,6 +249,14 @@ msgstr ""
 "nurgas."
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
+msgid "Department"
+msgstr "Osakond"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "Direct coordination with functional consultants for qualification and follow"
@@ -252,9 +291,9 @@ msgid "In the meantime,"
 msgstr "Samal ajal,"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_published
-msgid "Is published"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid "Job"
+msgstr "Ametikoht"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -265,6 +304,11 @@ msgstr "Tööle kandideerimise ankeet"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Job Complexity:"
 msgstr "Töö keerukus:"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
+msgid "Job Description"
+msgstr "Ameti kirjeldus"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
@@ -282,7 +326,7 @@ msgid "Job Security:"
 msgstr "Töö turvalisus:"
 
 #. module: website_hr_recruitment
-#: code:addons/website_hr_recruitment/controllers/main.py:77
+#: code:addons/website_hr_recruitment/controllers/main.py:0
 #, python-format
 msgid "Job Title"
 msgstr "Ametinimetus"
@@ -329,11 +373,6 @@ msgid "Need More Info?"
 msgstr "Vajate rohkem informatsiooni?"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.content_new_job_offer
-msgid "New Job Offer"
-msgstr "Uus tööpakkumine"
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "No outbound calls, you get leads and focus on providing value to them"
 msgstr ""
@@ -372,6 +411,13 @@ msgid "Personal Evolution:"
 msgstr "Isiklik areng:"
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
+#, python-format
+msgid "Phone Number"
+msgstr "Telefoninumber"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues and the bill is covered"
 msgstr "Mängi ükstapuha millist mängu kolleegidega ja teie arve tasutakse"
@@ -387,19 +433,12 @@ msgid "Profitable"
 msgstr "Kasumlik"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_id
-msgid "Restrict publishing to this website."
-msgstr ""
-
-#. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
 msgid "Resume"
 msgstr "Jätka"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_seo_optimized
-msgid "SEO optimized"
-msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -407,7 +446,10 @@ msgid "Sales Cycle:"
 msgstr "Müügitsükkel:"
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
 msgid "Short Introduction"
 msgstr "Lühitutvustus"
 
@@ -433,7 +475,7 @@ msgstr "Kandideerija allikas"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Submit"
-msgstr "Submit"
+msgstr "Esita"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -449,11 +491,6 @@ msgstr "Kultuur"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "The founder’s story"
 msgstr "Asutajate lugu"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
-msgid "The full URL to access the document through the website."
-msgstr "The full URL to access the document through the website."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -484,54 +521,14 @@ msgid "Variability of the Job:"
 msgstr "Töökohtade varieeruvus:"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_published
-msgid "Visible on current website"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_id
-msgid "Website"
-msgstr "Veebileht"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
-msgid "Website Editor"
-msgstr ""
-
-#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "Internetilehe värbamisankeet"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_url
-msgid "Website URL"
-msgstr "Veebilehe URL"
-
-#. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_description
 msgid "Website description"
 msgstr "Internetilehe kirjeldus"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_description
-msgid "Website meta description"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_keywords
-msgid "Website meta keywords"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_title
-msgid "Website meta title"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_og_img
-msgid "Website opengraph image"
-msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -548,12 +545,18 @@ msgstr ""
 "inimesed"
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
 msgid "Your Email"
 msgstr "Sinu e-post"
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
 msgid "Your Name"
 msgstr "Sinu nimi"
 

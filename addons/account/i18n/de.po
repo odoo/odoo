@@ -38,14 +38,14 @@
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Ermin Trevisan <trevi@twanda.com>, 2020
-# Chris Egal <sodaswed@web.de>, 2020
 # Florian Pose <fp@igh.de>, 2020
 # Gustav Gans <grafgustav6@gmail.com>, 2020
 # Robert Förster <hello@suppliot.eu>, 2020
-# philku79 <philip.kuss@gmx.de>, 2020
 # JEK Odoo <jek@odoo.com>, 2020
 # Kevin Harrings <kha@odoo.com>, 2020
 # Martin Trigaux, 2020
+# Chris Egal <sodaswed@web.de>, 2020
+# philku79 <philip.kuss@gmx.de>, 2020
 # 
 msgid ""
 msgstr ""
@@ -53,7 +53,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: philku79 <philip.kuss@gmx.de>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4605,7 +4605,7 @@ msgstr "Fälligkeitstyp"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "Due the"
-msgstr ""
+msgstr "Fälligkeit"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_duplicate_account
@@ -5898,7 +5898,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr ""
+msgstr "Weist darauf hin, dieser Journaleintrag ist eine Steuerkennzeichen"
 
 #. module: account
 #. openerp-web
@@ -7522,6 +7522,7 @@ msgstr "Nicht fällig"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "Nicht bezahlt"
 
@@ -11820,7 +11821,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, python-format
 msgid "To Check"
-msgstr ""
+msgstr "Zum  Überprüfen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -11866,7 +11867,7 @@ msgstr "Gesamtbetrag"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Total Base Amount"
-msgstr ""
+msgstr "Gesamtbetrag"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12988,7 +12989,7 @@ msgstr "Sie müssen zuerst eine Eröffnungsbuchung definieren."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
-msgstr ""
+msgstr "Sie müssen vor der Buchung eine Zeile hinzufügen."
 
 #. module: account
 #. openerp-web
@@ -13137,7 +13138,7 @@ msgstr "Name"
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line_template__repartition_type__tax
 msgid "of tax"
-msgstr ""
+msgstr "der Steuer"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_current_month
@@ -13162,14 +13163,14 @@ msgstr "Offene Rechnungen"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__paid
 msgid "paid"
-msgstr ""
+msgstr "bezahlt"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "reconcile"
-msgstr ""
+msgstr "abstimmen"
 
 #. module: account
 #. openerp-web
@@ -13212,12 +13213,12 @@ msgstr "der Mutterkonzern"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
-msgstr ""
+msgstr "zu Überprüfen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "to mark this invoice as paid."
-msgstr ""
+msgstr "um diese Rechnung als bezahlt zu kennzeichnen."
 
 #. module: account
 #. openerp-web
@@ -13231,21 +13232,21 @@ msgstr "Transaktionen in"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "unpaid invoices"
-msgstr ""
+msgstr "unbezahlte Rechnungen"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "unreconciled entries"
-msgstr ""
+msgstr "nicht abgestimmte Einträge"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "vendor bills"
-msgstr ""
+msgstr "Kreditorenrechnungen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
