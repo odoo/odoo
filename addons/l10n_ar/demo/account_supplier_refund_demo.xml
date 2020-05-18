@@ -5,6 +5,7 @@
     <record id="demo_sup_refund_invoice_3" model="account.move.reversal">
         <field name="reason">Mercadería defectuosa</field>
         <field name="refund_method">refund</field>
+        <field name="l10n_latam_document_number">0001-01234567</field>
         <field name="move_ids" eval="[(4, ref('demo_sup_invoice_3'), 0)]"/>
     </record>
 
@@ -14,6 +15,7 @@
     <record id="demo_sup_refund_invoice_4" model="account.move.reversal">
         <field name="reason">Venta cancelada</field>
         <field name="refund_method">cancel</field>
+        <field name="l10n_latam_document_number">0001-01234566</field>
         <field name="move_ids" eval="[(4, ref('demo_sup_invoice_4'), 0)]"/>
     </record>
 
