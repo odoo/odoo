@@ -985,7 +985,7 @@ var FormRenderer = BasicRenderer.extend({
         return Promise.all(defs).then(function () {
             self._updateView($form.contents());
             if (self.state.res_id in self.alertFields) {
-               //self.displayTranslationAlert();
+               self.displayTranslationAlert();
             }
         }).then(function(){
             if (self.lastActivatedFieldIndex >= 0) {
