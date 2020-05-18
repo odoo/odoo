@@ -31,22 +31,6 @@ class L10nLatamDocumentType(models.Model):
             ('X', 'X'),
             ('I', 'I'),  # used for mapping of imports
         ]
-
-    def _get_document_sequence_vals(self, journal):
-        """ Values to create the sequences """
-        values = super()._get_document_sequence_vals(journal)
-        if self.country_id != self.env.ref('base.ar'):
-            return values
-
-        values.update({'padding': 8, 'implementation': 'no_gap', 'prefix': "%05i-" % (journal.l10n_ar_afip_pos_number),
-                       'l10n_latam_journal_id': journal.id})
-        if journal.l10n_ar_share_sequences:
-            values.update({'name': '%s - Letter %s Documents' % (journal.name, self.l10n_ar_letter),
-                           'l10n_ar_letter': self.l10n_ar_letter})
-        else:
-            values.update({'name': '%s - %s' % (journal.name, self.name), 'l10n_latam_document_type_id': self.id})
-        return values
-
     def _filter_taxes_included(self, taxes):
         """ In argentina we include taxes depending on document letter """
         self.ensure_one()
