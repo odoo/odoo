@@ -227,11 +227,44 @@ function websiteDomain(self) {
     return ['|', ['website_id', '=', false], ['website_id', '=', websiteID]];
 }
 
+function sendRequest(route, params) {
+    function _addInput(form, name, value) {
+        let param = document.createElement('input');
+        param.setAttribute('type', 'hidden');
+        param.setAttribute('name', name);
+        param.setAttribute('value', value);
+        form.appendChild(param);
+    }
+
+    let form = document.createElement('form');
+    form.setAttribute('action', route);
+    form.setAttribute('method', params.method || 'POST');
+
+    if (core.csrf_token) {
+        _addInput(form, 'csrf_token', core.csrf_token);
+    }
+
+    for (const key in params) {
+        const value = params[key];
+        if (Array.isArray(value) && value.length) {
+            for (const val of value) {
+                _addInput(form, key, val);
+            }
+        } else {
+            _addInput(form, key, value);
+        }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
 return {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
     onceAllImagesLoaded: onceAllImagesLoaded,
     prompt: prompt,
+    sendRequest: sendRequest,
     websiteDomain: websiteDomain,
 };
 });
