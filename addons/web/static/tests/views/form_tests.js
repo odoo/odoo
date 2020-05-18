@@ -6340,7 +6340,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('translation alerts are preserved on pager change', async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         this.data.partner.fields.foo.translate = true;
 
@@ -6380,6 +6380,10 @@ QUnit.module('Views', {
         // remove translation alert by click X and check alert even after form reload
         await testUtils.dom.click(form.$('.o_form_view .alert > .close'));
         assert.containsNone(form, '.o_form_view .alert > div', "should not have a translation alert");
+
+        // remove translation alert by click X and check alert even after form reload
+        await testUtils.dom.click(form.$('.o_form_view > .reset_btn'));
+        assert.containsNone(form, '.o_form_view .reset_btn > div', "should not have a translation alert");
 
         await form.reload();
         assert.containsNone(form, '.o_form_view .alert > div', "should not have a translation alert after reload");
@@ -6446,9 +6450,9 @@ QUnit.module('Views', {
         actionManager.$('input[name="foo"]').val("test").trigger("input");
         await testUtils.dom.click(actionManager.$('.o_form_button_save'));
 
-/*        assert.strictEqual(actionManager.$('.o_form_view .alert > div').length, 1,
+        assert.strictEqual(actionManager.$('.o_form_view .alert > div').length, 1,
             "should have a translation alert");
-*/
+
         var currentController = actionManager.getCurrentController().widget;
         await actionManager.doAction(2, {
             on_reverse_breadcrumb: function () {
