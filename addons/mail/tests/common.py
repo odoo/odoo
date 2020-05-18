@@ -120,6 +120,30 @@ class MockEmail(common.BaseCase):
         self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
+    def gateway_reply_wrecord(self, template, record, use_in_reply_to=True):
+        """ Simulate a reply through the mail gateway. Usage: giving a record,
+        find an email sent to him and use its message-ID to simulate a reply.
+
+        Some noise is added in References just to test some robustness. """
+        mail_mail = self._find_mail_mail_wrecord(record)
+
+        if use_in_reply_to:
+            extra = 'In-Reply-To:\r\n\t%s\n' % mail_mail.message_id
+        else:
+            disturbing_other_msg_id = '<123456.654321@another.host.com>'
+            extra = 'References:\r\n\t%s\n\r%s' % (mail_mail.message_id, disturbing_other_msg_id)
+
+        return self.format_and_process(
+            template,
+            mail_mail.email_to,
+            mail_mail.reply_to,
+            subject='Re: %s' % mail_mail.subject,
+            extra=extra,
+            msg_id='<123456.%s.%d@test.example.com>' % (record._name, record.id),
+            target_model=record._name,
+            target_field=record._rec_name,
+        )
+
     def from_string(self, text):
         return email.message_from_string(pycompat.to_text(text), policy=email.policy.SMTP)
 
@@ -156,6 +180,14 @@ class MockEmail(common.BaseCase):
                 break
         else:
             raise AssertionError('mail.mail not found for message %s / recipients %s' % (mail_message, recipients.ids))
+        return mail
+
+    def _find_mail_mail_wrecord(self, record):
+        for mail in self._new_mails:
+            if mail.model == record._name and mail.res_id == record.id:
+                break
+        else:
+            raise AssertionError('mail.mail not found for record %s in %s' % (record, repr([m.email_to for m in self._new_mails])))
         return mail
 
     def assertMailFailed(self, author, recipients, mail_message):
