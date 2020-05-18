@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <div t-name="stock.leadDaysPopOver">
         <p>
-            The forecasted stock <t t-if="virtual">today</t><t t-else="">on the <t t-esc="lead_days_date"/></t>
+            The forecasted stock on the <t t-esc="lead_days_date"/>
             is <t t-if="qty_to_order &lt;= 0"><t t-esc="qty_forecast"/> <t t-esc="product_uom_name"/></t><t t-else="">
             below the minimum inventory of <t t-esc="product_min_qty"/> <t t-esc="product_uom_name"/>
             : <t t-esc="qty_to_order"/> <t t-esc="product_uom_name"/> should be replenished to reach the maximum of 
