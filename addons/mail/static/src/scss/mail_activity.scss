@@ -65,6 +65,11 @@
             }
 
             .o_mail_info {
+                .o_activity_summary {
+                    @include o-text-overflow;
+                    max-width: 290px;
+                    vertical-align: middle;
+                }
                 .o_activity_info {
                     vertical-align: baseline;
                     padding: 4px 6px;
@@ -197,6 +202,10 @@
                     .o_activity_title_entry {
                         display: flex;
                         align-items: baseline;
+                        max-width: 275px;
+                        .o_activity_summary {
+                            @include o-text-overflow;
+                        }
                     }
 
                     .o_edit_button {

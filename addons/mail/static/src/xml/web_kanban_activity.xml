@@ -61,9 +61,9 @@
 <t t-name="mail.activities-list-group-item">
     <li t-attf-class="list-group-item o_log_activity d-flex #{log_last ? 'border-bottom' : ''}" role="menuitem">
         <div t-attf-class="o_activity_title o_log_activity #{edit_class}" t-att-data-activity-id="log.id">
-            <div t-attf-class="o_activity_title_entry {{! log.force_next ? 'align-items-center' : 'mb-1'}}">
+            <div t-attf-class="o_activity_title_entry o_mail_activity {{! log.force_next ? 'align-items-center' : 'mb-1'}}">
                 <span t-attf-class="fa #{log.icon ? log.icon : 'fa-bell' } fa-fw mr-2 text-center text-muted" role="img" aria-label="Log" title="Log"/>
-                <strong class="text-dark"><t t-esc="log.title_action or log.activity_type_id[1]"/></strong>
+                <strong class="text-dark o_activity_summary"><t t-esc="log.title_action or log.summary or log.activity_type_id[1]"/></strong>
                 <button t-if="! log.force_next and log.can_write" class="btn btn-sm btn-link py-0 o_edit_button"><i class="fa fa-pencil"/></button>
             </div>
             <div class="o_activity_title_entry mt-1" t-if="log.state != 'today'">
