@@ -198,12 +198,23 @@ class WebsitePayment(http.Controller):
 
         # Check acquirer
         acquirers = None
+        if order_id and order:
+            cid = order.company_id.id
+        elif kw.get('company_id'):
+            try:
+                cid = int(kw.get('company_id'))
+            except:
+                cid = user.company_id.id
+        else:
+            cid = user.company_id.id
+        acquirer_domain = [('state', 'in', ['enabled', 'test']), ('company_id', '=', cid)]
+
         if acquirer_id:
             acquirers = env['payment.acquirer'].browse(int(acquirer_id))
         if order_id:
-            acquirers = env['payment.acquirer'].search([('state', 'in', ['enabled', 'test']), ('company_id', '=', order.company_id.id)])
+            acquirers = env['payment.acquirer'].search(acquirer_domain)
         if not acquirers:
-            acquirers = env['payment.acquirer'].search([('state', 'in', ['enabled', 'test']), ('company_id', '=', user.company_id.id)])
+            acquirers = env['payment.acquirer'].search(acquirer_domain)
 
         # Check partner
         if not user._is_public():
