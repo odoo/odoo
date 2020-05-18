@@ -54,6 +54,9 @@ var LivechatButton = Widget.extend({
     events: {
         'click': '_openChat',
     },
+    _onclick_badge: function(event) {
+        console.log("badge_click");
+    },
     init: function (parent, serverURL, options) {
         this._super(parent);
         this.options = _.defaults(options || {}, {
@@ -111,6 +114,11 @@ var LivechatButton = Widget.extend({
         if (this.options.button_text_color) {
             this.$el.css('color', this.options.button_text_color);
         }
+
+        this.$(".o_thread_message_avatar").on("click", function () {
+            console.log("boum");
+        });
+
         return this._super();
     },
 

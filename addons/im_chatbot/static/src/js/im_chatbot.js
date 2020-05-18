@@ -4,9 +4,6 @@ odoo.define('im_chatbot.chatBot', function (require) {
     var LivechatButton = require('im_livechat.im_livechat').LivechatButton;
 
     LivechatButton.include({
-        events: _.extend({}, LivechatButton.prototype.events, {
-            "click .chatbot_badge": "_onclick_badge"
-        }),
         _addMessage: function (data, options) {
             // Sometime, for unknown reason, this._livechat is null
             if (this._livechat) {

@@ -17,7 +17,11 @@ class ChatbotController(http.Controller):
             "ok": True
         }
 
-
+    @http.route("/im_chatbot/action", type="json", auth="public")
+    def ChatbotAction(self):
+        return {
+            "ok": True
+        }
 
 # class ImChatbot(http.Controller):
 #     @http.route('/im_chatbot/im_chatbot/', auth='public')

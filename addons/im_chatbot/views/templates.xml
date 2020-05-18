@@ -1,10 +1,10 @@
 <odoo>
     <data>
-        <template id="assets_backend" name="im_chatbot_assets" inherit_id="web.assets_frontend">
+        <template id="assets_frontend" name="im_chatbot_assets" inherit_id="web.assets_frontend">
             <xpath expr="//script[last()]" position="after">
                 <link rel="stylesheet" type="text/scss" href="/im_chatbot/static/src/scss/chatbot.scss"/>
                 <script type="text/javascript" src="/im_chatbot/static/src/js/im_chatbot.js"/>
-                <script type="text/javascript" src="/im_chatbot/static/src/js/im_chatbot_message.js"/>
+                <script type="text/javascript" src="/im_chatbot/static/src/js/im_chatbot_thread.js"/>
             </xpath>
         </template>
 
@@ -13,7 +13,7 @@
             <div class="chatbot_message">
                 <t t-esc="script.name"/>
                 <br />
-                <span class="chatbot_badge">Test badge</span>
+                <div class="chatbot_badge">Test badge</div>
             </div>
         </template>
 
