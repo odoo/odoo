@@ -819,7 +819,7 @@
 </template>
 
 <!-- Edition: ask your question -->
-<template id="new_question">
+<template id="new_question" name="New Post">
     <t t-call="website_forum.header">
         <div t-if="request.env.user.forum_waiting_posts_count" class="alert border" role="alert">
             <b>You already have a pending post.</b><br/>
