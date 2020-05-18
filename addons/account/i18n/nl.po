@@ -16,12 +16,12 @@
 # Laura Koedam <lko@odoo.com>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Eric Geens <ericgeens@yahoo.com>, 2019
-# Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # ca2da8678cdb9cbd573eaf985f02c476, 2019
 # Antoine Gilard <ang@odoo.com>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -860,8 +860,9 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
-"Een bankafschrift is een overzicht van alle financiële transacties\n"
-"die binnen een welbepaalde tijdsspanne via uw bankrekening geschieden. U zal deze informatie op periodieke wijze ontvangen via uw bankier."
+"Een bankafschrift is een samenvatting van alle financiële transacties\n"
+"gedurende een bepaalde periode op een bankrekening. U\n"
+"moet deze periodiek van uw bank ontvangen."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
@@ -7539,6 +7540,7 @@ msgstr "Niet vervallen"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "Niet betaald"
 
@@ -12834,7 +12836,7 @@ msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
 msgstr ""
 "U kan geen boekingen toevoegen/wijzigen voorafgaand en inclusief de "
-"slotdatum."
+"slotdatum %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13282,7 +13284,7 @@ msgstr "voor de leverancier. U kan deze toewijzen om te markeren als betaald."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "have been reconciled automatically."
-msgstr "Werden automatisch afgeletterd."
+msgstr "werden automatisch afgeletterd."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email

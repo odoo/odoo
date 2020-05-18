@@ -480,7 +480,12 @@ class MassMailing(models.Model):
     def _get_recipients(self):
         if self.mailing_domain:
             domain = safe_eval(self.mailing_domain)
-            res_ids = self.env[self.mailing_model_real].search(domain).ids
+            try:
+                res_ids = self.env[self.mailing_model_real].search(domain).ids
+            except ValueError:
+                res_ids = []
+                _logger.exception('Cannot get the mass mailing recipients, model: %s, domain: %s',
+                                  self.mailing_model_real, domain)
         else:
             res_ids = []
             domain = [('id', 'in', res_ids)]

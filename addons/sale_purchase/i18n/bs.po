@@ -1,17 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_purchase
+# 	* sale_purchase
 # 
-# Translators:
-# Martin Trigaux, 2018
-# Boško Stojaković <bluesoft83@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,10 +71,10 @@ msgid "Number of generated purchase items"
 msgstr ""
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:91
+#: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "Naručene količine su umanjene!"
+msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
@@ -88,10 +84,10 @@ msgstr ""
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
 msgid "Product Template"
-msgstr "Predlog proizvoda"
+msgstr ""
 
 #. module: sale_purchase
-#: sql_constraint:product.template:0
+#: model:ir.model.constraint,message:sale_purchase.constraint_product_template_service_to_purchase
 msgid "Product that is not a service can not create RFQ."
 msgstr ""
 
@@ -104,17 +100,17 @@ msgstr ""
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
 msgid "Purchase Order"
-msgstr "Nabavna narudžba"
+msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Stavka nabavne narudžbe"
+msgstr ""
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_form_view_inherit
 msgid "Purchase Orders"
-msgstr "Nabavne narudžbe"
+msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -124,11 +120,6 @@ msgid ""
 msgstr ""
 
 #. module: sale_purchase
-#: model:ir.model,name:sale_purchase.model_sale_order
-msgid "Quotation"
-msgstr "Predračun"
-
-#. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "Reordering"
 msgstr ""
@@ -136,25 +127,28 @@ msgstr ""
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
 msgid "Sale Order"
-msgstr "Prodajni nalog"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Stavka prodajne narudžbe"
+msgstr ""
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:273
+#: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
 "this product."
 msgstr ""
-"Nema dobavljača povezanog sa proizvodom %s. Molimo vas da definišete "
-"primarnog dobavljača za ovaj proizvod."
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:92
+#: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "

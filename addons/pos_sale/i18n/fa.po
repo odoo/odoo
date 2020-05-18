@@ -1,19 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pos_sale
+# 	* pos_sale
 # 
 # Translators:
-# Zahed Alfak <tamass4116@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Zahed Alfak <tamass4116@gmail.com>, 2020
+# Martin Trigaux, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:16+0000\n"
-"PO-Revision-Date: 2018-09-21 13:16+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,9 +21,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: pos_sale
-#: selection:sale.report,state:0
-msgid "Cancelled"
-msgstr "لغو شد"
+#: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
+msgid "<span class=\"o_form_label\">Sales Team</span>"
+msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -32,43 +31,12 @@ msgid "Currency Rate"
 msgstr "نرخ ارز"
 
 #. module: pos_sale
-#: code:addons/pos_sale/models/crm_team.py:107
-#, python-format
-msgid "Dashboard"
-msgstr "داشبورد"
-
-#. module: pos_sale
-#: selection:crm.team,dashboard_graph_group_pos:0
-msgid "Day"
-msgstr "روز"
-
-#. module: pos_sale
-#: selection:sale.report,state:0
-msgid "Draft Quotation"
-msgstr "پیشنویس پیش فاکتور"
-
-#. module: pos_sale
-#: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_form_inherit_pos_sale
-msgid "Group by"
-msgstr "گروه بندی شده بر اساس"
-
-#. module: pos_sale
-#: model:ir.model.fields,help:pos_sale.field_crm_team__dashboard_graph_group_pos
-msgid "How this channel's dashboard graph will group the results."
-msgstr ""
-
-#. module: pos_sale
-#: selection:sale.report,state:0
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
 msgid "Invoiced"
 msgstr "فاکتور شده"
 
 #. module: pos_sale
-#: selection:crm.team,dashboard_graph_group_pos:0
-msgid "Month"
-msgstr "ماه"
-
-#. module: pos_sale
-#: selection:sale.report,state:0
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_draft
 msgid "New"
 msgstr "جدید"
 
@@ -83,20 +51,9 @@ msgid "Open Sessions"
 msgstr ""
 
 #. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_crm_team__dashboard_graph_group_pos
-msgid "POS Grouping"
-msgstr ""
-
-#. module: pos_sale
-#: selection:sale.report,state:0
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
 msgid "Paid"
 msgstr "پرداخت شد"
-
-#. module: pos_sale
-#: selection:crm.team,dashboard_graph_group_pos:0
-#: model:crm.team,name:pos_sale.pos_sales_team selection:crm.team,team_type:0
-msgid "Point of Sale"
-msgstr "پایانه فروش"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
@@ -119,20 +76,9 @@ msgid "Point of Sales"
 msgstr ""
 
 #. module: pos_sale
-#: selection:sale.report,state:0
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
 msgid "Posted"
 msgstr "ارسال شد"
-
-#. module: pos_sale
-#: selection:sale.report,state:0
-msgid "Quotation Sent"
-msgstr "پیش فاکتور ارسال شد"
-
-#. module: pos_sale
-#: selection:crm.team,team_type:0
-#: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_salesteams_view_kanban_inherit_pos_sale
-msgid "Sales"
-msgstr "فروش"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_report
@@ -140,36 +86,22 @@ msgid "Sales Analysis Report"
 msgstr ""
 
 #. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
+msgid "Sales Reporting"
+msgstr ""
+
+#. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
-msgid "Sales Channels"
-msgstr "کانالهای فروش"
-
-#. module: pos_sale
-#: selection:sale.report,state:0
-msgid "Sales Done"
-msgstr "فروش انجام شد"
-
-#. module: pos_sale
-#: selection:sale.report,state:0
-msgid "Sales Order"
-msgstr "سفارش فروش"
-
-#. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__crm_team_id
 #: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
 msgid "Sales Team"
 msgstr "تیم فروش"
 
 #. module: pos_sale
-#: code:addons/pos_sale/models/crm_team.py:119
-#, python-format
-msgid "Sales: Untaxed Amount"
+#: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
+msgid "Sales are reported to the following sales team"
 msgstr ""
-
-#. module: pos_sale
-#: selection:crm.team,dashboard_graph_group_pos:0
-msgid "Salesperson"
-msgstr "فروشنده"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_salesteams_view_kanban_inherit_pos_sale
@@ -192,11 +124,6 @@ msgid "Status"
 msgstr "وضعیت"
 
 #. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_crm_team__team_type
-msgid "Team Type"
-msgstr ""
-
-#. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
@@ -204,23 +131,7 @@ msgid ""
 msgstr ""
 
 #. module: pos_sale
-#: model:ir.model.fields,help:pos_sale.field_crm_team__team_type
-msgid ""
-"The type of this channel, it will define the resources this channel uses."
-msgstr ""
-
-#. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
 msgstr ""
-
-#. module: pos_sale
-#: selection:crm.team,team_type:0
-msgid "Website"
-msgstr "تارنما"
-
-#. module: pos_sale
-#: selection:crm.team,dashboard_graph_group_pos:0
-msgid "Week"
-msgstr "هفته"

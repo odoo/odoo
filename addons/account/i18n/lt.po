@@ -23,9 +23,9 @@
 # Silvija Butko <silvija.butko@gmail.com>, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # Donatas F <osourcem@gmail.com>, 2019
-# Arunas Vaitekunas <vaitekunas@gmail.com>, 2020
 # Gailius Kazlauskas <gailius@vialaurea.lt>, 2020
 # Martin Trigaux, 2020
+# Arunas Vaitekunas <vaitekunas@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Arunas Vaitekunas <vaitekunas@gmail.com>, 2020\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -937,7 +937,7 @@ msgstr "Pasirinkta dokumento eilutė jau buvo sudengta su sąskaitos veiksmu."
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "A tag defined to be used on taxes must always have a country set."
-msgstr ""
+msgstr "Mokesčiams naudojama žyma visada turi būti nustatyta šalyje."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -1168,7 +1168,7 @@ msgstr "Sąskaitos mokesčių grupė"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
 msgid "Account Tax Report Line"
-msgstr ""
+msgstr "Sąskaitos mokesčio ataskaitos eilutė"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1272,7 +1272,7 @@ msgstr "Produkto sąskaita"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__account_id
 msgid "Account on which to post the tax amount"
-msgstr ""
+msgstr "Sąskaita, į kurią reikia įrašyti mokesčio sumą"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
@@ -1303,13 +1303,13 @@ msgstr "Pakaitinė sąskaita"
 #: model:ir.model.fields,help:account.field_account_accrual_accounting_wizard__revenue_accrual_account
 #: model:ir.model.fields,help:account.field_res_company__revenue_accrual_account_id
 msgid "Account used to move the period of a revenue"
-msgstr ""
+msgstr "Paskyra naudojama pajamų laikotarpiui perkelti"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrual_accounting_wizard__expense_accrual_account
 #: model:ir.model.fields,help:account.field_res_company__expense_accrual_account_id
 msgid "Account used to move the period of an expense"
-msgstr ""
+msgstr "Sąskaita naudojama perkelti išlaidų periodą"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -1320,11 +1320,15 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
+"Sąskaita, naudojama perkeliant mokesčių sumą grynųjų pinigų mokesčiams. Joje"
+" bus nurodoma mokesčio suma tol, kol nebus sudengta originali sąskaita "
+"faktūra; sudengimo metu ši suma bus atšaukta iš šios sąskaitos ir įtraukta į"
+" įprastą mokesčių sąskaitą."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Account with Entries"
-msgstr ""
+msgstr "Sąskaita su įrašais"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
@@ -1332,6 +1336,8 @@ msgstr ""
 #: model:ir.cron,name:account.ir_cron_auto_post_draft_entry
 msgid "Account; Post draft entries with auto_post set to True up to today"
 msgstr ""
+"Sąskaita; Skelbkite juodraščių įrašus naudodami „auto_post“ su reikšme True "
+"iki šios dienos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -1369,7 +1375,7 @@ msgstr "Apskaitos peržiūra"
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 #, python-format
 msgid "Accounting Periods"
-msgstr ""
+msgstr "Apskaitos laikotarpiai"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1410,26 +1416,28 @@ msgid ""
 "Accrual Adjusting Entries ({percent}%% recognized) have been created for "
 "this invoice on {date}"
 msgstr ""
+"Kaupimo koregavimo įrašai ({percent}%% atpažinta) sukurta {date} šiai "
+"sąskaitai faktūrai"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "Accrual Adjusting Entry (%s%% recognized) for invoice: %s"
-msgstr ""
+msgstr "Kaupimo koregavimo įrašas (%s%% atpažinta) Sąskaitai faktūrai: %s"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "Accrual Adjusting Entry ({percent}% recognized) for invoice:"
-msgstr ""
+msgstr "Kaupimo koregavimo įrašas ({percent}% atpažinta) Sąskaitai faktūrai:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__journal_id
 #: model:ir.model.fields,field_description:account.field_res_company__accrual_default_journal_id
 msgid "Accrual Default Journal"
-msgstr ""
+msgstr "Numatytasis kaupimo žurnalas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_accrual_accounting_wizard_form_view
@@ -1609,6 +1617,8 @@ msgid ""
 "Additional tags that will be assigned by this repartition line for use in "
 "financial reports"
 msgstr ""
+"Papildomos žymės, kurios bus naudojamos finansinėse ataskaitose pagal šios "
+"perskirstymo eilutės priskyrimą."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__adjustment_type
@@ -2673,7 +2683,7 @@ msgstr "CSV importavimas"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "CUST"
-msgstr ""
+msgstr "CUST"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__visible
@@ -2783,7 +2793,7 @@ msgstr "Grynųjų pinigų principo žurnalas"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Basis Taxes"
-msgstr ""
+msgstr "Mokesčiai pagal grynųjų pinigų principą"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
@@ -7471,6 +7481,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "Neapmokėta"
 
@@ -7588,7 +7599,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Klaidų kiekis"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_needaction_counter

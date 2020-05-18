@@ -4,7 +4,7 @@
 import re
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools.float_utils import float_split_str
 from odoo.tools.misc import mod10r
 
@@ -166,7 +166,8 @@ class AccountMove(models.Model):
         return float_split_str(self.amount_residual, 2)
 
     def display_swiss_qr_code(self):
-        """ Trigger the print of the Swiss QR code in the invoice report or not
+        """ DEPRECATED FUNCTION: not used anymore. QR-bills can now always
+        be generated, with a dedicated report
         """
         self.ensure_one()
         qr_parameter = self.env['ir.config_parameter'].sudo().get_param('l10n_ch.print_qrcode')
@@ -186,6 +187,30 @@ class AccountMove(models.Model):
                                    - define its bank\n
                                    - associate this bank with a postal reference for the currency used in this invoice\n
                                    - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."""))
+
+    def can_generate_qr_bill(self):
+        """ Returns True iff the invoice can be used to generate a QR-bill.
+        """
+        self.ensure_one()
+
+        # First part of this condition is due to fix commit https://github.com/odoo/odoo/commit/719f087b1b5be5f1f276a0f87670830d073f6ef4
+        # We do that to ensure not to try generating QR-bills for modules that haven't been
+        # updated yet. Not doing that could crash when trying to send an invoice by mail,
+        # as the QR report data haven't been loaded.
+        # TODO: remove this in master
+        return not self.env.ref('l10n_ch.l10n_ch_swissqr_template').inherit_id \
+               and self.invoice_partner_bank_id.validate_swiss_code_arguments(self.invoice_partner_bank_id.currency_id, self.partner_id, self.invoice_payment_ref)
+
+    def print_ch_qr_bill(self):
+        """ Triggered by the 'Print QR-bill' button.
+        """
+        self.ensure_one()
+
+        if not self.can_generate_qr_bill():
+            raise UserError(_("Cannot generate the QR-bill. Please check you have configured the address of your company and debtor. If you are using a QR-IBAN, also check the invoice's payment reference is a QR reference."))
+
+        self.l10n_ch_isr_sent = True
+        return self.env.ref('l10n_ch.l10n_ch_qr_report').report_action(self)
 
     def action_invoice_sent(self):
         # OVERRIDE

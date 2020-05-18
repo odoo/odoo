@@ -52,18 +52,19 @@
 # Alice Van Goethem <vga@odoo.com>, 2020
 # romrik_, 2020
 # lcaodoo <lca@odoo.com>, 2020
-# Jonathan Quique <jqu@odoo.com>, 2020
 # Frédéric GILSON <frederic.gilson@logicasoft.eu>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # qma.odoo <qma@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # Sylvain Dubuisson <sylvain@orderly.fr>, 2020
-# Christelle Pinchart <cpi@odoo.com>, 2020
 # Jonathan <jcs@odoo.com>, 2020
 # Priscilla Sanchez <prs@odoo.com>, 2020
-# Vallen Delobel <edv@odoo.com>, 2020
 # Martin Trigaux, 2020
+# Vallen Delobel <edv@odoo.com>, 2020
+# Christelle Pinchart <cpi@odoo.com>, 2020
+# Julien Goergen <jgo@odoo.com>, 2020
+# Jonathan Quique <jqu@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -71,7 +72,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Jonathan Quique <jqu@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1450,12 +1451,12 @@ msgstr "Affectation des comptes"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Accounts Mapping Template of Fiscal Position"
-msgstr ""
+msgstr "Modèle de mappage des comptes de position fiscale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr ""
+msgstr "Moappage des comptes de position fiscale"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
@@ -1464,20 +1465,22 @@ msgid ""
 "Accrual Adjusting Entries ({percent}%% recognized) have been created for "
 "this invoice on {date}"
 msgstr ""
+"Des écritures de régularisation ({percent}%% recognized) ont été créées pour"
+" cette facture le {date}"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "Accrual Adjusting Entry (%s%% recognized) for invoice: %s"
-msgstr ""
+msgstr "Ecriture de régularisation (%s%% reconnue) pour la facture : %s"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "Accrual Adjusting Entry ({percent}% recognized) for invoice:"
-msgstr ""
+msgstr "Ecriture de régularisation ({percent}% reconnue) pour la facture :"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__journal_id
@@ -1664,6 +1667,8 @@ msgid ""
 "Additional tags that will be assigned by this repartition line for use in "
 "financial reports"
 msgstr ""
+"Des étiquettes supplémentaires seront attribuées par cette ligne de "
+"répartition pour être utilisées dans les rapports financiers"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__adjustment_type
@@ -1673,7 +1678,7 @@ msgstr "Type d'ajustement"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
 msgid "Advance Tax payment account"
-msgstr ""
+msgstr "Compte de versement anticipé de l'impôt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_advance_tax_payment_account_id
@@ -1757,7 +1762,7 @@ msgstr "Tous les comptes sur les lignes doivent être du même type."
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "All entries are hashed."
-msgstr ""
+msgstr "Toutes les écritures sont hashées."
 
 #. module: account
 #. openerp-web
@@ -1959,13 +1964,13 @@ msgstr "Montant :"
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "An Off-Balance account can not be reconcilable"
-msgstr ""
+msgstr "Un compte hors bilan ne peut être réconcilié"
 
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "An Off-Balance account can not have taxes"
-msgstr ""
+msgstr "Un compte hors bilan ne peut détenir de taxes"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_account_account_src_dest_uniq
@@ -2868,13 +2873,13 @@ msgstr "Contrôle de caisse"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_expense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
 msgid "Cash Difference Expense Account"
-msgstr ""
+msgstr "Compte de dépenses des différences de caisse"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_income_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_income_account_id
 msgid "Cash Difference Income Account"
-msgstr ""
+msgstr "Compte de revenu de différence de caisse"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -3077,6 +3082,8 @@ msgid ""
 "Check this box to negate the absolute value of the balance of the lines "
 "associated with this tag in tax report computation."
 msgstr ""
+"Cochez cette case pour annuler la valeur absolue du solde des lignes "
+"associées à cette étiquette dans le calcul de la déclaration fiscale."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -3250,7 +3257,7 @@ msgstr "Entité commerciale"
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Common Journal Report"
-msgstr ""
+msgstr "Rapport du journal courant"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
@@ -3546,12 +3553,14 @@ msgstr "Créer"
 #. module: account
 #: model:ir.actions.server,name:account.action_accrual_entry
 msgid "Create Accrual Entry"
-msgstr ""
+msgstr "Créer une entrée de comptabilité d'exercice"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_accrual_accounting_wizard_action
 msgid "Create Accrual Entry for the expense/revenue recognition"
 msgstr ""
+"Créer une entrée de régularisation pour les dépenses/reconnaissance des "
+"revenus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_accrual_accounting_wizard_form_view
@@ -3665,7 +3674,7 @@ msgstr "Créer une note de crédit vendeur"
 #. module: account
 #: model:ir.model,name:account.model_account_accrual_accounting_wizard
 msgid "Create accrual entry."
-msgstr ""
+msgstr "Créer une entrée de comptabilité d'exercice."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -4004,7 +4013,7 @@ msgstr "URL du portail client"
 #: model:ir.model.fields,field_description:account.field_res_partner__customer_rank
 #: model:ir.model.fields,field_description:account.field_res_users__customer_rank
 msgid "Customer Rank"
-msgstr ""
+msgstr "Classement client"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
@@ -4022,7 +4031,7 @@ msgstr "Clients/Fournisseurs"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Customer/Vendor Matching"
-msgstr ""
+msgstr "Rapprochements client/fournisseur"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.res_partner_action_customer
@@ -4086,7 +4095,7 @@ msgstr "BAS"
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
 msgid "Data Inalterability Check"
-msgstr ""
+msgstr "Vérification de l'inaltérabilité des données"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -4219,7 +4228,7 @@ msgstr "Incoterm par défaut de votre société"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_default_pos_receivable_account_id
 msgid "Default PoS Receivable Account"
-msgstr ""
+msgstr "Compte débiteur par défaut du point de vente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -4744,7 +4753,7 @@ msgstr "Envoyez vos factures par email"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__end_bank_stmt_ids
 msgid "End Bank Stmt"
-msgstr ""
+msgstr "Fin relevé bancaire"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__date_to
@@ -4788,7 +4797,7 @@ msgstr "Écritures triées par"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Entries are hashed from %s (%s)"
-msgstr ""
+msgstr "Les écritures sont hashées à partir de %s (%s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -4868,7 +4877,7 @@ msgstr "Mouvement de change"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__exclude_from_invoice_tab
 msgid "Exclude From Invoice Tab"
-msgstr ""
+msgstr "Exclure de l'onglet facture"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
@@ -4906,7 +4915,7 @@ msgstr "Compte de dépense sur les modèles d'article"
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__expense_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__expense_accrual_account_id
 msgid "Expense Accrual Account"
-msgstr ""
+msgstr "Compte de régularisation des dépenses"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expenses
@@ -4953,6 +4962,8 @@ msgid ""
 "Factor to apply on the account move lines generated from this repartition "
 "line"
 msgstr ""
+"Facteur à appliquer sur les lignes d'écritures comptables générées à partir "
+"de cette ligne de répartition"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
@@ -4961,6 +4972,8 @@ msgid ""
 "Factor to apply on the account move lines generated from this repartition "
 "line, in percents"
 msgstr ""
+"Facteur à appliquer, en pourcentages, sur les lignes d'écritures comptables "
+"générées à partir de cette ligne de répartition"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -5004,7 +5017,7 @@ msgstr "Première écriture"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "First Hash"
-msgstr ""
+msgstr "Premier Hash"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -5187,12 +5200,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__force_second_tax_included
 msgid "Force the second tax to be managed as a price included tax."
 msgstr ""
+"Forcer la deuxième taxe à être gérée comme une taxe incluse dans le prix."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__force_tax_included
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__force_tax_included
 msgid "Force the tax to be managed as a price included tax."
-msgstr ""
+msgstr "Forcer la taxe à être gérée comme une taxe incluse dans le prix."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -5347,7 +5361,7 @@ msgstr "Relevés génériques"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
 msgid "Get hash integrity result as PDF."
-msgstr ""
+msgstr "Obtenez le résultat de l'intégrité du hash au format PDF."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5485,12 +5499,12 @@ msgstr "A tous les arguments requis"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Hash Integrity Result -"
-msgstr ""
+msgstr "Résultat de l'intégrité du hash"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_hash_integrity
 msgid "Hash integrity result PDF"
-msgstr ""
+msgstr "Résultat de l'intégrité du hash au format PDF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__hide_payment_method
@@ -5655,6 +5669,8 @@ msgid ""
 "If set, the accounting entries created during the bank statement reconciliation process will be created at this date.\n"
 "This is useful if the accounting period in which the entries should normally be booked is already closed."
 msgstr ""
+"Si cette option est activée, les écritures comptables créées lors du processus de lettrage des relevés bancaires seront créées à cette date.\n"
+"Ceci est utile si l'exercice comptable dans lequel les écritures devraient normalement être comptabilisées est déjà clôturé."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__analytic
@@ -5673,6 +5689,8 @@ msgid ""
 "If tags are defined for a tax report line, only two are allowed on it: a "
 "positive and a negative one."
 msgstr ""
+"Si des étiquettes sont définies pour une ligne de déclaration fiscale, "
+"seules deux sont autorisées sur celle-ci : une positive et une négative."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -5690,6 +5708,9 @@ msgid ""
 "related informations at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
+"Si cette case est cochée, cela signifie que l'utilisateur n'était pas sûr de"
+" toutes les informations liées au moment de la création du mouvement et que "
+"le mouvement doit être vérifié à nouveau."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__auto_post
@@ -5707,6 +5728,8 @@ msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
 "posted and cannot be modified anymore."
 msgstr ""
+"Si elle est cochée, l'entrée comptable ou la facture reçoit un hash dès "
+"qu'elle est comptabilisée et ne peut plus être modifiée."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5750,6 +5773,8 @@ msgid ""
 "If you want to use \"Off-Balance Sheet\" accounts, all the accounts of the "
 "journal entry must be of this type"
 msgstr ""
+"Si vous voulez utiliser des comptes \"hors bilan\", tous les comptes de la "
+"pièce comptable doivent être de ce type"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5864,7 +5889,7 @@ msgstr "Contrôle d'inaltérabilité"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 msgid "Inalteralbility No Gap Sequence #"
-msgstr ""
+msgstr "Inaltérabilité pas de discontinuité séquence #"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__inbound
@@ -6121,7 +6146,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_has_matching_suspense_amount
 msgid "Invoice Has Matching Suspense Amount"
-msgstr ""
+msgstr "La facture a un montant de suspension correspondant"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_has_outstanding
@@ -6146,17 +6171,17 @@ msgstr "Paiement des factures en ligne"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_outstanding_credits_debits_widget
 msgid "Invoice Outstanding Credits Debits Widget"
-msgstr ""
+msgstr "Widget Débits Crédits en cours Facture"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr ""
+msgstr "Nom affiché du partenaire de la facture"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_icon
 msgid "Invoice Partner Icon"
-msgstr ""
+msgstr "Icône du partenaire de la facture"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_payments_widget
@@ -6356,7 +6381,7 @@ msgstr "Est imprimé"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_rounding_line
 msgid "Is Rounding Line"
-msgstr ""
+msgstr "est une ligne d'arrondi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_difference_zero
@@ -6548,7 +6573,7 @@ msgstr "Écritures comptables"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_select_tax_audit
 msgid "Journal Items for Tax Audit"
-msgstr ""
+msgstr "Ecritures comptables pour audit fiscal"
 
 #. module: account
 #. openerp-web
@@ -6567,6 +6592,8 @@ msgstr "Nom du journal"
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Journal group are used in reporting to display relevant data together."
 msgstr ""
+"Les groupes de journaux sont utilisés dans les rapports pour afficher "
+"ensemble les données pertinentes."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -6577,7 +6604,7 @@ msgstr "Entrées de journal non lettrées"
 #: model:ir.model.fields,help:account.field_account_accrual_accounting_wizard__journal_id
 #: model:ir.model.fields,help:account.field_res_company__accrual_default_journal_id
 msgid "Journal used by default for moving the period of an entry"
-msgstr ""
+msgstr "Journal utilisé par défaut pour déplacer la période d'une écriture"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
@@ -6687,7 +6714,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
 msgid "Kpi Account Total Revenue Value"
-msgstr ""
+msgstr "Valeur des revenus totaux du compte Kpi"
 
 #. module: account
 #. openerp-web
@@ -6723,7 +6750,7 @@ msgstr "Dernière entrée"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Last Hash"
-msgstr ""
+msgstr "Dernier Hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account____last_update
@@ -6991,12 +7018,12 @@ msgstr "Choisissez comment les sous totaux sont affichés"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Lines from \"Off-Balance Sheet\" accounts cannot be reconciled"
-msgstr ""
+msgstr "Les lignes des comptes \"hors bilan\" ne peuvent pas être lettrées"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__children_line_ids
 msgid "Lines that should be rendered as children of this one"
-msgstr ""
+msgstr "Lignes qui doivent être restituées comme des enfants de celle-ci"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__type__liquidity
@@ -7043,7 +7070,7 @@ msgstr "Date de verrouillage pour les non-conseillers"
 #: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 msgid "Lock Posted Entries with Hash"
-msgstr ""
+msgstr "Verrouiller les Entrées Postées avec du Hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_log
@@ -7222,6 +7249,8 @@ msgstr "Faire correspondre les factures existantes."
 #, python-format
 msgid "Match with entries that are not from receivable/payable accounts"
 msgstr ""
+"Correspondance avec les écritures qui ne proviennent pas de comptes à "
+"recevoir / à payer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_credit_ids
@@ -7313,7 +7342,7 @@ msgstr "Messages"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__minus_report_line_ids
 msgid "Minus Report Lines"
-msgstr ""
+msgstr "Lignes de rapport négatives"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_misc
@@ -7331,7 +7360,7 @@ msgstr "Divers"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Miscellaneous Matching"
-msgstr ""
+msgstr "Correspondances diverses"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -7342,7 +7371,7 @@ msgstr "Opérations diverses"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
 msgid "Missing required account on accountable invoice line."
-msgstr ""
+msgstr "Absence du compte requis sur la ligne de facture imputable."
 
 #. module: account
 #. openerp-web
@@ -7385,7 +7414,7 @@ msgstr "Écriture lettrée"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__move_type
 msgid "Move Type"
-msgstr ""
+msgstr "Type de Mouvement"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7505,6 +7534,8 @@ msgstr "Aucune pièce jointe n'a été fournie"
 #, python-format
 msgid "No default debit and credit account defined on journal %s (ids: %s)."
 msgstr ""
+"Pas de compte de débit et de crédit par défaut défini sur le journal %s "
+"(ids: %s)."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -7591,6 +7622,7 @@ msgstr "Pas dû"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "Non payées"
 
@@ -7639,6 +7671,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note it to do it "
 "directly from the vendor bill."
 msgstr ""
+"Notez que la façon la plus simple de créer un avoir fournisseur est de le "
+"faire directement à partir de la facture fournisseur."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__note
@@ -7673,7 +7707,7 @@ msgstr "Novembre"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account
 msgid "Num Journals Without Account"
-msgstr ""
+msgstr "Num Journaux sans compte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__name
@@ -7781,12 +7815,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__internal_group__off_balance
 msgid "Off Balance"
-msgstr ""
+msgstr "Hors Bilan"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_off_sheet
 msgid "Off-Balance Sheet"
-msgstr ""
+msgstr "Hors bilan"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -7965,6 +7999,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_report_line__code
 msgid "Optional unique code to refer to this line in total formulas"
 msgstr ""
+"Code unique facultatif pour faire référence à cette ligne dans les formules "
+"totales"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__option
@@ -7996,12 +8032,12 @@ msgstr "Taxe d'origine"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_repartition_line_id
 msgid "Originator Tax Repartition Line"
-msgstr ""
+msgstr "Ligne de répartition de la taxe d'origine"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_group_id
 msgid "Originator tax group"
-msgstr ""
+msgstr "Groupe de la taxe d'origine"
 
 #. module: account
 #. openerp-web
@@ -8104,7 +8140,7 @@ msgstr "Modèle de plan de compte parent"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__parent_id
 msgid "Parent Line"
-msgstr ""
+msgstr "Ligne des parents"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__parent_id
@@ -8547,6 +8583,8 @@ msgid ""
 "Please go on the %s journal and define a %s Account. This account will be "
 "used to record cash difference."
 msgstr ""
+"Veuillez vous rendre sur le journal %s et définir un compte %s. Ce compte "
+"sera utilisé pour enregistrer la différence de caisse."
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -8566,7 +8604,7 @@ msgstr "Merci d'utiliser la communication suivante pour votre paiement:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__plus_report_line_ids
 msgid "Plus Tax Report Lines"
-msgstr ""
+msgstr "Lignes de rapport fiscal positives"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_pos_receivable_account_id
@@ -8643,6 +8681,7 @@ msgstr "Écritures comptabilisées"
 #, python-format
 msgid "Posted journal entry must have an unique sequence number per company."
 msgstr ""
+"La pièce comptabilisée doit avoir un numéro de séquence unique par société."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -8668,12 +8707,12 @@ msgstr "Préfixe pour les comptes de trésorerie principaux"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__transfer_account_code_prefix
 msgid "Prefix of the main transfer accounts"
-msgstr ""
+msgstr "Préfixe des principaux comptes de transfert"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__transfer_account_code_prefix
 msgid "Prefix of the transfer accounts"
-msgstr ""
+msgstr "Préfixe des comptes de transfert"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_prepayments
@@ -8693,7 +8732,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Presets config"
-msgstr ""
+msgstr "Configuration prédéfinies"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8860,6 +8899,13 @@ msgid ""
 "to the balance of the corresponding lines in the report. A formula cannot "
 "refer to another line using a formula."
 msgstr ""
+"Expression python utilisée pour calculer la valeur d'une ligne de total. Ce "
+"champ est mutuellement exclusif avec tag_name, en le définissant il "
+"transforme la ligne en une ligne de total. Les codes des lignes de la "
+"déclaration fiscale peuvent être utilisés comme variables dans cette "
+"expression pour faire référence au solde des lignes correspondantes dans la "
+"déclaration. Une formule ne peut pas se référer à une autre ligne en "
+"utilisant une formule."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8936,7 +8982,7 @@ msgstr "Destinataires"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_accrual_accounting_wizard_form_view
 msgid "Recognize on"
-msgstr ""
+msgstr "Reconnaître sur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__recompute_tax_line
@@ -8957,7 +9003,7 @@ msgstr "Lettrer"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_template
 msgid "Reconcile Model Template"
-msgstr ""
+msgstr "Modèle de lettrage"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -8979,7 +9025,7 @@ msgstr "Factures lettrées"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "Reconciled Invoices Count"
-msgstr ""
+msgstr "Nombre de factures lettrées"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_manual_reconciliation
@@ -9018,7 +9064,7 @@ msgstr "Enregistrer des transactions dans des devises étrangères"
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Recursion found for tax '%s'."
-msgstr ""
+msgstr "Récursion trouvée pour la taxe '%s'."
 
 #. module: account
 #. openerp-web
@@ -9134,19 +9180,19 @@ msgstr "Répartition pour les factures"
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_template__refund_repartition_line_ids
 msgid "Repartition for Refund Invoices"
-msgstr ""
+msgstr "Répartition des factures de remboursement"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
 #: model:ir.model.fields,help:account.field_account_tax_template__refund_repartition_line_ids
 msgid "Repartition when the tax is used on a refund"
-msgstr ""
+msgstr "Répartition lorsque la taxe est utilisée sur un remboursement"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__invoice_repartition_line_ids
 #: model:ir.model.fields,help:account.field_account_tax_template__invoice_repartition_line_ids
 msgid "Repartition when the tax is used on an invoice"
-msgstr ""
+msgstr "Répartition lorsque la taxe est utilisée sur une facture"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__tax_dest_id
@@ -9204,7 +9250,7 @@ msgstr "Requiert le Compte Bancaire du Partenaire"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
 msgid "Res Partner Bank"
-msgstr ""
+msgstr "Res Banque Partenaire"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -9275,6 +9321,8 @@ msgstr "Limitez les partenaires à"
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
 msgstr ""
+"Limitez-vous aux propositions ayant la même devise que la ligne de "
+"déclaration."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
@@ -9286,7 +9334,7 @@ msgstr "Revenu"
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__revenue_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__revenue_accrual_account_id
 msgid "Revenue Accrual Account"
-msgstr ""
+msgstr "Compte de régularisation des revenus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
@@ -9338,7 +9386,7 @@ msgstr "Écriture de renversement"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse Journal Entry"
-msgstr ""
+msgstr "Extourner pièce comptable"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -9361,7 +9409,7 @@ msgstr "Revoir"
 #: model:ir.model.fields,field_description:account.field_account_account__root_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__root_id
 msgid "Root"
-msgstr ""
+msgstr "Racine"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_globally
@@ -9609,7 +9657,7 @@ msgstr "Second compte"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__second_amount_from_label_regex
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__second_amount_from_label_regex
 msgid "Second Amount from Label (regex)"
-msgstr ""
+msgstr "Deuxième montant de l'étiquette (regex)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__second_amount_type
@@ -9665,7 +9713,7 @@ msgstr "Section"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
 msgid "Secure Sequence"
-msgstr ""
+msgstr "Séquence Sécurisée"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -9932,11 +9980,13 @@ msgid ""
 "Short name for the tax grid corresponding to this report line. Leave empty "
 "if this report line should not correspond to any such grid."
 msgstr ""
+"Nom abrégé de la grille fiscale correspondant à cette ligne de rapport. "
+"Laissez vide si cette ligne de déclaration ne correspond à aucune grille."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_force_tax_included
 msgid "Show Force Tax Included"
-msgstr ""
+msgstr "Afficher Forcer la taxe incluse"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -9951,7 +10001,7 @@ msgstr "Montrer le Compte Bancaire du Partenaire"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_second_force_tax_included
 msgid "Show Second Force Tax Included"
-msgstr ""
+msgstr "Afficher Forcer la deuxième taxe incluse"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -10024,6 +10074,8 @@ msgid ""
 "Some selected statement line were not already reconciled with an account "
 "move."
 msgstr ""
+"Certaines lignes de relevé sélectionnées n'ont pas encore été lettrées avec "
+"un mouvement de compte."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
@@ -10200,7 +10252,7 @@ msgstr "Etape complétée!"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__string_to_hash
 msgid "String To Hash"
-msgstr ""
+msgstr "String à hasher"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subject
@@ -10243,7 +10295,7 @@ msgstr "Suggérer des valeurs de contrepartie."
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_rank
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_rank
 msgid "Supplier Rank"
-msgstr ""
+msgstr "Rang des fournisseurs"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
@@ -10263,6 +10315,9 @@ msgid ""
 "Tag name %(tag)s is used by more than one tax report line in %(country)s. "
 "Each tag name should only be used once per country."
 msgstr ""
+"Le nom de l'étiquette %(tag)s est utilisé par plus d'une ligne de "
+"déclaration fiscale dans %(country)s. Chaque nom d'étiquette ne doit être "
+"utilisé qu'une seule fois par pays."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -10271,6 +10326,8 @@ msgid ""
 "Tag name and formula are mutually exclusive, they should not be set together"
 " on the same tax report line."
 msgstr ""
+"Le nom de l'étiquette et la formule sont mutuellement exclusifs, ils ne "
+"doivent pas être placés ensemble sur la même ligne de déclaration fiscale."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__tag_ids
@@ -10287,6 +10344,8 @@ msgid ""
 "Tags assigned to this line by the tax creating it, if any. It determines its"
 " impact on financial reports."
 msgstr ""
+"Étiquettes attribuées à cette ligne par la taxe qui la génère, le cas "
+"échéant. Elle détermine son impact sur les rapports financiers."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_cash_box_out
@@ -10329,7 +10388,7 @@ msgstr "Ajustements fiscaux"
 #. module: account
 #: model:ir.model,name:account.model_tax_adjustments_wizard
 msgid "Tax Adjustments Wizard"
-msgstr ""
+msgstr "Assistant d'ajustements fiscaux"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -10344,7 +10403,7 @@ msgstr "Application de la taxe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_audit
 msgid "Tax Audit String"
-msgstr ""
+msgstr "String de l'audit fiscal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_calculation_rounding_method
@@ -10388,7 +10447,7 @@ msgstr "Taxes exclues"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Tax Grids"
-msgstr ""
+msgstr "Grilles de Taxe"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_group
@@ -10424,7 +10483,7 @@ msgstr "Date de verrouillage de la taxe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__tax_lock_date_message
 msgid "Tax Lock Date Message"
-msgstr ""
+msgstr "Message de la Date de Verrouillage de la Taxe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
@@ -10436,12 +10495,12 @@ msgstr "Correspondance des taxes"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Tax Mapping Template of Fiscal Position"
-msgstr ""
+msgstr "Modèle de mappage de taxes de la position fiscale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr ""
+msgstr "Mappage de taxes de la position fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -10452,12 +10511,12 @@ msgstr "Nom de la taxe"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line
 msgid "Tax Repartition Line"
-msgstr ""
+msgstr "Ligne de répartition de la taxe"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line_template
 msgid "Tax Repartition Line Template"
-msgstr ""
+msgstr "Modèle de ligne de réparation de taxes"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_configure_tax_report
@@ -10467,7 +10526,7 @@ msgstr "Rapport de taxes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_report_line_ids
 msgid "Tax Report Lines"
-msgstr ""
+msgstr "Lignes de déclaration fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
@@ -10478,7 +10537,7 @@ msgstr "Portée de la taxe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_tax_signed
 msgid "Tax Signed"
-msgstr ""
+msgstr "Taxe signée"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__tax_src_id
@@ -10514,13 +10573,13 @@ msgstr "Méthode d'arrondi pour le calcul des taxes"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_payable_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
 msgid "Tax current account (payable)"
-msgstr ""
+msgstr "Compte courant de la taxe (à payer)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_receivable_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
 msgid "Tax current account (receivable)"
-msgstr ""
+msgstr "Compte courant de la taxe (à recevoir)"
 
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_excluded
@@ -10551,12 +10610,17 @@ msgid ""
 "not both at the same time. invoice_tax_id and refund_tax_id should not be "
 "set together."
 msgstr ""
+"Les modèles de lignes de répartition des taxes doivent s'appliquer soit aux "
+"factures, soit aux remboursements, et non aux deux en même temps. "
+"invoice_tax_id et refund_tax_id ne doivent pas être définis ensemble."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
 msgid ""
 "Tax repartition line that caused the creation of this move line, if any"
 msgstr ""
+"Ligne de répartition des taxes à l'origine de la création de cette ligne de "
+"mouvement, le cas échéant"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -10566,6 +10630,9 @@ msgid ""
 "at the same time. invoice_tax_id and refund_tax_id should not be set "
 "together."
 msgstr ""
+"Les lignes de répartition des taxes doivent s'appliquer soit aux factures, "
+"soit aux remboursements, et non aux deux en même temps. invoice_tax_id et "
+"refund_tax_id ne doivent pas être définis ensemble."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__plus_report_line_ids
@@ -10573,6 +10640,8 @@ msgid ""
 "Tax report lines whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Les lignes de déclaration fiscale avec le signe \"+\" seront attribuées aux "
+"lignes de mouvement par cette ligne de répartition"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__minus_report_line_ids
@@ -10580,11 +10649,13 @@ msgid ""
 "Tax report lines whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Les lignes de déclaration fiscale avec le signe \"-\" seront attribuées aux "
+"lignes de mouvement par cette ligne de répartition"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__tag_ids
 msgid "Tax tags populating this line"
-msgstr ""
+msgstr "Etiquettes de taxes qui alimentent cette ligne"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
@@ -11800,7 +11871,7 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
-msgstr ""
+msgstr "Ce journal n'est pas en mode strict."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -11954,7 +12025,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "To speed up reconciliation, define"
-msgstr ""
+msgstr "Pour accélérer la réconciliation, définir"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -12736,6 +12807,8 @@ msgid ""
 "You can only set an account having the payable type on payment terms lines "
 "for vendor bill."
 msgstr ""
+"Vous pouvez seulement définir un compte débiteur sur les lignes de "
+"conditions de paiement pour la facture fournisseur."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12805,6 +12878,9 @@ msgid ""
 "You can't set a different company on your analytic tags since there are some"
 " journal items linked to it."
 msgstr ""
+"Vous ne pouvez pas paramétrer une société différente sur les étiquettes "
+"analytiques puisqu'elles contiennent des écritures comptables liées à "
+"celles-ci."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13045,6 +13121,8 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
+"Vous ne pouvez changer de compte pour empêcher la réconciliation dans le cas"
+" où des rapprochements partiels sont toujours en suspens. "
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13057,6 +13135,8 @@ msgstr "Vous ne pouvez pas utiliser de compte expiré."
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
 msgstr ""
+"Vous ne pouvez employer des taxes sur des écritures avec un compte hors "
+"bilan"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13084,7 +13164,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr ""
+msgstr "Vous n'avez pas les droits d'accès pour poster une facture."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13095,6 +13175,8 @@ msgstr "Vous avez"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "You have suspense account moves that match this invoice."
 msgstr ""
+"Vous avez des mouvements sur le compte d'attente qui correspondent à cette "
+"facture."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -13109,6 +13191,8 @@ msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
 msgstr ""
+"Vous devez avoir défini un \"compte de transfert interne\" dans votre "
+"journal de caisse."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -13187,7 +13271,7 @@ msgstr "Fin de l'intervalle de code postal"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "and follow-up customers"
-msgstr ""
+msgstr "et relance clients"
 
 #. module: account
 #. openerp-web
@@ -13225,7 +13309,7 @@ msgstr "ex Bank of America"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g Checking account"
-msgstr ""
+msgstr "ex: Compte courant"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -13235,7 +13319,7 @@ msgstr "par ex : frais bancaires"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "e.g. GAAP, IFRS, ..."
-msgstr ""
+msgstr "p.e. GAAP, IFRS"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

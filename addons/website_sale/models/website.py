@@ -55,12 +55,9 @@ class Website(models.Model):
                 Pricelist._get_website_pricelists_domain(website.id)
             )
 
-    @api.depends_context('website_id')
     def _compute_pricelist_id(self):
         for website in self:
-            if website._context.get('website_id') != website.id:
-                website = website.with_context(website_id=website.id)
-            website.pricelist_id = website.get_current_pricelist()
+            website.pricelist_id = website.with_context(website_id=website.id).get_current_pricelist()
 
     # This method is cached, must not return records! See also #8795
     @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl', 'partner_pl', 'order_pl')
@@ -114,7 +111,7 @@ class Website(models.Model):
             if country_code:
                 # keep partner_pl only if GeoIP compliant in case of GeoIP enabled
                 partner_pl = partner_pl.filtered(
-                    lambda pl: pl.country_group_ids and country_code in pl.country_group_ids.mapped('country_ids.code')
+                    lambda pl: pl.country_group_ids and country_code in pl.country_group_ids.mapped('country_ids.code') or not pl.country_group_ids
                 )
             pricelists |= partner_pl
 
