@@ -20,6 +20,7 @@
         <field name="website_menu">True</field>
         <field name="website_track">True</field>
         <field name="website_track_proposal">True</field>
+        <field name="website_exhibitor">True</field>
     </record>
 
     <!-- Sponsorships -->
@@ -49,6 +50,19 @@
         <field name="sponsor_type_id" ref="event_sponsor_type3"/>
         <field name="partner_id" ref="base.res_partner_4"/>
         <field name="url">http://odoo.com</field>
+    </record>
+
+    <!-- Exhibitors -->
+
+    <record id="event_exhibitor_0" model="event.exhibitor">
+        <field name="event_id" ref="event.event_0"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="create_jitsi_room" eval="True" />
+    </record>
+
+    <record id="event_exhibitor_1" model="event.exhibitor">
+        <field name="event_id" ref="event.event_0"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
     </record>
 
     <!-- Tracks -->

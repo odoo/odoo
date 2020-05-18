@@ -3,6 +3,7 @@
 
 from . import event_event
 from . import event_sponsor
+from . import event_exhibitor
 from . import event_track
 from . import event_track_stage
 from . import website_event_menu

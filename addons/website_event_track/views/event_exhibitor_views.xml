@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<odoo>
+<data>
+    <record id="event_exhibitor_view_search" model="ir.ui.view">
+        <field name="name">event.exhibitor.search</field>
+        <field name="model">event.exhibitor</field>
+        <field name="arch" type="xml">
+            <search string="Event Exhibitors">
+                <field name="partner_id"/>
+                <field name="event_id"/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="event_exhibitor_view_form" model="ir.ui.view">
+        <field name="name">event.exhibitor.view.form</field>
+        <field name="model">event.exhibitor</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="active" invisible="1"/>
+                    <field name="image_512" widget="image" class="oe_avatar"/>
+                    <h1><field name="partner_id"/></h1>
+                    <group>
+                        <group>
+                            <field name="event_id"/>
+                            <field name="create_jitsi_room"/>
+                            <field name="partner_email" widget="email"/>
+                            <field name="exhibitor_url" widget="url"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="partner_phone" widget="phone" options="{'enable_sms': True}"/>
+                            <field name="partner_mobile" widget="phone" options="{'enable_sms': True}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_exhibitor_view_tree" model="ir.ui.view">
+        <field name="name">event.exhibitor.view.tree</field>
+        <field name="model">event.exhibitor</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="partner_id"/>
+                <field name="exhibitor_url"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="event_exhibitor_view_kanban" model="ir.ui.view">
+        <field name="name">event.exhibitor.view.kanban</field>
+        <field name="model">event.exhibitor</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id"/>
+                <field name="exhibitor_url"/>
+                <field name="partner_email"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click overflow-hidden">
+                            <div class="row my-auto">
+                                <img t-att-src="kanban_image('event.exhibitor', 'image_512', record.id.raw_value)" alt="Exhibitor image" class="col-4"/>
+                                <div class="col-8">
+                                    <h1 class="o_kanban_record_title"><field name="partner_id"/></h1>
+                                    <span class="o_text_overflow" t-esc="record.partner_email.value"/>
+                                    <span class="o_text_overflow" t-esc="record.exhibitor_url.value"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="event_exhibitor_action_from_event" model="ir.actions.act_window">
+        <field name="name">Event Exhibitors</field>
+        <field name="res_model">event.exhibitor</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
+    </record>
+</data>
+</odoo>

@@ -4,7 +4,9 @@
 <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Event Track Assets">
     <xpath expr="." position="inside">
         <link rel="stylesheet" href="/website_event_track/static/src/css/website_event_track.css"/>
+        <link rel="stylesheet" href="/website_event_track/static/src/scss/website_event_track.scss"/>
         <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
+        <script type="text/javascript" src="/website_event_track/static/src/js/website_event_exhibitor.js"></script>
         <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track_set_customize_options.js"></script>
     </xpath>
 </template>
@@ -440,6 +442,43 @@
         <li><b>Speakers Biography</b>: <div t-field="track.partner_biography"/></li>
         <li><b>Talk Introduction</b>: <div t-field="track.description"/></li>
     </ul>
+</template>
+
+<template id="exhibitors">
+    <t t-call="website_event.layout">
+        <div class="container mt32 mb16 d-print-none" t-if="event.exhibitor_ids">
+            <section>
+                <h2 class="text-center mb32">Exhibitors</h2>
+            </section>
+            <div class="col-lg pr-lg">
+                <div class="row mx-n2 mt8">
+                    <t t-foreach="event.exhibitor_ids" t-as="exhibitor">
+                        <div class="col-md-3 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1">
+                            <t t-call="website_event_track.exhibitor_card"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="exhibitor_card">
+    <div class="card o_wevent_exhibitor_card w-100 mb-4"
+        t-att-data-user-name="user_name"
+        t-att-data-user-email="user_email"
+        t-att-data-event-name="event.name"
+        t-att-data-exhibitor-name="exhibitor.partner_name">
+        <div t-attf-class="#{'o_wevent_exhibitor_jitsi_link' if exhibitor.create_jitsi_room else ''}">
+            <t t-set="exhibitor_image" t-value="website.image_url(exhibitor, 'image_512')"/>
+            <div t-if="exhibitor.image_512" class="card-img-top"
+                t-attf-style="background-image: url(#{exhibitor_image});"/>
+            <div t-else="" class="o_wevent_exhibitor_gradient card-img-top position-relative">
+                <div class="o_wevent_exhibitor_exhibitor_name position-absolute w-100 text-center text-white" t-esc="exhibitor.partner_name" />
+                <i class="fa fa-suitcase fa-2x mr-3 mb-3 position-absolute text-white-75"/>
+            </div>
+        </div>
+    </div>
 </template>
 
 </odoo>

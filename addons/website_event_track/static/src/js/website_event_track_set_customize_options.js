@@ -12,11 +12,13 @@ EventSpecificOptions.include({
     events: _.extend({}, EventSpecificOptions.prototype.events, {
         'change #display-showcase-talks': '_onDisplayTalksChange',
         'change #allow-talk-proposal': '_onAllowTalkProposalChange',
+        'change #display-showcase-exhibitors': '_onDisplayExhibitorsChange',
     }),
 
     start: function () {
         this.$displayTalksInput = this.$('#display-showcase-talks');
         this.$allowTalksInput = this.$('#allow-talk-proposal');
+        this.$displayExhibitorsInput = this.$('#display-showcase-exhibitors');
         this._super.apply(this, arguments);
     },
 
@@ -24,13 +26,16 @@ EventSpecificOptions.include({
         this._rpc({
             model: this.modelName,
             method: 'read',
-            args: [[this.eventId], ['website_menu', 'website_url', 'website_track', 'website_track_proposal']],
+            args: [[this.eventId], ['website_menu', 'website_url', 'website_track', 'website_track_proposal', 'website_exhibitor']],
         }).then((data) => {
             if (data[0]['website_track']) {
                 this.$displayTalksInput.attr('checked', 'checked');
             }
             if (data[0]['website_track_proposal']) {
                 this.$allowTalksInput.attr('checked', 'checked');
+            }
+            if (data[0]['website_exhibitor']) {
+                this.$displayExhibitorsInput.attr('checked', 'checked');
             }
             if (data[0]['website_menu']) {
                 this.$submenuInput.attr('checked', 'checked');
@@ -68,6 +73,22 @@ EventSpecificOptions.include({
         this._rpc({
             model: this.modelName,
             method: 'toggle_website_track',
+            args: [[this.eventId], val],
+        }).then(function () {
+            self._reloadEventPage();
+        });
+    },
+
+    _onDisplayExhibitorsChange: function () {
+        var checkboxValue = this.$displayExhibitorsInput.is(':checked');
+        this._toggleDisplayExhibitors(checkboxValue);
+    },
+
+    _toggleDisplayExhibitors: function (val) {
+        var self = this;
+        this._rpc({
+            model: this.modelName,
+            method: 'toggle_website_exhibitor',
             args: [[this.eventId], val],
         }).then(function () {
             self._reloadEventPage();

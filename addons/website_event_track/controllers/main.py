@@ -162,3 +162,16 @@ class WebsiteEventTrackController(http.Controller):
             if partner:
                 track.sudo().message_subscribe(partner_ids=partner.ids)
         return request.render("website_event_track.event_track_proposal", {'track': track, 'event': event})
+
+    @http.route('/event/<model("event.event"):event>/exhibitor', type='http', auth="public", website=True, sitemap=False)
+    def event_exhibitors(self, event, **post):
+        if not event.can_access_from_current_website():
+            raise NotFound()
+
+        values = {
+            'event': event,
+            'main_object': event,
+            'user_name': request.env.user.name if not request.env.user._is_public() else None,
+            'user_email': request.env.user.email_formatted if not request.env.user._is_public() else None,
+        }
+        return request.render("website_event_track.exhibitors", values)

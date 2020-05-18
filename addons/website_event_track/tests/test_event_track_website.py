@@ -7,7 +7,7 @@ from odoo.addons.website_event.tests.test_event_website import TestEventWebsiteH
 class TestEventWebsiteTrack(TestEventWebsiteHelper):
 
     def _get_menus(self):
-        return super(TestEventWebsiteTrack, self)._get_menus() | set(['Talks', 'Agenda', 'Talk Proposals'])
+        return super(TestEventWebsiteTrack, self)._get_menus() | set(['Talks', 'Agenda', 'Talk Proposals', 'Exhibitors'])
 
     def test_create_menu1(self):
         event = self.env['event.event'].create({
@@ -21,6 +21,7 @@ class TestEventWebsiteTrack(TestEventWebsiteHelper):
             'website_menu': True,
             'website_track': True,
             'website_track_proposal': True,
+            'website_exhibitor': True,
         })
 
         self._assert_website_menus(event)
@@ -31,5 +32,6 @@ class TestEventWebsiteTrack(TestEventWebsiteHelper):
             'website_menu': True,
             'website_track': True,
             'website_track_proposal': True,
+            'website_exhibitor': True,
         })
         self._assert_website_menus(self.event_0)
