@@ -136,14 +136,10 @@ class PaymentAcquirer(models.Model):
         'Cancel Message', translate=True,
         default=lambda s: _('Your payment has been cancelled.'),
         help='Message displayed, if order is cancel during the payment process.')
-    save_token = fields.Selection([
-        ('none', 'Never'),
-        ('ask', 'Let the customer decide'),
-        ('always', 'Always')],
-        string='Save Cards', default='none',
-        help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase. "
-             "If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you "
-             "issue an invoice.")
+    save_token = fields.Boolean(
+        string='Allow Save Card',
+        help="Allow your customers to save their payment card when paying an order or an invoice online and to reuse it in a later purchase."
+             "Note: In the case of subscriptions with automated payment debit, the payment card is saved automatically.")
     token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support', search='_search_is_tokenized')
     authorize_implemented = fields.Boolean('Authorize Mechanism Supported', compute='_compute_feature_support')
     fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_feature_support')
@@ -162,10 +158,11 @@ class PaymentAcquirer(models.Model):
     image_128 = fields.Image("Image", max_width=128, max_height=128)
 
     payment_icon_ids = fields.Many2many('payment.icon', string='Supported Payment Icons')
-    payment_flow = fields.Selection(selection=[('form', 'Redirection to the acquirer website'),
-        ('s2s','Payment from Odoo')],
+    payment_flow = fields.Selection(selection=[
+        ('form', 'Redirection to the acquirer website'),
+        ('s2s', 'Payment from Odoo')],
         default='form', required=True, string='Payment Flow',
-        help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
+        help=" Payment from Odoo provides a much better customer experience by embedding the card form in the checkout page rather than redirecting to the acquirer site. This relies on a server-to-server technology.")
     inbound_payment_method_ids = fields.Many2many('account.payment.method', related='journal_id.inbound_payment_method_ids', readonly=False)
 
     @api.onchange('payment_flow')
@@ -579,7 +576,7 @@ class PaymentTransaction(models.Model):
         ('validation', 'Validation of the bank card'),
         ('server2server', 'Server To Server'),
         ('form', 'Form'),
-        ('form_save', 'Form with tokenization')], 'Type',
+        ('save_token', 'Save Token')], 'Type',
         default='form', required=True, readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -1038,8 +1035,12 @@ class PaymentTransaction(models.Model):
         custom_method_name = '%s_s2s_do_transaction' % self.acquirer_id.provider
         for trans in self:
             trans._log_payment_transaction_sent()
+            res = False
             if hasattr(trans, custom_method_name):
-                return getattr(trans, custom_method_name)(**kwargs)
+                res = getattr(trans, custom_method_name)(**kwargs)
+            if trans.type not in ['save_token', 'validation'] and trans.payment_token_id:
+                trans.payment_token_id.unlink()
+            return res
 
     def s2s_do_refund(self, **kwargs):
         custom_method_name = '%s_s2s_do_refund' % self.acquirer_id.provider
@@ -1126,6 +1127,15 @@ class PaymentToken(models.Model):
                 fields_wl = set(self._fields) & set(values)
                 values = {field: values[field] for field in fields_wl}
         return super(PaymentToken, self).create(values)
+
+    def unlink(self):
+        # call custom unlink method if defined (i.e. ogone_unlink for ogone)
+        for token in self:
+            custom_method_name = '%s_unlink' % token.acquirer_id.provider
+            if hasattr(token, custom_method_name):
+                getattr(token, custom_method_name)()
+        return super(PaymentToken, self).unlink()
+
     """
         @TBE: stolen shamelessly from there https://www.paypal.com/us/selfhelp/article/why-is-there-a-$1.95-charge-on-my-card-statement-faq554
         Most of them are ~1.50€s

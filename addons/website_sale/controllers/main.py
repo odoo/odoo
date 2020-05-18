@@ -865,7 +865,7 @@ class WebsiteSale(http.Controller):
     @http.route(['/shop/payment/transaction/',
         '/shop/payment/transaction/<int:so_id>',
         '/shop/payment/transaction/<int:so_id>/<string:access_token>'], type='json', auth="public", website=True)
-    def payment_transaction(self, acquirer_id, save_token=False, so_id=None, access_token=None, token=None, **kwargs):
+    def payment_transaction(self, acquirer_id, transaction_type='form', so_id=None, access_token=None, token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -902,10 +902,9 @@ class WebsiteSale(http.Controller):
 
         # Create transaction
         vals = {'acquirer_id': acquirer_id,
-                'return_url': '/shop/payment/validate'}
+                'return_url': '/shop/payment/validate',
+                'type': transaction_type}
 
-        if save_token:
-            vals['type'] = 'form_save'
         if token:
             vals['payment_token_id'] = int(token)
 
@@ -944,7 +943,11 @@ class WebsiteSale(http.Controller):
             return request.redirect('/shop/?error=token_not_found')
 
         # Create transaction
-        vals = {'payment_token_id': pm_id, 'return_url': '/shop/payment/validate'}
+        vals = {
+            'payment_token_id': pm_id,
+            'return_url': '/shop/payment/validate',
+            'type': kwargs.get('transaction_type')
+        }
 
         tx = order._create_payment_transaction(vals)
         PaymentProcessing.add_payment_transaction(tx)

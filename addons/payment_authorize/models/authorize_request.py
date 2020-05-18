@@ -118,6 +118,25 @@ class AuthorizeAPI():
             'payment_profile_id': response.get('customerPaymentProfileIdList')[0]
         }
 
+    def delete_customer_profile(self, customerProfileId):
+        values = {
+            'deleteCustomerProfileRequest': {
+                'merchantAuthentication': {
+                    'name': self.name,
+                    'transactionKey': self.transaction_key
+                },
+                'customerProfileId': customerProfileId
+            }
+        }
+        response = self._authorize_request(values)
+
+        if response and response.get('err_code'):
+            raise UserError(_(
+                "Authorize.net Error:\nCode: %s\nMessage: %s"
+                % (response.get('err_code'), response.get('err_msg'))
+            ))
+        return True
+
     def create_customer_profile_from_tx(self, partner, transaction_id):
         """Create an Auth.net payment/customer profile from an existing transaction.
 

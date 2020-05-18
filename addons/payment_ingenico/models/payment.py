@@ -181,7 +181,7 @@ class PaymentAcquirerOgone(models.Model):
             'CANCELURL': urls.url_join(base_url, OgoneController._cancel_url),
             'PARAMPLUS': urls.url_encode(param_plus),
         }
-        if self.save_token in ['ask', 'always']:
+        if self.save_token:
             temp_ogone_tx_values.update({
                 'ALIAS': 'ODOO-NEW-ALIAS-%s' % time.time(),    # something unique,
                 'ALIASUSAGE': values.get('alias_usage') or self.ogone_alias_usage,
@@ -265,7 +265,7 @@ class PaymentTxOgone(models.Model):
             tx.acquirer_reference = pay_id
 
         # alias was created on ogone server, store it
-        if alias and tx.type == 'form_save':
+        if alias and tx.type == 'save_token':
             Token = self.env['payment.token']
             domain = [('acquirer_ref', '=', alias)]
             cardholder = data.get('CN')
@@ -305,7 +305,7 @@ class PaymentTxOgone(models.Model):
                 'acquirer_reference': data['PAYID'],
             }
             if data.get('ALIAS') and self.partner_id and \
-               (self.type == 'form_save' or self.acquirer_id.save_token == 'always')\
+               (self.type == 'save_token' and self.acquirer_id.save_token)\
                and not self.payment_token_id:
                 pm = self.env['payment.token'].create({
                     'partner_id': self.partner_id.id,
@@ -458,7 +458,7 @@ class PaymentTxOgone(models.Model):
                 'acquirer_reference': tree.get('PAYID'),
             })
             if tree.get('ALIAS') and self.partner_id and \
-               (self.type == 'form_save' or self.acquirer_id.save_token == 'always')\
+               (self.type == 'save_token' and self.acquirer_id.save_token)\
                and not self.payment_token_id:
                 pm = self.env['payment.token'].create({
                     'partner_id': self.partner_id.id,

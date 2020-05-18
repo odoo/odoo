@@ -27,7 +27,7 @@
             <field name="inherit_id" ref="payment.payment_token_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr='//field[@name="acquirer_ref"]' position='after'>
-                    <field name="authorize_profile" attrs="{'invisible':['|', ('provider', '!=', 'authorize'), ('save_token', '=', 'none')]}"/>
+                    <field name="authorize_profile" attrs="{'invisible':['|', ('provider', '!=', 'authorize'), ('save_token', '=', False)]}"/>
                     <field name="provider" invisible='1'/>
                     <field name="save_token" invisible='1'/>
                 </xpath>

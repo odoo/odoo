@@ -266,7 +266,7 @@ class CustomerPortal(CustomerPortal):
 
     # note dbo: website_sale code
     @http.route(['/my/orders/<int:order_id>/transaction/'], type='json', auth="public", website=True)
-    def payment_transaction_token(self, acquirer_id, order_id, save_token=False, access_token=None, **kwargs):
+    def payment_transaction_token(self, acquirer_id, order_id, transaction_type=False, access_token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -324,7 +324,7 @@ class CustomerPortal(CustomerPortal):
         # Create transaction
         vals = {
             'payment_token_id': pm_id,
-            'type': 'server2server',
+            'type': order._get_payment_type(),
             'return_url': order.get_portal_url(),
         }
 

@@ -268,7 +268,7 @@ class PaymentTransactionStripe(models.Model):
             self.write(vals)
             self._set_transaction_done()
             self.execute_callback()
-            if self.type == 'form_save':
+            if self.type == 'save_token' and not self.payment_token_id and self.partner_id:
                 s2s_data = {
                     'customer': tree.get('customer'),
                     'payment_method': tree.get('payment_method'),
@@ -370,3 +370,8 @@ class PaymentTokenStripe(models.Model):
             raise ValidationError(_('Unable to convert Stripe customer for SCA compatibility. Is there at least one card for this customer in the Stripe backend?'))
         self.stripe_payment_method = pm_ref
         _logger.info('converted old customer ref to sca-compatible record for payment token %s', self.id)
+
+    @api.model
+    def stripe_unlink(self):
+        api_url_customer_unlink = 'customers/%s' % self.acquirer_ref
+        return self.acquirer_id._stripe_request(api_url_customer_unlink, method='delete')
