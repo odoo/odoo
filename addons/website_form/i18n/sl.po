@@ -1,13 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_form
+# 	* website_form
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
+# Vida Potočnik <vida.potocnik@mentis.si>, 2020
+# Dejan Sraka <dejan.sraka@picolabs.si>, 2020
+# matjaz k <matjaz@mentis.si>, 2020
+# Grega Vavtar <grega@hbs.si>, 2020
+# Jasmina Macur <jasmina@hbs.si>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2020\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,87 +26,174 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "&amp;times;"
+msgstr "&amp;times;"
+
+#. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:226
+#: code:addons/website_form/static/src/js/website_form.js:0
 #, python-format
 msgid "'%s' is not a correct date"
-msgstr ""
+msgstr "'%s' ni pravilen datum"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:221
+#: code:addons/website_form/static/src/js/website_form.js:0
 #, python-format
 msgid "'%s' is not a correct datetime"
-msgstr ""
+msgstr "'%s' ni pravilen čas"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:226
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_access
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Add a custom field"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Add an existing field"
+msgstr ""
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
 msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:21
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "An error has occured, the form has not been sent."
 msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_fields_website_form_blacklisted
+#: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
 msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_fields_website_form_blacklisted
+#: model:ir.model.fields,field_description:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklisted in web forms"
 msgstr ""
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:54
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
 #, python-format
-msgid "Custom infos"
+msgid "Cancel"
+msgstr "Prekliči"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Change Form Parameters"
 msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_access
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Checkbox"
+msgstr ""
+
+#. module: website_form
+#: model:ir.model,name:website_form.model_res_config_settings
+msgid "Config Settings"
+msgstr "Urejanje nastavitev"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Date"
+msgstr "Datum"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Date &amp; Time"
+msgstr "Datum &amp; Čas"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Decimal Number"
+msgstr "Decimalno število"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Email"
+msgstr "E-pošta"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid "Email To"
+msgstr ""
+
+#. module: website_form
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
 msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_website_website_form_enable_metadata
-msgid "Enable writing metadata on form submit."
-msgstr ""
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#, python-format
+msgid "Error"
+msgstr "Napaka"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_default_field_id
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
 msgstr ""
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
 msgid "Fields"
-msgstr ""
+msgstr "Polja"
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_label
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "File Upload"
+msgstr "Nalaganje datoteke"
+
+#. module: website_form
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_label
 msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
 msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_label
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Hidden"
+msgstr "Skrito"
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
 msgid "Label for form action"
 msgstr ""
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:55
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Long Text"
+msgstr ""
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Metadata"
 msgstr ""
@@ -104,34 +201,242 @@ msgstr ""
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model
 msgid "Models"
+msgstr "Modeli"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Multiple Checkboxes"
 msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:14
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
-msgid "Please fill in the form correctly."
+msgid "No matching record !"
+msgstr "Ni ujemajočih se zapisov!"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Number"
+msgstr "Številka"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "Option 1"
 msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_default_field_id
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "Option 2"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "Option 3"
+msgstr ""
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:0
+#, python-format
+msgid "Other Information:"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Phone Number"
+msgstr "Telefonska številka"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#, python-format
+msgid "Please fill in the form correctly."
+msgstr "Prosimo, da pravilno izpolnite obrazec."
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Radio Buttons"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor_registry.js:0
+#, python-format
+msgid "Recipient Email"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Required"
+msgstr "Obvezno"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "Save"
+msgstr "Shrani"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Selection"
+msgstr "Izbor"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form
+msgid "Send"
+msgstr "Pošlji"
+
+#. module: website_form
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
 msgid ""
 "Specify the field which will contain meta and custom form fields datas."
 msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:7
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Subject"
+msgstr "Zadeva"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#, python-format
+msgid "Success"
+msgstr "Uspeh"
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
+msgid "Technical data on contact form"
+msgstr "Tehnični podatki na kontaktnem obrazci"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Text"
+msgstr "Besedilo"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "Thanks!"
+msgstr "Hvala!"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "The form has been sent successfully."
 msgstr ""
 
 #. module: website_form
-#: model:ir.model,name:website_form.model_website
-msgid "Website"
+#: code:addons/website_form/controllers/main.py:0
+#, python-format
+msgid "This message has been posted on your website!"
 msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_website_website_form_enable_metadata
-msgid "Write metadata"
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
 msgstr ""
+"Sledite metapodatkom (IP, uporabniški agent, ...) na spletnih obrazcih"
+
+#. module: website_form
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_key
+msgid "Used in FormBuilder Registry"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "We will get back to you shortly."
+msgstr "Kmalu vam bomo odgovorili."
+
+#. module: website_form
+#: model:ir.model,name:website_form.model_website
+msgid "Website"
+msgstr "Spletna stran"
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_key
+msgid "Website Form Key"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.ir_model_view
+msgid "Website Forms"
+msgstr "Obrazci spletnega mesta"
+
+#. module: website_form
+#: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
+msgid "You can choose to log technical data like IP, User Agent ,..."
+msgstr ""
+"Izberete lahko beleženje tehničnih logov kot so IP, Uporabniški agent, ..."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "You can't duplicate a model field."
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "You can't duplicate an item which refers to an actual record."
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor.js:0
+#, python-format
+msgid "You can't remove a field that is required by the model itself."
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Your Company"
+msgstr "Vaše podjetje"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Your Name"
+msgstr "Vaše ime"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Your Question"
+msgstr "Vaše vprašanje"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "Your message has been sent successfully."
+msgstr "Vaše sporočilo je bilo uspešno poslano."

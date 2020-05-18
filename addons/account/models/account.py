@@ -359,10 +359,8 @@ class AccountAccount(models.Model):
         either 'debit' or 'credit', depending on which one of these two fields
         got assigned.
         """
+        self.company_id.create_op_move_if_non_existant()
         opening_move = self.company_id.account_opening_move_id
-
-        if not opening_move:
-            raise UserError(_("You must first define an opening move."))
 
         if opening_move.state == 'draft':
             # check whether we should create a new move line or modify an existing one

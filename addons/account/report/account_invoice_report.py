@@ -220,7 +220,7 @@ class AccountInvoiceReport(models.Model):
             # Since the size of result_ref should be resonable, it should be fine to loop inside a
             # loop.
             for res_ref in result_ref:
-                if set(res['ids']) <= set(res_ref['ids']):
+                if res.get('ids') and res_ref.get('ids') and set(res['ids']) <= set(res_ref['ids']):
                     for field in {'amount_total', 'price_subtotal', 'residual'} & set(res_ref):
                         res_ref[field] += res[field]
                     for field in {'price_average'} & set(res_ref):
