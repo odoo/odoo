@@ -2063,6 +2063,12 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise<boolean>|boolean}
      */
     _computeWidgetVisibility: async function (widgetName, params) {
+        if (widgetName === 'move_up_opt' || widgetName === 'move_left_opt') {
+            return !this.$target.is(':first-child');
+        }
+        if (widgetName === 'move_down_opt' || widgetName === 'move_right_opt') {
+            return !this.$target.is(':last-child');
+        }
         return true;
     },
     /**
