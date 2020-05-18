@@ -41,6 +41,11 @@ class TestNestedTaskUpdate(TransactionCase):
     def test_creating_subtask_partner_id_on_parent_goes_on_child(self):
         parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.user.partner_id.id})
         child = self.env['project.task'].create({'name': 'child', 'parent_id': parent.id})
+        child._compute_partner_id()  # the compute will be triggered since the user set the parent_id.
+        self.assertEqual(child.partner_id, self.user.partner_id)
+
+        # Another case, it is the parent as a default value
+        child = self.env['project.task'].with_context(default_parent_id=parent.id).create({'name': 'child'})
         self.assertEqual(child.partner_id, self.user.partner_id)
 
     def test_creating_subtask_email_from_on_parent_goes_on_child(self):
@@ -96,9 +101,9 @@ class TestNestedTaskUpdate(TransactionCase):
         child = self.env['project.task'].create({'name': 'child', 'partner_id': False, 'parent_id': parent.id})
         self.assertFalse(child.partner_id)
         parent.write({'partner_id': self.user.partner_id.id})
-        self.assertEqual(child.partner_id, parent.partner_id)
+        self.assertNotEqual(child.partner_id, parent.partner_id)
         parent.write({'partner_id': False})
-        self.assertEqual(child.partner_id, self.user.partner_id)
+        self.assertNotEqual(child.partner_id, self.user.partner_id)
 
     def test_write_email_from_on_parent_write_on_child(self):
         parent = self.env['project.task'].create({'name': 'parent'})
@@ -121,6 +126,7 @@ class TestNestedTaskUpdate(TransactionCase):
     def test_write_sale_line_id_on_parent_write_on_child_with_partner_if_not_set(self):
         parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.partner.id})
         child = self.env['project.task'].create({'name': 'child', 'parent_id': parent.id})
+        child._compute_partner_id()
         self.assertFalse(child.sale_line_id)
         parent.write({'sale_line_id': self.order_line.id})
         self.assertEqual(child.sale_line_id, parent.sale_line_id)
@@ -192,6 +198,7 @@ class TestNestedTaskUpdate(TransactionCase):
         parent = self.env['project.task'].create({'name': 'parent', 'user_id': False, 'partner_id': self.partner.id})
         children_values = [{'name': 'child%s' % i, 'user_id': False, 'parent_id': parent.id} for i in range(5)]
         children = self.env['project.task'].create(children_values)
+        children._compute_partner_id()
         # test writing sale_line_id
         for child in children:
             self.assertFalse(child.sale_line_id)
