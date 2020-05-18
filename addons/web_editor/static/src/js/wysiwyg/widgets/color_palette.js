@@ -119,7 +119,8 @@ const ColorPaletteWidget = Widget.extend({
         }
 
         // Compute class colors
-        this.colorNames = [];
+        const compatibilityColorNames = ['primary', 'secondary', 'success', 'info', 'warning', 'danger'];
+        this.colorNames = [...compatibilityColorNames];
         this.colorToColorNames = {};
         this.el.querySelectorAll('button[data-color]').forEach(elem => {
             const colorName = elem.dataset.color;
@@ -135,7 +136,11 @@ const ColorPaletteWidget = Widget.extend({
         // Select selected Color and build customColors.
         // If no color is selected selectedColor is an empty string (transparent is interpreted as no color)
         if (this.options.selectedColor) {
-            const selectedColor = ColorpickerWidget.normalizeCSSColor(this.options.selectedColor);
+            let selectedColor = this.options.selectedColor;
+            if (compatibilityColorNames.includes(selectedColor)) {
+                selectedColor = this.style.getPropertyValue('--' + selectedColor).trim() || selectedColor;
+            }
+            selectedColor = ColorpickerWidget.normalizeCSSColor(selectedColor);
             if (selectedColor !== 'rgba(0, 0, 0, 0)') {
                 this.selectedColor = this.colorToColorNames[selectedColor] || selectedColor;
             }
@@ -152,12 +157,6 @@ const ColorPaletteWidget = Widget.extend({
             defaultColor: defaultColor,
         });
         await this.colorPicker.prependTo(this.$el);
-
-        // Add those at the very end so that we don't mark hidden colors as
-        // selected. We want those colors to appear as selected custom colors if
-        // they are chosen somehow.
-        this._addCompatibilityColors(['primary', 'secondary', 'success', 'info', 'warning', 'danger']);
-
         return res;
     },
     /**
@@ -171,24 +170,6 @@ const ColorPaletteWidget = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Hardcode some existing colors (but make them hidden in the colorpicker)
-     * so they can be removed from snippets when selecting another color.
-     * Normally, the chosable colors do not contain them, which prevents them to
-     * be removed. For example, normally, the 'alpha' and 'beta' color (which
-     * are the same as primary and secondary) are displayed instead of their
-     * duplicates... but not for all themes.
-     *
-     * @private
-     * @param {string[]} colorNames
-     */
-    _addCompatibilityColors: function (colorNames) {
-        for (const colorName of colorNames) {
-            if (!this.$('button[data-color="' + colorName + '"]').length) {
-                this.$el.append($('<button/>', {'class': 'd-none', 'data-color': colorName}));
-            }
-        }
-    },
     /**
      * @private
      */
