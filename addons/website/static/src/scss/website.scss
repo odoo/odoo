@@ -670,6 +670,15 @@ $-transition-duration: 200ms;
             }
         }
     }
+    &.o_header_standard.o_header_is_scrolled {
+        @if index(('menu_logo_below', 'logo_menu_below'), o-website-value('header-template')) != null {
+            .navbar-brand {
+                &, img {
+                    transition: none;
+                }
+            }
+        }
+    }
 }
 #oe_main_menu_navbar + #wrapwrap .o_header_affixed {
     top: $o-navbar-height;
