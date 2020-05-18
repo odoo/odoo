@@ -17,9 +17,7 @@ class AccountInvoiceReport(models.Model):
     move_id = fields.Many2one('account.move', readonly=True)
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    company_currency_id = fields.Many2one('res.currency', string='Company Currency', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
-    commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
     country_id = fields.Many2one('res.country', string="Country")
     invoice_user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
     move_type = fields.Selection([
@@ -60,12 +58,11 @@ class AccountInvoiceReport(models.Model):
         'account.move.line': [
             'quantity', 'price_subtotal', 'amount_residual', 'balance', 'amount_currency',
             'move_id', 'product_id', 'product_uom_id', 'account_id', 'analytic_account_id',
-            'journal_id', 'company_id', 'currency_id', 'partner_id',
+            'journal_id', 'company_id', 'partner_id',
         ],
         'product.product': ['product_tmpl_id'],
         'product.template': ['categ_id'],
         'uom.uom': ['category_id', 'factor', 'name', 'uom_type'],
-        'res.currency.rate': ['currency_id', 'name'],
         'res.partner': ['country_id'],
     }
 
@@ -81,7 +78,6 @@ class AccountInvoiceReport(models.Model):
                 line.journal_id,
                 line.company_id,
                 line.company_currency_id,
-                line.partner_id AS commercial_partner_id,
                 move.state,
                 move.move_type,
                 move.partner_id,
@@ -90,14 +86,12 @@ class AccountInvoiceReport(models.Model):
                 move.payment_state,
                 move.invoice_date,
                 move.invoice_date_due,
-                uom_template.id                                             AS product_uom_id,
-                template.categ_id                                           AS product_categ_id,
-                line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)
-                                                                            AS quantity,
-                -line.balance                                               AS price_subtotal,
-                -line.balance / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)
-                                                                            AS price_average,
-                COALESCE(partner.country_id, commercial_partner.country_id) AS country_id
+                partner.country_id AS country_id
+                uom_template.id    AS product_uom_id,
+                template.categ_id  AS product_categ_id,
+                line.quantity / NULLIF(COALESCE(uom_line.factor, 1), 0.0) AS quantity,
+                -line.balance / currency.factor AS price_subtotal,
+                -line.balance / NULLIF(COALESCE(uom_line.factor, 1), 0.0) / currency.factor AS price_average
         '''
 
     @api.model
@@ -106,13 +100,10 @@ class AccountInvoiceReport(models.Model):
             FROM account_move_line line
                 LEFT JOIN res_partner partner ON partner.id = line.partner_id
                 LEFT JOIN product_product product ON product.id = line.product_id
-                LEFT JOIN account_account account ON account.id = line.account_id
-                LEFT JOIN account_account_type user_type ON user_type.id = account.user_type_id
                 LEFT JOIN product_template template ON template.id = product.product_tmpl_id
                 LEFT JOIN uom_uom uom_line ON uom_line.id = line.product_uom_id
-                LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
                 INNER JOIN account_move move ON move.id = line.move_id
-                LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
+                INNER JOIN (select DISTINCT ON (currency_id) currency_id, rate FROM res_currency_rate WHERE name<now() ORDER BY currency_id,name desc) currency ON l.company_currency_id=currency.id
         '''
 
     @api.model
@@ -135,19 +126,12 @@ class AccountInvoiceReport(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        @lru_cache(maxsize=32)  # cache to prevent a SQL query for each data point
-        def get_rate(currency_id):
-            return self.env['res.currency']._get_conversion_rate(
-                self.env['res.currency'].browse(currency_id),
-                self.env.company.currency_id,
-                self.env.company,
-                self._fields['invoice_date'].today()
-            )
-        result = super(AccountInvoiceReport, self).read_group(domain, fields, set(groupby) | {'company_currency_id'}, offset, limit, orderby, False)
-        for res in result:
-            if self.env.company.currency_id.id != res['company_currency_id'][0]:
-                for field in {'price_average', 'price_subtotal'} & set(res):
-                    res[field] = self.env.company.currency_id.round(res[field] * get_rate(res['company_currency_id'][0]))
+        result = super(AccountInvoiceReport, self).read_group(domain, fields, groupby, offset, limit, orderby, False)
+        currency = self.env.company.currency_id
+        rate = currency.rate
+        for field in {'price_average', 'price_subtotal'} & set(fields):
+            for res in result:
+                res[field] = currency.round(res[field]*rate)
         return result
 
 
