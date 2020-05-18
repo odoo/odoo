@@ -10,6 +10,14 @@ class StockQuant(models.Model):
     removal_date = fields.Datetime(related='lot_id.removal_date', store=True, readonly=False)
 
     @api.model
+    def _get_inventory_fields_create(self):
+        """ Returns a list of fields user can edit when he want to create a quant in `inventory_mode`.
+        """
+        res = super()._get_inventory_fields_create()
+        res += ['removal_date']
+        return res
+
+    @api.model
     def _get_removal_strategy_order(self, removal_strategy):
         if removal_strategy == 'fefo':
             return 'removal_date, in_date, id'
