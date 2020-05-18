@@ -42,7 +42,6 @@ class AccountInvoiceReport(models.Model):
     # ==== Invoice line fields ====
     quantity = fields.Float(string='Product Quantity', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
-    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True)
     product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     invoice_date_due = fields.Date(string='Due Date', readonly=True)
     account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True, domain=[('deprecated', '=', False)])
@@ -62,7 +61,6 @@ class AccountInvoiceReport(models.Model):
         ],
         'product.product': ['product_tmpl_id'],
         'product.template': ['categ_id'],
-        'uom.uom': ['category_id', 'factor', 'name', 'uom_type'],
         'res.partner': ['country_id'],
     }
 
@@ -86,12 +84,11 @@ class AccountInvoiceReport(models.Model):
                 move.payment_state,
                 move.invoice_date,
                 move.invoice_date_due,
-                partner.country_id AS country_id
-                uom_template.id    AS product_uom_id,
+                partner.country_id AS country_id,
                 template.categ_id  AS product_categ_id,
                 line.quantity / NULLIF(COALESCE(uom_line.factor, 1), 0.0) AS quantity,
-                -line.balance / currency.factor AS price_subtotal,
-                -line.balance / NULLIF(COALESCE(uom_line.factor, 1), 0.0) / currency.factor AS price_average
+                -line.balance / COALESCE(currency.rate,1) AS price_subtotal,
+                -line.balance / NULLIF(COALESCE(uom_line.factor, 1), 0.0) / COALESCE(currency.rate,1) AS price_average
         '''
 
     @api.model
@@ -103,7 +100,7 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN product_template template ON template.id = product.product_tmpl_id
                 LEFT JOIN uom_uom uom_line ON uom_line.id = line.product_uom_id
                 INNER JOIN account_move move ON move.id = line.move_id
-                INNER JOIN (select DISTINCT ON (currency_id) currency_id, rate FROM res_currency_rate WHERE name<now() ORDER BY currency_id,name desc) currency ON l.company_currency_id=currency.id
+                LEFT JOIN (select DISTINCT ON (currency_id) currency_id, rate FROM res_currency_rate WHERE name<now() ORDER BY currency_id,name desc) currency ON line.company_currency_id=currency.currency_id
         '''
 
     @api.model
