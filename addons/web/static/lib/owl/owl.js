@@ -35,7 +35,7 @@
             }
             this.subscriptions[eventType].push({
                 owner,
-                callback
+                callback,
             });
         }
         /**
@@ -44,7 +44,7 @@
         off(eventType, owner) {
             const subs = this.subscriptions[eventType];
             if (subs) {
-                this.subscriptions[eventType] = subs.filter(s => s.owner !== owner);
+                this.subscriptions[eventType] = subs.filter((s) => s.owner !== owner);
             }
         }
         /**
@@ -129,13 +129,13 @@
                         self.notifyCB();
                     }
                     return true;
-                }
+                },
             });
             const metadata = {
                 value,
                 proxy,
                 rev: this.rev,
-                parent
+                parent,
             };
             this.weakMap.set(value, metadata);
             this.weakMap.set(metadata.proxy, metadata);
@@ -178,7 +178,7 @@
     }
     const propsModule = {
         create: updateProps,
-        update: updateProps
+        update: updateProps,
     };
     //------------------------------------------------------------------------------
     // module/eventlisteners.ts
@@ -285,7 +285,7 @@
     const eventListenersModule = {
         create: updateEventListeners,
         update: updateEventListeners,
-        destroy: updateEventListeners
+        destroy: updateEventListeners,
     };
     //------------------------------------------------------------------------------
     // attributes.ts
@@ -342,7 +342,7 @@
     }
     const attrsModule = {
         create: updateAttrs,
-        update: updateAttrs
+        update: updateAttrs,
     };
     //------------------------------------------------------------------------------
     // class.ts
@@ -746,7 +746,7 @@
         parentNode,
         nextSibling,
         tagName,
-        setTextContent
+        setTextContent,
     };
     function addNS(data, children, sel) {
         if (sel === "dummy") {
@@ -836,7 +836,7 @@
         gt: ">",
         gte: ">=",
         lt: "<",
-        lte: "<="
+        lte: "<=",
     };
     const STATIC_TOKEN_MAP = {
         "{": "LEFT_BRACE",
@@ -846,7 +846,7 @@
         ":": "COLON",
         ",": "COMMA",
         "(": "LEFT_PAREN",
-        ")": "RIGHT_PAREN"
+        ")": "RIGHT_PAREN",
     };
     // note that the space after typeof is relevant. It makes sure that the formatted
     // expression has a space after typeof
@@ -929,7 +929,7 @@
         tokenizeNumber,
         tokenizeOperator,
         tokenizeSymbol,
-        tokenizeStatic
+        tokenizeStatic,
     ];
     /**
      * Convert a javascript expression (as a string) into a list of tokens. For
@@ -1044,7 +1044,7 @@
     }
     function compileExpr(expr, scope) {
         return compileExprToArray(expr, scope)
-            .map(t => t.value)
+            .map((t) => t.value)
             .join("");
     }
 
@@ -1190,7 +1190,7 @@
             const tokens = compileExprToArray(expr, this.variables);
             const done = new Set();
             return tokens
-                .map(tok => {
+                .map((tok) => {
                 if (tok.varName) {
                     if (!done.has(tok.varName)) {
                         done.add(tok.varName);
@@ -1215,7 +1215,7 @@
             if (matches && matches[0].length === s.length) {
                 return `(${this.formatExpression(s.slice(2, -2))})`;
             }
-            let r = s.replace(/\{\{.*?\}\}/g, s => "${" + this.formatExpression(s.slice(2, -2)) + "}");
+            let r = s.replace(/\{\{.*?\}\}/g, (s) => "${" + this.formatExpression(s.slice(2, -2)) + "}");
             return "`" + r + "`";
         }
         startProtectScope(codeBlock) {
@@ -1246,7 +1246,7 @@
         random: Math.random,
         Date: window.Date,
         fetch: (window.fetch || (() => { })).bind(window),
-        localStorage: window.localStorage
+        localStorage: window.localStorage,
     };
 
     /**
@@ -1366,7 +1366,7 @@
         create: "(_, n)",
         insert: "vn",
         remove: "(vn, rm)",
-        destroy: "()"
+        destroy: "()",
     };
     function isComponent(obj) {
         return obj && obj.hasOwnProperty("__owl__");
@@ -1396,7 +1396,7 @@
         },
         vDomToString: function (vdom) {
             return vdom
-                .map(vnode => {
+                .map((vnode) => {
                 if (vnode.sel) {
                     const node = document.createElement(vnode.sel);
                     const result = patch(node, vnode);
@@ -1426,7 +1426,7 @@
                 obj = newObj;
             }
             return obj;
-        }
+        },
     };
     function parseXML(xml) {
         const parser = new DOMParser();
@@ -1487,7 +1487,7 @@
             QWeb.DIRECTIVE_NAMES[directive.name] = 1;
             QWeb.DIRECTIVES.sort((d1, d2) => d1.priority - d2.priority);
             if (directive.extraNames) {
-                directive.extraNames.forEach(n => (QWeb.DIRECTIVE_NAMES[n] = 1));
+                directive.extraNames.forEach((n) => (QWeb.DIRECTIVE_NAMES[n] = 1));
             }
         }
         static registerComponent(name, Component) {
@@ -1550,7 +1550,7 @@
                     const compiledFunction = this._compile(name, elem);
                     template.fn = compiledFunction;
                     return compiledFunction.call(this, context, extra);
-                }
+                },
             };
             this.templates[name] = template;
         }
@@ -1797,7 +1797,7 @@
                         qweb: this,
                         ctx,
                         fullName,
-                        value
+                        value,
                     });
                     if (isDone) {
                         for (let { directive, value, fullName } of finalizers) {
@@ -1824,7 +1824,7 @@
                             fullName,
                             value,
                             nodeID,
-                            addNodeHook
+                            addNodeHook,
                         });
                     }
                 }
@@ -1902,10 +1902,15 @@
                         if ((value = value.trim())) {
                             let classDef = value
                                 .split(/\s+/)
-                                .map(a => `'${escapeQuotes(a)}':true`)
+                                .map((a) => `'${escapeQuotes(a)}':true`)
                                 .join(",");
-                            classObj = `_${ctx.generateID()}`;
-                            ctx.addLine(`let ${classObj} = {${classDef}};`);
+                            if (classObj) {
+                                ctx.addLine(`Object.assign(${classObj}, {${classDef}})`);
+                            }
+                            else {
+                                classObj = `_${ctx.generateID()}`;
+                                ctx.addLine(`let ${classObj} = {${classDef}};`);
+                            }
                         }
                     }
                     else {
@@ -1947,7 +1952,7 @@
                             const attValueID = ctx.generateID();
                             ctx.addLine(`let _${attValueID} = ${formattedValue};`);
                             formattedValue = `'${attValue}' + (_${attValueID} ? ' ' + _${attValueID} : '')`;
-                            const attrIndex = attrs.findIndex(att => att.startsWith(attName + ":"));
+                            const attrIndex = attrs.findIndex((att) => att.startsWith(attName + ":"));
                             attrs.splice(attrIndex, 1);
                         }
                         ctx.addLine(`let _${attID} = ${formattedValue};`);
@@ -2030,7 +2035,7 @@
         name: 1,
         att: 1,
         attf: 1,
-        translation: 1
+        translation: 1,
     };
     QWeb.DIRECTIVES = [];
     QWeb.TEMPLATES = {};
@@ -2109,6 +2114,7 @@
         if (ctx.escaping) {
             let protectID;
             if (value.hasBody) {
+                ctx.rootContext.shouldDefineUtils = true;
                 protectID = ctx.startProtectScope();
                 ctx.addLine(`${exprID} = ${exprID} instanceof utils.VDomArray ? utils.vDomToString(${exprID}) : ${exprID};`);
             }
@@ -2154,7 +2160,7 @@
             let value = ctx.getValue(node.getAttribute("t-esc"));
             compileValueNode(value, node, qweb, ctx.subContext("escaping", true));
             return true;
-        }
+        },
     });
     QWeb.addDirective({
         name: "raw",
@@ -2163,7 +2169,7 @@
             let value = ctx.getValue(node.getAttribute("t-raw"));
             compileValueNode(value, node, qweb, ctx);
             return true;
-        }
+        },
     });
     //------------------------------------------------------------------------------
     // t-set
@@ -2214,7 +2220,7 @@
                 }
             }
             return true;
-        }
+        },
     });
     //------------------------------------------------------------------------------
     // t-if, t-elif, t-else
@@ -2229,7 +2235,7 @@
         },
         finalize({ ctx }) {
             ctx.closeIf();
-        }
+        },
     });
     QWeb.addDirective({
         name: "elif",
@@ -2242,7 +2248,7 @@
         },
         finalize({ ctx }) {
             ctx.closeIf();
-        }
+        },
     });
     QWeb.addDirective({
         name: "else",
@@ -2254,7 +2260,7 @@
         },
         finalize({ ctx }) {
             ctx.closeIf();
-        }
+        },
     });
     //------------------------------------------------------------------------------
     // t-call
@@ -2333,7 +2339,7 @@
                 ctx.addLine(`}`);
             }
             return true;
-        }
+        },
     });
     //------------------------------------------------------------------------------
     // t-foreach
@@ -2389,7 +2395,7 @@
             ctx.addLine("}");
             ctx.stopProtectScope(varsID);
             return true;
-        }
+        },
     });
     //------------------------------------------------------------------------------
     // t-debug
@@ -2399,7 +2405,7 @@
         priority: 1,
         atNodeEncounter({ ctx }) {
             ctx.addLine("debugger;");
-        }
+        },
     });
     //------------------------------------------------------------------------------
     // t-log
@@ -2410,7 +2416,7 @@
         atNodeEncounter({ ctx, value }) {
             const expr = ctx.formatExpression(value);
             ctx.addLine(`console.log(${expr})`);
-        }
+        },
     });
 
     /**
@@ -2434,7 +2440,7 @@
     const MODS_CODE = {
         prevent: "e.preventDefault();",
         self: "if (e.target !== this.elm) {return}",
-        stop: "e.stopPropagation();"
+        stop: "e.stopPropagation();",
     };
     const FNAMEREGEXP = /^[$A-Z_][0-9A-Z_$]*$/i;
     function makeHandlerCode(ctx, fullName, value, putInCache, modcodes = MODS_CODE) {
@@ -2473,7 +2479,7 @@
             putInCache = false;
             code = ctx.captureExpression(value);
         }
-        const modCode = mods.map(mod => modcodes[mod]).join("");
+        const modCode = mods.map((mod) => modcodes[mod]).join("");
         let handler = `function (e) {if (!context.__owl__.isMounted){return}${modCode}${code}}`;
         if (putInCache) {
             const key = ctx.generateTemplateKey(event);
@@ -2488,7 +2494,7 @@
         atNodeCreation({ ctx, fullName, value, nodeID }) {
             const { event, handler } = makeHandlerCode(ctx, fullName, value, true);
             ctx.addLine(`p${nodeID}.on['${event}'] = ${handler};`);
-        }
+        },
     });
     //------------------------------------------------------------------------------
     // t-ref
@@ -2502,7 +2508,7 @@
             ctx.addLine(`const ${refKey} = ${ctx.interpolate(value)};`);
             addNodeHook("create", `context.__owl__.refs[${refKey}] = n.elm;`);
             addNodeHook("destroy", `delete context.__owl__.refs[${refKey}];`);
-        }
+        },
     });
     //------------------------------------------------------------------------------
     // t-transition
@@ -2593,12 +2599,12 @@
             let name = value;
             const hooks = {
                 insert: `utils.transitionInsert(vn, '${name}');`,
-                remove: `utils.transitionRemove(vn, '${name}', rm);`
+                remove: `utils.transitionRemove(vn, '${name}', rm);`,
             };
             for (let hookName in hooks) {
                 addNodeHook(hookName, hooks[hookName]);
             }
-        }
+        },
     });
     //------------------------------------------------------------------------------
     // t-slot
@@ -2630,7 +2636,7 @@
             }
             ctx.closeIf();
             return true;
-        }
+        },
     });
     //------------------------------------------------------------------------------
     // t-model
@@ -2683,7 +2689,7 @@
             }
             ctx.addLine(`extra.handlers[${key}] = extra.handlers[${key}] || (${handler});`);
             ctx.addLine(`p${nodeID}.on['${event}'] = extra.handlers[${key}];`);
-        }
+        },
     });
     //------------------------------------------------------------------------------
     // t-key
@@ -2706,7 +2712,7 @@
             if (ctx.loopNumber === 0) {
                 ctx.rootContext.hasKey0 = ctx.keyStack.pop();
             }
-        }
+        },
     });
 
     const config = {};
@@ -2723,7 +2729,7 @@
             else {
                 console.log(`Owl is now running in 'prod' mode.`);
             }
-        }
+        },
     });
 
     /**
@@ -2742,7 +2748,7 @@
     // t-component
     //------------------------------------------------------------------------------
     const T_COMPONENT_MODS_CODE = Object.assign({}, MODS_CODE, {
-        self: "if (e.target !== vn.elm) {return}"
+        self: "if (e.target !== vn.elm) {return}",
     });
     QWeb.utils.defineProxy = function defineProxy(target, source) {
         for (let k in source) {
@@ -2752,7 +2758,7 @@
                 },
                 set(val) {
                     source[k] = val;
-                }
+                },
             });
         }
     };
@@ -2971,7 +2977,7 @@
             }
             // computing the props string representing the props object
             let propStr = Object.keys(props)
-                .map(k => k + ":" + props[k])
+                .map((k) => k + ":" + props[k])
                 .join(",");
             let componentID = ctx.generateID();
             const templateKey = ctx.generateTemplateKey();
@@ -3011,7 +3017,7 @@
                     let classDef = classAttr
                         .trim()
                         .split(/\s+/)
-                        .map(a => `'${a}':true`)
+                        .map((a) => `'${a}':true`)
                         .join(",");
                     classObj = `_${ctx.generateID()}`;
                     ctx.addLine(`let ${classObj} = {${classDef}};`);
@@ -3163,7 +3169,7 @@
             }
             ctx.addLine(`w${componentID}.__owl__.parentLastFiberId = extra.fiber.id;`);
             return true;
-        }
+        },
     });
 
     class Scheduler {
@@ -3194,7 +3200,7 @@
                             return reject(fiber.error);
                         }
                         resolve();
-                    }
+                    },
                 });
                 if (!this.isRunning) {
                     this.start();
@@ -3203,7 +3209,7 @@
         }
         rejectFiber(fiber, reason) {
             fiber = fiber.root;
-            const index = this.tasks.findIndex(t => t.fiber === fiber);
+            const index = this.tasks.findIndex((t) => t.fiber === fiber);
             if (index >= 0) {
                 const [task] = this.tasks.splice(index, 1);
                 fiber.cancel();
@@ -3218,7 +3224,7 @@
         flush() {
             let tasks = this.tasks;
             this.tasks = [];
-            tasks = tasks.filter(task => {
+            tasks = tasks.filter((task) => {
                 if (task.fiber.isCompleted) {
                     task.callback();
                     return false;
@@ -3492,7 +3498,7 @@
          * Cancel a fiber and all its children.
          */
         cancel() {
-            this._walk(f => {
+            this._walk((f) => {
                 if (!f.isRendered) {
                     f.root.counter--;
                 }
@@ -3657,7 +3663,7 @@
      */
     const STYLESHEETS = {};
     function processSheet(str) {
-        const tokens = str.split(/(\{|\}|;)/).map(s => s.trim());
+        const tokens = str.split(/(\{|\}|;)/).map((s) => s.trim());
         const selectorStack = [];
         const parts = [];
         let rules = [];
@@ -3801,7 +3807,7 @@
                 renderFn: qweb.render.bind(qweb, template),
                 classObj: null,
                 refs: null,
-                scope: null
+                scope: null,
             };
             if (constr.style) {
                 this.__applyStyles(constr);
@@ -3904,6 +3910,9 @@
                 else {
                     return Promise.resolve();
                 }
+            }
+            if (__owl__.isDestroyed) {
+                throw new Error("Cannot mount a destroyed component");
             }
             if (__owl__.currentFiber) {
                 const currentFiber = __owl__.currentFiber;
@@ -4096,7 +4105,7 @@
                 const ev = new OwlEvent(component, eventType, {
                     bubbles: true,
                     cancelable: true,
-                    detail: payload
+                    detail: payload,
                 });
                 const triggerHook = this.env[portalSymbol];
                 if (triggerHook) {
@@ -4131,7 +4140,7 @@
                 }
                 await Promise.all([
                     this.willUpdateProps(nextProps),
-                    __owl__.willUpdatePropsCB && __owl__.willUpdatePropsCB(nextProps)
+                    __owl__.willUpdatePropsCB && __owl__.willUpdatePropsCB(nextProps),
                 ]);
                 if (fiber.isCompleted) {
                     return;
@@ -4225,7 +4234,7 @@
             try {
                 let vnode = __owl__.renderFn(this, {
                     handlers: __owl__.boundHandlers,
-                    fiber: fiber
+                    fiber: fiber,
                 });
                 // we iterate over the children to detect those that no longer belong to the
                 // current rendering: those ones, if not mounted yet, can (and have to) be
@@ -4363,9 +4372,9 @@
         async __notifyComponents() {
             const rev = ++this.rev;
             const subscriptions = this.subscriptions.update;
-            const groups = partitionBy(subscriptions, s => (s.owner ? s.owner.__owl__.depth : -1));
+            const groups = partitionBy(subscriptions, (s) => (s.owner ? s.owner.__owl__.depth : -1));
             for (let group of groups) {
-                const proms = group.map(sub => sub.callback.call(sub.owner, rev));
+                const proms = group.map((sub) => sub.callback.call(sub.owner, rev));
                 // at this point, each component in the current group has registered a
                 // top level fiber in the scheduler. It could happen that rendering these
                 // components is done (if they have no children).  This is why we manually
@@ -4420,7 +4429,7 @@
             }
         });
         const __destroy = component.__destroy;
-        component.__destroy = parent => {
+        component.__destroy = (parent) => {
             ctx.off("update", component);
             delete mapping[id];
             __destroy.call(component, parent);
@@ -4526,7 +4535,7 @@
             get comp() {
                 const val = __owl__.refs && __owl__.refs[name];
                 return val instanceof Component ? val : null;
-            }
+            },
         };
     }
     // -----------------------------------------------------------------------------
@@ -4587,7 +4596,7 @@
             if (config.getters) {
                 const firstArg = {
                     state: this.state,
-                    getters: this.getters
+                    getters: this.getters,
                 };
                 for (let g in config.getters) {
                     this.getters[g] = config.getters[g].bind(this, firstArg);
@@ -4602,7 +4611,7 @@
                 dispatch: this.dispatch.bind(this),
                 env: this.env,
                 state: this.state,
-                getters: this.getters
+                getters: this.getters,
             }, ...payload);
             return result;
         }
@@ -4647,11 +4656,11 @@
                 return component.render();
             }
         });
-        onWillUpdateProps(props => {
+        onWillUpdateProps((props) => {
             selectCompareUpdate(store.state, props);
         });
         const __destroy = component.__destroy;
-        component.__destroy = parent => {
+        component.__destroy = (parent) => {
             delete store.updateFunctions[componentId];
             __destroy.call(component, parent);
         };
@@ -4667,7 +4676,7 @@
             },
             has(target, k) {
                 return k in result;
-            }
+            },
         });
     }
     function useDispatch(store) {
@@ -4765,12 +4774,12 @@
             // put a callback in the env that is propagated to children s.t. portal can
             // register an handler to those events just before children will trigger them
             useSubEnv({
-                [portalSymbol]: ev => {
+                [portalSymbol]: (ev) => {
                     if (!this._handledEvents.has(ev.type)) {
                         this.portal.elm.addEventListener(ev.type, this._handlerTunnel);
                         this._handledEvents.add(ev.type);
                     }
-                }
+                },
             });
         }
         /**
@@ -4878,8 +4887,8 @@
     Portal.template = xml `<portal><t t-slot="default"/></portal>`;
     Portal.props = {
         target: {
-            type: String
-        }
+            type: String,
+        },
     };
 
     class Link extends Component {
@@ -4969,7 +4978,7 @@
         // Public API
         //--------------------------------------------------------------------------
         async start() {
-            this._listener = ev => this._navigate(this.currentPath(), ev);
+            this._listener = (ev) => this._navigate(this.currentPath(), ev);
             window.addEventListener("popstate", this._listener);
             if (this.mode === "hash") {
                 window.addEventListener("hashchange", this._listener);
@@ -5061,7 +5070,7 @@
                     return {
                         type: "match",
                         route: route,
-                        params: params
+                        params: params,
                     };
                 }
             }
@@ -5084,7 +5093,7 @@
                 const result = await route.beforeRouteEnter({
                     env: this.env,
                     from: this.currentRoute,
-                    to: route
+                    to: route,
                 });
                 if (result === false) {
                     return { type: "cancelled" };
@@ -5160,7 +5169,7 @@
         useContext: useContext,
         useDispatch: useDispatch,
         useGetters: useGetters,
-        useStore: useStore
+        useStore: useStore,
     });
     const __info__ = {};
 
@@ -5178,9 +5187,9 @@
     exports.useState = useState$1;
     exports.utils = utils;
 
-    exports.__info__.version = '1.0.7';
-    exports.__info__.date = '2020-04-17T13:53:00.270Z';
-    exports.__info__.hash = '23ce19e';
+    exports.__info__.version = '1.0.8';
+    exports.__info__.date = '2020-05-18T07:34:23.796Z';
+    exports.__info__.hash = '4b961cb';
     exports.__info__.url = 'https://github.com/odoo/owl';
 
 }(this.owl = this.owl || {}));
