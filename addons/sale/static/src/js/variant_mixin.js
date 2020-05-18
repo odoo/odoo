@@ -447,6 +447,12 @@ var VariantMixin = {
         $price.text(self._priceToStr(combination.price));
         $default_price.text(self._priceToStr(combination.list_price));
 
+        // Open Revolution - Adding Variance
+        var $price_m2 = $parent.find(".oe_price_m2 .oe_currency_value");
+        var $default_price_m2 = $parent.find(".oe_default_price_m2:first .oe_currency_value");
+        $price_m2.text(self._priceToStr(combination.price/2));
+        $default_price_m2.text(self._priceToStr(combination.list_price/2));
+
         var isCombinationPossible = true;
         if (!_.isUndefined(combination.is_combination_possible)) {
             isCombinationPossible = combination.is_combination_possible;
@@ -462,12 +468,14 @@ var VariantMixin = {
                 .removeClass('d-none')
                 .css('text-decoration', 'line-through');
             $default_price.parent().removeClass('d-none');
+            $default_price_m2.parent().removeClass('d-none');   //Open Revolution
         } else {
             $default_price
                 .closest('.oe_website_sale')
                 .removeClass("discount");
             $optional_price.closest('.oe_optional').addClass('d-none');
             $default_price.parent().addClass('d-none');
+            $default_price_m2.parent().addClass('d-none');  //Open Revolution
         }
 
         var rootComponentSelectors = [
