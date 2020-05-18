@@ -21,10 +21,16 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         var $carriers = $('#delivery_carrier input[name="delivery_type"]');
+        var $payButton = $('#o_payment_form_pay');
         // Workaround to:
         // - update the amount/error on the label at first rendering
         // - prevent clicking on 'Pay Now' if the shipper rating fails
         if ($carriers.length > 0) {
+            if ($carriers.filter(':checked').length === 0) {
+                $payButton.prop('disabled', true);
+                $payButton.data('disabled_reasons', $payButton.data('disabled_reasons') || {});
+                $payButton.data('disabled_reasons').carrier_selection = true;
+            }
             $carriers.filter(':checked').click();
         }
 
