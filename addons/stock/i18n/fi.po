@@ -15,7 +15,6 @@
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
 # Tommi Rintala <tommi.rintala@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2019
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2019
 # Jukka Paulin <jukka.paulin@gmail.com>, 2019
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2019
@@ -27,6 +26,7 @@
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2020
 # 
 msgid ""
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020\n"
+"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1142,7 +1142,7 @@ msgstr "Valitse päivämäärä"
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "Sulje"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
@@ -7008,14 +7008,8 @@ msgstr "Punnittu tuote"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Kun varasto valitaan tälle reitille, tätä reittiä olisi pidettävä "
-"oletusreitinä, kun tuotteet kulkevat tämän varaston läpi. Tuotteiden / "
-"tuoteryhmien reitit tai hankinnan suositellut reitit voivat ohittaa tämän "
-"käyttäytymisen"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -7026,19 +7020,13 @@ msgstr "Kun kaikki tuotteet ovat valmiita"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Jos valittuna, reitti valitaan Tuoteseloste-välilehdessä. Se on etusijalla "
-"varaston reitillä."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Jos valittuna, reitti valitaan tuoteryhmässä. Se on etusijalla varaston "
-"reitillä."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id

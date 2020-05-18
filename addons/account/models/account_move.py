@@ -171,6 +171,7 @@ class AccountMove(models.Model):
 
     # ==== Reverse feature fields ====
     reversed_entry_id = fields.Many2one('account.move', string="Reversal of", readonly=True, copy=False)
+    reversal_move_id = fields.One2many('account.move', 'reversed_entry_id')
 
     # =========================================================
     # Invoice related fields
@@ -317,6 +318,8 @@ class AccountMove(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
+        self = self.with_context(force_company=self.journal_id.company_id.id)
+
         warning = {}
         if self.partner_id:
             rec_account = self.partner_id.property_account_receivable_id
@@ -509,6 +512,11 @@ class AccountMove(models.Model):
                 price_unit_foreign_curr = base_line.amount_currency
                 price_unit_comp_curr = base_line.balance
 
+            if move.is_invoice(include_receipts=True):
+                handle_price_include = True
+            else:
+                handle_price_include = False
+
             balance_taxes_res = base_line.tax_ids._origin.compute_all(
                 price_unit_comp_curr,
                 currency=base_line.company_currency_id,
@@ -516,6 +524,7 @@ class AccountMove(models.Model):
                 product=base_line.product_id,
                 partner=base_line.partner_id,
                 is_refund=self.type in ('out_refund', 'in_refund'),
+                handle_price_include=handle_price_include,
             )
 
             if base_line.currency_id:
@@ -776,6 +785,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         in_draft_mode = self != self._origin
         today = fields.Date.context_today(self)
+        self = self.with_context(force_company=self.journal_id.company_id.id)
 
         def _get_payment_terms_computation_date(self):
             ''' Get the date from invoice that will be used to compute the payment terms.
@@ -881,7 +891,8 @@ class AccountMove(models.Model):
 
         existing_terms_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
         others_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type not in ('receivable', 'payable'))
-        total_balance = sum(others_lines.mapped('balance'))
+        company_currency_id = self.company_id.currency_id
+        total_balance = sum(others_lines.mapped(lambda l: company_currency_id.round(l.balance)))
         total_amount_currency = sum(others_lines.mapped('amount_currency'))
 
         if not others_lines:
@@ -2166,7 +2177,7 @@ class AccountMove(models.Model):
                     raise UserError(_('Please define a sequence on your journal.'))
 
                 # Consume a new number.
-                to_write['name'] = sequence.next_by_id(sequence_date=move.date)
+                to_write['name'] = sequence.with_context(ir_sequence_date=move.date).next_by_id()
 
             move.write(to_write)
 
@@ -2668,6 +2679,7 @@ class AccountMoveLine(models.Model):
 
     def _get_computed_account(self):
         self.ensure_one()
+        self = self.with_context(force_company=self.move_id.journal_id.company_id.id)
 
         if not self.product_id:
             return

@@ -128,7 +128,7 @@ var PivotRenderer = AbstractRenderer.extend({
                     className = 'o_pivot_header_cell' + (cell.isLeaf ? '_closed' : '_opened');
                 }
                 cellParams.class = className;
-            
+
                 $tr.append($('<th>', cellParams));
             });
             $thead.append($tr);
@@ -259,7 +259,10 @@ var PivotRenderer = AbstractRenderer.extend({
         if ($(ev.currentTarget).is('th')) { // header cell
             index += 1; // increment by 1 to compensate the top left empty cell
         }
-        this.$("td").filter(":nth-child(" + (index + 1) + ")").addClass("o_cell_hover");
+        var tds = this.el.querySelectorAll("td:nth-child(" + (index + 1) + ")");
+        for (var td of tds) {
+            td.classList.add("o_cell_hover");
+        }
     },
     /**
      * @private

@@ -6,6 +6,7 @@
 # Katherine Zaoral <katherine.zaoral@gmail.com>, 2019
 # Julián Andrés Osorio López <mcjulian1107@gmail.com>, 2019
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2019
+# Hbto [ Vauxoo ] <hbto@vauxoo.com>, 2019
 # Carlos rodriguez <carlosalbertor436@gmail.com>, 2019
 # Luis González <lgonzalez@vauxoo.com>, 2019
 # oihane <oihanecruce@gmail.com>, 2019
@@ -20,7 +21,6 @@
 # Vivian Montana <vmo@odoo.com>, 2019
 # Alejandro Santana <alejandrosantana@anubia.es>, 2019
 # Carlos Lopez <celm1990@hotmail.com>, 2019
-# Manuel Gómez <nuelgoz@gmail.com>, 2019
 # pepito alialabs <pepitoalialabs@gmail.com>, 2019
 # David Perez <david@closemarketing.es>, 2019
 # AleEscandon <alejandra.escandon@jarsa.com.mx>, 2019
@@ -36,7 +36,6 @@
 # juani_aizean <juani@aizean.com>, 2019
 # Wilcar José Angulo <wilcarjose@gmail.com>, 2019
 # José Antonio Cuello <inactive+Yopli2k@transifex.com>, 2019
-# Hbto [ Vauxoo ] <hbto@vauxoo.com>, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2019
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
@@ -53,7 +52,7 @@
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
 # Sergio Flores <vitavitae1@gmail.com>, 2019
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Antonio Trueba, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2019
 # Gustavo Valverde, 2019
@@ -68,12 +67,12 @@
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
 # Pablo Rojas <rojaspablo88@gmail.com>, 2019
 # Marco Alejandro Martinez <martinezsuarezmarcoalejandro@gmail.com>, 2020
-# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # Jesse Garza <jga@odoo.com>, 2020
-# Elena Aguirre Claeyssens <eac@odoo.com>, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # gpi odoo <gpi@odoo.com>, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Elena Aguirre Claeyssens <eac@odoo.com>, 2020
+# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -81,7 +80,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1086,7 +1085,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"       Auto-completar datos de la compañía del partner\n"
+"       Auto-completar los datos de la compañía del contacto\n"
 "    "
 
 #. module: base
@@ -1581,6 +1580,44 @@ msgid ""
 "\n"
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Agregue un nuevo modelo denominado \"Tipo de identificación\" que amplíe la funcionalidad del campo de número de identificación fiscal(NIF) del contacto y permita que el usuario identifique (eventualmente una factura) a los contactos no solo con su número identificación fiscal fiscal (NIF) sino con otros tipos de identificaciones como documento nacional , pasaporte, identificación extranjera, etc. Con este módulo instalado, verá ahora en la vista de formulario de contactos dos campos:\n"
+"\n"
+"* Tipo de identificación\n"
+"* Número de identificación\n"
+"\n"
+"Este comportamiento es un requisito común para algunos países latinoamericanos como Argentina y Chile. Si su localización tiene estos requisitos, entonces debe depender de este módulo y definir en su módulo de localización los tipos de identificación que se utilizan en su país. En general, este tipo de identificaciones son definidas por las autoridades gubernamentales que regulan las operaciones fiscales. Por ejemplo:\n"
+"\n"
+"* AFIP en Argentina define el DNI, CUIT (número de identificación fiscal(NIF) para entidades legales), CUIL (número de identificación fiscal(NIF) para personas naturales), y otros 80 tipos de identificación válidos.\n"
+"\n"
+"Cada identificación contiene esta información:\n"
+"\n"
+"* nombre: nombre corto de la identificación\n"
+"* descripción: podría ser el mismo nombre corto o un nombre largo\n"
+"* id_pais(country_id): el país al que pertenece esta identificación\n"
+"* es_identificacionFiscal(is_vat): identifica este registro como el número de identificación fiscal(NIF) correspondiente para el país específico.\n"
+"* secuencia: permítanos ordenar los tipos de identificación según los más utilizados.\n"
+"* activo: podemos activar / desactivar identificaciones para que sea más fácil para nuestros clientes\n"
+"\n"
+"Con el fin de hacer que este módulo sea compatible con entornos de empresas múltiples donde tenemos compañías que no necesitan / no admiten este requisito, hemos agregado tipos de identificación genéricos y reglas genéricas para administrar la información de contacto y hacerla transparente para el usuario cuando solo use el número de identificación fiscal(NIF) como lo conocíamos anteriormente.\n"
+"\n"
+"Identificaciones genéricas:\n"
+"\n"
+"* identificación Fiscal: la identificación fiscal o el número de identificación fiscal(NIF), de forma predeterminada, se seleccionará como tipo de identificación, por lo que el usuario solo tendrá que agregar el número de identificación fiscal relacionado.\n"
+"* Pasaporte\n"
+"* Identificación extranjera (Documento nacional extranjero)\n"
+"\n"
+"Reglas al crear un nuevo contacto: solo veremos los tipos de identificación que son significativos, teniendo en cuenta estas reglas:\n"
+"\n"
+"* Si el contacto no tiene establecida la dirección del país: mostrará los tipos de identificación genéricos más los definidos en el país de la compañía relacionada del contacto (si el contacto no tiene una compañía específica, mostrará los tipos de identificación relacionados con la compañía de usuario actual)\n"
+"\n"
+"* Si el contacto tiene la dirección del país: mostrará los tipos de identificación genéricos más los definidos para el país del contacto.\n"
+"\n"
+"Al crear una nueva empresa, se establecerá en el contacto relacionado siempre el tipo de identificación es_identificacionFiscal(is_vat) del país relacionado.\n"
+"\n"
+"Todos los tipos de identificación definidos se pueden revisar y activar / desactivar en el menú \"Contactos / Configuración / Tipo de identificación\".\n"
+"\n"
+"Este módulo es compatible con el módulo base_vat para poder validar los números de identificación fiscal(NIF) para cada país que tenga o no la posibilidad de administrar múltiples tipos de identificación.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -1721,6 +1758,9 @@ msgid ""
 "Adds the lead partner to phonecall list\n"
 "    "
 msgstr ""
+"\n"
+"Agrega el contacto principal a la lista de llamadas telefónicas\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_enterprise
@@ -2433,7 +2473,7 @@ msgstr ""
 "Gestión de las ciudades en las direcciones\n"
 "============================\n"
 "\n"
-"Este módulo permite que los usuarios seleccionen la ciudad de una empresa en una lista predeterminada en vez de escribirla en un campo de texto abierto."
+"Este módulo permite que los usuarios seleccionen la ciudad de un contacto en una lista predeterminada en vez de escribirla en un campo de texto abierto."
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast_sale
@@ -4552,7 +4592,7 @@ msgstr ""
 "y hace que el conocimiento sobre el sistema de importación/exportación sea mucho más\n"
 "difícil de aunar, puesto que se expande en 3+ proyectos diferentes.\n"
 "\n"
-"* De forma más flexible, de manera que los usuarios y las empresas puedan construir su\n"
+"* De forma más flexible, de manera que los usuarios y contactos puedan construir su\n"
 "propia interfaz para importar desde otros formatos de archivo (p. ej., archivos\n"
 "OpenDocument), que podrán ser más fáciles de manejar en su flujo de trabajo o desde\n"
 "sus fuentes de producción de datos.\n"
@@ -4756,7 +4796,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Geolocalización de las empresas\n"
+"Geolocalización de los contactos\n"
 "========================\n"
 "    "
 
@@ -5201,7 +5241,7 @@ msgstr ""
 "Permite seleccionar automáticamente cuentas analíticas basadas en criterios:\n"
 "-------------------------------------------------------------------------------------------------------------------------------\n"
 "    * Producto\n"
-"    * Empresa\n"
+"    * Contacto\n"
 "    * Usuario\n"
 "    * Compañía\n"
 "    * Fecha\n"
@@ -5224,7 +5264,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Muestre la dirección de su empresa / socio en Google Maps. Configure una clave API en la parte de Configuraciones del Sitio Web\n"
+"Muestre la dirección de su empresa o la de un contacto en Google Maps. Configure una clave API en la parte de configuraciones del sitio web.\n"
 "   "
 
 #. module: base
@@ -5675,7 +5715,7 @@ msgstr ""
 "        * Precio de venta\n"
 "        * Precio de proveedor\n"
 "\n"
-"Las preferencias de tarifa se establecen por producto y/o empresas.\n"
+"Las preferencias de tarifa se establecen por producto y/o contacto.\n"
 "\n"
 "Imprime etiquetas de producto con código de barras.\n"
 "    "
@@ -7080,23 +7120,23 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Validación del n.º de IVA de las empresas.\n"
+"Validación del número de identificación fiscal(NIF) de los contactos.\n"
 "=========================================\n"
 "\n"
-"Tras instalar este módulo, se validarán los valores introducidos en el campo del IVA de las\n"
-"empresas para todos los países admitidos. Se deduce el país por las 2 letras del código que\n"
-"preceden al número de IVA. Por ejemplo, \"BE0477472701\" se validará usando la normativa\n"
+"Tras instalar este módulo, se validarán los valores introducidos en el campo de número de identificación fiscal(NIF) de los\n"
+"contactos para todos los países admitidos. Se deduce el país por las 2 letras del código que\n"
+"preceden al número de número de identificación fiscal(NIF). Por ejemplo, \"BE0477472701\" se validará usando la normativa\n"
 "belga.\n"
 "\n"
-"Hay dos niveles diferentes para validar el número de IVA:\n"
+"Hay dos niveles diferentes para validar el número de identificación fiscal(NIF):\n"
 "--------------------------------------------------------\n"
 "* Por defecto, se realiza una simple comprobación sin conexión usando las reglas de\n"
 "validación conocidas de un país, normalmente mediante una sencilla comprobación de\n"
 "dígitos. Es rápido y se puede hacer en cualquier momento, pero admite números que quizá\n"
 "no estén realmente asociados o que ya no sean válidos.\n"
 "\n"
-"* Cuando se habilita la opción de \"Comprobación del IVA en VIES\" (en la configuración de la\n"
-"empresa del usuario), los números del IVA se enviarán en su lugar a la base electrónica de\n"
+"* Cuando se habilita la opción de \"Comprobación del número de identificación fiscal(NIF) en VIES\" (en la configuración de la\n"
+"empresa del usuario), los números del número de identificación fiscal(NIF) se enviarán en su lugar a la base electrónica de\n"
 "datos VIES de la Unión Europea, que verificará realmente si el número es válido y si\n"
 "actualmente está asociado a una empresa. Esto es un poco más lento que una simple\n"
 "comprobación sin conexión, pues requiere tener conexión a internet y puede que no esté\n"
@@ -8334,8 +8374,8 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Tax "
 "ID</span></span> already exists ("
 msgstr ""
-"Ya existe un socio con la misma <span><span "
-"class=\"o_vat_label\">identificación fiscal</span></span> ("
+"Ya existe un contacto con el mismo <span><span class=\"o_vat_label\">número "
+"de identificación fiscal (NIF)</span></span> ("
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -8751,7 +8791,7 @@ msgstr "Acciones"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Activate Language and Update Translations"
-msgstr ""
+msgstr "Activar idioma y Actualizar traducciones"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9306,6 +9346,8 @@ msgstr ""
 msgid ""
 "Allows to send sms to website visitor if the visitor is linked to a partner."
 msgstr ""
+"Permite enviar sms al visitante del sitio web si el visitante está vinculado"
+" a un contacto."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_sms
@@ -9735,7 +9777,7 @@ msgstr "Instalación automática requerida"
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete
 msgid "Auto-complete partner companies' data"
-msgstr ""
+msgstr "Autocompletar datos de las empresas del contacto"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete_address_extended
@@ -10303,7 +10345,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon_taxcloud
 msgid "Bridge module between Amazon Connector and TaxCloud"
-msgstr ""
+msgstr "Módulo puente entre Amazon Connector y TaxCloud"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_purchase
@@ -10809,7 +10851,7 @@ msgid ""
 "Choose a subview of partners that includes only address fields, to change "
 "the way users can input addresses."
 msgstr ""
-"Elija una subvista de empresas que incluya solo campos de direcciones, para "
+"Elija una subvista de contacto que incluya solo campos de direcciones, para "
 "cambiar la forma en que los usuarios pueden registrar direcciones."
 
 #. module: base
@@ -12715,8 +12757,8 @@ msgid ""
 "you are working on will be maintained."
 msgstr ""
 "Muestra y gestiona la lista de todos los países que pueden asignarse a los "
-"registros de sus empresas. Puede crear o eliminar países para asegurarse de "
-"que aquellos con los que trabaja se mantienen."
+"registros de sus contactos. Puede crear o eliminar países para asegurarse de"
+" que aquellos con los que trabaja se mantienen."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -13032,7 +13074,7 @@ msgid ""
 "partner is a customer without access or with a limited access created for "
 "sharing data."
 msgstr ""
-"Ya sea cliente (no usuario), como usuario compartido. Indica si el socio "
+"Ya sea cliente (no usuario), como usuario compartido. Indica si el contacto "
 "actual es un cliente sin acceso o con un acceso limitado creado para "
 "compartir datos."
 
@@ -13439,7 +13481,7 @@ msgstr "Gastos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_expense
 msgid "Expenses in Payslips"
-msgstr ""
+msgstr "Gastos en las nóminas"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat__report_ids
@@ -13603,6 +13645,7 @@ msgstr "Permisos extra"
 #: model:ir.module.module,summary:base.module_account_invoice_extract
 msgid "Extract data from invoice scans to fill them automatically"
 msgstr ""
+"Extraiga datos de los escaneos de facturas para rellenarlas automáticamente"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_U
@@ -14504,7 +14547,7 @@ msgstr "Alemania SKR04 - Contabilidad"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_dashboard
 msgid "Get a new dashboard view in the Website App"
-msgstr ""
+msgstr "Obtenga una nueva vista de tablero en la aplicación Sitio web"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_fleet
@@ -14514,7 +14557,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_enterprise
 msgid "Get the enterprise look and feel"
-msgstr ""
+msgstr "Obtenga el aspecto y experiencia Enterprise"
 
 #. module: base
 #: model:res.country,name:base.gh
@@ -15067,7 +15110,7 @@ msgstr "Le ayuda a gestionar sus contrataciones."
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_time_off
 msgid "Helps you manage your time off."
-msgstr ""
+msgstr "Le ayuda a manejar su tiempo libre."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_sign
@@ -17471,7 +17514,7 @@ msgid ""
 "Manage sectors of activity to better classify partners for tracking and "
 "analysis purposes."
 msgstr ""
-"Gestionar sectores de actividad para mejorar la clasificación de empresas "
+"Gestionar sectores de actividad para mejorar la clasificación de contactos "
 "con vistas a hacer seguimiento y análisis."
 
 #. module: base
@@ -20610,7 +20653,7 @@ msgstr "Otras Licencias OSI Aprovadas"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_other_form
 msgid "Other Partners"
-msgstr "Otras empresas"
+msgstr "Otros contactos"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__other_proprietary
@@ -20850,7 +20893,7 @@ msgstr "Nombre del padre"
 #: model:ir.model.fields,field_description:base.field_res_company__partner_id
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 msgid "Partner"
-msgstr "Empresa"
+msgstr "Contacto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete
@@ -20865,18 +20908,18 @@ msgstr "Extensión de autocompletado de empresa para la dirección extendida"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_category
 msgid "Partner Tags"
-msgstr "Etiquetas de empresa"
+msgstr "Etiquetas del contacto"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_title
 msgid "Partner Title"
-msgstr "Título de empresa"
+msgstr "Título del contacto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_tree
 msgid "Partner Titles"
-msgstr "Formas jurídicas de empresa"
+msgstr "Formas o títulos de tratamiento del contacto"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__active_partner
@@ -20886,18 +20929,18 @@ msgstr "La empresa está activada"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner module for website"
-msgstr "Módulo de empresas para el sitio web"
+msgstr "Módulo de contactos para el sitio web"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
-msgstr ""
+msgstr "Contacto con la misma identificación fiscal"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
 msgid "Partner-related data of the user"
-msgstr "Datos del usuario relativos a la empresa"
+msgstr "Datos de contacto del usuario."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__partner_ids
@@ -20905,18 +20948,18 @@ msgstr "Datos del usuario relativos a la empresa"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
 msgid "Partners"
-msgstr "Empresa"
+msgstr "Contactos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
 msgid "Partners Geolocation"
-msgstr "Geolocalización de la empresa"
+msgstr "Geolocalización de los contactos"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Partners: "
-msgstr "Empresas: "
+msgstr "Contactos: "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -21221,7 +21264,7 @@ msgstr "Reimpresion del ticket del punto de venta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_enterprise
 msgid "Point of Sale enterprise"
-msgstr ""
+msgstr "Punto de Venta Enterprise"
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -21802,7 +21845,7 @@ msgstr "Preguntas sobre los eventos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "Generador de cotizaciones"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense
@@ -22091,7 +22134,7 @@ msgstr "Campo relacionado"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__partner_id
 msgid "Related Partner"
-msgstr "Empresa relacionada"
+msgstr "Contacto relacionada"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines__server_id
@@ -22841,17 +22884,17 @@ msgstr "Buscar banco"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Search Partner"
-msgstr "Buscar empresa"
+msgstr "Buscar Contacto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_category_view_search
 msgid "Search Partner Category"
-msgstr "Buscar categoría de socio"
+msgstr "Buscar categoría del contacto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
 msgid "Search Partner Industry"
-msgstr "Búsqueda en la industria del socio"
+msgstr "Buscar industria del contacto"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view
@@ -23262,7 +23305,7 @@ msgstr "Compartir grupo"
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_share
 #: model:ir.model.fields,field_description:base.field_res_users__partner_share
 msgid "Share Partner"
-msgstr "Compartir empresa"
+msgstr "Compartir Contacto"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__share
@@ -26155,12 +26198,12 @@ msgstr "Uzbekistán"
 #: model:res.country,vat_label:base.se model:res.country,vat_label:base.si
 #: model:res.country,vat_label:base.sk model:res.country,vat_label:base.uk
 msgid "VAT"
-msgstr "NIF"
+msgstr "Nº identif. fiscal (NIF)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
 msgid "VAT Number Validation"
-msgstr "Validación de número CIF"
+msgstr "Validación de número de identificación fiscal (NIF)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip
@@ -26265,7 +26308,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__vat_label
 msgid "Vat Label"
-msgstr "Etiqueta del IVA"
+msgstr "Etiqueta del número de identificación fiscal (NIF)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
@@ -26559,7 +26602,7 @@ msgstr "Módulo para correos en la página web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_partner
 msgid "Website Partner"
-msgstr "Empresas en la página web"
+msgstr "Contacto del sitio web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment
@@ -26909,7 +26952,7 @@ msgstr "No puede archivar un contacto vinculado a un usuario interno."
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
-msgstr "No puede crear jerarquías de empresas recursivas."
+msgstr "No puede crear jerarquías recursivas de contacto."
 
 #. module: base
 #: code:addons/base/models/res_company.py:0

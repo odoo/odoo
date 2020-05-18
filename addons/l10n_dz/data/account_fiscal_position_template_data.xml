@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fiscal_position_template_national" model="account.fiscal.position.template">
+        <field name="sequence">1</field>
+        <field name="name">Régime National</field>
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_id" ref="base.dz"/>
+    </record>
+
+    <record id="fiscal_position_template_exo" model="account.fiscal.position.template">
+        <field name="name">EXO</field>
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="note">Exo de TVA</field>
+    </record>
+
+    <record id="fiscal_position_template_import_export" model="account.fiscal.position.template">
+        <field name="name">Import/Export</field>
+        <field name="chart_template_id" ref="l10n_dz_pcg_chart_template"/>
+        <field name="note">Import Export</field>
+    </record>
+
+    <!-- Fiscal Position Tax Templates -->
+    <!-- ventes -->
+    <!-- 19% -->
+    <record id="fp_tax_ve_template_exo_normale19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="tva_normale19" />
+        <field name="tax_dest_id" ref="tva_0" />
+    </record>
+    <!-- 09% -->
+    <record id="fp_tax_ve_template_exo_specifique9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="tva_specifique9" />
+        <field name="tax_dest_id" ref="tva_0" />
+    </record>
+
+    <!-- Achat -->
+    <!-- 19% -->
+    <record id="fp_tax_ac_template_exo_normale19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="tva_acq_normale19" />
+        <field name="tax_dest_id" ref="tva_exo_0" />
+    </record>
+    <!-- 09% -->
+    <record id="fp_tax_ac_template_exo_specifique9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exo" />
+        <field name="tax_src_id" ref="tva_acq_specifique9" />
+        <field name="tax_dest_id" ref="tva_exo_0" />
+    </record>
+
+    <!-- Import/Export -->
+    <!-- ventes -->
+    <!-- 19% -->
+    <record id="fp_tax_ve_template_imp_exp_normale19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_import_export" />
+        <field name="tax_src_id" ref="tva_normale19" />
+        <field name="tax_dest_id" ref="tva_export_0" />
+    </record>
+    <!-- 09% -->
+    <record id="fp_tax_ve_template_imp_exp_specifique9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_import_export" />
+        <field name="tax_src_id" ref="tva_specifique9" />
+        <field name="tax_dest_id" ref="tva_export_0" />
+    </record>
+
+    <!-- Achat -->
+    <!-- 19% -->
+    <record id="fp_tax_ac_template_imp_exp_normale19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_import_export" />
+        <field name="tax_src_id" ref="tva_acq_normale19" />
+        <field name="tax_dest_id" ref="tva_import_0" />
+    </record>
+    <!-- 09% -->
+    <record id="fp_tax_ac_template_imp_exp_specifique9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_import_export" />
+        <field name="tax_src_id" ref="tva_acq_specifique9" />
+        <field name="tax_dest_id" ref="tva_import_0" />
+    </record>
+</odoo>

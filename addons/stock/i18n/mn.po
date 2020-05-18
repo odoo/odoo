@@ -7,7 +7,6 @@
 # Ubuntu Erka <erdenebold10@gmail.com>, 2019
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
 # Suren Ch <oyunsuren.ch@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Otgonbayar.A <gobi.mn@gmail.com>, 2019
 # Chinzorita <chinzorig.o@asterisk-tech.mn>, 2019
 # Onii Onii <onii0223@yahoo.com>, 2019
@@ -17,13 +16,15 @@
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
 # Bayarkhuu Bataa, 2020
 # Munkhbaatar Gombosuren <muuguu17@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Батболд <batbold.ts@gmail.com>, 2020
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
@@ -489,7 +490,7 @@ msgstr "<strong>Захиалга:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Package Type:</strong>"
-msgstr "<strong>Савлагааны төрөл:</strong>"
+msgstr "<strong>Савлагаа:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -1129,6 +1130,12 @@ msgid "Changing the operation type of this record is forbidden at this point."
 msgstr "Ийм нөхцөлд уг бичлэгийн баримтын төрлийг солих нь хориотой."
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
 msgstr "Нөөцийн хүрэлцээг шалгах"
@@ -1173,6 +1180,13 @@ msgstr "Очих байрлалыг сонгоно уу"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Choose your date"
 msgstr "Огноо сонгоно уу"
+
+#. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
+#, python-format
+msgid "Close"
+msgstr "Хаах"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
@@ -2917,7 +2931,7 @@ msgstr "Тооллогын алдагдал"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
 msgid "Inventory Overview"
-msgstr "Тооллогын товчоо"
+msgstr "Агуулахын товчоо"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__name
@@ -3808,6 +3822,8 @@ msgid "Number of unread messages"
 msgstr "Уншаагүй зурвасын тоо"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "On Hand"
 msgstr "Гарт байгаа"
@@ -3864,6 +3880,12 @@ msgstr "Буцаалтын ажиллагааны төрөл"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
 msgstr "Ажилбарын төрөл"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Үйлдлийг дэмжих боломжгүй"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
@@ -4127,7 +4149,7 @@ msgstr "Баглааны Төрөл"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type:"
-msgstr "Савлагааны төрөл:"
+msgstr "Савлагаа:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -6265,6 +6287,9 @@ msgid ""
 "There is already one inventory adjustment line for this product, you should "
 "rather modify this one instead of creating a new one."
 msgstr ""
+"Энэ барааны хувьд тооллогын мөр аль хэдийнээ үүссэн байна, та ижил бараагаар"
+" шинэ тооллогын мөр үүсгэхийн оронд байгаа мөр дээрх тоог засварлаж ашиглана"
+" уу."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -6559,6 +6584,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
+#: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Transfer"
@@ -6622,6 +6648,11 @@ msgstr "Дамжин өнгөрөх байрлалууд"
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__make_to_order
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+msgid "Trigger Another Rule If No Stock"
 msgstr ""
 
 #. module: stock
@@ -7043,14 +7074,8 @@ msgstr "Жинлэсэн бараа"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Энэ маршрутад агуулахыг сонгосноор энэ маршрут нь тухайн агуулахын үндсэн "
-"машрут болох бөгөөд бараа энэ дагуу агуулахад дамжин өнгөрнө. Энэ маршрут нь"
-" Бараа/Барааны ангилал эсвэл Татан авалт дээрх зөвлөмжит маршрутаар дарагдаж"
-" болно."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -7061,19 +7086,13 @@ msgstr "Бүх бараа бэлэн үед"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Сонгосон бол маршрут нь Барааны цонхны Бараа материал хавтас дээр сонгох "
-"боломжтой байна."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Сонгосон бол маршрут нь Барааны ангилал дээр сонгох боломжтой байна. Энэ нь "
-"агуулахын маршрутаас илүү өндөр урьтамжтай байна."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -7155,7 +7174,7 @@ msgid "Wizard"
 msgstr "Харилцах Цонх"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree_lot_name_as_textarea
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Write your SN/LN one by one or copy paste a list."
 msgstr ""
 
@@ -7579,10 +7598,4 @@ msgstr "оронд нь боловсруулсан"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph
 msgid "report_stock_quantity_graph"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:223
-#, python-format
-msgid "Changing the product is only allowed in 'Draft' state."
 msgstr ""
