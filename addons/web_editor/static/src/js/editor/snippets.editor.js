@@ -77,8 +77,8 @@ var SnippetEditor = Widget.extend({
                 cursor: 'move',
                 handle: '.o_move_handle',
                 cursorAt: {
-                    left: 18,
-                    top: 14
+                    left: 10,
+                    top: 10
                 },
                 helper: () => {
                     var $clone = this.$el.clone().css({width: '24px', height: '24px', border: 0});
