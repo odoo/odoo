@@ -234,8 +234,8 @@ class AccountMove(models.Model):
             self.env.context.get('default_type', self.type) in self.env['account.move'].get_invoice_types(include_receipts=True)
             or self.env['account.journal'].browse(self.env.context.get('default_journal_id')).type in ('sale', 'purchase')
         ):
-            for attachment in self.env['ir.attachment'].browse(kwargs.get('attachment_ids', [])):
-                self._create_invoice_from_attachment(attachment)
+            for attachment_id in self.env['ir.attachment'].search([('res_id', '=', self.id)]):
+                self._create_invoice_from_attachment(attachment_id)
         return res
 
     def _create_invoice_from_attachment(self, attachment):
