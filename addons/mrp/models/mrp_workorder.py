@@ -730,7 +730,7 @@ class MrpWorkorder(models.Model):
         }
         if not self.leave_id:
             leave = self.env['resource.calendar.leaves'].create({
-                'name': self.production_id.name + ' - ' + self.name,
+                'name': self.display_name,
                 'calendar_id': self.workcenter_id.resource_calendar_id.id,
                 'date_from': start_date,
                 'date_to': start_date + relativedelta(minutes=self.duration_expected),
