@@ -30,10 +30,11 @@
             <field name="name">hr.employee.public.form</field>
             <field name="model">hr.employee.public</field>
             <field name="arch" type="xml">
-                <form string="Employee" create="0" write="0">
+                <form string="Employee" create="0" write="0" js_class="hr_employee_form">
                     <header/>
                     <sheet>
                         <field name="user_id" invisible="1"/>
+                        <field name="user_partner_id" invisible="1"/>
                         <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <!-- Used by other modules-->
@@ -44,6 +45,7 @@
                                 <label for="name" class="oe_edit_only"/>
                                 <h1>
                                     <field name="name" placeholder="Employee's Name" required="True"/>
+                                    <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
                                 </h1>
                                 <h2>
                                     <field name="job_title" placeholder="Job Title" />
@@ -108,9 +110,11 @@
             <field name="model">hr.employee.public</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <kanban class="o_hr_employee_kanban">
+                <kanban class="o_hr_employee_kanban" js_class="hr_employee_kanban">
                     <field name="id"/>
                     <field name="hr_presence_state"/>
+                    <field name="user_id"/>
+                    <field name="user_partner_id"/>
                     <templates>
                         <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
@@ -139,6 +143,14 @@
                                     <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
                                     <li t-if="record.work_phone.raw_value" class="o_force_ltr"><field name="work_phone" /></li>
                                 </ul>
+                                <div class="oe_kanban_content">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left"/>
+                                        <div class="oe_kanban_bottom_right">
+                                            <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         </t>
