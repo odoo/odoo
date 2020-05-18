@@ -1100,8 +1100,9 @@ body.editor_enable.editor_has_snippets {
         text-align: center;
         transition: opacity 400ms linear 0s;
 
-        &.o_keypress {
+        &.o_overlay_hidden {
             opacity: 0;
+            transition: none;
         }
         &.oe_active {
             display: block;

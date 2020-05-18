@@ -391,11 +391,11 @@ var SnippetEditor = Widget.extend({
         return show;
     },
     /**
-     * @param {boolean} [isTextEdition=false]
+     * @param {boolean} [show=false]
      */
-    toggleTextEdition: function (isTextEdition) {
-        if (this.$el) {
-            this.$el.toggleClass('o_keypress', !!isTextEdition && this.isShown());
+    toggleOverlayVisibility: function (show) {
+        if (this.$el && !this.scrollingTimeout) {
+            this.$el.toggleClass('o_overlay_hidden', !show && this.isShown());
         }
     },
     /**
@@ -978,14 +978,31 @@ var SnippetsMenu = Widget.extend({
         // again when the mouse moves
         this.$document.on('keydown.snippets_menu', () => {
             this.snippetEditors.forEach(editor => {
-                editor.toggleTextEdition(true);
+                editor.toggleOverlayVisibility(false);
             });
         });
-        this.$document.on('mousemove.snippets_menu, mousedown.snippets_menu', () => {
+        this.$document.on('mousemove.snippets_menu, mousedown.snippets_menu', _.throttle(() => {
             this.snippetEditors.forEach(editor => {
-                editor.toggleTextEdition(false);
+                editor.toggleOverlayVisibility(true);
             });
-        });
+        }, 250));
+
+        // Hide the active overlay when scrolling.
+        // Show it again and recompute all the overlays after the scroll.
+        // TODO: current limitation, suppose that this is the body which scrolls
+        this.$document.on('scroll.snippets_menu', _.throttle(() => {
+            for (const editor of this.snippetEditors) {
+                editor.toggleOverlayVisibility(false);
+            }
+            clearTimeout(this.scrollingTimeout);
+            this.scrollingTimeout = setTimeout(() => {
+                this._scrollingTimeout = null;
+                for (const editor of this.snippetEditors) {
+                    editor.toggleOverlayVisibility(true);
+                    editor.cover();
+                }
+            }, 250);
+        }, 50));
 
         // Auto-selects text elements with a specific class and remove this
         // on text changes
