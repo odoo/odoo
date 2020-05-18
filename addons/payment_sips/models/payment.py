@@ -19,40 +19,21 @@ from odoo.tools.translate import _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_sips.controllers.main import SipsController
 
+from .const import SIPS_SUPPORTED_CURRENCIES
+
 _logger = logging.getLogger(__name__)
-
-
-CURRENCY_CODES = {
-    'EUR': '978',
-    'USD': '840',
-    'CHF': '756',
-    'GBP': '826',
-    'CAD': '124',
-    'JPY': '392',
-    'MXN': '484',
-    'TRY': '949',
-    'AUD': '036',
-    'NZD': '554',
-    'NOK': '578',
-    'BRL': '986',
-    'ARS': '032',
-    'KHR': '116',
-    'TWD': '901',
-}
 
 
 class AcquirerSips(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[
-        ('sips', 'Sips')
-    ], ondelete={'sips': 'set default'})
-    sips_merchant_id = fields.Char('Merchant ID', help="Used for production only", required_if_provider='sips', groups='base.group_user')
+    provider = fields.Selection(selection_add=[('sips', 'Sips')], ondelete={'sips': 'set default'})
+    sips_merchant_id = fields.Char('Merchant ID', required_if_provider='sips', groups='base.group_user')
     sips_secret = fields.Char('Secret Key', size=64, required_if_provider='sips', groups='base.group_user')
     sips_test_url = fields.Char("Test url", required_if_provider='sips', default='https://payment-webinit.simu.sips-atos.com/paymentInit')
     sips_prod_url = fields.Char("Production url", required_if_provider='sips', default='https://payment-webinit.sips-atos.com/paymentInit')
     sips_version = fields.Char("Interface Version", required_if_provider='sips', default='HP_2.31')
-    sips_key_version = fields.Char("Security Key Version", required_if_provider='sips', default="2.0")
+    sips_key_version = fields.Integer("Secret Key Version", required_if_provider='sips', default=2)
 
     def _sips_generate_shasign(self, values):
         """ Generate the shasign for incoming or outgoing communications.
@@ -71,31 +52,33 @@ class AcquirerSips(models.Model):
         self.ensure_one()
         base_url = self.get_base_url()
         currency = self.env['res.currency'].sudo().browse(values['currency_id'])
-        currency_code = CURRENCY_CODES.get(currency.name, False)
-        if not currency_code:
-            raise ValidationError(_('Currency not supported by Wordline'))
-        amount = round(values['amount'] * 100)
-        merchant_id = self.sips_merchant_id
-        key_version = self.sips_key_version
+        sips_currency = SIPS_SUPPORTED_CURRENCIES.get(currency.name)
+        if not sips_currency:
+            raise ValidationError(_('Currency not supported by Wordline: %s') % currency.name)
+        # rounded to its smallest unit, depends on the currency
+        amount = round(values['amount'] * (10 ** sips_currency.decimal))
 
         sips_tx_values = dict(values)
+        data = {
+            'amount': amount,
+            'currencyCode': sips_currency.iso_id,
+            'merchantId': self.sips_merchant_id,
+            'normalReturnUrl': urls.url_join(base_url, SipsController._return_url),
+            'automaticResponseUrl': urls.url_join(base_url, SipsController._notify_url),
+            'transactionReference': values['reference'],
+            'statementReference': values['reference'],
+            'keyVersion': self.sips_key_version,
+        }
         sips_tx_values.update({
-            'Data': u'amount=%s|' % amount +
-                    u'currencyCode=%s|' % currency_code +
-                    u'merchantId=%s|' % merchant_id +
-                    u'normalReturnUrl=%s|' % urls.url_join(base_url, SipsController._return_url) +
-                    u'automaticResponseUrl=%s|' % urls.url_join(base_url, SipsController._notify_url) +
-                    u'transactionReference=%s|' % values['reference'] +
-                    u'statementReference=%s|' % values['reference'] +
-                    u'keyVersion=%s' % key_version,
+            'Data': '|'.join([f'{k}={v}' for k,v in data.items()]),
             'InterfaceVersion': self.sips_version,
         })
 
         return_context = {}
         if sips_tx_values.get('return_url'):
-            return_context[u'return_url'] = u'%s' % urls.url_quote(sips_tx_values.pop('return_url'))
-        return_context[u'reference'] = u'%s' % sips_tx_values['reference']
-        sips_tx_values['Data'] += u'|returnContext=%s' % (json.dumps(return_context))
+            return_context['return_url'] = urls.url_quote(sips_tx_values.get('return_url'))
+        return_context['reference'] = sips_tx_values['reference']
+        sips_tx_values['Data'] += '|returnContext=%s' % (json.dumps(return_context))
 
         shasign = self._sips_generate_shasign(sips_tx_values)
         sips_tx_values['Seal'] = shasign
@@ -103,7 +86,7 @@ class AcquirerSips(models.Model):
 
     def sips_get_form_action_url(self):
         self.ensure_one()
-        return self.state == 'enabled' and self.sips_prod_url or self.sips_test_url
+        return self.sips_prod_url if self.state == 'enabled' else self.sips_test_url
 
 
 class TxSips(models.Model):
@@ -118,7 +101,7 @@ class TxSips(models.Model):
 
     @api.model
     def _compute_reference(self, values=None, prefix=None):
-        res = super(TxSips, self)._compute_reference(values=values, prefix=prefix)
+        res = super()._compute_reference(values=values, prefix=prefix)
         acquirer = self.env['payment.acquirer'].browse(values.get('acquirer_id'))
         if acquirer and acquirer.provider == 'sips':
             return re.sub(r'[^0-9a-zA-Z]+', 'x', res) + 'x' + str(int(time.time()))
@@ -131,8 +114,8 @@ class TxSips(models.Model):
     def _sips_data_to_object(self, data):
         res = {}
         for element in data.split('|'):
-            element_split = element.split('=')
-            res[element_split[0]] = element_split[1]
+            (key, value) = element.split('=')
+            res[key] = value
         return res
 
     @api.model
@@ -144,16 +127,12 @@ class TxSips(models.Model):
         reference = data.get('transactionReference')
 
         if not reference:
-            custom = json.loads(data.pop('returnContext', False) or '{}')
-            reference = custom.get('reference')
+            return_context = json.loads(data.get('returnContext', '{}'))
+            reference = return_context.get('reference')
 
         payment_tx = self.search([('reference', '=', reference)])
-        if not payment_tx or len(payment_tx) > 1:
-            error_msg = _('Sips: received data for reference %s', reference)
-            if not payment_tx:
-                error_msg += _('; no order found')
-            else:
-                error_msg += _('; multiple order found')
+        if not payment_tx:
+            error_msg = _('Sips: received data for reference %s; no order found') % reference
             _logger.error(error_msg)
             raise ValidationError(error_msg)
         return payment_tx
@@ -163,11 +142,12 @@ class TxSips(models.Model):
 
         data = self._sips_data_to_object(data.get('Data'))
 
-        # TODO: txn_id: should be false at draft, set afterwards, and verified with txn details
-        if self.acquirer_reference and data.get('transactionReference') != self.acquirer_reference:
-            invalid_parameters.append(('transactionReference', data.get('transactionReference'), self.acquirer_reference))
-        # check what is bought
-        if float_compare(float(data.get('amount', '0.0')) / 100, self.amount, 2) != 0:
+        # amounts should match
+        # get currency decimals from const
+        sips_currency = SIPS_SUPPORTED_CURRENCIES.get(self.currency_id.name)
+        # convert from int to float using decimals from currency
+        amount_converted = float(data.get('amount', '0.0')) / (10 ** sips_currency.decimal)
+        if float_compare(amount_converted, self.amount, sips_currency.decimal) != 0:
             invalid_parameters.append(('amount', data.get('amount'), '%.2f' % self.amount))
 
         return invalid_parameters
@@ -184,56 +164,49 @@ class TxSips(models.Model):
                 # See odoo/odoo#49160
                 date = parser.parse(date).astimezone(pytz.utc).replace(tzinfo=None)
             except:
-                # will fallback on now in the write to avoid failing to
-                # register the payment because a provider formats their 
-                # dates badly or because some local library is not behaving
-                date = False
+                # fallback on now to avoid failing to register the payment
+                # because a provider formats their dates badly or because
+                # some library is not behaving
+                date = fields.Datetime.now()
         data = {
             'acquirer_reference': data.get('transactionReference'),
-            'date': date or fields.Datetime.now(),
+            'date': date,
         }
         res = False
         if status in self._sips_valid_tx_status:
-            msg = 'Payment for tx ref: %s, got response [%s], set as done.' % \
-                  (self.reference, status)
+            msg = f'ref: {self.reference}, got valid response [{status}], set as done.'
             _logger.info(msg)
             data.update(state_message=msg)
             self.write(data)
             self._set_transaction_done()
             res = True
         elif status in self._sips_error_tx_status:
-            msg = 'Payment for tx ref: %s, got response [%s], set as ' \
-                  'error.' % (self.reference, status)
+            msg = f'ref: {self.reference}, got response [{status}], set as cancel.'
             data.update(state_message=msg)
             self.write(data)
             self._set_transaction_cancel()
         elif status in self._sips_wait_tx_status:
-            msg = 'Received wait status for payment ref: %s, got response ' \
-                  '[%s], set as error.' % (self.reference, status)
+            msg = f'ref: {self.reference}, got wait response [{status}], set as cancel.'
             data.update(state_message=msg)
             self.write(data)
             self._set_transaction_cancel()
         elif status in self._sips_refused_tx_status:
-            msg = 'Received refused status for payment ref: %s, got response' \
-                  ' [%s], set as error.' % (self.reference, status)
+            msg = f'ref: {self.reference}, got refused response [{status}], set as cancel.'
             data.update(state_message=msg)
             self.write(data)
             self._set_transaction_cancel()
         elif status in self._sips_pending_tx_status:
-            msg = 'Payment ref: %s, got response [%s] set as pending.' \
-                  % (self.reference, status)
+            msg = f'ref: {self.reference}, got pending response [{status}], set as pending.'
             data.update(state_message=msg)
             self.write(data)
             self._set_transaction_pending()
         elif status in self._sips_cancel_tx_status:
-            msg = 'Received notification for payment ref: %s, got response ' \
-                  '[%s], set as cancel.' % (self.reference, status)
+            msg = f'ref: {self.reference}, got cancel response [{status}], set as cancel.'
             data.update(state_message=msg)
             self.write(data)
             self._set_transaction_cancel()
         else:
-            msg = 'Received unrecognized status for payment ref: %s, got ' \
-                  'response [%s], set as error.' % (self.reference, status)
+            msg = f'ref: {self.reference}, got unrecognized response [{status}], set as cancel.'
             data.update(state_message=msg)
             self.write(data)
             self._set_transaction_cancel()
