@@ -41,6 +41,7 @@ class PaymentLinkWizard(models.TransientModel):
     link = fields.Char(string='Payment Link', compute='_compute_values')
     description = fields.Char('Payment Ref')
     access_token = fields.Char(compute='_compute_values')
+    company_id = fields.Many2one('res.company', compute='_compute_company')
 
     @api.onchange('amount', 'description')
     def _onchange_amount(self):
@@ -58,10 +59,27 @@ class PaymentLinkWizard(models.TransientModel):
         # must be called after token generation, obvsly - the link needs an up-to-date token
         self._generate_link()
 
+    @api.depends('res_model', 'res_id')
+    def _compute_company(self):
+        for link in self:
+            record = self.env[link.res_model].browse(link.res_id)
+            link.company_id = record.company_id if 'company_id' in record else False
+
     def _generate_link(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for payment_link in self:
-            payment_link.link = '%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s&partner_id=%s&access_token=%s' % (base_url, urls.url_quote(payment_link.description), payment_link.amount, payment_link.currency_id.id, payment_link.partner_id.id, payment_link.access_token)
+            link = ('%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s'
+                    '&partner_id=%s&access_token=%s') % (
+                        base_url,
+                        urls.url_quote(payment_link.description),
+                        payment_link.amount,
+                        payment_link.currency_id.id,
+                        payment_link.partner_id.id,
+                        payment_link.access_token
+                    )
+            if payment_link.company_id:
+                link += '&company_id=%s' % payment_link.company_id.id
+            payment_link.link = link
 
     @api.model
     def check_token(self, access_token, partner_id, amount, currency_id):
