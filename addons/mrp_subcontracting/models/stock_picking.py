@@ -138,6 +138,7 @@ class StockPicking(models.Model):
         for move, bom in subcontract_details:
             mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom))
             self.env['stock.move'].create(mo._get_moves_raw_values())
+            self.env['stock.move'].create(mo._get_moves_finished_values())
             mo.action_confirm()
 
             # Link the finished to the receipt move.

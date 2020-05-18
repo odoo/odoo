@@ -625,6 +625,10 @@
             <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_laptop_cust')._get_moves_raw_values()"/>
         </function>
 
+        <function model="stock.move" name="create">
+            <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_laptop_cust')._get_moves_finished_values()"/>
+        </function>
+
         <!-- Run Scheduler -->
         <function model="procurement.group" name="run_scheduler"/>
 

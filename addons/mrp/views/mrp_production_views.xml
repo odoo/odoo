@@ -171,6 +171,51 @@
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <field name="show_final_lots" invisible="1"/>
                             <field name="production_location_id" invisible="1" readonly="1"/>
+                            <field name="move_finished_ids" invisible="1" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <!-- <field name="move_line_ids" invisible="1">
+                                        <tree>
+                                            <field name="lot_id" invisible="1"/>
+                                            <field name="owner_id" invisible="1"/>
+                                            <field name="package_id" invisible="1"/>
+                                            <field name="result_package_id" invisible="1"/>
+                                            <field name="location_id" invisible="1"/>
+                                            <field name="location_dest_id" invisible="1"/>
+                                            <field name="qty_done" invisible="1"/>
+                                            <field name="product_id" invisible="1"/>
+                                            <field name="product_uom_id" invisible="1"/>
+                                            <field name="product_uom_qty" invisible="1"/>
+                                            <field name="state" invisible="1"/>
+                                            <field name="move_id" invisible="1"/>
+                                            <field name="id" invisible="1"/>
+                                        </tree>
+                                    </field> -->
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom"/>
+                                    <field name="operation_id"/>
+                                    <field name="byproduct_id"/>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="date_expected"/>
+                                    <field name="picking_type_id"/>
+                                    <field name="location_id"/>
+                                    <field name="location_dest_id"/>
+                                    <field name="company_id"/>
+                                    <field name="warehouse_id"/>
+                                    <field name="origin"/>
+                                    <field name="group_id"/>
+                                    <field name="propagate_date"/>
+                                    <field name="propagate_cancel"/>
+                                    <field name="delay_alert"/>
+                                    <field name="propagate_date_minimum_delta"/>
+                                    <field name="move_dest_ids"/>
+                                    <field name="state"/>
+                                    <!-- Useless as the editable in tree declaration -> For Form Test-->
+                                    <field name="product_uom_category_id"/>
+                                    <field name="allowed_operation_ids"/>
+                                </tree>
+                            </field>
                         </group>
                     </group>
                     <notebook>

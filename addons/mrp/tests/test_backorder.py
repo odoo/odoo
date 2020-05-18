@@ -132,7 +132,6 @@ class TestMrpProductionBackorder(TestMrpCommon):
         """
         with Form(self.warehouse) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
-
         production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=4, qty_final=4, picking_type_id=self.warehouse.manu_type_id)
 
         move_raw_ids = production.move_raw_ids
@@ -221,7 +220,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
                 backorder.save().action_backorder()
             active_production = active_production.procurement_group_id.mrp_production_ids[-1]
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot_final), nb_product_todo,  f'You should have the {nb_product_todo} final product in stock')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot_final), nb_product_todo, f'You should have the {nb_product_todo} final product in stock')
         self.assertEqual(len(production.procurement_group_id.mrp_production_ids), nb_product_todo)
 
     def test_tracking_backorder_series_serial_1(self):
