@@ -149,12 +149,21 @@ var MediaWidget = Widget.extend({
     },
     /**
      * @override
+     * @return {Deferred}
      */
     goToPage: function (page) {
         this.page = page;
         if (page > this.lastLoadedPage) {
             return this.fetchPage(page);
         }
+        return $.when();
+    },
+    /**
+     * Method to be overridden when component support pagination
+     *
+     * @return {Deferred}
+     */
+    fetchPage: function() {
         return $.when();
     },
     /**
@@ -375,6 +384,10 @@ var ImageWidget = MediaWidget.extend({
             self._renderImages();
         });
     },
+    /**
+     * @override
+     * @param {integer} pageNum
+     */
     fetchPage: function (pageNum) {
         // TODO: Expand this for adding SVG
         var domain = this.domain.concat([
