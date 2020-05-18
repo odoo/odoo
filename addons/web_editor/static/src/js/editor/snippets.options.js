@@ -3697,7 +3697,7 @@ registry.many2one = SnippetOptionWidget.extend({
         this.$search.find('input')
             .focus()
             .on('keyup', function (e) {
-                self.$overlay.removeClass('o_keypress');
+                self.$overlay.removeClass('o_overlay_hidden');
                 self._findExisting($(this).val());
             });
 
