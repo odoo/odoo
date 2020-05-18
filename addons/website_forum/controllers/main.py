@@ -11,6 +11,7 @@ import werkzeug.wrappers
 from datetime import datetime
 
 from odoo import http, tools, _
+from odoo.exceptions import AccessError
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
@@ -36,6 +37,18 @@ class WebsiteForum(WebsiteProfile):
             values['forum'] = kwargs.get('forum')
         elif kwargs.get('forum_id'):
             values['forum'] = request.env['forum.forum'].browse(kwargs.pop('forum_id'))
+        return values
+
+    def _prepare_mark_as_offensive_values(self, post, **kwargs):
+        offensive_reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'offensive')])
+
+        values = self._prepare_user_values(**kwargs)
+        values.update({
+            'question': post,
+            'forum': post.forum_id,
+            'reasons': offensive_reasons,
+            'offensive': True,
+        })
         return values
 
     # Forum
@@ -517,17 +530,18 @@ class WebsiteForum(WebsiteProfile):
             return {'error': 'anonymous_user'}
         return post.flag()[0]
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/ask_for_mark_as_offensive', type='http', auth="user", methods=['GET'], website=True)
-    def post_ask_for_mark_as_offensive(self, forum, post, **kwargs):
-        offensive_reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'offensive')])
+    @http.route('/forum/<model("forum.post"):post>/ask_for_mark_as_offensive', type='json', auth="user", website=True)
+    def post_json_ask_for_mark_as_offensive(self, post, **kwargs):
+        if not post.can_moderate:
+            raise AccessError(_('%d karma required to mark a post as offensive.', post.forum_id.karma_moderate))
+        values = self._prepare_mark_as_offensive_values(post, **kwargs)
+        return request.env['ir.ui.view']._render_template('website_forum.mark_as_offensive', values)
 
-        values = self._prepare_user_values(forum=forum)
-        values.update({
-            'question': post,
-            'forum': forum,
-            'reasons': offensive_reasons,
-            'offensive': True,
-        })
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/ask_for_mark_as_offensive', type='http', auth="user", methods=['GET'], website=True)
+    def post_http_ask_for_mark_as_offensive(self, forum, post, **kwargs):
+        if not post.can_moderate:
+            raise AccessError(_('%d karma required to mark a post as offensive.', forum.karma_moderate))
+        values = self._prepare_mark_as_offensive_values(post, **kwargs)
         return request.render("website_forum.close_post", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/mark_as_offensive', type='http', auth="user", methods=["POST"], website=True)
