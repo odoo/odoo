@@ -959,6 +959,7 @@ var KanbanFieldMany2One = AbstractField.extend({
  */
 const Many2OneAvatar = FieldMany2One.extend({
     _template: 'web.Many2OneAvatar',
+    //description: _lt("Many2OneAvatar"),
 
     init() {
         this._super.apply(this, arguments);

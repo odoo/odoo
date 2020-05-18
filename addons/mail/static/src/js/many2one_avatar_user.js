@@ -21,7 +21,7 @@ odoo.define('mail.Many2OneAvatarUser', function (require) {
     // chat windows with partners that won't be able to read your messages and
     // reply.
 
-    const { _t } = require('web.core');
+    const { _t, _lt } = require('web.core');
     const fieldRegistry = require('web.field_registry');
     const { Many2OneAvatar } = require('web.relational_fields');
     const session = require('web.session');
@@ -36,6 +36,8 @@ odoo.define('mail.Many2OneAvatarUser', function (require) {
         partnerIds: {},
         // This widget is only supported on many2ones pointing to 'res.users'
         supportedModel: 'res.users',
+        //description: _lt("Many2OneAvatarUser"),
+
 
         init() {
             this._super(...arguments);
