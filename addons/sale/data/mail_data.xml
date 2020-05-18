@@ -141,10 +141,16 @@
     <div style="margin: 0px; padding: 0px;">
         <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
             <tr style="border-bottom: 2px solid #dee2e6;">
-                <td width="18%"><strong>Products</strong></td>
+                <td style="width: 150px;"><strong>Products</strong></td>
                 <td></td>
-                <td><strong>Quantity</strong></td>
-                <td width="10%" align="center"><strong>Price</strong></td>
+                <td width="15%" align="center"><strong>Quantity</strong></td>
+                <td width="20%" align="right"><strong>
+                % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):
+                    VAT Excl.
+                % else
+                    VAT Incl.
+                % endif
+                </strong></td>
             </tr>
         </table>
         % for line in object.order_line:
@@ -167,13 +173,14 @@
                             <img src="/web/image/product.product/${line.product_id.id}/image_128" style="width: 64px; height: 64px; object-fit: contain;" alt="Product image"></img>
                         </td>
                         <td align="left">${line.product_id.name}</td>
-                        <td>${line.product_uom_qty}</td>
+                        <td width="15%" align="center">${line.product_uom_qty}</td>
+                        <td width="20%" align="right"><strong>
                         % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):
-                            <td align="right">${format_amount(line.price_reduce_taxexcl, object.currency_id)}</td>
+                            ${format_amount(line.price_reduce_taxexcl, object.currency_id)}
+                        % else
+                            ${format_amount(line.price_reduce_taxinc, object.currency_id)}
                         % endif
-                        % if object.user_id.has_group('account.group_show_line_subtotals_tax_included'):
-                            <td align="right">${format_amount(line.price_reduce_taxinc, object.currency_id)}</td>
-                        % endif
+                        </strong></td>
                     </tr>
                 </table>
             % endif
