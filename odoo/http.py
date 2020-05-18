@@ -381,13 +381,12 @@ class WebRequest(object):
         """
         return self.session.db if not self.disable_db else None
 
-    def csrf_token(self, time_limit=3600):
+    def csrf_token(self, time_limit=None):
         """ Generates and returns a CSRF token for the current session
 
-        :param time_limit: the CSRF token should only be valid for the
-                           specified duration (in second), by default 1h,
+        :param time_limit: the CSRF token validity period (in seconds), or
                            ``None`` for the token to be valid as long as the
-                           current user's session is.
+                           current user session is (the default)
         :type time_limit: int | None
         :returns: ASCII token string
         """
