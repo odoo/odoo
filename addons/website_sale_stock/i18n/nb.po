@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2019
 # Jorunn D. Newth, 2019
-# Marius Stedjan <marius@stedjan.com>, 2019
+# Marius Stedjan <marius@stedjan.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,14 +36,14 @@ msgstr "Legger til status for lagerbeholdning på produktsiden i nettbutikken."
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 msgid "Availability"
-msgstr "Tilgjengelighet"
+msgstr "Lagerstatus"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
 msgid "Availability Threshold"
-msgstr "Tilgjengelighetsterskel"
+msgstr "Terskel for lagerstatus"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
@@ -67,6 +67,8 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
+"Standard lagerstatusmodus satt på nye lagervarer. Denne kan endres på "
+"produktnivå."
 
 #. module: website_sale_stock
 #. openerp-web
@@ -85,7 +87,7 @@ msgstr "Lager"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__inventory_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__inventory_availability
 msgid "Inventory Availability"
-msgstr "Tilgjengelighet av lagerbeholdning"
+msgstr "Lagerbeholdning"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -93,8 +95,8 @@ msgid ""
 "Manage the inventory of your products and display their availability status "
 "on the website."
 msgstr ""
-"Administrer lagerbeholdning for produktene dine og vis "
-"tilgjengelighetsstatus i nettbutikken"
+"Administrer lagerbeholdning for produktene dine og vis lagerstatus i "
+"nettbutikken"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -148,6 +150,8 @@ msgid ""
 "Show inventory when below the threshold and prevent sales if not enough "
 "stock"
 msgstr ""
+"Vis lagerbeholdning under en gitt terskel, og forhindre salg om det ikke er "
+"nok på lager"
 
 #. module: website_sale_stock
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__custom
@@ -163,7 +167,7 @@ msgid ""
 " for the inconvenience."
 msgstr ""
 "Noen produkter er ikke lenger tilgjengelige, og handlevognen din har blitt "
-"oppdatert. Vi beklager bryet."
+"oppdatert. Vi beklager ulempen."
 
 #. module: website_sale_stock
 #. openerp-web
@@ -175,7 +179,7 @@ msgstr "Midlertidig tomt på lager"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Threshold"
-msgstr ""
+msgstr "Terskel"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -210,7 +214,7 @@ msgstr "Nettsted"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website this picking belongs to."
-msgstr ""
+msgstr "Nettsted dette plukket tilhører."
 
 #. module: website_sale_stock
 #. openerp-web
@@ -223,7 +227,7 @@ msgstr "Du har allerede lagt til"
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %s products but only %s is available"
-msgstr "Du ønsker %s produkter, men bare %s er tilgjengelige"
+msgstr "Du ønsker %s produkter, men bare %s er tilgjengelig"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -238,11 +242,11 @@ msgstr "alle"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "available"
-msgstr "tilgjengelige"
+msgstr "tilgjengelig"
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
-msgstr "i handlevognen din."
+msgstr "i handlevognen."
