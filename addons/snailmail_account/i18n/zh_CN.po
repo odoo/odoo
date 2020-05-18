@@ -6,9 +6,9 @@
 # Martin Trigaux, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # 开阖软件 Jeff Wang <jeff@osbzr.com>, 2019
-# bf2549c5415a9287249cba2b8a5823c7, 2019
 # keecome <7017511@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Felix Yang/杨孟泽 <felixyangsh@aliyun.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"Last-Translator: Felix Yang/杨孟泽 <felixyangsh@aliyun.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,7 @@ msgstr ""
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:76
 #, python-format
 msgid "%s of the selected invoice(s) had an invalid address and were not sent"
-msgstr ""
+msgstr "%s选中的伙伴地址无效，对应的催款没有被发送成功。"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -36,6 +36,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Make sure you have enough Stamps on your account.\"/>\n"
 "                                )"
 msgstr ""
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Make sure you have enough Stamps on your account.\"/>\n"
+"                                ）"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
@@ -53,6 +55,9 @@ msgid ""
 "                                            The customer address is not complete.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"text-danger\">\n"
+"                                一些客户地址不完整。\n"
+"                                 </span>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -61,6 +66,9 @@ msgid ""
 "                                        Some customer addresses are not complete.\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"text-danger\">\n"
+"                                一些客户地址不完整。\n"
+"                                 </span>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -77,7 +85,7 @@ msgstr "发送会计发票"
 msgid ""
 "Allows to send the document by Snailmail (coventional posting delivery "
 "service)"
-msgstr ""
+msgstr "允许通过snail邮件发送文档（传统发布服务）"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_company
@@ -95,12 +103,12 @@ msgstr "配置设置"
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_invoice_ids
 #, python-format
 msgid "Invalid Addresses"
-msgstr ""
+msgstr "无效地址"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_addresses
 msgid "Invalid Addresses Count"
-msgstr ""
+msgstr "无效的地址数量"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__partner_id
@@ -112,7 +120,7 @@ msgstr "业务伙伴"
 #: model:ir.model.fields,field_description:snailmail_account.field_res_company__invoice_is_snailmail
 #: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings__invoice_is_snailmail
 msgid "Send by Post"
-msgstr "透过邮递"
+msgstr "通过邮递"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_cost
