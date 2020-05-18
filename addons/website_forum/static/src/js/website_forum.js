@@ -3,6 +3,7 @@ odoo.define('website_forum.website_forum', function (require) {
 
 const dom = require('web.dom');
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var wysiwygLoader = require('web_editor.loader');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
@@ -24,7 +25,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'mouseenter .o_forum_user_info': '_onUserInfoMouseEnter',
         'mouseleave .o_forum_user_info': '_onUserInfoMouseLeave',
         'mouseleave .o_forum_user_bio_expand': '_onUserBioExpandMouseLeave',
-        'click .flag:not(.karma_required)': '_onFlagAlertClick',
+        'click .o_wforum_flag:not(.karma_required)': '_onFlagAlertClick',
+        'click .o_wforum_flag_validator': '_onFlagValidatorClick',
+        'click .o_wforum_flag_mark_as_offensive': '_onFlagMarkAsOffensiveClick',
         'click .vote_up:not(.karma_required), .vote_down:not(.karma_required)': '_onVotePostClick',
         'click .o_js_validation_queue a[href*="/validate"]': '_onValidationQueueClick',
         'click .o_wforum_validate_toggler:not(.karma_required)': '_onAcceptAnswerClick',
@@ -301,9 +304,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     _onFlagAlertClick: function (ev) {
         ev.preventDefault();
-        var $link = $(ev.currentTarget);
+        const elem = ev.currentTarget;
         this._rpc({
-            route: $link.data('href') || ($link.attr('href') !== '#' && $link.attr('href')) || $link.closest('form').attr('action'),
+            route: elem.dataset.href || (elem.getAttribute('href') !== '#' && elem.getAttribute('href')) || elem.closest('form').getAttribute('action'),
         }).then(data => {
             if (data.error) {
                 var message;
@@ -321,15 +324,21 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     type: "warning",
                 });
             } else if (data.success) {
-                var elem = $link;
+                const child = elem.firstElementChild;
                 if (data.success === 'post_flagged_moderator') {
-                    elem.data('href') && elem.html(' Flagged');
-                    var c = parseInt($('#count_flagged_posts').html(), 10);
-                    c++;
-                    $('#count_flagged_posts').html(c);
+                    const countFlaggedPosts = this.el.querySelector('#count_flagged_posts');
+                    elem.innerText = _t(' Flagged');
+                    elem.prepend(child);
+                    if (countFlaggedPosts) {
+                        countFlaggedPosts.classList.remove('badge-light');
+                        countFlaggedPosts.classList.add('badge-danger');
+                        countFlaggedPosts.innerText = parseInt(countFlaggedPosts.innerText, 10) + 1;
+                    }
+                    $(elem).next('#flag_validator').removeClass('d-none');
                 } else if (data.success === 'post_flagged_non_moderator') {
-                    elem.data('href') && elem.html(' Flagged');
-                    var forumAnswer = elem.closest('.forum_answer');
+                    const forumAnswer = elem.closest('.forum_answer');
+                    elem.innerText = _t(' Flagged');
+                    elem.prepend(child);
                     forumAnswer.fadeIn(1000);
                     forumAnswer.slideUp(1000);
                 }
@@ -498,6 +507,53 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         document.cookie = 'forum_welcome_message = false';
         $('.forum_intro').slideUp();
         return true;
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    async _onFlagValidatorClick(ev) {
+        ev.preventDefault();
+        const currentTarget = ev.currentTarget;
+        await this._rpc({
+            model: 'forum.post',
+            method: currentTarget.dataset.action,
+            args: [parseInt(currentTarget.dataset.postId)],
+        });
+        currentTarget.parentElement.classList.toggle('d-none');
+        const flaggedButton = currentTarget.parentElement.previousElementSibling,
+            child = flaggedButton.firstElementChild,
+            countFlaggedPosts = this.el.querySelector('#count_flagged_posts'),
+            count = parseInt(countFlaggedPosts.innerText, 10) - 1;
+
+        flaggedButton.innerText = _t(' Flag');
+        flaggedButton.prepend(child);
+        if (count === 0) {
+            countFlaggedPosts.classList.add("badge-light");
+        }
+        countFlaggedPosts.innerText = count;
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    async _onFlagMarkAsOffensiveClick(ev) {
+        ev.preventDefault();
+        const template = await this._rpc({
+            route: $(ev.currentTarget).data('action'),
+        });
+        const dialog = new Dialog(this, {
+            size: 'medium',
+            title: _t("Offensive Post"),
+            $content: template,
+            renderFooter: false,
+        }).open();
+        dialog.opened().then(() => {
+            dialog.$(".btn-light:contains('Discard')").click((ev) => {
+                ev.preventDefault();
+                dialog.close();
+            });
+        });
     },
 });
 

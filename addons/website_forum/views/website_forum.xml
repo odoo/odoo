@@ -4,13 +4,27 @@
 
 <!-- Editor custom -->
 <!-- helper -->
+<template id="show_flag_validator">
+    <div id="flag_validator" t-attf-class="input-group-append #{'ml-1' if object.state == 'flagged' else 'd-none'}">
+        <a href="#" t-att-data-post-id="object.id" t-attf-data-action="validate" class="badge badge-light my-2 mr-2 o_wforum_flag_validator" title="Validate" data-toggle="tooltip">
+            <i class="fa fa-check text-success"/>
+        </a>
+        <a href="#" t-attf-data-action="/forum/#{object.id}/ask_for_mark_as_offensive" class="badge badge-light my-2 mr-2 o_wforum_flag_mark_as_offensive" title="Mark as Offensive"  data-toggle="tooltip">
+            <i class="fa fa-times text-danger"/>
+        </a>
+    </div>
+</template>
+
 <template id="link_button">
     <form  t-attf-method="#{form_method or 'POST'}" t-att-action="url" t-attf-class="#{form_classes} #{not inDropdown and 'btn btn-sm border'}">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-        <button t-attf-class="#{icon and not label and ('fa ' + icon)} #{inDropdown and 'dropdown-item pl-3' or 'btn btn-sm p-0'} #{classes} #{karma and 'karma_required text-muted'}" t-attf-data-karma="#{karma}" t-att-title="title">
-            <i t-if="icon and label" t-attf-class="fa fa-fw text-muted #{icon} #{inDropdown and 'mr-1'}"/>
-            <t t-esc="label"/>
-        </button>
+        <div class="input-group">
+            <a t-attf-class="#{icon and not label and ('fa ' + icon)} #{inDropdown and 'dropdown-item pl-3' or 'btn btn-sm p-0'} #{classes} #{karma and 'karma_required text-muted'}" t-attf-data-karma="#{karma}" t-att-title="title">
+                <i t-if="icon and label" t-attf-class="fa fa-fw text-muted #{icon} #{inDropdown and 'mr-1'}"/>
+                <t t-esc="label"/>
+            </a>
+            <t t-if="flag_validator" t-call="website_forum.show_flag_validator"/>
+        </div>
     </form>
 </template>
 
@@ -918,8 +932,8 @@
 </template>
 
 <!-- Moderation: close a post -->
-<template id="close_post">
-    <t t-call="website_forum.header">
+<template id="mark_as_offensive">
+    <div class="o_mark_offensive">
         <p class="text-muted" t-if="not offensive">
             If you close this post, it will be hidden for most users. Only
             users having a high karma can see closed posts to moderate
@@ -930,7 +944,7 @@
             users having a high karma can see offensive posts to moderate
             them.
         </p>
-        <form t-attf-action="/forum/#{ slug(forum) }/#{offensive and 'post' or 'question'}/#{slug(question)}/#{offensive and 'mark_as_offensive' or 'close'}" method="post" role="form" class="mt32 mb64 js_website_submit_form">
+        <form t-attf-action="/forum/#{ slug(forum) }/#{offensive and 'post' or 'question'}/#{slug(question)}/#{offensive and 'mark_as_offensive' or 'close'}" method="post" role="form" class="mt32 js_website_submit_form">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input name="post_id" t-att-value="question.id" type="hidden"/>
             <div class="form-group">
@@ -950,10 +964,15 @@
                     <t t-if="offensive">Mark as offensive</t>
                     <t t-if="not offensive">Close post</t>
                 </button>
-                <span class="text-muted mx-3">or</span>
-                <a role="button" class="btn btn-light border" t-attf-href="/forum/#{ slug(forum) }/#{ slug(question) }">Discard</a>
+                <a role="button" class="btn btn-light border ml-2" t-attf-href="/forum/#{ slug(forum) }/#{ slug(question) }">Discard</a>
             </div>
         </form>
+    </div>
+</template>
+
+<template id="close_post" name="Close Post">
+    <t t-call="website_forum.header">
+        <t t-call="website_forum.mark_as_offensive"/>
     </t>
 </template>
 
@@ -1255,11 +1274,14 @@
             </t>
             <t t-if="question.active" href="#" t-call="website_forum.link_button">
                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/flag'"/>
-                <t t-set="label">Flag</t>
+                <t t-if="question.state == 'flagged'" t-set="label">Flagged</t>
+                <t t-else="" t-set="label">Flag</t>
                 <t t-set="inDropdown" t-value="True"/>
                 <t t-set="icon" t-value="not question.can_flag and 'fa-flag-o' or 'fa-flag'"/>
                 <t t-set="karma" t-value="not question.can_flag and question.forum_id.karma_flag or 0"/>
-                <t t-set="classes" t-value="'flag'"/>
+                <t t-set="classes" t-valuef="o_wforum_flag"/>
+                <t t-set="flag_validator" t-value="question.can_moderate"/>
+                <t t-set="object" t-value="question"/>
             </t>
         </div>
     </div>
@@ -1311,8 +1333,9 @@
                     <div class="btn-toolbar mb-3">
                         <div t-if="question.uid_has_answered and answer.create_uid.id == uid"
                             class="btn-group btn-group-sm mr-1 mr-md-2">
+                            <t t-set="edit_answer_title">Only one answer per question is allowed</t>
                             <a class="btn btn-sm px-2 btn-primary"
-                                t-attf-title="#{'Only one answer per question is allowed' if question.forum_id.mode == 'questions' else ''}"
+                                t-att-title="question.forum_id.mode == 'questions' and edit_answer_title"
                                 data-toggle="tooltip"
                                 t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/edit_answer">
                                 <i class="fa fa-pencil"/>
@@ -1360,7 +1383,9 @@
                                     <t t-set="inDropdown" t-value="True"/>
                                     <t t-set="karma" t-value="not answer.can_flag and answer.forum_id.karma_flag or 0"/>
                                     <t t-set="icon" t-value="'fa-flag-o text-muted mr-2'"/>
-                                    <t t-set="form_classes" t-value="'flag'"/>
+                                    <t t-set="classes" t-valuef="o_wforum_flag"/>
+                                    <t t-set="flag_validator" t-value="answer.can_moderate"/>
+                                    <t t-set="object" t-value="answer"/>
                                 </t>
                                 <t t-call="website_forum.link_button">
                                     <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/convert_to_comment'"/>
