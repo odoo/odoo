@@ -126,7 +126,7 @@ class AccountInvoiceReport(models.Model):
         result = super(AccountInvoiceReport, self).read_group(domain, fields, groupby, offset, limit, orderby, False)
         currency = self.env.company.currency_id
         rate = currency.rate
-        for field in {'price_average', 'price_subtotal'} & set(fields):
+        for field in {'price_average', 'price_subtotal'} & set(map(lambda x: x.split(':')[0], fields)):
             for res in result:
                 res[field] = currency.round(res[field]*rate)
         return result
