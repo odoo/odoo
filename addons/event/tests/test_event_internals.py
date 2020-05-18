@@ -30,7 +30,7 @@ class TestEventData(TestEventCommon):
     def test_event_date_computation(self):
         event = self.event_0.with_user(self.env.user)
         event.write({
-            'registration_ids': [(0, 0, {'partner_id': self.customer.id, 'name': 'test_reg'})],
+            'registration_ids': [(0, 0, {'partner_id': self.event_customer.id, 'name': 'test_reg'})],
             'date_begin': datetime(2020, 1, 31, 15, 0, 0),
             'date_end': datetime(2020, 4, 5, 18, 0, 0),
         })
