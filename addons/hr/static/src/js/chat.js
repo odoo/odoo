@@ -1,13 +1,18 @@
 odoo.define('hr.employee_chat', function (require) {
 'use strict';
+    var viewRegistry = require('web.view_registry');
 
     var FormController = require('web.FormController');
     var FormView = require('web.FormView');
     var FormRenderer = require('web.FormRenderer');
-    var viewRegistry = require('web.view_registry');
 
-    var EmployeeFormRenderer = FormRenderer.extend({
+    var KanbanController = require('web.KanbanController');
+    var KanbanView = require('web.KanbanView');
+    var KanbanRenderer = require('web.KanbanRenderer');
+    var KanbanRecord = require('web.KanbanRecord');
 
+    // CHAT MIXIN
+    var ChatMixin = {
         /**
          * @override
          */
@@ -37,7 +42,10 @@ odoo.define('hr.employee_chat', function (require) {
             });
             return true;
         },
-    });
+    };
+
+    // USAGE OF CHAT MIXIN IN FORM VIEWS
+    var EmployeeFormRenderer = FormRenderer.extend(ChatMixin);
 
     var EmployeeFormController = FormController.extend({
         custom_events: _.extend({}, FormController.prototype.custom_events, {
@@ -57,5 +65,32 @@ odoo.define('hr.employee_chat', function (require) {
     });
 
     viewRegistry.add('hr_employee_form', EmployeeFormView);
-    return EmployeeFormView;
+
+    // USAGE OF CHAT MIXIN IN KANBAN VIEWS
+    var EmployeeKanbanRecord = KanbanRecord.extend(ChatMixin);
+
+    var EmployeeKanbanRenderer = KanbanRenderer.extend({
+        config: Object.assign({}, KanbanRenderer.prototype.config, {
+            KanbanRecord: EmployeeKanbanRecord,
+        }),
+    });
+
+    var EmployeeKanbanController = KanbanController.extend({
+        custom_events: _.extend({}, KanbanController.prototype.custom_events, {
+            open_chat: '_onOpenChat'
+        }),
+
+        _onOpenChat: function (ev) {
+            this.call('mail_service', 'openDMChatWindow', ev.data.partner_id);
+        },
+    });
+
+    var EmployeeKanbanView = KanbanView.extend({
+        config: _.extend({}, KanbanView.prototype.config, {
+            Controller: EmployeeKanbanController,
+            Renderer: EmployeeKanbanRenderer
+        }),
+    });
+
+    viewRegistry.add('hr_employee_kanban', EmployeeKanbanView);
 });
