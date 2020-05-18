@@ -1,0 +1,29 @@
+.login_layout_opt {
+    height: calc(100vh - 308px);
+    background: url(https://source.unsplash.com/random);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    &.login_layout_opt_1 {
+        flex: 0 0 33.33%;
+        max-width: 33.33%;
+        margin-left: 0;
+
+        @include media-breakpoint-down(md) {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+
+    &.login_layout_opt_2 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        margin-left: 0;
+
+        @include media-breakpoint-down(md) {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+}
