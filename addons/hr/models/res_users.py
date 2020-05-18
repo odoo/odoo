@@ -210,6 +210,6 @@ class User(models.Model):
         self.ensure_one()
         self.env['hr.employee'].create(dict(
             name=self.name,
-            company_id=self.company_id.id,
+            company_id=self.env.company.id,
             **self.env['hr.employee']._sync_user(self)
         ))
