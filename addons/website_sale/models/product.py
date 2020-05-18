@@ -197,6 +197,19 @@ class ProductTemplate(models.Model):
 
     product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Media", copy=True)
 
+    def _slug_format(self):
+        # read from a config ? icp? new model?
+        return "{code}-{category}-{name}"
+
+    def _slug_values(self):
+        return {
+            'id': self.id,
+            'barcode': self.barcode or '',
+            'category': self.categ_id.name or '',
+            'code': self.default_code or '',
+            'name': self.name or '',
+        }
+
     def _has_no_variant_attributes(self):
         """Return whether this `product.template` has at least one no_variant
         attribute.

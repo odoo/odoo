@@ -14,3 +14,18 @@ class IrUiView(models.Model):
         qcontext['slug'] = slug
         qcontext['unslug_url'] = unslug_url
         return qcontext
+
+
+class BaseModel(models.AbstractModel):
+    _inherit = 'base'
+
+    def _slug_format(self):
+        # read from a config
+        return "{name}"
+
+    def _slug_values(self):
+        return {
+            'id': self.id,
+            'display_name': self.display_name or '',
+            'name': self.name or '',
+        }

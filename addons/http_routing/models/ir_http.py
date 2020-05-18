@@ -92,7 +92,9 @@ def slug(value):
         if not value.id:
             raise ValueError("Cannot slug non-existent record %s" % value)
         # [(id, name)] = value.name_get()
-        identifier, name = value.id, value.display_name
+
+        identifier = value.id
+        name = value._slug_format().format(**value._slug_values())
     else:
         # assume name_search result tuple
         identifier, name = value
@@ -110,10 +112,12 @@ def unslug(s):
     """Extract slug and id from a string.
         Always return un 2-tuple (str|None, int|None)
     """
-    m = _UNSLUG_RE.match(s)
-    if not m:
+    splits = s.rsplit('-', 1)
+
+    if len(splits) == 2:
+        return splits[0], splits[1]
+    else:
         return None, None
-    return m.group(1), int(m.group(2))
 
 
 def unslug_url(s):
