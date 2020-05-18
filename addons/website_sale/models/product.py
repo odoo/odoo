@@ -199,7 +199,8 @@ class ProductTemplate(models.Model):
 
     def _slug_format(self):
         # read from a config ? icp? new model?
-        return "{code}-{category}-{name}"
+        custom = self.env['ir.config_parameter'].sudo().get_param('ecom.slug')
+        return custom or "{code}-{category}-{name}"
 
     def _slug_values(self):
         return {

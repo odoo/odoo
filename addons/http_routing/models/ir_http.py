@@ -117,7 +117,7 @@ def unslug(s):
     if len(splits) == 2:
         return splits[0], splits[1]
     else:
-        return None, None
+        return s, None
 
 
 def unslug_url(s):
