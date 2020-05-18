@@ -51,7 +51,8 @@ class AcquirerSips(models.Model):
     sips_secret = fields.Char('Secret Key', size=64, required_if_provider='sips', groups='base.group_user')
     sips_test_url = fields.Char("Test url", required_if_provider='sips', default='https://payment-webinit.simu.sips-atos.com/paymentInit')
     sips_prod_url = fields.Char("Production url", required_if_provider='sips', default='https://payment-webinit.sips-atos.com/paymentInit')
-    sips_version = fields.Char("Interface Version", required_if_provider='sips', default='HP_2.3')
+    sips_version = fields.Char("Interface Version", required_if_provider='sips', default='HP_2.31')
+    sips_key_version = fields.Char("Security Key Version", required_if_provider='sips', default="2.0")
 
     def _sips_generate_shasign(self, values):
         """ Generate the shasign for incoming or outgoing communications.
