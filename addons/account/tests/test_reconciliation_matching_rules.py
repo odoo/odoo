@@ -96,10 +96,12 @@ class TestReconciliationMatchingRules(AccountTestCommon):
         })
 
     @classmethod
-    def _create_invoice_line(cls, amount, partner, type):
+    def _create_invoice_line(cls, amount, partner, type, currency=None):
         ''' Create an invoice on the fly.'''
         invoice_form = Form(cls.env['account.move'].with_context(default_move_type=type, default_invoice_date='2019-09-01', default_date='2019-09-01'))
         invoice_form.partner_id = partner
+        if currency:
+            invoice_form.currency_id = currency
         with invoice_form.invoice_line_ids.new() as invoice_line_form:
             invoice_line_form.name = 'xxxx'
             invoice_line_form.quantity = 1
@@ -413,3 +415,19 @@ class TestReconciliationMatchingRules(AccountTestCommon):
             bank_line_1.id: {'aml_ids': [payment_bnk_line.id], 'model': self.rule_0}
         }
         self._check_statement_matching(self.rule_0, expected_values, statements=bank_st)
+
+    def test_match_different_currencies(self):
+        partner = self.env['res.partner'].create({'name': 'Bernard Gagnant'})
+        self.rule_1.write({'match_partner_ids': [(6, 0, partner.ids)], 'match_same_currency': False})
+
+        currency_inv = self.env.ref('base.EUR')
+        currency_statement = self.env.ref('base.JPY')
+
+        currency_statement.active = True
+
+        invoice_line = self._create_invoice_line(100, partner, 'out_invoice', currency=currency_inv)
+
+        self.bank_line_2.unlink()
+        self.bank_line_1.write({'partner_id': partner.id, 'foreign_currency_id': currency_statement.id, 'amount_currency': 100, 'payment_ref': 'test'})
+        self.env['account.reconcile.model'].flush()
+        self._check_statement_matching(self.rule_1, {self.bank_line_1.id: {'aml_ids': []}}, statements=self.bank_st)
