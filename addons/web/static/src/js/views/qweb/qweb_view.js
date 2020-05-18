@@ -178,7 +178,7 @@ var Controller = AbstractController.extend({
  * view
  */
 var QWebView = AbstractView.extend({
-    display_name: _lt('Freedom View'),
+    display_name: _lt('QWeb View'),
     icon: 'fa-file-picture-o',
     viewType: 'qweb',
     // groupable?
