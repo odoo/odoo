@@ -78,8 +78,14 @@ class TestProjectBilling(TestCommonSaleTimesheet):
 
         cls.project_project_rate = cls.project_task_rate.copy({
             'name': 'Project with pricing_type="project_rate"',
+            'sale_order_id': cls.sale_order_1.id,
             'sale_line_id': cls.so1_line_order_no_task.id,
         })
+
+        # FIXME: [XBO] since the both projects have a SOL than the pricing_type should not be task_rate !
+        cls.project_task_rate = cls.env['project.project'].search([('sale_line_id', '=', cls.so2_line_deliver_project_task.id)], limit=1)
+        cls.project_task_rate2 = cls.env['project.project'].search([('sale_line_id', '=', cls.so2_line_deliver_project_template.id)], limit=1)
+
         cls.project_employee_rate = cls.project_task_rate.copy({
             'name': 'Project with pricing_type="employee_rate"',
             'partner_id': cls.sale_order_1.partner_id.id,
@@ -297,15 +303,14 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         task.write({
             'project_id': self.project_task_rate.id,
         })
-        task._onchange_project()
 
         self.assertTrue(task.allow_billable, "Task in project 'task rate' should be billed at task rate")
-        self.assertEqual(task.sale_line_id, self.so2_line_deliver_project_task, "The SOL in the task should be the one that we selected")
-        self.assertEqual(task.partner_id, task.project_id.partner_id, "Task created in a project billed on 'employee rate' should have the same customer as the one from the project")
+        self.assertEqual(task.sale_line_id, self.so1_line_deliver_no_task, "The task should keep the same SOL since the partner_id has not changed when the project of the task has changed.")
+        self.assertEqual(task.partner_id, self.partner_a, "Task created in a project billed on 'employee rate' should have the same customer when it has been created.")
 
         # move subtask into task rate project
         subtask.write({
-            'project_id': self.project_task_rate2.id,
+            'display_project_id': self.project_task_rate2.id,
         })
 
         self.assertTrue(subtask.allow_billable, "Subtask should keep the billable type from its parent, even when they are moved into another project")
@@ -352,7 +357,6 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         task = Task.with_context(default_project_id=self.project_task_rate.id).create({
             'name': 'first task',
         })
-        task._onchange_project()
 
         self.assertEqual(task.sale_line_id, self.so2_line_deliver_project_task, "Task created in a project billed on 'task rate' should be linked to a SOL containing a prepaid service product and the remaining hours of this SOL should be greater than 0.")
         self.assertEqual(task.partner_id, task.project_id.partner_id, "Task created in a project billed on 'task rate' should have the same customer as the one from the project")
@@ -369,9 +373,10 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         self.assertEqual(task.sale_line_id, timesheet1.so_line, "The timesheet should be linked to the SOL associated to the task since the pricing type of the project is task rate.")
 
         # create a subtask
-        subtask = Task.with_context(default_project_id=self.project_subtask.id).create({
+        subtask = Task.with_context(default_project_id=self.project_task_rate.id).create({
             'name': 'first subtask task',
             'parent_id': task.id,
+            'display_project_id': self.project_subtask.id,
         })
 
         self.assertEqual(subtask.partner_id, subtask.parent_id.partner_id, "Subtask should have the same customer as the one from their mother")
@@ -379,30 +384,27 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         # log timesheet on subtask
         timesheet2 = Timesheet.create({
             'name': 'Test Line on subtask',
-            'project_id': subtask.project_id.id,
+            'project_id': subtask.display_project_id.id,
             'task_id': subtask.id,
             'unit_amount': 50,
             'employee_id': self.employee_user.id,
         })
-
-        self.assertEqual(subtask.project_id, timesheet2.project_id, "The timesheet is in the subtask project")
+        self.assertEqual(subtask.display_project_id, timesheet2.project_id, "The timesheet is in the subtask project")
         self.assertFalse(timesheet2.so_line, "The timesheet should not be linked to SOL as it's a non billable project")
 
         # move task and subtask into task rate project
         task.write({
             'project_id': self.project_employee_rate.id,
         })
-        task._onchange_project()
         subtask.write({
-            'project_id': self.project_employee_rate.id,
+            'display_project_id': self.project_employee_rate.id,
         })
-        subtask._onchange_project()
 
-        self.assertEqual(task.sale_line_id, task.project_id.sale_line_id, "Task moved in a employee rate billable project have the SOL of the project")
-        self.assertEqual(task.partner_id, task.project_id.partner_id, "Task created in a project billed on 'employee rate' should have the same customer as the one from the project")
+        self.assertEqual(task.sale_line_id, self.project_task_rate.sale_line_id, "Task moved in a employee rate billable project should keep its SOL because the partner_id has not changed too.")
+        self.assertEqual(task.partner_id, self.project_task_rate.partner_id, "Task created in a project billed on 'employee rate' should have the same customer as the one from its initial project.")
 
-        self.assertEqual(subtask.sale_line_id, task.project_id.sale_line_id, "Subask moved in a employee rate billable project have the SOL of the project")
-        self.assertEqual(subtask.partner_id, task.project_id.partner_id, "Subask created in a project billed on 'employee rate' should have the same customer as the one from the project")
+        self.assertEqual(subtask.sale_line_id, subtask.parent_id.sale_line_id, "Subtask moved in a employee rate billable project should have the SOL of its parent since it keep its partner_id and this partner is different than the one in the destination project.")
+        self.assertEqual(subtask.partner_id, subtask.parent_id.partner_id, "Subtask moved in a project billed on 'employee rate' should keep its initial customer, that is the one of its parent.")
 
     def test_customer_change_in_project(self):
         """ Test when the user change the customer in a project
