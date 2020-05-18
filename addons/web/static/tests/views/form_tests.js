@@ -6375,8 +6375,8 @@ QUnit.module('Views', {
 
         // click on the pager to switch back to the previous record
         await cpHelpers.pagerPrevious(form);
-/*        assert.containsOnce(form, '.o_form_view .alert > div', "should have a translation alert");
-*/
+        assert.containsOnce(form, '.o_form_view .alert > div', "should have a translation alert");
+
         // remove translation alert by click X and check alert even after form reload
         await testUtils.dom.click(form.$('.o_form_view .alert > .close'));
         assert.containsNone(form, '.o_form_view .alert > div', "should not have a translation alert");
