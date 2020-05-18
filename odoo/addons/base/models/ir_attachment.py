@@ -334,7 +334,6 @@ class IrAttachment(models.Model):
             if not any([has_group(g) for g in self.get_serving_groups()]):
                 raise ValidationError("Sorry, you are not allowed to write on this document")
 
-    @api.model
     def check(self, mode, values=None):
         """Restricts the access to an ir.attachment, according to referred model
         In the 'document' module, it is overriden to relax this hard rule, since
