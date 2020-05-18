@@ -14,7 +14,7 @@ ActivityMenu.include({
      */
     _getViewsList(model) {
         if (model === "crm.lead") {
-                return [[false, 'kanban'], [false, 'list'],
+                return [[false, 'list'], [false, 'kanban'],
                         [false, 'form'], [false, 'calendar'],
                         [false, 'pivot'], [false, 'graph'],
                         [false, 'activity']

@@ -3,7 +3,7 @@
 
 import logging
 import threading
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
@@ -204,6 +204,7 @@ class Lead(models.Model):
                 ('res_model', '=', self._name),
                 ('res_id', 'in', self.ids)
             ], order='date_deadline ASC')
+
         for record in self:
             record.activity_date_deadline_my = next(
                 (activity.date_deadline for activity in todo_activities if activity.res_id == record.id),
@@ -763,6 +764,20 @@ class Lead(models.Model):
             'default_name': self.name,
         }
         return action
+
+    def action_snooze(self):
+        self.ensure_one()
+        today = date.today()
+        my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+        if my_next_activity:
+            if my_next_activity.date_deadline < today:
+                date_deadline = today + timedelta(days=7)
+            else:
+                date_deadline = my_next_activity.date_deadline + timedelta(days=7)
+            my_next_activity.write({
+                'date_deadline': date_deadline
+            })
+        return True
 
     # ------------------------------------------------------------
     # BUSINESS
