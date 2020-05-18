@@ -62,12 +62,7 @@ class AcquirerSips(models.Model):
         if self.provider != 'sips':
             raise ValidationError(_('Incorrect payment acquirer provider'))
         data = values['Data']
-
-        # Test key provided by Worldine
-        key = u'002001000000001_KEY1'
-
-        if self.state == 'enabled':
-            key = getattr(self, 'sips_secret')
+        key = self.sips_secret
 
         shasign = sha256((data + key).encode('utf-8'))
         return shasign.hexdigest()
@@ -80,14 +75,8 @@ class AcquirerSips(models.Model):
         if not currency_code:
             raise ValidationError(_('Currency not supported by Wordline'))
         amount = round(values['amount'] * 100)
-        if self.state == 'enabled':
-            # For production environment, key version 2 is required
-            merchant_id = getattr(self, 'sips_merchant_id')
-            key_version = self.env['ir.config_parameter'].sudo().get_param('sips.key_version', '2')
-        else:
-            # Test key provided by Atos Wordline works only with version 1
-            merchant_id = '002001000000001'
-            key_version = '1'
+        merchant_id = self.sips_merchant_id
+        key_version = self.sips_key_version
 
         sips_tx_values = dict(values)
         sips_tx_values.update({
