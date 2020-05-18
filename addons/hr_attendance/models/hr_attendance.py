@@ -39,7 +39,7 @@ class HrAttendance(models.Model):
     @api.depends('check_in', 'check_out')
     def _compute_worked_hours(self):
         for attendance in self:
-            if attendance.check_out:
+            if attendance.check_out and attendance.check_in:
                 delta = attendance.check_out - attendance.check_in
                 attendance.worked_hours = delta.total_seconds() / 3600.0
             else:
