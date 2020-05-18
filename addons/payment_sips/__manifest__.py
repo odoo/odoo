@@ -5,15 +5,16 @@
 
 {
     'name': 'Worldline SIPS',
-    'version': '1.0',
+    'version': '1.1',
     'author': 'Eezee-It',
     'category': 'Accounting/Payment Acquirers',
     'sequence': 385,
     'description': """
 Worldline SIPS Payment Acquirer for online payments
 
-Works with Worldline keys version 2.0, contains implementation of
-payments acquirer using Worldline SIPS.""",
+Implements the Worldline SIPS API for payment acquirers.
+Other SIPS providers may be compatible, though this is
+not guaranteed.""",
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',
