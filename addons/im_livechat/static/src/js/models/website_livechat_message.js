@@ -11,6 +11,7 @@ var AbstractMessage = require('mail.model.AbstractMessage');
  * @see mail.model.AbstractMessage for more information.
  */
 var WebsiteLivechatMessage =  AbstractMessage.extend({
+    events: {},
 
     /**
      * @param {im_livechat.im_livechat.LivechatButton} parent

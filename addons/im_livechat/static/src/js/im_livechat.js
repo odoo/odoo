@@ -52,7 +52,7 @@ var LivechatButton = Widget.extend({
         'updated_unread_counter': '_onUpdatedUnreadCounter',
     },
     events: {
-        'click': '_openChat'
+        'click': '_openChat',
     },
     init: function (parent, serverURL, options) {
         this._super(parent);

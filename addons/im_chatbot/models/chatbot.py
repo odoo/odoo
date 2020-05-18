@@ -22,8 +22,8 @@ class ChatBot(models.Model):
     _name = "im_chatbot.chatbot"
     _description = "Chabots main table"
 
-    name = fields.Char(Required = True, String="Subject")
-    livechat_username = fields.Char(Required = True, String="Bot name")
+    name = fields.Char(Required=True, String="Subject")
+    livechat_username = fields.Char(Required=True, String="Bot name")
     message_ids = fields.One2many("im_chatbot.script", "chatbot_id", index=True)
 
     livechat_channel_id = fields.One2many("im_livechat.channel", "chatbot_id")
@@ -33,6 +33,9 @@ class ChatBot(models.Model):
     partner_id = fields.Many2one(
         "res.partner", required=True, index=True, ondelete="cascade"
     )
+
+    def bot_answer(self):
+        return {"message": "test message from RPC"}
 
     # When a chatbot is created, create the res.partner to use in the chat box
     @api.model
@@ -97,21 +100,11 @@ class ChatBot(models.Model):
 class ChatbotMessageHook(models.Model):
     _inherit = "mail.channel"
 
-    # This is where the bot "catch" the conversation. And the user response
-    def _message_post_after_hook(self, message, msg_vals):
-        # Livechat Channel opérator is a bot but not the one who posted
-        # We know the bot can read the message and react to it
-        # if (
-        #     self.channel_type == "livechat"
-        #     and self.livechat_operator_id.is_bot
-        #     and not message.author_id.is_bot
-        # ):
-
-        # self._bot_answer(message)
-
-        super(ChatbotMessageHook, self)._message_post_after_hook(message, msg_vals)
-
-    def _bot_answer(self, user_message):
+    def _bot_answer(self):
+        """
+        This method get the next message on the bot script and send it to
+        _bot_message_post to be processed
+        """
         # Get the "bot operator"
         bot_partner = self.livechat_operator_id
 
@@ -146,13 +139,23 @@ class ChatbotMessageHook(models.Model):
         self._bot_message_post(bot_partner, next_message[0])
         return True
 
-    def _bot_message_post(self, bot_partner, message):
-        self.sudo().message_post(
-            body=message.name,
-            author_id=bot_partner.id,
-            message_type="comment",
-            subtype_xmlid="mail.mt_comment",
-        ).write({"script_id": message.id})
+    def _bot_message_post(self, bot_partner, script):
+
+        if script.answer_type == "input":
+            self.sudo().message_post(
+                body=script.name,
+                author_id=bot_partner.id,
+                message_type="comment",
+                subtype_xmlid="mail.mt_comment",
+            ).write({"script_id": script.id})
+        elif script.answer_type == "selection":
+            qweb = self.env["ir.qweb"]
+            self.sudo().message_post(
+                body=qweb.render("im_chatbot.multichoice", {"script": script[0]}),
+                author_id=bot_partner.id,
+                message_type="comment",
+                subtype_xmlid="mail.mt_comment",
+            ).write({"script_id": script.id})
 
         return True
 
@@ -165,17 +168,12 @@ class ImLivechatChannel(models.Model):
     def _open_livechat_mail_channel(
         self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None
     ):
-        print("override's working")
         operator = super(ImLivechatChannel, self)._open_livechat_mail_channel(
-            anonymous_name,
-            previous_operator_id,
-            user_id,
-            country_id,
+            anonymous_name, previous_operator_id, user_id, country_id,
         )
 
         # Assign the bot if no operator are available
         if not operator:
-            print("operator")
             operator = self.chatbot_id
             mail_channel_vals = self._get_livechat_mail_channel_vals(
                 anonymous_name, operator, user_id=user_id, country_id=country_id

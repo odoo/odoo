@@ -1,5 +1,22 @@
 # -*- coding: utf-8 -*-
-# from odoo import http
+from odoo import http
+from odoo.http import request
+
+
+class ChatbotController(http.Controller):
+
+    @http.route("/im_chatbot/answer", type="json", auth="public")
+    def ChatbotAnswer(self, operator, channel_id):
+        partner = request.env["res.partner"].sudo().browse(operator[0])
+        if partner.is_bot:
+            chatbot = partner.chatbot_ids
+            channel = request.env["mail.channel"].sudo().browse(channel_id)
+            channel._bot_answer()
+
+        return {
+            "ok": True
+        }
+
 
 
 # class ImChatbot(http.Controller):
