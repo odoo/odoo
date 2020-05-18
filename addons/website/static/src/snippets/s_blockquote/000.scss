@@ -1,40 +1,67 @@
 .s_blockquote {
+    // Reset
+    border: 0;
+    padding: 0;
     .s_blockquote_icon {
-        float: left;
+        font-size: $font-size-base;
     }
-    .s_blockquote_content {
-        overflow: hidden;
-        padding: $grid-gutter-width/2;
-        text-align: left;
-        footer {
-            background-color: initial;
+    .s_blockquote_author {
+        opacity: .75;
+    }
+    // Classic
+    &.s_blockquote_classic {
+        .s_blockquote_icon {
+            float: left;
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+            &.float-right {
+                border-top-left-radius: 0 !important;
+                border-bottom-left-radius: 0 !important;
+            }
         }
-    }
-    .blockquote-footer {
-        img {
-            max-height: 40px;
-        }
-    }
-    // Don't use `&:.s_blockquote_classic`, same but not retro-compatible
-    &:not(.s_blockquote_cover):not(.s_blockquote_minimalist) {
-        .blockquote-footer {
-            &:before {
-                display: none;
+        .s_blockquote_content {
+            overflow: hidden;
+            padding: $spacer * 1.5;
+            .blockquote-footer {
+                &::before {
+                    content: '';
+                }
+                .s_blockquote_avatar {
+                    max-height: $spacer * 2.5;
+                }
             }
         }
     }
+    // Cover
+    &.s_blockquote_cover {
+        text-align: center;
+        .s_blockquote_icon {
+            float: none;
+            margin-bottom: -$spacer * 1.5;
+        }
+        p:last-of-type {
+            margin-bottom: $spacer * .5;
+        }
+        .s_blockquote_filter {
+            padding: $spacer * 3 $spacer * 2 $spacer * 2;
+        }
+        // Compatibility
+        .quote_char {
+            margin: $spacer * 2 0 $spacer 0;
+            & ~ .blockquote-footer {
+                padding-bottom: $spacer * 2;
+            }
+        }
+    }
+    // Minimalist
     &.s_blockquote_minimalist {
-        border-radius: 5px;
+        border-left: 5px solid;
+        border-color: o-color('secondary');
         .s_blockquote_content {
-            padding: $grid-gutter-width/2.5;
-            p {
-                margin: 0;
-                &:before {
-                    content: '\00AB\00a0';
-                }
-                &:after {
-                    content: '\00a0\00BB';
-                }
+            padding: $spacer;
+            @include border-right-radius($border-radius);
+            p:last-of-type {
+                margin-bottom: 0;
             }
         }
     }
