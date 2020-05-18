@@ -246,8 +246,8 @@
         <li class="o_search_panel_category_value border-0 list-group-item" t-att-data-id="value.id" t-att-data-category-id="category.id">
             <header t-att-class="'list-group-item-action' + (value.id === category.activeValueId ? ' active' : '')">
                 <label t-att-for="value.display_name" t-attf-class="o_search_panel_label mb0{{ category.disableCounters ? '' : ' o_with_counters' }}">
-                    <span class="o_search_panel_label_title"><t t-esc="value.display_name"/></span>
                     <i t-if="value.childrenIds.length" t-attf-class="o_toggle_fold fa fa-fw fa-caret-{{ value.folded ? 'right' : 'down' }}"/>
+                    <span class="o_search_panel_label_title"><t t-esc="value.display_name"/></span>
                 </label>
                 <span t-if="!category.disableCounters and value.__count > 0"
                     class="text-muted ml-2 small"
