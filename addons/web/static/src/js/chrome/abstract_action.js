@@ -130,7 +130,7 @@ var AbstractAction = Widget.extend(ActionMixin, {
                 this._setTitle(this.controlPanelProps.title);
             }
             this.controlPanelProps.title = this.getTitle();
-            this._controlPanelWrapper = new ComponentWrapper(this, ControlPanel, this.controlPanelProps);
+            this._controlPanelWrapper = new ComponentWrapper(this, this.config.ControlPanel, this.controlPanelProps);
             await this._controlPanelWrapper.mount(this.el, { position: 'first-child' });
 
         }

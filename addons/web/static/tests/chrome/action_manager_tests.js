@@ -19,6 +19,7 @@ var Widget = require('web.Widget');
 
 var createActionManager = testUtils.createActionManager;
 const cpHelpers = testUtils.controlPanel;
+const { xml } = owl.tags;
 
 QUnit.module('ActionManager', {
     beforeEach: function () {
@@ -1877,6 +1878,29 @@ QUnit.module('ActionManager', {
         await actionManager.doAction('HelloWorldTest');
 
         assert.verifySteps(['push state']);
+
+        actionManager.destroy();
+        delete core.action_registry.map.HelloWorldTest;
+    });
+
+    QUnit.test('action can use a custom control panel', async function (assert) {
+        assert.expect(1);
+
+        class CustomControlPanel extends owl.Component {}
+        CustomControlPanel.template = xml/* xml */`
+            <div class="custom-control-panel">My custom control panel</div>
+        `
+        const ClientAction = AbstractAction.extend({
+            hasControlPanel: true,
+            config: {
+                ControlPanel: CustomControlPanel
+            },
+        });
+        const actionManager = await createActionManager();
+        core.action_registry.add('HelloWorldTest', ClientAction);
+        await actionManager.doAction('HelloWorldTest');
+        assert.containsOnce(actionManager, '.custom-control-panel',
+            "should have a custom control panel");
 
         actionManager.destroy();
         delete core.action_registry.map.HelloWorldTest;
