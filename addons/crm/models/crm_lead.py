@@ -298,17 +298,12 @@ class Lead(models.Model):
         """ If probability and automated_probability are equal probability computation
         is considered as automatic, aka probability is sync with automated_probability """
         for lead in self:
-            # creation mode: consider it as being not automated
-            if not lead.id and not lead._origin.id:
-                lead.is_automated_probability = False
-            else:
-                lead.is_automated_probability = tools.float_compare(lead.probability, lead.automated_probability, 2) == 0
+            lead.is_automated_probability = tools.float_compare(lead.probability, lead.automated_probability, 2) == 0
 
     @api.depends(lambda self: ['tag_ids', 'stage_id', 'team_id'] + self._pls_get_safe_fields())
     def _compute_probabilities(self):
+        lead_probabilities = self._pls_get_naive_bayes_probabilities()
         for lead in self:
-            was_automated = False
-            lead_probabilities = lead._pls_get_naive_bayes_probabilities()
             if lead.id in lead_probabilities:
                 was_automated = lead.active and lead.is_automated_probability
                 lead.automated_probability = lead_probabilities[lead.id]
@@ -421,8 +416,6 @@ class Lead(models.Model):
             if vals.get('website'):
                 vals['website'] = self.env['res.partner']._clean_website(vals['website'])
         leads = super(Lead, self).create(vals_list)
-        # Compute new probability for each lead separately
-        leads._update_probability()
         return leads
 
     def write(self, vals):
@@ -433,7 +426,7 @@ class Lead(models.Model):
         if 'stage_id' in vals:
             stage_id = self.env['crm.stage'].browse(vals.get('stage_id'))
             if stage_id.is_won:
-                vals['probability'] = 100
+                vals.update({'probability': 100, 'automated_probability': 100})
 
         # stage change with new stage: update probability and date_closed
         if vals.get('probability', 0) >= 100 or not vals.get('active', True):
@@ -445,11 +438,6 @@ class Lead(models.Model):
             self._handle_won_lost(vals)
 
         write_result = super(Lead, self).write(vals)
-        # Compute new automated_probability (and, eventually, probability) for each lead separately
-        # Done also here (and not only in compute) to handle onchange -> as automated_probability is in readonly mode,
-        # the form does not return the automated_probability value after having computed it.
-        if self._should_update_probability(vals):
-            self._update_probability()
 
         return write_result
 
@@ -491,23 +479,6 @@ class Lead(models.Model):
             leads_reach_lost._pls_increment_frequencies(to_state='lost')
         if leads_leave_lost:
             leads_leave_lost._pls_increment_frequencies(from_state='lost')
-
-    def _update_probability(self):
-        lead_probabilities = self.sudo()._pls_get_naive_bayes_probabilities()
-        for lead in self:
-            lead_proba = lead_probabilities.get(lead.id, 0)
-            proba_vals = {'automated_probability': lead_proba}
-            if lead.is_automated_probability:
-                proba_vals = {'probability': lead_proba}
-            super(Lead, lead).write(proba_vals)
-        return
-
-    def _should_update_probability(self, vals):
-        fields_to_check = ['tag_ids', 'stage_id', 'team_id'] + self._pls_get_safe_fields()
-        for field, value in vals.items():
-            if field in fields_to_check:
-                return True
-        return False
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -588,7 +559,7 @@ class Lead(models.Model):
         archived = self.filtered(lambda lead: not lead.active)
         if activated:
             activated.write({'lost_reason': False})
-            activated._update_probability()
+            activated._compute_probabilities()
         if archived:
             archived.write({'probability': 0, 'automated_probability': 0})
         return res
