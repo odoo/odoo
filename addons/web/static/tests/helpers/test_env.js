@@ -54,6 +54,7 @@ odoo.define('web.test_env', async function (require) {
         const defaultEnv = {
             _t: env._t || (s => s),
             _lt: env._lt || (s => s),
+            browser: {},
             bus: new Bus(),
             device: Object.assign({
                 isMobile: false,
