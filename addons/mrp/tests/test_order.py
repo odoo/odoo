@@ -78,7 +78,7 @@ class TestMrpOrder(TestMrpCommon):
 
         # check production move
         production_move = man_order.move_finished_ids
-        self.assertEqual(production_move.date, test_date_planned)
+        self.assertAlmostEqual(production_move.date, test_date_planned + timedelta(hours=1), delta=timedelta(seconds=10))
         self.assertEqual(production_move.product_id, self.product_4)
         self.assertEqual(production_move.product_uom, man_order.product_uom_id)
         self.assertEqual(production_move.product_qty, man_order.product_qty)

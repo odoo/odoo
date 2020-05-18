@@ -521,7 +521,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             if self[self._get_raw_workorder_inverse_name()]:
                 values = mo._get_move_raw_values(self.product_id, self.qty_done, self.product_uom_id)
             elif self.product_id != mo.product_id:
-                values = mo._get_finished_move_value(self.product_id.id, self.qty_done, self.product_uom_id.id)
+                values = mo._get_move_finished_values(self.product_id.id, self.qty_done, self.product_uom_id.id)
             else:
                 # The line is neither a component nor a byproduct
                 return

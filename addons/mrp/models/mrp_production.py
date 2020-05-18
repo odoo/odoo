@@ -494,7 +494,8 @@ class MrpProduction(models.Model):
             order.move_byproduct_ids = order.move_finished_ids.filtered(lambda m: m.product_id != order.product_id)
 
     def _set_move_byproduct_ids(self):
-        self.move_finished_ids |= self.move_byproduct_ids
+        move_finished_ids = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
+        self.move_finished_ids = move_finished_ids | self.move_byproduct_ids
 
     @api.depends('state')
     def _compute_show_lock(self):
@@ -558,8 +559,14 @@ class MrpProduction(models.Model):
 
     @api.onchange('date_planned_start')
     def _onchange_date_planned_start(self):
-        if not self.workorder_ids:
-            self.date_planned_finished = self.date_planned_start + datetime.timedelta(hours=1)
+        if not self.is_planned:
+            date_planned_finished = self.date_planned_start + relativedelta(days=self.product_id.produce_delay)
+            date_planned_finished = date_planned_finished + relativedelta(days=self.company_id.manufacturing_lead)
+            if date_planned_finished == self.date_planned_start:
+                date_planned_finished = date_planned_finished + relativedelta(hours=1)
+            self.date_planned_finished = date_planned_finished
+            self.move_raw_ids = [(1, m.id, {'date_expected': self.date_planned_start, 'date': self.date_planned_start}) for m in self.move_raw_ids]
+            self.move_finished_ids = [(1, m.id, {'date_expected': date_planned_finished, 'date': date_planned_finished}) for m in self.move_finished_ids]
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_raw(self):
@@ -579,6 +586,28 @@ class MrpProduction(models.Model):
         else:
             self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
 
+    @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
+    def _onchange_move_finished(self):
+        if self.product_id and self.product_qty > 0:
+            # keep manual entries
+            list_move_finished = [(4, move.id) for move in self.move_finished_ids.filtered(
+                lambda m: not m.byproduct_id and m.product_id != self.product_id)]
+            moves_finished_values = self._get_moves_finished_values()
+            moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_finished_ids.filtered(lambda m: m.byproduct_id)}
+            move_finished = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
+            for move_finished_values in moves_finished_values:
+                if move_finished_values.get('byproduct_id') in moves_byproduct_dict:
+                    # update existing entries
+                    list_move_finished += [(1, moves_byproduct_dict[move_finished_values['byproduct_id']].id, move_finished_values)]
+                elif move_finished_values.get('product_id') == self.product_id.id and move_finished:
+                    list_move_finished += [(1, move_finished.id, move_finished_values)]
+                else:
+                    # add new entries
+                    list_move_finished += [(0, 0, move_finished_values)]
+            self.move_finished_ids = list_move_finished
+        else:
+            self.move_finished_ids = [(2, move.id) for move in self.move_finished_ids.filtered(lambda m: m.bom_line_id)]
+
     @api.onchange('location_src_id', 'move_raw_ids', 'bom_id')
     def _onchange_location(self):
         source_location = self.location_src_id
@@ -586,6 +615,17 @@ class MrpProduction(models.Model):
             'warehouse_id': source_location.get_warehouse().id,
             'location_id': source_location.id,
         })
+
+    @api.onchange('location_dest_id', 'move_finished_ids', 'bom_id')
+    def _onchange_location_dest(self):
+        destination_location = self.location_dest_id
+        update_value_list = []
+        for move in self.move_finished_ids:
+            update_value_list += [(1, move.id, ({
+                'warehouse_id': destination_location.get_warehouse().id,
+                'location_dest_id': destination_location.id,
+            }))]
+        self.move_finished_ids = update_value_list
 
     @api.onchange('picking_type_id')
     def onchange_picking_type(self):
@@ -595,6 +635,7 @@ class MrpProduction(models.Model):
         except (AttributeError, AccessError):
             location = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).lot_stock_id
         self.move_raw_ids.update({'picking_type_id': self.picking_type_id})
+        self.move_finished_ids.update({'picking_type_id': self.picking_type_id})
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
@@ -608,6 +649,8 @@ class MrpProduction(models.Model):
             self._create_workorder()
 
     def write(self, vals):
+        if 'workorder_ids' in self:
+            production_to_replan = self.filtered(lambda p: p.is_planned)
         res = super(MrpProduction, self).write(vals)
 
         for production in self:
@@ -616,7 +659,7 @@ class MrpProduction(models.Model):
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
                 if production.is_partially_planned:
                     raise UserError(_('You cannot move a manufacturing order once it has a planned workorder, move related workorder(s) instead.'))
-            if ('move_raw_ids' in vals or 'move_finished_ids' in vals) and production.state != 'draft':
+            if any(field in ['move_raw_ids', 'move_finished_ids', 'workorder_ids'] for field in vals) and production.state != 'draft':
                 if production.state == 'done':
                     # for some reason moves added after state = 'done' won't save group_id, reference if added in
                     # "stock_move.default_get()"
@@ -630,6 +673,8 @@ class MrpProduction(models.Model):
                         'date_expected': production.date_planned_finished,
                     })
                 production._autoconfirm_production()
+                if production in production_to_replan:
+                    production._plan_workorders(replan=True)
             if production.state == 'done' and ('lot_producing_id' in vals or 'qty_producing' in vals):
                 finished_move_lines = production.move_finished_ids.filtered(
                     lambda move: move.product_id == self.product_id and move.state == 'done').mapped('move_line_ids')
@@ -637,6 +682,7 @@ class MrpProduction(models.Model):
                     finished_move_lines.write({'lot_id': vals.get('lot_producing_id')})
                 if 'qty_producing' in vals:
                     finished_move_lines.write({'qty_done': vals.get('qty_producing')})
+
             if not production.bom_id.operation_ids and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
                 new_date_planned_start = fields.Datetime.to_datetime(vals.get('date_planned_start'))
                 if not production.date_planned_finished or new_date_planned_start >= production.date_planned_finished:
@@ -656,12 +702,13 @@ class MrpProduction(models.Model):
             procurement_group_vals = self._prepare_procurement_group_vals(values)
             values['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
         production = super(MrpProduction, self).create(values)
-        production.move_raw_ids.write({
+        (production.move_raw_ids | production.move_finished_ids).write({
             'group_id': production.procurement_group_id.id,
         })
         # Trigger move_raw creation when importing a file
         if 'import_file' in self.env.context:
             production._onchange_move_raw()
+            production._onchange_move_finished()
         return production
 
     def unlink(self):
@@ -710,7 +757,7 @@ class MrpProduction(models.Model):
             for workorder in production.workorder_ids:
                 workorder.duration_expected = workorder._get_duration_expected()
 
-    def _get_finished_move_value(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False):
+    def _get_move_finished_values(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False):
         group_orders = self.procurement_group_id.mrp_production_ids
         move_dest_ids = self.move_dest_ids
         if len(group_orders) > 1:
@@ -726,7 +773,7 @@ class MrpProduction(models.Model):
             'operation_id': operation_id,
             'byproduct_id': byproduct_id,
             'name': self.name,
-            'date': self.date_planned_start,
+            'date': date_planned_finished,
             'date_expected': date_planned_finished,
             'picking_type_id': self.picking_type_id.id,
             'location_id': self.product_id.with_company(self.company_id).property_stock_production.id,
@@ -743,18 +790,18 @@ class MrpProduction(models.Model):
             'move_dest_ids': [(4, x.id) for x in move_dest_ids],
         }
 
-    def _generate_finished_moves(self):
-        if self.product_id in self.bom_id.byproduct_ids.mapped('product_id'):
-            raise UserError(_("You cannot have %s  as the finished product and in the Byproducts") % self.product_id.name)
-        moves_values = [self._get_finished_move_value(self.product_id.id, self.product_qty, self.product_uom_id.id)]
-        for byproduct in self.bom_id.byproduct_ids:
-            product_uom_factor = self.product_uom_id._compute_quantity(self.product_qty, self.bom_id.product_uom_id)
-            qty = byproduct.product_qty * (product_uom_factor / self.bom_id.product_qty)
-            move_values = self._get_finished_move_value(byproduct.product_id.id,
-                qty, byproduct.product_uom_id.id, byproduct.operation_id.id,
-                byproduct.id)
-            moves_values.append(move_values)
-        moves = self.env['stock.move'].create(moves_values)
+    def _get_moves_finished_values(self):
+        moves = []
+        for production in self:
+            if production.product_id in production.bom_id.byproduct_ids.mapped('product_id'):
+                raise UserError(_("You cannot have %s  as the finished product and in the Byproducts") % self.product_id.name)
+            moves = [production._get_move_finished_values(production.product_id.id, production.product_qty, production.product_uom_id.id)]
+            for byproduct in production.bom_id.byproduct_ids:
+                product_uom_factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
+                qty = byproduct.product_qty * (product_uom_factor / production.bom_id.product_qty)
+                moves.append(production._get_move_finished_values(
+                    byproduct.product_id.id, qty, byproduct.product_uom_id.id,
+                    byproduct.operation_id.id, byproduct.id))
         return moves
 
     def _get_moves_raw_values(self):
@@ -983,7 +1030,6 @@ class MrpProduction(models.Model):
                 production.consumption = production.bom_id.consumption
             if not production.move_raw_ids:
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
-            production._generate_finished_moves()
             production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()
             production.workorder_ids._action_confirm()
@@ -998,7 +1044,7 @@ class MrpProduction(models.Model):
         """ Create work orders. And probably do stuff, like things. """
         orders_to_plan = self.filtered(lambda order: not order.is_planned)
         for order in orders_to_plan:
-            order.move_raw_ids.filtered(lambda m: m.state == 'draft')._action_confirm()
+            (order.move_raw_ids | order.move_finished_ids).filtered(lambda m: m.state == 'draft')._action_confirm()
             # `propagate_date` enables the automatic rescheduling which could lead to hard to
             # understand behavior if a manufacturing order is planned, i.e. if the work orders do
             # have their leaves booked in the workcenter calendar. We thus disable the
@@ -1273,7 +1319,6 @@ class MrpProduction(models.Model):
         for production in self:
             if production.backorder_sequence == 0:  # Activate backorder naming
                 production.backorder_sequence = 1
-
             backorder_mo = production.copy(default=self._get_backorder_mo_vals(production))
             for wo in backorder_mo.workorder_ids:
                 wo.qty_produced = 0
@@ -1322,23 +1367,14 @@ class MrpProduction(models.Model):
         if self.env.context.get('mo_ids_to_backorder'):
             productions_to_backorder = self.browse(self.env.context['mo_ids_to_backorder'])
             productions_not_to_backorder = self - productions_to_backorder
-            # As a backorder will be created to produce the remaining quantity, we don't want
-            # action_done (in _post_inventory) create any new move for the finished one and the
-            # byproduct with the delta quantity (product_uom_qty - quantity_done)
-            for production in productions_to_backorder:
-                for move in production.move_finished_ids:
-                    if move.product_id == production.product_id:
-                        move.product_uom_qty = production.qty_producing
-                    else:
-                        move.product_uom_qty = move.quantity_done
         else:
             productions_not_to_backorder = self
             productions_to_backorder = self.env['mrp.production']
 
         self.workorder_ids.button_finish()
 
-        productions_not_to_backorder._post_inventory(cancel_backorder=False)
-        productions_to_backorder._post_inventory(cancel_backorder=True)
+        productions_not_to_backorder._post_inventory(cancel_backorder=True)
+        productions_to_backorder._post_inventory(cancel_backorder=False)
         backorders = productions_to_backorder._generate_backorder_productions()
 
         # Moves without quantity done are not posted => set them as done instead of canceling. In
