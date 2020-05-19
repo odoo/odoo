@@ -27,6 +27,7 @@ class AccountMove(models.Model):
 
     l10n_ch_isr_sent = fields.Boolean(default=False, help="Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail.")
     l10n_ch_currency_name = fields.Char(related='currency_id.name', readonly=True, string="Currency Name", help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
+    l10n_ch_isr_needs_fixing = fields.Boolean(compute="_compute_l10n_ch_isr_needs_fixing", help="Used to show a warning banner when the vendor bill needs a correct ISR payment reference. ")
 
     @api.depends('invoice_partner_bank_id.l10n_ch_isr_subscription_eur', 'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_subscription(self):
@@ -154,6 +155,33 @@ class AccountMove(models.Model):
                 record.l10n_ch_isr_subscription and \
                 record.l10n_ch_currency_name in ['EUR', 'CHF']
 
+    @api.depends('type', 'invoice_partner_bank_id', 'invoice_payment_ref')
+    def _compute_l10n_ch_isr_needs_fixing(self):
+        for inv in self:
+            if inv.type == 'in_invoice' and inv.company_id.country_id.code == "CH":
+                partner_bank = inv.invoice_partner_bank_id
+                if partner_bank._is_isr_issuer() and not inv._has_isr_ref():
+                    inv.l10n_ch_isr_needs_fixing = True
+                    continue
+            inv.l10n_ch_isr_needs_fixing = False
+
+    def _has_isr_ref(self):
+        """Check if this invoice has a valid ISR reference (for Switzerland)
+        e.g.
+        12371
+        000000000000000000000012371
+        210000000003139471430009017
+        21 00000 00003 13947 14300 09017
+        """
+        self.ensure_one()
+        ref = self.invoice_payment_ref or self.ref
+        if not ref:
+            return False
+        ref = ref.replace(' ', '')
+        if re.match(r'^(\d{2,27})$', ref):
+            return ref == mod10r(ref[:-1])
+        return False
+
     def split_total_amount(self):
         """ Splits the total amount of this invoice in two parts, using the dot as
         a separator, and taking two precision digits (always displayed).
@@ -181,7 +209,7 @@ class AccountMove(models.Model):
             self.l10n_ch_isr_sent = True
             return self.env.ref('l10n_ch.l10n_ch_isr_report').report_action(self)
         else:
-           raise ValidationError(_("""You cannot generate an ISR yet.\n
+            raise ValidationError(_("""You cannot generate an ISR yet.\n
                                    For this, you need to :\n
                                    - set a valid postal account number (or an IBAN referencing one) for your company\n
                                    - define its bank\n
