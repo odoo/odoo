@@ -8,6 +8,7 @@
         <field name="name">VAT 24%</field>
         <field name="description">VAT 24%</field>
         <field name="amount">24.0</field>
+        <field name="tax_group_id" ref="tax_group_24"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -40,6 +41,7 @@
         <field name="name">VAT 14%</field>
         <field name="description">VAT 14%</field>
         <field name="amount">14.0</field>
+        <field name="tax_group_id" ref="tax_group_14"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -72,6 +74,7 @@
         <field name="name">VAT 10%</field>
         <field name="description">VAT 10%</field>
         <field name="amount">10.0</field>
+        <field name="tax_group_id" ref="tax_group_10"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
 
@@ -105,6 +108,7 @@
         <field name="name">VAT 0%</field>
         <field name="description">VAT 0%</field>
         <field name="amount">0.0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
 
@@ -130,6 +134,7 @@
         <field name="name">VAT 24% Service</field>
         <field name="description">VAT 24% Service</field>
         <field name="amount">24.0</field>
+        <field name="tax_group_id" ref="tax_group_24"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
 
@@ -163,6 +168,7 @@
         <field name="name">VAT 14% Service</field>
         <field name="description">VAT 14% Service</field>
         <field name="amount">14.0</field>
+        <field name="tax_group_id" ref="tax_group_14"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
 
@@ -196,6 +202,7 @@
         <field name="name">VAT 10% Service</field>
         <field name="description">VAT 10% Service</field>
         <field name="amount">10.0</field>
+        <field name="tax_group_id" ref="tax_group_10"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -232,6 +239,7 @@
         <field name="name">Purchase 24%</field>
         <field name="description">Purchase 24%</field>
         <field name="amount">24.0</field>
+        <field name="tax_group_id" ref="tax_group_24"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -264,6 +272,7 @@
         <field name="name">Purchase 14%</field>
         <field name="description">Purchase 14%</field>
         <field name="amount">14.0</field>
+        <field name="tax_group_id" ref="tax_group_14"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -296,6 +305,7 @@
         <field name="name">Purchase 10%</field>
         <field name="description">Purchase 10%</field>
         <field name="amount">10.0</field>
+        <field name="tax_group_id" ref="tax_group_10"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -330,6 +340,7 @@
         <field name="name">Purchase 24% Service</field>
         <field name="description">Purchase 24% Service</field>
         <field name="amount">24.0</field>
+        <field name="tax_group_id" ref="tax_group_24"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -362,6 +373,7 @@
         <field name="name">Purchase 14% Service</field>
         <field name="description">Purchase 14% Service</field>
         <field name="amount">14.0</field>
+        <field name="tax_group_id" ref="tax_group_14"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -394,6 +406,7 @@
         <field name="name">Purchase 10% Service</field>
         <field name="description">Purchase 10% Service</field>
         <field name="amount">10.0</field>
+        <field name="tax_group_id" ref="tax_group_10"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -428,6 +441,7 @@
         <field name="name">Purchase 24% (brutto)</field>
         <field name="description">Purchase 24% (brutto)</field>
         <field name="amount">24.0</field>
+        <field name="tax_group_id" ref="tax_group_24"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -460,6 +474,7 @@
         <field name="name">Purchase 14% (brutto)</field>
         <field name="description">Purchase 14% (brutto)</field>
         <field name="amount">14.0</field>
+        <field name="tax_group_id" ref="tax_group_14"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -492,6 +507,7 @@
         <field name="name">Purchase 10% (brutto)</field>
         <field name="description">Purchase 10% (brutto)</field>
         <field name="amount">10.0</field>
+        <field name="tax_group_id" ref="tax_group_10"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -526,6 +542,7 @@
         <field name="name">Purchase 0%</field>
         <field name="description">Purchase 0%</field>
         <field name="amount">0.0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
     </record>
@@ -538,6 +555,7 @@
         <field name="name">VAT 0% EU Goods</field>
         <field name="description">VAT 0% EU Goods</field>
         <field name="amount">0.0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -562,6 +580,7 @@
         <field name="name">VAT 0% EU Service</field>
         <field name="description">VAT 0% EU Service</field>
         <field name="amount">0.0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -587,6 +606,7 @@
         <field name="name">Purchase 24% EU Goods</field>
         <field name="description">Purchase 24% EU Goods</field>
         <field name="amount">24.0</field>
+        <field name="tax_group_id" ref="tax_group_24"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -631,6 +651,7 @@
         <field name="name">Purchase 14% EU Goods</field>
         <field name="description">Purchase 14% EU Goods</field>
         <field name="amount">14.0</field>
+        <field name="tax_group_id" ref="tax_group_14"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -675,6 +696,7 @@
         <field name="name">Purchase 10% EU Goods</field>
         <field name="description">Purchase 10% EU Goods</field>
         <field name="amount">10.0</field>
+        <field name="tax_group_id" ref="tax_group_10"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -721,6 +743,7 @@
         <field name="name">Purchase 24% EU Service</field>
         <field name="description">Purchase 24% EU Service</field>
         <field name="amount">24.0</field>
+        <field name="tax_group_id" ref="tax_group_24"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -765,6 +788,7 @@
         <field name="name">Purchase 14% EU Service</field>
         <field name="description">Purchase 14% EU Service</field>
         <field name="amount">14.0</field>
+        <field name="tax_group_id" ref="tax_group_14"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -809,6 +833,7 @@
         <field name="name">Purchase 10% EU Service</field>
         <field name="description">Purchase 10% EU Service</field>
         <field name="amount">10.0</field>
+        <field name="tax_group_id" ref="tax_group_10"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -855,6 +880,7 @@
         <field name="name">VAT 0% Triangulation</field>
         <field name="description">VAT 0% Triangulation</field>
         <field name="amount">0.0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -876,6 +902,7 @@
         <field name="name">Triangulation Purchase</field>
         <field name="description">Triangulation Purchase</field>
         <field name="amount">0.0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -908,6 +935,7 @@
         <field name="name">Construct 0%</field>
         <field name="description">Construct 0%</field>
         <field name="amount">0.0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -930,6 +958,7 @@
         <field name="name">Purchase 24% Construct</field>
         <field name="description">Purchase 24% Construct</field>
         <field name="amount">24.0</field>
+        <field name="tax_group_id" ref="tax_group_24"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -961,6 +990,7 @@
         <field name="chart_template_id" ref="fi_chart_template"/>
         <field name="name">Purchase 24% FI Construct</field>
         <field name="description">Purchase 24% FI Construct</field>
+        <field name="tax_group_id" ref="tax_group_24"/>
         <field name="amount">24.0</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
@@ -1011,6 +1041,7 @@
         <field name="name">Aland 0%</field>
         <field name="description">Aland 0%</field>
         <field name="amount">0.0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -1037,6 +1068,7 @@
         <field name="name">Purchase 24% Non EU Goods</field>
         <field name="description">Purchase 24% Non EU Goods</field>
         <field name="amount">24.0</field>
+        <field name="tax_group_id" ref="tax_group_24"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -1081,6 +1113,7 @@
         <field name="name">Purchase 14% Non EU Goods</field>
         <field name="description">Purchase 14% Non EU Goods</field>
         <field name="amount">14.0</field>
+        <field name="tax_group_id" ref="tax_group_14"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -1125,6 +1158,7 @@
         <field name="name">Purchase 10% Non EU Goods</field>
         <field name="description">Purchase 10% Non EU Goods</field>
         <field name="amount">10.0</field>
+        <field name="tax_group_id" ref="tax_group_10"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -1171,6 +1205,7 @@
         <field name="name">VAT 0% Export</field>
         <field name="description">VAT 0% Export</field>
         <field name="amount">0.0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
 
@@ -1194,6 +1229,7 @@
         <field name="name">Import Pay24</field>
         <field name="description">24%</field>
         <field name="amount">24.0</field>
+        <field name="tax_group_id" ref="tax_group_24"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -1228,6 +1264,7 @@
         <field name="name">Import Deduct24</field>
         <field name="description">24%</field>
         <field name="amount">24.0</field>
+        <field name="tax_group_id" ref="tax_group_24"/>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),

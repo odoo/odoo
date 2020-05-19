@@ -30,6 +30,7 @@ Set the payment reference type from the Sales Journal.
         'data/account_chart_template_data.xml',
         'data/account.account.template.csv',
         'data/account_tax_report_line.xml',
+        'data/account_data.xml',
         'data/account_tax_template_data.xml',
         'data/l10n_fi_chart_post_data.xml',
         'data/account_fiscal_position_template_data.xml',
