@@ -235,21 +235,18 @@ class TestORM(TransactionCase):
             'groups_id': [(6, 0, [self.ref('base.group_partner_manager')])],
         })
         p1 = self.env['res.partner'].with_user(user).create({'name': 'Zorro'})
-        p1_prop = self.env['ir.property'].with_user(user).create({
-            'name': 'Slip en laine',
-            'res_id': 'res.partner,{}'.format(p1.id),
-            'fields_id': self.env['ir.model.fields'].search([
-                ('model', '=', 'res.partner'), ('name', '=', 'ref')], limit=1).id,
-            'value_text': 'Nain poilu',
-            'type': 'char',
-        })
+        self.env['ir.property'].with_user(user)._set_multi("ref", "res.partner", {p1.id: "Nain poilu"})
+        p1_prop = self.env['ir.property'].with_user(user)._get("ref", "res.partner", res_id=p1.id)
+        self.assertEqual(
+            p1_prop, "Nain poilu", 'p1_prop should have been created')
 
         # Unlink with unprivileged user
         p1.unlink()
 
         # ir.property is deleted
+        p1_prop = self.env['ir.property'].with_user(user)._get("ref", "res.partner", res_id=p1.id)
         self.assertEqual(
-            p1_prop.exists(), self.env['ir.property'], 'p1_prop should have been deleted')
+            p1_prop, False, 'p1_prop should have been deleted')
 
     def test_create_multi(self):
         """ create for multiple records """
