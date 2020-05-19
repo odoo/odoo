@@ -401,7 +401,7 @@ class Post(models.Model):
 
     def _get_uid_has_answered(self):
         for post in self:
-            post.uid_has_answered = any(answer.create_uid.id == post._uid for answer in post.child_ids)
+            post.uid_has_answered = post._uid in post.child_ids.create_uid.ids
 
     @api.depends('child_ids.is_correct')
     def _get_has_validated_answer(self):
