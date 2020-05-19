@@ -493,22 +493,31 @@ class ResourceCalendar(models.Model):
             'hours': sum(day_hours.values()),
         }
 
-    def _get_day_total(self, from_datetime, to_datetime, resource=None):
+    def _get_day_total(self, from_datetime, to_datetime, resources=None):
         """
         @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
         """
         self.ensure_one()
-        if resource is None:
-            resource = self.env['resource.resource']
+        if resources is None:
+            resources = self.env['resource.resource']
         # total hours per day:  retrieve attendances with one extra day margin,
         # in order to compute the total hours on the first and last days
         from_full = from_datetime - timedelta(days=1)
         to_full = to_datetime + timedelta(days=1)
-        intervals = self._attendance_intervals(from_full, to_full, resources=resource)
-        day_total = defaultdict(float)
-        for start, stop, meta in intervals:
-            day_total[start.date()] += (stop - start).total_seconds() / 3600
-        return day_total
+        intervals = self._attendance_intervals(from_full, to_full, resources=resources)
+
+        if len(resources) <= 1:
+            day_total = defaultdict(float)
+            for start, stop, meta in intervals:
+                day_total[start.date()] += (stop - start).total_seconds() / 3600
+            return day_total
+
+        result = defaultdict(lambda: defaultdict(float))
+        for resource in resources:
+            day_total = result[resource.id]
+            for start, stop, meta in intervals[resource.id]:
+                day_total[start.date()] += (stop - start).total_seconds() / 3600
+        return result
 
     # --------------------------------------------------
     # External API
