@@ -177,7 +177,7 @@ class Forum(models.Model):
     @api.model
     def create(self, values):
         res = super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
-        res._set_default_faq()
+        res._set_default_faq()  # will trigger a write and call update_website_count
         return res
 
     def write(self, vals):
@@ -199,7 +199,14 @@ class Forum(models.Model):
         if 'active' in vals:
             # archiving/unarchiving a forum does it on its posts, too
             self.env['forum.post'].with_context(active_test=False).search([('forum_id', 'in', self.ids)]).write({'active': vals['active']})
+
+        if 'active' in vals or 'website_id' in vals:
+            self._update_website_count()
         return res
+
+    def unlink(self):
+        self._update_website_count()
+        return super(Forum, self).unlink()
 
     @api.model
     def _tag_to_write_vals(self, tags=''):
@@ -237,6 +244,12 @@ class Forum(models.Model):
             'target': 'self',
             'url': self._compute_website_url(),
         }
+
+    @api.model
+    def _update_website_count(self):
+        for website in self.env['website'].sudo().search([]):
+            website.forums_count = self.env['forum.forum'].sudo().search_count(website.website_domain())
+
 
 class Post(models.Model):
 
