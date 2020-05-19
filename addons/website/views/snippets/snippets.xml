@@ -282,10 +282,17 @@
     </div>
 
     <!-- Background Image -->
+    <t t-set="bg_selector" t-value="'section, .parallax, .carousel-item'"/>
+    <t t-set="bg_exclude" t-value="'.s_hr, .s_image_gallery, .o_gallery .carousel-item'"/>
     <div data-js="background" string="Background"
-        data-selector="section, .parallax, .carousel-item"
-        data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item">
-        <we-imagepicker string="Background" data-background="" data-allow-videos=":not(.parallax, .s_parallax_bg)"/>
+        t-att-data-selector="bg_selector"
+        t-att-data-exclude="bg_exclude">
+        <we-imagepicker string="Background" data-background="" data-allow-videos=":not(.parallax, .s_parallax_bg)" data-name="bg_img_opt"/>
+    </div>
+    <div data-js="BackgroundOptimize" string="Background"
+        t-att-data-selector="bg_selector"
+        t-att-data-exclude="bg_exclude">
+        <t t-call="web_editor.image_optimization_controls"/>
     </div>
 
     <!-- Background Image Size/Position -->

@@ -458,6 +458,10 @@ var RTEWidget = Widget.extend({
 
         if (initialActiveElement && initialActiveElement !== document.activeElement) {
             initialActiveElement.focus();
+            // Range inputs don't support selection
+            if (initialActiveElement.matches('input[type=range]')) {
+                return;
+            }
             try {
                 initialActiveElement.selectionStart = initialSelectionStart;
                 initialActiveElement.selectionEnd = initialSelectionEnd;

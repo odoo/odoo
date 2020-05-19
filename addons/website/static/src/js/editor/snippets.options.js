@@ -518,6 +518,18 @@ options.Class.include({
     },
 });
 
+options.registry.BackgroundOptimize.include({
+    /**
+     * @override
+     */
+    _computeVisibility() {
+        if (this.$target.hasClass('o_background_video')) {
+            return false;
+        }
+        return this._super(...arguments);
+    },
+});
+
 options.registry.background.include({
     background: async function (previewMode, widgetValue, params) {
         if (previewMode === 'reset' && this.videoSrc) {

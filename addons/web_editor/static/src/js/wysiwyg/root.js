@@ -9,7 +9,7 @@ var WysiwygRoot = Widget.extend({
     assetLibs: ['web_editor.compiled_assets_wysiwyg'],
     _loadLibsTplRoute: '/web_editor/public_render_template',
 
-    publicMethods: ['isDirty', 'save', 'getValue', 'setValue', 'getEditable', 'on', 'trigger', 'focus', 'saveCroppedImages'],
+    publicMethods: ['isDirty', 'save', 'getValue', 'setValue', 'getEditable', 'on', 'trigger', 'focus', 'saveModifiedImages'],
 
     /**
      *   @see 'web_editor.wysiwyg' module

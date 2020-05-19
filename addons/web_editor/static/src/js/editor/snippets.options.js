@@ -9,6 +9,12 @@ var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 const weUtils = require('web_editor.utils');
 var weWidgets = require('wysiwyg.widgets');
+const {
+    loadImage,
+    loadImageInfo,
+    applyModifications,
+    removeOnImageChangeAttrs,
+} = require('web_editor.image_processing');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -1424,6 +1430,49 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     },
 });
 
+const RangeUserValueWidget = UserValueWidget.extend({
+    tagName: 'we-range',
+    events: {
+        'change input': '_onInputChange',
+    },
+
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this.input = document.createElement('input');
+        this.input.type = "range";
+        this.input.className = "custom-range";
+        this.containerEl.appendChild(this.input);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    setValue(value, methodName) {
+        this.input.value = value;
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onInputChange(ev) {
+        this._value = ev.target.value;
+        this._onUserValueChange(ev);
+    },
+});
+
+
 const userValueWidgetsRegistry = {
     'we-button': ButtonUserValueWidget,
     'we-checkbox': CheckboxUserValueWidget,
@@ -1433,6 +1482,7 @@ const userValueWidgetsRegistry = {
     'we-colorpicker': ColorpickerUserValueWidget,
     'we-datetimepicker': DatetimePickerUserValueWidget,
     'we-imagepicker': ImagepickerUserValueWidget,
+    'we-range': RangeUserValueWidget,
 };
 
 /**
@@ -2662,6 +2712,385 @@ registry['sizing_y'] = registry.sizing.extend({
     },
 });
 
+/*
+ * Abstract option to be extended by the ImageOptimize and BackgroundOptimize
+ * options that handles all the common parts.
+ */
+const ImageHandlerOption = SnippetOptionWidget.extend({
+
+    /**
+     * @override
+     */
+    async willStart() {
+        const _super = this._super.bind(this);
+        await this._loadImageInfo();
+        // Make sure image is loaded because we need its naturalWidth to render XML
+        const img = this._getImg();
+        await new Promise((resolve, reject) => {
+            if (img.complete) {
+                return resolve();
+            }
+            img.addEventListener('load', resolve, {once: true});
+            img.addEventListener('error', resolve, {once: true});
+        });
+        return _super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    selectWidth(previewMode, widgetValue, params) {
+        this._getImg().dataset.resizeWidth = widgetValue;
+        return this._applyOptions();
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    setFilter(previewMode, widgetValue, params) {
+        this._getImg().dataset.filter = this._normalizeColor(widgetValue);
+        return this._applyOptions();
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    setQuality(previewMode, widgetValue, params) {
+        this._getImg().dataset.quality = widgetValue;
+        return this._applyOptions();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeVisibility() {
+        const src = this._getImg().getAttribute('src');
+        return src && src !== '/';
+    },
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        const img = this._getImg();
+        switch (methodName) {
+            case 'selectWidth':
+                return img.naturalWidth;
+            case 'setFilter':
+                return img.dataset.filter;
+            case 'setQuality':
+                return img.dataset.quality || 95;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        if (!this.originalSrc) {
+            return [...uiFragment.childNodes].forEach(node => {
+                if (node.matches('.o_we_external_warning')) {
+                    node.classList.remove('d-none');
+                } else {
+                    node.remove();
+                }
+            });
+        }
+        const img = this._getImg();
+        const $select = $(uiFragment).find('we-select[data-name=width_select_opt]');
+        (await this._computeAvailableWidths()).forEach(([value, label]) => {
+            $select.append(`<we-button data-select-width="${value}">${label}</we-button>`);
+        });
+        const qualityRange = uiFragment.querySelector('we-range');
+        if (img.dataset.mimetype !== 'image/jpeg') {
+            qualityRange.remove();
+        }
+    },
+    /**
+     * Returns a list of valid widths for a given image.
+     *
+     * @private
+     */
+    async _computeAvailableWidths() {
+        const img = this._getImg();
+        const original = await loadImage(this.originalSrc);
+        const maxWidth = img.dataset.width ? img.naturalWidth : original.naturalWidth;
+        const optimizedWidth = Math.min(maxWidth, this._computeMaxDisplayWidth());
+        this.optimizedWidth = optimizedWidth;
+        const widths = {
+            128: '128px',
+            256: '256px',
+            512: '512px',
+            1024: '1024px',
+            1920: '1920px',
+        };
+        widths[img.naturalWidth] = _.str.sprintf(_t("%spx"), img.naturalWidth);
+        widths[optimizedWidth] = _.str.sprintf(_t("%dpx (Suggested)"), optimizedWidth);
+        widths[maxWidth] = _.str.sprintf(_t("%dpx (Original)"), maxWidth);
+        return Object.entries(widths)
+            .filter(([width]) => width <= maxWidth)
+            .sort(([v1], [v2]) => v1 - v2);
+    },
+    /**
+     * Applies all selected options on the original image.
+     *
+     * @private
+     */
+    async _applyOptions() {
+        const img = this._getImg();
+        if (!['image/jpeg', 'image/png'].includes(img.dataset.mimetype)) {
+            this.originalId = null;
+            return;
+        }
+        const dataURL = await applyModifications(img);
+        const weight = dataURL.split(',')[1].length / 4 * 3;
+        this.$el.find('.o_we_image_weight').text(`${(weight / 1024).toFixed(1)}kb`);
+        img.classList.add('o_modified_image_to_save');
+        return loadImage(dataURL, img);
+    },
+    /**
+     * Loads the image's attachment info.
+     *
+     * @private
+     */
+    async _loadImageInfo() {
+        const img = this._getImg();
+        await loadImageInfo(img, this._rpc.bind(this));
+        if (!img.dataset.originalId) {
+            this.originalId = null;
+            this.originalSrc = null;
+            return;
+        }
+        this.originalId = img.dataset.originalId;
+        this.originalSrc = img.dataset.originalSrc;
+    },
+    /**
+     * Returns the image that is currently being modified.
+     *
+     * @private
+     * @abstract
+     * @returns {HTMLImageElement} the image to use for modifications
+     */
+    _getImg() {},
+    /**
+     * Computes the image's maximum display width.
+     *
+     * @private
+     * @abstract
+     * @returns {Int} the maximum width at which the image can be displayed
+     */
+    _computeMaxDisplayWidth() {},
+
+    //--------------------------------------------------------------------------
+    // Util
+    //--------------------------------------------------------------------------
+
+    /**
+     * Normalize a color into a css value usable by the canvas rendering context.
+     *
+     * @private
+     * @param {string} color the color to normalize into a css value
+     */
+    _normalizeColor(color) {
+        if (!ColorpickerWidget.isCSSColor(color)) {
+            const style = window.getComputedStyle(document.documentElement);
+            color = style.getPropertyValue('--' + color).trim();
+            color = ColorpickerWidget.normalizeCSSColor(color);
+        }
+        return color;
+    },
+});
+
+/**
+ * Controls image width and quality.
+ */
+registry.ImageOptimize = ImageHandlerOption.extend({
+    /**
+     * @override
+     */
+    start() {
+        this.$target.on('image_changed.ImageOptimization', this._onImageChanged.bind(this));
+        this.$target.on('image_cropped.ImageOptimization', this._onImageCropped.bind(this));
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this.$target.off('.ImageOptimization');
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeMaxDisplayWidth() {
+        // TODO: read widths from computed style in case container widths are not default
+        const displayWidth = this._getImg().clientWidth;
+        // If the image is in a column, it might get bigger on smaller screens.
+        // We use col-lg for this in snippets, so they get bigger on the md breakpoint
+        if (this.$target.closest('[class*="col-lg"]').length) {
+            // container and o_container_small have maximum inner width of 690px on the md breakpoint
+            if (this.$target.closest('.container, .o_container_small').length) {
+                return Math.min(1920, Math.max(displayWidth, 690));
+            }
+            // A container-fluid's max inner width is 962px on the md breakpoint
+            return Math.min(1920, Math.max(displayWidth, 962));
+        }
+        // If it's not in a col-lg, it's probably not going to change size depending on breakpoints
+        return displayWidth;
+    },
+    /**
+     * @override
+     */
+    _getImg() {
+        return this.$target[0];
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Reloads image data and auto-optimizes the new image.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    async _onImageChanged(ev) {
+        this.trigger_up('snippet_edition_request', {exec: async () => {
+            await this._loadImageInfo();
+            await this._rerenderXML();
+            this._getImg().dataset.resizeWidth = this.optimizedWidth;
+            await this._applyOptions();
+            await this.updateUI();
+        }});
+    },
+    /**
+     * Available widths will change, need to rerender the width select.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    async _onImageCropped(ev) {
+        await this._rerenderXML();
+    },
+});
+
+/**
+ * Returns the src value from a css value related to a background image
+ * (e.g. "url('blabla')" => "blabla" / "none" => "").
+ *
+ * @param {string} value
+ * @returns {string}
+ */
+const getSrcFromCssValue = value => {
+    var srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
+    return value && value.replace(srcValueWrapper, '') || '';
+};
+
+/**
+ * Controls background image width and quality.
+ */
+registry.BackgroundOptimize = ImageHandlerOption.extend({
+    /**
+     * @override
+     */
+    start() {
+        this.$target.on('background_changed.BackgroundOptimize', this._onBackgroundChanged.bind(this));
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this.$target.off('.BackgroundOptimize');
+        return this._super(...arguments);
+    },
+    /**
+     * Marks the target for creation of an attachment and copies data attributes
+     * to the target so that they can be restored on this.img in later editions.
+     *
+     * @override
+     */
+    async cleanForSave() {
+        const img = this._getImg();
+        if (img.matches('.o_modified_image_to_save')) {
+            this.$target.addClass('o_modified_image_to_save');
+            Object.entries(img.dataset).forEach(([key, value]) => {
+                this.$target[0].dataset[key] = value;
+            });
+            this.$target[0].dataset.bgSrc = img.getAttribute('src');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _getImg() {
+        return this.img;
+    },
+    /**
+     * @override
+     */
+    _computeMaxDisplayWidth() {
+        return 1920;
+    },
+    /**
+     * @override
+     */
+    async _applyOptions() {
+        await this._super(...arguments);
+        this.$target.css('background-image', `url('${this._getImg().getAttribute('src')}')`);
+    },
+    /**
+     * Initializes this.img to an image with the background image url as src.
+     *
+     * @override
+     */
+    async _loadImageInfo() {
+        this.img = new Image();
+        Object.entries(this.$target[0].dataset).forEach(([key, value]) => {
+            this.img.dataset[key] = value;
+        });
+        const src = new URL(getSrcFromCssValue(this.$target.css('background-image')), window.location.origin);
+        // Make URL relative because that is how image urls are stored in the database.
+        this.img.src = src.origin === window.location.origin ? src.pathname : src;
+        return await this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Reloads image data when the background is changed.
+     *
+     * @private
+     */
+    async _onBackgroundChanged(ev, previewMode) {
+        if (!previewMode) {
+            this.trigger_up('snippet_edition_request', {exec: async () => {
+                await this._loadImageInfo();
+                await this._rerenderXML();
+            }});
+        }
+    },
+});
+
 /**
  * Handles the edition of snippet's background image.
  */
@@ -2687,18 +3116,34 @@ registry.background = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     background: async function (previewMode, widgetValue, params) {
-        if (previewMode === 'reset') {
-            return this._setCustomBackground(this.__customImageSrc, previewMode);
-        }
-        if (!previewMode) {
+        if (previewMode === true) {
+            this.__customImageSrc = this._getSrcFromCssValue();
+        } else if (previewMode === 'reset') {
+            widgetValue = this.__customImageSrc;
+        } else {
             this.__customImageSrc = widgetValue;
         }
+
         if (widgetValue) {
             this.$target.css('background-image', `url('${widgetValue}')`);
             this.$target.addClass('oe_img_bg');
         } else {
             this.$target.css('background-image', '');
             this.$target.removeClass('oe_img_bg');
+        }
+
+        if (previewMode === 'reset') {
+            return new Promise(resolve => {
+                // Will update the UI of the correct widgets for all options
+                // related to the same $target/editor
+                this.trigger_up('snippet_option_update', {
+                    previewMode: 'reset',
+                    onSuccess: () => resolve(),
+                });
+            });
+        } else {
+            removeOnImageChangeAttrs.forEach(attr => delete this.$target[0].dataset[attr]);
+            this.$target.trigger('background_changed', [previewMode]);
         }
     },
 
@@ -2732,38 +3177,13 @@ registry.background = SnippetOptionWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Returns the src value from a css value related to a background image
-     * (e.g. "url('blabla')" => "blabla" / "none" => "").
+     * Returns the background image's src.
      *
      * @private
-     * @param {string} value
      * @returns {string}
      */
-    _getSrcFromCssValue: function (value) {
-        if (value === undefined) {
-            value = this.$target.css('background-image');
-        }
-        var srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
-        return value && value.replace(srcValueWrapper, '') || '';
-    },
-    /**
-     * Sets the given value as custom background image.
-     *
-     * @private
-     * @param {string} value
-     * @returns {Promise}
-     */
-    _setCustomBackground: async function (value, previewMode) {
-        this.__customImageSrc = value;
-        this.background(false, this.__customImageSrc, {});
-        await new Promise(resolve => {
-            // Will update the UI of the correct widgets for all options
-            // related to the same $target/editor
-            this.trigger_up('snippet_option_update', {
-                previewMode: previewMode,
-                onSuccess: () => resolve(),
-            });
-        });
+    _getSrcFromCssValue: function () {
+        return getSrcFromCssValue(this.$target.css('background-image'));
     },
     /**
      * @override
@@ -2800,17 +3220,6 @@ registry.background = SnippetOptionWidget.extend({
         }
         await this.background(previewMode, '', {});
         return true;
-    },
-    /**
-     * Called on media dialog save (when choosing a snippet's background) ->
-     * sets the resulting media as the snippet's background somehow.
-     *
-     * @private
-     * @param {Object} data
-     * @returns {Promise}
-     */
-    _onSaveMediaDialog: async function (data) {
-        await this._setCustomBackground($(data).attr('src'));
     },
 });
 
@@ -3009,19 +3418,13 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         window.setTimeout(() => $(document).on('click.bgposition', this._onDocumentClicked.bind(this)), 0);
     },
     /**
-     * Returns the src value from a css value related to a background image
-     * (e.g. "url('blabla')" => "blabla" / "none" => "").
+     * Returns the background image's src.
      *
      * @private
-     * @param {string} value
      * @returns {string}
      */
-    _getSrcFromCssValue: function (value) {
-        if (value === undefined) {
-            value = this.$target.css('background-image');
-        }
-        var srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
-        return value && value.replace(srcValueWrapper, '') || '';
+    _getSrcFromCssValue: function () {
+        return getSrcFromCssValue(this.$target.css('background-image'));
     },
     /**
      * Returns the difference between the target's size and the background's
