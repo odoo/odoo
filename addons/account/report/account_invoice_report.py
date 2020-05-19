@@ -100,7 +100,7 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN product_template template ON template.id = product.product_tmpl_id
                 LEFT JOIN uom_uom uom_line ON uom_line.id = line.product_uom_id
                 INNER JOIN account_move move ON move.id = line.move_id
-                LEFT JOIN (select DISTINCT ON (currency_id) currency_id, rate FROM res_currency_rate WHERE name<now() ORDER BY currency_id,name desc) currency ON line.company_currency_id=currency.currency_id
+                LEFT JOIN (select DISTINCT ON (currency_id, company_id) currency_id, company_id, rate FROM res_currency_rate WHERE name<now() ORDER BY currency_id,company_id,name desc) currency ON (line.company_currency_id=currency.currency_id and line.company_id=currency.company_id)
         '''
 
     @api.model
