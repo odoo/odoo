@@ -401,7 +401,7 @@ class WebsiteSale(http.Controller):
 
         return request.render("website_sale.cart", values)
 
-    @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
+    @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
         sale_order = request.website.sale_get_order(force_create=True)
         if sale_order.state != 'draft':
@@ -418,7 +418,7 @@ class WebsiteSale(http.Controller):
     def _filter_attributes(self, **kw):
         return {k: v for k, v in kw.items() if "attribute" in k}
 
-    @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True, csrf=False)
+    @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(self, product_id, line_id=None, add_qty=None, set_qty=None, display=True):
         order = request.website.sale_get_order(force_create=1)
         if order.state != 'draft':
