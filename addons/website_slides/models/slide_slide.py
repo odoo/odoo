@@ -259,7 +259,7 @@ class Slide(models.Model):
             self.update(default_stats)
             return
 
-        slide_data = dict.fromkeys(self.ids, default_stats)
+        slide_data = dict.fromkeys(self.ids, dict(default_stats))
         slide_partners = self.env['slide.slide.partner'].sudo().search([
             ('slide_id', 'in', self.ids)
         ])
