@@ -3705,7 +3705,7 @@ Record ids: %(records)s
                 if not field:
                     raise ValueError("Invalid field %r on model %r" % (key, self._name))
                 if field.company_dependent:
-                    irprop_def = self.env['ir.property'].get(key, self._name)
+                    irprop_def = self.env['ir.property']._get(key, self._name)
                     cached_def = field.convert_to_cache(irprop_def, self)
                     cached_val = field.convert_to_cache(val, self)
                     if cached_val == cached_def:

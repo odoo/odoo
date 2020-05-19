@@ -1071,9 +1071,9 @@ class TestFields(TransactionCaseWithUserDemo):
         tag2 = self.env['test_new_api.multi.tag'].create({'name': 'Quuz'})
 
         # create default values for the company-dependent fields
-        self.env['ir.property'].set_default('foo', 'test_new_api.company', 'default')
-        self.env['ir.property'].set_default('foo', 'test_new_api.company', 'default1', company1)
-        self.env['ir.property'].set_default('tag_id', 'test_new_api.company', tag0)
+        self.env['ir.property']._set_default('foo', 'test_new_api.company', 'default')
+        self.env['ir.property']._set_default('foo', 'test_new_api.company', 'default1', company1)
+        self.env['ir.property']._set_default('tag_id', 'test_new_api.company', tag0)
 
         # assumption: users don't have access to 'ir.property'
         accesses = self.env['ir.model.access'].search([('model_id.model', '=', 'ir.property')])

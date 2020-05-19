@@ -571,12 +571,12 @@ class Field(MetaField('DummyField', (object,), {})):
     #
 
     def _default_company_dependent(self, model):
-        return model.env['ir.property'].get(self.name, self.model_name)
+        return model.env['ir.property']._get(self.name, self.model_name)
 
     def _compute_company_dependent(self, records):
         # read property as superuser, as the current user may not have access
         Property = records.env['ir.property'].sudo()
-        values = Property.get_multi(self.name, self.model_name, records.ids)
+        values = Property._get_multi(self.name, self.model_name, records.ids)
         for record in records:
             record[self.name] = values.get(record.id)
 
@@ -587,7 +587,7 @@ class Field(MetaField('DummyField', (object,), {})):
             record.id: self.convert_to_write(record[self.name], record)
             for record in records
         }
-        Property.set_multi(self.name, self.model_name, values)
+        Property._set_multi(self.name, self.model_name, values)
 
     def _search_company_dependent(self, records, operator, value):
         Property = records.env['ir.property']

@@ -86,7 +86,7 @@ class TestFrontend(odoo.tests.HttpCase):
                                                  'user_type_id': self.env.ref('account.data_account_type_receivable').id,
                                                  'reconcile': True})
 
-        self.env['ir.property'].set_default(
+        self.env['ir.property']._set_default(
             'property_account_receivable_id',
             'res.partner',
             account_receivable,
