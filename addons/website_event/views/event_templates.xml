@@ -235,10 +235,12 @@
                         </main>
                     </div>
                     <!-- Footer -->
-                    <footer
-                            t-attf-class="small align-self-end w-100 #{opt_events_list_cards and 'card-footer' or ((not opt_events_list_columns) and 'border-top mx-4 mt-auto pt-2' or 'border-top py-2')}">
+                    <footer t-attf-class="small align-self-end w-100 #{opt_events_list_cards and 'card-footer' or ((not opt_events_list_columns) and 'border-top mx-4 mt-auto pt-2' or 'border-top py-2')}">
                         <span t-if="not event.event_registrations_open" class="text-danger">
-                            <t t-if="event.event_registrations_sold_out">
+                            <t t-if="event.start_sale_date and event.start_sale_date &gt; datetime.date.today()">
+                                Registrations not yet open
+                            </t>
+                            <t t-elif="event.event_registrations_sold_out">
                                 Sold Out
                             </t>
                             <t t-else="">
