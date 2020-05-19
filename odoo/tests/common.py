@@ -2268,6 +2268,7 @@ def _cleanup_from_default(type_, value):
         return odoo.fields.Datetime.to_string(value)
     elif type_ == 'date' and isinstance(value, date):
         return odoo.fields.Date.to_string(value)
+    return value
 
 def _get_node(view, f, *arg):
     """ Find etree node for the field ``f`` in the view's arch
