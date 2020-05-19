@@ -97,6 +97,18 @@ class TestReconciliation(AccountingTestCase):
         })
 
         # Tax Cash Basis
+        self.tax_tag_base = self.env['account.account.tag'].create({
+            'name': "Base tag",
+            'applicability': 'taxes',
+            'country_id': company.country_id.id,
+        })
+
+        self.tax_tag_tax = self.env['account.account.tag'].create({
+            'name': "Tax tag",
+            'applicability': 'taxes',
+            'country_id': company.country_id.id,
+        })
+
         self.tax_cash_basis = self.env['account.tax'].create({
             'name': 'cash basis 20%',
             'type_tax_use': 'purchase',
@@ -109,12 +121,14 @@ class TestReconciliation(AccountingTestCase):
                     (0,0, {
                         'factor_percent': 100,
                         'repartition_type': 'base',
+                        'tag_ids': [(6, 0, self.tax_tag_base.ids)]
                     }),
 
                     (0,0, {
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': self.tax_final_account.id,
+                        'tag_ids': [(6, 0, self.tax_tag_tax.ids)]
                     }),
                 ],
             'refund_repartition_line_ids': [
@@ -131,6 +145,7 @@ class TestReconciliation(AccountingTestCase):
                 ],
         })
 
+<<<<<<< HEAD
     def _create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None, partner_id=None, date_invoice=None, payment_term_id=False, auto_validate=False):
         date_invoice = date_invoice or time.strftime('%Y') + '-07-01'
         invoice_vals = {
@@ -153,6 +168,30 @@ class TestReconciliation(AccountingTestCase):
             invoice_vals['currency_id'] = currency_id
 
         invoice = self.env['account.move'].with_context(default_type=type).create(invoice_vals)
+=======
+    def _create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None, partner_id=None, date_invoice=None, auto_validate=False, tax=None):
+        # we create an invoice in given currency
+        invoice = self.account_invoice_model.create({
+            'partner_id': partner_id or self.partner_agrolait_id,
+            'currency_id': currency_id or self.env.user.company_id.currency_id.id,
+            'name': type == 'out_invoice' and 'invoice to client' or 'invoice to vendor',
+            'account_id': self.account_rcv.id,
+            'type': type,
+            'date_invoice': date_invoice or time.strftime('%Y') + '-07-01',
+        })
+        self.account_invoice_line_model.create({
+            'product_id': self.product.id,
+            'quantity': 1,
+            'price_unit': invoice_amount,
+            'invoice_id': invoice.id,
+            'name': 'product that cost ' + str(invoice_amount),
+            'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
+            'invoice_line_tax_ids': [(6, 0, tax and tax.ids or [])]
+        })
+
+        invoice.compute_taxes()
+
+>>>>>>> 14b39b8290e... temp
         if auto_validate:
             invoice.post()
         return invoice
@@ -2071,6 +2110,21 @@ class TestReconciliationExec(TestReconciliation):
         pay_receivable_line1 = payment1.move_line_ids.filtered(lambda l: l.account_id == self.account_rcv)
         self.assertTrue(pay_receivable_line1.reconciled)
         self.assertEqual(pay_receivable_line1.matched_debit_ids, move_caba1.tax_cash_basis_rec_id)
+
+    def test_reconciliation_cash_basis_tags(self):
+        invoice = self._create_invoice(auto_validate=True, tax=self.tax_cash_basis)
+        self.env['account.payment.register'].with_context(active_ids=invoice.ids).create({}).create_payments()
+        partial_rec = invoice.move_id.line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'receivable').matched_credit_ids
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+
+        caba_base_line = caba_move.line_ids.filtered(lambda x: x.tax_ids)
+        caba_tax_line = caba_move.line_ids.filtered(lambda x: x.tax_line_id)
+        other_lines = caba_move.line_ids - (caba_base_line + caba_tax_line)
+
+        self.assertRecordValues(caba_base_line + caba_tax_line, [
+          {'tag_ids': self.tax_tag_base.ids},
+          {'tag_ids': self.tax_tag_tax.ids},
+        ])
 
     def test_reconciliation_with_currency(self):
         #reconciliation on an account having a foreign currency being

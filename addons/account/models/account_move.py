@@ -4244,6 +4244,56 @@ class AccountPartialReconcile(models.Model):
             # probably already sent to the estate.
             newly_created_move.write({'date': move_date})
 
+<<<<<<< HEAD
+=======
+    def _get_tax_cash_basis_base_key(self, tax, move, line):
+        account_id = self._get_tax_cash_basis_base_account(line, tax)
+        return (line.id, account_id.id, tax.id, line.currency_id.id, line.partner_id.id)
+
+    def _get_tax_cash_basis_base_common_vals(self, key, new_move):
+        self.ensure_one()
+        line_id, account_id, tax_id, currency_id, partner_id = key
+
+        line = self.env['account.move.line'].browse(line_id)
+        tax = self.env['account.tax'].browse(tax_id)
+
+        orig_inv_types = (self.debit_move_id + self.credit_move_id).mapped('invoice_id.type')
+        tax_rep_lines = tax.refund_repartition_line_ids if orig_inv_types in (['in_refund'], ['out_refund']) else tax.invoice_repartition_line_ids
+        base_tags = tax_rep_lines.filtered(lambda x: x.repartition_type == 'base').tag_ids
+
+        return {
+            'name': line.name,
+            'account_id': account_id,
+            'journal_id': new_move.journal_id.id,
+            'tax_exigible': True,
+            'tax_ids': [(6, 0, tax.ids)],
+            'tag_ids': [(6, 0, base_tags.ids)],
+            'move_id': new_move.id,
+            'currency_id': currency_id,
+            'partner_id': partner_id,
+        }
+
+    def _create_tax_cash_basis_base_line(self, amount_dict, amount_currency_dict, new_move):
+        for key in amount_dict.keys():
+            base_line = self._get_tax_cash_basis_base_common_vals(key, new_move)
+            currency_id = base_line.get('currency_id', False)
+            rounded_amt = amount_dict[key]
+            amount_currency = amount_currency_dict[key] if currency_id else 0.0
+            aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
+            aml_obj.create(dict(
+                base_line,
+                debit=rounded_amt > 0 and rounded_amt or 0.0,
+                credit=rounded_amt < 0 and abs(rounded_amt) or 0.0,
+                amount_currency=amount_currency))
+            aml_obj.create(dict(
+                base_line,
+                credit=rounded_amt > 0 and rounded_amt or 0.0,
+                debit=rounded_amt < 0 and abs(rounded_amt) or 0.0,
+                amount_currency=-amount_currency,
+                tax_ids=[],
+                tag_ids=[]))
+
+>>>>>>> 14b39b8290e... temp
     def create_tax_cash_basis_entry(self, percentage_before_rec):
         self.ensure_one()
         move_date = self.debit_move_id.date
