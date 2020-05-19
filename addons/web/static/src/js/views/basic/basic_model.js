@@ -3972,6 +3972,7 @@ var BasicModel = AbstractModel.extend({
             isOpen: params.isOpen,
             limit: type === 'record' ? 1 : (params.limit || Number.MAX_SAFE_INTEGER),
             isLoadMore: false,
+            loadMoreOffset: 0,
             model: params.modelName,
             offset: params.offset || (type === 'record' ? _.indexOf(res_ids, res_id) : 0),
             openGroupByDefault: params.openGroupByDefault,
@@ -4649,13 +4650,15 @@ var BasicModel = AbstractModel.extend({
                         // set the limit such that all previously loaded records
                         // (e.g. if we are coming back to the kanban view from a
                         // form view) are reloaded
-                        if (oldGroup.isLoadMore || (oldGroup.res_ids.length > oldGroup.limit && oldGroup.viewType == 'kanban')) {
+                        // newGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
+                        if (oldGroup.isLoadMore || (oldGroup.res_ids.length > oldGroup.limit && oldGroup.viewType === 'kanban')) {
                             newGroup.limit = oldGroup.res_ids.length;
                             newGroup.progressBarValues = oldGroup.progressBarValues;
                             newGroup.isLoadMore = oldGroup.isLoadMore;
                             domain = {domain: newGroup.domain.concat([['id', 'in', oldGroup.res_ids]])};
                         } else {
-                            newGroup.limit = oldGroup.limit;
+                            // newGroup.limit = oldGroup.limit;
+                            newGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
                         }
                         self.localData[newGroup.id] = newGroup;
                     } else if (!newGroup.openGroupByDefault || openGroupCount >= openGroupsLimit) {
@@ -4676,7 +4679,7 @@ var BasicModel = AbstractModel.extend({
                             newGroup.__data = group.__data;
                         }
                         options = _.defaults({enableRelationalFetch: false}, options);
-                        defs.push(self._load(newGroup, _.extend({}, options,  domain || {})));
+                        defs.push(self._load(newGroup, Object.assign({}, options, domain || {})));
                     }
                 });
                 if (options.keepEmptyGroups) {
@@ -4816,7 +4819,7 @@ var BasicModel = AbstractModel.extend({
         if (options.orderedBy !== undefined) {
             element.orderedBy = (options.orderedBy.length && options.orderedBy) || element.orderedBy;
         }
-        if (options.domain !== undefined && options.isLoadMore != true) {
+        if (options.domain !== undefined && options.isLoadMore !== true) {
             element.domain = options.domain;
         }
         if (options.groupBy !== undefined) {
@@ -4833,6 +4836,12 @@ var BasicModel = AbstractModel.extend({
         }
         if (options.groupsOffset !== undefined) {
             element.groupsOffset = options.groupsOffset;
+        }
+        if (options.loadMoreOffset !== undefined) {
+            element.loadMoreOffset = options.loadMoreOffset;
+        } else {
+            // reset if not specified
+            element.loadMoreOffset = 0;
         }
         if (options.isLoadMore === true) {
             element.isLoadMore = true;
@@ -4887,6 +4896,7 @@ var BasicModel = AbstractModel.extend({
             // call to 'web_read_group'), so we can bypass the search_read
             prom = Promise.resolve(list.__data);
         } else {
+            debugger;
             prom = this._rpc({
                 route: '/web/dataset/search_read',
                 model: list.model,
@@ -4894,6 +4904,7 @@ var BasicModel = AbstractModel.extend({
                 context: _.extend({}, list.getContext(), {bin_size: true}),
                 domain: options && options.domain || list.domain || [],
                 limit: list.limit,
+                // offset: list.loadMoreOffset + list.offset,
                 offset: list.offset,
                 orderBy: list.orderedBy,
             });
@@ -4923,6 +4934,7 @@ var BasicModel = AbstractModel.extend({
                 list.count = list.isLoadMore ? list.count : result.length;
             }
             if (list.isLoadMore) {
+            // if (list.loadMoreOffset) {
                 list.data = list.data.concat(data);
                 list.res_ids = list.res_ids.concat(ids);
             } else {

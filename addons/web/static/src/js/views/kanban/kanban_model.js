@@ -191,6 +191,10 @@ var KanbanModel = BasicModel.extend({
      */
     loadMore: function (groupID, domain) {
         var group = this.localData[groupID];
+        // var offset = group.loadMoreOffset + group.limit;
+        // return this.reload(group.id, {
+        //     loadMoreOffset: offset,
+        // });
         return this.reload(group.id, { isLoadMore: true, domain: domain});
     },
     loadMoreFilter: function (groupID, filter, recordCounts) {
@@ -331,6 +335,7 @@ var KanbanModel = BasicModel.extend({
         }
         var def = this._super(id, options);
         if (options && options.isLoadMore) {
+        // if (options && options.loadMoreOffset) {
             return def;
         }
         return this._reloadProgressBarGroupFromRecord(id, def);
