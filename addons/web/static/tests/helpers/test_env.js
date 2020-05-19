@@ -29,7 +29,7 @@ odoo.define('web.test_env', async function (require) {
         };
         const defaultEnv = {
             _t: env._t || Object.assign((s => s), { database }),
-            bus: new Bus(),
+            bus: env.bus || new Bus(),
             device: Object.assign({ isMobile: false }, env.device),
             isDebug: env.isDebug || (() => false),
             qweb: new owl.QWeb({ templates: session.owlTemplates }),

@@ -46,6 +46,7 @@ odoo.define('web.ActionAdapter', function (require) {
                     if (this.widget && this.widget.on_attach_callback) {
                         this.widget.on_attach_callback();
                     }
+                    this.env.bus.trigger('DOM_updated');
                     this.legacyZombie = false;
                 }
             }

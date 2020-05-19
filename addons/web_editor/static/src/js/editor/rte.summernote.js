@@ -46,11 +46,11 @@ class ColorPaletteAdapter extends ComponentAdapter {
     _trigger_up(ev) {
         const evType = ev.name;
         if (['custom_color_picked', 'color_picked'].includes(evType)) {
-            return processAndApplyColor(ev.data.target, evType, ev.data.color);
+            return this.props.handlers.colorPickedHandler(ev);
         } else if (['color_hover', 'color_leave'].includes(evType)) {
-            return processAndApplyColor(ev.data.target, evType, ev.data.color, true);
+            return this.props.handlers.colorHoverLeaveHandler(ev);
         } else if (evType === 'enter_key_color_colorpicker') {
-            return this.props.handlers.keyColorHandler();
+            return this.props.handlers.keyColorHandler(ev);
         }
         return super._trigger_up(...arguments);
     }
@@ -93,22 +93,28 @@ renderer.createPalette = function ($container, options) {
                 const keyColorHandler = () => {
                     $dropdown.children('.dropdown-toggle').dropdown('hide');
                 }
-                const colorResetHandler = ev => applyColor(ev.data.target, eventName, 'inherit');
+                const colorPickedHandler = ev => {
+                    processAndApplyColor(ev.data.target, eventName, ev.data.color);
+                }
+                const colorHoverLeaveHandler = ev => {
+                    processAndApplyColor(ev.data.target, eventName, ev.data.color, true);
+                }
                 let replaceFn;
                 let hookEl;
                 if (!parent || parent instanceof owl.Component) {
                     const colorPickerProps = {
                         Component: ColorPaletteWidget,
                         widgetArgs: colorPickerArgs,
-                        handlers: { keyColorHandler },
+                        handlers: { keyColorHandler , colorPickedHandler , colorHoverLeaveHandler },
                     };
                     colorpicker = new ColorPaletteAdapter(null, colorPickerProps);
                     replaceFn = colorpicker.mount.bind(colorpicker);
                     hookEl = elem;
                 } else {
                     colorpicker = new ColorPaletteWidget(parent, colorPickerArgs);
-                    colorpicker.on('color_picked', null, colorPickedHandler);
-                    colorpicker.on('color_reset', null, colorResetHandler);
+                    colorpicker.on('custom_color_picked color_picked', null, colorPickedHandler);
+                    colorpicker.on('color_hover color_leave', null, colorHoverLeaveHandler);
+                    colorpicker.on('enter_key_color_colorpicker', null, keyColorHandler);
                     replaceFn = colorpicker.replace.bind(colorpicker);
                     hookEl = oldColorpicker ? oldColorpicker.el : elem;
                 }

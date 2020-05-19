@@ -67,7 +67,6 @@ odoo.define("web.env", function (require) {
     // See https://github.com/odoo/owl/blob/master/doc/reference/environment.md#content-of-an-environment
     // for more information on environments.
     Object.assign(env, {
-        _lt,
         _t,
         bus,
         dataManager,

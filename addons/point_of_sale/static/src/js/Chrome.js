@@ -109,9 +109,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
          * Call this function after the Chrome component is mounted.
          * This will load pos and assign it to the environment.
          */
-        async willStart() {
-            return this.start();
-        }
         async start() {
             try {
                 // Instead of passing chrome to the instantiation the PosModel,
@@ -122,7 +119,10 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 const posModelDefaultAttributes = {
                     rpc: this.rpc.bind(this),
                     session: this.env.session,
-                    do_action: this.props.webClient.do_action.bind(this.props.webClient),
+                    do_action: (...args) => {
+                        // LPE FIXME
+                        return this.env.actionManager.doAction(...args);
+                    },
                     setLoadingMessage: this.setLoadingMessage.bind(this),
                     showLoadingSkip: this.showLoadingSkip.bind(this),
                     setLoadingProgress: this.setLoadingProgress.bind(this),
@@ -138,7 +138,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 );
                 this.state.uiState = 'READY';
                 this.env.pos.on('change:selectedOrder', this._showSavedScreen, this);
-                this._showStartScreen();
+                this.__showScreen({detail:this.startScreen});
                 this.env.pos.push_orders(); // push order in the background, no need to await
                 // Allow using the app even if not all the images are loaded.
                 // Basically, preload the images in the background.

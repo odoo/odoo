@@ -497,7 +497,7 @@ odoo.define('web.search_bar_tests', function (require) {
                         <field name="bar" operator="child_of"/>
                     </search>`,
             });
-            const actionManager = await createActionManager({
+            const webClient = await createWebClient({
                 actions: this.actions,
                 archs,
                 data: this.data,
@@ -508,16 +508,16 @@ odoo.define('web.search_bar_tests', function (require) {
                     return this._super(...arguments);
                 },
             });
-            await actionManager.doAction(1);
+            await testUtils.actionManager.doAction(1);
 
-            await cpHelpers.editSearch(actionManager, "rec");
-            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li:last-child'));
+            await cpHelpers.editSearch(webClient, "rec");
+            await testUtils.dom.click(webClient.el.querySelector('.o_searchview_autocomplete li:last-child'));
 
-            await cpHelpers.removeFacet(actionManager, 0);
+            await cpHelpers.removeFacet(webClient, 0);
 
-            await cpHelpers.editSearch(actionManager, "rec");
-            await testUtils.dom.click(actionManager.el.querySelector('.o_expand'));
-            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li.o_menu_item.o_indent'));
+            await cpHelpers.editSearch(webClient, "rec");
+            await testUtils.dom.click(webClient.el.querySelector('.o_expand'));
+            await testUtils.dom.click(webClient.el.querySelector('.o_searchview_autocomplete li.o_menu_item.o_indent'));
 
             assert.verifySteps([
                 '[]',
@@ -526,7 +526,7 @@ odoo.define('web.search_bar_tests', function (require) {
                 '[["bar","child_of",1]]', // Suggestion select -> Specific ID
             ]);
 
-            actionManager.destroy();
+            webClient.destroy();
         });
     });
 });

@@ -600,6 +600,60 @@ QUnit.module('ActionManager', {
 
         webClient.destroy();
     });
+    // LPE FIXME: this test is not finished
+    // the title is correct though
+    QUnit.skip('client actions can have breadcrumbs', async function (assert) {
+        assert.expect(4);
+
+        var ClientAction = AbstractAction.extend({
+            hasControlPanel: true,
+            init(parent, action) {
+                action.display_name = 'Goldeneye';
+                this._super.apply(this, arguments);
+            },
+            start() {
+                this.$el.addClass('o_client_action_test');
+            },
+        });
+        core.action_registry.add('ClientAction', ClientAction);
+
+        var ClientAction2 = AbstractAction.extend({
+            hasControlPanel: true,
+            init(parent, action) {
+                action.display_name = 'No time for sweetness';
+                this._super.apply(this, arguments);
+            },
+            start() {
+                this.$el.addClass('o_client_action_test_2');
+            },
+        });
+        core.action_registry.add('ClientAction2', ClientAction2);
+
+        const webClient = await createWebClient({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            menus: this.menus,
+            debug: true,
+        });
+        await doAction('ClientAction');
+        assert.containsOnce(webClient.el, '.breadcrumb-item');
+        assert.strictEqual(
+            webClient.el.querySelector('.breadcrumb-item.active').textContent,
+            'Goldeneye'
+        );
+
+        await doAction('ClientAction2', {clear_breadcrumbs: false});
+        assert.containsN(webClient.el, '.breadcrumb-item', 2);
+        assert.strictEqual(
+            webClient.el.querySelector('.breadcrumb-item.active').textContent,
+            'No time for sweetness'
+        );
+
+        //webClient.destroy();
+        delete core.action_registry.map.ClientAction;
+        delete core.action_registry.map.ClientAction2;
+    });
 
     QUnit.test('handles "history_back" event', async function (assert) {
         assert.expect(2);
@@ -4038,11 +4092,7 @@ QUnit.module('ActionManager', {
             "list view is not grouped");
 
         // open group by dropdown
-<<<<<<< 619bb1ea1f3726c58ae3c4013397a8090cab822d
-        await testUtils.dom.click($('.o_control_panel .o_cp_bottom_right button:contains(Group By)'));
-=======
-        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_right button:contains(Group By)'));
->>>>>>> [WIP] rewrite webclient/menu/actionmanager with owl
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_bottom_right button:contains(Group By)'));
 
         // click on first link
         await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_group_by_menu a:first'));
@@ -4288,7 +4338,7 @@ QUnit.module('ActionManager', {
             "should be grouped by 'bar' (two groups) at first load");
 
         // groupby 'bar' using the searchview
-        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_right button:contains(Group By)'));
+        await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_cp_bottom_right button:contains(Group By)'));
         await testUtils.dom.click($(webClient.el).find('.o_control_panel .o_group_by_menu a:first'));
 
         assert.containsN(webClient, '.o_group_header', 5,

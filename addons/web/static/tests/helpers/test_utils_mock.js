@@ -310,8 +310,10 @@ async function setMockedOwlEnv(Component, params, mockServer) {
             return func;
         };
     }
+    // LPE Fixme: throttle inactive by default
+    // should we make it explicit ?
     let initialThrottle;
-    if (params.throttle === false) {
+    if (!('throttle' in params) || !params.throttle) {
         initialThrottle = _.throttle;
         _.throttle = function (func) {
             return func;

@@ -215,7 +215,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 },
                 env: { controlPanelModel },
                 session: {
-                    getTZOffset: function () {
+                    getTZOffset() {
                         return -240;
                     },
                 },
@@ -253,6 +253,11 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             const cfi = await createComponent(CustomFilterItem, {
                 props: {
                     fields: this.fields,
+                },
+                session: {
+                    getTZOffset() {
+                        return -240;
+                    },
                 },
                 env: { controlPanelModel },
             });

@@ -1485,7 +1485,7 @@ QUnit.module('Views', {
             await this.testCombinations(combinations, assert);
 
             // isNotVisible can not have two elements so checking visibility of first element
-            assert.isNotVisible(this.actionManager.$('button[data-order]:first'),
+            assert.isNotVisible(this.graph.$('button[data-order]:first'),
                 "there should not be order button in comparison mode")
             assert.ok(true, "No combination causes a crash");
         });

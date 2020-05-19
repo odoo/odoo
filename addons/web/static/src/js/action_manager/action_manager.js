@@ -364,8 +364,13 @@ class ActionManager extends core.EventBus {
         }
         if (controller.options && controller.options.on_fail) {
             controller.options.on_fail();
+        } else {
+            // this else is a guess
+            // there is a little issue with "oops, something went wrong popup"
+            // and cannot be tested
+            // usecase: make a default_get crash during a do_action
+            this.restoreController();
         }
-        this.restoreController();
     }
 
     //--------------------------------------------------------------------------
