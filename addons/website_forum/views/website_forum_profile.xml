@@ -70,9 +70,9 @@
                         </t>
                     </div>
                     <t t-if="favourite">
-                        <div class="mb4">
+                        <div class="mb32">
                             <h5 class="border-bottom pb-1">Favourite Questions</h5>
-                            <div t-foreach="favourite" t-as="question">
+                            <div class="mb4" t-foreach="favourite" t-as="question">
                                 <t t-call="website_forum.display_post">
                                     <t t-set="hide_fav_icon" t-value="True"/>
                                 </t>
@@ -80,9 +80,9 @@
                         </div>
                     </t>
                     <t t-if="followed">
-                        <div class="mb4">
+                        <div class="mb32">
                             <h5 class="border-bottom pb-1">Followed Questions</h5>
-                            <div t-foreach="followed" t-as="question" class="mb16">
+                            <div class="mb4" t-foreach="followed" t-as="question">
                                 <t t-call="website_forum.display_post"/>
                             </div>
                         </div>
