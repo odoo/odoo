@@ -27,7 +27,7 @@
         <field name="name">pos.config.form.view</field>
         <field name="model">pos.config</field>
         <field name="arch" type="xml">
-            <form string="Point of Sale Configuration">
+            <form string="Point of Sale Configuration" js_class="pos_config_form">
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="active" invisible="1"/>
@@ -63,7 +63,11 @@
                         </div>
                         <div class="o_setting_right_pane">
                           <label for="module_pos_restaurant"/>
-                          <button string="Save" type="object" name="execute" class="oe_highlight" id="btn_use_pos_restaurant" attrs="{'invisible': [('module_pos_restaurant','=',False)]}" />
+                          <div class="content-group" id="warning_text_pos_restaurant" attrs="{'invisible': [('module_pos_restaurant','=',False)]}">
+                            <div class="text-warning mt16 mb4">
+                                Save this page and come back here to set up the feature.
+                            </div>
+                          </div>
                         </div>
                       </div>
                         <div class="col-12 col-lg-6 o_setting_box"
@@ -76,7 +80,11 @@
                                 <div class="text-muted">
                                     Use employee credentials to log in to the PoS session and switch cashier
                                 </div>
-                                <button string="Save" type="object" name="execute" class="oe_highlight" id="btn_use_employees" attrs="{'invisible': [('module_pos_hr','=',False)]}" />
+                                <div class="content-group" id="warning_text_employees" attrs="{'invisible': [('module_pos_hr','=',False)]}">
+                                    <div class="text-warning mt16 mb4">
+                                        Save this page and come back here to set up the feature.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -331,9 +339,9 @@
                                 <div class="text-muted">
                                     Allow global discounts on orders
                                 </div>
-                                <div class="content-group " attrs="{'invisible':[('module_pos_discount','=',False)]}">
-                                    <div class="mt16" id="btn_use_pos_discount">
-                                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
+                                <div class="content-group" id="warning_text_pos_discount" attrs="{'invisible':[('module_pos_discount','=',False)]}">
+                                    <div class="text-warning mt16 mb4">
+                                        Save this page and come back here to set up the feature.
                                     </div>
                                 </div>
                             </div>
@@ -359,8 +367,8 @@
                                     Give customer rewards, free samples, etc.
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('module_pos_loyalty', '=', False)]}">
-                                    <div class="mt16" id="btn_use_pos_loyalty">
-                                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
+                                    <div class="text-warning mt16 mb4"  id="warning_text_pos_loyalty">
+                                        Save this page and come back here to set up the feature.
                                     </div>
                                 </div>
                             </div>
