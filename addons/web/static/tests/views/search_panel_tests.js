@@ -1746,7 +1746,7 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_search_panel_filter_group:first .o_search_panel_filter_value');
         assert.containsN(kanban, '.o_search_panel_filter_group:nth(1) .o_search_panel_filter_value', 2);
         assert.containsNone(kanban, '.o_search_panel_filter_value input:checked');
-        assert.strictEqual(kanban.$('.o_search_panel_filter_group > div > label').text().replace(/\s/g, ''),
+        assert.strictEqual(kanban.$('.o_search_panel_filter_group > header > div > label').text().replace(/\s/g, ''),
             'goldsilver');
         assert.strictEqual(kanban.$('.o_search_panel_filter_value').text().replace(/\s/g, ''),
             'asustek2agrolait1camptocamp');
@@ -1756,7 +1756,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:first input'));
 
         assert.containsOnce(kanban, '.o_search_panel_filter_value input:checked');
-        var firstGroupCheckbox = kanban.$('.o_search_panel_filter_group:first > div > input').get(0);
+        var firstGroupCheckbox = kanban.$('.o_search_panel_filter_group:first > header > div > input').get(0);
         assert.strictEqual(firstGroupCheckbox.checked, true,
             "first group checkbox should be checked");
         assert.strictEqual(kanban.$('.o_search_panel_filter_value').text().replace(/\s/g, ''),
@@ -1767,7 +1767,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
 
         assert.containsN(kanban, '.o_search_panel_filter_value input:checked', 2);
-        var secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
+        var secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > header > div > input').get(0);
         assert.strictEqual(secondGroupCheckbox.checked, false,
             "second group checkbox should not be checked");
         assert.strictEqual(secondGroupCheckbox.indeterminate, true,
@@ -1780,7 +1780,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(2) input'));
 
         assert.containsN(kanban, '.o_search_panel_filter_value input:checked', 3);
-        secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
+        secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > header > div > input').get(0);
         assert.strictEqual(secondGroupCheckbox.checked, true,
             "second group checkbox should be checked");
         assert.strictEqual(secondGroupCheckbox.indeterminate, false,
@@ -1790,10 +1790,10 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 0);
 
         // uncheck second group
-        await testUtils.dom.click(kanban.$('.o_search_panel_filter_group:nth(1) > div > input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_group:nth(1) > header > div > input'));
 
         assert.containsOnce(kanban, '.o_search_panel_filter_value input:checked');
-        secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
+        secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > header > div > input').get(0);
         assert.strictEqual(secondGroupCheckbox.checked, false,
             "second group checkbox should not be checked");
         assert.strictEqual(secondGroupCheckbox.indeterminate, false,
@@ -1871,72 +1871,6 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_search_panel_filter_value', 2);
         assert.strictEqual(kanban.$('.o_search_panel_filter_value').text().replace(/\s/g, ''),
             'asustek2agrolait2');
-
-        kanban.destroy();
-    });
-
-    QUnit.test('(un)fold filter group', async function (assert) {
-        assert.expect(13);
-
-        this.data.company.records.push({id: 11, name: 'camptocamp', category_id: 7});
-
-        var kanban = await createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            services: this.services,
-            arch: `
-                <kanban>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="foo"/>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>`,
-            archs: {
-                'partner,false,search': `
-                    <search>
-                        <searchpanel>
-                            <field select="multi" name="company_id" groupby="category_id"/>
-                        </searchpanel>
-                    </search>`,
-            },
-        });
-
-        // groups are opened by default
-        assert.containsN(kanban, '.o_search_panel_filter_group', 2);
-        assert.containsN(kanban, '.o_search_panel_filter_value', 3);
-
-        // check 'agrolait'
-        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
-        var secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
-        assert.strictEqual(secondGroupCheckbox.indeterminate, true);
-        assert.hasAttrValue(kanban.$('.o_search_panel_filter_value:nth(1) input'), 'checked', 'checked');
-
-        // fold second group
-        await testUtils.dom.click(kanban.$('.o_search_panel_filter_group:nth(1) .o_toggle_fold'));
-
-        assert.containsN(kanban, '.o_search_panel_filter_group', 2);
-        assert.containsOnce(kanban, '.o_search_panel_filter_value');
-        secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
-        assert.strictEqual(secondGroupCheckbox.indeterminate, true);
-
-        // fold first group
-        await testUtils.dom.click(kanban.$('.o_search_panel_filter_group:first .o_toggle_fold'));
-
-        assert.containsN(kanban, '.o_search_panel_filter_group', 2);
-        assert.containsNone(kanban, '.o_search_panel_filter_value');
-
-        // unfold second group
-        await testUtils.dom.click(kanban.$('.o_search_panel_filter_group:nth(1) .o_toggle_fold'));
-
-        assert.containsN(kanban, '.o_search_panel_filter_group', 2);
-        assert.containsN(kanban, '.o_search_panel_filter_value', 2);
-        secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
-        assert.strictEqual(secondGroupCheckbox.indeterminate, true);
-        assert.hasAttrValue(kanban.$('.o_search_panel_filter_value:first input'), 'checked', 'checked');
 
         kanban.destroy();
     });
@@ -2155,7 +2089,7 @@ QUnit.module('Views', {
             },
         });
 
-        var secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
+        var secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > header > div > input').get(0);
         assert.strictEqual(secondGroupCheckbox.indeterminate, true);
 
         kanban.destroy();

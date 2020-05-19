@@ -27,8 +27,14 @@ $o-searchpanel-filter-default-color: #D59244;
         .o_search_panel_category .o_search_panel_section_icon {
             color: $o-brand-odoo;
         }
+
         .o_search_panel_filter .o_search_panel_section_icon {
             color: $o-searchpanel-filter-default-color;
+        }
+
+        .o_toggle_fold_container {
+            text-align: center;
+            width: 1.5rem;
         }
 
         .o_search_panel_label {
@@ -37,38 +43,35 @@ $o-searchpanel-filter-default-color: #D59244;
             display: flex;
             justify-content: space-between;
             user-select: none;
-
-            // Without counters: the caret is set at the right border
-            &:not(.o_with_counters) {
-                width: 100%;
-            }
-
-            .o_toggle_fold {
-                width: 2rem;
-            }
         }
+
         .o_search_panel_section_header {
             padding: $o-searchpanel-p-small 0;
             cursor: default;
         }
+
+        .list-group {
+            padding-bottom: $o-searchpanel-p-tiny;
+        }
+
         .list-group-item {
-            padding: 0 0 $o-searchpanel-p-small 0;
+            padding: 0;
 
             .list-group-item {
                 padding: 0 0 0 $custom-control-gutter;
                 margin-bottom: $o-searchpanel-p-tiny*0.5;
-                &:first-child {
-                    margin-top: $o-searchpanel-p-tiny*0.5;
-                }
             }
+
             span.o_search_panel_label_title {
                 color: $headings-color;
                 @include o-text-overflow;
             }
+
             header.active {
                 background-color: $o-searchpanel-active-bg;
             }
         }
+
         .o_search_panel_category_value {
             cursor: pointer;
 
@@ -76,9 +79,7 @@ $o-searchpanel-filter-default-color: #D59244;
                 align-items: center;
                 display: flex;
                 justify-content: space-between;
-                margin-top: -4px;
-                margin-bottom: -4px;
-                padding: 4px 6px;
+                padding: 4px 6px 4px 0px;
             }
             .o_search_panel_label.o_with_counters {
                 overflow: hidden;
@@ -86,7 +87,6 @@ $o-searchpanel-filter-default-color: #D59244;
             .o_search_panel_category_value {
                 position: relative;
                 padding-left: $o-searchpanel-p;
-                padding-bottom: $o-searchpanel-p-tiny;
                 margin-bottom: 0;
 
                 &:before, &:after {
@@ -94,23 +94,34 @@ $o-searchpanel-filter-default-color: #D59244;
                     @include size(1px, 100%);
                     background: $gray-500;
                     content: '';
+                    margin-left: 4px;
                 }
                 &:after {
-                    top: 10px;
+                    top: 12px;
                     @include size(8px, 1px);
                 }
-                &:last-child {
-                    &:before {
-                        height: 11px;
-                    }
-                    &:after {
-                        top: 11px;
-                    }
+                &:last-child:before {
+                    height: 12px;
                 }
             }
         }
+
+        .o_search_panel_filter_value,
         .o_search_panel_filter_group {
-            padding-right: 6px;
+            cursor: pointer;
+            padding-bottom: $o-searchpanel-p-small;
+
+            .o_search_panel_label,
+            .o_search_panel_label_title {
+                padding-right: 6px;
+            }
+        }
+
+        .o_search_panel_filter_group {
+
+            header {
+                display: flex;
+            }
 
             .o_search_panel_label.o_with_counters {
                 justify-content: flex-start;
