@@ -4,9 +4,14 @@
 import re
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 from odoo.tools.misc import mod10r
 
 import werkzeug.urls
+
+
+ISR_SUBSCRIPTION_CODE = {'chf': '01', 'eur': '03'}
+
 
 def _is_l10n_ch_postal(account_ref):
     """ Returns True iff the string account_ref is a valid postal account number,
@@ -23,6 +28,17 @@ def _is_l10n_ch_postal(account_ref):
     return False
 
 
+def _is_l10n_ch_isr_issuer(account_ref, currency_code):
+    """ Returns True if the string account_ref is a valid a valid ISR issuer
+    An ISR issuer is postal account number that starts by 01 (CHF) or 03 (EUR),
+    """
+
+    if (account_ref or '').startswith(ISR_SUBSCRIPTION_CODE[currency_code]):
+        return _is_l10n_ch_postal(account_ref)
+
+    return False
+
+
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
@@ -34,6 +50,39 @@ class ResPartnerBank(models.Model):
     l10n_ch_isr_subscription_chf = fields.Char(string='CHF ISR Subscription Number', help='The subscription number provided by the bank or Postfinance to identify the bank, used to generate ISR in CHF. eg. 01-162-8')
     l10n_ch_isr_subscription_eur = fields.Char(string='EUR ISR Subscription Number', help='The subscription number provided by the bank or Postfinance to identify the bank, used to generate ISR in EUR. eg. 03-162-5')
     l10n_ch_show_subscription = fields.Boolean(compute='_compute_l10n_ch_show_subscription', default=lambda self: self.env.company.country_id.code == 'CH')
+
+    def is_isr_issuer(self):
+        return (_is_l10n_ch_isr_issuer(self.l10n_ch_postal, 'chf')
+                or _is_l10n_ch_isr_issuer(self.l10n_ch_postal, 'eur'))
+
+    @api.constrains("l10n_ch_postal")
+    def _check_postal_num(self):
+        """Validate postal number format"""
+        for rec in self:
+            if rec.l10n_ch_postal and not _is_l10n_ch_postal(self.l10n_ch_postal):
+                raise ValidationError(
+                    _("The postal number {} is not valid.\n"
+                      "It must be a valid postal number format. eg. 10-8060-7").format(rec.l10n_ch_postal))
+        return True
+
+    @api.constrains("l10n_ch_isr_subscription_chf", "l10n_ch_isr_subscription_eur")
+    def _check_subscription_num(self):
+        """Validate ISR subscription number format
+
+        Subscription number can only starts with 01 or 03
+
+        """
+        for rec in self:
+            for currency in ["chf", "eur"]:
+                field_name = "l10n_ch_isr_subscription_{}".format(currency)
+                if rec[field_name] and not _is_l10n_ch_isr_issuer(rec[field_name], currency):
+                    example = "01-162-8" if currency == "chf" else "03-162-5"
+                    raise ValidationError(
+                        _("The ISR subcription {} for {} number is not valid.\n"
+                          "It must starts with {} and we a valid postal number format. eg. {}"
+                          ).format(self[field_name], currency.upper(), ISR_SUBSCRIPTION_CODE[currency], example)
+                    )
+        return True
 
     @api.depends('partner_id', 'company_id')
     def _compute_l10n_ch_show_subscription(self):
