@@ -725,6 +725,7 @@ action = model.setting_init_bank_account_action()
                                     <field name="account_number" optional="hidden"/>
                                     <field name="amount_currency" optional="hidden"/>
                                     <field name="currency_id" optional="hidden"/>
+                                    <field name="company_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <button name="button_cancel_reconciliation" attrs="{'invisible': ['|',('journal_entry_ids', '=', []), ('state', '=', 'confirm')]}" string="Revert reconciliation" type="object" icon="fa-undo"/>
                                 </tree>
@@ -814,6 +815,7 @@ action = model.setting_init_bank_account_action()
                     <field name="sequence"/>
                     <field name="note"/>
                     <field name="transaction_type"/>
+                    <field name="company_id" invisible="1"/>
                 </group>
             </form>
             </field>
@@ -835,6 +837,7 @@ action = model.setting_init_bank_account_action()
                     <field name="transaction_type" optional="hidden"/>
                     <field name="note" optional="hidden"/>
                     <field name="journal_currency_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
                 </tree>
             </field>
         </record>
