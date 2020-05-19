@@ -769,20 +769,15 @@ class HolidaysRequest(models.Model):
         """ This method will create entry in resource calendar time off object at the time of holidays validated
         :returns: created `resource.calendar.leaves`
         """
-        vals_list = []
-        for leave in self:
-            date_from = fields.Datetime.from_string(leave.date_from)
-            date_to = fields.Datetime.from_string(leave.date_to)
-
-            vals_list.append({
-                'name': leave.name,
-                'date_from': fields.Datetime.to_string(date_from),
-                'holiday_id': leave.id,
-                'date_to': fields.Datetime.to_string(date_to),
-                'resource_id': leave.employee_id.resource_id.id,
-                'calendar_id': leave.employee_id.resource_calendar_id.id,
-                'time_type': leave.holiday_status_id.time_type,
-            })
+        vals_list = [{
+            'name': leave.name,
+            'date_from': leave.date_from,
+            'holiday_id': leave.id,
+            'date_to': leave.date_to,
+            'resource_id': leave.employee_id.resource_id.id,
+            'calendar_id': leave.employee_id.resource_calendar_id.id,
+            'time_type': leave.holiday_status_id.time_type,
+        } for leave in self]
         return self.env['resource.calendar.leaves'].sudo().create(vals_list)
 
     def _remove_resource_leave(self):
@@ -794,36 +789,42 @@ class HolidaysRequest(models.Model):
         by creating a calendar event and a resource time off. """
         holidays = self.filtered(lambda request: request.holiday_type == 'employee')
         holidays._create_resource_leave()
-        for holiday in holidays.filtered(lambda l: l.holiday_status_id.create_calendar_meeting):
-            meeting_values = holiday._prepare_holidays_meeting_values()
-            meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True, active_model=self._name).create(meeting_values)
-            holiday.write({'meeting_id': meeting.id})
+        meeting_holidays = holidays.filtered(lambda l: l.holiday_status_id.create_calendar_meeting)
+        if meeting_holidays:
+            meeting_values = meeting_holidays._prepare_holidays_meeting_values()
+            meetings = self.env['calendar.event'].with_context(
+                no_mail_to_attendees=True,
+                active_model=self._name).create(meeting_values)
+            for i in range(len(meetings)):
+                meeting_holidays[i].meeting_id = meetings[i]
 
     def _prepare_holidays_meeting_values(self):
-        self.ensure_one()
-        calendar = self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
-        if self.leave_type_request_unit == 'hour':
-            meeting_name = _("%s on Time Off : %.2f hour(s)") % (self.employee_id.name or self.category_id.name, self.number_of_hours_display)
-        else:
-            meeting_name = _("%s on Time Off : %.2f day(s)") % (self.employee_id.name or self.category_id.name, self.number_of_days)
-        meeting_values = {
-            'name': meeting_name,
-            'duration': self.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY),
-            'description': self.notes,
-            'user_id': self.user_id.id,
-            'start': self.date_from,
-            'stop': self.date_to,
-            'allday': False,
-            'state': 'open',  # to block that meeting date in the calendar
-            'privacy': 'confidential',
-            'event_tz': self.user_id.tz,
-            'activity_ids': [(5, 0, 0)],
-        }
-        # Add the partner_id (if exist) as an attendee
-        if self.user_id and self.user_id.partner_id:
-            meeting_values['partner_ids'] = [
-                (4, self.user_id.partner_id.id)]
-        return meeting_values
+        result = []
+        for holiday in self:
+            calendar = holiday.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
+            if holiday.leave_type_request_unit == 'hour':
+                meeting_name = _("%s on Time Off : %.2f hour(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_hours_display)
+            else:
+                meeting_name = _("%s on Time Off : %.2f day(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_days)
+            meeting_values = {
+                'name': meeting_name,
+                'duration': holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY),
+                'description': holiday.notes,
+                'user_id': holiday.user_id.id,
+                'start': holiday.date_from,
+                'stop': holiday.date_to,
+                'allday': False,
+                'state': 'open',  # to block that meeting date in the calendar
+                'privacy': 'confidential',
+                'event_tz': holiday.user_id.tz,
+                'activity_ids': [(5, 0, 0)],
+            }
+            # Add the partner_id (if exist) as an attendee
+            if holiday.user_id and holiday.user_id.partner_id:
+                meeting_values['partner_ids'] = [
+                    (4, holiday.user_id.partner_id.id)]
+            result.append(meeting_values)
+        return result
 
     def _prepare_holiday_values(self, employees):
         self.ensure_one()
