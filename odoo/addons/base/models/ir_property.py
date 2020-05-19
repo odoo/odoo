@@ -186,7 +186,7 @@ class Property(models.Model):
         """
         field_id = self.env['ir.model.fields']._get(model, name).id
         company_id = int(company) if company else False
-        prop = self.search([
+        prop = self.sudo().search([
             ('fields_id', '=', field_id),
             ('company_id', '=', company_id),
             ('res_id', '=', False),
@@ -194,7 +194,7 @@ class Property(models.Model):
         if prop:
             prop.write({'value': value})
         else:
-            self.create({
+            prop.create({
                 'fields_id': field_id,
                 'company_id': company_id,
                 'res_id': False,
@@ -243,8 +243,8 @@ class Property(models.Model):
                 res_id = "%s,%s" % (model, res_id)
             domain = [('res_id', '=', res_id)] + domain
             #make the search with company_id asc to make sure that properties specific to a company are given first
-            return self.search(domain, limit=1, order='company_id')
-        return self.browse(())
+            return self.sudo().search(domain, limit=1, order='company_id')
+        return self.sudo().browse(())
 
     def _get_domain(self, prop_name, model):
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (prop_name, model))
@@ -347,7 +347,7 @@ class Property(models.Model):
         field_id = self._cr.fetchone()[0]
         company_id = self.env.company.id
         refs = {('%s,%s' % (model, id)): id for id in values}
-        props = self.search([
+        props = self.sudo().search([
             ('fields_id', '=', field_id),
             ('company_id', '=', company_id),
             ('res_id', 'in', list(refs)),
@@ -379,7 +379,7 @@ class Property(models.Model):
                     'value': value,
                     'type': self.env[model]._fields[name].type,
                 })
-        self.create(vals_list)
+        self.sudo().create(vals_list)
 
     @api.model
     def search_multi(self, name, model, operator, value):

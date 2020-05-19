@@ -16,8 +16,9 @@ def _configure_journals(cr, registry):
 
     for company_id in company_ids:
         # Check if property exists for stock account journal exists
-        properties = env['ir.property'].search([
-            ('name', '=', 'property_stock_journal'),
+        field = env['ir.model.fields']._get("product.category", "property_stock_journal")
+        properties = env['ir.property'].sudo().search([
+            ('fields_id', '=', field.id),
             ('company_id', '=', company_id.id)])
 
         # If not, check if you can find a journal that is already there with the same name, otherwise create one

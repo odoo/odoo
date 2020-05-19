@@ -207,9 +207,9 @@ class AccountChartTemplate(models.Model):
             existing_journals = self.env['account.journal'].search([('company_id', '=', company.id)])
             if existing_journals:
                 prop_values.extend(['account.journal,%s' % (journal_id,) for journal_id in existing_journals.ids])
-            accounting_props = self.env['ir.property'].search([('value_reference', 'in', prop_values)])
-            if accounting_props:
-                accounting_props.sudo().unlink()
+            self.env['ir.property'].sudo().search(
+                [('value_reference', 'in', prop_values)]
+            ).unlink()
 
             # delete account, journal, tax, fiscal position and reconciliation model
             models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.move', 'account.journal', 'account.group']
