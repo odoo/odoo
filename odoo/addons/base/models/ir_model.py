@@ -234,7 +234,7 @@ class IrModel(models.Model):
                     raise ValidationError(_("Unable to order by %s: fields used for ordering must be present on the model and stored.", field))
 
     _sql_constraints = [
-        ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
+        ('obj_name_uniq', 'unique (model)', 'Each model must have a unique name.'),
     ]
 
     def _get(self, name):
