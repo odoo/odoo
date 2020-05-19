@@ -505,6 +505,10 @@ class AccountBankStatementLine(models.Model):
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     foreign_currency_id = fields.Many2one('res.currency', string='Foreign Currency',
         help="The optional other currency if it is a multi-currency entry.")
+    amount_residual = fields.Float(string="Residual Amount",
+        compute="_compute_is_reconciled",
+        store=True,
+        help="The amount left to be reconciled on this statement line (signed according to its move lines' balance), expressed in its currency. This is a technical field use to speedup the application of reconciliation models.")
     currency_id = fields.Many2one('res.currency', string='Journal Currency')
     partner_id = fields.Many2one(
         comodel_name='res.partner',
@@ -810,15 +814,17 @@ class AccountBankStatementLine(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('currency_id', 'amount',
+    @api.depends('currency_id', 'amount', 'foreign_currency_id', 'amount_currency',
                  'move_id.line_ids', 'move_id.line_ids.matched_debit_ids', 'move_id.line_ids.matched_credit_ids')
     def _compute_is_reconciled(self):
         ''' Compute the field indicating if the statement lines are already reconciled with something.
         This field is used for display purpose (e.g. display the 'cancel' button on the statement lines).
+        Also computes the residual amount of the statement line.
         '''
         for st_line in self:
             liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
 
+            # Compute is_reconciled
             if not st_line.id or suspense_lines:
                 # New record: The journal items are not yet there.
                 st_line.is_reconciled = False
@@ -827,6 +833,17 @@ class AccountBankStatementLine(models.Model):
             else:
                 # The journal entry seems reconciled.
                 st_line.is_reconciled = True
+
+            # Compute residual amount
+            st_line_currency = suspense_lines.currency_id or suspense_lines.company_currency_id
+            balance_field, residual_field = ('amount_currency', 'amount_residual_currency') if suspense_lines.currency_id else ('balance', 'amount_residual')
+
+            if st_line.to_check:
+                st_line.amount_residual = -st_line.amount_currency if st_line.foreign_currency_id else -st_line.amount
+            elif suspense_lines.account_id.reconcile:
+                st_line.amount_residual = sum(suspense_lines.mapped(residual_field))
+            else:
+                st_line.amount_residual = sum(suspense_lines.mapped(balance_field))
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -1252,7 +1269,7 @@ class AccountBankStatementLine(models.Model):
 
             # Update the payment date to match the current bank statement line's date.
             if counterpart_line.payment_id:
-                counterpart_line.payment_id.payment_date = self.date
+                counterpart_line.payment_id.date = self.date
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS

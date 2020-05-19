@@ -1249,15 +1249,15 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
         test_line_1 = test_move.line_ids.filtered(lambda line: line.name == 'test line 1')
         test_line_2 = test_move.line_ids.filtered(lambda line: line.name == 'test line 2')
 
-        def _prepare_reconciliation_with_payments(lines_vals_list):
-            statement_line_wo_patch = self.env['account.bank.statement.line'].browse(self.statement_line.id)
-            return statement_line_wo_patch._prepare_reconciliation(lines_vals_list, create_payment_for_invoice=True)
+        statement_line = self.statement_line
+        StatementLine_prepare_reconciliation = type(statement_line)._prepare_reconciliation
 
-        with patch.object(
-                self.statement_line,
-                '_prepare_reconciliation',
-                lambda *args, **kwargs: _prepare_reconciliation_with_payments(*args)
-        ):
+        def _prepare_reconciliation(self, lines_vals_list, create_payment_for_invoice=False):
+            if self == statement_line:
+                create_payment_for_invoice = True
+            return StatementLine_prepare_reconciliation(self, lines_vals_list, create_payment_for_invoice)
+
+        with patch.object(type(statement_line), '_prepare_reconciliation', _prepare_reconciliation):
             self.statement_line.reconcile([
                 {'id': test_line_1.id, 'balance': -50.0},
                 {'id': test_line_2.id},

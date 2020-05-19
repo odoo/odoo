@@ -270,7 +270,6 @@
             <field name="model">event.event</field>
             <field name="arch" type="xml">
                 <tree string="Events"
-                    decoration-bf="message_needaction==True"
                     decoration-danger="(seats_max and seats_max&lt;seats_reserved)"
                     multi_edit="1">
                     <field name="name"/>
@@ -345,7 +344,9 @@
                                     </div>
                                     <div class="col-9 py-2 px-3 d-flex flex-column justify-content-between pt-3">
                                         <div>
-                                            <h4 class="o_event_fontweight_500 mb-0 o_text_overflow" t-att-title="record.name.value"><field name="name"/></h4>
+                                            <div class="o_kanban_record_title o_text_overflow" t-att-title="record.name.value">
+                                                <field name="name"/>
+                                            </div>
                                             <div><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-esc="record.address_id.value"/></div>
                                         </div>
                                         <h5 class="o_event_fontsize_11 p-0">
@@ -359,12 +360,14 @@
                                                 </a>
                                             </div>
                                         </h5>
-                                        <div class="text-right">
-                                            <div class="float-left"><field name="activity_ids" widget="kanban_activity"/></div>
-                                            <field name="kanban_state" widget="state_selection"/>
-                                            <span class="ml-2">
+                                        <div class="o_kanban_record_bottom">
+                                            <div class="oe_kanban_bottom_left">
+                                                <field name="activity_ids" widget="kanban_activity"/>
+                                            </div>
+                                            <div class="oe_kanban_bottom_right">
+                                                <field name="kanban_state" widget="state_selection"/>
                                                 <field name="user_id" widget="many2one_avatar_user"/>
-                                            </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -481,7 +484,7 @@
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <tree string="Registration" decoration-bf="message_needaction==True" multi_edit="1">
+                <tree string="Registration" multi_edit="1">
                     <field name="create_date" optional="hide"/>
                     <field name="date_open" optional="hide"/>
                     <field name="partner_id"/>

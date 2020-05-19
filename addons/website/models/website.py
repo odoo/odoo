@@ -256,7 +256,7 @@ class Website(models.Model):
         homepage_page = Page.search([
             ('website_id', '=', self.id),
             ('key', '=', standard_homepage.key),
-        ])
+        ], limit=1)
         if not homepage_page:
             homepage_page = Page.create({
                 'website_published': True,
@@ -1011,3 +1011,8 @@ class BaseModel(models.AbstractModel):
             return self.website_id._get_http_domain()
         else:
             return super(BaseModel, self).get_base_url()
+
+    def get_website_meta(self):
+        # dummy version of 'get_website_meta' above; this is a graceful fallback
+        # for models that don't inherit from 'website.seo.metadata'
+        return {}

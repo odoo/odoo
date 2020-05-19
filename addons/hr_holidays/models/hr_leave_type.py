@@ -73,7 +73,7 @@ class HolidaysType(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     responsible_id = fields.Many2one('res.users', 'Responsible',
         domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id)],
-        help="This user will be responsible for approving this type of times off. "
+        help="This user will be responsible for approving this type of time off. "
         "This is only used when validation is 'hr' or 'both'",)
     leave_validation_type = fields.Selection([
         ('no_validation', 'No Validation'),

@@ -364,7 +364,7 @@
                                     <field name="date_expected" optional="hide" attrs="{'readonly': [('show_operations', '=', True), ('is_locked', '=', True)]}"/>
                                     <field name="is_initial_demand_editable" invisible="1"/>
                                     <field name="is_quantity_done_editable" invisible="1"/>
-                                    <field name="product_uom_qty" string="Demand" attrs="{'column_invisible': [('parent.immediate_transfer', '=', True)], 'readonly': ['|', ('is_initial_demand_editable', '=', False), '&amp;', ('show_operations', '=', True), ('is_locked', '=', True)]}"/>
+                                    <field name="product_uom_qty" string="Demand" attrs="{'column_invisible': [('parent.immediate_transfer', '=', True)], 'readonly': ['|', ('is_initial_demand_editable', '=', False), '&amp;', '&amp;', ('show_operations', '=', True), ('is_locked', '=', True), ('is_initial_demand_editable', '=', False)]}"/>
                                     <field name="reserved_availability" string="Reserved" attrs="{'column_invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming'), ('parent.immediate_transfer', '=', True)])}"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
@@ -654,7 +654,7 @@
                                             <div class="o_primary" t-if="selection_mode">
                                                 <field name="name"/>
                                             </div>
-                                            <div class="o_secondary"><field class="o_secondary"  name="warehouse_id" readonly="1"/></div>
+                                            <div class="o_secondary"><field class="o_secondary"  name="warehouse_id" readonly="1" groups="stock.group_stock_multi_warehouses"/></div>
                                         </div>
                                         <div class="o_kanban_manage_button_section" t-if="!selection_mode">
                                             <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
@@ -674,35 +674,29 @@
                                                 </div>
 
                                                 <div t-if="record.count_picking_waiting.raw_value > 0" class="row">
-                                                    <div class="col-9">
+                                                    <div class="col-12">
                                                         <a name="get_action_picking_tree_waiting" type="object">
+                                                            <field name="count_picking_waiting"/>
                                                             Waiting
                                                         </a>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <field name="count_picking_waiting"/>
                                                     </div>
                                                 </div>
 
                                                 <div t-if="record.count_picking_late.raw_value > 0" class="row">
-                                                    <div class="col-9">
+                                                    <div class="col-12">
                                                         <a class="oe_kanban_stock_picking_type_list" name="get_action_picking_tree_late" type="object">
+                                                            <field name="count_picking_late"/>
                                                             Late
                                                         </a>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <field name="count_picking_late"/>
                                                     </div>
                                                 </div>
 
                                                 <div t-if="record.count_picking_backorders.raw_value > 0" class="row">
-                                                    <div class="col-9">
+                                                    <div class="col-12">
                                                         <a class="oe_kanban_stock_picking_type_list" name="get_action_picking_tree_backorder" type="object">
+                                                            <field name="count_picking_backorders"/>
                                                             Back Orders
                                                         </a>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <field name="count_picking_backorders"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -711,7 +705,8 @@
                                         <div class="row">
                                             <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
                                                 <div role="menuitem" class="o_kanban_card_manage_title">
-                                                    <span>View</span>
+                                                    <span t-if="record.code.raw_value == 'internal'">Transfers</span>
+                                                    <span t-else="">View</span>
                                                 </div>
                                                 <div role="menuitem">
                                                     <a name="get_stock_picking_action_picking_type" type="object">All</a>
@@ -740,8 +735,8 @@
                                             <div class="col-8" role="menuitem" aria-haspopup="true">
                                                 <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                                             </div>
-                                            <div role="menuitem" class="col-4 text-center">
-                                                <a type="edit">Settings</a>
+                                            <div role="menuitem" class="col-4">
+                                                <a class="dropdown-item" role="menuitem" type="edit">Configuration</a>
                                             </div>
                                         </div>
                                     </div>

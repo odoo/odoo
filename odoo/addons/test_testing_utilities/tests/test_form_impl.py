@@ -572,6 +572,101 @@ class TestO2M(TransactionCase):
         self.assertEqual(r.mapped('line_ids.vv'), [1, 2])
         self.assertEqual(r.mapped('line_ids.v'), [7, 7])
 
+class TestNestedO2M(TransactionCase):
+    def test_id_cannot_be_assigned(self):
+        # MO with:
+        # produces product0
+        # produces 1 (product_qty)
+        # flexible BOM produces 1
+        # bom consumes 4x product 1
+        # bom consumes 1x product 2
+        product0 = self.env['ttu.product'].create({}).id
+        product1 = self.env['ttu.product'].create({}).id
+        product2 = self.env['ttu.product'].create({}).id
+        # create pseudo-MO in post-asigned state
+        obj = self.env['ttu.root'].create({
+            'product_id': product0,
+            'product_qty': 1.0,
+            # qty_producing=0 (onchange)
+            # qty_produced=0 (computed)
+            'move_raw_ids': [
+                (0, 0, {
+                    'product_id': product2,
+                    # quantity_done=0 (computed)
+                    'move_line_ids': [(0, 0, {
+                        'product_id': product2,
+                        'product_uom_qty': 1.0,
+                        'qty_done': 0.0 # -> 1.0
+                    })] # -> new line with qty=0, qty_done=2
+                }),
+                (0, 0, {
+                    'product_id': product1,
+                    'unit_factor': 4,
+                    'move_line_ids': [(0, 0, {
+                        'product_id': product1,
+                        'product_uom_qty': 4.0,
+                        'qty_done': 0.0 # -> 4.0
+                    })] # -> new line with qty=0, qty_done=8
+                })
+            ],
+            'move_finished_ids': [(0, 0, {'product_id': product0})]
+            # -> new line with qty=0, qty_done=3
+        })
+        form = Form(obj)
+        form.qty_producing = 1
+        form._perform_onchange(['move_raw_ids'])
+        form.save()
+
+    def test_empty_update(self):
+        # MO with:
+        # produces product0
+        # produces 1 (product_qty)
+        # flexible BOM produces 1
+        # bom consumes 4x product 1
+        # bom consumes 1x product 2
+        product0 = self.env['ttu.product'].create({}).id
+        product1 = self.env['ttu.product'].create({}).id
+        product2 = self.env['ttu.product'].create({}).id
+        product4 = self.env['ttu.product'].create({})
+        # create pseudo-MO in post-asigned state
+        obj = self.env['ttu.root'].create({
+            'product_id': product0,
+            'product_qty': 1.0,
+            # qty_producing=0 (onchange)
+            # qty_produced=0 (computed)
+            'move_raw_ids': [
+                (0, 0, {
+                    'product_id': product2,
+                    # quantity_done=0 (computed)
+                    'move_line_ids': [(0, 0, {
+                        'product_id': product2,
+                        'product_uom_qty': 1.0,
+                        'qty_done': 0.0 # -> 1.0
+                    })] # -> new line with qty=0, qty_done=2
+                }),
+                (0, 0, {
+                    'product_id': product1,
+                    'unit_factor': 4,
+                    'move_line_ids': [(0, 0, {
+                        'product_id': product1,
+                        'product_uom_qty': 4.0,
+                        'qty_done': 0.0 # -> 4.0
+                    })] # -> new line with qty=0, qty_done=8
+                })
+            ],
+            'move_finished_ids': [(0, 0, {'product_id': product0})]
+            # -> new line with qty=0, qty_done=3
+        })
+        form = Form(obj)
+        form.qty_producing = 1
+        form.save()
+        with form.move_raw_ids.new() as move:
+            move.product_id = product4
+            move.quantity_done = 10
+        # Check that this new product is not updated by qty_producing
+        form.qty_producing = 2
+        form.save()
+
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record
     post-save (we already have it) and it's easier to see what bits act on

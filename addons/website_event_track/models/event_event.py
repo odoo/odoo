@@ -129,9 +129,6 @@ class Event(models.Model):
         res = [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 'track_proposal')]
         return res
 
-    def toggle_website_menu(self, val):
-        self.website_menu = val
-
     def toggle_website_track(self, val):
         self.website_track = val
 

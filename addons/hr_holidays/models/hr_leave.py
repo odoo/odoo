@@ -542,7 +542,7 @@ class HolidaysRequest(models.Model):
             ]
             nholidays = self.search_count(domain)
             if nholidays:
-                raise ValidationError(_('You can not set 2 times off that overlaps on the same day for the same employee.'))
+                raise ValidationError(_('You can not set 2 time off that overlaps on the same day for the same employee.'))
 
     @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
@@ -679,10 +679,10 @@ class HolidaysRequest(models.Model):
         if state == 'validate1':
             employees = employees.filtered(lambda employee: employee.leave_manager_id != self.env.user)
             if employees and not is_leave_user:
-                raise AccessError(_('You cannot first approve a leave for %s, because you are not his leave manager' % (employees[0].name,)))
+                raise AccessError(_('You cannot first approve a time off for %s, because you are not his time off manager' % (employees[0].name,)))
         elif state == 'validate' and not is_leave_user:
             # Is probably handled via ir.rule
-            raise AccessError(_('You don\'t have the rights to apply second approval on a leave request'))
+            raise AccessError(_('You don\'t have the rights to apply second approval on a time off request'))
 
     @api.model
     def create(self, values):
@@ -767,7 +767,7 @@ class HolidaysRequest(models.Model):
             default['request_date_from'] = default.get('date_from')
             default['request_date_to'] = default.get('date_to')
             return super().copy_data(default)
-        raise UserError(_('A leave cannot be duplicated.'))
+        raise UserError(_('A time off cannot be duplicated.'))
 
     def _get_mail_redirect_suggested_company(self):
         return self.holiday_status_id.company_id
@@ -936,7 +936,7 @@ class HolidaysRequest(models.Model):
             if conflicting_leaves:
                 # YTI: More complex use cases could be managed in master
                 if holiday.leave_type_request_unit != 'day' or any(l.leave_type_request_unit == 'hour' for l in conflicting_leaves):
-                    raise ValidationError(_('You can not have 2 leaves that overlaps on the same day.'))
+                    raise ValidationError(_('You can not have 2 time off that overlaps on the same day.'))
 
                 for conflicting_leave in conflicting_leaves:
                     if conflicting_leave.leave_type_request_unit == 'half_day' and conflicting_leave.request_unit_half:

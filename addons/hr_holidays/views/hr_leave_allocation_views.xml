@@ -68,7 +68,7 @@
                             attrs="{'invisible': [('holiday_type', '!=', 'employee')]}"
                             name="%(hr_leave_action_all)d"
                             context="{'search_default_employee_id': [employee_id], 'search_default_holiday_status_id': [holiday_status_id], 'default_holiday_status_id': holiday_status_id}"
-                            help="Leaves Taken/Total Allocated">
+                            help="Time off Taken/Total Allocated">
                             <div class="o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="leaves_taken" digits="[42,1]"/>/<field name="max_leaves" digits="[42,1]"/>
@@ -188,15 +188,14 @@
         <field name="model">hr.leave.allocation</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
-            <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
-                   decoration-bf="message_needaction == True">
+            <tree string="Allocation Requests">
                 <field name="employee_id"/>
                 <field name="department_id" optional="hide"/>
                 <field name="holiday_status_id"/>
                 <field name="name"/>
                 <field name="duration_display"/>
                 <field name="message_needaction" invisible="1"/>
-                <field name="state"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'"/>
                 <button string="Approve" name="action_approve" type="object"
                     icon="fa-thumbs-up"
                     states="confirm"

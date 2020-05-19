@@ -405,10 +405,6 @@ class View(models.Model):
                     func = getattr(values['main_object'], 'get_backend_menu_id', False)
                     values['backend_menu_id'] = func and func() or self.env.ref('website.menu_website_configuration').id
 
-                # Fallback incase main_object dont't inherit 'website.seo.metadata'
-                if not hasattr(values['main_object'], 'get_website_meta'):
-                    values['main_object'].get_website_meta = lambda: {}
-
         if self._context != new_context:
             self = self.with_context(new_context)
         return super(View, self)._render(values, engine=engine, minimal_qcontext=minimal_qcontext)

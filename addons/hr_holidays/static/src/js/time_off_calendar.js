@@ -42,7 +42,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
 
          /**
          * Render the buttons and add new button about
-         * times off and allocations request
+         * time off and allocations request
          *
          * @override
          */

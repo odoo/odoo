@@ -24,10 +24,10 @@
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <tree string="Applicants" decoration-bf="message_needaction==True" multi_edit="1">
+            <tree string="Applicants" multi_edit="1">
                 <field name="message_needaction" invisible="1"/>
                 <field name="last_stage_id" invisible="1"/>
-                <field name="create_date" readonly="1"/>
+                <field name="create_date" readonly="1" widget="date"/>
                 <field name="date_last_stage_update" invisible="1"/>
                 <field name="name" readonly="1"/>
                 <field name="partner_name" readonly="1"/>
@@ -37,11 +37,11 @@
                 <field name="stage_id"/>
                 <field name="medium_id"/>
                 <field name="source_id" readonly="1"/>
-                <field name="priority"/>
+                <field name="priority" widget="priority"/>
                 <field name="type_id" invisible="1"/>
                 <field name="availability" invisible="1"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)" readonly="1"/>
-                <field name="user_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1"/>
             </tree>
         </field>
@@ -272,7 +272,6 @@
                 <field name="partner_id"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
-                <field name="message_needaction_counter"/>
                 <field name="attachment_number"/>
                 <field name="active"/>
                 <field name="activity_ids" />
@@ -315,9 +314,6 @@
                                         <div class="o_kanban_inline_block mr8">
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
-                                        <t t-if="record.message_needaction_counter.raw_value">
-                                            <span role="alert" class='oe_kanban_mail_new mr4' title='Unread Messages'><i class='fa fa-comments' role="img" aria-label="Unread messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                        </t>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <a name="action_get_attachment_tree_view" type="object">

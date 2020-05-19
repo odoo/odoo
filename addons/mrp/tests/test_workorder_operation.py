@@ -1264,20 +1264,6 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         production sooner """
         self.workcenter_1.alternative_workcenter_ids = self.wc_alt_1 | self.wc_alt_2
         self.env['mrp.workcenter'].search([]).write({'tz': 'UTC'}) # compute all date in UTC
-        mrp_routing_0 = self.env['mrp.routing'].create({
-            'name': 'Primary Assembly',
-        })
-        mrp_workcenter_3 = self.env['mrp.workcenter'].create({
-            'name': 'Assembly Line 1',
-            'resource_calendar_id': self.env.ref('resource.resource_calendar_std').id,
-        })
-        mrp_routing_workcenter_0 = self.env['mrp.routing.workcenter'].create({
-            'routing_id': mrp_routing_0.id,
-            'workcenter_id': mrp_workcenter_3.id,
-            'name': 'Manual Assembly',
-            'time_cycle': 60,
-        })
-        self.planning_bom.routing = mrp_routing_0
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.planning_bom

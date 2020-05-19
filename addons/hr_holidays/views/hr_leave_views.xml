@@ -482,8 +482,7 @@
         <field name="name">hr.holidays.view.tree</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Time Off Requests"
-                   decoration-bf="message_needaction == True">
+            <tree string="Time Off Requests">
                 <field name="employee_id"/>
                 <field name="department_id"/>
                 <field name="holiday_type" string="Mode" groups="base.group_no_one"/>
@@ -492,7 +491,7 @@
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="duration_display"/>
-                <field name="state"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'"/>
                 <field name="payslip_status" widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_user"/>
                 <field name="category_id" invisible="1"/>
                 <field name="department_id" invisible="1"/>

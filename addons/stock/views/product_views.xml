@@ -37,13 +37,9 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
-                <tree position="attributes">
-                    <attribute name="decoration-danger">type == 'product' and virtual_available&lt;0</attribute>
-                    <attribute name="decoration-info">type != 'product' or virtual_available&gt;=0</attribute>
-                </tree>
                 <field name="price" position="after">
-                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show"/>
-                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" string="Forecasted Quantity" optional="show"/>
+                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"/>
+                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" string="Forecasted Quantity" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0"/>
                 </field>
             </field>
         </record>
@@ -53,13 +49,9 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_tree_view"/>
             <field name="arch" type="xml">
-                <tree position="attributes">
-                    <attribute name="decoration-danger">type == 'product' and virtual_available&lt;0</attribute>
-                    <attribute name="decoration-info">type != 'product' or virtual_available&gt;=0</attribute>
-                </tree>
                 <field name="uom_id" position="before">
-                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show"/>
-                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show"/>
+                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0"/>
+                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"/>
                 </field>
             </field>
         </record>
@@ -156,9 +148,9 @@
                 <xpath expr="//kanban" position="inside">
                     <field name="type"/>
                 </xpath>
-                <ul position="inside">
-                    <li t-if="record.type.raw_value == 'product'">On hand: <field name="qty_available"/> <field name="uom_id"/></li>
-                </ul>
+                <xpath expr="//div[@name='product_lst_price']" position="after">
+                    <div t-if="record.type.raw_value == 'product'">On hand: <field name="qty_available"/> <field name="uom_id"/></div>
+                </xpath>
             </field>
         </record>
 

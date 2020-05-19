@@ -42,6 +42,7 @@ var ListRenderer = BasicRenderer.extend({
         'click tbody tr': '_onRowClicked',
         'change tbody .o_list_record_selector': '_onSelectRecord',
         'click thead th.o_column_sortable': '_onSortColumn',
+        'click .o_list_record_selector': '_onToggleCheckbox',
         'click .o_group_header': '_onToggleGroup',
         'change thead .o_list_record_selector input': '_onToggleSelection',
         'keypress thead tr td': '_onKeyPress',
@@ -1309,6 +1310,18 @@ var ListRenderer = BasicRenderer.extend({
         this.trigger_up('toggle_column_order', { id: this.state.id, name: name });
     },
     /**
+     * When the user clicks on the whole record selector cell, we want to toggle
+     * the checkbox, to make record selection smooth.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onToggleCheckbox: function (ev) {
+        const $recordSelector = $(ev.target).find('input[type=checkbox]:not(":disabled")');
+        $recordSelector.prop('checked', !$recordSelector.prop("checked"));
+        $recordSelector.change(); // s.t. th and td checkbox cases are handled by their own handler
+    },
+    /**
      * @private
      * @param {DOMEvent} ev
      */
@@ -1334,8 +1347,8 @@ var ListRenderer = BasicRenderer.extend({
         }
     },
     /**
-     * When the user clicks on the 'checkbox' on the left of a record, we need
-     * to toggle its status.
+     * When the user clicks on the row selection checkbox in the header, we
+     * need to update the checkbox of the row selection checkboxes in the body.
      *
      * @private
      * @param {MouseEvent} ev
