@@ -1394,7 +1394,7 @@ class AccountJournal(models.Model):
                         'suffix': '',
                         'padding': 0,
                         'company_id': journal.company_id.id}
-                    seq = self.env['ir.sequence'].create(vals)
+                    seq = self.env['ir.sequence'].sudo().create(vals)
                     vals_write[seq_field] = seq.id
             if vals_write:
                 journal.write(vals_write)
