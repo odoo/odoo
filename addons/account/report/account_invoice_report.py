@@ -17,6 +17,7 @@ class AccountInvoiceReport(models.Model):
     move_id = fields.Many2one('account.move', readonly=True)
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    company_to_id = fields.Many2one('res.company', string='Company', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     country_id = fields.Many2one('res.country', string="Country")
     invoice_user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
@@ -75,6 +76,7 @@ class AccountInvoiceReport(models.Model):
                 line.analytic_account_id,
                 line.journal_id,
                 line.company_id,
+                currency.company_id company_to_id,
                 line.company_currency_id,
                 move.state,
                 move.move_type,
@@ -100,7 +102,7 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN product_template template ON template.id = product.product_tmpl_id
                 LEFT JOIN uom_uom uom_line ON uom_line.id = line.product_uom_id
                 INNER JOIN account_move move ON move.id = line.move_id
-                LEFT JOIN (select DISTINCT ON (currency_id, company_id) currency_id, company_id, rate FROM res_currency_rate WHERE name<now() ORDER BY currency_id,company_id,name desc) currency ON (line.company_currency_id=currency.currency_id and line.company_id=currency.company_id)
+                RIGHT JOIN (select DISTINCT ON (currency_id, company_id) currency_id, company_id, rate FROM res_currency_rate WHERE name<now() ORDER BY currency_id,company_id,name desc) currency ON (line.company_currency_id=currency.currency_id)
         '''
 
     @api.model
@@ -123,7 +125,7 @@ class AccountInvoiceReport(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        result = super(AccountInvoiceReport, self).read_group(domain, fields, groupby, offset, limit, orderby, False)
+        result = super(AccountInvoiceReport, self).read_group(domain+[('company_to_id','=',self.env.company.id)], fields, groupby, offset, limit, orderby, False)
         currency = self.env.company.currency_id
         rate = currency.rate
         for field in {'price_average', 'price_subtotal'} & set(map(lambda x: x.split(':')[0], fields)):
