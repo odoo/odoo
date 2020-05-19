@@ -9,7 +9,8 @@
                 <attribute name="attrs">{'invisible': [('type', 'not in', ['bank', 'cash', 'sale', 'purchase'])]}</attribute>
             </xpath>
             <field name="company_id" position="after">
-                <field name="l10n_in_gstin_partner_id" context="{'show_vat':True}" options='{"no_create": True,"always_reload": True}'/>
+                <field name="l10n_in_gstin_partner_id" context="{'show_vat':True}" options='{"no_create": True,"always_reload": True}'
+                    groups="l10n_in.group_l10n_in_multiple_gstn"/>
             </field>
         </field>
     </record>

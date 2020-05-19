@@ -13,7 +13,7 @@
                     attrs="{'invisible':[('l10n_in_company_country_code','!=','IN')],'required':[('l10n_in_company_country_code','=','IN')]}"/>
             </xpath>
             <xpath expr="//group[@name='sale_info']//field[@name='invoice_status']" position="after">
-                <field name="l10n_in_journal_id" domain="[('company_id', '=', company_id), ('type','=','sale')]" options="{'no_create': True}" attrs="{'invisible': [('l10n_in_company_country_code','!=', 'IN')]}"/>
+                <field name="l10n_in_journal_id" domain="[('company_id', '=', company_id), ('type','=','sale')]" options="{'no_create': True}" attrs="{'invisible': [('l10n_in_company_country_code','!=', 'IN')]}" groups="l10n_in.group_l10n_in_multiple_gstn"/>
             </xpath>
         </field>
     </record>

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="action_l10n_in_journal" model="ir.actions.act_window">
+        <field name="name">Journals</field>
+        <field name="res_model">account.journal</field>
+        <field name="domain">[('l10n_in_gstin_partner_id', 'in', active_ids)]</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
     <record id="l10n_in_view_partner_form" model="ir.ui.view">
         <field name="name">l10n.in.res.partner.vat.inherit</field>
         <field name="model">res.partner</field>
@@ -14,4 +21,80 @@
             </xpath>
         </field>
     </record>
+
+    <record id="l10n_in_view_partner_kanban" model="ir.ui.view">
+        <field name="name">l10n.in.res.partner.vat.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="100"/>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+            <field name="id" position="after">
+                <field name="vat"/>
+            </field>
+            <xpath expr="//ul/li[1]" position="before">
+                <li><strong><field name="vat"/></strong></li>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_in_view_gstn_form" model="ir.ui.view">
+        <field name="name">res.partner.gstn.form</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="200"/>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='company_type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="attrs">{'required':[('l10n_in_gst_treatment', 'in', ['regular', 'composition', 'special_economic_zone', 'deemed_export'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_in_gst_treatment']" position="attributes">
+                <attribute name="attrs">{}</attribute>
+            </xpath>
+
+            <div name="button_box" position="replace">
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" type="action"
+                        name="%(action_l10n_in_journal)d"
+                        attrs="{'invisible':[('l10n_in_journal_count', '=', 0)]}"
+                        icon="fa-book">
+                        <field string="Journals" name="l10n_in_journal_count"
+                            widget="statinfo"/>
+                    </button>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="action_l10n_in_view_gstn" model="ir.actions.act_window">
+        <field name="name">GSTN Units</field>
+        <field name="res_model">res.partner</field>
+        <field name="domain">[]</field>
+        <field name="context">{'default_is_company':True,
+          'default_type':'other',
+          'default_l10n_in_gst_treatment': 'regular',
+          'l10n_in_multiple_gstn': True}</field>
+        <field name="view_mode">kanban,form</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_l10n_in_view_gstn_kanban">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="l10n_in_view_partner_kanban"/>
+        <field name="act_window_id" ref="action_l10n_in_view_gstn"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_l10n_in_view_gstn_form">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_in_view_gstn_form"/>
+        <field name="act_window_id" ref="action_l10n_in_view_gstn"/>
+    </record>
+
 </odoo>

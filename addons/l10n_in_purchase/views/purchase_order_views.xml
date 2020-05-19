@@ -10,7 +10,7 @@
                 <field name="l10n_in_gst_treatment" attrs="{'invisible': [('l10n_in_company_country_code', '!=', 'IN')], 'required': [('l10n_in_company_country_code', '=', 'IN')]}"/>
             </xpath>
             <xpath expr="//group[@name='other_info']//field[@name='user_id']" position="after">
-                <field name="l10n_in_journal_id" options="{'no_create': True}" domain="[('company_id', '=', company_id), ('type', '=', 'purchase')]" attrs="{'invisible': [('l10n_in_company_country_code', '!=', 'IN')]}"/>
+                <field name="l10n_in_journal_id" options="{'no_create': True}" domain="[('company_id', '=', company_id), ('type', '=', 'purchase')]" groups="l10n_in.group_l10n_in_multiple_gstn" attrs="{'invisible': [('l10n_in_company_country_code', '!=', 'IN')]}"/>
             </xpath>
         </field>
     </record>

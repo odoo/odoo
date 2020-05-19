@@ -22,7 +22,7 @@ class AccountJournal(models.Model):
             j.l10n_in_gstin_partner_id and j.l10n_in_gstin_partner_id.vat)
         for journal in indian_journals:
             name = result_dict[journal.id]
-            name += "- %s" % (journal.l10n_in_gstin_partner_id.vat)
+            name += " - %s" % (journal.l10n_in_gstin_partner_id.vat)
             result_dict[journal.id] = name
         return list(result_dict.items())
 
