@@ -12,7 +12,6 @@ const topBus = window.top.odoo.__DEBUG__.services['web.core'].bus;
 const {ColorpickerWidget} = require('web.Colorpicker');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 var mixins = require('web.mixins');
-const session = require('web.session');
 var fonts = require('wysiwyg.fonts');
 var rte = require('web_editor.rte');
 var ServicesMixin = require('web.ServicesMixin');
@@ -1092,32 +1091,36 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
     },
 
     /**
-     * Create/Update cropped attachments.
+     * Create modified image attachments.
      *
      * @param {jQuery} $editable
      * @returns {Promise}
      */
-    saveCroppedImages: function ($editable) {
-        var defs = _.map($editable.find('.o_cropped_img_to_save'), async croppedImg => {
-            croppedImg.classList.remove('o_cropped_img_to_save');
-            // Cropping an image always creates a copy of the original, even if
-            // it was cropped previously, as the other cropped image may be used
-            // elsewhere if the snippet was duplicated or was saved as a custom one.
-            const croppedAttachmentSrc = await this._rpc({
-                route: '/web_editor/crop_attachment',
-                params: {
-                    res_model: croppedImg.dataset.resModel,
-                    res_id: parseInt(croppedImg.dataset.resId),
-                    name: croppedImg.dataset.originalName + '.crop',
-                    data: croppedImg.getAttribute('src').split(',')[1],
-                    mimetype: croppedImg.dataset.mimetype,
-                    original_id: parseInt(croppedImg.dataset.originalId),
-                },
+    saveModifiedImages: function ($editable) {
+        const defs = _.map($editable, async editableEl => {
+            const {oeModel: resModel, oeId: resId} = editableEl.dataset;
+            const proms = [...editableEl.querySelectorAll('.o_modified_image_to_save')].map(async el => {
+                const isBackground = !el.matches('img');
+                el.classList.remove('o_modified_image_to_save');
+                // Modifying an image always creates a copy of the original, even if
+                // it was modified previously, as the other modified image may be used
+                // elsewhere if the snippet was duplicated or was saved as a custom one.
+                const newAttachmentSrc = await this._rpc({
+                    route: `/web_editor/modify_image/${el.dataset.originalId}`,
+                    params: {
+                        res_model: resModel,
+                        res_id: parseInt(resId),
+                        data: (isBackground ? el.dataset.bgSrc : el.getAttribute('src')).split(',')[1],
+                    },
+                });
+                if (isBackground) {
+                    $(el).css('background-image', `url('${newAttachmentSrc}')`);
+                    delete el.dataset.bgSrc;
+                } else {
+                    el.setAttribute('src', newAttachmentSrc);
+                }
             });
-            croppedImg.setAttribute('src', croppedAttachmentSrc);
-            weWidgets.ImageCropWidget.prototype.removeOnSaveAttributes.forEach(attr => {
-                delete croppedImg.dataset[attr];
-            });
+            return Promise.all(proms);
         });
         return Promise.all(defs);
     },
@@ -1160,13 +1163,8 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
             return;
         }
         data.__alreadyDone = true;
-        new weWidgets.ImageCropWidget(this,
-            _.extend({
-                res_model: data.$editable.data('oe-model'),
-                res_id: data.$editable.data('oe-id'),
-            }, data.options || {}),
-            data.media
-        ).appendTo(data.$editable);
+        new weWidgets.ImageCropWidget(this, data.media)
+            .appendTo(data.$editable);
     },
     /**
      * Called when a demand to open a link dialog is received on the bus.

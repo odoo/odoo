@@ -307,7 +307,6 @@
     <t t-name="wysiwyg.widgets.image.existing.attachment">
         <t t-set="isOptimized" t-value="!!attachment.original_id"/>
         <div t-attf-class="o_existing_attachment_cell position-relative bg-light #{isOptimized and 'o_we_attachment_optimized d-none'}" t-att-data-id="attachment.id">
-            <i t-if="attachment.type === 'binary'" class="fa fa-cog o_existing_attachment_optimize p-2" title="Optimize" role="img" aria-label="Optimize"/>
             <t t-call="wysiwyg.widgets.file.existing.remove"/>
             <div t-attf-class="d-flex align-items-center justify-content-center h-100 w-100">
                 <!-- 256 is 2 * ImageWidget.MIN_ROW_HEIGHT, hopefully the highest display width of any image -->
