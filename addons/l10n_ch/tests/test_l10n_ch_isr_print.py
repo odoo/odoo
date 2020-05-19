@@ -34,7 +34,7 @@ class ISRTest(AccountTestInvoicingCommon):
 
         assertBankAccountValid('010391391', 'postal', expected_postal='010391391')
         assertBankAccountValid('010391394', 'bank')
-        assertBankAccountValid('CH6309000000250097798', 'iban', expected_postal='000250097798')
+        assertBankAccountValid('CH6309000000250097798', 'iban', expected_postal='25-9779-8')
         assertBankAccountValid('GR1601101250000000012300695', 'iban', expected_postal=False)
 
     def test_isr(self):
