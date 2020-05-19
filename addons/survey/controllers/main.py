@@ -461,10 +461,28 @@ class Survey(http.Controller):
             # Go back to specific page using the breadcrumb. Lines are saved and survey continues
             return self._prepare_question_html(survey_sudo, answer_sudo, **post)
         else:
+<<<<<<< HEAD
             vals = {'last_displayed_page_id': page_or_question_id}
             if not answer_sudo.is_session_answer:
                 next_page, unused = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id)
                 if next_page is None:
+=======
+            if not answer_sudo.is_time_limit_reached:
+                for question in questions:
+                    answer_tag = "%s_%s" % (survey_sudo.id, question.id)
+                    request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, post, answer_tag)
+
+            go_back = False
+            vals = {}
+            if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
+                answer_sudo._mark_done()
+            elif 'button_submit' in post:
+                go_back = post['button_submit'] == 'previous'
+                next_page, last = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id, go_back=go_back)
+                vals = {'last_displayed_page_id': page_or_question_id}
+
+                if next_page is None and not go_back:
+>>>>>>> cdac02fcd20... temp
                     answer_sudo._mark_done()
 
             answer_sudo.write(vals)
