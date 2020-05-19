@@ -282,6 +282,11 @@
             sequence="1"
             parent="website.menu_website_configuration"/>
 
+        <!-- Force empty action, to ease upgrade -->
+        <record id="menu_dashboard" model="ir.ui.menu">
+            <field name="action" eval="False"/>
+        </record>
+
         <menuitem id="menu_website_dashboard" parent="menu_dashboard"
             sequence="10" name="eCommerce Dashboard"
             action="website.ir_actions_server_website_dashboard" active="0"/>

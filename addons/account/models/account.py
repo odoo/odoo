@@ -534,7 +534,7 @@ class AccountAccount(models.Model):
         query = """
             UPDATE account_move_line
                 SET amount_residual = 0, amount_residual_currency = 0
-            WHERE full_reconcile_id = NULL AND account_id IN %s
+            WHERE full_reconcile_id IS NULL AND account_id IN %s
         """
         self.env.cr.execute(query, [tuple(self.ids)])
 
