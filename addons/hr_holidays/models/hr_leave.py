@@ -504,19 +504,21 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
+        mapped_days = self.mapped('holiday_status_id').get_days(self.mapped('employee_id.id'))
         for holiday in self:
             if holiday.holiday_type != 'employee' or not holiday.employee_id or holiday.holiday_status_id.allocation_type == 'no':
                 continue
-            leave_days = holiday.holiday_status_id.get_days(holiday.employee_id.id)[holiday.holiday_status_id.id]
+            leave_days = mapped_days[holiday.employee_id.id][holiday.holiday_status_id.id]
             if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                 raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
                                         'Please also check the time off waiting for validation.'))
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date_state(self):
-        for holiday in self:
-            if holiday.state in ['cancel', 'refuse', 'validate1', 'validate']:
-                raise ValidationError(_("This modification is not allowed in the current state."))
+        if self.env.context.get('leave_skip_state_check'):
+            return
+        if any(holiday.state in ['cancel', 'refuse', 'validate1', 'validate'] for holiday in self):
+            raise ValidationError(_("This modification is not allowed in the current state."))
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
         """ Returns a float equals to the timedelta between two dates given as string."""
@@ -836,7 +838,8 @@ class HolidaysRequest(models.Model):
             'notes': self.notes,
             'number_of_days': employee._get_work_days_data(self.date_from, self.date_to)['days'],
             'parent_id': self.id,
-            'employee_id': employee.id
+            'employee_id': employee.id,
+            'state': 'validate',
         }
         return values
 
@@ -920,18 +923,19 @@ class HolidaysRequest(models.Model):
                 if holiday.leave_type_request_unit != 'day' or any(l.leave_type_request_unit == 'hour' for l in conflicting_leaves):
                     raise ValidationError(_('You can not have 2 leaves that overlaps on the same day.'))
 
-                target_states = {l.employee_id: l.state for l in conflicting_leaves}
                 conflicting_leaves.action_refuse()
                 split_leaves_vals = []
                 for conflicting_leave in conflicting_leaves:
                     if conflicting_leave.leave_type_request_unit == 'half_day' and conflicting_leave.request_unit_half:
                         continue
 
+                    target_state = conflicting_leave.state
                     # Leaves in days
                     if conflicting_leave.date_from < holiday.date_from:
                         before_leave_vals = conflicting_leave.copy_data({
                             'date_from': conflicting_leave.date_from.date(),
                             'date_to': holiday.date_from.date() + timedelta(days=-1),
+                            'state': target_state,
                         })[0]
                         before_leave = self.env['hr.leave'].new(before_leave_vals)
                         before_leave._onchange_request_parameters()
@@ -951,6 +955,7 @@ class HolidaysRequest(models.Model):
                         after_leave_vals = conflicting_leave.copy_data({
                             'date_from': holiday.date_to.date() + timedelta(days=1),
                             'date_to': conflicting_leave.date_to.date(),
+                            'state': target_state,
                         })[0]
                         after_leave = self.env['hr.leave'].new(after_leave_vals)
                         after_leave._onchange_request_parameters()
@@ -962,31 +967,20 @@ class HolidaysRequest(models.Model):
                 split_leaves = self.env['hr.leave'].with_context(
                     tracking_disable=True,
                     mail_activity_automation_skip=True,
-                    leave_fast_create=True
+                    leave_fast_create=True,
+                    leave_skip_state_check=True
                 ).create(split_leaves_vals)
 
-                e_to_confirm, e_to_approve, e_to_validate = [], [], []
-                for employee, state in target_states.items():
-                    if state == 'confirm':
-                        e_to_confirm.append(employee)
-                    if state == 'validate1':
-                        e_to_approve.append(employee)
-                    if state == 'validate':
-                        e_to_validate.append(employee)
-                split_leaves.filtered(lambda l: l.employee_id in e_to_confirm + e_to_approve + e_to_validate).action_confirm()
-                split_leaves.filtered(lambda l: l.employee_id in e_to_approve).action_approve()
-                split_leaves.filtered(lambda l: l.employee_id in e_to_validate).action_validate()
+                split_leaves.filtered(lambda l: l.state in 'validate')._validate_leave_request()
 
             values = [holiday._prepare_holiday_values(employee) for employee in employees]
             leaves = self.env['hr.leave'].with_context(
                 tracking_disable=True,
                 mail_activity_automation_skip=True,
                 leave_fast_create=True,
+                leave_skip_state_check=True,
             ).create(values)
-            leaves.action_approve()
-            # FIXME RLi: This does not make sense, only the parent should be in validation_type both
-            if leaves and leaves[0].validation_type == 'both':
-                leaves.action_validate()
+            leaves._validate_leave_request()
         employee_requests = self.filtered(lambda hol: hol.holiday_type == 'employee')
         employee_requests._validate_leave_request()
         if not self.env.context.get('leave_fast_create'):

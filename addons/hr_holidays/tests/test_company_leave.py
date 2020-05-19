@@ -289,15 +289,15 @@ class TestCompanyLeave(SavepointCase):
             'company_id': self.company.id
         } for i in range(100)])
 
-        for employee in employees[0:15]:
-            leave = self.env['hr.leave'].create({
-                'name': 'Holiday - %s' % employee.name,
-                'employee_id': employee.id,
-                'holiday_status_id': self.paid_time_off.id,
-                'request_date_from': date(2020, 3, 29),
-                'request_date_to': date(2020, 4, 1),
-                'number_of_days': 3,
-            })
+        leaves = self.env['hr.leave'].create([{
+            'name': 'Holiday - %s' % employee.name,
+            'employee_id': employee.id,
+            'holiday_status_id': self.paid_time_off.id,
+            'request_date_from': date(2020, 3, 29),
+            'request_date_to': date(2020, 4, 1),
+            'number_of_days': 3,
+        } for employee in employees[0:15]])
+        for leave in leaves:
             leave._onchange_request_parameters()
 
         company_leave = self.env['hr.leave'].create({
