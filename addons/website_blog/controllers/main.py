@@ -148,6 +148,13 @@ class WebsiteBlog(http.Controller):
     ], type='http', auth="public", website=True, sitemap=True)
     def blog(self, blog=None, tag=None, page=1, **opt):
         Blog = request.env['blog.blog']
+
+        if tag and request.httprequest.method == 'GET':
+            # redirect get tag-1,tag-2 -> get tag-1
+            tags = tag.split(',')
+            if len(tags) > 1:
+                return werkzeug.utils.redirect('/blog/tag/%s' % tags[0], code=302)
+
         if blog and not blog.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
