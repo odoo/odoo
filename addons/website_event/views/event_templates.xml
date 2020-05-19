@@ -687,7 +687,9 @@
                         <t t-set="counter_type" t-value="counter_type + 1"/>
                     </t>
                     <t t-if="not availability_check">
-                        <strong> You ordered more tickets than available seats</strong>
+                        <div class="modal-body bg-light border-bottom">
+                            <strong> You ordered more tickets than available seats</strong>
+                        </div>
                     </t>
                     <div class="modal-footer border-0 justify-content-between">
                         <button type="button" class="btn btn-secondary js_goto_event" data-dismiss="modal">Cancel</button>
