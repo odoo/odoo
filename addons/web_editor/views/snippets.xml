@@ -37,6 +37,19 @@
     </div>
 </template>
 
+<template id="image_optimization_controls">
+    <we-range string="Quality" data-set-quality=""/>
+    <!-- Select filled in JS -->
+    <we-select string="Width" data-name="width_select_opt" data-no-preview="true"/>
+    <span class="o_we_image_weight text-right"/>
+    <we-colorpicker string="Color filter" data-set-filter="" data-no-preview="true" data-excluded="common, theme"/>
+    <div class="o_we_external_warning d-none">
+        <we-title title="Quality options are unavailable for external images. If you want to change this image's quality, please first download it from the original source and upload it in Odoo.">
+            <i class="fa fa-warning" /> External Image
+        </we-title>
+    </div>
+</template>
+
 <!-- options (data-selector, data-drop-in, data-drop-near, data-js to link js object ) -->
 <template id="snippet_options">
     <!-- t-field -->
@@ -49,6 +62,11 @@
 
     <div data-js="VersionControl"
          data-selector="[data-snippet]"/>
+
+    <div data-js="ImageOptimize"
+         data-selector="img">
+         <t t-call="web_editor.image_optimization_controls"/>
+     </div>
 </template>
 
 <!-- default block -->

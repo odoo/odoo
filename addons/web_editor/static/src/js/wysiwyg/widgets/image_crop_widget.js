@@ -2,13 +2,11 @@ odoo.define('wysiwyg.widgets.ImageCropWidget', function (require) {
 'use strict';
 
 const core = require('web.core');
-const qweb = core.qweb;
 const Widget = require('web.Widget');
+const {applyModifications, cropperDataFields, activateCropper, loadImage, loadImageInfo} = require('web_editor.image_processing');
 
 const _t = core._t;
 
-// Fields returned by cropper lib 'getData' method
-const cropperDataFields = ['x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY'];
 const ImageCropWidget = Widget.extend({
     template: ['wysiwyg.widgets.crop'],
     xmlDependencies: ['/web_editor/static/src/xml/wysiwyg.xml'],
@@ -17,41 +15,16 @@ const ImageCropWidget = Widget.extend({
         // zoom event is triggered by the cropperjs library when the user zooms.
         'zoom': '_onCropZoom',
     },
-    // Crop attributes that are saved with the DOM. Should only be removed when the image is changed.
-    persistentAttributes: [
-        ...cropperDataFields,
-        'aspectRatio',
-    ],
-    // Attributes that are used to keep data from one crop to the next in the same session
-    // If present, should be used by the cropper instead of querying db
-    sessionAttributes: [
-        'attachmentId',
-        'originalSrc',
-        'originalId',
-        'originalName',
-        'mimetype',
-    ],
-    // Attributes that are used by saveCroppedImages to create or update attachments
-    saveAttributes: [
-        'resModel',
-        'resId',
-        'attachmentId',
-        'originalId',
-        'originalName',
-        'mimetype',
-    ],
 
     /**
      * @constructor
      */
-    init(parent, options, media) {
+    init(parent, media) {
         this._super(...arguments);
         this.media = media;
         this.$media = $(media);
         // Needed for editors in iframes.
         this.document = media.ownerDocument;
-        // Used for res_model and res_id
-        this.options = options;
         // key: ratio identifier, label: displayed to user, value: used by cropper lib
         this.aspectRatios = {
             "0/0": {label: _t("Free"), value: 0},
@@ -65,48 +38,26 @@ const ImageCropWidget = Widget.extend({
         this.initialSrc = src;
         this.aspectRatio = data.aspectRatio || "0/0";
         this.mimetype = data.mimetype || src.endsWith('.png') ? 'image/png' : 'image/jpeg';
-        this.isCroppable = src.startsWith('data:') || new URL(src, window.location.origin).origin === window.location.origin;
     },
     /**
      * @override
      */
     async willStart() {
         await this._super.apply(this, arguments);
-        if (!this.isCroppable) {
-            return;
-        }
-        // If there is a marked originalSrc, a previous crop has already happened,
-        // we won't find the original from the data-url. Reuse the data from the previous crop.
+        await loadImageInfo(this.media, this._rpc.bind(this));
         if (this.media.dataset.originalSrc) {
-            this.sessionAttributes.forEach(attr => {
-                this[attr] = this.media.dataset[attr];
-            });
+            this.originalSrc = this.media.dataset.originalSrc;
+            this.originalId = this.media.dataset.originalId;
             return;
         }
-
-        // Get id, mimetype and originalSrc.
-        const {attachment, original} = await this._rpc({
-            route: '/web_editor/get_image_info',
-            params: {src: this.initialSrc.split(/[?#]/)[0]},
-        });
-        if (!attachment) {
-            // Local image that doesn't have an attachment, don't allow crop?
-            // In practice, this can happen if an image is directly linked with its
-            // static url and there is no corresponding attachment, (eg, logo in mass_mailing)
-            this.isCroppable = false;
-            return;
-        }
-        this.originalId = original.id;
-        this.originalSrc = original.image_src;
-        this.originalName = original.name;
-        this.mimetype = original.mimetype;
-        this.attachmentId = attachment.id;
+        // Couldn't find an attachment: not croppable.
+        this.uncroppable = true;
     },
     /**
      * @override
      */
     async start() {
-        if (!this.isCroppable) {
+        if (this.uncroppable) {
             this.displayNotification({
               type: 'warning',
               title: _t("This image is an external image"),
@@ -118,8 +69,7 @@ const ImageCropWidget = Widget.extend({
         const $cropperWrapper = this.$('.o_we_cropper_wrapper');
 
         // Replacing the src with the original's so that the layout is correct.
-        this.media.setAttribute('src', this.originalSrc);
-        await new Promise(resolve => this.media.addEventListener('load', resolve, {once: true}));
+        await loadImage(this.originalSrc, this.media);
         this.$cropperImage = this.$('.o_we_cropper_img');
         const cropperImage = this.$cropperImage[0];
         [cropperImage.style.width, cropperImage.style.height] = [this.$media.width() + 'px', this.$media.height() + 'px'];
@@ -130,18 +80,8 @@ const ImageCropWidget = Widget.extend({
         offset.top += parseInt(this.$media.css('padding-right'));
         $cropperWrapper.offset(offset);
 
-        cropperImage.setAttribute('src', this.originalSrc);
-        await new Promise(resolve => cropperImage.addEventListener('load', resolve, {once: true}));
-        this.$cropperImage.cropper({
-            viewMode: 2,
-            dragMode: 'move',
-            autoCropArea: 1.0,
-            aspectRatio: this.aspectRatios[this.aspectRatio].value,
-            data: _.mapObject(_.pick(this.media.dataset, ...cropperDataFields), value => parseFloat(value)),
-            // Can't use 0 because it's falsy and the lib will then use its defaults (200x100)
-            minContainerWidth: 1,
-            minContainerHeight: 1,
-        });
+        await loadImage(this.originalSrc, cropperImage);
+        await activateCropper(cropperImage, this.aspectRatios[this.aspectRatio].value, this.media.dataset);
         core.bus.trigger('deactivate_snippet');
 
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
@@ -173,27 +113,20 @@ const ImageCropWidget = Widget.extend({
      *
      * @private
      */
-    _save() {
-        // Mark the media for later creation/update of cropped attachment
-        this.media.classList.add('o_cropped_img_to_save');
+    async _save() {
+        // Mark the media for later creation of cropped attachment
+        this.media.classList.add('o_modified_image_to_save');
 
-        this.allAttributes.forEach(attr => {
+        [...cropperDataFields, 'aspectRatio'].forEach(attr => {
             delete this.media.dataset[attr];
             const value = this._getAttributeValue(attr);
             if (value) {
                 this.media.dataset[attr] = value;
             }
         });
-
-        // Update the media with base64 source for preview before saving
-        const cropperData = this.$cropperImage.cropper('getData');
-        const canvas = this.$cropperImage.cropper('getCroppedCanvas', {
-            width: cropperData.width,
-            height: cropperData.height,
-        });
-        // 1 is the quality if the image is jpeg (in the range O-1), defaults to .92
-        this.initialSrc = canvas.toDataURL(this.mimetype, 1);
-        // src will be set to this.initialSrc in the destroy method
+        delete this.media.dataset.resizeWidth;
+        this.initialSrc = await applyModifications(this.media);
+        this.$media.trigger('image_cropped');
         this.destroy();
     },
     /**
@@ -202,12 +135,6 @@ const ImageCropWidget = Widget.extend({
      * @private
      */
     _getAttributeValue(attr) {
-        switch (attr) {
-            case 'resModel':
-                return this.options.res_model;
-            case 'resId':
-                return this.options.res_id;
-        }
         if (cropperDataFields.includes(attr)) {
             return this.$cropperImage.cropper('getData')[attr];
         }
@@ -281,17 +208,6 @@ const ImageCropWidget = Widget.extend({
         this._resetCropBox();
     },
 });
-
-const proto = ImageCropWidget.prototype;
-proto.allAttributes = [...new Set([
-    ...proto.persistentAttributes,
-    ...proto.sessionAttributes,
-    ...proto.saveAttributes,
-])];
-proto.removeOnSaveAttributes = [...new Set([
-    ...proto.sessionAttributes,
-    ...proto.saveAttributes,
-])];
 
 return ImageCropWidget;
 });

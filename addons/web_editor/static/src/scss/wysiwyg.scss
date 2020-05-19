@@ -363,9 +363,7 @@ body .modal {
 
 // Highlight selected image/icon
 %o-we-selected-image {
-    $o-selected-image-color: rgba(150, 150, 220, 0.3);
-    background: $o-selected-image-color;
-    outline: 3px solid $o-selected-image-color;
+    outline: 3px solid rgba(150, 150, 220, 0.3);
 }
 
 img.o_we_selected_image {
@@ -374,6 +372,11 @@ img.o_we_selected_image {
 
 .fa.o_we_selected_image::before {
     @extend %o-we-selected-image;
+}
+// Override default image selection color from portal. It prevents your from
+// seeing the images' quality clearly in the wysiwyg.
+img::selection {
+    background: transparent;
 }
 
 .fa.mx-auto,

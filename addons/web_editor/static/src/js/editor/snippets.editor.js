@@ -219,6 +219,9 @@ var SnippetEditor = Widget.extend({
         if (this.$target.data('name') !== undefined) {
             return this.$target.data('name');
         }
+        if (this.$target.is('img')) {
+            return _t("Image");
+        }
         if (this.$target.parent('.row').length) {
             return _t("Column");
         }
