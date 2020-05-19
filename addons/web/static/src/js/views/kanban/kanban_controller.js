@@ -519,8 +519,10 @@ var KanbanController = BasicController.extend({
               this.model.actionUnarchive(recordIds, column.db_id);
             prom.then(function (dbID) {
                 var data = self.model.get(dbID);
-                self.renderer.updateColumn(dbID, data);
-                self._updateEnv();
+                if (data) {  // Could be null if a wizard is returned for example
+                    self.renderer.updateColumn(dbID, data);
+                    self._updateEnv();
+                }
             });
         }
     },
