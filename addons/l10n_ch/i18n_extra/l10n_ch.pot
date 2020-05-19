@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0\n"
+"Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-28 09:52+0000\n"
-"PO-Revision-Date: 2020-06-17 10:00+0000\n"
+"POT-Creation-Date: 2020-07-09 16:03+0000\n"
+"PO-Revision-Date: 2020-07-09 16:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -336,6 +336,11 @@ msgstr ""
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"title\">Account / Payable to</span><br/>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
 msgid "<span class=\"title\">Additional information</span><br/>"
 msgstr ""
 
@@ -346,22 +351,12 @@ msgstr ""
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
-msgid "<span class=\"title\">Account / Payable to</span><br/>"
-msgstr ""
-
-#. module: l10n_ch
-#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
 msgid "<span class=\"title\">Currency</span><br/>"
 msgstr ""
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
 msgid "<span class=\"title\">Payable by</span><br/>"
-msgstr ""
-
-#. module: l10n_ch
-#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
-msgid "<span class=\"title\">Payable to</span><br/>"
 msgstr ""
 
 #. module: l10n_ch
@@ -1027,7 +1022,6 @@ msgid "Immeubles d’exploitation"
 msgstr ""
 
 #. module: l10n_ch
-#: model:account.fiscal.position,name:l10n_ch.1_fiscal_position_template_import
 #: model:account.fiscal.position.template,name:l10n_ch.fiscal_position_template_import
 msgid "Import/Export"
 msgstr ""
@@ -1078,6 +1072,11 @@ msgstr ""
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_account_move
 msgid "Journal Entries"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_needs_fixing
+msgid "L10N Ch Isr Needs Fixing"
 msgstr ""
 
 #. module: l10n_ch
@@ -1214,6 +1213,13 @@ msgstr ""
 #. module: l10n_ch
 #: model:account.chart.template,name:l10n_ch.l10nch_chart_template
 msgid "Plan comptable 2015 (Suisse)"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.isr_invoice_form
+msgid ""
+"Please fill in a correct ISR reference in the payment reference.  The banks "
+"will refuse your payment file otherwise."
 msgstr ""
 
 #. module: l10n_ch
@@ -1419,7 +1425,6 @@ msgid "Subventions, taxes touristiques à 0%"
 msgstr ""
 
 #. module: l10n_ch
-#: model:account.fiscal.position,name:l10n_ch.1_fiscal_position_template_1
 #: model:account.fiscal.position.template,name:l10n_ch.fiscal_position_template_1
 msgid "Suisse national"
 msgstr ""
@@ -1577,8 +1582,24 @@ msgid "TVA due à 7.7% (Incl. TN)"
 msgstr ""
 
 #. module: l10n_ch
+#: code:addons/l10n_ch/models/res_bank.py:0
+#, python-format
+msgid ""
+"The ISR subcription {} for {} number is not valid.\n"
+"It must starts with {} and we a valid postal number format. eg. {}"
+msgstr ""
+
+#. module: l10n_ch
 #: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_currency_name
 msgid "The name of this invoice's currency"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/models/res_bank.py:0
+#, python-format
+msgid ""
+"The postal number {} is not valid.\n"
+"It must be a valid postal number format. eg. 10-8060-7"
 msgstr ""
 
 #. module: l10n_ch
@@ -1625,6 +1646,13 @@ msgstr ""
 #. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_1280
 msgid "Travaux en cours"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_needs_fixing
+msgid ""
+"Used to show a warning banner when the vendor bill needs a correct ISR "
+"payment reference. "
 msgstr ""
 
 #. module: l10n_ch

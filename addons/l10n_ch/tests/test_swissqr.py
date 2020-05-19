@@ -100,12 +100,12 @@ class TestSwissQR(AccountTestInvoicingCommon):
         )
 
         if ref_type == 'QRR':
-            self.assertTrue(invoice.invoice_payment_ref)
-            struct_ref = invoice.invoice_payment_ref
+            self.assertTrue(invoice.payment_reference)
+            struct_ref = invoice.payment_reference
             unstr_msg = invoice.ref or invoice.name or ''
         else:
             struct_ref = ''
-            unstr_msg = invoice.invoice_payment_ref or invoice.ref or invoice.name or ''
+            unstr_msg = invoice.payment_reference or invoice.ref or invoice.name or ''
         unstr_msg = (unstr_msg or invoice.number).replace('/', '%2F')
 
         payload = (
@@ -148,7 +148,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
             None,
             invoice.partner_id,
             None,
-            invoice.invoice_payment_ref,
+            invoice.payment_reference,
             invoice.ref or invoice.name,
         )
         self.assertEqual(url, expected_url)
