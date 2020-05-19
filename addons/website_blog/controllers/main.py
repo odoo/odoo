@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 import werkzeug
 import itertools
 import pytz
@@ -157,6 +156,13 @@ class WebsiteBlog(http.Controller):
             return werkzeug.utils.redirect('/blog/%s' % slug(blogs[0]), code=302)
 
         date_begin, date_end, state = opt.get('date_begin'), opt.get('date_end'), opt.get('state')
+
+        if tag and request.httprequest.method == 'GET':
+            # redirect get tag-1,tag-2 -> get tag-1
+            tags = tag.split(',')
+            if len(tags) > 1:
+                url = QueryURL('', ['blog', 'tag'], blog=blog, tag=tags[0], date_begin=date_begin, date_end=date_end)()
+                return request.redirect(url, code=302)
 
         values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page)
 
