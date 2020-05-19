@@ -838,7 +838,8 @@ class Post(models.Model):
         return result
 
     def set_viewed(self):
-        self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
+        self.ensure_one()
+        self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE views = %s and id = %s""", (self.views, self.id,))
         return True
 
     def get_access_action(self, access_uid=None):
