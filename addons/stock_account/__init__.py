@@ -34,7 +34,7 @@ def _configure_journals(cr, registry):
                     'company_id': company_id.id,
                     'show_on_dashboard': False
                 }).id
-            env['ir.property'].set_default(
+            env['ir.property']._set_default(
                 'property_stock_journal',
                 'product.category',
                 journal_id,
@@ -51,7 +51,7 @@ def _configure_journals(cr, registry):
         for name in todo_list:
             account = getattr(company_id, name)
             if account:
-                env['ir.property'].set_default(
+                env['ir.property']._set_default(
                     name,
                     'product.category',
                     account,

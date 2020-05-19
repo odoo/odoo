@@ -30,7 +30,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                                                  'reconcile': True})
         self.env.company.account_default_pos_receivable_account_id = account_receivable
 
-        self.env['ir.property'].set_default(
+        self.env['ir.property']._set_default(
             'property_account_receivable_id',
             'res.partner',
             account_receivable,

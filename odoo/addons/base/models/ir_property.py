@@ -176,7 +176,7 @@ class Property(models.Model):
         return False
 
     @api.model
-    def set_default(self, name, model, value, company=False):
+    def _set_default(self, name, model, value, company=False):
         """ Set the given field's generic value for the given company.
 
         :param name: the field's name
@@ -204,7 +204,7 @@ class Property(models.Model):
             })
 
     @api.model
-    def get(self, name, model, res_id=False):
+    def _get(self, name, model, res_id=False):
         """ Get the given field's generic value for the record.
 
         :param name: the field's name
@@ -223,7 +223,7 @@ class Property(models.Model):
             return p.get_by_record()
         return False
 
-    # only cache Property.get(res_id=False) as that's
+    # only cache Property._get(res_id=False) as that's
     # sub-optimally.
     COMPANY_KEY = "self.env.company.id"
     @ormcache(COMPANY_KEY, 'name', 'model')
@@ -255,7 +255,7 @@ class Property(models.Model):
         return [('fields_id', '=', res[0]), ('company_id', 'in', [company_id, False])]
 
     @api.model
-    def get_multi(self, name, model, ids):
+    def _get_multi(self, name, model, ids):
         """ Read the property field `name` for the records of model `model` with
             the given `ids`, and return a dictionary mapping `ids` to their
             corresponding value.
@@ -319,7 +319,7 @@ class Property(models.Model):
         }
 
     @api.model
-    def set_multi(self, name, model, values, default_value=None):
+    def _set_multi(self, name, model, values, default_value=None):
         """ Assign the property field `name` for the records of model `model`
             with `values` (dictionary mapping record ids to their value).
             If the value for a given record is the same as the default
@@ -340,7 +340,7 @@ class Property(models.Model):
             if domain is None:
                 raise Exception()
             # retrieve the default value for the field
-            default_value = clean(self.get(name, model))
+            default_value = clean(self._get(name, model))
 
         # retrieve the properties corresponding to the given record ids
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (name, model))

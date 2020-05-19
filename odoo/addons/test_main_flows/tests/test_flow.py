@@ -37,11 +37,11 @@ class BaseTestUi(odoo.tests.HttpCase):
         })
 
         Property = self.env['ir.property']
-        Property.set_default('property_account_receivable_id', 'res.partner', a_recv, self.env.company)
-        Property.set_default('property_account_payable_id', 'res.partner', a_pay, self.env.company)
-        Property.set_default('property_account_position_id', 'res.partner', False, self.env.company)
-        Property.set_default('property_account_expense_categ_id', 'product.category', a_expense, self.env.company)
-        Property.set_default('property_account_income_categ_id', 'product.category', a_sale, self.env.company)
+        Property._set_default('property_account_receivable_id', 'res.partner', a_recv, self.env.company)
+        Property._set_default('property_account_payable_id', 'res.partner', a_pay, self.env.company)
+        Property._set_default('property_account_position_id', 'res.partner', False, self.env.company)
+        Property._set_default('property_account_expense_categ_id', 'product.category', a_expense, self.env.company)
+        Property._set_default('property_account_income_categ_id', 'product.category', a_sale, self.env.company)
 
         self.expenses_journal = self.env['account.journal'].create({
             'name': 'Vendor Bills - Test',
