@@ -916,14 +916,14 @@ class HolidaysRequest(models.Model):
                 if holiday.leave_type_request_unit != 'day' or any(l.leave_type_request_unit == 'hour' for l in conflicting_leaves):
                     raise ValidationError(_('You can not have 2 leaves that overlaps on the same day.'))
 
+                conflicting_leaves.action_refuse()
                 for conflicting_leave in conflicting_leaves:
                     if conflicting_leave.leave_type_request_unit == 'half_day' and conflicting_leave.request_unit_half:
-                        conflicting_leave.action_refuse()
                         continue
+
                     # Leaves in days
                     split_leaves = self.env['hr.leave']
                     target_state = conflicting_leave.state
-                    conflicting_leave.action_refuse()
                     if conflicting_leave.date_from < holiday.date_from:
                         before_leave_vals = conflicting_leave.copy_data({
                             'date_from': conflicting_leave.date_from.date(),
