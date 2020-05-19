@@ -205,6 +205,13 @@ class Property(models.Model):
 
     @api.model
     def get(self, name, model, res_id=False):
+        """ Get the given field's generic value for the record.
+
+        :param name: the field's name
+        :param model: the field's model name
+        :param res_id: optional resource, format: "<id>" (int) or
+                       "<model>,<id>" (str)
+        """
         if not res_id:
             t, v = self._get_default_property(name, model)
             if not v or t != 'many2one':
@@ -232,6 +239,8 @@ class Property(models.Model):
     def _get_property(self, name, model, res_id):
         domain = self._get_domain(name, model)
         if domain is not None:
+            if res_id and isinstance(res_id, int):
+                res_id = "%s,%s" % (model, res_id)
             domain = [('res_id', '=', res_id)] + domain
             #make the search with company_id asc to make sure that properties specific to a company are given first
             return self.search(domain, limit=1, order='company_id')
