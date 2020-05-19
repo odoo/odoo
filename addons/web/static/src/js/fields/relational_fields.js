@@ -852,6 +852,9 @@ var FieldX2Many = AbstractField.extend({
             this.activeActions.delete = arch.attrs.delete ?
                                             JSON.parse(arch.attrs.delete) :
                                             true;
+            this.activeActions.select = arch.attrs.select ?
+                                            JSON.parse(arch.attrs.select) :
+                                            true;
             this.editable = arch.attrs.editable;
         }
         if (this.attrs.columnInvisibleFields) {
@@ -1025,7 +1028,7 @@ var FieldX2Many = AbstractField.extend({
             this.currentColInvisibleFields = this._evalColumnInvisibleFields();
             _.extend(rendererParams, {
                 editable: this.mode === 'edit' && arch.attrs.editable,
-                addCreateLine: !this.isReadonly && this.activeActions.create,
+                addCreateLine: !this.isReadonly && this.activeActions.select,
                 addTrashIcon: !this.isReadonly && this.activeActions.delete,
                 isMany2Many: this.isMany2Many,
                 columnInvisibleFields: this.currentColInvisibleFields,

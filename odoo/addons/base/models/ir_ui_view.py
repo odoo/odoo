@@ -1167,6 +1167,13 @@ actual arch.
                         not self._context.get(action, True) and is_base_model):
                     node.set(action, 'false')
 
+        if node.tag in ('tree',):
+            # Allow to select in a x2m field when having read right
+            if (not node.get('select') and
+                        not Model.check_access_rights('read', raise_exception=False) or
+                        not self._context.get('select', True) and is_base_model):
+                    node.set('select', 'false')
+
         if node.tag in ('kanban',):
             group_by_name = node.get('default_group_by')
             if group_by_name in Model._fields:
