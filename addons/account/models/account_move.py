@@ -1762,14 +1762,23 @@ class AccountPartialReconcile(models.Model):
         return (line.id, account_id.id, tax.id, line.currency_id.id, line.partner_id.id)
 
     def _get_tax_cash_basis_base_common_vals(self, key, new_move):
-        line, account_id, tax, currency_id, partner_id = key
-        line = self.env['account.move.line'].browse(line)
+        self.ensure_one()
+        line_id, account_id, tax_id, currency_id, partner_id = key
+
+        line = self.env['account.move.line'].browse(line_id)
+        tax = self.env['account.tax'].browse(tax_id)
+
+        orig_inv_types = (self.debit_move_id + self.credit_move_id).mapped('invoice_id.type')
+        tax_rep_lines = tax.refund_repartition_line_ids if orig_inv_types in (['in_refund'], ['out_refund']) else tax.invoice_repartition_line_ids
+        base_tags = tax_rep_lines.filtered(lambda x: x.repartition_type == 'base').tag_ids
+
         return {
             'name': line.name,
             'account_id': account_id,
             'journal_id': new_move.journal_id.id,
             'tax_exigible': True,
-            'tax_ids': [(6, 0, [tax])],
+            'tax_ids': [(6, 0, tax.ids)],
+            'tag_ids': [(6, 0, base_tags.ids)],
             'move_id': new_move.id,
             'currency_id': currency_id,
             'partner_id': partner_id,
@@ -1792,7 +1801,8 @@ class AccountPartialReconcile(models.Model):
                 credit=rounded_amt > 0 and rounded_amt or 0.0,
                 debit=rounded_amt < 0 and abs(rounded_amt) or 0.0,
                 amount_currency=-amount_currency,
-                tax_ids=[]))
+                tax_ids=[],
+                tag_ids=[]))
 
     def create_tax_cash_basis_entry(self, percentage_before_rec):
         self.ensure_one()
