@@ -173,7 +173,8 @@ class PaymentAcquirerAuthorize(models.Model):
             if len(cc_expiry) != 2 or any(not i.isdigit() for i in cc_expiry):
                 return False
             try:
-                if datetime.now().strftime('%y%m') > datetime.strptime('/'.join(cc_expiry), '%m/%y').strftime('%y%m'):
+                expiry_date = datetime.strptime('/'.join(cc_expiry), '%m/%{}'.format("y" if len(cc_expiry[1]) == 2 else "Y")).strftime('%y%m')
+                if datetime.now().strftime('%y%m') > expiry_date:
                     return False
             except ValueError:
                 return False
