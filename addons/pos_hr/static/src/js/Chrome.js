@@ -8,11 +8,14 @@ odoo.define('pos_hr.chrome', function (require) {
         class extends Chrome {
             async start() {
                 await super.start();
-                this.env.pos.on('change:cashier', this.render, this);
-                if (this.env.pos.config.module_pos_hr) this.showTempScreen('LoginScreen');
+                if (this.env.pos.config.module_pos_hr) {
+                    this.env.pos.on('change:cashier', this.render, this);
+                }
             }
             get headerButtonIsShown() {
-                return this.env.pos.get('cashier').role == 'manager';
+                return this.env.pos.config.module_pos_hr
+                    ? this.env.pos.get('cashier').role == 'manager'
+                    : true;
             }
         };
 

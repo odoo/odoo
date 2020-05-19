@@ -22,9 +22,8 @@ The actual till still requires one user but an unlimited number of employees can
     'installable': True,
     'auto_install': True,
     'qweb': [
-        'static/src/xml/HeaderLockButton.xml',
         'static/src/xml/Chrome.xml',
-        'static/src/xml/CashierName.xml',
-        'static/src/xml/LoginScreen.xml',
+        'static/src/xml/EmployeeBadge.xml',
+        'static/src/xml/SelectEmployeePopup.xml',
     ],
 }

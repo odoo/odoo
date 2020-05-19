@@ -9,6 +9,7 @@ models.load_models([{
     domain: function(self){ return [['company_id', '=', self.config.company_id[0]]]; },
     loaded: function(self, employees) {
         if (self.config.module_pos_hr) {
+            // TODO jcb: this can be optimized by fetching only the hr.employee records in config.employee_ids
             if (self.config.employee_ids.length > 0) {
                 self.employees = employees.filter(function(employee) {
                     return self.config.employee_ids.includes(employee.id) || employee.user_id[0] === self.user.id;
@@ -20,6 +21,7 @@ models.load_models([{
                 var hasUser = self.users.some(function(user) {
                     if (user.id === employee.user_id[0]) {
                         employee.role = user.role;
+                        self.get_cashier().id = employee.id;
                         return true;
                     }
                     return false;
