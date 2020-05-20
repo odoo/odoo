@@ -71,7 +71,7 @@
                                 <field name="module_pos_hr" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                             </div>
                             <div class="o_setting_right_pane" id="login_with_employees">
-                                <span class="o_form_label">Login with Employees</span>
+                                <span class="o_form_label">Authorized Employees</span>
                                 <div class="text-muted">
                                     Use employee credentials to log in to the PoS session and switch cashier
                                 </div>
@@ -102,7 +102,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="limit_categories"/>
                                 <div class="text-muted">
-                                    Available Product Categories
+                                    Pick which product categories are available
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('limit_categories', '=', False)]}">
                                     <field name="iface_available_categ_ids" widget="many2many_tags" attrs="{'readonly': [('has_active_session','=', True)]}"/>
@@ -156,9 +156,9 @@
                                 <field name="is_posbox"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="is_posbox" string="IoT Box Devices"/>
+                                <label for="is_posbox" string="IoT Box"/>
                                 <div class="text-muted mb16">
-                                    Connect devices to your PoS through an IoT Box
+                                    Connect devices using an IoT Box
                                 </div>
                                 <div class="content-group pos_iot_config" attrs="{'invisible' : [('is_posbox', '=', False)]}">
                                     <div class="row">
@@ -204,9 +204,9 @@
                             <div class="o_setting_left_pane">
                             </div>
                             <div class="o_setting_right_pane">
-                                <span class="o_form_label">Barcode Scanner</span>
+                                <span class="o_form_label">Barcodes</span>
                                 <div class="text-muted">
-                                    Set barcodes to scan products, customer cards, etc.
+                                    Use barcodes to scan products, customer cards, etc.
                                 </div>
                                 <div class="content-group mt16 row">
                                     <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
@@ -535,7 +535,6 @@
         <field name="arch" type="xml">
             <tree string="Point of Sale Configuration">
                 <field name="name" />
-                <field name="picking_type_id"/>
                 <field name="company_id"  options="{'no_create': True}" groups="base.group_multi_company"/>
             </tree>
         </field>

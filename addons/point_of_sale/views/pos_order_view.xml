@@ -134,24 +134,28 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" create="0" sample="1">
                 <field name="name"/>
-                <field name="user_id"/>
+                <field name="partner_id"/>
                 <field name="amount_total"/>
                 <field name="date_order"/>
                 <field name="state"/>
                 <field name="pos_reference"/>
                 <field name="partner_id"/>
+                <field name="currency_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                             <div class="o_kanban_record_top">
                                 <div class="o_kanban_record_headings">
                                     <strong class="o_kanban_record_title">
-                                        <span>
-                                            <t t-esc="record.user_id"/>
+                                        <span t-if="record.partner_id.value">
+                                            <t t-esc="record.partner_id.value"/>
+                                        </span>
+                                        <span t-else="">
+                                            <t t-esc="record.name.value"/>
                                         </span>
                                     </strong>
                                 </div>
-                                <strong><span class="badge badge-pill"><i class="fa fa-money" role="img" aria-label="Amount" title="Amount"/> <field name="amount_total"/></span></strong>
+                                <strong><field name="amount_total" widget="monetary"/></strong>
                             </div>
                             <div class="row">
                                 <div class="col-12">
@@ -221,8 +225,8 @@
                 <field name="date_order"/>
                 <field name="pos_reference"/>
                 <field name="partner_id"/>
-                <field string="Cashier" name="user_id"/>
-                <field name="amount_total" sum="Amount total" widget="monetary"/>
+                <field string="Cashier" name="user_id" widget="many2one_avatar_user"/>
+                <field name="amount_total" sum="Amount total" widget="monetary" decoration-bf="1"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state not in ('draft','cancel')"/>
             </tree>
         </field>
