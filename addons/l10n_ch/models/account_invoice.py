@@ -210,6 +210,42 @@ class AccountMove(models.Model):
         self.l10n_ch_isr_sent = True
         return self.env.ref('l10n_ch.l10n_ch_qr_report').report_action(self)
 
+    @api.model
+    def _is_isr_ref(self, payment_comm):
+        """Check if the communication is a valid ISR reference (for Switzerland)
+        e.g.
+        12371
+        000000000000000000000012371
+        210000000003139471430009017
+        21 00000 00003 13947 14300 09017
+
+        """
+        if not payment_comm:
+            return False
+        ref = payment_comm.replace(' ', '')
+        if re.match(r'^(\d{2,27})$', ref):
+            return ref == mod10r(ref[:-1])
+        return False
+
+    def has_isr_ref(self):
+        """Check if this invoice has a valid ISR reference (for Switzerland)
+
+        """
+        ref = self.invoice_payment_ref or self.ref
+        return self._is_isr_ref(ref)
+
+    def _validate_isr_reference(self):
+        partner_bank = self.invoice_partner_bank_id
+        if partner_bank.is_isr_issuer() and not self.has_isr_ref():
+            raise ValidationError(_("""The payment reference is not a valid ISR Reference."""))
+        return True
+
+    def post(self):
+        for invoice in self:
+            if invoice.type == "in_invoice":
+                invoice._validate_isr_reference()
+        return super().post()
+
     def action_invoice_sent(self):
         # OVERRIDE
         rslt = super(AccountMove, self).action_invoice_sent()

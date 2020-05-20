@@ -9,7 +9,7 @@ from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class ISRTest(AccountingTestCase):
+class ISRPrintTest(AccountingTestCase):
 
     def create_invoice(self, currency_to_use='base.CHF'):
         """ Generates a test invoice """
