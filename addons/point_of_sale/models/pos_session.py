@@ -898,7 +898,7 @@ class PosSession(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url':   '/pos/web?config_id=%d' % self.config_id.id,
+            'url':   '/pos/web?config_id=%d&iotbox=1' % self.config_id.id,
         }
 
     def open_cashbox_pos(self):

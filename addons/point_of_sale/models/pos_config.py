@@ -521,7 +521,7 @@ class PosConfig(models.Model):
         self._validate_fields(set(self._fields) - {"cash_control"})
         return {
             'type': 'ir.actions.act_url',
-            'url':   '/pos/web?config_id=%d' % self.id,
+            'url':   '/pos/web?config_id=%d&iotbox=1' % self.id,
             'target': 'self',
         }
 
