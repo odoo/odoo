@@ -11,15 +11,14 @@
                          context="{'balance': 'start'}"/>
                     <button name="action_pos_session_open" type="object" string="Start Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}" class="oe_highlight"/>
-                    <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
-                        class="oe_highlight"/>
+                    <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"/>
                     <button id="end_session_opened" name="action_pos_session_closing_control" type="object" string="End of Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}"
                         class="oe_highlight"/>
-                    <button id="validate_opened" name="action_pos_session_closing_control" type="object" string="Validate Closing &amp; Post Entries"
+                    <button id="validate_opened" name="action_pos_session_closing_control" type="object" string="Close Session &amp; Post Entries"
                         attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
                         class="oe_highlight"/>
-                    <button id="validate_closing_control" name="action_pos_session_validate" type="object" string="Validate Closing &amp; Post Entries" states="closing_control"
+                    <button id="validate_closing_control" name="action_pos_session_validate" type="object" string="Close Session &amp; Post Entries" states="closing_control"
                         class="oe_highlight"/>
 
                     <field name="state" widget="statusbar" statusbar_visible="new_session,opening_control,opened,closing_control,closed" nolabel="1" />
@@ -136,12 +135,12 @@
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
             <tree string="Point of Sale Session" create="0" sample="1">
+                <field name="name" decoration-bf="1"/>
                 <field name="config_id" />
-                <field name="name" />
-                <field name="user_id" />
+                <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="start_at" />
                 <field name="stop_at" />
-                <field name="state" />
+                <field name="state" widget="badge" decoration-info="state in ('new_session', 'opening_control')" decoration-success="state in ('opened', 'closed')" decoration-warning="state == 'closing_control'" />
             </tree>
         </field>
     </record>
@@ -198,8 +197,11 @@
                 <separator/>
                 <filter string="Opening Date" name="start_date" date="start_at" />
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" name="user" domain="[]" context="{'group_by' : 'user_id'}"/>
+                    <filter string="Opened By" name="user" domain="[]" context="{'group_by' : 'user_id'}"/>
                     <filter string="Point of Sale" name="point_of_sale" domain="[]" context="{'group_by': 'config_id'}"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Opening Date" name="opening_date" domain="[]" context="{'group_by': 'start_at'}"/>
+                    <filter string="Closing Date" name="closing_date" domain="[]" context="{'group_by': 'stop_at'}"/>
                 </group>
             </search>
         </field>
