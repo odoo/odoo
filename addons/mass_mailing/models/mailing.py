@@ -260,8 +260,8 @@ class MassMailing(models.Model):
 
     @api.model
     def create(self, values):
-        if values.get('subject') and not values.get('name'):
-            values['name'] = "%s %s" % (values['subject'], datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))
+        values['name'] = self._get_mailing_name(values.get('name'), values.get('subject'))
+
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
         return super(MassMailing, self).create(values)
@@ -277,6 +277,9 @@ class MassMailing(models.Model):
         default = dict(default or {},
                        name=_('%s (copy)', self.name),
                        contact_list_ids=self.contact_list_ids.ids)
+        # we don't keep the name during duplication
+        # because we want the system to regenerate the name based on the subject
+        default["name"] = None
         return super(MassMailing, self).copy(default=default)
 
     def _group_expand_states(self, states, domain, order):
@@ -753,6 +756,36 @@ class MassMailing(models.Model):
     # ------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------
+
+    def _get_mailing_name(self, base_name, subject):
+        """Generate a name for the mailing.
+
+        :param base_name: base name to use
+        :param subject: subject of the mailing
+        """
+        base_name = base_name or ''
+        if subject and not base_name:
+            base_name = _(
+                "%s (Mailing created on %s)",
+                subject,
+                fields.Date.to_string(fields.Datetime.now().date()),
+            )
+
+        # remove trailing " [XX]" to avoid having "Name (Created on ...) [X] [Y]"
+        base_name = re.sub(r'\s\[([0-9]+)\]$', '', base_name)
+
+        last_mailing_name = self.env['utm.source'].search_read(
+            domain=[('name', '=like', base_name + "%")],
+            fields=['name'],
+            limit=1,
+            order='name DESC',
+        )
+
+        if last_mailing_name:
+            match = re.findall(r"\[([0-9]+)\]$", last_mailing_name[0]['name'])
+            count = int(match[0]) + 1 if match else 2
+            return "%s [%i]" % (base_name, count)
+        return base_name
 
     def _get_default_mailing_domain(self):
         default_mailing_domain = self.default_get(['mailing_domain']).get('mailing_domain')
