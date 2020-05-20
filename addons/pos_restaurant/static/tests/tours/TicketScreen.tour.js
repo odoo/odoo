@@ -40,5 +40,5 @@ odoo.define('pos_restaurant.tour.TicketScreen', function (require) {
     ProductScreen.check.totalAmountIs('2.0');
     Chrome.check.backToFloorTextIs('Main Floor', 'T2');
 
-    Tour.register('PosResTicketScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('PosResTicketScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });
