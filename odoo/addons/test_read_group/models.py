@@ -50,3 +50,18 @@ class FillTemporal(models.Model):
     date = fields.Date()
     datetime = fields.Datetime()
     value = fields.Integer()
+
+
+class Order(models.Model):
+    _name = 'test_read_group.order'
+    _description = 'Sales order'
+
+    line_ids = fields.One2many('test_read_group.order.line', 'order_id')
+
+
+class OrderLine(models.Model):
+    _name = 'test_read_group.order.line'
+    _description = 'Sales order line'
+
+    order_id = fields.Many2one('test_read_group.order', ondelete='cascade')
+    value = fields.Integer()
