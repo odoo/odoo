@@ -13,7 +13,7 @@ odoo.define('point_of_sale.DebugManager.Backend', function(require) {
                 name: _t('JS Tests'),
                 target: 'new',
                 type: 'ir.actions.act_url',
-                url: '/pos/web/tests?mod=*',
+                url: '/pos/ui/tests?mod=*',
             });
         },
     });

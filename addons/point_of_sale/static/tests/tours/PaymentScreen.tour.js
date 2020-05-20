@@ -66,5 +66,5 @@ odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
     PaymentScreen.check.changeIs('0.0');
     PaymentScreen.check.validateButtonIsHighlighted(true);
 
-    Tour.register('PaymentScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('PaymentScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

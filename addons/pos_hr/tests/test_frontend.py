@@ -43,11 +43,11 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
 @tagged("post_install", "-at_install")
 class TestUi(TestPosHrHttpCommon):
     def test_01_pos_hr_tour(self):
-        # open a session, the /pos/web controller will redirect to it
+        # open a session, the /pos/ui controller will redirect to it
         self.main_pos_config.open_session_cb(check_coa=False)
 
         self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
             "PosHrTour",
             login="admin",
         )

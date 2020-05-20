@@ -119,5 +119,5 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     PaymentScreen.do.clickValidate();
     ReceiptScreen.check.isShown();
 
-    Tour.register('PosResTipScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('PosResTipScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

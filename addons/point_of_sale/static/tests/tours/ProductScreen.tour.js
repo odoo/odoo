@@ -101,5 +101,5 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
     ProductScreen.do.pressNumpad('Backspace');
     ProductScreen.check.orderIsEmpty();
 
-    Tour.register('ProductScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('ProductScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

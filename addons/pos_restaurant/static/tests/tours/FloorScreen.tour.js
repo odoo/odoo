@@ -105,5 +105,5 @@ odoo.define('pos_restaurant.tour.FloorScreen', function (require) {
     FloorScreen.do.clickTable('T1');
     Chrome.check.backToFloorTextIs('Second Floor', 'T1');
 
-    Tour.register('FloorScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('FloorScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

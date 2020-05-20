@@ -13,10 +13,10 @@ class WebSuite(odoo.tests.HttpCase):
         self.main_pos_config = env.ref('point_of_sale.pos_config_main')
 
     def test_pos_js(self):
-        # open a session, the /pos/web controller will redirect to it
+        # open a session, the /pos/ui controller will redirect to it
         self.main_pos_config.open_session_cb(check_coa=False)
 
         # point_of_sale desktop test suite
         self.browser_js(
-            "/pos/web/tests?mod=web&failfast", "", "", login="admin", timeout=1800
+            "/pos/ui/tests?mod=web&failfast", "", "", login="admin", timeout=1800
         )

@@ -134,5 +134,5 @@ odoo.define('point_of_sale.tour.OrderManagementScreen', function (require) {
     OrderManagementScreen.do.closeReceipt();
     OrderManagementScreen.check.isNotHidden();
 
-    Tour.register('OrderManagementScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('OrderManagementScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

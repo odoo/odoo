@@ -49,5 +49,5 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
     NumberPopup.do.clickConfirm();
     ProductScreen.check.isShown();
 
-    Tour.register('PosHrTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('PosHrTour', { test: true, url: '/pos/ui' }, getSteps());
 });

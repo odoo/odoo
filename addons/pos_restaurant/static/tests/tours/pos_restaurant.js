@@ -64,7 +64,7 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
     // There should be 1 synced draft order.
     FloorScreen.check.orderCountSyncedInTableIs('T5', '1');
 
-    Tour.register('pos_restaurant_sync', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('pos_restaurant_sync', { test: true, url: '/pos/ui' }, getSteps());
 
     startSteps();
 
@@ -104,5 +104,5 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
     Chrome.do.backToFloor();
     FloorScreen.check.orderCountSyncedInTableIs('T4', '1');
 
-    Tour.register('pos_restaurant_sync_second_login', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('pos_restaurant_sync_second_login', { test: true, url: '/pos/ui' }, getSteps());
 });

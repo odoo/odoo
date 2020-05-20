@@ -44,5 +44,5 @@ odoo.define('pos_restaurant.tour.ControlButtons', function (require) {
     BillScreen.check.isShown();
     BillScreen.do.clickBack();
 
-    Tour.register('ControlButtonsTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('ControlButtonsTour', { test: true, url: '/pos/ui' }, getSteps());
 });
