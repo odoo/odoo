@@ -18,9 +18,9 @@
                     <t t-esc="line.name[:1000]"/>
                     <t t-if="not line.name" t-esc="'NO NAME'"/>
                 </Descrizione>
-                <Quantita t-esc="format_numbers(line.quantity)"/>
+                <Quantita t-esc="format_numbers(abs(line.quantity))"/>
                 <UnitaMisura t-if="line.uom_id.category_id.measure_type != 'unit'" t-esc="line.uom_id.name"/>
-                <PrezzoUnitario t-esc="format_monetary(taxes['total_excluded'], currency)"/>
+                <PrezzoUnitario t-esc="format_monetary(taxes['total_excluded'] if line.price_subtotal >= 0 else -abs(taxes['total_excluded']), currency)"/>
                 <ScontoMaggiorazione t-if="line.discount != 0">
                     <!-- [2.2.1.10] -->
                     <Tipo t-esc="discount_type(line.discount)"/>
