@@ -12,7 +12,7 @@ except ImportError:
 
 class TestMassMailingShortener(common.TransactionCase):
     def getHrefFor(self, html, id):
-        return html.xpath("*[@id='%s']" % id)[0].attrib.get('href')
+        return html.xpath("//*[@id='%s']" % id)[0].attrib.get('href')
 
     def shorturl_to_link(self, short_url):
         return self.env['link.tracker.code'].search([('code', '=', short_url.split('/r/')[-1])]).link_id
@@ -80,7 +80,7 @@ Email: <a id="url4" href="mailto:test@odoo.com">test@odoo.com</h1>
         self.assertEqual(mailing_list_A.contact_nbr, len(sent_messages),
                          'Some message has not been sent')
 
-        xbody = etree.fromstring(sent_messages[0].body)
+        xbody = etree.fromstring("<div>%s</div>" % sent_messages[0].body)
         after_url0 = self.getHrefFor(xbody, 'url0')
         after_url1 = self.getHrefFor(xbody, 'url1')
         after_url2 = self.getHrefFor(xbody, 'url2')
@@ -103,7 +103,7 @@ Email: <a id="url4" href="mailto:test@odoo.com">test@odoo.com</h1>
         self.assertEqual(short2.url, "https://www.odoo.com", 'URL mismatch')
         self.assertEqual(short3.url, "https://www.odoo.eu", 'URL mismatch')
 
-        _xbody = etree.fromstring(sent_messages[1].body)
+        _xbody = etree.fromstring("<div>%s</div>" % sent_messages[1].body)
         _after_url0 = self.getHrefFor(_xbody, 'url0')
         _after_url1 = self.getHrefFor(_xbody, 'url1')
         _after_url2 = self.getHrefFor(_xbody, 'url2')

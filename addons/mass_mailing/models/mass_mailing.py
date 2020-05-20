@@ -967,7 +967,7 @@ class MassMailing(models.Model):
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing.body_html,
+                'body': self._prepare_mail_body(),
                 'subject': mailing.name,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,
@@ -1023,3 +1023,29 @@ class MassMailing(models.Model):
                 mass_mailing.send_mail()
             else:
                 mass_mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
+
+    def _prepare_mail_body(self, body=None):
+        """Prepare the email body before sending.
+
+        Add the text preview at the beginning of the mail. The preview text is displayed
+        bellow the mail subject of most mail client (gmail, outlook...).
+
+        We add the character `&zwnj;` (zero-width non-joiner) to fill the end of the
+        preview in order to not have the beginning of the mail at the end of the preview
+        (don't work with simple space as the content is trimmed).
+
+        https://litmus.com/blog/the-ultimate-guide-to-preview-text-support
+        """
+        self.ensure_one()
+
+        body = body or self.body_html
+        preview = re.findall(r'\>([^<>]+)\<', body)
+        preview = ' '.join([p.strip() for p in preview if p.strip()])[:500]
+
+        html_preview = f"""
+            <div style="display:none;font-size:1px;height:0px;width:0px;opacity:0;">
+              {tools.html_escape(preview)} {'&zwnj;&nbsp;' * 500}
+            </div>
+        """ if preview else ''
+
+        return html_preview + body
