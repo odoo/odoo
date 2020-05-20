@@ -333,13 +333,12 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
     # Computation API
     # --------------------------------------------------
-    def _attendance_intervals(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+    def _attendance_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         """ Return the attendance intervals in the given datetime range.
             The returned intervals are expressed in specified tz or in the resource's timezone.
         """
         self.ensure_one()
-        if resources is None:
-            resources = self.env['resource.resource']
+        resources = self.env['resource.resource'] if (resource is None) else resource
         assert start_dt.tzinfo and end_dt.tzinfo
         combine = datetime.combine
 
@@ -413,12 +412,11 @@ class ResourceCalendar(models.Model):
             return Intervals(result[resources.id])
         return {r.id: Intervals(result[r.id]) for r in resources}
 
-    def _leave_intervals(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+    def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         """ Return the leave intervals in the given datetime range.
             The returned intervals are expressed in specified tz or in the calendar's timezone.
         """
-        if resources is None:
-            resources = self.env['resource.resource']
+        resources = self.env['resource.resource'] if (resource is None) else resource
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
 
@@ -453,12 +451,13 @@ class ResourceCalendar(models.Model):
             return Intervals(result[resources.id])
         return {r.id: Intervals(result[r.id]) for r in resources}
 
-    def _work_intervals(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+    def _work_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         """ Return the effective work intervals between the given datetimes. """
-        if resources is None:
+        if resource is None:
             resources = self.env['resource.resource']
             resources_list = [resources]
         else:
+            resources = resource
             resources_list = [r for r in resources]
 
         attendance_intervals = self._attendance_intervals(start_dt, end_dt, resources, tz=tz)
@@ -493,18 +492,17 @@ class ResourceCalendar(models.Model):
             'hours': sum(day_hours.values()),
         }
 
-    def _get_day_total(self, from_datetime, to_datetime, resources=None):
+    def _get_day_total(self, from_datetime, to_datetime, resource=None):
         """
         @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
         """
         self.ensure_one()
-        if resources is None:
-            resources = self.env['resource.resource']
+        resources = self.env['resource.resource'] if (resource is None) else resource
         # total hours per day:  retrieve attendances with one extra day margin,
         # in order to compute the total hours on the first and last days
         from_full = from_datetime - timedelta(days=1)
         to_full = to_datetime + timedelta(days=1)
-        intervals = self._attendance_intervals(from_full, to_full, resources=resources)
+        intervals = self._attendance_intervals(from_full, to_full, resource=resources)
 
         if len(resources) <= 1:
             day_total = defaultdict(float)
@@ -589,7 +587,7 @@ class ResourceCalendar(models.Model):
 
         # which method to use for retrieving intervals
         if compute_leaves:
-            get_intervals = partial(self._work_intervals, domain=domain, resources=resource)
+            get_intervals = partial(self._work_intervals, domain=domain, resource=resource)
         else:
             get_intervals = self._attendance_intervals
 
