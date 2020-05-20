@@ -29,12 +29,12 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient.scss"/>
     </template>
 
-    <template id="iframe_css_assets_edit">
+    <template id="iframe_css_assets_edit" groups="base.group_user">
         <t t-call-assets="mass_mailing.assets_mail_themes" t-js="false"/>
         <t t-call-assets="mass_mailing.assets_mail_themes_edition" t-js="false"/>
     </template>
 
-    <template id="iframe_css_assets_readonly">
+    <template id="iframe_css_assets_readonly" groups="base.group_user">
         <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/css/basic_theme_readonly.css"/>
     </template>
 
