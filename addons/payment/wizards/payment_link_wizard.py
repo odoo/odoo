@@ -38,6 +38,7 @@ class PaymentLinkWizard(models.TransientModel):
     amount_max = fields.Monetary(currency_field='currency_id')
     currency_id = fields.Many2one('res.currency')
     partner_id = fields.Many2one('res.partner')
+    partner_email = fields.Char(related='partner_id.email')
     link = fields.Char(string='Payment Link', compute='_compute_values')
     description = fields.Char('Payment Ref')
     access_token = fields.Char(compute='_compute_values')
