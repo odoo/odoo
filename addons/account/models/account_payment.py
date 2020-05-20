@@ -369,6 +369,7 @@ class account_payment(models.Model):
 
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id', 'is_internal_transfer')
     def _compute_destination_account_id(self):
+        self.destination_account_id = False
         for payment in self:
             payment = payment.with_company(payment.company_id)
             if payment.invoice_ids:
