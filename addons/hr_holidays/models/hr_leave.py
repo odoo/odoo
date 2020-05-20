@@ -504,7 +504,7 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
-        mapped_days = self.mapped('holiday_status_id').get_days(self.mapped('employee_id.id'))
+        mapped_days = self.mapped('holiday_status_id').get_employees_days(self.mapped('employee_id').ids)
         for holiday in self:
             if holiday.holiday_type != 'employee' or not holiday.employee_id or holiday.holiday_status_id.allocation_type == 'no':
                 continue

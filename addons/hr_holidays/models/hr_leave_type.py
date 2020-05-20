@@ -181,7 +181,11 @@ class HolidaysType(models.Model):
 
         return [('id', 'in', valid_leave_types.ids)]
 
-    def get_days(self, employee_ids):
+    # YTI TODO: Remove me in master
+    def get_days(self, employee_id):
+        return self.get_employees_days([employee_id])[employee_id]
+
+    def get_employees_days(self, employee_ids):
         result = {
             employee_id: {
                 leave_type.id: {
@@ -233,7 +237,6 @@ class HolidaysType(models.Model):
                 status_dict['remaining_leaves'] += (allocation.number_of_hours_display
                                                   if allocation.type_request_unit == 'hour'
                                                   else allocation.number_of_days)
-
         return result
 
     @api.model
@@ -262,7 +265,7 @@ class HolidaysType(models.Model):
         employee_id = self._get_contextual_employee_id()
 
         if employee_id:
-            data_days = self.get_days(employee_id)[employee_id]
+            data_days = self.get_employees_days([employee_id])[employee_id]
 
         for holiday_status in self:
             result = data_days.get(holiday_status.id, {})
