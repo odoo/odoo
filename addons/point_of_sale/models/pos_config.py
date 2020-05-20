@@ -565,6 +565,12 @@ class PosConfig(models.Model):
              'params': {'wait': True}
          }
 
+    def _force_http(self):
+        return False
+
+    def _get_pos_base_url(self):
+        return '/pos/web' if self._force_http() else '/pos/ui'
+
     # Methods to open the POS
     def open_ui(self):
         """Open the pos interface with config_id as an extra argument.
@@ -579,7 +585,7 @@ class PosConfig(models.Model):
         self._validate_fields(set(self._fields) - {"cash_control"})
         return {
             'type': 'ir.actions.act_url',
-            'url':   '/pos/web?config_id=%d' % self.id,
+            'url': self._get_pos_base_url() + '?config_id=%d' % self.id,
             'target': 'self',
         }
 

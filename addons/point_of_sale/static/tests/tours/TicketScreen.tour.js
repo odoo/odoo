@@ -50,5 +50,5 @@ odoo.define('point_of_sale.tour.TicketScreen', function (require) {
     TicketScreen.do.search('Receipt Number', '-0003');
     TicketScreen.check.nthRowContains(2, 'Receipt');
 
-    Tour.register('TicketScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('TicketScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

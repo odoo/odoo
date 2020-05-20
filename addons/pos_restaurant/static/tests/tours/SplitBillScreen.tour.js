@@ -48,5 +48,5 @@ odoo.define('pos_restaurant.tour.SplitBillScreen', function (require) {
     ProductScreen.do.clickOrderline('Water', '2.0')
     ProductScreen.do.clickOrderline('Minute Maid', '3.0')
 
-    Tour.register('SplitBillScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('SplitBillScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });
