@@ -77,7 +77,7 @@
                             <span class="swissqr_text content">Credit transfer</span>
                         </div>
 
-                        <img class="swissqr" t-att-src="o.invoice_partner_bank_id.build_qr_code_url(o.amount_residual, o.ref or o.name, o.invoice_payment_ref, o.currency_id, o.partner_id, 'ch_qr')"/>
+                        <img class="swissqr" t-att-src="qr_code_urls[o.id]"/>
 
                         <div id="indications_zone" class="swissqr_column_right indication_zone">
                             <span class="swissqr_text title">Payable to</span><br/>
