@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="hr_org_chart_employee">
-    <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} media">
-        <t t-set="is_self" t-value="employee.id == view_employee_id"/>
+<t t-name="hr_org_chart_employee" owl="1">
+    <t t-set="employee" t-value="props.employee"/>
+    <div t-attf-class="o_org_chart_entry o_org_chart_entry_{{props.employee_type}} media">
+        <t t-set="is_self" t-value="employee.id == props.orgData.view_employee_id"/>
 
         <div class="o_media_left">
             <!-- NOTE: Since by the default on not squared images odoo add white borders,
                 use bg-images to get a clean and centred images -->
-            <a t-if="! is_self"
+            <a t-if="!is_self"
                 class="o_media_object rounded-circle o_employee_redirect"
+                t-on-click.prevent="_onEmployeeRedirect"
                 t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/image_1024/\')'"
                 t-att-alt="employee.name"
                 t-att-data-employee-id="employee.id"
@@ -20,21 +22,25 @@
         </div>
 
         <div class="media-body">
-            <span
-                    t-if="employee.indirect_sub_count &gt; 0"
-                    class="badge badge-pill"
-                    tabindex="0"
-                    data-trigger="focus"
-                    t-att-data-emp-name="employee.name"
-                    t-att-data-emp-id="employee.id"
-                    t-att-data-emp-dir-subs="employee.direct_sub_count"
-                    t-att-data-emp-ind-subs="employee.indirect_sub_count"
-                    data-toggle="popover">
-                <t t-esc="employee.indirect_sub_count"/>
-            </span>
-
+            <t t-if="employee.indirect_sub_count &gt; 0">
+                <!-- <Popover position="'left'" class="popover-body"> -->
+                <Popover position="'left'">
+                    <t t-set-slot="opened">
+                        <t t-call="hr_orgchart_emp_popover"/>
+                    </t>
+                    <span
+                        class="badge badge-pill"
+                        tabindex="0"
+                        t-att-data-emp-name="employee.name"
+                        t-att-data-emp-id="employee.id"
+                        t-att-data-emp-dir-subs="employee.direct_sub_count"
+                        t-att-data-emp-ind-subs="employee.indirect_sub_count">
+                        <t t-esc="employee.indirect_sub_count"/>
+                    </span>
+                </Popover>
+            </t>
             <t t-if="!is_self">
-                <a t-att-href="employee.link" class="o_employee_redirect" t-att-data-employee-id="employee.id">
+                <a t-att-href="employee.link" class="o_employee_redirect" t-on-click.prevent="_onEmployeeRedirect" t-att-data-employee-id="employee.id">
                     <h5 class="o_media_heading"><b><t t-esc="employee.name"/></b></h5>
                     <strong><t t-esc="employee.job_title"/></strong>
                 </a>
@@ -47,7 +53,7 @@
     </div>
 </t>
 
-<t t-name="hr_org_chart">
+<div t-name="hr_org_chart" owl="1">
     <!-- NOTE: Desidered behaviour:
             The maximun number of people is always 7 (including 'self'). Managers have priority over suburdinates
             Eg. 1 Manager + 1 self = show just 5 subordinates (if availables)
@@ -56,32 +62,38 @@
         -->
     <t t-set="emp_count" t-value="0"/>
 
-    <div t-if='managers.length &gt; 0' class="o_org_chart_group_up">
-        <t t-if='managers_more'>
+    <div t-if='orgData.managers.length &gt; 0' class="o_org_chart_group_up">
+        <t t-if='orgData.managers_more'>
             <div class="o_org_chart_entry o_org_chart_more media">
                 <div class="o_media_left">
                     <a class="text-center o_employee_more_managers"
-                            t-att-data-employee-id="managers[0].id">
-                        <i t-attf-class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
+                            t-on-click.prevent="_onEmployeeMoreManager"
+                            t-att-data-employee-id="orgData.managers[0].id">
+                        <i class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
                     </a>
                 </div>
             </div>
         </t>
 
-        <t t-foreach="managers" t-as="employee">
+        <t t-foreach="orgData.managers" t-as="employee" t-key="employee.id">
+            <!-- <t t-debug="pdb"/> -->
             <t t-set="emp_count" t-value="emp_count + 1"/>
-            <t t-call="hr_org_chart_employee">
+            <!-- <t t-call="hr_org_chart_employee">
                 <t t-set="employee_type" t-value="'manager'"/>
-            </t>
+            </t> -->
+            <EmployeeChart employee_type="'manager'" employee="employee" orgData="orgData"/>
         </t>
     </div>
 
-    <t t-if="children.length || managers.length" t-call="hr_org_chart_employee">
+    <!-- <t t-if="orgData.children.length || orgData.managers.length" t-call="hr_org_chart_employee">
         <t t-set="employee_type" t-value="'self'"/>
-        <t t-set="employee" t-value="self"/>
+        <t t-set="employee" t-value="orgData.self"/>
+    </t> -->
+    <t t-if="orgData.children.length || orgData.managers.length">
+        <EmployeeChart employee_type="'self'" employee="orgData.self" orgData="orgData"/>
     </t>
 
-    <t t-if="!children.length &amp;&amp; !managers.length">
+    <t t-if="!orgData.children.length &amp;&amp; !orgData.managers.length">
         <div class="alert alert-info" role="alert">
             <p><b>No hierarchy position.</b></p>
             <p>This employee has no manager or subordinate.</p>
@@ -89,71 +101,75 @@
         </div>
     </t>
 
-    <div t-if="children.length" class="o_org_chart_group_down">
-        <t t-foreach="children" t-as="employee">
+    <div t-if="orgData.children.length" class="o_org_chart_group_down">
+        <t t-foreach="orgData.children" t-as="employee" t-key="employee.id">
             <t t-set="emp_count" t-value="emp_count + 1"/>
             <t t-if="emp_count &lt; 20">
-                <t t-call="hr_org_chart_employee">
+                <!-- <t t-call="hr_org_chart_employee">
                     <t t-set="employee_type" t-value="'sub'"/>
-                </t>
+                </t> -->
+                <EmployeeChart employee_type="'sub'" employee="employee" orgData="orgData"/>
             </t>
         </t>
 
-        <t t-if="(children.length + managers.length) &gt; 19">
+        <t t-if="(orgData.children.length + orgData.managers.length) &gt; 19">
             <div class="o_org_chart_entry o_org_chart_more media">
                 <div class="o_media_left">
                     <a href="#"
-                        t-att-data-employee-id="self.id"
-                        t-att-data-employee-name="self.name"
-                        class="o_org_chart_show_more text-center o_employee_sub_redirect">&#8230;</a>
+                        t-att-data-employee-id="orgData.self.id"
+                        t-att-data-employee-name="orgData.self.name"
+                        class="o_org_chart_show_more text-center o_employee_sub_redirect"
+                        t-on-click.prevent="_onEmployeeSubRedirect">&#8230;</a>
                 </div>
             </div>
         </t>
     </div>
+</div>
+
+<t t-name="hr_orgchart_emp_popover" owl="1">
+    <div class="popover o_org_chart_popup">
+        <h3 class="popover-header"><t t-call="hr_orgchart_emp_popover_title"/></h3>
+        <div class="popover-content"><t t-call="hr_orgchart_emp_popover_content"/></div>
+    </div>
 </t>
 
-<t t-name="hr_orgchart_emp_popover">
-    <div class="popover o_org_chart_popup" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>
+<t t-name="hr_orgchart_emp_popover_content" owl="1">
+    <div class="o_org_chart_content">
+        <div>
+            <span class="text-right" t-esc="employee.direct_sub_count"></span>
+            <a href="#" class="o_employee_sub_redirect" data-type='direct'
+                t-on-click.prevent="_onEmployeeSubRedirect"
+                t-att-data-employee-name="employee.name"
+                t-att-data-employee-id="employee.id">
+                <b>Direct subordinates</b>
+            </a>
+        </div>
+        <div>
+            <span class="text-right" t-esc="employee.indirect_sub_count - employee.direct_sub_count"></span>
+            <a href="#" class="o_employee_sub_redirect" data-type='indirect'
+                t-on-click.prevent="_onEmployeeSubRedirect"
+                t-att-data-employee-name="employee.name"
+                t-att-data-employee-id="employee.id">
+                Indirect subordinates
+            </a>
+        </div>
+        <div>
+            <span class="text-right" t-esc="employee.indirect_sub_count"></span>
+            <a href="#" class="o_employee_sub_redirect" data-type='total'
+                t-on-click.prevent="_onEmployeeSubRedirect"
+                t-att-data-employee-name="employee.name"
+                t-att-data-employee-id="employee.id">
+                Total
+            </a>
+        </div>
+    </div>
 </t>
 
-<t t-name="hr_orgchart_emp_popover_content">
-    <table class="table table-sm">
-        <thead>
-            <td class="text-right"><t t-esc="employee.direct_sub_count"/></td>
-            <td>
-                <a href="#" class="o_employee_sub_redirect" data-type='direct'
-                        t-att-data-employee-name="employee.name" t-att-data-employee-id="employee.id">
-                    <b>Direct subordinates</b></a>
-            </td>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="text-right">
-                    <t t-esc="employee.indirect_sub_count - employee.direct_sub_count"/>
-                </td>
-                <td>
-                    <a href="#" class="o_employee_sub_redirect" data-type='indirect'
-                            t-att-data-employee-name="employee.name" t-att-data-employee-id="employee.id">
-                        Indirect subordinates</a>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-right"><t t-esc="employee.indirect_sub_count"/></td>
-                <td>
-                    <a href="#" class="o_employee_sub_redirect" data-type='total'
-                            t-att-data-employee-name="employee.name" t-att-data-employee-id="employee.id">
-                        Total</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</t>
-
-<t t-name="hr_orgchart_emp_popover_title">
+<t t-name="hr_orgchart_emp_popover_title" owl="1">
     <div>
-        <span t-att-style='"background-image:url(\"/web/image/hr.employee.public/" + employee.id + "/image_1024/\")"'/>
-        <a href="#" class="float-right o_employee_redirect" t-att-data-employee-id="employee.id"><i class="fa fa-external-link" role="img" aria-label='Redirect' title="Redirect"></i></a>
+        <span t-att-style='"background-image:url(\"/web/image/hr.employee.public/" + employee.id + "/image_1024/\")"' class="popover_title"/>
         <b><t t-esc="employee.name"/></b>
+        <a href="#" class="float-right o_employee_redirect" t-on-click.prevent="_onEmployeeRedirect" t-att-data-employee-id="employee.id"><i class="fa fa-external-link" role="img" aria-label='Redirect' title="Redirect"></i></a>
     </div>
 </t>
 

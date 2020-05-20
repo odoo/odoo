@@ -1,10 +1,10 @@
 odoo.define('hr_org_chart.tests', function (require) {
 "use strict";
 
-var FormView = require('web.FormView');
-var testUtils = require("web.test_utils");
+const FormView = require('web.FormView');
+const testUtils = require("web.test_utils");
 
-var createView = testUtils.createView;
+const createView = testUtils.createView;
 
 QUnit.module('hr_org_chart', {
     before: function () {
@@ -24,14 +24,13 @@ QUnit.module('hr_org_chart', {
     QUnit.test("hr org chart: empty render", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'hr_employee',
             data: this.data,
-            arch:
-                '<form>' +
-                    '<field name="child_ids" widget="hr_org_chart"/>' +
-                '</form>',
+            arch: `<form>
+                    <field name="child_ids" widget="hr_org_chart"/>
+                </form>`,
             res_id: 1,
             mockRPC: function (route, args) {
                 if (route === '/hr/get_org_chart') {
@@ -51,17 +50,17 @@ QUnit.module('hr_org_chart', {
             "the chart should have 1 child");
         form.destroy();
     });
+
     QUnit.test("hr org chart: render without data", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'hr_employee',
             data: this.data,
-            arch:
-                '<form>' +
-                    '<field name="child_ids" widget="hr_org_chart"/>' +
-                '</form>',
+            arch: `<form>
+                    <field name="child_ids" widget="hr_org_chart"/>
+                </form>`,
             res_id: 1,
             mockRPC: function (route, args) {
                 if (route === '/hr/get_org_chart') {
@@ -75,23 +74,23 @@ QUnit.module('hr_org_chart', {
             "the chart should have 1 child");
         form.destroy();
     });
+
     QUnit.test("hr org chart: basic render", async function (assert) {
         assert.expect(3);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'hr_employee',
             data: this.data,
-            arch:
-                '<form>' +
-                    '<sheet>' +
-                        '<div id="o_employee_container"><div id="o_employee_main">' +
-                            '<div id="o_employee_right">' +
-                                '<field name="child_ids" widget="hr_org_chart"/>' +
-                            '</div>' +
-                        '</div></div>' +
-                    '</sheet>' +
-                '</form>',
+            arch: `<form>
+                    <sheet>
+                        <div id="o_employee_container"><div id="o_employee_main">
+                            <div id="o_employee_right">
+                                <field name="child_ids" widget="hr_org_chart"/>
+                            </div>
+                        </div></div>
+                    </sheet>
+                </form>`,
             res_id: 1,
             mockRPC: function (route, args) {
                 if (route === '/hr/get_org_chart') {
@@ -130,23 +129,23 @@ QUnit.module('hr_org_chart', {
             "the current employee should only be displayed once in the chart");
         form.destroy();
     });
+
     QUnit.test("hr org chart: basic manager render", async function (assert) {
         assert.expect(4);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'hr_employee',
             data: this.data,
-            arch:
-                '<form>' +
-                    '<sheet>' +
-                        '<div id="o_employee_container"><div id="o_employee_main">' +
-                            '<div id="o_employee_right">' +
-                                '<field name="child_ids" widget="hr_org_chart"/>' +
-                            '</div>' +
-                        '</div></div>' +
-                    '</sheet>' +
-                '</form>',
+            arch: `<form>
+                    <sheet>
+                        <div id="o_employee_container"><div id="o_employee_main">
+                            <div id="o_employee_right">
+                                <field name="child_ids" widget="hr_org_chart"/>
+                            </div>
+                        </div></div>
+                    </sheet>
+                </form>`,
             res_id: 1,
             mockRPC: function (route, args) {
                 if (route === '/hr/get_org_chart') {
