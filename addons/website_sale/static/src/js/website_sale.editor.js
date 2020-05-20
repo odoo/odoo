@@ -55,7 +55,7 @@ odoo.define('website_sale.editor', function (require) {
 var options = require('web_editor.snippets.options');
 var publicWidget = require('web.public.widget');
 const {Class: EditorMenuBar} = require('web_editor.editor');
-const {qweb} = require('web.core');
+const {qweb, _t} = require('web.core');
 
 EditorMenuBar.include({
     custom_events: Object.assign(EditorMenuBar.prototype.custom_events, {
@@ -675,6 +675,31 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
                 y: y,
             },
         }).then(reload);
+    },
+});
+
+options.registry.ProductsRecentlyViewed = options.Class.extend({
+    /**
+     * @override
+     */
+    onBuilt: function () {
+        this.displayNotification({
+            type: 'info',
+            title: '',
+            message: _t('The snippet will be visible once one has seen one product'),
+        });
+    },
+    /**
+     * @override
+     */
+    onTargetShow: async function () {
+        this.$target.removeClass('d-none');
+    },
+    /**
+     * @override
+     */
+    onTargetHide: function () {
+        this.$target.addClass('d-none');
     },
 });
 });

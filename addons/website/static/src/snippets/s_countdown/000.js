@@ -109,7 +109,7 @@ const CountdownWidget = publicWidget.Widget.extend({
                     );
                 }
             }
-        } else if (this.endAction === 'message') {
+        } else if (this.endAction === 'message' || this.endAction === 'message_no_countdown') {
             this.$('.s_countdown_end_message').removeClass('d-none');
         }
     },
