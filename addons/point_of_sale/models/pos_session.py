@@ -1010,7 +1010,7 @@ class PosSession(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url':   '/pos/web?config_id=%d' % self.config_id.id,
+            'url': self.config_id._get_pos_base_url() + '?config_id=%d' % self.config_id.id,
         }
 
     def open_cashbox_pos(self):

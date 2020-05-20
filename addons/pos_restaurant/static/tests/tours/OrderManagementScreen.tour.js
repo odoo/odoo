@@ -120,5 +120,5 @@ odoo.define('pos_restaurant.tour.OrderManagementScreen', function (require) {
     ProductScreen.check.totalAmountIs('44');
     Chrome.check.backToFloorTextIs('Main Floor', 'T2');
 
-    Tour.register('PosResOrderManagementScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('PosResOrderManagementScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });
