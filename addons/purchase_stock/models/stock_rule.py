@@ -54,7 +54,7 @@ class StockRule(models.Model):
             if procurement.values.get('supplierinfo_id'):
                 supplier = procurement.values['supplierinfo_id']
             else:
-                supplier = procurement.product_id._select_seller(
+                supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
                     partner_id=procurement.values.get("supplierinfo_name"),
                     quantity=procurement.product_qty,
                     date=schedule_date.date(),
