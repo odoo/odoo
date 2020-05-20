@@ -49,35 +49,39 @@
                             </section>
 
                             <div class="payment-buttons">
-                                <div class="button" t-on-click="selectClient">
-                                    <i class="fa fa-user" role="img" aria-label="Customer"
-                                       title="Customer" />
-                                    <span class="js_customer_name">
-                                        <t t-if="env.pos.get_client()">
-                                            <t t-esc="env.pos.get_client().name" />
-                                        </t>
-                                        <t t-if="!env.pos.get_client()">
-                                            Customer
-                                        </t>
-                                    </span>
+                                <div class="customer-button">
+                                    <div class="button" t-on-click="selectClient">
+                                        <i class="fa fa-user" role="img" aria-label="Customer"
+                                           title="Customer" />
+                                        <span class="js_customer_name">
+                                            <t t-if="env.pos.get_client()">
+                                                <t t-esc="env.pos.get_client().name" />
+                                            </t>
+                                            <t t-if="!env.pos.get_client()">
+                                                Customer
+                                            </t>
+                                        </span>
+                                    </div>
                                 </div>
-                                <div t-if="env.pos.config.module_account" class="button js_invoice"
-                                     t-att-class="{ highlight: currentOrder.is_to_invoice() }"
-                                     t-on-click="toggleIsToInvoice">
-                                    <i class="fa fa-file-text-o" /> Invoice
-                                </div>
-                                <div class="button js_email"
-                                     t-att-class="{ highlight: currentOrder.is_to_email() }"
-                                     t-on-click="toggleIsToEmail">
-                                    <i class="fa fa-inbox" /> Email
-                                </div>
-                                <div t-if="env.pos.config.tip_product_id" class="button js_tip"
-                                     t-on-click="addTip">
-                                    <i class="fa fa-heart" /> Tip
-                                </div>
-                                <div t-if="env.pos.config.iface_cashdrawer" class="button js_cashdrawer"
-                                     t-on-click="openCashbox">
-                                    <i class="fa fa-archive" /> Open Cashbox
+                                <div class="payment-controls">
+                                    <div t-if="env.pos.config.module_account" class="button js_invoice"
+                                        t-att-class="{ highlight: currentOrder.is_to_invoice() }"
+                                        t-on-click="toggleIsToInvoice">
+                                        <i class="fa fa-file-text-o" /> Invoice
+                                    </div>
+                                    <div class="button js_email"
+                                        t-att-class="{ highlight: currentOrder.is_to_email() }"
+                                        t-on-click="toggleIsToEmail">
+                                        <i class="fa fa-inbox" /> Email
+                                    </div>
+                                    <div t-if="env.pos.config.tip_product_id" class="button js_tip"
+                                        t-on-click="addTip">
+                                        <i class="fa fa-heart" /> Tip
+                                    </div>
+                                    <div t-if="env.pos.config.iface_cashdrawer" class="button js_cashdrawer"
+                                        t-on-click="openCashbox">
+                                        <i class="fa fa-archive" /> Open Cashbox
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -32,7 +32,7 @@ class PosSession(models.Model):
         index=True)
     name = fields.Char(string='Session ID', required=True, readonly=True, default='/')
     user_id = fields.Many2one(
-        'res.users', string='Responsible',
+        'res.users', string='Opened By',
         required=True,
         index=True,
         readonly=True,

@@ -32,7 +32,7 @@
         <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='user_id']" position="replace">
-                <field name="cashier"/>
+                <field name="employee_id" widget="many2one_avatar_employee"/>
             </xpath>
         </field>
     </record>
