@@ -142,7 +142,6 @@ class AccountMove(models.Model):
 
     @api.depends(
         'move_type', 'name', 'currency_id.name',
-        'partner_bank_id.l10n_ch_postal',
         'partner_bank_id.l10n_ch_isr_subscription_eur',
         'partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_valid(self):
@@ -151,7 +150,6 @@ class AccountMove(models.Model):
             record.l10n_ch_isr_valid = record.move_type == 'out_invoice' and\
                 record.name and \
                 record.l10n_ch_isr_subscription and \
-                record.partner_bank_id.l10n_ch_postal and \
                 record.l10n_ch_currency_name in ['EUR', 'CHF']
 
     def split_total_amount(self):
