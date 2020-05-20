@@ -19,15 +19,16 @@
         <div data-js="countdown" data-selector=".s_countdown">
             <we-datetimepicker string="Due Date" data-select-data-attribute="" data-attribute-name="endTime"/>
             <we-row>
-                <we-select string="What should happen at the end?" data-no-preview="true">
+                <we-select string="At The End" data-no-preview="true">
                     <we-button data-end-action="nothing" data-name="no_end_action_opt">Nothing</we-button>
                     <we-button data-end-action="redirect" data-name="redirect_end_action_opt">Redirect</we-button>
-                    <we-button data-end-action="message">Show Message</we-button>
+                    <we-button data-end-action="message_no_countdown">Show Message and hide countdown</we-button>
+                    <we-button data-end-action="message">Show Message and keep countdown</we-button>
                 </we-select>
-                <we-button class="align-self-end toggle-edit-message" title="Edit Message"><i class="fa fa-eye fa-fw"/></we-button>
+                <we-button class="align-self-end toggle-edit-message" title="The message will be visible once the countdown ends">
+                    <i class="fa fa-fw fa-eye"/>
+                </we-button>
             </we-row>
-            <we-checkbox string="Hide countdown at the end" data-dependencies="!no_end_action_opt"
-                        data-select-class="hide-countdown"/>
             <we-urlpicker string="URL" data-dependencies="redirect_end_action_opt"
                         data-select-data-attribute="" placeholder="e.g. /my-awesome-page" data-attribute-name="redirectUrl"/>
             <we-select string="Size" data-attribute-name="size">
