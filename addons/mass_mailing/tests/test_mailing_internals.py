@@ -3,6 +3,7 @@
 
 from ast import literal_eval
 
+from odoo import fields
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests.common import users, Form
 from odoo.tools import formataddr, mute_logger
@@ -108,6 +109,65 @@ class TestMassMailValues(MassMailCommon):
             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
         })
         self.assertEqual(literal_eval(mailing.mailing_domain), [('email', 'ilike', 'test.example.com')])
+
+    @users('user_marketing')
+    def test_mailing_generated_source_name(self):
+        today_str = fields.Date.to_string(fields.Datetime.now())
+        mailing1, mailing2, mailing3 = self.env['mailing.mailing'].create(
+            [{
+                'subject': 'Test source',
+                'mailing_type': 'mail',
+                'body_html': '<p>Hello ${object.name}</p>',
+                'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+            }, {
+                'subject': 'Test source',
+                'mailing_type': 'mail',
+                'body_html': '<p>Hello ${object.name}</p>',
+                'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+            }, {
+                'subject': 'Test source',
+                'mailing_type': 'mail',
+                'body_html': '<p>Hello ${object.name}</p>',
+                'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+            }])
+
+        self.assertEqual(mailing1.name, 'Test source (Mailing created on %s)' % today_str)
+        self.assertEqual(mailing2.name, 'Test source (Mailing created on %s) [2]' % today_str)
+        self.assertEqual(mailing3.name, 'Test source (Mailing created on %s) [3]' % today_str)
+
+        # removing an old mailing should not change the count
+        mailing2.sudo().source_id.unlink()
+        mailing4 = self.env['mailing.mailing'].create({
+            'subject': 'Test source',
+            'mailing_type': 'mail',
+            'body_html': '<p>Hello ${object.name}</p>',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        self.assertEqual(mailing4.name, 'Test source (Mailing created on %s) [4]' % today_str)
+
+        # test if remove `[count]` from the given name
+        mailing5 = self.env['mailing.mailing'].create({
+            'name': 'Test source (Mailing created on %s) [4]' % today_str,
+            'subject': 'Test source',
+            'mailing_type': 'mail',
+            'body_html': '<p>Hello ${object.name}</p>',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        self.assertEqual(mailing5.name, 'Test source (Mailing created on %s) [5]' % today_str)
+
+        # removing the last mailing make its number available
+        mailing5.sudo().source_id.unlink()
+        mailing5 = self.env['mailing.mailing'].create({
+            'subject': 'Test source',
+            'mailing_type': 'mail',
+            'body_html': '<p>Hello ${object.name}</p>',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        self.assertEqual(mailing5.name, 'Test source (Mailing created on %s) [5]' % today_str)
+
+        # the copy should regenerate the name
+        mailing6 = mailing5.copy()
+        self.assertEqual(mailing6.name, 'Test source (Mailing created on %s) [6]' % today_str)
 
     @users('user_marketing')
     def test_mailing_computed_fields_form(self):
