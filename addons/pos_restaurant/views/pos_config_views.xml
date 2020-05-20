@@ -78,7 +78,7 @@
                         <div class="content-group" attrs="{'invisible': [('is_table_management','=',False)]}">
                             <div class="mt16">
                                 <label string="Floors" for="floor_ids" class="o_light_label"/>
-                                <field name="floor_ids" widget="many2many_tags" attrs="{'readonly': [('has_active_session','=', True)]}"/>
+                                <field name="floor_ids" widget="many2many_tags" attrs="{'readonly': [('has_active_session','=', True)]}" domain="['|', ('pos_config_id', '=', False), ('pos_config_id', '=', active_id)]"/>
                             </div>
                             <div>
                                 <button name="%(pos_restaurant.action_restaurant_floor_form)d" icon="fa-arrow-right" type="action" string="Floors" class="btn-link"/>
