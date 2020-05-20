@@ -25,16 +25,6 @@ class PosConfig(models.Model):
             'is_table_management': False,
             'iface_orderline_notes': False})
 
-    @api.onchange('is_table_management')
-    def _onchange_is_table_management(self):
-        if not self.is_table_management:
-            self.floor_ids = [(5, 0, 0)]
-
-    @api.onchange('is_order_printer')
-    def _onchange_is_order_printer(self):
-        if not self.is_order_printer:
-            self.printer_ids = [(5, 0, 0)]
-
     def get_tables_order_count(self):
         """         """
         self.ensure_one()
@@ -54,3 +44,10 @@ class PosConfig(models.Model):
         forbidden_keys.append('is_table_management')
         forbidden_keys.append('floor_ids')
         return forbidden_keys
+
+    def write(self, vals):
+        if ('is_table_management' in vals and vals['is_table_management'] == False):
+            vals['floor_ids'] = [(5, 0, 0)]
+        if ('is_order_printer' in vals and vals['is_order_printer'] == False):
+            vals['printer_ids'] = [(5, 0, 0)]
+        return super(PosConfig, self).write(vals)
