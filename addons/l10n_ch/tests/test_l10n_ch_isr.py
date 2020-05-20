@@ -34,6 +34,15 @@ class ISRTest(AccountingTestCase):
         """ Generates a test res.partner.bank. """
         return self.env['res.partner.bank'].create({
             'acc_number': number,
+            'partner_id': self.env.ref("base.res_partner_2").id,
+        })
+
+    def create_isr_issuer_account(self, number):
+        """ Generates a test res.partner.bank on company """
+        return self.env['res.partner.bank'].create({
+            'acc_number': "ISR {} number",
+            'partner_id': self.env.user.company_id.partner_id.id,
+            'l10n_ch_isr_subscription_chf': number,
         })
 
     def print_isr(self, invoice):
@@ -79,18 +88,9 @@ class ISRTest(AccountingTestCase):
         invoice_1 = self.create_invoice('base.CHF')
         self.isr_not_generated(invoice_1)
 
-        #Now we add an account for payment to our invoice, but still cannot generate the ISR
-        test_account = self.create_account('250097798')
-        invoice_1.partner_bank_id = test_account
-        self.isr_not_generated(invoice_1)
-
-        #Finally, we add bank coordinates to our account. The ISR should now be available to generate
-        test_bank = self.env['res.bank'].create({
-                'name':'Money Drop',
-                'l10n_ch_postal_chf':'010391391'
-        })
-
-        test_account.bank_id = test_bank
+        #Now we add an account for payment to our invoice, the ISR can be generated
+        test_account = self.create_isr_issuer_account('01-39139-1')
+        invoice_1.invoice_partner_bank_id = test_account
         self.isr_generated(invoice_1)
 
         #Now, let us show that, with the same data, an invoice in euros does not generate any ISR (because the bank does not have any EUR postal reference)
