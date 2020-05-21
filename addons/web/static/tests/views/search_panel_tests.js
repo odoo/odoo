@@ -305,10 +305,10 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('specify active category value in context', async function (assert) {
-        assert.expect(1);
+    QUnit.test('specify active category value in context and manually change category', async function (assert) {
+        assert.expect(5);
 
-        var kanban = await createView({
+        const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -333,7 +333,7 @@ QUnit.module('Views', {
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
-                    assert.deepEqual(args.domain, [["state", "=", "ghi"]]);
+                    assert.step(JSON.stringify(args.domain));
                 }
                 return this._super.apply(this, arguments);
             },
@@ -343,6 +343,26 @@ QUnit.module('Views', {
             },
         });
 
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header.active label')].map(
+                el => el.innerText
+            ),
+            ['All', 'GHI']
+        );
+
+        // select 'ABC' in the category 'state'
+        await testUtils.dom.click(kanban.el.querySelectorAll('.o_search_panel_category_value header')[4]);
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header.active label')].map(
+                el => el.innerText
+            ),
+            ['All', 'ABC']
+        );
+
+        assert.verifySteps([
+            '[["state","=","ghi"]]',
+            '[["state","=","abc"]]'
+        ]);
         kanban.destroy();
     });
 
