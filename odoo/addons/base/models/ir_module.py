@@ -371,6 +371,9 @@ class Module(models.Model):
                     raise UserError(_("You try to install module '%s' that depends on module '%s'.\nBut the latter module is not available in your system.") % (module.name, dep.name,))
                 if dep.depend_id.state == newstate:
                     ready_mods += dep.depend_id
+                # If a module is already installed, don't set "to install" again
+                elif dep.depend_id.state == 'installed' and newstate == 'to install':
+                    ready_mods += dep.depend_id
                 else:
                     update_mods += dep.depend_id
 
