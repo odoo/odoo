@@ -88,7 +88,7 @@ class ResPartner(models.Model):
         url = '%s/%s' % (self.get_endpoint(), action)
         account = self.env['iap.account'].get('partner_autocomplete')
         params.update({
-            'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            'db_uuid': '68c281f8-9add-11ea-921e-0242ac11002b', #self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
             'account_token': account.account_token,
             'country_code': self.env.user.company_id.country_id.code,
             'zip': self.env.user.company_id.zip,
