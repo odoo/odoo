@@ -312,9 +312,10 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('specify active category value in context', async function (assert) {
-        assert.expect(1);
+    QUnit.test('specify active category value in context and manually change category', async function (assert) {
+        assert.expect(4);
 
+        let count = 0;
         var kanban = await createView({
             View: KanbanView,
             model: 'partner',
@@ -341,7 +342,13 @@ QUnit.module('Views', {
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
-                    assert.deepEqual(args.domain, [["state", "=", "ghi"]]);
+                    if (count === 0) {
+                        assert.deepEqual(args.domain, [["state", "=", "ghi"]]);
+                    }
+                    if (count === 1) {
+                        assert.deepEqual(args.domain, [["state", "=", "abc"]]);
+                    }
+                    count++;
                 }
                 return this._super.apply(this, arguments);
             },
@@ -350,6 +357,16 @@ QUnit.module('Views', {
                 searchpanel_default_state: 'ghi',
             },
         });
+
+        await testUtils.nextTick();
+        let $searchPanelSection = kanban.$('.o_search_panel_section');
+        assert.strictEqual($searchPanelSection.find('.o_search_panel_category_value header.active label').text().replace(/\s/g, ''),
+            'AllGHI', "All and GHI should be default selected");
+
+        await testUtils.dom.click($searchPanelSection.eq(1).find('.o_search_panel_category_value:nth(1) header'));
+        $searchPanelSection = kanban.$('.o_search_panel_section');
+        assert.strictEqual($searchPanelSection.find('.o_search_panel_category_value header.active label').text().replace(/\s/g, ''),
+            'AllABC', "All and ABC should be selected after changing active filter");
 
         kanban.destroy();
     });
@@ -521,11 +538,11 @@ QUnit.module('Views', {
                 </kanban>`,
             archs: {
                 'partner,false,search': `
-                    <seasrch>
+                    <search>
                         <searchpanel>
                             <field name="company_id" store_last_active="1" enable_counters="1"/>
                         </searchpanel>
-                    </seasrch>`,
+                    </search>`,
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
@@ -547,7 +564,6 @@ QUnit.module('Views', {
         assert.verifySteps([
             'getItem searchpanel_partner_company_id', // get on start
             'setItem searchpanel_partner_company_id to 5',
-            'getItem searchpanel_partner_company_id', // get on reload
         ]);
 
         kanban.destroy();
