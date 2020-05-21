@@ -336,7 +336,10 @@ const SearchPanel = Widget.extend({
 
         // set active value
         const validValues = [...Object.values(category.values).map(v => v.id), false];
-        const value = this._getCategoryDefaultValue(category, validValues);
+        let value = category.activeValueId;
+        if (value === undefined) {
+            value = this._getCategoryDefaultValue(category, validValues);
+        }
         category.activeValueId = validValues.includes(value) ? value : false;
 
         // unfold ancestor values of active value to make it is visible
