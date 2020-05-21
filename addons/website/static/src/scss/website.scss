@@ -218,6 +218,37 @@ font[class*='bg-'] {
         background: transparent;
     }
 }
+
+/* Images */
+img {
+    &.rounded-leaf {
+        $size: 10rem;
+        border-top-left-radius: $size;
+        border-bottom-right-radius: $size;
+    }
+    &.rounded-pill {
+        $size: 10rem;
+        border-radius: $size;
+    }
+    &.stacked {
+        padding: .75rem;
+        border: 1px solid rgba(0,0,0,0.15);
+        box-shadow:
+        /* The top layer shadow */
+        0 1px 1px rgba(0,0,0,0.15),
+        /* The second layer */
+        0 10px 0 -5px #eee,
+        /* The second layer shadow */
+        0 10px 1px -4px rgba(0,0,0,0.15),
+         /* The third layer */
+        0 20px 0 -10px #eee,
+        /* The third layer shadow */
+        0 20px 1px -9px rgba(0,0,0,0.15);
+    }
+}
+
+
+
 // Smaller container
 .o_container_small {
     @extend .container;
