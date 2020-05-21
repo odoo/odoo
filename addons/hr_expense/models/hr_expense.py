@@ -410,10 +410,8 @@ class HrExpense(models.Model):
             move.with_context(dont_create_taxes=True).write({
                 'line_ids': [(0, 0, line) for line in move_line_values]
             })
-            expense.sheet_id.write({'account_move_id': move.id})
 
-            if expense.payment_mode == 'company_account':
-                expense.sheet_id.paid_expense_sheets()
+        self.filtered(lambda x: x.payment_mode == 'company_account').mapped('sheet_id').paid_expense_sheets()
 
         # post the moves
         for move in move_group_by_sheet.values():
