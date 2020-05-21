@@ -60,14 +60,15 @@ class SaleOrder(models.Model):
             action = {'type': 'ir.actions.act_window_close'}
         return action
 
-    def _create_invoices(self, grouped=False, final=False, date=None):
+    def _create_invoices(self, grouped=False, final=False, start_date=None, end_date=None):
         """ Override the _create_invoice method in sale.order model in sale module
             Add new parameter in this method, to invoice sale.order with a date. This date is used in sale_make_invoice_advance_inv into this module.
-            :param date
+            :param start_date: the start date of the period
+            :param end_date: the end date of the period
             :return {account.move}: the invoices created
         """
         moves = super(SaleOrder, self)._create_invoices(grouped, final)
-        moves._link_timesheets_to_invoice(date)
+        moves._link_timesheets_to_invoice(start_date, end_date)
         return moves
 
 class SaleOrderLine(models.Model):
@@ -115,22 +116,26 @@ class SaleOrderLine(models.Model):
         project.write({'allow_timesheets': True})
         return project
 
-    def _recompute_qty_to_invoice(self, date):
+    def _recompute_qty_to_invoice(self, start_date, end_date):
         """ Recompute the qty_to_invoice field for product containing timesheets
 
-            Search the existed timesheets up the given date in parameter.
+            Search the existed timesheets between the given period in parameter.
             Retrieve the unit_amount of this timesheet and then recompute
             the qty_to_invoice for each current product.
 
-            :param date: date to search timesheets before this date.
+            :param start_date: the start date of the period
+            :param end_date: the end date of the period
         """
         lines_by_timesheet = self.filtered(lambda sol: sol.product_id._is_delivered_timesheet())
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
         domain = expression.AND([domain, [
-            ('date', '<=', date),
             '|',
             ('timesheet_invoice_id', '=', False),
             ('timesheet_invoice_id.state', '=', 'cancel')]])
+        if start_date:
+            domain = expression.AND([domain, [('date', '>=', start_date)]])
+        if end_date:
+            domain = expression.AND([domain, [('date', '<=', end_date)]])
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
         for line in lines_by_timesheet:
