@@ -8,9 +8,8 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.tools.float_utils import float_split_str
 from odoo.tools.misc import mod10r
 
+l10n_ch_ISR_ID_NUM_LENGTH = 6
 
-l10n_ch_ISR_NUMBER_LENGTH = 27
-l10n_ch_ISR_NUMBER_ISSUER_LENGTH = 6
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -63,12 +62,13 @@ class AccountMove(models.Model):
 
     def _get_isrb_id_number(self):
         """Hook to fix the lack of proper field for ISR-B Customer ID"""
-        # FIXME
-        # replace l10n_ch_postal by an other field to not mix ISR-B
-        # customer ID as it forbid the following validations on l10n_ch_postal
+        # FIXME drop support of using l10n_ch_postal for this purpose
+        # replace l10n_ch_postal to not mix it ISR-B customer ID as it
+        # forbid the following validations on l10n_ch_postal
         # number for Vendor bank accounts:
         # - validation of format xx-yyyyy-c
         # - validation of checksum
+        # This is patched in l10n_ch_isrb module
         self.ensure_one()
         partner_bank = self.invoice_partner_bank_id
         return partner_bank.l10n_ch_postal or ''
@@ -124,6 +124,8 @@ class AccountMove(models.Model):
             isr_subscription = (record.invoice_partner_bank_id.l10n_ch_postal or '').replace("-", "")  # In case the user put the -
             if (has_qriban or isr_subscription) and record.name:
                 id_number = record._get_isrb_id_number()
+                if id_number:
+                    id_number = id_number.zfill(l10n_ch_ISR_ID_NUM_LENGTH)
                 invoice_ref = re.sub('[^\d]', '', record.name)
                 # keep only the last digits if it exceed boundaries
                 full_len = len(id_number) + len(invoice_ref)
