@@ -10,7 +10,7 @@ from odoo.tools.misc import mod10r
 
 
 l10n_ch_ISR_NUMBER_LENGTH = 27
-l10n_ch_ISR_NUMBER_ISSUER_LENGTH = 12
+l10n_ch_ISR_ID_NUM_LENGTH = 6
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -61,7 +61,18 @@ class AccountMove(models.Model):
                     record.l10n_ch_isr_subscription = _format_isr_subscription_scanline(isr_subscription)
                     record.l10n_ch_isr_subscription_formatted = _format_isr_subscription(isr_subscription)
 
-    @api.depends('name', 'partner_bank_id.l10n_ch_postal', 'partner_bank_id.acc_number')
+    def _get_isrb_id_number(self):
+        """Hook to fix the lack of proper field for ISR-B Customer ID"""
+        # FIXME
+        # replace l10n_ch_postal by an other field to not mix ISR-B
+        # customer ID as it forbid the following validations on l10n_ch_postal
+        # number for Vendor bank accounts:
+        # - validation of format xx-yyyyy-c
+        # - validation of checksum
+        self.ensure_one()
+        return self.partner_bank_id.l10n_ch_postal or ''
+
+    @api.depends('name', 'partner_bank_id.l10n_ch_postal')
     def _compute_l10n_ch_isr_number(self):
         """Generates the ISR or QRR reference
 
@@ -109,14 +120,20 @@ class AccountMove(models.Model):
         """
         for record in self:
             has_qriban = record.partner_bank_id and record.partner_bank_id._is_qr_iban() or False
-            isr_subscription = (record.partner_bank_id.l10n_ch_postal or '').replace("-", "")  # In case the user put the -
+            isr_subscription = record.l10n_ch_isr_subscription
             if (has_qriban or isr_subscription) and record.name:
-                invoice_issuer_ref = (isr_subscription or '').ljust(l10n_ch_ISR_NUMBER_ISSUER_LENGTH, '0')
+                id_number = record._get_isrb_id_number()
+                if id_number:
+                    id_number = id_number.zfill(l10n_ch_ISR_ID_NUM_LENGTH)
                 invoice_ref = re.sub('[^\d]', '', record.name)
-                #We only keep the last digits of the sequence number if it is too long
-                invoice_ref = invoice_ref[-l10n_ch_ISR_NUMBER_ISSUER_LENGTH:]
-                internal_ref = invoice_ref.zfill(l10n_ch_ISR_NUMBER_LENGTH - l10n_ch_ISR_NUMBER_ISSUER_LENGTH - 1) # -1 for mod10r check character
-                record.l10n_ch_isr_number = mod10r(invoice_issuer_ref + internal_ref)
+                # keep only the last digits if it exceed boundaries
+                full_len = len(id_number) + len(invoice_ref)
+                ref_payload_len = l10n_ch_ISR_NUMBER_LENGTH - 1
+                extra = full_len - ref_payload_len
+                if extra > 0:
+                    invoice_ref = invoice_ref[extra:]
+                internal_ref = invoice_ref.zfill(ref_payload_len - len(id_number))
+                record.l10n_ch_isr_number = mod10r(id_number + internal_ref)
             else:
                 record.l10n_ch_isr_number = False
 
@@ -138,10 +155,23 @@ class AccountMove(models.Model):
             else:
                 record.l10n_ch_isr_number_spaced = False
 
+    def _get_l10n_ch_isr_optical_amount(self):
+        """Prepare amount string for ISR optical line"""
+        self.ensure_one()
+        currency_code = None
+        if self.currency_id.name == 'CHF':
+            currency_code = '01'
+        elif self.currency_id.name == 'EUR':
+            currency_code = '03'
+        units, cents = float_split_str(self.amount_residual, 2)
+        amount_to_display = units + cents
+        amount_ref = amount_to_display.zfill(10)
+        optical_amount = currency_code + amount_ref
+        optical_amount = mod10r(optical_amount)
+        return optical_amount
 
     @api.depends(
         'currency_id.name', 'amount_residual', 'name',
-        'partner_bank_id.l10n_ch_postal',
         'partner_bank_id.l10n_ch_isr_subscription_eur',
         'partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_optical_line(self):
@@ -192,19 +222,12 @@ class AccountMove(models.Model):
         for record in self:
             record.l10n_ch_isr_optical_line = ''
             if record.l10n_ch_isr_number and record.l10n_ch_isr_subscription and record.currency_id.name:
-                #Left part
-                currency_code = None
-                if record.currency_id.name == 'CHF':
-                    currency_code = '01'
-                elif record.currency_id.name == 'EUR':
-                    currency_code = '03'
-                units, cents = float_split_str(record.amount_residual, 2)
-                amount_to_display = units + cents
-                amount_ref = amount_to_display.zfill(10)
-                left = currency_code + amount_ref
-                left = mod10r(left)
-                #Final assembly (the space after the '+' is no typo, it stands in the specs.)
-                record.l10n_ch_isr_optical_line = left + '>' + record.l10n_ch_isr_number + '+ ' + record.l10n_ch_isr_subscription + '>'
+                # Final assembly (the space after the '+' is no typo, it stands in the specs.)
+                record.l10n_ch_isr_optical_line = '{amount}>{reference}+ {creditor}>'.format(
+                    amount=record._get_l10n_ch_isr_optical_amount(),
+                    reference=record.l10n_ch_isr_number,
+                    creditor=record.l10n_ch_isr_subscription,
+                )
 
     @api.depends(
         'move_type', 'name', 'currency_id.name',
