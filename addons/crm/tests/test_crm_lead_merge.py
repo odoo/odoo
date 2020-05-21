@@ -89,8 +89,8 @@ class TestLeadMerge(TestLeadMergeCommon):
     def test_lead_merge_internals(self):
         """ Test internals of merge wizard. In this test leads are ordered as
 
-        lead_w_contact --lead---seq=3
-        lead_w_email ----lead---seq=3
+        lead_w_contact --lead---seq=3---probability=25
+        lead_w_email ----lead---seq=3---probability=15
         lead_1 ----------lead---seq=1
         lead_w_partner --lead---seq=False
         """
@@ -113,7 +113,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         ordered_merge_description = '<br><br>'.join(l.description for l in ordered_merge)
 
         # merged opportunity: in this test, all input are leads. Confidence is based on stage
-        # sequence -> lead_w_contact has a stage sequence of 3 and ID is greater than lead_w_email
+        # sequence -> lead_w_contact has a stage sequence of 3 and probability is greater
         result = merge.action_merge()
         merge_opportunity = self.env['crm.lead'].browse(result['res_id'])
         self.assertFalse((ordered_merge - merge_opportunity).exists())
@@ -130,14 +130,16 @@ class TestLeadMerge(TestLeadMergeCommon):
     def test_lead_merge_mixed(self):
         """ In case of mix, opportunities are on top, and result is an opportunity
 
-        lead_1 -------------------opp----seq=1
-        lead_w_partner_company ---opp----seq=1 (ID greater)
-        lead_w_contact -----------lead---seq=3
-        lead_w_email -------------lead---seq=3
+        lead_1 -------------------opp----seq=1---probability=60
+        lead_w_partner_company ---opp----seq=1---probability=50
+        lead_w_contact -----------lead---seq=3---probability=25
+        lead_w_email -------------lead---seq=3---probability=15
         lead_w_partner -----------lead---seq=False
         """
         # ensure initial data
         (self.lead_w_partner_company | self.lead_1).write({'type': 'opportunity'})
+        self.lead_1.write({'probability': 60})
+
         self.assertEqual(self.lead_w_partner_company.stage_id.sequence, 1)
         self.assertEqual(self.lead_1.stage_id.sequence, 1)
 
@@ -175,7 +177,7 @@ class TestLeadMerge(TestLeadMergeCommon):
     @mute_logger('odoo.models.unlink')
     def test_lead_merge_probability_auto(self):
         """ Check master lead keeps its automated probability when merged. """
-        self.lead_1.write({'probability': self.lead_1.automated_probability})
+        self.lead_1.write({'type': 'opportunity', 'probability': self.lead_1.automated_probability})
         self.assertTrue(self.lead_1.is_automated_probability)
         leads = self.env['crm.lead'].browse((self.lead_1 + self.lead_w_partner + self.lead_w_partner_company).ids)
         merged_lead = self._run_merge_wizard(leads)
@@ -187,7 +189,7 @@ class TestLeadMerge(TestLeadMergeCommon):
     def test_lead_merge_probability_auto_empty(self):
         """ Check master lead keeps its automated probability when merged
         even if its probability is 0. """
-        self.lead_1.write({'probability': 0, 'automated_probability': 0})
+        self.lead_1.write({'type': 'opportunity', 'probability': 0, 'automated_probability': 0})
         self.assertTrue(self.lead_1.is_automated_probability)
         leads = self.env['crm.lead'].browse((self.lead_1 + self.lead_w_partner + self.lead_w_partner_company).ids)
         merged_lead = self._run_merge_wizard(leads)
@@ -198,12 +200,12 @@ class TestLeadMerge(TestLeadMergeCommon):
     @mute_logger('odoo.models.unlink')
     def test_lead_merge_probability_manual(self):
         """ Check master lead keeps its manual probability when merged. """
-        self.lead_1.write({'probability': 40})
+        self.lead_1.write({'probability': 60})
         self.assertFalse(self.lead_1.is_automated_probability)
         leads = self.env['crm.lead'].browse((self.lead_1 + self.lead_w_partner + self.lead_w_partner_company).ids)
         merged_lead = self._run_merge_wizard(leads)
         self.assertEqual(merged_lead, self.lead_1)
-        self.assertEqual(merged_lead.probability, 40, "Manual Probability should remain the same after the merge")
+        self.assertEqual(merged_lead.probability, 60, "Manual Probability should remain the same after the merge")
         self.assertFalse(merged_lead.is_automated_probability)
 
     @users('user_sales_manager')
@@ -211,7 +213,7 @@ class TestLeadMerge(TestLeadMergeCommon):
     def test_lead_merge_probability_manual_empty(self):
         """ Check master lead keeps its manual probability when merged even if
         its probability is 0. """
-        self.lead_1.write({'probability': 0})
+        self.lead_1.write({'type': 'opportunity', 'probability': 0})
         leads = self.env['crm.lead'].browse((self.lead_1 + self.lead_w_partner + self.lead_w_partner_company).ids)
         merged_lead = self._run_merge_wizard(leads)
         self.assertEqual(merged_lead, self.lead_1)
@@ -223,14 +225,14 @@ class TestLeadMerge(TestLeadMergeCommon):
     def test_merge_method(self):
         """ In case of mix, opportunities are on top, and result is an opportunity
 
-        lead_1 -------------------opp----seq=1
-        lead_w_partner_company ---opp----seq=1 (ID greater)
+        lead_1 -------------------opp----seq=1---probability=50
+        lead_w_partner_company ---opp----seq=1---probability=50 (ID greater)
         lead_w_contact -----------lead---seq=3
         lead_w_email -------------lead---seq=3
         lead_w_partner -----------lead---seq=False
         """
         # ensure initial data
-        (self.lead_w_partner_company | self.lead_1).write({'type': 'opportunity'})
+        (self.lead_w_partner_company | self.lead_1).write({'type': 'opportunity', 'probability': 50})
         leads = self.env['crm.lead'].browse(self.leads.ids)._sort_by_confidence_level(reverse=True)
         with self.assertLeadMerged(self.lead_1, leads,
                                    name='Nibbler Spacecraft Request',

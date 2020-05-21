@@ -1557,6 +1557,7 @@ class Lead(models.Model):
             used mainly for first classification;
           * stage sequence: the higher the better as it indicates we are moving
             towards won stage;
+          * probability: the higher the better as it is more likely to be won;
           * ID: the higher the better when all other parameters are equal. We
             consider newer leads to be more reliable;
         """
@@ -1564,6 +1565,7 @@ class Lead(models.Model):
             return opportunity.type == 'opportunity' or opportunity.active,  \
                 opportunity.type == 'opportunity', \
                 opportunity.stage_id.sequence, \
+                opportunity.probability, \
                 -opportunity._origin.id
 
         return self.sorted(key=opps_key, reverse=reverse)
