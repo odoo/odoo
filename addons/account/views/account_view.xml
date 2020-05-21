@@ -306,7 +306,7 @@
                                                 <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                             </div>
                                         </div>
-                                        <div class="content-group" attrs="{'invisible': [('alias_domain', '!=', False)]}">
+                                        <div class="content-group" attrs="{'invisible': [('alias_domain', '!=', False)]}" groups="base.group_system" >
                                             <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button"><i class="fa fa-fw o_button_icon fa-arrow-right"/> Configure Email Servers</a>
                                         </div>
                                     </group>
