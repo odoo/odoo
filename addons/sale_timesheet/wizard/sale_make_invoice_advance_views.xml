@@ -6,16 +6,19 @@
         <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='deposit_taxes_id']" position="after">
-                <field name="date_invoice_timesheet" class="oe_inline" string="Invoice Timesheets up to" data-toggle="tooltip" data-placement="bottom"
-                    title="Only timesheets not yet invoiced (and validated, if applicable) up to this date included will be invoiced. If no date is indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."
-                    attrs="{
-                        'invisible': [ '|',
-                            ('invoicing_timesheet_enabled', '=', False),
-                            ('advance_payment_method', '!=', 'delivered'),
-                        ]
-                    }"
-                />
                 <field name="invoicing_timesheet_enabled" invisible="1"/>
+                <label for="date_start_invoice_timesheet" string="Timesheets Period" attrs="{'invisible': [ '|', ('invoicing_timesheet_enabled', '=', False), ('advance_payment_method', '!=', 'delivered')]}"/>
+                <div clas="o_row" attrs="{'invisible': [ '|',('invoicing_timesheet_enabled', '=', False), ('advance_payment_method', '!=', 'delivered')]}">
+                    <field name="date_start_invoice_timesheet"
+                        class="oe_inline" widget="daterange"
+                        options="{'related_end_date': 'date_end_invoice_timesheet'}"
+                        title="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."/>
+                    <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                    <field name="date_end_invoice_timesheet"
+                        class="oe_inline" widget="daterange"
+                        options="{'related_start_date': 'date_start_invoice_timesheet'}"
+                        title="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."/>
+                </div>
             </xpath>
         </field>
     </record>
