@@ -6,6 +6,7 @@ import time
 from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -32,9 +33,10 @@ class ISRTest(AccountTestCommon):
 
     def create_account(self, number):
         """ Generates a test res.partner.bank. """
-        return self.env['res.partner.bank'].create({
-            'acc_number': number,
-        })
+        partner_form = Form(self.env['res.partner.bank'])
+        partner_form.acc_number = number
+        partner_form.partner_id = self.env.ref("base.res_partner_2")
+        return partner_form.save()
 
     def print_isr(self, invoice):
         try:
@@ -83,11 +85,13 @@ class ISRTest(AccountTestCommon):
         test_account = self.create_account('250097798')
         invoice_1.partner_bank_id = test_account
         self.isr_not_generated(invoice_1)
+        invoice_1.partner_bank_id.write({
+            'l10n_ch_isr_subscription_chf': 'CHF'
+        })
 
         #Finally, we add bank coordinates to our account. The ISR should now be available to generate
         test_bank = self.env['res.bank'].create({
                 'name':'Money Drop',
-                'l10n_ch_postal_chf':'010391391'
         })
 
         test_account.bank_id = test_bank
