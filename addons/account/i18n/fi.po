@@ -26,13 +26,13 @@
 # Marko Happonen <marko.happonen@sprintit.fi>, 2019
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2019
 # Tommi Rintala <tommi.rintala@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2019
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2019
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
 # Miku Laitinen <miku.laitinen@gmail.com>, 2019
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
+# Martin Trigaux, 2020
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # 
 msgid ""
@@ -2287,7 +2287,7 @@ msgstr "Pankin tiliote"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Bank Statement %s"
-msgstr "% Tiliotteet"
+msgstr "Tiliote %s"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -7360,6 +7360,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "Maksamaton"
 
@@ -7699,10 +7700,10 @@ msgid ""
 "otherwise it would make a gap in the numbering. You should book an entry and"
 " make a regular revert of it in case you want to cancel it."
 msgstr ""
-"Toiminto ei ole sallittu. Koska lausuntorivisi on jo saanut numeron (% s), "
-"et voi sovittaa sitä kokonaan olemassa oleviin lokimerkintöihin, sillä "
-"muutoin numerointiin tulisi aukko. Sinun pitäisi varata merkintä ja tehdä se"
-" säännöllisesti, jos haluat peruuttaa sen."
+"Toiminto ei ole sallittu. Koska tilioterivisi on jo saanut numeron (%s), et "
+"voi hyvittää sitä kokonaan kun päiväkirjan kirjauksia on olemassa. Muutoin "
+"numerointiin tulisi aukko. Sinun pitäisi tehdä kirjaus ja tehdä normaali "
+"vastakirjaus, jos haluat perua sen.."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -8775,7 +8776,7 @@ msgstr "Tallenna valuuttatapahtumat"
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Recursion found for tax '%s'."
-msgstr "Vero '% s' löytyi rekursiosta."
+msgstr "Verolle '%s' löytyi rekursio."
 
 #. module: account
 #. openerp-web
@@ -11774,13 +11775,13 @@ msgstr "Siirrä"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Transfer from %s"
-msgstr "Siirto kohteesta% s"
+msgstr "Siirrä kohteesta %s"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Transfer to %s"
-msgstr "Siirrä kohteeseen% s"
+msgstr "Siirrä kohteeseen %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12497,7 +12498,7 @@ msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
-"Et voi lisätä / muokata merkintöjä ennen lukituksen päivämäärää% s. Tarkista"
+"Et voi lisätä / muokata merkintöjä ennen lukituksen päivämäärää %s. Tarkista"
 " yrityksen asetukset tai kysy joltain, jolla on neuvonantajan rooli"
 
 #. module: account
@@ -12757,7 +12758,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "You have to define a sequence for %s in your company."
-msgstr "Yrityksessäsi on määritettävä sekvenssi% s: lle."
+msgstr "Yrityksessäsi on määritettävä sekvenssi %s: lle."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:0

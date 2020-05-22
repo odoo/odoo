@@ -1,23 +1,86 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_mail_channel
+# 	* website_mail_channel
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Boško Stojaković <bluesoft83@gmail.com>, 2018
+# Martin Trigaux, 2020
+# Boško Stojaković <bluesoft83@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2020\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: bs\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid "- <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid ""
+"- <i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Attachments\" "
+"title=\"Attachments\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid ""
+"<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid ""
+"<i class=\"fa fa-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid ""
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
+" title=\"Show attachments\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid ""
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
+msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -29,6 +92,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "<i class=\"fa fa-file-o\"/> archives"
+msgstr ""
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
+msgid ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
+"title=\"Recipients\"/>"
 msgstr ""
 
 #. module: website_mail_channel
@@ -210,7 +280,7 @@ msgstr ""
 
 #. module: website_mail_channel
 #. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:17
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:15
 #, python-format
 msgid "Add a Subscribe Button"
 msgstr ""
@@ -229,7 +299,7 @@ msgstr "Arhive"
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -264,16 +334,16 @@ msgid "Confirm unsubscription to ${object.name}"
 msgstr ""
 
 #. module: website_mail_channel
-#. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:18
-#, python-format
-msgid "Discussion List"
+#: model:ir.model,name:website_mail_channel.model_mail_channel
+msgid "Discussion Channel"
 msgstr ""
 
 #. module: website_mail_channel
-#: model:ir.model,name:website_mail_channel.model_mail_channel
-msgid "Discussion channel"
-msgstr "Kanal rasprave"
+#. openerp-web
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:16
+#, python-format
+msgid "Discussion List"
+msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message

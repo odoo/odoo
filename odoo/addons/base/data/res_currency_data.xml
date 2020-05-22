@@ -99,7 +99,7 @@
         <record id="IDR" model="res.currency">
             <field name="name">IDR</field>
             <field name="symbol">Rp</field>
-            <field name="rounding">0.01</field>
+            <field name="rounding">1.00</field>
             <field name="position">before</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Rupiah</field>
@@ -331,9 +331,10 @@
 
         <record id="SGD" model="res.currency">
             <field name="name">SGD</field>
-            <field name="symbol">$</field>
+            <field name="symbol">S$</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
+            <field name="position">before</field>
             <field name="currency_unit_label">Dollars</field>
             <field name="currency_subunit_label">Cents</field>
         </record>
@@ -413,6 +414,7 @@
             <field name="symbol">$</field>
             <field name="rounding">1</field>
             <field name="active" eval="False"/>
+            <field name="position">before</field>
             <field name="currency_unit_label">Peso</field>
             <field name="currency_subunit_label">Centavos</field>
         </record>

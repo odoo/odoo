@@ -550,13 +550,30 @@ def TranslationFileReader(source, fileformat='po'):
 
 class CSVFileReader:
     def __init__(self, source):
-        self.source = pycompat.csv_reader(source, quotechar='"', delimiter=',')
-        # read the first line of the file (it contains columns titles)
-        self.fields = next(self.source)
+        _reader = codecs.getreader('utf-8')
+        self.source = csv.DictReader(_reader(source), quotechar='"', delimiter=',')
+        self.prev_code_src = ""
 
     def __iter__(self):
         for entry in self.source:
-            yield zip(self.fields, entry)
+
+            # determine <module>.<imd_name> from res_id
+            if entry["res_id"] and entry["res_id"].isnumeric():
+                # res_id is an id or line number
+                entry["res_id"] = int(entry["res_id"])
+            elif not entry.get("imd_name"):
+                # res_id is an external id and must follow <module>.<name>
+                entry["module"], entry["imd_name"] = entry["res_id"].split(".")
+                entry["res_id"] = None
+            entry["imd_model"] = entry["name"].split(":")[0]
+
+            if entry["type"] == "code":
+                if entry["src"] == self.prev_code_src:
+                    # skip entry due to unicity constrain on code translations
+                    continue
+                self.prev_code_src = entry["src"]
+
+            yield entry
 
 class PoFileReader:
     """ Iterate over po file to return Odoo translation entries """
