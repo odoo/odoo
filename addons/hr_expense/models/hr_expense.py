@@ -67,8 +67,7 @@ class HrExpense(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    account_id = fields.Many2one('account.account', string='Account', default=_default_account_id, domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]",
-        states={'refused': [('readonly', False)]}, help="An expense account is expected")
+    account_id = fields.Many2one('account.account', string='Account', default=_default_account_id, domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]", help="An expense account is expected")
     description = fields.Text('Notes...', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     payment_mode = fields.Selection([
         ("own_account", "Employee (to reimburse)"),
@@ -157,7 +156,7 @@ class HrExpense(models.Model):
             self.product_uom_id = self.product_id.uom_id
             self.tax_ids = self.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == self.company_id)  # taxes only from the same company
             account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
-            if account:
+            if account and self.is_editable:
                 self.account_id = account
 
     @api.onchange('company_id')
