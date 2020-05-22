@@ -1197,7 +1197,7 @@
                                 <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
                                     <div class="alert alert-warning" role="alert">
                                         <h4 class="alert-heading">Be aware!</h4>
-                                        <p>
+                                        <p t-if="not only_services" groups="sale.group_delivery_invoice_address">
                                             You are editing your <b>billing and shipping</b> addresses at the same time!<br/>
                                             If you want to modify your shipping address, create a <a href='/shop/address'>new address</a>.
                                         </p>
