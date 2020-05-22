@@ -354,6 +354,7 @@ return AbstractRenderer.extend({
             event: event,
             record: event.extendedProps.record,
             color: this.getColor(event.extendedProps.color_index),
+            showTime: !self.hideTime && event.extendedProps.showTime,
         };
         this.qweb_context = qweb_context;
         if (_.isEmpty(qweb_context.record)) {
