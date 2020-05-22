@@ -224,12 +224,12 @@ class GoogleCalendar(models.AbstractModel):
             "start": {
                 type: start_date,
                 vstype: None,
-                'timeZone': self.env.context.get('tz') or 'UTC',
+                'timeZone': self.env.context.get('tz') or self.env.user.tz or 'UTC',
             },
             "end": {
                 type: final_date,
                 vstype: None,
-                'timeZone': self.env.context.get('tz') or 'UTC',
+                'timeZone': self.env.context.get('tz') or self.env.user.tz or 'UTC',
             },
             "attendees": attendee_list,
             "reminders": {
