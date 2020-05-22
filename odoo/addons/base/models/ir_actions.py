@@ -463,7 +463,7 @@ class IrActionsServer(models.Model):
         return True
 
     def _run_action_code_multi(self, eval_context):
-        safe_eval(self.sudo().code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
+        safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
         return eval_context.get('action')
 
     def _run_action_multi(self, eval_context=None):
@@ -564,10 +564,19 @@ class IrActionsServer(models.Model):
                  return action
         """
         res = False
-        for action in self:
+        for action in self.sudo():
             action_groups = action.groups_id
-            if action_groups and not (action_groups & self.env.user.groups_id):
-                raise AccessError(_("You don't have enough access rights to run this action."))
+            if action_groups:
+                if not (action_groups & self.env.user.groups_id):
+                    raise AccessError(_("You don't have enough access rights to run this action."))
+            else:
+                try:
+                    self.env[action.model_name].check_access_rights("write")
+                except AccessError:
+                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
+                        action.name, self.env.user.login, action.model_name,
+                    )
+                    raise
 
             eval_context = self._get_eval_context(action)
 
