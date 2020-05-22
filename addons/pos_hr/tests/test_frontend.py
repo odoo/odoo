@@ -45,10 +45,10 @@ class TestUi(TestPosHrHttpCommon):
     def test_01_pos_hr_tour(self):
         # open a session, the /pos/web controller will redirect to it
         self.main_pos_config.open_session_cb(check_coa=False)
-
-        self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
-            "PosHrTour",
-            login="admin",
-            step_delay=50,
-        )
+        with self.assertQueryCount(__system__=2649):
+            self.start_tour(
+                "/pos/web?config_id=%d" % self.main_pos_config.id,
+                "PosHrTour",
+                login="admin",
+                step_delay=50,
+            )

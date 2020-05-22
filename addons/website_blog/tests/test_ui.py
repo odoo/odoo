@@ -9,4 +9,5 @@ from odoo import tools
 class TestUi(odoo.tests.HttpCase):
     def test_admin(self):
         self.env['blog.blog'].create({'name': 'Travel'})
-        self.start_tour("/", 'blog', login='admin')
+        with self.assertQueryCount(__system__=2108):
+            self.start_tour("/", 'blog', login='admin')

@@ -16,7 +16,8 @@ class TestSaleMatrixUi(common.TestMatrixCommon):
         # Set the template as configurable by matrix.
         self.matrix_template.product_add_mode = "matrix"
 
-        self.start_tour("/web", 'sale_matrix_tour', login="admin")
+        with self.assertQueryCount(__system__=5454):
+            self.start_tour("/web", 'sale_matrix_tour', login="admin")
 
         # Ensures some dynamic create variants have been created by the matrix
         # Ensures a SO has been created with exactly x lines ...

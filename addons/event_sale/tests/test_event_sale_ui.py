@@ -26,4 +26,6 @@ class TestUi(HttpCase):
             'event_id': event.id,
             'product_id': self.env.ref('event_sale.product_product_event').id,
         }])
-        self.start_tour("/web", 'event_configurator_tour', login="admin")
+        # runbot needs +1198 compared to local
+        with self.assertQueryCount(__system__=3448):
+            self.start_tour("/web", 'event_configurator_tour', login="admin")

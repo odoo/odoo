@@ -66,13 +66,16 @@ class TestUi(HttpCaseWithUserDemo):
         })
 
     def test_01_admin_shop_tour(self):
-        self.start_tour("/", 'shop', login="admin")
+        with self.assertQueryCount(__system__=5346):
+            self.start_tour("/", 'shop', login="admin")
 
     def test_02_admin_checkout(self):
-        self.start_tour("/", 'shop_buy_product', login="admin")
+        with self.assertQueryCount(__system__=4665):
+            self.start_tour("/", 'shop_buy_product', login="admin")
 
     def test_03_demo_checkout(self):
-        self.start_tour("/", 'shop_buy_product', login="demo")
+        with self.assertQueryCount(__system__=4552):
+            self.start_tour("/", 'shop_buy_product', login="demo")
 
     def test_04_admin_website_sale_tour(self):
         tax_group = self.env['account.tax.group'].create({'name': 'Tax 15%'})
@@ -99,7 +102,8 @@ class TestUi(HttpCaseWithUserDemo):
             'group_show_line_subtotals_tax_included': False,
         }).execute()
 
-        self.start_tour("/", 'website_sale_tour')
+        with self.assertQueryCount(__system__=14236):
+            self.start_tour("/", 'website_sale_tour')
 
 
 @odoo.tests.tagged('post_install', '-at_install')

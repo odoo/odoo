@@ -8,4 +8,5 @@ from odoo import tools
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
     def test_admin(self):
-        self.start_tour("/", 'event', login='admin', step_delay=100)
+        with self.assertQueryCount(__system__=3367):
+            self.start_tour("/", 'event', login='admin', step_delay=100)

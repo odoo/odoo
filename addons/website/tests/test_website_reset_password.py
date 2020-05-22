@@ -56,7 +56,8 @@ class TestWebsiteResetPassword(HttpCase):
             user.action_reset_password()
             user.invalidate_cache()
 
-            self.start_tour(user.signup_url, 'website_reset_password', login=None)
+            with self.assertQueryCount(__system__=2276):
+                self.start_tour(user.signup_url, 'website_reset_password', login=None)
 
     def test_02_multi_user_login(self):
         # In case Specific User Account is activated on a website, the same login can be used for

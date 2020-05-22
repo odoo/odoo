@@ -84,7 +84,8 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
         })
 
         self.env.ref("website_sale.search_count_box").write({"active": True})
-        self.start_tour("/", 'shop_sale_coupon', login="admin")
+        with self.assertQueryCount(__system__=6459):
+            self.start_tour("/", 'shop_sale_coupon', login="admin")
 
 
 @tagged('post_install', '-at_install')

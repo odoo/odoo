@@ -415,12 +415,18 @@ class TestUi(TestPointOfSaleHttpCommon):
         # this you end up with js, css but no qweb.
         self.env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
 
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_pricelist', login="admin", step_delay=50)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_basic_order', login="admin", step_delay=50)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ProductScreenTour', login="admin", step_delay=50)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour', login="admin", step_delay=50)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="admin", step_delay=50)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="admin", step_delay=50)
+        with self.assertQueryCount(__system__=3031):
+            self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_pricelist', login="admin", step_delay=50)
+        with self.assertQueryCount(__system__=1247):
+            self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_basic_order', login="admin", step_delay=50)
+        with self.assertQueryCount(__system__=1126):
+            self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ProductScreenTour', login="admin", step_delay=50)
+        with self.assertQueryCount(__system__=1238):
+            self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour', login="admin", step_delay=50)
+        with self.assertQueryCount(__system__=1310):
+            self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="admin", step_delay=50)
+        with self.assertQueryCount(__system__=1303):
+            self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="admin", step_delay=50)
 
         for order in self.env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))

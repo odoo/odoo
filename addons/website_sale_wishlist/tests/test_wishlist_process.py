@@ -60,4 +60,5 @@ class TestUi(odoo.tests.HttpCase):
 
         self.env.ref('base.user_admin').name = 'Mitchell Admin'
 
-        self.start_tour("/", 'shop_wishlist')
+        with self.assertQueryCount(__system__=8402):
+            self.start_tour("/", 'shop_wishlist')

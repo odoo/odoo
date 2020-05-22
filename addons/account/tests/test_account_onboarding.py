@@ -21,4 +21,6 @@ class TestAccountDocumentLayout(HttpCase):
             self.env.ref('account.account_invoices_without_payment').write({
                 'report_type': 'qweb-html',
             })
-            self.start_tour("/web", 'account_render_report', login='admin', timeout=200)
+            # runbot needs +1071 compared to local
+            with self.assertQueryCount(__system__=3647):
+                self.start_tour("/web", 'account_render_report', login='admin', timeout=200)

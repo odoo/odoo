@@ -90,9 +90,11 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
 
     @mute_logger('odoo.addons.http_routing.models.ir_http')
     def test_07_reset_page_view_complete_flow(self):
-        self.start_tour("/", 'test_reset_page_view_complete_flow_part1', login="admin")
+        with self.assertQueryCount(__system__=2565):
+            self.start_tour("/", 'test_reset_page_view_complete_flow_part1', login="admin")
         self.fix_it('/test_page_view')
-        self.start_tour("/", 'test_reset_page_view_complete_flow_part2', login="admin")
+        with self.assertQueryCount(__system__=2652):
+            self.start_tour("/", 'test_reset_page_view_complete_flow_part2', login="admin")
         self.fix_it('/test_page_view')
 
     @mute_logger('odoo.addons.http_routing.models.ir_http')

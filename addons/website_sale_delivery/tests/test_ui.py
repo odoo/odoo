@@ -69,4 +69,5 @@ class TestUi(odoo.tests.HttpCase):
         # Acquirers are sorted by state, showing `test` acquirers first (don't ask why).
         self.env.ref("payment.payment_acquirer_transfer").write({"state": "test"})
 
-        self.start_tour("/", 'check_free_delivery', login="admin")
+        with self.assertQueryCount(__system__=3357):
+            self.start_tour("/", 'check_free_delivery', login="admin")

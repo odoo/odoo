@@ -56,7 +56,8 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
     def test_01_admin_shop_customize_tour(self):
         # Enable Variant Group
         self.env.ref('product.group_product_variant').write({'users': [(4, self.env.ref('base.user_admin').id)]})
-        self.start_tour("/", 'shop_customize', login="admin")
+        with self.assertQueryCount(__system__=7232):
+            self.start_tour("/", 'shop_customize', login="admin")
 
     def test_02_admin_shop_custom_attribute_value_tour(self):
         # Make sure pricelist rule exist
@@ -159,7 +160,8 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
             pricelist.discount_policy = 'without_discount'
 
-        self.start_tour("/", 'shop_custom_attribute_value', login="admin")
+        with self.assertQueryCount(__system__=3643):
+            self.start_tour("/", 'shop_custom_attribute_value', login="admin")
 
     def test_03_public_tour_shop_dynamic_variants(self):
         """ The goal of this test is to make sure product variants with dynamic
@@ -208,7 +210,8 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
                 # 0 to not bother with the pricelist of the public user
                 ptav.price_extra = 0
 
-        self.start_tour("/", 'tour_shop_dynamic_variants')
+        with self.assertQueryCount(__system__=2310):
+            self.start_tour("/", 'tour_shop_dynamic_variants')
 
     def test_04_portal_tour_deleted_archived_variants(self):
         """The goal of this test is to make sure deleted and archived variants
@@ -264,7 +267,8 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         # delete second combination (which is now first variant since cache has been cleared)
         product_template.product_variant_ids[0].unlink()
 
-        self.start_tour("/", 'tour_shop_deleted_archived_variants', login="portal")
+        with self.assertQueryCount(__system__=1745):
+            self.start_tour("/", 'tour_shop_deleted_archived_variants', login="portal")
 
     def test_05_demo_tour_no_variant_attribute(self):
         """The goal of this test is to make sure attributes no_variant are
@@ -301,7 +305,8 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         # set a price on the value
         ptal.product_template_value_ids.price_extra = 10
 
-        self.start_tour("/", 'tour_shop_no_variant_attribute', login="demo")
+        with self.assertQueryCount(__system__=1863):
+            self.start_tour("/", 'tour_shop_no_variant_attribute', login="demo")
 
     def test_06_admin_list_view_b2c(self):
         self.env.ref('product.group_product_variant').write({'users': [(4, self.env.ref('base.user_admin').id)]})
@@ -312,4 +317,5 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         config._onchange_sale_tax()
         config.execute()
 
-        self.start_tour("/", 'shop_list_view_b2c', login="admin")
+        with self.assertQueryCount(__system__=3054):
+            self.start_tour("/", 'shop_list_view_b2c', login="admin")

@@ -113,7 +113,8 @@ class TestUi(odoo.tests.HttpCase):
         # YTI FIXME: Adapt to work without demo data
         if tools.config["without_demo"]:
             return
-        self.start_tour("/", 'product_comparison', login='admin')
+        with self.assertQueryCount(__system__=6351):
+            self.start_tour("/", 'product_comparison', login='admin')
 
     def test_02_attribute_multiple_lines(self):
         # Case product page with "Product attributes table" disabled (website_sale standard case)

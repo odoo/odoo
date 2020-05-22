@@ -12,7 +12,8 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             'is_published': True,
         })
 
-        self.start_tour("/", 'website_hr_recruitment_tour')
+        with self.assertQueryCount(__system__=1357):
+            self.start_tour("/", 'website_hr_recruitment_tour')
 
         # check result
         record = self.env['hr.applicant'].search([('description', '=', '### HR RECRUITMENT TEST DATA ###')])

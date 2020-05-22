@@ -8,7 +8,8 @@ import odoo.tests
 class TestWebsiteCrm(odoo.tests.HttpCase):
 
     def test_tour(self):
-        self.start_tour("/", 'website_crm_tour')
+        with self.assertQueryCount(__system__=1678):
+            self.start_tour("/", 'website_crm_tour')
 
         # check result
         record = self.env['crm.lead'].search([('description', '=', '### TOUR DATA ###')])

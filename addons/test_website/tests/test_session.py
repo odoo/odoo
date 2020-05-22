@@ -6,4 +6,5 @@ from odoo.tools import mute_logger
 class TestWebsiteSession(odoo.tests.HttpCase):
 
     def test_01_run_test(self):
-        self.start_tour('/', 'test_json_auth')
+        with self.assertQueryCount(__system__=2185):
+            self.start_tour('/', 'test_json_auth')

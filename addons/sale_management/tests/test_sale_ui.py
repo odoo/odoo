@@ -6,4 +6,5 @@ import odoo.tests
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_sale_tour(self):
-        self.start_tour("/web", 'sale_tour', login="admin", step_delay=100)
+        with self.assertQueryCount(__system__=4169):
+            self.start_tour("/web", 'sale_tour', login="admin", step_delay=100)

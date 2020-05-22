@@ -87,7 +87,8 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
             </t>
         '''
         generic_page.arch = oe_structure_layout
-        self.start_tour("/", 'html_editor_multiple_templates', login='admin')
+        with self.assertQueryCount(__system__=3198):
+            self.start_tour("/", 'html_editor_multiple_templates', login='admin')
         self.assertEqual(View.search_count([('key', '=', 'test.generic_view')]), 2, "homepage view should have been COW'd")
         self.assertTrue(generic_page.arch == oe_structure_layout, "Generic homepage view should be untouched")
         self.assertEqual(len(generic_page.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 0, "oe_structure view should have been deleted when aboutus was COW")
@@ -96,7 +97,8 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
         self.assertEqual(len(specific_page.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 1, "oe_structure view should have been created on the specific tree")
 
     def test_html_editor_scss(self):
-        self.start_tour("/", 'test_html_editor_scss', login='admin')
+        with self.assertQueryCount(__system__=3447):
+            self.start_tour("/", 'test_html_editor_scss', login='admin')
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslate(odoo.tests.HttpCase):
@@ -104,14 +106,16 @@ class TestUiTranslate(odoo.tests.HttpCase):
         fr_BE = self.env.ref('base.lang_fr_BE')
         fr_BE.active = True
         self.env.ref('website.default_website').language_ids |= fr_BE
-        self.start_tour("/", 'rte_translator', login='admin', timeout=120)
+        with self.assertQueryCount(__system__=7113):
+            self.start_tour("/", 'rte_translator', login='admin', timeout=120)
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_admin_tour_banner(self):
-        self.start_tour("/", 'banner', login='admin', step_delay=100)
+        with self.assertQueryCount(__system__=4157):
+            self.start_tour("/", 'banner', login='admin', step_delay=100)
 
     def test_02_restricted_editor(self):
         self.restricted_editor = self.env['res.users'].create({
@@ -123,10 +127,12 @@ class TestUi(odoo.tests.HttpCase):
                     self.ref('website.group_website_publisher')
                 ])]
         })
-        self.start_tour("/", 'restricted_editor', login='restricted')
+        with self.assertQueryCount(__system__=2114):
+            self.start_tour("/", 'restricted_editor', login='restricted')
 
     def test_03_backend_dashboard(self):
-        self.start_tour("/", 'backend_dashboard', login='admin')
+        with self.assertQueryCount(__system__=3089):
+            self.start_tour("/", 'backend_dashboard', login='admin')
 
     def test_04_website_navbar_menu(self):
         website = self.env['website'].search([], limit=1)
@@ -137,7 +143,8 @@ class TestUi(odoo.tests.HttpCase):
             'sequence': 0,
             'website_id': website.id,
         })
-        self.start_tour("/", 'website_navbar_menu')
+        with self.assertQueryCount(__system__=1010):
+            self.start_tour("/", 'website_navbar_menu')
 
     def test_05_specific_website_editor(self):
         website_default = self.env['website'].search([], limit=1)
@@ -154,8 +161,10 @@ class TestUi(odoo.tests.HttpCase):
                 </xpath>
             """,
         })
-        self.start_tour("/?fw=%s" % website_default.id, "generic_website_editor", login='admin')
-        self.start_tour("/?fw=%s" % new_website.id, "specific_website_editor", login='admin')
+        with self.assertQueryCount(__system__=1779):
+            self.start_tour("/?fw=%s" % website_default.id, "generic_website_editor", login='admin')
+        with self.assertQueryCount(__system__=1673):
+            self.start_tour("/?fw=%s" % new_website.id, "specific_website_editor", login='admin')
 
     def test_06_public_user_editor(self):
         website_default = self.env['website'].search([], limit=1)
@@ -166,7 +175,9 @@ class TestUi(odoo.tests.HttpCase):
                 </t>
             </t>
         """
-        self.start_tour("/", "public_user_editor", login=None)
+        with self.assertQueryCount(__system__=674):
+            self.start_tour("/", "public_user_editor", login=None)
 
     def test_07_snippet_version(self):
-        self.start_tour("/", 'snippet_version', login='admin')
+        with self.assertQueryCount(__system__=3055):
+            self.start_tour("/", 'snippet_version', login='admin')

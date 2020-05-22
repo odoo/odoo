@@ -60,9 +60,11 @@ class TestUi(HttpCaseWithUserDemo):
         # we have to force company currency as USDs only for this test
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.env.ref('base.USD').id, self.env.ref('base.main_company').id])
 
-        self.start_tour("/", 'event_buy_tickets', login="admin")
+        with self.assertQueryCount(__system__=3266):
+            self.start_tour("/", 'event_buy_tickets', login="admin")
 
     def test_demo(self):
-        self.start_tour("/", 'event_buy_tickets', login="demo")
+        with self.assertQueryCount(__system__=3173):
+            self.start_tour("/", 'event_buy_tickets', login="demo")
 
     # TO DO - add public test with new address when convert to web.tour format.
