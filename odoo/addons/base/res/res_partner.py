@@ -624,6 +624,11 @@ class Partner(models.Model):
             If only an email address is received and that the regex cannot find
             a name, the name will have the email value.
             If 'force_email' key in context: must find the email address. """
+        default_type = self._context.get('default_type')
+        if default_type and default_type not in self._fields['type'].selection:
+            context = dict(self._context)
+            context.pop('default_type')
+            self = self.with_context(context)
         name, email = self._parse_partner_name(name)
         if self._context.get('force_email') and not email:
             raise UserError(_("Couldn't create contact without email address!"))
