@@ -242,7 +242,7 @@ class IrActionsActWindow(models.Model):
             # mark missing records in cache with a failed value
             exc = MissingError(
                 _("Record does not exist or has been deleted.")
-                + '\n\n({} {}, {} {})'.format(_('Records:'), (self - existing).ids[:6], _('User:'), self._uid)
+                + '\n\n({} {}, {} {})'.format(_('Records:'), (self - existing)[:6], _('User:'), self._uid)
             )
             for record in (self - existing):
                 record._cache.set_failed(self._fields, exc)
