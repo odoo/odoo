@@ -16,6 +16,9 @@ class Partner(models.Model):
 
     @api.model
     def default_get(self, fields):
+        default_type = self._context.get('default_type')
+        if default_type and not dict(self._fields['type'].selection).get(default_type):
+            self = self.with_context(dict(self._context, default_type=None))
         rec = super(Partner, self).default_get(fields)
         active_model = self.env.context.get('active_model')
         if active_model == 'crm.lead':
