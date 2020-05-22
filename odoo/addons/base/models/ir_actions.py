@@ -597,13 +597,6 @@ class IrActionsServer(models.Model):
                 )
         return res or False
 
-    def _run_actions(self, ids):
-        """
-            Run server actions with given ids.
-            Allow crons to run specific server actions
-        """
-        return self.browse(ids).run()
-
 
 class IrServerObjectLines(models.Model):
     _name = 'ir.server.object.lines'
