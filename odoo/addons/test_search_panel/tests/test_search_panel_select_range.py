@@ -245,6 +245,26 @@ class TestSelectRange(odoo.tests.TransactionCase):
             False
         )
 
+        # counters, no expand, no hierarchization, and category_domain
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            enable_counters=True,
+            hierarchize=False,
+            category_domain=[['id', 'in', [r1_id, r3_id]]],  # impact expected
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 1, 'display_name': 'Folder 1', 'id': f1_id, },
+                {'__count': 0, 'display_name': 'Folder 3', 'id': f3_id, },
+                {'__count': 1, 'display_name': 'Folder 4', 'id': f4_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
+        )
+
         # counters, no expand, no hierarchization, and limit
         result = self.SourceModel.search_panel_select_range(
             'folder_id',
@@ -291,6 +311,26 @@ class TestSelectRange(odoo.tests.TransactionCase):
         result = self.SourceModel.search_panel_select_range(
             'folder_id',
             hierarchize=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Folder 1', 'id': f1_id, },
+                {'display_name': 'Folder 3', 'id': f3_id, },
+                {'display_name': 'Folder 4', 'id': f4_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
+        )
+
+        # no counters, no expand, no hierarchization, and category_domain
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            hierarchize=False,
+            category_domain=[['id', 'in', [r1_id, r3_id]]],  # no impact expected
+
         )
         self.assertEqual(
             result['values'],

@@ -397,7 +397,7 @@ const SearchPanel = Widget.extend({
         const proms = [];
         for (const category of Object.values(this.categories)) {
             const { enableCounters, expand, hierarchize, limit } = category;
-            if (force || enableCounters || !expand) {
+            if (force || enableCounters) {
                 const prom = this._rpc({
                     method: 'search_panel_select_range',
                     model: this.model,

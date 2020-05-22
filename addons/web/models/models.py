@@ -6,13 +6,17 @@ import base64
 import json
 
 from odoo import _, api, fields, models
-from odoo.osv.expression import AND
+from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
 from odoo.tools import lazy
 from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
 
 SEARCH_PANEL_ERROR_MESSAGE = "Too many items to display."
+
+def is_true_domain(domain):
+    return normalize_domain(domain) == TRUE_DOMAIN
+
 
 class lazymapping(defaultdict):
     def __missing__(self, key):
@@ -222,6 +226,51 @@ class Base(models.AbstractModel):
             r['arch'] = etree.tostring(etree.Element('qweb', root.attrib))
         return r
 
+    @api.model
+    def _search_panel_field_image(self, field_name, **kwargs):
+        """
+        Return the values in the image of the provided domain by field_name.
+
+        :param model_domain: domain whose image is returned
+        :param extra_domain: extra domain to use when counting records associated with field values
+        :param field_name: the name of a field (type many2one or selection)
+        :param enable_counters: whether to set the key '__count' in image values
+        :param only_counters: whether to retrieve information on the model_domain image or only
+                                counts based on model_domain and extra_domain. In the later case,
+                                the counts are set whatever is enable_counters.
+        :param limit: integer, maximal number of values to fetch
+        :param set_limit: boolean, whether to use the provided limit (if any)
+        :return: a dict of the form
+                    {
+                        id: { 'id': id, 'display_name': display_name, ('__count': c,) },
+                        ...
+                    }
+        """
+
+        enable_counters = kwargs.get('enable_counters')
+        only_counters = kwargs.get('only_counters')
+        extra_domain = kwargs.get('extra_domain', [])
+        no_extra = is_true_domain(extra_domain)
+        model_domain = kwargs.get('model_domain', [])
+        count_domain = AND([model_domain, extra_domain])
+
+        limit = kwargs.get('limit')
+        set_limit = kwargs.get('set_limit')
+
+        if only_counters:
+            return self._search_panel_domain_image(field_name, count_domain, True)
+
+        model_domain_image = self._search_panel_domain_image(field_name, model_domain,
+                            enable_counters and no_extra,
+                            set_limit and limit,
+                        )
+        if enable_counters and not no_extra:
+            count_domain_image = self._search_panel_domain_image(field_name, count_domain, True)
+            for id, values in model_domain_image.items():
+                element = count_domain_image.get(id)
+                values['__count'] = element['__count'] if element else 0
+
+        return model_domain_image
 
     @api.model
     def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
@@ -371,11 +420,7 @@ class Base(models.AbstractModel):
         expand = kwargs.get('expand')
 
         if enable_counters or not expand:
-            domain = AND([
-                kwargs.get('model_domain', []),
-                [(field_name, '!=', False)],
-            ])
-            domain_image = self._search_panel_domain_image(field_name, domain, enable_counters)
+            domain_image = self._search_panel_field_image(field_name, only_counters=expand, **kwargs)
 
         if not expand:
             return list(domain_image.values())
@@ -433,16 +478,15 @@ class Base(models.AbstractModel):
             raise UserError(_('Only types %(supported_types)s are supported for category (found type %(field_type)s)') % ({
                             'supported_types': supported_types, 'field_type': field.type}))
 
-        model_domain = AND([
-            kwargs.get('search_domain', []),
-            kwargs.get('category_domain', []),
-            [(field_name, '!=', False)]
-        ])
+        model_domain = kwargs.get('search_domain', [])
+        extra_domain = kwargs.get('category_domain', [])
 
         if field.type == 'selection':
             return {
                 'parent_field': False,
-                'values': self._search_panel_selection_range(field_name, model_domain=model_domain,**kwargs),
+                'values': self._search_panel_selection_range(field_name, model_domain=model_domain,
+                                extra_domain=extra_domain, **kwargs
+                            ),
             }
 
         Comodel = self.env[field.comodel_name].with_context(hierarchical_naming=False)
@@ -463,11 +507,14 @@ class Base(models.AbstractModel):
         enable_counters = kwargs.get('enable_counters')
         expand = kwargs.get('expand')
         limit = kwargs.get('limit')
-        domain_image = {}
+
         if enable_counters or not expand:
-            domain_image = self._search_panel_domain_image(field_name, model_domain, enable_counters,
-                                    limit if not (expand or hierarchize or comodel_domain) else False
-                                )
+            domain_image = self._search_panel_field_image(field_name,
+                model_domain=model_domain, extra_domain=extra_domain,
+                only_counters=expand,
+                set_limit= limit and not (expand or hierarchize or comodel_domain), **kwargs
+            )
+
         if not (expand or hierarchize or comodel_domain):
             values = list(domain_image.values())
             if limit and len(values) == limit:
@@ -503,7 +550,7 @@ class Base(models.AbstractModel):
             if hierarchize:
                 values[parent_name] = get_parent_id(record)
             if enable_counters:
-                image_element  = domain_image.get(record_id)
+                image_element = domain_image.get(record_id)
                 values['__count'] = image_element['__count'] if image_element else 0
             field_range[record_id] = values
 
@@ -554,16 +601,17 @@ class Base(models.AbstractModel):
             raise UserError(_('Only types %(supported_types)s are supported for filter (found type %(field_type)s)') % ({
                             'supported_types': supported_types, 'field_type': field.type}))
 
-        model_domain = AND([
-            kwargs.get('search_domain', []),
+        model_domain = kwargs.get('search_domain', [])
+        extra_domain = AND([
             kwargs.get('category_domain', []),
             kwargs.get('filter_domain', []),
-            [(field_name, '!=', False)]
         ])
 
         if field.type == 'selection':
             return {
-                'values': self._search_panel_selection_range(field_name, model_domain=model_domain, **kwargs)
+                'values': self._search_panel_selection_range(field_name, model_domain=model_domain,
+                                extra_domain=extra_domain, **kwargs
+                            )
             }
 
         Comodel = self.env.get(field.comodel_name).with_context(hierarchical_naming=False)
@@ -614,19 +662,29 @@ class Base(models.AbstractModel):
                     values['group_name'] = group_name
 
                 if enable_counters or not expand:
-                    count_domain = AND([
-                        model_domain,
-                        [(field_name, 'in', record_id)],
-                    ])
-                    if group_by and group_domain:
-                        extra_domain = group_domain.get(json.dumps(group_id), [])
-                        count_domain = AND([
-                            count_domain,
-                            extra_domain,
+                    search_domain = AND([
+                            model_domain,
+                            [(field_name, 'in', record_id)],
                         ])
-                    count = self.search_count(count_domain)
+                    local_extra_domain = extra_domain
+                    if group_by and group_domain:
+                        local_extra_domain = AND([
+                            local_extra_domain,
+                            group_domain.get(json.dumps(group_id), []),
+                        ])
+                    search_count_domain = AND([
+                        search_domain,
+                        local_extra_domain
+                    ])
+                    if enable_counters:
+                        count = self.search_count(search_count_domain)
+                    if not expand:
+                        if enable_counters and is_true_domain(local_extra_domain):
+                            inImage = count
+                        else:
+                            inImage = self.search(search_domain, limit=1)
 
-                if expand or count:
+                if expand or inImage:
                     if enable_counters:
                         values['__count'] = count
                     field_range.append(values)
@@ -637,14 +695,15 @@ class Base(models.AbstractModel):
             return { 'values': field_range, }
 
         if field.type == 'many2one':
-            domain_image = {}
             if enable_counters or not expand:
-                model_domain = AND([
-                    model_domain,
+                extra_domain = AND([
+                    extra_domain,
                     kwargs.get('group_domain', []),
                 ])
-                domain_image = self._search_panel_domain_image(field_name, model_domain, enable_counters,
-                                    limit if not (expand or group_by or comodel_domain) else False
+                domain_image = self._search_panel_field_image(field_name,
+                                    model_domain=model_domain, extra_domain=extra_domain,
+                                    only_counters=expand,
+                                    set_limit=limit and not (expand or group_by or comodel_domain), **kwargs
                                 )
 
             if not (expand or group_by or comodel_domain):
@@ -677,7 +736,7 @@ class Base(models.AbstractModel):
                     values['group_name'] = group_name
 
                 if enable_counters:
-                    image_element  = domain_image.get(record_id)
+                    image_element = domain_image.get(record_id)
                     values['__count'] = image_element['__count'] if image_element else 0
 
                 field_range.append(values)
