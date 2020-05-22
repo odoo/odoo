@@ -30,14 +30,6 @@ class SaleOrder(models.Model):
             invoice_vals['l10n_in_gst_treatment'] = self.l10n_in_gst_treatment
         return invoice_vals
 
-    @api.onchange('company_id')
-    def l10n_in_onchange_company_id(self):
-        if self.l10n_in_company_country_code == 'IN':
-            domain = [('company_id', '=', self.company_id.id), ('type', '=', 'sale')]
-            journal = self.env['account.journal'].search(domain, limit=1)
-            if journal:
-                self.l10n_in_journal_id = journal.id
-
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         if self.l10n_in_company_country_code == 'IN':
