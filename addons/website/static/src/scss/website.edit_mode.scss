@@ -65,6 +65,13 @@ $-editor-messages-margin-x: 2%;
 .editor_enable [data-oe-readonly]:hover {
     cursor: default;
 }
+.oe_structure_solo > .oe_drop_zone {
+    // TODO implement something more robust. This is currently for our only
+    // use case of oe_structure_solo: the footer. The dropzone in there need to
+    // be 1px lower that the end-of-page dropzone to distinguish them. The
+    // usability has to be reviewed anyway.
+    transform: translateY(10px); // For some reason "1px" is not enough...
+}
 
 /* Prevent the text contents of draggable elements from being selectable. */
 [draggable] {
