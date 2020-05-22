@@ -52,6 +52,8 @@ class TestSaleMargin(common.TransactionCase):
         # Verify that margin field gets bind with the value.
         self.assertEqual(sale_order_so11.margin, 6000.00, "Sales order profit should be 6000.00")
         self.assertEqual(sale_order_so11.margin_percent, 0.3, "Sales order margin should be 30%")
+        sale_order_so11.order_line[1].purchase_price = 800
+        self.assertEqual(sale_order_so11.margin, 5000.00, "Sales order margin should be 5000.00")
 
     def test_sale_margin1(self):
         """ Test the margin when sales price is less then cost."""
