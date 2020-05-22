@@ -11,10 +11,29 @@ const cpHelpers = testUtils.controlPanel;
 var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 
+/**
+ * Return the list of counters displayed in the search panel (if any).
+ * @param {Widget} view, view controller
+ * @returns {number[]}
+ */
 function getCounters(view) {
     return [...view.el.querySelectorAll('.o_search_panel_counter')].map(
         counter => Number(counter.innerText.trim())
     );
+}
+
+/**
+ * Fold/unfold the category value (with children)
+ * @param {Widget} widget
+ * @param {string} text
+ * @returns {Promise}
+ */
+function toggleFold(widget, text) {
+    const headers = [...widget.el.querySelectorAll(".o_search_panel_category_value header")];
+    const target = headers.find(
+        (header) => header.innerText.trim().startsWith(text)
+    );
+    return testUtils.dom.click(target);
 }
 
 QUnit.module('Views', {
@@ -1549,54 +1568,6 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test("Always reload categories when domains change and expand is false (many2one)", async function (assert) {
-        assert.expect(6);
-
-        const kanban = await createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            mockRPC: function (route, args) {
-                assert.step(args.method || route);
-                return this._super.apply(this, arguments);
-            },
-            services: this.services,
-            arch: `
-                <kanban>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="foo"/>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>`,
-            archs: {
-                'partner,false,search': `
-                    <search>
-                        <searchpanel>
-                            <field name="category_id"/>
-                        </searchpanel>
-                    </search>`,
-            },
-        });
-
-        assert.verifySteps([
-            'search_panel_select_range',
-            '/web/dataset/search_read',
-        ]);
-
-        // reload with another domain, so the filters should be reloaded
-        await kanban.reload({domain: [['id', '<', 5]]});
-
-        assert.verifySteps([
-            'search_panel_select_range',
-            '/web/dataset/search_read',
-        ]);
-
-        kanban.destroy();
-    });
-
     QUnit.test('category counters', async function (assert) {
         assert.expect(20);
 
@@ -2683,7 +2654,7 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_toggle_fold > i');
         assert.deepEqual(getCounters(kanban), [2 ,1]);
 
-        await testUtils.dom.click(kanban.el.querySelector('.o_toggle_fold > i'));
+        await toggleFold(kanban, "agrolait");
 
         assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 5);
         assert.deepEqual(getCounters(kanban), [2, 1, 1]);
@@ -2726,7 +2697,7 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_toggle_fold > i');
         assert.deepEqual(getCounters(kanban), [2, 1]);
 
-        await testUtils.dom.click(kanban.el.querySelector('.o_toggle_fold > i'));
+        await toggleFold(kanban, "agrolait");
 
         assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 4);
         assert.deepEqual(getCounters(kanban), [2, 1, 1]);
@@ -2845,7 +2816,7 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_toggle_fold > i');
         assert.deepEqual(getCounters(kanban), []);
 
-        await testUtils.dom.click(kanban.el.querySelector('.o_toggle_fold > i'));
+        await toggleFold(kanban, "agrolait");
 
         assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 5);
         assert.deepEqual(getCounters(kanban), []);
@@ -2888,7 +2859,7 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_toggle_fold > i');
         assert.deepEqual(getCounters(kanban), []);
 
-        await testUtils.dom.click(kanban.el.querySelector('.o_toggle_fold > i'));
+        await toggleFold(kanban, "agrolait");
 
         assert.containsN(kanban, '.o_search_panel_field .o_search_panel_category_value', 4);
         assert.deepEqual(getCounters(kanban), []);
@@ -3835,6 +3806,56 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    //-------------------------------------------------------------------------
+    // Model domain and count domain distinction
+    //-------------------------------------------------------------------------
+
+    QUnit.test("selection: select multi, no expand, counters, extra_domain", async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records.shift();
+        const kanban = await createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id"/>
+                            <field name="state" select="multi" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: 'partner',
+            services: this.services,
+            View: KanbanView,
+        });
+
+        assert.containsN(kanban, '.o_search_panel_label', 5);
+        assert.containsNone(kanban, '.o_toggle_fold > i');
+        assert.deepEqual(getCounters(kanban), [1, 2]);
+
+        await toggleFold(kanban, "asustek");
+
+        assert.containsN(kanban, '.o_search_panel_label', 5);
+        assert.deepEqual(getCounters(kanban), [1]);
+
+        kanban.destroy();
+    });
+
+    //-------------------------------------------------------------------------
+    // Limit
+    //-------------------------------------------------------------------------
 
     QUnit.test("reached limit for a category", async function (assert) {
         assert.expect(6);

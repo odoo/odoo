@@ -539,6 +539,57 @@ var MockServer = Class.extend({
         return modelFields;
     },
     /**
+     * Simulates a call to the server '_search_panel_field_image' method.
+     *
+     * @private
+     * @param {string} model
+     * @param {string} fieldName
+     * @param {Object} kwargs
+     * @see _mockSearchPanelDomainImage()
+     */
+	_mockSearchPanelFieldImage(model, fieldName, kwargs) {
+        const enableCounters = kwargs.enable_counters;
+        const onlyCounters = kwargs.only_counters;
+        const extraDomain = kwargs.extra_domain || [];
+        const normalizedExtra = Domain.prototype.normalizeArray(extraDomain);
+        const noExtra = JSON.stringify(normalizedExtra) === "[]";
+        const modelDomain = kwargs.model_domain || [];
+        const countDomain = Domain.prototype.normalizeArray([
+            ...modelDomain,
+            ...extraDomain,
+        ]);
+
+        const limit = kwargs.limit;
+        const setLimit = kwargs.set_limit;
+
+        if (onlyCounters) {
+            return this._mockSearchPanelDomainImage(model, fieldName, countDomain, true);
+        }
+
+        const modelDomainImage = this._mockSearchPanelDomainImage(
+            model,
+            fieldName,
+            modelDomain,
+            enableCounters && noExtra,
+            setLimit && limit
+        );
+        if (enableCounters && !noExtra) {
+            const countDomainImage = this._mockSearchPanelDomainImage(
+                model,
+                fieldName,
+                countDomain,
+                true
+            );
+            for (const [id, values] of modelDomainImage.entries()) {
+                const element = countDomainImage.get(id);
+                values.__count = element ? element.__count : 0;
+            }
+        }
+
+        return modelDomainImage;
+    },
+
+    /**
      * Simulates a call to the server '_search_panel_domain_image' method.
      *
      * @private
@@ -658,11 +709,10 @@ var MockServer = Class.extend({
         const expand = kwargs.expand;
         let domainImage;
         if (enableCounters || !expand) {
-            const domain = Domain.prototype.normalizeArray([
-                ...(kwargs.model_domain || []),
-                [fieldName, '!=', false],
-            ]);
-            domainImage = this._mockSearchPanelDomainImage(model, fieldName, domain, enableCounters);
+            const newKwargs = Object.assign({}, kwargs, {
+                only_counters: expand,
+            });
+            domainImage = this._mockSearchPanelFieldImage(model, fieldName, newKwargs);
         }
         if (!expand) {
             return [...domainImage.values()];
@@ -705,16 +755,19 @@ var MockServer = Class.extend({
         if (!supportedTypes.includes(field.type)) {
             throw new Error(`Only types ${supportedTypes} are supported for category (found type ${field.type})`);
         }
-        const modelDomain = Domain.prototype.normalizeArray([
-            ...(kwargs.search_domain || []),
-            ...(kwargs.category_domain || []),
-            [fieldName, '!=', false],
-        ]);
+
+        const modelDomain = kwargs.search_domain || [];
+        const extraDomain = kwargs.category_domain || [];
+
         if (field.type === 'selection') {
+            const newKwargs = Object.assign({}, kwargs, {
+                model_domain: modelDomain,
+                extra_domain: extraDomain,
+            });
             kwargs.model_domain = modelDomain;
             return {
                 parent_field: false,
-                values: this._mockSearchPanelSelectionRange(model, fieldName, kwargs),
+                values: this._mockSearchPanelSelectionRange(model, fieldName, newKwargs),
             };
         }
 
@@ -733,12 +786,15 @@ var MockServer = Class.extend({
         const enableCounters = kwargs.enable_counters;
         const expand = kwargs.expand;
         const limit = kwargs.limit;
-        let domainImage = new Map();
+        let domainImage;
         if (enableCounters || !expand) {
-            domainImage = this._mockSearchPanelDomainImage(
-                model, fieldName, modelDomain, enableCounters,
-                !expand && !hierarchize && !comodelDomain.length ? limit : false
-            );
+            const newKwargs = Object.assign({}, kwargs, {
+                model_domain: modelDomain,
+                extra_domain: extraDomain,
+                only_counters: expand,
+                set_limit: limit && !(expand || hierarchize || comodelDomain),
+            });
+            domainImage = this._mockSearchPanelFieldImage(model, fieldName, newKwargs);
         }
         if (!expand && !hierarchize && !comodelDomain.length) {
             if (limit && domainImage.size === limit) {
@@ -837,16 +893,18 @@ var MockServer = Class.extend({
         if (!supportedTypes.includes(field.type)) {
             throw new Error(`Only types ${supportedTypes} are supported for filter (found type ${field.type})`);
         }
-        let modelDomain = Domain.prototype.normalizeArray([
-            ...(kwargs.search_domain || []),
+        let modelDomain = kwargs.search_domain || [];
+        let extraDomain = Domain.prototype.normalizeArray([
             ...(kwargs.category_domain || []),
             ...(kwargs.filter_domain || []),
-            [fieldName, '!=', false],
         ]);
         if (field.type === 'selection') {
-            kwargs.model_domain = modelDomain;
+            const newKwargs = Object.assign({}, kwargs, {
+                model_domain: modelDomain,
+                extra_domain: extraDomain,
+            });
             return {
-                values: this._mockSearchPanelSelectionRange(model, fieldName, kwargs),
+                values: this._mockSearchPanelSelectionRange(model, fieldName, newKwargs),
             };
         }
         const fieldNames = ['display_name'];
@@ -889,21 +947,38 @@ var MockServer = Class.extend({
                     values.group_name = gName;
                 }
                 let count;
+                let inImage;
                 if (enableCounters || !expand) {
-                    let countDomain = Domain.prototype.normalizeArray([
+                    const searchDomain = Domain.prototype.normalizeArray([
                         ...modelDomain,
-                        [fieldName, 'in', record.id],
+                        [fieldName, "in", record.id]
                     ]);
+                    let localExtraDomain = extraDomain;
                     if (groupBy && groupDomain) {
-                        const extraDomain = groupDomain[JSON.stringify(groupId)] || [];
-                        countDomain = Domain.prototype.normalizeArray([
-                            ...countDomain,
-                            ...extraDomain,
+                        localExtraDomain = Domain.prototype.normalizeArray([
+                            ...localExtraDomain,
+                            ...(groupDomain[JSON.stringify(groupId)] || []),
                         ]);
                     }
-                    count = this._mockSearchCount(model, [countDomain]);
+                    const searchCountDomain = Domain.prototype.normalizeArray([
+                        ...searchDomain,
+                        ...localExtraDomain,
+                    ]);
+                    if (enableCounters) {
+                        count = this._mockSearchCount(model, [searchCountDomain]);
+                    }
+                    if (!expand) {
+                        if (
+                            enableCounters &&
+                            JSON.stringify(localExtraDomain) === "[]"
+                        ) {
+                            inImage = count;
+                        } else {
+                            inImage = (this._mockSearch(model, [searchDomain], { limit: 1 })).length;
+                        }
+                    }
                 }
-                if (expand || count) {
+                if (expand || inImage) {
                     if (enableCounters) {
                         values.__count = count;
                     }
@@ -919,16 +994,23 @@ var MockServer = Class.extend({
         }
 
         if (field.type === 'many2one') {
-            let domainImage = new Map();
+            let domainImage;
             if (enableCounters || !expand) {
+                extraDomain = Domain.prototype.normalizeArray([
+                    ...extraDomain,
+                    ...(kwargs.group_domain || []),
+                ]);
                 modelDomain = Domain.prototype.normalizeArray([
                     ...modelDomain,
                     ...(kwargs.group_domain || []),
                 ]);
-                domainImage = this._mockSearchPanelDomainImage(
-                    model, fieldName, modelDomain, enableCounters,
-                    !expand && !groupBy && !comodelDomain.length ? limit : false,
-                );
+                const newKwargs = Object.assign({}, kwargs, {
+                    model_domain: modelDomain,
+                    extra_domain: extraDomain,
+                    only_counters: expand,
+                    set_limit: limit && !(expand || groupBy || comodelDomain),
+                });
+                domainImage = this._mockSearchPanelFieldImage(model, fieldName, newKwargs);
             }
             if (!expand && !groupBy && !comodelDomain.length) {
                 if (limit && domainImage.size === limit) {
