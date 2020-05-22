@@ -33,5 +33,4 @@ class PurchaseOrder(models.Model):
     def onchange_partner_id(self):
         if self.l10n_in_company_country_code == 'IN':
             self.l10n_in_gst_treatment = self.partner_id.l10n_in_gst_treatment
-            self.onchange_l10n_in_gst_treatment()
         return super().onchange_partner_id()
