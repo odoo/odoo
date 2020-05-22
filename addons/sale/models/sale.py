@@ -547,7 +547,6 @@ class SaleOrder(models.Model):
         }
         return invoice_vals
 
-    @api.model
     def action_quotation_sent(self):
         if self.filtered(lambda so: so.state != 'draft'):
             raise UserError(_('Only draft orders can be marked as sent directly.'))

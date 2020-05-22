@@ -18,6 +18,7 @@ var ActivityMenu = Widget.extend({
         'click .o_mail_activity_action': '_onActivityActionClick',
         'click .o_mail_preview': '_onActivityFilterClick',
         'show.bs.dropdown': '_onActivityMenuShow',
+        'hide.bs.dropdown': '_onActivityMenuHide',
     },
     start: function () {
         this._$activitiesPreview = this.$('.o_mail_systray_dropdown_items');
@@ -154,7 +155,14 @@ var ActivityMenu = Widget.extend({
      * @private
      */
     _onActivityMenuShow: function () {
+        document.body.classList.add('modal-open');
          this._updateActivityPreview();
+    },
+    /**
+     * @private
+     */
+    _onActivityMenuHide: function () {
+        document.body.classList.remove('modal-open');
     },
 });
 

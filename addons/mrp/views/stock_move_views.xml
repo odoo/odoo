@@ -73,7 +73,7 @@
             <field name="model">stock.move</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="not is_done and quantity_done - product_uom_qty &lt; 0.0001" decoration-danger="not is_done and reserved_availability &lt; product_uom_qty and product_uom_qty - reserved_availability &gt; 0.0001">
+                <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" decoration-warning="quantity_done - product_uom_qty &gt; 0.0001" decoration-success="not is_done and quantity_done - product_uom_qty &lt; 0.0001" decoration-danger="not is_done and reserved_availability &lt; product_uom_qty and product_uom_qty - reserved_availability &gt; 0.0001">
                     <field name="product_id" required="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="product_uom_category_id" invisible="1"/>
