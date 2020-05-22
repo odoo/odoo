@@ -77,8 +77,12 @@ class HrExpense(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+<<<<<<< HEAD
     account_id = fields.Many2one('account.account', compute='_compute_from_product_id_company_id', store=True, readonly=False, string='Account',
         default=_default_account_id, domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]", help="An expense account is expected")
+=======
+    account_id = fields.Many2one('account.account', string='Account', default=_default_account_id, domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]", help="An expense account is expected")
+>>>>>>> 3ad86409024... temp
     description = fields.Text('Notes...', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     payment_mode = fields.Selection([
         ("own_account", "Employee (to reimburse)"),
@@ -157,6 +161,7 @@ class HrExpense(models.Model):
             else:
                 expense.is_ref_editable = is_account_manager
 
+<<<<<<< HEAD
     @api.depends('product_id', 'company_id')
     def _compute_from_product_id_company_id(self):
         for expense in self.filtered('product_id'):
@@ -169,6 +174,24 @@ class HrExpense(models.Model):
             account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
             if account:
                 expense.account_id = account
+=======
+    @api.onchange('product_id', 'company_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            if not self.name:
+                self.name = self.product_id.display_name or ''
+            if not self.attachment_number or (self.attachment_number and not self.unit_amount):
+                self.unit_amount = self.product_id.price_compute('standard_price')[self.product_id.id]
+            self.product_uom_id = self.product_id.uom_id
+            self.tax_ids = self.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == self.company_id)  # taxes only from the same company
+            account = self.product_id.product_tmpl_id.with_company(self.company_id)._get_product_accounts()['expense']
+            if account and self.is_editable:
+                self.account_id = account
+
+    @api.onchange('company_id')
+    def _onchange_expense_company_id(self):
+        self.employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid), ('company_id', '=', self.company_id.id)])
+>>>>>>> 3ad86409024... temp
 
     @api.depends('company_id')
     def _compute_employee_id(self):
