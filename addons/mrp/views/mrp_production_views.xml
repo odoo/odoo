@@ -129,7 +129,7 @@
                             <field name="id" invisible="1"/>
                             <field name="allowed_product_ids" invisible="1"/>
                             <field name="product_tracking" invisible="1"/>
-                            <field name="product_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="product_id" context="{'default_type': 'product'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', 'in', (False, ''))], 'readonly': [('state', '!=', 'draft')]}"/>
                             <label for="product_qty" string="Quantity"/>
@@ -207,7 +207,7 @@
                                 context="{'default_date_expected': date_planned_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" 
                                 attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
                                 <tree delete="0" default_order="is_done,sequence" editable="bottom">
-                                    <field name="product_id" required="1" attrs="{'readonly': ['|', '|', ('has_move_lines', '=', True), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>
+                                    <field name="product_id" required="1" context="{'default_type': 'product'}" attrs="{'readonly': ['|', '|', ('has_move_lines', '=', True), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>
 
                                     <field name="move_line_ids" invisible="1">
                                         <tree>
@@ -264,7 +264,7 @@
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids" context="{'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
                                 <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
-                                    <field name="product_id" domain="[('id', '!=', parent.product_id)]" required="1"/>
+                                    <field name="product_id" context="{'default_type': 'product'}" domain="[('id', '!=', parent.product_id)]" required="1"/>
 
                                     <field name="move_line_ids" invisible="1">
                                         <tree>
