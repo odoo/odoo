@@ -45,7 +45,7 @@
             <tree editable="top" decoration-muted="state == 'cancel'" string="Move Lines" default_order="location_id">
                 <field name="tracking" invisible="1"/>
                 <field name="state" invisible="1"/>
-                <field name="product_id" required="1" attrs="{'readonly': [('id', '!=', False)]}"/>
+                <field name="product_id" context="{'default_type': 'product'}" required="1" attrs="{'readonly': [('id', '!=', False)]}"/>
                 <field name="picking_id" required="1" attrs="{'readonly': [('id', '!=', False)]}"
                     options="{'no_create_edit': True}" domain="[('id', 'in', parent.picking_ids)]"/>
                 <field name="lot_id" groups="stock.group_production_lot" attrs="{'readonly': [('tracking', 'not in', ['lot', 'serial'])]}"/>
