@@ -43,4 +43,17 @@
         <button t-if="replan" class="btn btn-primary action_replan_button">Replan</button>
     </div>
 
+    <div t-name="mrp.OWLSetBulletStatus" owl="1">
+        <t t-if="mode === 'readonly'">
+            <t t-set="classes" t-value="nodeOptions and nodeOptions.classes || {}"/>
+            <t t-set="bullet_class" t-value="classes[value] or 'default'"/>
+            <t t-if="value">
+                <t t-set="title" t-value="value === 'waiting' ? env._t('Waiting Materials') : '';"/>
+                <span t-att-title="title" t-attf-class="o_bullet_status badge {{ 'badge-' + bullet_class }}">
+                    <t t-esc="title"/>
+                </span>
+            </t>
+        </t>
+    </div>
+
 </templates>

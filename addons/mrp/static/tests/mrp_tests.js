@@ -32,15 +32,15 @@ QUnit.module('mrp', {
     QUnit.test("bullet_state: basic rendering", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             res_id: 1,
             arch:
-                '<form>' +
-                    '<field name="state" widget="bullet_state" options="{\'classes\': {\'waiting\': \'danger\'}}"/>' +
-                '</form>',
+                `<form>
+                    <field name="state" widget="bullet_state" options="{'classes': {'waiting': 'danger'}}"/>
+                </form>`,
         });
 
         assert.strictEqual(form.$('.o_field_widget').text(), "Waiting Materials",
@@ -54,15 +54,15 @@ QUnit.module('mrp', {
     QUnit.test("mrp_time_counter: basic rendering", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             res_id: 1,
             arch:
-                '<form>' +
-                    '<field name="duration" widget="mrp_time_counter"/>' +
-                '</form>',
+                `<form>
+                    <field name="duration" widget="mrp_time_counter"/>
+                </form>`,
             mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'mrp.workcenter.productivity') {
                     assert.ok(true, "the widget should fetch the mrp.workcenter.productivity");
