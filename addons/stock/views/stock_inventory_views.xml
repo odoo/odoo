@@ -13,7 +13,8 @@
                 <field name="product_tracking" invisible="1"/>
                 <field name="is_editable" invisible="1"/>
                 <field name="outdated" invisible="1"/>
-                <field name="product_id" options="{'no_create': True}" width="1.6"
+                <field name="product_id" width="1.6"
+                       context="{'default_type': 'product'}"
                        readonly="context.get('default_product_id', False)"
                        attrs="{'readonly': ['|',
                             ('is_editable', '=', False),
@@ -53,6 +54,17 @@
                 <field name="inventory_id" invisible="1"/>
                 <field name="state" invisible="1"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="stock_inventory_line_tree_no_product_create" model="ir.ui.view">
+        <field name="name">stock.inventory.line.tree2</field>
+        <field name="model">stock.inventory.line</field>
+        <field name="inherit_id" ref="stock.stock_inventory_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <field name="product_id" position="attributes"><attribute name="options">{'no_create': True}</attribute></field>
         </field>
     </record>
 
@@ -180,7 +192,8 @@
                                widget="many2many_tags"
                                force_save="1"
                                groups="stock.group_stock_multi_locations"/>
-                        <field name="product_ids" options="{'no_create': True}"
+                        <field name="product_ids"
+                               context="{'default_type': 'product'}"
                                widget="many2many_tags"/>
                         <field name="exhausted"/>
                     </group>

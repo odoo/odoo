@@ -168,7 +168,6 @@ class Inventory(models.Model):
         self.ensure_one()
         action = {
             'type': 'ir.actions.act_window',
-            'views': [(self.env.ref('stock.stock_inventory_line_tree').id, 'tree')],
             'view_mode': 'tree',
             'name': _('Inventory Lines'),
             'res_model': 'stock.inventory.line',
@@ -190,8 +189,13 @@ class Inventory(models.Model):
                     context['readonly_location_id'] = True
 
         if self.product_ids:
+            # no_create on product_id field
+            action['view_id'] = self.env.ref('stock.stock_inventory_line_tree_no_product_create').id
             if len(self.product_ids) == 1:
                 context['default_product_id'] = self.product_ids[0].id
+        else:
+            # no product_ids => we're allowed to create new products in tree
+            action['view_id'] = self.env.ref('stock.stock_inventory_line_tree').id
 
         action['context'] = context
         action['domain'] = domain
