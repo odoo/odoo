@@ -357,7 +357,7 @@
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="has_tracking" invisible="1"/>
                                     <field name="display_assign_serial" invisible="1"/>
-                                    <field name="product_id" required="1" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('has_move_lines', '=', True)]}"/>
+                                    <field name="product_id" required="1" context="{'default_type': 'product'}" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('has_move_lines', '=', True)]}"/>
                                     <field name="description_picking" string="Description" optional="hide"/>
                                     <field name="date_expected" optional="hide" attrs="{'readonly': [('show_operations', '=', True), ('is_locked', '=', True)]}"/>
                                     <field name="is_initial_demand_editable" invisible="1"/>
