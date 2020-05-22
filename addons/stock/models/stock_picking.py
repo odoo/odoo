@@ -497,13 +497,13 @@ class Picking(models.Model):
         for picking in self:
             picking.has_packages = picking.move_line_ids.filtered(lambda ml: ml.result_package_id)
 
-    @api.depends('immediate_transfer', 'is_locked', 'state')
+    @api.depends('immediate_transfer', 'state')
     def _compute_show_check_availability(self):
         """ According to `picking.show_check_availability`, the "check availability" button will be
         displayed in the form view of a picking.
         """
         for picking in self:
-            if picking.immediate_transfer or not picking.is_locked or picking.state not in ('confirmed', 'waiting', 'assigned'):
+            if picking.immediate_transfer or picking.state not in ('confirmed', 'waiting', 'assigned'):
                 picking.show_check_availability = False
                 continue
             picking.show_check_availability = any(
@@ -524,12 +524,12 @@ class Picking(models.Model):
             else:
                 picking.show_mark_as_todo = True
 
-    @api.depends('state', 'is_locked')
+    @api.depends('state')
     def _compute_show_validate(self):
         for picking in self:
             if not (picking.immediate_transfer) and picking.state == 'draft':
                 picking.show_validate = False
-            elif picking.state not in ('draft', 'waiting', 'confirmed', 'assigned') or not picking.is_locked:
+            elif picking.state not in ('draft', 'waiting', 'confirmed', 'assigned'):
                 picking.show_validate = False
             else:
                 picking.show_validate = True
