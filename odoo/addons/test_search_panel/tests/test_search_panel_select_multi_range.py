@@ -516,6 +516,22 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
+        # counters, no expand, no group_by, and category_domain
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            enable_counters=True,
+            category_domain=[['id', '=', r2_id]],
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'__count': 1, 'display_name': 'Tag 1', 'id': t1_id, },
+                {'__count': 0, 'display_name': 'Tag 2', 'id': t2_id, },
+                {'__count': 0, 'display_name': 'Tag 3', 'id': t3_id, },
+            ]
+        )
+
+
         # no counters, no expand, group_by (many2one case), and search_domain
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
