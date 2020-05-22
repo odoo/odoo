@@ -31,10 +31,12 @@ odoo.define('hr_expense.expenses.tree', function (require) {
                 });
             }).then(function (result) {
                 self.$el.parent().find('.o_expense_container').remove();
-                var elem = QWeb.render('hr_expense.dashboard_list_header', {
-                    expenses: result,
-                    render_monetary_field: self.render_monetary_field,
-                });
+                if (result !== undefined) {
+                    var elem = QWeb.render('hr_expense.dashboard_list_header', {
+                        expenses: result,
+                        render_monetary_field: self.render_monetary_field,
+                    });
+                }
                 self.$el.before(elem);
             });
         },
