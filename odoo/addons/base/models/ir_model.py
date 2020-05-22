@@ -1491,6 +1491,55 @@ class IrModelAccess(models.Model):
         """ % access_mode, [model_name])
         return [('%s/%s' % x) if x[0] else x[1] for x in self._cr.fetchall()]
 
+    @tools.ormcache('self.env.uid', 'self.env.su')
+    def _acl_map(self):
+        """ Returns a mapping of model names to CRUD access rights.
+
+        Access rights are a map from a CRUD operation to whether it's allowed.
+
+        :rtype: dict[str, {'read': bool, 'write': bool, 'create': bool, 'unlink': bool}]
+        """
+        if self.env.su:
+            self._cr.execute('SELECT model FROM ir_model')
+            return dict.fromkeys(
+                [m for [m] in self.env.cr.fetchall()],
+                {'read': True, 'write': True, 'create': True, 'unlink': True}
+            )
+
+        self.flush(self._fields)
+        # note: need a subquery because it's possible to get models with IMA
+        #       with only groups the user doesn't have, in which case we
+        #       generate a bunch of rows with gu.uid != self.env.uid (satisfying
+        #       left joins) which get filtered out afterwards, ending up with no
+        #       row for the model...
+        self._cr.execute("""
+               SELECT model, true, true, true, true FROM ir_model WHERE transient
+        UNION ALL
+               SELECT m.model,
+                      coalesce(acl.perm_read, false),
+                      coalesce(acl.perm_write, false),
+                      coalesce(acl.perm_create, false),
+                      coalesce(acl.perm_unlink, false)
+                 FROM ir_model m
+            LEFT JOIN (
+                       SELECT a.model_id,
+                              bool_or(a.perm_read) AS perm_read,
+                              bool_or(a.perm_write) AS perm_write,
+                              bool_or(a.perm_create) AS perm_create,
+                              bool_or(a.perm_unlink) AS perm_unlink
+                         FROM ir_model_access a
+                    LEFT JOIN res_groups_users_rel gu ON (gu.gid = a.group_id)
+                        WHERE a.active
+                          AND (a.group_id IS NULL OR gu.uid = %s)
+                     GROUP BY a.model_id
+                ) AS acl ON (acl.model_id = m.id)
+                WHERE NOT m.transient
+        """, [self.env.uid])
+        return {
+            m: {'read': r, 'write': w, 'create': c, 'unlink': u}
+            for m, r, w, c, u in self._cr.fetchall()
+        }
+
     # The context parameter is useful when the method translates error messages.
     # But as the method raises an exception in that case,  the key 'lang' might
     # not be really necessary as a cache key, unless the `ormcache_context`

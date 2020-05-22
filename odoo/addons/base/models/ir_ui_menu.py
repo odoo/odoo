@@ -9,7 +9,6 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.modules import get_module_resource
-from odoo.tools.safe_eval import safe_eval
 
 MENU_ITEM_SEPARATOR = "/"
 NUMBER_PARENS = re.compile(r"\(([0-9]+)\)")
@@ -81,39 +80,43 @@ class IrUiMenu(models.Model):
         """ Return the ids of the menu items visible to the user. """
         # retrieve all menus, and determine which ones are visible
         context = {'ir.ui.menu.full_list': True}
-        menus = self.with_context(context).search([])
-
         groups = self.env.user.groups_id
         if not debug:
             groups = groups - self.env.ref('base.group_no_one')
         # first discard all menus with groups the user does not have
-        menus = menus.filtered(
-            lambda menu: not menu.groups_id or menu.groups_id & groups)
+        allowed_menu_ids = self.with_context(context).search([
+            '|', ('groups_id', '=', False), ('groups_id', 'in', groups.ids)
+        ]).ids
 
-        # take apart menus that have an action
-        action_menus = menus.filtered(lambda m: m.action and m.action.exists())
-        folder_menus = menus - action_menus
-        visible = self.browse()
+        access = self.env['ir.model.access']._acl_map()
+        self.env.cr.execute("""
+               SELECT m.id, m.parent_id, coalesce(a.id::boolean, false)
+                 FROM ir_ui_menu m
+            LEFT JOIN ir_actions a ON a.id = substring(m.action from ',(\\d+)$')::integer
+            LEFT JOIN ir_act_server s ON s.id = a.id
+            LEFT JOIN ir_act_window w ON w.id = a.id
+            LEFT JOIN ir_act_report_xml r ON r.id = a.id
+            LEFT JOIN ir_model model ON model.id = s.model_id OR model.model = w.res_model OR model.model = r.model
+                WHERE m.id = ANY(%s)
+                  AND (model.id IS NULL OR model.model = ANY(%s))
+        """, [allowed_menu_ids, [m for m, v in access.items() if v['read']]])
 
-        # process action menus, check whether their action is allowed
-        access = self.env['ir.model.access']
-        MODEL_GETTER = {
-            'ir.actions.act_window': lambda action: action.res_model,
-            'ir.actions.report': lambda action: action.model,
-            'ir.actions.server': lambda action: action.model_id.model,
-        }
-        for menu in action_menus:
-            get_model = MODEL_GETTER.get(menu.action._name)
-            if not get_model or not get_model(menu.action) or \
-                    access.check(get_model(menu.action), 'read', False):
-                # make menu visible, and its folder ancestors, too
-                visible += menu
-                menu = menu.parent_id
-                while menu and menu in folder_menus and menu not in visible:
-                    visible += menu
-                    menu = menu.parent_id
+        parents = {}
+        action_menus = set()
+        for menu_id, parent_id, has_action in self.env.cr.fetchall():
+            parents[menu_id] = parent_id
+            if has_action:
+                action_menus.add(menu_id)
 
-        return set(visible.ids)
+        visible = set()
+        for menu_id in action_menus:
+            visible.add(menu_id)
+            menu_id = parents.get(menu_id)
+            while menu_id and menu_id not in action_menus and menu_id not in visible:
+                visible.add(menu_id)
+                menu_id = parents.get(menu_id)
+
+        return visible
 
     @api.returns('self')
     def _filter_visible_menus(self):
