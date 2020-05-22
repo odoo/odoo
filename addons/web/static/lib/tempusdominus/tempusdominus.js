@@ -2737,8 +2737,10 @@ var TempusDominusBootstrap4 = function ($) {
 
 
     $(document).on(DateTimePicker.Event.CLICK_DATA_API, DateTimePicker.Selector.DATA_TOGGLE, function () {
-        var $target = getSelectorFromElement($(this));
-        if ($target.length === 0) {
+        var $target = getSelectorFromElement($(this)),
+            config = $target.data(DateTimePicker.DATA_KEY);
+        // /!\ ODOO FIX: check on 'config' existence added by odoo
+        if ($target.length === 0 || !config) {
             return;
         }
         TempusDominusBootstrap4._jQueryInterface.call($target, 'toggle');
@@ -2777,7 +2779,8 @@ var TempusDominusBootstrap4 = function ($) {
         if ($target.length === 0) {
             return;
         }
-        if (!config._options.allowInputToggle) {
+        // /!\ ODOO FIX: check on 'config' existence added by odoo
+        if (!config || !config._options.allowInputToggle) {
             return;
         }
         TempusDominusBootstrap4._jQueryInterface.call($target, 'show', event);
