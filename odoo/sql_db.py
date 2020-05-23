@@ -12,6 +12,7 @@ from contextlib import contextmanager
 from functools import wraps
 import itertools
 import logging
+import os
 import time
 import uuid
 
@@ -59,7 +60,6 @@ if pv(psycopg2.__version__) < pv('2.7'):
 from datetime import timedelta
 import threading
 from inspect import currentframe
-
 
 def flush_env(cr):
     """ Retrieve and flush an environment corresponding to the given cursor """
@@ -248,6 +248,7 @@ class Cursor(BaseCursor):
         self.autocommit(False)
 
         self._default_log_exceptions = True
+        self._application_name_is_set = False
 
         self.cache = {}
 
@@ -281,6 +282,13 @@ class Cursor(BaseCursor):
         if params and not isinstance(params, (tuple, list, dict)):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
+
+        # define application_name only if that's the first query
+        # of the transaction
+        if not self._application_name_is_set:
+            self._obj.execute("SET application_name='odoo (%d)'" %
+                              os.getpid())
+            self._application_name_is_set = True
 
         if self.sql_log:
             encoding = psycopg2.extensions.encodings[self.connection.encoding]
@@ -432,6 +440,7 @@ class Cursor(BaseCursor):
         flush_env(self)
         self.precommit()
         result = self._cnx.commit()
+        self._application_name_is_set = False
         self.prerollback.clear()
         self.postrollback.clear()
         self.postcommit()
@@ -445,6 +454,7 @@ class Cursor(BaseCursor):
         self.postcommit.clear()
         self.prerollback()
         result = self._cnx.rollback()
+        self._application_name_is_set = False
         self.postrollback()
         return result
 
