@@ -6,9 +6,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, format_date
+from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
-from odoo.tools import date_utils
 from odoo.tests.common import Form
 
 
@@ -164,61 +163,6 @@ class ResCompany(models.Model):
             'account_setup_fy_data_state',
             'account_setup_coa_state',
         ]
-
-    def compute_fiscalyear_dates(self, current_date):
-        '''Computes the start and end dates of the fiscal year where the given 'date' belongs to.
-
-        :param current_date: A datetime.date/datetime.datetime object.
-        :return: A dictionary containing:
-            * date_from
-            * date_to
-            * [Optionally] record: The fiscal year record.
-        '''
-        self.ensure_one()
-        date_str = current_date.strftime(DEFAULT_SERVER_DATE_FORMAT)
-
-        # Search a fiscal year record containing the date.
-        # If a record is found, then no need further computation, we get the dates range directly.
-        fiscalyear = self.env['account.fiscal.year'].search([
-            ('company_id', '=', self.id),
-            ('date_from', '<=', date_str),
-            ('date_to', '>=', date_str),
-        ], limit=1)
-        if fiscalyear:
-            return {
-                'date_from': fiscalyear.date_from,
-                'date_to': fiscalyear.date_to,
-                'record': fiscalyear,
-            }
-
-        date_from, date_to = date_utils.get_fiscal_year(
-            current_date, day=self.fiscalyear_last_day, month=int(self.fiscalyear_last_month))
-
-        date_from_str = date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)
-        date_to_str = date_to.strftime(DEFAULT_SERVER_DATE_FORMAT)
-
-        # Search for fiscal year records reducing the delta between the date_from/date_to.
-        # This case could happen if there is a gap between two fiscal year records.
-        # E.g. two fiscal year records: 2017-01-01 -> 2017-02-01 and 2017-03-01 -> 2017-12-31.
-        # => The period 2017-02-02 - 2017-02-30 is not covered by a fiscal year record.
-
-        fiscalyear_from = self.env['account.fiscal.year'].search([
-            ('company_id', '=', self.id),
-            ('date_from', '<=', date_from_str),
-            ('date_to', '>=', date_from_str),
-        ], limit=1)
-        if fiscalyear_from:
-            date_from = fiscalyear_from.date_to + timedelta(days=1)
-
-        fiscalyear_to = self.env['account.fiscal.year'].search([
-            ('company_id', '=', self.id),
-            ('date_from', '<=', date_to_str),
-            ('date_to', '>=', date_to_str),
-        ], limit=1)
-        if fiscalyear_to:
-            date_to = fiscalyear_to.date_from - timedelta(days=1)
-
-        return {'date_from': date_from, 'date_to': date_to}
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix):
         digits = len(current_code)
@@ -405,10 +349,16 @@ class ResCompany(models.Model):
         current year earnings account.
         """
         if self.account_opening_move_id and self.account_opening_move_id.state == 'draft':
-            debit_diff, credit_diff = self.get_opening_move_differences(self.account_opening_move_id.line_ids)
-
+            balancing_account = self.get_unaffected_earnings_account()
             currency = self.currency_id
-            balancing_move_line = self.account_opening_move_id.line_ids.filtered(lambda x: x.account_id == self.get_unaffected_earnings_account())
+
+            balancing_move_line = self.account_opening_move_id.line_ids.filtered(lambda x: x.account_id == balancing_account)
+            # There could be multiple lines if we imported the balance from unaffected earnings account too
+            if len(balancing_move_line) > 1:
+                self.with_context(check_move_validity=False).account_opening_move_id.line_ids -= balancing_move_line[1:]
+                balancing_move_line = balancing_move_line[0]
+
+            debit_diff, credit_diff = self.get_opening_move_differences(self.account_opening_move_id.line_ids)
 
             if float_is_zero(debit_diff + credit_diff, precision_rounding=currency.rounding):
                 if balancing_move_line:
@@ -420,7 +370,6 @@ class ResCompany(models.Model):
                     balancing_move_line.write({'debit': credit_diff, 'credit': debit_diff})
                 else:
                     # Non-zero difference and no existing line : create a new line
-                    balancing_account = self.get_unaffected_earnings_account()
                     self.env['account.move.line'].create({
                         'name': _('Automatic Balancing Line'),
                         'move_id': self.account_opening_move_id.id,

@@ -1032,7 +1032,7 @@ var MailManager =  AbstractService.extend({
         this._rpc({
                 model: resModel,
                 method: 'get_formview_id',
-                args: [[resID], session.user_context],
+                args: [[resID], session.user_context.uid],
             })
             .then(function (viewID) {
                 self._redirectToDocument(resModel, resID, viewID);

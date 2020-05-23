@@ -355,14 +355,6 @@
             </field>
         </record>
 
-        <record id="action_bank_statement_draft_tree" model="ir.actions.act_window">
-            <field name="name">Draft statements</field>
-            <field name="res_model">account.bank.statement</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','draft')]</field>
-            <field name="filter" eval="True"/>
-        </record>
-
         <record id="account_bank_statement_pivot" model="ir.ui.view">
             <field name="name">account.bank.statement.pivot</field>
             <field name="model">account.bank.statement</field>

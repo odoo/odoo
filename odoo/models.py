@@ -332,7 +332,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     """
 
     # default values for _transient_vacuum()
-    _transient_check_count = 0
     _transient_max_count = lazy_classproperty(lambda _: config.get('osv_memory_count_limit'))
     _transient_max_hours = lazy_classproperty(lambda _: config.get('transient_age_limit'))
 
@@ -3276,19 +3275,21 @@ Record ids: %(records)s
         if not self._ids:
             return self
 
-        where_clause, where_params, tables = self.env['ir.rule'].domain_get(self._name, operation)
-        if not where_clause:
+        quoted_table = '"%s"' % self._table
+        query = Query([quoted_table])
+        self._apply_ir_rules(query, operation)
+        if not query.where_clause:
             return self
 
         # detemine ids in database that satisfy ir.rules
-        # TODO: we should add a flush here, based on domain's arguments
         valid_ids = set()
-        query = "SELECT {}.id FROM {} WHERE {}.id IN %s AND {}".format(
-            self._table, ",".join(tables), self._table, " AND ".join(where_clause),
+        from_clause, where_clause, where_params = query.get_sql()
+        query_str = "SELECT {}.id FROM {} WHERE {} AND {}.id IN %s".format(
+            quoted_table, from_clause, where_clause, quoted_table,
         )
         self._flush_search([])
         for sub_ids in self._cr.split_for_in_conditions(self.ids):
-            self._cr.execute(query, [sub_ids] + where_params)
+            self._cr.execute(query_str, where_params + [sub_ids])
             valid_ids.update(row[0] for row in self._cr.fetchall())
 
         # return new ids without origin and ids with origin in valid_ids
@@ -4113,14 +4114,9 @@ Record ids: %(records)s
                 domain = [(self._active_name, '=', 1)] + domain
 
         if domain:
-            e = expression.expression(domain, self)
-            tables = e.get_tables()
-            where_clause, where_params = e.to_sql()
-            where_clause = [where_clause] if where_clause else []
+            return expression.expression(domain, self).query
         else:
-            where_clause, where_params, tables = [], [], ['"%s"' % self._table]
-
-        return Query(tables, where_clause, where_params)
+            return Query(['"%s"' % self._table])
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
@@ -4137,41 +4133,19 @@ Record ids: %(records)s
         if self.env.su:
             return
 
-        def apply_rule(clauses, params, tables, parent_model=None):
-            """ :param parent_model: name of the parent model, if the added
-                    clause comes from a parent model
-            """
-            if clauses:
-                if parent_model:
-                    # as inherited rules are being applied, we need to add the
-                    # missing JOIN to reach the parent table (if not JOINed yet)
-                    parent_table = '"%s"' % self.env[parent_model]._table
-                    parent_alias = '"%s"' % self._inherits_join_add(self, parent_model, query)
-                    # inherited rules are applied on the external table, replace
-                    # parent_table by parent_alias
-                    clauses = [clause.replace(parent_table, parent_alias) for clause in clauses]
-                    # replace parent_table by parent_alias, and introduce
-                    # parent_alias if needed
-                    tables = [
-                        (parent_table + ' as ' + parent_alias) if table == parent_table \
-                            else table.replace(parent_table, parent_alias)
-                        for table in tables
-                    ]
-                query.where_clause += clauses
-                query.where_clause_params += params
-                for table in tables:
-                    if table not in query.tables:
-                        query.tables.append(table)
-
         # apply main rules on the object
         Rule = self.env['ir.rule']
-        where_clause, where_params, tables = Rule.domain_get(self._name, mode)
-        apply_rule(where_clause, where_params, tables)
+        domain = Rule._compute_domain(self._name, mode)
+        if domain:
+            expression.expression(domain, self.sudo(), self._table, query)
 
         # apply ir.rules from the parents (through _inherits)
-        for parent_model in self._inherits:
-            where_clause, where_params, tables = Rule.domain_get(parent_model, mode)
-            apply_rule(where_clause, where_params, tables, parent_model)
+        for parent_model_name in self._inherits:
+            domain = Rule._compute_domain(parent_model_name, mode)
+            if domain:
+                parent_model = self.env[parent_model_name]
+                parent_alias = self._inherits_join_add(self, parent_model_name, query)
+                expression.expression(domain, parent_model.sudo(), parent_alias, query)
 
     @api.model
     def _generate_translated_field(self, table_alias, field, query):
@@ -4377,19 +4351,20 @@ Record ids: %(records)s
 
         query = self._where_calc(args)
         self._apply_ir_rules(query, 'read')
-        order_by = self._generate_order_by(order, query)
-        from_clause, where_clause, where_clause_params = query.get_sql()
-
-        where_str = where_clause and (" WHERE %s" % where_clause) or ''
 
         if count:
             # Ignore order, limit and offset when just counting, they don't make sense and could
             # hurt performance
+            from_clause, where_clause, where_clause_params = query.get_sql()
+            where_str = where_clause and (" WHERE %s" % where_clause) or ''
             query_str = 'SELECT count(1) FROM ' + from_clause + where_str
             self._cr.execute(query_str, where_clause_params)
             res = self._cr.fetchone()
             return res[0]
 
+        order_by = self._generate_order_by(order, query)
+        from_clause, where_clause, where_clause_params = query.get_sql()
+        where_str = where_clause and (" WHERE %s" % where_clause) or ''
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
@@ -4704,61 +4679,6 @@ Record ids: %(records)s
 
         """
         return cls._transient
-
-    def _transient_clean_rows_older_than(self, seconds):
-        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
-        # Never delete rows used in last 5 minutes
-        seconds = max(seconds, 300)
-        query = ("SELECT id FROM " + self._table + " WHERE"
-            " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
-            " < ((now() at time zone 'UTC') - interval %s)")
-        self._cr.execute(query, ("%s seconds" % seconds,))
-        ids = [x[0] for x in self._cr.fetchall()]
-        self.sudo().browse(ids).unlink()
-
-    def _transient_clean_old_rows(self, max_count):
-        # Check how many rows we have in the table
-        self._cr.execute("SELECT count(*) AS row_count FROM " + self._table)
-        res = self._cr.fetchall()
-        if res[0][0] <= max_count:
-            return  # max not reached, nothing to do
-        self._transient_clean_rows_older_than(300)
-
-    @api.model
-    def _transient_vacuum(self, force=False):
-        """Clean the transient records.
-
-        This unlinks old records from the transient model tables whenever the
-        "_transient_max_count" or "_max_age" conditions (if any) are reached.
-        Actual cleaning will happen only once every "_transient_check_time" calls.
-        This means this method can be called frequently called (e.g. whenever
-        a new record is created).
-        Example with both max_hours and max_count active:
-        Suppose max_hours = 0.2 (e.g. 12 minutes), max_count = 20, there are 55 rows in the
-        table, 10 created/changed in the last 5 minutes, an additional 12 created/changed between
-        5 and 10 minutes ago, the rest created/changed more then 12 minutes ago.
-        - age based vacuum will leave the 22 rows created/changed in the last 12 minutes
-        - count based vacuum will wipe out another 12 rows. Not just 2, otherwise each addition
-          would immediately cause the maximum to be reached again.
-        - the 10 rows that have been created/changed the last 5 minutes will NOT be deleted
-        """
-        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
-        _transient_check_time = 20          # arbitrary limit on vacuum executions
-        cls = type(self)
-        cls._transient_check_count += 1
-        if not force and (cls._transient_check_count < _transient_check_time):
-            return True  # no vacuum cleaning this time
-        cls._transient_check_count = 0
-
-        # Age-based expiration
-        if self._transient_max_hours:
-            self._transient_clean_rows_older_than(self._transient_max_hours * 60 * 60)
-
-        # Count-based expiration
-        if self._transient_max_count:
-            self._transient_clean_old_rows(self._transient_max_count)
-
-        return True
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
@@ -6297,6 +6217,53 @@ class TransientModel(Model):
     _register = False           # not visible in ORM registry, meant to be python-inherited only
     _abstract = False           # not abstract
     _transient = True           # transient
+
+    @api.autovacuum
+    def _transient_vacuum(self):
+        """Clean the transient records.
+
+        This unlinks old records from the transient model tables whenever the
+        "_transient_max_count" or "_max_age" conditions (if any) are reached.
+        Actual cleaning will happen only once every "_transient_check_time" calls.
+        This means this method can be called frequently called (e.g. whenever
+        a new record is created).
+        Example with both max_hours and max_count active:
+        Suppose max_hours = 0.2 (e.g. 12 minutes), max_count = 20, there are 55 rows in the
+        table, 10 created/changed in the last 5 minutes, an additional 12 created/changed between
+        5 and 10 minutes ago, the rest created/changed more then 12 minutes ago.
+        - age based vacuum will leave the 22 rows created/changed in the last 12 minutes
+        - count based vacuum will wipe out another 12 rows. Not just 2, otherwise each addition
+          would immediately cause the maximum to be reached again.
+        - the 10 rows that have been created/changed the last 5 minutes will NOT be deleted
+        """
+        if self._transient_max_hours:
+            # Age-based expiration
+            self._transient_clean_rows_older_than(self._transient_max_hours * 60 * 60)
+
+        if self._transient_max_count:
+            # Count-based expiration
+            self._transient_clean_old_rows(self._transient_max_count)
+
+    def _transient_clean_old_rows(self, max_count):
+        # Check how many rows we have in the table
+        query = 'SELECT count(*) FROM "{}"'.format(self._table)
+        self._cr.execute(query)
+        [count] = self._cr.fetchone()
+        if count > max_count:
+            self._transient_clean_rows_older_than(300)
+
+    def _transient_clean_rows_older_than(self, seconds):
+        # Never delete rows used in last 5 minutes
+        seconds = max(seconds, 300)
+        query = """
+            SELECT id FROM "{}"
+            WHERE COALESCE(write_date, create_date, (now() AT TIME ZONE 'UTC'))::timestamp
+                < (now() AT TIME ZONE 'UTC') - interval %s
+        """.format(self._table)
+        self._cr.execute(query, ["%s seconds" % seconds])
+        ids = [x[0] for x in self._cr.fetchall()]
+        self.sudo().browse(ids).unlink()
+
 
 def itemgetter_tuple(items):
     """ Fixes itemgetter inconsistency (useful in some cases) of not returning

@@ -75,37 +75,12 @@
 </template>
 
 <!-- Extend default mass_mailing snippets with website feature -->
-<template id="social_links">
-    <t t-if="not website">
-        <t t-set="website" t-value="request.env['website'].search([], limit=1)"/>
-    </t>
-    <t t-if="website.social_facebook">
-        <a t-att-href="website.social_facebook" aria-label="Facebook" title="Facebook">
-          <span class="fa fa-facebook"></span>
-        </a>
-    </t>
-    <t t-if="website.social_linkedin">
-        <a t-att-href="website.social_linkedin" style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn">
-            <span class="fa fa-linkedin"></span>
-        </a>
-    </t>
-    <t t-if="website.social_twitter">
-        <a t-att-href="website.social_twitter" style="margin-left:10px" aria-label="Twitter" title="Twitter">
-            <span class="fa fa-twitter"></span>
-        </a>
-    </t>
-    <t t-if="website.social_instagram">
-        <a t-att-href="website.social_instagram" style="margin-left:10px" aria-label="Instagram" title="Instagram">
-            <span class="fa fa-instagram"></span>
-        </a>
-    </t>
-</template>
 
 <template id="s_mail_block_header_social" inherit_id="mass_mailing.s_mail_block_header_social">
     <xpath expr="//td[hasclass('o_mail_logo_container')]" position="after">
         <td width="30%" class="text-right o_mail_no_resize">
             <div class="o_mail_header_social">
-                <t t-call="website_mass_mailing.social_links"/>
+                <t t-call="mass_mailing.social_links"/>
             </div>
         </td>
     </xpath>
@@ -115,7 +90,7 @@
     <xpath expr="//table//td" position="after">
         <td width="30%" class="text-right o_mail_no_resize">
             <div class="o_mail_header_social">
-                <t t-call="website_mass_mailing.social_links"/>
+                <t t-call="mass_mailing.social_links"/>
             </div>
         </td>
     </xpath>
@@ -125,23 +100,11 @@
     <xpath expr="//td[hasclass('o_mail_footer_links')]" position="inside">
         <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
     </xpath>
-    <xpath expr="//tr" position="before">
-        <tr>
-            <td class="o_mail_footer_social">
-                <t t-call="website_mass_mailing.social_links"/>
-            </td>
-        </tr>
-    </xpath>
 </template>
 
 <template id="s_mail_block_footer_social_left" inherit_id="mass_mailing.s_mail_block_footer_social_left">
     <xpath expr="//div[hasclass('o_mail_footer_links')]" position="inside">
         <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
-    </xpath>
-    <xpath expr="//td" position="after">
-        <td class="o_mail_footer_social">
-            <t t-call="website_mass_mailing.social_links"/>
-        </td>
     </xpath>
 </template>
 

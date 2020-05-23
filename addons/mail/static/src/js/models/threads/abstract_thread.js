@@ -98,6 +98,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
     getTitle: function () {
         return this.getName();
     },
+    getType: function () {},
     /**
      * @returns {integer}
      */

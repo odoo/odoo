@@ -77,8 +77,8 @@ class SaleOrder(models.Model):
         free_shipping_product_ids = free_shipping_prgs_ids.mapped('discount_line_product_id')
         return self.order_line.filtered(lambda l: l.product_id in free_shipping_product_ids)
 
-    @api.model
-    def _garbage_collector(self, *args, **kwargs):
+    @api.autovacuum
+    def _gc_abandoned_coupons(self, *args, **kwargs):
         """Remove/free coupon from abandonned ecommerce order."""
         ICP = self.env['ir.config_parameter']
         validity = ICP.get_param('website_sale_coupon.abandonned_coupon_validity', 4)

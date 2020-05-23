@@ -777,27 +777,7 @@ class TestExpression2(TransactionCase):
 
 class TestAutoJoin(TransactionCase):
 
-    def setUp(self):
-        super(TestAutoJoin, self).setUp()
-        # Mock BaseModel._where_calc(), to be able to proceed to some tests about generated expression
-        self._reinit_mock()
-        BaseModel_where_calc = BaseModel._where_calc
-
-        def _where_calc(model, *args, **kwargs):
-            """ Mock `_where_calc` to be able to test its results. Store them
-                into some internal variable for latter processing. """
-            query = BaseModel_where_calc(model, *args, **kwargs)
-            self.query_list.append(query)
-            return query
-
-        self.patch(BaseModel, '_where_calc', _where_calc)
-
-    def _reinit_mock(self):
-        self.query_list = []
-
     def test_auto_join(self):
-        unaccent = expression.get_unaccent_wrapper(self.cr)
-
         # Get models
         partner_obj = self.env['res.partner']
         state_obj = self.env['res.country.state']
@@ -819,6 +799,7 @@ class TestAutoJoin(TransactionCase):
         # Create demo data: partners and bank object
         p_a = partner_obj.create({'name': 'test__A', 'state_id': states[0].id})
         p_b = partner_obj.create({'name': 'test__B', 'state_id': states[1].id})
+        p_c = partner_obj.create({'name': 'test__C', 'state_id': False})
         p_aa = partner_obj.create({'name': 'test__AA', 'parent_id': p_a.id, 'state_id': states[0].id})
         p_ab = partner_obj.create({'name': 'test__AB', 'parent_id': p_a.id, 'state_id': states[1].id})
         p_ba = partner_obj.create({'name': 'test__BA', 'parent_id': p_b.id, 'state_id': states[0].id})
@@ -841,111 +822,45 @@ class TestAutoJoin(TransactionCase):
         name_test = '12'
 
         # Do: one2many without _auto_join
-        self._reinit_mock()
         partners = partner_obj.search([('bank_ids.sanitized_acc_number', 'like', name_test)])
-        # Test result
         self.assertEqual(partners, p_aa,
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
-        # Test produced queries
-        self.assertEqual(len(self.query_list), 2,
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') should produce 2 queries (1 in res_partner_bank, 1 on res_partner)")
-        sql_query = self.query_list[0].get_sql()
-        self.assertIn('res_partner_bank', sql_query[0],
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect main table")
 
-        expected = "%s like %s" % (unaccent('"res_partner_bank"."sanitized_acc_number"::text'), unaccent('%s'))
-        self.assertIn(expected, sql_query[1],
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect where condition")
-
-        self.assertEqual(['%' + name_test + '%'], sql_query[2],
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect parameter")
-        sql_query = self.query_list[1].get_sql()
-        self.assertIn('res_partner', sql_query[0],
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') second query incorrect main table")
-        self.assertIn('"res_partner"."id" in (%s)', sql_query[1],
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') second query incorrect where condition")
-        self.assertIn(p_aa.id, sql_query[2],
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') second query incorrect parameter")
+        partners = partner_obj.search(['|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', name_test)])
+        self.assertIn(p_aa, partners,
+            "_auto_join off: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
+        self.assertIn(p_c, partners,
+            "_auto_join off: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
 
         # Do: cascaded one2many without _auto_join
-        self._reinit_mock()
         partners = partner_obj.search([('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
-        # Test result
         self.assertEqual(partners, p_a + p_b,
             "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]): incorrect result")
-        # Test produced queries
-        self.assertEqual(len(self.query_list), 3,
-            "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]) should produce 3 queries (1 in res_partner_bank, 2 on res_partner)")
 
         # Do: one2many with _auto_join
         patch_auto_join(partner_obj, 'bank_ids', True)
-        self._reinit_mock()
         partners = partner_obj.search([('bank_ids.sanitized_acc_number', 'like', name_test)])
-        # Test result
         self.assertEqual(partners, p_aa,
             "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') incorrect result")
-        # Test produced queries
-        self.assertEqual(len(self.query_list), 1,
-            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') should produce 1 query")
-        sql_query = self.query_list[0].get_sql()
-        self.assertIn('"res_partner"', sql_query[0],
-            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect main table")
-        self.assertIn('"res_partner_bank" as "res_partner__bank_ids"', sql_query[0],
-            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect join")
 
-        expected = "%s like %s" % (unaccent('"res_partner__bank_ids"."sanitized_acc_number"::text'), unaccent('%s'))
-        self.assertIn(expected, sql_query[1],
-            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect where condition")
-        
-        self.assertIn('"res_partner"."id"="res_partner__bank_ids"."partner_id"', sql_query[1],
-            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect join condition")
-        self.assertIn('%' + name_test + '%', sql_query[2],
-            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect parameter")
+        partners = partner_obj.search(['|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', name_test)])
+        self.assertIn(p_aa, partners,
+            "_auto_join on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
+        self.assertIn(p_c, partners,
+            "_auto_join on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
 
         # Do: one2many with _auto_join, test final leaf is an id
-        self._reinit_mock()
         bank_ids = [b_aa.id, b_ab.id]
         partners = partner_obj.search([('bank_ids.id', 'in', bank_ids)])
-        # Test result
         self.assertEqual(partners, p_aa + p_ab,
             "_auto_join on: ('bank_ids.id', 'in', [..]) incorrect result")
-        # Test produced queries
-        self.assertEqual(len(self.query_list), 1,
-            "_auto_join on: ('bank_ids.id', 'in', [..]) should produce 1 query")
-        sql_query = self.query_list[0].get_sql()
-        self.assertIn('"res_partner"', sql_query[0],
-            "_auto_join on: ('bank_ids.id', 'in', [..]) query incorrect main table")
-        self.assertIn('"res_partner__bank_ids"."id" in (%s,%s)', sql_query[1],
-            "_auto_join on: ('bank_ids.id', 'in', [..]) query incorrect where condition")
-        self.assertLessEqual(set(bank_ids), set(sql_query[2]),
-            "_auto_join on: ('bank_ids.id', 'in', [..]) query incorrect parameter")
 
         # Do: 2 cascaded one2many with _auto_join, test final leaf is an id
         patch_auto_join(partner_obj, 'child_ids', True)
-        self._reinit_mock()
         bank_ids = [b_aa.id, b_ba.id]
         partners = partner_obj.search([('child_ids.bank_ids.id', 'in', bank_ids)])
-        # Test result
         self.assertEqual(partners, p_a + p_b,
             "_auto_join on: ('child_ids.bank_ids.id', 'not in', [..]): incorrect result")
-        # # Test produced queries
-        self.assertEqual(len(self.query_list), 1,
-            "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) should produce 1 query")
-        sql_query = self.query_list[0].get_sql()
-        self.assertIn('"res_partner"', sql_query[0],
-            "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) incorrect main table")
-        self.assertIn('"res_partner" as "res_partner__child_ids"', sql_query[0],
-            "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join")
-        self.assertIn('"res_partner_bank" as "res_partner__child_ids__bank_ids"', sql_query[0],
-            "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join")
-        self.assertIn('"res_partner__child_ids__bank_ids"."id" in (%s,%s)', sql_query[1],
-            "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect where condition")
-        self.assertIn('"res_partner"."id"="res_partner__child_ids"."parent_id"', sql_query[1],
-            "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join condition")
-        self.assertIn('"res_partner__child_ids"."id"="res_partner__child_ids__bank_ids"."partner_id"', sql_query[1],
-            "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join condition")
-        self.assertLessEqual(set(bank_ids), set(sql_query[2][-2:]),
-            "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect parameter")
 
         # --------------------------------------------------
         # Test3: many2one
@@ -953,107 +868,37 @@ class TestAutoJoin(TransactionCase):
         name_test = 'US'
 
         # Do: many2one without _auto_join
-        self._reinit_mock()
         partners = partner_obj.search([('state_id.country_id.code', 'like', name_test)])
-        # Test result: at least our added data + demo data
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "_auto_join off: ('state_id.country_id.code', 'like', '..') incorrect result")
-        # Test produced queries
-        self.assertEqual(len(self.query_list), 3,
-            "_auto_join off: ('state_id.country_id.code', 'like', '..') should produce 3 queries (1 on res_country, 1 on res_country_state, 1 on res_partner)")
+
+        partners = partner_obj.search(['|', ('state_id.code', '=', states[0].code), ('name', 'like', 'C')])
+        self.assertIn(p_a, partners, '_auto_join off: disjunction incorrect result')
+        self.assertIn(p_c, partners, '_auto_join off: disjunction incorrect result')
 
         # Do: many2one with 1 _auto_join on the first many2one
         patch_auto_join(partner_obj, 'state_id', True)
-        self._reinit_mock()
         partners = partner_obj.search([('state_id.country_id.code', 'like', name_test)])
-        # Test result: at least our added data + demo data
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') incorrect result")
-        # Test produced queries
-        self.assertEqual(len(self.query_list), 2,
-            "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') should produce 2 query")
-        sql_query = self.query_list[0].get_sql()
-        self.assertIn('"res_country"', sql_query[0],
-            "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect main table")
 
-        expected = "%s like %s" % (unaccent('"res_country"."code"::text'), unaccent('%s'))
-        self.assertIn(expected, sql_query[1],
-            "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect where condition")
-
-        self.assertEqual(['%' + name_test + '%'], sql_query[2],
-            "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect parameter")
-        sql_query = self.query_list[1].get_sql()
-        self.assertIn('"res_partner"', sql_query[0],
-            "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect main table")
-        self.assertIn('"res_country_state" as "res_partner__state_id"', sql_query[0],
-            "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect join")
-        self.assertIn('"res_partner__state_id"."country_id" in (%s)', sql_query[1],
-            "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect where condition")
-        self.assertIn('"res_partner"."state_id"="res_partner__state_id"."id"', sql_query[1],
-            "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect join condition")
+        partners = partner_obj.search(['|', ('state_id.code', '=', states[0].code), ('name', 'like', 'C')])
+        self.assertIn(p_a, partners, '_auto_join: disjunction incorrect result')
+        self.assertIn(p_c, partners, '_auto_join: disjunction incorrect result')
 
         # Do: many2one with 1 _auto_join on the second many2one
         patch_auto_join(partner_obj, 'state_id', False)
         patch_auto_join(state_obj, 'country_id', True)
-        self._reinit_mock()
         partners = partner_obj.search([('state_id.country_id.code', 'like', name_test)])
-        # Test result: at least our added data + demo data
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') incorrect result")
-        # Test produced queries
-        self.assertEqual(len(self.query_list), 2,
-            "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') should produce 2 query")
-        # -- first query
-        sql_query = self.query_list[0].get_sql()
-        self.assertIn('"res_country_state"', sql_query[0],
-            "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect main table")
-        self.assertIn('"res_country" as "res_country_state__country_id"', sql_query[0],
-            "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect join")
-
-        expected = "%s like %s" % (unaccent('"res_country_state__country_id"."code"::text'), unaccent('%s'))
-        self.assertIn(expected, sql_query[1],
-            "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect where condition")
-        
-        self.assertIn('"res_country_state"."country_id"="res_country_state__country_id"."id"', sql_query[1],
-            "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect join condition")
-        self.assertEqual(['%' + name_test + '%'], sql_query[2],
-            "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect parameter")
-        # -- second query
-        sql_query = self.query_list[1].get_sql()
-        self.assertIn('"res_partner"', sql_query[0],
-            "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect main table")
-        self.assertIn('"res_partner"."state_id" in', sql_query[1],
-            "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect where condition")
 
         # Do: many2one with 2 _auto_join
         patch_auto_join(partner_obj, 'state_id', True)
         patch_auto_join(state_obj, 'country_id', True)
-        self._reinit_mock()
         partners = partner_obj.search([('state_id.country_id.code', 'like', name_test)])
-        # Test result: at least our added data + demo data
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "_auto_join on: ('state_id.country_id.code', 'like', '..') incorrect result")
-        # Test produced queries
-        self.assertEqual(len(self.query_list), 1,
-            "_auto_join on: ('state_id.country_id.code', 'like', '..') should produce 1 query")
-        sql_query = self.query_list[0].get_sql()
-        self.assertIn('"res_partner"', sql_query[0],
-            "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect main table")
-        self.assertIn('"res_country_state" as "res_partner__state_id"', sql_query[0],
-            "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join")
-        self.assertIn('"res_country" as "res_partner__state_id__country_id"', sql_query[0],
-            "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join")
-
-        expected = "%s like %s" % (unaccent('"res_partner__state_id__country_id"."code"::text'), unaccent('%s'))
-        self.assertIn(expected, sql_query[1],
-            "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect where condition")
-        
-        self.assertIn('"res_partner"."state_id"="res_partner__state_id"."id"', sql_query[1],
-            "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join condition")
-        self.assertIn('"res_partner__state_id"."country_id"="res_partner__state_id__country_id"."id"', sql_query[1],
-            "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join condition")
-        self.assertIn('%' + name_test + '%', sql_query[2],
-            "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect parameter")
 
         # --------------------------------------------------
         # Test4: domain attribute on one2many fields
@@ -1063,28 +908,16 @@ class TestAutoJoin(TransactionCase):
         patch_auto_join(partner_obj, 'bank_ids', True)
         patch_domain(partner_obj, 'child_ids', lambda self: ['!', ('name', '=', self._name)])
         patch_domain(partner_obj, 'bank_ids', [('sanitized_acc_number', 'like', '2')])
+
         # Do: 2 cascaded one2many with _auto_join, test final leaf is an id
-        self._reinit_mock()
         partners = partner_obj.search(['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
-        # Test result: at least one of our added data
         self.assertLessEqual(p_a, partners,
             "_auto_join on one2many with domains incorrect result")
         self.assertFalse((p_ab + p_ba) & partners,
             "_auto_join on one2many with domains incorrect result")
-        # Test produced queries that domains effectively present
-        sql_query = self.query_list[0].get_sql()
-
-        expected = "%s like %s" % (unaccent('"res_partner__child_ids__bank_ids"."sanitized_acc_number"::text'), unaccent('%s'))
-        self.assertIn(expected, sql_query[1],
-            "_auto_join on one2many with domains incorrect result")
-        # TDE TODO: check first domain has a correct table name
-        self.assertIn('"res_partner__child_ids"."name" = %s', sql_query[1],
-            "_auto_join on one2many with domains incorrect result")
 
         patch_domain(partner_obj, 'child_ids', lambda self: [('name', '=', '__%s' % self._name)])
-        self._reinit_mock()
         partners = partner_obj.search(['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
-        # Test result: no one
         self.assertFalse(partners,
             "_auto_join on one2many with domains incorrect result")
 
@@ -1101,27 +934,17 @@ class TestAutoJoin(TransactionCase):
         patch_domain(partner_obj, 'bank_ids', [])
 
         # Do: ('child_ids.state_id.country_id.code', 'like', '..') without _auto_join
-        self._reinit_mock()
         partners = partner_obj.search([('child_ids.state_id.country_id.code', 'like', name_test)])
-        # Test result: at least our added data + demo data
         self.assertLessEqual(p_a + p_b, partners,
             "_auto_join off: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
-        # Test produced queries
-        self.assertEqual(len(self.query_list), 4,
-            "_auto_join off: ('child_ids.state_id.country_id.code', 'like', '..') number of queries incorrect")
 
         # Do: ('child_ids.state_id.country_id.code', 'like', '..') with _auto_join
         patch_auto_join(partner_obj, 'child_ids', True)
         patch_auto_join(partner_obj, 'state_id', True)
         patch_auto_join(state_obj, 'country_id', True)
-        self._reinit_mock()
         partners = partner_obj.search([('child_ids.state_id.country_id.code', 'like', name_test)])
-        # Test result: at least our added data + demo data
         self.assertLessEqual(p_a + p_b, partners,
             "_auto_join on: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
-        # Test produced queries
-        self.assertEqual(len(self.query_list), 1,
-            "_auto_join on: ('child_ids.state_id.country_id.code', 'like', '..') number of queries incorrect")
 
     def test_nullfields(self):
         obj1 = self.env['res.bank'].create({'name': 'c0'})
@@ -1146,3 +969,554 @@ class TestAutoJoin(TransactionCase):
             (obj1 | obj2 | obj3),
             "Should have returned all banks whose city doesn't contain field"
         )
+
+
+class TestQueries(TransactionCase):
+
+    def test_logic(self):
+        Model = self.env['res.partner']
+        domain = [
+            '&', ('name', 'like', 'foo'),
+                 '|', ('title', '=', 1), '!', ('ref', '=', '42'),
+        ]
+        Model.search(domain)
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE (("res_partner"."active" = %s) AND (
+                ("res_partner"."name"::text LIKE %s) AND (
+                    ("res_partner"."title" = %s) OR (
+                        ("res_partner"."ref" != %s) OR
+                        "res_partner"."ref" IS NULL
+                    )
+                )
+            ))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            Model.search(domain)
+
+    def test_translated_field(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        Model = self.env['res.partner.title'].with_context(lang='fr_FR')
+        Model.search([('name', 'ilike', 'foo')])
+
+        with self.assertQueries(['''
+            SELECT "res_partner_title".id
+            FROM "res_partner_title"
+            LEFT JOIN "ir_translation" AS "res_partner_title__name" ON
+                ("res_partner_title"."id" = "res_partner_title__name"."res_id"
+                 AND "res_partner_title__name"."type" = 'model'
+                 AND "res_partner_title__name"."name" = %s
+                 AND "res_partner_title__name"."lang" = %s
+                 AND "res_partner_title__name"."value" != %s)
+            WHERE COALESCE("res_partner_title__name"."value", "res_partner_title"."name") LIKE %s
+            ORDER BY COALESCE("res_partner_title__name"."value", "res_partner_title"."name")
+        ''']):
+            Model.search([('name', 'like', 'foo')])
+
+        with self.assertQueries(['''
+            SELECT COUNT(1)
+            FROM "res_partner_title"
+            WHERE ("res_partner_title"."id" = %s)
+        ''']):
+            Model.search_count([('id', '=', 1)])
+
+    @mute_logger('odoo.models.unlink')
+    def test_access_rules(self):
+        Model = self.env['res.users'].with_user(self.env.ref('base.user_admin'))
+        self.env['ir.rule'].search([]).unlink()
+        self.env['ir.rule'].create([{
+            'name': 'users rule',
+            'model_id': self.env['ir.model']._get('res.users').id,
+            'domain_force': str([('id', '=', 1)]),
+        }, {
+            'name': 'partners rule',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+            'domain_force': str([('id', '=', 1)]),
+        }])
+        Model.search([])
+
+        with self.assertQueries(['''
+            SELECT "res_users".id
+            FROM "res_users", "res_partner" AS "res_users__partner_id"
+            WHERE ("res_users"."active" = %s)
+            AND ("res_users"."id" = %s)
+            AND ("res_users"."partner_id" = "res_users__partner_id"."id")
+            AND ("res_users__partner_id"."id" = %s)
+            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+        ''']):
+            Model.search([])
+
+
+class TestMany2one(TransactionCase):
+    def setUp(self):
+        super().setUp()
+        self.Partner = self.env['res.partner'].with_context(active_test=False)
+        self.User = self.env['res.users'].with_context(active_test=False)
+        self.company = self.env['res.company'].browse(1)
+
+    def test_inherited(self):
+        with self.assertQueries(['''
+            SELECT "res_users".id
+            FROM "res_users"
+            LEFT JOIN "res_partner" AS "res_users__partner_id" ON
+                ("res_users"."partner_id" = "res_users__partner_id"."id")
+            WHERE ("res_users__partner_id"."name"::text LIKE %s)
+            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+        ''']):
+            self.User.search([('name', 'like', 'foo')])
+
+    def test_regular(self):
+        self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
+        self.Partner.search([('country_id.code', 'like', 'BE')])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."company_id" = %s)
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('company_id', '=', self.company.id)])
+
+        with self.assertQueries(['''
+            SELECT "res_company".id
+            FROM "res_company"
+            WHERE ("res_company"."name"::text LIKE %s)
+            ORDER BY "res_company"."sequence", "res_company"."name"
+        ''', '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."company_id" IN (%s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('company_id.name', 'like', self.company.name)])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."name"::text LIKE %s)
+            ORDER BY "res_partner"."display_name"
+        ''', '''
+            SELECT "res_company".id
+            FROM "res_company"
+            WHERE ("res_company"."partner_id" IN (%s))
+            ORDER BY "res_company"."sequence", "res_company"."name"
+        ''', '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."company_id" IN (%s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
+
+        with self.assertQueries(['''
+            SELECT "res_country".id
+            FROM "res_country"
+            WHERE ("res_country"."code"::text LIKE %s)
+            ORDER BY "res_country"."name"
+        ''', '''
+            SELECT "res_company".id
+            FROM "res_company"
+            WHERE ("res_company"."name"::text LIKE %s)
+            ORDER BY "res_company"."sequence", "res_company"."name"
+        ''', '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE (("res_partner"."company_id" IN (%s)) OR ("res_partner"."country_id" IN (%s)))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([
+                '|',
+                ('company_id.name', 'like', self.company.name),
+                ('country_id.code', 'like', 'BE'),
+            ])
+
+    def test_autojoin(self):
+        # auto_join on the first many2one
+        self.patch(self.Partner._fields['company_id'], 'auto_join', True)
+        self.patch(self.company._fields['partner_id'], 'auto_join', False)
+        self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            LEFT JOIN "res_company" AS "res_partner__company_id" ON
+                ("res_partner"."company_id" = "res_partner__company_id"."id")
+            WHERE ("res_partner__company_id"."name"::text LIKE %s)
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('company_id.name', 'like', self.company.name)])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."name"::text LIKE %s)
+            ORDER BY "res_partner"."display_name"
+        ''', '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            LEFT JOIN "res_company" AS "res_partner__company_id" ON
+                ("res_partner"."company_id" = "res_partner__company_id"."id")
+            WHERE ("res_partner__company_id"."partner_id" IN (%s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
+
+        # auto_join on the second many2one
+        self.patch(self.Partner._fields['company_id'], 'auto_join', False)
+        self.patch(self.company._fields['partner_id'], 'auto_join', True)
+        self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
+
+        with self.assertQueries(['''
+            SELECT "res_company".id
+            FROM "res_company"
+            LEFT JOIN "res_partner" AS "res_company__partner_id" ON
+                ("res_company"."partner_id" = "res_company__partner_id"."id")
+            WHERE ("res_company__partner_id"."name"::text LIKE %s)
+            ORDER BY "res_company"."sequence", "res_company"."name"
+        ''', '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."company_id" IN (%s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
+
+        # auto_join on both many2one
+        self.patch(self.Partner._fields['company_id'], 'auto_join', True)
+        self.patch(self.company._fields['partner_id'], 'auto_join', True)
+        self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            LEFT JOIN "res_company" AS "res_partner__company_id" ON
+                ("res_partner"."company_id" = "res_partner__company_id"."id")
+            LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON
+                ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
+            WHERE ("res_partner__company_id__partner_id"."name"::text LIKE %s)
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
+
+        # union with two auto_join
+        self.patch(self.Partner._fields['company_id'], 'auto_join', True)
+        self.patch(self.Partner._fields['country_id'], 'auto_join', True)
+        self.Partner.search([
+            '|',
+            ('company_id.name', 'like', self.company.name),
+            ('country_id.code', 'like', 'BE'),
+        ])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            LEFT JOIN "res_country" AS "res_partner__country_id" ON
+                ("res_partner"."country_id" = "res_partner__country_id"."id")
+            LEFT JOIN "res_company" AS "res_partner__company_id" ON
+                ("res_partner"."company_id" = "res_partner__company_id"."id")
+            WHERE (("res_partner__company_id"."name"::text LIKE %s)
+                OR ("res_partner__country_id"."code"::text LIKE %s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([
+                '|',
+                ('company_id.name', 'like', self.company.name),
+                ('country_id.code', 'like', 'BE'),
+            ])
+
+    def test_name_search(self):
+        self.Partner.search([('company_id', 'like', self.company.name)])
+
+        with self.assertQueries(['''
+            SELECT "res_company".id
+            FROM "res_company"
+            WHERE ("res_company"."name"::text LIKE %s)
+            ORDER BY "res_company"."sequence", "res_company"."name"
+        ''', '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."company_id" IN (%s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('company_id', 'like', self.company.name)])
+
+
+class TestOne2many(TransactionCase):
+    def setUp(self):
+        super().setUp()
+        self.Partner = self.env['res.partner'].with_context(active_test=False)
+        self.partner = self.Partner.create({
+            'name': 'Foo',
+            'bank_ids': [
+                (0, 0, {'acc_number': '123', 'acc_type': 'bank'}),
+                (0, 0, {'acc_number': '456', 'acc_type': 'bank'}),
+                (0, 0, {'acc_number': '789', 'acc_type': 'bank'}),
+            ],
+        })
+
+    def test_regular(self):
+        self.Partner.search([('bank_ids', 'in', self.partner.bank_ids.ids)])
+        self.Partner.search([('bank_ids.sanitized_acc_number', 'like', '12')])
+        self.Partner.search([('child_ids.bank_ids.sanitized_acc_number', 'like', '12')])
+
+        with self.assertQueries(['''
+            SELECT DISTINCT "partner_id"
+            FROM "res_partner_bank"
+            WHERE "id" IN %s
+        ''', '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."id" IN (%s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('bank_ids', 'in', self.partner.bank_ids.ids)])
+
+        with self.assertQueries(['''
+            SELECT "res_partner_bank".id
+            FROM "res_partner_bank"
+            WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
+            ORDER BY "res_partner_bank"."sequence", "res_partner_bank"."id"
+        ''', '''
+            SELECT DISTINCT "partner_id"
+            FROM "res_partner_bank"
+            WHERE "id" IN %s
+        ''', '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."id" IN (%s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('bank_ids.sanitized_acc_number', 'like', '12')])
+
+        with self.assertQueries(['''
+            SELECT "res_partner_bank".id
+            FROM "res_partner_bank"
+            WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
+            ORDER BY "res_partner_bank"."sequence", "res_partner_bank"."id"
+        ''', '''
+            SELECT DISTINCT "partner_id"
+            FROM "res_partner_bank"
+            WHERE "id" IN %s
+        ''', '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."id" IN (%s))
+            ORDER BY "res_partner"."display_name"
+        ''', '''
+            SELECT DISTINCT "parent_id"
+            FROM "res_partner"
+            WHERE "id" IN %s
+        ''', '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."id" IN (%s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('child_ids.bank_ids.sanitized_acc_number', 'like', '12')])
+
+    def test_autojoin(self):
+        self.patch(self.Partner._fields['bank_ids'], 'auto_join', True)
+        self.patch(self.Partner._fields['child_ids'], 'auto_join', True)
+        self.Partner.search([('bank_ids', 'in', self.partner.bank_ids.ids)])
+        self.Partner.search([('bank_ids.sanitized_acc_number', 'like', '12')])
+        self.Partner.search([('child_ids.bank_ids.sanitized_acc_number', 'like', '12')])
+
+        with self.assertQueries(['''
+            SELECT DISTINCT "partner_id"
+            FROM "res_partner_bank"
+            WHERE "id" IN %s
+        ''', '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."id" IN (%s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('bank_ids', 'in', self.partner.bank_ids.ids)])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            LEFT JOIN "res_partner_bank" AS "res_partner__bank_ids" ON
+                ("res_partner"."id" = "res_partner__bank_ids"."partner_id")
+            WHERE ("res_partner__bank_ids"."sanitized_acc_number"::text LIKE %s)
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('bank_ids.sanitized_acc_number', 'like', '12')])
+
+        # WRONG QUERY: the domain semantics is having some line matching '12'
+        # and having some line matching '45', but not necessarily the same line!
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            LEFT JOIN "res_partner_bank" AS "res_partner__bank_ids" ON
+                ("res_partner"."id" = "res_partner__bank_ids"."partner_id")
+            WHERE (("res_partner__bank_ids"."sanitized_acc_number"::text LIKE %s)
+            AND ("res_partner__bank_ids"."sanitized_acc_number"::text LIKE %s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([
+                ('bank_ids.sanitized_acc_number', 'like', '12'),
+                ('bank_ids.sanitized_acc_number', 'like', '45'),
+            ])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            LEFT JOIN "res_partner" AS "res_partner__child_ids" ON
+                ("res_partner"."id" = "res_partner__child_ids"."parent_id")
+            LEFT JOIN "res_partner_bank" AS "res_partner__child_ids__bank_ids" ON
+                ("res_partner__child_ids"."id" = "res_partner__child_ids__bank_ids"."partner_id")
+            WHERE (("res_partner__child_ids"."active" = %s)
+            AND ("res_partner__child_ids__bank_ids"."sanitized_acc_number"::text LIKE %s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('child_ids.bank_ids.sanitized_acc_number', 'like', '12')])
+
+        # check domains on one2many fields
+        self.patch(self.Partner._fields['bank_ids'], 'domain',
+                   [('sanitized_acc_number', 'like', '2')])
+        self.patch(self.Partner._fields['child_ids'], 'domain',
+                   lambda self: ['!', ('name', '=', self._name)])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            LEFT JOIN "res_partner" AS "res_partner__child_ids" ON
+                ("res_partner"."id" = "res_partner__child_ids"."parent_id")
+            LEFT JOIN "res_partner_bank" AS "res_partner__child_ids__bank_ids" ON
+                ("res_partner__child_ids"."id" = "res_partner__child_ids__bank_ids"."partner_id")
+            WHERE ((NOT (("res_partner__child_ids"."name" = %s)))
+            AND (("res_partner__child_ids__bank_ids"."sanitized_acc_number"::text LIKE %s)
+            AND ("res_partner__child_ids__bank_ids"."id" in (%s,%s,%s))))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('child_ids.bank_ids.id', 'in', self.partner.bank_ids.ids)])
+
+    def test_autojoin_mixed(self):
+        self.patch(self.Partner._fields['child_ids'], 'auto_join', True)
+        self.patch(self.Partner._fields['state_id'], 'auto_join', True)
+        self.patch(self.Partner.state_id._fields['country_id'], 'auto_join', True)
+        self.Partner.search([('child_ids.state_id.country_id.code', 'like', 'US')])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            LEFT JOIN "res_partner" AS "res_partner__child_ids" ON
+                ("res_partner"."id" = "res_partner__child_ids"."parent_id")
+            LEFT JOIN "res_country_state" AS "res_partner__child_ids__state_id" ON
+                ("res_partner__child_ids"."state_id" = "res_partner__child_ids__state_id"."id")
+            LEFT JOIN "res_country" AS "res_partner__child_ids__state_id__country_id" ON
+                ("res_partner__child_ids__state_id"."country_id" = "res_partner__child_ids__state_id__country_id"."id")
+            WHERE (("res_partner__child_ids"."active" = %s)
+            AND ("res_partner__child_ids__state_id__country_id"."code"::text LIKE %s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('child_ids.state_id.country_id.code', 'like', 'US')])
+
+    def test_name_search(self):
+        self.Partner.search([('bank_ids', 'like', '12')])
+
+        with self.assertQueries(['''
+            SELECT "res_partner_bank".id
+            FROM "res_partner_bank"
+            WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
+            ORDER BY "res_partner_bank"."sequence", "res_partner_bank"."id"
+        ''', '''
+            SELECT DISTINCT "partner_id"
+            FROM "res_partner_bank"
+            WHERE "id" IN %s
+        ''', '''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."id" IN (%s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            self.Partner.search([('bank_ids', 'like', '12')])
+
+
+class TestMany2many(TransactionCase):
+    def setUp(self):
+        super().setUp()
+        self.User = self.env['res.users'].with_context(active_test=False)
+        self.company = self.env['res.company'].browse(1)
+
+    def test_regular(self):
+        group = self.env.ref('base.group_user')
+        rule = group.rule_groups[0]
+
+        self.User.search([('groups_id', 'in', group.ids)], order='id')
+        self.User.search([('groups_id.name', 'like', group.name)], order='id')
+        self.User.search([('groups_id.rule_groups.name', 'like', rule.name)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_users".id
+            FROM "res_users"
+            WHERE ("res_users"."id" IN (
+                SELECT "uid" FROM "res_groups_users_rel" WHERE "gid" IN %s
+            ))
+            ORDER BY "res_users"."id"
+        ''']):
+            self.User.search([('groups_id', 'in', group.ids)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_groups".id
+            FROM "res_groups"
+            WHERE ("res_groups"."color" = %s)
+            ORDER BY "res_groups"."name"
+        ''', '''
+            SELECT "res_users".id
+            FROM "res_users"
+            WHERE ("res_users"."id" IN (
+                SELECT "uid" FROM "res_groups_users_rel" WHERE "gid" IN %s
+            ))
+            ORDER BY "res_users"."id"
+        ''']):
+            self.User.search([('groups_id.color', '=', group.color)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "ir_rule".id
+            FROM "ir_rule"
+            LEFT JOIN "ir_model" AS "ir_rule__model_id" ON ("ir_rule"."model_id" = "ir_rule__model_id"."id")
+            WHERE ("ir_rule"."name"::text LIKE %s)
+            ORDER BY "ir_rule__model_id"."model" DESC, "ir_rule"."id"
+        ''', '''
+            SELECT "res_groups".id
+            FROM "res_groups"
+            WHERE ("res_groups"."id" IN (
+                SELECT "group_id" FROM "rule_group_rel" WHERE "rule_group_id" IN %s
+            ))
+            ORDER BY "res_groups"."name"
+        ''', '''
+            SELECT "res_users".id
+            FROM "res_users"
+            WHERE ("res_users"."id" IN (
+                SELECT "uid" FROM "res_groups_users_rel" WHERE "gid" IN %s
+            ))
+            ORDER BY "res_users"."id"
+        ''']):
+            self.User.search([('groups_id.rule_groups.name', 'like', rule.name)], order='id')
+
+    def test_autojoin(self):
+        self.patch(self.User._fields['groups_id'], 'auto_join', True)
+        with self.assertRaises(NotImplementedError):
+            self.User.search([('groups_id.name', '=', 'foo')])
+
+    def test_name_search(self):
+        self.User.search([('company_ids', 'like', self.company.name)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_company".id
+            FROM "res_company"
+            WHERE ("res_company"."name"::text LIKE %s)
+            ORDER BY "res_company"."sequence", "res_company"."name"
+        ''', '''
+            SELECT "res_users".id
+            FROM "res_users"
+            WHERE ("res_users"."id" IN (
+                SELECT "user_id" FROM "res_company_users_rel" WHERE "cid" IN %s
+            ))
+            ORDER BY "res_users"."id"
+        ''']):
+            self.User.search([('company_ids', 'like', self.company.name)], order='id')
