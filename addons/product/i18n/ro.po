@@ -80,6 +80,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
 msgstr ""
+"- Instant: Toate variantele posibile sunt create imediat ce atributul și valorile acestuia sunt adăugate la un produs.\n"
+"- Dinamic: fiecare variantă este creată numai atunci când atributele și valorile corespunzătoare sunt adăugate la o comandă de vânzare.\n"
+"- Niciodată: Variantele nu sunt create niciodată pentru atribut.\n"
+"         Notă: modul de creare a variantelor nu poate fi schimbat odată ce atributul este utilizat pe cel puțin un produs."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -848,7 +852,7 @@ msgstr "Durată"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
 msgid "Dynamically"
-msgstr ""
+msgstr "Dinamic"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
@@ -1138,7 +1142,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
 msgid "Instantly"
-msgstr ""
+msgstr "Imediat"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2561,7 +2565,7 @@ msgstr "Variante"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variants Creation Mode"
-msgstr ""
+msgstr "Mod generare variante"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__name
