@@ -749,7 +749,6 @@ class PaymentTransaction(models.Model):
         tx_to_process.write({
             'state': target_state,
             'date': fields.Datetime.now(),
-            'state_message': '',
         })
         tx_to_process._log_payment_transaction_received()
 
@@ -766,7 +765,6 @@ class PaymentTransaction(models.Model):
         tx_to_process.write({
             'state': target_state,
             'date': fields.Datetime.now(),
-            'state_message': '',
         })
         tx_to_process._log_payment_transaction_received()
 
@@ -784,7 +782,6 @@ class PaymentTransaction(models.Model):
         tx_to_process.write({
             'state': target_state,
             'date': fields.Datetime.now(),
-            'state_message': '',
         })
 
     @api.multi
