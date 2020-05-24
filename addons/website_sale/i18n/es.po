@@ -30,8 +30,8 @@
 # Efrem Jimenez <efj@odoo.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Carles Antoli <carlesantoli@hotmail.com>, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-04 14:42+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2020\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +50,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.option_collapse_categories_recursive
 msgid "#{'Unfold' if categ.id in parent_category_ids else 'Fold'}"
-msgstr ""
+msgstr "#{'Unfold' if categ.id in parent_category_ids else 'Fold'}"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -83,10 +83,7 @@ msgid ""
 "30-day money-back guarantee<br/>\n"
 "                              Free Shipping in U.S.<br/>\n"
 "                              Buy now, get in 2 days"
-msgstr ""
-"Garantía de devolución de 30 días<br/>\n"
-"                              Envío gratuito en España<br/>\n"
-"                              Compre ahora, recíbalo en 2 días."
+msgstr " "
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
@@ -440,7 +437,9 @@ msgstr "<span class=\"fa fa-chevron-left\"/> Previo"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
 msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Siguiente\" "
+"title=\"Siguiente\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -721,8 +720,8 @@ msgid ""
 "An error occured while processing your payment. Please try again or contact "
 "your administrator."
 msgstr ""
-"S'ha produït un error en processar el pagament. Torneu-ho a provar o poseu-"
-"vos en contacte amb l'administrador."
+"Se ha producido un error al procesar el pago. Por favor inténtelo de nuevo o"
+" contacte con su administrador."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -1821,7 +1820,7 @@ msgstr "Pagar con otro medio de pago"
 #. module: website_sale
 #: selection:website.sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with credit card (via Stripe)"
-msgstr ""
+msgstr "Pagar con tarjeta de crédito (vía Stripe)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_email_account
