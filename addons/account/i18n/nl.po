@@ -22,10 +22,10 @@
 # Antoine Gilard <ang@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Eric Geens <ericgeens@yahoo.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # ca2da8678cdb9cbd573eaf985f02c476, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: ca2da8678cdb9cbd573eaf985f02c476, 2020\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -413,6 +413,9 @@ msgid ""
 "('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> or "
 "</span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': ['|', "
+"('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> "
+"of</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -504,6 +507,9 @@ msgid ""
 "groups=\"account.group_account_readonly,base.group_multi_currency\"> in "
 "</span>"
 msgstr ""
+"<span class=\"oe_inline o_form_label mx-3 oe_read_only\" "
+"groups=\"account.group_account_readonly,base.group_multi_currency\"> in "
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -4491,7 +4497,7 @@ msgstr "Schermnaam"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__display_qr_code
 msgid "Display QR-code"
-msgstr ""
+msgstr "Toon QR-code"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__qr_code
@@ -4506,7 +4512,7 @@ msgstr "Toon afrondingsfout"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__qr_code
 msgid "Display SEPA QR-code"
-msgstr ""
+msgstr "Toon SEPA QR-code"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__display_type
@@ -6314,7 +6320,7 @@ msgstr "Is groter dan"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_internal_transfer
 msgid "Is Internal Transfer"
-msgstr ""
+msgstr "Is interne overboeking"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
@@ -7174,7 +7180,7 @@ msgstr "Marge analyse"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Mark as Sent"
-msgstr ""
+msgstr "Markeer als verzonden"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_difference_handling__reconcile
@@ -7584,6 +7590,7 @@ msgstr "Niet vervallen"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "Niet betaald"
 
@@ -8870,12 +8877,12 @@ msgstr "QIF import"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
 msgid "QR Code"
-msgstr ""
+msgstr "QR code"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "QR Codes"
-msgstr ""
+msgstr "QR codes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__qr_code
@@ -10068,7 +10075,7 @@ msgstr "Bron E-mail"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__date_mode__custom
 msgid "Specific"
-msgstr ""
+msgstr "Specifiek"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -10275,7 +10282,7 @@ msgstr "Stel tegenwaardes voor."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__suitable_journal_ids
 msgid "Suitable Journal"
-msgstr ""
+msgstr "Geschikt dagboek"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_rank
@@ -13429,7 +13436,7 @@ msgstr "Tot postcode"
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "[Not set]"
-msgstr ""
+msgstr "[Niet ingesteld]"
 
 #. module: account
 #. openerp-web
@@ -13554,7 +13561,7 @@ msgstr "betaald"
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "postponing it to {date}"
-msgstr ""
+msgstr "Uitstellen naar [datum]"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id

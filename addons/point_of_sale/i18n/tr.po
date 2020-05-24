@@ -871,7 +871,7 @@ msgstr "Nakit yuvarlama"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Cash rounding strategy must be: 'Add a rounding line'"
-msgstr ""
+msgstr "Nakit yuvarlama yöntemi şöyle olmalıdır: 'Bir yuvarlama satırı ekle'"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
@@ -1439,6 +1439,7 @@ msgstr "Yeni bir kategori tanımlayın"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Define the smallest coinage of the currency used to pay"
 msgstr ""
+"Ödemek için kullanılan para biriminin en küçük bozuk parasını tanımlayın"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2689,7 +2690,7 @@ msgstr "Bir veya birden fazla ürün seri/lot numarası gerektiriyor."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
-msgstr ""
+msgstr "Yalnızca nakitte yuvarlamayı uygula"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -3323,7 +3324,7 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__pos_payment_method_ids
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Satış Noktası Ödeme Yöntemleri"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
@@ -3675,7 +3676,7 @@ msgstr "Adet"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "ROUNDED"
-msgstr ""
+msgstr "YUVARLATILMIŞ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4471,6 +4472,8 @@ msgid ""
 "The Point of Sale only support the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
+"Satış Noktası yalnızca \"Add a rounding line\" yuvarlama yöntemini "
+"destekler."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5283,6 +5286,8 @@ msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
 msgstr ""
+"Bir pos oturumu kullanarak zaten açıkken nakit yuvarlama yapılandırmasını "
+"değiştirmenize izin verilmez."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0

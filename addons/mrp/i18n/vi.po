@@ -12,8 +12,8 @@
 # Martin Trigaux, 2020
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # Thang Duong Bao <nothingctrl@gmail.com>, 2020
-# Duy BQ <duybq86@gmail.com>, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
+# Duy BQ <duybq86@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2020\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -392,6 +392,8 @@ msgid ""
 "Abstract model to implement product_produce_line as well as    "
 "workorder_line"
 msgstr ""
+"Mô hình trừu tượng để triển khai product_produce_line cũng như "
+"workorder_line"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -536,7 +538,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__alternative_workcenter_ids
 msgid "Alternative Workcenters"
-msgstr ""
+msgstr "Khu vực sản xuất dự trù"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__alternative_workcenter_ids
@@ -544,6 +546,8 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
+"Khu vực sản xuất dự trù có thể được thay thế thực hiện cho lệnh này để nhanh"
+" chóng sản xuất"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -829,12 +833,14 @@ msgid ""
 "BoM cannot concern product %s and have a line with attributes (%s) at the "
 "same time."
 msgstr ""
+"BoM không thể liên quan đến sản phẩm %s và có một dòng với các thuộc tính "
+"(%s) cùng một lúc."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
-msgstr ""
+msgstr "BOM của sản phẩm %s không nên giống với BOM sản phẩm."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_byproducts
@@ -1002,7 +1008,7 @@ msgstr "Thành phần của lệnh làm việc"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__raw_product_produce_id
 msgid "Component in Produce wizard"
-msgstr ""
+msgstr "Thuật sĩ thành phần trong sản xuất"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__raw_workorder_line_ids
@@ -2759,7 +2765,7 @@ msgstr "PDF"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__move_raw_ids
 msgid "PO Components"
-msgstr ""
+msgstr "Thành phần PO"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -4115,7 +4121,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
 msgid "This is a BoM of type Kit!"
-msgstr ""
+msgstr "Đây là loại BOM Kit!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4894,7 +4900,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet_google_slide
 msgid "Worksheet URL"
-msgstr ""
+msgstr "URL tài liệu công việc"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_production_lot.py:0
