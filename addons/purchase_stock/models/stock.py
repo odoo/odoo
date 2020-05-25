@@ -126,12 +126,15 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id,
                     'propagate_cancel': self.reception_steps != 'one_step',
+                    'delay_alert': True,
+                    'propagate_date': self.reception_steps != 'one_step',
                 },
                 'update_values': {
                     'active': self.buy_to_resupply,
                     'name': self._format_rulename(location_id, False, 'Buy'),
                     'location_id': location_id.id,
                     'propagate_cancel': self.reception_steps != 'one_step',
+                    'propagate_date': self.reception_steps != 'one_step',
                 }
             }
         })
