@@ -452,7 +452,7 @@ return AbstractModel.extend({
             dayNamesShort: moment.weekdaysShort(),
             firstDay: this.week_start,
             slotLabelFormat: _t.database.parameters.time_format.search("%H") !== -1 ? format24Hour : format12Hour,
-            allDaySlot: this.mapping.all_day,
+            allDaySlot: this.mapping.all_day || this.fields[this.mapping.date_start].type === 'date',
         };
     },
     /**
