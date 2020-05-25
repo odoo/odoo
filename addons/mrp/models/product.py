@@ -39,7 +39,7 @@ class ProductTemplate(models.Model):
 
     def action_used_in_bom(self):
         self.ensure_one()
-        action = self.env.ref('mrp.mrp_bom_form_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_form_action")
         action['domain'] = [('bom_line_ids.product_id', 'in', self.product_variant_ids.ids)]
         return action
 
@@ -48,7 +48,7 @@ class ProductTemplate(models.Model):
             template.mrp_product_qty = float_round(sum(template.mapped('product_variant_ids').mapped('mrp_product_qty')), precision_rounding=template.uom_id.rounding)
 
     def action_view_mos(self):
-        action = self.env.ref('mrp.mrp_production_report').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_production_report")
         action['domain'] = [('state', '=', 'done'), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'graph_measure': 'product_uom_qty',
@@ -97,7 +97,7 @@ class ProductProduct(models.Model):
 
     def action_used_in_bom(self):
         self.ensure_one()
-        action = self.env.ref('mrp.mrp_bom_form_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_form_action")
         action['domain'] = [('bom_line_ids.product_id', '=', self.id)]
         return action
 
@@ -163,7 +163,7 @@ class ProductProduct(models.Model):
                 product.free_qty = min(ratios_free_qty) // 1
 
     def action_view_bom(self):
-        action = self.env.ref('mrp.product_open_bom').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.product_open_bom")
         template_ids = self.mapped('product_tmpl_id').ids
         # bom specific to this variant or global to template
         action['context'] = {

@@ -494,7 +494,7 @@ class IrActionsReport(models.Model):
         report_obj = self.env['ir.actions.report']
         conditions = [('report_name', '=', report_name)]
         context = self.env['res.users'].context_get()
-        return report_obj.with_context(context).search(conditions, limit=1)
+        return report_obj.with_context(context).sudo().search(conditions, limit=1)
 
     @api.model
     def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0, quiet=1, mask=None):
@@ -694,10 +694,13 @@ class IrActionsReport(models.Model):
             data = {}
         data.setdefault('report_type', 'pdf')
 
+        # access the report details with sudo() but evaluation context as sudo(False)
+        self_sudo = self.sudo()
+
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
         if (tools.config['test_enable'] or tools.config['test_file']) and not self.env.context.get('force_report_rendering'):
-            return self._render_qweb_html(res_ids, data=data)
+            return self_sudo._render_qweb_html(res_ids, data=data)
 
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
@@ -724,21 +727,21 @@ class IrActionsReport(models.Model):
         # an asset bundle during the execution of test scenarios. In this case, return
         # the html version.
         if isinstance(self.env.cr, TestCursor):
-            return self.with_context(context)._render_qweb_html(res_ids, data=data)[0]
+            return self_sudo.with_context(context)._render_qweb_html(res_ids, data=data)[0]
 
         save_in_attachment = OrderedDict()
         if res_ids:
             # Dispatch the records by ones having an attachment and ones requesting a call to
             # wkhtmltopdf.
-            Model = self.env[self.model]
+            Model = self.env[self_sudo.model]
             record_ids = Model.browse(res_ids)
             wk_record_ids = Model
-            if self.attachment:
+            if self_sudo.attachment:
                 for record_id in record_ids:
-                    attachment = self.retrieve_attachment(record_id)
+                    attachment = self_sudo.retrieve_attachment(record_id)
                     if attachment:
-                        save_in_attachment[record_id.id] = self._retrieve_stream_from_attachment(attachment)
-                    if not self.attachment_use or not attachment:
+                        save_in_attachment[record_id.id] = self_sudo._retrieve_stream_from_attachment(attachment)
+                    if not self_sudo.attachment_use or not attachment:
                         wk_record_ids += record_id
             else:
                 wk_record_ids = record_ids
@@ -749,7 +752,7 @@ class IrActionsReport(models.Model):
         # - The report is not fully present in attachments.
         if save_in_attachment and not res_ids:
             _logger.info('The PDF report has been generated from attachments.')
-            return self._post_pdf(save_in_attachment), 'pdf'
+            return self_sudo._post_pdf(save_in_attachment), 'pdf'
 
         if self.get_wkhtmltopdf_state() == 'install':
             # wkhtmltopdf is not installed
@@ -758,14 +761,14 @@ class IrActionsReport(models.Model):
             # bypassed
             raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
 
-        html = self.with_context(context)._render_qweb_html(res_ids, data=data)[0]
+        html = self_sudo.with_context(context)._render_qweb_html(res_ids, data=data)[0]
 
         # Ensure the current document is utf-8 encoded.
         html = html.decode('utf-8')
 
-        bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(context)._prepare_html(html)
+        bodies, html_ids, header, footer, specific_paperformat_args = self_sudo.with_context(context)._prepare_html(html)
 
-        if self.attachment and set(res_ids) != set(html_ids):
+        if self_sudo.attachment and set(res_ids) != set(html_ids):
             raise UserError(_("The report's template '%s' is wrong, please contact your administrator. \n\n"
                 "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname.") %  self.name)
 
@@ -778,8 +781,8 @@ class IrActionsReport(models.Model):
             set_viewport_size=context.get('set_viewport_size'),
         )
         if res_ids:
-            _logger.info('The PDF report has been generated for model: %s, records %s.' % (self.model, str(res_ids)))
-            return self._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
+            _logger.info('The PDF report has been generated for model: %s, records %s.' % (self_sudo.model, str(res_ids)))
+            return self_sudo._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
         return pdf_content, 'pdf'
 
     @api.model
@@ -813,10 +816,14 @@ class IrActionsReport(models.Model):
 
         data = data and dict(data) or {}
 
+
         if report_model is not None:
+            # _render_ may be executed in sudo but evaluation context as real user
+            report_model = report_model.sudo(False)
             data.update(report_model._get_report_values(docids, data=data))
         else:
-            docs = self.env[self.model].browse(docids)
+            # _render_ may be executed in sudo but evaluation context as real user
+            docs = self.env[self.model].sudo(False).browse(docids)
             data.update({
                 'doc_ids': docids,
                 'doc_model': self.model,
@@ -859,7 +866,7 @@ class IrActionsReport(models.Model):
 
         discard_logo_check = self.env.context.get('discard_logo_check')
         if self.env.is_admin() and not self.env.company.external_report_layout_id and config and not discard_logo_check:
-            action = self.env.ref('base.action_base_document_layout_configurator').read()[0]
+            action = self.env["ir.actions.actions"]._for_xml_id("base.action_base_document_layout_configurator")
             ctx = action.get('context')
             py_ctx = json.loads(ctx) if ctx else {}
             report_action['close_on_report_download'] = True

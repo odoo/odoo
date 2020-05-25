@@ -453,7 +453,7 @@ class Channel(models.Model):
     # ---------------------------------------------------------
 
     def action_redirect_to_members(self, state=None):
-        action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_partner_action")
         action['domain'] = [('channel_id', 'in', self.ids)]
         if len(self) == 1:
             action['display_name'] = _('Attendees of %s', self.name)
@@ -600,7 +600,7 @@ class Channel(models.Model):
             self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
 
     def action_view_slides(self):
-        action = self.env.ref('website_slides.slide_slide_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_slide_action")
         action['context'] = {
             'search_default_published': 1,
             'default_channel_id': self.id
@@ -609,7 +609,7 @@ class Channel(models.Model):
         return action
 
     def action_view_ratings(self):
-        action = self.env.ref('website_slides.rating_rating_action_slide_channel').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.rating_rating_action_slide_channel")
         action['name'] = _('Rating of %s') % (self.name)
         action['domain'] = [('res_id', 'in', self.ids)]
         return action

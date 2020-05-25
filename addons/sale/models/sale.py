@@ -570,7 +570,7 @@ class SaleOrder(models.Model):
 
     def action_view_invoice(self):
         invoices = self.mapped('invoice_ids')
-        action = self.env.ref('account.action_move_out_invoice_type').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
         if len(invoices) > 1:
             action['domain'] = [('id', 'in', invoices.ids)]
         elif len(invoices) == 1:

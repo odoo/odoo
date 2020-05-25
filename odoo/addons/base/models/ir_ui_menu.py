@@ -80,7 +80,7 @@ class IrUiMenu(models.Model):
         """ Return the ids of the menu items visible to the user. """
         # retrieve all menus, and determine which ones are visible
         context = {'ir.ui.menu.full_list': True}
-        menus = self.with_context(context).search([])
+        menus = self.with_context(context).search([]).sudo()
 
         groups = self.env.user.groups_id
         if not debug:

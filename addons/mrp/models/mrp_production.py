@@ -394,7 +394,7 @@ class MrpProduction(models.Model):
         view, if there is only one picking to show.
         """
         self.ensure_one()
-        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
         pickings = self.mapped('picking_ids')
         if len(pickings) > 1:
             action['domain'] = [('id', 'in', pickings.ids)]
@@ -1247,7 +1247,7 @@ class MrpProduction(models.Model):
                 'product_expected_qty_uom': expected_qty
             }))
         ctx.update({'default_mrp_production_ids': self.ids, 'default_mrp_consumption_warning_line_ids': lines})
-        action = self.env.ref('mrp.action_mrp_consumption_warning').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.action_mrp_consumption_warning")
         action['context'] = ctx
         return action
 
@@ -1269,7 +1269,7 @@ class MrpProduction(models.Model):
                 'to_backorder': True
             }))
         ctx.update({'default_mrp_production_ids': self.ids, 'default_mrp_production_backorder_line_ids': lines})
-        action = self.env.ref('mrp.action_mrp_production_backorder').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.action_mrp_production_backorder")
         action['context'] = ctx
         return action
 
@@ -1559,7 +1559,7 @@ class MrpProduction(models.Model):
 
     def action_see_move_scrap(self):
         self.ensure_one()
-        action = self.env.ref('stock.action_stock_scrap').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
         action['domain'] = [('production_id', '=', self.id)]
         action['context'] = dict(self._context, default_origin=self.name)
         return action

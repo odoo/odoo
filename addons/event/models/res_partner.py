@@ -19,7 +19,7 @@ class ResPartner(models.Model):
             partner.event_count = self.env['event.event'].search_count([('registration_ids.partner_id', 'child_of', partner.ids)])
 
     def action_event_view(self):
-        action = self.env.ref('event.action_event_view').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("event.action_event_view")
         action['context'] = {}
         action['domain'] = [('registration_ids.partner_id', 'child_of', self.ids)]
         return action

@@ -124,7 +124,7 @@ class HrEmployeeBase(models.AbstractModel):
         """
         self.ensure_one()
         employee = self.sudo()
-        action_message = self.env.ref('hr_attendance.hr_attendance_action_greeting_message').read()[0]
+        action_message = self.env["ir.actions.actions"]._for_xml_id("hr_attendance.hr_attendance_action_greeting_message")
         action_message['previous_attendance_change_date'] = employee.last_attendance_id and (employee.last_attendance_id.check_out or employee.last_attendance_id.check_in) or False
         action_message['employee_name'] = employee.name
         action_message['barcode'] = employee.barcode

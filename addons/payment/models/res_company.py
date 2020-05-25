@@ -22,7 +22,7 @@ class ResCompany(models.Model):
         # Fail if there are no existing accounts
         self.env.company.get_chart_of_accounts_or_fail()
 
-        action = self.env.ref('payment.action_open_payment_onboarding_payment_acquirer_wizard').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("payment.action_open_payment_onboarding_payment_acquirer_wizard")
         return action
 
     def get_account_invoice_onboarding_steps_states_names(self):

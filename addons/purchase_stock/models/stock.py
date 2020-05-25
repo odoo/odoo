@@ -272,7 +272,7 @@ class ProductionLot(models.Model):
 
     def action_view_po(self):
         self.ensure_one()
-        action = self.env.ref('purchase.purchase_form_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.purchase_form_action")
         action['domain'] = [('id', 'in', self.mapped('purchase_order_ids.id'))]
         action['context'] = dict(self._context, create=False)
         return action

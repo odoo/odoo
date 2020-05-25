@@ -46,13 +46,13 @@ class UtmCampaign(models.Model):
             campaign.invoiced_amount = 0
 
     def action_redirect_to_quotations(self):
-        action = self.env.ref('sale.action_quotations_with_onboarding').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_quotations_with_onboarding")
         action['domain'] = [('campaign_id', '=', self.id)]
         action['context'] = {'default_campaign_id': self.id}
         return action
 
     def action_redirect_to_invoiced(self):
-        action = self.env.ref('account.action_move_journal_line').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_journal_line")
         invoices = self.env['account.move'].search([('campaign_id', '=', self.id)])
         action['context'] = {
             'create': False,

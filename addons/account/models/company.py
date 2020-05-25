@@ -431,7 +431,7 @@ class ResCompany(models.Model):
     @api.model
     def action_open_account_onboarding_sale_tax(self):
         """ Onboarding step for the invoice layout. """
-        action = self.env.ref('account.action_open_account_onboarding_sale_tax').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_open_account_onboarding_sale_tax")
         action['res_id'] = self.env.company.id
         return action
 
@@ -485,7 +485,7 @@ class ResCompany(models.Model):
             with the edi_invoice_template message loaded by default. """
         sample_invoice = self._get_sample_invoice()
         template = self.env.ref('account.email_template_edi_invoice', False)
-        action = self.env.ref('account.action_open_account_onboarding_sample_invoice').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_open_account_onboarding_sample_invoice")
         action['context'] = {
             'default_res_id': sample_invoice.id,
             'default_use_template': bool(template),

@@ -30,7 +30,7 @@ class SaleOrder(models.Model):
         return res
 
     def action_view_attendee_list(self):
-        action = self.env.ref('event.event_registration_action_tree').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("event.event_registration_action_tree")
         action['domain'] = [('sale_order_id', 'in', self.ids)]
         return action
 

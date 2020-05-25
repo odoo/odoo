@@ -51,7 +51,7 @@ class ProjectCreateInvoice(models.TransientModel):
     def action_create_invoice(self):
         if not self.sale_order_id and self.sale_order_id.invoice_status != 'to invoice':
             raise UserError(_("The selected Sales Order should contain something to invoice."))
-        action = self.env.ref('sale.action_view_sale_advance_payment_inv').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_view_sale_advance_payment_inv")
         action['context'] = {
             'active_ids': self.sale_order_id.ids
         }

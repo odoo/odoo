@@ -134,7 +134,7 @@ class ProjectTask(models.Model):
         so_to_confirm.action_confirm()
 
         # redirect create invoice wizard (of the Sales Order)
-        action = self.env.ref('sale.action_view_sale_advance_payment_inv').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_view_sale_advance_payment_inv")
         context = literal_eval(action.get('context', "{}"))
         context.update({
             'active_id': self.sale_order_id.id if len(self) == 1 else False,
