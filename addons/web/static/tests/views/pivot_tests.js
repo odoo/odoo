@@ -387,28 +387,29 @@ QUnit.module('Views', {
         assert.expect(2);
 
         var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
-        var context = {
-            time_ranges: {
-                field: 'date',
-                range: 'this_month'
-            }
-        };
         var pivot = await createView({
             View: PivotView,
             model: "partner",
             data: this.data,
             arch: '<pivot/>',
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                    </search>
+                `,
+            },
             intercepts: {
                 do_action: function (ev) {
                     assert.deepEqual(
                         ev.data.action.domain,
-                        ["&",["date",">=","2016-12-01"],["date","<","2017-01-01"]],
+                        ["&",["date",">=","2016-12-01"],["date","<=","2016-12-31"]],
                         "should trigger do_action with the correct action domain"
                     );
                 },
             },
             viewOptions: {
-                context: context,
+                context: { search_default_date_filter: true, },
                 title: 'Partners',
             },
         });
@@ -431,14 +432,6 @@ QUnit.module('Views', {
         this.data.partner.records[2].date = '2016-11-22';
         this.data.partner.records[3].date = '2016-11-03';
 
-        var context = {
-            time_ranges: {
-                field: 'date',
-                range: 'this_month',
-                comparisonRange: 'previous_period',
-            }
-        };
-
         var first_do_action = true;
         var pivot = await createView({
             View: PivotView,
@@ -452,7 +445,7 @@ QUnit.module('Views', {
                     if (first_do_action) {
                         assert.deepEqual(
                             ev.data.action.domain,
-                            ["&",["date",">=","2016-12-01"],["date","<","2017-01-01"]],
+                            ["&",["date",">=","2016-12-01"],["date","<=","2016-12-31"]],
                             "should trigger do_action with the correct action domain"
                         );
                     } else {
@@ -465,11 +458,22 @@ QUnit.module('Views', {
                     first_do_action = false;
                 },
             },
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                    </search>
+                `,
+            },
             viewOptions: {
-                context: context,
+                context: { search_default_date_filter: true, },
                 title: 'Partners',
             },
         });
+
+        await cpHelpers.toggleComparisonMenu(pivot);
+        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
+
         assert.hasClass(pivot.$('table'), 'o_enable_linking',
             "root node should have classname 'o_enable_linking'");
         // here we click on the group corresponding to Total/Total/This Month
@@ -1961,8 +1965,16 @@ QUnit.module('Views', {
                     '<field name="date" interval="month" type="col"/>' +
                     '<field name="foo" type="measure"/>' +
               '</pivot>',
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="date_filter" date="date" domain="[]" default_period='last_year'/>
+                    </search>
+                `,
+            },
             viewOptions: {
                 additionalMeasures: ['product_id'],
+                context: { search_default_date_filter: 1 },
             },
             mockRPC: function () {
                 return this._super.apply(this, arguments);
@@ -1975,31 +1987,35 @@ QUnit.module('Views', {
                             pivot_column_groupby: [],
                             pivot_row_groupby: ['product_id'],
                             group_by: [],
-                            time_ranges: {
-                                field: 'date',
-                                range: 'this_month',
-                                comparisonRange: 'previous_period',
-                            }
-                        })
+                            comparison: {
+                                comparisonId: "previous_period",
+                                comparisonRange: "[\"&\", [\"date\", \">=\", \"2016-11-01\"], [\"date\", \"<=\", \"2016-11-30\"]]",
+                                comparisonRangeDescription: "November 2016",
+                                fieldDescription: "Date",
+                                fieldName: "date",
+                                range: "[\"&\", [\"date\", \">=\", \"2016-12-01\"], [\"date\", \"<=\", \"2016-12-31\"]]",
+                                rangeDescription: "December 2016"
+                              },
+                        });
                     }
                 }
             },
         });
 
-
         // with no data
-        await cpHelpers.toggleTimeRangeMenu(pivot);
-        await cpHelpers.toggleTimeRangeMenuBox(pivot);
-        await cpHelpers.selectRange(pivot, 'today');
-        await cpHelpers.applyTimeRange(pivot);
+        await cpHelpers.toggleComparisonMenu(pivot);
+        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
 
         assert.strictEqual(pivot.$('.o_pivot p.o_view_nocontent_empty_folder').length, 1);
 
-        // with data, no row groupby
-        await cpHelpers.selectRange(pivot, 'this_month');
-        await cpHelpers.applyTimeRange(pivot);
+        await cpHelpers.toggleFilterMenu(pivot);
+        await cpHelpers.toggleMenuItem(pivot, 'Date');
+        await cpHelpers.toggleMenuItemOption(pivot, 'Date', 'December');
+        await cpHelpers.toggleMenuItemOption(pivot, 'Date', '2016');
+        await cpHelpers.toggleMenuItemOption(pivot, 'Date', '2015');
+
         assert.containsN(pivot, '.o_pivot thead tr:last th', 9,
-            "last header row should contains 9 cells (3*[This month, Previous Period, Variation]");
+            "last header row should contains 9 cells (3*[December 2016, November 2016, Variation]");
         var values = [
             "13", "0", "100%", "0", "19", "-100%", "13", "19", "-31.58%"
         ];
@@ -2069,6 +2085,16 @@ QUnit.module('Views', {
                     '<field name="date" interval="month" type="col"/>' +
                     '<field name="foo" type="measure"/>' +
               '</pivot>',
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="date_filter" date="date" domain="[]" default_period='antepenultimate_month'/>
+                    </search>
+                `,
+            },
+            viewOptions: {
+                context: { search_default_date_filter: 1 },
+            },
             session: {
                 get_file: function (args) {
                     var data = JSON.parse(args.data.data);
@@ -2099,29 +2125,22 @@ QUnit.module('Views', {
             },
         });
 
+        // open comparison menu
+        await cpHelpers.toggleComparisonMenu(pivot);
+        // compare October 2016 to September 2016
+        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
 
-        // open time range menu
-        await cpHelpers.toggleTimeRangeMenu(pivot);
-        // select 'Today' as range
-        await cpHelpers.selectRange(pivot, 'today');
-        // check checkbox 'Compare To'
-        await cpHelpers.toggleTimeRangeMenuBox(pivot);
-        // Click on 'Apply' button
-        await cpHelpers.applyTimeRange(pivot);
-
-        // the time range menu configuration is by now: Date, Today, checkbox checked, Previous Period
         // With the data above, the time ranges contain no record.
         assert.strictEqual(pivot.$('.o_pivot p.o_view_nocontent_empty_folder').length, 1, "there should be no data");
         // export data should be impossible since the pivot buttons
         // are deactivated (exception: the 'Measures' button).
         assert.ok(pivot.$('.o_control_panel button.o_pivot_download').prop('disabled'));
 
-        // select 'This Month' as date range
-        await cpHelpers.selectRange(pivot, 'this_month');
+        await cpHelpers.toggleFilterMenu(pivot);
+        await cpHelpers.toggleMenuItem(pivot, 'Date');
+        await cpHelpers.toggleMenuItemOption(pivot, 'Date', 'December');
+        await cpHelpers.toggleMenuItemOption(pivot, 'Date', 'October');
 
-        // Click on 'Apply' button
-        await cpHelpers.applyTimeRange(pivot);
-        // the time range menu configuration is by now: Date, This Month, checkbox checked, Previous Period
         // With the data above, the time ranges contain some records.
         // export data. Should execute 'get_file'
         await testUtils.dom.click(pivot.$('.o_control_panel button.o_pivot_download'));
@@ -2133,8 +2152,8 @@ QUnit.module('Views', {
             // measure headers
             '["Foo","Foo","Foo"]',
             // origin headers
-            '["This Month","Previous Period","Variation","This Month","Previous Period"' +
-                ',"Variation","This Month","Previous Period","Variation"]',
+            '["December 2016","November 2016","Variation","December 2016","November 2016"' +
+                ',"Variation","December 2016","November 2016","Variation"]',
             // number of 'measures'
             '1',
             // number of 'origins'
@@ -2165,6 +2184,16 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: '<pivot><field name="customer" type="row"/></pivot>',
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                    </search>
+                `,
+            },
+            viewOptions: {
+                context: { search_default_date_filter: 1 },
+            },
             mockRPC: function (route, args) {
                 var result = this._super.apply(this, arguments);
                 if (args.method === 'read_group' && mockMock) {
@@ -2182,12 +2211,9 @@ QUnit.module('Views', {
 
         mockMock = true;
 
-
-        // activate 'This Month' and 'Previous Period' in time range menu
-        await cpHelpers.toggleTimeRangeMenu(pivot);
-        await cpHelpers.selectRange(pivot, 'this_month');
-        await cpHelpers.toggleTimeRangeMenuBox(pivot);
-        await cpHelpers.applyTimeRange(pivot);
+        // compare December 2016 to November 2016
+        await cpHelpers.toggleComparisonMenu(pivot);
+        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
 
         var values = [
             "4", "0", "100%",
@@ -2220,17 +2246,22 @@ QUnit.module('Views', {
                     '<field name="company_type" type="col"/>' +
                     '<field name="foo" type="measure"/>' +
                 '</pivot>',
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                    </search>
+                `,
+            },
             viewOptions: {
                 additionalMeasures: ['product_id'],
+                context: { search_default_date_filter: 1 },
             },
         });
 
-
-        // enable comparison mode
-        await cpHelpers.toggleTimeRangeMenu(pivot);
-        await cpHelpers.selectRange(pivot, 'this_month');
-        await cpHelpers.toggleTimeRangeMenuBox(pivot);
-        await cpHelpers.applyTimeRange(pivot);
+        // compare December 2016 to November 2016
+        await cpHelpers.toggleComparisonMenu(pivot);
+        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
 
         // initial sanity check
         var values = [
@@ -2388,17 +2419,22 @@ QUnit.module('Views', {
                     '<field name="company_type" type="col"/>' +
                     '<field name="foo" type="measure"/>' +
                 '</pivot>',
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                    </search>
+                `,
+            },
             viewOptions: {
                 additionalMeasures: ['product_id'],
+                context: { search_default_date_filter: 1 },
             },
         });
 
-
-        // enable comparison mode
-        await cpHelpers.toggleTimeRangeMenu(pivot);
-        await cpHelpers.selectRange(pivot, 'this_month');
-        await cpHelpers.toggleTimeRangeMenuBox(pivot);
-        await cpHelpers.applyTimeRange(pivot);
+        // compare December 2016 to November 2016
+        await cpHelpers.toggleComparisonMenu(pivot);
+        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
 
         // initial sanity check
         var values = [
@@ -2442,6 +2478,13 @@ QUnit.module('Views', {
                     '<field name="company_type" type="col"/>' +
                     '<field name="foo" type="measure"/>' +
                 '</pivot>',
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                    </search>
+                `,
+            },
             viewOptions: {
                 additionalMeasures: ['product_id'],
             },
@@ -2490,12 +2533,14 @@ QUnit.module('Views', {
             "The row headers should be as expected"
         );
 
+        // Filter on December 2016
+        await cpHelpers.toggleFilterMenu(pivot);
+        await cpHelpers.toggleMenuItem(pivot, 'Date');
+        await cpHelpers.toggleMenuItemOption(pivot, 'Date', 'December');
 
-        // enable comparison mode
-        await cpHelpers.toggleTimeRangeMenu(pivot);
-        await cpHelpers.selectRange(pivot, 'this_month');
-        await cpHelpers.toggleTimeRangeMenuBox(pivot);
-        await cpHelpers.applyTimeRange(pivot);
+        // compare December 2016 to November 2016
+        await cpHelpers.toggleComparisonMenu(pivot);
+        await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
 
         assert.strictEqual(
             pivot.$('th').slice(0, 7).text(),
@@ -2769,7 +2814,7 @@ QUnit.module('Views', {
     QUnit.test('pivot rendering with boolean field', async function (assert) {
         assert.expect(4);
 
-        this.data.partner.fields.bar = {string: "bar", type: "boolean", store: true, searchable: true, group_operator: 'bool_or'}
+        this.data.partner.fields.bar = {string: "bar", type: "boolean", store: true, searchable: true, group_operator: 'bool_or'};
         this.data.partner.records = [{id: 1, bar: true, date: '2019-12-14'}, {id: 2, bar: false, date: '2019-05-14'}];
 
         var pivot = await createView({
