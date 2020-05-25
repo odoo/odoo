@@ -28,7 +28,6 @@ class View(models.Model):
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
     track = fields.Boolean(string='Track', default=False, help="Allow to specify for one page of the website to be trackable or not")
     visibility = fields.Selection([('', 'All'), ('connected', 'Signed In'), ('restricted_group', 'Restricted Group'), ('password', 'With Password')], default='')
-    visibility_group = fields.Many2one('res.groups', copy=False)
     visibility_password = fields.Char(groups='base.group_system', copy=False)
     visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
 
@@ -186,11 +185,11 @@ class View(models.Model):
 
         if current_website_id and not self._context.get('no_cow'):
             for view in self.filtered(lambda view: not view.website_id):
-                for website in self.env['website'].search([('id', '!=', current_website_id)]):
+                for w in self.env['website'].search([('id', '!=', current_website_id)]):
                     # reuse the COW mechanism to create
                     # website-specific copies, it will take
                     # care of creating pages and menus.
-                    view.with_context(website_id=website.id).write({'name': view.name})
+                    view.with_context(website_id=w.id).write({'name': view.name})
 
         specific_views = self.env['ir.ui.view']
         if self and self.pool._init:
@@ -364,11 +363,6 @@ class View(models.Model):
         if self.visibility and not request.env.user.has_group('website.group_website_designer'):
             if (self.visibility == 'connected' and request.website.is_public_user()):
                 error = werkzeug.exceptions.Forbidden()
-            elif self.visibility == 'restricted_group' and self.visibility_group:
-                # special case, to avoid employee.user_ids
-                if (self.visibility_group.get_external_id() == 'base.group_user' and not request.env.user.share) or \
-                        request.env.user.id not in self.visibility_group.sudo().users.ids:
-                    error = werkzeug.exceptions.Forbidden()
             elif self.visibility == 'password' and \
                     (request.website.is_public_user() or self.id not in request.session.get('views_unlock', [])):
                 pwd = request.params.get('visibility_password')
@@ -377,6 +371,13 @@ class View(models.Model):
                     request.session.setdefault('views_unlock', list()).append(self.id)
                 else:
                     error = werkzeug.exceptions.Forbidden('website_visibility_password_required')
+
+            # elif self.visibility == 'restricted_group' and self.groups_id: or if groups_id set from backend
+            try:
+                self._check_view_access()
+            except AccessError:
+                error = werkzeug.exceptions.Forbidden()
+
         if error:
             if do_raise:
                 raise error

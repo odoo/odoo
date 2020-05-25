@@ -272,7 +272,6 @@
                     <field name="page_ids" invisible="1" />
                     <field name="first_page_id" attrs="{'invisible': [('page_ids', '=', [])]}" />
                     <field name="visibility" attrs="{'invisible': [('type', '!=', 'qweb')]}" />
-                    <field name="visibility_group" attrs="{'invisible': [('visibility', '!=', 'restricted_group')]}" />
                     <field name="visibility_password_display" attrs="{'invisible': [('visibility', '!=', 'password')]}" password="True"/>
                 </field>
                 <sheet position="before">
