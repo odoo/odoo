@@ -38,6 +38,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
      * @override
      */
     start: function () {
+        KeyboardNavigationMixin.start.call(this);
         // Compatibility lang change ?
         if (!this.$('.js_change_lang').length) {
             var $links = this.$('ul.js_language_selector li a:not([data-oe-id])');
@@ -56,6 +57,13 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
         this.$('.zoomable img[data-zoom]').zoomOdoo();
 
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        KeyboardNavigationMixin.destroy.call(this);
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------

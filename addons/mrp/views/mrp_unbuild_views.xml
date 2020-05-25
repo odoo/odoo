@@ -175,17 +175,17 @@
             <field name="model">mrp.unbuild</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name"/>
+                    <field name="name" decoration-bf="1"/>
                     <field name="product_id"/>
                     <field name="bom_id"/>
                     <field name="mo_id"/>
                     <field name="lot_id" groups="stock.group_production_lot"/>
                     <field name="product_qty"/>
                     <field name="product_uom_id" groups="uom.group_uom"/>
-                    <field name="state"/>
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state" widget='badge' decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
                 </tree>
             </field>
         </record>

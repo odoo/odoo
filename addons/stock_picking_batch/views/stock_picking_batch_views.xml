@@ -138,11 +138,11 @@
         <field name="name">stock.picking.batch.tree</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <tree string="Stock Batch Transfer" decoration-muted="state=='cancel'" multi_edit="1">
-                <field name="name"/>
-                <field name="user_id"/>
-                <field name="state"/>
+            <tree string="Stock Batch Transfer" multi_edit="1">
+                <field name="name" decoration-bf="1"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state in ('draft', 'in_progress')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
@@ -230,7 +230,7 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.vpicktree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='state']" position="before">
+            <xpath expr="//field[@name='company_id']" position="before">
                 <field name="batch_id" optional="show"
                     domain="[
                         ('state', 'in', ['draft', 'in_progress']),

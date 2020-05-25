@@ -1037,8 +1037,6 @@ class TestStockFlow(TestStockCommon):
         res_dict = bo_out_3.button_validate()
         wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         res_dict_for_back_order = wizard.process()
-        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id')).with_context(res_dict_for_back_order['context'])
-        backorder_wizard.process()
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
         self.assertEqual(sum(total_qty), 999.9980, 'Expecting 999.9980 kg , got %.4f kg on location stock!' % (sum(total_qty)))
