@@ -602,8 +602,8 @@ class PurchaseOrder(models.Model):
                    FROM purchase_order po
                    JOIN res_company comp ON (po.company_id = comp.id)
                    JOIN res_currency curr ON (comp.currency_id = curr.id)
-                   WHERE state in ('purchase', 'done')
-                     AND company_id = %s;
+                   WHERE po.state in ('purchase', 'done')
+                     AND po.company_id = %s
                 """
         self._cr.execute(query, (one_week_ago, self.env.company.id))
         res = self.env.cr.fetchone()
