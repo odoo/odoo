@@ -2791,6 +2791,66 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('search more in many2one: resequence inside dialog', async function (assert) {
+            // when the user clicks on 'Search More...' in a many2one dropdown, resequencing inside
+            // the dialog works
+            assert.expect(10);
+
+            this.data.partner.fields.sequence = { string: 'Sequence', type: 'integer' };
+            for (var i = 0; i < 8; i++) {
+                this.data.partner.records.push({id: 100 + i, display_name: 'test_' + i});
+            }
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="trululu"/></form>',
+                archs: {
+                    'partner,false,list': '<list>' +
+                        '<field name="sequence" widget="handle"/>' +
+                        '<field name="display_name"/>' +
+                    '</list>',
+                    'partner,false,search': '<search></search>',
+                },
+                mockRPC: function (route, args) {
+                    assert.step(args.method || route);
+                    if (route === '/web/dataset/search_read') {
+                        assert.deepEqual(args.domain, [],
+                            "should not preselect ids as there as nothing in the m2o input");
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            await testUtils.fields.many2one.searchAndClickItem('trululu', {
+                item: 'Search More',
+                search: '',
+            });
+
+            var $modal = $('.modal');
+            assert.equal($modal.length, 1,
+                'There should be 1 modal opened');
+
+            var $handles = $modal.find('.ui-sortable-handle');
+            assert.equal($handles.length, 11,
+                'There should be 11 sequence handlers');
+
+            await testUtils.dom.dragAndDrop($handles.eq(1),
+                $modal.find('tbody tr').first(), { position: 'top' });
+
+            assert.verifySteps([
+                'default_get',
+                'name_search', // to display results in the dropdown
+                'load_views', // list view in dialog
+                '/web/dataset/search_read', // to display results in the dialog
+                '/web/dataset/resequence', // resequencing lines
+                'read',
+            ]);
+
+            form.destroy();
+        });
+
         QUnit.test('many2one dropdown disappears on scroll', async function (assert) {
             assert.expect(2);
 
