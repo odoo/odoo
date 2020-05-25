@@ -44,7 +44,6 @@ class SaleReport(models.Model):
             NULL AS campaign_id,
             NULL AS medium_id,
             NULL AS source_id,
-            extract(epoch from avg(date_trunc('day',pos.date_order)-date_trunc('day',pos.create_date)))/(24*60*60)::decimal(16,2) AS delay,
             t.categ_id AS categ_id,
             pos.pricelist_id AS pricelist_id,
             NULL AS analytic_account_id,
@@ -53,14 +52,8 @@ class SaleReport(models.Model):
             partner.country_id AS country_id,
             partner.industry_id AS industry_id,
             partner.commercial_partner_id AS commercial_partner_id,
-            (select sum(t.weight*l.qty/u.factor) from pos_order_line l
-               join product_product p on (l.product_id=p.id)
-               left join product_template t on (p.product_tmpl_id=t.id)
-               left join uom_uom u on (u.id=t.uom_id)) AS weight,
-            (select sum(t.volume*l.qty/u.factor) from pos_order_line l
-               join product_product p on (l.product_id=p.id)
-               left join product_template t on (p.product_tmpl_id=t.id)
-               left join uom_uom u on (u.id=t.uom_id)) AS volume,
+            sum(p.weight * l.qty / u.factor) as weight,
+            sum(p.volume * l.qty / u.factor) as volume,
             l.discount as discount,
             sum((l.price_unit * l.discount * l.qty / 100.0 / CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END)) as discount_amount,
             NULL as order_id
@@ -78,7 +71,6 @@ class SaleReport(models.Model):
                     LEFT JOIN uom_uom u ON (u.id=t.uom_id)
                     LEFT JOIN pos_session session ON (session.id = pos.session_id)
                     LEFT JOIN pos_config config ON (config.id = session.config_id)
-                left join product_pricelist pp on (pos.pricelist_id = pp.id)
         '''
 
         groupby_ = '''

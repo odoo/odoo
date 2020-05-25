@@ -83,7 +83,6 @@ class SaleReport(models.Model):
             s.campaign_id as campaign_id,
             s.medium_id as medium_id,
             s.source_id as source_id,
-            extract(epoch from avg(date_trunc('day',s.date_order)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
             t.categ_id as categ_id,
             s.pricelist_id as pricelist_id,
             s.analytic_account_id as analytic_account_id,
@@ -110,7 +109,6 @@ class SaleReport(models.Model):
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join uom_uom u on (u.id=l.product_uom)
                     left join uom_uom u2 on (u2.id=t.uom_id)
-                    left join product_pricelist pp on (s.pricelist_id = pp.id)
                 %s
         """ % from_clause
 
