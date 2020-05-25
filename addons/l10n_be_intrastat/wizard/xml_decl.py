@@ -341,7 +341,7 @@ class XmlDeclaration(models.TransientModel):
         if po_line:
             stock_move_domain.append(('purchase_line_id', '=', po_line.id))
         if so_line:
-            stock_move_domain.append(('procurement_id.sale_line_id', '=', so_line.id))
+            stock_move_domain.append(('sale_line_id', '=', so_line.id))
 
         stock_move = self.env['stock.move'].search(stock_move_domain, limit=1)
         return stock_move and (
