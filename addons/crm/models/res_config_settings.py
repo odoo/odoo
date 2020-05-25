@@ -77,9 +77,8 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('group_use_lead')
     def _compute_generate_lead_from_alias(self):
         """ Reset alias / leads configuration if leads are not used """
-        if not self.group_use_lead:
-            for setting in self:
-                setting.generate_lead_from_alias = False
+        for setting in self.filtered(lambda r: not r.group_use_lead):
+            setting.generate_lead_from_alias = False
 
     @api.depends('generate_lead_from_alias')
     def _compute_crm_alias_prefix(self):
