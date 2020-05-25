@@ -202,7 +202,7 @@ class StockQuant(models.Model):
 
     def action_view_stock_moves(self):
         self.ensure_one()
-        action = self.env.ref('stock.stock_move_line_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action")
         action['domain'] = [
             ('product_id', '=', self.product_id.id),
             '|',
@@ -718,7 +718,7 @@ class QuantPackage(models.Model):
         self.env['stock.quant']._unlink_zero_quants()
 
     def action_view_picking(self):
-        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
         domain = ['|', ('result_package_id', 'in', self.ids), ('package_id', 'in', self.ids)]
         pickings = self.env['stock.move.line'].search(domain).mapped('picking_id')
         action['domain'] = [('id', 'in', pickings.ids)]

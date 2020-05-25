@@ -77,7 +77,7 @@ class ProductTemplate(models.Model):
                                         'shared product.') % (target_company.name, ', '.join(used_products)))
 
     def action_view_sales(self):
-        action = self.env.ref('sale.report_all_channels_sales_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.report_all_channels_sales_action")
         action['domain'] = [('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'pivot_measures': ['product_uom_qty'],

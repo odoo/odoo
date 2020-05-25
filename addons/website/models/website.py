@@ -905,8 +905,8 @@ class Website(models.Model):
     @api.model
     def action_dashboard_redirect(self):
         if self.env.user.has_group('base.group_system') or self.env.user.has_group('website.group_website_designer'):
-            return self.env.ref('website.backend_dashboard').read()[0]
-        return self.env.ref('website.action_website').read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
+        return self.env["ir.actions.actions"]._for_xml_id("website.action_website")
 
     def button_go_website(self):
         self._force()

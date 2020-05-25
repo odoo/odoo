@@ -16,7 +16,7 @@ class Channel(models.Model):
 
     def action_redirect_to_forum(self):
         self.ensure_one()
-        action = self.env.ref('website_forum.action_forum_post').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_forum.action_forum_post")
         action['view_mode'] = 'tree'
         action['context'] = {
             'create': False

@@ -52,7 +52,7 @@ class SaleOrder(models.Model):
 
     def action_view_timesheet(self):
         self.ensure_one()
-        action = self.env.ref('sale_timesheet.timesheet_action_from_sales_order').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.timesheet_action_from_sales_order")
         action['context'] = {}  # erase default filters
         if self.timesheet_count > 0:
             action['domain'] = [('so_line', 'in', self.order_line.ids)]

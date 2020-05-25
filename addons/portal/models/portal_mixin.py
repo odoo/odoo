@@ -122,7 +122,7 @@ class PortalMixin(models.AbstractModel):
 
     @api.model
     def action_share(self):
-        action = self.env.ref('portal.portal_share_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("portal.portal_share_action")
         action['context'] = {'active_id': self.env.context['active_id'],
                              'active_model': self.env.context['active_model']}
         return action

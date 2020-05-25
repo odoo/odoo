@@ -219,7 +219,7 @@ class StockPicking(models.Model):
             for tracker in carrier_trackers:
                 msg += '<a href=' + tracker[1] + '>' + tracker[0] + '</a><br/>'
             self.message_post(body=msg)
-            return self.env.ref('delivery.act_delivery_trackers_url').read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("delivery.act_delivery_trackers_url")
 
         client_action = {
             'type': 'ir.actions.act_url',

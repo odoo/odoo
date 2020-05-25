@@ -657,13 +657,13 @@ class MrpWorkorder(models.Model):
 
     def action_see_move_scrap(self):
         self.ensure_one()
-        action = self.env.ref('stock.action_stock_scrap').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
         action['domain'] = [('workorder_id', '=', self.id)]
         return action
 
     def action_open_wizard(self):
         self.ensure_one()
-        action = self.env.ref('mrp.mrp_workorder_mrp_production_form').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_workorder_mrp_production_form")
         action['res_id'] = self.id
         return action
 
