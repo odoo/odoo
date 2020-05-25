@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tools import mute_logger
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate
-from odoo.tests.common import TransactionCase, BaseCase
+from odoo.tests.common import TransactionCase, BaseCase, tagged
 from psycopg2 import IntegrityError
 
 
@@ -744,3 +744,21 @@ class TestXMLTranslation(TransactionCase):
         view.write({"arch_db": "<form><i>content</i></form>"})
         self.assertIn("<i>", view.arch_db)
         self.assertIn("<i>", view_fr.arch_db)
+
+@tagged('-at_install', 'post_install')
+class TestTranslationPostInstall(TransactionCase):
+    def test_positional_parameters(self):
+        self.env["base.update.translations"].create({'lang': 'en_US'}).act_update()
+        self.env.cr.execute(r"""
+            SELECT id, module, src
+            FROM ir_translation
+            WHERE type = 'code'
+              AND name LIKE '%.py'
+              AND src SIMILAR TO '(%\%\d*[srf]%){2,}'
+        """)
+        result = self.env.cr.dictfetchall()
+        self.assertEqual(
+            len(result), 0,
+            'Format parameters of translatable strings with multiple parameters need to be named. Problematic strings:\n' +
+            '\n'.join('%10s | %s' % (res['module'], res['src']) for res in result)
+        )
