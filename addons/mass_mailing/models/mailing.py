@@ -300,7 +300,7 @@ class MassMailing(models.Model):
 
     def action_schedule(self):
         self.ensure_one()
-        action = self.env.ref('mass_mailing.mailing_mailing_schedule_date_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_mailing_schedule_date_action")
         action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
         return action
 
@@ -332,7 +332,7 @@ class MassMailing(models.Model):
         return self._action_view_traces_filtered('sent')
 
     def _action_view_traces_filtered(self, view_filter):
-        action = self.env.ref('mass_mailing.mailing_trace_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_trace_action")
         action['name'] = _('%s Traces') % (self.name)
         action['context'] = {'search_default_mass_mailing_id': self.id,}
         filter_key = 'search_default_filter_%s' % (view_filter)

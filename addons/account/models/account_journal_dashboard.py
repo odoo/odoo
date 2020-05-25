@@ -459,7 +459,8 @@ class account_journal(models.Model):
         if '.' not in action_name:
             action_name = 'account.%s' % action_name
 
-        action = self.env.ref(action_name).read()[0]
+        action = self.env["ir.actions.act_window"]._for_xml_id(action_name)
+
         context = self._context.copy()
         if 'context' in action and type(action['context']) == str:
             context.update(ast.literal_eval(action['context']))
@@ -533,7 +534,7 @@ class account_journal(models.Model):
 
     def create_bank_statement(self):
         """return action to create a bank statements. This button should be called only on journals with type =='bank'"""
-        action = self.env.ref('account.action_bank_statement_tree').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_bank_statement_tree")
         action.update({
             'views': [[False, 'form']],
             'context': "{'default_journal_id': " + str(self.id) + "}",

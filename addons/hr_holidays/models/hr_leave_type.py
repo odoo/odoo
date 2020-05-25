@@ -347,7 +347,7 @@ class HolidaysType(models.Model):
 
     def action_see_days_allocated(self):
         self.ensure_one()
-        action = self.env.ref('hr_holidays.hr_leave_allocation_action_all').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_allocation_action_all")
         domain = [
             ('holiday_status_id', 'in', self.ids),
             ('holiday_type', '!=', 'employee'),
@@ -366,7 +366,7 @@ class HolidaysType(models.Model):
 
     def action_see_group_leaves(self):
         self.ensure_one()
-        action = self.env.ref('hr_holidays.hr_leave_action_action_approve_department').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_action_action_approve_department")
         action['domain'] = [
             ('holiday_status_id', '=', self.ids[0]),
             ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))

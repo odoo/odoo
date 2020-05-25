@@ -117,7 +117,7 @@ class IrActions(models.Model):
         user_groups = self.env.user.groups_id
         for action_id, action_model, binding_type in cr.fetchall():
             try:
-                action = self.env[action_model].browse(action_id)
+                action = self.env[action_model].sudo().browse(action_id)
                 action_groups = getattr(action, 'groups_id', ())
                 action_model = getattr(action, 'res_model', False)
                 if action_groups and not action_groups & user_groups:

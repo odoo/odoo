@@ -243,7 +243,7 @@ class CRMLeadMiningRequest(models.Model):
 
     def action_get_lead_action(self):
         self.ensure_one()
-        action = self.env.ref('crm.crm_lead_all_leads').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'lead')]
         action['help'] = _("""<p class="o_view_nocontent_empty_folder">
             No leads found
@@ -254,7 +254,7 @@ class CRMLeadMiningRequest(models.Model):
 
     def action_get_opportunity_action(self):
         self.ensure_one()
-        action = self.env.ref('crm.crm_lead_opportunities').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_opportunities")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'opportunity')]
         action['help'] = _("""<p class="o_view_nocontent_empty_folder">
             No opportunities found
