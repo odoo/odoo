@@ -406,7 +406,7 @@ var Followers = AbstractField.extend({
      */
     _onRedirect: function (ev) {
         ev.preventDefault();
-        var $target = $(ev.target);
+        var $target = $(ev.target).closest('.o_mail_redirect');
         this.do_action({
             type: 'ir.actions.act_window',
             view_mode: 'form',

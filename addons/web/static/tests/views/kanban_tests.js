@@ -161,11 +161,12 @@ QUnit.module('Views', {
 
     QUnit.test('basic grouped rendering with active field (archivable by default)', async function (assert) {
         // var done = assert.async();
-        assert.expect(9);
+        assert.expect(10);
 
         // add active field on partner model and make all records active
         this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
 
+        var action = { action_id: 1 }
         var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
         var kanban = await createView({
             View: KanbanView,
@@ -187,11 +188,20 @@ QUnit.module('Views', {
                             return record.id === partnerID; 
                         }).active = false;
                     })
-                    this.data.partner.records[0].active;
-                    return Promise.resolve();
+
+                    // Returning an action should not cause a traceback (opw-2259540)
+                    return Promise.resolve(action);
                 }
                 return this._super.apply(this, arguments);
             },
+            intercepts: {
+                do_action: function (event) {
+                    assert.deepEqual(event.data.action, action, "should trigger a do_action");
+                    // Mocking the JS framework behavior
+                    kanban.reload();
+                    event.data.on_success(event.data.action);
+                },
+            }
         });
 
         // check archive/restore all actions in kanban header's config dropdown
@@ -211,7 +221,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(kanban.$('.o_kanban_group:last .o_column_archive_records'));
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
         await testUtils.modal.clickButton('Ok');
-        assert.containsNone(kanban, '.o_kanban_group:last .o_kanban_record', "last column should not contain any records");
+        assert.containsN(kanban, '.o_kanban_view .o_kanban_group', 1, "there should be one remaining column");
         envIDs = [4];
         assert.deepEqual(kanban.exportState().resIds, envIDs);
         kanban.destroy();
