@@ -49,7 +49,8 @@ class PaymentAcquirerStripe(models.Model):
             'payment_intent_data[description]': tx_values['reference'],
             'customer_email': tx_values.get('partner_email') or tx_values.get('billing_partner_email'),
         }
-        if tx_values.get('billing_partner_country').code.lower() == 'nl' and tx_values.get('currency').name.lower() == 'eur':
+        if tx_values.get('billing_partner_country').code and tx_values.get('billing_partner_country').code.lower() == 'nl' and \
+           tx_values.get('currency').name and tx_values.get('currency').name.lower() == 'eur':
             # enable iDEAL for NL-based customers (€ payments only)
             stripe_session_data['payment_method_types[1]'] = 'ideal'
         tx_values['session_id'] = self._create_stripe_session(stripe_session_data)
