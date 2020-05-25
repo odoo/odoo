@@ -132,6 +132,7 @@
                                             </span>
 
                                             <form action="/shop/cart/update" method="post" class="text-center">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                                 <input name="product_id" t-att-value="product.id" type="hidden"/>
                                                 <a role="button" class="btn btn-primary btn-block a-submit" href="#"><i class="fa fa-shopping-cart"></i>&amp;nbsp;Add to Cart</a>
                                             </form>
