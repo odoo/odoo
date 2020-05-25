@@ -5,6 +5,7 @@ from . import pycompat
 from . import win32
 from . import appdirs
 from . import pdf
+from . import cloc
 from .config import config
 from .misc import *
 from .convert import *
