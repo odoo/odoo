@@ -323,13 +323,20 @@ odoo.define('web.favorite_menu_tests', function (require) {
             controlPanel.destroy();
         });
 
-        QUnit.test('toggle favorite correctly clears filter, groupbys, time ranges and field "options"', async function (assert) {
-            assert.expect(8);
+        QUnit.test('toggle favorite correctly clears filter, groupbys, comparison and field "options"', async function (assert) {
+            assert.expect(11);
 
             const unpatchDate = patchDate(2019, 6, 31, 13, 43, 0);
 
             const favoriteFilters = [{
-                context: "{'group_by': ['foo'], 'time_ranges': {'field': 'birthday', 'range': 'this_year'}}",
+                context: `
+                    {
+                        "group_by": ["foo"],
+                        "comparison": {
+                            "favorite comparison content": "bla bla..."
+                        },
+                    }
+                `,
                 domain: "['!', ['foo', '=', 'qsdf']]",
                 id: 7,
                 is_default: false,
@@ -337,14 +344,15 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 sort: "[]",
                 user_id: [2, "Mitchell Admin"],
             }];
+            let firstSearch = true;
             const arch = `
             <search>
                 <field string="Foo" name="foo"/>
-                <filter string="Date Field Filter" name="positive" date="date_field"/>
+                <filter string="Date Field Filter" name="positive" date="date_field" default_period="this_year"/>
                 <filter string="Date Field Groupby" name="coolName" context="{'group_by': 'date_field'}"/>
             </search>
         `;
-            const searchMenuTypes = ['filter', 'groupBy', 'timeRange', 'favorite'];
+            const searchMenuTypes = ['filter', 'groupBy', 'comparison', 'favorite'];
             const params = {
                 cpStoreConfig: {
                     viewInfo: { favoriteFilters, arch, fields: this.fields },
@@ -353,24 +361,34 @@ odoo.define('web.favorite_menu_tests', function (require) {
                         search_default_positive: true,
                         search_default_coolName: true,
                         search_default_foo: "a",
-                        time_ranges: { field: 'date_field', range: 'today', comparisonRange: 'previous_period' }
                     }
                 },
                 cpProps: { searchMenuTypes, action: {}, fields: this.fields },
                 search: function (searchQuery) {
                     const { domain, groupBy, timeRanges } = searchQuery;
-                    assert.deepEqual(domain, ['!', ['foo', '=', 'qsdf']]);
-                    assert.deepEqual(groupBy, ['foo']);
-                    assert.deepEqual(timeRanges, {
-                        fieldDescription: "Birthday",
-                        fieldName: "birthday",
-                        range: [
-                            "&", ["birthday", ">=", "2019-01-01"], ["birthday", "<", "2020-01-01"]
-                        ],
-                        rangeDescription: "This Year",
-                        rangeId: "this_year"
-                    });
-                }
+                    if (firstSearch) {
+                        assert.deepEqual(domain, [['foo', '=', 'a']]);
+                        assert.deepEqual(groupBy, ['date_field:month']);
+                        assert.deepEqual(timeRanges, {
+                            comparisonId: "previous_period",
+                            comparisonRange: ["&", ["date_field", ">=", "2018-01-01"], ["date_field", "<=", "2018-12-31"]],
+                            comparisonRangeDescription: "2018",
+                            fieldDescription: "Date Field Filter",
+                            fieldName: "date_field",
+                            range: ["&", ["date_field", ">=", "2019-01-01"], ["date_field", "<=", "2019-12-31"]],
+                            rangeDescription: "2019",
+                        });
+                        firstSearch = false;
+                    } else {
+                        assert.deepEqual(domain, ['!', ['foo', '=', 'qsdf']]);
+                        assert.deepEqual(groupBy, ['foo']);
+                        assert.deepEqual(timeRanges, {
+                            "favorite comparison content": "bla bla...",
+                            range: undefined,
+                            comparisonRange: undefined,
+                        });
+                    }
+                },
             };
             const controlPanel = await createControlPanel(params);
 
@@ -379,35 +397,26 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 "&",
                 ["foo", "=", "a"],
                 "&",
-                ["date_field", ">=", "2019-07-01"],
-                ["date_field", "<=", "2019-07-31"]
+                ["date_field", ">=", "2019-01-01"],
+                ["date_field", "<=", "2019-12-31"]
             ]);
             assert.deepEqual(groupBy, ['date_field:month']);
-            assert.deepEqual(timeRanges, {
-                comparisonRange: [
-                    "&", ["date_field", ">=", "2019-07-30"], ["date_field", "<", "2019-07-31"]
-                ],
-                comparisonRangeDescription: "Previous Period",
-                comparisonRangeId: "previous_period",
-                fieldDescription: "Date",
-                fieldName: "date_field",
-                range: [
-                    "&", ["date_field", ">=", "2019-07-31"], ["date_field", "<", "2019-08-01"]
-                ],
-                rangeDescription: "Today",
-                rangeId: "today"
-            });
+            assert.deepEqual(timeRanges, {});
 
             assert.deepEqual(
                 cpHelpers.getFacetTexts(controlPanel),
                 [
                     'Foo\na',
-                    'Date Field Filter: July 2019',
+                    'Date Field Filter: 2019',
                     'Date Field Groupby: Month',
-                    'Date: Today / Previous Period'
                 ]
-            );
+                );
 
+            // activate a comparison
+            await cpHelpers.toggleComparisonMenu(controlPanel);
+            await cpHelpers.toggleMenuItem(controlPanel, "Date Field Filter: Previous period");
+
+            // activate the unique existing favorite
             await cpHelpers.toggleFavoriteMenu(controlPanel);
             await cpHelpers.toggleMenuItem(controlPanel, 0);
 
