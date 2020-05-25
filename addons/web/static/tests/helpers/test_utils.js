@@ -154,13 +154,8 @@ odoo.define('web.test_utils', async function (require) {
             editFavoriteName: testUtilsControlPanel.editFavoriteName,
             saveFavorite: testUtilsControlPanel.saveFavorite,
             deleteFavorite: testUtilsControlPanel.deleteFavorite,
-            // TimeRangeMenu interactions
-            toggleTimeRangeMenu: testUtilsControlPanel.toggleTimeRangeMenu,
-            selectField: testUtilsControlPanel.selectField,
-            selectRange: testUtilsControlPanel.selectRange,
-            selectComparisonRange: testUtilsControlPanel.selectComparisonRange,
-            toggleTimeRangeMenuBox: testUtilsControlPanel.toggleTimeRangeMenuBox,
-            applyTimeRange: testUtilsControlPanel.applyTimeRange,
+            // ComparisonMenu interactions
+            toggleComparisonMenu: testUtilsControlPanel.toggleComparisonMenu,
             // SearchBar interactions
             getFacetTexts: testUtilsControlPanel.getFacetTexts,
             removeFacet: testUtilsControlPanel.removeFacet,
