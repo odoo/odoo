@@ -964,8 +964,9 @@ class Picking(models.Model):
             for move in picking.mapped('move_lines'):
                 quantity_todo.setdefault(move.product_id.id, 0)
                 quantity_done.setdefault(move.product_id.id, 0)
-                quantity_todo[move.product_id.id] += move.product_uom_qty
-                quantity_done[move.product_id.id] += move.quantity_done
+                quantity_todo[move.product_id.id] += move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
+                quantity_done[move.product_id.id] += move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
+            # FIXME: the next block doesn't seem nor should be used.
             for ops in picking.mapped('move_line_ids').filtered(lambda x: x.package_id and not x.product_id and not x.move_id):
                 for quant in ops.package_id.quant_ids:
                     quantity_done.setdefault(quant.product_id.id, 0)
