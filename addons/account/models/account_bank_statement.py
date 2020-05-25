@@ -422,7 +422,11 @@ class AccountBankStatement(models.Model):
             raise UserError(_("Only validated statements can be reset to new."))
 
         self.write({'state': 'open'})
+        names = self.line_ids.move_id.mapped('name')
         self.line_ids.move_id.button_draft()
+        self.line_ids.move_id.posted_before = False
+        for name, move in zip(names, self.line_ids.move_id):
+            move.name = name
         self.line_ids.button_undo_reconciliation()
 
     def button_journal_entries(self):
