@@ -30,7 +30,22 @@ tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "if
 tags_to_remove = ['html', 'body']
 
 # allow new semantic HTML5 tags
-allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split() + [etree.Comment])
+allowed_tags = frozenset({
+    'a', 'abbr', 'acronym', 'address', 'applet', 'area', 'article', 'aside',
+    'audio', 'b', 'basefont', 'bdo', 'big', 'blink', 'blockquote', 'body', 'br',
+    'button', 'canvas', 'caption', 'center', 'cite', 'code', 'col', 'colgroup',
+    'command', 'datalist', 'dd', 'del', 'details', 'dfn', 'dir', 'div', 'dl',
+    'dt', 'em', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form',
+    'frameset', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'html',
+    'i', 'img', 'input', 'ins', 'isindex', 'kbd', 'keygen', 'label', 'legend',
+    'li', 'main', 'map', 'mark', 'marquee', 'math', 'menu', 'meter', 'nav',
+    'ol', 'optgroup', 'option', 'output', 'p', 'param', 'pre', 'progress', 'q',
+    'rp', 'rt', 'ruby', 's', 'samp', 'section', 'select', 'small', 'source',
+    'span', 'strike', 'strong', 'sub', 'summary', 'sup', 'svg', 'table', 'tbody',
+    'td', 'textarea', 'tfoot', 'th', 'thead', 'time', 'tr', 'track', 'tt', 'u',
+    'ul', 'var', 'video', 'wbr'
+}) | frozenset([etree.Comment])
+
 safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
      'data-o-mail-quote',  # quote detection
