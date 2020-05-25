@@ -214,3 +214,13 @@ class TestPurchaseOrder(AccountTestCommon):
         # A new move of 10 unit (15 - 5 units)
         self.assertEqual(po1.order_line.qty_received, 5)
         self.assertEqual(po1.picking_ids[-1].move_lines.product_qty, 10)
+
+    def test_propagate_date_of_move(self):
+        """ Propagate date of move should be assigned as per value of mto
+            buy route if PO is created manually (not from mto route).
+        """
+        warehouse = self.env.ref('stock.warehouse0')
+        self.po = self.env['purchase.order'].create(self.po_vals)
+        self.po.button_confirm()
+        self.assertFalse(self.po.order_line.mapped('move_dest_ids'))
+        self.assertEqual(self.po.picking_ids.move_lines[0].propagate_date, warehouse.buy_pull_id.propagate_date)

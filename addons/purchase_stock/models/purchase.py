@@ -468,7 +468,7 @@ class PurchaseOrderLine(models.Model):
             'picking_type_id': self.order_id.picking_type_id.id,
             'group_id': self.order_id.group_id.id,
             'origin': self.order_id.name,
-            'propagate_date': self.propagate_date,
+            'propagate_date': self.order_id.picking_type_id.warehouse_id.buy_pull_id.propagate_date if not self.move_dest_ids else self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': description_picking,
             'propagate_cancel': self.propagate_cancel,
