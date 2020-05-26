@@ -5,6 +5,7 @@
 from unittest.mock import patch
 import email.policy
 import email.message
+import re
 import threading
 
 from odoo.tests.common import BaseCase, SavepointCase, TransactionCase
@@ -12,6 +13,7 @@ from odoo.tools import (
     is_html_empty, html_sanitize, append_content_to_html, plaintext2html,
     email_split,
     misc, formataddr,
+    prepend_html_content,
 )
 
 from . import test_mail_examples
@@ -333,6 +335,57 @@ class TestHtmlTools(BaseCase):
         valid_html_samples = ['<p><br>1</p>', '<p>1<br > </p>']
         for content in valid_html_samples:
             self.assertFalse(is_html_empty(content))
+
+    def test_prepend_html_content(self):
+        body = """
+            <html>
+                <body>
+                    <div>test</div>
+                </body>
+            </html>
+        """
+
+        content = "<span>content</span>"
+
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<html><body><span>content</span><div>test</div></body></html>")
+
+        body = "<div>test</div>"
+        content = "<span>content</span>"
+
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<span>content</span><div>test</div>")
+
+        body = """
+            <body>
+                <div>test</div>
+            </body>
+        """
+
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<body><span>content</span><div>test</div></body>")
+
+        body = """
+            <html>
+                <body>
+                    <div>test</div>
+                </body>
+            </html>
+        """
+
+        content = """
+            <html>
+                <body>
+                    <div>test</div>
+                </body>
+            </html>
+        """
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<html><body><div>test</div><div>test</div></body></html>")
 
 
 class TestEmailTools(BaseCase):
