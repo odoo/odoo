@@ -1739,8 +1739,6 @@ var SnippetsMenu = Widget.extend({
     _makeSnippetDraggable: function ($snippets) {
         var self = this;
         var $tumb = $snippets.find('.oe_snippet_thumbnail_img:first');
-        var left = $tumb.outerWidth() / 2;
-        var top = $tumb.outerHeight() / 2;
         var $toInsert, dropped, $snippet;
 
         $snippets.draggable({
@@ -1752,12 +1750,8 @@ var SnippetsMenu = Widget.extend({
             },
             appendTo: this.$body,
             cursor: 'move',
+            distance: 0,
             handle: '.oe_snippet_thumbnail',
-            distance: 30,
-            cursorAt: {
-                left: left,
-                top: top,
-            },
             start: function () {
                 dropped = false;
                 $snippet = $(this);
