@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sms.tests.common import SMSCase, SMSCommon
 
 
@@ -50,7 +49,7 @@ class MassSMSCase(SMSCase):
             state = recipient_info.get('state', 'outgoing')
             content = recipient_info.get('content', None)
             if number is None and partner:
-                number = phone_validation.phone_get_sanitized_record_number(partner)
+                number = partner._sms_get_recipients_info()[partner.id]['sanitized']
 
             notif = traces.filtered(lambda s: s.sms_number == number and s.state == state)
             self.assertTrue(notif, 'SMS: not found notification for number %s, (state: %s)' % (number, state))
