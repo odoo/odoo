@@ -546,10 +546,8 @@ class AccountJournal(models.Model):
 
         invoices = self.env['account.move']
         for attachment in attachments:
-            invoice = self.env['account.move'].create({})
             attachment.write({'res_model': 'mail.compose.message'})
-            invoice.message_post(attachment_ids=[attachment.id])
-            invoices += invoice
+            invoices += self._create_invoice_from_single_attachment(attachment)
 
         action_vals = {
             'name': _('Generated Documents'),
@@ -564,6 +562,16 @@ class AccountJournal(models.Model):
         else:
             action_vals['view_mode'] = 'tree,form'
         return action_vals
+
+    def _create_invoice_from_single_attachment(self, attachment):
+        """ Creates an invoice and post the attachment. If the related modules
+            are installed, it will trigger OCR or the import from the EDI.
+
+            :returns: the created invoice.
+        """
+        invoice = self.env['account.move'].create({})
+        invoice.message_post(attachment_ids=[attachment.id])
+        return invoice
 
     def _create_secure_sequence(self, sequence_fields):
         """This function creates a no_gap sequence on each journal in self that will ensure
