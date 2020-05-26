@@ -45,6 +45,21 @@ var sortButtonAppended = false;
  * browser_js is closed as soon as an error is logged.
  */
 const errorMessages = [];
+const errorMessageSeparator = '\n' + new Array(80).fill('-').join('') + '\n';
+const validElements = [
+    // always in the body:
+    { tag: 'DIV', attr: 'id', value: 'qunit' },
+    { tag: 'DIV', attr: 'id', value: 'qunit-fixture' },
+    // shouldn't be in the body after a test but are tolerated:
+    { tag: 'SCRIPT', attr: 'id', value: '' },
+    { tag: 'DIV', attr: 'className', value: 'o_notification_manager' },
+    { tag: 'DIV', attr: 'className', value: 'tooltip fade bs-tooltip-auto' },
+    { tag: 'DIV', attr: 'className', value: 'tooltip fade bs-tooltip-auto show' },
+    { tag: 'SPAN', attr: 'className', value: 'select2-hidden-accessible' },
+    // Due to a Document Kanban bug (already present in 12.0)
+    { tag: 'DIV', attr: 'className', value: 'ui-helper-hidden-accessible' },
+    { tag: 'UL', attr: 'className', value: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front' },
+];
 
 /**
  * Waits for the module system to end processing the JS modules, so that we can
@@ -144,58 +159,48 @@ QUnit.moduleDone(function(result) {
  */
 QUnit.on('OdooAfterTestHook', function () {
     // check for leftover elements in the body
-    var $bodyChilds = $('body > *');
-    var validElements = [
-        // always in the body:
-        {tagName: 'DIV', attrToCompare: 'id', value: 'qunit'},
-        {tagName: 'DIV', attrToCompare: 'id', value: 'qunit-fixture'},
-        {tagName: 'SCRIPT', attrToCompare: 'id', value: ''},
-        // shouldn't be in the body after a test but are tolerated:
-        {tagName: 'DIV', attrToCompare: 'className', value: 'o_notification_manager'},
-        {tagName: 'DIV', attrToCompare: 'className', value: 'tooltip fade bs-tooltip-auto'},
-        {tagName: 'DIV', attrToCompare: 'className', value: 'tooltip fade bs-tooltip-auto show'},
-        {tagName: 'I', attrToCompare: 'title', value: 'Raphaël Colour Picker'},
-        {tagName: 'SPAN', attrToCompare: 'className', value: 'select2-hidden-accessible'},
-        // Due to a Document Kanban bug (already present in 12.0)
-        {tagName: 'DIV', attrToCompare: 'className', value: 'ui-helper-hidden-accessible'},
-        {tagName: 'UL', attrToCompare: 'className', value: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front'},
-    ];
-    if ($bodyChilds.length > 3) {
-        for (var i = 0; i < $bodyChilds.length; i++) {
-            var bodyChild = $bodyChilds[i];
-            var isValid = false;
-
-            for (var j = 0; j < validElements.length; j++) {
-                var toleratedElement = validElements[j];
-                if (toleratedElement.tagName === bodyChild.tagName) {
-                    var attr = toleratedElement.attrToCompare;
-                    if (toleratedElement.value === bodyChild[attr]) {
-                        isValid = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!isValid) {
-                console.error('Body still contains undesirable elements:' +
-                    '\nInvalid element:\n' + bodyChild.outerHTML +
-                    '\nBody HTML: \n' + $('body').html());
-                if (!document.body.classList.contains('debug')) {
-                    $(bodyChild).remove();
-                }
-                QUnit.pushFailure(`Body still contains undesirable elements`);
-            }
+    const qunitFixture = document.getElementById('qunit-fixture');
+    const invalidBodyElements = [];
+    for (const child of document.body.children) {
+        const isValid = validElements.some(
+            ({ attr, tag, value }) => tag === child.tagName && value === child[attr]
+        );
+        if (!isValid) {
+            invalidBodyElements.push(child);
         }
     }
-
+    if (invalidBodyElements.length) {
+        console.error([
+            "Body still contains undesirable elements",
+            [
+                "Invalid elements:",
+                invalidBodyElements.map(
+                    (el) => el.outerHTML.trim()
+                ).join('\n'),
+            ].join('\n'),
+            [
+                "Body HTML:",
+                document.body.innerHTML.trim(),
+            ].join('\n'),
+        ].join(errorMessageSeparator));
+        QUnit.pushFailure(`Body still contains undesirable elements`);
+    }
     // check for leftovers in #qunit-fixture
-    var qunitFixture = document.getElementById('qunit-fixture');
     if (qunitFixture.children.length) {
-        console.error('#qunit-fixture still contains elements:' +
-            '\n#qunit-fixture HTML:\n' + qunitFixture.outerHTML);
+        console.error([
+            "#qunit-fixture still contains elements",
+            [
+                "#qunit-fixture HTML:",
+                qunitFixture.innerHTML.trim(),
+            ].join('\n'),
+        ].join(errorMessageSeparator));
         QUnit.pushFailure(`#qunit-fixture still contains elements`);
-        if (!document.body.classList.contains('debug')) {
-            $(qunitFixture.children).remove();
+    }
+    // remove invalid elements
+    if (!document.body.classList.contains('debug')) {
+        const invalidElements = [...invalidBodyElements, ...qunitFixture.children];
+        for (const invalidElement of invalidElements) {
+            invalidElement.remove();
         }
     }
 });
