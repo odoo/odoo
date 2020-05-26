@@ -921,12 +921,9 @@ class expression(object):
                         operator = 'in'
                     domain = field.determine_domain(model, operator, right)
 
-                if not domain:
-                    leaf.leaf = TRUE_LEAF
-                    push(leaf)
-                else:
-                    for elem in reversed(domain):
-                        push(create_substitution_leaf(leaf, elem, model, internal=True))
+                # replace current leaf by normalized domain
+                for elem in reversed(normalize_domain(domain)):
+                    push(create_substitution_leaf(leaf, elem, model, internal=True))
 
             # -------------------------------------------------
             # RELATIONAL FIELDS

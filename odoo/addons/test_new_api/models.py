@@ -152,7 +152,8 @@ class Message(models.Model):
                 (self._table, operator)
         self.env.cr.execute(query, (value,))
         ids = [t[0] for t in self.env.cr.fetchall()]
-        return [('id', 'in', ids)]
+        # return domain with an implicit AND
+        return [('id', 'in', ids), (1, '=', 1)]
 
     @api.one
     @api.depends('size')
