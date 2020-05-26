@@ -125,7 +125,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             this._controlPanelModel.on('search', this, this._onSearch);
             this._controlPanelModel.on('get-controller-query-params', this, this._onGetOwnedQueryParams);
         }
-        this.renderer.on_attach_callback();
+        if (!(this.renderer instanceof owl.Component)) {
+            this.renderer.on_attach_callback();
+        }
     },
     /**
      * Called each time the controller is detached from the DOM.
@@ -136,7 +138,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             this._controlPanelModel.off('search', this);
             this._controlPanelModel.off('get-controller-query-params', this);
         }
-        this.renderer.on_detach_callback();
+        if (!(this.renderer instanceof owl.Component)) {
+            this.renderer.on_detach_callback();
+        }
     },
 
     //--------------------------------------------------------------------------
