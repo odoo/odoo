@@ -529,6 +529,7 @@ class AccountBankStatementLine(models.Model):
         compute='_compute_is_reconciled',
         help="Technical field indicating if the statement line is already reconciled.")
     state = fields.Selection(related='statement_id.state', string='Status', readonly=True)
+    country_code = fields.Char(related='company_id.country_id.code')
 
     # -------------------------------------------------------------------------
     # HELPERS
