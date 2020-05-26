@@ -103,6 +103,7 @@ class AccountPaymentRegister(models.TransientModel):
     require_partner_bank_account = fields.Boolean(
         compute='_compute_show_require_partner_bank',
         help="Technical field used to know whether the field `partner_bank_id` needs to be required or not in the payments form views")
+    country_code = fields.Char(related='company_id.country_id.code', readonly=True)
 
     # -------------------------------------------------------------------------
     # HELPERS

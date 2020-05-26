@@ -134,6 +134,7 @@
                         <page string="Definition" name="definition">
                             <div attrs="{'invisible': [('amount_type', '=', 'group')]}">
                                 <field name="tax_fiscal_country_id" invisible="1"/>
+                                <field name="country_code" invisible="1"/>
                                 <group string="Repartition for Invoices">
                                     <field name="invoice_repartition_line_ids" nolabel="1" context="{'default_company_id': company_id}"/>
                                 </group>

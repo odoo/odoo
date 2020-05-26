@@ -101,6 +101,7 @@ class AccountJournal(models.Model):
     currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency")
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, index=True, default=lambda self: self.env.company,
         help="Company related to this journal")
+    country_code = fields.Char(related='company_id.country_id.code', readonly=True)
 
     refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
     sequence_override_regex = fields.Text(help="Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"\
