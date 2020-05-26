@@ -557,6 +557,11 @@ registry.Parallax = Animation.extend({
             top: -this.ratio,
             bottom: -this.ratio,
         });
+
+        // Get parallax direction
+        if (this.el.dataset.scrollBackgroundDirection === 'bottom') {
+            this.ratio = -this.ratio;
+        }
     },
 
     //--------------------------------------------------------------------------
