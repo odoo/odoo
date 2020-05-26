@@ -925,12 +925,12 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
                 this._render();
                 break;
             case $.ui.keyCode.UP:
-                ev.preventDefault();
-                this.$menu.children().last().focus();
-                break;
             case $.ui.keyCode.DOWN:
                 ev.preventDefault();
-                this.$menu.children().first().focus();
+                if (this.$menu) {
+                    let $element = ev.which === $.ui.keyCode.UP ? this.$menu.children().last() : this.$menu.children().first();
+                    $element.focus();
+                }
                 break;
         }
     },
