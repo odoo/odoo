@@ -294,7 +294,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                         self.displayError(
                             _t('Server Error'),
                             _t("We are not able to redirect you to the payment form. ") +
-                                error.data.message
+                                error.message.data.arguments[0]
                         );
                     });
                 }
