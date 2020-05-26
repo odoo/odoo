@@ -277,6 +277,129 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list view with adjacent buttons', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <button name="a" type="object" icon="fa-car"/>
+                    <field name="foo"/>
+                    <button name="x" type="object" icon="fa-star"/>
+                    <button name="y" type="object" icon="fa-refresh"/>
+                    <button name="z" type="object" icon="fa-exclamation"/>
+                </tree>`,
+        });
+
+        assert.containsN(list, 'th', 4,
+            "adjacent buttons in the arch must be grouped in a single column");
+        assert.containsN(list.$('.o_data_row:first'), 'td.o_list_button', 2);
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with adjacent buttons and invisible field', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <button name="a" type="object" icon="fa-car"/>
+                    <field name="foo" invisible="1"/>
+                    <button name="x" type="object" icon="fa-star"/>
+                    <button name="y" type="object" icon="fa-refresh"/>
+                    <button name="z" type="object" icon="fa-exclamation"/>
+                </tree>`,
+        });
+
+        assert.containsN(list, 'th', 3,
+            "adjacent buttons in the arch must be grouped in a single column");
+        assert.containsN(list.$('.o_data_row:first'), 'td.o_list_button', 2);
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with adjacent buttons and invisible field (modifier)', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <button name="a" type="object" icon="fa-car"/>
+                    <field name="foo" attrs="{'invisible': [['foo', '=', 'blip']]}"/>
+                    <button name="x" type="object" icon="fa-star"/>
+                    <button name="y" type="object" icon="fa-refresh"/>
+                    <button name="z" type="object" icon="fa-exclamation"/>
+                </tree>`,
+        });
+
+        assert.containsN(list, 'th', 4,
+            "adjacent buttons in the arch must be grouped in a single column");
+        assert.containsN(list.$('.o_data_row:first'), 'td.o_list_button', 2);
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with adjacent buttons and optional field', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <button name="a" type="object" icon="fa-car"/>
+                    <field name="foo" optional="hide"/>
+                    <button name="x" type="object" icon="fa-star"/>
+                    <button name="y" type="object" icon="fa-refresh"/>
+                    <button name="z" type="object" icon="fa-exclamation"/>
+                </tree>`,
+        });
+
+        assert.containsN(list, 'th', 3,
+            "adjacent buttons in the arch must be grouped in a single column");
+        assert.containsN(list.$('.o_data_row:first'), 'td.o_list_button', 2);
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with adjacent buttons with invisible modifier', async function (assert) {
+        assert.expect(6);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <button name="x" type="object" icon="fa-star" attrs="{'invisible': [['foo', '=', 'blip']]}"/>
+                    <button name="y" type="object" icon="fa-refresh" attrs="{'invisible': [['foo', '=', 'yop']]}"/>
+                    <button name="z" type="object" icon="fa-exclamation" attrs="{'invisible': [['foo', '=', 'gnap']]}"/>
+                </tree>`,
+        });
+
+        assert.containsN(list, 'th', 3,
+            "adjacent buttons in the arch must be grouped in a single column");
+        assert.containsOnce(list.$('.o_data_row:first'), 'td.o_list_button');
+        assert.strictEqual(list.$('.o_field_cell').text(), 'yopblipgnapblip');
+        assert.containsN(list, 'td button i.fa-star:visible', 2);
+        assert.containsN(list, 'td button i.fa-refresh:visible', 3);
+        assert.containsN(list, 'td button i.fa-exclamation:visible', 3);
+
+        list.destroy();
+    });
+
     QUnit.test('list view with icon buttons', async function (assert) {
         assert.expect(5);
 
@@ -1884,7 +2007,6 @@ QUnit.module('Views', {
             { field: 'date', expected: 92, type: 'Date' },
             { field: 'datetime', expected: 146, type: 'Datetime' },
             { field: 'amount', expected: 104, type: 'Monetary' },
-            { field: 'the_button', expected: 25, type: 'with custom width' },
         ];
         assert.expect(9);
 
@@ -1901,7 +2023,7 @@ QUnit.module('Views', {
                         '<field name="date"/>' +
                         '<field name="datetime"/>' +
                         '<field name="amount"/>' +
-                        '<button name="the_button" width="25px"></button>' +
+                        '<field name="currency_id" width="25px"/>' +
                     '</tree>',
         });
 
@@ -1912,6 +2034,8 @@ QUnit.module('Views', {
         });
         assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%',
             "Char field should occupy the remaining space");
+        assert.strictEqual(list.$('th[data-name="currency_id"]')[0].offsetWidth, 25,
+            'Currency field should have a fixed width of 25px (see arch)');
 
         list.destroy();
     });
@@ -1924,7 +2048,6 @@ QUnit.module('Views', {
             { field: 'date', expected: 92, type: 'Date' },
             { field: 'datetime', expected: 146, type: 'Datetime' },
             { field: 'amount', expected: 104, type: 'Monetary' },
-            { field: 'the_button', expected: 25, type: 'with custom width' },
         ];
         assert.expect(12);
 
@@ -1949,7 +2072,7 @@ QUnit.module('Views', {
                                         <field name="date"/>
                                         <field name="datetime"/>
                                         <field name="amount"/>
-                                        <button name="the_button" width="25px"/>
+                                        <field name="currency_id" width="25px"/>
                                     </tree>
                                 </field>
                             </page>
@@ -1972,7 +2095,8 @@ QUnit.module('Views', {
         });
         assert.strictEqual(form.$('.o_field_one2many th[data-name="foo"]')[0].style.width, '100%',
             "Char field should occupy the remaining space");
-
+        assert.strictEqual(form.$('th[data-name="currency_id"]')[0].offsetWidth, 25,
+            'Currency field should have a fixed width of 25px (see arch)');
         assert.strictEqual(form.el.querySelector('.o_list_record_remove_header').style.width, '32px');
 
         form.destroy();
@@ -2285,14 +2409,13 @@ QUnit.module('Views', {
     });
 
     QUnit.test('empty list: state with nameless and stringless buttons', async function (assert) {
-        assert.expect(3);
+        assert.expect(2);
 
         this.data.foo.records = [];
         const list = await createView({
             arch: `
                 <tree>
                     <field name="foo"/>
-                    <field name="text"/>
                     <button string="choucroute"/>
                     <button icon="fa-heart"/>
                 </tree>`,
@@ -2301,12 +2424,10 @@ QUnit.module('Views', {
             View: ListView,
         });
 
-        assert.strictEqual(list.el.querySelector('th[data-name="foo"]').style.width, '25%',
+        assert.strictEqual(list.el.querySelector('th[data-name="foo"]').style.width, '50%',
             "Field column should be frozen");
-        assert.strictEqual(list.el.querySelector('th[data-string="choucroute"]').style.width, '25%',
-            "Nameless button column should be frozen");
-        assert.strictEqual(list.el.querySelector('th[data-icon="fa-heart"]').style.width, '25%',
-            "Nameless and stringless button should be frozen");
+        assert.strictEqual(list.el.querySelector('th:last-child').style.width, '50%',
+            "Buttons column should be frozen");
 
         list.destroy();
     });
@@ -2354,7 +2475,6 @@ QUnit.module('Views', {
             { field: 'date', expected: 92, type: 'Date' },
             { field: 'datetime', expected: 146, type: 'Datetime' },
             { field: 'amount', expected: 104, type: 'Monetary' },
-            { field: 'the_button', expected: 25, type: 'with custom width' },
         ];
         assert.expect(9);
 
@@ -2370,7 +2490,7 @@ QUnit.module('Views', {
                         '<field name="date"/>' +
                         '<field name="datetime"/>' +
                         '<field name="amount"/>' +
-                        '<button name="the_button" width="25px"></button>' +
+                        '<field name="currency_id" width="25px"/>' +
                     '</tree>',
             groupBy: ['int_field'],
         });
@@ -2382,6 +2502,8 @@ QUnit.module('Views', {
         });
         assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%',
             "Char field should occupy the remaining space");
+        assert.strictEqual(list.$('th[data-name="currency_id"]')[0].offsetWidth, 25,
+            "Currency field should have a fixed width of 25px (see arch)");
 
         list.destroy();
     });
@@ -4050,15 +4172,15 @@ QUnit.module('Views', {
 
         assert.equal(list.$('tbody tr:nth(0) td:nth(4)').html(), "",
             "td that contains an invisible field should be empty");
-        assert.equal(list.$('tbody tr:nth(0) td:nth(1)').html(), "",
-            "td that contains an invisible button should be empty");
+        assert.hasClass(list.$('tbody tr:nth(0) td:nth(1) button'), "o_invisible_modifier",
+            "button with invisible attrs should be properly hidden");
 
         // edit first row
         await testUtils.dom.click(list.$('tbody tr:nth(0) td:nth(2)'));
         assert.strictEqual(list.$('tbody tr:nth(0) td:nth(4) input.o_invisible_modifier').length, 1,
             "td that contains an invisible field should not be empty in edition");
-        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > button.o_invisible_modifier').length, 1,
-            "td that contains an invisible button should not be empty in edition");
+        assert.hasClass(list.$('tbody tr:nth(0) td:nth(1) button'), "o_invisible_modifier",
+            "button with invisible attrs should be properly hidden");
         await testUtils.dom.click(list.$buttons.find('.o_list_button_discard'));
 
         // click on the invisible field's cell to edit first row
