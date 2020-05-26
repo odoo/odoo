@@ -2958,6 +2958,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # store failed values in cache for the records that could not be read
         missing = self - fetched
         if missing:
+			_logger.info("============")			
+			_logger.info("Access Error IDs : %s",missing)
+			_logger.info("============")			
             extras = fetched - self
             if extras:
                 raise AccessError(
