@@ -134,5 +134,35 @@ QUnit.module("Views", {
         assert.hasClass(document.activeElement, "o_searchview_input");
         view.destroy();
     });
+
+    QUnit.test('Owl Renderer mounted/willUnmount hooks are properly called', async function (assert) {
+        // This test could be removed as soon as controllers and renderers will
+        // both be converted in Owl.
+        assert.expect(3);
+
+        class Renderer extends AbstractRenderer {
+            mounted() {
+                assert.step("mounted");
+            }
+            willUnmount() {
+                assert.step("unmounted");
+            }
+        }
+        Renderer.template = xml`<div>Test</div>`;
+
+        const view = await createView({
+            View: getOwlView(Renderer, "test"),
+            data: this.data,
+            model: "test_model",
+            arch: "<test/>",
+        });
+
+        view.destroy();
+
+        assert.verifySteps([
+            "mounted",
+            "unmounted",
+        ]);
+    });
 });
 });
