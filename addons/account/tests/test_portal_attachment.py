@@ -61,7 +61,7 @@ class TestUi(tests.HttpCase):
         self.assertEqual(res_binary.content, b'<svg></svg>')
 
         res_image = self.url_open('/web/image/%d?access_token=%s' % (create_res['id'], create_res['access_token']))
-        self.assertEqual(res_image.headers['Content-Type'], 'text/plain')
+        self.assertEqual(res_image.headers['Content-Type'], 'image/svg+xml')
         self.assertEqual(res_image.content, b'<svg></svg>')
 
         # Test attachment can't be removed without valid token

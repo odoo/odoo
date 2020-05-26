@@ -1624,7 +1624,7 @@ def set_safe_image_headers(headers, content):
     `Content-Type` set appropriately depending on the given `content` only if it
     is safe to do."""
     content_type = guess_mimetype(content)
-    safe_types = ['image/jpeg', 'image/png', 'image/gif', 'image/x-icon']
+    safe_types = ['image/jpeg', 'image/png', 'image/gif', 'image/x-icon', 'image/svg+xml']
     if content_type in safe_types:
         headers = set_header_field(headers, 'Content-Type', content_type)
     set_header_field(headers, 'Content-Length', len(content))
