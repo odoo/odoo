@@ -21,6 +21,8 @@ class AccountMove(models.Model):
         for move in self:
             move.journal_id.edi_format_ids._create_ir_attachments(move)
 
+        return res
+
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         # OVERRIDE
