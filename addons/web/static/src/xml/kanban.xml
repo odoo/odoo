@@ -226,7 +226,7 @@
             <li class="o_search_panel_category_value border-0 list-group-item" t-att-data-category-id="category.id">
                 <header t-att-class="'list-group-item-action' + (!category.activeValueId ? ' active' : '')">
                     <label class="o_search_panel_label mb0">
-                        <div class="o_toggle_fold_container"/>
+                        <div class="o_toggle_fold"/>
                         <span class="o_search_panel_label_title"><b>All</b></span>
                     </label>
                 </header>
@@ -247,8 +247,8 @@
         <li class="o_search_panel_category_value border-0 list-group-item" t-att-data-id="value.id" t-att-data-category-id="category.id">
             <header t-att-class="'list-group-item-action' + (value.id === category.activeValueId ? ' active' : '')">
                 <label t-attf-class="o_search_panel_label mb0{{ category.disableCounters ? '' : ' o_with_counters' }}">
-                    <div class="o_toggle_fold_container">
-                        <i t-if="value.childrenIds.length" t-attf-class="o_toggle_fold fa fa-caret-{{ value.folded ? 'right' : 'down' }}"/>
+                    <div class="o_toggle_fold">
+                        <i t-if="value.childrenIds.length" t-attf-class="fa fa-caret-{{ value.folded ? 'right' : 'down' }}"/>
                     </div>
                     <span class="o_search_panel_label_title"><t t-esc="value.display_name"/></span>
                 </label>

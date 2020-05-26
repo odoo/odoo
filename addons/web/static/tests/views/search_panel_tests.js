@@ -625,7 +625,7 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_search_panel_category_value', 2,
             'The number of categories should be 2: All and Company 5');
 
-        assert.containsNone(kanban, '.o_toggle_fold',
+        assert.containsNone(kanban, '.o_toggle_fold > i',
             'None of the categories should have children');
 
         kanban.destroy();
@@ -703,7 +703,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('category with parent_field', async function (assert) {
-        assert.expect(28);
+        assert.expect(33);
 
         this.data.company.records.push({id: 40, name: 'child company 1', parent_id: 5});
         this.data.company.records.push({id: 41, name: 'child company 2', parent_id: 5});
@@ -740,10 +740,11 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_search_panel_category_value:first .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
         assert.containsN(kanban, '.o_search_panel_category_value', 3);
-        assert.containsOnce(kanban, '.o_search_panel_category_value .o_toggle_fold');
+        assert.containsOnce(kanban, '.o_search_panel_category_value .o_toggle_fold > i');
 
-        // unfold parent category
-        await testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_toggle_fold'));
+        // unfold parent category and select 'All' again
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) > header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:first > header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:first .active');
@@ -763,6 +764,13 @@ QUnit.module('Views', {
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
+        assert.containsOnce(kanban, '.o_kanban_record:not(.o_kanban_ghost)');
+
+        // fold parent company by clicking on it
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) > header'));
+
+        assert.containsOnce(kanban, '.o_search_panel_category_value .active');
+        assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // parent company should be folded
@@ -772,8 +780,8 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // fold category with children
-        await testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_toggle_fold'));
-        await testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_toggle_fold'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) > header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) > header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
@@ -781,6 +789,8 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         assert.verifySteps([
+            '[]',
+            '[["company_id","child_of",5]]',
             '[]',
             '[["company_id","child_of",40]]',
             '[["company_id","child_of",5]]',
@@ -866,21 +876,21 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold').length, 1,
+        assert.strictEqual(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold > i').length, 1,
             "'agrolait' should be displayed as a parent category value");
-        assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'), 'fa-caret-right',
+        assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold > i'), 'fa-caret-right',
             "'agrolait' should be folded");
         assert.containsN(kanban, '.o_search_panel_category_value', 3);
 
         // unfold agrolait
-        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'));
-        assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'), 'fa-caret-down',
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold > i'));
+        assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold > i'), 'fa-caret-down',
             "'agrolait' should be open");
         assert.containsN(kanban, '.o_search_panel_category_value', 5);
 
         // fold agrolait
-        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'));
-        assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'), 'fa-caret-right',
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold > i'));
+        assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold > i'), 'fa-caret-right',
             "'agrolait' should be folded");
         assert.containsN(kanban, '.o_search_panel_category_value', 3);
 
@@ -915,14 +925,14 @@ QUnit.module('Views', {
         });
 
         // unfold agrolait
-        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'));
-        assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'), 'fa-caret-down',
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:contains(agrolait) > header'));
+        assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold > i'), 'fa-caret-down',
             "'agrolait' should be open");
         assert.containsN(kanban, '.o_search_panel_category_value', 5);
 
         await kanban.reload({});
 
-        assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'), 'fa-caret-down',
+        assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold > i'), 'fa-caret-down',
             "'agrolait' should be open");
         assert.containsN(kanban, '.o_search_panel_category_value', 5);
 
