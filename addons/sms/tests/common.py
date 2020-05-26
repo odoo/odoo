@@ -66,7 +66,7 @@ class SMSCase(MockSMS):
     """ Main test class to use when testing SMS integrations. Contains helpers and tools related
     to notification sent by SMS. """
 
-    def assertSMSSent(self, numbers, content):
+    def assertSMSSent(self, numbers, content=None):
         """ Check sent SMS. Order is not checked. Each number should have received
         the same content. Useful to check batch sending.
 
@@ -76,7 +76,8 @@ class SMSCase(MockSMS):
         for number in numbers:
             sent_sms = next((sms for sms in self._sms if sms['number'] == number), None)
             self.assertTrue(bool(sent_sms), 'Number %s not found in %s' % (number, repr([s['number'] for s in self._sms])))
-            self.assertEqual(sent_sms['body'], content)
+            if content is not None:
+                self.assertEqual(sent_sms['body'], content)
 
     def assertSMSCanceled(self, partner, number, error_code, content=None):
         """ Check canceled SMS. Search is done for a pair partner / number where
