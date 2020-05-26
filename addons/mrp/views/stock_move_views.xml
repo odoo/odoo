@@ -100,6 +100,17 @@
             </field>
         </record>
 
+        <record id="view_move_kanban_inherit_mrp" model="ir.ui.view">
+            <field name="name">stock.move.kanban.inherit.mrp</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_kandan"/>
+            <field name="arch" type="xml">
+                <xpath expr="//templates" position="before">
+                    <field name="bom_line_id"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_finisehd_move_line" model="ir.ui.view">
             <field name="name">mrp.finished.move.line.form</field>
             <field name="priority">1000</field>
