@@ -140,7 +140,7 @@ class FetchmailServer(models.Model):
         except Exception:
             raise UserError(_('The xml file is badly formatted : {}').format(att_name))
 
-        invoice = self.env['account.move']._import_xml_invoice(tree)
+        invoice = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_invoice_from_xml_tree(att_name, tree)
         invoice.l10n_it_send_state = "new"
         invoice.source_email = from_address
         self._cr.commit()
