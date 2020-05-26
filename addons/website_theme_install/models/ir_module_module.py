@@ -165,7 +165,7 @@ class IrModuleModule(models.Model):
                         # at update, ignore active field
                         if 'active' in rec_data:
                             rec_data.pop('active')
-                        find.update(rec_data)
+                        find.with_context(install_filename='').update(rec_data)
                         self._post_copy(rec, find)
                 else:
                     new_rec = self.env[model_name].create(rec_data)
