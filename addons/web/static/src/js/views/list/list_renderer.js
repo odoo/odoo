@@ -58,6 +58,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
+        this._preprocessColumns();
         this.columnInvisibleFields = params.columnInvisibleFields;
         this.rowDecorations = this._extractDecorationAttrs(this.arch);
         this.fieldDecorations = {};
@@ -283,7 +284,62 @@ var ListRenderer = BasicRenderer.extend({
         };
     },
     /**
-     * Removes the columns which should be invisible.
+     * Adjacent buttons (in the arch) are displayed in a single column. This
+     * function iterates over the arch's nodes and replaces "button" nodes by
+     * "button_group" nodes, with a single "button_group" node for adjacent
+     * "button" nodes. A "button_group" node has a "children" attribute
+     * containing all "button" nodes in the group.
+     *
+     * @private
+     */
+    _groupAdjacentButtons: function () {
+        const children = [];
+        let groupId = 0;
+        let buttonGroupNode = null;
+        for (const c of this.arch.children) {
+            if (c.tag === 'button') {
+                if (!buttonGroupNode) {
+                    buttonGroupNode = {
+                        tag: 'button_group',
+                        children: [c],
+                        attrs: {
+                            name: `button_group_${groupId++}`,
+                            modifiers: {},
+                        },
+                    };
+                    children.push(buttonGroupNode);
+                } else {
+                    buttonGroupNode.children.push(c);
+                }
+            } else {
+                buttonGroupNode = null;
+                children.push(c);
+            }
+        }
+        this.arch.children = children;
+    },
+    /**
+     * Processes arch's child nodes for the needs of the list view:
+     *   - detects oe_read_only/oe_edit_only classnames
+     *   - groups adjacent buttons in a single column.
+     * This function is executed only once, at initialization.
+     *
+     * @private
+     */
+    _preprocessColumns: function () {
+        this._processModeClassNames();
+        this._groupAdjacentButtons();
+
+        // set as readOnly (resp. editOnly) button groups containing only
+        // readOnly (resp. editOnly) buttons, s.t. no column is rendered
+        this.arch.children.filter(c => c.tag === 'button_group').forEach(c => {
+            c.attrs.editOnly = c.children.every(n => n.attrs.editOnly);
+            c.attrs.readOnly = c.children.every(n => n.attrs.readOnly);
+        });
+    },
+    /**
+     * Removes the columns which should be invisible. This function is executed
+     * at each (re-)rendering of the list.
      *
      * @param  {Object} columnInvisibleFields contains the column invisible modifier values
      */
@@ -307,14 +363,6 @@ var ListRenderer = BasicRenderer.extend({
                 // attribute to have the evaluated modifier value.
                 if (c.attrs.name in columnInvisibleFields) {
                     reject = columnInvisibleFields[c.attrs.name];
-                }
-               if (c.attrs.class) {
-                    if (c.attrs.class.match(/\boe_edit_only\b/)) {
-                        c.attrs.editOnly = true;
-                    }
-                    if (c.attrs.class.match(/\boe_read_only\b/)) {
-                        c.attrs.readOnly = true;
-                    }
                 }
                 if (!reject && c.attrs.widget === 'handle') {
                     self.handleField = c.attrs.name;
@@ -340,6 +388,22 @@ var ListRenderer = BasicRenderer.extend({
                 if (!reject) {
                     self.columns.push(c);
                 }
+            }
+        });
+    },
+    /**
+     * Classnames "oe_edit_only" and "oe_read_only" aim to only display the cell
+     * in the corresponding mode. This only concerns lists inside form views
+     * (for x2many fields). This function detects the className and stores a
+     * flag on the node's attrs accordingly, to ease further computations.
+     *
+     * @private
+     */
+    _processModeClassNames: function () {
+        this.arch.children.forEach(c => {
+            if (c.attrs.class) {
+                c.attrs.editOnly = /\boe_edit_only\b/.test(c.attrs.class);
+                c.attrs.readOnly = /\boe_read_only\b/.test(c.attrs.class);
             }
         });
     },
@@ -419,7 +483,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderBodyCell: function (record, node, colIndex, options) {
         var tdClassName = 'o_data_cell';
-        if (node.tag === 'button') {
+        if (node.tag === 'button_group') {
             tdClassName += ' o_list_button';
         } else if (node.tag === 'field') {
             tdClassName += ' o_field_cell';
@@ -449,8 +513,11 @@ var ListRenderer = BasicRenderer.extend({
             return $td;
         }
 
-        if (node.tag === 'button') {
-            return $td.append(this._renderButton(record, node));
+        if (node.tag === 'button_group') {
+            for (const buttonNode of node.children) {
+                $td.append(this._renderButton(record, buttonNode));
+            }
+            return $td;
         } else if (node.tag === 'widget') {
             return $td.append(this._renderWidget(record, node));
         }
