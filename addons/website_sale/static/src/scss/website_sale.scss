@@ -93,6 +93,14 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         .btn {
             transform: scale(0);
             transition: transform ease 200ms 0s;
+
+            @include media-breakpoint-down(lg) {
+                padding: 5px 9px;
+            }
+
+            @include media-breakpoint-down(xl) {
+                padding: 5px 20px;
+            }
         }
 
         &:empty {
