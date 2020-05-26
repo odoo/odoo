@@ -526,6 +526,13 @@ actual arch.
         ]
 
     @api.model
+    def _get_node_xpath(self, node, default=None):
+        """Gets the most explicit XPath possible for the node."""
+        if not default:
+            default = node.getroottree().getpath(node)
+        return default
+
+    @api.model
     def get_inheriting_views_arch(self, view_id, model):
         """Retrieves the architecture of views that inherit from the given view, from the sets of
            views that should currently be used in the system. During the module upgrade phase it
@@ -605,12 +612,11 @@ actual arch.
 
     def inherit_branding(self, specs_tree, view_id, root_id):
         for node in specs_tree.iterchildren(tag=etree.Element):
-            xpath = node.getroottree().getpath(node)
             if node.tag == 'data' or node.tag == 'xpath' or node.get('position') or node.get('t-field'):
                 self.inherit_branding(node, view_id, root_id)
             else:
                 node.set('data-oe-id', str(view_id))
-                node.set('data-oe-xpath', xpath)
+                node.set('data-oe-xpath', self._get_node_xpath(node))
                 node.set('data-oe-model', 'ir.ui.view')
                 node.set('data-oe-field', 'arch')
         return specs_tree
@@ -1259,7 +1265,7 @@ actual arch.
             node_path = "%s/%s[%d]" % (parent_xpath, e.tag, index_map[e.tag])
         if branding and not (e.get('data-oe-model') or e.get('t-field')):
             e.attrib.update(branding)
-            e.set('data-oe-xpath', node_path)
+            e.set('data-oe-xpath', self._get_node_xpath(e, node_path))
         if not e.get('data-oe-model'):
             return
 

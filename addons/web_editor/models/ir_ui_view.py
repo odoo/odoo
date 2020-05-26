@@ -31,6 +31,13 @@ class IrUiView(models.Model):
     #------------------------------------------------------
 
     @api.model
+    def _get_node_xpath(self, node, default=None):
+        """Identify oe_structure nodes by id and class if possible."""
+        if "oe_structure" in node.get("id", "") and "oe_structure" in node.get("class", "").split():
+            return "//*[@id='{}' and hasclass('oe_structure')]".format(node.get('id'))
+        return super()._get_node_xpath(node, default)
+
+    @api.model
     def extract_embedded_fields(self, arch):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
 
