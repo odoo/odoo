@@ -252,7 +252,7 @@ Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
                 link_params = {'utm_medium': 'Email', 'utm_source': mailing.name}
                 if link_info[0] == 'url4':
                     link_params['baz'] = 'qux'
-                self.assertLinkShortened(
+                self.assertLinkShortenedHtml(
                     new_mail.mail_message_id.body,
                     link_info,
                     link_params=link_params,
