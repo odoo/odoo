@@ -1,10 +1,41 @@
 # -*- coding: utf-8 -*-
 
+import re
+import werkzeug
+
+from odoo import tools
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.addons.sms.tests.common import SMSCase, SMSCommon
 
 
 class MassSMSCase(SMSCase):
+
+    # ------------------------------------------------------------
+    # GATEWAY TOOLS
+    # ------------------------------------------------------------
+
+    def gateway_sms_click(self, sent_sms):
+        """ Simulate a click on a sent SMS. Usage: giving a partner and/or
+        a number, find an SMS sent to him, find shortened links in its body
+        and call add_click to simulate a click. """
+        for url in re.findall(tools.TEXT_URL_REGEX, sent_sms['body']):
+            if '/r' in url:  # shortened link, like 'http://localhost:8069/r/LBG/s/53'
+                parsed_url = werkzeug.urls.url_parse(url)
+                path_items = parsed_url.path.split('/')
+                code, sms_sms_id = path_items[2], int(path_items[4])
+                trace_id = self.env['mailing.trace'].sudo().search([('sms_sms_id_int', '=', sms_sms_id)]).id
+
+                self.env['link.tracker.click'].sudo().add_click(
+                    code,
+                    ip='100.200.300.400',
+                    country_code='BE',
+                    mailing_trace_id=trace_id
+                )
+
+
+    # ------------------------------------------------------------
+    # ASSERTS
+    # ------------------------------------------------------------
 
     def assertSMSOutgoingStatistics(self, partners, numbers, records, mailing):
         found_sms = self.env['sms.sms'].sudo().search([
@@ -26,13 +57,16 @@ class MassSMSCase(SMSCase):
     def assertSMSStatistics(self, recipients_info, mailing, records, check_sms=True):
         """ Check content of notifications.
 
-          :param recipients_info: list[{
-            'partner': res.partner record (may be empty),
-            'number': number used for notification (may be empty, computed based on partner),
-            'state': outgoing / sent / ignored / exception / opened (sent by default),
-            'record: linked record,
-            'failure_type': optional: sms_number_missing / sms_number_format / sms_credit / sms_server
-            }, { ... }]
+        :param recipients_info: list[{
+          'partner': res.partner record (may be empty),
+          'number': number used for notification (may be empty, computed based on partner),
+          'state': outgoing / sent / ignored / exception / opened (sent by default),
+          'record: linked record,
+          'content': optional: if set, check content of sent SMS
+          'failure_type': optional: sms_number_missing / sms_number_format / sms_credit / sms_server
+          },
+          { ... }
+        ]
         """
         traces = self.env['mailing.trace'].search([
             ('mass_mailing_id', 'in', mailing.ids),

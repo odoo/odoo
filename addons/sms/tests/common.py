@@ -66,6 +66,28 @@ class SMSCase(MockSMS):
     """ Main test class to use when testing SMS integrations. Contains helpers and tools related
     to notification sent by SMS. """
 
+    def _find_sms_sent(self, partner, number):
+        if number is None and partner:
+            number = partner.phone_get_sanitized_number()
+        sent_sms = next((sms for sms in self._sms if sms['number'] == number), None)
+        if not sent_sms:
+            raise AssertionError('sent sms not found for %s (number: %s)' % (partner, number))
+        return sent_sms
+
+    def _find_sms_sms(self, partner, number, status):
+        if number is None and partner:
+            number = partner.phone_get_sanitized_number()
+        domain = [('partner_id', '=', partner.id), ('number', '=', number)]
+        if status:
+            domain += [('state', '=', status)]
+
+        sms = self.env['sms.sms'].sudo().search(domain)
+        if not sms:
+            raise AssertionError('sms.sms not found for %s (number: %s / status %s)' % (partner, number, status))
+        if len(sms) > 1:
+            raise NotImplementedError()
+        return sms
+
     def assertSMSSent(self, numbers, content=None):
         """ Check sent SMS. Order is not checked. Each number should have received
         the same content. Useful to check batch sending.
@@ -82,12 +104,7 @@ class SMSCase(MockSMS):
     def assertSMSCanceled(self, partner, number, error_code, content=None):
         """ Check canceled SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
-        if number is None and partner:
-            number = partner.phone_get_sanitized_number()
-        sms = self.env['sms.sms'].sudo().search([
-            ('partner_id', '=', partner.id), ('number', '=', number),
-            ('state', '=', 'canceled')
-        ])
+        sms = self._find_sms_sms(partner, number, 'canceled')
         self.assertTrue(sms, 'SMS: not found canceled SMS for %s (number: %s)' % (partner, number))
         self.assertEqual(sms.error_code, error_code)
         if content is not None:
@@ -96,12 +113,7 @@ class SMSCase(MockSMS):
     def assertSMSFailed(self, partner, number, error_code, content=None):
         """ Check failed SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
-        if number is None and partner:
-            number = partner.phone_get_sanitized_number()
-        sms = self.env['sms.sms'].sudo().search([
-            ('partner_id', '=', partner.id), ('number', '=', number),
-            ('state', '=', 'error')
-        ])
+        sms = self._find_sms_sms(partner, number, 'error')
         self.assertTrue(sms, 'SMS: not found failed SMS for %s (number: %s)' % (partner, number))
         self.assertEqual(sms.error_code, error_code)
         if content is not None:
@@ -110,12 +122,7 @@ class SMSCase(MockSMS):
     def assertSMSOutgoing(self, partner, number, content=None):
         """ Check outgoing SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
-        if number is None and partner:
-            number = partner.phone_get_sanitized_number()
-        sms = self.env['sms.sms'].sudo().search([
-            ('partner_id', '=', partner.id), ('number', '=', number),
-            ('state', '=', 'outgoing')
-        ])
+        sms = self._find_sms_sms(partner, number, 'outgoing')
         self.assertTrue(sms, 'SMS: not found failed SMS for %s (number: %s)' % (partner, number))
         if content is not None:
             self.assertEqual(sms.body, content)
