@@ -101,10 +101,20 @@ class Digest(models.Model):
     def action_send(self):
         for digest in self:
             for user in digest.user_ids:
-                subject = '%s: %s' % (user.company_id.name, digest.name)
-                digest.template_id.with_context(user=user).send_mail(digest.id, force_send=True, raise_exception=True, email_values={'email_to': user.email, 'subject': subject})
+                digest._action_send_to_user(user, tips_count=1)
             digest.next_run_date = digest._get_next_run_date()
 
+    def _action_send_to_user(self, user, tips_count=1):
+        subject = '%s: %s' % (user.company_id.name, self.name)
+        self.template_id.with_context(user=user, tips_count=tips_count).send_mail(
+            self.id,
+            force_send=True,
+            notif_layout="digest.digest_mail_layout",
+            raise_exception=True,
+            email_values={
+                'email_to': user.email, 'subject': subject
+            }
+        )
 
     @api.model
     def _cron_send_digest_email(self):
@@ -148,15 +158,17 @@ class Digest(models.Model):
                 res.update({tf_name: kpis})
         return res
 
-    def compute_tips(self, company, user):
-        tip = self.env['digest.tip'].search([('user_ids', '!=', user.id), '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)], limit=1)
-        if not tip:
-            return False
-        tip.user_ids += user
-        body = tools.html_sanitize(tip.tip_description)
-        # FIXME: sanitize ? links ?
-        tip_description = self.env['mail.render.mixin']._render_template(body, 'digest.tip', self.ids)[self.id]
-        return tip_description
+    def compute_tips(self, company, user, tips_count=1):
+        tips = self.env['digest.tip'].search([
+            ('user_ids', '!=', user.id),
+            '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)
+        ], limit=tips_count)
+        tip_descriptions = [
+            self.env['mail.render.mixin']._render_template(tools.html_sanitize(tip.tip_description), 'digest.tip', tip.ids, post_process=True)[tip.id]
+            for tip in tips
+        ]
+        # tip.user_ids += user
+        return tip_descriptions
 
     def compute_kpis_actions(self, company, user):
         """ Give an optional action to display in digest email linked to some KPIs.
