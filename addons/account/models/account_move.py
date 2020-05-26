@@ -306,6 +306,7 @@ class AccountMove(models.Model):
         help="Technical field used to display a message when the invoice's accounting date is prior of the tax lock date.")
     # Technical field to hide Reconciled Entries stat button
     has_reconciled_entries = fields.Boolean(compute="_compute_has_reconciled_entries")
+    show_reset_to_draft_button = fields.Boolean(compute='_compute_show_reset_to_draft_button')
 
     # ==== Hash Fields ====
     restrict_mode_hash_table = fields.Boolean(related='journal_id.restrict_mode_hash_table')
@@ -1429,6 +1430,11 @@ class AccountMove(models.Model):
                     format_date(self.env, move.company_id.tax_lock_date))
             else:
                 move.tax_lock_date_message = False
+
+    @api.depends('restrict_mode_hash_table', 'state')
+    def _compute_show_reset_to_draft_button(self):
+        for move in self:
+            move.show_reset_to_draft_button = not move.restrict_mode_hash_table and move.state in ('posted', 'cancel')
 
     # -------------------------------------------------------------------------
     # BUSINESS MODELS SYNCHRONIZATION

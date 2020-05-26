@@ -523,7 +523,7 @@
                         <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice"
                                 attrs="{'invisible' : ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>
                         <button name="button_draft" string="Reset to Draft" type="object" groups="account.group_account_invoice"
-                                attrs="{'invisible' : ['|', ('restrict_mode_hash_table', '=', True), ('state', 'not in', ('posted', 'cancel'))]}"/>
+                                attrs="{'invisible' : [('show_reset_to_draft_button', '=', False)]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
                     <!-- Invoice outstanding credits -->
@@ -584,6 +584,7 @@
                         <field name="commercial_partner_id" invisible="1"/>
                         <field name="bank_partner_id" invisible="1"/>
                         <field name="display_qr_code" invisible="1"/>
+                        <field name="show_reset_to_draft_button" invisible="1"/>
 
                         <field name="invoice_has_outstanding" invisible="1"/>
                         <field name="is_move_sent" invisible="1"/>
@@ -671,7 +672,7 @@
                                 <label for="journal_id"
                                        groups="account.group_account_readonly"
                                        invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'"/>
-                                <div class="d-flex" invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'">
+                                <div name="journal_div" class="d-flex" invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'">
                                     <field name="journal_id"
                                         groups="account.group_account_readonly"
                                         options="{'no_create': True}"

@@ -20,6 +20,17 @@ DEFAULT_FACTUR_ITALIAN_DATE_FORMAT = '%Y-%m-%d'
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
+    def _is_embedding_to_invoice_pdf_needed(self):
+        # OVERRIDE
+        self.ensure_one()
+        return True if self.code == 'fattura_pa' else super()._is_embedding_to_invoice_pdf_needed()
+
+    def _is_compatible_with_journal(self, journal):
+        self.ensure_one()
+        if self.code != 'fattura_pa':
+            return super()._is_compatible_with_journal(journal)
+        return False  # edi does not support generic export
+
     def _check_filename_is_fattura_pa(self, filename):
         return re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", filename)
 

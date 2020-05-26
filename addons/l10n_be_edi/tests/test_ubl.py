@@ -1,35 +1,20 @@
 # -*- coding: utf-8 -*-
-from odoo import tools, _
-from odoo.tests import common
-import base64
-from odoo.modules.module import get_module_resource
+from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 
-class TestUBL(common.TransactionCase):
-    def setUp(self):
-        super(TestUBL, self).setUp()
-        # Force user Belgium country.
-        self.env.user.company_id = self.env['res.company'].create({'name': 'MyCompany'})
-        self.env.user.company_id.country_id = self.env.ref('base.be')
-        self.env.ref('l10n_be.l10nbe_chart_template').try_loading()
-        self.partner_id = self.env['res.partner'].create({'name': 'TestUser', 'vat': 'BE0123456789'})
 
-    def test_ubl_invoice_import(self):
-        xml_file_path = get_module_resource('l10n_be_edi', 'test_xml_file', 'efff_test.xml')
-        xml_file = open(xml_file_path, 'rb').read()
+class TestUBL(AccountEdiTestCommon):
+    @classmethod
+    def setUpClass(cls, chart_template_ref='l10n_be.l10nbe_chart_template', edi_format_ref='l10n_be_edi.edi_efff_1'):
+        super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
+
+        cls.partner_a.vat = 'BE0123456789'
+
+    def test_invoice_edi_xml(self):
         invoice = self.env['account.move'].with_context(default_move_type='in_invoice').create({})
-
-        attachment_id = self.env['ir.attachment'].create({
-            'name': 'efff_test.xml',
-            'datas': base64.encodebytes(xml_file),
-            'res_id': invoice.id,
-            'res_model': 'account.move',
-        })
-
         invoice_count = len(self.env['account.move'].search([]))
-
-        invoice.message_post(attachment_ids=[attachment_id.id])
+        self.update_invoice_from_file('l10n_be_edi', 'test_xml_file', 'efff_test.xml', invoice)
 
         self.assertEqual(len(self.env['account.move'].search([])), invoice_count)
         self.assertEqual(invoice.amount_total, 666.50)
         self.assertEqual(invoice.amount_tax, 115.67)
-        self.assertEqual(invoice.partner_id, self.partner_id)
+        self.assertEqual(invoice.partner_id, self.partner_a)

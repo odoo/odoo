@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 from freezegun import freeze_time
-
-from odoo.addons.account.tests.account_test_xml import AccountTestEdiCommon
+from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestAccountEdiFacturx(AccountTestEdiCommon):
+class TestAccountEdiFacturx(AccountEdiTestCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls, chart_template_ref=None, edi_format_ref='account_edi_facturx.edi_facturx_1_0_05'):
+        super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
         # ==== Init ====
 
@@ -39,12 +38,6 @@ class TestAccountEdiFacturx(AccountTestEdiCommon):
             'type_tax_use': 'sale',
             'children_tax_ids': [(6, 0, (cls.tax_10_include + cls.tax_20).ids)],
         })
-
-        # ==== EDI ====
-
-        cls.facturx_edi_format = cls.env.ref('account_edi_facturx.edi_facturx_1_0_05')
-        cls.journal = cls.company_data['default_journal_sale']
-        cls.journal.edi_format_ids = [(6, 0, cls.facturx_edi_format.ids)]
 
         # ==== Invoice ====
 
@@ -153,16 +146,13 @@ class TestAccountEdiFacturx(AccountTestEdiCommon):
             </CrossIndustryInvoice>
         '''
 
-    @freeze_time('2017-02-01')
+    ####################################################
+    # Test export
+    ####################################################
+
     def test_facturx(self):
         ''' Test the generated Facturx Edi attachment without any modification of the invoice. '''
-
-        self.invoice.action_post()
-
-        xml_content = self.facturx_edi_format._export_invoice_to_attachment(self.invoice)['datas']
-        current_etree = self.get_xml_tree_from_string(xml_content)
-        expected_etree = self.get_xml_tree_from_string(self.expected_invoice_facturx_values)
-        self.assertXmlTreeEqual(current_etree, expected_etree)
+        self.assert_generated_file_equal(self.invoice, self.expected_invoice_facturx_values)
 
     @freeze_time('2017-02-01')
     def test_facturx_group_of_taxes(self):
@@ -171,56 +161,80 @@ class TestAccountEdiFacturx(AccountTestEdiCommon):
             'invoice_line_ids': [(1, self.invoice.invoice_line_ids.id, {'tax_ids': [(6, 0, self.tax_group.ids)]})],
         })
 
-        self.invoice.action_post()
+        applied_xpath = '''
+            <xpath expr="//GrossPriceProductTradePrice/ChargeAmount" position="replace">
+                <ChargeAmount currencyID="Gol">275.000</ChargeAmount>
+            </xpath>
+            <xpath expr="//SpecifiedLineTradeSettlement" position="replace">
+                <SpecifiedLineTradeSettlement>
+                    <ApplicableTradeTax>
+                        <RateApplicablePercent>10.0</RateApplicablePercent>
+                    </ApplicableTradeTax>
+                    <ApplicableTradeTax>
+                        <RateApplicablePercent>20.0</RateApplicablePercent>
+                    </ApplicableTradeTax>
+                    <SpecifiedTradeSettlementLineMonetarySummation>
+                        <LineTotalAmount currencyID="Gol">1000.000</LineTotalAmount>
+                    </SpecifiedTradeSettlementLineMonetarySummation>
+                </SpecifiedLineTradeSettlement>
+            </xpath>
+            <xpath expr="//ApplicableHeaderTradeSettlement" position="replace">
+                <ApplicableHeaderTradeSettlement>
+                    <ApplicableTradeTax>
+                        <CalculatedAmount currencyID="Gol">220.000</CalculatedAmount>
+                        <BasisAmount currencyID="Gol">1100.000</BasisAmount>
+                        <RateApplicablePercent>20.0</RateApplicablePercent>
+                    </ApplicableTradeTax>
+                    <ApplicableTradeTax>
+                        <CalculatedAmount currencyID="Gol">100.000</CalculatedAmount>
+                        <BasisAmount currencyID="Gol">1000.000</BasisAmount>
+                        <RateApplicablePercent>10.0</RateApplicablePercent>
+                    </ApplicableTradeTax>
+                    <SpecifiedTradePaymentTerms>
+                        <DueDateDateTime>
+                            <DateTimeString>20170101</DateTimeString>
+                        </DueDateDateTime>
+                    </SpecifiedTradePaymentTerms>
+                    <SpecifiedTradeSettlementHeaderMonetarySummation>
+                        <LineTotalAmount currencyID="Gol">1000.000</LineTotalAmount>
+                        <TaxBasisTotalAmount currencyID="Gol">1000.000</TaxBasisTotalAmount>
+                        <TaxTotalAmount currencyID="Gol">320.000</TaxTotalAmount>
+                        <GrandTotalAmount currencyID="Gol">1320.000</GrandTotalAmount>
+                        <TotalPrepaidAmount currencyID="Gol">0.000</TotalPrepaidAmount>
+                        <DuePayableAmount currencyID="Gol">1320.000</DuePayableAmount>
+                    </SpecifiedTradeSettlementHeaderMonetarySummation>
+                </ApplicableHeaderTradeSettlement>
+            </xpath>
+        '''
 
-        xml_content = self.facturx_edi_format._export_invoice_to_attachment(self.invoice)['datas']
-        current_etree = self.get_xml_tree_from_string(xml_content)
-        expected_etree = self.with_applied_xpath(
-            self.get_xml_tree_from_string(self.expected_invoice_facturx_values),
-            '''
-                <xpath expr="//GrossPriceProductTradePrice/ChargeAmount" position="replace">
-                    <ChargeAmount currencyID="Gol">275.000</ChargeAmount>
-                </xpath>
-                <xpath expr="//SpecifiedLineTradeSettlement" position="replace">
-                    <SpecifiedLineTradeSettlement>
-                        <ApplicableTradeTax>
-                            <RateApplicablePercent>10.0</RateApplicablePercent>
-                        </ApplicableTradeTax>
-                        <ApplicableTradeTax>
-                            <RateApplicablePercent>20.0</RateApplicablePercent>
-                        </ApplicableTradeTax>
-                        <SpecifiedTradeSettlementLineMonetarySummation>
-                            <LineTotalAmount currencyID="Gol">1000.000</LineTotalAmount>
-                        </SpecifiedTradeSettlementLineMonetarySummation>
-                    </SpecifiedLineTradeSettlement>
-                </xpath>
-                <xpath expr="//ApplicableHeaderTradeSettlement" position="replace">
-                    <ApplicableHeaderTradeSettlement>
-                        <ApplicableTradeTax>
-                            <CalculatedAmount currencyID="Gol">220.000</CalculatedAmount>
-                            <BasisAmount currencyID="Gol">1100.000</BasisAmount>
-                            <RateApplicablePercent>20.0</RateApplicablePercent>
-                        </ApplicableTradeTax>
-                        <ApplicableTradeTax>
-                            <CalculatedAmount currencyID="Gol">100.000</CalculatedAmount>
-                            <BasisAmount currencyID="Gol">1000.000</BasisAmount>
-                            <RateApplicablePercent>10.0</RateApplicablePercent>
-                        </ApplicableTradeTax>
-                        <SpecifiedTradePaymentTerms>
-                            <DueDateDateTime>
-                                <DateTimeString>20170101</DateTimeString>
-                            </DueDateDateTime>
-                        </SpecifiedTradePaymentTerms>
-                        <SpecifiedTradeSettlementHeaderMonetarySummation>
-                            <LineTotalAmount currencyID="Gol">1000.000</LineTotalAmount>
-                            <TaxBasisTotalAmount currencyID="Gol">1000.000</TaxBasisTotalAmount>
-                            <TaxTotalAmount currencyID="Gol">320.000</TaxTotalAmount>
-                            <GrandTotalAmount currencyID="Gol">1320.000</GrandTotalAmount>
-                            <TotalPrepaidAmount currencyID="Gol">0.000</TotalPrepaidAmount>
-                            <DuePayableAmount currencyID="Gol">1320.000</DuePayableAmount>
-                        </SpecifiedTradeSettlementHeaderMonetarySummation>
-                    </ApplicableHeaderTradeSettlement>
-                </xpath>
-            ''',
-        )
-        self.assertXmlTreeEqual(current_etree, expected_etree)
+        self.assert_generated_file_equal(self.invoice, self.expected_invoice_facturx_values, applied_xpath)
+
+    ####################################################
+    # Test import
+    ####################################################
+
+    def test_invoice_edi_pdf(self):
+        invoice = self.env['account.move'].with_context(default_move_type='in_invoice').create({})
+        invoice_count = len(self.env['account.move'].search([]))
+        self.update_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.pdf', invoice)
+
+        self.assertEqual(len(self.env['account.move'].search([])), invoice_count)
+        self.assertEqual(invoice.amount_total, 525)
+
+        self.create_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.pdf')
+
+        self.assertEqual(invoice.amount_total, 525)
+        self.assertEqual(len(self.env['account.move'].search([])), invoice_count + 1)
+
+    def test_invoice_edi_xml(self):
+        invoice = self.env['account.move'].with_context(default_move_type='in_invoice').create({})
+        invoice_count = len(self.env['account.move'].search([]))
+        self.update_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.xml', invoice)
+
+        self.assertEqual(len(self.env['account.move'].search([])), invoice_count)
+        self.assertEqual(invoice.amount_total, 4610)
+
+        self.create_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.xml')
+
+        self.assertEqual(invoice.amount_total, 4610)
+        self.assertEqual(len(self.env['account.move'].search([])), invoice_count + 1)

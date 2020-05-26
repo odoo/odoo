@@ -92,6 +92,7 @@ class AccountTax(models.Model):
     invoice_repartition_line_ids = fields.One2many(string="Repartition for Invoices", comodel_name="account.tax.repartition.line", inverse_name="invoice_tax_id", copy=True, help="Repartition when the tax is used on an invoice")
     refund_repartition_line_ids = fields.One2many(string="Repartition for Refund Invoices", comodel_name="account.tax.repartition.line", inverse_name="refund_tax_id", copy=True, help="Repartition when the tax is used on a refund")
     tax_fiscal_country_id = fields.Many2one(string='Fiscal Country', comodel_name='res.country', related='company_id.account_tax_fiscal_country_id', help="Technical field used to restrict the domain of account tags for tax repartition lines created for this tax.")
+    country_code = fields.Char(related='company_id.country_id.code', readonly=True)
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use, tax_scope)', 'Tax names must be unique !'),
