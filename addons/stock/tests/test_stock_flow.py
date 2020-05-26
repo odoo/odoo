@@ -1057,7 +1057,7 @@ class TestStockFlow(TestStockCommon):
         wizard.process()
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
-        self.assertEqual(sum(total_qty), 999.9975, 'Expecting 999.9975 kg , got %.4f kg on location stock!' % (sum(total_qty)))
+        self.assertAlmostEqual(sum(total_qty), 999.9975, msg='Expecting 999.9975 kg , got %.4f kg on location stock!' % (sum(total_qty)))
 
     def test_20_create_inventory_with_different_uom(self):
         """Create inventory with different unit of measure."""
