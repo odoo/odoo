@@ -1338,7 +1338,7 @@
         <t t-call="website.layout">
             <div class="oe_website_login_container">
                 <div class="row h-100 m-0">
-                    <div class="login_layout"  />
+                    <div class="login_layout_opt"  />
                     <div class="col-lg align-self-center" t-raw="0" />
                 </div>
             </div>
@@ -1348,22 +1348,35 @@
 
 <template id="login_layout_options" inherit_id="web_editor.snippet_options">
     <xpath expr="." position="inside">
-        <div data-selector=".login_layout">
+        <div data-selector=".login_layout_opt">
             <we-select string="Image Size">
                 <we-button data-select-class="login_layout_opt_1">Small</we-button>
                 <we-button data-select-class="login_layout_opt_2">Big</we-button>
             </we-select>
         </div>
-        <div data-js="background" string="Background"
-            data-selector=".login_layout">
+        <div data-js="background" string="Background" data-selector=".login_layout_opt">
             <we-imagepicker string="Background" data-background="" data-allow-videos=":not(.parallax, .s_parallax_bg)"/>
+        </div>
+        <div data-js="BackgroundPosition" data-selector=".login_layout_opt">
+        <we-row>
+            <we-select data-no-preview="true">
+                <we-button data-background-type="cover">Cover</we-button>
+                <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
+            </we-select>
+            <we-button class="fa fa-fw fa-crosshairs" title="Background Position"
+                       data-background-position-overlay="true" data-no-preview="true"/>
+        </we-row>
+        <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
+            <we-input string="Width" data-select-style="auto" placeholder="auto" data-unit="px"/>
+            <we-input string="Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
+        </we-multi>
         </div>
     </xpath>
 </template>
 
 <template id="login_layout_opt_switch" inherit_id="website.login_layout" active="False" customize_show="True" name="Side Image">
-    <xpath expr="//div[contains(@class, 'login_layout')]" position="replace">
-        <div class="login_layout col-lg p-0">
+    <xpath expr="//div[hasclass('login_layout_opt')]" position="replace">
+        <div class="login_layout_opt col-lg p-0">
             <div class="login_layout_opt_1" />
         </div>    
     </xpath>
