@@ -8,7 +8,17 @@ odoo.define("im_chatbot.widget.Thread", function (require) {
             "click .chatbot_badge": "_onclick_badge"
         }),
         _onclick_badge(event) {
-            console.log("click badge");
+            // here we need the action to perform to send to /im_chatbot/action
+            var action = this.$(event.target).data("action");
+            this._rpc({
+                route: "/im_chatbot/action",
+                params: {
+                    action: action,
+                    channel_id: this._currentThreadID
+                }
+            }).then((response) => {
+                console.log(response);
+            });
         }
     });
 

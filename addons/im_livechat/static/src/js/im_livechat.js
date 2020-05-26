@@ -115,10 +115,6 @@ var LivechatButton = Widget.extend({
             this.$el.css('color', this.options.button_text_color);
         }
 
-        this.$(".o_thread_message_avatar").on("click", function () {
-            console.log("boum");
-        });
-
         return this._super();
     },
 

@@ -5,15 +5,16 @@
                 <link rel="stylesheet" type="text/scss" href="/im_chatbot/static/src/scss/chatbot.scss"/>
                 <script type="text/javascript" src="/im_chatbot/static/src/js/im_chatbot.js"/>
                 <script type="text/javascript" src="/im_chatbot/static/src/js/im_chatbot_thread.js"/>
+                <script type="text/javascript" src="/im_chatbot/static/src/js/im_chatbot_message.js"/>
             </xpath>
         </template>
 
 
         <template id="im_chatbot.multichoice">
             <div class="chatbot_message">
-                <t t-esc="script.name"/>
+                <t t-esc="script['name']"/>
                 <br />
-                <div class="chatbot_badge">Test badge</div>
+                <span class="chatbot_badge" data-action="lead">Test badge</span>
             </div>
         </template>
 
