@@ -206,6 +206,47 @@ class MailRenderMixin(models.AbstractModel):
             html = self.env['mail.render.mixin']._replace_local_links(html)
         return html
 
+    @api.model
+    def _generate_preview(self, html):
+        """ Generate a preview of html, to used for example in marketing emails.
+
+        We add the character `&zwnj;` (zero-width non-joiner) to fill the end of
+        the preview in order to not have the beginning of the mail at the end of
+        the preview (don't work with simple space as the content is trimmed).
+        https://litmus.com/blog/the-ultimate-guide-to-preview-text-support
+
+        :param html: html content for which we generate the preview
+        :return: html to use as preview
+        """
+        preview = ""
+        for element in re.finditer(r"\>([^<>]+)\<", html):
+            element = element.group(1).strip()
+            if element:
+                preview += " %s" % element
+            if len(preview) > 500:
+                break
+
+        html_preview = f"""
+            <div style="display:none;font-size:1px;height:0px;width:0px;opacity:0;">
+              {tools.html_escape(preview)} {'&zwnj;&nbsp;' * 500}
+            </div>
+        """ if preview else ''
+
+        return html_preview
+
+    @api.model
+    def _prepend_preview(self, html):
+        """ Prepare the email body before sending. Add the text preview at the
+        beginning of the mail. The preview text is displayed bellow the mail
+        subject of most mail client (gmail, outlook...).
+
+        See ``_generate_preview()`` for more details about the preview computation.
+
+        :param html: html content for which we want to prepend a preview
+        :return: html with preprended preview
+        """
+        return tools.prepend_html_content(html, self._generate_preview(html))
+
     # ------------------------------------------------------------
     # RENDERING
     # ------------------------------------------------------------

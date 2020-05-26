@@ -428,6 +428,20 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
         return '%s%s' % (html, content)
     return '%s%s%s' % (html[:insert_location], content, html[insert_location:])
 
+
+def prepend_html_content(html_body, html_content):
+    """Prepend some HTML content at the beginning of an other HTML content."""
+    html_content = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', html_content)
+    html_content = html_content.strip()
+
+    insert_index = next(re.finditer(r'<body[^>]*>', html_body), None)
+    if insert_index is None:
+        insert_index = next(re.finditer(r'<html[^>]*>', html_body), None)
+
+    insert_index = insert_index.end() if insert_index else 0
+
+    return html_body[:insert_index] + html_content + html_body[insert_index:]
+
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
