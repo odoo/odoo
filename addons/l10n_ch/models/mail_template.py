@@ -27,26 +27,25 @@ class MailTemplate(models.Model):
 
         if self.model == 'account.move':
             for record in self.env[self.model].browse(res_ids):
+                inv_print_name = self._render_field('report_name', record.ids, compute_lang=True)[record.id]
+                new_attachments = []
+
                 if record.l10n_ch_isr_valid:
                     # We add an attachment containing the ISR
-                    inv_print_name = self._render_field('report_name', record.ids, compute_lang=True)[record.id]
-
-                    report_name = 'ISR-' + self._render_field('report_name', record.ids, compute_lang=True)[record.id] + '.pdf'
-
                     isr_report_name = 'ISR-' + inv_print_name + '.pdf'
-                    qr_report_name = 'QR-bill-' + inv_print_name + '.pdf'
-
                     isr_pdf = self.env.ref('l10n_ch.l10n_ch_isr_report')._render_qweb_pdf(record.ids)[0]
                     isr_pdf = base64.b64encode(isr_pdf)
+                    new_attachments.append((isr_report_name, isr_pdf))
 
+                if record.can_generate_qr_bill():
+                    # We add an attachment containing the QR-bill
+                    qr_report_name = 'QR-bill-' + inv_print_name + '.pdf'
                     qr_pdf = self.env.ref('l10n_ch.l10n_ch_qr_report')._render_qweb_pdf(record.ids)[0]
                     qr_pdf = base64.b64encode(qr_pdf)
+                    new_attachments.append((qr_report_name, qr_pdf))
 
-                    new_attachments = [(isr_report_name, isr_pdf), (qr_report_name, qr_pdf)]
-
-                    record_dict = multi_mode and result[record.id] or result
-                    attachments_list = record_dict.get('attachments', False)
-
+                record_dict = multi_mode and result[record.id] or result
+                attachments_list = record_dict.get('attachments', False)
                 if attachments_list:
                     attachments_list.extend(new_attachments)
                 else:
