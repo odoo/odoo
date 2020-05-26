@@ -119,7 +119,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
         if (this._searchPanel) {
             this._searchPanel.on_attach_callback();
         }
-        this.renderer.on_attach_callback();
+        if (!(this.renderer instanceof owl.Component)) {
+            this.renderer.on_attach_callback();
+        }
         WidgetAdapterMixin.on_attach_callback.call(this, ...arguments);
     },
     /**
@@ -129,7 +131,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
         if (this._controlPanel) {
             this._controlPanel.on_detach_callback();
         }
-        this.renderer.on_detach_callback();
+        if (!(this.renderer instanceof owl.Component)) {
+            this.renderer.on_detach_callback();
+        }
         WidgetAdapterMixin.on_detach_callback.call(this, ...arguments);
     },
 
