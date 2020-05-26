@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_ids']//field[@name='account_id']" position="after">
+                <field name='need_vehicle' invisible='1'/>
+                <field name='vehicle_id' attrs="{'required': [('need_vehicle', '=', True), ('parent.move_type', '=', 'in_invoice')], 'column_invisible': [('parent.move_type', '!=', 'in_invoice')]}" optional='hidden'/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']//field[@name='account_id']" position="after">
+                <field name='need_vehicle' invisible='1'/>
+                <field name='vehicle_id' attrs="{'required': [('need_vehicle', '=', True), ('parent.move_type', '=', 'in_invoice')], 'column_invisible': [('parent.move_type', '!=', 'in_invoice')]}" optional='hidden'/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
