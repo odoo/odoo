@@ -5,10 +5,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.addons.event.tests.common import TestEventCommon
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.addons.sms.tests.common import MockSMS
+from odoo.addons.sms.tests.common import SMSCase
 
 
-class TestSMSSchedule(TestEventCommon, MockSMS):
+class TestSMSSchedule(TestEventCommon, SMSCase):
 
     @classmethod
     def setUpClass(cls):

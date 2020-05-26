@@ -4,11 +4,11 @@
 import datetime
 import random
 
-from odoo.addons.mass_mailing.tests.common import TestMassMailCommon
+from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.addons.test_mail.tests.common import TestMailCommon
 
 
-class TestMassMailCommon(TestMassMailCommon, TestMailCommon):
+class TestMassMailCommon(MassMailCommon, TestMailCommon):
 
     @classmethod
     def setUpClass(cls):

@@ -2,47 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.link_tracker.tests.common import MockLinkTracker
-from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
-from odoo.tests.common import SavepointCase
+from odoo.addons.mail.tests.common import MailCase, MailCommon, mail_new_test_user
 
 
 class MassMailCase(MailCase, MockLinkTracker):
-
-    def _find_mail_mail_wemail(self, email_to, state, author=None):
-        for mail in self._new_mails:
-            if author is not None and mail.author_id != author:
-                continue
-            if mail.state != state:
-                continue
-            if (mail.email_to == email_to and not mail.recipient_ids) or (not mail.email_to and mail.recipient_ids.email) == email_to:
-                break
-        else:
-            raise AssertionError('mail.mail not found for email_to %s / state %s in %s' % (email_to, state, repr([m.email_to for m in self._new_mails])))
-        return mail
-
-    def _find_mail_mail_wrecord(self, record):
-        for mail in self._new_mails:
-            if mail.model == record._name and mail.res_id == record.id:
-                break
-        else:
-            raise AssertionError('mail.mail not found for record %s in %s' % (record, repr([m.email_to for m in self._new_mails])))
-        return mail
-
-    def assertMailMailWEmails(self, emails, state, content, fields_values=None):
-        """ Will check in self._new_mails to find a sent mail.mail. To use with
-        mail gateway mock.
-
-        :param emails: list of emails;
-        :param state: state of mail.mail;
-        :param content: content to check for each email;
-        :param fields_values: specific value to check on the mail.mail record;
-        """
-        for email_to in emails:
-            sent_mail = self._find_mail_mail_wemail(email_to, state)
-            if content:
-                self.assertIn(content, sent_mail.body_html)
-            for fname, fvalue in (fields_values or {}).items():
-                self.assertEqual(sent_mail[fname], fvalue)
 
     def assertMailTraces(self, recipients_info, mailing, records, check_mail=True):
         """ Check content of traces.
@@ -90,6 +53,8 @@ class MassMailCase(MailCase, MockLinkTracker):
 
                 if state == 'sent':
                     self.assertMailMailWEmails([email], 'sent', content, fields_values=fields_values)
+                elif state == 'replied':  # replied imply something has been sent
+                    self.assertMailMailWEmails([email], 'sent', content, fields_values=fields_values)
                 elif state == 'ignored':
                     self.assertMailMailWEmails([email], 'cancel', content, fields_values=fields_values)
                 elif state == 'exception':
@@ -100,11 +65,11 @@ class MassMailCase(MailCase, MockLinkTracker):
                     raise NotImplementedError()
 
 
-class TestMassMailCommon(SavepointCase, MassMailCase):
+class MassMailCommon(MailCommon, MassMailCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMassMailCommon, cls).setUpClass()
+        super(MassMailCommon, cls).setUpClass()
 
         cls.user_marketing = mail_new_test_user(
             cls.env, login='user_marketing',

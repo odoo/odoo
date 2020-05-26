@@ -3,11 +3,11 @@
 
 from ast import literal_eval
 
-from odoo.addons.mass_mailing.tests.common import TestMassMailCommon
+from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests.common import users, Form
 from odoo.tools import formataddr, mute_logger
 
-class TestMassMailValues(TestMassMailCommon):
+class TestMassMailValues(MassMailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -122,7 +122,7 @@ class TestMassMailValues(TestMassMailCommon):
         self.assertEqual(mailing_form.mailing_model_real, 'res.partner')
 
 
-class TestMassMailFeatures(TestMassMailCommon):
+class TestMassMailFeatures(MassMailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -252,7 +252,7 @@ Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
                 link_params = {'utm_medium': 'Email', 'utm_source': mailing.name}
                 if link_info[0] == 'url4':
                     link_params['baz'] = 'qux'
-                self.assertLinkShortened(
+                self.assertLinkShortenedHtml(
                     new_mail.mail_message_id.body,
                     link_info,
                     link_params=link_params,
