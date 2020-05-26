@@ -113,7 +113,7 @@ class ResPartner(models.Model):
                 partner = partner.sudo()
                 partner.signup_prepare()
                 res[partner.id]['auth_signup_token'] = partner.signup_token
-            elif partner.user_ids:
+            elif partner.sudo().user_ids:
                 res[partner.id]['auth_login'] = partner.user_ids[0].login
         return res
 
