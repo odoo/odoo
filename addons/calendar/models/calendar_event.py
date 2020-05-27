@@ -223,7 +223,7 @@ class Meeting(models.Model):
 
     user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.user)
     partner_id = fields.Many2one(
-        'res.partner', string='Responsible Contact', related='user_id.partner_id', readonly=True)
+        'res.partner', string='Organiser', related='user_id.partner_id', readonly=True)
     active = fields.Boolean(
         'Active', default=True,
         help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.")

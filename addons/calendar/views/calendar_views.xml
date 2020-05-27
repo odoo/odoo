@@ -136,6 +136,14 @@
                                     <field name="location" />
                                     <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
                                 </group>
+                                <group>
+                                    <!--
+                                        Doesn't use partner_id cause many2one_avatar_user requires a res.user
+                                        Needs to be readonly to display properly
+                                    -->
+                                    <label for="user_id" string="Organiser"/>
+                                    <field name="user_id" nolabel="1" widget="many2one_avatar_user" readonly="1"/>
+                                </group>
 
                             </group>
                             <label for="description"/>
@@ -232,6 +240,7 @@
                         </page>
                         <page name="page_misc" string="Misc" groups="base.group_no_one">
                             <group>
+                                <!-- Kept for debug use -->
                                 <label for="user_id" string="Owner"/>
                                 <field name="user_id" nolabel="1" widget="many2one_avatar_user"/>
                             </group>
