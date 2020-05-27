@@ -164,7 +164,7 @@ class IrModuleModule(models.Model):
                             rec_data.pop('active')
                         if model_name == 'ir.ui.view' and (find.arch_updated or find.arch == rec_data['arch']):
                             rec_data.pop('arch')
-                        find.with_context(install_filename='').update(rec_data)
+                        find.update(rec_data)
                         self._post_copy(rec, find)
                 else:
                     new_rec = self.env[model_name].create(rec_data)
