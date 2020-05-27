@@ -514,6 +514,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 '_name': name,
                 '_register': False,
                 '_original_module': cls._module,
+                '_inherit_module': dict(),              # map parent to introducing module
                 '_inherit_children': OrderedSet(),      # names of children models
                 '_inherits_children': set(),            # names of children models
                 '_fields': OrderedDict(),               # populated in _setup_base()
@@ -532,7 +533,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             else:
                 check_parent(cls, parent_class)
                 bases.add(parent_class)
+                ModelClass._inherit_module[parent] = cls._module
                 parent_class._inherit_children.add(name)
+
         ModelClass.__bases__ = tuple(bases)
 
         # determine the attributes of the model's class
