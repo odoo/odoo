@@ -171,6 +171,7 @@ return AbstractRenderer.extend({
     template: "CalendarView",
     config: {
         CalendarPopover: CalendarPopover,
+        eventTemplate: 'calendar-box',
     },
     custom_events: _.extend({}, AbstractRenderer.prototype.custom_events || {}, {
         edit_event: '_onEditEvent',
@@ -360,7 +361,7 @@ return AbstractRenderer.extend({
         if (_.isEmpty(qweb_context.record)) {
             return '';
         } else {
-            return qweb.render("calendar-box", qweb_context);
+            return qweb.render(this.config.eventTemplate, qweb_context);
         }
     },
     /**
