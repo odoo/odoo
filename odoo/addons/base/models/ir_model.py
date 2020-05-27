@@ -1040,11 +1040,20 @@ class IrModelFields(models.Model):
         if not module:
             return
 
+        def is_field_inherited_from_mixin(model, field_name):
+            parents = [model._inherit] if isinstance(model._inherit, str) else model._inherit
+            return any(
+                parent_model._abstract and field_name in parent_model._fields
+                for parent_model in map(self.env.get, parents)
+            )
+
         data_list = []
         for (field_model, field_name), field_id in field_ids.items():
             model = self.env[field_model]
             field = model._fields.get(field_name)
-            if field and (module == model._original_module or module in field._modules):
+            if field and (module == model._original_module
+                          or module in field._modules
+                          or is_field_inherited_from_mixin(model, field_name)):
                 xml_id = field_xmlid(module, field_model, field_name)
                 record = self.browse(field_id)
                 data_list.append({'xml_id': xml_id, 'record': record})
