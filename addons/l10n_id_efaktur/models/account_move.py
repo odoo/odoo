@@ -20,7 +20,6 @@ def _csv_row(data, delimiter=',', quote='"'):
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    country_code = fields.Char(related='company_id.country_id.code', string='Country Code')
     l10n_id_tax_number = fields.Char(string="Tax Number", copy=False)
     l10n_id_replace_invoice_id = fields.Many2one('account.move', string="Replace Invoice",  domain="['|', '&', '&', ('state', '=', 'posted'), ('partner_id', '=', partner_id), ('reversal_move_id', '!=', False), ('state', '=', 'cancel')]", copy=False)
     l10n_id_attachment_id = fields.Many2one('ir.attachment', readonly=True, copy=False)
@@ -63,10 +62,10 @@ class AccountMove(models.Model):
     def _constraint_kode_ppn(self):
         ppn_tag = self.env.ref('l10n_id.ppn_tag')
         for move in self.filtered(lambda m: m.l10n_id_kode_transaksi != '08'):
-            if any(ppn_tag.id in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False) and any(ppn_tag.id not in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False):
+            if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False) and any(ppn_tag.id not in line.tax_tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False):
                 raise UserError(_('Cannot mix VAT subject and Non-VAT subject items in the same invoice with this kode transaksi.'))
         for move in self.filtered(lambda m: m.l10n_id_kode_transaksi == '08'):
-            if any(ppn_tag.id in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False):
+            if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False):
                 raise UserError('Kode transaksi 08 is only for non VAT subject items.')
 
     @api.constrains('l10n_id_tax_number')
