@@ -214,7 +214,7 @@ class AccountInvoiceReport(models.Model):
             domain, fields + ['ids:array_agg(id)'], set(groupby) | {'currency_id'}, offset, limit, orderby, False
         )
         for res in result:
-            if self.env.company.currency_id.id != res['currency_id'][0]:
+            if res.get('currency_id') and self.env.company.currency_id.id != res['currency_id'][0]:
                 for field in {'amount_total', 'price_average', 'price_subtotal', 'residual'} & set(res):
                     res[field] = self.env.company.currency_id.round((res[field] or 0.0) * get_rate(res['currency_id'][0]))
             # Since the size of result_ref should be resonable, it should be fine to loop inside a
