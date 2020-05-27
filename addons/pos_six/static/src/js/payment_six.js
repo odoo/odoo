@@ -80,7 +80,7 @@ var PaymentSix = PaymentInterface.extend({
     _onTransactionComplete: function (event, data) {
         timapi.DefaultTerminalListener.prototype.transactionCompleted(event, data);
 
-        if (event.exception) {
+        if (event.exception && this.pos.get_order().selected_paymentline.get_payment_status() !== 'retry') {
             this.pos.gui.show_popup('error', {
                 title: _t('Terminal Error'),
                 body: _t('Transaction was not processed correctly'),
@@ -118,8 +118,9 @@ var PaymentSix = PaymentInterface.extend({
 
     _sendTransaction: function (transactionType) {
         var amount = new timapi.Amount(
-            this.pos.get_order().selected_paymentline.amount,
-            timapi.constants.Currency[this.pos.currency.name]
+            this.pos.get_order().selected_paymentline.amount / this.pos.currency.rounding,
+            timapi.constants.Currency[this.pos.currency.name],
+            this.pos.currency.decimals
         );
 
         return new Promise((resolve) => {
