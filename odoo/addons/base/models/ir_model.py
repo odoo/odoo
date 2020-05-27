@@ -1044,7 +1044,16 @@ class IrModelFields(models.Model):
         for (field_model, field_name), field_id in field_ids.items():
             model = self.env[field_model]
             field = model._fields.get(field_name)
-            if field and (module == model._original_module or module in field._modules):
+            if field and (
+                module == model._original_module
+                or module in field._modules
+                or any(
+                    # module introduced field on model by inheritance
+                    field_name in self.env[parent]._fields
+                    for parent, parent_module in model._inherit_module.items()
+                    if module == parent_module
+                )
+            ):
                 xml_id = field_xmlid(module, field_model, field_name)
                 record = self.browse(field_id)
                 data_list.append({'xml_id': xml_id, 'record': record})
