@@ -112,6 +112,7 @@ var CalendarView = AbstractView.extend({
                     };
                     filters[fieldName].write_model = child.attrs.write_model;
                     filters[fieldName].write_field = child.attrs.write_field; // can't use a x2many fields
+                    filters[fieldName].filter_field = child.attrs.filter_field;
 
                     modelFilters.push(fields[fieldName].relation);
                 }
