@@ -68,6 +68,8 @@ class Http(models.AbstractModel):
                 "show_effect": True,
                 "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user.company_ids) > 1,
                 "cache_hashes": cache_hashes,
+                "company_currency_id": user.company_id.currency_id.id,
+                "companies_currency_id": {comp.id: comp.currency_id.id for comp in request.env.user.company_ids},
             })
         return session_info
 
