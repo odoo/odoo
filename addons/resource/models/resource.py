@@ -3,7 +3,6 @@
 
 from collections import defaultdict
 import math
-import logging
 from datetime import datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import rrule, DAILY, WEEKLY
@@ -19,8 +18,6 @@ from odoo.tools.float_utils import float_round
 
 from odoo.tools import date_utils, float_utils
 from .resource_mixin import timezone_datetime
-
-_logger = logging.getLogger(__name__)
 
 # Default hour per day value. The one should
 # only be used when the one from the calendar
@@ -475,14 +472,15 @@ class ResourceCalendar(models.Model):
         def interval_dt(interval):
             return interval[1 if match_end else 0]
 
+        if not dt.tzinfo or search_range and not (search_range[0].tzinfo and search_range[1].tzinfo):
+            raise ValueError('Provided datetimes needs to be timezoned')
+        dt = dt.astimezone(timezone(self.tz))
+
         if not search_range:
             range_start = dt + relativedelta(hour=0, minute=0, second=0)
             range_end = dt + relativedelta(days=1, hour=0, minute=0, second=0)
         else:
             range_start, range_end = search_range
-
-        if not (dt.tzinfo and range_start.tzinfo and range_end.tzinfo):
-            raise ValueError('Provided datetimes needs to be timezoned')
 
         if not range_start <= dt <= range_end:
             return None
@@ -778,7 +776,8 @@ class ResourceResource(models.Model):
         for resource in self:
             calendar_start = resource.calendar_id._get_closest_work_time(start, resource=resource)
             search_range = None
-            if calendar_start and start.date() == end.date():
+            tz = timezone(resource.tz)
+            if calendar_start and start.astimezone(tz).date() == end.astimezone(tz).date():
                 # Make sure to only search end after start
                 search_range = (
                     start,
