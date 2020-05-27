@@ -149,3 +149,12 @@ class Selection(models.Model):
 
     def _other_values(self):
         return [('baz', 'Baz')]
+
+
+#
+# Helper model used in test_inherit_depends
+#
+class IsPublishedMixin(models.AbstractModel):
+    _name = 'test.inherit.mixin'
+    _description = "Test Inherit Mixin"
+    published = fields.Boolean()

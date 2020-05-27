@@ -517,6 +517,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 '_inherit_module': dict(),              # map parent to introducing module
                 '_inherit_children': OrderedSet(),      # names of children models
                 '_inherits_children': set(),            # names of children models
+                '_inherit_module': dict(),              # map of parent to introducing module
                 '_fields': OrderedDict(),               # populated in _setup_base()
             })
             check_parent = cls._build_model_check_parent
@@ -526,6 +527,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for parent in parents:
             if parent not in pool:
                 raise TypeError("Model %r inherits from non-existing model %r." % (name, parent))
+            ModelClass._inherit_module[parent] = cls._module
             parent_class = pool[parent]
             if parent == name:
                 for base in parent_class.__bases__:
