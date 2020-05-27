@@ -59,7 +59,6 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                 <header>
-                    <field name="bom_has_operations" invisible="1"/>
                     <field name="confirm_cancel" invisible="1"/>
                     <field name="show_lock" invisible="1"/>
                     <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('qty_producing', '=', 0)]}" string="Backorder" type="object" class="oe_highlight"/>
@@ -82,6 +81,8 @@
                 </header>
                 <sheet>
                     <field name="reservation_state" invisible="1"/>
+                    <field name="is_partially_planned" invisible="1"/>
+                    <field name="date_planned_finished" invisible="1"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="qty_produced" invisible="1"/>
                     <field name="unreserve_visible" invisible="1"/>
@@ -157,47 +158,11 @@
                                 context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                         <group>
-                            <field name="date_deadline" attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"/>
-                            <div class="o_row o_td_label" attrs="{'invisible': [
-                                                '|',
-                                                ('bom_has_operations', '!=', False),
-                                                ('state', 'in', ['draft', 'confirmed', 'to_close'])
-                                        ]}">
-                                <label for="date_planned_start" string="Planned Date"
-                                       attrs="{'invisible': [
-                                                '|',
-                                                ('bom_has_operations', '!=', False),
-                                                ('state', 'in', ['draft', 'confirmed', 'to_close'])
-                                        ]}"/>
-                            </div>
-                            <div class="o_row" attrs="{'invisible': [
-                                                '|',
-                                                ('bom_has_operations', '!=', False),
-                                                ('state', 'in', ['draft', 'confirmed', 'to_close'])
-                                        ]}">
+                            <field name="date_deadline"/>
+                            <label for="date_planned_start"/>
+                            <div class="o_row">
                                 <field name="date_planned_start"
-                                   attrs="{'readonly': [
-                                        ('bom_has_operations', '!=', False),
-                                        ('state', 'not in', ['draft', 'confirmed', 'to_close'])],
-                                        'invisible': [
-                                            '|',
-                                            ('bom_has_operations', '!=', False),
-                                            ('state', 'in', ['draft', 'confirmed', 'to_close'])]}"/>
-                                <label for="date_planned_finished" string="to" attrs="{'invisible': [
-                                    '|',
-                                        ('id', '=', False),
-                                            '|',
-                                            ('bom_has_operations', '!=', False),
-                                            ('state', 'in', ['draft', 'confirmed', 'to_close'])
-                                ]}"/>
-                                <field name="date_planned_finished" required="1"
-                                    attrs="{'readonly': [
-                                            ('bom_has_operations', '!=', False)
-                                    ], 'invisible': [
-                                        '|',
-                                        ('bom_has_operations', '!=', False),
-                                        ('state', 'in', ['draft', 'confirmed', 'to_close'])
-                                    ]}"/>
+                                    attrs="{'readonly': ['|', ('is_partially_planned', '=', True), ('state', 'in', ['close', 'cancel'])]}"/>
                                 <field name="delay_alert_date" invisible="1"/>
                                 <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
                             </div>
@@ -210,8 +175,8 @@
                     </group>
                     <notebook>
                         <page string="Components" name="components">
-                            <field name="move_raw_ids"
-                                context="{'default_date_expected': date_planned_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}"
+                            <field name="move_raw_ids" 
+                                context="{'default_date_expected': date_planned_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" 
                                 attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
                                 <tree delete="0" default_order="is_done,sequence" editable="bottom">
                                     <field name="product_id" required="1" attrs="{'readonly': ['|', '|', ('has_move_lines', '=', True), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>

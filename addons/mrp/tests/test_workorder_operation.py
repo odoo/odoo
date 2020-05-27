@@ -1062,7 +1062,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
             - calendar wc1 :[mo1][mo4]
             - calendar wc2 :[mo2 ][mo5 ]
             - calendar wc3 :[mo3  ][mo6  ]"""
-        planned_date = datetime(2019, 5, 13, 9, 0)
+        planned_date = datetime(2023, 5, 15, 9, 0)
         self.workcenter_1.alternative_workcenter_ids = self.wc_alt_1 | self.wc_alt_2
         workcenters = [self.wc_alt_2, self.wc_alt_1, self.workcenter_1]
         for i in range(3):
@@ -1146,6 +1146,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         one take the free slot before on the calendar
         calendar after first mo : [   ][mo1]
         calendar after second mo: [mo2][mo1] """
+        planned_date = datetime(2023, 5, 15, 14, 0)
 
         self.workcenter_1.alternative_workcenter_ids = self.wc_alt_1 | self.wc_alt_2
         self.env['mrp.workcenter'].search([]).write({'tz': 'UTC'}) # compute all date in UTC
@@ -1154,7 +1155,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.planning_bom
         mo_form.product_qty = 1
-        mo_form.date_planned_start = datetime(2019, 5, 13, 14, 0, 0, 0)
+        mo_form.date_planned_start = planned_date
         mo = mo_form.save()
         start = mo.date_planned_start
         mo.action_confirm()
@@ -1166,19 +1167,20 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         self.assertAlmostEqual(wo1_stop, start + timedelta(minutes=85.58), delta=timedelta(seconds=10), msg="Wrong plannification")
 
         # second MO should be plan before as there is a free slot before
+        planned_date = datetime(2023, 5, 15, 9, 0)
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.planning_bom
         mo_form.product_qty = 1
-        mo_form.date_planned_start = datetime(2019, 5, 13, 9, 0, 0, 0)
+        mo_form.date_planned_start = planned_date
         mo = mo_form.save()
         mo.action_confirm()
         mo.button_plan()
         self.assertEqual(mo.workorder_ids[0].workcenter_id, self.wc_alt_2, "wrong workcenter")
         wo1_start = mo.workorder_ids[0].date_planned_start
         wo1_stop = mo.workorder_ids[0].date_planned_finished
-        self.assertAlmostEqual(wo1_start, datetime(2019, 5, 13, 9, 0, 0, 0), delta=timedelta(seconds=10), msg="Wrong plannification")
-        self.assertAlmostEqual(wo1_stop, datetime(2019, 5, 13, 9, 0, 0, 0) + timedelta(minutes=85.59), delta=timedelta(seconds=10), msg="Wrong plannification")
+        self.assertAlmostEqual(wo1_start, planned_date, delta=timedelta(seconds=10), msg="Wrong plannification")
+        self.assertAlmostEqual(wo1_stop, planned_date + timedelta(minutes=85.59), delta=timedelta(seconds=10), msg="Wrong plannification")
 
     def test_planning_4(self):
         """ Plan a manufacturing orders with 1 workorder on 1 workcenter
@@ -1229,17 +1231,18 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
                 'time_cycle': 60,
             })]
         })
+        planned_date = datetime(2023, 5, 15, 9, 0)
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.planning_bom
         mo_form.product_qty = 1
-        mo_form.date_planned_start = datetime(2019, 5, 13, 9, 0, 0, 0)
+        mo_form.date_planned_start = planned_date
         mo = mo_form.save()
         mo.action_confirm()
         mo.button_plan()
         wo = mo.workorder_ids
-        self.assertAlmostEqual(wo.date_planned_start, datetime(2019, 5, 13, 9, 0, 0, 0), delta=timedelta(seconds=10))
-        self.assertAlmostEqual(wo.date_planned_finished, datetime(2019, 5, 13, 9, 0, 0, 0) + timedelta(minutes=60), delta=timedelta(seconds=10))
+        self.assertAlmostEqual(wo.date_planned_start, planned_date, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(wo.date_planned_finished, planned_date + timedelta(minutes=60), delta=timedelta(seconds=10))
         wo.button_start()
         wo.record_production()
         # Marking workorder as done should change the finished date
@@ -1250,7 +1253,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.planning_bom
         mo_form.product_qty = 1
-        mo_form.date_planned_start = datetime(2019, 5, 13, 9, 0, 0, 0)
+        mo_form.date_planned_start = planned_date
         mo = mo_form.save()
         mo.action_confirm()
         mo.button_plan()
@@ -1258,7 +1261,6 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         wo.button_start()
         self.assertAlmostEqual(wo.date_start, datetime.now(), delta=timedelta(seconds=10))
         self.assertAlmostEqual(wo.date_planned_start, datetime.now(), delta=timedelta(seconds=10))
-        self.assertAlmostEqual(wo.date_planned_finished, datetime.now(), delta=timedelta(seconds=10))
 
     def test_planning_7(self):
         """ set the workcenter capacity to 10. Produce a dozen of product tracked by
@@ -1284,7 +1286,7 @@ class TestWorkOrderProcess(TestWorkOrderProcessCommon):
         """ Testing planning a workorder then cancel it and then plan it again.
         The planned date must be the same the first time and the second time the
         workorder is planned."""
-        planned_date = datetime(2019, 5, 13, 9, 0)
+        planned_date = datetime(2023, 5, 15, 9, 0)
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_4
         mo_form.bom_id = self.planning_bom
