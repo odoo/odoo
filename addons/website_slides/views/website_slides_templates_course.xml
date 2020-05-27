@@ -138,7 +138,6 @@
                             </div>
                             <div class="d-flex flex-column justify-content-center h5 flex-grow-1 mb-md-5" t-if="channel.allow_comment">
                                 <t t-call="portal_rating.rating_stars_static_popup_composer">
-                                    <t t-set="btn_classes" t-value="'btn-warning'"/>
                                     <t t-set="rating_avg" t-value="rating_avg"/>
                                     <t t-set="rating_total" t-value="rating_count"/>
                                     <t t-set="object" t-value="channel"/>
@@ -151,6 +150,7 @@
                                     <t t-set="default_attachment_ids" t-value="last_message_attachment_ids"/>
                                     <t t-set="force_submit_url" t-value="'/slides/mail/update_comment' if last_message_id else False"/>
                                     <t t-set="disable_composer" t-value="not channel.can_review"/>
+                                    <t t-set="_link_btn_classes" t-value="'btn-link text-white'"/>
                                 </t>
                             </div>
                         </div>
