@@ -438,6 +438,10 @@ class TestCalendar(TestResourceCommon):
         calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
         self.assertEqual(calendar_dt, start, "It should have taken john's specific attendances")
 
+        dt = datetime_tz(2020, 4, 4, 1, 0, 0, tzinfo='UTC')  # The next day in UTC, but still the 3rd in john's timezone (America/Los_Angeles)
+        start = datetime_tz(2020, 4, 3, 16, 0, 0, tzinfo=self.john.tz)
+        calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
+        self.assertEqual(calendar_dt, start, "It should have found the attendance on the 3rd April")
 
 class TestResMixin(TestResourceCommon):
 
@@ -486,6 +490,21 @@ class TestResMixin(TestResourceCommon):
             None,
             datetime_tz(2020, 4, 3, 13, 0, 0, tzinfo=self.john.tz),
         ))
+
+    def test_adjust_calendar_timezone_after(self):
+        # Calendar:
+        # Tuesdays 8-16
+        # Fridays 8-13 and 16-23
+        tz = 'Europe/Brussels'
+        self.john.tz = tz
+        result = self.john._adjust_to_calendar(
+            datetime(2020, 4, 2, 23, 0, 0),  # The previous day in UTC, but the 3rd in Europe/Brussels
+            datetime(2020, 4, 3, 20, 0, 0),
+        )
+        self.assertEqual(result[self.john], (
+            datetime(2020, 4, 3, 6, 0, 0),
+            datetime(2020, 4, 3, 21, 0, 0),
+        ), "It should have found a starting time the 3rd")
 
     def test_work_days_data(self):
         # Looking at Jean's calendar
