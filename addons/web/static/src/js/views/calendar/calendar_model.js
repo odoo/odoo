@@ -537,11 +537,15 @@ return AbstractModel.extend({
         }
 
         var field = this.fields[filter.fieldName];
+        var fields = [filter.write_field];
+        if (filter.filter_field) {
+            fields.push(filter.filter_field);
+        }
         return this._rpc({
                 model: filter.write_model,
                 method: 'search_read',
                 domain: [["user_id", "=", session.uid]],
-                fields: [filter.write_field],
+                fields: fields,
             })
             .then(function (res) {
                 var records = _.map(res, function (record) {
@@ -554,7 +558,7 @@ return AbstractModel.extend({
                         'id': record.id,
                         'value': value,
                         'label': formater(_value, field),
-                        'active': f && f.active,
+                        'active': (f && f.active) || (filter.filter_field && record[filter.filter_field]),
                     };
                 });
                 records.sort(function (f1,f2) {

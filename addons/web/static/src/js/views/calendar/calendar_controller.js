@@ -246,7 +246,22 @@ var CalendarController = AbstractController.extend({
      * @private
      * @param {OdooEvent} event
      */
-    _onChangeFilter: function (event) {
+    _onChangeFilter: async function (event) {
+        if (event.data.value !== "all" && event.target.filter_field) {
+            const domain = [['user_id', '=', this.getSession().uid], [event.target.write_field, '=', parseInt(event.data.value)]];
+            const contact = await this._rpc({
+                model: event.target.write_model,
+                method: 'search',
+                args: [domain],
+            });
+            let val = {};
+            val[event.target.filter_field] = event.data.active;
+            await this._rpc({
+                model: event.target.write_model,
+                method: 'write',
+                args: [contact, val],
+            });
+        }
         if (this.model.changeFilter(event.data) && !event.data.no_reload) {
             this.reload();
         }

@@ -46,6 +46,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
         this.fieldName = options.fieldName;
         this.write_model = options.write_model;
         this.write_field = options.write_field;
+        this.filter_field = options.filter_field;
         this.avatar_field = options.avatar_field;
         this.avatar_model = options.avatar_model;
         this.filters = options.filters;
@@ -161,10 +162,12 @@ return AbstractRenderer.extend({
     template: "CalendarView",
     config: {
         CalendarPopover: CalendarPopover,
+        eventTemplate: 'calendar-box',
     },
     custom_events: _.extend({}, AbstractRenderer.prototype.custom_events || {}, {
         edit_event: '_onEditEvent',
         delete_event: '_onDeleteEvent',
+        render_event: '_renderEvents',
     }),
 
     /**
@@ -356,7 +359,7 @@ return AbstractRenderer.extend({
         if (_.isEmpty(qweb_context.record)) {
             return '';
         } else {
-            return qweb.render("calendar-box", qweb_context);
+            return qweb.render(this.config.eventTemplate, qweb_context);
         }
     },
     /**
