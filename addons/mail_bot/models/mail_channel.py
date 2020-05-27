@@ -13,7 +13,7 @@ class Channel(models.Model):
 
     @api.model
     def init_odoobot(self):
-        if self.env.user.odoobot_state == 'not_initialized':
+        if self.env.user.odoobot_state in [False, 'not_initialized']:
             partner = self.env.user.partner_id
             odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
             channel = self.with_context(mail_create_nosubscribe=True).create({

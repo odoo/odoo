@@ -53,7 +53,7 @@ class MailBot(models.AbstractModel):
                 self.env.user.odoobot_state = "idle"
                 self.env.user.odoobot_failed = False
                 return _("I am a simple bot, but if that's a dog, he is the cutest 😊 <br/>Congratulations, you finished this tour. You can now <b>close this chat window</b>. Enjoy discovering Odoo.")
-            elif odoobot_state in ("idle", "not_initialized") and (_('start the tour') in body.lower()):
+            elif odoobot_state in (False, "idle", "not_initialized") and (_('start the tour') in body.lower()):
                 self.env.user.odoobot_state = "onboarding_emoji"
                 return _("To start, try to send me an emoji :)")
             # easter eggs
