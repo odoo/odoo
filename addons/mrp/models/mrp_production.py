@@ -60,6 +60,12 @@ class MrpProduction(models.Model):
         return datetime.datetime.now() + datetime.timedelta(hours=1)
 
     @api.model
+    def _get_default_date_planned_start(self):
+        if self.env.context.get('default_date_deadline'):
+            return fields.Datetime.to_datetime(self.env.context.get('default_date_deadline'))
+        return datetime.datetime.now()
+
+    @api.model
     def _get_default_is_locked(self):
         return self.user_has_groups('mrp.group_locked_by_default')
 
@@ -113,7 +119,7 @@ class MrpProduction(models.Model):
         states={'draft': [('readonly', False)]}, check_company=True,
         help="Location where the system will stock the finished products.")
     date_planned_start = fields.Datetime(
-        'Planned Date', copy=False, default=fields.Datetime.now,
+        'Scheduled Date', copy=False, default=_get_default_date_planned_start,
         compute='_compute_dates_planned', inverse='_set_date_planned_start',
         help="Date at which you plan to start the production.",
         index=True, required=True, store=True)
@@ -145,7 +151,6 @@ class MrpProduction(models.Model):
         ('type', '=', 'normal')]""",
         check_company=True,
         help="Bill of Materials allow you to define the list of required components to make a finished product.")
-    bom_has_operations = fields.Boolean(compute='_compute_bom_has_operations')
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -188,7 +193,6 @@ class MrpProduction(models.Model):
         )
     workorder_ids = fields.One2many(
         'mrp.workorder', 'production_id', 'Work Orders', copy=True)
-    workorder_count = fields.Integer('# Work Orders', compute='_compute_workorder_count')
     workorder_done_count = fields.Integer('# Done Work Orders', compute='_compute_workorder_done_count')
     move_dest_ids = fields.One2many('stock.move', 'created_production_id',
         string="Stock Movements of Produced Goods")
@@ -229,6 +233,8 @@ class MrpProduction(models.Model):
                                 readonly=True, states={'draft': [('readonly', False)]}, default='1')
     is_locked = fields.Boolean('Is Locked', default=_get_default_is_locked, copy=False)
     is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned")
+    is_partially_planned = fields.Boolean('One operation is Planned', compute="_compute_is_planned")
+
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", compute="_compute_production_location", store=True)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
@@ -284,7 +290,8 @@ class MrpProduction(models.Model):
         for production in self:
             if production.state != 'done':
                 production.date_planned_start = max(production.mapped('move_raw_ids.date_expected') or [fields.Datetime.now()])
-                production.date_planned_finished = max(production.mapped('move_finished_ids.date_expected') or [production.date_deadline or fields.Datetime.now()])
+                if production.move_finished_ids:
+                    production.date_planned_finished = max(production.mapped('move_finished_ids.date_expected'))
 
     def _set_date_planned_start(self):
         self.move_raw_ids.write({'date_expected': self.date_planned_start})
@@ -292,20 +299,14 @@ class MrpProduction(models.Model):
     def _set_date_planned_finished(self):
         self.move_finished_ids.write({'date_expected': self.date_planned_finished})
 
-    @api.depends('bom_id')
-    def _compute_bom_has_operations(self):
-        for production in self:
-            if not production.bom_id:
-                production.bom_has_operations = False
-            else:
-                production.bom_has_operations = len(production.bom_id.operation_ids) > 0
-
     def _compute_is_planned(self):
         for production in self:
             if production.workorder_ids:
                 production.is_planned = all(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids)
+                production.is_partially_planned = any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids if production.state != 'draft')
             else:
                 production.is_planned = False
+                production.is_partially_planned = False
 
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
@@ -409,13 +410,6 @@ class MrpProduction(models.Model):
     def _compute_lines(self):
         for production in self:
             production.finished_move_line_ids = production.move_finished_ids.mapped('move_line_ids')
-
-    @api.depends('workorder_ids')
-    def _compute_workorder_count(self):
-        data = self.env['mrp.workorder'].read_group([('production_id', 'in', self.ids)], ['production_id'], ['production_id'])
-        count_data = dict((item['production_id'][0], item['production_id_count']) for item in data)
-        for production in self:
-            production.workorder_count = count_data.get(production.id, 0)
 
     @api.depends('workorder_ids.state')
     def _compute_workorder_done_count(self):
@@ -636,11 +630,11 @@ class MrpProduction(models.Model):
         res = super(MrpProduction, self).write(vals)
 
         for production in self:
-            if 'date_planned_start' in vals:
+            if 'date_planned_start' in vals and not self.env.context.get('force_date', False):
                 if production.state in ['done', 'cancel']:
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
-                if production.state == 'done' and not self.env.context.get('force_date', False):
-                    raise UserError(_('You cannot move a done manufacturing order.'))
+                if production.is_partially_planned:
+                    raise UserError(_('You cannot move a manufacturing order once it has a planned workorder, move related workorder(s) instead.'))
             if ('move_raw_ids' in vals or 'move_finished_ids' in vals) and production.state != 'draft':
                 if production.state == 'done':
                     # for some reason moves added after state = 'done' won't save group_id, reference if added in
@@ -1049,12 +1043,11 @@ class MrpProduction(models.Model):
         # Schedule all work orders (new ones and those already created)
         qty_to_produce = max(self.product_qty - self.qty_produced, 0)
         qty_to_produce = self.product_uom_id._compute_quantity(qty_to_produce, self.product_id.uom_id)
-        start_date = self.date_planned_start
+        start_date = max(self.date_planned_start, datetime.datetime.now())
         if replan:
             workorder_ids = self.workorder_ids.filtered(lambda wo: wo.state in ['ready', 'pending'])
             # We plan the manufacturing order according to its `date_planned_start`, but if
             # `date_planned_start` is in the past, we plan it as soon as possible.
-            start_date = max(start_date, datetime.datetime.now())
             workorder_ids.leave_id.unlink()
         else:
             workorder_ids = self.workorder_ids.filtered(lambda wo: not wo.date_planned_start)
