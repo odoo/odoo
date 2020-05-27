@@ -2192,6 +2192,81 @@ class StockMove(SavepointCase):
         self.assertAlmostEqual(move_pack_cust.reserved_availability, 1.0)
         self.assertEqual(move_pack_cust.state, 'partially_available')
 
+    def test_aaaaaaaaaaaaa_link_assign_11(self):
+        move_out_1 = self.env['stock.move'].create({
+            'name': 'move_out_1',
+            'location_id': self.pack_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 45,
+        })
+        receipt_move_1 = self.env['stock.move'].create({
+            'name': 'receipt_move_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 20,
+            'move_dest_ids': [(4, move_out_1.id, 0)]
+        })
+        receipt_move_2 = self.env['stock.move'].create({
+            'name': 'receipt_move_2',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 29,
+            'move_dest_ids': [(4, move_out_1.id, 0)]
+        })
+        receipt_move_3 = self.env['stock.move'].create({
+            'name': 'receipt_move_3',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1,
+            'move_dest_ids': [(4, move_out_1.id, 0)]
+        })
+        for m in move_out_1 + receipt_move_1 + receipt_move_2 + receipt_move_3:
+            m._action_confirm()
+            m.quantity_done = m.product_uom_qty
+            m._action_done()
+
+        move_out_2 = self.env['stock.move'].create({
+            'name': 'move_out_2',
+            'location_id': self.pack_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5,
+            'move_orig_ids': [
+                (4, receipt_move_1.id, 0),
+                (4, receipt_move_2.id, 0),
+                (4, receipt_move_3.id, 0)
+            ],
+        })
+        move_out_2._action_confirm()
+        self.assertEqual(move_out_2.state, 'waiting')
+
+        # simulate a return of receipt_move_3
+        move_out_3 = self.env['stock.move'].create({
+            'name': 'move_out_3',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1,
+            'move_orig_ids': [
+                (4, receipt_move_1.id, 0),
+                (4, receipt_move_2.id, 0),
+                (4, receipt_move_3.id, 0)
+            ],
+        })
+        move_out_3._action_confirm()
+        move_out_3._action_assign()
+        self.assertEqual(move_out_3.state, 'assigned')
+
     def test_use_reserved_move_line_1(self):
         """ Test that _free_reservation work when quantity is only available on
         reserved move lines.
