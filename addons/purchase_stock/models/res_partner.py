@@ -33,4 +33,3 @@ class ResPartner(models.Model):
             on_time, ordered = numbers
             partner.on_time_rate = on_time / ordered * 100 if ordered else 100
         (self - seen_partner).on_time_rate = 100
-
