@@ -524,21 +524,35 @@ def email_escape_char(email_address):
     return email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
 
 # was mail_message.decode()
-def decode_smtp_header(smtp_header):
+def decode_smtp_header(smtp_header, quoted=False):
     """Returns unicode() string conversion of the given encoded smtp header
     text. email.header decode_header method return a decoded string and its
-    charset for each decoded par of the header. This method unicodes the
-    decoded header and join them in a complete string. """
+    charset for each decoded part of the header. This method unicodes the
+    decoded header and join them in a complete string.
+
+    :param bool quoted: when True, encoded words in the header will be turned into RFC822
+        quoted-strings after decoding, which is appropriate for address headers
+    """
     if isinstance(smtp_header, Header):
         smtp_header = ustr(smtp_header)
     if smtp_header:
-        text = decode_header(smtp_header.replace('\r', ''))
-        return ''.join([ustr(x[0], x[1]) for x in text])
-    return u''
+        pairs = decode_header(smtp_header.replace('\r', ''))
+        tokens = []
+        for token, enc in pairs:
+            token = ustr(token, enc)
+            if enc and quoted:
+                # re-quote the encoded word to form an RFC822 quoted-string
+                token = email_addr_escapes_re.sub(r'\\\g<0>', token)
+                tokens.append('"%s"' % token)
+            else:
+                # plain word
+                tokens.append(token)
+        return ''.join(tokens)
+    return ''
 
 # was mail_thread.decode_header()
-def decode_message_header(message, header, separator=' '):
-    return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)
+def decode_message_header(message, header, separator=' ', quoted=False):
+    return separator.join(decode_smtp_header(h, quoted=quoted) for h in message.get_all(header, []) if h)
 
 def formataddr(pair, charset='utf-8'):
     """Pretty format a 2-tuple of the form (realname, email_address).

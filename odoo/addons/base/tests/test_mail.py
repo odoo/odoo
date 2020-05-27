@@ -8,7 +8,7 @@ from odoo.tests.common import BaseCase
 from odoo.tests.common import SavepointCase
 from odoo.tools import (
     html_sanitize, append_content_to_html, plaintext2html, email_split,
-    misc, formataddr,
+    misc, formataddr, decode_smtp_header
 )
 
 from . import test_mail_examples
@@ -354,6 +354,39 @@ class TestEmailTools(BaseCase):
                         self.assertEqual(formataddr(pair, charset), expected)
                     else:
                         self.assertRaises(expected, formataddr, pair, charset)
+
+
+    def test_decode_smtp_header_email(self):
+        cases = [
+            # In == Out for trivial ASCII cases
+            ('Joe Doe <joe@ex.com>', 'Joe Doe <joe@ex.com>'),
+            ('Joe <joe@ex.com>, Mike <mike@ex.com>', 'Joe <joe@ex.com>, Mike <mike@ex.com>'),
+
+            # Same thing, but RFC822 quoted-strings must be preserved
+            ('"Doe, Joe" <joe@ex.com>', '"Doe, Joe" <joe@ex.com>'),
+            ('"Doe, Joe" <joe@ex.com>, "Foo, Mike" <mike@ex.com>',
+                    '"Doe, Joe" <joe@ex.com>, "Foo, Mike" <mike@ex.com>'),
+
+            # RFC2047-encoded words have to be quoted after decoding, because
+            # they are considered RFC822 `words` i.e. atom or quoted-string only!
+            # It's ok to quote a single word even if unnecessary.
+            # Example values produced by `formataddr((name, address), 'ascii')`
+            ("=?utf-8?b?Sm/DqQ==?= <joe@ex.com>", '"Joé" <joe@ex.com>'),
+            ("=?utf-8?b?Sm/DqQ==?= <joe@ex.com>, =?utf-8?b?RsO2w7YsIE1pa2U=?= <mike@ex.com>",
+                    '"Joé" <joe@ex.com>, "Föö, Mike" <mike@ex.com>'),
+            ('=?utf-8?b?RG/DqSwg?= =?US-ASCII?Q?Joe?= <joe@ex.com>',
+                '"Doé, ""Joe" <joe@ex.com>'),
+
+            # Double-quotes may appear in the encoded form and /must/ be turned
+            # into a RFC2822 quoted-pair (i.e. escaped)
+            #   "Trevor \"Banana\" Dumoulin" <tbd@ex.com>
+            ('=?utf-8?b?VHLDqXZvciAiQmFuYW5hIiBEdW1vdWxpbg==?= <tbd@ex.com>',
+                    '"Trévor \\"Banana\\" Dumoulin" <tbd@ex.com>'),
+        ]
+
+        for test, truth in cases:
+            self.assertEqual(decode_smtp_header(test, quoted=True), truth)
+
 
 
 class EmailConfigCase(SavepointCase):
