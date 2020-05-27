@@ -55,4 +55,11 @@
         </t>
     </t>
 
+    <t t-name="Calendar.attendee.calendar-box">
+        <div t-attf-class="#{record.is_highlighted ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : 'o_calendar_color_1'} fc-event o_attendee_status_#{record.attendee_status}" >
+            <span class="fc-time"/>
+            <div class="o_event_title" t-esc="record.display_name"/>
+        </div>
+    </t>
+
 </template>

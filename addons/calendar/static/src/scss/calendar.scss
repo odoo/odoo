@@ -67,3 +67,26 @@
         font-weight: bold;
     }
 }
+
+.o_calendar_view .fc-view .fc-event-container {
+
+    .fc-event.o_attendee_status_needsAction, .fc-event.o_attendee_status_tentative {
+        color: gray('700');
+        border-width: 2px 2px 2px !important;
+        .fc-bg {
+            background: transparent;
+        }
+        &:hover {
+            border-width: 3px 3px 3px !important
+        }
+    }
+
+    .fc-event:hover {
+        color: black;
+    }
+
+    .fc-event.o_attendee_status_declined {
+        text-decoration: line-through;
+        opacity: 0.5;
+    }
+}
