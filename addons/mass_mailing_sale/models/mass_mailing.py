@@ -23,8 +23,16 @@ class MassMailing(models.Model):
         for mass_mailing in self:
             if self.user_has_groups('sales_team.group_sale_salesman') and self.user_has_groups('account.group_account_invoice'):
                 domain = self._get_sale_utm_domain() + [('state', 'not in', ['draft', 'cancel'])]
-                moves = self.env['account.move'].search_read(domain, ['amount_untaxed'])
-                mass_mailing.sale_invoiced_amount = sum(i['amount_untaxed'] for i in moves)
+                moves = self.env['account.move'].search(domain)
+                mass_mailing.sale_invoiced_amount = sum(
+                    move.currency_id._convert(
+                        move.amount_untaxed,
+                        self.env.company.currency_id,
+                        move.company_id,
+                        move.date
+                    )
+                    for move in moves
+                )
             else:
                 mass_mailing.sale_invoiced_amount = 0
 
