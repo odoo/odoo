@@ -18,6 +18,9 @@ from odoo.osv import expression
 from odoo.tools import pycompat, unique
 from odoo.tools.safe_eval import safe_eval
 
+VACUUM__EXPORT__MAX_WEEKS = 9
+VACUUM__EXPORT__MAX_RECORDS = 10000
+
 _logger = logging.getLogger(__name__)
 
 MODULE_UNINSTALL_FLAG = '_force_unlink'
@@ -2182,6 +2185,26 @@ class IrModelData(models.Model):
         if record.check_access_rights('write'):
             for xid in  self.search([('model', '=', model), ('res_id', '=', res_id)]):
                 xid.noupdate = not xid.noupdate
+
+    @api.autovacuum
+    def _gc__export__xml_ids(self):
+        """Garbage collection in ir.model.data models only for xml_id '__export__'
+        These kind of records could be too much during the time and many of them are useless after a while
+         - Just deleting records that are not used anymore after a while (VACUUM__EXPORT__MAX_WEEKS)
+         - Just deleting a few records each time (VACUUM__EXPORT__MAX_RECORDS)
+           in order to avoid raising an error if the worker timeout configuration is very low
+        """
+        limit_date = fields.Datetime.now() - datetime.timedelta(weeks=VACUUM__EXPORT__MAX_WEEKS)
+
+        records = self.env['ir.model.data'].search([
+            ('module', '=', '__export__'), ('noupdate', '=', False),
+            ('create_date', '<', limit_date), ('write_date', '<', limit_date)],
+            limit=VACUUM__EXPORT__MAX_RECORDS, order='write_date')
+        if not records:
+            return True
+        records.unlink()
+        _logger.info("GC %d '__export__' external IDs (ir.model.data) records until %s", len(records), limit_date)
+        return True
 
 
 class WizardModelMenu(models.TransientModel):
