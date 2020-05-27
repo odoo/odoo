@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+import requests
+
 from random import randint
 
 from odoo import api, fields, models
@@ -78,6 +81,8 @@ class Track(models.Model):
     description = fields.Html(translate=html_translate, sanitize_attributes=False, sanitize_form=False)
     date = fields.Datetime('Track Date')
     date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
+    is_live = fields.Boolean('Is Live', compute='_compute_is_live', search='_search_is_live',
+        help="Is the track currently ongoing?")
     duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")
     location_id = fields.Many2one('event.track.location', 'Location')
     event_id = fields.Many2one('event.event', 'Event', required=True)
@@ -87,6 +92,10 @@ class Track(models.Model):
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
     image = fields.Image("Image", max_width=128, max_height=128)
+    youtube_event_url = fields.Char('Youtube Event URL',
+        help="Configure this URL so that event attendees can see your Track in video!")
+    youtube_video_id = fields.Char('Youtube video ID', compute='_compute_youtube_video_id',
+        help="Extracted from the video URL and used to infer various links (embed/thumbnail/...)")
 
     @api.depends('name')
     def _compute_website_url(self):
@@ -111,6 +120,41 @@ class Track(models.Model):
                 track.date_end = track.date + delta
             else:
                 track.date_end = False
+
+    @api.depends('date', 'duration')
+    def _compute_is_live(self):
+        """ Separated from '_compute_end_date' since 'is_live' is not stored. """
+        for track in self:
+            if track.date:
+                date_end = track.date + timedelta(minutes=60 * track.duration)
+                track.is_live = track.date <= fields.Datetime.now() <= date_end
+            else:
+                track.is_live = False
+
+    @api.depends('youtube_event_url')
+    def _compute_youtube_video_id(self):
+        for track in self:
+            if track.youtube_event_url:
+                regex = r'^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*'
+                match = re.match(regex, track.youtube_event_url)
+                if match and len(match.groups()) == 2 and len(match.group(2)) == 11:
+                    track.youtube_video_id = match.group(2)
+
+            if not track.youtube_video_id:
+                track.youtube_video_id = False
+
+    def _search_is_live(self, operator, value):
+        if operator not in ['=', '!=']:
+            raise ValueError(_('This operator is not supported'))
+        if not isinstance(value, bool):
+            raise ValueError(_('Value should be True or False (not %s)'), value)
+        now = fields.Datetime.now()
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            domain = [('date', '<=', now), ('date_end', '>', now)]
+        else:
+            domain = ['|', ('date', '>', now), ('date_end', '<=', now)]
+        track_ids = self.env['event.track']._search(domain)
+        return [('id', 'in', track_ids)]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -189,3 +233,33 @@ class Track(models.Model):
             'view_id': False,
             'type': 'ir.actions.act_window',
         }
+
+    def get_viewers_count(self):
+        """ Uses the Youtube Data API to request the viewers count of all tracks in recordset (self).
+        We collect data for both live and past videos, returning a dict with the following structure:
+
+        {'trackId': {
+            'live_views': 42, // relevant for streamings that are currently live
+            'total_views': 5899 // relevant for existing videos or recorded live streams that are passed
+        }}
+
+        This is obviously only relevant for tracks that have a configured 'youtube_event_url'.
+        The method is called when necessary, it would not make sense to make actual 'fields' for those values
+        as it's constantly changing (we need to make the API call every time). """
+
+        youtube_api_key = self.env['website'].get_current_website().website_event_track_youtube_api_key
+        video_ids = {track.youtube_video_id: track.id for track in self if track.youtube_video_id}
+        viewers_by_track = {}
+        if video_ids.keys() and youtube_api_key:
+            youtube_api_request = requests.get('https://www.googleapis.com/youtube/v3/videos', params={
+                'part': 'statistics,liveStreamingDetails',
+                'id': ','.join(video_ids.keys()),
+                'key': youtube_api_key,
+            })
+            for youtube_result in youtube_api_request.json().get('items', []):
+                viewers_by_track[video_ids[youtube_result['id']]] = {
+                    'live_views': youtube_result.get('liveStreamingDetails', {}).get('concurrentViewers', 0),
+                    'total_views': youtube_result.get('statistics', {}).get('viewCount', 0),
+                }
+
+        return viewers_by_track

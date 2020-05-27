@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<div t-name="event_youtube_embed_modal" role="dialog" class="modal fade o_wevent_youtube_embed_modal w-100 p-0">
+    <div class="modal-dialog w-100 h-100 p-0">
+        <div class="modal-content border-0 h-100">
+            <header class="modal-header p-2 border-0 text-white">
+                <div class="d-flex w-100">
+                    <div class="flex-grow-1">
+                        <h2 class="m-0 d-inline-block" t-esc="widget.trackName"></h2>
+                        <img t-if="widget.speakerId" class="o_wevent_speaker_image d-inline-block align-top ml-4" t-attf-src="/web/image/res.partner/#{widget.speakerId}/image_128" />
+                        <h2 t-if="widget.speakerName" class="m-0 d-inline-block font-weight-normal ml-2" t-esc="widget.speakerName"></h2>
+                        <h2 t-if="widget.viewers[widget.trackId] &amp;&amp; widget.viewers[widget.trackId].live_views > 0" class="d-inline-block font-weight-normal">
+                            <span class="px-2">&#183;</span><span t-esc="widget.formatNumber(widget.viewers[widget.trackId].live_views)"/><span> watching</span>
+                        </h2>
+                        <h2 t-elif="widget.viewers[widget.trackId] &amp;&amp; widget.viewers[widget.trackId].total_views > 0" class="d-inline-block font-weight-normal">
+                            <span class="px-2">&#183;</span><span t-esc="widget.formatNumber(widget.viewers[widget.trackId].total_views)"/><span> views</span>
+                        </h2>
+                    </div>
+                    <div>
+                        <button type="button" class="btn fa fa-remove text-white" data-dismiss="modal" />
+                    </div>
+                </div>
+            </header>
+            <main class="modal-body p-0 overflow-hidden d-flex">
+                <div class="o_wevent_youtube_side_panel d-flex flex-column overflow-auto">
+                    <div class="d-flex justify-content-center">
+                        <ul class="nav nav-pills justify-content-center flex-grow-1" role="tablist">
+                            <li class="nav-item flex-grow-1 text-center">
+                                <a t-attf-class="nav-link o_wevent_youtube_embed_modal_btn text-white py-3 #{widget.isLiveOrUpcoming ? 'active' : 'disabled'}"
+                                    id="o_wevent_room_pill" data-toggle="pill" href="#o_wevent_room_tab" role="tab" aria-controls="o_wevent_room_pill">
+                                    Room
+                                </a>
+                            </li>
+                            <li class="nav-item flex-grow-1 text-center">
+                                <a t-attf-class="nav-link o_wevent_youtube_embed_modal_btn text-white py-3 #{!widget.isLiveOrUpcoming ? 'active' : ''}"
+                                    id="o_wevent_event_pill" data-toggle="pill" href="#o_wevent_event_tab" role="tab" aria-controls="o_wevent_event_pill">
+                                    Event
+                                </a>
+                            </li>
+                        </ul>
+                        <a t-attf-class="btn o_wevent_youtube_embed_modal_btn o_wevent_room_side_panel_toggle text-white p-3" href="#">
+                            <i class="fa fa-arrow-left position-relative" />
+                        </a>
+                    </div>
+                    <div class="tab-content flex-grow-1">
+                        <div t-attf-class="tab-pane fade h-100 #{widget.isLiveOrUpcoming ? 'show active' : 'disabled'}" id="o_wevent_room_tab" role="tabpanel" aria-labelledby="o_wevent_room_pill">
+                            <iframe t-if="widget.isLiveOrUpcoming"
+                                t-att-src="widget.chatUrl"
+                                class="o_wevent_youtube_chat w-100 h-100"
+                                frameborder="0"
+                                allowfullscreen="allowfullscreen">
+                            </iframe>
+                        </div>
+                        <div t-attf-class="tab-pane fade #{!widget.isLiveOrUpcoming ? 'show active' : ''}" id="o_wevent_event_tab" role="tabpanel" aria-labelledby="o_wevent_event_pill">
+                            <h3 class="text-white py-2 pl-3">Live</h3>
+                            <div t-if="widget.liveTracks.length !== 0" class="pb-3">
+                                <t t-foreach="widget.liveTracks.tracks" t-as="track">
+                                    <t t-call="event_youtube_embed_modal_track">
+                                        <t t-set="viewers" t-value="widget.liveTracks.viewers" />
+                                    </t>
+                                </t>
+                            </div>
+                            <div t-else="" class="text-muted text-center font-italic pb-3">No other live tracks currently</div>
+                            <h3 class="text-white pb-2 pl-3">Upcoming</h3>
+                            <div t-if="widget.upcomingTracks.length !== 0" class="pb-3">
+                                <t t-foreach="widget.upcomingTracks.tracks" t-as="track">
+                                    <t t-call="event_youtube_embed_modal_track">
+                                        <t t-set="viewers" t-value="widget.upcomingTracks.viewers" />
+                                    </t>
+                                </t>
+                            </div>
+                            <div t-else="" class="text-muted text-center font-italic pb-3">No upcoming tracks currently</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_wevent_youtube_side_panel_restore d-none">
+                    <a t-attf-class="btn o_wevent_youtube_embed_modal_btn o_wevent_room_side_panel_toggle text-white p-3" href="#">
+                        <i class="fa fa-arrow-right" />
+                    </a>
+                </div>
+                <iframe t-att-src="widget.videoUrl"
+                    class="flex-grow-1"
+                    frameborder="0"
+                    allow="autoplay"
+                    allowfullscreen="allowfullscreen">
+                </iframe>
+            </main>
+        </div>
+    </div>
+</div>
+
+<a t-name="event_youtube_embed_modal_track" class="o_wevent_youtube_modal_track position-relative d-block p-2 border-left-0 border-right-0"
+    t-att-href="track.website_url + '?open_video=1'">
+    <span t-if="track.is_live" class="position-absolute o_wevent_youtube_live_dot">&#183;</span> <!-- dot symbol -->
+    <h4 class="text-white ml-3 font-weight-normal" t-esc="track.name"></h4>
+    <div class="d-flex o_wevent_youtube_modal_track_info">
+        <img t-if="track.partner_id &amp;&amp; track.partner_id.length !== 0" class="o_wevent_speaker_image d-inline-block align-top ml-3"
+            t-attf-src="/web/image/res.partner/#{track.partner_id[0]}/image_128" />
+        <span t-if="track.partner_id &amp;&amp; track.partner_id.length !== 0" class="text-white ml-2" t-esc="track.partner_id[1]"></span>
+        <div t-if="viewers[track.id] &amp;&amp; viewers[track.id].live_views > 0" class="flex-grow-1 text-white text-right mr-2">
+            <span t-esc="widget.formatNumber(viewers[track.id].live_views)"/><span> watching</span>
+        </div>
+        <div t-elif="viewers[track.id] &amp;&amp; viewers[track.id].total_views > 0" class="flex-grow-1 text-white text-right mr-2">
+            <span t-esc="widget.formatNumber(viewers[track.id].total_views)"/><span> views</span>
+        </div>
+    </div>
+</a>
+
+</templates>

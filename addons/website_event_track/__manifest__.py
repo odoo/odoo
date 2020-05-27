@@ -18,6 +18,10 @@
         'views/event_sponsor_views.xml',
         'views/event_exhibitor_views.xml',
         'views/event_views.xml',
+        'views/res_config_settings_views.xml',
+    ],
+    'qweb': [
+        'static/src/xml/event_youtube_embed_templates.xml'
     ],
     'demo': [
         'data/event_demo.xml',

@@ -25,6 +25,38 @@ class WebsiteEventTrackController(http.Controller):
         values = {'track': track, 'event': track.event_id, 'main_object': track}
         return request.render("website_event_track.track_view", values)
 
+    @http.route(['''/event/<model("event.event"):event>/track/<model("event.track", "[('event_id','=',event.id)]"):track>/live_tracks'''], type='json', auth="public", website=True)
+    def event_track_live_tracks(self, event, track):
+        """ Simple redirect to a search_read since you can't rpc search_read when public user. """
+        live_tracks = request.env['event.track'].search([
+            ('event_id', '=', event.id),
+            ('website_published', '=', True),
+            ('youtube_event_url', '!=', False),
+            ('is_live', '=', True),
+            ('id', '!=', track.id),
+        ])
+
+        return {
+            'tracks': live_tracks.read(['name', 'partner_id', 'is_live', 'website_url']),
+            'viewers': live_tracks.get_viewers_count()
+        }
+
+    @http.route(['''/event/<model("event.event"):event>/track/<model("event.track", "[('event_id','=',event.id)]"):track>/upcoming_tracks'''], type='json', auth="public", website=True)
+    def event_track_upcoming_tracks(self, event, track):
+        """ Simple redirect to a search_read since you can't rpc search_read when public user. """
+        upcoming_tracks = request.env['event.track'].search([
+            ('event_id', '=', event.id),
+            ('website_published', '=', True),
+            ('youtube_event_url', '!=', False),
+            ('date', '>', fields.Datetime.now()),
+            ('id', '!=', track.id),
+        ])
+
+        return {
+            'tracks': upcoming_tracks.read(['name', 'partner_id', 'is_live', 'website_url']),
+            'viewers': upcoming_tracks.get_viewers_count()
+        }
+
     def _get_locale_time(self, dt_time, lang_code):
         """ Get locale time from datetime object
 

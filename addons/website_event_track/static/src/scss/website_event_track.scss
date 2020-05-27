@@ -62,3 +62,92 @@
         }
     }
 }
+
+.o_wevent_youtube_button .o_wevent_youtube_live {
+    background-color: $danger;
+    border-radius: 0.25rem;
+
+    .o_wevent_youtube_live_dot {
+        font-size: 2.5rem;
+        left: 0.2rem;
+        line-height: 1.4rem;
+    }
+}
+
+.o_wevent_youtube_embed_modal {
+    .modal-dialog {
+        max-width: 100%;
+        max-height: 100%;
+
+        .o_wevent_youtube_embed_modal_btn {
+            border: 0;
+            border-radius: 0px;
+            background-color: #333333;
+
+            &:hover, &.active {
+                background-color: lighten(#333333, 5%);
+            }
+        }
+
+        .modal-content {
+            border-radius: 0px;
+
+            .modal-header {
+                background-color: #333333;
+                border-radius: 0px;
+            }
+
+            .modal-body {
+                border-radius: 0px;
+
+                .o_wevent_youtube_side_panel {
+                    width: 25rem;
+                    background-color: #333333;
+
+                    a.text-white:hover, a.text-white:focus {
+                        color: white !important;
+                    }
+
+                    .fa-arrow-left {
+                        top: 1px;
+                    }
+
+                    .o_wevent_youtube_modal_track {
+                        border: .5px solid $text-muted;
+                        border-top: 0;
+
+                        &:first-child {
+                            border-top: .5px solid $text-muted;
+                        }
+
+                        &:hover {
+                            text-decoration: none;
+                            cursor: pointer;
+                            background-color: lighten(#333333, 5%);
+                        }
+
+                        .o_wevent_youtube_live_dot {
+                            color: $danger;
+                            font-size: 3.5rem;
+                            left: 0.2rem;
+                            line-height: 1.4rem;
+                        }
+
+                        .o_wevent_youtube_modal_track_info {
+                            line-height: 32px;
+                        }
+                    }
+                }
+
+                .o_wevent_youtube_side_panel_restore {
+                    background-color: #333333;
+                }
+            }
+
+            .o_wevent_speaker_image {
+                border-radius: 50%;
+                height: 32px;
+            }
+        }
+    }
+}

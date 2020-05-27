@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="/website_event_track/static/src/scss/website_event_track.scss"/>
         <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
         <script type="text/javascript" src="/website_event_track/static/src/js/website_event_exhibitor.js"></script>
+        <script type="text/javascript" src="/website_event_track/static/src/js/website_event_youtube_embed.js"></script>
         <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track_set_customize_options.js"></script>
     </xpath>
 </template>
@@ -201,7 +202,7 @@
         <section class="pt48">
             <div class="container">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-10">
                         <h1 t-field="track.name"/>
                         <small>Proposed by
                             <span t-if="track.partner_id" t-field="track.partner_id.sudo().name"/>
@@ -215,6 +216,24 @@
                                 </a>
                             </li>
                         </ul>
+                    </div>
+                    <div t-if="track.youtube_event_url" class="col-2 text-right">
+                        <div class="btn btn-primary o_wevent_youtube_button"
+                            t-att-data-event-id="track.event_id.id"
+                            t-att-data-track-id="track.id"
+                            t-att-data-track-name="track.name"
+                            t-att-data-speaker-id="track.partner_id.id"
+                            t-att-data-speaker-name="track.partner_id.name"
+                            t-att-data-viewers="json.dumps(track.get_viewers_count())"
+                            t-att-data-youtube-id="track.youtube_video_id"
+                            t-att-data-is-live-or-upcoming="datetime.datetime.now() &lt;= track.date_end">
+                            <i class="fa fa-tv mr-1" />
+                            <div class="d-inline-block">Video</div>
+                            <div class="d-inline-block ml-1 p-1 pr-2 pl-3 o_wevent_youtube_live position-relative font-weight-bold" t-if="track.is_live">
+                                <span class="position-absolute o_wevent_youtube_live_dot">&#183;</span> <!-- dot symbol -->
+                                <span>LIVE</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
