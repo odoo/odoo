@@ -18,7 +18,7 @@ class AccountMove(models.Model):
         'l10n_latam.document.type', string='Document Type', readonly=False, auto_join=True, index=True,
         states={'posted': [('readonly', True)]}, compute='_compute_l10n_latam_document_type', store=True)
     l10n_latam_use_documents = fields.Boolean(related='journal_id.l10n_latam_use_documents')
-    l10n_latam_country_code = fields.Char(
+    l10n_latam_country_code = fields.Char("Country Code (LATAM)",
         related='company_id.country_id.code', help='Technical field used to hide/show fields regarding the localization')
 
     @api.model
