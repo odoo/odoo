@@ -3,6 +3,8 @@
 from odoo import tools
 from odoo import models, fields, api
 
+from functools import lru_cache
+
 
 class AccountInvoiceReport(models.Model):
     _name = "account.invoice.report"
@@ -84,7 +86,7 @@ class AccountInvoiceReport(models.Model):
                 line.analytic_account_id,
                 line.journal_id,
                 line.company_id,
-                COALESCE(line.currency_id, line.company_currency_id)        AS currency_id,
+                line.company_currency_id                                    AS currency_id,
                 line.partner_id AS commercial_partner_id,
                 move.name,
                 move.state,
@@ -97,41 +99,15 @@ class AccountInvoiceReport(models.Model):
                 move.invoice_date_due,
                 move.invoice_payment_term_id,
                 move.invoice_partner_bank_id,
-                ROUND(move.amount_residual_signed / (SELECT count(*) FROM account_move_line aml where line.move_id = aml.move_id AND NOT aml.exclude_from_invoice_tab),
-                  COALESCE((SELECT decimal_places
-                    FROM res_currency rc INNER JOIN res_currency_rate cr ON
-                    rc.id = cr.currency_id
-                   WHERE cr.currency_id = (COALESCE(line.currency_id, line.company_currency_id)) AND
-                         cr.company_id = line.company_id
-                   LIMIT 1
-                   ),2))                                                   AS residual,
-                ROUND(
-                  line.price_total / COALESCE(
-                    (SELECT rate FROM res_currency_rate cr WHERE
-                      cr.currency_id = line.currency_id AND
-                      cr.company_id = line.company_id AND
-                      cr.name <= COALESCE(line.date,NOW())
-                    ORDER BY cr.name DESC
-                    LIMIT 1)
-                    ,1),
-                  COALESCE((SELECT decimal_places
-                   FROM res_currency rc INNER JOIN res_currency_rate cr ON
-                    rc.id = cr.currency_id
-                   WHERE cr.currency_id = (COALESCE(line.currency_id, line.company_currency_id)) AND
-                         cr.company_id = line.company_id
-                   LIMIT 1
-                   ),2))
-                    *
-                   (CASE WHEN move.amount_total_signed < 0
-                        THEN -1
-                        ELSE 1
-                    END)                                                    AS amount_total,
+                -line.balance * (move.amount_residual_signed / NULLIF(move.amount_total_signed, 0.0)) * (line.price_total / NULLIF(line.price_subtotal, 0.0))
+                                                                            AS residual,
+                -line.balance * (line.price_total / NULLIF(line.price_subtotal, 0.0))    AS amount_total,
                 uom_template.id                                             AS product_uom_id,
                 template.categ_id                                           AS product_categ_id,
-                SUM(line.quantity / NULLIF(COALESCE(uom_line.factor, 1) * COALESCE(uom_template.factor, 1), 0.0))
+                line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)
                                                                             AS quantity,
-                -SUM(line.balance)                                          AS price_subtotal,
-                -SUM(line.balance / NULLIF(COALESCE(uom_line.factor, 1) * COALESCE(uom_template.factor, 1), 0.0))
+                -line.balance                                               AS price_subtotal,
+                -line.balance / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)
                                                                             AS price_average,
                 COALESCE(partner.country_id, commercial_partner.country_id) AS country_id,
                 1                                                           AS nbr_lines
@@ -187,6 +163,7 @@ class AccountInvoiceReport(models.Model):
                 move.invoice_payment_term_id,
                 move.invoice_partner_bank_id,
                 uom_template.id,
+                uom_line.factor,
                 template.categ_id,
                 COALESCE(partner.country_id, commercial_partner.country_id)
         '''
@@ -200,6 +177,56 @@ class AccountInvoiceReport(models.Model):
         ''' % (
             self._table, self._select(), self._from(), self._where(), self._group_by()
         ))
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        @lru_cache(maxsize=32)  # cache to prevent a SQL query for each data point
+        def get_rate(currency_id):
+            return self.env['res.currency']._get_conversion_rate(
+                self.env['res.currency'].browse(currency_id),
+                self.env.company.currency_id,
+                self.env.company,
+                self._fields['invoice_date'].today()
+            )
+
+        # First we get the structure of the results. The results won't be correct in multi-currency,
+        # but we need this result structure.
+        # By adding 'ids:array_agg(id)' to the fields, we will be able to map the results of the
+        # second step in the structure of the first step.
+        result_ref = super(AccountInvoiceReport, self).read_group(
+            domain, fields + ['ids:array_agg(id)'], groupby, offset, limit, orderby, False
+        )
+
+        # In mono-currency, the results are correct, so we don't need the second step.
+        if len(self.env.companies.mapped('currency_id')) <= 1:
+            return result_ref
+
+        # Reset all fields needing recomputation.
+        for res_ref in result_ref:
+            for field in {'amount_total', 'price_average', 'price_subtotal', 'residual'} & set(res_ref):
+                res_ref[field] = 0.0
+
+        # Then we perform another read_group, but this time we group by 'currency_id'. This way, we
+        # are able to convert in batch in the current company currency.
+        # During the process, we fill in the result structure we got in the previous step. To make
+        # the mapping, we use the aggregated ids.
+        result = super(AccountInvoiceReport, self).read_group(
+            domain, fields + ['ids:array_agg(id)'], set(groupby) | {'currency_id'}, offset, limit, orderby, False
+        )
+        for res in result:
+            if res.get('currency_id') and self.env.company.currency_id.id != res['currency_id'][0]:
+                for field in {'amount_total', 'price_average', 'price_subtotal', 'residual'} & set(res):
+                    res[field] = self.env.company.currency_id.round((res[field] or 0.0) * get_rate(res['currency_id'][0]))
+            # Since the size of result_ref should be resonable, it should be fine to loop inside a
+            # loop.
+            for res_ref in result_ref:
+                if res.get('ids') and res_ref.get('ids') and set(res['ids']) <= set(res_ref['ids']):
+                    for field in {'amount_total', 'price_subtotal', 'residual'} & set(res_ref):
+                        res_ref[field] += res[field]
+                    for field in {'price_average'} & set(res_ref):
+                        res_ref[field] = (res_ref[field] + res[field]) / 2 if res_ref[field] else res[field]
+
+        return result_ref
 
 
 class ReportInvoiceWithoutPayment(models.AbstractModel):
