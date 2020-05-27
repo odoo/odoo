@@ -2370,6 +2370,7 @@ class AccountMove(models.Model):
         # Force balance check since nothing prevents another module to create an incorrect entry.
         # This is performed at the very end to avoid flushing fields before the whole processing.
         self._check_balanced()
+        return True
 
     def _auto_compute_invoice_reference(self):
         ''' Hook to be overridden to set custom conditions for auto-computed invoice references.
