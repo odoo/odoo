@@ -58,6 +58,19 @@ class TestOdoobot(TestMailCommon, TestRecipients):
         channel = self.env['mail.channel'].with_user(self.user_employee).init_odoobot()
 
         kwargs['body'] = 'tagada 😊'
+        last_message = self.assertNextMessage(
+            channel.message_post(**kwargs),
+            sender=self.odoobot,
+            answer=("help",)
+        )
+        channel.execute_command(command="help")
+        self.assertNextMessage(
+            last_message,  # no message will be post with command help, use last odoobot message instead
+            sender=self.odoobot,
+            answer=("@OdooBot",)
+        )
+        kwargs['body'] = ''
+        kwargs['partner_ids'] = [self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")]
         self.assertNextMessage(
             channel.message_post(**kwargs),
             sender=self.odoobot,
@@ -70,20 +83,12 @@ class TestOdoobot(TestMailCommon, TestRecipients):
             'res_model': 'mail.compose.message',
         })
         kwargs['attachment_ids'] = [attachment.id]
-        last_message = self.assertNextMessage(
-            channel.message_post(**kwargs),
-            sender=self.odoobot,
-            answer=("help",)
-        )
-        kwargs['attachment_ids'] = []
+        # For the end of the flow, we only test that the state changed, but not to which
+        # one since it depends on the intalled apps, which can add more steps (like livechat)
+        channel.message_post(**kwargs)
+        self.assertNotEqual(self.user_employee.odoobot_state, 'onboarding_attachement')
 
-        channel.execute_command(command="help")
-        self.assertNextMessage(
-            last_message,  # no message will be post with command help, use last odoobot message instead
-            sender=self.odoobot,
-            answer=("@OdooBot",)
-        )
-        # we dont test the end of the flow since it will depends of the installed apps (livechat)
+        # Test miscellaneous messages
         self.user_employee.odoobot_state = "idle"
         kwargs['partner_ids'] = []
         kwargs['body'] = "I love you"
@@ -97,6 +102,12 @@ class TestOdoobot(TestMailCommon, TestRecipients):
             channel.message_post(**kwargs),
             sender=self.odoobot,
             answer=("I have feelings",)
+        )
+        kwargs['body'] = "help me"
+        self.assertNextMessage(
+            channel.message_post(**kwargs),
+            sender=self.odoobot,
+            answer=("If you need help",)
         )
 
     @mute_logger('odoo.addons.mail.models.mail_mail')

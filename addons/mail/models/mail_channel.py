@@ -633,14 +633,14 @@ class Channel(models.Model):
             partners_to.append(self.env.user.partner_id.id)
             # determine type according to the number of partner in the channel
             self.env.cr.execute("""
-                SELECT P.channel_id as channel_id
+                SELECT P.channel_id
                 FROM mail_channel C, mail_channel_partner P
                 WHERE P.channel_id = C.id
                     AND C.public LIKE 'private'
                     AND P.partner_id IN %s
-                    AND channel_type LIKE 'chat'
+                    AND C.channel_type LIKE 'chat'
                 GROUP BY P.channel_id
-                HAVING array_agg(P.partner_id ORDER BY P.partner_id) = %s
+                HAVING ARRAY_AGG(DISTINCT P.partner_id ORDER BY P.partner_id) = %s
             """, (tuple(partners_to), sorted(list(partners_to)),))
             result = self.env.cr.dictfetchall()
             if result:
@@ -973,7 +973,7 @@ class Channel(models.Model):
         })
 
     def _define_command_help(self):
-        return {'help': _("Show an helper message")}
+        return {'help': _("Show a helper message")}
 
     def _execute_command_help(self, **kwargs):
         partner = self.env.user.partner_id
@@ -987,9 +987,9 @@ class Channel(models.Model):
             msg = _("You are in a private conversation with <b>@%s</b>.") % (channel_partners[0].partner_id.name if channel_partners else _('Anonymous'))
         msg += _("""<br><br>
             Type <b>@username</b> to mention someone, and grab his attention.<br>
-            Type <b>#channel</b>.to mention a channel.<br>
+            Type <b>#channel</b> to mention a channel.<br>
             Type <b>/command</b> to execute a command.<br>
-            Type <b>:shortcut</b> to insert canned responses in your message.<br>""")
+            Type <b>:shortcut</b> to insert a canned response in your message.<br>""")
 
         self._send_transient_message(partner, msg)
 

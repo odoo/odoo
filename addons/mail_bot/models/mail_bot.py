@@ -25,7 +25,7 @@ class MailBot(models.AbstractModel):
         if len(record) != 1 or values.get("author_id") == odoobot_id:
             return
         if self._is_bot_pinged(values) or self._is_bot_in_private_channel(record):
-            body = values.get("body", "").replace(u'\xa0', u' ').strip().lower().strip(".?!")
+            body = values.get("body", "").replace(u'\xa0', u' ').strip().lower().strip(".!")
             answer = self._get_answer(record, body, values, command)
             if answer:
                 message_type = values.get('message_type', 'comment')
@@ -38,42 +38,53 @@ class MailBot(models.AbstractModel):
         if self._is_bot_in_private_channel(record):
             # main flow
             if odoobot_state == 'onboarding_emoji' and self._body_contains_emoji(body):
-                self.env.user.odoobot_state = "onboarding_attachement"
-                return _("Great! 👍<br/>Now, try to <b>send an attachment</b>, like a picture of your cute dog...")
-            elif odoobot_state == 'onboarding_attachement' and values.get("attachment_ids"):
                 self.env.user.odoobot_state = "onboarding_command"
-                return _("Not a cute dog, but you get it 😊<br/>To access special features, <b>start your sentence with '/'</b>. Try to get help.")
+                self.env.user.odoobot_failed = False
+                return _("Great! 👍<br/>To access special commands, <b>start your sentence with</b> <span class=\"o_odoobot_command\">/</span>. Try getting help.")
             elif odoobot_state == 'onboarding_command' and command == 'help':
                 self.env.user.odoobot_state = "onboarding_ping"
-                return _("Wow you are a natural!<br/>Ping someone to grab its attention with @nameoftheuser. <b>Try to ping me using @OdooBot</b> in a sentence.")
+                self.env.user.odoobot_failed = False
+                return _("Wow you are a natural!<br/>Ping someone to grab its attention with @username. <b>Try to ping me using</b> <span class=\"o_odoobot_command\">@OdooBot</span> in a sentence.")
             elif odoobot_state == 'onboarding_ping' and self._is_bot_pinged(values):
+                self.env.user.odoobot_state = "onboarding_attachement"
+                self.env.user.odoobot_failed = False
+                return _("Yep, I am here! 🎉 <br/>Now, try <b>sending an attachment</b>, like a picture of your cute dog...")
+            elif odoobot_state == 'onboarding_attachement' and values.get("attachment_ids"):
                 self.env.user.odoobot_state = "idle"
-                return _("Yep, I am here! 🎉 <br/>You finished the tour, you can <b>close this chat window</b>. Enjoy discovering Odoo.")
-            elif odoobot_state == "idle" and (_('start the tour') in body.lower()):
+                self.env.user.odoobot_failed = False
+                return _("I am a simple bot, but if that's a dog, he is the cutest 😊 <br/>Congratulations, you finished this tour. You can now <b>close this chat window</b>. Enjoy discovering Odoo.")
+            elif odoobot_state in (False, "idle", "not_initialized") and (_('start the tour') in body.lower()):
                 self.env.user.odoobot_state = "onboarding_emoji"
                 return _("To start, try to send me an emoji :)")
             # easter eggs
             elif odoobot_state == "idle" and body in ['❤️', _('i love you'), _('love')]:
                 return _("Aaaaaw that's really cute but, you know, bots don't work that way. You're too human for me! Let's keep it professional ❤️")
-            elif odoobot_state == "idle" and (('help' in body) or _('help') in body):
-                return _("I'm just a bot... :( You can check <a href=\"https://www.odoo.com/page/docs\">our documentation</a>) for more information!")
             elif _('fuck') in body or "fuck" in body:
                 return _("That's not nice! I'm a bot but I have feelings... 💔")
+            # help message
+            elif self._is_help_requested(body) or odoobot_state == 'idle':
+                return _("Unfortunately, I'm just a bot 😞 I don't understand! If you need help discovering our product, please check "
+                         "<a href=\"https://www.odoo.com/page/docs\" target=\"_blank\">our documentation</a> or "
+                         "<a href=\"https://www.odoo.com/slides\" target=\"_blank\">our videos</a>.")
             else:
-                #repeat question
+                # repeat question
                 if odoobot_state == 'onboarding_emoji':
-                    return _("Not exactly. To continue the tour, send an emoji, <b>type \":)\"</b> and press enter.")
+                    self.env.user.odoobot_failed = True
+                    return _("Not exactly. To continue the tour, send an emoji: <b>type</b> <span class=\"o_odoobot_command\">:)</span> and press enter.")
                 elif odoobot_state == 'onboarding_attachement':
-                    return _("To <b>send an attachment</b>, click the 📎 icon on the right, and select a file.")
+                    self.env.user.odoobot_failed = True
+                    return _("To <b>send an attachment</b>, click on the <i class=\"fa fa-paperclip\" aria-hidden=\"true\"></i> icon and select a file.")
                 elif odoobot_state == 'onboarding_command':
-                    return _("Not sure wat you are doing. Please press / and wait for the propositions. Select \"help\" and press enter")
+                    self.env.user.odoobot_failed = True
+                    return _("Not sure what you are doing. Please, type <span class=\"o_odoobot_command\">/</span> and wait for the propositions. Select <span class=\"o_odoobot_command\">help</span> and press enter")
                 elif odoobot_state == 'onboarding_ping':
-                    return _("Sorry, I am not listening. To get someone's attention, <b>ping him</b>. Write \"@odoobot\" and select me.")
+                    self.env.user.odoobot_failed = True
+                    return _("Sorry, I am not listening. To get someone's attention, <b>ping him</b>. Write <span class=\"o_odoobot_command\">@OdooBot</span> and select me.")
                 return random.choice([
-                    _("I'm not smart enough to answer your question.<br/>To follow my guide, ask") + ": <b>"+_('start the tour') + "</b>",
+                    _("I'm not smart enough to answer your question.<br/>To follow my guide, ask: <span class=\"o_odoobot_command\">start the tour</span>."),
                     _("Hmmm..."),
                     _("I'm afraid I don't understand. Sorry!"),
-                    _("Sorry I'm sleepy. Or not! Maybe I'm just trying to hide my unawareness of human language...<br/>I can show you features if you write")+ ": '<b>"+_('start the tour')+"</b>'.",
+                    _("Sorry I'm sleepy. Or not! Maybe I'm just trying to hide my unawareness of human language...<br/>I can show you features if you write: <span class=\"o_odoobot_command\">start the tour</span>.")
                 ])
         return False
 
@@ -219,3 +230,9 @@ class MailBot(models.AbstractModel):
         if record._name == 'mail.channel' and record.channel_type == 'chat':
             return odoobot_id in record.with_context(active_test=False).channel_partner_ids.ids
         return False
+
+    def _is_help_requested(self, body):
+        """Returns whether a message linking to the documentation and videos
+        should be sent back to the user.
+        """
+        return any(token in body for token in ['help', _('help'), '?']) or self.env.user.odoobot_failed
