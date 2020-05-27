@@ -176,6 +176,7 @@ return AbstractRenderer.extend({
     custom_events: _.extend({}, AbstractRenderer.prototype.custom_events || {}, {
         edit_event: '_onEditEvent',
         delete_event: '_onDeleteEvent',
+        render_event: '_renderEvents',
     }),
 
     /**
