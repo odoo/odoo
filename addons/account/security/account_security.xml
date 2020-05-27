@@ -146,7 +146,7 @@
         <field name="name">Tax report multi-company</field>
         <field name="model_id" ref="model_account_tax_report_line"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">[('country_id','=',user.company_id.country_id.id)]</field>
+        <field name="domain_force">[('country_id','=',user.company_id.get_fiscal_country().id)]</field>
     </record>
 
     <record id="invoice_comp_rule" model="ir.rule">
