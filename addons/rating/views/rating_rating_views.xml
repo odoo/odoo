@@ -10,7 +10,7 @@
                     <field name="parent_res_name"/>
                     <field name="rated_partner_id"/>
                     <field name="partner_id"/>
-                    <field name="rating_text"/>
+                    <field name="rating_text" decoration-danger="rating_text == 'highly_dissatisfied'" decoration-warning="rating_text == 'not_satisfied'" decoration-success="rating_text == 'satisfied'"/>
                     <field name="feedback"/>
                     <field name="create_date" string="Submitted on"/>
                 </tree>

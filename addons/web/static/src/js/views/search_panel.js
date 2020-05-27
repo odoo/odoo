@@ -67,10 +67,8 @@ const SearchPanel = Widget.extend({
     className: 'o_search_panel',
     events: {
         'click .o_search_panel_category_value header': '_onCategoryValueClicked',
-        'click .o_search_panel_category_value .o_toggle_fold': '_onToggleFoldCategory',
-        'click .o_search_panel_filter_group .o_toggle_fold': '_onToggleFoldFilterGroup',
-        'change .o_search_panel_filter_value > div > input': '_onFilterValueChanged',
-        'change .o_search_panel_filter_group > div > input': '_onFilterGroupChanged',
+        'change .o_search_panel_filter_value > header > div > input': '_onFilterValueChanged',
+        'change .o_search_panel_filter_group > header > div > input': '_onFilterGroupChanged',
     },
 
     /**
@@ -727,8 +725,9 @@ const SearchPanel = Widget.extend({
             item.dataset.id || false;
         const hasChanged = category.activeValueId !== valueId;
         category.activeValueId = valueId;
-        if (category.values[valueId]) {
-            category.values[valueId].folded = !category.values[valueId].folded;
+        const value = category.values[category.activeValueId];
+        if (value) {
+            value.folded = value.folded ? false : !hasChanged;
         }
         if (hasChanged) {
             const storageKey = this._getLocalStorageKey(category);
@@ -769,32 +768,6 @@ const SearchPanel = Widget.extend({
             this._updateFilterGroupState(group);
         }
         this._notifyDomainUpdated();
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onToggleFoldCategory(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        const item = ev.currentTarget.closest('.o_search_panel_category_value');
-        const category = this.categories[item.dataset.categoryId];
-        const valueId = item.dataset.id;
-        category.values[valueId].folded = !category.values[valueId].folded;
-        this._render();
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onToggleFoldFilterGroup(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        const item = ev.currentTarget.closest('.o_search_panel_filter_group');
-        const filter = this.filters[item.dataset.filterId];
-        const groupId = item.dataset.groupId;
-        filter.groups[groupId].folded = !filter.groups[groupId].folded;
-        this._render();
     },
 });
 

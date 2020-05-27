@@ -291,7 +291,7 @@
                             <group>
                                 <group>
                                     <field name="active" invisible="1"/>
-                                    <field name="user_id" string="Project Manager" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]"/>
+                                    <field name="user_id" string="Project Manager" widget="many2one_avatar_user" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]"/>
                                     <field name="partner_id" string="Customer"/>
                                 </group>
                                 <group>
@@ -404,7 +404,7 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <field name="name" string="Project Name"/>
-                    <field name="user_id" optional="show" string="Project Manager"/>
+                    <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user"/>
                     <field name="partner_id" optional="show" string="Contact"/>
                     <field name="analytic_account_id" optional="hide"/>
                     <field name="privacy_visibility" optional="hide"/>
@@ -666,7 +666,7 @@
                                 domain="[('parent_id', '=', False)]"
                                 attrs="{'invisible' : [('allow_subtasks', '=', False)]}"
                             />
-                            <field name="date_deadline" widget="task_closed_deadline" />
+                            <field name="date_deadline" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </group>
                     </group>
@@ -761,8 +761,6 @@
                     <field name="user_id"/>
                     <field name="partner_id"/>
                     <field name="sequence"/>
-                    <field name="date_deadline"/>
-                    <field name="date_deadline_formatted"/>
                     <field name="is_closed"/>
                     <field name="partner_is_company"/>
                     <field name="displayed_image_id"/>
@@ -823,19 +821,9 @@
                                             <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 3" title="Latest Rating: Not Satisfied" role="img" aria-label="Neutral face"/>
                                             <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied" role="img" aria-label="Sad face"/>
                                         </b>
-                                        <!-- formating of the date -->
-                                        <t t-set="date_format" t-value="'MM/DD/YY'" />
-                                        <t t-set="date" t-value=""/>
-                                        <!-- color of the span -->
-                                        <t t-if="!record.is_closed.raw_value and record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().startOf('day')">
-                                            <t t-set="deadline_class" t-value="'oe_kanban_text_red'" />
-                                        </t>
-                                        <t t-elif="!record.is_closed.raw_value and record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().endOf('day')">
-                                            <t t-set="deadline_class" t-value="'text-warning font-weight-bold'" />
-                                        </t>
-                                        <!-- Date value -->
-                                        <t t-if="record.date_deadline.raw_value" t-set="date" t-value="record.date_deadline_formatted.raw_value" />
-                                        <span name="date" title="Deadline" t-attf-class="#{deadline_class || ''}"><t t-esc="date" /></span>
+                                        <div name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}">
+                                            <field name="date_deadline" widget="remaining_days"/>
+                                        </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                         <field name="kanban_state" widget="state_selection" groups="base.group_user" invisible="context.get('fsm_mode', False)"/>
@@ -856,7 +844,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree decoration-danger="not is_closed and date_deadline and (date_deadline&lt;current_date)" string="Tasks" multi_edit="1">
+                <tree string="Tasks" multi_edit="1">
                     <field name="message_needaction" invisible="1" readonly="1"/>
                     <field name="is_closed" invisible="1" />
                     <field name="sequence" invisible="not context.get('seq_visible', False)" readonly="1"/>
@@ -865,8 +853,9 @@
                     <field name="project_id" invisible="context.get('user_invisible', False)" optional="show" readonly="1"/>
                     <field name="partner_id" optional="hide"/>
                     <field name="parent_id" groups="project.group_subtask_project" optional="show"/>
-                    <field name="user_id" invisible="context.get('user_invisible', False)" optional="show"/>
-                    <field name="date_deadline" optional="hide"/>
+                    <field name="user_id" invisible="context.get('user_invisible', False)" optional="show" widget="many2one_avatar_user"/>
+                    <field name="activity_ids" widget="list_activity" optional="show"/>
+                    <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show" readonly="1"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>

@@ -62,7 +62,7 @@ class SaleReport(models.Model):
                left join product_template t on (p.product_tmpl_id=t.id)
                left join uom_uom u on (u.id=t.uom_id)) AS volume,
             l.discount as discount,
-            sum((l.price_unit * l.discount / 100.0 / CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END)) as discount_amount,
+            sum((l.price_unit * l.discount * l.qty / 100.0 / CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END)) as discount_amount,
             NULL as order_id
         '''
 

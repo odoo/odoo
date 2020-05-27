@@ -439,7 +439,7 @@ class StockMove(models.Model):
                         # in the past.
                         new_move_date = max(move_dest.date_expected + relativedelta.relativedelta(days=delta_days or 0), fields.Datetime.now())
                         move_dest.date_expected = new_move_date
-                    move_dest_ids.filtered(lambda m: m.delay_alert)._propagate_date_log_activity(move)
+                    move_dest_ids.filtered(lambda m: m.delay_alert)._propagate_date_log_note(move)
                 if move.delay_alert:
                     move._delay_alert_check(new_date)
         res = super(StockMove, self).write(vals)
@@ -462,9 +462,8 @@ class StockMove(models.Model):
         """
         return list(self.mapped('picking_id'))
 
-    def _propagate_date_log_activity(self, move_orig):
-        """Post a delay alert next activity on the documents linked to `self`. If the delay alert
-        is already present on the document, it isn't posted twice.
+    def _propagate_date_log_note(self, move_orig):
+        """Post a delay alert log note on the documents linked to `self`.
 
         :param move_orig: the stock move triggering the delay alert on the next document
         """
@@ -474,16 +473,15 @@ class StockMove(models.Model):
             return
 
         msg = _("The scheduled date has been automatically updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
+        msg_subject = _("Scheduled date update due to delay on %s") % doc_orig[0].name
         # write the message on each document
         for doc in documents:
-            if doc.activity_ids.filtered(lambda a: a.automated and doc_orig[0].name in a.note):
+            last_message = doc.message_ids[:1]
+            # Avoids to write the exact same message multiple times.
+            if last_message and last_message.subject == msg_subject:
                 continue
-            doc.activity_schedule(
-                'mail.mail_activity_data_warning',
-                datetime.today().date(),
-                note=msg,
-                user_id=doc.user_id.id or SUPERUSER_ID
-            )
+            odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
+            doc.message_post(body=msg, author_id=odoobot_id, subject=msg_subject)
 
     def _delay_alert_check(self, new_date=None):
         """Set an alert on late moves by using the `delay_alert_date` field.

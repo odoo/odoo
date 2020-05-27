@@ -31,10 +31,10 @@ class MockLinkTracker(common.BaseCase):
         ])
         return code.link_id
 
-    def assertLinkShortened(self, body, link_info, link_params=None):
-        """ Usage
+    def assertLinkShortenedHtml(self, body, link_info, link_params=None):
+        """ Find shortened links in an HTML content. Usage :
 
-        self.assertLinkShortened(
+        self.assertLinkShortenedHtml(
             message.body,
             ('url0', 'http://www.odoo.com',  True),
             {'utm_campaign': self.utm_c.name, 'utm_medium': self.utm_m.name}

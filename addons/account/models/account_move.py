@@ -32,7 +32,7 @@ def calc_check_digits(number):
 class AccountMove(models.Model):
     _name = "account.move"
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'sequence.mixin']
-    _description = "Journal Entries"
+    _description = "Journal Entry"
     _order = 'date desc, name desc, id desc'
     _mail_post_access = 'read'
     _check_company_auto = True
@@ -3438,7 +3438,7 @@ class AccountMoveLine(models.Model):
             if control_journal_failed:
                 raise UserError(_('You cannot use this account (%s) in this journal, check the field \'Allowed Journals\' on the related account.') % account.display_name)
             if control_type_failed or control_account_failed:
-                raise UserError(_('You cannot use this account (%s) in this journal, check the tab \'Control-Access\' on the related journal.') % account.display_name)
+                raise UserError(_('You cannot use this account (%s) in this journal, check the section \'Control-Access\' under tab \'Advanced Settings\' on the related journal.') % account.display_name)
 
     @api.constrains('account_id', 'tax_ids', 'tax_line_id', 'reconciled')
     def _check_off_balance(self):
@@ -3919,8 +3919,11 @@ class AccountMoveLine(models.Model):
             # Eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
             if to_balance and any([not float_is_zero(residual, precision_rounding=digits_rounding_precision) for aml, residual in to_balance.values()]):
                 if not self.env.context.get('no_exchange_difference'):
-                    exchange_move = self.env['account.move'].with_context(default_move_type='entry').create(
-                        self.env['account.full.reconcile']._prepare_exchange_diff_move(move_date=maxdate, company=amls[0].company_id))
+                    exchange_move_vals = self.env['account.full.reconcile']._prepare_exchange_diff_move(
+                        move_date=maxdate, company=amls[0].company_id)
+                    if len(amls.mapped('partner_id')) == 1 and amls[0].partner_id:
+                        exchange_move_vals['partner_id'] = amls[0].partner_id.id
+                    exchange_move = self.env['account.move'].with_context(default_move_type='entry').create(exchange_move_vals)
                     part_reconcile = self.env['account.partial.reconcile']
                     for aml_to_balance, total in to_balance.values():
                         if total:
