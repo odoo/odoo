@@ -87,7 +87,7 @@ const AttendeeCalendarPopover = CalendarPopover.extend({
         this._rpc({
             model: 'calendar.event',
             method: 'change_attendee_status',
-            args: [this.event.id, selectedStatus],
+            args: [parseInt(this.event.id), selectedStatus],
         }).then(function () {
             self.event.extendedProps.record.attendee_status = selectedStatus;  // FIXEME: Maybe we have to reload view
             self.$('.o-calendar-attendee-status-text').text(self.statusInfo[selectedStatus].text);
