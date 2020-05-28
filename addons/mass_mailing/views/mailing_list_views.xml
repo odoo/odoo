@@ -26,7 +26,7 @@
                 <field name="name"/>
                 <field name="create_date"/>
                 <field name="is_public"/>
-                <field name="contact_nbr"/>
+                <field name="contact_valid_email_count"/>
             </tree>
         </field>
     </record>
@@ -38,9 +38,25 @@
             <form string="Contact List">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_contacts"
+                        <button name="action_view_valid_contacts"
                                 type="object" icon="fa-user" class="oe_stat_button">
-                            <field name="contact_nbr" string="Recipients" widget="statinfo"/>
+                            <field name="contact_valid_count" string="Recipients" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_mailing"
+                                type="object" icon="fa-envelope-o" class="oe_stat_button">
+                            <field name="mailing_list_count" string="Mailings" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_message_bounce_contacts"
+                                type="object" icon="fa-exchange" class="oe_stat_button">
+                            <field name="contact_message_bounce_percentage_str" string="Bouncing" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_opt_out_contacts"
+                                type="object" icon="fa-bell-slash" class="oe_stat_button">
+                            <field name="contact_opt_out_percentage_str" string="Opt-Out" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_blacklisted_contacts"
+                                type="object" icon="fa-ban" class="oe_stat_button">
+                            <field name="contact_blacklist_percentage_str" string="BlackList" widget="statinfo"/>
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -94,21 +110,53 @@
     </record>
 
     <record id="mailing_list_view_kanban" model="ir.ui.view">
-        <field name="name">mailing.list.view.kanban</field>
+        <field name="name">Mailing list kanban view</field>
         <field name="model">mailing.list</field>
         <field name="arch" type="xml">
             <kanban js_class="mass_mailing_list_kanban" class="o_kanban_mobile" on_create="mass_mailing.open_create_mass_mailing_list">
                 <field name="name"/>
-                <field name="contact_nbr"/>
+                <field name="contact_count"/>
+                <field name="contact_valid_email_count"/>
+                <field name="contact_message_bounce_percentage"/>
+                <field name="contact_blacklist_percentage"/>
+                <field name="contact_opt_out_percentage"/>
+                <field name="mailing_list_count"/>
                 <field name="active"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click">
+                        <div>
                             <div class="o_mass_mailing_kanban_main">
                                 <div class="o_kanban_card_content">
-                                    <div class="o_kanban_primary_left">
-                                        <div class="o_primary">
-                                            <span><t t-esc="record.name.value"/></span>
+                                    <div class="mb-3">
+                                        <div class="o_primary mb-3">
+                                            <h3><t t-esc="record.name.value"/></h3>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <button name="action_view_full_contacts" type="object" class="btn btn-primary oe_kanban_global_click">
+                                                <t t-esc="record.contact_count.value"/> Contacts</button>
+                                            </div>
+                                            <div class="kanban-right-content col">
+                                                <div t-if="record.contact_valid_email_count.value > 0" class="row">
+                                                    <div class="col-12 my-0 text-info">
+                                                        <div class="row">
+                                                            <small class="col-auto my-0 d-block">
+                                                                <a type="object"
+                                                                   name="action_view_valid_email_contacts">
+                                                                    Valid email recipients
+                                                                </a>
+                                                            </small>
+                                                            <small class="col-3 my-0 d-block p-0">
+                                                                <a class="text-left"
+                                                                   type="object"
+                                                                   t-esc="record.contact_valid_email_count.value"
+                                                                   name="action_view_valid_email_contacts">
+                                                                </a>
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -129,14 +177,33 @@
                                 </div>
                             </div>
                             <div class="o_mailing_list_kanban_boxes">
-                                <a name="action_view_contacts" type="object">
-                                    <div>
-                                        <span class="badge badge-pill">
-                                            <i class="fa fa-user" role="img" aria-label="Contacts" title="Contacts"/>
-                                            <t t-esc="record.contact_nbr.value"/>
-                                        </span>
-                                    </div>
-                                </a>
+                                <t t-set="message_bounce_status"
+                                   t-value="record.contact_message_bounce_percentage.value >= 8.0 ? 'text-danger': record.contact_message_bounce_percentage.value >= 3.0 ? 'text-warning' : 'text-black'" />
+                                <t t-set="opt_out_status"
+                                   t-value="record.contact_opt_out_percentage.value >= 0.5 ? 'text-danger': record.contact_opt_out_percentage.value >= 0.2 ? 'text-warning' : 'text-black'" />
+                                <t t-set="blacklist_status"
+                                   t-value="record.contact_blacklist_percentage.value >= 0.1 ? 'text-danger': record.contact_blacklist_percentage.value >= 0.05 ? 'text-warning' : 'text-black'" />
+                                <div>
+                                    <a role="button" class="mr-3 text-black" type="object" name="action_view_mailing" aria-label="Mailing list" title="Mailing list">
+                                        <i class="fa fa-envelope-o" role="img"/>
+                                        <t t-esc="record.mailing_list_count.value"/>
+                                    </a>
+                                    <a t-attf-class="mr-3 {{message_bounce_status}}"
+                                       role="button" type="object" name="action_view_message_bounce_contacts" aria-label="Bounce" title="Bounce">
+                                        <i class="fa fa-exchange" role="img"/>
+                                        <t t-esc="record.contact_message_bounce_percentage.value"/>
+                                    </a>
+                                    <a t-attf-class="mr-3 {{opt_out_status}}"
+                                       role="button" type="object" name="action_view_opt_out_contacts" aria-label="Opt-out" title="Opt out">
+                                        <i class="fa fa-bell-slash" role="img"/>
+                                        <t t-esc="record.contact_opt_out_percentage.value"/>%
+                                    </a>
+                                    <a t-attf-class="mr-3 {{blacklist_status}}"
+                                       role="button" type="object" name="action_view_blacklisted_contacts" aria-label="Black list" title="Black List" >
+                                        <i class="fa fa-ban" role="img"/>
+                                        <t t-esc="record.contact_blacklist_percentage.value"/>%
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </t>

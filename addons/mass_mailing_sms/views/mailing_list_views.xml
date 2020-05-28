@@ -15,6 +15,50 @@
         </field>
     </record>
 
+
+    <record id="mailing_sms_list_view_kanban" model="ir.ui.view">
+        <field name="name">Mailing list sms kanban view</field>
+        <field name="model">mailing.list</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_list_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('kanban-right-content')]" position="inside">
+                <field name="contact_valid_sms_count" invisible="1"/>
+                <div t-if="record.contact_valid_sms_count.value > 0" class="row">
+                    <div class="col-12 my-0 text-info">
+                        <div class="row">
+                            <small class="col-auto my-0 mr-2 d-block">
+                                <a type="object"
+                                   name="action_view_valid_sms_contacts">
+                                    Valid sms recipients
+                                </a>
+                            </small>
+                            <small class="col-2 my-0 d-block p-0">
+                                <a class="text-left"
+                                   type="object"
+                                   t-esc="record.contact_valid_sms_count.value"
+                                   name="action_view_valid_sms_contacts">
+                                </a>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="mailing_sms_list_view_tree" model="ir.ui.view">
+        <field name="name">Mailing list sms kanban view</field>
+        <field name="model">mailing.list</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_list_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contact_valid_email_count']" position="after">
+                <field name="contact_valid_sms_count"/>
+                <field name="contact_valid_count"/>
+            </xpath>
+        </field>
+    </record>
+
     <!-- SMS Marketing / Contacts Lists / Contacts Lists -->
     <record id="mass_mailing_sms.mailing_list_menu_sms" model="ir.ui.menu">
         <field name="action" ref="mailing_list_action_sms"/>
