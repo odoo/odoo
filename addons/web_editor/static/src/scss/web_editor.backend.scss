@@ -42,24 +42,6 @@
     }
 }
 
-// FIX (to improve in next versions)
-// ---------------------------------
-// The web_editor.colorpicker defines a series of color buttons which toggle the bg-* and text-* classes.
-// The problem is that themes can define new buttons whose bg-* and text-* classes only exist in the frontend.
-// So these buttons should not be displayed in the backend. Only solution for the current implementation is
-// to add this ugly rule (in this backend file) which hides every button and redisplayed the default ones.
-.note-editor {
-    .colorpicker .o_colorpicker_section > button {
-        display: none;
-
-        &[data-color="alpha"], &[data-color="beta"], &[data-color="gamma"], &[data-color="delta"], &[data-color="epsilon"],
-        &[data-color="white"], &[data-color="gray-lighter"], &[data-color="gray-light"], &[data-color="gray"], &[data-color="gray-dark"], &[data-color="gray-darker"], &[data-color="black"],
-        &[data-color="primary"], &[data-color="success"], &[data-color="info"], &[data-color="warning"], &[data-color="danger"] {
-            display: block;
-        }
-    }
-}
-
 .o_field_widgetTextHtml_fullscreen {
     .oe_form_field_html.o_form_fullscreen_ancestor iframe {
         position: absolute !important;

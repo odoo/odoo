@@ -618,15 +618,21 @@ options.registry.Theme = options.Class.extend({
      * @override
      */
     start: async function () {
-        // The normal configuration of Odoo is to have two colors named 'alpha'
-        // and 'beta' which generate their own BS CSS classes but which are also
-        // used as 'primary' and 'secondary' BS values (to customize standard BS
-        // used in Odoo). However, some themes are still going against that
-        // system and do not link alpha-primary and beta-secondary at all.
+        // Checks for support of the old color system
         const style = window.getComputedStyle(document.documentElement);
-        this._alphaEqualsPrimary = style.getPropertyValue('--is-alpha-primary').trim() == 'true';
-        this._betaEqualsSecondary = style.getPropertyValue('--is-beta-secondary').trim() == 'true';
+        const supportOldColorSystem = style.getPropertyValue('--support-13-0-color-system').trim() === 'true';
+        const hasCustomizedOldColorSystem = style.getPropertyValue('--has-customized-13-0-color-system').trim() === 'true';
+        this._showOldColorSystemWarning = supportOldColorSystem && hasCustomizedOldColorSystem;
+
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    updateUIVisibility: async function () {
+        await this._super(...arguments);
+        const oldColorSystemEl = this.el.querySelector('.o_old_color_system_warning');
+        oldColorSystemEl.classList.toggle('d-none', !this._showOldColorSystemWarning);
     },
 
     //--------------------------------------------------------------------------
@@ -775,18 +781,6 @@ options.registry.Theme = options.Class.extend({
     _computeWidgetVisibility: async function (widgetName, params) {
         if (widgetName === 'theme_color_suggestions') {
             return false;
-        }
-        if (widgetName === 'primary_color_opt' || widgetName === 'alpha_as_extra_color_opt') {
-            return !this._alphaEqualsPrimary;
-        }
-        if (widgetName === 'secondary_color_opt' || widgetName === 'beta_as_extra_color_opt') {
-            return !this._betaEqualsSecondary;
-        }
-        if (widgetName === 'alpha_as_primary_color_opt') {
-            return this._alphaEqualsPrimary;
-        }
-        if (widgetName === 'beta_as_secondary_color_opt') {
-            return this._betaEqualsSecondary;
         }
         return this._super(...arguments);
     },

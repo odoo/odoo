@@ -639,18 +639,18 @@
     <!-- Theme options -->
     <div data-js="Theme" data-selector="theme" data-no-check="true">
         <we-button class="o_we_primary_btn" data-switch-theme="" data-no-preview="true">Switch Theme</we-button>
-        <we-row string="Main Colors">
-            <we-colorpicker data-name="primary_color_opt" title="Primary" data-customize-website-color="" data-color-type="theme" data-color="primary"/>
-            <we-colorpicker data-name="alpha_as_primary_color_opt" data-customize-website-color="" data-color-type="theme" data-color="alpha"/>
-            <we-colorpicker data-name="secondary_color_opt" title="Secondary" data-customize-website-color="" data-color-type="theme" data-color="secondary"/>
-            <we-colorpicker data-name="beta_as_secondary_color_opt" title="Secondary" data-customize-website-color="" data-color-type="theme" data-color="beta"/>
-        </we-row>
-        <we-row string="Extra Colors">
-            <we-colorpicker data-name="alpha_as_extra_color_opt" data-customize-website-color="" data-color-type="theme" data-color="alpha"/>
-            <we-colorpicker data-name="beta_as_extra_color_opt" data-customize-website-color="" data-color-type="theme" data-color="beta"/>
-            <we-colorpicker data-customize-website-color="" data-color-type="theme" data-color="gamma"/>
-            <we-colorpicker data-customize-website-color="" data-color-type="theme" data-color="delta"/>
-            <we-colorpicker data-customize-website-color="" data-color-type="theme" data-color="epsilon"/>
+        <we-alert class="o_old_color_system_warning d-none">
+            It appears your website is still using the old color system of
+            Odoo 13.0 in some places. We made sure it is still working but
+            we recommend you to try to use the new color system, which is
+            still customizable.
+        </we-alert>
+        <we-row string="Theme colors">
+            <we-colorpicker title="Primary" data-customize-website-color="" data-color="o-color-1"/>
+            <we-colorpicker title="Secondary" data-customize-website-color="" data-color="o-color-2"/>
+            <we-colorpicker data-customize-website-color="" data-color="o-color-3"/>
+            <we-colorpicker data-customize-website-color="" data-color="o-color-4"/>
+            <we-colorpicker data-customize-website-color="" data-color="o-color-5"/>
         </we-row>
         <we-row string="Status Colors">
             <we-colorpicker title="Success" data-customize-website-color="" data-color-type="theme" data-color="success"/>

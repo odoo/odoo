@@ -3,31 +3,31 @@
 // ============================
 
 // ===== Default Theme palette =====
-$o-mm-def-color-alpha: #f5f5f5;
-$o-mm-def-color-beta: #ffffff;
-$o-mm-def-color-gamma: #706482;
-$o-mm-def-color-delta: #464646;
-$o-mm-def-color-epsilon: darken($o-mm-def-color-gamma, 5%);
-$o-mm-def-color-zeta: #706482;
-$o-mm-def-color-eta: #87a6b5;
+$o-mm-def-color-1: #f5f5f5;
+$o-mm-def-color-2: #ffffff;
+$o-mm-def-color-3: #706482;
+$o-mm-def-color-4: #464646;
+$o-mm-def-color-5: darken($o-mm-def-color-3, 5%);
+$o-mm-def-color-6: #706482;
+$o-mm-def-color-7: #87a6b5;
 
 // ===== Default Theme variables =====
 $o-mm-def-body-width    : 600px;
 $o-mm-def-body-bobile   : 480px;
 $o-mm-def-b-radius      : 2px;
-$o-mm-def-body-bg       : $o-mm-def-color-beta;
+$o-mm-def-body-bg       : $o-mm-def-color-2;
 
 $o-mm-def-font          : -apple-system, "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-$o-mm-def-text-color    : $o-mm-def-color-delta;
+$o-mm-def-text-color    : $o-mm-def-color-4;
 
-$o-mm-def-btn-bg        : $o-mm-def-color-gamma;
-$o-mm-def-btn-text      : $o-mm-def-color-beta;
+$o-mm-def-btn-bg        : $o-mm-def-color-3;
+$o-mm-def-btn-text      : $o-mm-def-color-2;
 
 // ===== Colors =====
-@include bg-variant(".bg-beta", $o-mm-def-color-zeta);
-@include text-emphasis-variant(".text-beta", $o-mm-def-color-zeta);
-@include bg-variant(".bg-delta", $o-mm-def-color-eta);
-@include bg-variant(".bg-gray-lighter", $o-mm-def-color-alpha);
+@include bg-variant(".bg-o-color-2", $o-mm-def-color-6);
+@include text-emphasis-variant(".text-o-color-2", $o-mm-def-color-6);
+@include bg-variant(".bg-o-color-4", $o-mm-def-color-7);
+@include bg-variant(".bg-gray-lighter", $o-mm-def-color-1);
 
 td:not([align]) {
     // Default browser style but needed so that alignment works on some mail
@@ -41,7 +41,7 @@ td:not([align]) {
     box-sizing: content-box;
     width: 94%;
     min-height: 100%;
-    background-color: $o-mm-def-color-alpha;
+    background-color: $o-mm-def-color-1;
     padding: 0 3%;
 
     // Forces on <p/> and <hx/> elements as several mail clients does not
@@ -61,8 +61,8 @@ td:not([align]) {
 
         .o_mail_wrapper_td {
             width: $o-mm-def-body-width;
-            border: 1px solid darken($o-mm-def-color-alpha, 2%);
-            background-color: $o-mm-def-color-beta;
+            border: 1px solid darken($o-mm-def-color-1, 2%);
+            background-color: $o-mm-def-color-2;
         }
     }
 }
@@ -89,7 +89,7 @@ td:not([align]) {
     }
 
     a, .btn.btn-link {
-        color: $o-mm-def-color-epsilon;
+        color: $o-mm-def-color-5;
         font-weight: bold;
         text-decoration: none !important;
 
@@ -106,20 +106,20 @@ td:not([align]) {
 
     .separator {
         height: 2px;
-        background-color: $o-mm-def-color-alpha;
+        background-color: $o-mm-def-color-1;
     }
 
-    .bg-beta {
+    .bg-o-color-2 {
         h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-            color: $o-mm-def-color-beta;
+            color: $o-mm-def-color-2;
         }
 
         .btn.btn-primary {
-            background-color: $o-mm-def-color-eta;
+            background-color: $o-mm-def-color-7;
         }
 
         a, .btn.btn-link {
-            color: $o-mm-def-color-eta;
+            color: $o-mm-def-color-7;
         }
     }
 
@@ -153,7 +153,7 @@ td:not([align]) {
 }
 
 .o_mail_block_steps .o_mail_snippet_general{
-    background-color: $o-mm-def-color-alpha;
+    background-color: $o-mm-def-color-1;
 }
 
 .o_mail_block_two_cols, .o_mail_block_three_cols {
@@ -184,7 +184,7 @@ td:not([align]) {
     margin-left: 20px;
     margin-right: 20px;
     .o_mail_snippet_general{
-        background: darken($o-mm-def-color-alpha, 2%);
+        background: darken($o-mm-def-color-1, 2%);
     }
 }
 
@@ -196,7 +196,7 @@ td:not([align]) {
 .o_mail_block_comparison_table {
     .separator {
         height: 1px;
-        background-color: darken($o-mm-def-color-alpha, 15%);
+        background-color: darken($o-mm-def-color-1, 15%);
     }
     table table {
         td, th {
@@ -215,7 +215,7 @@ td:not([align]) {
 .o_mail_block_discount2 {
     .o_code {
         padding: 5px 10px;
-        background: $o-mm-def-color-alpha;
+        background: $o-mm-def-color-1;
         border-radius: 3px;
         font-family: monospace;
     }
@@ -223,7 +223,7 @@ td:not([align]) {
 
 .o_mail_block_footer_social {
     .o_mail_table_styles {
-        border-top: 2px solid $o-mm-def-color-alpha;
+        border-top: 2px solid $o-mm-def-color-1;
         padding-top: 20px;
         padding-bottom: 20px;
     }

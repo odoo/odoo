@@ -101,7 +101,7 @@ const ColorPaletteWidget = Widget.extend({
         }
 
         // Compute class colors
-        const compatibilityColorNames = ['primary', 'secondary', 'success', 'info', 'warning', 'danger'];
+        const compatibilityColorNames = ['primary', 'secondary', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'success', 'info', 'warning', 'danger'];
         this.colorNames = [...compatibilityColorNames];
         this.colorToColorNames = {};
         this.el.querySelectorAll('button[data-color]').forEach(elem => {

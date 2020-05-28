@@ -25,7 +25,7 @@ options.registry.InnerChart = options.Class.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.themeArray = ['alpha', 'beta', 'gamma', 'delta', 'epsilon'];
+        this.themeArray = ['o-color-1', 'o-color-2', 'o-color-3', 'o-color-4', 'o-color-5'];
         this.style = window.getComputedStyle(document.documentElement);
     },
     /**

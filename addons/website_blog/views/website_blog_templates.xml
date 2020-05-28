@@ -126,7 +126,7 @@ list of filtered posts (by date or tag).
                                 <div t-field="blog.subtitle" class="h4" placeholder="Subtitle"/>
                             </t>
                             <t t-else="first_post">
-                                <div t-if="not date and not tag" class="h4 mb-3 bg-gamma px-2 rounded-sm d-inline-block mr-auto">Latest</div>
+                                <div t-if="not date and not tag" class="h4 mb-3 bg-o-color-3 px-2 rounded-sm d-inline-block mr-auto">Latest</div>
                                 <a t-attf-href="/blog/#{slug(first_post.blog_id)}/post/#{slug(first_post)}"
                                    t-field="first_post.name" class="h1 d-block" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
                                 <div t-field="first_post.subtitle" class="h4" placeholder="Subtitle"/>
@@ -161,7 +161,7 @@ list of filtered posts (by date or tag).
 
             <div class="container position-relative h-100 d-flex flex-column justify-content-around">
                 <div t-attf-class="o_wblog_post_title #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
-                    <div t-if="not date and not tag and not blog" class="h4 bg-gamma px-2 d-inline-block rounded-sm">Latest</div>
+                    <div t-if="not date and not tag and not blog" class="h4 bg-o-color-3 px-2 d-inline-block rounded-sm">Latest</div>
                     <a t-if="not blog and first_post" t-attf-href="/blog/#{slug(first_post.blog_id)}/post/#{slug(first_post)}" t-att-title="first_post.name" class="text-white text-decoration-none">
                         <div t-field="first_post.name" id="o_wblog_post_name" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
                         <div t-field="first_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
@@ -412,7 +412,7 @@ list of filtered posts (by date or tag).
                         <hr/>
                         <div class="d-flex text-right py-4">
                             <div class="flex-grow-1 pr-3">
-                                <span class="bg-gamma h6 d-inline-block py-1 px-2 rounded-sm">Read Next</span>
+                                <span class="bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-sm">Read Next</span>
                                 <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/post/' + slug(next_post)" t-att-title="'Read next' + next_post.name">
                                     <div t-field="next_post.name" id="o_wblog_post_name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h2"/>
                                     <div t-field="next_post.subtitle" id="o_wblog_post_subtitle" placeholder="Subtitle" class="lead"/>
