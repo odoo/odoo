@@ -63,7 +63,7 @@
     }
 }
 
-.o_wevent_youtube_button .o_wevent_youtube_live {
+.o_wevent_youtube_live {
     background-color: $danger;
     border-radius: 0.25rem;
 
@@ -71,6 +71,43 @@
         font-size: 2.5rem;
         left: 0.2rem;
         line-height: 1.4rem;
+    }
+
+    &.o_wevent_font_size_06 {
+        font-size: .6rem;
+    }
+}
+
+.o_wevent_track_invisible {
+    opacity: .1;
+}
+
+// Color tags according to assigned background color.
+.o_wevent_track_tag {
+    @for $size from 1 through length($o-colors) {
+        &.o_tag_color_#{$size - 1} {
+            $background-color: white;
+            // no color selected
+            @if $size == 1 {
+                & {
+                    color: black;
+                    background-color: $background-color;
+                    box-shadow: inset 0 0 0 1px nth($o-colors, $size);
+                }
+            } @else {
+                $background-color: nth($o-colors, $size);
+                & {
+                    color: white;
+                    background-color: $background-color;
+                }
+            }
+            @at-root a#{&} {
+                &:hover {
+                    color: color-yiq($background-color);
+                    background-color: darken($background-color, 10%);
+                }
+            }
+        }
     }
 }
 

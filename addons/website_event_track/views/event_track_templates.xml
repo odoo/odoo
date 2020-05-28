@@ -50,7 +50,9 @@
         <section class="container pt48">
             <h1 t-field="event.name"/>
             <div class="form-inline float-right">
-                <label class="invisible text-muted" id="search_summary"><span id="search_number">0</span> Found </label>
+                <label class="invisible text-muted" id="search_summary">
+                    <span id="search_count" class="mr-2">0</span>
+                </label>
                 <input type="text" class="form-control" placeholder="Filter Tracks..." id="event_track_search"/>
             </div>
         </section>
@@ -82,16 +84,7 @@
                             <t t-set="track" t-value="dt[1][location][0]"/>
                             <t t-if="track">
                                 <td t-att-rowspan="dt[1][location][3]" t-attf-class="event_color_#{track.color} #{track and 'event_track' or ''}">
-                                    <t t-if="track">
-                                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
-                                            <span t-esc="track and track.name"/>
-                                            <span t-if="not track.website_published" class="badge badge-warning">unpublished</span>
-                                        </a>
-                                        <div class="text-muted">
-                                            <small t-if="track.partner_id" t-esc="track.partner_id.sudo().name"/>
-                                            <small t-if="not track.partner_id" t-esc="track.partner_name"/>
-                                        </div>
-                                    </t>
+                                    <t t-call="website_event_track.agenda_track" />
                                 </td>
                             </t>
                             <td t-if="not track" t-att-rowspan="dt[1][location][3]" class="event_track"/>
@@ -100,13 +93,7 @@
                 </t><t t-if="not dt[2]">
                     <t t-set="track" t-value="dt[1][False][0]"/>
                     <td t-att-colspan="len(locations)-1" t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''}">
-                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
-                            <span t-esc="track.name"/>
-                        </a>
-                        <div class="text-muted">
-                            <small t-if="track.partner_id" t-esc="track.partner_id.sudo().name"/>
-                            <small t-if="not track.partner_id" t-esc="track.partner_name"/>
-                        </div>
+                        <t t-call="website_event_track.agenda_track" />
                     </td>
                 </t>
             </tr>
@@ -114,6 +101,25 @@
         </section>
         <div class="oe_structure" id="oe_structure_website_event_track_agenda_2"/>
     </t>
+</template>
+
+<template id="agenda_track">
+    <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }#{'?open_video=1' if track.is_live else ''}">
+        <span t-esc="track and track.name"/>
+        <span t-if="not track.website_published" class="badge badge-warning">unpublished</span>
+    </a>
+    <span t-if="track.is_live" class="o_wevent_youtube_live o_wevent_font_size_06 p-1 text-white">LIVE</span>
+    <div class="text-muted">
+        <small t-if="track.partner_id" t-esc="track.partner_id.sudo().name"/>
+        <small t-if="not track.partner_id" t-esc="track.partner_name"/>
+    </div>
+    <ul t-if="track.tag_ids" class="list-inline m-0">
+        <li t-foreach="track.tag_ids" t-as="tag_id" t-attf-class="list-inline-item" t-if="tag_id.color != 0">
+            <a t-attf-class="o_wevent_track_tag badge badge-pill o_tag_color_#{tag_id.color}" t-attf-href="#">
+                <span t-field="tag_id.name"/>
+            </a>
+        </li>
+    </ul>
 </template>
 
 <template id="tracks">

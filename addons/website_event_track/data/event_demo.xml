@@ -1,6 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Extra event to showcase online features -->
+    <record id="res_partner_location_3" model="res.partner">
+        <field name="name">Brussels Expo</field>
+        <field name="is_company">1</field>
+        <field name="street">Place de Belgique 1</field>
+        <field name="city">Brussels</field>
+        <field name="zip">1020</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="event_7" model="event.event">
+        <field name="name">IDEA : Furniture Collection Online Reveal</field>
+        <field name="date_tz">Europe/Brussels</field>
+        <field name="stage_id" ref="event.event_stage_booked"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="date_begin" eval="DateTime.now().strftime('%Y-%m-%d 05:00:00')"/>
+        <field name="date_end" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
+        <field name="address_id" ref="res_partner_location_3"/>
+        <field name="website_published">True</field>
+        <field name="website_menu">True</field>
+        <field name="website_track">True</field>
+        <field name="subtitle">Our newest collection will be revealed online! Interact with us on our live streams!</field>
+        <field name="cover_properties">{"background-image": "url('/website_event_track/static/src/img/event_cover_7.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
+        <field name="description" type="html">
+            <div class="oe_structure">
+                <h5>The finest IDEA furnitures are coming to your house in a brand new collection</h5>
+                <p>And this time, we go fully ONLINE! Meet us in our live streams from the confort of your house.<br/>
+                Special discount codes will be handed out during the various streams, make sure to be there on time.</p>
+                <p class="mb-3">For any additional information, please contact us at <a href="mailto:events@idea.com">events@idea.com</a>.</p>
+                <div class="bg-light rounded-right border-left border-secondary p-3 mb-5" style="border-left-width: 3px !important;">
+                    <p class="mb-1">This event is fully online and FREE, if you have paid for tickets, you should get a refund.<br/>
+                    It will require a good Internet connection to get the best video quality.</p>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <!-- Demo Event Tags -->
     <record id="event_track_tag1" model="event.track.tag">
         <field name="name">Technical</field>
     </record>
@@ -12,6 +50,18 @@
     </record>
     <record id="event_track_tag4" model="event.track.tag">
         <field name="name">Round Table</field>
+    </record>
+    <record id="event_track_tag5" model="event.track.tag">
+        <field name="name">Home Visit</field>
+        <field name="color">3</field>
+    </record>
+    <record id="event_track_tag6" model="event.track.tag">
+        <field name="name">Around the World</field>
+        <field name="color">7</field>
+    </record>
+    <record id="event_track_tag7" model="event.track.tag">
+        <field name="name">Home Solar</field>
+        <field name="color">9</field>
     </record>
     <!--
         This should be done at the end so that the menu is complete
@@ -99,6 +149,15 @@
     </record>
     <record id="event_track_location10" model="event.track.location">
         <field name="name">Bruyère</field>
+    </record>
+    <record id="event_track_location11" model="event.track.location">
+        <field name="name">Oak</field>
+    </record>
+    <record id="event_track_location12" model="event.track.location">
+        <field name="name">Elm</field>
+    </record>
+    <record id="event_track_location13" model="event.track.location">
+        <field name="name">Pine</field>
     </record>
     <record id="event_track1" model="event.track">
         <field name="name">How to design a new piece of furniture</field>
@@ -424,6 +483,279 @@
         <field name="duration" eval="1"/>
         <field name="stage_id" ref="event_track_stage1"/>
         <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <!-- Tracks of: "IDEA : Furniture Collection Online Reveal" -->
+    <record id="event_track32" model="event.track">
+        <field name="name">What This Event Is All About</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=E4RbtlDit_A</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="date" eval="(DateTime.now() - timedelta(hours=2)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="1"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+    <record id="event_track33" model="event.track">
+        <field name="name">Securing your furniture – what you need to know</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=smxbuFc-GkI</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location11"/>
+        <field name="date" eval="(DateTime.now() - timedelta(hours=1)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+    <record id="event_track34" model="event.track">
+        <field name="name">Meet our new food containers</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=HOqub8msMTg</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location12"/>
+        <field name="date" eval="(DateTime.now() - timedelta(hours=1)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+    </record>
+    <record id="event_track35" model="event.track">
+        <field name="name">Home visit: the joy of minimalist living</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=BGnXvvbGTeI</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location13"/>
+        <field name="date" eval="(DateTime.now() - timedelta(hours=1)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(4, ref('event_track_tag5'))]"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+    </record>
+    <record id="event_track36" model="event.track">
+        <field name="name">Home visit: one-room living in the city</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=J7MnBQE8uBY</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location11"/>
+        <field name="date" eval="(DateTime.now() + timedelta(hours=2)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(4, ref('event_track_tag5'))]"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+    </record>
+    <record id="event_track37" model="event.track">
+        <field name="name">Life at Home Around the World: William’s Story</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=dT2L3cO8v4o</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location12"/>
+        <field name="date" eval="(DateTime.now() + timedelta(hours=2)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(4, ref('event_track_tag6'))]"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+    </record>
+    <record id="event_track38" model="event.track">
+        <field name="name">Life at Home Around the World: Alessandro’s Story</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=6CbKNCvEiQk</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location13"/>
+        <field name="date" eval="(DateTime.now() + timedelta(hours=2)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(4, ref('event_track_tag6'))]"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+    </record>
+    <record id="event_track39" model="event.track">
+        <field name="name">Home visit: make a puppet theatre from an old box</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=SimhpkjmCCo</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location11"/>
+        <field name="date" eval="(DateTime.now() + timedelta(hours=5)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(4, ref('event_track_tag5'))]"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+    </record>
+    <record id="event_track40" model="event.track">
+        <field name="name">Life at Home Around the World: Mary's Story</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=WudJPTI8xL0</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location12"/>
+        <field name="date" eval="(DateTime.now() + timedelta(hours=5)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(4, ref('event_track_tag6'))]"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+    </record>
+    <record id="event_track41" model="event.track">
+        <field name="name">Life at Home Around the World: Greta’s Story</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=tjylZj0iNQk</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location13"/>
+        <field name="date" eval="(DateTime.now() + timedelta(hours=5)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(4, ref('event_track_tag6'))]"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+    </record>
+    <record id="event_track42" model="event.track">
+        <field name="name">First Day Wrapup</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=oCS37jmrfRM</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="date" eval="(DateTime.now() + timedelta(hours=8)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="1"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+    <record id="event_track43" model="event.track">
+        <field name="name">Welcome to Day 2</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=E4RbtlDit_A</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="date" eval="(DateTime.now() + timedelta(days=1) - timedelta(hours=2)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="1"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+    <record id="event_track44" model="event.track">
+        <field name="name">Introduction to IWAY</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=8cG_znA_uYQ</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location11"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1) - timedelta(hours=1)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+    <record id="event_track45" model="event.track">
+        <field name="name">Facts and figures: climate positive</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=4WEt1HDcZFU</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location12"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1) - timedelta(hours=1)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+    </record>
+    <record id="event_track46" model="event.track">
+        <field name="name">Life at Home Around the World: Anna’s Story</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=f-EaG7rogu4</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location13"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1) - timedelta(hours=1)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(4, ref('event_track_tag6'))]"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+    </record>
+    <record id="event_track47" model="event.track">
+        <field name="name">A New Era of Life at Home</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=IJ-bpo53_zY</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location11"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1) + timedelta(hours=2)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+    </record>
+    <record id="event_track48" model="event.track">
+        <field name="name">Pretty. Ugly. Lovely.</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=qT1xGeWnpHM</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location12"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1) + timedelta(hours=2)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+    </record>
+    <record id="event_track49" model="event.track">
+        <field name="name">Skills, Talents and Aspirations</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=F-7TMkVXW3E</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location13"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1) + timedelta(hours=2)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+    </record>
+    <record id="event_track50" model="event.track">
+        <field name="name">Home Solar is easy to buy</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=8_8KRAaa6aI</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location11"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1) + timedelta(hours=5)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(4, ref('event_track_tag7'))]"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+    </record>
+    <record id="event_track51" model="event.track">
+        <field name="name">Home Solar is easy to use</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=2BGBsXveFPY</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location12"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1) + timedelta(hours=5)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(4, ref('event_track_tag7'))]"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+    </record>
+    <record id="event_track52" model="event.track">
+        <field name="name">Home Solar is easy to install</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=PjcjpPRs6PM</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="location_id" ref="website_event_track.event_track_location13"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1) + timedelta(hours=5)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="3"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(4, ref('event_track_tag7'))]"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+    </record>
+    <record id="event_track53" model="event.track">
+        <field name="name">Event Wrapup</field>
+        <field name="youtube_event_url">https://www.youtube.com/watch?v=oCS37jmrfRM</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event_7"/>
+        <field name="stage_id" ref="event_track_stage3" />
+        <field name="date" eval="(DateTime.now() + timedelta(days=1) + timedelta(hours=8)).strftime('%Y-%m-%d %H:00:00')"></field>
+        <field name="duration" eval="1"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
     </record>
 
 </odoo>
