@@ -50,13 +50,9 @@
         % endif
         amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
         from ${object.company_id.name}. 
-        % if object.date_planned or object.expected_date:
-            The receipt is planned for 
-            % if object.date_planned:
-                <strong>${object.date_planned.date()}</strong>.
-            % elif object.expected_date:
-                <strong>${object.expected_date.date()}</strong>.
-            % endif
+        <br/><br/>
+        % if object.date_planned:
+            The receipt is expected for <strong>${format_date(object.date_planned)}</strong>.
             <br/><br/>
             Could you please acknowledge the receipt of this order?
         % endif
@@ -82,13 +78,15 @@
             (${object.partner_id.parent_id.name})
         % endif
         <br/><br/>
-        Here is a reminder that the delivery of the purchase order <strong>${object.name}</strong> is planned for 
+        Here is a reminder that the delivery of the purchase order <strong>${object.name}</strong>
+        % if object.partner_ref:
+            <strong>(${object.partner_ref})</strong>
+        % endif 
+        is expected for 
         % if object.date_planned:
-            <strong>${object.date_planned.date()}</strong>.
-        % else:
-            <strong>${object.expected_date.date()}</strong>.
+            <strong>${format_date(object.date_planned)}</strong>.
         % endif
-        Could you please confirm it will be on time?
+        Could you please confirm it will be delivered on time?
     </p>
 </div></field>
             <field name="report_template" ref="action_report_purchase_order"/>

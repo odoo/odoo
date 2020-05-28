@@ -143,7 +143,7 @@
                     <button name="print_quotation" string="Print RFQ" type="object" states="sent" groups="base.group_user"/>
                     <button name="button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
                     <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
-                    <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True)]}"/>
+                    <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True)]}" groups="base.group_no_one"/>
                     <button name="action_create_invoice" string="Create Bill" type="object" context="{'create_bill':True}" attrs="{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'not in', ('no', 'invoiced')), ('order_line', '=', [])]}"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
@@ -184,18 +184,18 @@
                                 <span class="text-muted" attrs="{'invisible': [('mail_reception_confirmed','=', False)]}">(confirmed by vendor)</span>
                             </div>
                             <label for="date_planned"/>
-                            <div name="date_planned_and_confirmation">
-                                <div name="date_planned_div" class="o_row">
-                                    <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve', 'purchase'))]}"/>
-                                    <span name='expected_date_span' class="text-muted" attrs="{'invisible': ['|', ('expected_date', '=', False), ('date_planned', '!=', False)]}">Per line, first on <field name="expected_date" widget="date"/></span>
-                                    <field name="mail_reminder_confirmed" invisible="1"/>
-                                    <span class="text-muted" attrs="{'invisible': [('mail_reminder_confirmed', '=', False)]}">(confirmed by vendor)</span>
-                                </div>
-                                <div name="confirmation" class="oe_edit_only o_row" groups='purchase.group_send_reminder'>
-                                    <field name="receipt_reminder_email"/>
-                                    <span>Ask confirmation</span>
-                                    <field name="reminder_date_before_receipt" attrs="{'readonly': [('receipt_reminder_email', '=', False)]}"/>
-                                    <span> days before</span>
+                            <div name="date_planned_div" class="o_row">
+                                <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve', 'purchase'))]}"/>
+                                <field name="mail_reminder_confirmed" invisible="1"/>
+                                <span class="text-muted" attrs="{'invisible': [('mail_reminder_confirmed', '=', False)]}">(confirmed by vendor)</span>
+                            </div>
+                            <label for="receipt_reminder_email" invisible='1'/>
+                            <div name="reminder" class="o_row" groups='purchase.group_send_reminder' title="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.">
+                                <field name="receipt_reminder_email"/>
+                                <span>Ask confirmation</span>
+                                <div class="o_row oe_inline" attrs="{'invisible': [('receipt_reminder_email', '=', False)]}">
+                                    <field name="reminder_date_before_receipt" class="oe_inline"/>
+                                    days before <button name="send_reminder_preview" icon="fa-info-circle" type="object" class="oe_inline oe_link" title="Preveiw the reminder email by sending it to yourself."/>
                                 </div>
                             </div>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
@@ -229,7 +229,7 @@
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text"/>
-                                    <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)], 'readonly': [('parent.date_planned', '!=', False)]}" force_save="1"/>
+                                    <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)]}" force_save="1"/>
                                     <field name="account_analytic_id" optional="hide" context="{'default_partner_id':parent.partner_id}" groups="analytic.group_analytic_accounting" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="analytic_tag_ids" optional="hide" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="product_qty"/>
@@ -728,6 +728,19 @@
         <field name="code">
             if records:
                 action = records.action_create_invoice()
+        </field>
+    </record>
+
+    <record id="action_purchase_send_reminder" model="ir.actions.server">
+        <field name="name">Send Reminder</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name='groups_id' eval="[(4, ref('purchase.group_send_reminder'))]"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records._send_reminder_mail(send_single=True)
         </field>
     </record>
     

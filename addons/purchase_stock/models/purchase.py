@@ -340,7 +340,7 @@ class PurchaseOrderLine(models.Model):
     def write(self, values):
         for line in self.filtered(lambda l: not l.display_type):
             # PO date_planned overrides any PO line date_planned values
-            if not line.order_id.date_planned and values.get('date_planned') and line.propagate_date:
+            if values.get('date_planned') and line.propagate_date:
                 new_date = fields.Datetime.to_datetime(values['date_planned'])
                 self._update_move_expected_date(new_date)
         result = super(PurchaseOrderLine, self).write(values)

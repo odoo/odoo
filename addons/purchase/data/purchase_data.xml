@@ -42,7 +42,7 @@
             <field name="name">receipt_reminder_email</field>
             <field name="type" eval="'boolean'"/>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','receipt_reminder_email')]"/>
-            <field eval="True" name="value"/>
+            <field eval="False" name="value"/>
         </record>
         <record forcecreate="True" id="reminder_date_before_receipt" model="ir.property">
             <field name="name">reminder_date_before_receipt</field>

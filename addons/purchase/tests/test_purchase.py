@@ -22,9 +22,9 @@ class TestPurchase(SavepointCase):
         cls.vendor = cls.env['res.partner'].create({'name': 'vendor1'})
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 
-    def test_expected_date(self):
-        """Set a date planned on 2 PO lines. Check that the PO expected date is the earliest PO line date
-        planned. Change one of the dates so it is even earlier and check that the expected date is set to
+    def test_date_planned(self):
+        """Set a date planned on 2 PO lines. Check that the PO date_planned is the earliest PO line date
+        planned. Change one of the dates so it is even earlier and check that the date_planned is set to
         this earlier date.
         """
         po = Form(self.env['purchase.order'])
@@ -42,19 +42,19 @@ class TestPurchase(SavepointCase):
         # Check that the same date is planned on both PO lines.
         self.assertNotEqual(po.order_line[0].date_planned, False)
         self.assertAlmostEqual(po.order_line[0].date_planned, po.order_line[1].date_planned, delta=timedelta(seconds=10))
-        self.assertAlmostEqual(po.order_line[0].date_planned, po.expected_date, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(po.order_line[0].date_planned, po.date_planned, delta=timedelta(seconds=10))
 
         orig_date_planned = po.order_line[0].date_planned
 
         # Set an earlier date planned on a PO line and check that the PO expected date matches it.
         new_date_planned = orig_date_planned - timedelta(hours=1)
         po.order_line[0].date_planned = new_date_planned
-        self.assertAlmostEqual(po.order_line[0].date_planned, po.expected_date, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(po.order_line[0].date_planned, po.date_planned, delta=timedelta(seconds=10))
 
         # Set an even earlier date planned on the other PO line and check that the PO expected date matches it.
         new_date_planned = orig_date_planned - timedelta(hours=72)
         po.order_line[1].date_planned = new_date_planned
-        self.assertAlmostEqual(po.order_line[1].date_planned, po.expected_date, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(po.order_line[1].date_planned, po.date_planned, delta=timedelta(seconds=10))
 
     def test_purchase_order_sequence(self):
         PurchaseOrder = self.env['purchase.order'].with_context(tracking_disable=True)
