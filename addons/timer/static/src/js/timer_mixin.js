@@ -39,9 +39,9 @@ odoo.define('timer.Timer', function (require) {
 
             timer.addTime(
                 moment.utc(
-                    moment.utc(serverTime)
+                    Math.abs(moment.utc(serverTime)
                         .diff(moment.utc(timer_start))
-                    ).format("HH:mm:ss")
+                    )).format("HH:mm:ss")
             );
 
             return timer;
@@ -87,7 +87,7 @@ odoo.define('timer.Timer', function (require) {
 
                 hour = parseInt(hour);
                 minute = parseInt(minute);
-                second = parseInt(second);
+                second = (second === undefined) ? 0 : parseInt(second);
 
                 this.addSeconds(second);
                 this.addMinutes(minute);
@@ -97,6 +97,10 @@ odoo.define('timer.Timer', function (require) {
 
         convertToFloat() {
             return (this.hours * 60 + this.minutes) * 60 / 3600;
+        }
+
+        convertToSeconds() {
+            return (this.hours * 60 + this.minutes) * 60 + this.seconds;
         }
 
         toString() {
