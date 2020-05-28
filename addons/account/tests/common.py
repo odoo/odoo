@@ -586,11 +586,12 @@ class AccountTestNoChartCommonMultiCompany(AccountTestNoChartCommon):
 class AccountTestInvoicingCommon(SavepointCase):
 
     @classmethod
-    def setUpClass(cls):
-        super(AccountTestInvoicingCommon, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass()
 
-        chart_template = cls.env.user.company_id.chart_template_id
-        if not chart_template:
+        if chart_template_ref:
+            chart_template = cls.env.ref(chart_template_ref)
+        else:
             chart_template = cls.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
         if not chart_template:
             cls.skipTest(cls, "Accounting Tests skipped because the user's company has no chart of accounts.")
@@ -608,8 +609,14 @@ class AccountTestInvoicingCommon(SavepointCase):
         cls.env = cls.env(user=user)
         cls.cr = cls.env.cr
 
-        cls.company_data_2 = cls.setup_company_data('company_2_data')
-        cls.company_data = cls.setup_company_data('company_1_data')
+        cls.company_data_2 = cls.setup_company_data('company_2_data', chart_template=chart_template)
+        cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template)
+
+        user.write({
+            'company_ids': [(6, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)],
+            'company_id': cls.company_data['company'].id,
+        })
+
         cls.currency_data = cls.setup_multi_currency_data()
 
         # ==== Taxes ====
@@ -725,25 +732,25 @@ class AccountTestInvoicingCommon(SavepointCase):
         })
 
     @classmethod
-    def setup_company_data(cls, company_name, **kwargs):
+    def setup_company_data(cls, company_name, chart_template=None, **kwargs):
         ''' Create a new company having the name passed as parameter.
         A chart of accounts will be installed to this company: the same as the current company one.
         The current user will get access to this company.
 
+        :param chart_template: The chart template to be used on this new company.
         :param company_name: The name of the company.
         :return: A dictionary will be returned containing all relevant accounting data for testing.
         '''
-        chart_template = cls.env.user.company_id.chart_template_id
+        chart_template = chart_template or cls.env.company.chart_template_id
+
         company = cls.env['res.company'].create({
             'name': company_name,
             'currency_id': cls.env.user.company_id.currency_id.id,
             **kwargs,
         })
         cls.env.user.company_ids |= company
-        cls.env.user.company_id = company
 
-        chart_template = cls.env['account.chart.template'].browse(chart_template.id)
-        chart_template.try_loading()
+        chart_template.try_loading(company=company)
 
         # The currency could be different after the installation of the chart template.
         company.write({'currency_id': kwargs.get('currency_id', cls.env.user.company_id.currency_id.id)})
@@ -901,10 +908,10 @@ class AccountTestInvoicingCommon(SavepointCase):
         })
 
     @classmethod
-    def init_invoice(cls, move_type):
+    def init_invoice(cls, move_type, partner=None, invoice_date=None):
         move_form = Form(cls.env['account.move'].with_context(default_move_type=move_type))
-        move_form.invoice_date = fields.Date.from_string('2019-01-01')
-        move_form.partner_id = cls.partner_a
+        move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
+        move_form.partner_id = partner or cls.partner_a
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = cls.product_a
         with move_form.invoice_line_ids.new() as line_form:
