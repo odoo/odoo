@@ -542,20 +542,19 @@ blockquote {
     }
 }
 @for $index from 1 through length($o-color-combinations) {
-    $config: nth($o-color-combinations, $index);
-    $-bg: map-get($config, 'bg');
-    $-text: map-get($config, 'text');
-    $-headings: map-get($config, 'headings');
-    $-h2: map-get($config, 'h2');
-    $-h3: map-get($config, 'h3');
-    $-h4: map-get($config, 'h4');
-    $-h5: map-get($config, 'h5');
-    $-h6: map-get($config, 'h6');
-    $-link: map-get($config, 'link');
-    $-btn-primary: map-get($config, 'btn-primary');
-    $-btn-primary-border: map-get($config, 'btn-primary-border');
-    $-btn-secondary: map-get($config, 'btn-secondary');
-    $-btn-secondary-border: map-get($config, 'btn-secondary-border');
+    $-bg: color('o-cc#{$index}-bg');
+    $-text: color('o-cc#{$index}-text');
+    $-headings: color('o-cc#{$index}-headings');
+    $-h2: color('o-cc#{$index}-h2');
+    $-h3: color('o-cc#{$index}-h3');
+    $-h4: color('o-cc#{$index}-h4');
+    $-h5: color('o-cc#{$index}-h5');
+    $-h6: color('o-cc#{$index}-h6');
+    $-link: color('o-cc#{$index}-link');
+    $-btn-primary: color('o-cc#{$index}-btn-primary');
+    $-btn-primary-border: color('o-cc#{$index}-btn-primary-border');
+    $-btn-secondary: color('o-cc#{$index}-btn-secondary');
+    $-btn-secondary-border: color('o-cc#{$index}-btn-secondary-border');
 
     // Those color classes color multiple elements when applied on a snippet.
     // Those rules are not important so that they can be overridden through

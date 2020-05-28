@@ -3,8 +3,23 @@
 // Colors
 //------------------------------------------------------------------------------
 
+// Color combinations
+$o-color-combinations: nth($o-color-combinations-presets, $o-color-combinations-preset-number) !default;
+$-combination-additions: ();
+@for $index from 1 through length($o-color-combinations) {
+    $combination: map-merge($o-base-color-combination, nth($o-color-combinations, $index));
+
+    @each $element, $color in $combination {
+        $-combination-additions: map-merge($-combination-additions, (
+            'o-cc#{$index}-#{$element}': $color,
+        ));
+    }
+}
+
 // Colors
 $o-color-palette: nth($o-color-palettes, $o-color-palette-number) !default;
+// Original color palette can contain override of the default combinations (so keep 'null' values for this merge)
+$o-color-palette: map-merge($-combination-additions, $o-color-palette);
 $o-color-palette: map-merge($o-base-color-palette, o-map-omit($o-color-palette));
 
 // Theme colors
@@ -32,9 +47,6 @@ $o-gray-color-palette: nth($o-gray-color-palettes, $o-gray-color-palette-number)
 $o-gray-color-palette: map-merge($o-transparent-grays, o-map-omit($o-gray-color-palette));
 $o-gray-color-palette: map-merge($o-base-gray-color-palette, o-map-omit($o-gray-color-palette));
 
-// Color combinations
-$o-color-combinations: nth($o-color-combinations-presets, $o-color-combinations-preset-number) !default;
-
 $o-color-system-initialized: false;
 
 // Returns:
@@ -50,9 +62,23 @@ $o-color-system-initialized: false;
     }
     @return false;
 }
+@function use-cc-bg($name) {
+    @if type-of($name) == 'number' {
+        // Preset number, let's return the background color of the related
+        // preset.
+        @return 'o-cc#{$name}-bg';
+    }
+    @return $name;
+}
 // Looks up for the color related to the given name in the related odoo palettes
 // following redirection a maximum number of time (by default none).
-@function o-related-color($name, $max-recursions: 0, $original-name: $name) {
+@function o-related-color($name, $max-recursions: 0, $original-name: $name, $use-cc-bg: false) {
+    @if $use-cc-bg {
+        $name: use-cc-bg($name);
+    } @else if type-of($name) == 'number' {
+        @return $name;
+    }
+
     @if $max-recursions < 0 or check-color-identifier-type($name) {
         @return $name;
     }
@@ -71,6 +97,8 @@ $o-color-system-initialized: false;
 // either in $theme-colors, $grays or $colors maps. If those maps are not
 // initialized yet, it will look up the color in the related odoo palettes.
 @function o-color($name) {
+    $name: use-cc-bg($name);
+
     @if check-color-identifier-type($name) {
         @return $name;
     }
@@ -91,5 +119,5 @@ $o-color-system-initialized: false;
     }
 
     // If not initialized, search the css color value in selected color palettes
-    @return o-related-color($name, $max-recursions: 10);
+    @return o-related-color($name, $max-recursions: 10, $use-cc-bg: true);
 }
