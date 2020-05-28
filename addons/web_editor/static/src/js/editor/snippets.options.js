@@ -723,7 +723,11 @@ const SelectUserValueWidget = UserValueWidget.extend({
         }
 
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
-        this.menuTogglerEl.textContent = activeWidget ? activeWidget.el.textContent : "/";
+        let value = "/";
+        if (activeWidget) {
+            value = activeWidget.el.dataset.selectLabel || activeWidget.el.textContent;
+        }
+        this.menuTogglerEl.textContent = value;
     },
 
     //--------------------------------------------------------------------------
