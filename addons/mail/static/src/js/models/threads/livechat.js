@@ -20,6 +20,7 @@ var Livechat = TwoUserChannel.extend({
      */
     init: function (params) {
         this._super.apply(this, arguments);
+        this._typingPartnerData = {};
         this._name = params.data.correspondent_name;
         this._WEBSITE_USER_NAME = this._name;
     },
@@ -67,7 +68,11 @@ var Livechat = TwoUserChannel.extend({
      */
     registerTyping: function (params) {
         params.partnerID = this._WEBSITE_USER_ID;
+        this._typingPartnerData[this.getID()] = params.inputData;
         this._super.call(this, params);
+        if (_.contains(this._typingPartnerIDs, params.partnerID) && params.inputData) {
+            this._warnUpdatedTypingPartners();
+        }
     },
     /**
      * Called when someone stops typing something on the livechat.
@@ -86,6 +91,8 @@ var Livechat = TwoUserChannel.extend({
      */
     unregisterTyping: function (params) {
         params.partnerID = this._WEBSITE_USER_ID;
+        this._typingPartnerIDs.push(params.partnerID);
+        this._typingPartnerData[this.getID()] = params.inputData;
         this._super.call(this, params);
     },
 });

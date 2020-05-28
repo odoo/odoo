@@ -23,4 +23,19 @@
         </t>
     </t>
 
+    <t t-extend="mail.widget.Thread.Content.ASC">
+        <t t-jquery=".o_mail_thread_content" t-operation="append">
+            <t t-call="mail.widget.Thread.TypingData"/>
+        </t>
+    </t>
+
+    <div t-name="mail.widget.Thread.TypingData" class="o_thread_message_preview">
+        <t t-if="thread and thread.hasTypingNotification() and thread._typingPartnerData and thread._typingPartnerData[thread.getID()]">
+            <div class="alert alert-secondary ml32">
+                <t t-call="mail.ThreadTypingIcon"/><t t-esc="thread._name"/><br/>
+                <t t-esc="thread._typingPartnerData[thread.getID()]"/>
+            </div>
+        </t>
+    </div>
+
 </template>

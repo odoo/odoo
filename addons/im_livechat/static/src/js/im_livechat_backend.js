@@ -1,7 +1,10 @@
 odoo.define('im_livechat.Discuss', function (require) {
 "use strict";
 
+var core = require('web.core');
 var Discuss = require('mail.Discuss');
+
+var QWeb = core.qweb;
 
 Discuss.include({
     /**
@@ -26,6 +29,14 @@ Discuss.include({
         });
         channels = partition[0].concat(partition[1]);
         return this._super(channels);
+    },
+    /**
+     * @override
+     * @private
+     */
+    _onTypingPartnersUpdated() {
+        this._super.apply(this, arguments);
+        this.$('.o_thread_message_preview').replaceWith(QWeb.render('mail.widget.Thread.TypingData', {thread: this._thread}));
     },
 });
 
