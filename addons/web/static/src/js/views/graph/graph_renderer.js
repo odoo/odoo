@@ -1071,6 +1071,8 @@ return AbstractRenderer.extend({
      * @param {Object} legendItem
      */
     _onlegendTooltipHover: function (e, legendItem) {
+        // set cursor pointer on hover of legend
+        e.target.style.cursor = 'pointer';
         // The string legendItem.text is an initial segment of legendItem.fullText.
         // If the two coincide, no need to generate a tooltip.
         // If a tooltip for the legend already exists, it is already good and don't need
@@ -1102,7 +1104,9 @@ return AbstractRenderer.extend({
      *
      * @private
      */
-    _onLegendTootipLeave: function () {
+    _onLegendTootipLeave: function (e) {
+        // remove cursor style pointer on mouseleave from legend
+        e.target.style.cursor = "";
         if (this.$legendTooltip) {
             this.$legendTooltip.remove();
             this.$legendTooltip = null;
