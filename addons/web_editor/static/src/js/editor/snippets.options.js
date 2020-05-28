@@ -636,6 +636,13 @@ const SelectUserValueWidget = UserValueWidget.extend({
         }
 
         this.menuTogglerEl = document.createElement('we-toggler');
+        this.icon = this.el.dataset.icon || false;
+        if (this.icon) {
+            this.el.classList.add('o_we_icon_select');
+            const iconEl = document.createElement('i');
+            iconEl.classList.add('fa', 'fa-fw', this.icon);
+            this.menuTogglerEl.appendChild(iconEl);
+        }
         this.containerEl.appendChild(this.menuTogglerEl);
 
         this.menuEl = document.createElement('we-select-menu');
@@ -710,6 +717,11 @@ const SelectUserValueWidget = UserValueWidget.extend({
      */
     _updateUI: async function () {
         await this._super(...arguments);
+
+        if (this.icon) {
+            return;
+        }
+
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
         this.menuTogglerEl.textContent = activeWidget ? activeWidget.el.textContent : "/";
     },
