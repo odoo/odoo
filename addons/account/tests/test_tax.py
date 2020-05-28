@@ -7,8 +7,8 @@ from odoo.tests import tagged
 class TestTaxCommon(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestTaxCommon, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # Setup another company having a rounding of 1.0.
         cls.currency_data['currency'].rounding = 1.0

@@ -10,8 +10,8 @@ import math
 class TestPrintCheck(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.payment_method_check = cls.env.ref("account_check_printing.account_payment_method_check")
 

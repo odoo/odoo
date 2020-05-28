@@ -7,8 +7,8 @@ from odoo.tests import tagged
 class InvoiceGetReferenceTest(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(InvoiceGetReferenceTest, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref='l10n_fi.fi_chart_template'):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.invoice = cls.init_invoice('out_invoice')
 

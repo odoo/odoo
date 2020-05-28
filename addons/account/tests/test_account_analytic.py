@@ -8,8 +8,8 @@ from odoo.exceptions import UserError
 class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.env.user.write({
             'groups_id': [

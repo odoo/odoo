@@ -10,8 +10,8 @@ from odoo.exceptions import UserError, ValidationError
 class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestAccountMoveInInvoiceOnchanges, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.invoice = cls.init_invoice('in_invoice')
 
