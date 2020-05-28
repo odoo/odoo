@@ -1,5 +1,5 @@
-from odoo import models, fields, api
-from odoo.exceptions import AccessDenied
+from odoo import models, fields, api, _
+from odoo.exceptions import AccessDenied, ValidationError
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -72,6 +72,15 @@ class WebsiteRewrite(models.Model):
     def _onchange_route_id(self):
         self.url_from = self.route_id.path
         self.url_to = self.route_id.path
+
+    @api.constrains('url_to', 'redirect_type')
+    def _check_url_to(self):
+        for rewrite in self:
+            if rewrite.redirect_type == '308':
+                if not rewrite.url_to:
+                    raise ValidationError(_('"URL to" can not be empty.'))
+                elif not rewrite.url_to.startswith('/'):
+                    raise ValidationError(_('"URL to" must start with a leading slash.'))
 
     def name_get(self):
         result = []
