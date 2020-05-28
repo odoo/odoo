@@ -16,7 +16,7 @@ from PIL import Image, ImageOps
 
 from odoo import http, _
 from odoo.addons.hw_drivers.controllers.driver import event_manager, Driver, iot_devices
-from odoo.addons.hw_drivers.iot_handlers.interfaces.PrinterInterface import PPDs, conn, printers, cups_lock
+from odoo.addons.hw_drivers.iot_handlers.interfaces.PrinterInterface import PPDs, conn, cups_lock
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.addons.hw_proxy.controllers.main import drivers as old_drivers
 
@@ -92,6 +92,8 @@ class PrinterDriver(Driver):
 
     @classmethod
     def supported(cls, device):
+        if device.get('supported', False):
+            return True
         protocol = ['dnssd', 'lpd']
         if any(x in device['url'] for x in protocol) and device['device-make-and-model'] != 'Unknown' or 'direct' in device['device-class']:
             model = cls.get_device_model(device)
@@ -105,15 +107,12 @@ class PrinterDriver(Driver):
                     conn.addPrinter(name=device['identifier'], ppdname=ppdFile, device=device['url'])
                 else:
                     conn.addPrinter(name=device['identifier'], device=device['url'])
-                if device['identifier'] not in printers:
-                    conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
-                    conn.enablePrinter(device['identifier'])
-                    conn.acceptJobs(device['identifier'])
-                    conn.setPrinterUsersAllowed(device['identifier'], ['all'])
-                    conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
-                    conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
-                else:
-                    device['device-make-and-model'] = printers[device['identifier']]['printer-info']
+                conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
+                conn.enablePrinter(device['identifier'])
+                conn.acceptJobs(device['identifier'])
+                conn.setPrinterUsersAllowed(device['identifier'], ['all'])
+                conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
+                conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
             if 'STR_T' in device['device-id']:
                 # Star printers have either STR_T or ESP in their name depending on the protocol used.
                 print_star_error(device['identifier'])

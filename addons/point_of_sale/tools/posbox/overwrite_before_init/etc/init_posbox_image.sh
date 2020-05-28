@@ -158,6 +158,7 @@ systemctl enable autologin@.service
 systemctl disable systemd-timesyncd.service
 systemctl unmask hostapd.service
 systemctl disable hostapd.service
+systemctl disable cups-browsed.service
 
 # disable overscan in /boot/config.txt, we can't use
 # overwrite_after_init because it's on a different device
