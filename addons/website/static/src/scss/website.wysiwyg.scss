@@ -135,7 +135,7 @@ $i: 1;
             clear: both;
         }
 
-        > button {
+        > .o_we_color_btn {
 
             &:hover,
             &.selected {
@@ -152,8 +152,11 @@ $i: 1;
         }
     }
 
-    .note-palette-title {
-        color: $o-we-color-text-light;
+    .note-palette-title, a, button:not(.o_we_color_combination_btn) {
+
+        &, &:hover {
+            color: $o-we-color-text-light;
+        }
     }
 
     .palette-reset {

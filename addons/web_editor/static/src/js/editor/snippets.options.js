@@ -1086,10 +1086,14 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @returns {Promise}
      */
     _renderColorPalette: function () {
-        const options = {};
-        options.selectedColor = this._value;
+        const options = {
+            selectedColor: this._value,
+        };
         if (this.options.dataAttributes.excluded) {
             options.excluded = this.options.dataAttributes.excluded.replace(/ /g, '').split(',');
+        }
+        if (this.options.dataAttributes.withCombinations) {
+            options.withCombinations = !!this.options.dataAttributes.withCombinations;
         }
         const oldColorPalette = this.colorPalette;
         this.colorPalette = new ColorPaletteWidget(this, options);
@@ -1108,14 +1112,17 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     _updateUI: async function (color) {
         await this._super(...arguments);
 
-        this.colorPreviewEl.classList.remove(...this.colorPalette.getColorNames().map(c => 'bg-' + c));
+        const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
+        this.colorPreviewEl.classList.remove(...classes);
         this.colorPreviewEl.style.removeProperty('background-color');
 
         if (this._value) {
             if (ColorpickerWidget.isCSSColor(this._value)) {
                 this.colorPreviewEl.style.backgroundColor = this._value;
+            } else if (weUtils.isColorCombinationName(this._value)) {
+                this.colorPreviewEl.classList.add('o_cc', `o_cc${this._value}`);
             } else {
-                this.colorPreviewEl.classList.add('bg-' + this._value);
+                this.colorPreviewEl.classList.add(`bg-${this._value}`);
             }
         }
 
@@ -1631,9 +1638,15 @@ const SnippetOptionWidget = Widget.extend({
         // other potential color names (to remove) and if we know about a prefix
         // (otherwise we suppose that we should use the actual related color).
         if (params.colorNames && params.colorPrefix) {
-            const classes = params.colorNames.map(c => params.colorPrefix + c);
+            const classes = weUtils.computeColorClasses(params.colorNames, params.colorPrefix);
             this.$target[0].classList.remove(...classes);
 
+            if (weUtils.isColorCombinationName(widgetValue)) {
+                // Those are the special color combinations classes. Just have
+                // to add it (and adding the potential extra class) then leave.
+                this.$target[0].classList.add('o_cc', `o_cc${widgetValue}`, params.extraClass);
+                return;
+            }
             if (params.colorNames.includes(widgetValue)) {
                 const originalCSSValue = window.getComputedStyle(this.$target[0])[cssProps[0]];
                 const className = params.colorPrefix + widgetValue;
@@ -1924,7 +1937,8 @@ const SnippetOptionWidget = Widget.extend({
             case 'selectStyle': {
                 if (params.colorPrefix && params.colorNames) {
                     for (const c of params.colorNames) {
-                        if (this.$target[0].classList.contains(params.colorPrefix + c)) {
+                        const className = weUtils.computeColorClasses([c], params.colorPrefix)[0];
+                        if (this.$target[0].classList.contains(className)) {
                             return c;
                         }
                     }
