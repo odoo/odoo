@@ -376,7 +376,16 @@ QUnit.module('web_editor', {}, function () {
             Wysiwyg.setRange(pText, 1, pText, 10);
             // text is selected
 
-            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button:first'));
+            async function openColorpicker(selector) {
+                const $colorpicker = $field.find(selector);
+                const openingProm = new Promise(resolve => {
+                    $colorpicker.one('shown.bs.dropdown', () => resolve());
+                });
+                await testUtils.dom.click($colorpicker.find('button:first'));
+                return openingProm;
+            }
+
+            await openColorpicker('.note-toolbar .note-back-color-preview');
             await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button.bg-gamma'));
 
             await testUtils.form.clickSave(form);
