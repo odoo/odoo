@@ -100,6 +100,7 @@ $o-we-toolbar-height: 32px;
 // Used to preserve web_editor and website UI from themes customizations
 
 @mixin o-w-preserve-base {
+    font-size: $o-we-font-size;
     font-family: $o-we-font-family;
     line-height: 1.5;
     color: $o-we-color-divider;
@@ -115,6 +116,24 @@ $o-we-toolbar-height: 32px;
         line-height: 1.5;
         color: $o-we-color-dark;
         font-weight: bold;
+    }
+    h1, .h1 {
+        font-size: 2.4 * $o-we-font-size;
+    }
+    h2, .h2 {
+        font-size: 1.5 * $o-we-font-size;
+    }
+    h3, .h3 {
+        font-size: 1.3 * $o-we-font-size;
+    }
+    h4, .h4 {
+        font-size: 1.2 * $o-we-font-size;
+    }
+    h5, .h5 {
+        font-size: 1.1 * $o-we-font-size;
+    }
+    h6, .h6 {
+        font-size: $o-we-font-size;
     }
 }
 
@@ -189,6 +208,10 @@ $o-we-toolbar-height: 32px;
             border-top-color: #e9ecef;
             text-align: left;
         }
+    }
+
+    .close {
+        font-size: 1.5 * $o-we-font-size;
     }
 }
 

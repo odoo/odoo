@@ -3,11 +3,32 @@
 // Website customizations
 //------------------------------------------------------------------------------
 
+@function o-add-font-config($values) {
+    $types: ('base': 'font-number', 'headings': 'headings-font-number', 'navbar': 'navbar-font-number', 'buttons': 'buttons-font-number');
+    @each $type, $number-label in $types {
+        $number: map-get($values, $number-label) or map-get($o-base-website-values-palette, $number-label);
+        @if $number <= length($o-theme-font-names) { // At least useful because of google fonts
+            $font-name: nth($o-theme-font-names, $number);
+            $font-config: map-get($o-theme-font-configs, $font-name);
+            @if $font-config {
+                $type-font-config: map-get($font-config, $type);
+                @if $type-font-config {
+                    $values: map-merge($values, $type-font-config);
+                }
+            }
+        }
+    }
+    @return $values;
+}
+
 // By default, most website palette values are null. Each null value is
 // automatically replaced with corresponsing values in chosen default values
 // palette.
 $-website-values-default: nth($o-website-values-palettes, $o-website-values-palette-number);
 $-actual-user-website-values-palette: map-merge($-website-values-default, o-map-omit($o-user-website-values));
+// Default font selection + User font selection have been merged, now need to
+// add the right associated font config while still forcing any user override
+$-actual-user-website-values-palette: map-merge(o-add-font-config($-actual-user-website-values-palette), o-map-omit($o-user-website-values));
 $o-website-values-palettes: append($o-website-values-palettes, $-actual-user-website-values-palette);
 
 // Enable last website values palette, which is now the user customized one
@@ -88,6 +109,7 @@ $o-theme-fonts: $-with-support-theme-fonts;
 
 $o-theme-navbar-logo-height: o-website-value('logo-height') !default;
 $o-theme-navbar-fixed-logo-height: o-website-value('fixed-logo-height') !default;
+
 $o-theme-font: nth($o-theme-fonts, o-website-value('font-number')) !default;
 $o-theme-headings-font: nth($o-theme-fonts, o-website-value('headings-font-number')) !default;
 $o-theme-navbar-font: nth($o-theme-fonts, o-website-value('navbar-font-number')) !default;
