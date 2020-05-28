@@ -326,8 +326,8 @@ $o-base-color-palette: (
 ) !default;
 $o-color-palettes: (
     (
-        'o-color-1': $o-enterprise-primary-color,
-        'o-color-2': $o-enterprise-color,
+        'o-color-1': scale-color($o-enterprise-primary-color, $saturation: -50%, $lightness: 20%),
+        'o-color-2': scale-color($o-enterprise-color, $saturation: -50%),
         'o-color-3': #F6F6F6,
         'o-color-4': #FFFFFF,
         'o-color-5': #383E45,

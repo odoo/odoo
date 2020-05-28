@@ -54,7 +54,13 @@ $o-base-website-values-palette: (
     'footer-template': 'products_contacts_about_us',
 );
 $o-website-values-palettes: (
-    (),
+    (
+        'header-font-size': 1rem,
+        'font-size-base': 0.875rem,
+        'headings-font-number': 7,
+        'navbar-font-number': 7,
+        'buttons-font-number': 7,
+    ),
 ) !default;
 $o-website-values-palette-number: 1 !default;
 
@@ -82,6 +88,7 @@ $o-theme-fonts: (
     ('Raleway', sans-serif),
     ('Noto Serif', serif),
     ('Arvo', Times, serif),
+    ('Gothic A1', sans-serif),
 ) !default;
 $o-theme-font-urls: (
     'Roboto:300,300i,400,400i,700,700i',
@@ -90,6 +97,7 @@ $o-theme-font-urls: (
     'Raleway:300,300i,400,400i,700,700i',
     'Noto+Serif:300,300i,400,400i,700,700i',
     'Arvo:300,300i,400,400i,700,700i',
+    'Gothic+A1:300,300i,500,500i,700,700i',
 ) !default;
 $o-theme-font-names: (
     'Roboto',
@@ -98,6 +106,7 @@ $o-theme-font-names: (
     'Raleway',
     'Noto Serif',
     'Arvo',
+    'Gothic A1',
 ) !default;
 
 // TODO improve this: we should not have multiple lists regarding fonts but
