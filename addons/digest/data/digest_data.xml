@@ -53,4 +53,16 @@
     </body>
 </html>
     </template>
+
+    <!-- DIGEST PART: PREFERENCES -->
+    <template id="digest_section_preferences">
+<p t-if="object._context.get('digest_slowdown')" class="font-12" style="font-size: 15px; color: #6b6d70">
+    We've noticed you did not connect these last few days so we've automatically switched your preference to weekly Digests.
+</p>
+<p t-elif="user.has_group('base.group_erp_manager') and object.periodicity == 'daily'" class="font-12" style="font-size: 15px; color: #6b6d70">
+    Prefer a broader overview ?
+    <a t-att-href="'/digest/%s/set_periodicity?periodicity=weekly' % object.id" target="_blank" style="color:#875A7B; font-weight: bold;">Switch to weekly Digests.</a>
+</p>
+<p t-else=""/>
+    </template>
 </data></odoo>
