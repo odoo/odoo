@@ -133,7 +133,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             aml_ids = cr.fetchall()
             aml_ids = aml_ids and [x[0] for x in aml_ids] or []
             for line in self.env['account.move.line'].browse(aml_ids).with_context(prefetch_fields=False):
-                partner_id = line.partner_id.id or False
+                partner_id = line.partner_id.id or None
                 if partner_id not in partners_amount:
                     partners_amount[partner_id] = 0.0
                 line_amount = line.company_id.currency_id._convert(line.balance, user_currency, user_company, date_from)
@@ -172,7 +172,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         aml_ids = cr.fetchall()
         aml_ids = aml_ids and [x[0] for x in aml_ids] or []
         for line in self.env['account.move.line'].browse(aml_ids):
-            partner_id = line.partner_id.id or False
+            partner_id = line.partner_id.id or None
             if partner_id not in undue_amounts:
                 undue_amounts[partner_id] = 0.0
             line_amount = line.company_id.currency_id._convert(line.balance, user_currency, user_company, date_from)
@@ -194,8 +194,6 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 })
 
         for partner in partners:
-            if partner['partner_id'] is None:
-                partner['partner_id'] = False
             at_least_one_amount = False
             values = {}
             undue_amt = 0.0
