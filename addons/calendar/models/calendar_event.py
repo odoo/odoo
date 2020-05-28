@@ -669,10 +669,26 @@ class Meeting(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        vals_list = [  # Else bug with quick_create when we are filter on an other user
-            dict(vals, user_id=self.env.user.id) if not 'user_id' in vals else vals
-            for vals in vals_list
-        ]
+
+        new_val_list = []
+        for vals in vals_list:
+            new_vals = vals
+
+            # Add the current user to the data
+            # Else bug with quick_create when we are filter on an other user
+            if not 'user_id' in new_vals:
+                new_vals = dict(new_vals, user_id=self.env.user.id)
+
+            # If the call is from js, from the quickcreate, it won't have
+            # any partners associated. But we know that the creator is the current user.
+            # We therefore add it here ourselves
+            if not 'partner_ids' in new_vals and 'source' in new_vals and new_vals['source'] == 'js-quickcreate':
+                del new_vals['source']
+                new_vals = dict(new_vals, partner_ids=[[6, False, [self.env.user.partner_id.id]]])
+
+            new_val_list.append(new_vals)
+
+        vals_list = new_val_list
 
         for values in vals_list:
             # created from calendar: try to create an activity on the related record
@@ -698,6 +714,7 @@ class Meeting(models.Model):
             dict(vals, attendee_ids=self._attendees_values(vals['partner_ids'])) if 'partner_ids' in vals else vals
             for vals in vals_list
         ]
+
         recurrence_fields = self._get_recurrent_fields()
         recurring_vals = [vals for vals in vals_list if vals.get('recurrency')]
         other_vals = [vals for vals in vals_list if not vals.get('recurrency')]
@@ -818,7 +835,7 @@ class Meeting(models.Model):
                     event.activity_ids.write(activity_values)
 
     def change_attendee_status(self, status):
-        attendee = self.attendee_ids.filtered(lambda x: x.partner_id == self.env.user.partner_id)
+        attendee = self.env['calendar.event'].search([('id', '=', int(self.id))]).attendee_ids.filtered(lambda x: x.partner_id == self.env.user.partner_id)
         if status == 'accepted':
             return attendee.do_accept()
         if status == 'declined':

@@ -147,6 +147,10 @@ return AbstractModel.extend({
                 data[k] = dateToServer(data[k]);
             }
         }
+
+        // To keep track this is a rpc from frontend and quickcreate
+        data.source = 'js-quickcreate'
+
         return this._rpc({
                 model: this.modelName,
                 method: 'create',

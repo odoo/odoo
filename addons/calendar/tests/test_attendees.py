@@ -36,6 +36,16 @@ class TestEventNotifications(SavepointCase):
         self.assertEqual(event.attendee_ids.partner_id, self.partner, "It should be linked to the partner")
         self.assertIn(self.partner, event.message_follower_ids.partner_id, "He should be follower of the event")
 
+    # This test ensure that the self.env.user is automatically an attendee if created with the quick create js pop up
+    def test_attendee_added_create_from_js_quick_create(self):
+        event = self.env['calendar.event'].create({
+            'name': "Doom's day",
+            'start': datetime(2019, 10, 25, 8, 0),
+            'stop': datetime(2019, 10, 27, 18, 0),
+            'source': 'js-quickcreate'
+        })
+        self.assertTrue(event.attendee_ids, "It should have one attendee, the creator of the event from the quickcreate")
+
     def test_attendee_added_multi(self):
         event = self.env['calendar.event'].create({
             'name': "Doom's day",
