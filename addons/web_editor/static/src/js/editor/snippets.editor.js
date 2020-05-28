@@ -2057,10 +2057,11 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onBlocksTabClick: function (ev) {
-        this._activateSnippet(false);
-        this._updateLeftPanelContent({
-            content: [],
-            tab: this.tabs.BLOCKS,
+        this._activateSnippet(false).then(() => {
+            this._updateLeftPanelContent({
+                content: [],
+                tab: this.tabs.BLOCKS,
+            });
         });
     },
     /**
