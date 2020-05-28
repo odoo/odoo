@@ -343,16 +343,7 @@ options.Class.include({
             color = style.getPropertyValue('--' + color).trim();
             color = ColorpickerWidget.normalizeCSSColor(color);
         }
-        const colors = {};
-        colors[params.color] = color;
-        if (params.color === 'alpha') {
-            colors['beta'] = null;
-            colors['gamma'] = null;
-            colors['delta'] = null;
-            colors['epsilon'] = null;
-        }
-
-        return this._makeSCSSCusto(url, colors);
+        return this._makeSCSSCusto(url, {[params.color]: color});
     },
     /**
      * @private
