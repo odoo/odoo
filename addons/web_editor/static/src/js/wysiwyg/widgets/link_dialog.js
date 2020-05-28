@@ -19,6 +19,7 @@ var LinkDialog = Dialog.extend({
     ]),
     events: _.extend({}, Dialog.prototype.events || {}, {
         'input': '_onAnyChange',
+        'change [name="link_style_color"]': '_onTypeChange',
         'change': '_onAnyChange',
         'input input[name="url"]': '_onURLInput',
     }),
@@ -27,19 +28,27 @@ var LinkDialog = Dialog.extend({
      * @constructor
      */
     init: function (parent, options, editable, linkInfo) {
-        var self = this;
         this.options = options || {};
-
         this._super(parent, _.extend({
             title: _t("Link to"),
         }, this.options));
 
         this.trigger_up('getRecordInfo', {
             recordInfo: this.options,
-            callback: function (recordInfo) {
-                _.defaults(self.options, recordInfo);
+            callback: recordInfo => {
+                _.defaults(this.options, recordInfo);
             },
         });
+
+        this.colorsData = [
+            {type: '', label: _t("Link"), btnPreview: 'link'},
+            {type: 'primary', label: _t("Primary"), btnPreview: 'primary'},
+            {type: 'secondary', label: _t("Secondary"), btnPreview: 'secondary'},
+            // Note: by compatibility the dialog should be able to remove old
+            // colors that were suggested like the BS status colors or the
+            // alpha -> epsilon classes. This is currently done by removing
+            // all btn-* classes anyway.
+        ];
 
         this.editable = editable;
         this.data = linkInfo || {};
@@ -142,6 +151,8 @@ var LinkDialog = Dialog.extend({
     start: function () {
         var self = this;
 
+        this.buttonOptsCollapseEl = this.el.querySelector('#o_link_dialog_button_opts_collapse');
+
         this.$('input.link-style').prop('checked', false).first().prop('checked', true);
         if (this.data.iniClassName) {
             this.$('input[name="link_style_color"], select[name="link_style_size"] > option, select[name="link_style_shape"] > option').each(function () {
@@ -163,21 +174,7 @@ var LinkDialog = Dialog.extend({
             this._onURLInput();
         }
 
-        // Hide the duplicate color buttons (most of the times, primary = alpha
-        // and secondary = beta for example but this may depend on the theme)
-        this.opened().then(function () {
-            var colors = [];
-            _.each(self.$('.o_link_dialog_color .o_btn_preview'), function (btn) {
-                var $btn = $(btn);
-                var color = $btn.css('background-color');
-                if (_.contains(colors, color)) {
-                    $btn.hide(); // Not remove to be able to edit buttons with those styles
-                } else {
-                    colors.push(color);
-                }
-            });
-        });
-
+        this._updateOptionsUI();
         this._adaptPreview();
 
         this.$('input:visible:first').focus();
@@ -285,6 +282,13 @@ var LinkDialog = Dialog.extend({
             isNewWindow: isNewWindow,
         };
     },
+    /**
+     * @private
+     */
+    _updateOptionsUI: function () {
+        const el = this.el.querySelector('[name="link_style_color"]:checked');
+        $(this.buttonOptsCollapseEl).collapse(el && el.value ? 'show' : 'hide');
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -295,6 +299,12 @@ var LinkDialog = Dialog.extend({
      */
     _onAnyChange: function () {
         this._adaptPreview();
+    },
+    /**
+     * @private
+     */
+    _onTypeChange() {
+        this._updateOptionsUI();
     },
     /**
      * @private
