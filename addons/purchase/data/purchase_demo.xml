@@ -6,6 +6,18 @@
             <field eval="[(4, ref('group_purchase_user'))]" name="groups_id"/>
         </record>
 
+        <record id="base.res_partner_1" model="res.partner">
+            <field name="receipt_reminder_email">True</field>
+        </record>
+
+        <record id="base.res_partner_2" model="res.partner">
+            <field name="receipt_reminder_email">True</field>
+        </record>
+
+        <record id="base.res_partner_12" model="res.partner">
+            <field name="receipt_reminder_email">True</field>
+        </record>
+
     </data>
 
     <record id="purchase_order_1" model="purchase.order">

@@ -130,10 +130,8 @@ class PurchaseOrder(models.Model):
     mail_reminder_confirmed = fields.Boolean("Reminder Confirmed", default=False, readonly=True, copy=False, help="True if the reminder email is confirmed by the vendor.")
     mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
 
-    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', related='partner_id.receipt_reminder_email', readonly=False,
-        help='Automatically send a reminder email to your vendors before receipt')
-    reminder_date_before_receipt = fields.Integer('Days Before Receipt', related='partner_id.reminder_date_before_receipt', readonly=False,
-        help="Number of days to send reminder email before the promised receipt date")
+    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', related='partner_id.receipt_reminder_email', readonly=False)
+    reminder_date_before_receipt = fields.Integer('Days Before Receipt', related='partner_id.reminder_date_before_receipt', readonly=False)
 
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
@@ -628,23 +626,38 @@ class PurchaseOrder(models.Model):
 
         return result
 
-    @api.model
-    def _send_reminder_mail(self):
-        if not self.user_has_groups('purchase.group_send_reminder') and not self.receipt_reminder_email:
+    def _send_reminder_mail(self, send_single=False):
+        if not self.user_has_groups('purchase.group_send_reminder'):
             return
 
         template = self.env.ref('purchase.email_template_edi_purchase_reminder', raise_if_not_found=False)
         if template:
-            for order in self._get_orders_to_remind():
+            orders = self if send_single else self._get_orders_to_remind()
+            for order in orders:
                 date = order.date_planned or order.expected_date
-                if date and (date - relativedelta(days=order.reminder_date_before_receipt)).date() == datetime.today().date():
+                if date and (send_single or (date - relativedelta(days=order.reminder_date_before_receipt)).date() == datetime.today().date()):
                     order.with_context(is_reminder=True).message_post_with_template(template.id, email_layout_xmlid="mail.mail_notification_paynow", composition_mode='comment')
+
+    def send_reminder_preview(self):
+        if not self.user_has_groups('purchase.group_send_reminder') and not self.receipt_reminder_email:
+            return
+
+        template = self.env.ref('purchase.email_template_edi_purchase_reminder', raise_if_not_found=False)
+        if template and self.env.user.email:
+            for order in self:
+                template.with_context(is_reminder=True).send_mail(
+                    order.id,
+                    force_send=True,
+                    raise_exception=False,
+                    email_values={'email_to': self.env.user.email, 'recipient_ids': []},
+                    notif_layout="mail.mail_notification_paynow")
 
     @api.model
     def _get_orders_to_remind(self):
         """When auto sending a reminder mail, only send for unconfirmed purchase
         order and not all products are service."""
         return self.search([
+            ('receipt_reminder_email', '=', True),
             ('state', 'in', ['purchase', 'done']),
             ('mail_reminder_confirmed', '=', False)
         ]).filtered(lambda p: p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
