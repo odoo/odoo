@@ -910,6 +910,8 @@ var SnippetsMenu = Widget.extend({
             )[0]
         );
 
+        this._addTabLoading(this.tabs.BLOCKS);
+
         // Fetch snippet templates and compute it
         defs.push(this._loadSnippetsTemplates().then(() => {
             return this._updateInvisibleDOM();
@@ -1233,6 +1235,21 @@ var SnippetsMenu = Widget.extend({
              && dispPrev.indexOf('inline') >= 0 && dispNext.indexOf('inline') >= 0) {
                 zone.remove();
             }
+        });
+    },
+    /**
+     * @private
+     * @param {this.tabs.VALUE} [tab='OPTIONS'] - the tab to select
+     */
+    _addTabLoading: function (tab) {
+        const loadingEl = document.createElement('div');
+        loadingEl.classList.add('o_we_ui_loading', 'text-center', 'pt-5');
+        const loadingIconEl = document.createElement('i');
+        loadingIconEl.classList.add('fa', 'fa-circle-o-notch', 'fa-spin', 'fa-3x');
+        loadingEl.appendChild(loadingIconEl);
+        this._updateLeftPanelContent({
+            content: loadingEl,
+            tab: tab || this.tabs.OPTIONS,
         });
     },
     /**
@@ -2041,6 +2058,8 @@ var SnippetsMenu = Widget.extend({
      * @param {Event} ev
      */
     _onInvisibleEntryClick: async function (ev) {
+        this._addTabLoading();
+
         ev.preventDefault();
         const $snippet = $(this.invisibleDOMMap.get(ev.currentTarget));
         const isVisible = await this._mutex.exec(async () => {
