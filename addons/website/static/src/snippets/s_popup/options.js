@@ -21,6 +21,13 @@ options.registry.SnippetPopup = options.Class.extend({
         this.$target.on('hidden.bs.modal.SnippetPopup', () => {
             this.trigger_up('snippet_option_visibility_update', {show: false});
         });
+        this.trigger_up('option_update', {
+            optionName: 'anchor',
+            name: 'modalAnchor',
+            data: {
+                $button: this._requestUserValueWidgets('onclick_opt')[0].$el,
+            },
+        });
         return this._super(...arguments);
     },
     /**

@@ -437,6 +437,19 @@ eventHandler.modules.editor.imageShape = function ($editable, sValue) {
     $editable.data('NoteHistory').recordUndo();
     $target.toggleClass(sValue);
 };
+const fn_editor_createLink = eventHandler.modules.editor.createLink;
+eventHandler.modules.editor.createLink = function ($editable, linkInfo, options) {
+    fn_editor_createLink.call(this, $editable, linkInfo, options);
+    const link = $editable.data('range').sc;
+    if (linkInfo.isModalTarget) {
+        link.dataset.toggle = 'modal';
+        link.dataset.target = linkInfo.selector;
+        $(link).removeAttr('target');
+    } else if (link.dataset.toggle = 'modal') {
+        delete link.dataset.toggle;
+        delete link.dataset.target;
+    }
+};
 
 eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, linkInfo) {
     $editable.data('range').select();

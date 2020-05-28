@@ -214,6 +214,8 @@ var LinkDialog = Dialog.extend({
             };
         }
         this.data.isNewWindow = data.isNewWindow;
+        this.data.isModalTarget = data.isModalTarget;
+        this.data.selector = data.selector;
         this.final_data = this.data;
         return this._super.apply(this, arguments);
     },
@@ -271,6 +273,15 @@ var LinkDialog = Dialog.extend({
             (shapeClasses ? (` ${shapeClasses}`) : '') +
             (size ? (' btn-' + size) : '');
         var isNewWindow = this.$('input[name="is_new_window"]').prop('checked');
+
+        let isModalTarget = false;
+        let selector = "";
+        if (url.indexOf('#') === 0 && url.length > 1) {
+            selector = '#' + $.escapeSelector(url.substring(1));
+            const $modal = $(selector);
+            isModalTarget = $modal.length && $modal.hasClass('modal');
+            selector = isModalTarget ? selector : "";
+        }
         if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i)) {
             url = ('mailto:' + url);
         } else if (url.indexOf(location.origin) === 0 && this.$('#o_link_dialog_url_strip_domain').prop("checked")) {
@@ -283,6 +294,8 @@ var LinkDialog = Dialog.extend({
             url: url,
             classes: classes.replace(allWhitespace, ' ').replace(allStartAndEndSpace, ''),
             isNewWindow: isNewWindow,
+            isModalTarget: isModalTarget,
+            selector: selector,
         };
     },
     /**

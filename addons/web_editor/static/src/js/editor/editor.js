@@ -93,6 +93,9 @@ var EditorMenuBar = Widget.extend({
                 ev.preventDefault();
             }
         });
+        $(document.body).on('click', '.note-editable [data-toggle="modal"]', function (ev) {
+            ev.stopPropagation(); // Disable modal opening on click in editable mode
+        });
 
         this.rte.start();
 

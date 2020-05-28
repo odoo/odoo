@@ -67,9 +67,10 @@
                             data-css-property="color"
                             data-color-prefix="text-"
                             data-apply-to=".s_popup_close"/>
-            <we-select string="Display" data-attribute-name="display" data-attribute-default-value="always">
+            <we-select string="Display" data-attribute-name="display" data-attribute-default-value="always" data-no-preview="true">
                 <we-button data-select-data-attribute="afterDelay" data-name="show_delay">Delay</we-button>
                 <we-button data-select-data-attribute="mouseExit">On Exit</we-button>
+                <we-button data-select-data-attribute="onClick" data-name="onclick_opt">On Click</we-button>
             </we-select>
             <we-input string="⌙ Delay"
                       data-select-data-attribute=""
@@ -78,7 +79,11 @@
                       data-save-unit="ms"
                       data-dependencies="show_delay"/>
             <t t-set="unit_popup_duration">days</t>
-            <we-input string="Hide For" title="Once the user closes the popup, it won't be shown again for that period of time." t-attf-data-select-data-attribute="7#{unit_popup_duration}" data-attribute-name="consentsDuration" t-att-data-unit="unit_popup_duration"/>
+            <we-input string="Hide For" title="Once the user closes the popup, it won't be shown again for that period of time."
+                      t-attf-data-select-data-attribute="7#{unit_popup_duration}"
+                      data-attribute-name="consentsDuration"
+                      t-att-data-unit="unit_popup_duration"
+                      data-dependencies="!onclick_opt"/>
             <we-select string="Show on" data-no-preview="true">
                 <we-button data-move-block="moveToBody">This page</we-button>
                 <we-button data-move-block="moveToFooter">All pages</we-button>
