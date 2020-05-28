@@ -61,5 +61,28 @@
                 </form>
             </field>
         </record>
+
+        <record id="mrp_routing_action" model="ir.actions.act_window">
+            <field name="name">Operations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.routing.workcenter</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="mrp_routing_workcenter_tree_view"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new operation
+              </p><p>
+                Operation define that need to be done to realize a Work Order.
+                Each operation is done at a specific Work Center and has a specific duration.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_mrp_routing_action"
+          action="mrp_routing_action"
+          parent="menu_mrp_configuration"
+          groups="group_mrp_routings"
+          sequence="100"/>
+
     </data>
 </odoo>
