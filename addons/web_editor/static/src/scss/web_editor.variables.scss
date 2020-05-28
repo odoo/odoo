@@ -2,6 +2,8 @@
 /// This files regroups the variables and mixins which are specific to the editor.
 ///
 
+$o-support-13-0-color-system: false !default;
+
 $o-we-font-family: Roboto, 'Montserrat', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
 
 $o-we-font-size: 13px;
@@ -310,21 +312,37 @@ $o-we-toolbar-height: 32px;
 // palette once selected to ensure it works.
 
 // Colors
-$o-base-color-palette: () !default;
+$o-base-color-palette: (
+    'o-color-1': transparent,
+    'o-color-2': transparent,
+    'o-color-3': transparent,
+    'o-color-4': transparent,
+    'o-color-5': transparent,
+) !default;
 $o-color-palettes: (
-    (),
+    (
+        'o-color-1': $o-enterprise-primary-color,
+        'o-color-2': $o-enterprise-color,
+        'o-color-3': #F6F6F6,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #383E45,
+    ),
+    (
+        'o-color-1': #337ab7,
+        'o-color-2': #e9ecef,
+        'o-color-3': #F8F9FA,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #343a40,
+    ),
 ) !default;
 $o-color-palette-number: 1 !default;
 
 // Theme colors
-$o-base-theme-color-palette: (
-    'alpha': white,
-    'beta': white,
-    'gamma': white,
-    'delta': white,
-    'epsilon': white,
-) !default;
+$o-base-theme-color-palette: () !default;
 $o-theme-color-palettes: (
+    // alpha -> epsilon are old color names kept for compatibility.
+    // They should not be used in the code base anymore and ideally they will
+    // not generate any classes for >= 13.4 databases.
     (
         'alpha': $o-enterprise-primary-color,
         'beta': $o-enterprise-color,
@@ -332,6 +350,7 @@ $o-theme-color-palettes: (
         'delta': #5B899E,
         'epsilon': #E46F78,
     ),
+    (),
 ) !default;
 $o-theme-color-palette-number: 1 !default;
 
@@ -366,7 +385,7 @@ $o-transparent-grays: (
     'white-85': rgba(white, 0.85),
 ) !default;
 $o-gray-color-palettes: (
-    (),
+    (), (),
 ) !default;
 $o-gray-color-palette-number: 1 !default;
 
@@ -389,26 +408,26 @@ $o-base-color-combination: (
 $o-color-combinations-presets: (
     (
         (
-            // See $o-base-color-combination
+            'bg': 'o-color-4',
         ),
         (
-            'bg': 'gamma',
-            'headings': 'alpha',
+            'bg': 'o-color-3',
+            'headings': 'o-color-1',
         ),
         (
-            'bg': 'beta',
-            'btn-secondary': 'gamma',
+            'bg': 'o-color-2',
+            'btn-secondary': 'o-color-3',
         ),
         (
-            'bg': 'alpha',
-            'link': 'epsilon',
-            'btn-primary': 'epsilon',
-            'btn-secondary': 'gamma',
+            'bg': 'o-color-1',
+            'link': 'o-color-5',
+            'btn-primary': 'o-color-5',
+            'btn-secondary': 'o-color-3',
         ),
         (
-            'bg': 'epsilon',
-            'headings': 'delta',
-            'btn-secondary': 'gamma',
+            'bg': 'o-color-5',
+            'headings': 'o-color-4',
+            'btn-secondary': 'o-color-3',
         ),
     ),
 ) !default;

@@ -8,10 +8,9 @@
             <field name="arch" type="xml">
                 <t name="Debug" t-name="website.bs_debug_page_view">
                     <t t-call="website.layout">
-                        <t t-set="odoo_theme_colors" t-value="[['alpha', 'Alpha'], ['beta', 'Beta'], ['gamma', 'Gamma'], ['delta', 'Delta'], ['epsilon', 'Epsilon']]"/>
+                        <t t-set="odoo_theme_colors" t-value="[['o-color-1', 'Color 1'], ['o-color-2', 'Color 2'], ['o-color-3', 'Color 3'], ['o-color-4', 'Color 4'], ['o-color-5', 'Color 5']]"/>
                         <t t-set="bs_theme_colors" t-value="[['primary', 'Primary'], ['secondary', 'Secondary'], ['success', 'Success'], ['info', 'Info'], ['warning', 'Warning'], ['danger', 'Danger'], ['light', 'Light'], ['dark', 'Dark']]"/>
                         <t t-set="bs_gray_colors" t-value="[['white', 'White'], ['100', '100'], ['200', '200'], ['300', '300'], ['400', '400'], ['500', '500'], ['600', '600'], ['700', '700'], ['800', '800'], ['900', '900'], ['black', 'Black']]"/>
-                        <t t-set="all_theme_colors" t-value="odoo_theme_colors + bs_theme_colors"/>
                         <div id="wrap" class="oe_structure">
                             <section class="py-2">
                                 <div class="container">
@@ -19,69 +18,37 @@
                                     <div class="row">
                                         <div class="col-md">
                                             <h2>Badge</h2>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <span t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></span>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <span t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></span>
                                             </t>
                                             <h3 class="mt-2 h6">Pill</h3>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <span t-attf-class="badge mb-1 badge-pill badge-#{color[0]}"><t t-esc="color[1]"/></span>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <span t-attf-class="badge mb-1 badge-pill badge-#{color[0]}"><t t-esc="color[1]"/></span>
                                             </t>
                                             <h3 class="mt-2 h6">Link</h3>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <a href="#" t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></a>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <a href="#" t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></a>
                                             </t>
                                             <h3 class="mt-2 h6">Autosizing</h3>
                                             <div class="h3">
-                                                <t t-foreach="odoo_theme_colors" t-as="color">
-                                                    <span t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></span>
-                                                </t>
-                                                <br/>
                                                 <t t-foreach="bs_theme_colors" t-as="color">
                                                     <span t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></span>
                                                 </t>
                                             </div>
 
                                             <h2 class="mt-4">Button</h2>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <button type="button" t-attf-class="btn mb-1 btn-#{color[0]}"><t t-esc="color[1]"/></button>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <button type="button" t-attf-class="btn mb-1 btn-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
                                             <h3 class="mt-2 h6">Outline</h3>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <button type="button" t-attf-class="btn mb-1 btn-outline-#{color[0]}"><t t-esc="color[1]"/></button>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <button type="button" t-attf-class="btn mb-1 btn-outline-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
                                             <h3 class="mt-2 h6">Small</h3>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <button type="button" t-attf-class="btn mb-1 btn-sm btn-#{color[0]}"><t t-esc="color[1]"/></button>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <button type="button" t-attf-class="btn mb-1 btn-sm btn-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
                                             <h3 class="mt-2 h6">Large</h3>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <button type="button" t-attf-class="btn mb-1 btn-lg btn-#{color[0]}"><t t-esc="color[1]"/></button>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <button type="button" t-attf-class="btn mb-1 btn-lg btn-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
@@ -156,7 +123,7 @@
                                         </div>
                                         <div class="col-md-auto">
                                             <h2>Alert</h2>
-                                            <t t-foreach="all_theme_colors" t-as="color">
+                                            <t t-foreach="bs_theme_colors" t-as="color">
                                                 <div t-attf-class="alert alert-#{color[0]}">
                                                     This is a "<t t-esc="color[1]"/>" alert with a <a href="#" class="alert-link">link</a>.
                                                 </div>

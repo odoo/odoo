@@ -641,3 +641,12 @@ blockquote {
         }
     }
 }
+
+// Extend bootstrap to create background and text utilities for some colors
+// outside of the $theme-colors too (but not btn-, alert-, etc).
+@for $index from 1 through 5 {
+    $-color-name: 'o-color-#{$index}';
+    $-color: color($-color-name);
+    @include bg-variant(".bg-#{$-color-name}", $-color);
+    @include text-emphasis-variant(".text-#{$-color-name}", $-color);
+}
