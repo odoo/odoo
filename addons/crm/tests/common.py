@@ -150,6 +150,24 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'zip': '97648',
         })
 
+    def _create_leads_batch(self, lead_type='lead', count=10):
+        """ Helper tool method creating a batch of leads, useful when dealing
+        with batch processes. Please update me.
+
+        :param string type: 'lead', 'opportunity', 'mixed' (lead then opp),
+          None (depends on configuration);
+        """
+        types = ['lead', 'opportunity']
+        partners = [self.contact_1.id, self.contact_2.id, False]
+        leads_data = [{
+            'name': 'TestLead_%02d' % (x),
+            'type': lead_type if lead_type else types[x % 2],
+            'partner_id': partners[x % 3],
+            'priority': '%s' % (x % 3),
+        } for x in range(count)]
+
+        return self.env['crm.lead'].create(leads_data)
+
     def _create_duplicates(self, lead, create_opp=True):
         """ Helper tool method creating, based on a given lead
 
