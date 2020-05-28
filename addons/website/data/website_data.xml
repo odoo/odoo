@@ -14,7 +14,7 @@
             <field name="website_id" ref="default_website"/>
         </record>
 
-        <record id="menu_homepage" model="website.menu">
+        <record id="menu_homepage" model="website.menu" forcecreate="False">
             <field name="name">Home</field>
             <field name="url">/</field>
             <field name="parent_id" ref="website.main_menu"/>
@@ -22,7 +22,7 @@
             <field name="website_id" ref="default_website"/>
         </record>
 
-        <record id="menu_contactus" model="website.menu">
+        <record id="menu_contactus" model="website.menu" forcecreate="False">
             <field name="name">Contact us</field>
             <field name="url">/contactus</field>
             <field name="parent_id" ref="website.main_menu"/>

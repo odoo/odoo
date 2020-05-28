@@ -5,7 +5,7 @@
             <field name="name">Our Blog</field>
             <field name="subtitle">Get in touch with us</field>
         </record>
-        <record id="menu_news" model="website.menu">
+        <record id="menu_news" model="website.menu" forcecreate="False">
             <field name="name">Blog</field>
             <field name="url" eval="'/blog/'+str(ref('website_blog.blog_blog_1'))"/>
             <field name="parent_id" ref="website.main_menu"/>

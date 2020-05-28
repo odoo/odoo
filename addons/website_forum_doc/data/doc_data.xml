@@ -10,7 +10,7 @@
     </data>
 
     <data noupdate="1">
-        <record id="menu_questions" model="website.menu">
+        <record id="menu_questions" model="website.menu" forcecreate="False">
             <field name="name">Documentation</field>
             <field name="url" eval="'/forum/how-to'"/>
             <field name="parent_id" ref="website.main_menu"/>
