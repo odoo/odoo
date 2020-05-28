@@ -44,6 +44,15 @@ $o-website-values: map-merge($o-base-website-values-palette, o-map-omit($o-websi
 // Colors
 //------------------------------------------------------------------------------
 
+$o-has-customized-13-0-color-system:
+    not not (map-get($o-user-theme-color-palette, 'primary')
+    or map-get($o-user-theme-color-palette, 'secondary')
+    or map-get($o-user-theme-color-palette, 'alpha')
+    or map-get($o-user-theme-color-palette, 'beta')
+    or map-get($o-user-theme-color-palette, 'gamma')
+    or map-get($o-user-theme-color-palette, 'delta')
+    or map-get($o-user-theme-color-palette, 'epsilon'));
+
 // Color palette
 // -------------
 
@@ -57,14 +66,8 @@ $o-color-palettes: append($o-color-palettes, $-actual-user-color-palette);
 // Theme color palette
 // -------------------
 
-// Proper themes have to enforce primary = alpha and secondary = beta.
-// Exceptions to this rule are made for compatibility reasons
-$-palette-default: nth($o-theme-color-palettes, $o-theme-color-palette-number);
-
-// Generate default theme color scheme if alpha is set
-$-is-alpha-primary: not map-has-key($-palette-default, 'primary');
-$-is-beta-secondary: not map-has-key($-palette-default, 'secondary');
-
+// alpha -> epsilon colors are from the old color system, this is kept for
+// compatibility: Generate default theme color scheme if alpha is set
 $-alpha: map-get($o-user-theme-color-palette, 'alpha');
 @if ($-alpha) {
     $o-user-theme-color-palette: map-merge((
@@ -78,7 +81,15 @@ $-alpha: map-get($o-user-theme-color-palette, 'alpha');
 // By default, all user theme color palette values are null. Each null value is
 // automatically replaced with corresponsing colors in chosen default theme
 // color palette.
+$-palette-default: nth($o-theme-color-palettes, $o-theme-color-palette-number);
 $-actual-user-theme-color-palette: map-merge($-palette-default, o-map-omit($o-user-theme-color-palette));
+// Always remove the primary/secondary which were customizable in some theme
+// in Odoo <= 13.3. The customer can always rechoose the right color in the
+// Odoo color system as the first two ones are mapped to primary/secondary.
+$-actual-user-theme-color-palette: map-remove($-actual-user-theme-color-palette,
+    'primary',
+    'secondary'
+);
 $o-theme-color-palettes: append($o-theme-color-palettes, $-actual-user-theme-color-palette);
 
 // ---
