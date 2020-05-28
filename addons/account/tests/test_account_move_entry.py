@@ -14,8 +14,8 @@ import json
 class TestAccountMove(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestAccountMove, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         tax_repartition_line = cls.company_data['default_tax_sale'].invoice_repartition_line_ids\
             .filtered(lambda line: line.repartition_type == 'tax')
