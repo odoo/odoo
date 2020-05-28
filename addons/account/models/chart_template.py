@@ -207,9 +207,9 @@ class AccountChartTemplate(models.Model):
             existing_journals = self.env['account.journal'].search([('company_id', '=', company.id)])
             if existing_journals:
                 prop_values.extend(['account.journal,%s' % (journal_id,) for journal_id in existing_journals.ids])
-            accounting_props = self.env['ir.property'].search([('value_reference', 'in', prop_values)])
-            if accounting_props:
-                accounting_props.sudo().unlink()
+            self.env['ir.property'].sudo().search(
+                [('value_reference', 'in', prop_values)]
+            ).unlink()
 
             # delete account, journal, tax, fiscal position and reconciliation model
             models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.move', 'account.journal', 'account.group']
@@ -463,34 +463,22 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         PropertyObj = self.env['ir.property']
         todo_list = [
-            ('property_account_receivable_id', 'res.partner', 'account.account'),
-            ('property_account_payable_id', 'res.partner', 'account.account'),
-            ('property_account_expense_categ_id', 'product.category', 'account.account'),
-            ('property_account_income_categ_id', 'product.category', 'account.account'),
-            ('property_account_expense_id', 'product.template', 'account.account'),
-            ('property_account_income_id', 'product.template', 'account.account'),
-            ('property_tax_payable_account_id', 'account.tax.group', 'account.account'),
-            ('property_tax_receivable_account_id', 'account.tax.group', 'account.account'),
-            ('property_advance_tax_payment_account_id', 'account.tax.group', 'account.account'),
+            ('property_account_receivable_id', 'res.partner'),
+            ('property_account_payable_id', 'res.partner'),
+            ('property_account_expense_categ_id', 'product.category'),
+            ('property_account_income_categ_id', 'product.category'),
+            ('property_account_expense_id', 'product.template'),
+            ('property_account_income_id', 'product.template'),
+            ('property_tax_payable_account_id', 'account.tax.group'),
+            ('property_tax_receivable_account_id', 'account.tax.group'),
+            ('property_advance_tax_payment_account_id', 'account.tax.group'),
         ]
-        for record in todo_list:
-            account = getattr(self, record[0])
-            value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
+        for field, model in todo_list:
+            account = self[field]
+            value = acc_template_ref[account.id] if account else False
             if value:
-                field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
-                vals = {
-                    'name': record[0],
-                    'company_id': company.id,
-                    'fields_id': field.id,
-                    'value': value,
-                }
-                properties = PropertyObj.search([('name', '=', record[0]), ('company_id', '=', company.id)])
-                if properties:
-                    #the property exist: modify it
-                    properties.write(vals)
-                else:
-                    #create the property
-                    PropertyObj.create(vals)
+                PropertyObj._set_default(field, model, value, company=company)
+
         stock_properties = [
             'property_stock_account_input_categ_id',
             'property_stock_account_output_categ_id',

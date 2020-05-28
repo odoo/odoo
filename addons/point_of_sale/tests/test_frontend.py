@@ -30,12 +30,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                                                  'reconcile': True})
         self.env.company.account_default_pos_receivable_account_id = account_receivable
 
-        self.env['ir.property'].set_default(
-            'property_account_receivable_id',
-            'res.partner',
-            account_receivable,
-            main_company,
-        )
+        self.env['ir.property']._set_default('property_account_receivable_id', 'res.partner', account_receivable, main_company)
 
         cash_journal = journal_obj.create({
             'name': 'Cash Test',
@@ -400,12 +395,11 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         # Change the default sale pricelist of customers,
         # so the js tests can expect deterministically this pricelist when selecting a customer.
-        field = env['ir.model.fields']._get('res.partner', 'property_product_pricelist')
-        env['ir.property'].search([
-            ('name', '=', 'property_product_pricelist'),
-            ('fields_id', '=', field.id),
-            ('res_id', '=', False)
-        ]).write({'value_reference': 'product.pricelist,%s' % public_pricelist.id})
+        env['ir.property']._set_default(
+            "property_product_pricelist",
+            "res.partner",
+            public_pricelist,
+        )
 
 
 @odoo.tests.tagged('post_install', '-at_install')

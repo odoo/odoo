@@ -432,19 +432,9 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         # Ensure everything was done correctly
         self.assertEqual(self.demo_user.partner_id.with_company(self.company1.id).property_product_pricelist, self.c1_pl)
         self.assertEqual(self.demo_user.partner_id.with_company(self.company2.id).property_product_pricelist, self.c2_pl)
-        irp1 = self.env['ir.property'].search([
-            ('name', '=', 'property_product_pricelist'),
-            ('company_id', '=', self.company1.id),
-            ('res_id', '=', 'res.partner,%s' % self.demo_user.partner_id.id),
-            ('value_reference', '=', 'product.pricelist,%s' % self.c1_pl.id),
-        ])
-        irp2 = self.env['ir.property'].search([
-            ('name', '=', 'property_product_pricelist'),
-            ('company_id', '=', self.company2.id),
-            ('res_id', '=', 'res.partner,%s' % self.demo_user.partner_id.id),
-            ('value_reference', '=', 'product.pricelist,%s' % self.c2_pl.id),
-        ])
-        self.assertEqual(len(irp1 + irp2), 2, "Ensure there is an `ir.property` for demo partner for every company, and that the pricelist is the company specific one.")
+        irp1 = self.env['ir.property'].with_company(self.company1)._get("property_product_pricelist", "res.partner", self.demo_user.partner_id.id)
+        irp2 = self.env['ir.property'].with_company(self.company2)._get("property_product_pricelist", "res.partner", self.demo_user.partner_id.id)
+        self.assertEqual((irp1, irp2), (self.c1_pl, self.c2_pl), "Ensure there is an `ir.property` for demo partner for every company, and that the pricelist is the company specific one.")
         simulate_frontend_context(self)
         # ---------------------------------- IR.PROPERTY -------------------------------------
         # id |            name              |     res_id    | company_id |   value_reference
