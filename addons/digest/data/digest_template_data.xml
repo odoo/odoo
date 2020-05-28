@@ -12,6 +12,7 @@
     % set data = object.compute_kpis(company, user)
     % set tips = object.compute_tips(company, user, tips_count=ctx.get('tips_count', 1))
     % set kpi_actions = object.compute_kpis_actions(company, user)
+    % set preferences = object.compute_preferences(company, user)
     % set kpis = data.yesterday.keys()
     <table cellspacing="0" cellpadding="0" align="center" border="0" bgcolor="#eeeeee" style="width:100%; font-family: Arial,Helvetica,Verdana,sans-serif;">
         <tr class="mobile-hide" bgcolor="#875a7b"><td height="70"> </td></tr>
@@ -46,6 +47,7 @@
                 <table bgcolor="#ffffff" cellspacing="0" cellpadding="0" width="650" align="center" border="0" style="border: 1px solid #eeeeee; border-bottom: none;width: 100%; max-width: 650px; padding:30px 30px">
                     <tr>
                         <td>
+                            % for tip in tips:
                             <table cellspacing="0" cellpadding="0" border="0" width="580" align="center" style="width:100%; max-width:580px;">
                                 <tr>
                                     <td valign="top">
@@ -53,6 +55,7 @@
                                     </td>
                                 </tr>
                             </table>
+                            % endfor
                         </td>
                     </tr>
                 </table>
@@ -137,6 +140,15 @@
                     </tr>
                 </table>
                 % endfor
+                % if preferences:
+                <table bgcolor="#ffffff" cellspacing="0" cellpadding="0" width="650" align="center" border="0" style="border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; width: 100%; max-width: 650px; padding:30px 30px">
+                    <tr>
+                        <td bgcolor="#fafafa" width="100%" height="50" align="center">
+                            ${preferences | safe}
+                        </td>
+                    </tr>
+                </table>
+                % endif
                 % if user.has_group('base.group_system'):
                 <table bgcolor="#ffffff" cellspacing="0" cellpadding="0" width="650" align="center" border="0" style="border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; width: 100%; max-width: 650px; padding:30px 30px">
                     <tr>

@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import math
 import pytz
 
 from datetime import datetime, date
@@ -23,10 +22,11 @@ class Digest(models.Model):
     # Digest description
     name = fields.Char(string='Name', required=True, translate=True)
     user_ids = fields.Many2many('res.users', string='Recipients', domain="[('share', '=', False)]")
-    periodicity = fields.Selection([('weekly', 'Weekly'),
+    periodicity = fields.Selection([('daily', 'Daily'),
+                                    ('weekly', 'Weekly'),
                                     ('monthly', 'Monthly'),
                                     ('quarterly', 'Quarterly')],
-                                   string='Periodicity', default='weekly', required=True)
+                                   string='Periodicity', default='daily', required=True)
     next_run_date = fields.Date(string='Next Send Date')
     template_id = fields.Many2one('mail.template', string='Email Template',
                                   domain="[('model','=','digest.digest')]",
@@ -77,19 +77,21 @@ class Digest(models.Model):
 
     @api.model
     def create(self, vals):
-        vals['next_run_date'] = date.today() + relativedelta(days=3)
-        return super(Digest, self).create(vals)
+        digest = super(Digest, self).create(vals)
+        if not digest.next_run_date:
+             digest.next_run_date = digest._get_next_run_date()
+        return digest
 
     # ------------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------------
 
     def action_subscribe(self):
-        if self.env.user not in self.user_ids:
+        if self.env.user.has_group('base.group_user') and self.env.user not in self.user_ids:
             self.sudo().user_ids |= self.env.user
 
     def action_unsubcribe(self):
-        if self.env.user in self.user_ids:
+        if self.env.user.has_group('base.group_user') and self.env.user in self.user_ids:
             self.sudo().user_ids -= self.env.user
 
     def action_activate(self):
@@ -98,10 +100,16 @@ class Digest(models.Model):
     def action_deactivate(self):
         self.state = 'deactivated'
 
+    def action_set_periodicity(self, periodicity):
+        self.periodicity = periodicity
+
     def action_send(self):
+        to_slowdown = self._check_daily_logs()
         for digest in self:
             for user in digest.user_ids:
-                digest._action_send_to_user(user, tips_count=1)
+                digest.with_context(digest_slowdown=digest in to_slowdown)._action_send_to_user(user, tips_count=1)
+            if digest in to_slowdown:
+                digest.write({'periodicity': 'weekly'})
             digest.next_run_date = digest._get_next_run_date()
 
     def _action_send_to_user(self, user, tips_count=1):
@@ -167,7 +175,7 @@ class Digest(models.Model):
             self.env['mail.render.mixin']._render_template(tools.html_sanitize(tip.tip_description), 'digest.tip', tip.ids, post_process=True)[tip.id]
             for tip in tips
         ]
-        # tip.user_ids += user
+        tip.user_ids += user
         return tip_descriptions
 
     def compute_kpis_actions(self, company, user):
@@ -178,8 +186,27 @@ class Digest(models.Model):
         """
         return {}
 
+    def compute_preferences(self, company, user):
+        """ Give an optional text for preferences, like a shortcut for configuration.
+
+        :return string: html to put in template
+        """
+        preferences = self.env['mail.render.mixin']._render_template(
+            'digest.digest_section_preferences',
+            'digest.digest',
+            self.ids,
+            engine='qweb',
+            add_context={
+                'company': company,
+                'user': user,
+            },
+            post_process=True)[self.id]
+        return preferences
+
     def _get_next_run_date(self):
         self.ensure_one()
+        if self.periodicity == 'daily':
+            delta = relativedelta(days=1)
         if self.periodicity == 'weekly':
             delta = relativedelta(weeks=1)
         elif self.periodicity == 'monthly':
@@ -215,6 +242,18 @@ class Digest(models.Model):
         if (value != previous_value) and (value != 0.0 and previous_value != 0.0):
             margin = float_round((float(value-previous_value) / previous_value or 1) * 100, precision_digits=2)
         return margin
+
+    def _check_daily_logs(self):
+        three_days_ago = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - relativedelta(days=3)
+        to_slowdown = self.env['digest.digest']
+        for digest in self.filtered(lambda digest: digest.periodicity == 'daily'):
+            users_logs = self.env['res.users.log'].sudo().search_count([
+                ('create_uid', 'in', digest.user_ids.ids),
+                ('create_date', '>=', three_days_ago)
+            ])
+            if not users_logs:
+                to_slowdown += digest
+        return to_slowdown
 
     def _format_currency_amount(self, amount, currency_id):
         pre = currency_id.position == 'before'
