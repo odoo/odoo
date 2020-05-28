@@ -9,8 +9,8 @@
             <xpath expr="//header/button[@name='action_rfq_send']" position="after">
                 <button name="action_view_picking" string="Receive Products" class="oe_highlight" type="object" attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}"/>
             </xpath>
-            <xpath expr="//header/button[@name='confirm_reminder_mail']" position="replace">
-                <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('effective_date', '!=', False)]}"/>
+            <xpath expr="//header/button[@name='confirm_reminder_mail']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('effective_date', '!=', False)]}</attribute>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button type="object"
@@ -32,15 +32,10 @@
                     <span><field name="on_time_rate" widget="integer" class="oe_inline"/>% On-Time Delivery</span>
                 </button>
             </xpath>
-            <xpath expr="//div[@name='confirmation']" position="replace">
-                <div name="confirmation" class="oe_edit_only o_row" attrs="{'invisible': [('effective_date', '!=', False)]}" groups='purchase.group_send_reminder'>
-                    <field name="receipt_reminder_email"/>
-                    <span>Ask confirmation</span>
-                    <field name="reminder_date_before_receipt" attrs="{'readonly': [('receipt_reminder_email', '=', False)]}"/>
-                    <span> days before</span>
-                </div>
+            <xpath expr="//div[@name='reminder']" position="attributes">
+                <attribute name="attrs">{'invisible': [('effective_date', '!=', False)]}</attribute>
             </xpath>
-            <xpath expr="//div[@name='date_planned_and_confirmation']" position="after">
+            <xpath expr="//div[@name='reminder']" position="after">
                 <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='invoice_lines']" position="after">
