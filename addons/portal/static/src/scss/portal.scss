@@ -63,7 +63,9 @@ header {
     ul.nav > li {
         &.divider {
             display: none;
-            border-right: 1px solid $nav-divider-color;
+            margin: $nav-link-padding-y ($nav-link-padding-x * 0.5);
+            border-right: 1px solid;
+            opacity: 0.25;
         }
 
         &.active + .divider {
