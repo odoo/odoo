@@ -614,6 +614,13 @@ options.registry.background.include({
 });
 
 options.registry.Theme = options.Class.extend({
+    events: {
+        'click .o_color_combinations_edition we-toggler': '_onCCTogglerClick',
+        // FIXME investigate why using 'click' does not work *anymore* but those
+        // foldable areas will be made more robust and standard with the new UI.
+        'mouseup .o_cc_subheadings_toggler_icon': '_onCCHeadingsTogglerClick',
+    },
+
     /**
      * @override
      */
@@ -811,6 +818,77 @@ options.registry.Theme = options.Class.extend({
             useWorker: false,
         });
         return aceEditor;
+    },
+    /**
+     * @override
+     */
+    async _renderOriginalXML($xml) {
+        const uiFragment = await this._super(...arguments);
+
+        uiFragment.querySelectorAll('.o_cc_subheadings_toggler').forEach(headingsEl => {
+            const togglerEl = document.createElement('span');
+            togglerEl.classList.add('o_cc_subheadings_toggler_icon', 'o_we_fold_icon', 'fa', 'fa-caret-down');
+            togglerEl.setAttribute('role', 'button');
+            const titleEl = headingsEl.querySelector('we-title');
+            titleEl.insertBefore(togglerEl, titleEl.firstChild);
+        });
+        uiFragment.querySelectorAll('.o_cc_subheadings_collapse').forEach(subheadingsEl => {
+            subheadingsEl.classList.add('d-none');
+        });
+
+        return uiFragment;
+    },
+    /**
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        const ccEl = uiFragment.querySelector('.o_color_combinations_edition');
+        for (let i = 1; i <= 5; i++) {
+            const togglerEl = document.createElement('we-toggler');
+            togglerEl.classList.add('pt-0', 'pb-0', 'pl-0');
+            const divEl = document.createElement('div');
+            divEl.classList.add('o_we_cc_preview_container');
+            const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
+            ccPreviewEl.classList.add('p-1', 'text-center', `o_cc${i}`);
+            divEl.appendChild(ccPreviewEl);
+            togglerEl.appendChild(divEl);
+            ccEl.appendChild(togglerEl);
+
+            const collapseEl = document.createElement('we-collapse');
+            const editionEl = $(qweb.render('website.color_combination_edition', {number: i}))[0];
+            collapseEl.appendChild(editionEl);
+            ccEl.appendChild(collapseEl);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onCCTogglerClick(ev) {
+        const ccTogglerEls = this.el.querySelectorAll('.o_color_combinations_edition we-toggler');
+        for (const el of ccTogglerEls) {
+            if (el !== ev.currentTarget) {
+                el.classList.remove('active');
+            }
+        }
+        ev.currentTarget.classList.toggle('active');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onCCHeadingsTogglerClick(ev) {
+        const togglerEl = ev.currentTarget;
+        const collapseEl = togglerEl.closest('we-collapse').querySelector('.o_cc_subheadings_collapse');
+        const show = togglerEl.classList.contains('fa-caret-down');
+        togglerEl.classList.toggle('fa-caret-down', !show);
+        togglerEl.classList.toggle('fa-caret-up', show);
+        collapseEl.classList.toggle('d-none', !show);
     },
 });
 

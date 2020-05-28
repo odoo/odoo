@@ -14,6 +14,10 @@ $enable-deprecation-messages: false !default;
     @return o-get-most-contrast($color, $light, $dark, $background, $threshold, $cross-mix);
 }
 
+@function mute-color($color) {
+    @return scale-color($color, $alpha: -30%);
+}
+
 // This placeholder regroups the rules that will apply on all elements with a
 // bg-* class (see o-bg-color, bg-variant). The optimized-css way would be to
 // have a common class for them all.
@@ -37,7 +41,7 @@ $o-color-extras-nesting-selector: '&' !default;
 
                 .text-muted {
                     // Always important since the basic BS rule is important
-                    color: scale-color($-yiq-color, $alpha: -30%) !important;
+                    color: mute-color($-yiq-color) !important;
                 }
             }
         }

@@ -251,6 +251,7 @@ $o-we-toolbar-height: 32px;
 
         &.btn-primary {
             @include button-variant($o-brand-primary, $o-brand-primary);
+            color: white;
         }
         &.btn-secondary {
             @include button-variant($o-we-bg-color, $o-we-bg-color);
@@ -262,15 +263,19 @@ $o-we-toolbar-height: 32px;
         }
         &.btn-success {
             @include button-variant($o-we-color-success, $o-we-color-success);
+            color: white;
         }
         &.btn-info {
             @include button-variant($o-we-color-info, $o-we-color-info);
+            color: white;
         }
         &.btn-warning {
             @include button-variant($o-we-color-warning, $o-we-color-warning);
+            color: $o-we-color-divider;
         }
         &.btn-danger {
             @include button-variant($o-we-color-danger, $o-we-color-danger);
+            color: $o-we-color-divider;
         }
     }
 }

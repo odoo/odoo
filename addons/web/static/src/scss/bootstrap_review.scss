@@ -108,15 +108,22 @@
 // We do it ourself here with a tweak: we introduce btn-fill-* (working as the
 // normal btn-* classes (in opposition to btn-outline-* classes). We then map
 // the btn-* classes to either btn-fill-* or btn-outline-* classes depending on
-// the configuration.
+// the configuration. We also allow to define a border-color different than the
+// background color.
+$o-btn-bg-colors: () !default;
+$o-btn-border-colors: () !default;
 @each $color, $value in $theme-colors {
+    $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
+    $-border-color: map-get($o-btn-border-colors, $color) or $-bg-color;
     .btn-fill-#{$color} {
-        @include button-variant($value, $value);
+        @include button-variant($-bg-color, $-border-color);
     }
 }
 @each $color, $value in $theme-colors {
+    $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
+    $-border-color: map-get($o-btn-border-colors, $color) or $-bg-color;
     .btn-outline-#{$color} {
-        @include button-outline-variant($value);
+        @include button-outline-variant($-border-color);
     }
 }
 $o-btn-outline-defaults: () !default;

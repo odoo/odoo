@@ -41,21 +41,7 @@ $-font-numbers: (
     }
 
     // 5) Use final value used by the theme
-    $-h1-color: if($headings-color == inherit or not $headings-color, $body-color, $headings-color);
-    $-h2-color: if(color('h2'), color('h2'), $-h1-color);
-    $-h3-color: if(color('h3'), color('h3'), $-h2-color);
-    $-h4-color: if(color('h4'), color('h4'), $-h3-color);
-    $-h5-color: if(color('h5'), color('h5'), $-h4-color);
-    $-h6-color: if(color('h6'), color('h6'), $-h5-color);
-
     --body: #{$body-bg};
-    --text: #{$body-color};
-    --h1: #{$-h1-color};
-    --h2: #{$-h2-color};
-    --h3: #{$-h3-color};
-    --h4: #{$-h4-color};
-    --h5: #{$-h5-color};
-    --h6: #{$-h6-color};
 
     --logo-height: #{$o-theme-navbar-logo-height};
     --fixed-logo-height: #{$o-theme-navbar-fixed-logo-height};
@@ -81,7 +67,7 @@ $-font-numbers: (
         }
 
         #wrap {
-            background-color: $white;
+            background-color: o-color('o-cc1-bg');
         }
     }
 }
@@ -145,19 +131,19 @@ $-header-nav-link-height: $nav-link-height;
     }
 }
 h2, h3, h4, h5, h6 {
-    color: color('h2');
+    color: color('o-cc1-h2');
 }
 h3, h4, h5, h6 {
-    color: color('h3');
+    color: color('o-cc1-h3');
 }
 h4, h5, h6 {
-    color: color('h4');
+    color: color('o-cc1-h4');
 }
 h5, h6 {
-    color: color('h5');
+    color: color('o-cc1-h5');
 }
 h6 {
-    color: color('h6');
+    color: color('o-cc1-h6');
 }
 .btn {
     @if ($o-theme-buttons-font != $o-theme-font) {
