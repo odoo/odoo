@@ -22,7 +22,7 @@ $enable-deprecation-messages: false !default;
 
         @if ($with-muted) {
             .text-muted {
-                color: rgba($-yiq-color, 0.4) !important;
+                color: scale-color($-yiq-color, $alpha: -30%) !important;
             }
         }
 
