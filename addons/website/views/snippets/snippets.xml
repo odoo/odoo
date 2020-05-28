@@ -325,18 +325,12 @@
          data-js="MainColorpicker"
          data-selector="section, .carousel-item, section .row > div, .o_record_cover_container"
          data-exclude=".parallax, .o_gallery .carousel-item, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div, .s_carousel_wrapper, .s_tabs .oe_structure > *">
-        <we-select data-trigger="bg_color_opt" data-trigger-value="">
-            <we-button data-select-class="o_cc o_cc1">Color combinations 1</we-button>
-            <we-button data-select-class="o_cc o_cc2">Color combinations 2</we-button>
-            <we-button data-select-class="o_cc o_cc3">Color combinations 3</we-button>
-            <we-button data-select-class="o_cc o_cc4">Color combinations 4</we-button>
-            <we-button data-select-class="o_cc o_cc5">Color combinations 5</we-button>
-        </we-select>
         <we-colorpicker string="Background Color"
             data-name="bg_color_opt"
             data-select-style="true"
             data-css-property="background-color"
             data-color-prefix="bg-"
+            data-with-combinations="true"
             data-dependencies="!cover_background_opt"/>
     </div>
 
