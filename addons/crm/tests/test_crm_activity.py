@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date, timedelta
+
 from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.tests.common import users
 
 
 class TestCrmMailActivity(TestCrmCommon):
@@ -22,6 +25,89 @@ class TestCrmMailActivity(TestCrmCommon):
             'summary': 'ACT 2 : I want to show you my ERP !',
             'res_model_id': cls.env['ir.model']._get('crm.lead').id,
         })
+        for activity_type in cls.activity_type_1 + cls.activity_type_2:
+            cls.env['ir.model.data'].create({
+                'name': activity_type.name.lower().replace(' ', '_'),
+                'module': 'crm',
+                'model': activity_type._name,
+                'res_id': activity_type.id,
+            })
+
+    @users('user_sales_leads')
+    def test_crm_activity_ordering(self):
+        """ Test ordering on "my activities", linked to a hack introduced for a b2b.
+        Purpose is to be able to order on "my activities", which is a filtered o2m.
+        In this test we will check search, limit, order and offset linked to the
+        override of search for this non stored computed field. """
+        # Initialize some batch data
+        default_order = self.env['crm.lead']._order
+        self.assertEqual(default_order, "priority desc, id desc")  # force updating this test is order changes
+        test_leads = self._create_leads_batch(count=10).sorted('id')
+
+        # assert initial data, ensure we did not break base behavior
+        for lead in test_leads:
+            self.assertFalse(lead.activity_date_deadline_my)
+        search_res = self.env['crm.lead'].search([('id', 'in', test_leads.ids)], limit=5, offset=0, order='id ASC')
+        self.assertEqual(search_res.ids, test_leads[:5].ids)
+        search_res = self.env['crm.lead'].search([('id', 'in', test_leads.ids)], limit=5, offset=5, order='id ASC')
+        self.assertEqual(search_res.ids, test_leads[5:10].ids)
+
+        # Let's schedule some activities for "myself" and "my bro"and check those are correctly computed
+        # LEAD NUMBER     DEADLINE (MY) PRIORITY   LATE DEADLINE (MY)
+        # 0               +2D           0          +2D
+        # 1               -1D           1          +2D
+        # 2               -2D           2          +2D
+        # 3               -1D           0          -1D
+        # 4               -2D           1          -2D
+        # 5               +2D           2          +2D
+        # 6+              /             0/1/2/0    /
+        today = date.today()
+        deadline_in2d, deadline_in1d = today + timedelta(days=2), today + timedelta(days=1)
+        deadline_was2d, deadline_was1d = today + timedelta(days=-2), today + timedelta(days=-1)
+        deadlines_my = [deadline_in2d, deadline_was1d, deadline_was2d, deadline_was1d, deadline_was2d,
+                        deadline_in2d, False, False, False, False]
+        deadlines_gl = [deadline_in1d, deadline_was1d, deadline_was2d, deadline_was1d, deadline_was2d,
+                        deadline_in2d, False, False, False, False]
+
+        test_leads[0:4].activity_schedule(act_type_xmlid='crm.call_for_demo', user_id=self.user_sales_manager.id, date_deadline=deadline_in1d)
+        test_leads[0:3].activity_schedule(act_type_xmlid='crm.initial_contact', date_deadline=deadline_in2d)
+        test_leads[5].activity_schedule(act_type_xmlid='crm.initial_contact', date_deadline=deadline_in2d)
+        (test_leads[1] | test_leads[3]).activity_schedule(act_type_xmlid='crm.initial_contact', date_deadline=deadline_was1d)
+        (test_leads[2] | test_leads[4]).activity_schedule(act_type_xmlid='crm.call_for_demo', date_deadline=deadline_was2d)
+        test_leads.invalidate_cache()
+
+        expected_ids_asc = [2, 4, 1, 3, 5, 0, 8, 7, 9, 6]
+        expected_leads_asc = self.env['crm.lead'].browse([test_leads[lid].id for lid in expected_ids_asc])
+        expected_ids_desc = [5, 0, 1, 3, 2, 4, 8, 7, 9, 6]
+        expected_leads_desc = self.env['crm.lead'].browse([test_leads[lid].id for lid in expected_ids_desc])
+
+        for idx, lead in enumerate(test_leads):
+            self.assertEqual(lead.activity_date_deadline_my, deadlines_my[idx])
+            self.assertEqual(lead.activity_date_deadline, deadlines_gl[idx], 'Fail at %s' % idx)
+
+        # Let's go for a first batch of search
+        _order = 'activity_date_deadline_my ASC, %s' % default_order
+        _domain = [('id', 'in', test_leads.ids)]
+
+        search_res = self.env['crm.lead'].search(_domain, limit=None, offset=0, order=_order)
+        self.assertEqual(expected_leads_asc.ids, search_res.ids)
+        search_res = self.env['crm.lead'].search(_domain, limit=4, offset=0, order=_order)
+        self.assertEqual(expected_leads_asc[:4].ids, search_res.ids)
+        search_res = self.env['crm.lead'].search(_domain, limit=4, offset=3, order=_order)
+        self.assertEqual(expected_leads_asc[3:7].ids, search_res.ids)
+        search_res = self.env['crm.lead'].search(_domain, limit=None, offset=3, order=_order)
+        self.assertEqual(expected_leads_asc[3:].ids, search_res.ids)
+
+        _order = 'activity_date_deadline_my DESC, %s' % default_order
+        search_res = self.env['crm.lead'].search(_domain, limit=None, offset=0, order=_order)
+        self.assertEqual(expected_leads_desc.ids, search_res.ids)
+        search_res = self.env['crm.lead'].search(_domain, limit=4, offset=0, order=_order)
+        self.assertEqual(expected_leads_desc[:4].ids, search_res.ids)
+        search_res = self.env['crm.lead'].search(_domain, limit=4, offset=3, order=_order)
+        self.assertEqual(expected_leads_desc[3:7].ids, search_res.ids)
+        search_res = self.env['crm.lead'].search(_domain, limit=None, offset=3, order=_order)
+        self.assertEqual(expected_leads_desc[3:].ids, search_res.ids)
+
 
     def test_crm_activity_recipients(self):
         """ This test case checks
