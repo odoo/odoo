@@ -80,11 +80,13 @@ var PaymentSix = PaymentInterface.extend({
     _onTransactionComplete: function (event, data) {
         timapi.DefaultTerminalListener.prototype.transactionCompleted(event, data);
 
-        if (event.exception && this.pos.get_order().selected_paymentline.get_payment_status() !== 'retry') {
-            this.pos.gui.show_popup('error', {
-                title: _t('Terminal Error'),
-                body: _t('Transaction was not processed correctly'),
-            });
+        if (event.exception) {
+            if (this.pos.get_order().selected_paymentline.get_payment_status() !== 'retry') {
+                this.pos.gui.show_popup('error', {
+                    title: _t('Terminal Error'),
+                    body: _t('Transaction was not processed correctly'),
+                });
+            }
 
             this.transactionResolve();
         } else {
