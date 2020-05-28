@@ -161,6 +161,7 @@ class Theme(models.AbstractModel):
                 'headings-font-number': 'null',
                 'navbar-font-number': 'null',
                 'buttons-font-number': 'null',
+                'color-palettes-number': 'null',
                 'header-template': 'null',
                 'footer-template': 'null',
             }

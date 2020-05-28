@@ -5,9 +5,9 @@
     }
 }
 
-// Override css variables to influence the default style of the editor without
-// duplicating the css.
 :root {
+    // Override css variables to influence the default style of the editor without
+    // duplicating the css.
     --o-we-toolbar-height: #{$o-navbar-height};
     --o-we-bg-color: #{$o-we-color-dark};
     --o-we-bg-color-dark: #{$o-we-color-darker};
@@ -19,6 +19,13 @@
 
     --o-we-snippets-bg-color: #{$o-we-color-normal};
     --o-we-snippets-color: #{$o-we-color-text-light};
+
+    // Need info about the color of each color palette
+    @for $index from 1 through length($o-color-palettes) - 1 { // Not the user one
+        @each $name, $color in nth($o-color-palettes, $index) {
+            --o-palette-#{$index}-#{$name}: #{$color};
+        }
+    }
 }
 
 // EDITOR TOP BAR AND POPOVER
@@ -118,6 +125,23 @@ $i: 1;
 }
 .o_we_add_google_font_btn {
     border-top: 1px solid currentColor !important;
+}
+
+$palette-size: 10em;
+.o_palette_color_preview {
+    flex: 0 0 auto;
+    display: inline-block;
+    width: $palette-size / 3;
+    height: 1.35em;
+    margin: 4px 0;
+    transition: width 150ms ease 0s;
+
+    &:nth-child(4), &:nth-child(5) {
+        width: 0;
+    }
+}
+.o_palette_color_preview_button:hover .o_palette_color_preview {
+    width: $palette-size / 5;
 }
 
 // SNIPPET OPTIONS
