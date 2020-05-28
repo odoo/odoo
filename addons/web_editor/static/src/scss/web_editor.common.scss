@@ -615,7 +615,7 @@ blockquote {
     // bg and text utility classes. **
     .o_cc#{$index} {
         // Background & Text
-        @include o-bg-color(o-color($-bg), o-color($-text), $important: false);
+        @include o-bg-color(o-color($-bg), o-color($-text), $important: false, $yiq-min-opacity-threshold: 0);
 
         #{$o-color-extras-nesting-selector} {
             // Headings
