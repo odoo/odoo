@@ -24,7 +24,7 @@
 // By default, most website palette values are null. Each null value is
 // automatically replaced with corresponsing values in chosen default values
 // palette.
-$-website-values-default: nth($o-website-values-palettes, $o-website-values-palette-number);
+$-website-values-default: if($o-website-values-palette-number <= length($o-website-values-palettes), nth($o-website-values-palettes, $o-website-values-palette-number), ());
 $-actual-user-website-values-palette: map-merge($-website-values-default, o-map-omit($o-user-website-values));
 // Default font selection + User font selection have been merged, now need to
 // add the right associated font config while still forcing any user override
@@ -71,10 +71,13 @@ $o-has-customized-colors:
 // Color palette
 // -------------
 
+// Add generic color palettes
+$o-color-palettes: join($o-color-palettes, $o-theme-generic-color-palettes);
+
 // By default, most user color palette values are null. Each null value is
 // automatically replaced with corresponsing colors in chosen default color
 // palette.
-$-palette-default: nth($o-color-palettes, $o-color-palette-number);
+$-palette-default: if($o-color-palette-number <= length($o-color-palettes), nth($o-color-palettes, $o-color-palette-number), ());
 $-actual-user-color-palette: map-merge($-palette-default, o-map-omit($o-user-color-palette));
 $o-color-palettes: append($o-color-palettes, $-actual-user-color-palette);
 
@@ -96,7 +99,7 @@ $-alpha: map-get($o-user-theme-color-palette, 'alpha');
 // By default, all user theme color palette values are null. Each null value is
 // automatically replaced with corresponsing colors in chosen default theme
 // color palette.
-$-palette-default: nth($o-theme-color-palettes, $o-theme-color-palette-number);
+$-palette-default: if($o-theme-color-palette-number <= length($o-theme-color-palettes), nth($o-theme-color-palettes, $o-theme-color-palette-number), ());
 $-actual-user-theme-color-palette: map-merge($-palette-default, o-map-omit($o-user-theme-color-palette));
 // Always remove the primary/secondary which were customizable in some theme
 // in Odoo <= 13.3. The customer can always rechoose the right color in the
