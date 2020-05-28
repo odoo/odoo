@@ -338,6 +338,10 @@ $o-color-palettes: (
         'o-color-3': #F8F9FA,
         'o-color-4': #FFFFFF,
         'o-color-5': #343a40,
+
+        'menu': 2,
+        'footer': 2,
+        'copyright': 5,
     ),
 ) !default;
 $o-color-palette-number: 1 !default;
@@ -449,3 +453,16 @@ $o-we-translated-content-color: rgb(120, 215, 110) !default;
 // snippets will have problem because of this; this is a limitation of the
 // system until a better solution is found.
 $o-color-extras-nesting-selector: '&, .o_colored_level &';
+
+// Apply colors according to the given identifier. Can either be a preset
+// number, a color name or a css color.
+@mixin o-apply-colors($identifier, $background: $body-bg) {
+    $-related-color: o-related-color($identifier, $max-recursions: 10);
+    @if type-of($-related-color) == 'number' {
+        // This is a preset to be applied, just extend it. This should probably
+        // be avoided and use the class in XML if possible.
+        @extend .o_cc#{$-related-color};
+    } @else {
+        @include o-bg-color(o-color($-related-color), $background: $background);
+    }
+}

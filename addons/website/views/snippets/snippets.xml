@@ -324,7 +324,7 @@
     <div id="so_main_colorpicker"
          data-js="MainColorpicker"
          data-selector="section, .carousel-item, section .row > div, .o_record_cover_container"
-         data-exclude=".parallax, .o_gallery .carousel-item, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div, .s_carousel_wrapper, .s_tabs .oe_structure > *">
+         data-exclude=".parallax, .o_gallery .carousel-item, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div, .s_carousel_wrapper, .s_tabs .oe_structure > *, footer .oe_structure > *, .o_mega_menu .row > div">
         <we-colorpicker string="Background Color"
             data-name="bg_color_opt"
             data-select-style="true"
@@ -398,7 +398,9 @@
          data-no-check="true"
          groups="website.group_website_designer">
         <we-checkbox string="Show Sign In" data-customize-website-views="portal.portal_show_sign_in" data-reload="/"/>
-        <we-colorpicker string="Background Color" data-customize-website-color="" data-color="menu"/>
+        <we-colorpicker string="Colors"
+                        data-customize-website-color="" data-color="menu"
+                        data-with-combinations="true"/>
         <we-checkbox id="option_header_shadow" string="Shadow"
                      data-customize-website-views="website.header_shadow"
                      data-select-class="shadow"
@@ -507,7 +509,9 @@
     <div data-selector="#wrapwrap > footer"
          data-no-check="true"
          groups="website.group_website_designer">
-        <we-colorpicker string="Background" data-customize-website-color="" data-color="footer"/>
+        <we-colorpicker string="Colors"
+                        data-customize-website-color="" data-color="footer"
+                        data-with-combinations="true"/>
         <we-select string="Footer Template" data-variable="footer-template" data-reload="/">
             <we-button id="option_template_footer_products_contacts_about_us"
                        data-customize-website-views="website.footer_custom"
@@ -534,6 +538,14 @@
                        data-customize-website-variable="address_logo"
                        string="Address - Logo"/>
         </we-select>
+    </div>
+
+    <div data-selector=".o_footer_copyright"
+         data-no-check="true"
+         groups="website.group_website_designer">
+        <we-colorpicker string="Colors"
+                        data-customize-website-color="" data-color="copyright"
+                        data-with-combinations="true"/>
     </div>
 
     <!-- Anchor Name -->
@@ -646,11 +658,18 @@
             still customizable.
         </we-alert>
         <we-row string="Theme colors">
-            <we-colorpicker data-name="color_1_opt" title="Primary" data-customize-website-color="" data-color="o-color-1"/>
-            <we-colorpicker data-name="color_2_opt" title="Secondary" data-customize-website-color="" data-color="o-color-2"/>
-            <we-colorpicker data-customize-website-color="" data-color="o-color-3"/>
-            <we-colorpicker data-customize-website-color="" data-color="o-color-4"/>
-            <we-colorpicker data-customize-website-color="" data-color="o-color-5"/>
+            <we-colorpicker data-name="color_1_opt" title="Primary"
+                            data-customize-website-color="" data-color="o-color-1"
+                            data-use-css-color="true"/>
+            <we-colorpicker data-name="color_2_opt" title="Secondary"
+                            data-customize-website-color="" data-color="o-color-2"
+                            data-use-css-color="true"/>
+            <we-colorpicker data-customize-website-color="" data-color="o-color-3"
+                            data-use-css-color="true"/>
+            <we-colorpicker data-customize-website-color="" data-color="o-color-4"
+                            data-use-css-color="true"/>
+            <we-colorpicker data-customize-website-color="" data-color="o-color-5"
+                            data-use-css-color="true"/>
         </we-row>
         <div class="o_color_combinations_edition"/>
         <we-row string="Status Colors">
