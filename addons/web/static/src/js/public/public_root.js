@@ -3,7 +3,7 @@ odoo.define('web.public.root', function (require) {
 
 var ajax = require('web.ajax');
 var dom = require('web.dom');
-var ServiceProviderMixin = require('web.ServiceProviderMixin');
+const env = require('web.public_env');
 var session = require('web.session');
 var utils = require('web.utils');
 var publicWidget = require('web.public.widget');
@@ -25,16 +25,17 @@ var localeDef = ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_'));
  * this Class instance. Its main role will be to retrieve RPC demands from its
  * children and handle them.
  */
-var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
+var PublicRoot = publicWidget.RootWidget.extend({
     events: _.extend({}, publicWidget.RootWidget.prototype.events || {}, {
         'submit .js_website_submit_form': '_onWebsiteFormSubmit',
         'click .js_disable_on_click': '_onDisableOnClick',
     }),
     custom_events: _.extend({}, publicWidget.RootWidget.prototype.custom_events || {}, {
-        'context_get': '_onContextGet',
-        'main_object_request': '_onMainObjectRequest',
-        'widgets_start_request': '_onWidgetsStartRequest',
-        'widgets_stop_request': '_onWidgetsStopRequest',
+        call_service: '_onCallService',
+        context_get: '_onContextGet',
+        main_object_request: '_onMainObjectRequest',
+        widgets_start_request: '_onWidgetsStartRequest',
+        widgets_stop_request: '_onWidgetsStopRequest',
     }),
 
     /**
@@ -42,7 +43,7 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
      */
     init: function () {
         this._super.apply(this, arguments);
-        ServiceProviderMixin.init.call(this);
+        this.env = env;
         this.publicWidgets = [];
     },
     /**
@@ -90,37 +91,6 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Automatically adds the global context to RPCs.
-     *
-     * @override
-     */
-    _call_service: function (ev) {
-        if (ev.data.service === 'ajax' && ev.data.method === 'rpc') {
-            var route = ev.data.args[0];
-            if (_.str.startsWith(route, '/web/dataset/call_kw/')) {
-                var params = ev.data.args[1];
-                var options = ev.data.args[2];
-                var noContextKeys = undefined;
-                if (options) {
-                    noContextKeys = options.noContextKeys;
-                    ev.data.args[2] = _.omit(options, 'noContextKeys');
-                }
-                params.kwargs.context = _computeContext.call(this, params.kwargs.context, noContextKeys);
-            }
-        } else if (ev.data.service === 'ajax' && ev.data.method === 'loadLibs') {
-            ev.data.args[1] = _computeContext.call(this, ev.data.args[1]);
-        }
-        return ServiceProviderMixin._call_service.apply(this, arguments);
-
-        function _computeContext(context, noContextKeys) {
-            context = _.extend({}, this._getContext(), context);
-            if (noContextKeys) {
-                context = _.omit(context, noContextKeys);
-            }
-            return JSON.parse(JSON.stringify(context));
-        }
-    },
     /**
      * Retrieves the global context of the public environment. This is the
      * context which is automatically added to each RPC.
@@ -234,6 +204,47 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Calls the requested service from the env. Automatically adds the global
+     * context to RPCs.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onCallService: function (ev) {
+        function _computeContext(context, noContextKeys) {
+            context = _.extend({}, this._getContext(), context);
+            if (noContextKeys) {
+                context = _.omit(context, noContextKeys);
+            }
+            return JSON.parse(JSON.stringify(context));
+        }
+
+        const payload = ev.data;
+        let args = payload.args || [];
+        if (payload.service === 'ajax' && payload.method === 'rpc') {
+            // ajax service uses an extra 'target' argument for rpc
+            args = args.concat(ev.target);
+
+            var route = args[0];
+            if (_.str.startsWith(route, '/web/dataset/call_kw/')) {
+                var params = args[1];
+                var options = args[2];
+                var noContextKeys;
+                if (options) {
+                    noContextKeys = options.noContextKeys;
+                    args[2] = _.omit(options, 'noContextKeys');
+                }
+                params.kwargs.context = _computeContext.call(this, params.kwargs.context, noContextKeys);
+            }
+        } else if (payload.service === 'ajax' && payload.method === 'loadLibs') {
+            args[1] = _computeContext.call(this, args[1]);
+        }
+
+        const service = this.env.services[payload.service];
+        const result = service[payload.method].apply(service, args);
+        payload.callback(result);
+    },
     /**
      * Called when someone asked for the global public context.
      *
