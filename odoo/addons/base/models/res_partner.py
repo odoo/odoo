@@ -480,6 +480,14 @@ class Partner(models.Model):
             addr_vals = self._update_fields_values(address_fields)
             parent.update_address(addr_vals)
 
+    def _clean_website(self, website):
+        url = urls.url_parse(website)
+        if not url.scheme:
+            if not url.netloc:
+                url = url.replace(netloc=url.path, path='')
+            website = url.replace(scheme='http').to_url()
+        return website
+
     def write(self, vals):
         if vals.get('active') is False:
             # DLE: It should not be necessary to modify this to make work the ORM. The problem was just the recompute
@@ -499,6 +507,8 @@ class Partner(models.Model):
         # (this is to allow the code from res_users to write to the partner!) or
         # if setting the company_id to False (this is compatible with any user
         # company)
+        if vals.get('website'):
+            vals['website'] = self._clean_website(vals['website'])
         if vals.get('parent_id'):
             vals['company_name'] = False
         if vals.get('company_id'):
@@ -528,6 +538,8 @@ class Partner(models.Model):
         if self.env.context.get('import_file'):
             self._check_import_consistency(vals_list)
         for vals in vals_list:
+            if vals.get('website'):
+                vals['website'] = self._clean_website(vals['website'])
             if vals.get('parent_id'):
                 vals['company_name'] = False
         partners = super(Partner, self).create(vals_list)
