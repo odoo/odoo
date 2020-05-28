@@ -1062,9 +1062,18 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             return this._customColorValue;
         }
         let value = this._super(...arguments);
-        if (value && this.options.dataAttributes.hasOwnProperty('cssCompatible') &&
-            !ColorpickerWidget.isCSSColor(value)) {
-            value = `var(--${value})`;
+        if (value) {
+            const useCssColor = this.options.dataAttributes.hasOwnProperty('useCssColor');
+            const cssCompatible = this.options.dataAttributes.hasOwnProperty('cssCompatible');
+            if ((useCssColor || cssCompatible) && !ColorpickerWidget.isCSSColor(value)) {
+                if (useCssColor) {
+                    const style = window.getComputedStyle(document.documentElement);
+                    value = style.getPropertyValue(`--${value}`).trim();
+                    value = ColorpickerWidget.normalizeCSSColor(value);
+                } else {
+                    value = `var(--${value})`;
+                }
+            }
         }
         return value;
     },

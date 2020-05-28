@@ -92,11 +92,9 @@ $-font-numbers: (
     // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
     // Note: this only works because navbar-light is defined before navbar-dark,
     // we may want to use a safest way when possible.
-    @if color('menu') {
-        background-color: color('menu') !important;
-        @if (color-yiq(color('menu')) != $yiq-text-dark) {
-            @extend .navbar-dark;
-        }
+    @include o-apply-colors('menu');
+    @if (color-yiq(o-color('menu')) != $yiq-text-dark) {
+        @extend .navbar-dark;
     }
 }
 
@@ -126,8 +124,10 @@ $-header-nav-link-height: $nav-link-height;
 }
 
 .o_footer {
-    @if color('footer') {
-        @include o-bg-color(color('footer'));
+    @include o-apply-colors('footer');
+
+    .o_footer_copyright {
+        @include o-apply-colors('copyright', $background: o-color('footer'));
     }
 }
 h2, h3, h4, h5, h6 {
@@ -869,7 +869,7 @@ header {
 
 // Copyright
 .o_footer_copyright {
-    padding: 8px;
+
     .js_language_selector {
         display: inline-block;
     }
