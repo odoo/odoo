@@ -1873,10 +1873,10 @@ var SnippetsMenu = Widget.extend({
 
         tab = tab || this.tabs.BLOCKS;
 
-        while (this.customizePanel.firstChild) {
-            this.customizePanel.removeChild(this.customizePanel.firstChild);
-        }
         if (content) {
+            while (this.customizePanel.firstChild) {
+                this.customizePanel.removeChild(this.customizePanel.firstChild);
+            }
             $(this.customizePanel).append(content);
         }
 
