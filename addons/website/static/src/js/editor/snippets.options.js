@@ -5,8 +5,9 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-const wUtils = require('website.utils');
+const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
+const wUtils = require('website.utils');
 require('website.s_popup_options');
 
 var _t = core._t;

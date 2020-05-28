@@ -139,6 +139,33 @@ function _areCssValuesEqual(value1, value2, cssProp, $target) {
     const numValue2 = _convertValueToUnit(value2, data[1], cssProp, $target);
     return (Math.abs(numValue1 - numValue2) < Number.EPSILON);
 }
+/**
+ * @param {string|number} name
+ * @returns {boolean}
+ */
+function _isColorCombinationName(name) {
+    const number = parseInt(name);
+    return (!isNaN(number) && number % 100 !== 0);
+}
+/**
+ * @param {string[]} colorNames
+ * @param {string} [prefix='bg-']
+ * @returns {string[]}
+ */
+function _computeColorClasses(colorNames, prefix = 'bg-') {
+    let hasCCClasses = false;
+    const classes = colorNames.map(c => {
+        if (_isColorCombinationName(c)) {
+            hasCCClasses = true;
+            return `o_cc${c}`;
+        }
+        return (prefix + c);
+    });
+    if (hasCCClasses) {
+        classes.push('o_cc');
+    }
+    return classes;
+}
 
 return {
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -148,5 +175,7 @@ return {
     convertNumericToUnit: _convertNumericToUnit,
     getNumericAndUnit: _getNumericAndUnit,
     areCssValuesEqual: _areCssValuesEqual,
+    isColorCombinationName: _isColorCombinationName,
+    computeColorClasses: _computeColorClasses,
 };
 });
