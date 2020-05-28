@@ -340,7 +340,7 @@ class Pricelist(models.Model):
         pl_domain = self._get_partner_pricelist_multi_search_domain_hook(company_id)
 
         # if no specific property, try to find a fitting pricelist
-        result = Property.get_multi('property_product_pricelist', Partner._name, partner_ids)
+        result = Property._get_multi('property_product_pricelist', Partner._name, partner_ids)
 
         remaining_partner_ids = [pid for pid, val in result.items() if not val or
                                  not val._get_partner_pricelist_multi_filter_hook()]
@@ -348,7 +348,7 @@ class Pricelist(models.Model):
             # get fallback pricelist when no pricelist for a given country
             pl_fallback = (
                 Pricelist.search(pl_domain + [('country_group_ids', '=', False)], limit=1) or
-                Property.get('property_product_pricelist', 'res.partner') or
+                Property._get('property_product_pricelist', 'res.partner') or
                 Pricelist.search(pl_domain, limit=1)
             )
             # group partners by country, and find a pricelist for each country

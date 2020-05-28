@@ -11,13 +11,13 @@ class StockAccountTestCommon(AccountTestCommon):
         super(StockAccountTestCommon, cls).setUpClass()
 
         # Properties: Stock valuation account and journal
-        cls.env['ir.property'].set_default(
+        cls.env['ir.property']._set_default(
             'property_stock_valuation_account_id',
             'product.category',
             cls.stk,
             cls.env.company,
         )
-        cls.env['ir.property'].set_default(
+        cls.env['ir.property']._set_default(
             'property_stock_journal',
             'product.category',
             cls.miscellaneous_journal,

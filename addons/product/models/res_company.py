@@ -18,7 +18,7 @@ class ResCompany(models.Model):
                 'name': _("Default %(currency)s pricelist") %  params,
                 'currency_id': new_company.currency_id.id,
             })
-        self.env['ir.property'].sudo().set_default(
+        self.env['ir.property']._set_default(
             'property_product_pricelist',
             'res.partner',
             pricelist,
@@ -54,7 +54,7 @@ class ResCompany(models.Model):
                         'name': _("Default %(currency)s pricelist") %  params,
                         'currency_id': currency_id,
                     })
-                    self.env['ir.property'].sudo().set_default(
+                    self.env['ir.property']._set_default(
                         'property_product_pricelist',
                         'res.partner',
                         pricelist,
