@@ -260,6 +260,33 @@ options.Class.include({
     /**
      * @override
      */
+    async _checkIfWidgetsUpdateNeedReload(widgets) {
+        const needReload = await this._super(...arguments);
+        if (needReload) {
+            return needReload;
+        }
+        for (const widget of widgets) {
+            const methodsNames = widget.getMethodsNames();
+            if (!methodsNames.includes('customizeWebsiteViews')
+                    && !methodsNames.includes('customizeWebsiteVariable')
+                    && !methodsNames.includes('customizeWebsiteColor')) {
+                continue;
+            }
+            let paramsReload = false;
+            if (widget.getMethodsParams('customizeWebsiteViews').reload
+                    || widget.getMethodsParams('customizeWebsiteVariable').reload
+                    || widget.getMethodsParams('customizeWebsiteColor').reload) {
+                paramsReload = true;
+            }
+            if (paramsReload || config.isDebug('assets')) {
+                return (config.isDebug('assets') ? _t("It appears you are in debug=assets mode, all theme customization options require a page reload in this mode.") : true);
+            }
+        }
+        return false;
+    },
+    /**
+     * @override
+     */
     _computeWidgetState: async function (methodName, params) {
         switch (methodName) {
             case 'customizeWebsiteViews': {
@@ -352,9 +379,9 @@ options.Class.include({
      * @private
      */
     _customizeWebsiteVariable: async function (value, params) {
-        const values = {};
-        values[params.variable] = value;
-        return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values);
+        return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', {
+            [params.variable]: value,
+        });
     },
     /**
      * @private
@@ -470,62 +497,6 @@ options.Class.include({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    _onUserValueUpdate: async function (ev) {
-        const _super = this._super.bind(this);
-
-        // First check if the updated widget or any of the widgets it will
-        // trigger uses one of the 'customizeWebsite...' methods. If so, check
-        // if any one of them will require a reload. If it is the case, warns
-        // the user and ask if he agrees to save its current changes. If not,
-        // just do nothing. If yes, save the current changes and continue.
-        let requiresReload = false;
-        if (!ev.data.previewMode && !ev.data.isSimulatedEvent) {
-            const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
-            const widgets = [ev.data.widget].concat(linkedWidgets);
-
-            for (const widget of widgets) {
-                const methodsNames = widget.getMethodsNames();
-                if (!methodsNames.includes('customizeWebsiteViews')
-                        && !methodsNames.includes('customizeWebsiteVariable')
-                        && !methodsNames.includes('customizeWebsiteColor')) {
-                    continue;
-                }
-                let paramsReload = false;
-                if (widget.getMethodsParams('customizeWebsiteViews').reload
-                        || widget.getMethodsParams('customizeWebsiteVariable').reload
-                        || widget.getMethodsParams('customizeWebsiteColor').reload) {
-                    paramsReload = true;
-                }
-                if (paramsReload || config.isDebug('assets')) {
-                    requiresReload = true;
-                    break;
-                }
-            }
-            if (requiresReload) {
-                const save = await new Promise(resolve => {
-                    Dialog.confirm(this, _t("This change needs to reload the page, this will save all your changes and reload the page, are you sure you want to proceed?") +
-                        (config.isDebug('assets') ? _t(" It appears you are in debug=assets mode, all theme customization options require a page reload in this mode.") : ''), {
-                        confirm_callback: () => resolve(true),
-                        cancel_callback: () => resolve(false),
-                    });
-                });
-                if (!save) {
-                    return;
-                }
-            }
-        }
-
-        await _super(...arguments);
-
-        if (requiresReload) {
-            this.trigger_up('request_save', {
-                reloadEditor: true,
-            });
-        }
-    },
     /**
      * @private
      * @param {OdooEvent} ev
@@ -755,7 +726,7 @@ options.registry.Theme = options.Class.extend({
      */
     switchTheme: async function (previewMode, widgetValue, params) {
         const save = await new Promise(resolve => {
-            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed?"), {
+            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."), {
                 confirm_callback: () => resolve(true),
                 cancel_callback: () => resolve(false),
             });
@@ -776,20 +747,31 @@ options.registry.Theme = options.Class.extend({
     /**
      * @override
      */
+    async _checkIfWidgetsUpdateNeedWarning(widgets) {
+        const warningMessage = await this._super(...arguments);
+        if (warningMessage) {
+            return warningMessage;
+        }
+        for (const widget of widgets) {
+            if (widget.getMethodsNames().includes('customizeWebsiteVariable')
+                    && widget.getMethodsParams('customizeWebsiteVariable').variable === 'color-palettes-number') {
+                const style = window.getComputedStyle(document.documentElement);
+                const hasCustomizedColors = style.getPropertyValue('--has-customized-colors').trim();
+                if (hasCustomizedColors && hasCustomizedColors !== 'false') {
+                    return _t("Changing the color palette will reset all your color customizations, are you sure you want to proceed?");
+                }
+            }
+        }
+        return '';
+    },
+    /**
+     * @override
+     */
     _computeWidgetState: async function (methodName, params) {
         if (methodName === 'customizeBodyBg') {
             const bgURL = $('#wrapwrap').css('background-image');
             const srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
             return bgURL && bgURL.replace(srcValueWrapper, '') || '';
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    _computeWidgetVisibility: async function (widgetName, params) {
-        if (widgetName === 'theme_color_suggestions') {
-            return false;
         }
         return this._super(...arguments);
     },
@@ -844,6 +826,23 @@ options.registry.Theme = options.Class.extend({
      * @override
      */
     async _renderCustomXML(uiFragment) {
+        const paletteSelectorEl = uiFragment.querySelector('[data-variable="color-palettes-number"]');
+        const style = window.getComputedStyle(document.documentElement);
+        const nbPalettes = parseInt(style.getPropertyValue('--number-of-color-palettes'));
+        for (let i = 1; i <= nbPalettes; i++) {
+            const btnEl = document.createElement('we-button');
+            btnEl.classList.add('o_palette_color_preview_button');
+            btnEl.dataset.customizeWebsiteVariable = i;
+            for (let c = 1; c <= 5; c++) {
+                const colorPreviewEl = document.createElement('span');
+                colorPreviewEl.classList.add('o_palette_color_preview');
+                const color = style.getPropertyValue(`--o-palette-${i}-o-color-${c}`).trim();
+                colorPreviewEl.style.backgroundColor = color;
+                btnEl.appendChild(colorPreviewEl);
+            }
+            paletteSelectorEl.appendChild(btnEl);
+        }
+
         const ccEl = uiFragment.querySelector('.o_color_combinations_edition');
         for (let i = 1; i <= 5; i++) {
             const togglerEl = document.createElement('we-toggler');

@@ -1898,6 +1898,29 @@ const SnippetOptionWidget = Widget.extend({
 
     /**
      * @private
+     * @param {UserValueWidget[]} widgets
+     * @returns {Promise<string>}
+     */
+    async _checkIfWidgetsUpdateNeedWarning(widgets) {
+        const messages = [];
+        for (const widget of widgets) {
+            const message = widget.getMethodsParams().warnMessage;
+            if (message) {
+                messages.push(message);
+            }
+        }
+        return messages.join(' ');
+    },
+    /**
+     * @private
+     * @param {UserValueWidget[]} widgets
+     * @returns {Promise<boolean|string>}
+     */
+    async _checkIfWidgetsUpdateNeedReload(widgets) {
+        return false;
+    },
+    /**
+     * @private
      * @returns {Promise<boolean>|boolean}
      */
     _computeVisibility: async function () {
@@ -2218,6 +2241,44 @@ const SnippetOptionWidget = Widget.extend({
         const widget = ev.data.widget;
         const previewMode = ev.data.previewMode;
 
+        // First check if the updated widget or any of the widgets it triggers
+        // will require a reload or a confirmation choice by the user. If it is
+        // the case, warn the user and potentially ask if he agrees to save its
+        // current changes. If not, just do nothing.
+        let requiresReload = false;
+        if (!ev.data.previewMode && !ev.data.isSimulatedEvent) {
+            const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
+            const widgets = [ev.data.widget].concat(linkedWidgets);
+
+            const warnMessage = await this._checkIfWidgetsUpdateNeedWarning(widgets);
+            if (warnMessage) {
+                const okWarning = await new Promise(resolve => {
+                    Dialog.confirm(this, warnMessage, {
+                        confirm_callback: () => resolve(true),
+                        cancel_callback: () => resolve(false),
+                    });
+                });
+                if (!okWarning) {
+                    return;
+                }
+            }
+
+            const reloadMessage = await this._checkIfWidgetsUpdateNeedReload(widgets);
+            requiresReload = !!reloadMessage;
+            if (requiresReload) {
+                const save = await new Promise(resolve => {
+                    Dialog.confirm(this, _t("This change needs to reload the page, this will save all your changes and reload the page, are you sure you want to proceed?") + ' '
+                            + (typeof reloadMessage === 'string' ? reloadMessage : ''), {
+                        confirm_callback: () => resolve(true),
+                        cancel_callback: () => resolve(false),
+                    });
+                });
+                if (!save) {
+                    return;
+                }
+            }
+        }
+
         // Ask a mutexed snippet update according to the widget value change
         const shouldRecordUndo = (!previewMode && !ev.data.isSimulatedEvent);
         this.trigger_up('snippet_edition_request', {exec: async () => {
@@ -2293,6 +2354,12 @@ const SnippetOptionWidget = Widget.extend({
 
             linkedWidget.notifyValueChange(previewMode, true);
             i++;
+        }
+
+        if (requiresReload) {
+            this.trigger_up('request_save', {
+                reloadEditor: true,
+            });
         }
     },
 });
