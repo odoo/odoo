@@ -1,20 +1,48 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, tools
-from odoo.addons.account.tests.common import AccountTestCommon
+from odoo import fields
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestReconciliationMatchingRules(AccountTestCommon):
+class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestReconciliationMatchingRules, cls).setUpClass()
-        cls.company = cls.env.user.company_id
-        cls.account_pay = cls.a_pay
-        cls.account_liq = cls.bnk
-        cls.account_rcv = cls.a_recv
+    def _create_invoice_line(cls, amount, partner, type):
+        ''' Create an invoice on the fly.'''
+        invoice_form = Form(cls.env['account.move'].with_context(default_type=type))
+        invoice_form.invoice_date = fields.Date.from_string('2019-09-01')
+        invoice_form.partner_id = partner
+        with invoice_form.invoice_line_ids.new() as invoice_line_form:
+            invoice_line_form.name = 'xxxx'
+            invoice_line_form.quantity = 1
+            invoice_line_form.price_unit = amount
+            invoice_line_form.tax_ids.clear()
+        invoice = invoice_form.save()
+        invoice.post()
+        lines = invoice.line_ids
+        return lines.filtered(lambda l: l.account_id.user_type_id.type in ('receivable', 'payable'))
+
+    def _check_statement_matching(self, rules, expected_values, statements=None):
+        if statements is None:
+            statements = self.bank_st + self.cash_st
+        statement_lines = statements.mapped('line_ids').sorted()
+        matching_values = rules._apply_rules(statement_lines)
+        for st_line_id, values in matching_values.items():
+            values.pop('reconciled_lines', None)
+            self.assertDictEqual(values, expected_values[st_line_id])
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
+        cls.company = cls.company_data['company']
+
+        cls.account_pay = cls.company_data['default_account_payable']
+        cls.account_rcv = cls.company_data['default_account_receivable']
+        cls.account_bnk = cls.company_data['default_journal_bank'].default_debit_account_id
+        cls.account_cash = cls.company_data['default_journal_cash'].default_debit_account_id
 
         cls.partner_1 = cls.env['res.partner'].create({'name': 'partner_1', 'company_id': cls.company.id})
         cls.partner_2 = cls.env['res.partner'].create({'name': 'partner_2', 'company_id': cls.company.id})
@@ -379,7 +407,7 @@ class TestReconciliationMatchingRules(AccountTestCommon):
             'debit': 10,
         })
         payment_bnk_line = AccountMoveLine.create({
-            'account_id': self.account_liq.id,
+            'account_id': self.account_bnk.id,
             'move_id': move.id,
             'partner_id': partner.id,
             'name': 'I\'m gonna cut you into little pieces',

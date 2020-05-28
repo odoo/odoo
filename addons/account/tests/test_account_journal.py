@@ -7,13 +7,6 @@ from odoo.exceptions import UserError
 @tagged('post_install', '-at_install')
 class TestAccountJournal(AccountTestInvoicingCommon):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        # By default, tests are run with the current user set on the first company.
-        cls.env.user.company_id = cls.company_data['company']
-
     def test_changing_journal_company(self):
         ''' Ensure you can't change the company of an account.journal if there are some journal entries '''
 

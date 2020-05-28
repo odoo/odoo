@@ -8,8 +8,8 @@ from odoo.exceptions import UserError
 class TestAccountAccount(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # By default, tests are run with the current user set on the first company.
         cls.env.user.company_id = cls.company_data['company']
