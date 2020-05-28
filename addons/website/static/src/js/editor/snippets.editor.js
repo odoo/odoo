@@ -52,17 +52,17 @@ weSnippetEditor.Class.include({
             this.el.appendChild(this.fakeThemeEl);
         }
 
-        await this._activateSnippet($(this.fakeThemeEl));
-
-        if (!this.themeCustomizationMenuEl) {
-            this.themeCustomizationMenuEl = document.createElement('div');
-            for (const node of this.customizePanel.childNodes) {
-                this.themeCustomizationMenuEl.appendChild(node);
-            }
-        }
+        // Need all of this in that order so that:
+        // - the element is visible and can be enabled and the onFocus method is
+        //   called each time.
+        // - the element is hidden afterwards so it does not take space in the
+        //   DOM, same as the overlay which may make a scrollbar appear.
+        this.fakeThemeEl.classList.remove('d-none');
+        const editor = await this._activateSnippet($(this.fakeThemeEl));
+        this.fakeThemeEl.classList.add('d-none');
+        editor.toggleOverlay(false);
 
         this._updateLeftPanelContent({
-            content: this.themeCustomizationMenuEl,
             tab: this.tabs.THEME,
         });
     },
