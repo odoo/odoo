@@ -49,3 +49,12 @@ $headings-color: palette-color('h1') !default;
 // Jumbotron
 
 $jumbotron-bg: transparent !default;
+
+// Bootstrap Review
+
+$o-btn-outline-defaults: () !default;
+@each $color in ('primary', 'secondary') {
+    @if o-website-value('btn-#{$color}-outline') {
+        $o-btn-outline-defaults: append($o-btn-outline-defaults, $color);
+    }
+}
