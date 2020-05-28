@@ -60,7 +60,6 @@
                     <button name="action_get_attachment_view" string="Attachments" type="object" icon="fa-paperclip" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="state" optional="show" readonly="1" decoration-info="state == 'draft'" decoration-success="state in ['reported', 'approved', 'done']" decoration-danger="state in 'refused'" widget="badge"/>
-                    <field name="activity_exception_decoration"  widget="activity_exception"/>
                 </tree>
             </field>
         </record>
@@ -474,7 +473,6 @@
                     <field name="state" optional="show" decoration-info="state == 'draft'" decoration-success="state in ['submit', 'approve', 'post', 'done']" decoration-danger="state == 'cancel'" widget="badge"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="message_unread" invisible="1"/>
-                    <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
         </record>
