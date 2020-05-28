@@ -929,7 +929,7 @@ class Task(models.Model):
         return res
 
     def email_split(self, msg):
-        email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
+        email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or '') + ',' + (msg.get('from') or ''))
         # check left-part is not already an alias
         aliases = self.mapped('project_id.alias_name')
         return [x for x in email_list if x.split('@')[0] not in aliases]
