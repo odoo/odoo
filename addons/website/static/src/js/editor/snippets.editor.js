@@ -46,6 +46,9 @@ weSnippetEditor.Class.include({
      * @private
      */
     _onThemeTabClick: async function (ev) {
+        this._addTabLoading(this.tabs.THEME);
+        await new Promise(resolve => setTimeout(() => resolve())); // Needed to force the loading to appear... to review with new design
+
         if (!this.fakeThemeEl) {
             this.fakeThemeEl = document.createElement('theme');
             this.fakeThemeEl.dataset.name = "";
