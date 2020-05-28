@@ -149,15 +149,14 @@ var LinkDialog = Dialog.extend({
      * @override
      */
     start: function () {
-        var self = this;
-
         this.buttonOptsCollapseEl = this.el.querySelector('#o_link_dialog_button_opts_collapse');
 
-        this.$('input.link-style').prop('checked', false).first().prop('checked', true);
+        this.$styleInputs = this.$('input.link-style');
+        this.$styleInputs.prop('checked', false).filter('[value=""]').prop('checked', true);
         if (this.data.iniClassName) {
-            this.$('input[name="link_style_color"], select[name="link_style_size"] > option, select[name="link_style_shape"] > option').each(function () {
-                var $option = $(this);
-                if ($option.val() && self.data.iniClassName.match(new RegExp('(^|btn-| |btn-outline-)' + $option.val()))) {
+            _.each(this.$('input[name="link_style_color"], select[name="link_style_size"] > option, select[name="link_style_shape"] > option'), el => {
+                var $option = $(el);
+                if ($option.val() && this.data.iniClassName.match(new RegExp('(^|btn-| |btn-outline-)' + $option.val()))) {
                     if ($option.is("input")) {
                         $option.prop("checked", true);
                     } else {
@@ -224,17 +223,16 @@ var LinkDialog = Dialog.extend({
      * @private
      */
     _adaptPreview: function () {
-        var $preview = this.$("#link-preview");
         var data = this._getData();
         if (data === null) {
             return;
         }
-        var floatClass = /float-\w+/;
-        $preview.attr({
+        const attrs = {
             target: data.isNewWindow ? '_blank' : '',
             href: data.url && data.url.length ? data.url : '#',
-            class: data.classes.replace(floatClass, '') + ' o_btn_preview',
-        }).html((data.label && data.label.length) ? data.label : data.url);
+            class: `${data.classes.replace(/float-\w+/, '')} o_btn_preview`,
+        };
+        this.$("#link-preview").attr(attrs).html((data.label && data.label.length) ? data.label : data.url);
     },
     /**
      * Get the link's data (url, label and styles).
@@ -257,15 +255,15 @@ var LinkDialog = Dialog.extend({
             return null;
         }
 
-        var style = this.$('input[name="link_style_color"]:checked').val() || '';
-        var shape = this.$('select[name="link_style_shape"] option:selected').val() || '';
-        var size = this.$('select[name="link_style_size"] option:selected').val() || '';
-        var shapes = shape.split(',');
-        var outline = shapes[0] === 'outline';
-        shape = shapes.slice(outline ? 1 : 0).join(' ');
-        var classes = (this.data.className || '') +
-            (style ? (' btn btn-' + (outline ? 'outline-' : '') + style) : '') +
-            (shape ? (' ' + shape) : '') +
+        const type = this.$('input[name="link_style_color"]:checked').val() || '';
+        const size = this.$('select[name="link_style_size"]').val() || '';
+        const shape = this.$('select[name="link_style_shape"]').val() || '';
+        const shapes = shape ? shape.split(',') : [];
+        const style = ['outline', 'fill'].includes(shapes[0]) ? `${shapes[0]}-` : '';
+        const shapeClasses = shapes.slice(style ? 1 : 0).join(' ');
+        const classes = (this.data.className || '') +
+            (type ? (` btn btn-${style}${type}`) : '') +
+            (shapeClasses ? (` ${shapeClasses}`) : '') +
             (size ? (' btn-' + size) : '');
         var isNewWindow = this.$('input[name="is_new_window"]').prop('checked');
         if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i)) {
