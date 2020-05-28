@@ -68,6 +68,10 @@ body.o_connected_user {
             &[data-action="edit"], &[data-action="translate"], &.css_edit_dynamic {
                 @include button-variant($o-brand-primary, $o-brand-primary);
             }
+
+            &, &:hover, &:focus {
+                text-decoration: none;
+            }
         }
 
         .o_mobile_preview a {
@@ -349,6 +353,7 @@ body .modal {
             display: block;
             font-size: 34px;
             text-align: center;
+            text-decoration: none;
 
             i {
                 width: 110px;
