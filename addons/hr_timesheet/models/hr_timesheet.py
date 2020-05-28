@@ -235,3 +235,11 @@ class AccountAnalyticLine(models.Model):
 
     def _action_interrupt_user_timers(self):
         self.action_timer_stop()
+
+    def unlink(self):
+        res = super(AccountAnalyticLine, self).unlink()
+        self.env['timer.timer'].search([
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids)
+        ]).unlink()
+        return res
