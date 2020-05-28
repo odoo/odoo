@@ -891,7 +891,7 @@ var ListRenderer = BasicRenderer.extend({
             .attr('tabindex', -1)
             .toggleClass('o-sort-down', isNodeSorted ? !order[0].asc : false)
             .toggleClass('o-sort-up', isNodeSorted ? order[0].asc : false)
-            .addClass(field.sortable && 'o_column_sortable');
+            .addClass((field.sortable || this.state.fieldsInfo.list[name].options.allow_order || false) && 'o_column_sortable');
 
         if (isNodeSorted) {
             $th.attr('aria-sort', order[0].asc ? 'ascending' : 'descending');

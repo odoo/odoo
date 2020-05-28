@@ -670,7 +670,7 @@ class MailActivityMixin(models.AbstractModel):
     activity_date_deadline = fields.Date(
         'Next Activity Deadline',
         compute='_compute_activity_date_deadline', search='_search_activity_date_deadline',
-        readonly=True, store=False,
+        compute_sudo=False, readonly=True, store=False,
         groups="base.group_user")
     activity_summary = fields.Char(
         'Next Activity Summary',
