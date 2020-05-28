@@ -2273,6 +2273,44 @@ const registry = {};
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+/**
+ * Marks color levels of any element that may get or has a color classes. This
+ * is done for the specific main colorpicker option so that those are marked on
+ * snippet drop (so that base snippet definition do not need to care about that)
+ * and on first focus (for compatibility).
+ */
+registry.MainColorpicker = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        this._markColorLevel();
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    onBuilt: function () {
+        this._markColorLevel();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds a specific class indicating the element is colored so that nested
+     * color classes work (we support one-level). Removing it is not useful,
+     * technically the class can be added on anything that *may* receive a color
+     * class: this does not come with any CSS rule.
+     *
+     * @private
+     */
+    _markColorLevel: function () {
+        this.$target.addClass('o_colored_level');
+    },
+});
+
 registry.sizing = SnippetOptionWidget.extend({
     /**
      * @override

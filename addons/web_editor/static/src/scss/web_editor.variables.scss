@@ -338,7 +338,7 @@ $o-theme-color-palette-number: 1 !default;
 // Greyscale transparent colours
 
 // Note: BS values are forced by default in every palette as the values can
-// be used in bootstrap_overridden.scss files through the palette-gray function.
+// be used in bootstrap_overridden.scss files through the o-color function.
 // Also, all of the gray colors generates bg- classes in Odoo so black and white
 // are added for the same reason.
 
@@ -370,6 +370,61 @@ $o-gray-color-palettes: (
 ) !default;
 $o-gray-color-palette-number: 1 !default;
 
+// Color combinations
+$o-color-combinations-presets: (
+    (
+        (
+            'bg': #FFFFFF,
+            'text': null,
+            'headings': null,
+            'link': null,
+            'btn-primary': null,
+            'btn-secondary': null,
+        ),
+        (
+            'bg': 'gamma',
+            'text': null,
+            'headings': 'alpha',
+            'link': null,
+            'btn-primary': null,
+            'btn-secondary': null,
+        ),
+        (
+            'bg': 'beta',
+            'text': null,
+            'headings': null,
+            'link': null,
+            'btn-primary': null,
+            'btn-secondary': 'gamma',
+        ),
+        (
+            'bg': 'alpha',
+            'text': null,
+            'headings': null,
+            'link': 'epsilon',
+            'btn-primary': 'epsilon',
+            'btn-secondary': 'gamma',
+        ),
+        (
+            'bg': 'epsilon',
+            'text': null,
+            'headings': 'delta',
+            'link': null,
+            'btn-primary': null,
+            'btn-secondary': 'gamma',
+        ),
+    ),
+) !default;
+$o-color-combinations-preset-number: 1;
+
 // Translations
 $o-we-content-to-translate-color: rgb(255, 255, 90) !default;
 $o-we-translated-content-color: rgb(120, 215, 110) !default;
+
+// We allow snippets to be colored and elements like card and columns to be
+// colored as well. We need components targeted by those colored classes to
+// use the deepest coloring element config. We only allow here for this to
+// work for one level of nesting. Note: snippets which can contain other
+// snippets will have problem because of this; this is a limitation of the
+// system until a better solution is found.
+$o-color-extras-nesting-selector: '&, .o_colored_level &';

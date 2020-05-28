@@ -461,13 +461,15 @@
                 <div class="form-group row">
                     <label class="col-form-label col-md-3">Type</label>
                     <div class="col-md-9 d-flex align-items-center">
-                        <t t-foreach="widget.colorsData" t-as="colorData">
-                            <label role="button" class="m-0 mr-2">
-                                <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData.type"/>
-                                <span t-esc="colorData.label"
-                                        t-attf-class="o_btn_preview btn btn-sm btn-#{colorData.btnPreview} #{colorData.type ? '' : 'px-0'}"/>
-                            </label>
-                        </t>
+                        <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}">
+                            <t t-foreach="widget.colorsData" t-as="colorData">
+                                <label role="button" class="m-0 mr-2">
+                                    <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData.type"/>
+                                    <span t-esc="colorData.label"
+                                            t-attf-class="o_btn_preview btn btn-sm btn-#{colorData.btnPreview} #{colorData.type ? '' : 'px-0'}"/>
+                                </label>
+                            </t>
+                        </div>
                     </div>
                 </div>
                 <div id="o_link_dialog_button_opts_collapse" class="collapse">
@@ -509,7 +511,8 @@
             <div class="col-lg-4 o_link_dialog_preview">
                 <div class="form-group text-center">
                     <label>Preview</label>
-                    <div style="overflow-x: auto; max-width: 100%; max-height: 200px;">
+                    <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}"
+                         style="overflow-x: auto; max-width: 100%; max-height: 200px;">
                         <a href="#" id="link-preview" aria-label="Preview" title="Preview"/>
                     </div>
                 </div>

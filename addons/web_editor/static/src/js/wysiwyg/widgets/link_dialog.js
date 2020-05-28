@@ -60,7 +60,19 @@ var LinkDialog = Dialog.extend({
         this.needLabel = !r || (r.sc === r.ec && r.so === r.eo);
 
         if (this.data.range) {
-            this.data.iniClassName = $(this.data.range.sc).filter("a").attr("class") || "";
+            const $link = $(this.data.range.sc).filter("a");
+            this.data.iniClassName = $link.attr("class") || "";
+            this.colorCombinationClass = false;
+            let $node = $link;
+            while ($node.length && !$node.is('body')) {
+                const className = $node.attr('class') || '';
+                const m = className.match(/\b(o_cc\d+)\b/g);
+                if (m) {
+                    this.colorCombinationClass = m[0];
+                    break;
+                }
+                $node = $node.parent();
+            }
             this.data.className = this.data.iniClassName.replace(/(^|\s+)btn(-[a-z0-9_-]*)?/gi, ' ');
 
             var is_link = this.data.range.isOnAnchor();
