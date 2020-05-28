@@ -1,6 +1,7 @@
 odoo.define('web_editor.ColorPalette', function (require) {
 'use strict';
 
+const ajax = require('web.ajax');
 const core = require('web.core');
 const session = require('web.session');
 const {ColorpickerWidget} = require('web.Colorpicker');
@@ -9,10 +10,8 @@ const summernoteCustomColors = require('web_editor.rte.summernote_custom_colors'
 
 const qweb = core.qweb;
 
-let templatePromise;
-
 const ColorPaletteWidget = Widget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
+    // ! for xmlDependencies, see loadDependencies function
     template: 'web_editor.snippet.option.colorpicker',
     events: {
         'click button': '_onColorButtonClick',
@@ -53,22 +52,7 @@ const ColorPaletteWidget = Widget.extend({
      */
     willStart: async function () {
         await this._super(...arguments);
-        if (session.is_website_user) {
-            // Public user using the editor may have a colorpalette but with
-            // the default summernote ones.
-            return;
-        }
-        // We can call the colorPalette multiple times but only need 1 rpc
-        if (!templatePromise && !qweb.has_template('web_editor.colorpicker')) {
-            templatePromise = this._rpc({
-                model: 'ir.ui.view',
-                method: 'read_template',
-                args: ['web_editor.colorpicker'],
-            }).then(template => {
-                return qweb.add_template('<templates>' + template + '</templates>');
-            });
-        }
-        await templatePromise;
+        await ColorPaletteWidget.loadDependencies(this);
     },
     /**
      * @override
@@ -355,6 +339,39 @@ const ColorPaletteWidget = Widget.extend({
         }, 'custom_color_picked');
     },
 });
+
+//------------------------------------------------------------------------------
+// Static
+//------------------------------------------------------------------------------
+
+/**
+ * Load ColorPaletteWidget dependencies. This allows to load them without
+ * instantiating the widget itself.
+ *
+ * @static
+ */
+let colorpickerTemplateProm;
+ColorPaletteWidget.loadDependencies = async function (rpcCapableObj) {
+    const proms = [ajax.loadXML('/web_editor/static/src/xml/snippets.xml', qweb)];
+
+    // Public user using the editor may have a colorpalette but with
+    // the default summernote ones.
+    if (!session.is_website_user) {
+        // We can call the colorPalette multiple times but only need 1 rpc
+        if (!colorpickerTemplateProm && !qweb.has_template('web_editor.colorpicker')) {
+            colorpickerTemplateProm = rpcCapableObj._rpc({
+                model: 'ir.ui.view',
+                method: 'read_template',
+                args: ['web_editor.colorpicker'],
+            }).then(template => {
+                return qweb.add_template('<templates>' + template + '</templates>');
+            });
+        }
+        proms.push(colorpickerTemplateProm);
+    }
+
+    return Promise.all(proms);
+};
 
 return {
     ColorPaletteWidget: ColorPaletteWidget,
