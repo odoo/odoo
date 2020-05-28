@@ -14,19 +14,33 @@ $enable-deprecation-messages: false !default;
     @return o-get-most-contrast($color, $light, $dark, $background, $threshold, $cross-mix);
 }
 
-@mixin o-bg-color($color, $text-color: null, $with-muted: true) {
+// This placeholder regroups the rules that will apply on all elements with a
+// bg-* class (see o-bg-color, bg-variant). The optimized-css way would be to
+// have a common class for them all.
+%o-bg-color-component-color-reset {
+    h1, h2, h3, h4, h5, h6 {
+        color: inherit;
+    }
+}
+
+$o-color-extras-nesting-selector: '&' !default;
+
+@mixin o-bg-color($color, $text-color: null, $with-extras: true, $important: true, $nesting-selector: $o-color-extras-nesting-selector) {
     @if ($color) {
         $-yiq-color: if($text-color, $text-color, color-yiq($color));
-        background-color: $color !important;
+        background-color: $color#{if($important, ' !important', '')};
         color: $-yiq-color; // not important so that text utilities still work
 
-        @if ($with-muted) {
-            .text-muted {
-                color: scale-color($-yiq-color, $alpha: -30%) !important;
+        @if $with-extras {
+            #{$nesting-selector} {
+                @extend %o-bg-color-component-color-reset;
+
+                .text-muted {
+                    // Always important since the basic BS rule is important
+                    color: scale-color($-yiq-color, $alpha: -30%) !important;
+                }
             }
         }
-
-        @include o-bg-color-extension($color, $text-color, $with-muted);
     }
 }
 

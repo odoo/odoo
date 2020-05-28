@@ -1824,8 +1824,8 @@ options.registry.CoverProperties = options.Class.extend({
         });
         const color = colorPickerWidget._value;
         const isCSSColor = ColorpickerWidget.isCSSColor(color);
-        this.$target[0].dataset.bgColorClass = isCSSColor ? '' : 'bg-' + color;
-        this.$target[0].dataset.bgColorStyle = isCSSColor ? `background-color:${color};` : '';
+        this.$target[0].dataset.bgColorClass = isCSSColor ? '' : weUtils.computeColorClasses([color])[0];
+        this.$target[0].dataset.bgColorStyle = isCSSColor ? `background-color: ${color};` : '';
     },
 
     //--------------------------------------------------------------------------

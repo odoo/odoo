@@ -7,19 +7,19 @@
 // depending on its contrast. Themes should be careful if they decide to
 // override those values. This would be simplified by giving the user the choice
 // for its dark *and* light text colors.
-$-light: if(palette-gray('white') != null, palette-gray('white'), #FFFFFF);
-$-dark: if(palette-gray('900') != null, palette-gray('900'), #212529);
-$-text: if(palette-color('text') != null, palette-color('text'), $-dark);
-$-is-light: (o-get-most-contrast($-text, $-light, $-dark, palette-color('body'), $cross-mix: false) == $-dark);
-$yiq-text-light: if($-is-light, palette-color('text'), null) !default;
-$yiq-text-dark: if($-is-light, null, palette-color('text')) !default;
+$-light: if(o-color('white') != null, o-color('white'), #FFFFFF);
+$-dark: if(o-color('900') != null, o-color('900'), #212529);
+$-text: if(o-color('text') != null, o-color('text'), $-dark);
+$-is-light: (o-get-most-contrast($-text, $-light, $-dark, o-color('body'), $cross-mix: false) == $-dark);
+$yiq-text-light: if($-is-light, o-color('text'), null) !default;
+$yiq-text-dark: if($-is-light, null, o-color('text')) !default;
 
 // Body
 //
 // Settings for the `<body>` element.
 
-$body-bg: palette-color('body') !default;
-$body-color: palette-color('text') !default;
+$body-bg: o-color('body') !default;
+$body-color: o-color('text') !default;
 
 // Links
 //
@@ -44,7 +44,7 @@ $h5-font-size: $font-size-base * $o-theme-h5-font-size-multiplier !default;
 $h6-font-size: $font-size-base * $o-theme-h6-font-size-multiplier !default;
 
 $headings-font-family: $o-theme-headings-font !default;
-$headings-color: palette-color('h1') !default;
+$headings-color: o-color('h1') !default;
 
 // Jumbotron
 
