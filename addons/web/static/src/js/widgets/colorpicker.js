@@ -592,6 +592,8 @@ ColorpickerWidget.convertCSSColorToRgba = function (cssColor) {
 
     // TODO maybe implement a support for receiving css color like 'red' or
     // 'transparent' (which are now considered non-css color by isCSSColor...)
+    // Note: however, if ever implemented be careful of 'white'/'black' which
+    // actually are color names for our color system...
 
     return false;
 };
