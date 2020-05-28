@@ -6,6 +6,60 @@
     @each $color, $value in $grays {
         --#{$color}: #{$value};
     }
+
+    // Most of the keys of the color combination color should be null. We have
+    // to indicate their fallback values.
+    @for $index from 1 through length($o-color-combinations) {
+        $-text: color('o-cc#{$index}-text') or color-yiq(o-color('o-cc#{$index}-bg'));
+        $-headings: color('o-cc#{$index}-headings') or $-text;
+        $-h2: color('o-cc#{$index}-h2') or $-headings;
+        $-h3: color('o-cc#{$index}-h3') or $-h2;
+        $-h4: color('o-cc#{$index}-h4') or $-h3;
+        $-h5: color('o-cc#{$index}-h5') or $-h4;
+        $-h6: color('o-cc#{$index}-h6') or $-h5;
+
+        @if not color('o-cc#{$index}-text') {
+            --o-cc#{$index}-text: #{$-text};
+        }
+        @if not color('o-cc#{$index}-headings') {
+            --o-cc#{$index}-headings: #{$-headings};
+        }
+        @if not color('o-cc#{$index}-h2') {
+            --o-cc#{$index}-h2: #{$-h2};
+        }
+        @if not color('o-cc#{$index}-h3') {
+            --o-cc#{$index}-h3: #{$-h3};
+        }
+        @if not color('o-cc#{$index}-h4') {
+            --o-cc#{$index}-h4: #{$-h4};
+        }
+        @if not color('o-cc#{$index}-h5') {
+            --o-cc#{$index}-h5: #{$-h5};
+        }
+        @if not color('o-cc#{$index}-h6') {
+            --o-cc#{$index}-h6: #{$-h6};
+        }
+
+        @if not color('o-cc#{$index}-link') {
+            --o-cc#{$index}-link: #{theme-color('primary')};
+        }
+
+        $-btn-primary: color('o-cc#{$index}-btn-primary');
+        @if not $-btn-primary {
+            --o-cc#{$index}-btn-primary: #{theme-color('primary')};
+        }
+        @if not color('o-cc#{$index}-btn-primary-border') {
+            --o-cc#{$index}-btn-primary-border: #{$-btn-primary or theme-color('primary')};
+        }
+
+        $-btn-secondary: color('o-cc#{$index}-btn-secondary');
+        @if not $-btn-secondary {
+            --o-cc#{$index}-btn-secondary: #{theme-color('secondary')};
+        }
+        @if not color('o-cc#{$index}-btn-secondary-border') {
+            --o-cc#{$index}-btn-secondary-border: #{$-btn-secondary or theme-color('secondary')};
+        }
+    }
 }
 
 html, body {

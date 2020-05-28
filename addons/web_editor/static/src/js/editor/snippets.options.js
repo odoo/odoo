@@ -739,7 +739,11 @@ const SelectUserValueWidget = UserValueWidget.extend({
      *
      * @private
      */
-    _onClick: function () {
+    _onClick: function (ev) {
+        if (ev.target.closest('[role="button"]')) {
+            return;
+        }
+
         if (!this.menuTogglerEl.classList.contains('active')) {
             this.trigger_up('user_value_widget_opening');
             this.menuTogglerEl.classList.add('active');
