@@ -106,10 +106,8 @@ class PurchaseOrder(models.Model):
         ('invoiced', 'Fully Billed'),
     ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
     date_planned = fields.Datetime(
-        string='Receipt Date', index=True, copy=False,
+        string='Receipt Date', index=True, copy=False, compute='_compute_date_planned', store=True, readonly=False,
         help="Delivery date promised by vendor. This date is used to determine expected arrival of products.")
-    expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=True,
-        help="Delivery date expected by vendor, computed from the minimum lead time of the order lines.")
     date_calendar_start = fields.Datetime(compute='_compute_date_calendar_start', readonly=True, store=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
@@ -130,10 +128,8 @@ class PurchaseOrder(models.Model):
     mail_reminder_confirmed = fields.Boolean("Reminder Confirmed", default=False, readonly=True, copy=False, help="True if the reminder email is confirmed by the vendor.")
     mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
 
-    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', related='partner_id.receipt_reminder_email', readonly=False,
-        help='Automatically send a reminder email to your vendors before receipt')
-    reminder_date_before_receipt = fields.Integer('Days Before Receipt', related='partner_id.reminder_date_before_receipt', readonly=False,
-        help="Number of days to send reminder email before the promised receipt date")
+    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', related='partner_id.receipt_reminder_email', readonly=False)
+    reminder_date_before_receipt = fields.Integer('Days Before Receipt', related='partner_id.reminder_date_before_receipt', readonly=False)
 
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
@@ -168,11 +164,14 @@ class PurchaseOrder(models.Model):
             order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
 
     @api.depends('order_line.date_planned')
-    def _compute_expected_date(self):
-        """ expected_date = the earliest date_planned across all order lines. """
+    def _compute_date_planned(self):
+        """ date_planned = the earliest date_planned across all order lines. """
         for order in self:
-            dates_list = order.order_line.filtered(lambda x: not x.display_type).mapped('date_planned')
-            order.expected_date = fields.Datetime.to_string(min(dates_list)) if dates_list else False
+            dates_list = order.order_line.filtered(lambda x: not x.display_type and x.date_planned).mapped('date_planned')
+            if dates_list:
+                order.date_planned = fields.Datetime.to_string(min(dates_list))
+            else:
+                order.date_planned = False
 
     @api.depends('name', 'partner_ref')
     def name_get(self):
@@ -218,6 +217,17 @@ class PurchaseOrder(models.Model):
                     date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
                 line.date_planned = line._get_date_planned(seller)
         return new_po
+
+    def onchange(self, values, field_name, field_onchange):
+        """Override onchange to NOT to update all date_planned on PO lines when
+        date_planned on PO is updated by the change of date_planned on PO lines.
+        """
+        result = super(PurchaseOrder, self).onchange(values, field_name, field_onchange)
+        if field_name == 'order_line' and 'value' in result:
+            for line in result['value'].get('order_line', []):
+                if line[0] < 2 and 'date_planned' in line[2]:
+                    del line[2]['date_planned']
+        return result
 
     def _track_subtype(self, init_values):
         self.ensure_one()
@@ -628,23 +638,38 @@ class PurchaseOrder(models.Model):
 
         return result
 
-    @api.model
-    def _send_reminder_mail(self):
-        if not self.user_has_groups('purchase.group_send_reminder') and not self.receipt_reminder_email:
+    def _send_reminder_mail(self, send_single=False):
+        if not self.user_has_groups('purchase.group_send_reminder'):
             return
 
         template = self.env.ref('purchase.email_template_edi_purchase_reminder', raise_if_not_found=False)
         if template:
-            for order in self._get_orders_to_remind():
-                date = order.date_planned or order.expected_date
-                if date and (date - relativedelta(days=order.reminder_date_before_receipt)).date() == datetime.today().date():
+            orders = self if send_single else self._get_orders_to_remind()
+            for order in orders:
+                date = order.date_planned
+                if date and (send_single or (date - relativedelta(days=order.reminder_date_before_receipt)).date() == datetime.today().date()):
                     order.with_context(is_reminder=True).message_post_with_template(template.id, email_layout_xmlid="mail.mail_notification_paynow", composition_mode='comment')
+
+    def send_reminder_preview(self):
+        if not self.user_has_groups('purchase.group_send_reminder') and not self.receipt_reminder_email:
+            return
+
+        template = self.env.ref('purchase.email_template_edi_purchase_reminder', raise_if_not_found=False)
+        if template and self.env.user.email:
+            for order in self:
+                template.with_context(is_reminder=True).send_mail(
+                    order.id,
+                    force_send=True,
+                    raise_exception=False,
+                    email_values={'email_to': self.env.user.email, 'recipient_ids': []},
+                    notif_layout="mail.mail_notification_paynow")
 
     @api.model
     def _get_orders_to_remind(self):
         """When auto sending a reminder mail, only send for unconfirmed purchase
         order and not all products are service."""
         return self.search([
+            ('receipt_reminder_email', '=', True),
             ('state', 'in', ['purchase', 'done']),
             ('mail_reminder_confirmed', '=', False)
         ]).filtered(lambda p: p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
@@ -655,7 +680,7 @@ class PurchaseOrder(models.Model):
         if confirm_type in ['reminder', 'reception']:
             param = url_encode({
                 'confirm': confirm_type,
-                'confirmed_date': (self.date_planned or self.expected_date).date(),
+                'confirmed_date': self.date_planned.date(),
             })
             return self.get_portal_url(query_string='&%s' % param)
         return self.get_portal_url()
@@ -670,7 +695,7 @@ class PurchaseOrder(models.Model):
         for order in self:
             if order.state in ['purchase', 'done'] and not order.mail_reminder_confirmed:
                 order.mail_reminder_confirmed = True
-                date = confirmed_date or (self.date_planned or self.expected_date).date()
+                date = confirmed_date or self.date_planned.date()
                 order.message_post(body="%s confirmed the receipt will take place on %s." % (order.partner_id.name, date))
 
     def _confirm_reception_mail(self):
