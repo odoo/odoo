@@ -16,15 +16,16 @@ class PurchaseReport(models.Model):
         'Average Receipt Delay', digits=(16, 2), readonly=True, store=False,  # needs store=False to prevent showing up as a 'measure' option
         help="Amount of time between expected and effective receipt date. Due to a hack needed to calculate this, \
               every record will show the same average value, therefore only use this as an aggregated value with group_operator=avg")
+    effective_date = fields.Datetime(string="Effective Date")
 
     def _select(self):
-        return super(PurchaseReport, self)._select() + ", spt.warehouse_id as picking_type_id"
+        return super(PurchaseReport, self)._select() + ", spt.warehouse_id as picking_type_id, po.effective_date as effective_date"
 
     def _from(self):
         return super(PurchaseReport, self)._from() + " left join stock_picking_type spt on (spt.id=po.picking_type_id)"
 
     def _group_by(self):
-        return super(PurchaseReport, self)._group_by() + ", spt.warehouse_id"
+        return super(PurchaseReport, self)._group_by() + ", spt.warehouse_id, effective_date"
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
