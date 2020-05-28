@@ -622,11 +622,6 @@ options.registry.background.include({
 });
 
 options.registry.Theme = options.Class.extend({
-    jsLibs: [
-        '/web/static/lib/ace/ace.js',
-        '/web/static/lib/ace/mode-xml.js',
-    ],
-
     /**
      * @override
      */
@@ -678,6 +673,29 @@ options.registry.Theme = options.Class.extend({
      * @see this.selectClass for parameters
      */
     async openCustomCodeDialog(previewMode, widgetValue, params) {
+        const libsProm = this._loadLibs({
+            jsLibs: [
+                '/web/static/lib/ace/ace.js',
+                '/web/static/lib/ace/mode-xml.js',
+            ],
+        });
+
+        let websiteId;
+        this.trigger_up('context_get', {
+            callback: (ctx) => {
+                websiteId = ctx['website_id'];
+            },
+        });
+
+        let website;
+        const dataProm = this._rpc({
+            model: 'website',
+            method: 'read',
+            args: [[websiteId], ['custom_code_head', 'custom_code_footer']],
+        }).then(websites => {
+            website = websites[0];
+        });
+
         let fieldName, title, contentText;
         if (widgetValue === 'head') {
             fieldName = 'custom_code_head';
@@ -689,23 +707,13 @@ options.registry.Theme = options.Class.extend({
             contentText = _t('Enter code that will be added before the </body> of every page of your site.');
         }
 
-        let websiteId;
-        this.trigger_up('context_get', {
-            callback: (ctx) => {
-                websiteId = ctx['website_id'];
-            },
-        });
-        const websites = await this._rpc({
-            model: 'website',
-            method: 'read',
-            args: [[websiteId], ['custom_code_head', 'custom_code_footer']],
-        });
+        await Promise.all([libsProm, dataProm]);
 
         await new Promise(resolve => {
             const $content = $(core.qweb.render('website.custom_code_dialog_content', {
                 contentText,
             }));
-            const aceEditor = this._renderAceEditor($content.find('.o_ace_editor_container')[0], websites[0][fieldName] || '');
+            const aceEditor = this._renderAceEditor($content.find('.o_ace_editor_container')[0], website[fieldName] || '');
             const dialog = new Dialog(this, {
                 title,
                 $content,
@@ -799,7 +807,7 @@ options.registry.Theme = options.Class.extend({
     _renderAceEditor(node, content) {
         const aceEditor = window.ace.edit(node);
         aceEditor.setTheme('ace/theme/monokai');
-        aceEditor.setValue(content, 1)
+        aceEditor.setValue(content, 1);
         aceEditor.setOptions({
             minLines: 20,
             maxLines: Infinity,
