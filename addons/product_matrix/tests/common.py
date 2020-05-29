@@ -6,12 +6,13 @@ from odoo.tests import tagged, common
 @tagged('post_install', '-at_install')
 class TestMatrixCommon(common.HttpCase):
 
-    def setUp(self):
-        super(TestMatrixCommon, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Prepare relevant test data
         # This is not included in demo data to avoid useless noise
-        product_attributes = self.env['product.attribute'].create([{
+        product_attributes = cls.env['product.attribute'].create([{
             'name': 'PA1',
             'create_variant': 'always',
             'sequence': 1
@@ -29,16 +30,16 @@ class TestMatrixCommon(common.HttpCase):
             'sequence': 4
         }])
 
-        self.env['product.attribute.value'].create([{
+        cls.env['product.attribute.value'].create([{
             'name': 'PAV' + str(product_attribute.sequence) + str(i),
             'attribute_id': product_attribute.id
         } for i in range(1, 3) for product_attribute in product_attributes])
 
-        self.matrix_template = self.env['product.template'].create({
+        cls.matrix_template = cls.env['product.template'].create({
             'name': "Matrix",
             'type': "consu",
-            'uom_id': self.ref("uom.product_uom_unit"),
-            'uom_po_id': self.ref("uom.product_uom_unit"),
+            'uom_id': cls.ref("uom.product_uom_unit"),
+            'uom_po_id': cls.ref("uom.product_uom_unit"),
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': attribute.id,
                 'value_ids': [(6, 0, attribute.value_ids.ids)]
