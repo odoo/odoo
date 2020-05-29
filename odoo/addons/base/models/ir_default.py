@@ -148,7 +148,10 @@ class IrDefault(models.Model):
         for row in cr.fetchall():
             # keep the highest priority default for each field
             if row[0] not in result:
-                result[row[0]] = json.loads(row[1])
+                if len(row[1]) > 0 and (row[1][0] != "\"" or row[1][-1] != "\""):
+                    raise ValidationError(_("There is a misconfigured user-defined default value for : " + row[0] + ". Please, make sure the value is surrounded by double quote like this exemple : \"value\". "))
+                else:
+                    result[row[0]] = json.loads(row[1])
         return result
 
     @api.model
