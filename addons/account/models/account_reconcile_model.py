@@ -181,11 +181,6 @@ class AccountReconcileModel(models.Model):
         if self.match_total_amount_param < 0 or self.match_total_amount_param > 100:
             self.match_total_amount_param = min(max(0, self.match_total_amount_param), 100)
 
-    @api.onchange('match_partner')
-    def _onchange_match_partner(self):
-        if not self.match_partner:
-            self.match_total_amount = False
-
     ####################################################
     # RECONCILIATION PROCESS
     ####################################################
