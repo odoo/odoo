@@ -58,7 +58,11 @@ class PaymentAcquirerStripeSCA(models.Model):
         # cfr https://stripe.com/docs/error-codes
         # these can be made customer-facing, as they usually indicate a problem with the payment
         # (e.g. insufficient funds, expired card, etc.)
-        if not resp.ok and not (400 <= resp.status_code < 500 and resp.json().get('error', {}).get('code')):
+        # if the context key `stripe_manual_payment` is set then these errors will be raised as ValidationError,
+        # otherwise, they will be silenced, and the will be returned no matter the status.
+        # This key should typically be set for payments in the present and unset for automated payments
+        # (e.g. through crons)
+        if not resp.ok and self._context.get('stripe_manual_payment') and (400 <= resp.status_code < 500 and resp.json().get('error', {}).get('code')):
             try:
                 resp.raise_for_status()
             except HTTPError:
