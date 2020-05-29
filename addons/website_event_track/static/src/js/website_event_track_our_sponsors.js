@@ -38,7 +38,10 @@ publicWidget.registry.eventSponsors = publicWidget.Widget.extend({
     _fetch: function () {
         return this._rpc({
             route: '/event/our_sponsors',
-            params: {'res_id': this.$el.data('res-id')}
+            params: {
+                'res_id': this.$el.data('res-id'),
+                'res_model': this.$el.data('res-model')
+                }
         }).then(sponsors => {
             // return demo data for snippet (in case of drag-drop sponsors snippet in edit mode)
             if (!(sponsors && sponsors.length)) {
@@ -46,17 +49,17 @@ publicWidget.registry.eventSponsors = publicWidget.Widget.extend({
                         id: 0,
                         url: '#',
                         partner_name: 'Sponsor 1',
-                        sponsor_type_id: {'name': 'Gold'}
+                        sponsor_type_id: (1, 'Gold')
                     }, {
                         id: 0,
                         url: '#',
                         partner_name: 'Sponsor 2',
-                        sponsor_type_id: {'name': 'Silver'}
+                        sponsor_type_id: (2, 'Silver')
                     }, {
                         id: 0,
                         url: '#',
                         partner_name: 'Sponsor 3',
-                        sponsor_type_id: {'name': 'Bronze'}
+                        sponsor_type_id: (3, 'Bronze')
                     }]
             }
             return sponsors;
@@ -71,9 +74,9 @@ publicWidget.registry.eventSponsors = publicWidget.Widget.extend({
     _render: function (sponsors) {
         this.sponsorsList = $(qweb.render('website_event_track.ourSponsors', {
             uniqueId: this.uniqueId,
-            sponsorsGroups: sponsors,
+            sponsors: sponsors,
         }));
-        this.$('.o_event_sponsors').html(this.sponsorsList).css('display', '');
+        this.$('.o_our_sponsors').html(this.sponsorsList).css('display', '');
         this.$el.toggleClass('d-none', !(sponsors && sponsors.length));
     }
 });

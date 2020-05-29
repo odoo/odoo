@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="website_event_track.ourSponsors">
         <div t-att-id="uniqueId" class="row">
-           <div t-attf-class="col-sm-6 col-lg-#{(sponsorsGroups.length > 4)  and 2 or (12 / sponsorsGroups.length)} text-center mb16" t-foreach="sponsorsGroups" t-as="sponsor">
+           <div t-attf-class="col-sm-6 col-lg-#{(sponsors.length > 4)  and 2 or (12 / sponsors.length)} text-center mb16" t-foreach="sponsors" t-as="sponsor">
                 <span style="position: relative; display: inline-block;" class="bg-white">
                     <t t-if="sponsor.url">
                         <a t-att-href="sponsor.url" style="position: relative; display: inline-block;" class="bg-white">
