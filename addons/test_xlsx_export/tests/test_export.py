@@ -18,23 +18,22 @@ class XlsxCreatorCase(common.HttpCase):
         super().__init__(*args, **kwargs)
         self.model = None
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.model = cls.env[cls.model_name]
+    def setUp(self):
+        super().setUp()
+        self.model = self.env[self.model_name]
 
-        u = mail_new_test_user(cls.env, login='fof', password='123456789', groups='base.group_user,base.group_allow_export')
-        cls.authenticate('fof', '123456789')
+        u = mail_new_test_user(self.env, login='fof', password='123456789', groups='base.group_user,base.group_allow_export')
+        self.authenticate('fof', '123456789')
 
-        cls.worksheet = {}  # mock worksheet
+        self.worksheet = {}  # mock worksheet
 
-        cls.default_params = {
+        self.default_params = {
             'domain': [],
-            'fields': [{'name': field.name, 'label': field.string} for field in cls.model._fields.values()],
+            'fields': [{'name': field.name, 'label': field.string} for field in self.model._fields.values()],
             'groupby': [],
             'ids': False,
             'import_compat': False,
-            'model': cls.model._name,
+            'model': self.model._name,
         }
 
     def _mock_write(self, row, column, value, style=None):
