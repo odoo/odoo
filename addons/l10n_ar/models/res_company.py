@@ -42,3 +42,17 @@ class ResCompany(models.Model):
         if self.env['account.chart.template'].existing_accounting(self):
             raise ValidationError(_(
                 'Could not change the AFIP Responsibility of this company because there are already accounting entries.'))
+
+    def _load_or_install_coa(self, modules, module_list):
+        """
+            load COA only when company have AFIP Responsibility
+            because here three COA and it's depend on AFIP Responsibility so we don't wont to load wrong COA for company.
+        """
+        if not modules and 'l10n_ar' in module_list:
+            if self.l10n_ar_afip_responsibility_type_id:
+                chart_template_xml_ids = self.env['ir.model.data'].search([('module', 'in', module_list), ('model', '=', 'account.chart.template')])
+                chart_templates = self.env['account.chart.template'].browse(chart_template_xml_ids.mapped('res_id'))
+                chart_template = chart_templates.filtered(lambda coa: coa._get_ar_responsibility_match(coa.id) == self.l10n_ar_afip_responsibility_type_id)
+                chart_template.try_loading(company=self)
+        else:
+            super()._load_or_install_coa(modules, module_list)

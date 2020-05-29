@@ -377,6 +377,7 @@ class Registry(Mapping):
 
             for model in models:
                 model._auto_init()
+            for model in models:
                 model.init()
 
             env['ir.model']._reflect_models(model_names)
