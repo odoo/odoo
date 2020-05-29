@@ -36,6 +36,10 @@
             This invoice is already paid.
         % else:
             Please remit payment at your earliest convenience.
+            % if object.invoice_payment_ref:
+                <br /><br />
+                Please use the following communication for your payment: <strong>${object.invoice_payment_ref}</strong>.
+            % endif
         % endif
         <br /><br />
         Do not hesitate to contact us if you have any questions.
