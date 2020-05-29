@@ -8,10 +8,11 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUiCertification(HttpCaseWithUserDemo):
 
-    def setUp(self):
-        super(TestUiCertification, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.survey_certification = self.env['survey.survey'].create({
+        cls.survey_certification = cls.env['survey.survey'].create({
             'title': 'MyCompany Vendor Certification',
             'access_token': '4ead4bc8-b8f2-4760-a682-1fde8daaaaac',
             'state': 'open',
@@ -20,7 +21,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
             'certification': True,
-            'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
+            'certification_mail_template_id': cls.env.ref('survey.mail_template_certification').id,
             'is_time_limited': 'limited',
             'time_limit': 10.0,
             'is_attempts_limited': True,

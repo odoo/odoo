@@ -8,9 +8,10 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUiFeedback(HttpCaseWithUserDemo):
 
-    def setUp(self):
-        super(TestUiFeedback, self).setUp()
-        self.survey_feedback = self.env['survey.survey'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.survey_feedback = cls.env['survey.survey'].create({
             'title': 'User Feedback Form',
             'access_token': 'b137640d-14d4-4748-9ef6-344caaaaaae',
             'state': 'open',
