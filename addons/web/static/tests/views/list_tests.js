@@ -1638,6 +1638,40 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('selection box is removed after multi record edition', async function (assert) {
+        assert.expect(6);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree multi_edit="1"><field name="foo"/><field name="bar"/></tree>',
+        });
+
+        assert.containsN(list, '.o_data_row', 4,
+            "there should be 4 records");
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box',
+            "list selection box should not be displayed");
+
+        // select all records
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box',
+            "list selection box should be displayed");
+        assert.containsN(list, '.o_data_row .o_list_record_selector input:checked', 4,
+            "all 4 records should be selected");
+
+        // edit selected records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'legion');
+        await testUtils.dom.click($('.modal-dialog button.btn-primary'));
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box',
+            "list selection box should not be displayed");
+        assert.containsNone(list, '.o_data_row .o_list_record_selector input:checked',
+            "no records should be selected");
+
+        list.destroy();
+    });
+
     QUnit.test('selection is reset on reload', async function (assert) {
         assert.expect(8);
 
