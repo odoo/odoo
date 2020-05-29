@@ -107,17 +107,23 @@
                 <t t-call="website.layout">
                   <div id="wrap">
                     <div class="oe_structure" id="oe_structure_website_form_contact_us_thanks_1"/>
-                    <div class="container pt-3">
-                        <h1>Thanks!</h1>
+                    <div class="container mt-4">
                         <div class="row">
-                            <div class="col-lg-8">
-                                <div class="alert alert-success" role="status">
-                                    Your message has been sent successfully.
-                                    <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
-                                </div>
-                                <p>
-                                    We will get back to you shortly.
-                                </p>
+                            <div class="col-lg-7 col-xl-6 mr-lg-auto oe_structure">
+                                <section class="pt40 s_text_block pb40 o_colored_level o_cc o_cc1" data-snippet="s_text_block" data-name="Text">
+                                    <div class="container">
+                                        <span class="d-block fa fa-4x fa-thumbs-up mx-auto rounded-circle bg-primary"/><br/>
+                                        <h1 class="text-center">Thank You!</h1>
+                                        <div class="pb16 pt16 s_hr" data-snippet="s_hr" data-name="Separator">
+                                            <hr class="mx-auto border-top w-50 border-dark text-center"/>
+                                        </div>
+                                        <h5 class="text-center">
+                                            <span class="fa fa-check-circle"/>
+                                            <span>Your message has been sent <b>successfully</b></span>
+                                        </h5>
+                                        <p class="text-center">We will get back to you shortly.</p>
+                                    </div>
+                                </section>
                             </div>
                             <div class="col-lg-4">
                                 <t t-call="website.company_description"/>
