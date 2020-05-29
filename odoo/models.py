@@ -940,11 +940,38 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # list of (xid, vals, info) for records to be created in batch
         batch = []
         batch_xml_ids = set()
+        # models in which we may have created / modified data, therefore might
+        # require flushing in order to name_search: the root model and any
+        # o2m
+        creatable_models = {self._name}
+        for field_path in fields:
+            if field_path[0] in (None, 'id', '.id'):
+                continue
+            model_fields = self._fields
+            if isinstance(model_fields[field_path[0]], odoo.fields.Many2one):
+                # this only applies for toplevel m2o (?) fields
+                if field_path[0] in (self.env.context.get('name_create_enabled_fieds') or {}):
+                    creatable_models.add(model_fields[field_path[0]].comodel_name)
+            for field_name in field_path:
+                if field_name in (None, 'id', '.id'):
+                    break
 
-        def flush(xml_id=None):
+                if isinstance(model_fields[field_name], odoo.fields.One2many):
+                    comodel = model_fields[field_name].comodel_name
+                    creatable_models.add(comodel)
+                    model_fields = self.env[comodel]._fields
+
+        def flush(*, xml_id=None, model=None):
             if not batch:
                 return
+
+            assert not (xml_id and model), \
+                "flush can specify *either* an external id or a model, not both"
+
             if xml_id and xml_id not in batch_xml_ids:
+                if xml_id not in self.env:
+                    return
+            if model and model not in creatable_models:
                 return
 
             data_list = [
@@ -954,22 +981,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             batch.clear()
             batch_xml_ids.clear()
 
-            unknown_msg = _(u"Unknown database error: '%s'")
-            try:
-                cr.execute('SAVEPOINT model_load_save')
-            except psycopg2.InternalError as e:
-                # broken transaction, exit and hope the source error was
-                # already logged
-                if not any(message['type'] == 'error' for message in messages):
-                    info = data_list[0]['info']
-                    messages.append(dict(info, type='error', message=unknown_msg % e))
-                return
-
             # try to create in batch
             try:
                 with cr.savepoint():
                     recs = self._load_records(data_list, mode == 'update')
                     ids.extend(recs.ids)
+                return
+            except psycopg2.InternalError as e:
+                # broken transaction, exit and hope the source error was already logged
+                if not any(message['type'] == 'error' for message in messages):
+                    info = data_list[0]['info']
+                    messages.append(dict(info, type='error', message=_(u"Unknown database error: '%s'") % e))
                 return
             except Exception:
                 pass
@@ -3705,7 +3727,7 @@ Record ids: %(records)s
                 if not field:
                     raise ValueError("Invalid field %r on model %r" % (key, self._name))
                 if field.company_dependent:
-                    irprop_def = self.env['ir.property'].get(key, self._name)
+                    irprop_def = self.env['ir.property']._get(key, self._name)
                     cached_def = field.convert_to_cache(irprop_def, self)
                     cached_val = field.convert_to_cache(val, self)
                     if cached_val == cached_def:

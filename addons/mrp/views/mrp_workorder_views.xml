@@ -154,12 +154,7 @@
                             <field name="duration_expected" widget="float_time" class="oe_inline"/>
                             minutes
                         </div>
-                        <label for="duration"/>
-                        <div>
-                            <button style="pointer-events: none;" class="oe_inline badge badge-secondary">
-                                <field name="duration" widget="mrp_time_counter" help="Time the currently logged user spent on this workorder."/>
-                            </button>
-                        </div>
+                        <field name="duration" widget="mrp_time_counter" help="Time the currently logged user spent on this workorder."/>
                     </group>
                     <group>
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
@@ -229,10 +224,11 @@
                         </tree>
                     </field>
                 </page>
-                <page string="Work Instruction" name="workorder_page_work_instruction" attrs="{'invisible': [('worksheet', '=', False),('worksheet_google_slide', '=', False)]}">
+                <page string="Work Instruction" name="workorder_page_work_instruction" attrs="{'invisible': [('worksheet', '=', False), ('worksheet_google_slide', '=', False), ('operation_note', '=', False)]}">
                     <field name="worksheet_type" invisible="1"/>
-                    <field name="worksheet_google_slide" widget="embed_viewer" attrs="{'invisible': [('worksheet_type', '=', 'pdf')]}"/>
-                    <field name="worksheet" widget="pdf_viewer" attrs="{'invisible': [('worksheet_type', '=', 'google_slide')]}"/>
+                    <field name="worksheet" widget="pdf_viewer" attrs="{'invisible': [('worksheet_type', '!=', 'pdf')]}"/>
+                    <field name="worksheet_google_slide" widget="embed_viewer" attrs="{'invisible': [('worksheet_type', '!=', 'google_slide')]}"/>
+                    <field name="operation_note" attrs="{'invisible': [('worksheet_type', '!=', 'text')]}"/>
                 </page>
                 </notebook>
             </sheet>

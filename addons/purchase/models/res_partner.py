@@ -59,3 +59,8 @@ class res_partner(models.Model):
     supplier_invoice_count = fields.Integer(compute='_compute_supplier_invoice_count', string='# Vendor Bills')
     purchase_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order', help=WARNING_HELP, default="no-message")
     purchase_warn_msg = fields.Text('Message for Purchase Order')
+
+    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', default=True, company_dependent=True,
+        help='Automatically send a reminder email to your vendors before receipt')
+    reminder_date_before_receipt = fields.Integer('Days Before Receipt', default=1, company_dependent=True,
+        help="Number of days to send reminder email before the promised receipt date")

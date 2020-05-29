@@ -49,14 +49,12 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Description" name="description">
-                                <field name="note"/>
-                            </page>
                             <page string="Work Sheet" name="worksheet">
                                 <group>
                                     <field name="worksheet_type" widget="radio"/>
-                                    <field name="worksheet" help="Upload your PDF file." widget="pdf_viewer" attrs="{'invisible':  [('worksheet_type', '=', 'google_slide')]}"/>
-                                    <field name="worksheet_google_slide" placeholder="Google Slide Link" widget="embed_viewer" attrs="{'invisible':  [('worksheet_type', '=', 'pdf')]}"/>
+                                    <field name="worksheet" help="Upload your PDF file." widget="pdf_viewer" attrs="{'invisible':  [('worksheet_type', '!=', 'pdf')]}"/>
+                                    <field name="worksheet_google_slide" placeholder="Google Slide Link" widget="embed_viewer" attrs="{'invisible':  [('worksheet_type', '!=', 'google_slide')]}"/>
+                                    <field name="note" attrs="{'invisible':  [('worksheet_type', '!=', 'text')]}"/>
                                 </group>
                             </page>
                         </notebook>
@@ -174,7 +172,7 @@
 
         <menuitem id="menu_mrp_routing_action"
           action="mrp_routing_action"
-          parent="menu_mrp_bom"
+          parent="menu_mrp_configuration"
           groups="group_mrp_routings"
           sequence="50"/>
     </data>

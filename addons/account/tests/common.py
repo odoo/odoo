@@ -213,11 +213,11 @@ class AccountTestCommon(SavepointCase):
 
         # Properties: Product income and expense accounts, default parameters
         Property = cls.env['ir.property']
-        Property.set_default('property_account_receivable_id', 'res.partner', cls.a_recv, cls.company)
-        Property.set_default('property_account_payable_id', 'res.partner', cls.a_pay, cls.company)
-        Property.set_default('property_account_position_id', 'res.partner', False, cls.company)
-        Property.set_default('property_account_expense_categ_id', 'product.category', cls.a_expense, cls.company)
-        Property.set_default('property_account_income_categ_id', 'product.category', cls.a_sale, cls.company)
+        Property._set_default('property_account_receivable_id', 'res.partner', cls.a_recv, cls.company)
+        Property._set_default('property_account_payable_id', 'res.partner', cls.a_pay, cls.company)
+        Property._set_default('property_account_position_id', 'res.partner', False, cls.company)
+        Property._set_default('property_account_expense_categ_id', 'product.category', cls.a_expense, cls.company)
+        Property._set_default('property_account_income_categ_id', 'product.category', cls.a_sale, cls.company)
 
         # Bank Accounts
         cls.bank_account = cls.env['res.partner.bank'].create({

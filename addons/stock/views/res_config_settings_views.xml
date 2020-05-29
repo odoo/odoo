@@ -121,6 +121,9 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <h2>Shipping Connectors</h2>
+                        <div class="row mt16 o_settings_container" name="product_setting_container">
                             <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_ups">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_ups" widget="upgrade_boolean"/>
@@ -339,23 +342,6 @@
                                         <div class="mt8" attrs="{'invisible': [('group_stock_multi_locations', '=', False)]}">
                                             <button name="%(stock.action_location_form)d" icon="fa-arrow-right" type="action" string="Locations" class="btn-link"/><br/>
                                             <button name="stock.action_putaway_tree" icon="fa-arrow-right" type="action" string="Putaway Rules" class="btn-link"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="manage_several_warehouses">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_stock_multi_warehouses"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_stock_multi_warehouses"/>
-                                    <a href="https://www.odoo.com/documentation/user/13.0/inventory/management/warehouses/difference_warehouse_location.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                    <div class="text-muted">
-                                        Manage several warehouses
-                                    </div>
-                                    <div class="content-group">
-                                        <div class="mt8" attrs="{'invisible': [('group_stock_multi_warehouses', '=', False)]}">
-                                            <button name="%(stock.action_warehouse_form)d" icon="fa-arrow-right" type="action" string="Warehouses" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>

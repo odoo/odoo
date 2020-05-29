@@ -8,6 +8,7 @@ var dom = require('web.dom');
 var Widget = require('web.Widget');
 var options = require('web_editor.snippets.options');
 var Wysiwyg = require('web_editor.wysiwyg');
+const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 
 var _t = core._t;
 
@@ -873,6 +874,17 @@ var SnippetsMenu = Widget.extend({
             '.ui-autocomplete',
             '.modal .close',
         ].join(', ');
+    },
+    /**
+     * @override
+     */
+    willStart: function () {
+        // Preload colorpalette dependencies without waiting for them. The
+        // widget have huge chances of being used by the user (clicking on any
+        // text will load it). The colorpalette itself will do the actual
+        // waiting of the loading completion.
+        ColorPaletteWidget.loadDependencies(this);
+        return this._super(...arguments);
     },
     /**
      * @override
@@ -1860,10 +1872,10 @@ var SnippetsMenu = Widget.extend({
 
         tab = tab || this.tabs.BLOCKS;
 
-        while (this.customizePanel.firstChild) {
-            this.customizePanel.removeChild(this.customizePanel.firstChild);
-        }
         if (content) {
+            while (this.customizePanel.firstChild) {
+                this.customizePanel.removeChild(this.customizePanel.firstChild);
+            }
             $(this.customizePanel).append(content);
         }
 
@@ -2044,10 +2056,11 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onBlocksTabClick: function (ev) {
-        this._activateSnippet(false);
-        this._updateLeftPanelContent({
-            content: [],
-            tab: this.tabs.BLOCKS,
+        this._activateSnippet(false).then(() => {
+            this._updateLeftPanelContent({
+                content: [],
+                tab: this.tabs.BLOCKS,
+            });
         });
     },
     /**

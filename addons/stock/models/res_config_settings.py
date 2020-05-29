@@ -41,18 +41,11 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_easypost = fields.Boolean("Easypost Connector")
     group_stock_multi_locations = fields.Boolean('Storage Locations', implied_group='stock.group_stock_multi_locations',
         help="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.")
-    group_stock_multi_warehouses = fields.Boolean('Multi-Warehouses', implied_group='stock.group_stock_multi_warehouses')
 
     @api.onchange('group_stock_multi_locations')
     def _onchange_group_stock_multi_locations(self):
         if not self.group_stock_multi_locations:
-            self.group_stock_multi_warehouses = False
             self.group_stock_adv_location = False
-
-    @api.onchange('group_stock_multi_warehouses')
-    def _onchange_group_stock_multi_warehouses(self):
-        if self.group_stock_multi_warehouses:
-            self.group_stock_multi_locations = True
 
     @api.onchange('group_stock_production_lot')
     def _onchange_group_stock_production_lot(self):

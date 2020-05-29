@@ -11,7 +11,12 @@
                     <t t-set="locations" t-value="move_line_ids.mapped('location_id').sorted(lambda location: location.complete_name)"/>
                     <t t-call="web.external_layout">
                         <div class="page">
-                            <h3>Summary: <span t-field="o.name"/></h3>
+                            <div class="d-flex">
+                                <div><h3>Summary: <span t-field="o.name"/></h3></div>
+                                <div class="mr-auto">
+                                    <img alt="Barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', quote_plus(o.name or ''), 600, 150)" style="width:300px;height:50px"/>
+                                </div>
+                            </div>
                             <div t-if="o.user_id">
                                 <strong>Responsible:</strong>
                                 <span t-field="o.user_id"/>

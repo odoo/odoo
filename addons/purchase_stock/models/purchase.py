@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare
+from datetime import datetime
 from dateutil import relativedelta
 from odoo.exceptions import UserError
 
@@ -29,6 +30,7 @@ class PurchaseOrder(models.Model):
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
     effective_date = fields.Datetime("Effective Date", compute='_compute_effective_date', store=True, copy=False,
         help="Completion date of the first receipt order.")
+    on_time_rate = fields.Float(related='partner_id.on_time_rate')
 
     @api.depends('order_line.move_ids.returned_move_ids',
                  'order_line.move_ids.state',
@@ -250,6 +252,31 @@ class PurchaseOrder(models.Model):
                     values={'self': picking, 'origin': order},
                     subtype_id=self.env.ref('mail.mt_note').id)
         return True
+
+    def _update_date_planned_for_lines(self, updated_dates):
+        note = self._compose_note(updated_dates)
+
+        validated_picking = self.picking_ids.filtered(lambda p: p.state == 'done')
+        if validated_picking:
+            note += _("<p>Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.</p>") % validated_picking.name
+        else:
+            note += _("<p>Those dates have been updated accordingly on the receipt %s.</p>") % self.picking_ids[0].name
+            for line, date in updated_dates:
+                date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+                line._update_date_planned(date)
+
+        self.activity_schedule(
+            'mail.mail_activity_data_warning',
+            summary="Date Updated",
+            note=note,
+            user_id=self.user_id.id or SUPERUSER_ID
+        )
+
+    @api.model
+    def _get_orders_to_remind(self):
+        """When auto sending reminder mails, don't send for purchase order with
+        validated receipts."""
+        return super()._get_orders_to_remind().filtered(lambda p: not p.effective_date)
 
 
 class PurchaseOrderLine(models.Model):
@@ -510,3 +537,14 @@ class PurchaseOrderLine(models.Model):
                     incoming_moves |= move
 
         return outgoing_moves, incoming_moves
+
+    def _update_date_planned(self, updated_date):
+        move_to_update = self.move_ids.filtered(lambda m: m.state not in ['done', 'cancel'])
+        if move_to_update:
+            super()._update_date_planned(updated_date)
+            self._update_move_expected_date(updated_date)
+
+    @api.model
+    def _update_qty_received_method(self):
+        """Update qty_received_method for old PO before install this module."""
+        self.search([])._compute_qty_received_method()
