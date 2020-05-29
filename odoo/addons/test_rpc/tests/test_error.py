@@ -11,7 +11,7 @@ class TestError(common.HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        uid = cls.ref("base.user_admin")
+        uid = cls.env.ref("base.user_admin").id
         cls.rpc = partial(cls.xmlrpc_object.execute, common.get_db_name(), uid, "admin")
 
         # Reset the admin's lang to avoid breaking tests due to admin not in English
