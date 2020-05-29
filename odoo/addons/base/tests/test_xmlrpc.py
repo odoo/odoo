@@ -8,9 +8,10 @@ from odoo.tests import common
 @common.tagged('post_install', '-at_install')
 class TestXMLRPC(common.HttpCase):
 
-    def setUp(self):
-        super(TestXMLRPC, self).setUp()
-        self.admin_uid = self.env.ref('base.user_admin').id
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.admin_uid = cls.env.ref('base.user_admin').id
 
     def test_01_xmlrpc_login(self):
         """ Try to login on the common service. """
