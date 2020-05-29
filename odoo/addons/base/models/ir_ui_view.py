@@ -1550,6 +1550,9 @@ actual arch.
             for that view's key.
         """
         self.ensure_one()
+        # Only qweb views have a specific conterpart
+        if self.type != 'qweb':
+            return self.env['ir.ui.view']
         # A specific view can have a xml_id if exported/imported but it will not be equals to it's key (only generic view will).
         return self.with_context(active_test=False).search([('key', '=', self.key)]).filtered(lambda r: not r.xml_id == r.key)
 
