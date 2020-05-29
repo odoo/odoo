@@ -1227,7 +1227,7 @@ class ChromeBrowser():
             return m[0]
         return replacer
 
-class HttpCase(TransactionCase):
+class HttpCase(SavepointCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers.
     """
     registry_test_mode = True
@@ -1236,11 +1236,6 @@ class HttpCase(TransactionCase):
 
     def __init__(self, methodName='runTest'):
         super(HttpCase, self).__init__(methodName)
-        # v8 api with correct xmlrpc exception handling.
-        self.xmlrpc_url = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, odoo.tools.config['http_port'])
-        self.xmlrpc_common = xmlrpclib.ServerProxy(url_8 + 'common')
-        self.xmlrpc_db = xmlrpclib.ServerProxy(url_8 + 'db')
-        self.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
         cls = type(self)
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
@@ -1257,11 +1252,28 @@ class HttpCase(TransactionCase):
             cls.browser.stop()
             cls.browser = None
 
+    @classmethod
+    def setUpClass(cls):
+        """ Test class setup.
+
+        Ensure a single shared cursors through all threads and setup xmlrpc client.
+        """
+        super(HttpCase, cls).setUpClass()
+        # v8 api with correct xmlrpc exception handling.
+        cls.xmlrpc_url = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, odoo.tools.config['http_port'])
+        cls.xmlrpc_common = xmlrpclib.ServerProxy(url_8 + 'common')
+        cls.xmlrpc_db = xmlrpclib.ServerProxy(url_8 + 'db')
+        cls.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
+        if cls.registry_test_mode:
+            cls.registry.enter_test_mode(cls.cr)
+            cls.addClassCleanup(cls.registry.leave_test_mode)
+    
     def setUp(self):
-        super(HttpCase, self).setUp()
-        if self.registry_test_mode:
-            self.registry.enter_test_mode(self.cr)
-            self.addCleanup(self.registry.leave_test_mode)
+        """ Unit test setup.
+
+        Ensure an empty new session for each test.
+        """
+        super().setUp()
         # setup a magic session_id that will be rollbacked
         self.session = odoo.http.root.session_store.new()
         self.session_id = self.session.sid
@@ -1270,6 +1282,12 @@ class HttpCase(TransactionCase):
         # setup an url opener helper
         self.opener = requests.Session()
         self.opener.cookies['session_id'] = self.session_id
+        self.addCleanup(self.remove_session)
+
+    def remove_session(self):
+        self.session = None
+        self.session_id = None
+        self.opener = None
 
     def url_open(self, url, data=None, files=None, timeout=10, headers=None, allow_redirects=True):
         self.env['base'].flush()
