@@ -4,12 +4,13 @@
 from odoo import fields, tests
 
 
-class TestLivechatCommon(tests.TransactionCase):
-    def setUp(self):
-        super(TestLivechatCommon, self).setUp()
-        self.base_datetime = fields.Datetime.from_string("2019-11-11 21:30:00")
+class TestLivechatCommon(tests.SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.base_datetime = fields.Datetime.from_string("2019-11-11 21:30:00")
 
-        self.operator = self.env['res.users'].create({
+        cls.operator = cls.env['res.users'].create({
             'name': 'Operator Michel',
             'login': 'operator',
             'email': 'operator@example.com',
@@ -17,36 +18,37 @@ class TestLivechatCommon(tests.TransactionCase):
             'livechat_username': 'El Deboulonnator',
         })
 
-        self.livechat_channel = self.env['im_livechat.channel'].create({
+        cls.livechat_channel = cls.env['im_livechat.channel'].create({
             'name': 'The basic channel',
-            'user_ids': [(6, 0, [self.operator.id])]
+            'user_ids': [(6, 0, [cls.operator.id])]
         })
 
-        self.max_sessions_per_operator = 5
+        cls.max_sessions_per_operator = 5
         visitor_vals = {
-            'lang_id': self.env.ref('base.lang_en').id,
-            'country_id': self.env.ref('base.be').id,
-            'website_id': self.env.ref('website.default_website').id,
+            'lang_id': cls.env.ref('base.lang_en').id,
+            'country_id': cls.env.ref('base.be').id,
+            'website_id': cls.env.ref('website.default_website').id,
         }
-        self.visitors = self.env['website.visitor'].create([{
-            'lang_id': self.env.ref('base.lang_en').id,
-            'country_id': self.env.ref('base.de').id,
-            'website_id': self.env.ref('website.default_website').id,
-            'partner_id': self.env.ref('base.user_demo').partner_id.id,
-        }] + [visitor_vals]*self.max_sessions_per_operator)
-        self.visitor_demo, self.visitor = self.visitors[0], self.visitors[1]
+        cls.visitors = cls.env['website.visitor'].create([{
+            'lang_id': cls.env.ref('base.lang_en').id,
+            'country_id': cls.env.ref('base.de').id,
+            'website_id': cls.env.ref('website.default_website').id,
+            'partner_id': cls.env.ref('base.user_demo').partner_id.id,
+        }] + [visitor_vals]*cls.max_sessions_per_operator)
+        cls.visitor_demo, cls.visitor = cls.visitors[0], cls.visitors[1]
 
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = cls.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
-        self.open_chat_url = base_url + "/im_livechat/get_session"
-        self.open_chat_params = {'params': {
-            'channel_id': self.livechat_channel.id,
+        cls.open_chat_url = base_url + "/im_livechat/get_session"
+        cls.open_chat_params = {'params': {
+            'channel_id': cls.livechat_channel.id,
             'anonymous_name': "Wrong Name"
         }}
 
-        self.send_feedback_url = base_url + "/im_livechat/feedback"
-        self.leave_session_url = base_url + "/im_livechat/visitor_leave_session"
+        cls.send_feedback_url = base_url + "/im_livechat/feedback"
+        cls.leave_session_url = base_url + "/im_livechat/visitor_leave_session"
 
+    def setUp(self):
         # override the get_available_users to return only Michel as available
         operators = self.operator
         def get_available_users(self):
