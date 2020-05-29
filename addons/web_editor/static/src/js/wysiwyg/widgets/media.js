@@ -1250,7 +1250,7 @@ var VideoWidget = MediaWidget.extend({
         // dialog is opened for a background-video
         $optBox.toggleClass('d-none', this.isForBgVideo || $optBox.find('div:not(.d-none)').length === 0);
 
-        if (query.type === 'yt') {
+        if (query.type === 'youtube') {
             // Youtube only: If 'hide controls' is checked, hide 'fullscreen'
             // and 'youtube logo' options too
             this.$('input#o_video_hide_fullscreen, input#o_video_hide_yt_logo').closest('div').toggleClass('d-none', this.$('input#o_video_hide_controls').is(':checked'));
