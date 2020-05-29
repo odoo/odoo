@@ -314,6 +314,16 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
     def cursor(self):
         return self.registry.cursor()
 
+    def patch(self, obj, key, val):
+        """ Do the patch ``setattr(obj, key, val)``, and prepare cleanup. """
+        old = getattr(obj, key)
+        setattr(obj, key, val)
+        self.addCleanup(setattr, obj, key, old)
+
+    def patch_order(self, model, order):
+        """ Patch the order of the given model (name), and prepare cleanup. """
+        self.patch(type(self.env[model]), '_order', order)
+
     @property
     def uid(self):
         """ Get the current uid. """
@@ -595,16 +605,6 @@ class TransactionCase(BaseCase):
         self.addCleanup(self.env.reset)
 
         self.patch(type(self.env['res.partner']), '_get_gravatar_image', lambda *a: False)
-
-    def patch(self, obj, key, val):
-        """ Do the patch ``setattr(obj, key, val)``, and prepare cleanup. """
-        old = getattr(obj, key)
-        setattr(obj, key, val)
-        self.addCleanup(setattr, obj, key, old)
-
-    def patch_order(self, model, order):
-        """ Patch the order of the given model (name), and prepare cleanup. """
-        self.patch(type(self.env[model]), '_order', order)
 
 
 class SingleTransactionCase(BaseCase):
