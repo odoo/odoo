@@ -1619,11 +1619,12 @@ class Lead(models.Model):
                     current_frequency_for_couple = current_frequencies.get(field, {}).get(param, {})
                     # If frequency already present : UPDATE IT
                     if current_frequency_for_couple:
-                        new_won = result['won'] * step
-                        new_lost = result['lost'] * step
+                        new_won = current_frequency_for_couple['won'] + (result['won'] * step)
+                        new_lost = current_frequency_for_couple['lost'] + (result['lost'] * step)
+                        # ensure to have always positive frequencies
                         values_to_update[current_frequency_for_couple['frequency_id']] = {
-                            'won_count': current_frequency_for_couple['won'] + new_won,
-                            'lost_count': current_frequency_for_couple['lost'] + new_lost
+                            'won_count': new_won if new_won > 0 else 0.1,
+                            'lost_count': new_lost if new_lost > 0 else 0.1
                         }
                         continue
 
