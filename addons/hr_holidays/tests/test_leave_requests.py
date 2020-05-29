@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from pytz import timezone, UTC
@@ -8,9 +9,11 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 from odoo.tests.common import Form
+from odoo.tests import tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
+@tagged('leave_requests')
 class TestLeaveRequests(TestHrHolidaysCommon):
 
     def _check_holidays_status(self, holiday_status, ml, lt, rl, vrl):
@@ -207,7 +210,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_from': '8',  # 8:00 AM in the employee's timezone
             'request_hour_to': '17',  # 5:00 PM in the employee's timezone
         })
-        leave._onchange_request_parameters()
         self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
         self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
 
@@ -227,7 +229,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_from': '8',  # 8:00 AM in the company's timezone
             'request_hour_to': '17',  # 5:00 PM in the company's timezone
         })
-        leave._onchange_request_parameters()
         self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
         self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
 
@@ -248,7 +249,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_from': '8',  # 8:00 AM in the department's timezone
             'request_hour_to': '17',  # 5:00 PM in the department's timezone
         })
-        leave._onchange_request_parameters()
         self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
         self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
 
@@ -391,7 +391,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'holiday_status_id': self.holidays_type_1.id,
         })
         leave = self.env['hr.leave'].with_user(self.user_employee_id).new(values)
-        leave._onchange_request_parameters()
         self.assertEqual(leave.number_of_days, number_of_days)
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')

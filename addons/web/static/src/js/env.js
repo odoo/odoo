@@ -3,11 +3,12 @@ odoo.define("web.env", function (require) {
 
     const { jsonRpc } = require('web.ajax');
     const { device, isDebug } = require("web.config");
-    const { _lt, _t, bus, serviceRegistry } = require("web.core");
+    const { bus, serviceRegistry } = require("web.core");
     const dataManager = require('web.data_manager');
     const { blockUI, unblockUI } = require("web.framework");
     const rpc = require("web.rpc");
     const session = require("web.session");
+    const { _t } = require('web.translation');
     const utils = require("web.utils");
 
     const qweb = new owl.QWeb({ translateFn: _t });
@@ -21,25 +22,28 @@ odoo.define("web.env", function (require) {
     }
 
     function httpRequest(route, params = {}, readMethod = 'json') {
-        const formData = new FormData();
-        for (const key in params) {
-            if (key === 'method') {
-                continue;
-            }
-            const value = params[key];
-            if (Array.isArray(value) && value.length) {
-                for (const val of value) {
-                    formData.append(key, val);
+        const info = {
+            method: params.method || 'POST',
+        };
+        if (params.method !== 'GET') {
+            const formData = new FormData();
+            for (const key in params) {
+                if (key === 'method') {
+                    continue;
                 }
-            } else {
-                formData.append(key, value);
+                const value = params[key];
+                if (Array.isArray(value) && value.length) {
+                    for (const val of value) {
+                        formData.append(key, val);
+                    }
+                } else {
+                    formData.append(key, value);
+                }
             }
+            info.body = formData;
         }
 
-        return fetch(route, {
-            method: params.method || 'POST',
-            body: formData,
-        }).then(response => response[readMethod]());
+        return fetch(route, info).then(response => response[readMethod]());
     }
 
     function navigate(url, params) {
@@ -131,7 +135,6 @@ odoo.define("web.env", function (require) {
     // See https://github.com/odoo/owl/blob/master/doc/reference/environment.md#content-of-an-environment
     // for more information on environments.
     return {
-        _lt,
         _t,
         bus,
         dataManager,

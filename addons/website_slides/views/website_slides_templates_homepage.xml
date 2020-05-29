@@ -3,7 +3,7 @@
 
 <template id='courses_footer'>
     <!-- 'users':  3 top users with picture (skip users without picture) -->
-    <section class="s_banner bg-900" style="background-image: url(/website_slides/static/src/img/banner_heroes_default.svg); background-size: cover; background-position: right bottom">
+    <section class="s_banner bg-900" style="background-image: url(/website_slides/static/src/img/banner_heroes_default.svg); background-size: cover; background-position: right bottom" data-snippet="s_banner">
         <div class="container py-5">
             <div class="row align-items-center">
                 <div t-attf-class="col-12 #{'col-md' if top3_users else 'text-center'}">
@@ -29,7 +29,7 @@
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <div id="wrap" class="wrap o_wslides_wrap">
-            <section class="s_banner overflow-hidden bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default.svg&quot;); background-size: cover; background-position: 55% 65%">
+            <section class="s_banner overflow-hidden bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default.svg&quot;); background-size: cover; background-position: 55% 65%" data-snippet="s_banner">
                 <div class="container align-items-center d-flex mb-5 mt-lg-5 pt-lg-4 pb-lg-1">
                     <div>
                         <h1 class="display-3 mb-0">Reach new heights</h1>
@@ -203,7 +203,7 @@
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <div id="wrap" class="wrap o_wslides_wrap">
-            <section class="s_banner bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default_all.svg&quot;); background-size: cover; background-position: 80% 20%">
+            <section class="s_banner bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default_all.svg&quot;); background-size: cover; background-position: 80% 20%" data-snippet="s_banner">
                 <div class="container py-5">
                     <h1 t-if="search_my" class="display-3 mb-0">My Courses</h1>
                     <h1 t-elif="search_slide_type=='certification'" class="display-3 mb-0">Certifications</h1>
@@ -505,7 +505,8 @@
             <div t-attf-class="d-flex mb-3 align-items-center #{'o_wslides_entry_muted' if not challenge_done else ''}">
                 <img class="mr-2"
                     style="max-height: 36px;"
-                    t-att-src="website.image_url(challenge.reward_id, 'image_128')"
+                    t-att-src="website.image_url(challenge.reward_id, 'image_128') if challenge.reward_id.image_1920 else
+                               '/website_profile/static/src/img/badge_%s.svg' % (challenge.reward_id.level)"
                     t-att-alt="challenge.reward_id.name"/>
                 <div class="flex-grow-1">
                     <b class="text_small_caps" t-esc="challenge.reward_id.name"/><br/>

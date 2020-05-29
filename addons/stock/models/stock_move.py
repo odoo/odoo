@@ -172,7 +172,7 @@ class StockMove(models.Model):
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
     has_move_lines = fields.Boolean(compute='_compute_has_move_lines')
-    package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True)
+    package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True, copy=False)
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
     next_serial = fields.Char('First SN')
@@ -306,11 +306,13 @@ class StockMove(models.Model):
         for d in data:
             rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
 
+        # In case we are in an onchange, move.id is a NewId, not an integer. Therefore, there is no
+        # match in the rec dictionary. By using move.ids[0] we get the correct integer value.
         for move in self:
             uom = move.product_uom
             move.quantity_done = sum(
                 self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
-                for line_uom_id, qty in rec.get(move.id, [])
+                for line_uom_id, qty in rec.get(move.ids[0] if move.ids else move.id, [])
             )
 
     def _quantity_done_set(self):
@@ -437,7 +439,7 @@ class StockMove(models.Model):
                         # in the past.
                         new_move_date = max(move_dest.date_expected + relativedelta.relativedelta(days=delta_days or 0), fields.Datetime.now())
                         move_dest.date_expected = new_move_date
-                    move_dest_ids.filtered(lambda m: m.delay_alert)._propagate_date_log_activity(move)
+                    move_dest_ids.filtered(lambda m: m.delay_alert)._propagate_date_log_note(move)
                 if move.delay_alert:
                     move._delay_alert_check(new_date)
         res = super(StockMove, self).write(vals)
@@ -460,9 +462,8 @@ class StockMove(models.Model):
         """
         return list(self.mapped('picking_id'))
 
-    def _propagate_date_log_activity(self, move_orig):
-        """Post a delay alert next activity on the documents linked to `self`. If the delay alert
-        is already present on the document, it isn't posted twice.
+    def _propagate_date_log_note(self, move_orig):
+        """Post a delay alert log note on the documents linked to `self`.
 
         :param move_orig: the stock move triggering the delay alert on the next document
         """
@@ -472,16 +473,15 @@ class StockMove(models.Model):
             return
 
         msg = _("The scheduled date has been automatically updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
+        msg_subject = _("Scheduled date update due to delay on %s") % doc_orig[0].name
         # write the message on each document
         for doc in documents:
-            if doc.activity_ids.filtered(lambda a: a.automated and doc_orig[0].name in a.note):
+            last_message = doc.message_ids[:1]
+            # Avoids to write the exact same message multiple times.
+            if last_message and last_message.subject == msg_subject:
                 continue
-            doc.activity_schedule(
-                'mail.mail_activity_data_warning',
-                datetime.today().date(),
-                note=msg,
-                user_id=doc.user_id.id or SUPERUSER_ID
-            )
+            odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
+            doc.message_post(body=msg, author_id=odoobot_id, subject=msg_subject)
 
     def _delay_alert_check(self, new_date=None):
         """Set an alert on late moves by using the `delay_alert_date` field.
@@ -638,8 +638,9 @@ class StockMove(models.Model):
         padding = len(initial_number)
         # We split the serial number to get the prefix and suffix.
         splitted = regex_split(initial_number, self.next_serial)
-        prefix = splitted[0]
-        suffix = splitted[1]
+        # initial_number could appear several times in the SN, e.g. BAV023B00001S00001
+        prefix = initial_number.join(splitted[:-1])
+        suffix = splitted[-1]
         initial_number = int(initial_number)
 
         lot_names = []
@@ -772,22 +773,22 @@ class StockMove(models.Model):
             .filtered(lambda move: move.state not in ['cancel', 'done'])\
             .sorted(key=lambda move: (sort_map.get(move.state, 0), move.product_uom_qty))
         # The picking should be the same for all moves.
-        if moves_todo[0].picking_id and moves_todo[0].picking_id.move_type == 'one':
+        if moves_todo[:1].picking_id and moves_todo[:1].picking_id.move_type == 'one':
             most_important_move = moves_todo[0]
             if most_important_move.state == 'confirmed':
                 return 'confirmed' if most_important_move.product_uom_qty else 'assigned'
             elif most_important_move.state == 'partially_available':
                 return 'confirmed'
             else:
-                return moves_todo[0].state or 'draft'
-        elif moves_todo[0].state != 'assigned' and any(move.state in ['assigned', 'partially_available'] for move in moves_todo):
+                return moves_todo[:1].state or 'draft'
+        elif moves_todo[:1].state != 'assigned' and any(move.state in ['assigned', 'partially_available'] for move in moves_todo):
             return 'partially_available'
         else:
-            least_important_move = moves_todo[-1]
+            least_important_move = moves_todo[-1:]
             if least_important_move.state == 'confirmed' and least_important_move.product_uom_qty == 0:
                 return 'assigned'
             else:
-                return moves_todo[-1].state or 'draft'
+                return moves_todo[-1:].state or 'draft'
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -914,6 +915,7 @@ class StockMove(models.Model):
         else:
             location_dest = self.location_dest_id._get_putaway_strategy(self.product_id)
         move_line_vals = {
+            'picking_id': self.picking_id.id,
             'location_dest_id': location_dest.id or self.location_dest_id.id,
             'location_id': self.location_id.id,
             'product_id': self.product_id.id,
@@ -1114,11 +1116,12 @@ class StockMove(models.Model):
                 taken_quantity = 0
 
         try:
-            if not float_is_zero(taken_quantity, precision_rounding=self.product_id.uom_id.rounding):
-                quants = self.env['stock.quant']._update_reserved_quantity(
-                    self.product_id, location_id, taken_quantity, lot_id=lot_id,
-                    package_id=package_id, owner_id=owner_id, strict=strict
-                )
+            with self.env.cr.savepoint():
+                if not float_is_zero(taken_quantity, precision_rounding=self.product_id.uom_id.rounding):
+                    quants = self.env['stock.quant']._update_reserved_quantity(
+                        self.product_id, location_id, taken_quantity, lot_id=lot_id,
+                        package_id=package_id, owner_id=owner_id, strict=strict
+                    )
         except UserError:
             taken_quantity = 0
 

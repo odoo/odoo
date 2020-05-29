@@ -70,7 +70,7 @@ class SaleOrder(models.Model):
             purchase_to_notify_map[purchase_line.order_id] |= purchase_line.sale_line_id
 
         for purchase_order, sale_order_lines in purchase_to_notify_map.items():
-            purchase_order.activity_schedule_with_view('mail.mail_activity_data_warning',
+            purchase_order._activity_schedule_with_view('mail.mail_activity_data_warning',
                 user_id=purchase_order.user_id.id or self.env.uid,
                 views_or_xmlid='sale_purchase.exception_purchase_on_sale_cancellation',
                 render_context={
@@ -109,13 +109,14 @@ class SaleOrderLine(models.Model):
     # CRUD
     # --------------------------
 
-    @api.model
+    @api.model_create_multi
     def create(self, values):
-        line = super(SaleOrderLine, self).create(values)
+        lines = super(SaleOrderLine, self).create(values)
         # Do not generate purchase when expense SO line since the product is already delivered
-        if line.state == 'sale' and not line.is_expense:
-            line.sudo()._purchase_service_generation()
-        return line
+        lines.filtered(
+            lambda line: line.state == 'sale' and not line.is_expense
+        )._purchase_service_generation()
+        return lines
 
     def write(self, values):
         increased_lines = None
@@ -160,7 +161,7 @@ class SaleOrderLine(models.Model):
                 'sale_orders': sale_lines.mapped('order_id'),
                 'origin_values': origin_values,
             }
-            purchase_order.activity_schedule_with_view('mail.mail_activity_data_warning',
+            purchase_order._activity_schedule_with_view('mail.mail_activity_data_warning',
                 user_id=purchase_order.user_id.id or self.env.uid,
                 views_or_xmlid='sale_purchase.exception_purchase_on_sale_quantity_decreased',
                 render_context=render_context)
@@ -200,7 +201,7 @@ class SaleOrderLine(models.Model):
             'partner_ref': partner_supplier.ref,
             'company_id': self.company_id.id,
             'currency_id': partner_supplier.property_purchase_currency_id.id or self.env.company.currency_id.id,
-            'dest_address_id': self.order_id.partner_shipping_id.id,
+            'dest_address_id': False, # False since only supported in stock
             'origin': self.order_id.name,
             'payment_term_id': partner_supplier.property_supplier_payment_term_id.id,
             'date_order': date_order,

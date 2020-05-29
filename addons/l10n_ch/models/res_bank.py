@@ -193,7 +193,7 @@ class ResPartnerBank(models.Model):
         """
         line_1 = (partner and partner.street or '') + ' ' + (partner and partner.street2 or '')
         line_2 = partner.zip + ' ' + partner.city
-        return line_1[:71], line_2[:71]
+        return line_1[:70], line_2[:70]
 
     def _eligible_for_qr_code(self, qr_method, debtor_partner, currency):
         if qr_method == 'ch_qr':
@@ -217,7 +217,7 @@ class ResPartnerBank(models.Model):
                 return _("The partner set on the bank account meant to receive the payment (%s) must have a complete postal address (street, zip, city and country)." % self.acc_number)
 
             if debtor_partner and not _partner_fields_set(debtor_partner):
-                return _("The partner the QR-code is intended to must have a complete postal address (street, zip, city and country).")
+                return _("The partner the QR-code must have a complete postal address (street, zip, city and country).")
 
             if self._is_qr_iban() and not self._is_qr_reference(structured_communication):
                 return _("When using a QR-IBAN as the destination account of a QR-code, the payment reference must be a QR-reference.")

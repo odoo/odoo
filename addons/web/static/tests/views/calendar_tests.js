@@ -2468,6 +2468,26 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('set event as all day when field is date (without all_day mapping)', async function (assert) {
+        assert.expect(1);
+
+        this.data.event.records[0].start_date = "2016-12-14";
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: `<calendar date_start="start_date" mode="week"></calendar>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+        assert.containsOnce(calendar, '.fc-day-grid .fc-event-container',
+            "should be one event in the all day row");
+        calendar.destroy();
+    });
+
     QUnit.test('quickcreate avoid double event creation', async function (assert) {
         assert.expect(1);
         var createCount = 0;
@@ -2692,7 +2712,7 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
-    QUnit.skip('timezone does not affect drag and drop', async function (assert) {
+    QUnit.test('timezone does not affect drag and drop', async function (assert) {
         assert.expect(10);
 
         var calendar = await createCalendarView({
@@ -2749,7 +2769,7 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
-    QUnit.skip('timzeone does not affect calendar with date field', async function (assert) {
+    QUnit.test('timzeone does not affect calendar with date field', async function (assert) {
         assert.expect(11);
 
         var calendar = await createCalendarView({

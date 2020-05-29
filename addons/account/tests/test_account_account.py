@@ -11,9 +11,6 @@ class TestAccountAccount(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        # Create another company.
-        cls.company_data_2 = cls.setup_company_data('company_2_data')
-
         # By default, tests are run with the current user set on the first company.
         cls.env.user.company_id = cls.company_data['company']
 

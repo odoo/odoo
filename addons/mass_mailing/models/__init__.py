@@ -12,3 +12,4 @@ from . import mail_thread
 from . import res_config_settings
 from . import res_users
 from . import utm
+from . import res_company

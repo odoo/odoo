@@ -498,7 +498,12 @@ var FileWidget = SearchableMediaWidget.extend({
 
         // Remove crop related attributes
         if (this.$media.attr('data-aspect-ratio')) {
-            var attrs = ['aspect-ratio', 'x', 'y', 'width', 'height', 'rotate', 'scale-x', 'scale-y', 'crop:originalSrc'];
+            var attrs = ['aspect-ratio', 'x', 'y', 'width', 'height', 'rotate', 'scale-x', 'scale-y'];
+            Object.keys(self.$media.data()).forEach(function (key) {
+                if (_.str.startsWith(key, 'crop:')) {
+                    attrs.push(key);
+                }
+            });
             this.$media.removeClass('o_cropped_img_to_save');
             attrs.forEach(attr => {
                 this.$media.removeData(attr);
@@ -1134,7 +1139,7 @@ var VideoWidget = MediaWidget.extend({
                 '<div class="media_iframe_video" data-oe-expression="' + this.$content.attr('src') + '">' +
                     '<div class="css_editable_mode_display">&nbsp;</div>' +
                     '<div class="media_iframe_video_size" contenteditable="false">&nbsp;</div>' +
-                    '<iframe src="' + this.$content.attr('src') + '" frameborder="0" contenteditable="false"></iframe>' +
+                    '<iframe src="' + this.$content.attr('src') + '" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>' +
                 '</div>'
             );
             this.media = this.$media[0];

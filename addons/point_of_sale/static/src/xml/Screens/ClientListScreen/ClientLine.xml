@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ClientLine" owl="1">
+        <tr t-attf-class="client-line {{highlight}}" t-att-data-id="props.partner.id"
+            t-on-click="trigger('click-client', {client: props.partner})">
+            <td>
+                <t t-esc="props.partner.name" />
+            </td>
+            <td>
+                <t t-esc="props.partner.address" />
+            </td>
+            <td>
+                <t t-esc="props.partner.phone or props.partner.mobile or ''" />
+            </td>
+        </tr>
+    </t>
+
+</templates>

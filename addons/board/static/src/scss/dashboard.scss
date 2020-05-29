@@ -126,6 +126,18 @@
             .o_graph_svg_container {
                 height: 250px;
             }
+
+            // Override height for calendar view to be displayed properly
+            .o_calendar_view {
+                height: 100vh;
+            }
+
+            // Override height for map view to be displayed properly
+            .o_map_view {
+                .o_map_container, .o_pin_list_container {
+                    height: calc(100vh - #{$o-navbar-height});
+                }
+            }
         }
     }
 }

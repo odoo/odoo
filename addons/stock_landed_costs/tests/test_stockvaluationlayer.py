@@ -257,8 +257,8 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
 
         with rfq.order_line.new() as po_line:
             po_line.product_id = self.product1
-            po_line.price_unit = 10
             po_line.product_qty = 10
+            po_line.price_unit = 10
             po_line.taxes_id.clear()
 
         rfq = rfq.save()
@@ -344,8 +344,8 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
 
         with rfq.order_line.new() as po_line:
             po_line.product_id = self.product1
-            po_line.price_unit = 10
             po_line.product_qty = 10
+            po_line.price_unit = 10
             po_line.taxes_id.clear()
 
         rfq = rfq.save()
@@ -397,8 +397,8 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
 
         with rfq.order_line.new() as po_line:
             po_line.product_id = self.product1
-            po_line.price_unit = 10
             po_line.product_qty = 10
+            po_line.price_unit = 10
             po_line.taxes_id.clear()
 
         rfq = rfq.save()

@@ -226,19 +226,14 @@
             <field name="name">hr.contract.tree</field>
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contracts"
-                    decoration-bf="message_needaction == True"
-                    decoration-info="state == 'draft'"
-                    decoration-muted="state in ('close', 'cancel')"
-                    decoration-danger="state == 'pending'"
-                    multi_edit="1">
+                <tree string="Contracts" multi_edit="1">
                     <field name="name" readonly="1"/>
-                    <field name="employee_id" readonly="1"/>
+                    <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
                     <field name="job_id"/>
                     <field name="resource_calendar_id"/>
                     <field name="date_start" readonly="1"/>
                     <field name="date_end" readonly="1"/>
-                    <field name="state"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
                     <field name="kanban_state" widget="state_selection" readonly="1"/>
                     <field name="wage" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
@@ -278,7 +273,9 @@
                                     <field name="job_id"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('hr.employee', 'image_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                    <span class="float-right">
+                                        <field name="employee_id" widget="many2one_avatar_employee"/>
+                                    </span>
                                     <span class="float-right mr4">
                                         <field name="kanban_state" widget="state_selection"/>
                                     </span>

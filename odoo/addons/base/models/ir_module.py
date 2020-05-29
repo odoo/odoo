@@ -11,6 +11,7 @@ import os
 import pkg_resources
 import shutil
 import tempfile
+import threading
 import zipfile
 
 import requests
@@ -173,6 +174,9 @@ class Module(models.Model):
     @api.depends('name', 'description')
     def _get_desc(self):
         for module in self:
+            if not module.name:
+                module.description_html = False
+                continue
             path = modules.get_module_resource(module.name, 'static/description/index.html')
             if path:
                 with tools.file_open(path, 'rb') as desc_file:
@@ -563,6 +567,13 @@ class Module(models.Model):
         }
 
     def _button_immediate_function(self, function):
+        if getattr(threading.currentThread(), 'testing', False):
+            raise RuntimeError(
+                "Module operations inside tests are not transactional and thus forbidden.\n"
+                "If you really need to perform module operations to test a specific behavior, it "
+                "is best to write it as a standalone script, and ask the runbot/metastorm team "
+                "for help."
+            )
         try:
             # This is done because the installation/uninstallation/upgrade can modify a currently
             # running cron job and prevent it from finishing, and since the ir_cron table is locked
@@ -605,7 +616,7 @@ class Module(models.Model):
     def button_uninstall(self):
         if 'base' in self.mapped('name'):
             raise UserError(_("The `base` module cannot be uninstalled"))
-        if not all(state == 'installed' for state in self.mapped('state')):
+        if not all(state in ('installed', 'to upgrade') for state in self.mapped('state')):
             raise UserError(_(
                 "One or more of the selected modules have already been uninstalled, if you "
                 "believe this to be an error, you may try again later or contact support."
@@ -913,7 +924,7 @@ class Module(models.Model):
         }
 
     @api.model
-    def search_panel_select_range(self, field_name):
+    def search_panel_select_range(self, field_name, **kwargs):
         if field_name == 'category_id':
             domain = [('module_ids', '!=', False)]
 
@@ -938,13 +949,15 @@ class Module(models.Model):
                 ]])
             categories = self.env['ir.module.category'].search(domain)
             categories = categories | categories.mapped('parent_id')
-            return {
-                'parent_field': 'parent_id',
-                'values': self.env['ir.module.category'].search_read(
-                    [('id', 'in', categories.ids)],
-                    ['display_name', 'parent_id']),
-            }
-        return super(Module, self).search_panel_select_range(field_name)
+
+            comodel_domain = [('id', 'in', categories.ids)]
+
+            return super(Module, self).search_panel_select_range(
+                field_name,
+                comodel_domain=comodel_domain,
+                **kwargs
+            )
+        return super(Module, self).search_panel_select_range(field_name, **kwargs)
 
 
 DEP_STATES = STATES + [('unknown', 'Unknown')]

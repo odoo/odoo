@@ -22,6 +22,9 @@
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': ['|', ('active', '=', False), ('type', '=', 'lead')]}"/>
                     </header>
+                    <div class="text-center alert alert-primary" role="alert" attrs="{'invisible': ['|', ('ribbon_message', '=', False), ('ribbon_message', '=', '')]}">
+                        <field name="ribbon_message"/>
+                    </div>
                     <sheet>
                         <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
@@ -139,15 +142,8 @@
                                     <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
                                         title="This email is blacklisted for mass mailings. Click to unblacklist."
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
-                                        attrs="{'invisible': ['|', ('is_blacklisted', '=', False), ('partner_address_email', '!=', False)]}"/>
-                                    <field name="email_from"
-                                        attrs="{'invisible': [('partner_address_email', '!=', False)]}" string="Email" widget="email"/>
-                                    <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
-                                        title="This email is blacklisted for mass mailings. Click to unblacklist."
-                                        type="object" context="{'default_email': partner_address_email}" groups="base.group_user"
-                                        attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}"/>
-                                    <field name="partner_address_email"
-                                        attrs="{'invisible': [('partner_address_email', '=', False)]}" widget="email" string="Email"/>
+                                        attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
+                                    <field name="email_from" string="Email" widget="email"/>
                                 </div>
                                 <label for="phone" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
@@ -165,6 +161,7 @@
                                     <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                 </div>
                                 <field name="is_blacklisted" invisible="1"/>
+                                <field name="phone_blacklisted" invisible="1"/>
                                 <field name="email_state" invisible="1"/>
                                 <field name="phone_state" invisible="1"/>
                                 <label for="email_from" class="oe_inline"/>
@@ -172,15 +169,8 @@
                                     <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
                                         title="This email is blacklisted for mass mailings. Click to unblacklist."
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
-                                        attrs="{'invisible': ['|', ('is_blacklisted', '=', False), ('partner_address_email', '!=', False)]}"/>
-                                    <field name="email_from"
-                                        attrs="{'invisible': [('partner_address_email', '!=', False)]}" string="Email" widget="email"/>
-                                    <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
-                                        title="This email is blacklisted for mass mailings. Click to unblacklist."
-                                        type="object" context="{'default_email': partner_address_email}" groups="base.group_user"
-                                        attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}"/>
-                                    <field name="partner_address_email"
-                                        attrs="{'invisible': [('partner_address_email', '=', False)]}" widget="email" string="Email"/>
+                                        attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
+                                    <field name="email_from" string="Email" widget="email"/>
                                 </div>
                                 <field name="email_cc" groups="base.group_no_one"/>
                                 <field name="function"/>
@@ -233,8 +223,9 @@
                                     <group string="Email" groups="base.group_no_one">
                                         <field name="message_bounce" readonly="1"/>
                                     </group>
-                                    <group string="Tracking" groups="base.group_multi_company" name="categorization">
+                                    <group string="Tracking" name="categorization">
                                         <field name="company_id"
+                                            groups="base.group_multi_company"
                                             options="{'no_create': True}"/>
                                         <field name="campaign_id" />
                                         <field name="medium_id"/>
@@ -317,7 +308,7 @@
             <field name="name">crm.lead.tree.lead</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Leads" decoration-bf="message_needaction==True" decoration-muted="probability == 100">
+                <tree string="Leads" decoration-muted="probability == 100">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Lead"/>
@@ -357,7 +348,6 @@
                     <field name="priority"/>
                     <field name="tag_ids"/>
                     <field name="user_id"/>
-                    <field name="message_needaction_counter"/>
                     <field name="activity_ids"/>
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -376,16 +366,12 @@
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
-                                        <t t-if="record.message_needaction_counter.raw_value">
-                                            <span role="alert" class="oe_kanban_mail_new" title="Unread Messages"><i class="fa fa-comments" aria-label="Messages" role="img"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                        </t>
                                         <div class="o_kanban_inline_block">
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
-                                        <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value" class="oe_kanban_avatar float-right"/>
+                                        <field name="user_id" widget="many2one_avatar_user"/>
                                     </div>
                                 </div>
                             </div>
@@ -474,8 +460,6 @@
                     <field name="activity_date_deadline"/>
                     <field name="user_email"/>
                     <field name="user_id"/>
-                    <field name="partner_address_email"/>
-                    <field name="message_needaction_counter"/>
                     <field name="partner_id"/>
                     <field name="activity_summary"/>
                     <field name="active"/>
@@ -498,27 +482,26 @@
                                     </div>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <div>
-                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                    <div class="o_kanban_record_title">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="o_kanban_record_subtitle">
+                                        <t t-if="record.planned_revenue.raw_value">
+                                            <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                            <span t-if="record.partner_id.value"> - </span>
+                                        </t>
+                                        <span t-if="record.partner_id.value" t-esc="record.partner_id.value"></span>
                                     </div>
                                     <div>
                                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
-                                    <div class="text-muted o_kanban_record_subtitle">
-                                        <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/><span t-if="record.partner_id.value">,</span></t> <span t-if="record.partner_id.value"> <t t-esc="record.partner_id.value"/></span>
-                                    </div>
-
                                     <div class="o_kanban_record_bottom">
                                         <div class="oe_kanban_bottom_left">
                                             <field name="priority" widget="priority" groups="base.group_user"/>
-                                            <t t-if="record.message_needaction_counter.raw_value">
-                                                <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments' aria-label="Unread messages" role="img"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                            </t>
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
                                         <div class="oe_kanban_bottom_right">
-                                            <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
-                                            <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value" class="oe_kanban_avatar"/>
+                                            <field name="user_id" widget="many2one_avatar_user"/>
                                         </div>
                                     </div>
                                 </div>
@@ -596,7 +579,7 @@
             <field name="name">crm.lead.tree.opportunity</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" decoration-bf="message_needaction==True" decoration-muted="probability == 100" decoration-danger="activity_date_deadline and (activity_date_deadline &lt; current_date)">
+                <tree string="Opportunities" decoration-muted="probability == 100" decoration-danger="activity_date_deadline and (activity_date_deadline &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Opportunity"/>
@@ -612,7 +595,8 @@
                     <field name="probability" avg="Avg. of Probability" optional="hide"/>
                     <field name="user_id" optional="show"/>
                     <field name="team_id" optional="show"/>
-                    <field name="planned_revenue" sum="Expected Revenues" optional="show"/>
+                    <field name="company_currency" invisible="1"/>
+                    <field name="planned_revenue" sum="Expected Revenues" optional="show" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                     <field name="referred" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="probability" invisible="1"/>
@@ -767,28 +751,6 @@ if record:
             </field>
         </record>
 
-        <!--
-            Menu Actions
-        -->
-        <menuitem
-            id="crm_menu_sales"
-            name="Sales"
-            parent="crm_menu_root"
-            sequence="1"/>
-
-        <menuitem id="sales_team_menu_team_pipeline"
-            name="Team Pipelines"
-            parent="crm_menu_sales"
-            action="sales_team.crm_team_salesteams_pipelines_act"
-            groups="sales_team.group_sale_manager"
-            sequence="4"/>
-
-        <menuitem id="res_partner_menu_customer"
-            name="Customers"
-            parent="crm_menu_sales"
-            action="base.action_partner_form"
-            sequence="5"/>
-
         <!-- Lead Menu -->
         <record model="ir.actions.act_window" id="crm_lead_all_leads">
             <field name="name">Leads</field>
@@ -839,12 +801,9 @@ if record:
             <field name="act_window_id" ref="crm_lead_all_leads"/>
         </record>
 
-        <menuitem id="crm_menu_leads"
-            name="Leads"
-            parent="crm_menu_root"
-            groups="crm.group_use_lead"
-            action="crm_lead_all_leads"
-            sequence="5"/>
+        <record id="crm_menu_leads" model="ir.ui.menu">
+            <field name="action" ref="crm.crm_lead_all_leads"/>
+        </record>
 
         <!-- 'My Pipeline' menu : Server action, act_window_views and act_windows -->
         <record model="ir.actions.act_window" id="crm_lead_opportunities">
@@ -948,22 +907,10 @@ if record:
             <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
-        <menuitem
-            id="menu_crm_opportunities"
-            action="action_your_pipeline"
-            name="My Pipeline"
-            parent="crm_menu_sales"
-            sequence="1"/>
-
-        <menuitem
-            id="crm.crm_menu_root"
-            name="CRM"
-            action="action_your_pipeline"/>
-
-        <menuitem
-            id="menu_crm_lead_categ"
-            name="Tags"
-            action="sales_team.sales_team_crm_tag_action"
-            parent="menu_crm_config_lead"
-            sequence="1"/>
+        <record id="menu_crm_opportunities" model="ir.ui.menu">
+            <field name="action" ref="crm.action_your_pipeline"/>
+        </record>
+        <record id="crm_menu_root" model="ir.ui.menu">
+            <field name="action" ref="crm.action_your_pipeline"/>
+        </record>
 </odoo>

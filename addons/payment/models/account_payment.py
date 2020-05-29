@@ -88,7 +88,7 @@ class AccountPayment(models.Model):
         self.mapped('payment_transaction_id').filtered(lambda x: x.state == 'done' and not x.is_processed)._post_process_after_done()
         return res
 
-    def post(self):
+    def action_post(self):
         # Post the payments "normally" if no transactions are needed.
         # If not, let the acquirer updates the state.
         #                                __________            ______________
@@ -109,7 +109,7 @@ class AccountPayment(models.Model):
         payments_need_trans = self.filtered(lambda pay: pay.payment_token_id and not pay.payment_transaction_id)
         transactions = payments_need_trans._create_payment_transaction()
 
-        res = super(AccountPayment, self - payments_need_trans).post()
+        res = super(AccountPayment, self - payments_need_trans).action_post()
 
         transactions.s2s_do_transaction()
 

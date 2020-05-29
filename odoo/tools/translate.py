@@ -549,13 +549,30 @@ def TranslationFileReader(source, fileformat='po'):
 
 class CSVFileReader:
     def __init__(self, source):
-        self.source = pycompat.csv_reader(source, quotechar='"', delimiter=',')
-        # read the first line of the file (it contains columns titles)
-        self.fields = next(self.source)
+        _reader = codecs.getreader('utf-8')
+        self.source = csv.DictReader(_reader(source), quotechar='"', delimiter=',')
+        self.prev_code_src = ""
 
     def __iter__(self):
         for entry in self.source:
-            yield zip(self.fields, entry)
+
+            # determine <module>.<imd_name> from res_id
+            if entry["res_id"] and entry["res_id"].isnumeric():
+                # res_id is an id or line number
+                entry["res_id"] = int(entry["res_id"])
+            elif not entry.get("imd_name"):
+                # res_id is an external id and must follow <module>.<name>
+                entry["module"], entry["imd_name"] = entry["res_id"].split(".")
+                entry["res_id"] = None
+            entry["imd_model"] = entry["name"].split(":")[0]
+
+            if entry["type"] == "code":
+                if entry["src"] == self.prev_code_src:
+                    # skip entry due to unicity constrain on code translations
+                    continue
+                self.prev_code_src = entry["src"]
+
+            yield entry
 
 class PoFileReader:
     """ Iterate over po file to return Odoo translation entries """
@@ -842,10 +859,20 @@ def _extract_translatable_qweb_terms(element, callback):
                 and "t-js" not in el.attrib
                 and not ("t-jquery" in el.attrib and "t-operation" not in el.attrib)
                 and el.get("t-translation", '').strip() != "off"):
+
             _push(callback, el.text, el.sourceline)
-            for att in ('title', 'alt', 'label', 'placeholder', 'aria-label'):
-                if att in el.attrib:
-                    _push(callback, el.attrib[att], el.sourceline)
+            # Do not export terms contained on the Component directive of OWL
+            # attributes in this context are most of the time variables,
+            # not real HTML attributes.
+            # Node tags starting with a capital letter are considered OWL Components
+            # and a widespread convention and good practice for DOM tags is to write
+            # them all lower case.
+            # https://www.w3schools.com/html/html5_syntax.asp
+            # https://github.com/odoo/owl/blob/master/doc/reference/component.md#composition
+            if not el.tag[0].isupper() and 't-component' not in el.attrib:
+                for att in ('title', 'alt', 'label', 'placeholder', 'aria-label'):
+                    if att in el.attrib:
+                        _push(callback, el.attrib[att], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
         _push(callback, el.tail, el.sourceline)
 

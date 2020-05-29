@@ -126,7 +126,8 @@
      */
     async function testMenuItem(element){
         if (testedMenus.indexOf(element.dataset.menuXmlid) >= 0) return Promise.resolve(); // Avoid infinite loop
-        console.log("Testing menu", element.innerText.trim(), " ", element.dataset.menuXmlid);
+        var menuDescription = element.innerText.trim() + " " + element.dataset.menuXmlid;
+        console.log("Testing menu", menuDescription);
         testedMenus.push(element.dataset.menuXmlid);
         if (blackListedMenus.includes(element.dataset.menuXmlid)) return Promise.resolve(); // Skip black listed menus
         var startActionCount = clientActionCount;
@@ -154,7 +155,7 @@
                 return testViews();
             }
         }).catch(function (err) {
-            console.error("Error while testing", element);
+            console.error("Error while testing", menuDescription);
             return Promise.reject(err);
         });
     };
@@ -242,7 +243,7 @@
                         // recursive call until the resolve or the timeout
                         setTimeout(checkCondition, interval);
                     } else {
-                        console.error("Timeout exceeded", stopCondition);
+                        console.error('Timeout, the clicked element took more than 5 seconds to load');
                         reject();
                     }
                 }

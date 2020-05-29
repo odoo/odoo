@@ -25,6 +25,10 @@ $-font-numbers: (
     // customized by themes, the user or anything else (so there is no file to
     // parse to get them). Those will be printed here as CSS variables.
 
+    // 0) does this theme enforce primary = alpha or secondary = beta
+    --is-alpha-primary: #{$-is-alpha-primary};
+    --is-beta-secondary: #{$-is-beta-secondary};
+
     // 1) Handle default values
     --header-font-size: #{$font-size-base};
 
@@ -33,7 +37,7 @@ $-font-numbers: (
     // 3) The values in the $colors map are also printed by Bootstrap.
 
     // 4) The Odoo values map, $o-website-values, must be printed.
-    @each $key, $value in $o-website-values {
+    @each $key, $value in o-map-omit($o-website-values) {
         --#{$key}: #{$value};
     }
 
@@ -57,6 +61,13 @@ $-font-numbers: (
     --logo-height: #{$o-theme-navbar-logo-height};
     --fixed-logo-height: #{$o-theme-navbar-fixed-logo-height};
     --number-of-fonts: #{length($o-theme-fonts)};
+
+    // 6) Get list of colorpalette custom colors
+    $custom-colors: ();
+    @each $key, $value in $o-color-palette {
+        $custom-colors: append($custom-colors, $key);
+    }
+    --custom-colors: #{$custom-colors};
 }
 
 #wrapwrap {
@@ -132,12 +143,6 @@ $-header-nav-link-height: $nav-link-height;
 .o_footer {
     @if color('footer') {
         @include o-bg-color(color('footer'));
-    }
-
-    > #footer {
-        // FIXME needed to prevent the dropzone at the bottom of the #wrap element
-        // to be at the same place of the dropzone at the top of the #footer element
-        border-top: 1px solid transparent;
     }
 }
 h2, h3, h4, h5, h6 {
@@ -727,7 +732,6 @@ header {
         }
     }
 
-    z-index: 1;
     @include media-breakpoint-up(md) {
         // Allow to center the logo, ignoring the toggler space
         .o_navbar_toggler_container {

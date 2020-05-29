@@ -40,6 +40,41 @@
         <field name="no_of_recruitment">6</field>
     </record>
 
+    <record id="hr_recruitment_linkedin_developer" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_developer"/>
+    </record>
+
+    <record id="hr_recruitment_linkedin_ceo" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_ceo"/>
+    </record>
+
+    <record id="hr_recruitment_linkedin_cto" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_cto"/>
+    </record>
+
+    <record id="hr_recruitment_linkedin_consultant" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_consultant"/>
+    </record>
+
+    <record id="hr_recruitment_linkedin_hrm" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_hrm"/>
+    </record>
+
+    <record id="hr_recruitment_linkedin_marketing" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_marketing"/>
+    </record>
+
+    <record id="hr_recruitment_linkedin_trainee" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_trainee"/>
+    </record>
+
     <record id="hr_case_salesman0" model="hr.applicant">
         <field name="name">Sales Manager</field>
         <field name="job_id" ref="hr.job_marketing"/>

@@ -12,6 +12,7 @@ Allows users to send invoices by post
         'views/res_config_settings_views.xml',
         'views/assets.xml',
         'wizard/account_invoice_send_views.xml',
+        'security/ir.model.access.csv',
     ],
     'auto_install': True,
 }

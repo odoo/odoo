@@ -61,6 +61,9 @@ class PaymentAcquirer(models.Model):
     _description = 'Payment Acquirer'
     _order = 'module_state, state, sequence, name'
 
+    def _valid_field_parameter(self, field, name):
+        return name == 'required_if_provider' or super()._valid_field_parameter(field, name)
+
     def _get_default_view_template_id(self):
         return self.env.ref('payment.default_acquirer_button', raise_if_not_found=False)
 
@@ -475,7 +478,7 @@ class PaymentAcquirer(models.Model):
         })
 
         _logger.info('payment.acquirer.render: <%s> values rendered for form payment:\n%s', self.provider, pprint.pformat(values))
-        return self.view_template_id.render(values, engine='ir.qweb')
+        return self.view_template_id._render(values, engine='ir.qweb')
 
     def get_s2s_form_xml_id(self):
         if self.registration_view_template_id:
@@ -596,7 +599,7 @@ class PaymentTransaction(models.Model):
                             help='Internal reference of the TX')
     acquirer_reference = fields.Char(string='Acquirer Reference', readonly=True, help='Reference of the TX as stored in the acquirer database')
     # duplicate partner / transaction data to store the values at transaction time
-    partner_id = fields.Many2one('res.partner', 'Customer', tracking=True)
+    partner_id = fields.Many2one('res.partner', 'Customer')
     partner_name = fields.Char('Partner Name')
     partner_lang = fields.Selection(_lang_get, 'Language', default=lambda self: self.env.lang)
     partner_email = fields.Char('Email')
@@ -636,22 +639,42 @@ class PaymentTransaction(models.Model):
         for trans in self:
             trans.invoice_ids_nbr = len(trans.invoice_ids)
 
-    def _prepare_account_payment_vals(self):
+    def _create_payment(self, add_payment_vals={}):
+        ''' Create an account.payment record for the current payment.transaction.
+        If the transaction is linked to some invoices, the reconciliation will be done automatically.
+        :param add_payment_vals:    Optional additional values to be passed to the account.payment.create method.
+        :return:                    An account.payment record.
+        '''
         self.ensure_one()
-        return {
+
+        payment_vals = {
             'amount': self.amount,
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'partner_type': 'customer',
-            'invoice_ids': [(6, 0, self.invoice_ids.ids)],
             'journal_id': self.acquirer_id.journal_id.id,
             'company_id': self.acquirer_id.company_id.id,
             'payment_method_id': self.env.ref('payment.account_payment_method_electronic_in').id,
             'payment_token_id': self.payment_token_id and self.payment_token_id.id or None,
             'payment_transaction_id': self.id,
-            'communication': self.reference,
+            'ref': self.reference,
+            **add_payment_vals,
         }
+        payment = self.env['account.payment'].create(payment_vals)
+        payment.action_post()
+
+        # Track the payment to make a one2one.
+        self.payment_id = payment
+
+        if self.invoice_ids:
+            self.invoice_ids.filtered(lambda move: move.state == 'draft').post()
+
+            (payment.line_ids + self.invoice_ids.line_ids)\
+                .filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled)\
+                .reconcile()
+
+        return payment
 
     def get_last_transaction(self):
         transactions = self.filtered(lambda t: t.state != 'draft')
@@ -788,21 +811,11 @@ class PaymentTransaction(models.Model):
         invoices.post()
 
         # Create & Post the payments.
-        payments = defaultdict(lambda: self.env['account.payment'])
         for trans in self:
             if trans.payment_id:
-                payments[trans.acquirer_id.company_id.id] += trans.payment_id
                 continue
 
-            payment_vals = trans._prepare_account_payment_vals()
-            payment = self.env['account.payment'].create(payment_vals)
-            payments[trans.acquirer_id.company_id.id] += payment
-
-            # Track the payment to make a one2one.
-            trans.payment_id = payment
-
-        for company in payments:
-            payments[company].with_company(company).with_context(company_id=company).post()
+            trans._create_payment()
 
     def _set_transaction_cancel(self):
         '''Move the transaction's payment to the cancel state(e.g. Paypal).'''
@@ -815,7 +828,7 @@ class PaymentTransaction(models.Model):
             _logger.warning('Processed tx with abnormal state (ref: %s, target state: %s, previous state %s, expected previous states: %s)' % (tx.reference, target_state, tx.state, allowed_states))
 
         # Cancel the existing payments.
-        tx_to_process.mapped('payment_id').cancel()
+        tx_to_process.mapped('payment_id').action_cancel()
 
         tx_to_process.write({'state': target_state, 'date': fields.Datetime.now()})
         tx_to_process._log_payment_transaction_received()

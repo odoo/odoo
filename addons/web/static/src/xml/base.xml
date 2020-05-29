@@ -6,39 +6,41 @@
 <t t-name="web.ControlPanel" owl="1">
     <div class="o_control_panel">
         <div class="o_cp_top">
-            <ol t-if="props.withBreadcrumbs" class="breadcrumb" role="navigation">
-                <li t-foreach="props.breadcrumbs" t-as="bc" t-key="bc.controllerID"
-                    class="breadcrumb-item"
-                    t-att-class="{ o_back_button: bc_index === props.breadcrumbs.length - 1 }"
-                    t-att-accesskey="bc_last and 'b'"
-                    t-on-click.prevent="trigger('breadcrumb-clicked', { controllerID: bc.controllerID })"
+            <div class="o_cp_top_left">
+                <ol t-if="props.withBreadcrumbs" class="breadcrumb" role="navigation">
+                    <li t-foreach="props.breadcrumbs" t-as="bc" t-key="bc.controllerID"
+                        class="breadcrumb-item"
+                        t-att-class="{ o_back_button: bc_index === props.breadcrumbs.length - 1 }"
+                        t-att-accesskey="bc_last and 'b'"
+                        t-on-click.prevent="trigger('breadcrumb-clicked', { controllerID: bc.controllerID })"
+                        >
+                        <a t-if="bc.title" href="#" t-esc="bc.title"/>
+                        <em t-else="" class="text-warning">Unnamed</em>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <t t-if="props.title" t-esc="props.title"/>
+                        <em t-else="" class="text-warning">Unnamed</em>
+                    </li>
+                </ol>
+            </div>
+            <div class="o_cp_top_right">
+                <div class="o_cp_searchview"
+                    role="search"
+                    t-ref="searchView"
                     >
-                    <a t-if="bc.title" href="#" t-esc="bc.title"/>
-                    <em t-else="" class="text-warning">Unnamed</em>
-                </li>
-                <li class="breadcrumb-item active">
-                    <t t-if="props.title" t-esc="props.title"/>
-                    <em t-else="" class="text-warning">Unnamed</em>
-                </li>
-            </ol>
-            <div class="o_cp_searchview"
-                role="search"
-                t-ref="searchView"
-                >
-                <div t-if="props.withSearchBar" class="o_searchview" role="search" aria-autocomplete="list" >
-                    <i t-if="props.searchMenuTypes.length"
-                        t-attf-class="o_searchview_more fa fa-search-{{ state.displayDropdowns ? 'minus' : 'plus' }}"
-                        title="Advanced Search..."
-                        role="img"
-                        aria-label="Advanced Search..."
-                        t-on-click.prevent="state.displayDropdowns = !state.displayDropdowns"
-                    />
-                    <SearchBar t-if="props.withSearchBar" fields="fields"/>
+                    <div t-if="props.withSearchBar" class="o_searchview" role="search" aria-autocomplete="list" >
+                        <i class="o_searchview_icon fa fa-search"
+                            title="Search..."
+                            role="img"
+                            aria-label="Search..."
+                        />
+                        <SearchBar t-if="props.withSearchBar" fields="fields"/>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="o_cp_bottom">
-            <div class="o_cp_left">
+            <div class="o_cp_bottom_left">
                 <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
                     <t t-slot="buttons"/>
                 </div>
@@ -46,12 +48,12 @@
                     t-props="props.actionMenus"
                 />
             </div>
-            <div class="o_cp_right">
+            <div class="o_cp_bottom_right">
                 <div class="btn-group o_search_options position-static"
                     role="search"
                     t-ref="searchViewButtons"
                     >
-                    <t t-if="props.withSearchBar and state.displayDropdowns">
+                    <t t-if="props.withSearchBar">
                         <FilterMenu t-if="props.searchMenuTypes.includes('filter')"
                             class="o_filter_menu"
                             fields="fields"
@@ -161,7 +163,7 @@
             <i t-if="props.icon" t-att-class="props.icon"/>
             <span class="o_dropdown_title" t-esc="title"/>
             <i t-if="displayCaret" t-attf-class="o_dropdown_caret fa fa-caret-{{ state.open ? 'down' : 'right' }}"/>
-            <i t-else="" t-attf-class="fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
+            <i t-elif="displayChevron" t-attf-class="fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
         </button>
         <ul t-if="state.open" class="o_dropdown_menu dropdown-menu show" role="menu"
             t-on-item-selected="_onItemSelected"
@@ -505,6 +507,21 @@
     </Portal>
 </t>
 
+<t t-name="Popover" owl="1">
+    <div t-on-click="openPopover" data-popover="1">
+        <t t-slot="default"/>
+        <Portal t-if="state.displayed" target="'body'">
+            <div role="tooltip" class="o_popover" t-ref="popover">
+                <div class="arrow"/>
+                <h3 t-if="props.title" class="o_popover_header"><t t-esc="props.title"/></h3>
+                <div class="popover-body">
+                    <t t-slot="opened"/>
+                </div>
+            </div>
+        </Portal>
+    </div>
+</t>
+
 <t t-name="web.Pager" owl="1">
     <nav class="o_pager" aria-label="Pager">
         <span class="o_pager_counter" t-on-click.stop="">
@@ -614,10 +631,12 @@
         <DropdownMenu t-if="printItems.length"
             title="env._t('Print')"
             items="printItems"
+            icon="'fa fa-print'"
         />
         <DropdownMenu t-if="actionItems.length"
             title="env._t('Action')"
             items="actionItems"
+            icon="'fa fa-cog'"
         />
     </div>
 </t>
@@ -891,17 +910,17 @@
         <p>
             <t t-if="changes.isDomainSelected">This update will only consider the records of the current page.<br/><br/></t>
             <t t-if="changes.nbRecords != changes.nbValidRecords">
-                Among the <t t-raw="changes.nbRecords"/> selected records,
-                <t t-raw="changes.nbValidRecords"/> are valid for this update.<br/>
+                Among the <t t-esc="changes.nbRecords"/> selected records,
+                <t t-esc="changes.nbValidRecords"/> are valid for this update.<br/>
             </t>
-            Are you sure you want to perform the following update on those <t t-raw="changes.nbValidRecords"/> records ?
+            Are you sure you want to perform the following update on those <t t-esc="changes.nbValidRecords"/> records ?
         </p>
         <div class="table-responsive">
             <table class="o_modal_changes">
                 <tbody>
                     <tr>
                         <td>Field:</td>
-                        <td><t t-raw="changes.fieldLabel"/></td>
+                        <td><t t-esc="changes.fieldLabel"/></td>
                     </tr>
                     <tr>
                         <td>Update to:</td>
@@ -1331,6 +1350,12 @@
         <button type="button" t-if="!widget.noOpen" class="fa fa-external-link btn btn-secondary o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
     </div>
 </t>
+
+<t t-name="web.Many2OneAvatar">
+    <img t-att-src="url" t-att-alt="value" class="o_m2o_avatar"/>
+    <span t-esc="value"/>
+</t>
+
 <t t-name="FieldReference" t-extend="FieldMany2One">
     <t t-jquery=".o_input_dropdown" t-operation="before">
         <select t-att-class="'o_input o_field_widget' + (widget.nodeOptions.hide_model and ' d-none' or '')">
@@ -1709,8 +1734,7 @@
 </t>
 <t t-name="M2ODialog">
     <div>
-        <p/>
-        Name: <input class="o_input" type="text"/>
+        Do you want to create <strong t-esc="widget.value"/> as a new <t t-esc="widget.name"/>?
     </div>
 </t>
 <t t-name="FieldMany2ManyCheckBoxes">
@@ -1782,7 +1806,7 @@
     <li class="o_switch_company_menu">
         <a role="button" class="dropdown-toggle o-no-caret" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" title="Dropdown menu">
             <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}">
-                <t t-if="!widget.isMobile"><t t-raw="widget.current_company_name"/></t>
+                <t t-if="!widget.isMobile"><t t-esc="widget.current_company_name"/></t>
             </span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu">
@@ -1881,7 +1905,7 @@
 <t t-name="ColorPickerReadonly">
     <div class="o_field_color_picker_preview">
         <li>
-            <a aria-label="No color" href="#" role="menuitem" t-att-class="'oe_kanban_color_'+active_color" t-att-data-color="active_color" title="No color"/>
+            <a href="#" role="menuitem" t-att-class="'oe_kanban_color_'+active_color" t-att-data-color="active_color" t-att-aria-label="name_color" t-att-title="name_color"/>
         </li>
     </div>
 </t>

@@ -42,6 +42,12 @@
                 width: 17px;
                 height: 17px;
             }
+            &.o_list_button > button {
+                padding: 0 5px;
+                .o_button_icon {
+                    margin-right: 3px;
+                }
+            }
         }
 
         tfoot {
@@ -98,6 +104,9 @@
         .o_list_record_selector {
             width: 40px;
             padding-left: $o-horizontal-padding;
+            .custom-control-label {
+                cursor: pointer;
+            }
         }
         .o_list_record_remove, .o_handle_cell {
             width: 1px;  // to prevent the column to expand
@@ -286,6 +295,9 @@
             }
             > .o_row_handle {
                 visibility: hidden; // hide sequence when editing
+            }
+            > .o_field_badge {
+                width: auto; // override width: 100% to keep the optimal badge width
             }
         }
 

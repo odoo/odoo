@@ -42,18 +42,14 @@ var M2ODialog = Dialog.extend({
         this.name = name;
         this.value = value;
         this._super(parent, {
-            title: _.str.sprintf(_t("Create a %s"), this.name),
+            title: _t(`New ${this.name}`),
             size: 'medium',
             buttons: [{
                 text: _t('Create'),
                 classes: 'btn-primary',
+                close: true,
                 click: function () {
-                    if (this.$("input").val() !== ''){
-                        this.trigger_up('quick_create', { value: this.$('input').val() });
-                        this.close(true);
-                    } else {
-                        this.$("input").focus();
-                    }
+                    this.trigger_up('quick_create', { value: this.value });
                 },
             }, {
                 text: _t('Create and edit'),
@@ -62,7 +58,7 @@ var M2ODialog = Dialog.extend({
                 click: function () {
                     this.trigger_up('search_create_popup', {
                         view_type: 'form',
-                        value: this.$('input').val(),
+                        value: this.value,
                     });
                 },
             }, {
@@ -70,10 +66,6 @@ var M2ODialog = Dialog.extend({
                 close: true,
             }],
         });
-    },
-    start: function () {
-        this.$("p").text(_.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), this.name));
-        this.$("input").val(this.value);
     },
     /**
      * @override
@@ -959,6 +951,44 @@ var KanbanFieldMany2One = AbstractField.extend({
     },
 });
 
+/**
+ * Widget Many2OneAvatar is only supported on many2one fields pointing to a
+ * model which inherits from 'image.mixin'. In readonly, it displays the
+ * record's image next to the display_name. In edit, it behaves exactly like a
+ * regular many2one widget.
+ */
+const Many2OneAvatar = FieldMany2One.extend({
+    _template: 'web.Many2OneAvatar',
+
+    init() {
+        this._super.apply(this, arguments);
+        if (this.mode === 'readonly') {
+            this.template = null;
+            this.tagName = 'div';
+            this.className = 'o_field_many2one_avatar';
+            // disable the redirection to the related record on click, in readonly
+            this.noOpen = true;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _renderReadonly() {
+        this.$el.empty();
+        if (this.value) {
+            this.$el.html(qweb.render(this._template, {
+                url: `/web/image/${this.field.relation}/${this.value.res_id}/image_128`,
+                value: this.m2o_value,
+            }));
+        }
+    },
+});
+
 //------------------------------------------------------------------------------
 // X2Many widgets
 //------------------------------------------------------------------------------
@@ -1518,9 +1548,9 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 if (ev.data.onSuccess) {
                     ev.data.onSuccess();
                 }
-            }).guardedCatch(function () {
+            }).guardedCatch(function (reason) {
                 if (ev.data.onFailure) {
-                    ev.data.onFailure();
+                    ev.data.onFailure(reason);
                 }
             });
         }
@@ -2274,6 +2304,7 @@ var FieldMany2ManyTags = AbstractField.extend({
     fieldsToFetch: {
         display_name: {type: 'char'},
     },
+    limit: 1000,
 
     /**
      * @constructor
@@ -2736,7 +2767,11 @@ var FieldStatus = AbstractField.extend({
         // Retro-compatibility: clickable used to be defined in the field attrs
         // instead of options.
         // If not set, the statusbar is not clickable.
-        this.isClickable = !!this.attrs.clickable || !!this.nodeOptions.clickable;
+        try {
+            this.isClickable = !!JSON.parse(this.attrs.clickable);
+        } catch (_) {
+            this.isClickable = !!this.nodeOptions.clickable;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -3307,8 +3342,9 @@ return {
     Many2oneBarcode: Many2oneBarcode,
     KanbanFieldMany2One: KanbanFieldMany2One,
     ListFieldMany2One: ListFieldMany2One,
+    Many2OneAvatar: Many2OneAvatar,
 
-    FieldX2Many : FieldX2Many,
+    FieldX2Many: FieldX2Many,
     FieldOne2Many: FieldOne2Many,
 
     FieldMany2Many: FieldMany2Many,

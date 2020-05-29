@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import time
+import warnings
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, ValidationError
@@ -18,7 +19,7 @@ class IrRule(models.Model):
 
     name = fields.Char(index=True)
     active = fields.Boolean(default=True, help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module).")
-    model_id = fields.Many2one('ir.model', string='Object', index=True, required=True, ondelete="cascade")
+    model_id = fields.Many2one('ir.model', string='Model', index=True, required=True, ondelete="cascade")
     groups = fields.Many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id')
     domain_force = fields.Text(string='Domain')
     perm_read = fields.Boolean(string='Apply for Read', default=True)
@@ -174,6 +175,13 @@ class IrRule(models.Model):
 
     @api.model
     def domain_get(self, model_name, mode='read'):
+        # this method is now unsafe, since it returns a list of tables which
+        # does not contain the joins present in the generated Query object
+        warnings.warn(
+            "Unsafe and deprecated IrRule.domain_get(), "
+            "use IrRule._compute_domain() and expression().query instead",
+            DeprecationWarning,
+        )
         dom = self._compute_domain(model_name, mode)
         if dom:
             # _where_calc is called as superuser. This means that rules can

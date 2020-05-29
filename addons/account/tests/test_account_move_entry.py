@@ -142,6 +142,23 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # The date has been changed to the first valid date.
         self.assertEqual(copy_move.date, copy_move.company_id.fiscalyear_lock_date + relativedelta(days=1))
 
+    def test_misc_fiscalyear_lock_date_2(self):
+        self.test_move.post()
+
+        # Create a bank statement to get a balance in the suspense account.
+        statement = self.env['account.bank.statement'].create({
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'date': '2016-01-01',
+            'line_ids': [
+                (0, 0, {'payment_ref': 'test', 'amount': 10.0})
+            ],
+        })
+        statement.button_post()
+
+        # You can't lock the fiscal year if there is some unreconciled statement.
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string('2017-01-01')
+
     def test_misc_tax_lock_date_1(self):
         self.test_move.post()
 
@@ -280,6 +297,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # lines[1] = 'move 1 counterpart line'
         # lines[2] = 'move 1 receivable line'
         # lines[3] = 'move 2 counterpart line'
+        draft_moves.post()
         lines = draft_moves.mapped('line_ids').sorted('balance')
 
         (lines[0] + lines[2]).reconcile()
@@ -555,3 +573,56 @@ class TestAccountMove(AccountTestInvoicingCommon):
                 },
             ],
         )
+
+    def test_included_tax(self):
+        '''
+        Test an account.move.line is created automatically when adding a tax.
+        This test uses the following scenario:
+            - Create manually a debit line of 1000 having an included tax.
+            - Assume a line containing the tax amount is created automatically.
+            - Create manually a credit line to balance the two previous lines.
+            - Save the move.
+
+        included tax = 20%
+
+        Name                   | Debit     | Credit    | Tax_ids       | Tax_line_id's name
+        -----------------------|-----------|-----------|---------------|-------------------
+        debit_line_1           | 1000      |           | tax           |
+        included_tax_line      | 200       |           |               | included_tax_line
+        credit_line_1          |           | 1200      |               |
+        '''
+
+        self.included_percent_tax = self.env['account.tax'].create({
+            'name': 'included_tax_line',
+            'amount_type': 'percent',
+            'amount': 20,
+            'price_include': True,
+            'include_base_amount': False,
+        })
+        self.account = self.company_data['default_account_revenue']
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='entry'))
+
+        # Create a new account.move.line with debit amount.
+        with move_form.line_ids.new() as debit_line:
+            debit_line.name = 'debit_line_1'
+            debit_line.account_id = self.account
+            debit_line.debit = 1000
+            debit_line.tax_ids.clear()
+            debit_line.tax_ids.add(self.included_percent_tax)
+
+            self.assertTrue(debit_line.recompute_tax_line)
+
+        # Create a third account.move.line with credit amount.
+        with move_form.line_ids.new() as credit_line:
+            credit_line.name = 'credit_line_1'
+            credit_line.account_id = self.account
+            credit_line.credit = 1200
+
+        move = move_form.save()
+
+        self.assertRecordValues(move.line_ids, [
+            {'name': 'debit_line_1',             'debit': 1000.0,    'credit': 0.0,      'tax_ids': [self.included_percent_tax.id],      'tax_line_id': False},
+            {'name': 'included_tax_line',        'debit': 200.0,     'credit': 0.0,      'tax_ids': [],                                  'tax_line_id': self.included_percent_tax.id},
+            {'name': 'credit_line_1',            'debit': 0.0,       'credit': 1200.0,   'tax_ids': [],                                  'tax_line_id': False},
+        ])

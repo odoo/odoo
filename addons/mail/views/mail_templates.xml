@@ -10,6 +10,7 @@
         <template id="assets_backend" name="mail assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/mail/static/src/js/many2many_tags_email.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/many2one_avatar_user.js"></script>
 
                 <!-- Services -->
                 <script type="text/javascript" src="/mail/static/src/js/services/mail_manager.js"></script>
@@ -97,21 +98,22 @@
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/systray.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/mail_activity.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/many2one_avatar_user.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/activity_view.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/kanban_view.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/attachment_box.scss"/>
             </xpath>
         </template>
 
-        <template id="js_test_assets" name="mail_js_test_assets" inherit_id="web.js_tests_assets">
+        <template id="tests_assets" name="mail_tests_assets" inherit_id="web.tests_assets">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/mail/static/tests/helpers/mock_server.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/helpers/test_utils.js"></script>
             </xpath>
         </template>
 
-        <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite">
-            <xpath expr="//t[@t-set='head']" position="inside">
+        <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="." position="inside">
                 <!-- thread window -->
                     <script type="text/javascript" src="/mail/static/tests/thread_window/basic_thread_window_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/thread_window/blank_thread_window_tests.js"></script>
@@ -123,6 +125,7 @@
                 <script type="text/javascript" src="/mail/static/tests/mail_utils_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/discuss_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/document_viewer_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/many2one_avatar_user_tests.js"></script>
                 <!-- systray -->
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_activity_menu_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_messaging_menu_tests.js"></script>
@@ -144,7 +147,9 @@
         </template>
 
         <template id="message_origin_link">
-            <p>This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been <span t-if="edit">modified</span><span t-if="not edit">created</span> from:
+            <p>
+                <t t-if="edit">This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been modified from:</t>
+                <t t-else="">This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been created from:</t>
                 <t t-foreach="origin" t-as="o">
                     <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.display_name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
                 </t>

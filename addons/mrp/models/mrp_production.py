@@ -9,7 +9,7 @@ from itertools import groupby
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import date_utils, float_round, float_is_zero, format_datetime
+from odoo.tools import date_utils, float_compare, float_round, float_is_zero, format_datetime
 
 
 class MrpProduction(models.Model):
@@ -63,9 +63,10 @@ class MrpProduction(models.Model):
 
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain="[('bom_ids', '!=', False), ('bom_ids.active', '=', True), ('bom_ids.type', '=', 'normal'), ('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="[('id', 'in', allowed_product_ids)]",
         readonly=True, required=True, check_company=True,
         states={'draft': [('readonly', False)]})
+    allowed_product_ids = fields.Many2many('product.product', compute='_compute_allowed_product_ids')
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
         'Quantity To Produce',
@@ -238,6 +239,22 @@ class MrpProduction(models.Model):
     mrp_production_child_count = fields.Integer("Number of generated MO", compute='_compute_mrp_production_child_count')
     mrp_production_source_count = fields.Integer("Number of source MO", compute='_compute_mrp_production_source_count')
 
+    @api.depends('product_id', 'bom_id', 'company_id')
+    def _compute_allowed_product_ids(self):
+        for production in self:
+            product_domain = [
+                ('type', 'in', ['product', 'consu']),
+                '|',
+                    ('company_id', '=', False),
+                    ('company_id', '=', production.company_id.id)
+            ]
+            if production.bom_id:
+                if production.bom_id.product_id:
+                    product_domain += [('id', '=', production.bom_id.product_id.id)]
+                else:
+                    product_domain += [('id', 'in', production.bom_id.product_tmpl_id.product_variant_ids.ids)]
+            production.allowed_product_ids = self.env['product.product'].search(product_domain)
+
     @api.depends('procurement_group_id.stock_move_ids.created_production_id')
     def _compute_mrp_production_child_count(self):
         for production in self:
@@ -392,13 +409,19 @@ class MrpProduction(models.Model):
             elif all(move.state == 'cancel' for move in production.move_raw_ids):
                 production.state = 'cancel'
             elif all(move.state in ['cancel', 'done'] for move in production.move_raw_ids):
-                production.state = 'done'
+                if (
+                    production.bom_id.consumption == 'flexible'
+                    and float_compare(production.qty_produced, production.product_qty, precision_rounding=production.product_uom_id.rounding) == -1
+                ):
+                    production.state = 'progress'
+                else:
+                    production.state = 'done'
             elif production.move_finished_ids.filtered(lambda m: m.state not in ('cancel', 'done') and m.product_id.id == production.product_id.id)\
                  and (production.qty_produced >= production.product_qty)\
                  and (not production.routing_id or all(wo_state in ('cancel', 'done') for wo_state in production.workorder_ids.mapped('state'))):
                 production.state = 'to_close'
             elif production.workorder_ids and any(wo_state in ('progress') for wo_state in production.workorder_ids.mapped('state'))\
-                 or production.qty_produced > 0 and production.qty_produced < production.product_uom_qty:
+                 or production.qty_produced > 0 and production.qty_produced < production.product_qty:
                 production.state = 'progress'
             elif production.workorder_ids:
                 production.state = 'planned'
@@ -407,10 +430,9 @@ class MrpProduction(models.Model):
 
             # Compute reservation state
             # State where the reservation does not matter.
-            if production.state in ('draft', 'done', 'cancel'):
-                production.reservation_state = False
+            production.reservation_state = False
             # Compute reservation state according to its component's moves.
-            else:
+            if production.state not in ('draft', 'done', 'cancel'):
                 relevant_move_state = production.move_raw_ids._get_relevant_state_among_moves()
                 if relevant_move_state == 'partially_available':
                     if production.routing_id and production.routing_id.operation_ids and production.bom_id.ready_to_produce == 'asap':
@@ -426,7 +448,7 @@ class MrpProduction(models.Model):
             already_reserved = order.is_locked and order.state not in ('done', 'cancel') and order.mapped('move_raw_ids.move_line_ids')
             any_quantity_done = any([m.quantity_done > 0 for m in order.move_raw_ids])
             order.unreserve_visible = not any_quantity_done and already_reserved
-            order.reserve_visible = order.state in ('confirmed', 'planned') and any(move.state == 'confirmed' for move in order.move_raw_ids)
+            order.reserve_visible = order.state in ('confirmed', 'planned') and any(move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids)
 
     @api.depends('move_finished_ids.quantity_done', 'move_finished_ids.state', 'is_locked')
     def _compute_post_visible(self):
@@ -485,8 +507,10 @@ class MrpProduction(models.Model):
 
     @api.onchange('bom_id')
     def _onchange_bom_id(self):
+        if not self.product_id and self.bom_id:
+            self.product_id = self.bom_id.product_id or self.bom_id.product_tmpl_id.product_variant_ids[0]
         self.product_qty = self.bom_id.product_qty
-        self.product_uom_id = self.bom_id.product_uom_id.id
+        self.product_uom_id = self.bom_id and self.bom_id.product_uom_id.id or self.product_id.uom_id.id
         self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
         self.picking_type_id = self.bom_id.picking_type_id or self.picking_type_id
 
@@ -559,7 +583,8 @@ class MrpProduction(models.Model):
             else:
                 values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
         if not values.get('procurement_group_id'):
-            values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id
+            procurement_group_vals = self._prepare_procurement_group_vals(values)
+            values['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
         production = super(MrpProduction, self).create(values)
         production.move_raw_ids.write({
             'group_id': production.procurement_group_id.id,
@@ -801,7 +826,10 @@ class MrpProduction(models.Model):
     def action_confirm(self):
         self._check_company()
         for production in self:
-            production.consumption = production.bom_id.consumption
+            if not production.bom_id:
+                production.consumption = 'flexible'
+            else:
+                production.consumption = production.bom_id.consumption
             if not production.move_raw_ids:
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
             production._generate_finished_moves()
@@ -1162,7 +1190,7 @@ class MrpProduction(models.Model):
                 'impacted_pickings': False,
                 'cancel': cancel
             }
-            return self.env.ref('mrp.exception_on_mo').render(values=values)
+            return self.env.ref('mrp.exception_on_mo')._render(values=values)
 
         documents = self.env['stock.picking']._log_activity_get_documents(moves_modification, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
         documents = self.env['stock.picking']._less_quantities_than_expected_add_documents(moves_modification, documents)
@@ -1188,18 +1216,26 @@ class MrpProduction(models.Model):
                 'impacted_object': impacted_object,
                 'cancel': cancel
             }
-            return self.env.ref('mrp.exception_on_mo').render(values=values)
+            return self.env.ref('mrp.exception_on_mo')._render(values=values)
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
 
     def button_unbuild(self):
         self.ensure_one()
         return {
-            'name': _('Unbuild'),
+            'name': _('Unbuild: %s') % self.product_id.display_name,
             'view_mode': 'form',
             'res_model': 'mrp.unbuild',
-            'view_id': self.env.ref('mrp.mrp_unbuild_form_view').id,
+            'view_id': self.env.ref('mrp.mrp_unbuild_form_view_simplified').id,
             'type': 'ir.actions.act_window',
-            'context': {'default_mo_id': self.id, 'create': False, 'edit': False},
+            'context': {'default_mo_id': self.id, 
+                        'default_company_id': self.company_id.id,
+                        'default_location_id': self.location_dest_id.id,
+                        'default_location_dest_id': self.location_src_id.id,
+                        'create': False, 'edit': False},
             'target': 'new',
         }
+
+    @api.model
+    def _prepare_procurement_group_vals(self, values):
+        return {'name': values['name']}

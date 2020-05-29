@@ -28,12 +28,7 @@ class StockLandedCost(models.Model):
         if self.env.company.lc_journal_id:
             lc_journal = self.env.company.lc_journal_id
         else:
-            ir_property = self.env['ir.property'].search([
-                ('name', '=', 'property_stock_journal'),
-                ('company_id', '=', self.env.company.id)
-            ], limit=1)
-            if ir_property:
-                lc_journal = ir_property.get_by_record()
+            lc_journal = self.env['ir.property']._get("property_stock_journal", "product.category")
         return lc_journal
 
     name = fields.Char(
@@ -60,7 +55,7 @@ class StockLandedCost(models.Model):
         'Item Description', states={'done': [('readonly', True)]})
     amount_total = fields.Monetary(
         'Total', compute='_compute_total_amount',
-        digits=0, store=True, tracking=True)
+        store=True, tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Posted'),
@@ -319,7 +314,7 @@ class StockLandedCostLine(models.Model):
         'stock.landed.cost', 'Landed Cost',
         required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', 'Product', required=True)
-    price_unit = fields.Monetary('Cost', digits='Product Price', required=True)
+    price_unit = fields.Monetary('Cost', required=True)
     split_method = fields.Selection(
         SPLIT_METHOD,
         string='Split Method',
@@ -334,8 +329,6 @@ class StockLandedCostLine(models.Model):
 
     @api.onchange('product_id')
     def onchange_product_id(self):
-        if not self.product_id:
-            self.quantity = 0.0
         self.name = self.product_id.name or ''
         self.split_method = self.product_id.product_tmpl_id.split_method_landed_cost or self.split_method or 'equal'
         self.price_unit = self.product_id.standard_price or 0.0
@@ -365,13 +358,12 @@ class AdjustmentLines(models.Model):
     volume = fields.Float(
         'Volume', default=1.0, digits='Volume')
     former_cost = fields.Monetary(
-        'Original Value', digits='Product Price')
+        'Original Value')
     additional_landed_cost = fields.Monetary(
-        'Additional Landed Cost',
-        digits='Product Price')
+        'Additional Landed Cost')
     final_cost = fields.Monetary(
         'New Value', compute='_compute_final_cost',
-        digits=0, store=True)
+        store=True)
     currency_id = fields.Many2one('res.currency', related='cost_id.company_id.currency_id')
 
     @api.depends('cost_line_id.name', 'product_id.code', 'product_id.name')

@@ -519,6 +519,13 @@ var ListController = BasicController.extend({
         }
     },
     /**
+     * @override
+     */
+    _shouldBounceOnClick() {
+        const state = this.model.get(this.handle, {raw: true});
+        return !state.count;
+    },
+    /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
      *
      * @private
@@ -728,7 +735,13 @@ var ListController = BasicController.extend({
      * @private
      */
     _onDirectExportData() {
-        this._getExportDialogWidget().export();
+        // access rights check before exporting data
+        return this._rpc({
+            model: 'ir.exports',
+            method: 'search_read',
+            args: [[], ['id']],
+            limit: 1,
+        }).then(() => this._getExportDialogWidget().export())
     },
     /**
      * Opens the related form view.
@@ -764,8 +777,12 @@ var ListController = BasicController.extend({
             this.fieldChangedPrevented = ev;
         } else if (this.renderer.isInMultipleRecordEdition(recordId)) {
             const saveMulti = () => {
+                // if ev.data.__originalComponent is set, it is the field Component
+                // that triggered the event, otherwise ev.target is the legacy field
+                // Widget that triggered the event
+                const target = ev.data.__originalComponent || ev.target;
                 this.multipleRecordsSavingPromise =
-                    this._saveMultipleRecords(ev.data.dataPointID, ev.target.__node, ev.data.changes);
+                    this._saveMultipleRecords(ev.data.dataPointID, target.__node, ev.data.changes);
             };
             // deal with edition of multiple lines
             ev.data.onSuccess = saveMulti; // will ask confirmation, and save
@@ -806,6 +823,7 @@ var ListController = BasicController.extend({
         this.selectedRecords = ev.data.selection;
         this.isPageSelected = ev.data.allChecked;
         this.isDomainSelected = false;
+        this.$('.o_list_export_xlsx').toggle(!this.selectedRecords.length);
         this._updateSelectionBox();
         this._updateControlPanel();
     },

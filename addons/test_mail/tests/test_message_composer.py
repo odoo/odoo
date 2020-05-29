@@ -207,14 +207,21 @@ class TestComposerWTpl(TestMailCommon, TestRecipients):
             composer.send_mail()
 
         new_partners = self.env['res.partner'].search([('email', 'in', [self.email_1, self.email_2])])
-        self.assertMailSent(
-            self.user_employee.partner_id,
+        self.assertMailMail(
             [self.partner_1, self.partner_2, new_partners[0], new_partners[1], self.partner_admin],
-            False,
+            'sent',
+            author=self.user_employee.partner_id,
+            mail_message=False,
             check_mail_mail=False,
-            subject='About %s' % self.test_record.name,
-            body_content=self.test_record.name,
-            attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
+            email_values={
+                'subject': 'About %s' % self.test_record.name,
+                'body_content': self.test_record.name,
+                'attachments': [
+                    ('first.txt', b'My first attachment', 'text/plain'),
+                    ('second.txt', b'My second attachment', 'text/plain')
+                ]
+            }
+        )
 
     def test_composer_template_onchange_attachments(self):
         """Tests that all attachments are added to the composer,
@@ -278,24 +285,38 @@ class TestComposerWTpl(TestMailCommon, TestRecipients):
         self._mails_record2 = [dict(mail) for mail in self._mails if '%s-%s' % (test_record_2.id, test_record_2._name) in mail['message_id']]
 
         self._mails = self._mails_record1
-        self.assertMailSent(
-            self.user_employee.partner_id,
+        self.assertMailMail(
             [self.partner_1, self.partner_2, new_partners[0], new_partners[1], self.partner_admin],
-            False,
+            'sent',
+            author=self.user_employee.partner_id,
+            mail_message=False,
             check_mail_mail=False,
-            subject='About %s' % self.test_record.name,
-            body_content=self.test_record.name,
-            attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
+            email_values={
+                'subject': 'About %s' % self.test_record.name,
+                'body_content': self.test_record.name,
+                'attachments': [
+                    ('first.txt', b'My first attachment', 'text/plain'),
+                    ('second.txt', b'My second attachment', 'text/plain')
+                ]
+            }
+        )
 
         self._mails = self._mails_record2
-        self.assertMailSent(
-            self.user_employee.partner_id,
+        self.assertMailMail(
             [self.partner_1, self.partner_2, new_partners[0], new_partners[1], self.partner_admin],
-            False,
+            'sent',
+            author=self.user_employee.partner_id,
+            mail_message=False,
             check_mail_mail=False,
-            subject='About %s' % test_record_2.name,
-            body_content=test_record_2.name,
-            attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
+            email_values={
+                'subject': 'About %s' % test_record_2.name,
+                'body_content': test_record_2.name,
+                'attachments': [
+                    ('first.txt', b'My first attachment', 'text/plain'),
+                    ('second.txt', b'My second attachment', 'text/plain')
+                ]
+            }
+        )
 
         message_1 = self.test_record.message_ids[0]
         message_2 = test_record_2.message_ids[0]

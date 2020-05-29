@@ -53,6 +53,20 @@ MailManager.include({
         }
     },
     /**
+     * Open a DM chat in a thread window.
+     *
+     * @param {integer} partnerID
+     * @returns {Promise}
+     */
+    openDMChatWindow: async function (partnerID) {
+        let dmChat = this.call('mail_service', 'getDMChatFromPartnerID', partnerID);
+        if (!dmChat) {
+            const dmChatId = await this.call('mail_service', 'createChannel', partnerID, 'dm_chat');
+            dmChat = this.call('mail_service', 'getChannel', dmChatId);
+        }
+        dmChat.detach();
+    },
+    /**
      * Open a DM chat in a thread window. This is useful when selecting a DM
      * chatin the blank thread window, so that it replaces it with the DM chat
      * window.

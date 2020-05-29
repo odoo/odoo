@@ -169,6 +169,8 @@
                         <page string="Options" name="options" attrs="{'invisible': [('is_page', '=', True)]}">
                             <group string="Constraints">
                                 <group>
+                                    <field name="constr_mandatory" string="Mandatory Answer"/>
+                                    <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
                                     <field name="matrix_subtype" attrs="{'invisible':[('question_type','not in',['matrix'])],'required':[('question_type','=','matrix')]}"/>
                                 </group>
                             </group>

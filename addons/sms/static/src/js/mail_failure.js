@@ -16,13 +16,35 @@ MailFailure.include({
      */
     getPreview: function () {
         var preview = this._super.apply(this, arguments);
-        if (this._failureType === 'sms') {
+        if (this.getMessageType() === 'sms') {
             _.extend(preview, {
-                body: _t('An error occurred when sending an SMS'),
                 id: 'sms_failure',
             });
         }
         return preview;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _getPreviewBody() {
+        if (this.getMessageType() === 'sms') {
+            return _t("An error occurred when sending an SMS.");
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _getPreviewImage() {
+        if (this.getMessageType() === 'sms') {
+            return '/sms/static/img/sms_failure.svg';
+        }
+        return this._super(...arguments);
     },
 });
 

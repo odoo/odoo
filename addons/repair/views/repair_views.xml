@@ -6,19 +6,18 @@
         <field name="name">repair.tree</field>
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
-            <tree string="Repairs order" multi_edit="1"
-                  decoration-muted="state in ('done','cancel')" decoration-info="state=='draft'">
-                <field name="name" />
+            <tree string="Repairs order" multi_edit="1">
+                <field name="name"/>
                 <field name="product_id" readonly="1" optional="show"/>
                 <field name="product_qty" optional="hide" string="Quantity"/>
                 <field name="product_uom" string="Unit of Measure" readonly="1" optional="hide"/>
-                <field name="user_id" optional="hide"/>
+                <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
                 <field name="partner_id" readonly="1" optional="show"/>
                 <field name="address_id" optional="show"/>
                 <field name="guarantee_limit" optional="show"/>
                 <field name="location_id" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
-                <field name="state" optional="show"/>
+                <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
@@ -190,8 +189,8 @@
                         </group>
                     </page>
                     <page string="Notes" name="notes">
-                        <field name="internal_notes" placeholder="Add internal notes..."/>
-                        <field name="quotation_notes" placeholder="Add quotation notes..."/>
+                        <field name="internal_notes" placeholder="Add internal notes."/>
+                        <field name="quotation_notes" placeholder="Add quotation notes."/>
                     </page>
                 </notebook>
                 </sheet>

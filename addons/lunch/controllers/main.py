@@ -60,7 +60,7 @@ class LunchController(http.Controller):
 
     @http.route('/lunch/payment_message', type='json', auth='user')
     def payment_message(self):
-        return {'message': request.env['ir.qweb'].render('lunch.lunch_payment_dialog', {})}
+        return {'message': request.env['ir.qweb']._render('lunch.lunch_payment_dialog', {})}
 
     @http.route('/lunch/user_location_set', type='json', auth='user')
     def set_user_location(self, location_id=None, user_id=None):

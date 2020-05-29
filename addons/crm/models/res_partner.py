@@ -37,13 +37,42 @@ class Partner(models.Model):
         return rec
 
     def _compute_opportunity_count(self):
+        if self.ids:
+            lead_group_data = self.env['crm.lead'].read_group(
+                [('partner_id.commercial_partner_id', 'in', self.ids)],
+                ['partner_id'], ['partner_id']
+            )
+        else:
+            lead_group_data = []
+        partners = dict(
+            (m['partner_id'][0], m['partner_id_count'])
+            for m in lead_group_data)
+        commercial_partners = {}
+        for partner in self.browse(partners.keys()):
+            commercial_partners.setdefault(partner.commercial_partner_id.id, 0)
+            commercial_partners[partner.commercial_partner_id.id] += partners[partner.id]
         for partner in self:
-            operator = 'child_of' if partner.is_company else '='  # the opportunity count should counts the opportunities of this company and all its contacts
-            partner.opportunity_count = self.env['crm.lead'].search_count([('partner_id', operator, partner.id), ('type', '=', 'opportunity')])
+            if partner.is_company:
+                partner.opportunity_count = commercial_partners.get(partner.id, 0)
+            else:
+                partner.opportunity_count = partners.get(partner.id, 0)
 
     def _compute_meeting_count(self):
+        if self.ids:
+            self.env.cr.execute("""
+                SELECT res_partner_id, calendar_event_id, count(1)
+                  FROM calendar_event_res_partner_rel
+                 WHERE res_partner_id IN %s
+              GROUP BY res_partner_id, calendar_event_id
+            """, [tuple(self.ids)])
+            meeting_data = self.env.cr.fetchall()
+            events = [row[1] for row in meeting_data]
+            valid_events = self.env['calendar.event'].search([('id', 'in', events)])  # filter for ACLs
+            meetings = dict((m[0], m[2]) for m in meeting_data if m[1] in valid_events.ids)
+        else:
+            meetings = dict()
         for partner in self:
-            partner.meeting_count = len(partner.meeting_ids)
+            partner.meeting_count = meetings.get(partner.id, 0)
 
     def schedule_meeting(self):
         partner_ids = self.ids

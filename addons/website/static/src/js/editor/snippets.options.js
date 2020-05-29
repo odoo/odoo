@@ -1,7 +1,7 @@
 odoo.define('website.editor.snippets.options', function (require) {
 'use strict';
 
-const ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerWidget} = require('web.Colorpicker');
 const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
@@ -338,10 +338,10 @@ options.Class.include({
         const colorType = params.colorType ? (params.colorType + '_') : '';
         const url = `${baseURL}user_${colorType}color_palette.scss`;
 
-        if (!ColorpickerDialog.isCSSColor(color)) {
+        if (!ColorpickerWidget.isCSSColor(color)) {
             const style = window.getComputedStyle(document.documentElement);
             color = style.getPropertyValue('--' + color).trim();
-            color = ColorpickerDialog.normalizeCSSColor(color);
+            color = ColorpickerWidget.normalizeCSSColor(color);
         }
         const colors = {};
         colors[params.color] = color;
@@ -386,7 +386,7 @@ options.Class.include({
     _getCSSColorFromName: function (colorName) {
         const style = window.getComputedStyle(document.documentElement);
         const color = style.getPropertyValue('--' + colorName).trim();
-        return ColorpickerDialog.normalizeCSSColor(color);
+        return ColorpickerWidget.normalizeCSSColor(color);
     },
     /**
      * @private
@@ -622,11 +622,6 @@ options.registry.background.include({
 });
 
 options.registry.Theme = options.Class.extend({
-    jsLibs: [
-        '/web/static/lib/ace/ace.js',
-        '/web/static/lib/ace/mode-xml.js',
-    ],
-
     /**
      * @override
      */
@@ -636,8 +631,9 @@ options.registry.Theme = options.Class.extend({
         // used as 'primary' and 'secondary' BS values (to customize standard BS
         // used in Odoo). However, some themes are still going against that
         // system and do not link alpha-primary and beta-secondary at all.
-        this._alphaEqualsPrimary = (this._getCSSColorFromName('primary') === this._getCSSColorFromName('alpha'));
-        this._betaEqualsSecondary = (this._getCSSColorFromName('secondary') === this._getCSSColorFromName('beta'));
+        const style = window.getComputedStyle(document.documentElement);
+        this._alphaEqualsPrimary = style.getPropertyValue('--is-alpha-primary').trim() == 'true';
+        this._betaEqualsSecondary = style.getPropertyValue('--is-beta-secondary').trim() == 'true';
         return this._super(...arguments);
     },
 
@@ -677,6 +673,29 @@ options.registry.Theme = options.Class.extend({
      * @see this.selectClass for parameters
      */
     async openCustomCodeDialog(previewMode, widgetValue, params) {
+        const libsProm = this._loadLibs({
+            jsLibs: [
+                '/web/static/lib/ace/ace.js',
+                '/web/static/lib/ace/mode-xml.js',
+            ],
+        });
+
+        let websiteId;
+        this.trigger_up('context_get', {
+            callback: (ctx) => {
+                websiteId = ctx['website_id'];
+            },
+        });
+
+        let website;
+        const dataProm = this._rpc({
+            model: 'website',
+            method: 'read',
+            args: [[websiteId], ['custom_code_head', 'custom_code_footer']],
+        }).then(websites => {
+            website = websites[0];
+        });
+
         let fieldName, title, contentText;
         if (widgetValue === 'head') {
             fieldName = 'custom_code_head';
@@ -688,23 +707,13 @@ options.registry.Theme = options.Class.extend({
             contentText = _t('Enter code that will be added before the </body> of every page of your site.');
         }
 
-        let websiteId;
-        this.trigger_up('context_get', {
-            callback: (ctx) => {
-                websiteId = ctx['website_id'];
-            },
-        });
-        const websites = await this._rpc({
-            model: 'website',
-            method: 'read',
-            args: [[websiteId], ['custom_code_head', 'custom_code_footer']],
-        });
+        await Promise.all([libsProm, dataProm]);
 
         await new Promise(resolve => {
             const $content = $(core.qweb.render('website.custom_code_dialog_content', {
                 contentText,
             }));
-            const aceEditor = this._renderAceEditor($content.find('.o_ace_editor_container')[0], websites[0][fieldName] || '');
+            const aceEditor = this._renderAceEditor($content.find('.o_ace_editor_container')[0], website[fieldName] || '');
             const dialog = new Dialog(this, {
                 title,
                 $content,
@@ -798,7 +807,7 @@ options.registry.Theme = options.Class.extend({
     _renderAceEditor(node, content) {
         const aceEditor = window.ace.edit(node);
         aceEditor.setTheme('ace/theme/monokai');
-        aceEditor.setValue(content, 1)
+        aceEditor.setValue(content, 1);
         aceEditor.setOptions({
             minLines: 20,
             maxLines: Infinity,
@@ -1823,7 +1832,7 @@ options.registry.CoverProperties = options.Class.extend({
             onSuccess: _widget => colorPickerWidget = _widget,
         });
         const color = colorPickerWidget._value;
-        const isCSSColor = ColorpickerDialog.isCSSColor(color);
+        const isCSSColor = ColorpickerWidget.isCSSColor(color);
         this.$target[0].dataset.bgColorClass = isCSSColor ? '' : 'bg-' + color;
         this.$target[0].dataset.bgColorStyle = isCSSColor ? `background-color:${color};` : '';
     },

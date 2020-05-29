@@ -582,7 +582,8 @@ class Picking(models.Model):
         defaults = self.default_get(['name', 'picking_type_id'])
         picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id', defaults.get('picking_type_id')))
         if vals.get('name', '/') == '/' and defaults.get('name', '/') == '/' and vals.get('picking_type_id', defaults.get('picking_type_id')):
-            vals['name'] = picking_type.sequence_id.next_by_id()
+            if picking_type.sequence_id:
+                vals['name'] = picking_type.sequence_id.next_by_id()
 
         # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
         # As it is a create the format will be a list of (0, 0, dict)
@@ -956,6 +957,7 @@ class Picking(models.Model):
         return True
 
     def _check_backorder(self):
+        prec = self.env["decimal.precision"].precision_get("Product Unit of Measure")
         backorder_pickings = self.browse()
         for picking in self:
             quantity_todo = {}
@@ -963,8 +965,9 @@ class Picking(models.Model):
             for move in picking.mapped('move_lines'):
                 quantity_todo.setdefault(move.product_id.id, 0)
                 quantity_done.setdefault(move.product_id.id, 0)
-                quantity_todo[move.product_id.id] += move.product_uom_qty
-                quantity_done[move.product_id.id] += move.quantity_done
+                quantity_todo[move.product_id.id] += move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
+                quantity_done[move.product_id.id] += move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
+            # FIXME: the next block doesn't seem nor should be used.
             for ops in picking.mapped('move_line_ids').filtered(lambda x: x.package_id and not x.product_id and not x.move_id):
                 for quant in ops.package_id.quant_ids:
                     quantity_done.setdefault(quant.product_id.id, 0)
@@ -972,7 +975,10 @@ class Picking(models.Model):
             for pack in picking.mapped('move_line_ids').filtered(lambda x: x.product_id and not x.move_id):
                 quantity_done.setdefault(pack.product_id.id, 0)
                 quantity_done[pack.product_id.id] += pack.product_uom_id._compute_quantity(pack.qty_done, pack.product_id.uom_id)
-            if any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done):
+            if any(
+                float_compare(quantity_done[x], quantity_todo.get(x, 0), precision_digits=prec,) == -1
+                for x in quantity_done
+            ):
                 backorder_pickings |= picking
         return backorder_pickings
 
@@ -1024,7 +1030,6 @@ class Picking(models.Model):
                 moves_to_backorder.write({'picking_id': backorder_picking.id})
                 moves_to_backorder.mapped('package_level_id').write({'picking_id':backorder_picking.id})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
-                backorder_picking.action_assign()
                 backorders |= backorder_picking
         return backorders
 
@@ -1159,7 +1164,7 @@ class Picking(models.Model):
                 'moves_information': rendering_context.values(),
                 'impacted_pickings': impacted_pickings,
             }
-            return self.env.ref('stock.exception_on_picking').render(values=values)
+            return self.env.ref('stock.exception_on_picking')._render(values=values)
 
         documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
         documents = self._less_quantities_than_expected_add_documents(moves, documents)
@@ -1325,7 +1330,7 @@ class Picking(models.Model):
     def _attach_sign(self):
         """ Render the delivery report in pdf and attach it to the picking in `self`. """
         self.ensure_one()
-        report = self.env.ref('stock.action_report_delivery').render_qweb_pdf(self.id)
+        report = self.env.ref('stock.action_report_delivery')._render_qweb_pdf(self.id)
         filename = "%s_signed_delivery_slip" % self.name
         if self.partner_id:
             message = _('Order signed by %s') % (self.partner_id.name)

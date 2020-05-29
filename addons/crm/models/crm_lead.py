@@ -2,16 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from psycopg2 import sql, extras
-from datetime import datetime, timedelta, date
-from dateutil.relativedelta import relativedelta
+import threading
+from datetime import date, datetime
+from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
 from odoo.addons.phone_validation.tools import phone_validation
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from . import crm_stage
 
@@ -47,6 +47,11 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'email_cc',
     'website']
 
+# Those values have been determined based on benchmark to minimise
+# computation time, number of transaction and transaction time.
+PLS_COMPUTE_BATCH_STEP = 50000  # odoo.models.PREFETCH_MAX = 1000 but larger cluster can speed up global computation
+PLS_UPDATE_BATCH_STEP = 5000
+
 
 class Lead(models.Model):
     _name = "crm.lead"
@@ -79,7 +84,7 @@ class Lead(models.Model):
         default=crm_stage.AVAILABLE_PRIORITIES[0][0])
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', index=True, tracking=True,
-        compute='_compute_team_id', copy=True, readonly=False, store=True)
+        compute='_compute_team_id', readonly=False, store=True)
     stage_id = fields.Many2one(
         'crm.stage', string='Stage', index=True, tracking=True,
         compute='_compute_stage_id', readonly=False, store=True,
@@ -114,7 +119,6 @@ class Lead(models.Model):
         'res.partner', string='Customer', index=True, tracking=10,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
-    partner_address_email = fields.Char('Partner Contact Email', related='partner_id.email', readonly=True)
     partner_is_blacklisted = fields.Boolean('Partner is blacklisted', related='partner_id.is_blacklisted', readonly=True)
     contact_name = fields.Char(
         'Contact Name', tracking=30,
@@ -127,10 +131,10 @@ class Lead(models.Model):
     title = fields.Many2one('res.partner.title', string='Title',compute='_compute_partner_id_values', readonly=False, store=True)
     email_from = fields.Char(
         'Email', tracking=40, index=True,
-        compute='_compute_partner_id_values', readonly=False, store=True)
+        compute='_compute_email_from', inverse='_inverse_email_from', readonly=False, store=True)
     phone = fields.Char(
         'Phone', tracking=50,
-        compute='_compute_partner_id_values', readonly=False, store=True)
+        compute='_compute_phone', inverse='_inverse_phone', readonly=False, store=True)
     mobile = fields.Char('Mobile', compute='_compute_partner_id_values', readonly=False, store=True)
     phone_mobile_search = fields.Char('Phone/Mobile', store=False, search='_search_phone_mobile_search')
     phone_state = fields.Selection([
@@ -164,6 +168,7 @@ class Lead(models.Model):
     lost_reason = fields.Many2one(
         'crm.lost.reason', string='Lost Reason',
         index=True, ondelete='restrict', tracking=True)
+    ribbon_message = fields.Char('Ribbon message', compute='_compute_ribbon_message')
 
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
@@ -219,7 +224,7 @@ class Lead(models.Model):
         others = self - leads
         others.day_open = None
         for lead in leads:
-            date_create = fields.Datetime.from_string(lead.create_date)
+            date_create = fields.Datetime.from_string(lead.create_date).replace(microsecond=0)
             date_open = fields.Datetime.from_string(lead.date_open)
             lead.day_open = abs((date_open - date_create).days)
 
@@ -238,7 +243,29 @@ class Lead(models.Model):
     def _compute_partner_id_values(self):
         """ compute the new values when partner_id has changed """
         for lead in self:
-            lead.update(lead._preare_values_from_partner(lead.partner_id))
+            lead.update(lead._prepare_values_from_partner(lead.partner_id))
+
+    @api.depends('partner_id.email')
+    def _compute_email_from(self):
+        for lead in self:
+            if lead.partner_id and lead.partner_id.email != lead.email_from:
+                lead.email_from = lead.partner_id.email
+
+    def _inverse_email_from(self):
+        for lead in self:
+            if lead.partner_id and lead.email_from != lead.partner_id.email:
+                lead.partner_id.email = lead.email_from
+
+    @api.depends('partner_id.phone')
+    def _compute_phone(self):
+        for lead in self:
+            if lead.partner_id and lead.phone != lead.partner_id.phone:
+                lead.phone = lead.partner_id.phone
+
+    def _inverse_phone(self):
+        for lead in self:
+            if lead.partner_id and lead.phone != lead.partner_id.phone:
+                lead.partner_id.phone = lead.phone
 
     @api.depends('phone', 'country_id.code')
     def _compute_phone_state(self):
@@ -293,10 +320,30 @@ class Lead(models.Model):
             lead.expected_revenue = round((lead.planned_revenue or 0.0) * (lead.probability or 0) / 100.0, 2)
 
     def _compute_meeting_count(self):
-        meeting_data = self.env['calendar.event'].read_group([('opportunity_id', 'in', self.ids)], ['opportunity_id'], ['opportunity_id'])
-        mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
+        if self.ids:
+            meeting_data = self.env['calendar.event'].sudo().read_group([
+                ('opportunity_id', 'in', self.ids)
+            ], ['opportunity_id'], ['opportunity_id'])
+            mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
+        else:
+            mapped_data = dict()
         for lead in self:
             lead.meeting_count = mapped_data.get(lead.id, 0)
+
+    @api.depends('email_from', 'phone', 'partner_id')
+    def _compute_ribbon_message(self):
+        for lead in self:
+            will_write_email = lead.partner_id and lead.email_from != lead.partner_id.email
+            will_write_phone = lead.partner_id and lead.phone != lead.partner_id.phone
+
+            if will_write_email and will_write_phone:
+                lead.ribbon_message = _('By saving this change, the customer email and phone number will also be updated.')
+            elif will_write_email:
+                lead.ribbon_message = _('By saving this change, the customer email will also be updated.')
+            elif will_write_phone:
+                lead.ribbon_message = _('By saving this change, the customer phone number will also be updated.')
+            else:
+                lead.ribbon_message = False
 
     def _search_phone_mobile_search(self, operator, value):
         if len(value) <= 2:
@@ -333,7 +380,7 @@ class Lead(models.Model):
         if self.mobile:
             self.mobile = self.phone_format(self.mobile)
 
-    def _preare_values_from_partner(self, partner):
+    def _prepare_values_from_partner(self, partner):
         """ Get a dictionary with values coming from customer information to
         copy on a lead. Email_from and phone fields get the current lead
         values to avoid being reset if customer has no value for them. """
@@ -349,8 +396,6 @@ class Lead(models.Model):
             'city': partner.city,
             'state_id': partner.state_id.id,
             'country_id': partner.country_id.id,
-            'email_from': partner.email or self.email_from,
-            'phone': partner.phone or self.phone,
             'mobile': partner.mobile,
             'zip': partner.zip,
             'function': partner.function,
@@ -369,15 +414,20 @@ class Lead(models.Model):
                            self._table, ['create_date', 'team_id'])
         return res
 
-    @api.model
-    def create(self, vals):
-        lead = super(Lead, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('website'):
+                vals['website'] = self.env['res.partner']._clean_website(vals['website'])
+        leads = super(Lead, self).create(vals_list)
         # Compute new probability for each lead separately
-        lead._update_probability()
-        return lead
+        leads._update_probability()
+        return leads
 
     def write(self, vals):
-        # stage change:
+        if vals.get('website'):
+            vals['website'] = self.env['res.partner']._clean_website(vals['website'])
+        # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             stage_id = self.env['crm.stage'].browse(vals['stage_id'])
             if stage_id.is_won:
@@ -399,12 +449,11 @@ class Lead(models.Model):
     def _update_probability(self):
         lead_probabilities = self.sudo()._pls_get_naive_bayes_probabilities()
         for lead in self:
-            if lead.id in lead_probabilities:
-                lead_proba = lead_probabilities[lead.id]
-                proba_vals = {'automated_probability': lead_proba}
-                if lead.active and lead.is_automated_probability:
-                    proba_vals['probability'] = lead_proba
-                super(Lead, lead).write(proba_vals)
+            lead_proba = lead_probabilities.get(lead.id, 0)
+            proba_vals = {'automated_probability': lead_proba}
+            if lead.is_automated_probability:
+                proba_vals = {'probability': lead_proba}
+            super(Lead, lead).write(proba_vals)
         return
 
     def _should_update_probability(self, vals):
@@ -1306,10 +1355,20 @@ class Lead(models.Model):
                     s_lead_lost *= value_result['lost'] / total_lost
 
             # 3. Compute Probability to win
-            lead_probabilities[lead_id] = 100 * s_lead_won / (s_lead_won + s_lead_lost)
+            lead_probabilities[lead_id] = round(100 * s_lead_won / (s_lead_won + s_lead_lost), 2)
         return lead_probabilities
 
     def _cron_update_automated_probabilities(self):
+        """ This cron will :
+          - rebuild the lead scoring frequency table
+          - recompute all the automated_probability and align probability if both were aligned
+        """
+        cron_start_date = datetime.now()
+        self._rebuild_pls_frequency_table()
+        self._update_automated_probabilities()
+        _logger.info("Predictive Lead Scoring : Cron duration = %d seconds" % ((datetime.now() - cron_start_date).total_seconds()))
+
+    def _rebuild_pls_frequency_table(self):
         # Clear the frequencies table (in sql to speed up the cron)
         try:
             self.check_access_rights('unlink')
@@ -1332,28 +1391,83 @@ class Lead(models.Model):
         self.env['crm.lead.scoring.frequency'].create(values_to_create)
         _logger.info("Predictive Lead Scoring : crm.lead.scoring.frequency table rebuilt")
 
-        # Recompute all the leads. Won : probability = 100 | Lost : probability = 0 or inactive
-        # Here, inactive won't be returned anyway
-        # Get also all the lead without probability --> These are the new leads. Activate auto probability on them.
-        pls_start_date = self._pls_get_safe_start_date()
-        if pls_start_date:
-            pending_lead_domain = ['&', '&', ('stage_id', '!=', False), ('create_date', '>', pls_start_date),
-                                   '|', ('probability', '=', False), '&', ('probability', '<', 100), ('probability', '>', 0)]
-            leads_to_update = self.env['crm.lead'].search(pending_lead_domain)
-            lead_probabilities = leads_to_update._pls_get_naive_bayes_probabilities(batch_mode=True)
+    def _update_automated_probabilities(self):
+        """ Recompute all the automated_probability (and align probability if both were aligned) for all the leads
+        that are active (not won, nor lost).
 
-            # Update in execute batch to avoid server roundtrips + page_size to 10000 to avoid memory errors
-            # Update both probability and automated_probability if they were equal, else, update only automated_probability
-            sql = """UPDATE crm_lead
+        For performance matter, as there can be a huge amount of leads to recompute, this cron proceed by batch.
+        Each batch is performed into its own transaction, in order to minimise the lock time on the lead table
+        (and to avoid complete lock if there was only 1 transaction that would last for too long -> several minutes).
+        If a concurrent update occurs, it will simply be put in the queue to get the lock.
+        """
+        pls_start_date = self._pls_get_safe_start_date()
+        if not pls_start_date:
+            return
+
+        # 1. Get all the leads to recompute created after pls_start_date that are nor won nor lost
+        # (Won : probability = 100 | Lost : probability = 0 or inactive. Here, inactive won't be returned anyway)
+        # Get also all the lead without probability --> These are the new leads. Activate auto probability on them.
+        pending_lead_domain = [
+            '&',
+                '&',
+                    ('stage_id', '!=', False),
+                    ('create_date', '>', pls_start_date),
+                '|',
+                    ('probability', '=', False),
+                    '&',
+                        ('probability', '<', 100),
+                        ('probability', '>', 0)
+        ]
+        leads_to_update = self.env['crm.lead'].search(pending_lead_domain)
+        leads_to_update_count = len(leads_to_update)
+
+        # 2. Compute by batch to avoid memory error
+        lead_probabilities = {}
+        for i in range(0, leads_to_update_count, PLS_COMPUTE_BATCH_STEP):
+            leads_to_update_part = leads_to_update[i:i + PLS_COMPUTE_BATCH_STEP]
+            lead_probabilities.update(leads_to_update_part._pls_get_naive_bayes_probabilities(batch_mode=True))
+        _logger.info("Predictive Lead Scoring : New automated probabilities computed")
+
+        # 3. Group by new probability to reduce server roundtrips when executing the update
+        probability_leads = defaultdict(list)
+        for lead_id, probability in sorted(lead_probabilities.items()):
+            probability_leads[probability].append(lead_id)
+
+        # 4. Update automated_probability (+ probability if both were equal)
+        update_sql = """UPDATE crm_lead
                         SET automated_probability = %s,
-                            probability = CASE WHEN (ROUND(probability::numeric, 2) = ROUND(automated_probability::numeric, 2) or probability is null)
+                            probability = CASE WHEN (probability = automated_probability OR probability is null)
                                                THEN (%s)
                                                ELSE (probability)
-                                               END
-                        WHERE id = %s"""
-            batch_params = [(lead_probabilities[lead.id], lead_probabilities[lead.id], lead.id) for lead in leads_to_update if lead.id in lead_probabilities]
-            extras.execute_batch(self._cr, sql, batch_params, page_size=10000)
-            _logger.info("Predictive Lead Scoring : all automated probability updated (count: %d)" % (len(leads_to_update)))
+                                          END
+                        WHERE id in %s"""
+
+        # Update by a maximum number of leads at the same time, one batch by transaction :
+        # - avoid memory errors
+        # - avoid blocking the table for too long with a too big transaction
+        transactions_count, transactions_failed_count = 0, 0
+        cron_update_lead_start_date = datetime.now()
+        auto_commit = not getattr(threading.currentThread(), 'testing', False)
+        for probability, probability_lead_ids in probability_leads.items():
+            for lead_ids_current in tools.split_every(PLS_UPDATE_BATCH_STEP, probability_lead_ids):
+                transactions_count += 1
+                try:
+                    self.env.cr.execute(update_sql, (probability, probability, tuple(lead_ids_current)))
+                    # auto-commit except in testing mode
+                    if auto_commit:
+                        self.env.cr.commit()
+                except Exception as e:
+                    _logger.warning("Predictive Lead Scoring : update transaction failed. Error: %s" % e)
+                    transactions_failed_count += 1
+
+        _logger.info(
+            "Predictive Lead Scoring : All automated probabilities updated (%d leads / %d transactions (%d failed) / %d seconds)" % (
+                leads_to_update_count,
+                transactions_count,
+                transactions_failed_count,
+                (datetime.now() - cron_update_lead_start_date).total_seconds(),
+            )
+        )
 
     # ----------------------------
     # Utility Tools for PLS

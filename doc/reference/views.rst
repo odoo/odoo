@@ -775,6 +775,9 @@ system. Available semantic components are:
   ``special``
     for form views opened in dialogs: ``save`` to save the record and close the
     dialog, ``cancel`` to close the dialog without saving.
+  ``confirm``
+    confirmation message to display (and for the user to accept) before
+    performing the button's Odoo call (also works in Kanban views).
 
 ``field``
   renders (and allow editing of, possibly) a single field of the current
@@ -1425,9 +1428,6 @@ Possible children elements of the list view are:
             unexpected results as domains are combined with a logical AND.
     ``context``
         merged into the view's context when performing the button's Odoo call
-    ``confirm``
-        confirmation message to display (and for the user to accept) before
-        performing the button's Odoo call
 
     .. todo:: declared but unused: help
 
@@ -1473,6 +1473,13 @@ Possible children elements of the list view are:
         be 3 times larger than the others). Note that when there are records in
         the list, we let the browser automatically adapt the column's widths
         according to their content, and this attribute is thus ignored.
+    ``decoration-{$name}``
+        allow changing the style of a cell's text based on the corresponding
+        record's attributes.
+
+        ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
+        (``font-style: italic``), or any `bootstrap contextual color`_ (``danger``,
+        ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 
     .. note::
 
@@ -1985,6 +1992,13 @@ Possible children elements of the search view are:
 
   * ``color``: determines the icon color
 
+  * ``disable_counters``: default is false. If set to true the counters won't be computed.
+
+    This feature has been implemented in case performances would be too bad.
+
+    Another way to solve performance issues is to properly override the
+    ``search_panel_select_range`` and ``search_panel_select_multi_range`` methods.
+
   Additional optional attributes are available in the ``multi`` case:
 
   * ``domain``: determines conditions that the comodel records have to satisfy.
@@ -2004,12 +2018,6 @@ Possible children elements of the search view are:
 
   * ``groupby``: field name of the comodel (only available for many2one and many2many fields). Values will be grouped by that field.
 
-  * ``disable_counters``: default is false. If set to true the counters won't be computed.
-
-    This feature has been implemented in case performances would be too bad.
-
-    Another way to solve performance issues is to properly override the
-    ``search_panel_select_multi_range`` method.
 
 .. _reference/views/search/defaults:
 

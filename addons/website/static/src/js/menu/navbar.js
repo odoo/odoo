@@ -8,8 +8,6 @@ var concurrency = require('web.concurrency');
 var Widget = require('web.Widget');
 var websiteRootData = require('website.root');
 
-var qweb = core.qweb;
-
 var websiteNavbarRegistry = new publicWidget.RootWidgetRegistry();
 
 var WebsiteNavbar = publicWidget.RootWidget.extend({
@@ -18,7 +16,8 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
         'click [data-action]': '_onActionMenuClick',
         'mouseover > ul > li.dropdown:not(.show)': '_onMenuHovered',
         'click .o_mobile_menu_toggle': '_onMobileMenuToggleClick',
-        'mouseover #oe_applications:not(:has(.dropdown-item))': '_onOeApplicationsHovered',
+        'mouseenter #oe_applications:not(:has(.dropdown-item))': '_onOeApplicationsHovered',
+        'show.bs.dropdown #oe_applications:not(:has(.dropdown-item))': '_onOeApplicationsShow',
     }),
     custom_events: _.extend({}, publicWidget.RootWidget.prototype.custom_events || {}, {
         'action_demand': '_onActionDemand',
@@ -125,6 +124,25 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
     },
     /**
      * @private
+     * @returns {Promise}
+     */
+    async _loadAppMenus() {
+        if (!this._loadAppMenusProm) {
+            this._loadAppMenusProm = this._rpc({
+                model: 'ir.ui.menu',
+                method: 'load_menus_root',
+                args: [],
+            });
+            const result = await this._loadAppMenusProm;
+            const menus = core.qweb.render('website.oe_applications_menu', {
+                'menu_data': result,
+            });
+            this.$('#oe_applications .dropdown-menu').html(menus);
+        }
+        return this._loadAppMenusProm;
+    },
+    /**
+     * @private
      */
     _whenReadyForActions: function () {
         return Promise.all(this._widgetDefs);
@@ -139,19 +157,20 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
      * available menus and insert it in DOM.
      *
      * @private
-     * @param {Event} ev
      */
-    _onOeApplicationsHovered: function (ev) {
-        var self = this;
-        this._rpc({
-            model: 'ir.ui.menu',
-            method: 'load_menus_root',
-            args: [],
-        }).then(function (result) {
-            self.$('#oe_applications .dropdown-menu').html(
-                $(qweb.render('website.oe_applications_menu', {menu_data: result}))
-            );
-        });
+    _onOeApplicationsHovered: function () {
+        this._loadAppMenus();
+    },
+    /**
+     * Called when the backend applications menu is opening -> fetch the
+     * available menus and insert it in DOM. Needed on top of hovering as the
+     * dropdown could be opened via keyboard (or the user could just already
+     * be over the dropdown when the JS is fully loaded).
+     *
+     * @private
+     */
+    _onOeApplicationsShow: function () {
+        this._loadAppMenus();
     },
     /**
      * Called when an action menu is clicked -> searches for the automatic

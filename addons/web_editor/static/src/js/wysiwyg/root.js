@@ -7,6 +7,7 @@ var assetsLoaded = false;
 
 var WysiwygRoot = Widget.extend({
     assetLibs: ['web_editor.compiled_assets_wysiwyg'],
+    _loadLibsTplRoute: '/web_editor/public_render_template',
 
     publicMethods: ['isDirty', 'save', 'getValue', 'setValue', 'getEditable', 'on', 'trigger', 'focus', 'saveCroppedImages'],
 
@@ -30,6 +31,9 @@ var WysiwygRoot = Widget.extend({
         this.$el = null;
 
         return this._super().then(function () {
+            // FIXME: this code works by pure luck. If the web_editor.wysiwyg
+            // JS module was requiring a delayed module, using it here right
+            // away would lead to a crash.
             if (!assetsLoaded) {
                 var Wysiwyg = odoo.__DEBUG__.services['web_editor.wysiwyg'];
                 _.each(['getRange', 'setRange', 'setRangeFromNode'], function (methodName) {

@@ -41,8 +41,8 @@
                 <field name='price' sum="Total" string="Price" widget="monetary"/>
                 <field name='state'/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <button name="action_confirm" string="Confirm" type="object" icon="fa-phone text-success" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
-                <button name="action_cancel" string="Cancel" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_confirm" string="Confirm" type="object" icon="fa-check" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_cancel" string="Cancel" type="object" icon="fa-times" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
             </tree>
         </field>
     </record>
@@ -91,7 +91,9 @@
                                     </a>
                                 </div>
                                 <div class="col-6">
-                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar o_image_24_cover float-right"/>
+                                    <span class="float-right">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -148,10 +150,6 @@
             Nothing to order today
           </p><p>
             Here you can see today's orders grouped by vendors.
-          </p><p>
-            Click on the <span class="fa fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
-            Click on the <span class="fa fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
-            Click on the <span class="fa fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> to announce that the order isn't available.
           </p>
         </field>
     </record>
@@ -187,7 +185,6 @@
                 <field name="available_toppings_1" invisible="1"/>
                 <field name="available_toppings_2" invisible="1"/>
                 <field name="available_toppings_3" invisible="1"/>
-                <field name="edit" invisible="1"/>
                 <div class="d-flex">
                     <div class="flex-grow-0 pr-5">
                         <field name="image_1920" widget="image" class="o_lunch_image" options="{'image_preview': 'image_128'}"/>
@@ -240,8 +237,8 @@
                     </div>
                 </div>
                 <footer>
-                    <button string="Save" special="save" class="oe_highlight" attrs="{'invisible': [('edit', '=', False)]}"/>
-                    <button string="Add To Cart" name="add_to_cart" type="object" class="oe_highlight" attrs="{'invisible': [('edit', '=', True)]}"/>
+                    <button string="Save" special="save" class="oe_highlight" invisible="not context.get('active_id', False)"/>
+                    <button string="Add To Cart" name="add_to_cart" type="object" class="oe_highlight" invisible="context.get('active_id', False)"/>
                     <button string="Discard" special="cancel"/>
                 </footer>
             </form>

@@ -73,42 +73,25 @@
                                     </div>
                                 </div>
                                 <div class="container o_kanban_card_content" t-if="!selection_mode">
-                                    <div class="row">
-                                        <div class="col-6 o_kanban_primary_left">
+                                    <div class="row o_kanban_card_upper_content">
+                                        <div class="col-4 o_kanban_primary_left">
                                             <button class="btn btn-primary" name="%(act_employee_from_department)d" type="action">Employees</button>
                                         </div>
-                                        <div class="col-6 o_kanban_primary_right">
-                                        </div>
-                                    </div>
-                                </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                    <div class="row">
-                                        <div role="menuitem" class="col-4 o_kanban_card_manage_section o_kanban_manage_to_do">
-                                            <div class="o_kanban_card_manage_title">
-                                                <span>To Do</span>
-                                            </div>
-                                        </div>
-                                        <div role="menuitem" class="col-4 o_kanban_card_manage_section o_kanban_manage_to_approve">
-                                            <div class="o_kanban_card_manage_title">
-                                                <span>To Approve</span>
-                                            </div>
-                                        </div>
-                                        <div role="menuitem" class="col-4 o_kanban_card_manage_section o_kanban_manage_reports">
-                                            <div class="o_kanban_card_manage_title">
-                                                <span>Reporting</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                        <div role="menuitem" aria-haspopup="true" class="col-8">
-                                            <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
-                                        </div>
-                                        <div class="col-4 text-right">
-                                            <a role="menuitem" type="edit">Settings</a>
+                                        <div class="col-8 o_kanban_primary_right">
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                    <div class="o_kanban_card_manage_section">
+                                        <div role="menuitem" class="o_kanban_card_manage_section o_kanban_manage_reports">
+                                            <div class="o_kanban_card_manage_title">
+                                                <strong><span>Reporting</span></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a t-if="widget.editable" role="menuitem" class="dropdown-item" type="edit">Configuration</a>
+                                    <ul t-if="widget.editable" class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                </div>
                             </div>
                         </t>
                     </templates>
@@ -116,7 +99,7 @@
             </field>
         </record>
 
-        <record id="open_module_tree_department" model="ir.actions.act_window">
+        <record id="hr_department_kanban_action" model="ir.actions.act_window">
             <field name="name">Departments</field>
             <field name="res_model">hr.department</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -127,8 +110,23 @@
               </p><p>
                 Odoo's department structure is used to manage all documents
                 related to employees by departments: expenses, timesheets,
-                leaves, recruitments, etc.
+                time off, recruitments, etc.
               </p>
+            </field>
+        </record>
+        <record id="hr_department_tree_action" model="ir.actions.act_window">
+            <field name="name">Departments</field>
+            <field name="res_model">hr.department</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="search_view_id" ref="view_department_filter"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new department
+                </p><p>
+                    Odoo's department structure is used to manage all documents
+                    related to employees by departments: expenses, timesheets,
+                    leaves, recruitments, etc.
+                </p>
             </field>
         </record>
     </data>

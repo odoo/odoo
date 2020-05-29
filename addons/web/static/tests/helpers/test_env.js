@@ -34,7 +34,6 @@ odoo.define('web.test_env', async function (require) {
         let testEnv = {};
         const defaultEnv = {
             _t: env._t || Object.assign((s => s), { database }),
-            _lt: env._lt || Object.assign((s => s), { database }),
             bus: new Bus(),
             device: Object.assign({ isMobile: false }, env.device),
             isDebug: env.isDebug || (() => false),
@@ -50,6 +49,9 @@ odoo.define('web.test_env', async function (require) {
                     },
                 },
                 getCookie() { },
+                httpRequest() {
+                    return Promise.resolve('');
+                },
                 rpc(params, options) {
                     const query = buildQuery(params);
                     return testEnv.session.rpc(query.route, query.params, options);

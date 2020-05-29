@@ -463,9 +463,13 @@ class WebsiteSlides(WebsiteProfile):
                 last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]
                 last_message_attachment_ids = last_message_values.pop('attachment_ids', [])
                 if last_message_attachment_ids:
-                    last_message_attachment_ids = json.dumps(request.env['ir.attachment'].browse(last_message_attachment_ids).read(
-                        ['id', 'name', 'mimetype', 'file_size', 'access_token']
-                    ))
+                    # use sudo as portal user cannot read access_token, necessary for updating attachments
+                    # through frontend chatter -> access is already granted and limited to current user message
+                    last_message_attachment_ids = json.dumps(
+                        request.env['ir.attachment'].sudo().browse(last_message_attachment_ids).read(
+                            ['id', 'name', 'mimetype', 'file_size', 'access_token']
+                        )
+                    )
             else:
                 last_message_values = {}
                 last_message_attachment_ids = []
@@ -602,9 +606,9 @@ class WebsiteSlides(WebsiteProfile):
             channel = request.env['slide.channel'].browse(int(channel_id))
             can_upload = channel.can_upload
             can_publish = channel.can_publish
-        except (UserError, AccessError) as e:
+        except UserError as e:
             _logger.error(e)
-            return {'error': e.name}
+            return {'error': e.args[0]}
         else:
             if not can_upload or not can_publish:
                 return {'error': _('You cannot add tags to this course.')}
@@ -854,7 +858,7 @@ class WebsiteSlides(WebsiteProfile):
                 'comment': answer['comment']
             }) for answer in answer_ids]
         })
-        return request.env.ref('website_slides.lesson_content_quiz_question').render({
+        return request.env.ref('website_slides.lesson_content_quiz_question')._render({
             'slide': slide,
             'question': slide_question,
         })
@@ -982,7 +986,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
     def prepare_preview(self, **data):
         Slide = request.env['slide.slide']
-        document_type, document_id = Slide._find_document_data_from_url(data['url'])
+        unused, document_id = Slide._find_document_data_from_url(data['url'])
         preview = {}
         if not document_id:
             preview['error'] = _('Please enter valid youtube or google doc url')
@@ -1013,9 +1017,9 @@ class WebsiteSlides(WebsiteProfile):
             channel = request.env['slide.channel'].browse(values['channel_id'])
             can_upload = channel.can_upload
             can_publish = channel.can_publish
-        except (UserError, AccessError) as e:
+        except UserError as e:
             _logger.error(e)
-            return {'error': e.name}
+            return {'error': e.args[0]}
         else:
             if not can_upload:
                 return {'error': _('You cannot upload on this channel.')}
@@ -1024,15 +1028,15 @@ class WebsiteSlides(WebsiteProfile):
             # minutes to hours conversion
             values['completion_time'] = int(post['duration']) / 60
 
-        category_id = False
+        category = False
         # handle creation of new categories on the fly
         if post.get('category_id'):
             category_id = post['category_id'][0]
             if category_id == 0:
                 category = request.env['slide.slide'].create(self._get_new_slide_category_values(channel, post['category_id'][1]['name']))
                 values['sequence'] = category.sequence + 1
-                category_id = category.id
             else:
+                category = request.env['slide.slide'].browse(category_id)
                 values.update({
                     'sequence': request.env['slide.slide'].browse(post['category_id'][0]).sequence + 1
                 })
@@ -1042,15 +1046,15 @@ class WebsiteSlides(WebsiteProfile):
             values['user_id'] = request.env.uid
             values['is_published'] = values.get('is_published', False) and can_publish
             slide = request.env['slide.slide'].sudo().create(values)
-        except (UserError, AccessError) as e:
+        except UserError as e:
             _logger.error(e)
-            return {'error': e.name}
+            return {'error': e.args[0]}
         except Exception as e:
             _logger.error(e)
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
 
         # ensure correct ordering by re sequencing slides in front-end (backend should be ok thanks to list view)
-        channel._resequence_slides(slide, category_id)
+        channel._resequence_slides(slide, force_category=category)
 
         redirect_url = "/slides/slide/%s" % (slide.id)
         if channel.channel_type == "training" and not slide.slide_type == "webpage":

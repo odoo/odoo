@@ -29,13 +29,12 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 
     expense_sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", required=True)
     partner_id = fields.Many2one('res.partner', string='Partner', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    partner_bank_account_id = fields.Many2one('res.partner.bank', compute='_compute_partner_bank_account_id', store=True, readonly=False,
+        string="Recipient Bank Account", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True, domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company', related='expense_sheet_id.company_id', string='Company', readonly=True)
-    payment_method_id = fields.Many2one('account.payment.method', string='Payment Type', required=True, domain="""[
-        ('payment_type', '=', 'outbound'),
-        ('id', 'in', available_payment_methods),
-    ]""")
+    payment_method_id = fields.Many2one('account.payment.method', compute='_compute_payment_method_id', store=True, readonly=False,
+        string='Payment Type', required=True, domain="[('payment_type', '=', 'outbound'), ('id', 'in', available_payment_methods)]")
     available_payment_methods = fields.Many2many(related='journal_id.outbound_payment_method_ids')
     amount = fields.Monetary(string='Payment Amount', required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.company.currency_id)
@@ -46,15 +45,14 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
     show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
     require_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be required or not in the payments form views')
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        expense_sheet = self.expense_sheet_id
-        if expense_sheet.employee_id.id and expense_sheet.employee_id.sudo().bank_account_id.id:
-            self.partner_bank_account_id = expense_sheet.employee_id.sudo().bank_account_id.id
-        elif self.partner_id and len(self.partner_id.bank_ids) > 0:
-            self.partner_bank_account_id = self.partner_id.bank_ids[0]
-        else:
-            self.partner_bank_account_id = False
+    @api.depends('partner_id')
+    def _compute_partner_bank_account_id(self):
+        for wizard in self:
+            expense_sheet = wizard.expense_sheet_id
+            if expense_sheet.employee_id.id and expense_sheet.employee_id.sudo().bank_account_id.id:
+                wizard.partner_bank_account_id = expense_sheet.employee_id.sudo().bank_account_id.id
+            else:
+                wizard.partner_bank_account_id = wizard.partner_id.bank_ids[:1]
 
     @api.constrains('amount')
     def _check_amount(self):
@@ -80,11 +78,11 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
                 wizard.hide_payment_method = (len(journal_payment_methods) == 1
                     and journal_payment_methods[0].code == 'manual')
 
-    @api.onchange('journal_id')
-    def _onchange_journal(self):
-        if self.journal_id:
+    @api.depends('journal_id')
+    def _compute_payment_method_id(self):
+        for wizard in self.filtered('journal_id'):
             # Set default payment method (we consider the first to be the default one)
-            self.payment_method_id = self.journal_id.outbound_payment_method_ids[:1]
+            wizard.payment_method_id = wizard.journal_id.outbound_payment_method_ids[:1]
 
     def _get_payment_vals(self):
         """ Hook for extension """
@@ -92,14 +90,14 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
             'partner_type': 'supplier',
             'payment_type': 'outbound',
             'partner_id': self.partner_id.id,
-            'partner_bank_account_id': self.partner_bank_account_id.id,
+            'partner_bank_id': self.partner_bank_account_id.id,
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
             'payment_method_id': self.payment_method_id.id,
             'amount': self.amount,
             'currency_id': self.currency_id.id,
-            'payment_date': self.payment_date,
-            'communication': self.communication
+            'date': self.payment_date,
+            'ref': self.communication
         }
 
     def expense_post_payment(self):
@@ -112,7 +110,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 
         # Create payment and post it
         payment = self.env['account.payment'].create(self._get_payment_vals())
-        payment.post()
+        payment.action_post()
 
         # Log the payment in the chatter
         body = (_("A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related to your expense %s has been made.") % (payment.amount, payment.currency_id.symbol, url_encode({'model': 'account.payment', 'res_id': payment.id}), payment.name, expense_sheet.name))
@@ -120,7 +118,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 
         # Reconcile the payment and the expense, i.e. lookup on the payable account move lines
         account_move_lines_to_reconcile = self.env['account.move.line']
-        for line in payment.move_line_ids + expense_sheet.account_move_id.line_ids:
+        for line in payment.line_ids + expense_sheet.account_move_id.line_ids:
             if line.account_id.internal_type == 'payable' and not line.reconciled:
                 account_move_lines_to_reconcile |= line
         account_move_lines_to_reconcile.reconcile()

@@ -32,7 +32,13 @@ class SipsController(http.Controller):
     def sips_ipn(self, **post):
         """ Sips IPN. """
         _logger.info('Beginning Sips IPN form_feedback with post data %s', pprint.pformat(post))  # debug
-        self.sips_validate_data(**post)
+        if not post:
+            # SIPS sometimes send empty notification, the reason why is
+            # unclear but they tend to pollute logs and do not provide any
+            # meaningful information; log as a warning instead of a traceback
+            _logger.warning('Sips: received empty notification; skip.')
+        else:
+            self.sips_validate_data(**post)
         return ''
 
     @http.route([

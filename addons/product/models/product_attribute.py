@@ -400,7 +400,6 @@ class ProductTemplateAttributeValue(models.Model):
         'product.template.attribute.exclusion',
         'product_template_attribute_value_id',
         string="Exclude for",
-        relation="product_template_attribute_exclusion",
         help="Make this attribute value not compatible with "
              "other values of the product or some attribute values of optional and accessory products.")
 

@@ -48,7 +48,7 @@
                 <field name="quantity" />
                 <field name="uom_id" groups="uom.group_uom" />
                 <field name="currency_id" invisible="1" />
-                <field name="value" />
+                <field name="value" sum="Total Value"/>
                 <field name="company_id" groups="base.group_multi_company" />
                 <groupby name="product_id">
                     <field name="cost_method" invisible="1"/>
@@ -65,7 +65,7 @@
         <field name="res_model">stock.valuation.layer</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="stock_valuation_layer_tree"/>
-        <field name="domain"></field>
+        <field name="domain">[('product_id.type', '=', 'product')]</field>
         <field name="context">{'search_default_group_by_product_id': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

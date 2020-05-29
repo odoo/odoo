@@ -248,7 +248,7 @@ QUnit.test('messaging initially ready', async function (assert) {
 });
 
 QUnit.test('searchview options visibility', async function (assert) {
-    assert.expect(5);
+    assert.expect(2);
 
     var discuss = await createDiscuss({
         id: 1,
@@ -258,18 +258,10 @@ QUnit.test('searchview options visibility', async function (assert) {
         services: this.services,
     });
 
-    assert.containsOnce(discuss, '.o_control_panel .o_search_options',
-        "should have search options");
-    assert.hasClass(discuss.$('.o_control_panel .o_searchview_more.fa'), 'fa-search-minus',
-        "should have a button to toggle search options");
-
+    assert.hasClass(discuss.$('.o_control_panel .o_searchview_icon.fa'), 'fa-search',
+        "should have a search icon");
     assert.isVisible(discuss.$('.o_control_panel .o_search_options'),
-        "search options should be visible by default");
-    await testUtils.dom.click(discuss.$('.o_control_panel .o_searchview_more.fa'));
-    assert.hasClass(discuss.$('.o_control_panel .o_searchview_more.fa'), 'fa-search-plus',
-        "should have a button to toggle search options");
-    assert.isNotVisible(discuss.$('.o_control_panel .o_search_options'),
-        "search options should be hidden after clicking on search option toggler");
+        "search options should always be visible");
 
     discuss.destroy();
 });
@@ -2039,6 +2031,44 @@ QUnit.test('no crash on receiving needaction channel message notif with messagin
     await testUtils.nextTick();
     assert.ok(true, "should not crash on receiving new needaction message when messaging is not ready");
 
+    discuss.destroy();
+});
+
+QUnit.test('load record form view', async function (assert) {
+    assert.expect(4);
+    this.data['mail.message'].records = [{
+        author_id: [5, 'Demo User'],
+        body: '<a id="test_redirect_link" href="#" data-oe-model="my.model" data-oe-id="10">Link</a>',
+        id: 1,
+        needaction: true,
+        needaction_partner_ids: [3],
+        res_id: 100,
+        model: 'some.document',
+        record_name: 'SomeDocument',
+    }];
+    const discuss = await createDiscuss({
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: {
+            partner_id: 3,
+            user_context: { uid: 99 },
+        },
+        async mockRPC(route, args) {
+            if (args.model === 'my.model' && args.method === 'get_formview_id') {
+                const [resIds, uid] = args.args;
+                assert.step('get_redirect_form');
+                assert.deepEqual(resIds, [10],
+                    "should have have called with the correct ID");
+                assert.strictEqual(uid, 99,
+                    "should have have called with the current user");
+            }
+            return this._super(...arguments);
+        },
+    });
+    await testUtils.dom.click(discuss.$('#test_redirect_link'));
+    assert.verifySteps(['get_redirect_form']);
     discuss.destroy();
 });
 

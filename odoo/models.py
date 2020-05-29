@@ -53,7 +53,7 @@ from . import api
 from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
-from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
+from .tools import frozendict, lazy_classproperty, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
                    groupby, unique
 from .tools.config import config
@@ -151,6 +151,10 @@ class MetaModel(api.Meta):
 
     module_to_models = defaultdict(list)
 
+    def __new__(meta, name, bases, attrs):
+        attrs.setdefault('__slots__', ())
+        return super().__new__(meta, name, bases, attrs)
+
     def __init__(self, name, bases, attrs):
         if not self._register:
             self._register = True
@@ -158,30 +162,17 @@ class MetaModel(api.Meta):
             return
 
         if not hasattr(self, '_module'):
-            self._module = self._get_addon_name(self.__module__)
+            assert self.__module__.startswith('odoo.addons.'), \
+                "Invalid import of %s.%s, it should start with 'odoo.addons'." % (self.__module__, name)
+            self._module = self.__module__.split('.')[2]
 
         # Remember which models to instanciate for this module.
         if self._module:
             self.module_to_models[self._module].append(self)
 
-        # check for new-api conversion error: leave comma after field definition
         for key, val in attrs.items():
-            if type(val) is tuple and len(val) == 1 and isinstance(val[0], Field):
-                _logger.error("Trailing comma after field definition: %s.%s", self, key)
             if isinstance(val, Field):
                 val.args['_module'] = self._module
-
-    def _get_addon_name(self, full_name):
-        # The (OpenERP) module name can be in the ``odoo.addons`` namespace
-        # or not. For instance, module ``sale`` can be imported as
-        # ``odoo.addons.sale`` (the right way) or ``sale`` (for backward
-        # compatibility).
-        module_parts = full_name.split('.')
-        if len(module_parts) > 2 and module_parts[:2] == ['odoo', 'addons']:
-            addon_name = full_name.split('.')[2]
-        else:
-            addon_name = full_name.split('.')[0]
-        return addon_name
 
 
 class NewId(object):
@@ -266,6 +257,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     To create a class that should not be instantiated,
     the :attr:`~odoo.models.BaseModel._register` attribute may be set to False.
     """
+    __slots__ = ['env', '_ids', '_prefetch_ids']
 
     _auto = False
     """Whether a database table should be created (default: ``True``).
@@ -340,9 +332,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     """
 
     # default values for _transient_vacuum()
-    _transient_check_count = 0
     _transient_max_count = lazy_classproperty(lambda _: config.get('osv_memory_count_limit'))
-    _transient_max_hours = lazy_classproperty(lambda _: config.get('osv_memory_age_limit'))
+    _transient_max_hours = lazy_classproperty(lambda _: config.get('transient_age_limit'))
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
@@ -352,6 +343,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         opened. This method is invoked by :meth:`~default_get`.
         """
         pass
+
+    def _valid_field_parameter(self, field, name):
+        """ Return whether the given parameter name is valid for the field. """
+        return name == 'related_sudo'
 
     @api.model
     def _add_field(self, name, field):
@@ -945,11 +940,38 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # list of (xid, vals, info) for records to be created in batch
         batch = []
         batch_xml_ids = set()
+        # models in which we may have created / modified data, therefore might
+        # require flushing in order to name_search: the root model and any
+        # o2m
+        creatable_models = {self._name}
+        for field_path in fields:
+            if field_path[0] in (None, 'id', '.id'):
+                continue
+            model_fields = self._fields
+            if isinstance(model_fields[field_path[0]], odoo.fields.Many2one):
+                # this only applies for toplevel m2o (?) fields
+                if field_path[0] in (self.env.context.get('name_create_enabled_fieds') or {}):
+                    creatable_models.add(model_fields[field_path[0]].comodel_name)
+            for field_name in field_path:
+                if field_name in (None, 'id', '.id'):
+                    break
 
-        def flush(xml_id=None):
+                if isinstance(model_fields[field_name], odoo.fields.One2many):
+                    comodel = model_fields[field_name].comodel_name
+                    creatable_models.add(comodel)
+                    model_fields = self.env[comodel]._fields
+
+        def flush(*, xml_id=None, model=None):
             if not batch:
                 return
+
+            assert not (xml_id and model), \
+                "flush can specify *either* an external id or a model, not both"
+
             if xml_id and xml_id not in batch_xml_ids:
+                if xml_id not in self.env:
+                    return
+            if model and model not in creatable_models:
                 return
 
             data_list = [
@@ -959,22 +981,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             batch.clear()
             batch_xml_ids.clear()
 
-            unknown_msg = _(u"Unknown database error: '%s'")
-            try:
-                cr.execute('SAVEPOINT model_load_save')
-            except psycopg2.InternalError as e:
-                # broken transaction, exit and hope the source error was
-                # already logged
-                if not any(message['type'] == 'error' for message in messages):
-                    info = data_list[0]['info']
-                    messages.append(dict(info, type='error', message=unknown_msg % e))
-                return
-
             # try to create in batch
             try:
                 with cr.savepoint():
                     recs = self._load_records(data_list, mode == 'update')
                     ids.extend(recs.ids)
+                return
+            except psycopg2.InternalError as e:
+                # broken transaction, exit and hope the source error was already logged
+                if not any(message['type'] == 'error' for message in messages):
+                    info = data_list[0]['info']
+                    messages.append(dict(info, type='error', message=_(u"Unknown database error: '%s'") % e))
                 return
             except Exception:
                 pass
@@ -1459,7 +1476,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        View = self.env['ir.ui.view']
+        View = self.env['ir.ui.view'].sudo()
         result = {
             'model': self._name,
             'field_parent': False,
@@ -1524,7 +1541,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 * if some tag other than 'position' is found in parent view
         :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
         """
-        view = self.env['ir.ui.view'].browse(view_id)
+        self.check_access_rights('read')
+        view = self.env['ir.ui.view'].sudo().browse(view_id)
 
         # Get the view arch and all other attributes describing the composition of the view
         result = self._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
@@ -3279,29 +3297,21 @@ Record ids: %(records)s
         if not self._ids:
             return self
 
-        if self.is_transient():
-            # Only one single implicit access rule for transient models: owner only!
-            # This is ok to hardcode because we assert that TransientModels always
-            # have log_access enabled so that the create_uid column is always there.
-            # And even with _inherits, these fields are always present in the local
-            # table too, so no need for JOINs.
-            query = "SELECT id FROM {} WHERE id IN %s AND create_uid=%s".format(self._table)
-            self._cr.execute(query, (tuple(self.ids), self._uid))
-            return self.browse([row[0] for row in self._cr.fetchall()])
-
-        where_clause, where_params, tables = self.env['ir.rule'].domain_get(self._name, operation)
-        if not where_clause:
+        quoted_table = '"%s"' % self._table
+        query = Query([quoted_table])
+        self._apply_ir_rules(query, operation)
+        if not query.where_clause:
             return self
 
         # detemine ids in database that satisfy ir.rules
-        # TODO: we should add a flush here, based on domain's arguments
         valid_ids = set()
-        query = "SELECT {}.id FROM {} WHERE {}.id IN %s AND {}".format(
-            self._table, ",".join(tables), self._table, " AND ".join(where_clause),
+        from_clause, where_clause, where_params = query.get_sql()
+        query_str = "SELECT {}.id FROM {} WHERE {} AND {}.id IN %s".format(
+            quoted_table, from_clause, where_clause, quoted_table,
         )
         self._flush_search([])
         for sub_ids in self._cr.split_for_in_conditions(self.ids):
-            self._cr.execute(query, [sub_ids] + where_params)
+            self._cr.execute(query_str, where_params + [sub_ids])
             valid_ids.update(row[0] for row in self._cr.fetchall())
 
         # return new ids without origin and ids with origin in valid_ids
@@ -3717,7 +3727,7 @@ Record ids: %(records)s
                 if not field:
                     raise ValueError("Invalid field %r on model %r" % (key, self._name))
                 if field.company_dependent:
-                    irprop_def = self.env['ir.property'].get(key, self._name)
+                    irprop_def = self.env['ir.property']._get(key, self._name)
                     cached_def = field.convert_to_cache(irprop_def, self)
                     cached_val = field.convert_to_cache(val, self)
                     if cached_val == cached_def:
@@ -4126,14 +4136,9 @@ Record ids: %(records)s
                 domain = [(self._active_name, '=', 1)] + domain
 
         if domain:
-            e = expression.expression(domain, self)
-            tables = e.get_tables()
-            where_clause, where_params = e.to_sql()
-            where_clause = [where_clause] if where_clause else []
+            return expression.expression(domain, self).query
         else:
-            where_clause, where_params, tables = [], [], ['"%s"' % self._table]
-
-        return Query(tables, where_clause, where_params)
+            return Query(['"%s"' % self._table])
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
@@ -4150,41 +4155,19 @@ Record ids: %(records)s
         if self.env.su:
             return
 
-        def apply_rule(clauses, params, tables, parent_model=None):
-            """ :param parent_model: name of the parent model, if the added
-                    clause comes from a parent model
-            """
-            if clauses:
-                if parent_model:
-                    # as inherited rules are being applied, we need to add the
-                    # missing JOIN to reach the parent table (if not JOINed yet)
-                    parent_table = '"%s"' % self.env[parent_model]._table
-                    parent_alias = '"%s"' % self._inherits_join_add(self, parent_model, query)
-                    # inherited rules are applied on the external table, replace
-                    # parent_table by parent_alias
-                    clauses = [clause.replace(parent_table, parent_alias) for clause in clauses]
-                    # replace parent_table by parent_alias, and introduce
-                    # parent_alias if needed
-                    tables = [
-                        (parent_table + ' as ' + parent_alias) if table == parent_table \
-                            else table.replace(parent_table, parent_alias)
-                        for table in tables
-                    ]
-                query.where_clause += clauses
-                query.where_clause_params += params
-                for table in tables:
-                    if table not in query.tables:
-                        query.tables.append(table)
-
         # apply main rules on the object
         Rule = self.env['ir.rule']
-        where_clause, where_params, tables = Rule.domain_get(self._name, mode)
-        apply_rule(where_clause, where_params, tables)
+        domain = Rule._compute_domain(self._name, mode)
+        if domain:
+            expression.expression(domain, self.sudo(), self._table, query)
 
         # apply ir.rules from the parents (through _inherits)
-        for parent_model in self._inherits:
-            where_clause, where_params, tables = Rule.domain_get(parent_model, mode)
-            apply_rule(where_clause, where_params, tables, parent_model)
+        for parent_model_name in self._inherits:
+            domain = Rule._compute_domain(parent_model_name, mode)
+            if domain:
+                parent_model = self.env[parent_model_name]
+                parent_alias = self._inherits_join_add(self, parent_model_name, query)
+                expression.expression(domain, parent_model.sudo(), parent_alias, query)
 
     @api.model
     def _generate_translated_field(self, table_alias, field, query):
@@ -4390,33 +4373,25 @@ Record ids: %(records)s
 
         query = self._where_calc(args)
         self._apply_ir_rules(query, 'read')
-        order_by = self._generate_order_by(order, query)
-        from_clause, where_clause, where_clause_params = query.get_sql()
-
-        where_str = where_clause and (" WHERE %s" % where_clause) or ''
 
         if count:
             # Ignore order, limit and offset when just counting, they don't make sense and could
             # hurt performance
+            from_clause, where_clause, where_clause_params = query.get_sql()
+            where_str = where_clause and (" WHERE %s" % where_clause) or ''
             query_str = 'SELECT count(1) FROM ' + from_clause + where_str
             self._cr.execute(query_str, where_clause_params)
             res = self._cr.fetchone()
             return res[0]
 
+        order_by = self._generate_order_by(order, query)
+        from_clause, where_clause, where_clause_params = query.get_sql()
+        where_str = where_clause and (" WHERE %s" % where_clause) or ''
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
         self._cr.execute(query_str, where_clause_params)
-        res = self._cr.fetchall()
-
-        # TDE note: with auto_join, we could have several lines about the same result
-        # i.e. a lead with several unread messages; we uniquify the result using
-        # a fast way to do it while preserving order (http://www.peterbe.com/plog/uniqifiers-benchmark)
-        def _uniquify_list(seq):
-            seen = set()
-            return [x for x in seq if x not in seen and not seen.add(x)]
-
-        return _uniquify_list([x[0] for x in res])
+        return [row[0] for row in self._cr.fetchall()]
 
     @api.returns(None, lambda value: value[0])
     def copy_data(self, default=None):
@@ -4717,61 +4692,6 @@ Record ids: %(records)s
 
         """
         return cls._transient
-
-    def _transient_clean_rows_older_than(self, seconds):
-        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
-        # Never delete rows used in last 5 minutes
-        seconds = max(seconds, 300)
-        query = ("SELECT id FROM " + self._table + " WHERE"
-            " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
-            " < ((now() at time zone 'UTC') - interval %s)")
-        self._cr.execute(query, ("%s seconds" % seconds,))
-        ids = [x[0] for x in self._cr.fetchall()]
-        self.sudo().browse(ids).unlink()
-
-    def _transient_clean_old_rows(self, max_count):
-        # Check how many rows we have in the table
-        self._cr.execute("SELECT count(*) AS row_count FROM " + self._table)
-        res = self._cr.fetchall()
-        if res[0][0] <= max_count:
-            return  # max not reached, nothing to do
-        self._transient_clean_rows_older_than(300)
-
-    @api.model
-    def _transient_vacuum(self, force=False):
-        """Clean the transient records.
-
-        This unlinks old records from the transient model tables whenever the
-        "_transient_max_count" or "_max_age" conditions (if any) are reached.
-        Actual cleaning will happen only once every "_transient_check_time" calls.
-        This means this method can be called frequently called (e.g. whenever
-        a new record is created).
-        Example with both max_hours and max_count active:
-        Suppose max_hours = 0.2 (e.g. 12 minutes), max_count = 20, there are 55 rows in the
-        table, 10 created/changed in the last 5 minutes, an additional 12 created/changed between
-        5 and 10 minutes ago, the rest created/changed more then 12 minutes ago.
-        - age based vacuum will leave the 22 rows created/changed in the last 12 minutes
-        - count based vacuum will wipe out another 12 rows. Not just 2, otherwise each addition
-          would immediately cause the maximum to be reached again.
-        - the 10 rows that have been created/changed the last 5 minutes will NOT be deleted
-        """
-        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
-        _transient_check_time = 20          # arbitrary limit on vacuum executions
-        cls = type(self)
-        cls._transient_check_count += 1
-        if not force and (cls._transient_check_count < _transient_check_time):
-            return True  # no vacuum cleaning this time
-        cls._transient_check_count = 0
-
-        # Age-based expiration
-        if self._transient_max_hours:
-            self._transient_clean_rows_older_than(self._transient_max_hours * 60 * 60)
-
-        # Count-based expiration
-        if self._transient_max_count:
-            self._transient_clean_old_rows(self._transient_max_count)
-
-        return True
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
@@ -5625,7 +5545,7 @@ Record ids: %(records)s
     # Cache and recomputation management
     #
 
-    @lazy_property
+    @property
     def _cache(self):
         """ Return the cache of ``self``, mapping field names to values. """
         return RecordCache(self)
@@ -6156,22 +6076,41 @@ Record ids: %(records)s
         return 'placeholder.png'
 
     def _populate_factories(self):
-        """ Return a list of pairs ``(field_name, factory)``, ``factory`` is a function that creates
-        a generator of values (dict of field values).  Its API suggested by::
+        """ Generates a factory for the different fields of the model.
 
-            # generator yield values by iterating on base_generator and adding a value
-            # for the given field in the dicts yielded by base_generator
-            generator = factory(base_generator, field_name, model_name)
-            # suggested usage
-            for values in generator:
-                model.create(values)
+        ``factory`` is a generator of values (dict of field values).
+
+        Factory skeleton::
+
+            def generator(iterator, field_name, model_name):
+                for counter, values in enumerate(iterator):
+                    # values.update(dict())
+                    yield values
+
+        See :mod:`odoo.tools.populate` for population tools and applications.
+
+        :returns: list of pairs(field_name, factory) where `factory` is a generator function.
+        :rtype: list(tuple(str, generator))
+
+        .. note::
+
+            It is the responsibility of the generator to handle the field_name correctly.
+            The generator could generate values for multiple fields together. In this case,
+            the field_name should be more a "field_group", covering the different fields
+            updated by the generator (e.g. "_address" for a generator updating multiple address fields).
         """
         return []
 
     @property
     def _populate_sizes(self):
         """ Return a dict mapping symbolic sizes (``'small'``, ``'medium'``, ``'large'``) to integers,
-        giving the minimal number of records that method ``_populate`` should create.
+        giving the minimal number of records that :meth:`_populate` should create.
+
+        The default population sizes are:
+
+        * ``small`` : 10
+        * ``medium`` : 100
+        * ``large`` : 1000
         """
         return {
             'small': 10,  # minimal representative set
@@ -6181,12 +6120,16 @@ Record ids: %(records)s
 
     @property
     def _populate_dependencies(self):
+        """ Return the list of models which have to be populated before the current one.
+
+        :rtype: list
+        """
         return []
 
     def _populate(self, size):
         """ Create records to populate this model.
-        
-        :param size: symbolic size for the number of records: ``'small'``, ``'medium'`` or ``'large'``
+
+        :param str size: symbolic size for the number of records: ``'small'``, ``'medium'`` or ``'large'``
         """
         batch_size = 1000
         min_size = self._populate_sizes[size]
@@ -6221,6 +6164,8 @@ collections.Sequence.register(BaseModel)
 
 class RecordCache(MutableMapping):
     """ A mapping from field names to values, to read and update the cache of a record. """
+    __slots__ = ['_record']
+
     def __init__(self, record):
         assert len(record) == 1, "Unexpected RecordCache(%s)" % record
         self._record = record
@@ -6285,6 +6230,53 @@ class TransientModel(Model):
     _register = False           # not visible in ORM registry, meant to be python-inherited only
     _abstract = False           # not abstract
     _transient = True           # transient
+
+    @api.autovacuum
+    def _transient_vacuum(self):
+        """Clean the transient records.
+
+        This unlinks old records from the transient model tables whenever the
+        "_transient_max_count" or "_max_age" conditions (if any) are reached.
+        Actual cleaning will happen only once every "_transient_check_time" calls.
+        This means this method can be called frequently called (e.g. whenever
+        a new record is created).
+        Example with both max_hours and max_count active:
+        Suppose max_hours = 0.2 (e.g. 12 minutes), max_count = 20, there are 55 rows in the
+        table, 10 created/changed in the last 5 minutes, an additional 12 created/changed between
+        5 and 10 minutes ago, the rest created/changed more then 12 minutes ago.
+        - age based vacuum will leave the 22 rows created/changed in the last 12 minutes
+        - count based vacuum will wipe out another 12 rows. Not just 2, otherwise each addition
+          would immediately cause the maximum to be reached again.
+        - the 10 rows that have been created/changed the last 5 minutes will NOT be deleted
+        """
+        if self._transient_max_hours:
+            # Age-based expiration
+            self._transient_clean_rows_older_than(self._transient_max_hours * 60 * 60)
+
+        if self._transient_max_count:
+            # Count-based expiration
+            self._transient_clean_old_rows(self._transient_max_count)
+
+    def _transient_clean_old_rows(self, max_count):
+        # Check how many rows we have in the table
+        query = 'SELECT count(*) FROM "{}"'.format(self._table)
+        self._cr.execute(query)
+        [count] = self._cr.fetchone()
+        if count > max_count:
+            self._transient_clean_rows_older_than(300)
+
+    def _transient_clean_rows_older_than(self, seconds):
+        # Never delete rows used in last 5 minutes
+        seconds = max(seconds, 300)
+        query = """
+            SELECT id FROM "{}"
+            WHERE COALESCE(write_date, create_date, (now() AT TIME ZONE 'UTC'))::timestamp
+                < (now() AT TIME ZONE 'UTC') - interval %s
+        """.format(self._table)
+        self._cr.execute(query, ["%s seconds" % seconds])
+        ids = [x[0] for x in self._cr.fetchall()]
+        self.sudo().browse(ids).unlink()
+
 
 def itemgetter_tuple(items):
     """ Fixes itemgetter inconsistency (useful in some cases) of not returning

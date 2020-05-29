@@ -3,7 +3,7 @@
         <record id="view_order_form_inherit_sale_timesheet" model="ir.ui.view">
             <field name="name">sale.order.form.sale.timesheet</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="inherit_id" ref="sale_project.view_order_form_inherit_sale_project"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//button[@name='action_view_project_ids']" position="attributes">

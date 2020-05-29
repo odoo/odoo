@@ -6,6 +6,7 @@ odoo.define('web.CustomFilterItem', function (require) {
     const DropdownMenuItem = require('web.DropdownMenuItem');
     const { FIELD_OPERATORS, FIELD_TYPES } = require('web.searchUtils');
     const field_utils = require('web.field_utils');
+    const patchMixin = require('web.patchMixin');
     const { useModel } = require('web.model');
 
     /**
@@ -120,6 +121,10 @@ odoo.define('web.CustomFilterItem', function (require) {
                     if (operator.symbol === 'between') {
                         condition.value.push(moment('23:59:59', 'hh:mm:ss'));
                     }
+                    break;
+                case 'selection':
+                    const [firstValue] = this.fields[condition.field].selection[0];
+                    condition.value = firstValue;
                     break;
                 default:
                     condition.value = "";
@@ -254,5 +259,5 @@ odoo.define('web.CustomFilterItem', function (require) {
     };
     CustomFilterItem.template = 'web.CustomFilterItem';
 
-    return CustomFilterItem;
+    return patchMixin(CustomFilterItem);
 });

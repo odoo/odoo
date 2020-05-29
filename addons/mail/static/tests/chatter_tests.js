@@ -39,7 +39,7 @@ QUnit.module('Chatter', {
                     im_status: 'online',
                 }]
             },
-            partner: {
+            'partner': {
                 fields: {
                     display_name: { string: "Displayed name", type: "char" },
                     foo: {string: "Foo", type: "char", default: "My little Foo Value"},
@@ -60,6 +60,11 @@ QUnit.module('Chatter', {
                         type: 'one2many',
                         relation: 'mail.activity',
                         relation_field: 'res_id',
+                    },
+                    activity_type_id: {
+                        string: "Activity type",
+                        type: "many2one",
+                        relation: "mail.activity.type",
                     },
                     activity_exception_decoration: {
                         string: 'Decoration',
@@ -901,6 +906,178 @@ QUnit.test('kanban activity widget popover test', async function (assert) {
     assert.equal(rpcCount, 1, "");
 
     kanban.destroy();
+});
+
+QUnit.test('list activity widget with no activity', async function (assert) {
+    assert.expect(4);
+
+    const list = await createView({
+        View: ListView,
+        model: 'partner',
+        data: this.data,
+        arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
+        mockRPC: function (route) {
+            assert.step(route);
+            return this._super(...arguments);
+        },
+        session: {uid: 2},
+    });
+
+    assert.containsOnce(list, '.o_mail_activity .o_activity_color_default');
+    assert.strictEqual(list.$('.o_activity_summary').text(), '');
+
+    assert.verifySteps(['/web/dataset/search_read']);
+
+    list.destroy();
+});
+
+QUnit.test('list activity widget with activities', async function (assert) {
+    assert.expect(6);
+
+    this.data.partner.records[0].activity_ids = [1, 4];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data.partner.records[0].activity_summary = 'Call with Al';
+    this.data.partner.records[0].activity_type_id = 3;
+
+    this.data.partner.records.push({
+        id: 44,
+        activity_ids: [2],
+        activity_state: 'planned',
+        activity_summary: false,
+        activity_type_id: 2,
+    });
+
+    const list = await createView({
+        View: ListView,
+        model: 'partner',
+        data: this.data,
+        arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
+        mockRPC: function (route) {
+            assert.step(route);
+            return this._super(...arguments);
+        },
+    });
+
+    const $firstRow = list.$('.o_data_row:first');
+    assert.containsOnce($firstRow, '.o_mail_activity .o_activity_color_today');
+    assert.strictEqual($firstRow.find('.o_activity_summary').text(), 'Call with Al');
+
+    const $secondRow = list.$('.o_data_row:nth(1)');
+    assert.containsOnce($secondRow, '.o_mail_activity .o_activity_color_planned');
+    assert.strictEqual($secondRow.find('.o_activity_summary').text(), 'Type 2');
+
+    assert.verifySteps(['/web/dataset/search_read']);
+
+    list.destroy();
+});
+
+QUnit.test('list activity widget with exception', async function (assert) {
+    assert.expect(4);
+
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data.partner.records[0].activity_summary = 'Call with Al';
+    this.data.partner.records[0].activity_type_id = 3;
+    this.data.partner.records[0].activity_exception_decoration = 'warning';
+    this.data.partner.records[0].activity_exception_icon = 'fa-warning';
+
+    const list = await createView({
+        View: ListView,
+        model: 'partner',
+        data: this.data,
+        arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
+        mockRPC: function (route) {
+            assert.step(route);
+            return this._super(...arguments);
+        },
+    });
+
+    assert.containsOnce(list, '.o_activity_color_today.text-warning.fa-warning');
+    assert.strictEqual(list.$('.o_activity_summary').text(), 'Warning');
+
+    assert.verifySteps(['/web/dataset/search_read']);
+
+    list.destroy();
+});
+
+QUnit.test('list activity widget: open dropdown', async function (assert) {
+    assert.expect(9);
+
+    this.data.partner.records[0].activity_ids = [1, 4];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data.partner.records[0].activity_summary = 'Call with Al';
+    this.data.partner.records[0].activity_type_id = 3;
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "Call with Al",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: 2,
+        create_uid: 2,
+        activity_type_id: 3,
+    }, {
+        id: 4,
+        display_name: "Meet FP",
+        date_deadline: moment().add(1, 'day').format("YYYY-MM-DD"), // tomorrow
+        can_write: true,
+        state: "planned",
+        user_id: 2,
+        create_uid: 2,
+        activity_type_id: 1,
+    }];
+
+    const list = await createView({
+        View: ListView,
+        model: 'partner',
+        data: this.data,
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="activity_ids" widget="list_activity"/>
+            </list>`,
+        mockRPC: function (route, args) {
+            assert.step(args.method || route);
+            if (args.method === 'action_feedback') {
+                this.data.partner.records[0].activity_ids = [4];
+                this.data.partner.records[0].activity_state = 'planned';
+                this.data.partner.records[0].activity_summary = 'Meet FP';
+                this.data.partner.records[0].activity_type_id = 1;
+                return Promise.resolve();
+            }
+            return this._super(route, args);
+        },
+        intercepts: {
+            switch_view: () => assert.step('switch_view'),
+        },
+    });
+
+    assert.strictEqual(list.$('.o_activity_summary').text(), 'Call with Al');
+
+    // click on the first record to open it, to ensure that the 'switch_view'
+    // assertion is relevant (it won't be opened as there is no action manager,
+    // but we'll log the 'switch_view' event)
+    await testUtils.dom.click(list.$('.o_data_cell:first'));
+
+    // from this point, no 'switch_view' event should be triggered, as we
+    // interact with the activity widget
+    assert.step('open dropdown');
+    await testUtils.dom.click(list.$('.o_activity_btn span')); // open the popover
+    await testUtils.dom.click(list.$('.o_mark_as_done:first')); // mark the first activity as done
+    await testUtils.dom.click(list.$('.o_activity_popover_done')); // confirm
+
+    assert.strictEqual(list.$('.o_activity_summary').text(), 'Meet FP');
+
+    assert.verifySteps([
+        '/web/dataset/search_read',
+        'switch_view',
+        'open dropdown',
+        'activity_format',
+        'action_feedback',
+        'read',
+    ]);
+
+    list.destroy();
 });
 
 QUnit.test('list activity exception widget with activity', async function (assert) {
@@ -1775,21 +1952,21 @@ QUnit.test('chatter: Attachment viewer', async function (assert) {
         attachment_ids: [{
             filename: 'image1.jpg',
             id:1,
-            checksum: 999,
+            checksum: '123456789abc',
             mimetype: 'image/jpeg',
             name: 'Test Image 1',
             url: '/web/content/1?download=true'
         },{
             filename: 'image2.jpg',
             id:2,
-            checksum: 999,
+            checksum: '123456789abc',
             mimetype: 'image/jpeg',
             name: 'Test Image 2',
             url: '/web/content/2?download=true'
         },{
             filename: 'image3.jpg',
             id:3,
-            checksum: 999,
+            checksum: '123456789abc',
             mimetype: 'image/jpeg',
             name: 'Test Image 3',
             url: '/web/content/3?download=true'
@@ -1840,11 +2017,11 @@ QUnit.test('chatter: Attachment viewer', async function (assert) {
         "image caption should have correct download link");
     // click on first image attachement
     await testUtils.dom.click(form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').first());
-    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1&signature=999&model=ir.attachment"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=56789abc&model=ir.attachment"]').length, 1,
         "Modal popup should open with first image src");
     //  click on next button
     await testUtils.dom.click($('.modal .arrow.arrow-right.move_next span'));
-    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=1&signature=999&model=ir.attachment"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=56789abc&model=ir.attachment"]').length, 1,
         "Modal popup should have now second image src");
     assert.strictEqual($('.o_modal_fullscreen .o_viewer_toolbar .o_download_btn').length, 1,
         "Modal popup should have download button");
@@ -3528,6 +3705,39 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     // should have read [14] three times: when opening the dropdown, when opening the modal, and
     // after the save
     assert.verifySteps(['[14]', '[14]', '[14]']);
+
+    form.destroy();
+});
+
+QUnit.test('many2many_tags_email widget can load more than 40 records', async function (assert) {
+    assert.expect(3);
+
+    this.data.partner.fields.partner_ids = {string: "Partner", type: "many2many", relation: 'partner'};
+    this.data.partner.records[0].partner_ids = [];
+    for (let i = 100; i < 200; i++) {
+        this.data.partner.records.push({id: i, display_name: `partner${i}`});
+        this.data.partner.records[0].partner_ids.push(i);
+    }
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form><field name="partner_ids" widget="many2many_tags"/></form>',
+        res_id: 1,
+    });
+
+    assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 100);
+
+    await testUtils.form.clickEdit(form);
+
+    assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+
+    // add a record to the relation
+    await testUtils.fields.many2one.clickOpenDropdown('partner_ids');
+    await testUtils.fields.many2one.clickHighlightedItem('partner_ids');
+
+    assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 101);
 
     form.destroy();
 });

@@ -46,7 +46,7 @@
 
         <template id="account_invoice_it_FatturaPA_export">
             <t t-set="currency" t-value="record.currency_id or record.company_currency_id"/>
-            <t t-set="bank" t-value="record.invoice_partner_bank_id"/>
+            <t t-set="bank" t-value="record.partner_bank_id"/>
                 <p:FatturaElettronica  t-att-versione="formato_trasmissione" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
                 <FatturaElettronicaHeader>
                     <DatiTrasmissione>
@@ -168,14 +168,14 @@
                         <t t-set="payments" t-value="record.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))"/>
                         <CondizioniPagamento><t t-if="len(payments) == 1">TP02</t><t t-else="">TP01</t></CondizioniPagamento>
                         <DettaglioPagamento>
-                            <t t-set="company_bank_account" t-value="record.invoice_partner_bank_id"/>
+                            <t t-set="company_bank_account" t-value="record.partner_bank_id"/>
                             <ModalitaPagamento t-if="company_bank_account">MP05</ModalitaPagamento>
                             <DataScadenzaPagamento t-esc="format_date(record.invoice_date_due)"/>
                             <ImportoPagamento t-esc="format_numbers_two(record.amount_total)"/>
                             <IstitutoFinanziario t-if="company_bank_account.bank_id" t-esc="company_bank_account.bank_id.name[:80]"/>
                             <IBAN t-if="company_bank_account.acc_type == 'iban'" t-esc="company_bank_account.sanitized_acc_number"/>
                             <BIC t-if="company_bank_account.acc_type == 'bank' and company_bank_account.bank_id.bic" t-esc="company_bank_account.bank_id.bic"/>
-                            <CodicePagamento t-esc="record.invoice_payment_ref[:60]"/>
+                            <CodicePagamento t-esc="record.payment_reference[:60]"/>
                         </DettaglioPagamento>
                     </DatiPagamento>
                     <Allegati t-if="pdf">

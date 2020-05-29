@@ -93,7 +93,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
     def _onchange_new_journal_code(self):
         for record in self:
             if not record.linked_journal_id:
-                record.new_journal_code = self.env['account.journal'].get_next_bank_cash_default_code('bank', self.env.company.id)
+                record.new_journal_code = self.env['account.journal'].get_next_bank_cash_default_code('bank', self.env.company)
             else:
                 record.new_journal_code = self.linked_journal_id.code
 

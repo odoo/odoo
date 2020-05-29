@@ -29,69 +29,44 @@
                 </xpath>
 
                 <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
-                    <div t-if="record.leave_to_approve_count.raw_value > 0" class="row">
+                    <div t-if="record.leave_to_approve_count.raw_value > 0" class="row ml16">
                         <div class="col-9">
                             <a name="%(hr_leave_action_action_approve_department)d" type="action">
                                 Time Off Requests
                             </a>
                         </div>
-                        <div class="col-3">
+                        <div class="col-3 text-right">
                             <field name="leave_to_approve_count"/>
                         </div>
                     </div>
-                    <div t-if="record.allocation_to_approve_count.raw_value > 0" class="row">
+                    <div t-if="record.allocation_to_approve_count.raw_value > 0" class="row ml16">
                         <div class="col-9">
                             <a name="%(hr_leave_allocation_action_approve_department)d" type="action">
                                 Allocation Requests
                             </a>
                         </div>
-                        <div class="col-3">
+                        <div class="col-3 text-right">
                             <field name="allocation_to_approve_count"/>
                         </div>
                     </div>
                 </xpath>
 
-                <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="after">
-                    <div class="col-12 o_kanban_primary_bottom bottom_block">
-                        <div class="row">
-                            <div class="col-3">
-                                <a name="%(hr_employee_action_from_department)d" type="action" title="Absent Employee(s), Whose leaves request are either confirmed or validated on today">Absence</a>
-                            </div>
-                            <div class="col-9">
-                                <field name="absence_of_today" widget="progressbar" options="{'current_value': 'absence_of_today', 'max_value': 'total_employee', 'editable': false}"/>
-                            </div>
+                <xpath expr="//div[hasclass('o_kanban_card_upper_content')]" position="after">
+                    <div class="row o_kanban_primary_bottom bottom_block">
+                        <div class="col-3">
+                            <a name="%(hr_employee_action_from_department)d" type="action" title="Absent Employee(s), Whose time off requests are either confirmed or validated on today">Absence</a>
                         </div>
-                    </div>
-                </xpath>
-
-                <xpath expr="//div[hasclass('o_kanban_manage_to_approve')]" position="inside">
-                    <div class="row">
-                        <div class="col-12 text-left">
-                            <a name="%(hr_leave_action_action_approve_department)d" type="action">
-                                <t t-esc="record.leave_to_approve_count.raw_value or 0"/> Time Off Requests
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12 text-left">
-                            <a name="%(hr_leave_allocation_action_approve_department)d" type="action">
-                                <t t-esc="record.allocation_to_approve_count.raw_value or 0"/> Allocation Requests
-                            </a>
+                        <div class="col-9">
+                            <field name="absence_of_today" widget="progressbar" options="{'current_value': 'absence_of_today', 'max_value': 'total_employee', 'editable': false}"/>
                         </div>
                     </div>
                 </xpath>
 
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
-                    <div class="row">
-                        <div class="col-12 text-left">
-                            <a name="%(hr_leave_action_action_department)d" type="action">
-                                Time Off
-                            </a>
-                        </div>
-                    </div>
+                    <a role="menuitem" class="dropdown-item" name="%(hr_leave_action_action_department)d" type="action">
+                        Time Off
+                    </a>
                 </xpath>
-
             </data>
         </field>
     </record>

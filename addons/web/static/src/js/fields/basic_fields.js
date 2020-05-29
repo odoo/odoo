@@ -23,7 +23,7 @@ var utils = require('web.utils');
 var view_dialogs = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
 var time = require('web.time');
-var ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerDialog} = require('web.Colorpicker');
 
 let FieldBoolean = deprecatedFields.FieldBoolean;
 
@@ -326,7 +326,7 @@ var InputField = DebouncedField.extend({
      * @private
      */
     _onInput: function () {
-        this.isDirty = true;
+        this.isDirty = !this._isLastSetValue(this.$input.val());
         this._doDebouncedAction();
     },
     /**
@@ -364,6 +364,16 @@ var InputField = DebouncedField.extend({
 
 var NumericField = InputField.extend({
     tagName: 'span',
+
+    /**
+     * @override
+     */
+    init() {
+        this._super.apply(this, arguments);
+        this.shouldFormat = Boolean(
+            JSON.parse('format' in this.nodeOptions ? this.nodeOptions.format : true)
+        );
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -427,7 +437,7 @@ var NumericField = InputField.extend({
      * @private
      */
     _formatValue: function (value) {
-        if (this.mode === 'edit' && this.nodeOptions.type === 'number') {
+        if (!this.shouldFormat || (this.mode === 'edit' && this.nodeOptions.type === 'number')) {
             return value;
         }
         return this._super.apply(this, arguments);
@@ -695,6 +705,11 @@ var FieldDateRange = InputField.extend({
                 self.$el.data('daterangepicker').hide();
             }
         });
+
+        // Prevent bootstrap from focusing on modal (which breaks hours drop-down in firefox)
+        this.$pickerContainer.on('focusin.bs.modal', 'select', function (ev) {
+            ev.stopPropagation();
+        });
     },
 });
 
@@ -758,7 +773,7 @@ var FieldDate = InputField.extend({
      */
     activate: function () {
         if (this.isFocusable() && this.datewidget) {
-            this.datewidget.focus();
+            this.datewidget.$input.select();
             return true;
         }
         return false;
@@ -874,6 +889,49 @@ var FieldDateTime = FieldDate.extend({
         var value = this.value && this.value.clone().add(this.getSession().getTZOffset(this.value), 'minutes');
         this.datewidget.setValue(value);
         this.$input = this.datewidget.$input;
+    },
+});
+
+const RemainingDays = FieldDate.extend({
+    description: _lt("Remaining Days"),
+    supportedFieldTypes: ['date', 'datetime'],
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Displays the delta (in days) between the value of the field and today. If
+     * the delta is larger than 99 days, displays the date as usual (without
+     * time).
+     *
+     * @override
+     */
+    _renderReadonly() {
+        if (this.value === false) {
+            this.$el.removeClass('text-bf text-danger text-warning');
+            return;
+        }
+        // compare the value (in the user timezone) with now (also in the user
+        // timezone), to get a meaningful delta for the user
+        const nowUTC = moment().utc();
+        const nowUserTZ = nowUTC.clone().add(session.getTZOffset(nowUTC), 'minutes');
+        const valueUserTZ = this.value.clone().add(session.getTZOffset(this.value), 'minutes');
+        const diffDays = valueUserTZ.startOf('day').diff(nowUserTZ.startOf('day'), 'days');
+        let text;
+        if (Math.abs(diffDays) > 99) {
+            text = this._formatValue(this.value, 'date');
+        } else if (diffDays === 0) {
+            text = _t("Today");
+        } else if (diffDays < 0) {
+            text = diffDays === -1 ? _t("Yesterday") : _t(`${-diffDays} days ago`);
+        } else {
+            text = diffDays === 1 ? _t("Tomorrow") : _t(`In ${diffDays} days`);
+        }
+        this.$el.text(text).attr('title', this._formatValue(this.value, 'date'));
+        this.$el.toggleClass('text-bf', diffDays <= 0);
+        this.$el.toggleClass('text-danger', diffDays < 0);
+        this.$el.toggleClass('text-warning', diffDays === 0);
     },
 });
 
@@ -1211,7 +1269,7 @@ var FieldPercentage = FieldFloat.extend({
         if (this.mode === 'edit') {
             this.tagName = 'div';
             this.className += ' o_input';
-            
+
             // do not display % in the input in edit
             this.formatOptions.noSymbol = true;
         }
@@ -1824,6 +1882,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                         if(this.$zoom.height() < 256 && this.$zoom.width() < 256) {
                             this.hide();
                         }
+                        core.bus.on('keydown', this, this.hide);
                     },
                     beforeAttach: function () {
                         this.$flyout.css({ width: '512px', height: '512px' });
@@ -3301,6 +3360,21 @@ var FieldColor = AbstractField.extend({
 });
 
 var FieldColorPicker = FieldInteger.extend({
+    RECORD_COLORS: [
+        _t('No color'),
+        _t('Red'),
+        _t('Orange'),
+        _t('Yellow'),
+        _t('Light blue'),
+        _t('Dark purple'),
+        _t('Salmon pink'),
+        _t('Medium blue'),
+        _t('Dark blue'),
+        _t('Fushia'),
+        _t('Green'),
+        _t('Purple'),
+    ],
+
     /**
      * Prepares the rendering, since we are based on an input but not using it
      * setting tagName after parent init force the widget to not render an input
@@ -3327,7 +3401,8 @@ var FieldColorPicker = FieldInteger.extend({
      * @override
      */
     _renderReadonly: function () {
-        this.$el.html(qweb.render('ColorPickerReadonly', {active_color: this.value,}));
+        var selectedColorName = this.RECORD_COLORS[this.value];
+        this.$el.html(qweb.render('ColorPickerReadonly', { active_color: this.value, name_color: selectedColorName }));
         this.$el.on('click', 'a', function(ev){ ev.preventDefault(); });
     },
     /**
@@ -3342,7 +3417,7 @@ var FieldColorPicker = FieldInteger.extend({
         if (!$colorpicker.length) {
             return;
         }
-        $colorpicker.html(qweb.render('KanbanColorPicker'));
+        $colorpicker.html(qweb.render('KanbanColorPicker', { colors: this.RECORD_COLORS }));
         $colorpicker.on('click', 'a', this._onColorChanged.bind(this));
     },
     /**
@@ -3410,6 +3485,7 @@ return {
     FieldDate: FieldDate,
     FieldDateTime: FieldDateTime,
     FieldDateRange: FieldDateRange,
+    RemainingDays: RemainingDays,
     FieldDomain: FieldDomain,
     FieldFloat: FieldFloat,
     FieldFloatTime: FieldFloatTime,

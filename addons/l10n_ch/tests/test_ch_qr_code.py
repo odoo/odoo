@@ -28,9 +28,9 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
             'currency_id': cls.env.ref('base.CHF').id,
-            'invoice_partner_bank_id': cls.swiss_iban.id,
+            'partner_bank_id': cls.swiss_iban.id,
             'company_id': cls.company_data['company'].id,
-            'invoice_payment_ref': "Papa a vu le fifi de lolo",
+            'payment_reference': "Papa a vu le fifi de lolo",
             'invoice_line_ids': [
                 (0, 0, {'quantity': 1, 'price_unit': 100})
             ],
@@ -61,13 +61,13 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
         self.ch_qr_invoice.generate_qr_code()
 
         # Now, check with a QR-IBAN as the payment account
-        self.ch_qr_invoice.invoice_partner_bank_id = self.swiss_qr_iban
+        self.ch_qr_invoice.partner_bank_id = self.swiss_qr_iban
 
         with self.assertRaises(UserError, msg="It shouldn't be possible to generate a Swiss QR-cde for a QR-IBAN without giving it a valid QR-reference as payment reference."):
             self.ch_qr_invoice.generate_qr_code()
 
         # Assigning a QR reference should fix it
-        self.ch_qr_invoice.invoice_payment_ref = '210000000003139471430009017'
+        self.ch_qr_invoice.payment_reference = '210000000003139471430009017'
 
     def test_ch_qr_code_detection(self):
         """ Checks Swiss QR-code auto-detection when no specific QR-method

@@ -148,7 +148,7 @@ var BasicView = AbstractView.extend({
                             var x2mFieldInfo = record.fieldsInfo[this.viewType][name];
                             var viewType = x2mFieldInfo.viewType || x2mFieldInfo.mode;
                             var knownFields = Object.keys(record.data[name].fieldsInfo[record.data[name].viewType] || {});
-                            var newFields = Object.keys(record.data[name].fieldsInfo[viewType]);
+                            var newFields = Object.keys(record.data[name].fieldsInfo[viewType] || {});
                             if (_.difference(newFields, knownFields).length) {
                                 fieldNames.push(name);
                             }
@@ -232,11 +232,10 @@ var BasicView = AbstractView.extend({
 
         // process decoration attributes
         _.each(attrs, function (value, key) {
-            var splitKey = key.split('-');
-            if (splitKey[0] === 'decoration') {
+            if (key.startsWith('decoration-')) {
                 attrs.decorations = attrs.decorations || [];
                 attrs.decorations.push({
-                    className: 'text-' + splitKey[1],
+                    name: key,
                     expression: pyUtils._getPyJSAST(value),
                 });
             }

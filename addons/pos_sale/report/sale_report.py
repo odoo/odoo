@@ -26,8 +26,8 @@ class SaleReport(models.Model):
             MIN(l.id) AS id,
             l.product_id AS product_id,
             t.uom_id AS product_uom,
-            sum(l.qty * u.factor) AS product_uom_qty,
-            sum(l.qty * u.factor) AS qty_delivered,
+            sum(l.qty) AS product_uom_qty,
+            sum(l.qty) AS qty_delivered,
             CASE WHEN pos.state = 'invoiced' THEN sum(qty) ELSE 0 END AS qty_invoiced,
             CASE WHEN pos.state != 'invoiced' THEN sum(qty) ELSE 0 END AS qty_to_invoice,
             SUM(l.price_subtotal_incl) / MIN(CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END) AS price_total,
@@ -62,7 +62,7 @@ class SaleReport(models.Model):
                left join product_template t on (p.product_tmpl_id=t.id)
                left join uom_uom u on (u.id=t.uom_id)) AS volume,
             l.discount as discount,
-            sum((l.price_unit * l.discount / 100.0 / CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END)) as discount_amount,
+            sum((l.price_unit * l.discount * l.qty / 100.0 / CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END)) as discount_amount,
             NULL as order_id
         '''
 

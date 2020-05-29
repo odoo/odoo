@@ -64,7 +64,7 @@ class AlarmManager(models.AbstractModel):
 
             if event.recurrency:
                 found = False
-                for event_start in event._get_recurrent_date_by_event():
+                for event_start in event.recurrence_id._get_occurrences(event.start):
                     event_start = event_start.replace(tzinfo=None)
                     last_found = self.do_check_alarm_for_one_date(event_start, event, max_delta, 0, 'sms', after=last_sms_cron, missing=True)
                     for alert in last_found:

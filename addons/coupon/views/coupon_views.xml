@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="coupon_view_tree" model="ir.ui.view">
+        <field name="name">coupon.coupon.tree</field>
+        <field name="model">coupon.coupon</field>
+        <field name="arch" type="xml">
+            <tree string="Coupons" create="false" edit="false" delete="false">
+                <field name="code"/>
+                <field name="expiration_date"/>
+                <field name="program_id"/>
+                <field name="partner_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="coupon_action" model="ir.actions.act_window">
+        <field name="name">Coupons</field>
+        <field name="res_model">coupon.coupon</field>
+        <field name="view_id" ref="coupon_view_tree"/>
+        <field name="domain">[('program_id', '=', active_id)]</field>
+        <field name="context">{}</field>
+    </record>
+
+
+    <record id="coupon_view_form" model="ir.ui.view">
+        <field name="name">coupon.coupon.form</field>
+        <field name="model">coupon.coupon</field>
+        <field name="arch" type="xml">
+            <form string="Coupons" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_coupon_sent" type="object" string="Send by Email" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['new', 'sent'])]}"/>
+                    <button name="action_coupon_cancel" type="object" string="Cancel" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'new')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,sent,used,expired" context="{'state': state}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="expiration_date"/>
+                        <field name="partner_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

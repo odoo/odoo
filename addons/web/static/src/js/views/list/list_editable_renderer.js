@@ -128,8 +128,11 @@ ListRenderer.include({
      */
     on_attach_callback: function () {
         this.isInDOM = true;
-        this._freezeColumnWidths();
         this._super();
+        // _freezeColumnWidths requests style information, which produces a
+        // repaint, so we call it after _super to prevent flickering (in case
+        // other code would also modify the DOM post rendering/before repaint)
+        this._freezeColumnWidths();
     },
     /**
      * The list renderer needs to know if it is in the DOM to properly compute
@@ -186,7 +189,7 @@ ListRenderer.include({
             if (widgets.length) {
                 var $row = self._getRow(recordID);
                 var record = self._getRecord(recordID);
-                self._setDecorationClasses(record, $row);
+                self._setDecorationClasses($row, self.rowDecorations, record);
                 self._updateFooter();
             }
             return widgets;
@@ -385,12 +388,10 @@ ListRenderer.include({
             // we want to always keep at least 4 (possibly empty) rows
             var $emptyRow = this._renderEmptyRow();
             $row.replaceWith($emptyRow);
-            if (this.editable === "top") {
-                // move the empty row we just inserted after data rows
-                var $lastDataRow = this.$('.o_data_row:last');
-                if ($lastDataRow.length) {
-                    $emptyRow.insertAfter($lastDataRow);
-                }
+            // move the empty row we just inserted after last data row
+            const $lastDataRow = this.$('.o_data_row:last');
+            if ($lastDataRow.length) {
+                $emptyRow.insertAfter($lastDataRow);
             }
         }
     },
@@ -1701,6 +1702,11 @@ ListRenderer.include({
             'mousedown',
             'mouseup',
         ];
+
+        // Fix container width to prevent the table from overflowing when being resized
+        if (!this.el.style.width) {
+            this.el.style.width = `${initialTableWidth}px`;
+        }
 
         // Apply classes to table and selected column
         table.classList.add('o_resizing');

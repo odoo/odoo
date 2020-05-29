@@ -18,9 +18,9 @@ class LunchProductCategory(models.Model):
     topping_label_1 = fields.Char('Extra 1 Label', required=True, default='Extras')
     topping_label_2 = fields.Char('Extra 2 Label', required=True, default='Beverages')
     topping_label_3 = fields.Char('Extra 3 Label', required=True, default='Extra Label 3')
-    topping_ids_1 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 1)], ondelete='cascade')
-    topping_ids_2 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 2)], ondelete='cascade')
-    topping_ids_3 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 3)], ondelete='cascade')
+    topping_ids_1 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 1)])
+    topping_ids_2 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 2)])
+    topping_ids_3 = fields.One2many('lunch.topping', 'category_id', domain=[('topping_category', '=', 3)])
     topping_quantity_1 = fields.Selection([
         ('0_more', 'None or More'),
         ('1_more', 'One or More'),
@@ -70,7 +70,7 @@ class LunchTopping(models.Model):
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     price = fields.Float('Price', digits='Account', required=True)
-    category_id = fields.Many2one('lunch.product.category')
+    category_id = fields.Many2one('lunch.product.category', ondelete='cascade')
     topping_category = fields.Integer('Topping Category', help="This field is a technical field", required=True, default=1)
 
     def name_get(self):

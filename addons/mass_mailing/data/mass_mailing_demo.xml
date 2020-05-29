@@ -7,26 +7,21 @@
             <field name="name">SampleDoc.doc</field>
         </record>
 
-        <!-- Create mailing lists -->
-        <record id="mass_mail_list_2" model="mailing.list">
-            <field name="name">Imported Contacts</field>
-        </record>
-
         <!-- Create Contacts -->
         <record id="mass_mail_contact_1" model="mailing.contact">
             <field name="name">Aristide Antario</field>
             <field name="email">aa@example.com</field>
-            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_list_2')])]"/>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
         </record>
         <record id="mass_mail_contact_2" model="mailing.contact">
             <field name="name">Beverly Bridge</field>
             <field name="email">bb@example.com</field>
-            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_list_2')])]"/>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
         </record>
         <record id="mass_mail_contact_3" model="mailing.contact">
             <field name="name">Carol Cartridge</field>
             <field name="email">cc@example.com</field>
-            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_list_2')])]"/>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
         </record>
         <record id="mass_mail_contact_4" model="mailing.contact">
             <field name="name">David Dawson</field>
@@ -35,12 +30,12 @@
         <record id="mass_mail_contact_5" model="mailing.contact">
             <field name="name">Elsa Ericson</field>
             <field name="email">ee@example.com</field>
-            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_list_2')])]"/>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
         </record>
 
         <!-- Create Opt-out Records -->
         <record id="mass_mail_contact_list_rel_1" model="mailing.contact.subscription">
-            <field name="list_id" ref="mass_mailing.mass_mail_list_2"/>
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
             <field name="contact_id" ref="mass_mailing.mass_mail_contact_4"/>
             <field name="opt_out">True</field>
         </record>
@@ -81,7 +76,7 @@
             <tr>
                 <td class="o_mail_no_resize o_not_editable" style="text-align:left;"> </td>
                 <td class="o_mail_no_options o_mail_wrapper_td oe_structure" style="text-align:left;width:100%;">
-                    <div class="o_mail_block_header_logo">
+                    <div class="o_mail_block_header_logo" data-snippet="s_mail_block_header_logo">
                         <div class="o_mail_snippet_general" style="margin:0px auto 0px auto;background-color:rgb(255, 255, 255);max-width:600px;width:100%;">
                             <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles o_mail_h_padding" style="padding:0 20px 0 20px;width:100%;border-collapse:separate;">
                                 <tbody>
@@ -96,7 +91,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="o_mail_block_footer_separator" style="margin:0 20px 0 20px;">
+                    <div class="o_mail_block_footer_separator" data-snippet="s_mail_block_footer_separator" style="margin:0 20px 0 20px;">
                         <div class="o_mail_snippet_general" style="margin:0px auto 0px auto;background-color:rgb(255, 255, 255);max-width:600px;width:100%;">
                             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_full_width_padding" style="width:100%;border-collapse:separate;">
                                 <tbody>
@@ -109,7 +104,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="o_mail_block_paragraph">
+                    <div class="o_mail_block_paragraph" data-snippet="s_mail_block_paragraph">
                         <div class="o_mail_snippet_general" style="margin:0px auto 0px auto;background-color:rgb(255, 255, 255);max-width:600px;width:100%;">
                             <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles" style="width:100%;border-collapse:separate;">
                                 <tbody>
@@ -125,13 +120,14 @@
                             </table>
                         </div>
                     </div>
-                    <div class="o_mail_block_footer_social o_mail_footer_social_center">
+                    <div class="o_mail_block_footer_social o_mail_footer_social_center" data-snippet="s_mail_block_footer_social">
                         <div class="o_mail_snippet_general" style="margin:0px auto 0px auto;background-color:rgb(255, 255, 255);max-width:600px;width:100%;">
                             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_full_width_padding" style="border-style:solid none none none;padding:20px 0 20px 0;border-top-color:rgb(245, 245, 245);border-top-width:2px;width:100%;border-collapse:separate;">
                                 <tbody>
                                     <tr>
                                         <td class="o_mail_footer_links o_default_snippet_text" style="padding:10px 0 10px 0;text-align:center;vertical-align:middle;">
-                                            <a href="/unsubscribe_from_list" class="btn btn-link o_default_snippet_text" style="text-decoration:none;border-radius:0.25rem;border-style:solid;padding:0px;cursor:pointer;line-height:1.5;font-size:12px;border-left-color:transparent;border-bottom-color:transparent;border-right-color:transparent;border-top-color:transparent;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-width:1px;user-select:none;vertical-align:middle;white-space:nowrap;text-align:center;font-weight:bold;display:inline-block;background-color:transparent;color:rgb(100, 89, 116);">Unsubscribe</a> | 
+                                            <a href="/unsubscribe_from_list" class="btn btn-link o_default_snippet_text" style="text-decoration:none;border-radius:0.25rem;border-style:solid;padding:0px;cursor:pointer;line-height:1.5;font-size:12px;border-left-color:transparent;border-bottom-color:transparent;border-right-color:transparent;border-top-color:transparent;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-width:1px;user-select:none;vertical-align:middle;white-space:nowrap;text-align:center;font-weight:bold;display:inline-block;background-color:transparent;color:rgb(100, 89, 116);">Unsubscribe</a> |
+
                                             <a href="/contactus" class="btn btn-link o_default_snippet_text" style="text-decoration:none;border-radius:0.25rem;border-style:solid;padding:0px;cursor:pointer;line-height:1.5;font-size:12px;border-left-color:transparent;border-bottom-color:transparent;border-right-color:transparent;border-top-color:transparent;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-width:1px;user-select:none;vertical-align:middle;white-space:nowrap;text-align:center;font-weight:bold;display:inline-block;background-color:transparent;color:rgb(100, 89, 116);">Contact</a>
                                         </td>
                                     </tr>
@@ -214,7 +210,7 @@
         </record>
         <record id="mass_mail_1_stat_5" model="mailing.trace">
             <field name="mass_mailing_id" ref="mass_mail_1"/>
-            <field name="message_id">1111004@odoo.com</field>
+            <field name="message_id">1111005@odoo.com</field>
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_33"/>
             <field name="email">julie.richards84@example.com</field>
@@ -223,12 +219,21 @@
         </record>
         <record id="mass_mail_1_stat_6" model="mailing.trace">
             <field name="mass_mailing_id" ref="mass_mail_1"/>
-            <field name="message_id">1111004@odoo.com</field>
+            <field name="message_id">1111006@odoo.com</field>
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_34"/>
             <field name="email">travis.mendoza24@example.com</field>
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="bounced" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_1_stat_7" model="mailing.trace">
+            <field name="mass_mailing_id" ref="mass_mail_1"/>
+            <field name="message_id">1111007@odoo.com</field>
+            <field name="model">res.partner</field>
+            <field name="res_id" ref="base.res_partner_address_34"/>
+            <field name="email">travis.mendoza24@example.com</field>
+            <field name="sent" eval="False"/>
+            <field name="ignored" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
         <!-- Generate some clicks -->

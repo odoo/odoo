@@ -53,14 +53,14 @@ class TestMembership(TestMembershipCommon):
 
         # the invoice is paid -> customer goes to paid status
         bank_journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
-        self.env['account.payment'].create({
-            'payment_method_id': self.env.ref("account.account_payment_method_manual_in").id,
-            'payment_type': 'inbound',
-            'invoice_ids': [(6, False, invoice.ids)],
-            'amount': 86.25,
-            'journal_id': bank_journal.id,
-            'partner_type': 'customer',
-        }).post()
+
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({
+                'amount': 86.25,
+                'journal_id': bank_journal.id,
+            })\
+            ._create_payments()
 
         self.assertEqual(
             self.partner_1.membership_state, 'paid',

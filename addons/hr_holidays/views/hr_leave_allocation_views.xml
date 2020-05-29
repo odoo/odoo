@@ -68,7 +68,7 @@
                             attrs="{'invisible': [('holiday_type', '!=', 'employee')]}"
                             name="%(hr_leave_action_all)d"
                             context="{'search_default_employee_id': [employee_id], 'search_default_holiday_status_id': [holiday_status_id], 'default_holiday_status_id': holiday_status_id}"
-                            help="Leaves Taken/Total Allocated">
+                            help="Time off Taken/Total Allocated">
                             <div class="o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="leaves_taken" digits="[42,1]"/>/<field name="max_leaves" digits="[42,1]"/>
@@ -159,12 +159,13 @@
                 <attribute name="invisible">0</attribute>
             </xpath>
             <xpath expr="//field[@name='allocation_type']" position="after">
-                <label for="date_to" string=""
-                    attrs="{'invisible': [('allocation_type', '=', 'regular')]}"/>
+                <label for="date_from" attrs="{'invisible': [('allocation_type', '=', 'regular')]}"/>
+                <div class="o_row" attrs="{'invisible': [('allocation_type', '=', 'regular')]}">
+                    <field name="date_from" widget="date" required="1" class="mr-2"/>
+                    Run until <field name="date_to" help="If no value set, runs indefinitely" class="ml-2" widget="date"/>
+                </div>
+                <label for="date_from" invisible="1"/>
                 <div attrs="{'invisible': [('allocation_type', '=', 'regular')]}">
-                    <div class="o_row">
-                        Run until <field name="date_to" string="Run Until" help="If no value set, runs indefinitely" class="ml-2" widget="date"/>
-                    </div>
                     <div class="o_row">
                         <span>Add</span>
                         <field name="number_per_interval" class="ml8"
@@ -187,25 +188,24 @@
         <field name="model">hr.leave.allocation</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
-            <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
-                   decoration-bf="message_needaction == True">
+            <tree string="Allocation Requests">
                 <field name="employee_id"/>
                 <field name="department_id" optional="hide"/>
                 <field name="holiday_status_id"/>
                 <field name="name"/>
                 <field name="duration_display"/>
                 <field name="message_needaction" invisible="1"/>
-                <field name="state"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'"/>
                 <button string="Approve" name="action_approve" type="object"
-                    icon="fa-check text-success"
+                    icon="fa-thumbs-up"
                     states="confirm"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <button string="Validate" name="action_validate" type="object"
-                    icon="fa-check text-success"
+                    icon="fa-check"
                     states="validate1"
                     groups="hr_holidays.group_hr_holidays_manager"/>
                 <button string="Refuse" name="action_refuse" type="object"
-                    icon="fa-ban text-danger"
+                    icon="fa-times"
                     states="confirm,validate,validate1"
                     groups="hr_holidays.group_hr_holidays_manager"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
@@ -370,8 +370,8 @@
         <field name="name">Department Allocation to Approve</field>
         <field name="res_model">hr.leave.allocation</field>
         <field name="view_mode">tree,form,kanban,activity</field>
-        <field name="context">{'search_default_managed_people':1, 'search_default_approve':1}</field>
-        <field name="domain">[]</field>
+        <field name="context">{'search_default_approve':1}</field>
+        <field name="domain">[('employee_id.leave_manager_id', '=', uid)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new time off allocation

@@ -57,8 +57,8 @@ class CRMRevealRule(models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson')
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority')
     lead_ids = fields.One2many('crm.lead', 'reveal_rule_id', string='Generated Lead / Opportunity')
-    leads_count = fields.Integer(compute='_compute_leads_count', string='Number of Generated Leads')
-    opportunity_count = fields.Integer(compute='_compute_leads_count', string='Number of Generated Opportunity')
+    lead_count = fields.Integer(compute='_compute_lead_count', string='Number of Generated Leads')
+    opportunity_count = fields.Integer(compute='_compute_lead_count', string='Number of Generated Opportunity')
 
     # This limits the number of extra contact.
     # Even if more than 5 extra contacts provided service will return only 5 contacts (see service module for more)
@@ -101,13 +101,13 @@ class CRMRevealRule(models.Model):
         self.clear_caches() # Clear the cache in order to recompute _get_active_rules
         return super(CRMRevealRule, self).unlink()
 
-    def _compute_leads_count(self):
+    def _compute_lead_count(self):
         leads = self.env['crm.lead'].read_group([
             ('reveal_rule_id', 'in', self.ids)
         ], fields=['reveal_rule_id', 'type'], groupby=['reveal_rule_id', 'type'], lazy=False)
         mapping = {(lead['reveal_rule_id'][0], lead['type']): lead['__count'] for lead in leads}
         for rule in self:
-            rule.leads_count = mapping.get((rule.id, 'lead'), 0)
+            rule.lead_count = mapping.get((rule.id, 'lead'), 0)
             rule.opportunity_count = mapping.get((rule.id, 'opportunity'), 0)
 
     def action_get_lead_tree_view(self):
@@ -356,12 +356,20 @@ class CRMRevealRule(models.Model):
             # Does not create a lead if the reveal_id is already known
             return False
         lead_vals = rule._lead_vals_from_response(result)
+
         lead = self.env['crm.lead'].create(lead_vals)
+
+        template_values = result['reveal_data']
+        template_values.update({
+            'flavor_text': _("Opportunity created by Odoo Lead Generation"),
+            'people_data': result.get('people_data'),
+        })
         lead.message_post_with_view(
-            'crm_iap_lead.lead_message_template',
-            values=self.env['crm.iap.lead.helpers'].format_data_for_message_post(result['reveal_data'], result.get('people_data')),
+            'partner_autocomplete.enrich_service_information',
+            values=template_values,
             subtype_id=self.env.ref('mail.mt_note').id
         )
+
         return lead
 
     # Methods responsible for format response data in to valid odoo lead data

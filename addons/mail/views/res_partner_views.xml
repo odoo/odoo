@@ -36,10 +36,8 @@
                 <field name="type" position="after">
                     <field name="activity_state"/>
                 </field>
-                <xpath expr="//div[hasclass('oe_kanban_details')]" position="inside">
-                    <div class="mt-auto">
-                        <field name="activity_ids" widget="kanban_activity"/>
-                    </div>
+                <xpath expr="//span[hasclass('oe_kanban_partner_links')]" position="after">
+                    <field name="activity_ids" widget="kanban_activity"/>
                 </xpath>
             </field>
         </record>

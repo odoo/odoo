@@ -174,7 +174,7 @@ class TestProcRule(TransactionCase):
         orderpoint_form.location_id = warehouse.lot_stock_id
         orderpoint_form.product_min_qty = 0.0
         orderpoint_form.product_max_qty = 5.0
-        orderpoint_form.save()
+        orderpoint = orderpoint_form.save()
 
         self.env['stock.rule'].create({
             'name': 'Rule Supplier',
@@ -197,6 +197,7 @@ class TestProcRule(TransactionCase):
             'location_dest_id': self.ref('stock.stock_location_customers'),
         })
         delivery_move._action_confirm()
+        orderpoint._compute_qty()
         self.env['procurement.group'].run_scheduler()
 
         receipt_move = self.env['stock.move'].search([

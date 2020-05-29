@@ -256,7 +256,7 @@ actual arch.
          """)
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
-    @api.depends_context('read_arch_from_file')
+    @api.depends_context('read_arch_from_file', 'lang')
     def _compute_arch(self):
         def resolve_external_ids(arch_fs, view_xml_id):
             def replacer(m):
@@ -277,7 +277,11 @@ actual arch.
                 if fullpath:
                     arch_fs = get_view_arch_from_file(fullpath, xml_id)
                     # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
-                    arch_fs = arch_fs and resolve_external_ids(arch_fs, xml_id).replace('%%', '%')
+                    if arch_fs:
+                        arch_fs = resolve_external_ids(arch_fs, xml_id).replace('%%', '%')
+                        if self.env.context.get('lang'):
+                            tr = self._fields['arch_db'].get_trans_func(view)
+                            arch_fs = tr(view.id, arch_fs)
                 else:
                     _logger.warning("View %s: Full path [%s] cannot be found.", xml_id, view.arch_fs)
                     arch_fs = False
@@ -294,6 +298,10 @@ actual arch.
                     data['arch_fs'] = '/'.join(path_info[0:2])
                     data['arch_updated'] = False
             view.write(data)
+        # the field 'arch' depends on the context and has been implicitly
+        # modified in all languages; the invalidation below ensures that the
+        # field does not keep an old value in another environment
+        self.invalidate_cache(['arch'], self._ids)
 
     @api.depends('arch')
     @api.depends_context('read_arch_from_file')
@@ -315,10 +323,10 @@ actual arch.
             if mode == 'soft':
                 arch = view.arch_prev
             elif mode == 'hard' and view.arch_fs:
-                arch = view.with_context(read_arch_from_file=True).arch
+                arch = view.with_context(read_arch_from_file=True, lang=None).arch
             if arch:
                 # Don't save current arch in previous since we reset, this arch is probably broken
-                view.with_context(no_save_prev=True).write({'arch_db': arch})
+                view.with_context(no_save_prev=True, lang=None).write({'arch_db': arch})
 
     @api.depends('write_date')
     def _compute_model_data_id(self):
@@ -371,8 +379,6 @@ actual arch.
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.
         for view in self:
-            if not view.arch:
-                continue
             try:
                 view_arch = etree.fromstring(view.arch.encode('utf-8'))
                 view._valid_inheritance(view_arch)
@@ -400,11 +406,14 @@ actual arch.
 
         return True
 
-    @api.constrains('type', 'groups_id')
+    @api.constrains('type', 'groups_id', 'inherit_id')
     def _check_groups(self):
         for view in self:
-            if view.type == 'qweb' and view.groups_id:
-                raise ValidationError(_("Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"))
+            if (view.type == 'qweb' and
+                view.groups_id and
+                view.inherit_id and
+                view.mode != 'primary'):
+                raise ValidationError(_("Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"))
 
     @api.constrains('inherit_id')
     def _check_000_inheritance(self):
@@ -469,7 +478,7 @@ actual arch.
     def write(self, vals):
         # Keep track if view was modified. That will be useful for the --dev mode
         # to prefer modified arch over file arch.
-        if ('arch' in vals or 'arch_base' in vals) and 'install_filename' not in self._context:
+        if 'arch_updated' not in vals and ('arch' in vals or 'arch_base' in vals) and 'install_filename' not in self._context:
             vals['arch_updated'] = True
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
@@ -561,7 +570,8 @@ actual arch.
         # retrieve all the views transitively inheriting from view_id
         domain = self._get_inheriting_views_arch_domain(model)
         e = expression(domain, self.env['ir.ui.view'])
-        where_clause, where_params = e.to_sql()
+        from_clause, where_clause, where_params = e.query.get_sql()
+        assert from_clause == '"ir_ui_view"'
         self.flush(['active'])
         query = """
             WITH RECURSIVE ir_ui_view_inherits AS (
@@ -599,6 +609,21 @@ actual arch.
             return not view.groups_id or (view.groups_id & self.env.user.groups_id)
 
         return self.browse(view_ids).sudo().filtered(accessible)
+
+    def _check_view_access(self):
+        """ Verify that a view is accessible by the current user based on the
+        groups attribute. Views with no groups are considered private.
+        """
+        if self.inherit_id and self.mode != 'primary':
+            return self.inherit_id._check_view_access()
+        if self.groups_id & self.env.user.groups_id:
+            return True
+        if self.groups_id:
+            error = _("View '%s' accessible only to groups %s ") % \
+                     (self.key, ", ".join([g.name for g in self.groups_id]))
+        else:
+            error = _("View '%s' is private") % self.key
+        raise AccessError(error)
 
     def handle_view_error(self, message, *, raise_exception=True, from_exception=None, from_traceback=None):
         """ Handle a view error by raising an exception or logging a warning,
@@ -858,7 +883,8 @@ actual arch.
         """ Compute and set on node access rights based on view type. Specific
         views can add additional specific rights like creating columns for
         many2one-based grouping views. """
-        Model = self.env[model]
+        # testing ACL as real user
+        Model = self.env[model].sudo(False)
         is_base_model = self.env.context.get('base_model_name', model) == model
 
         if node.tag in ('kanban', 'tree', 'form', 'activity'):
@@ -965,7 +991,7 @@ actual arch.
                         }
                 attrs['views'] = views
                 if field.comodel_name in self.env:
-                    Comodel = self.env[field.comodel_name]
+                    Comodel = self.env[field.comodel_name].sudo(False)
                     node_info['attr_model'] = Comodel
                     if field.type in ('many2one', 'many2many'):
                         can_create = Comodel.check_access_rights('create', raise_exception=False)
@@ -1484,7 +1510,12 @@ actual arch.
 
     @api.model
     def read_template(self, xml_id):
-        return self._read_template(self.get_view_id(xml_id))
+        """ Return a template content based on external id
+        Read access on ir.ui.view required
+        """
+        template_id = self.get_view_id(xml_id)
+        self.browse(template_id)._check_view_access()
+        return self._read_template(template_id)
 
     @api.model
     def get_view_id(self, template):
@@ -1499,7 +1530,7 @@ actual arch.
             return template
         if '.' not in template:
             raise ValueError('Invalid template id: %r' % template)
-        view = self.search([('key', '=', template)], limit=1)
+        view = self.sudo().search([('key', '=', template)], limit=1)
         return view and view.id or self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
 
     def clear_cache(self):
@@ -1581,7 +1612,7 @@ actual arch.
         :rtype: boolean
         """
         return any(
-            (attr in ('data-oe-model', 'group') or (attr.startswith('t-')))
+            (attr in ('data-oe-model', 'groups') or (attr.startswith('t-')))
             for attr in node.attrib
         )
 
@@ -1592,16 +1623,21 @@ actual arch.
         return '%s.%s' % (xmlid['module'], xmlid['name'])
 
     @api.model
-    def render_template(self, template, values=None, engine='ir.qweb'):
-        return self.browse(self.get_view_id(template)).render(values, engine)
+    def render_public_asset(self, template, values=None):
+        template = self.sudo().browse(self.get_view_id(template))
+        template._check_view_access()
+        return template.sudo()._render(values, engine="ir.qweb")
 
-    def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
+    def _render_template(self, template, values=None, engine='ir.qweb'):
+        return self.browse(self.get_view_id(template))._render(values, engine)
+
+    def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         assert isinstance(self.id, int)
 
         qcontext = dict() if minimal_qcontext else self._prepare_qcontext()
         qcontext.update(values or {})
 
-        return self.env[engine].render(self.id, qcontext)
+        return self.env[engine]._render(self.id, qcontext)
 
     @api.model
     def _prepare_qcontext(self):
@@ -1621,7 +1657,7 @@ actual arch.
             time=time,
             datetime=datetime,
             relativedelta=relativedelta,
-            xmlid=self.key,
+            xmlid=self.sudo().key,
             viewid=self.id,
             to_text=pycompat.to_text,
             image_data_uri=image_data_uri,

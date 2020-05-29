@@ -1,39 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-       <record id="tax1" model="account.tax.template">
-            <field name="chart_template_id" ref="no_chart_template"/>
-            <field name="name">0 Ingen mvabehandling 0%</field>
-            <field name="description">Ingen mvabehandling(anskaffelser)</field>
-            <field name="amount">0</field>
-            <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tax_group_id" ref="tax_group_0"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
-            ]"/>
-        </record>
-
         <record id="tax2" model="account.tax.template">
             <field name="chart_template_id" ref="no_chart_template"/>
             <field name="name">1 Inngående mva høy sats 25%</field>
+            <field name="sequence">0</field>
             <field name="description">Fradrag for inngående mva</field>
             <field name="amount">25</field>
             <field name="amount_type">percent</field>
@@ -61,6 +32,36 @@
                     'repartition_type': 'tax',
                     'account_id': ref('chart2711'),
                     'minus_report_line_ids': [ref('account_tax_report_line_post_14')],
+                }),
+            ]"/>
+        </record>
+
+       <record id="tax1" model="account.tax.template">
+            <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="name">0 Ingen mvabehandling 0%</field>
+            <field name="description">Ingen mvabehandling(anskaffelser)</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
                 }),
             ]"/>
         </record>

@@ -5,9 +5,18 @@
             <link rel="stylesheet" href="/pos_hr/static/src/css/pos.css"/>
 
             <script type="text/javascript" src="/pos_hr/static/src/js/models.js"></script>
-            <script type="text/javascript" src="/pos_hr/static/src/js/screens.js"></script>
-            <script type="text/javascript" src="/pos_hr/static/src/js/gui.js"></script>
-            <script type="text/javascript" src="/pos_hr/static/src/js/chrome.js"></script>
+            <script type="text/javascript" src="/pos_hr/static/src/js/useSelectEmployee.js"></script>
+            <script type="text/javascript" src="/pos_hr/static/src/js/Chrome.js"></script>
+            <script type="text/javascript" src="/pos_hr/static/src/js/HeaderLockButton.js"></script>
+            <script type="text/javascript" src="/pos_hr/static/src/js/CashierName.js"></script>
+            <script type="text/javascript" src="/pos_hr/static/src/js/LoginScreen.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="Pos Hr Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_hr/static/tests/tours/PosHrTourMethods.js"></script>
+            <script type="text/javascript" src="/pos_hr/static/tests/tours/PosHrTour.js"></script>
         </xpath>
     </template>
 </odoo>

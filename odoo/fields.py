@@ -29,9 +29,6 @@ from odoo.exceptions import CacheMiss
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
-RENAMED_ATTRS = [('select', 'index'), ('digits_compute', 'digits')]
-DEPRECATED_ATTRS = [("oldname", "use an upgrade script instead.")]
-
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
     'ir.model.relation', 'ir.model.constraint', 'ir.module.module',
@@ -98,6 +95,8 @@ class Field(MetaField('DummyField', (object,), {})):
         set, the ORM takes the field name in the class (capitalized).
 
     :param str help: the tooltip of the field seen by users
+
+    :param invisible: whether the field is invisible (boolean, by default ``False``)
 
     :param bool readonly: whether the field is readonly (default: ``False``)
 
@@ -233,6 +232,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     string = None                       # field label
     help = None                         # field tooltip
+    invisible = False             # whether the field is invisible
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
     states = None                       # set readonly and required depending on state
@@ -345,18 +345,21 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _setup_attrs(self, model, name):
         """ Initialize the field parameter attributes. """
+        # validate extra arguments
+        for key in self.args:
+            # TODO: improve filter as there are attributes on the class which
+            #       are not valid on the field, probably
+            if not (hasattr(self, key) or model._valid_field_parameter(self, key)):
+                _logger.warning(
+                    "Field %s.%s: unknown parameter %r, if this is an actual"
+                    " parameter you may want to override the method"
+                    " _valid_field_parameter on the relevant model in order to"
+                    " allow it",
+                    model._name, name, key
+                )
+
         attrs = self._get_attrs(model, name)
         self.__dict__.update(attrs)
-
-        # check for renamed attributes (conversion errors)
-        for key1, key2 in RENAMED_ATTRS:
-            if key1 in attrs:
-                _logger.warning("Field %s: parameter %r is no longer supported; use %r instead.",
-                                self, key1, key2)
-        for key, msg in DEPRECATED_ATTRS:
-            if key in attrs:
-                _logger.warning("Field %s: parameter %r is not longer supported; %s",
-                                self, key, msg)
 
         # prefetch only stored, column, non-manual and non-deprecated fields
         if not (self.store and self.column_type) or self.manual or self.deprecated:
@@ -466,7 +469,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 setattr(self, attr, getattr(field, prop))
 
         for attr, value in field.__dict__.items():
-            if not hasattr(self, attr):
+            if not hasattr(self, attr) and model._valid_field_parameter(self, attr):
                 setattr(self, attr, value)
 
         # special cases of inherited fields
@@ -568,12 +571,12 @@ class Field(MetaField('DummyField', (object,), {})):
     #
 
     def _default_company_dependent(self, model):
-        return model.env['ir.property'].get(self.name, self.model_name)
+        return model.env['ir.property']._get(self.name, self.model_name)
 
     def _compute_company_dependent(self, records):
         # read property as superuser, as the current user may not have access
         Property = records.env['ir.property'].sudo()
-        values = Property.get_multi(self.name, self.model_name, records.ids)
+        values = Property._get_multi(self.name, self.model_name, records.ids)
         for record in records:
             record[self.name] = values.get(record.id)
 
@@ -584,7 +587,7 @@ class Field(MetaField('DummyField', (object,), {})):
             record.id: self.convert_to_write(record[self.name], record)
             for record in records
         }
-        Property.set_multi(self.name, self.model_name, values)
+        Property._set_multi(self.name, self.model_name, values)
 
     def _search_company_dependent(self, records, operator, value):
         Property = records.env['ir.property']
@@ -837,12 +840,14 @@ class Field(MetaField('DummyField', (object,), {})):
 
     ############################################################################
     #
-    # Read from/write to database
+    # Alternatively stored fields: if fields don't have a `column_type` (not
+    # stored as regular db columns) they go through a read/create/write
+    # protocol instead
     #
 
     def read(self, records):
         """ Read the value of ``self`` on ``records``, and store it in cache. """
-        return NotImplementedError("Method read() undefined on %s" % self)
+        raise NotImplementedError("Method read() undefined on %s" % self)
 
     def create(self, record_values):
         """ Write the value of ``self`` on the given records, which have just
@@ -909,7 +914,7 @@ class Field(MetaField('DummyField', (object,), {})):
             recs = record if self.recursive else env.records_to_compute(self)
             try:
                 self.compute_value(recs)
-            except AccessError:
+            except (AccessError, MissingError):
                 self.compute_value(record)
 
         try:
@@ -944,7 +949,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     recs = record if self.recursive else record._in_cache_without(self)
                     try:
                         self.compute_value(recs)
-                    except AccessError:
+                    except (AccessError, MissingError):
                         self.compute_value(record)
                     value = env.cache.get(record, self)
 
@@ -1301,7 +1306,9 @@ class Monetary(Field):
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
-            currency = record[:1][self.currency_field]
+            # BEWARE: do not prefetch other fields, because 'value' may be in
+            # cache, and would be overridden by the value read from database!
+            currency = record[:1].with_context(prefetch_fields=False)[self.currency_field]
 
         value = float(value or 0.0)
         if currency:
@@ -1314,7 +1321,9 @@ class Monetary(Field):
         if value and validate:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
-            currency = record.sudo()[self.currency_field]
+            # BEWARE: do not prefetch other fields, because 'value' may be in
+            # cache, and would be overridden by the value read from database!
+            currency = record.sudo().with_context(prefetch_fields=False)[self.currency_field]
             if len(currency) > 1:
                 raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
             elif currency:
@@ -1437,7 +1446,10 @@ class _String(Field):
             if self.translate is True and cache_value is not None:
                 tname = "%s,%s" % (records._name, self.name)
                 records.env['ir.translation']._set_source(tname, real_recs._ids, value)
-                records.invalidate_cache(fnames=[self.name], ids=records.ids)
+            if self.translate:
+                # invalidate the field in the other languages
+                cache.invalidate([(self, records.ids)])
+                cache.update(records, self, [cache_value] * len(records))
 
         if update_trans:
             if callable(self.translate):
@@ -1949,8 +1961,10 @@ class Binary(Field):
             ('res_id', 'in', records.ids),
         ]
         # Note: the 'bin_size' flag is handled by the field 'datas' itself
-        data = {att.res_id: att.datas
-                for att in records.env['ir.attachment'].sudo().search(domain)}
+        data = {
+            att.res_id: att.datas
+            for att in records.env['ir.attachment'].sudo().search(domain)
+        }
         cache = records.env.cache
         for record in records:
             cache.set(record, self, data.get(record.id, False))
@@ -2030,11 +2044,19 @@ class Binary(Field):
 class Image(Binary):
     """Encapsulates an image, extending :class:`Binary`.
 
-    :param int max_width: the maximum width of the image
-    :param int max_height: the maximum height of the image
+    If image size is greater than the ``max_width``/``max_height`` limit of pixels, the image will be
+    resized to the limit by keeping aspect ratio.
+
+    :param int max_width: the maximum width of the image (default: ``0``, no limit)
+    :param int max_height: the maximum height of the image (default: ``0``, no limit)
     :param bool verify_resolution: whether the image resolution should be verified
         to ensure it doesn't go over the maximum image resolution (default: ``True``).
         See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+
+    .. note::
+
+        If no ``max_width``/``max_height`` is specified (or is set to 0) and ``verify_resolution`` is False,
+        the field content won't be verified at all and a :class:`Binary` field should be used.
     """
     max_width = 0
     max_height = 0
@@ -2136,6 +2158,12 @@ class Selection(Field):
         field = self.related_field
         self.selection = lambda model: field._description_selection(model.env)
 
+    def _get_attrs(self, model, name):
+        attrs = super(Selection, self)._get_attrs(model, name)
+        # arguments 'selection' and 'selection_add' are processed below
+        attrs.pop('selection_add', None)
+        return attrs
+
     def _setup_attrs(self, model, name):
         super(Selection, self)._setup_attrs(model, name)
 
@@ -2154,9 +2182,11 @@ class Selection(Field):
                     if values is not None and values != [kv[0] for kv in selection]:
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
                     values = [kv[0] for kv in selection]
-                    labels.update(selection)
+                    labels = dict(selection)
                     self.ondelete = {}
                 else:
+                    values = None
+                    labels = {}
                     self.selection = selection
                     self.ondelete = None
 
@@ -2375,11 +2405,14 @@ class _Relational(Field):
                 else:
                     return "[('company_id', 'in', [allowed_company_ids[0], False])]"
             else:
+                # when using check_company=True on a field on 'res.company', the
+                # company_id comes from the id of the current record
+                cid = "id" if self.model_name == "res.company" else "company_id"
                 if self.comodel_name == "res.users":
                     # User allowed company ids = user.company_ids
-                    return "['|', (not company_id, '=', True), ('company_ids', 'in', [company_id])]"
+                    return f"['|', (not {cid}, '=', True), ('company_ids', 'in', [{cid}])]"
                 else:
-                    return "[('company_id', 'in', [company_id, False])]"
+                    return f"[('company_id', 'in', [{cid}, False])]"
         return self.domain(env[self.model_name]) if callable(self.domain) else self.domain
 
     def null(self, record):
@@ -2580,15 +2613,15 @@ class Many2one(_Relational):
         # update the cache of self
         cache.update(records, self, [cache_value] * len(records))
 
-        # update the cache of one2many fields of new corecord
-        self._update_inverses(records, cache_value)
-
         # update towrite
         if self.store:
             towrite = records.env.all.towrite[self.model_name]
             for record in records.filtered('id'):
                 # cache_value is already in database format
                 towrite[record.id][self.name] = cache_value
+
+        # update the cache of one2many fields of new corecord
+        self._update_inverses(records, cache_value)
 
         return records
 

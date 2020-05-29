@@ -3,7 +3,7 @@
 
 {
     'name': 'OdooBot',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Productivity/Discuss',
     'summary': 'Add OdooBot in discussions',
     'description': "",
@@ -11,7 +11,6 @@
     'depends': ['mail'],
     'installable': True,
     'application': False,
-    'auto_install': True,
     'data': [
         'views/assets.xml',
         'views/res_users_views.xml',

@@ -45,6 +45,7 @@ class MailActivityType(models.Model):
         ('days', 'days'),
         ('weeks', 'weeks'),
         ('months', 'months')], string="Delay units", help="Unit of delay", required=True, default='days')
+    delay_label = fields.Char(compute='_compute_delay_label')
     delay_from = fields.Selection([
         ('current_date', 'after validation date'),
         ('previous_activity', 'after previous activity deadline')], string="Delay Type", help="Type of delay", required=True, default='previous_activity')
@@ -91,6 +92,14 @@ class MailActivityType(models.Model):
         for activity_type in self:
             activity_type.initial_res_model_id = activity_type.res_model_id
 
+    @api.depends('delay_unit', 'delay_count')
+    def _compute_delay_label(self):
+        selection_description_values = {
+            e[0]: e[1] for e in self._fields['delay_unit']._description_selection(self.env)}
+        for activity_type in self:
+            unit = selection_description_values[activity_type.delay_unit]
+            activity_type.delay_label = '%s %s' % (activity_type.delay_count, unit)
+
 
 class MailActivity(models.Model):
     """ An actual activity to perform. Activities are linked to
@@ -110,6 +119,19 @@ class MailActivity(models.Model):
             res['res_model_id'] = self.env['ir.model']._get(res['res_model']).id
         return res
 
+    @api.model
+    def _default_activity_type_id(self):
+        ActivityType = self.env["mail.activity.type"]
+        activity_type_todo = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
+        current_model_id = self.default_get(['res_model_id', 'res_model'])['res_model_id']
+        if activity_type_todo and activity_type_todo.active and (activity_type_todo.res_model_id.id == current_model_id or not activity_type_todo.res_model_id):
+            return activity_type_todo
+        activity_type_model = ActivityType.search([('res_model_id', '=', current_model_id)], limit=1)
+        if activity_type_model:
+            return activity_type_model
+        activity_type_generic = ActivityType.search([('res_model_id','=', False)], limit=1)
+        return activity_type_generic
+
     # owner
     res_model_id = fields.Many2one(
         'ir.model', 'Document Model',
@@ -124,7 +146,8 @@ class MailActivity(models.Model):
     # activity
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
-        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict')
+        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict',
+        default=_default_activity_type_id)
     activity_category = fields.Selection(related='activity_type_id.category', readonly=True)
     activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=True)
     icon = fields.Char('Icon', related='activity_type_id.icon', readonly=True)
@@ -393,7 +416,7 @@ class MailActivity(models.Model):
                 body_template = body_template.with_context(lang=activity.user_id.lang)
                 activity = activity.with_context(lang=activity.user_id.lang)
             model_description = self.env['ir.model']._get(activity.res_model).display_name
-            body = body_template.render(
+            body = body_template._render(
                 dict(
                     activity=activity,
                     model_description=model_description,
@@ -798,7 +821,7 @@ class MailActivityMixin(models.AbstractModel):
             activities |= self.env['mail.activity'].create(create_vals)
         return activities
 
-    def activity_schedule_with_view(self, act_type_xmlid='', date_deadline=None, summary='', views_or_xmlid='', render_context=None, **act_values):
+    def _activity_schedule_with_view(self, act_type_xmlid='', date_deadline=None, summary='', views_or_xmlid='', render_context=None, **act_values):
         """ Helper method: Schedule an activity on each record of the current record set.
         This method allow to the same mecanism as `activity_schedule`, but provide
         2 additionnal parameters:
@@ -821,7 +844,7 @@ class MailActivityMixin(models.AbstractModel):
         activities = self.env['mail.activity']
         for record in self:
             render_context['object'] = record
-            note = views.render(render_context, engine='ir.qweb', minimal_qcontext=True)
+            note = views._render(render_context, engine='ir.qweb', minimal_qcontext=True)
             activities |= record.activity_schedule(act_type_xmlid=act_type_xmlid, date_deadline=date_deadline, summary=summary, note=note, **act_values)
         return activities
 

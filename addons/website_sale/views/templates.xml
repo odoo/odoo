@@ -97,7 +97,7 @@
             <attribute name="t-attf-class" remove="#{_classes}" separator=" "/>
         </xpath>
         <xpath expr="//div[@role='search']" position="replace">
-            <form t-attf-class="o_wsale_products_searchbar_form o_wait_lazy_js #{_classes}" t-att-action="action if action else '/shop'" method="get">
+            <form t-attf-class="o_wsale_products_searchbar_form o_wait_lazy_js #{_classes}" t-att-action="action if action else '/shop'" method="get" t-att-data-snippet="_snippet">
                 <t>$0</t>
                 <input name="order" type="hidden" class="o_wsale_search_order_by" value=""/>
                 <t t-raw="0"/>
@@ -592,7 +592,7 @@
 
     <template id="recently_viewed_products_product" inherit_id="website_sale.product" active="True" customize_show="True" name="Recently Viewed Products" priority="16">
         <xpath expr="//div[@t-field='product.website_description']" position="after">
-            <t t-call="website_sale.s_products_recently_viewed"/>
+            <t t-snippet-call="website_sale.s_products_recently_viewed"/>
         </xpath>
     </template>
 
@@ -746,13 +746,15 @@
                             <t t-call="website_sale.cart_summary"/>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
-                            <section class="s_website_form" data-vcss="001">
+                            <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                                 <div class="container">
                                     <form action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-force_action="shop.sale.order" data-model_name="sale.order" data-success-mode="redirect" data-success-page="/shop/payment" hide-change-model="true">
                                         <div class="s_website_form_rows row s_col_no_bgcolor">
                                             <div class="form-group col-12 s_website_form_field" data-type="char" data-name="Field">
                                                 <div class="row s_col_no_resize s_col_no_bgcolor">
-                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale1">Your Reference</label>
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale1">
+                                                        <span class="s_website_form_label_content">Your Reference</span>
+                                                    </label>
                                                     <div class="col-sm">
                                                         <input id="sale1" type="text" class="form-control s_website_form_input" name="client_order_ref"/>
                                                     </div>
@@ -760,7 +762,9 @@
                                             </div>
                                             <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="text" data-name="Field">
                                                 <div class="row s_col_no_resize s_col_no_bgcolor">
-                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale2">Give us your feedback</label>
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale2">
+                                                        <span class="s_website_form_label_content">Give us your feedback</span>
+                                                    </label>
                                                     <div class="col-sm">
                                                         <textarea id="sale2" class="form-control s_website_form_input" name="Give us your feedback" />
                                                     </div>
@@ -768,7 +772,9 @@
                                             </div>
                                             <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="binary" data-name="Field">
                                                 <div class="row s_col_no_resize s_col_no_bgcolor">
-                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale3">A document to provide</label>
+                                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale3">
+                                                        <span class="s_website_form_label_content">A document to provide</span>
+                                                    </label>
                                                     <div class="col-sm">
                                                         <input id="sale3" type="file" class="form-control-file s_website_form_input" name="a_document" />
                                                     </div>
@@ -1185,7 +1191,7 @@
                                 <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
                                     <div class="alert alert-warning" role="alert">
                                         <h4 class="alert-heading">Be aware!</h4>
-                                        <p>
+                                        <p t-if="not only_services" groups="sale.group_delivery_invoice_address">
                                             You are editing your <b>billing and shipping</b> addresses at the same time!<br/>
                                             If you want to modify your shipping address, create a <a href='/shop/address'>new address</a>.
                                         </p>
@@ -1498,7 +1504,7 @@
                                         </h2>
                                     </div>
                                 </t>
-                                <t t-if="request.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b') == 'b2c' and request.website.is_public_user()">
+                                <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user()">
                                     <p class="alert alert-info mt-3" role="status">
                                         <a role="button" t-att-href='order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True).signup_url' class='btn btn-primary'>Sign Up</a>
                                          to follow your order.
@@ -1621,6 +1627,9 @@
                     <t t-if="payment_tx_id.state == 'authorized'">
                         <span>Your payment has been authorized.</span>
                     </t>
+                    <t t-if="payment_tx_id.state == 'error'">
+                        <span t-esc="payment_tx_id.state_message"/>
+                    </t>
                 </div>
                 <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and order.reference" class="card-body">
                     <b>Communication: </b><span t-esc='order.reference'/>
@@ -1673,7 +1682,7 @@
         <t t-call="website.layout">
           <div id="wrap">
               <div class="oe_structure" id="oe_structure_website_sale_terms_1">
-                <section class="s_title">
+                <section class="s_title" data-vcss="001">
                   <div class="container">
                     <div class="row">
                       <div class="col-lg-12">
@@ -1695,7 +1704,7 @@
                     </div>
                   </div>
                 </section>
-                <section class="s_text_block">
+                <section class="s_text_block" data-snippet="s_text_block">
                   <div class="container">
                     <div class="row">
                       <div class="col-lg-12 mb16 mt16">

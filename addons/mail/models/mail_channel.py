@@ -61,16 +61,19 @@ class Channel(models.Model):
 
     MAX_BOUNCE_LIMIT = 10
 
-    def _get_default_image(self):
-        image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
-        return base64.b64encode(open(image_path, 'rb').read())
-
     @api.model
     def default_get(self, fields):
         res = super(Channel, self).default_get(fields)
         if not res.get('alias_contact') and (not fields or 'alias_contact' in fields):
             res['alias_contact'] = 'everyone' if res.get('public', 'private') == 'public' else 'followers'
         return res
+
+    def _default_channel_last_seen_partner_ids(self):
+        return [(0, 0, {"partner_id": self.env.user.partner_id.id})]
+
+    def _get_default_image(self):
+        image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
+        return base64.b64encode(open(image_path, 'rb').read())
 
     name = fields.Char('Name', required=True, translate=True)
     active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
@@ -84,7 +87,7 @@ class Channel(models.Model):
     email_send = fields.Boolean('Send messages by email', default=False)
     # multi users channel
     # depends=['...'] is for `test_mail/tests/common.py`, class Moderation, `setUpClass`
-    channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen', depends=['channel_partner_ids'])
+    channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen', depends=['channel_partner_ids'], default=_default_channel_last_seen_partner_ids)
     channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners', depends=['channel_last_seen_partner_ids'])
     channel_message_ids = fields.Many2many('mail.message', 'mail_message_mail_channel_rel')
     is_member = fields.Boolean('Is a member', compute='_compute_is_member')
@@ -181,9 +184,12 @@ class Channel(models.Model):
 
     @api.onchange('moderator_ids')
     def _onchange_moderator_ids(self):
-        missing_partners = self.mapped('moderator_ids.partner_id') - self.mapped('channel_last_seen_partner_ids.partner_id')
-        for partner in missing_partners:
-            self.channel_last_seen_partner_ids += self.env['mail.channel.partner'].new({'partner_id': partner.id})
+        missing_partner_ids = set(self.mapped('moderator_ids.partner_id').ids) - set(self.mapped('channel_last_seen_partner_ids.partner_id').ids)
+        if missing_partner_ids:
+            self.channel_last_seen_partner_ids = [
+                (0, 0, {'partner_id': partner_id})
+                for partner_id in missing_partner_ids
+            ]
 
     @api.onchange('email_send')
     def _onchange_email_send(self):
@@ -208,9 +214,8 @@ class Channel(models.Model):
 
         # Create channel and alias
         channel = super(Channel, self.with_context(
-            alias_model_name=self._name, alias_parent_model_name=self._name, mail_create_nolog=True, mail_create_nosubscribe=True)
+            mail_create_nolog=True, mail_create_nosubscribe=True)
         ).create(vals)
-        channel.alias_id.write({"alias_force_thread_id": channel.id, 'alias_parent_thread_id': channel.id})
 
         if vals.get('group_ids'):
             channel._subscribe_users()
@@ -222,8 +227,6 @@ class Channel(models.Model):
         return channel
 
     def unlink(self):
-        aliases = self.mapped('alias_id')
-
         # Delete mail.channel
         try:
             all_emp_group = self.env.ref('mail.channel_all_employees')
@@ -231,10 +234,7 @@ class Channel(models.Model):
             all_emp_group = None
         if all_emp_group and all_emp_group in self and not self._context.get(MODULE_UNINSTALL_FLAG):
             raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
-        res = super(Channel, self).unlink()
-        # Cascade-delete mail aliases as well, as they should not exist without the mail.channel.
-        aliases.sudo().unlink()
-        return res
+        return super(Channel, self).unlink()
 
     def write(self, vals):
         # First checks if user tries to modify moderation fields and has not the right to do it.
@@ -257,8 +257,12 @@ class Channel(models.Model):
 
         return result
 
-    def get_alias_model_name(self, vals):
-        return vals.get('alias_model', 'mail.channel')
+    def _alias_get_creation_values(self):
+        values = super(Channel, self)._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('mail.channel').id
+        if self.id:
+            values['alias_force_thread_id'] = self.id
+        return values
 
     def _subscribe_users(self):
         for mail_channel in self:
@@ -422,7 +426,7 @@ class Channel(models.Model):
             create_values = {
                 'email_from': company.catchall_formatted or company.email_formatted,
                 'author_id': self.env.user.partner_id.id,
-                'body_html': view.render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
+                'body_html': view._render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
                 'subject': _("Guidelines of channel %s") % self.name,
                 'recipient_ids': [(4, partner.id)]
             }
@@ -629,14 +633,14 @@ class Channel(models.Model):
             partners_to.append(self.env.user.partner_id.id)
             # determine type according to the number of partner in the channel
             self.env.cr.execute("""
-                SELECT P.channel_id as channel_id
+                SELECT P.channel_id
                 FROM mail_channel C, mail_channel_partner P
                 WHERE P.channel_id = C.id
                     AND C.public LIKE 'private'
                     AND P.partner_id IN %s
-                    AND channel_type LIKE 'chat'
+                    AND C.channel_type LIKE 'chat'
                 GROUP BY P.channel_id
-                HAVING array_agg(P.partner_id ORDER BY P.partner_id) = %s
+                HAVING ARRAY_AGG(DISTINCT P.partner_id ORDER BY P.partner_id) = %s
             """, (tuple(partners_to), sorted(list(partners_to)),))
             result = self.env.cr.dictfetchall()
             if result:
@@ -969,7 +973,7 @@ class Channel(models.Model):
         })
 
     def _define_command_help(self):
-        return {'help': _("Show an helper message")}
+        return {'help': _("Show a helper message")}
 
     def _execute_command_help(self, **kwargs):
         partner = self.env.user.partner_id
@@ -983,9 +987,9 @@ class Channel(models.Model):
             msg = _("You are in a private conversation with <b>@%s</b>.") % (channel_partners[0].partner_id.name if channel_partners else _('Anonymous'))
         msg += _("""<br><br>
             Type <b>@username</b> to mention someone, and grab his attention.<br>
-            Type <b>#channel</b>.to mention a channel.<br>
+            Type <b>#channel</b> to mention a channel.<br>
             Type <b>/command</b> to execute a command.<br>
-            Type <b>:shortcut</b> to insert canned responses in your message.<br>""")
+            Type <b>:shortcut</b> to insert a canned response in your message.<br>""")
 
         self._send_transient_message(partner, msg)
 

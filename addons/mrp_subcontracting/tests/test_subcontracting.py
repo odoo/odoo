@@ -238,7 +238,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         orderpoint_form.product_min_qty = 0.0
         orderpoint_form.product_max_qty = 10.0
         orderpoint_form.location_id = self.env.company.subcontracting_location_id
-        orderpoint_form.save()
+        orderpoint = orderpoint_form.save()
 
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])

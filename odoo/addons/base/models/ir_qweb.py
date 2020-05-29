@@ -36,7 +36,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     _description = 'Qweb'
 
     @api.model
-    def render(self, id_or_xml_id, values=None, **options):
+    def _render(self, id_or_xml_id, values=None, **options):
         """ render(id_or_xml_id, values, **options)
 
         Render the template specified by the given name.
@@ -55,7 +55,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         context.update(options)
 
-        result = super(IrQWeb, self).render(id_or_xml_id, values=values, **context)
+        result = super(IrQWeb, self)._render(id_or_xml_id, values=values, **context)
 
         if b'data-pagebreak=' not in result:
             return result
@@ -112,21 +112,22 @@ class IrQWeb(models.AbstractModel, QWeb):
             pass
         return super(IrQWeb, self).compile(id_or_xml_id, options=options)
 
-    def load(self, name, options):
+    def _load(self, name, options):
         lang = options.get('lang', get_lang(self.env).code)
         env = self.env
         if lang != env.context.get('lang'):
             env = env(context=dict(env.context, lang=lang))
 
-        template = env['ir.ui.view'].read_template(name)
+        view_id = self.env['ir.ui.view'].get_view_id(name)
+        template = env['ir.ui.view'].sudo()._read_template(view_id)
 
-        # QWeb's `read_template` will check if one of the first children of
+        # QWeb's `_read_template` will check if one of the first children of
         # what we send to it has a "t-name" attribute having `name` as value
         # to consider it has found it. As it'll never be the case when working
         # with view ids or children view or children primary views, force it here.
         def is_child_view(view_name):
             view_id = self.env['ir.ui.view'].get_view_id(view_name)
-            view = self.env['ir.ui.view'].browse(view_id)
+            view = self.env['ir.ui.view'].sudo().browse(view_id)
             return view.inherit_id is not None
 
         if isinstance(name, int) or is_child_view(name):
@@ -323,7 +324,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                 from odoo.addons.web.controllers.main import module_boot
                 return json.dumps(module_boot())
             return '[]'
-        template = IrQweb.render(xmlid, {"get_modules_order": get_modules_order})
+        template = IrQweb._render(xmlid, {"get_modules_order": get_modules_order})
 
         files = []
         remains = []

@@ -2,9 +2,8 @@ odoo.define('mail.CustomFilterItem', function (require) {
     "use strict";
 
     const CustomFilterItem = require('web.CustomFilterItem');
-    const utils = require('web.utils');
 
-    utils.patch(CustomFilterItem, 'mail.CustomFilterItem', {
+    CustomFilterItem.patch('mail.CustomFilterItem', T => class extends T {
 
         /**
          * With the `mail` module installed, we want to filter out some of the
@@ -12,10 +11,10 @@ odoo.define('mail.CustomFilterItem', function (require) {
          * @override
          */
         _validateField(field) {
-            return this._super(...arguments) &&
+            return super._validateField(...arguments) &&
                 field.relation !== 'mail.message' &&
                 field.name !== 'message_ids';
-        },
+        }
     });
 
     return CustomFilterItem;

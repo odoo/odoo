@@ -84,9 +84,10 @@
             <field name="name">Austria</field>
             <field name="code">at</field>
             <field file="base/static/img/country_flags/at.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
             <field eval="43" name="phone_code" />
-            <field name="vat_label">VAT</field>
+            <field name="vat_label">USt</field>
         </record>
         <record id="au" model="res.country">
             <field name="name">Australia</field>
@@ -273,7 +274,7 @@
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="CAD" />
             <field eval="1" name="phone_code" />
-            <field name="vat_label">HST</field>            
+            <field name="vat_label">HST</field>
         </record>
         <record id="cc" model="res.country">
             <field name="name">Cocos (Keeling) Islands</field>
@@ -728,6 +729,7 @@
             <field file="base/static/img/country_flags/id.png" name="image" type="base64" />
             <field name="currency_id" ref="IDR" />
             <field eval="62" name="phone_code" />
+            <field name="vat_label">NPWP</field>
         </record>
         <record id="ie" model="res.country">
             <field name="name">Ireland</field>
@@ -1203,6 +1205,7 @@
             <field name="name">Norway</field>
             <field name="code">no</field>
             <field file="base/static/img/country_flags/no.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="NOK" />
             <field eval="47" name="phone_code" />
         </record>

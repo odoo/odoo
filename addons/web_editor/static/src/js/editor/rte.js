@@ -510,7 +510,7 @@ var RTEWidget = Widget.extend({
                     // new rejection with all relevant info
                     var id = _.uniqueId('carlos_danger_');
                     $el.addClass('o_dirty oe_carlos_danger ' + id);
-                    var html = (response.message.data.exception_type === 'except_osv');
+                    var html = Boolean(response.data.name);
                     if (html) {
                         var msg = $('<div/>', {text: response.message.data.message}).html();
                         var data = msg.substring(3, msg.length  -2).split(/', u'/);
@@ -800,7 +800,7 @@ return {
 odoo.define('web_editor.rte.summernote_custom_colors', function (require) {
 'use strict';
 
-// These colors are already normalized as per normalizeCSSColor in web.ColorpickerDialog
+// These colors are already normalized as per normalizeCSSColor in web.Colorpicker
 return [
     ['#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF'],
     ['#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF'],

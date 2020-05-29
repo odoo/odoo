@@ -3,5 +3,5 @@
 
 from . import common
 from . import test_mailing_internals
-from . import test_mass_mailing_list_merge
-from . import test_mass_mailing_shortener
+from . import test_mailing_list
+from . import test_mailing_controllers

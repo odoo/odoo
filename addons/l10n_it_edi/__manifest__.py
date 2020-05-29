@@ -7,6 +7,7 @@
     'depends': [
         'l10n_it',
         'fetchmail',
+        'account_edi'
     ],
     'author': 'Odoo',
     'description': """
@@ -16,10 +17,12 @@ E-invoice implementation
     'website': 'http://www.odoo.com/',
     'data': [
         'security/ir.model.access.csv',
+        'data/account_edi_data.xml',
         'data/invoice_it_template.xml',
         'views/l10n_it_view.xml',
         ],
     'demo': [
         'data/account_invoice_demo.xml',
     ],
+    'auto_install': True,
 }

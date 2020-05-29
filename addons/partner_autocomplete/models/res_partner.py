@@ -184,9 +184,11 @@ class ResPartner(models.Model):
         if len(vals_list) == 1:
             partners._update_autocomplete_data(vals_list[0].get('vat', False))
             if partners.additional_info:
+                template_values = json.loads(partners.additional_info)
+                template_values['flavor_text'] = _("Partner created by Odoo Partner Autocomplete Service")
                 partners.message_post_with_view(
-                    'partner_autocomplete.additional_info_template',
-                    values=json.loads(partners.additional_info),
+                    'partner_autocomplete.enrich_service_information',
+                    values=template_values,
                     subtype_id=self.env.ref('mail.mt_note').id,
                 )
                 partners.write({'additional_info': False})

@@ -28,7 +28,7 @@ class CustomerPortal(CustomerPortal):
                'order_line_price_subtotal': format_price(order_line.price_subtotal)
             })
             try:
-                results['order_totals_table'] = request.env['ir.ui.view'].render_template('sale.sale_order_portal_content_totals_table', {'sale_order': order_sudo})
+                results['order_totals_table'] = request.env['ir.ui.view']._render_template('sale.sale_order_portal_content_totals_table', {'sale_order': order_sudo})
             except ValueError:
                 pass
 
@@ -58,7 +58,7 @@ class CustomerPortal(CustomerPortal):
             results = self._get_portal_order_details(order_sudo)
             results.update({
                 'unlink': True,
-                'sale_template': request.env['ir.ui.view'].render_template('sale.sale_order_portal_content', {
+                'sale_template': request.env['ir.ui.view']._render_template('sale.sale_order_portal_content', {
                     'sale_order': order_sudo,
                     'report_type': "html"
                 }),
@@ -84,7 +84,7 @@ class CustomerPortal(CustomerPortal):
 
         option_sudo.add_option_to_order()
         results = self._get_portal_order_details(order_sudo)
-        results['sale_template'] = request.env['ir.ui.view'].render_template("sale.sale_order_portal_content", {
+        results['sale_template'] = request.env['ir.ui.view']._render_template("sale.sale_order_portal_content", {
             'sale_order': option_sudo.order_id,
             'report_type': "html"
         })

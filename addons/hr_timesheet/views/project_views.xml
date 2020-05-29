@@ -106,10 +106,7 @@
                         <group>
                             <group>
                                 <field name="planned_hours" widget="float_time"/>
-                                    <label for="subtask_planned_hours" groups="project.group_subtask_project" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}"/>
-                                    <div class="o_row" groups="project.group_subtask_project" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
-                                        <field name="subtask_planned_hours" widget="float_time"/><span> planned hours</span>
-                                    </div>
+                                <field name="subtask_planned_hours" widget="float_time" groups="project.group_subtask_project" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}"/>
                             </group>
                             <group>
                                 <field name="progress" widget="progressbar"/>
@@ -117,25 +114,25 @@
                         </group>
                         <group name="timesheet_error" attrs="{'invisible': [('analytic_account_active', '!=', False)]}">
                             <div class="alert alert-warning" role="alert">
-                                You can not log timesheets on this project since is linked to an inactive analytic account. Please change it, or reactivate the current one to timesheet on the project.
+                                You cannot log timesheets on this project since it is linked to an inactive analytic account. Please change this account, or reactivate the current one to timesheet on the project.
                             </div>
                         </group>
                     <field name="timesheet_ids" mode="tree,kanban" attrs="{'invisible': [('analytic_account_active', '=', False)]}" context="{'default_project_id': project_id, 'default_name':''}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
                             <field name="user_id" invisible="1"/>
-                            <field name="employee_id" required="1"/>
+                            <field name="employee_id" required="1" widget="many2one_avatar_employee"/>
                             <field name="name" required="0"/>
-                            <field name="unit_amount" widget="timesheet_uom"/>
+                            <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
                             <field name="project_id" invisible="1"/>
                             <field name="company_id" invisible="1"/>
                         </tree>
                         <kanban class="o_kanban_mobile">
                             <field name="date"/>
                             <field name="user_id"/>
-                            <field name="employee_id"/>
+                            <field name="employee_id" widget="many2one_avatar_employee"/>
                             <field name="name"/>
-                            <field name="unit_amount"/>
+                            <field name="unit_amount" decoration-danger="unit_amount &gt; 24"/>
                             <field name="project_id"/>
                             <templates>
                                 <t t-name="kanban-box">
@@ -167,9 +164,9 @@
                                  <group>
                                     <field name="date"/>
                                     <field name="user_id" invisible="1"/>
-                                    <field name="employee_id" required="1"/>
+                                    <field name="employee_id" required="1" widget="many2one_avatar_employee"/>
                                     <field name="name"/>
-                                    <field name="unit_amount" string="Duration" widget="float_time"/>
+                                    <field name="unit_amount" string="Duration" widget="float_time" decoration-danger="unit_amount &gt; 24"/>
                                     <field name="project_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
                                 </group>
@@ -179,8 +176,8 @@
                     <group attrs="{'invisible': [('analytic_account_active', '=', False)]}">
                         <group class="oe_subtotal_footer oe_right" name="project_hours">
                             <field name="effective_hours" widget="float_time" />
-                            <button name="action_view_subtask_timesheet" string="Sub-tasks Hours Spent:" type="object" class="oe_inline oe_link pl-0" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}"/>
-                            <field name="subtask_effective_hours" widget="float_time" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" nolabel="1"/>
+                            <button name="action_view_subtask_timesheet" string="Sub-tasks Hours Spent" type="object" class="o_td_label o_form_label oe_inline oe_link mr-0" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}"/>
+                            <field name="subtask_effective_hours" class="mt-2" widget="float_time" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" nolabel="1"/>
                             <field name="total_hours_spent" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" />
                             <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : [('planned_hours', '=', 0.0)]}"/>
                         </group>
@@ -196,13 +193,10 @@
             <field name="inherit_id" ref="project.view_task_tree2" />
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
-                    <attribute name="decoration-warning">planned_hours and (effective_hours&gt;planned_hours)</attribute>
-                </xpath>
                 <field name="user_id" position="after">
                     <field name="planned_hours" widget="float_time" sum="Initially Planned Hours" optional="show"/>
                     <field name="effective_hours" widget="float_time" sum="Effective Hours" optional="show"/>
-                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" optional="show"/>
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" optional="show" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
                     <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </field>
             </field>
@@ -239,10 +233,11 @@
                     <field name="progress" />
                     <field name="remaining_hours" />
                     <field name="planned_hours" />
+                    <field name="allow_timesheets"/>
                 </templates>
                 <div class="oe_kanban_bottom_left" position="inside">
-                   <t t-if="record.planned_hours.raw_value &gt; 0">
-                        <t t-set="badge" t-value="" t-if="record.progress.raw_value &lt; 80"/>
+                   <t t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value">
+                        <t t-set="badge" t-value=""/>
                         <t t-set="badge" t-value="'badge-warning'" t-if="record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100"/>
                         <t t-set="badge" t-value="'badge-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
                        <div t-attf-class="oe_kanban_align badge {{ badge }}" title="Remaining hours">
@@ -304,7 +299,7 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_kanban"/>
             <field name="arch" type="xml">
-                <xpath expr="//span[@name='date']" position="before">
+                <xpath expr="//div[@name='date_deadline']" position="before">
                     <field name="display_timesheet_timer" invisible="1"/>
                     <field name="timer_start" invisible="1"/>
                     <field name="timer_pause" invisible="1"/>

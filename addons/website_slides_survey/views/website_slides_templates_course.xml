@@ -32,5 +32,11 @@
                 <attribute name="t-if">channel.can_upload and not slide.question_ids and slide.slide_type != 'certification'</attribute>
             </xpath>
         </template>
+
+        <template id="course_slides_list_inherit_survey" inherit_id="website_slides.course_slides_list">
+            <xpath expr="//div[hasclass('o_wslides_content_actions')]" position="inside">
+                <div class="o_wslides_survey_certification_upload_toast"/>
+            </xpath>
+        </template>
     </data>
 </odoo>

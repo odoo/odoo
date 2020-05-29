@@ -42,6 +42,7 @@ var ListRenderer = BasicRenderer.extend({
         'click tbody tr': '_onRowClicked',
         'change tbody .o_list_record_selector': '_onSelectRecord',
         'click thead th.o_column_sortable': '_onSortColumn',
+        'click .o_list_record_selector': '_onToggleCheckbox',
         'click .o_group_header': '_onToggleGroup',
         'change thead .o_list_record_selector input': '_onToggleSelection',
         'keypress thead tr td': '_onKeyPress',
@@ -57,13 +58,14 @@ var ListRenderer = BasicRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
+        this._preprocessColumns();
         this.columnInvisibleFields = params.columnInvisibleFields;
-        this.rowDecorations = _.chain(this.arch.attrs)
-            .pick(function (value, key) {
-                return DECORATIONS.indexOf(key) >= 0;
-            }).mapObject(function (value) {
-                return py.parse(py.tokenize(value));
-            }).value();
+        this.rowDecorations = this._extractDecorationAttrs(this.arch);
+        this.fieldDecorations = {};
+        for (const field of this.arch.children.filter(c => c.tag === 'field')) {
+            const decorations = this._extractDecorationAttrs(field);
+            this.fieldDecorations[field.attrs.name] = decorations;
+        }
         this.hasSelectors = params.hasSelectors;
         this.selection = params.selectedRecords || [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
@@ -187,6 +189,24 @@ var ListRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * Extract the decoration attributes (e.g. decoration-danger) of a node. The
+     * condition is processed such that it is ready to be evaluated.
+     *
+     * @private
+     * @param {Object} node the <tree> or a <field> node
+     * @returns {Object}
+     */
+    _extractDecorationAttrs: function (node) {
+        const decorations = {};
+        for (const [key, expr] of Object.entries(node.attrs)) {
+            if (DECORATIONS.includes(key)) {
+                const cssClass = key.replace('decoration', 'text');
+                decorations[cssClass] = py.parse(py.tokenize(expr));
+            }
+        }
+        return decorations;
+    },
+    /**
      *
      * @private
      * @param {jQuery} $cell
@@ -264,7 +284,62 @@ var ListRenderer = BasicRenderer.extend({
         };
     },
     /**
-     * Removes the columns which should be invisible.
+     * Adjacent buttons (in the arch) are displayed in a single column. This
+     * function iterates over the arch's nodes and replaces "button" nodes by
+     * "button_group" nodes, with a single "button_group" node for adjacent
+     * "button" nodes. A "button_group" node has a "children" attribute
+     * containing all "button" nodes in the group.
+     *
+     * @private
+     */
+    _groupAdjacentButtons: function () {
+        const children = [];
+        let groupId = 0;
+        let buttonGroupNode = null;
+        for (const c of this.arch.children) {
+            if (c.tag === 'button') {
+                if (!buttonGroupNode) {
+                    buttonGroupNode = {
+                        tag: 'button_group',
+                        children: [c],
+                        attrs: {
+                            name: `button_group_${groupId++}`,
+                            modifiers: {},
+                        },
+                    };
+                    children.push(buttonGroupNode);
+                } else {
+                    buttonGroupNode.children.push(c);
+                }
+            } else {
+                buttonGroupNode = null;
+                children.push(c);
+            }
+        }
+        this.arch.children = children;
+    },
+    /**
+     * Processes arch's child nodes for the needs of the list view:
+     *   - detects oe_read_only/oe_edit_only classnames
+     *   - groups adjacent buttons in a single column.
+     * This function is executed only once, at initialization.
+     *
+     * @private
+     */
+    _preprocessColumns: function () {
+        this._processModeClassNames();
+        this._groupAdjacentButtons();
+
+        // set as readOnly (resp. editOnly) button groups containing only
+        // readOnly (resp. editOnly) buttons, s.t. no column is rendered
+        this.arch.children.filter(c => c.tag === 'button_group').forEach(c => {
+            c.attrs.editOnly = c.children.every(n => n.attrs.editOnly);
+            c.attrs.readOnly = c.children.every(n => n.attrs.readOnly);
+        });
+    },
+    /**
+     * Removes the columns which should be invisible. This function is executed
+     * at each (re-)rendering of the list.
      *
      * @param  {Object} columnInvisibleFields contains the column invisible modifier values
      */
@@ -288,14 +363,6 @@ var ListRenderer = BasicRenderer.extend({
                 // attribute to have the evaluated modifier value.
                 if (c.attrs.name in columnInvisibleFields) {
                     reject = columnInvisibleFields[c.attrs.name];
-                }
-               if (c.attrs.class) {
-                    if (c.attrs.class.match(/\boe_edit_only\b/)) {
-                        c.attrs.editOnly = true;
-                    }
-                    if (c.attrs.class.match(/\boe_read_only\b/)) {
-                        c.attrs.readOnly = true;
-                    }
                 }
                 if (!reject && c.attrs.widget === 'handle') {
                     self.handleField = c.attrs.name;
@@ -321,6 +388,22 @@ var ListRenderer = BasicRenderer.extend({
                 if (!reject) {
                     self.columns.push(c);
                 }
+            }
+        });
+    },
+    /**
+     * Classnames "oe_edit_only" and "oe_read_only" aim to only display the cell
+     * in the corresponding mode. This only concerns lists inside form views
+     * (for x2many fields). This function detects the className and stores a
+     * flag on the node's attrs accordingly, to ease further computations.
+     *
+     * @private
+     */
+    _processModeClassNames: function () {
+        this.arch.children.forEach(c => {
+            if (c.attrs.class) {
+                c.attrs.editOnly = /\boe_edit_only\b/.test(c.attrs.class);
+                c.attrs.readOnly = /\boe_read_only\b/.test(c.attrs.class);
             }
         });
     },
@@ -400,7 +483,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderBodyCell: function (record, node, colIndex, options) {
         var tdClassName = 'o_data_cell';
-        if (node.tag === 'button') {
+        if (node.tag === 'button_group') {
             tdClassName += ' o_list_button';
         } else if (node.tag === 'field') {
             tdClassName += ' o_field_cell';
@@ -430,8 +513,11 @@ var ListRenderer = BasicRenderer.extend({
             return $td;
         }
 
-        if (node.tag === 'button') {
-            return $td.append(this._renderButton(record, node));
+        if (node.tag === 'button_group') {
+            for (const buttonNode of node.children) {
+                $td.append(this._renderButton(record, buttonNode));
+            }
+            return $td;
         } else if (node.tag === 'widget') {
             return $td.append(this._renderWidget(record, node));
         }
@@ -440,6 +526,8 @@ var ListRenderer = BasicRenderer.extend({
             return $td.append($el);
         }
         this._handleAttributes($td, node);
+        this._setDecorationClasses($td, this.fieldDecorations[node.attrs.name], record);
+
         var name = node.attrs.name;
         var field = this.state.fields[name];
         var value = record.data[name];
@@ -469,9 +557,18 @@ var ListRenderer = BasicRenderer.extend({
         var self = this;
         var nodeWithoutWidth = Object.assign({}, node);
         delete nodeWithoutWidth.attrs.width;
+
+        let extraClass = '';
+        if (node.attrs.icon) {
+            // if there is an icon, we force the btn-link style, unless a btn-xxx
+            // style class is explicitely provided
+            const btnStyleRegex = /\bbtn-[a-z]+\b/;
+            if (!btnStyleRegex.test(nodeWithoutWidth.attrs.class)) {
+                extraClass = 'btn-link o_icon_button';
+            }
+        }
         var $button = viewUtils.renderButtonFromNode(nodeWithoutWidth, {
-            extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
-            textAsTitle: !!node.attrs.icon,
+            extraClass: extraClass,
         });
         this._handleAttributes($button, node);
         this._registerModifiers(node, record, $button);
@@ -783,8 +880,11 @@ var ListRenderer = BasicRenderer.extend({
         var description = string || field.string;
         if (node.attrs.widget) {
             $th.addClass(' o_' + node.attrs.widget + '_cell');
-            if (this.state.fieldsInfo.list[name].Widget.prototype.noLabel) {
+            const FieldWidget = this.state.fieldsInfo.list[name].Widget;
+            if (FieldWidget.prototype.noLabel) {
                 description = '';
+            } else if (FieldWidget.prototype.label) {
+                description = FieldWidget.prototype.label;
             }
         }
         $th.text(description)
@@ -834,7 +934,7 @@ var ListRenderer = BasicRenderer.extend({
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td', !record.res_id));
         }
-        this._setDecorationClasses(record, $tr);
+        this._setDecorationClasses($tr, this.rowDecorations, record);
         return $tr;
     },
     /**
@@ -997,22 +1097,24 @@ var ListRenderer = BasicRenderer.extend({
         return Promise.all([this._super.apply(this, arguments), prom]);
     },
     /**
-     * Each line can be decorated according to a few simple rules. The arch
-     * description of the list may have one of the decoration-X attribute with
-     * a domain as value.  Then, for each record, we check if the domain matches
-     * the record, and add the text-X css class to the element.  This method is
-     * concerned with the computation of the list of css classes for a given
-     * record.
+     * Each line or cell can be decorated according to a few simple rules. The
+     * arch description of the list or the field nodes may have one of the
+     * decoration-X attributes with a python expression as value. Then, for each
+     * record, we evaluate the python expression, and conditionnaly add the
+     * text-X css class to the element.  This method is concerned with the
+     * computation of the list of css classes for a given record.
      *
      * @private
+     * @param {jQueryElement} $el the element to which to add the classes (a tr
+     *   or td)
+     * @param {Object} decorations keys are the decoration classes (e.g.
+     *   'text-bf') and values are the python expressions to evaluate
      * @param {Object} record a basic model record
-     * @param {jQueryElement} $tr a jquery <tr> element (the row to add decoration)
      */
-    _setDecorationClasses: function (record, $tr) {
-        _.each(this.rowDecorations, function (expr, decoration) {
-            var cssClass = decoration.replace('decoration', 'text');
-            $tr.toggleClass(cssClass, py.PY_isTrue(py.evaluate(expr, record.evalContext)));
-        });
+    _setDecorationClasses: function ($el, decorations, record) {
+        for (const [cssClass, expr] of Object.entries(decorations)) {
+            $el.toggleClass(cssClass, py.PY_isTrue(py.evaluate(expr, record.evalContext)));
+        }
     },
     /**
      * @private
@@ -1109,6 +1211,11 @@ var ListRenderer = BasicRenderer.extend({
     _onToggleOptionalColumn: function (ev) {
         var self = this;
         ev.stopPropagation();
+        // when the input's label is clicked, the click event is also raised on the
+        // input itself (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label),
+        // so this handler is executed twice (except if the rendering is quick enough,
+        // as when we render, we empty the HTML)
+        ev.preventDefault();
         var input = ev.currentTarget.querySelector('input');
         var fieldIndex = this.optionalColumnsEnabled.indexOf(input.name);
         if (fieldIndex >= 0) {
@@ -1270,6 +1377,18 @@ var ListRenderer = BasicRenderer.extend({
         this.trigger_up('toggle_column_order', { id: this.state.id, name: name });
     },
     /**
+     * When the user clicks on the whole record selector cell, we want to toggle
+     * the checkbox, to make record selection smooth.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onToggleCheckbox: function (ev) {
+        const $recordSelector = $(ev.target).find('input[type=checkbox]:not(":disabled")');
+        $recordSelector.prop('checked', !$recordSelector.prop("checked"));
+        $recordSelector.change(); // s.t. th and td checkbox cases are handled by their own handler
+    },
+    /**
      * @private
      * @param {DOMEvent} ev
      */
@@ -1295,8 +1414,8 @@ var ListRenderer = BasicRenderer.extend({
         }
     },
     /**
-     * When the user clicks on the 'checkbox' on the left of a record, we need
-     * to toggle its status.
+     * When the user clicks on the row selection checkbox in the header, we
+     * need to update the checkbox of the row selection checkboxes in the body.
      *
      * @private
      * @param {MouseEvent} ev

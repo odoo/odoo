@@ -189,24 +189,22 @@
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <tree string="Picking list" multi_edit="1"
-                      decoration-info="state == 'draft'" decoration-muted="state == 'cancel'"
-                      decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date">
-                    <field name="name"/>
+                <tree string="Picking list" multi_edit="1">
+                    <field name="name" decoration-bf="1"/>
                     <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations" optional="show"/>
                     <field name="partner_id" optional="show"/>
                     <field name="signature" string="Signed" optional="hide" widget="boolean" groups="stock.group_stock_sign_delivery"/>
-                    <field name="user_id" optional="hide"/>
+                    <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
                     <field name="date" invisible="1"/>
-                    <field name="scheduled_date" optional="show"/>
+                    <field name="scheduled_date" optional="show" decoration-danger="scheduled_date &lt; current_date and state not in ('done', 'cancel')"/>
                     <field name="origin" optional="show"/>
                     <field name="group_id" invisible="1"/>
                     <field name="backorder_id" optional="hide"/>
-                    <field name="state" optional="show"/>
                     <field name="priority" optional="hide"/>
                     <field name="picking_type_id" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="state" optional="show" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                     <field name="delay_alert_date" invisible="1"/>
                     <field name="json_popover" string=" " widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
@@ -279,7 +277,7 @@
                             </div>
                         </button>
                     </div>
-                    <h1 class="d-none d-md-block">
+                    <h1>
                         <field name="name" attrs="{'invisible': [('name','=','/')]}"/>
                     </h1>
                     <group>
@@ -364,7 +362,7 @@
                                     <field name="date_expected" optional="hide" attrs="{'readonly': [('show_operations', '=', True), ('is_locked', '=', True)]}"/>
                                     <field name="is_initial_demand_editable" invisible="1"/>
                                     <field name="is_quantity_done_editable" invisible="1"/>
-                                    <field name="product_uom_qty" string="Demand" attrs="{'column_invisible': [('parent.immediate_transfer', '=', True)], 'readonly': ['|', ('is_initial_demand_editable', '=', False), '&amp;', ('show_operations', '=', True), ('is_locked', '=', True)]}"/>
+                                    <field name="product_uom_qty" string="Demand" attrs="{'column_invisible': [('parent.immediate_transfer', '=', True)], 'readonly': ['|', ('is_initial_demand_editable', '=', False), '&amp;', '&amp;', ('show_operations', '=', True), ('is_locked', '=', True), ('is_initial_demand_editable', '=', False)]}"/>
                                     <field name="reserved_availability" string="Reserved" attrs="{'column_invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming'), ('parent.immediate_transfer', '=', True)])}"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
@@ -444,8 +442,8 @@
                     <filter name="done" string="Done" domain="[('state', '=', 'done')]" help="Pickings already processed"/>
                     <filter name="cancel" string="Cancelled" domain="[('state', '=', 'cancel')]" help="Cancelled Moves"/>
                     <separator/>
-                    <filter name="late" string="Late" domain="[('scheduled_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Transfers that are late on scheduled time"/>
-                    <filter string="Planning Issues" name="delay_alert_date" domain="[('delay_alert_date', '!=', False)]"/>
+                    <filter string="Planning Issues" name="planning_issues" help="Transfers that are late on scheduled time or one of pickings will be late"
+                        domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('scheduled_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]"/>
                     <separator/>
                     <filter name="backorder" string="Backorders" domain="[('backorder_id', '!=', False), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Remaining parts of picking partially processed"/>
                     <separator/>
@@ -654,7 +652,7 @@
                                             <div class="o_primary" t-if="selection_mode">
                                                 <field name="name"/>
                                             </div>
-                                            <div class="o_secondary"><field class="o_secondary"  name="warehouse_id" readonly="1"/></div>
+                                            <div class="o_secondary"><field class="o_secondary"  name="warehouse_id" readonly="1" groups="stock.group_stock_multi_warehouses"/></div>
                                         </div>
                                         <div class="o_kanban_manage_button_section" t-if="!selection_mode">
                                             <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
@@ -674,35 +672,29 @@
                                                 </div>
 
                                                 <div t-if="record.count_picking_waiting.raw_value > 0" class="row">
-                                                    <div class="col-9">
+                                                    <div class="col-12">
                                                         <a name="get_action_picking_tree_waiting" type="object">
+                                                            <field name="count_picking_waiting"/>
                                                             Waiting
                                                         </a>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <field name="count_picking_waiting"/>
                                                     </div>
                                                 </div>
 
                                                 <div t-if="record.count_picking_late.raw_value > 0" class="row">
-                                                    <div class="col-9">
+                                                    <div class="col-12">
                                                         <a class="oe_kanban_stock_picking_type_list" name="get_action_picking_tree_late" type="object">
+                                                            <field name="count_picking_late"/>
                                                             Late
                                                         </a>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <field name="count_picking_late"/>
                                                     </div>
                                                 </div>
 
                                                 <div t-if="record.count_picking_backorders.raw_value > 0" class="row">
-                                                    <div class="col-9">
+                                                    <div class="col-12">
                                                         <a class="oe_kanban_stock_picking_type_list" name="get_action_picking_tree_backorder" type="object">
+                                                            <field name="count_picking_backorders"/>
                                                             Back Orders
                                                         </a>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <field name="count_picking_backorders"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -711,7 +703,8 @@
                                         <div class="row">
                                             <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
                                                 <div role="menuitem" class="o_kanban_card_manage_title">
-                                                    <span>View</span>
+                                                    <span t-if="record.code.raw_value == 'internal'">Transfers</span>
+                                                    <span t-else="">View</span>
                                                 </div>
                                                 <div role="menuitem">
                                                     <a name="get_stock_picking_action_picking_type" type="object">All</a>
@@ -740,8 +733,8 @@
                                             <div class="col-8" role="menuitem" aria-haspopup="true">
                                                 <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                                             </div>
-                                            <div role="menuitem" class="col-4 text-center">
-                                                <a type="edit">Settings</a>
+                                            <div role="menuitem" class="col-4">
+                                                <a class="dropdown-item" role="menuitem" type="edit">Configuration</a>
                                             </div>
                                         </div>
                                     </div>

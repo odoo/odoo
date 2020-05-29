@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import common
-from odoo.exceptions import except_orm
+from odoo.exceptions import UserError
 from odoo.tests import Form
 
 
@@ -150,7 +150,7 @@ class TestWarehouse(common.TestMrpCommon):
 
         # Scrap Product Wood without lot to check assert raise ?.
         scrap_id = self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'production_id': production_3.id})
-        with self.assertRaises(except_orm):
+        with self.assertRaises(UserError):
             scrap_id.do_scrap()
 
         # Scrap Product Wood with lot.

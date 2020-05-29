@@ -241,9 +241,9 @@
                     <field name="url"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <group string="Group By">
-                        <filter string="name" name="group_by_name" domain="[]" context="{'group_by':'name'}"/>
-                        <filter string="url" name="group_by_url" domain="[]" context="{'group_by':'url'}"/>
-                        <filter string="website"  name="my_websites" domain="[]" context="{'group_by':'website_id'}"/>
+                        <filter string="Name" name="group_by_name" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Url" name="group_by_url" domain="[]" context="{'group_by':'url'}"/>
+                        <filter string="Website"  name="group_by_website_id" domain="[]" context="{'group_by':'website_id'}"/>
                     </group>
                 </search>
             </field>
@@ -253,7 +253,7 @@
             <field name="name">Website Menu</field>
             <field name="res_model">website.menu</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_my_websites':1}</field>
+            <field name="context">{'search_default_group_by_website_id':1}</field>
             <field name="view_id" ref="menu_tree"/>
             <field name="target">current</field>
         </record>
@@ -272,7 +272,6 @@
                     <field name="page_ids" invisible="1" />
                     <field name="first_page_id" attrs="{'invisible': [('page_ids', '=', [])]}" />
                     <field name="visibility" attrs="{'invisible': [('type', '!=', 'qweb')]}" />
-                    <field name="visibility_group" attrs="{'invisible': [('visibility', '!=', 'restricted_group')]}" />
                     <field name="visibility_password_display" attrs="{'invisible': [('visibility', '!=', 'password')]}" password="True"/>
                 </field>
                 <sheet position="before">
@@ -346,7 +345,7 @@
                         <div t-name="kanban-box" t-attf-class="o_theme_preview mb16 mt16 #{record.is_installed_on_current_website.raw_value? 'o_theme_installed' : ''}">
                             <t t-set="has_image" t-value="record.image_ids.raw_value.length > 0"/>
                             <t t-set="has_screenshot" t-value="record.image_ids.raw_value.length > 1"/>
-                            <t t-set="image_url" t-value="has_image ? 'web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
+                            <t t-set="image_url" t-value="has_image ? '/web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
 
                             <div class="o_theme_preview_top bg-white mb4">
                                 <div t-attf-class="bg-gray-lighter #{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')}" t-attf-style="background-image: url(#{image_url});"/>
@@ -460,6 +459,11 @@
             name="Dashboard"
             sequence="1"
             parent="website.menu_website_configuration"/>
+
+        <!-- Force empty action, to ease upgrade -->
+        <record id="menu_dashboard" model="ir.ui.menu">
+            <field name="action" eval="False"/>
+        </record>
 
         <menuitem id="menu_website_dashboard" parent="menu_dashboard"
             sequence="10" name="eCommerce Dashboard"

@@ -16,13 +16,35 @@ MailFailure.include({
      */
     getPreview: function () {
         var preview = this._super.apply(this, arguments);
-        if (this._failureType === 'snailmail') {
+        if (this._messageType === 'snailmail') {
             _.extend(preview, {
-                body: _t("An error occured when sending a letter with Snailmail"),
                 id: 'snailmail_failure',
             });
         }
         return preview;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _getPreviewBody() {
+        if (this._messageType === 'snailmail') {
+            return _t("An error occured when sending a letter with Snailmail.");
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _getPreviewImage() {
+        if (this._messageType === 'snailmail') {
+            return '/snailmail/static/img/snailmail_failure.png';
+        }
+        return this._super(...arguments);
     },
 });
 

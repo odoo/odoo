@@ -124,13 +124,11 @@ class StockRule(models.Model):
             return delay, delay_description
         manufacture_rule.ensure_one()
         manufacture_delay = product.produce_delay
-        if manufacture_delay:
-            delay += manufacture_delay
-            delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Manufacturing Lead Time'), manufacture_delay, _('day(s)'))
+        delay += manufacture_delay
+        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacturing Lead Time'), manufacture_delay, _('day(s)'))
         security_delay = manufacture_rule.picking_type_id.company_id.manufacturing_lead
-        if security_delay:
-            delay += security_delay
-            delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Company Manufacture Lead Time'), security_delay, _('day(s)'))
+        delay += security_delay
+        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacture Security Lead Time'), security_delay, _('day(s)'))
         return delay, delay_description
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
@@ -151,7 +149,11 @@ class ProcurementGroup(models.Model):
         """
         procurements_without_kit = []
         for procurement in procurements:
-            bom_kit = self.env['mrp.bom']._bom_find(product=procurement.product_id, bom_type='phantom')
+            bom_kit = self.env['mrp.bom']._bom_find(
+                product=procurement.product_id,
+                company_id=procurement.company_id.id,
+                bom_type='phantom',
+            )
             if bom_kit:
                 order_qty = procurement.product_uom._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
                 qty_to_produce = (order_qty / bom_kit.product_qty)

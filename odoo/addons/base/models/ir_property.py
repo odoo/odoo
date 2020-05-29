@@ -176,7 +176,7 @@ class Property(models.Model):
         return False
 
     @api.model
-    def set_default(self, name, model, value, company=False):
+    def _set_default(self, name, model, value, company=False):
         """ Set the given field's generic value for the given company.
 
         :param name: the field's name
@@ -186,7 +186,7 @@ class Property(models.Model):
         """
         field_id = self.env['ir.model.fields']._get(model, name).id
         company_id = int(company) if company else False
-        prop = self.search([
+        prop = self.sudo().search([
             ('fields_id', '=', field_id),
             ('company_id', '=', company_id),
             ('res_id', '=', False),
@@ -194,7 +194,7 @@ class Property(models.Model):
         if prop:
             prop.write({'value': value})
         else:
-            self.create({
+            prop.create({
                 'fields_id': field_id,
                 'company_id': company_id,
                 'res_id': False,
@@ -204,7 +204,14 @@ class Property(models.Model):
             })
 
     @api.model
-    def get(self, name, model, res_id=False):
+    def _get(self, name, model, res_id=False):
+        """ Get the given field's generic value for the record.
+
+        :param name: the field's name
+        :param model: the field's model name
+        :param res_id: optional resource, format: "<id>" (int) or
+                       "<model>,<id>" (str)
+        """
         if not res_id:
             t, v = self._get_default_property(name, model)
             if not v or t != 'many2one':
@@ -216,7 +223,7 @@ class Property(models.Model):
             return p.get_by_record()
         return False
 
-    # only cache Property.get(res_id=False) as that's
+    # only cache Property._get(res_id=False) as that's
     # sub-optimally.
     COMPANY_KEY = "self.env.company.id"
     @ormcache(COMPANY_KEY, 'name', 'model')
@@ -232,10 +239,12 @@ class Property(models.Model):
     def _get_property(self, name, model, res_id):
         domain = self._get_domain(name, model)
         if domain is not None:
+            if res_id and isinstance(res_id, int):
+                res_id = "%s,%s" % (model, res_id)
             domain = [('res_id', '=', res_id)] + domain
             #make the search with company_id asc to make sure that properties specific to a company are given first
-            return self.search(domain, limit=1, order='company_id')
-        return self.browse(())
+            return self.sudo().search(domain, limit=1, order='company_id')
+        return self.sudo().browse(())
 
     def _get_domain(self, prop_name, model):
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (prop_name, model))
@@ -246,7 +255,7 @@ class Property(models.Model):
         return [('fields_id', '=', res[0]), ('company_id', 'in', [company_id, False])]
 
     @api.model
-    def get_multi(self, name, model, ids):
+    def _get_multi(self, name, model, ids):
         """ Read the property field `name` for the records of model `model` with
             the given `ids`, and return a dictionary mapping `ids` to their
             corresponding value.
@@ -310,7 +319,7 @@ class Property(models.Model):
         }
 
     @api.model
-    def set_multi(self, name, model, values, default_value=None):
+    def _set_multi(self, name, model, values, default_value=None):
         """ Assign the property field `name` for the records of model `model`
             with `values` (dictionary mapping record ids to their value).
             If the value for a given record is the same as the default
@@ -331,14 +340,14 @@ class Property(models.Model):
             if domain is None:
                 raise Exception()
             # retrieve the default value for the field
-            default_value = clean(self.get(name, model))
+            default_value = clean(self._get(name, model))
 
         # retrieve the properties corresponding to the given record ids
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (name, model))
         field_id = self._cr.fetchone()[0]
         company_id = self.env.company.id
         refs = {('%s,%s' % (model, id)): id for id in values}
-        props = self.search([
+        props = self.sudo().search([
             ('fields_id', '=', field_id),
             ('company_id', '=', company_id),
             ('res_id', 'in', list(refs)),
@@ -351,8 +360,6 @@ class Property(models.Model):
             if value == default_value:
                 # avoid prop.unlink(), as it clears the record cache that can
                 # contain the value of other properties to set on record!
-                prop.check_access_rights('unlink')
-                prop.check_access_rule('unlink')
                 self._cr.execute("DELETE FROM ir_property WHERE id=%s", [prop.id])
             elif value != clean(prop.get_by_record()):
                 prop.write({'value': value})
@@ -370,7 +377,7 @@ class Property(models.Model):
                     'value': value,
                     'type': self.env[model]._fields[name].type,
                 })
-        self.create(vals_list)
+        self.sudo().create(vals_list)
 
     @api.model
     def search_multi(self, name, model, operator, value):

@@ -16,7 +16,7 @@
         </xpath>
     </template>
 
-    <template id="qunit_suite" name="bus tests" inherit_id="web.qunit_suite">
+    <template id="qunit_suite" name="bus tests" inherit_id="web.qunit_suite_tests">
         <xpath expr="//script[last()]" position="after">
             <script type="text/javascript" src="/bus/static/tests/bus_tests.js"/>
         </xpath>

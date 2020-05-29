@@ -40,10 +40,11 @@ odoo.define('web.qunit_asserts', function (require) {
             w instanceof jQuery ? w[0] : w;
 
         msg = msg || `target should ${shouldHaveClass ? 'have' : 'not have'} class ${className}`;
-        const hasClass = className.split(" ").reduce((acc, cls) =>
-            acc && el.classList.contains(cls), true);
-        const condition = shouldHaveClass ? hasClass : !hasClass;
-        QUnit.assert.ok(condition, msg);
+        const isFalse = className.split(" ").some(cls => {
+            const hasClass = el.classList.contains(cls);
+            return shouldHaveClass ? !hasClass : hasClass;
+        });
+        QUnit.assert.ok(!isFalse, msg);
     }
 
     /**

@@ -3,6 +3,8 @@ odoo.define('website.root', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+const KeyboardNavigationMixin = require('web.KeyboardNavigationMixin');
+const session = require('web.session');
 var publicRootData = require('web.public.root');
 require("web.zoomodoo");
 
@@ -10,8 +12,8 @@ var _t = core._t;
 
 var websiteRootRegistry = publicRootData.publicRootRegistry;
 
-var WebsiteRoot = publicRootData.PublicRoot.extend({
-    events: _.extend({}, publicRootData.PublicRoot.prototype.events || {}, {
+var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
+    events: _.extend({}, KeyboardNavigationMixin.events, publicRootData.PublicRoot.prototype.events || {}, {
         'click .js_change_lang': '_onLangChangeClick',
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
         'click .js_multi_website_switch': '_onWebsiteSwitch',
@@ -25,7 +27,18 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
     /**
      * @override
      */
+    init() {
+        this.isFullscreen = false;
+        KeyboardNavigationMixin.init.call(this, {
+            autoAccessKeys: false,
+        });
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     start: function () {
+        KeyboardNavigationMixin.start.call(this);
         // Compatibility lang change ?
         if (!this.$('.js_change_lang').length) {
             var $links = this.$('ul.js_language_selector li a:not([data-oe-id])');
@@ -44,6 +57,13 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
         this.$('.zoomable img[data-zoom]').zoomOdoo();
 
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        KeyboardNavigationMixin.destroy.call(this);
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -81,6 +101,38 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
             });
         }
         return registry;
+    },
+    /**
+     * Toggles the fullscreen mode.
+     *
+     * @private
+     * @param {boolean} state toggle fullscreen on/off (true/false)
+     */
+    _toggleFullscreen(state) {
+        this.isFullscreen = state;
+        document.body.classList.toggle('o_fullscreen', this.isFullscreen);
+        document.body.style.overflowX = 'hidden';
+        let resizing = true;
+        window.requestAnimationFrame(function resizeFunction() {
+            window.dispatchEvent(new Event('resize'));
+            if (resizing) {
+                window.requestAnimationFrame(resizeFunction);
+            }
+        });
+        let stopResizing;
+        const onTransitionEnd = ev => {
+            if (ev.target === document.body && ev.propertyName === 'padding-top') {
+                stopResizing();
+            }
+        };
+        stopResizing = () => {
+            resizing = false;
+            document.body.style.overflowX = '';
+            document.body.removeEventListener('transitionend', onTransitionEnd);
+        };
+        document.body.addEventListener('transitionend', onTransitionEnd);
+        // Safeguard in case the transitionend event doesn't trigger for whatever reason.
+        window.setTimeout(() => stopResizing(), 500);
     },
 
     //--------------------------------------------------------------------------
@@ -147,6 +199,9 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
      */
     _onPublishBtnClick: function (ev) {
         ev.preventDefault();
+        if (document.body.classList.contains('editor_enable')) {
+            return;
+        }
 
         var self = this;
         var $data = $(ev.currentTarget).parents(".js_publish_management:first");
@@ -206,6 +261,20 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
      */
     _onModalShown: function (ev) {
         $(ev.target).addClass('modal_shown');
+    },
+    /**
+     * @override
+     */
+    _onKeyDown(ev) {
+        if (!session.user_id) {
+            return;
+        }
+        // If document.body doesn't contain the element, it was probably removed as a consequence of pressing Esc.
+        // we don't want to toggle fullscreen as the removal (eg, closing a modal) is the intended action.
+        if (ev.keyCode !== $.ui.keyCode.ESCAPE || !document.body.contains(ev.target) || ev.target.closest('.modal')) {
+            return KeyboardNavigationMixin._onKeyDown.apply(this, arguments);
+        }
+        this._toggleFullscreen(!this.isFullscreen);
     },
 });
 

@@ -41,8 +41,8 @@ class TestUi(TestUICommon):
         })
 
         Property = self.env['ir.property']
-        Property.set_default('property_account_receivable_id', 'res.partner', a_recv, self.env.company)
-        Property.set_default('property_account_payable_id', 'res.partner', a_pay, self.env.company)
+        Property._set_default('property_account_receivable_id', 'res.partner', a_recv, self.env.company)
+        Property._set_default('property_account_payable_id', 'res.partner', a_pay, self.env.company)
 
         product_course_channel_6 = self.env['product.product'].create({
             'name': 'DIY Furniture Course',

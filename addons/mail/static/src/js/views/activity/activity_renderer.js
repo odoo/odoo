@@ -7,6 +7,7 @@ const ActivityRecord = require('mail.ActivityRecord');
 const { ComponentAdapter } = require('web.OwlCompatibility');
 const core = require('web.core');
 const KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
+const patchMixin = require('web.patchMixin');
 const QWeb = require('web.QWeb');
 const session = require('web.session');
 const utils = require('web.utils');
@@ -204,6 +205,6 @@ ActivityRenderer.components = {
 };
 ActivityRenderer.template = 'mail.ActivityRenderer';
 
-return ActivityRenderer;
+return patchMixin(ActivityRenderer);
 
 });

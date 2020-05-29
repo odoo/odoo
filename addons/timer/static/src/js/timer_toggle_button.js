@@ -3,6 +3,7 @@ odoo.define('timer.timer_toggle_button', function (require) {
 
 const fieldRegistry = require('web.field_registry');
 const { FieldToggleBoolean } = require("web.basic_fields");
+const { _lt } = require('web.core');
 
 /**
  * The TimerToggleButton is used to display correctly the button
@@ -16,9 +17,9 @@ const TimerToggleButton = FieldToggleBoolean.extend({
      */
     _render: function () {
         // When the is_timer_running field is false, then the button is used to start the timer
-        const title = this.value ? 'stop' : 'play';
+        const title = this.value ? _lt('Stop') : _lt('Play');
         const name = this.value ? 'action_timer_stop' : 'action_timer_start';
-        const label = this.value ? 'stop' : 'start';
+        const label = this.value ? _lt('Stop') : _lt('Start');
 
         this.$('i')
             .addClass('fa')
@@ -50,10 +51,13 @@ const TimerToggleButton = FieldToggleBoolean.extend({
      * @param {MouseEvent} event
      */
     _onToggleButton: async function (event) {
+        const context = this.record.getContext();
+        const prevent_deletion = this.attrs.options && this.attrs.options.prevent_deletion || false;
         event.stopPropagation();
         const result = await this._rpc({
             model: this.model,
             method: this._getActionButton(),
+            context: $.extend({}, context, {prevent_deletion: prevent_deletion}),
             args: [this.res_id]
         });
 

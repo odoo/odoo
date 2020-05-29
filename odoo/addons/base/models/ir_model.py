@@ -446,9 +446,9 @@ class IrModelFields(models.Model):
 
     name = fields.Char(string='Field Name', default='x_', required=True, index=True)
     complete_name = fields.Char(index=True)
-    model = fields.Char(string='Object Name', required=True, index=True,
+    model = fields.Char(string='Model Name', required=True, index=True,
                         help="The technical name of the model this field belongs to")
-    relation = fields.Char(string='Object Relation',
+    relation = fields.Char(string='Related Model',
                            help="For relationship fields, the technical name of the target model")
     relation_field = fields.Char(help="For one2many fields, the field on the target model that implement the opposite many2one relationship")
     relation_field_id = fields.Many2one('ir.model.fields', compute='_compute_relation_field_id',
@@ -678,6 +678,16 @@ class IrModelFields(models.Model):
                     'title': _("Warning"),
                     'message': _("The table %r if used for other, possibly incompatible fields.") % self.relation_table,
                 }}
+
+    @api.onchange('required', 'ttype', 'on_delete')
+    def _onchange_required(self):
+        for rec in self:
+            if rec.ttype == 'many2one' and rec.required and rec.on_delete == 'set null':
+                return {'warning': {'title': _("Warning"), 'message': _(
+                    "The m2o field %s is required but declares its ondelete policy "
+                    "as being 'set null'. Only 'restrict' and 'cascade' make sense."
+                    % (rec.name)
+                )}}
 
     def _get(self, model_name, name):
         """ Return the (sudoed) `ir.model.fields` record with the given model and name.
@@ -1068,7 +1078,8 @@ class IrModelFields(models.Model):
         }
         if field_data['ttype'] in ('char', 'text', 'html'):
             attrs['translate'] = bool(field_data['translate'])
-            attrs['size'] = field_data['size'] or None
+            if field_data['ttype'] == 'char':
+                attrs['size'] = field_data['size'] or None
         elif field_data['ttype'] in ('selection', 'reference'):
             attrs['selection'] = self.env['ir.model.fields.selection']._get_selection_data(field_data['id'])
         elif field_data['ttype'] == 'many2one':
@@ -1341,8 +1352,13 @@ class IrModelSelection(models.Model):
         """ Process the 'ondelete' of the given selection values. """
         for selection in self:
             Model = self.env[selection.field_id.model]
-            field = Model._fields[selection.field_id.name]
-            if not field.store or Model._abstract:
+            # The field may exist in database but not in registry. In this case
+            # we allow the field to be skipped, but for production this should
+            # be handled through a migration script. The ORM will take care of
+            # the orphaned 'ir.model.fields' down the stack, and will log a
+            # warning prompting the developer to write a migration script.
+            field = Model._fields.get(selection.field_id.name)
+            if not field or not field.store or Model._abstract:
                 continue
 
             ondelete = (field.ondelete or {}).get(selection.value) or 'set null'
@@ -1588,7 +1604,7 @@ class IrModelAccess(models.Model):
 
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
-    model_id = fields.Many2one('ir.model', string='Object', required=True, index=True, ondelete='cascade')
+    model_id = fields.Many2one('ir.model', string='Model', required=True, index=True, ondelete='cascade')
     group_id = fields.Many2one('res.groups', string='Group', ondelete='cascade', index=True)
     perm_read = fields.Boolean(string='Read Access')
     perm_write = fields.Boolean(string='Write Access')
@@ -1774,8 +1790,6 @@ class IrModelData(models.Model):
     module = fields.Char(default='', required=True)
     res_id = fields.Many2oneReference(string='Record ID', help="ID of the target record in the database", model_field='model')
     noupdate = fields.Boolean(string='Non Updatable', default=False)
-    date_update = fields.Datetime(string='Update Date', default=fields.Datetime.now)
-    date_init = fields.Datetime(string='Init Date', default=fields.Datetime.now)
     reference = fields.Char(string='Reference', compute='_compute_reference', readonly=True, store=False)
 
     _sql_constraints = [
@@ -1942,8 +1956,6 @@ class IrModelData(models.Model):
         if not data_list:
             return
 
-        # rows to insert
-        rowf = "(%s, %s, %s, %s, %s, now() at time zone 'UTC', now() at time zone 'UTC')"
         rows = tools.OrderedSet()
         for data in data_list:
             prefix, suffix = data['xml_id'].split('.', 1)
@@ -1961,15 +1973,7 @@ class IrModelData(models.Model):
 
         for sub_rows in self.env.cr.split_for_in_conditions(rows):
             # insert rows or update them
-            query = """
-                INSERT INTO ir_model_data (module, name, model, res_id, noupdate, date_init, date_update)
-                VALUES {rows}
-                ON CONFLICT (module, name)
-                DO UPDATE SET date_update=(now() at time zone 'UTC') {where}
-            """.format(
-                rows=", ".join([rowf] * len(sub_rows)),
-                where="WHERE NOT ir_model_data.noupdate" if update else "",
-            )
+            query = self._build_update_xmlids_query(sub_rows, update)
             try:
                 self.env.cr.execute(query, [arg for row in sub_rows for arg in row])
             except Exception:
@@ -1978,6 +1982,20 @@ class IrModelData(models.Model):
 
         # update loaded_xmlids
         self.pool.loaded_xmlids.update("%s.%s" % row[:2] for row in rows)
+
+    # NOTE: this method is overriden in web_studio; if you need to make another
+    #  override, make sure it is compatible with the one that is there.
+    def _build_update_xmlids_query(self, sub_rows, update):
+        rowf = "(%s, %s, %s, %s, %s)"
+        return """
+            INSERT INTO ir_model_data (module, name, model, res_id, noupdate)
+            VALUES {rows}
+            ON CONFLICT (module, name)
+            DO UPDATE SET write_date=(now() at time zone 'UTC') {where}
+        """.format(
+            rows=", ".join([rowf] * len(sub_rows)),
+            where="WHERE NOT ir_model_data.noupdate" if update else "",
+        )
 
     @api.model
     def _load_xmlid(self, xml_id):

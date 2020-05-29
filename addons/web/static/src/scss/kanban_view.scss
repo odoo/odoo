@@ -17,9 +17,6 @@
             padding: $o-kanban-inside-vgutter $o-kanban-inside-hgutter-mobile;
         }
         &:focus, &:focus-within {
-            -webkit-box-shadow: 1px 1px 1px 0px gray('600');
-            -moz-box-shadow: 1px 1px 1px 0px gray('600');
-            box-shadow: 1px 1px 1px 0px gray('600');
             z-index: 1; // show the shadow on top of the previous & next cards in grouped mode
             outline: none;
         }
@@ -40,6 +37,12 @@
         &.o_disabled {
             pointer-events: none;
             opacity: 0.7;
+        }
+
+        &:focus, &:focus-within {
+            -webkit-box-shadow: 1px 1px 1px 0px gray('600');
+            -moz-box-shadow: 1px 1px 1px 0px gray('600');
+            box-shadow: 1px 1px 1px 0px gray('600');
         }
     }
 
@@ -127,9 +130,11 @@
 
                 .oe_kanban_avatar {
                     border-radius: 50%;
+                    object-fit: cover;
+                }
+                .oe_kanban_avatar, .o_field_many2one_avatar > .o_m2o_avatar {
                     width: 20px;
                     height: 20px;
-                    object-fit: cover;
                     margin-left: 6px;
                 }
             }
@@ -259,6 +264,7 @@
             display: block;
             margin-bottom: $o-kanban-inner-hmargin;
             line-height: 1.2;
+            word-break: break-all;
 
             .o_tag {
                 display: inline-block;
@@ -277,6 +283,12 @@
                     margin-right: 4px;
                     border-radius: 100%;
                 }
+            }
+        }
+
+        .o_field_many2one_avatar {
+            img.o_m2o_avatar {
+                margin-right: 0;
             }
         }
 
@@ -305,6 +317,11 @@
         // Kanban Record - Utility classes
         &.oe_kanban_global_click, &.oe_kanban_global_click_edit {
             cursor: pointer;
+            &:focus, &:focus-within {
+                -webkit-box-shadow: 1px 1px 1px 0px gray('600');
+                -moz-box-shadow: 1px 1px 1px 0px gray('600');
+                box-shadow: 1px 1px 1px 0px gray('600');
+            }
         }
 
         &.ui-sortable-helper {
@@ -354,8 +371,6 @@
         }
 
         .oe_kanban_details {
-            display: inherit;
-            flex-flow: column;
             width: 100%;
 
             // Useful for the class 'o_text_overflow'
@@ -564,6 +579,8 @@
 
     // Kanban UN-grouped Layout
     &.o_kanban_ungrouped {
+        min-height: 100%;
+        align-content: flex-start;
         flex-flow: row wrap;
         justify-content: flex-start;
 

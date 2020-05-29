@@ -17,7 +17,7 @@
                             <a title="assign to invoice" role="button" class="oe_form_field btn btn-link outstanding_credit_assign" t-att-data-id="line.id" style="margin-right: 10px;" href="#" data-toggle="tooltip">Add</a>
                         </td>
                         <td style="max-width: 30em;">
-                            <div class="oe_form_field" style="margin-right: 30px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" t-att-title="line.payment_date" data-toggle="tooltip"><t t-esc="line.journal_name"></t></div>
+                            <div class="oe_form_field" style="margin-right: 30px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" t-att-title="line.date" data-toggle="tooltip"><t t-esc="line.journal_name"></t></div>
                         </td>
                     </t>
                     <t t-if="!outstanding">

@@ -12,7 +12,8 @@ from . import mail_message
 from . import mail_activity
 from . import mail_mail
 from . import mail_thread
-from . import mail_cc_mixin
+from . import mail_thread_blacklist
+from . import mail_thread_cc
 from . import mail_blacklist
 from . import mail_channel
 from . import mail_template
@@ -26,7 +27,6 @@ from . import update
 from . import ir_action_act_window
 from . import ir_actions
 from . import ir_attachment
-from . import ir_autovacuum
 from . import ir_config_parameter
 from . import ir_http
 from . import ir_model

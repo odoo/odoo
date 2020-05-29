@@ -10,6 +10,7 @@ var core = require('web.core');
 var Domain = require('web.Domain');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
+const FieldWrapper = require('web.FieldWrapper');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
@@ -17,20 +18,7 @@ var widgetRegistry = require('web.widget_registry');
 var _t = core._t;
 var QWeb = core.qweb;
 
-var KANBAN_RECORD_COLORS = [
-    _t('No color'),
-    _t('Red'),
-    _t('Orange'),
-    _t('Yellow'),
-    _t('Light blue'),
-    _t('Dark purple'),
-    _t('Salmon pink'),
-    _t('Medium blue'),
-    _t('Dark blue'),
-    _t('Fushia'),
-    _t('Green'),
-    _t('Purple'),
-];
+var KANBAN_RECORD_COLORS = require('web.basic_fields').FieldColorPicker.prototype.RECORD_COLORS;
 var NB_KANBAN_RECORD_COLORS = KANBAN_RECORD_COLORS.length;
 
 var KanbanRecord = Widget.extend({
@@ -316,8 +304,22 @@ var KanbanRecord = Widget.extend({
             attrs[key] = value;
         });
         var options = _.extend({}, this.options, { attrs: attrs });
-        var widget = new Widget(this, field_name, this.state, options);
-        var def = widget.replace($field);
+        let widget;
+        let def;
+        if (utils.isComponent(Widget)) {
+            widget = new FieldWrapper(this, Widget, {
+                fieldName: field_name,
+                record: this.state,
+                options: options,
+            });
+            def = widget.mount(document.createDocumentFragment())
+                .then(() => {
+                    $field.replaceWith(widget.$el);
+                });
+        } else {
+            widget = new Widget(this, field_name, this.state, options);
+            def = widget.replace($field);
+        }
         this.defs.push(def);
         def.then(function () {
             self._setFieldDisplay(widget.$el, field_name);
@@ -380,8 +382,9 @@ var KanbanRecord = Widget.extend({
      *
      * @private
      * @param {string} fieldName field used to set cover image
+     * @param {boolean} autoOpen automatically open the file choser if there are no attachments
      */
-    _setCoverImage: function (fieldName) {
+    _setCoverImage: function (fieldName, autoOpen) {
         var self = this;
         this._rpc({
             model: 'ir.attachment',
@@ -395,6 +398,7 @@ var KanbanRecord = Widget.extend({
         }).then(function (attachmentIds) {
             self.imageUploadID = _.uniqueId('o_cover_image_upload');
             self.accepted_file_extensions = 'image/*';  // prevent uploading of other file types
+            self.attachment_count = attachmentIds.length;
             var coverId = self.record[fieldName] && self.record[fieldName].raw_value;
             var $content = $(QWeb.render('KanbanView.SetCoverModal', {
                 coverId: coverId,
@@ -442,6 +446,10 @@ var KanbanRecord = Widget.extend({
             });
             dialog.opened().then(function () {
                 var $selectBtn = dialog.$footer.find('.btn-primary');
+                if (autoOpen && !self.attachment_count) {
+                    $selectBtn.click();
+                }
+
                 $content.on('click', '.o_kanban_cover_image', function (ev) {
                     $imgs.not(ev.currentTarget).removeClass('o_selected');
                     $selectBtn.prop('disabled', !$(ev.currentTarget).toggleClass('o_selected').hasClass('o_selected'));
@@ -546,7 +554,7 @@ var KanbanRecord = Widget.extend({
         if (!$colorpicker.length) {
             return;
         }
-        $colorpicker.html(QWeb.render('KanbanColorPicker'));
+        $colorpicker.html(QWeb.render('KanbanColorPicker', { colors: KANBAN_RECORD_COLORS}));
         $colorpicker.on('click', 'a', this._onColorChanged.bind(this));
     },
     /**
@@ -687,10 +695,11 @@ var KanbanRecord = Widget.extend({
                 break;
             case 'set_cover':
                 var fieldName = $action.data('field');
+                var autoOpen = $action.data('auto-open');
                 if (this.fields[fieldName].type === 'many2one' &&
                     this.fields[fieldName].relation === 'ir.attachment' &&
                     this.fieldsInfo[fieldName].widget === 'attachment_image') {
-                    this._setCoverImage(fieldName);
+                    this._setCoverImage(fieldName, autoOpen);
                 } else {
                     var warning = _.str.sprintf(_t('Could not set the cover image: incorrect field ("%s") is provided in the view.'), fieldName);
                     this.do_warn(warning);
@@ -740,6 +749,7 @@ var KanbanRecord = Widget.extend({
      */
     _onManageTogglerClicked: function (event) {
         event.preventDefault();
+        this.$el.parent().find('.o_kanban_record').not(this.$el).removeClass('o_dropdown_open');
         this.$el.toggleClass('o_dropdown_open');
         var colorClass = this._getColorClassname(this.recordData.color || 0);
         this.$('.o_kanban_manage_button_section').toggleClass(colorClass);

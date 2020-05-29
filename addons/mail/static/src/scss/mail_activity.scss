@@ -65,6 +65,11 @@
             }
 
             .o_mail_info {
+                .o_activity_summary {
+                    @include o-text-overflow;
+                    max-width: 290px;
+                    vertical-align: middle;
+                }
                 .o_activity_info {
                     vertical-align: baseline;
                     padding: 4px 6px;
@@ -145,6 +150,25 @@
     }
 }
 
+/* list_activity widget */
+.o_list_view {
+    .o_list_table tbody > tr {
+        > td.o_data_cell.o_list_activity_cell {
+            overflow: visible; // allow the activity dropdown to overflow
+            .o_mail_activity {
+                display: flex;
+                max-width: 275px;
+                .o_activity_btn {
+                    margin-right: 3px;
+                }
+                .o_activity_summary {
+                    @include o-text-overflow;
+                }
+            }
+        }
+    }
+}
+
 /* Kanban View */
 .o_kanban_record{
     .o_kanban_inline_block {
@@ -178,6 +202,10 @@
                     .o_activity_title_entry {
                         display: flex;
                         align-items: baseline;
+                        max-width: 275px;
+                        .o_activity_summary {
+                            @include o-text-overflow;
+                        }
                     }
 
                     .o_edit_button {

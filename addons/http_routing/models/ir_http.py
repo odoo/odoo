@@ -572,9 +572,8 @@ class IrHttp(models.AbstractModel):
             exception=exception,
             traceback=traceback.format_exc(),
         )
-        # only except_orm exceptions contain a message
-        if isinstance(exception, exceptions.except_orm):
-            values['error_message'] = exception.name
+        if isinstance(exception, exceptions.UserError):
+            values['error_message'] = exception.args[0]
             code = 400
             if isinstance(exception, exceptions.AccessError):
                 code = 403
@@ -589,7 +588,7 @@ class IrHttp(models.AbstractModel):
             code = exception.code
 
         values.update(
-            status_message=werkzeug.http.HTTP_STATUS_CODES[code],
+            status_message=werkzeug.http.HTTP_STATUS_CODES.get(code,''),
             status_code=code,
         )
 
@@ -602,7 +601,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _get_error_html(cls, env, code, values):
-        return code, env['ir.ui.view'].render_template('http_routing.%s' % code, values)
+        return code, env['ir.ui.view']._render_template('http_routing.%s' % code, values)
 
     @classmethod
     def _handle_exception(cls, exception):
@@ -659,6 +658,6 @@ class IrHttp(models.AbstractModel):
             try:
                 code, html = cls._get_error_html(env, code, values)
             except Exception:
-                code, html = 418, env['ir.ui.view'].render_template('http_routing.http_error', values)
+                code, html = 418, env['ir.ui.view']._render_template('http_routing.http_error', values)
 
         return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')

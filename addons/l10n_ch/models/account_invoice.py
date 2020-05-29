@@ -4,7 +4,7 @@
 import re
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools.float_utils import float_split_str
 from odoo.tools.misc import mod10r
 
@@ -28,7 +28,7 @@ class AccountMove(models.Model):
     l10n_ch_isr_sent = fields.Boolean(default=False, help="Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail.")
     l10n_ch_currency_name = fields.Char(related='currency_id.name', readonly=True, string="Currency Name", help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
 
-    @api.depends('invoice_partner_bank_id.l10n_ch_isr_subscription_eur', 'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
+    @api.depends('partner_bank_id.l10n_ch_isr_subscription_eur', 'partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_subscription(self):
         """ Computes the ISR subscription identifying your company or the bank that allows to generate ISR. And formats it accordingly"""
         def _format_isr_subscription(isr_subscription):
@@ -46,11 +46,11 @@ class AccountMove(models.Model):
         for record in self:
             record.l10n_ch_isr_subscription = False
             record.l10n_ch_isr_subscription_formatted = False
-            if record.invoice_partner_bank_id:
+            if record.partner_bank_id:
                 if record.currency_id.name == 'EUR':
-                    isr_subscription = record.invoice_partner_bank_id.l10n_ch_isr_subscription_eur
+                    isr_subscription = record.partner_bank_id.l10n_ch_isr_subscription_eur
                 elif record.currency_id.name == 'CHF':
-                    isr_subscription = record.invoice_partner_bank_id.l10n_ch_isr_subscription_chf
+                    isr_subscription = record.partner_bank_id.l10n_ch_isr_subscription_chf
                 else:
                     #we don't format if in another currency as EUR or CHF
                     continue
@@ -60,7 +60,7 @@ class AccountMove(models.Model):
                     record.l10n_ch_isr_subscription = _format_isr_subscription_scanline(isr_subscription)
                     record.l10n_ch_isr_subscription_formatted = _format_isr_subscription(isr_subscription)
 
-    @api.depends('name', 'invoice_partner_bank_id.l10n_ch_postal')
+    @api.depends('name', 'partner_bank_id.l10n_ch_postal')
     def _compute_l10n_ch_isr_number(self):
         """ The ISR reference number is 27 characters long. The first 12 of them
         contain the postal account number of this ISR's issuer, removing the zeros
@@ -72,8 +72,8 @@ class AccountMove(models.Model):
         of a recursive modulo 10 on its first 26 characters.
         """
         for record in self:
-            if record.name and record.invoice_partner_bank_id and record.invoice_partner_bank_id.l10n_ch_postal:
-                invoice_issuer_ref = record.invoice_partner_bank_id.l10n_ch_postal.ljust(l10n_ch_ISR_NUMBER_ISSUER_LENGTH, '0')
+            if record.name and record.partner_bank_id and record.partner_bank_id.l10n_ch_postal:
+                invoice_issuer_ref = record.partner_bank_id.l10n_ch_postal.ljust(l10n_ch_ISR_NUMBER_ISSUER_LENGTH, '0')
                 invoice_ref = re.sub('[^\d]', '', record.name)
                 #We only keep the last digits of the sequence number if it is too long
                 invoice_ref = invoice_ref[-l10n_ch_ISR_NUMBER_ISSUER_LENGTH:]
@@ -95,7 +95,7 @@ class AccountMove(models.Model):
             return res
 
         for record in self:
-            if record.name and record.invoice_partner_bank_id and record.invoice_partner_bank_id.l10n_ch_postal:
+            if record.name and record.partner_bank_id and record.partner_bank_id.l10n_ch_postal:
                 record.l10n_ch_isr_number_spaced = _space_isr_number(record.l10n_ch_isr_number)
             else:
                 record.l10n_ch_isr_number_spaced = False
@@ -103,9 +103,9 @@ class AccountMove(models.Model):
 
     @api.depends(
         'currency_id.name', 'amount_residual', 'name',
-        'invoice_partner_bank_id.l10n_ch_postal',
-        'invoice_partner_bank_id.l10n_ch_isr_subscription_eur',
-        'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
+        'partner_bank_id.l10n_ch_postal',
+        'partner_bank_id.l10n_ch_isr_subscription_eur',
+        'partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_optical_line(self):
         """ The optical reading line of the ISR looks like this :
                 left>isr_ref+ bank_ref>
@@ -142,16 +142,16 @@ class AccountMove(models.Model):
 
     @api.depends(
         'move_type', 'name', 'currency_id.name',
-        'invoice_partner_bank_id.l10n_ch_postal',
-        'invoice_partner_bank_id.l10n_ch_isr_subscription_eur',
-        'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
+        'partner_bank_id.l10n_ch_postal',
+        'partner_bank_id.l10n_ch_isr_subscription_eur',
+        'partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_valid(self):
         """Returns True if all the data required to generate the ISR are present"""
         for record in self:
             record.l10n_ch_isr_valid = record.move_type == 'out_invoice' and\
                 record.name and \
                 record.l10n_ch_isr_subscription and \
-                record.invoice_partner_bank_id.l10n_ch_postal and \
+                record.partner_bank_id.l10n_ch_postal and \
                 record.l10n_ch_currency_name in ['EUR', 'CHF']
 
     def split_total_amount(self):
@@ -164,14 +164,6 @@ class AccountMove(models.Model):
         template, which cannot reference static functions
         """
         return float_split_str(self.amount_residual, 2)
-
-    def display_swiss_qr_code(self):
-        """ Returns whether or not to print the QR-bills additional page when
-        generation an invoice pdf.
-        """
-        self.ensure_one()
-        return self.display_qr_code and \
-               self.invoice_partner_bank_id._eligible_for_qr_code('ch_qr', self.partner_id, self.currency_id)
 
     def isr_print(self):
         """ Triggered by the 'Print ISR' button.
@@ -187,6 +179,17 @@ class AccountMove(models.Model):
                                    - define its bank\n
                                    - associate this bank with a postal reference for the currency used in this invoice\n
                                    - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."""))
+
+    def print_ch_qr_bill(self):
+        """ Triggered by the 'Print QR-bill' button.
+        """
+        self.ensure_one()
+
+        if not self.partner_bank_id._eligible_for_qr_code('ch_qr', self.partner_id, self.currency_id):
+            raise UserError(_("Cannot generate the QR-bill. Please check you have configured the address of your company and debtor. If you are using a QR-IBAN, also check the invoice's payment reference is a QR reference."))
+
+        self.l10n_ch_isr_sent = True
+        return self.env.ref('l10n_ch.l10n_ch_qr_report').report_action(self)
 
     def action_invoice_sent(self):
         # OVERRIDE

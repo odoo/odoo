@@ -19,7 +19,8 @@ class SmsSms(models.Model):
         'success': 'sent',
         'insufficient_credit': 'sms_credit',
         'wrong_number_format': 'sms_number_format',
-        'server_error': 'sms_server'
+        'server_error': 'sms_server',
+        'unregistered': 'sms_acc'
     }
 
     number = fields.Char('Number')
@@ -37,6 +38,7 @@ class SmsSms(models.Model):
         ('sms_number_format', 'Wrong Number Format'),
         ('sms_credit', 'Insufficient Credit'),
         ('sms_server', 'Server Error'),
+        ('sms_acc', 'Unregistered Account'),
         # mass mode specific codes
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),
@@ -135,6 +137,7 @@ class SmsSms(models.Model):
                         'failure_type': self.IAP_TO_SMS_STATE[state] if state != 'success' else False,
                         'failure_reason': failure_reason if failure_reason else False,
                     })
+        self.mail_message_id._notify_message_notification_update()
 
         if todelete_sms_ids:
             self.browse(todelete_sms_ids).sudo().unlink()

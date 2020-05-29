@@ -5,39 +5,17 @@ var ThreadWidget = require('mail.widget.Thread');
 var Dialog = require('web.Dialog');
 
 var core = require('web.core');
-var QWeb = core.qweb;
 var _t = core._t;
 
 ThreadWidget.include({
-    dependencies: ['bus_service'],
-    events: _.extend({}, ThreadWidget.prototype.events, {
-        'click .o_thread_message_snailmail_missing_required_fields': '_onClickMissingRequiredFields',
-        'click .o_thread_message_snailmail_credit_error': '_onClickCreditError',
-        'click .o_thread_message_snailmail_trial_error': '_onClickTrialError',
-        'click .o_thread_message_snailmail_no_price_available': '_onClickNoPriceAvailable',
-        'click .o_thread_message_snailmail_format_error': '_onClickFormatError',
-        'click .o_thread_message_snailmail_unknown_error': '_onClickUnknownError',
-    }),
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this._enabledOptions = _.defaults(this._enabledOptions, {
-            displaySnailmailIcons: true,
-        });
-        this._disabledOptions = _.defaults(this._disabledOptions, {
-            displaySnailmailIcons: false,
-        });
-    },
+
     /**
      * @override
      */
     render: function (thread, options) {
         this._super.apply(this, arguments);
         var messages = _.clone(thread.getMessages({ domain: options.domain || [] }));
-        this._messages  = messages;
-        this._renderMessageSnailmailPopover();
+        this._messages = messages;
     },
 
     //--------------------------------------------------------------------------
@@ -46,8 +24,8 @@ ThreadWidget.include({
 
     /**
      * @private
-     * @param {integer} messageID 
-     * @param {string} content 
+     * @param {integer} messageID
+     * @param {string} content
      */
     _openCreditErrorDialog: function (messageID, content) {
         var message = _.find(this._messages, function (message) {
@@ -57,17 +35,25 @@ ThreadWidget.include({
             size: 'medium',
             title: _t("Failed letter"),
             $content: $('<div>').html(content),
-            buttons: [
-                {text: _t("Re-send letter"), classes: 'btn-primary', close: true, click: _.bind(message.resendLetter, message)},
-                {text: _t("Cancel letter"), close: true, click: _.bind(message.cancelLetter, message)},
-                {text: _t("Close"), close: true},
-            ],
+            buttons: [{
+                text: _t("Re-send letter"),
+                classes: 'btn-primary',
+                close: true,
+                click: (...args) => message.resendLetter(...args),
+            }, {
+                text: _t("Cancel letter"),
+                close: true,
+                click: (...args) => message.cancelLetter(...args),
+            }, {
+                text: _t("Close"),
+                close: true,
+            }],
         }).open();
     },
     /**
      * @private
-     * @param {integer} messageID 
-     * @param {string} content 
+     * @param {integer} messageID
+     * @param {string} content
      */
     _openGenericErrorDialog: function (messageID, content) {
         var message = _.find(this._messages, function (message) {
@@ -77,45 +63,16 @@ ThreadWidget.include({
             size: 'medium',
             title: _t("Failed letter"),
             $content: $('<div>').html(content),
-            buttons: [
-                {text: _t("Cancel letter"), classes: 'btn-primary', close: true, click: _.bind(message.cancelLetter, message)},
-                {text: _t("Close"), close: true},
-            ],
+            buttons: [{
+                text: _t("Cancel letter"),
+                classes: 'btn-primary',
+                close: true,
+                click: (...args) => message.cancelLetter(...args),
+            }, {
+                text: _t("Close"),
+                close: true,
+            }],
         }).open();
-    },
-    /**
-     * Render the popover when mouse-hovering on the mail icon of a message
-     * in the thread. There is at most one such popover at any given time.
-     *
-     * @private
-     * @param {mail.model.AbstractMessage[]} messages list of messages in the
-     *   rendered thread, for which popover on mouseover interaction is
-     *   permitted.
-     */
-    _renderMessageSnailmailPopover: function () {
-        var self = this;
-        if (this._messageSnailmailPopover) {
-            this._messageSnailmailPopover.popover('hide');
-        }
-        if (!this.$('.o_thread_snailmail_tooltip').length) {
-            return;
-        }
-        this._messageSnailmailPopover = this.$('.o_thread_snailmail_tooltip').popover({
-            html: true,
-            boundary: 'viewport',
-            placement: 'auto',
-            trigger: 'hover',
-            offset: '0, 1',
-            content: function () {
-                var messageID = $(this).data('message-id');
-                var message = _.find(self._messages, function (message) {
-                    return message.getID() === messageID;
-                });
-                return QWeb.render('snailmail.widget.Thread.Message.SnailmailTooltip', {
-                    status: message.getSnailmailStatus()
-                });
-            },
-        });
     },
 
     //--------------------------------------------------------------------------
@@ -156,6 +113,37 @@ ThreadWidget.include({
                 message_id: messageID,
             }
         });
+    },
+    /**
+     * Discards the generic error handler since more specific handlers are
+     * defined here.
+     *
+     * @override
+     */
+    _onClickMessageNotificationError(ev) {
+        const $target = $(ev.currentTarget);
+        if ($target.data('message-type') === 'snailmail') {
+            if ($target.data('failure-type') === 'sn_fields') {
+                this._onClickMissingRequiredFields(ev);
+            }
+            if ($target.data('failure-type') === 'sn_credit') {
+                this._onClickCreditError(ev);
+            }
+            if ($target.data('failure-type') === 'sn_trial') {
+                this._onClickTrialError(ev);
+            }
+            if ($target.data('failure-type') === 'sn_price') {
+                this._onClickNoPriceAvailable(ev);
+            }
+            if ($target.data('failure-type') === 'sn_format') {
+                this._onClickFormatError(ev);
+            }
+            if ($target.data('failure-type') === 'sn_error') {
+                this._onClickUnknownError(ev);
+            }
+        } else {
+            this._super(...arguments);
+        }
     },
     /**
      * @private

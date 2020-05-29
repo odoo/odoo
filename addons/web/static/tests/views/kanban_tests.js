@@ -2909,6 +2909,50 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('kanban view not groupable', async function (assert) {
+        assert.expect(3);
+
+        const searchMenuTypesOriginal = KanbanView.prototype.searchMenuTypes;
+        KanbanView.prototype.searchMenuTypes = ['filter', 'favorite'];
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test" default_group_by="bar">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
+                    </search>
+                `,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    throw new Error("Should not do a read_group RPC");
+                }
+                return this._super.apply(this, arguments);
+            },
+            context: { search_default_itsName: 1, },
+        });
+
+        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
+        assert.containsNone(kanban, '.o_control_panel div.o_search_options div.o_group_by_menu');
+        assert.deepEqual(cpHelpers.getFacetTexts(kanban), []);
+
+        kanban.destroy();
+        KanbanView.prototype.searchMenuTypes = searchMenuTypesOriginal;
+    });
+
     QUnit.test('kanban view with create=False', async function (assert) {
         assert.expect(1);
 
@@ -3982,6 +4026,37 @@ QUnit.module('Views', {
             "there should not be a nocontent helper");
         assert.containsNone(kanban, '.o_column_quick_create',
             "there should not be a column quick create");
+        kanban.destroy();
+    });
+
+    QUnit.test('bounce create button when no data and click on empty area', async function (assert) {
+        assert.expect(2);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `<kanban class="o_kanban_test"><templates><t t-name="kanban-box">
+                    <div>
+                        <t t-esc="record.foo.value"/>
+                        <field name="foo"/>
+                    </div>
+                </t></templates></kanban>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="hello">click to add a partner</p>'
+                }
+            },
+        });
+
+        await testUtils.dom.click(kanban.$('.o_kanban_view'));
+        assert.doesNotHaveClass(kanban.$('.o-kanban-button-new'), 'o_catch_attention');
+
+        await kanban.reload({ domain: [['id', '<', 0]] });
+
+        await testUtils.dom.click(kanban.$('.o_kanban_view'));
+        assert.hasClass(kanban.$('.o-kanban-button-new'), 'o_catch_attention');
+
         kanban.destroy();
     });
 
@@ -6017,6 +6092,29 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(kanban.$('.o_field_image').first());
 
+        kanban.destroy();
+    });
+
+    QUnit.test('kanban view with boolean widget', async function (assert) {
+        assert.expect(1);
+
+        const kanban = await testUtils.createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="bar" widget="boolean"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        assert.containsOnce(kanban.el.querySelector('.o_kanban_record'),
+            'div.custom-checkbox.o_field_boolean');
         kanban.destroy();
     });
 });

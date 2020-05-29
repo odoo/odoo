@@ -3,6 +3,7 @@ odoo.define('web.PivotRenderer', function (require) {
 
     const OwlAbstractRenderer = require('web.AbstractRendererOwl');
     const field_utils = require('web.field_utils');
+    const patchMixin = require('web.patchMixin');
 
     const { useExternalListener, useState, onMounted, onPatched } = owl.hooks;
 
@@ -198,6 +199,6 @@ odoo.define('web.PivotRenderer', function (require) {
 
     PivotRenderer.template = 'web.PivotRenderer';
 
-    return PivotRenderer;
+    return patchMixin(PivotRenderer);
 
 });

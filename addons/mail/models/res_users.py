@@ -18,11 +18,6 @@ class Users(models.Model):
     _inherit = ['res.users']
     _description = 'Users'
 
-    alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="set null", required=False,
-            help="Email address internally associated with this user. Incoming "\
-                 "emails will appear in the user's notifications.", copy=False, auto_join=True)
-    alias_contact = fields.Selection(
-        string='Alias Contact Security', related='alias_id.alias_contact', readonly=False)
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
         ('inbox', 'Handle in Odoo')],
@@ -64,8 +59,8 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
-            and alias fields. Access rights are disabled by default, but allowed
-            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
+            fields. Access rights are disabled by default, but allowed on some
+            specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
         """
         init_res = super(Users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
@@ -76,17 +71,18 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         type(self).SELF_READABLE_FIELDS.extend(['notification_type'])
         return init_res
 
-    @api.model
-    def create(self, values):
-        if not values.get('login', False):
-            action = self.env.ref('base.action_res_users')
-            msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
-            raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if not values.get('login', False):
+                action = self.env.ref('base.action_res_users')
+                msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
+                raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
-        user = super(Users, self).create(values)
+        users = super(Users, self).create(vals_list)
         # Auto-subscribe to channels
-        self.env['mail.channel'].search([('group_ids', 'in', user.groups_id.ids)])._subscribe_users()
-        return user
+        self.env['mail.channel'].search([('group_ids', 'in', users.groups_id.ids)])._subscribe_users()
+        return users
 
     def write(self, vals):
         write_res = super(Users, self).write(vals)

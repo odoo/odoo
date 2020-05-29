@@ -18,8 +18,10 @@ class Contract(models.Model):
     active = fields.Boolean(default=True)
     structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type")
     employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    department_id = fields.Many2one('hr.department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
-    job_id = fields.Many2one('hr.job', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Job Position')
+    department_id = fields.Many2one('hr.department', compute='_compute_employee_contract', store=True, readonly=False,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
+    job_id = fields.Many2one('hr.job', compute='_compute_employee_contract', store=True, readonly=False,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Job Position')
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today, tracking=True,
         help="Start date of the contract.")
     date_end = fields.Date('End Date', tracking=True,
@@ -27,7 +29,7 @@ class Contract(models.Model):
     trial_date_end = fields.Date('End of Trial Period',
         help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
-        'resource.calendar', 'Working Schedule',
+        'resource.calendar', 'Working Schedule', compute='_compute_employee_contract', store=True, readonly=False,
         default=lambda self: self.env.company.resource_calendar_id.id, copy=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
@@ -39,7 +41,8 @@ class Contract(models.Model):
         ('cancel', 'Cancelled')
     ], string='Status', group_expand='_expand_states', copy=False,
        tracking=True, help='Status of the contract', default='draft')
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
+    company_id = fields.Many2one('res.company', compute='_compute_employee_contract', store=True, readonly=False,
+        default=lambda self: self.env.company, required=True)
     company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
 
     """
@@ -70,13 +73,13 @@ class Contract(models.Model):
     def _expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]
 
-    @api.onchange('employee_id')
-    def _onchange_employee_id(self):
-        if self.employee_id:
-            self.job_id = self.employee_id.job_id
-            self.department_id = self.employee_id.department_id
-            self.resource_calendar_id = self.employee_id.resource_calendar_id
-            self.company_id = self.employee_id.company_id
+    @api.depends('employee_id')
+    def _compute_employee_contract(self):
+        for contract in self.filtered('employee_id'):
+            contract.job_id = contract.employee_id.job_id
+            contract.department_id = contract.employee_id.department_id
+            contract.resource_calendar_id = contract.employee_id.resource_calendar_id
+            contract.company_id = contract.employee_id.company_id
 
     @api.onchange('company_id')
     def _onchange_company_id(self):

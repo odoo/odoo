@@ -257,12 +257,14 @@ class ResPartner(models.Model):
             partner = self.browse(pid)
             if type == 'receivable':
                 partner.credit = val
-                partner.debit = False
-                treated |= partner
+                if partner not in treated:
+                    partner.debit = False
+                    treated |= partner
             elif type == 'payable':
                 partner.debit = -val
-                partner.credit = False
-                treated |= partner
+                if partner not in treated:
+                    partner.credit = False
+                    treated |= partner
         remaining = (self - treated)
         remaining.debit = False
         remaining.credit = False
@@ -399,7 +401,7 @@ class ResPartner(models.Model):
         groups='account.group_account_invoice,account.group_account_readonly')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency", help='Utility field to express amount currency')
-    journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items", type="integer")
+    journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
@@ -510,7 +512,7 @@ class ResPartner(models.Model):
     def _increase_rank(self, field):
         if self.ids and field in ['customer_rank', 'supplier_rank']:
             try:
-                with self.env.cr.savepoint():
+                with self.env.cr.savepoint(flush=False):
                     query = sql.SQL("""
                         SELECT {field} FROM res_partner WHERE ID IN %(partner_ids)s FOR UPDATE NOWAIT;
                         UPDATE res_partner SET {field} = {field} + 1

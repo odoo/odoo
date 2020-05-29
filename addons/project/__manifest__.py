@@ -33,10 +33,11 @@
         'views/mail_activity_views.xml',
         'views/project_assets.xml',
         'views/project_portal_templates.xml',
-        'views/project_rating_templates.xml',
         'data/digest_data.xml',
         'data/project_mail_template_data.xml',
         'data/project_data.xml',
+        'wizard/project_delete_wizard_views.xml',
+        'wizard/project_task_type_delete_views.xml',
     ],
     'demo': ['data/project_demo.xml'],
     'test': [

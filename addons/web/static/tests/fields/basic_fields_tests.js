@@ -15,6 +15,8 @@ var testUtilsDom = require('web.test_utils_dom');
 var field_registry = require('web.field_registry');
 
 var createView = testUtils.createView;
+var patchDate = testUtils.mock.patchDate;
+
 var DebouncedField = basicFields.DebouncedField;
 var JournalDashboardGraph = basicFields.JournalDashboardGraph;
 var _t = core._t;
@@ -1567,6 +1569,69 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('input field: change value before pending onchange returns (with fieldDebounce)', async function (assert) {
+        // this test is exactly the same as the previous one, except that we set
+        // here a fieldDebounce to accurately reproduce what happens in practice:
+        // the field doesn't notify the changes on 'input', but on 'change' event.
+        assert.expect(5);
+
+        this.data.partner.onchanges = {
+            product_id: function (obj) {
+                obj.int_field = obj.product_id ? 7 : false;
+            },
+        };
+
+        let def;
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="foo"/>
+                            <field name="int_field"/>
+                        </tree>
+                    </field>
+                </form>`,
+            async mockRPC(route, args) {
+                const result = this._super(...arguments);
+                if (args.method === "onchange") {
+                    await Promise.resolve(def);
+                }
+                return result;
+            },
+            fieldDebounce: 5000,
+        });
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'My little Foo Value',
+            'should contain the default value');
+
+        def = testUtils.makeTestPromise();
+
+        await testUtils.fields.many2one.clickOpenDropdown('product_id');
+        await testUtils.fields.many2one.clickHighlightedItem('product_id');
+
+        // set foo before onchange
+        await testUtils.fields.editInput(form.$('input[name="foo"]'), "tralala");
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala');
+        assert.strictEqual(form.$('input[name="int_field"]').val(), '');
+
+        // complete the onchange
+        def.resolve();
+        await testUtils.nextTick();
+
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
+            'foo should contain the same value as before onchange');
+        assert.strictEqual(form.$('input[name="int_field"]').val(), '7',
+            'int_field should contain the value returned by the onchange');
+
+        form.destroy();
+    });
+
     QUnit.test('input field: change value before pending onchange renaming', async function (assert) {
         assert.expect(3);
 
@@ -1674,6 +1739,54 @@ QUnit.module('basic_fields', {
             "password field input should be with type 'password' in edit mode");
         assert.strictEqual(form.$('input.o_field_char').val(), '',
             "password field input value should be the (non-hidden, empty) password value");
+
+        form.destroy();
+    });
+
+    QUnit.test('input field: set and remove value, then wait for onchange', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.onchanges = {
+            product_id(obj) {
+                obj.foo = obj.product_id ? "onchange value" : false;
+            },
+        };
+
+        let def;
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            async mockRPC(route, args) {
+                const result = this._super(...arguments);
+                if (args.method === "onchange") {
+                    await Promise.resolve(def);
+                }
+                return result;
+            },
+            fieldDebounce: 1000, // needed to accurately mock what really happens
+        });
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        assert.strictEqual(form.$('input[name="foo"]').val(), "");
+
+        await testUtils.fields.editInput(form.$('input[name="foo"]'), "test"); // set value for foo
+        await testUtils.fields.editInput(form.$('input[name="foo"]'), ""); // remove value for foo
+
+        // trigger the onchange by setting a product
+        await testUtils.fields.many2one.clickOpenDropdown('product_id');
+        await testUtils.fields.many2one.clickHighlightedItem('product_id');
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'onchange value',
+            'input should contain correct value after onchange');
 
         form.destroy();
     });
@@ -3478,7 +3591,7 @@ QUnit.module('basic_fields', {
 
         assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be opened");
 
-        form.el.dispatchEvent(new Event('scroll'));
+        form.el.dispatchEvent(new Event('wheel'));
         assert.containsNone($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be closed");
 
         form.destroy();
@@ -4193,6 +4306,201 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.module('RemainingDays');
+
+    QUnit.test('remaining_days widget on a date field in list view', async function (assert) {
+        assert.expect(16);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.records = [
+            { id: 1, date: '2017-10-08' }, // today
+            { id: 2, date: '2017-10-09' }, // tomorrow
+            { id: 3, date: '2017-10-07' }, // yesterday
+            { id: 4, date: '2017-10-10' }, // + 2 days
+            { id: 5, date: '2017-10-05' }, // - 3 days
+            { id: 6, date: '2018-02-08' }, // + 4 months (diff >= 100 days)
+            { id: 7, date: '2017-06-08' }, // - 4 months (diff >= 100 days)
+            { id: 8, date: false },
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree><field name="date" widget="remaining_days"/></tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Today');
+        assert.strictEqual(list.$('.o_data_cell:nth(1)').text(), 'Tomorrow');
+        assert.strictEqual(list.$('.o_data_cell:nth(2)').text(), 'Yesterday');
+        assert.strictEqual(list.$('.o_data_cell:nth(3)').text(), 'In 2 days');
+        assert.strictEqual(list.$('.o_data_cell:nth(4)').text(), '3 days ago');
+        assert.strictEqual(list.$('.o_data_cell:nth(5)').text(), '02/08/2018');
+        assert.strictEqual(list.$('.o_data_cell:nth(6)').text(), '06/08/2017');
+        assert.strictEqual(list.$('.o_data_cell:nth(7)').text(), '');
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0) .o_field_widget').attr('title'), '10/08/2017');
+
+        assert.hasClass(list.$('.o_data_cell:nth(0) span'), 'text-bf text-warning');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) span'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(2) span'), 'text-bf text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) span'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(4) span'), 'text-bf text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) span'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(6) span'), 'text-bf text-danger');
+
+        list.destroy();
+        unpatchDate();
+    });
+
+    QUnit.test('remaining_days widget on a date field in form view', async function (assert) {
+        assert.expect(6);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.records = [
+            { id: 1, date: '2017-10-08' }, // today
+        ];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="date" widget="remaining_days"/></form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Today');
+        assert.hasClass(form.$('.o_field_widget'), 'text-bf text-warning');
+
+        // in edit mode, this widget should behave like a regular date(time) widget
+        await testUtils.form.clickEdit(form);
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+        assert.containsOnce(form, '.o_datepicker');
+        assert.strictEqual(form.$('.o_datepicker_input').val(), '10/08/2017');
+
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+
+        assert.containsOnce(document.body, '.bootstrap-datetimepicker-widget:visible');
+
+        form.destroy();
+        unpatchDate();
+    });
+
+    QUnit.test('remaining_days widget on a datetime field in list view in UTC', async function (assert) {
+        assert.expect(16);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.records = [
+            { id: 1, datetime: '2017-10-08 20:00:00' }, // today
+            { id: 2, datetime: '2017-10-09 08:00:00' }, // tomorrow
+            { id: 3, datetime: '2017-10-07 18:00:00' }, // yesterday
+            { id: 4, datetime: '2017-10-10 22:00:00' }, // + 2 days
+            { id: 5, datetime: '2017-10-05 04:00:00' }, // - 3 days
+            { id: 6, datetime: '2018-02-08 04:00:00' }, // + 4 months (diff >= 100 days)
+            { id: 7, datetime: '2017-06-08 04:00:00' }, // - 4 months (diff >= 100 days)
+            { id: 6, datetime: false },
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree><field name="datetime" widget="remaining_days"/></tree>',
+            session: {
+                getTZOffset: () => 0,
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Today');
+        assert.strictEqual(list.$('.o_data_cell:nth(1)').text(), 'Tomorrow');
+        assert.strictEqual(list.$('.o_data_cell:nth(2)').text(), 'Yesterday');
+        assert.strictEqual(list.$('.o_data_cell:nth(3)').text(), 'In 2 days');
+        assert.strictEqual(list.$('.o_data_cell:nth(4)').text(), '3 days ago');
+        assert.strictEqual(list.$('.o_data_cell:nth(5)').text(), '02/08/2018');
+        assert.strictEqual(list.$('.o_data_cell:nth(6)').text(), '06/08/2017');
+        assert.strictEqual(list.$('.o_data_cell:nth(7)').text(), '');
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0) .o_field_widget').attr('title'), '10/08/2017');
+
+        assert.hasClass(list.$('.o_data_cell:nth(0) span'), 'text-bf text-warning');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) span'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(2) span'), 'text-bf text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) span'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(4) span'), 'text-bf text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) span'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(6) span'), 'text-bf text-danger');
+
+        list.destroy();
+        unpatchDate();
+    });
+
+    QUnit.test('remaining_days widget on a datetime field in list view in UTC+6', async function (assert) {
+        assert.expect(6);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11, UTC+6
+        this.data.partner.records = [
+            { id: 1, datetime: '2017-10-08 20:00:00' }, // tomorrow
+            { id: 2, datetime: '2017-10-09 08:00:00' }, // tomorrow
+            { id: 3, datetime: '2017-10-07 18:30:00' }, // today
+            { id: 4, datetime: '2017-10-07 12:00:00' }, // yesterday
+            { id: 5, datetime: '2017-10-09 20:00:00' }, // + 2 days
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree><field name="datetime" widget="remaining_days"/></tree>',
+            session: {
+                getTZOffset: () => 360,
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Tomorrow');
+        assert.strictEqual(list.$('.o_data_cell:nth(1)').text(), 'Tomorrow');
+        assert.strictEqual(list.$('.o_data_cell:nth(2)').text(), 'Today');
+        assert.strictEqual(list.$('.o_data_cell:nth(3)').text(), 'Yesterday');
+        assert.strictEqual(list.$('.o_data_cell:nth(4)').text(), 'In 2 days');
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0) .o_field_widget').attr('title'), '10/09/2017');
+
+        list.destroy();
+        unpatchDate();
+    });
+
+    QUnit.test('remaining_days widget on a datetime field in list view in UTC-8', async function (assert) {
+        assert.expect(5);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11, UTC-8
+        this.data.partner.records = [
+            { id: 1, datetime: '2017-10-08 20:00:00' }, // today
+            { id: 2, datetime: '2017-10-09 07:00:00' }, // today
+            { id: 3, datetime: '2017-10-09 10:00:00' }, // tomorrow
+            { id: 4, datetime: '2017-10-08 06:00:00' }, // yesterday
+            { id: 5, datetime: '2017-10-07 02:00:00' }, // - 2 days
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree><field name="datetime" widget="remaining_days"/></tree>',
+            session: {
+                getTZOffset: () => -560,
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Today');
+        assert.strictEqual(list.$('.o_data_cell:nth(1)').text(), 'Today');
+        assert.strictEqual(list.$('.o_data_cell:nth(2)').text(), 'Tomorrow');
+        assert.strictEqual(list.$('.o_data_cell:nth(3)').text(), 'Yesterday');
+        assert.strictEqual(list.$('.o_data_cell:nth(4)').text(), '2 days ago');
+
+        list.destroy();
+        unpatchDate();
+    });
+
     QUnit.module('FieldMonetary');
 
     QUnit.test('monetary field in form view', async function (assert) {
@@ -4812,6 +5120,70 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('integer field without formatting', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records = [{
+            'id': 999,
+            'int_field': 8069,
+        }];
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="int_field" options="{\'format\': \'false\'}"/>' +
+            '</form>',
+            res_id: 999,
+            translateParameters: {
+                thousands_sep: ",",
+                grouping: [3, 0],
+            },
+        });
+
+        assert.ok(form.$('.o_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
+        assert.strictEqual(form.$('.o_field_widget[name=int_field]').text(), '8069',
+            'Integer value must not be formatted');
+        await testUtils.form.clickEdit(form);
+
+        assert.strictEqual(form.$('.o_field_widget').val(), '8069',
+            'Integer value must not be formatted');
+
+        form.destroy();
+    });
+
+    QUnit.test('integer field is formatted by default', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records = [{
+            'id': 999,
+            'int_field': 8069,
+        }];
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="int_field" />' +
+            '</form>',
+            res_id: 999,
+            translateParameters: {
+                thousands_sep: ",",
+                grouping: [3, 0],
+            },
+        });
+        assert.ok(form.$('.o_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
+        assert.strictEqual(form.$('.o_field_widget[name=int_field]').text(), '8,069',
+            'Integer value must be formatted by default');
+        await testUtils.form.clickEdit(form);
+
+        assert.strictEqual(form.$('.o_field_widget').val(), '8,069',
+            'Integer value must be formatted by default');
+
+        form.destroy();
+    });
 
     QUnit.module('FieldFloatTime');
 
@@ -6887,7 +7259,7 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldColor', {
         before: function () {
-            return ajax.loadXML('/web/static/src/xml/colorpicker_dialog.xml', core.qweb);
+            return ajax.loadXML('/web/static/src/xml/colorpicker.xml', core.qweb);
         },
     });
 
@@ -6988,6 +7360,79 @@ QUnit.module('basic_fields', {
             "Background of the color field should be updated to green");
 
         form.destroy();
+    });
+
+    QUnit.module('FieldBadge');
+
+    QUnit.test('FieldBadge component on a char field in list view', async function (assert) {
+        assert.expect(3);
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: `<list><field name="display_name" widget="badge"/></list>`,
+        });
+
+        assert.containsOnce(list, '.o_field_badge[name="display_name"]:contains(first record)');
+        assert.containsOnce(list, '.o_field_badge[name="display_name"]:contains(second record)');
+        assert.containsOnce(list, '.o_field_badge[name="display_name"]:contains(aaa)');
+
+        list.destroy();
+    });
+
+    QUnit.test('FieldBadge component on a selection field in list view', async function (assert) {
+        assert.expect(3);
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: `<list><field name="selection" widget="badge"/></list>`,
+        });
+
+        assert.containsOnce(list, '.o_field_badge[name="selection"]:contains(Blocked)');
+        assert.containsOnce(list, '.o_field_badge[name="selection"]:contains(Normal)');
+        assert.containsOnce(list, '.o_field_badge[name="selection"]:contains(Done)');
+
+        list.destroy();
+    });
+
+    QUnit.test('FieldBadge component on a many2one field in list view', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: `<list><field name="trululu" widget="badge"/></list>`,
+        });
+
+        assert.containsOnce(list, '.o_field_badge[name="trululu"]:contains(first record)');
+        assert.containsOnce(list, '.o_field_badge[name="trululu"]:contains(aaa)');
+
+        list.destroy();
+    });
+
+    QUnit.test('FieldBadge component with decoration-xxx attributes', async function (assert) {
+        assert.expect(3);
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <list>
+                    <field name="selection"/>
+                    <field name="foo" widget="badge" decoration-danger="selection == 'done'" decoration-warning="selection == 'blocked'"/>
+                </list>`,
+        });
+
+        assert.containsN(list, '.o_field_badge[name="foo"]', 5);
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger-light');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning-light');
+
+        list.destroy();
     });
 });
 });

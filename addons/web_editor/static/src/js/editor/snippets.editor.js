@@ -8,6 +8,7 @@ var dom = require('web.dom');
 var Widget = require('web.Widget');
 var options = require('web_editor.snippets.options');
 var Wysiwyg = require('web_editor.wysiwyg');
+const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 
 var _t = core._t;
 
@@ -808,6 +809,7 @@ var SnippetsMenu = Widget.extend({
         'cover_update': '_onOverlaysCoverUpdate',
         'deactivate_snippet': '_onDeactivateSnippet',
         'drag_and_drop_stop': '_onDragAndDropStop',
+        'get_snippet_versions': '_onGetSnippetVersions',
         'go_to_parent': '_onGoToParent',
         'remove_snippet': '_onRemoveSnippet',
         'snippet_edition_request': '_onSnippetEditionRequest',
@@ -872,6 +874,17 @@ var SnippetsMenu = Widget.extend({
             '.ui-autocomplete',
             '.modal .close',
         ].join(', ');
+    },
+    /**
+     * @override
+     */
+    willStart: function () {
+        // Preload colorpalette dependencies without waiting for them. The
+        // widget have huge chances of being used by the user (clicking on any
+        // text will load it). The colorpalette itself will do the actual
+        // waiting of the loading completion.
+        ColorPaletteWidget.loadDependencies(this);
+        return this._super(...arguments);
     },
     /**
      * @override
@@ -1033,7 +1046,7 @@ var SnippetsMenu = Widget.extend({
         }
         this._defLoadSnippets = this._rpc({
             model: 'ir.ui.view',
-            method: 'render_template',
+            method: 'render_public_asset',
             args: [this.options.snippets, {}],
             kwargs: {
                 context: this.options.context,
@@ -1385,11 +1398,11 @@ var SnippetsMenu = Widget.extend({
      * See implementation for function details.
      *
      * @private
-     * @param {string} include
+     * @param {string} selector
      *        jQuery selector that DOM elements must match to be considered as
      *        potential snippet.
      * @param {string} exclude
-     *        jQuery selector that DOM elements must *not* match the be
+     *        jQuery selector that DOM elements must *not* match to be
      *        considered as potential snippet.
      * @param {string|false} target
      *        jQuery selector that at least one child of a DOM element must
@@ -1402,46 +1415,33 @@ var SnippetsMenu = Widget.extend({
      *        considered (@see noCheck), this is true if the DOM elements'
      *        parent must also be in an editable environment to be considered.
      */
-    _computeSelectorFunctions: function (include, exclude, target, noCheck, isChildren) {
+    _computeSelectorFunctions: function (selector, exclude, target, noCheck, isChildren) {
         var self = this;
 
-        // Convert the selector for elements to include into a list
-        var selectorList = _.compact(include.split(/\s*,\s*/));
+        exclude += `${exclude && ', '}.o_snippet_not_selectable`;
 
-        // Convert the selector for elements to exclude into a list
-        var excludeList = _.compact(exclude.split(/\s*,\s*/));
-        excludeList.push('.o_snippet_not_selectable');
-
-        // Prepare the condition that will be added to each subselector for
-        // elements to include: 'not the elements to exclude and only the
-        // editable ones if needed'
-        var selectorConditions = _.map(excludeList, function (exc) {
-            return ':not(' + exc + ')';
-        }).join('');
+        let filterFunc = function () {
+            return !$(this).is(exclude);
+        };
         if (target) {
-            selectorConditions += ':has(' + target + ')';
+            const oldFilter = filterFunc;
+            filterFunc = function () {
+                return oldFilter.apply(this) && $(this).find(target).length !== 0;
+            };
         }
-        if (!noCheck) {
-            selectorConditions = (this.options.addDropSelector || '') + selectorConditions;
-        }
-
-        // (Re)join the subselectors
-        var selector = _.map(selectorList, function (s) {
-            return s + selectorConditions;
-        }).join(', ');
 
         // Prepare the functions
         var functions = {
             is: function ($from) {
-                return $from.is(selector);
+                return $from.is(selector) && $from.filter(filterFunc).length !== 0;
             },
         };
         if (noCheck) {
             functions.closest = function ($from, parentNode) {
-                return $from.closest(selector, parentNode);
+                return $from.closest(selector, parentNode).filter(filterFunc);
             };
             functions.all = function ($from) {
-                return $from ? dom.cssFind($from, selector) : $(selector);
+                return ($from ? dom.cssFind($from, selector) : $(selector)).filter(filterFunc);
             };
         } else {
             functions.closest = function ($from, parentNode) {
@@ -1455,13 +1455,13 @@ var SnippetsMenu = Widget.extend({
                         node = node.parentNode;
                     }
                     return false;
-                });
+                }).filter(filterFunc);
             };
             functions.all = isChildren ? function ($from) {
-                return dom.cssFind($from || self.getEditableArea(), selector);
+                return dom.cssFind($from || self.getEditableArea(), selector).filter(filterFunc);
             } : function ($from) {
                 $from = $from || self.getEditableArea();
-                return $from.filter(selector).add(dom.cssFind($from, selector));
+                return $from.filter(selector).add(dom.cssFind($from, selector)).filter(filterFunc);
             };
         }
         return functions;
@@ -1872,10 +1872,10 @@ var SnippetsMenu = Widget.extend({
 
         tab = tab || this.tabs.BLOCKS;
 
-        while (this.customizePanel.firstChild) {
-            this.customizePanel.removeChild(this.customizePanel.firstChild);
-        }
         if (content) {
+            while (this.customizePanel.firstChild) {
+                this.customizePanel.removeChild(this.customizePanel.firstChild);
+            }
             $(this.customizePanel).append(content);
         }
 
@@ -2056,10 +2056,11 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onBlocksTabClick: function (ev) {
-        this._activateSnippet(false);
-        this._updateLeftPanelContent({
-            content: [],
-            tab: this.tabs.BLOCKS,
+        this._activateSnippet(false).then(() => {
+            this._updateLeftPanelContent({
+                content: [],
+                tab: this.tabs.BLOCKS,
+            });
         });
     },
     /**
@@ -2091,6 +2092,18 @@ var SnippetsMenu = Widget.extend({
                 close: true,
             }],
         }).open();
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onGetSnippetVersions: function (ev) {
+        const snippet = this.el.querySelector(`.oe_snippet > [data-snippet="${ev.data.snippetName}"]`);
+        ev.data.onSuccess(snippet && {
+            vcss: snippet.dataset.vcss,
+            vjs: snippet.dataset.vjs,
+            vxml: snippet.dataset.vxml,
+        });
     },
     /**
      * @private

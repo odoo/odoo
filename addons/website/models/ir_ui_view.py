@@ -28,7 +28,6 @@ class View(models.Model):
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
     track = fields.Boolean(string='Track', default=False, help="Allow to specify for one page of the website to be trackable or not")
     visibility = fields.Selection([('', 'All'), ('connected', 'Signed In'), ('restricted_group', 'Restricted Group'), ('password', 'With Password')], default='')
-    visibility_group = fields.Many2one('res.groups', copy=False)
     visibility_password = fields.Char(groups='base.group_system', copy=False)
     visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
 
@@ -186,11 +185,11 @@ class View(models.Model):
 
         if current_website_id and not self._context.get('no_cow'):
             for view in self.filtered(lambda view: not view.website_id):
-                for website in self.env['website'].search([('id', '!=', current_website_id)]):
+                for w in self.env['website'].search([('id', '!=', current_website_id)]):
                     # reuse the COW mechanism to create
                     # website-specific copies, it will take
                     # care of creating pages and menus.
-                    view.with_context(website_id=website.id).write({'name': view.name})
+                    view.with_context(website_id=w.id).write({'name': view.name})
 
         specific_views = self.env['ir.ui.view']
         if self and self.pool._init:
@@ -359,19 +358,11 @@ class View(models.Model):
         """
         error = False
 
-        try:
-            self.visibility  # avoid useless sudo() in case page is public
-        except AccessError:
-            self = self.sudo()
+        self = self.sudo()
 
         if self.visibility and not request.env.user.has_group('website.group_website_designer'):
             if (self.visibility == 'connected' and request.website.is_public_user()):
                 error = werkzeug.exceptions.Forbidden()
-            elif self.visibility == 'restricted_group' and self.visibility_group:
-                # special case, to avoid employee.user_ids
-                if (self.visibility_group.get_external_id() == 'base.group_user' and not request.env.user.share) or \
-                        request.env.user.id not in self.visibility_group.sudo().users.ids:
-                    error = werkzeug.exceptions.Forbidden()
             elif self.visibility == 'password' and \
                     (request.website.is_public_user() or self.id not in request.session.get('views_unlock', [])):
                 pwd = request.params.get('visibility_password')
@@ -380,6 +371,13 @@ class View(models.Model):
                     request.session.setdefault('views_unlock', list()).append(self.id)
                 else:
                     error = werkzeug.exceptions.Forbidden('website_visibility_password_required')
+
+            # elif self.visibility == 'restricted_group' and self.groups_id: or if groups_id set from backend
+            try:
+                self._check_view_access()
+            except AccessError:
+                error = werkzeug.exceptions.Forbidden()
+
         if error:
             if do_raise:
                 raise error
@@ -387,7 +385,7 @@ class View(models.Model):
                 return False
         return True
 
-    def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
+    def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
         self._handle_visibility(do_raise=True)
         new_context = dict(self._context)
@@ -408,13 +406,9 @@ class View(models.Model):
                     func = getattr(values['main_object'], 'get_backend_menu_id', False)
                     values['backend_menu_id'] = func and func() or self.env.ref('website.menu_website_configuration').id
 
-                # Fallback incase main_object dont't inherit 'website.seo.metadata'
-                if not hasattr(values['main_object'], 'get_website_meta'):
-                    values['main_object'].get_website_meta = lambda: {}
-
         if self._context != new_context:
             self = self.with_context(new_context)
-        return super(View, self).render(values, engine=engine, minimal_qcontext=minimal_qcontext)
+        return super(View, self)._render(values, engine=engine, minimal_qcontext=minimal_qcontext)
 
     @api.model
     def _prepare_qcontext(self):
@@ -448,6 +442,7 @@ class View(models.Model):
                 self._context.copy(),
                 main_object=self,
                 website=request.website,
+                is_view_active=request.website.is_view_active,
                 url_for=url_for,
                 res_company=request.website.company_id.sudo(),
                 languages=request.env['res.lang'].get_available(),

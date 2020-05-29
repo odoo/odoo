@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail_full.tests import common as test_mail_full_common
+from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestRecipients
 
 
-class TestSMSComposerComment(test_mail_full_common.TestSMSCommon, test_mail_full_common.TestRecipients):
+class TestSMSComposerComment(TestMailFullCommon, TestRecipients):
     """ TODO LIST
 
      * add test for default_res_model / default_res_id and stuff like that;
@@ -155,6 +155,38 @@ class TestSMSComposerComment(test_mail_full_common.TestSMSCommon, test_mail_full
         self.test_record.flush()
         self.assertEqual(self.test_record.phone_nbr, self.random_numbers[0])
 
+    def test_composer_comment_wo_partner_wo_value_update(self):
+        """ Test record without partner and without phone values: should allow updating first found phone field """
+        self.test_record.write({
+            'customer_id': False,
+            'phone_nbr': False,
+            'mobile_nbr': False,
+        })
+        default_field_name = self.env['mail.test.sms']._sms_get_number_fields()[0]
+
+        with self.with_user('employee'):
+            composer = self.env['sms.composer'].with_context(
+                active_model='mail.test.sms', active_id=self.test_record.id,
+                default_composition_mode='comment',
+            ).create({
+                'body': self._test_body,
+            })
+            self.assertFalse(composer.recipient_single_number_itf)
+            self.assertFalse(composer.recipient_single_number)
+            self.assertEqual(composer.number_field_name, default_field_name)
+
+            composer.write({
+                'recipient_single_number_itf': self.random_numbers_san[0],
+            })
+            self.assertEqual(composer.recipient_single_number_itf, self.random_numbers_san[0])
+            self.assertFalse(composer.recipient_single_number)
+
+            with self.mockSMSGateway():
+                messages = composer._action_send_sms()
+
+        self.assertEqual(self.test_record[default_field_name], self.random_numbers_san[0])
+        self.assertSMSNotification([{'partner': self.env['res.partner'], 'number': self.random_numbers_san[0]}], self._test_body, messages)
+
     def test_composer_numbers_no_model(self):
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
@@ -169,7 +201,7 @@ class TestSMSComposerComment(test_mail_full_common.TestSMSCommon, test_mail_full
         self.assertSMSSent(self.random_numbers_san, self._test_body)
 
 
-class TestSMSComposerBatch(test_mail_full_common.TestSMSCommon):
+class TestSMSComposerBatch(TestMailFullCommon):
     @classmethod
     def setUpClass(cls):
         super(TestSMSComposerBatch, cls).setUpClass()
@@ -245,7 +277,7 @@ class TestSMSComposerBatch(test_mail_full_common.TestSMSCommon):
             self.assertSMSNotification([{'partner': r.customer_id} for r in self.records], 'Zizisse an SMS.', messages)
 
 
-class TestSMSComposerMass(test_mail_full_common.TestSMSCommon):
+class TestSMSComposerMass(TestMailFullCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -497,8 +529,6 @@ class TestSMSComposerMass(test_mail_full_common.TestSMSCommon):
             ).create({
                 'mass_keep_log': False,
             })
-            # Call manually the onchange
-            composer._onchange_template_id()
             self.assertEqual(composer.composition_mode, "comment")
             self.assertEqual(composer.body, "Hello %s ceci est en français." % test_record_2.display_name)
 
@@ -521,8 +551,6 @@ class TestSMSComposerMass(test_mail_full_common.TestSMSCommon):
             ).create({
                 'mass_keep_log': True,
             })
-            # Call manually the onchange
-            composer._onchange_template_id()
             self.assertEqual(composer.composition_mode, "mass")
             # In english because by default but when sinding depending of record
             self.assertEqual(composer.body, "Dear ${object.display_name} this is an SMS.")

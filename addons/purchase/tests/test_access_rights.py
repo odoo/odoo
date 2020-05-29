@@ -15,6 +15,7 @@ class TestPurchaseInvoice(SavepointCase):
         # Create a users
         group_purchase_user = cls.env.ref('purchase.group_purchase_user')
         group_employee = cls.env.ref('base.group_user')
+        group_partner_manager = cls.env.ref('base.group_partner_manager')
 
         cls.purchase_user = cls.env['res.users'].with_context(
             no_reset_password=True
@@ -22,7 +23,7 @@ class TestPurchaseInvoice(SavepointCase):
             'name': 'Purchase user',
             'login': 'purchaseUser',
             'email': 'pu@odoo.com',
-            'groups_id': [(6, 0, [group_purchase_user.id, group_employee.id])],
+            'groups_id': [(6, 0, [group_purchase_user.id, group_employee.id, group_partner_manager.id])],
         })
 
         cls.vendor = cls.env['res.partner'].create({

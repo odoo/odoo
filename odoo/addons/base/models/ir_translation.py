@@ -598,7 +598,7 @@ class IrTranslation(models.Model):
         if callable(field.translate):
             # insert missing translations for each term in src
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module, state)
-                        SELECT l.code, 'model_terms', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s, 'to_translate'
+                        SELECT l.code, 'model_terms', %(name)s, %(res_id)s, %(src)s, '', %(module)s, 'to_translate'
                         FROM res_lang l
                         WHERE l.active AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
@@ -619,7 +619,7 @@ class IrTranslation(models.Model):
         else:
             # insert missing translations for src
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module, state)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s, 'to_translate'
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, '', %(module)s, 'to_translate'
                         FROM res_lang l
                         WHERE l.active AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
@@ -751,7 +751,7 @@ class IrTranslation(models.Model):
             self.insert_missing(fld, rec)
 
         action = {
-            'name': 'Translate',
+            'name': _('Translate'),
             'res_model': 'ir.translation',
             'type': 'ir.actions.act_window',
             'view_mode': 'tree',

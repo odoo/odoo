@@ -39,7 +39,7 @@ class MrpProductProduce(models.TransientModel):
             if 'qty_producing' in fields:
                 res['qty_producing'] = todo_quantity
             if 'consumption' in fields:
-                res['consumption'] = production.bom_id.consumption
+                res['consumption'] = production.bom_id.consumption if production.bom_id else 'flexible'
         return res
 
     serial = fields.Boolean('Requires Serial')

@@ -6,9 +6,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, format_date
+from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
-from odoo.tools import date_utils
 from odoo.tests.common import Form
 
 
@@ -26,6 +25,13 @@ MONTH_SELECTION = [
     ('11', 'November'),
     ('12', 'December'),
 ]
+
+ONBOARDING_STEP_STATES = [
+    ('not_done', "Not done"),
+    ('just_done', "Just done"),
+    ('done', "Done"),
+]
+DASHBOARD_ONBOARDING_STATES = ONBOARDING_STEP_STATES + [('closed', 'Closed')]
 
 
 class ResCompany(models.Model):
@@ -45,6 +51,7 @@ class ResCompany(models.Model):
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
     default_cash_difference_income_account_id = fields.Many2one('account.account', string="Cash Difference Income Account")
     default_cash_difference_expense_account_id = fields.Many2one('account.account', string="Cash Difference Expense Account")
+    account_journal_suspense_account_id = fields.Many2one('account.account', string='Journal Suspense Account')
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
@@ -64,9 +71,6 @@ class ResCompany(models.Model):
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
-    account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold", help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
-                                                                                                       This is useful if you install accounting after having used invoicing for some time and
-                                                                                                       don't want to reconcile all the past payments with bank statements.""")
 
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
@@ -82,17 +86,16 @@ class ResCompany(models.Model):
     account_opening_date = fields.Date(string='Opening Entry', default=lambda self: fields.Date.today().replace(month=1, day=1), required=True, help="That is the date of the opening entry.")
 
     # Fields marking the completion of a setup step
-    # YTI FIXME : The selection should be factorize as a static list in base, like ONBOARDING_STEP_STATES
-    account_setup_bank_data_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding bank data step", default='not_done')
-    account_setup_fy_data_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding fiscal year step", default='not_done')
-    account_setup_coa_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding charts of account step", default='not_done')
-    account_onboarding_invoice_layout_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding invoice layout step", default='not_done')
-    account_onboarding_sample_invoice_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding sample invoice step", default='not_done')
-    account_onboarding_sale_tax_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding sale tax step", default='not_done')
+    account_setup_bank_data_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding bank data step", default='not_done')
+    account_setup_fy_data_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding fiscal year step", default='not_done')
+    account_setup_coa_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding charts of account step", default='not_done')
+    account_onboarding_invoice_layout_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding invoice layout step", default='not_done')
+    account_onboarding_sample_invoice_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding sample invoice step", default='not_done')
+    account_onboarding_sale_tax_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding sale tax step", default='not_done')
 
     # account dashboard onboarding
-    account_invoice_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account invoice onboarding panel", default='not_done')
-    account_dashboard_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account dashboard onboarding panel", default='not_done')
+    account_invoice_onboarding_state = fields.Selection(DASHBOARD_ONBOARDING_STATES, string="State of the account invoice onboarding panel", default='not_done')
+    account_dashboard_onboarding_state = fields.Selection(DASHBOARD_ONBOARDING_STATES, string="State of the account dashboard onboarding panel", default='not_done')
     invoice_terms = fields.Text(string='Default Terms and Conditions', translate=True)
 
     # Needed in the Point of Sale
@@ -114,17 +117,18 @@ class ResCompany(models.Model):
     def _check_fiscalyear_last_day(self):
         # if the user explicitly chooses the 29th of February we allow it:
         # there is no "fiscalyear_last_year" so we do not know his intentions.
-        if self.fiscalyear_last_day == 29 and self.fiscalyear_last_month == '2':
-            return
+        for rec in self:
+            if rec.fiscalyear_last_day == 29 and rec.fiscalyear_last_month == '2':
+                continue
 
-        if self.account_opening_date:
-            year = self.account_opening_date.year
-        else:
-            year = datetime.now().year
+            if rec.account_opening_date:
+                year = rec.account_opening_date.year
+            else:
+                year = datetime.now().year
 
-        max_day = calendar.monthrange(year, int(self.fiscalyear_last_month))[1]
-        if self.fiscalyear_last_day > max_day:
-            raise ValidationError(_("Invalid fiscal year last day"))
+            max_day = calendar.monthrange(year, int(rec.fiscalyear_last_month))[1]
+            if rec.fiscalyear_last_day > max_day:
+                raise ValidationError(_("Invalid fiscal year last day"))
 
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
@@ -160,61 +164,6 @@ class ResCompany(models.Model):
             'account_setup_coa_state',
         ]
 
-    def compute_fiscalyear_dates(self, current_date):
-        '''Computes the start and end dates of the fiscal year where the given 'date' belongs to.
-
-        :param current_date: A datetime.date/datetime.datetime object.
-        :return: A dictionary containing:
-            * date_from
-            * date_to
-            * [Optionally] record: The fiscal year record.
-        '''
-        self.ensure_one()
-        date_str = current_date.strftime(DEFAULT_SERVER_DATE_FORMAT)
-
-        # Search a fiscal year record containing the date.
-        # If a record is found, then no need further computation, we get the dates range directly.
-        fiscalyear = self.env['account.fiscal.year'].search([
-            ('company_id', '=', self.id),
-            ('date_from', '<=', date_str),
-            ('date_to', '>=', date_str),
-        ], limit=1)
-        if fiscalyear:
-            return {
-                'date_from': fiscalyear.date_from,
-                'date_to': fiscalyear.date_to,
-                'record': fiscalyear,
-            }
-
-        date_from, date_to = date_utils.get_fiscal_year(
-            current_date, day=self.fiscalyear_last_day, month=int(self.fiscalyear_last_month))
-
-        date_from_str = date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)
-        date_to_str = date_to.strftime(DEFAULT_SERVER_DATE_FORMAT)
-
-        # Search for fiscal year records reducing the delta between the date_from/date_to.
-        # This case could happen if there is a gap between two fiscal year records.
-        # E.g. two fiscal year records: 2017-01-01 -> 2017-02-01 and 2017-03-01 -> 2017-12-31.
-        # => The period 2017-02-02 - 2017-02-30 is not covered by a fiscal year record.
-
-        fiscalyear_from = self.env['account.fiscal.year'].search([
-            ('company_id', '=', self.id),
-            ('date_from', '<=', date_from_str),
-            ('date_to', '>=', date_from_str),
-        ], limit=1)
-        if fiscalyear_from:
-            date_from = fiscalyear_from.date_to + timedelta(days=1)
-
-        fiscalyear_to = self.env['account.fiscal.year'].search([
-            ('company_id', '=', self.id),
-            ('date_from', '<=', date_to_str),
-            ('date_to', '>=', date_to_str),
-        ], limit=1)
-        if fiscalyear_to:
-            date_to = fiscalyear_to.date_from - timedelta(days=1)
-
-        return {'date_from': date_from, 'date_to': date_to}
-
     def get_new_account_code(self, current_code, old_prefix, new_prefix):
         digits = len(current_code)
         return new_prefix + current_code.replace(old_prefix, '', 1).lstrip('0').rjust(digits-len(new_prefix), '0')
@@ -228,12 +177,22 @@ class ResCompany(models.Model):
 
     def _validate_fiscalyear_lock(self, values):
         if values.get('fiscalyear_lock_date'):
+
             nb_draft_entries = self.env['account.move'].search([
                 ('company_id', 'in', self.ids),
                 ('state', '=', 'draft'),
                 ('date', '<=', values['fiscalyear_lock_date'])])
             if nb_draft_entries:
                 raise ValidationError(_('There are still unposted entries in the period you want to lock. You should either post or delete them.'))
+
+            has_unreconciled_statement_lines = self.env['account.bank.statement.line'].search_count([
+                ('company_id', 'in', self.ids),
+                ('is_reconciled', '=', False),
+            ])
+            if has_unreconciled_statement_lines:
+                raise ValidationError(_(
+                    "There are still unreconciled bank statement lines in the period you want to lock."
+                    "You should either reconcile or delete them."))
 
     def _get_user_fiscal_lock_date(self):
         """Get the fiscal lock date for this company depending on the user"""
@@ -390,10 +349,16 @@ class ResCompany(models.Model):
         current year earnings account.
         """
         if self.account_opening_move_id and self.account_opening_move_id.state == 'draft':
-            debit_diff, credit_diff = self.get_opening_move_differences(self.account_opening_move_id.line_ids)
-
+            balancing_account = self.get_unaffected_earnings_account()
             currency = self.currency_id
-            balancing_move_line = self.account_opening_move_id.line_ids.filtered(lambda x: x.account_id == self.get_unaffected_earnings_account())
+
+            balancing_move_line = self.account_opening_move_id.line_ids.filtered(lambda x: x.account_id == balancing_account)
+            # There could be multiple lines if we imported the balance from unaffected earnings account too
+            if len(balancing_move_line) > 1:
+                self.with_context(check_move_validity=False).account_opening_move_id.line_ids -= balancing_move_line[1:]
+                balancing_move_line = balancing_move_line[0]
+
+            debit_diff, credit_diff = self.get_opening_move_differences(self.account_opening_move_id.line_ids)
 
             if float_is_zero(debit_diff + credit_diff, precision_rounding=currency.rounding):
                 if balancing_move_line:
@@ -405,7 +370,6 @@ class ResCompany(models.Model):
                     balancing_move_line.write({'debit': credit_diff, 'credit': debit_diff})
                 else:
                     # Non-zero difference and no existing line : create a new line
-                    balancing_account = self.get_unaffected_earnings_account()
                     self.env['account.move.line'].create({
                         'name': _('Automatic Balancing Line'),
                         'move_id': self.account_opening_move_id.id,
@@ -455,7 +419,7 @@ class ResCompany(models.Model):
                 raise RedirectWarning(msg, action.id, _("Go to the journal configuration"))
 
             sample_invoice = self.env['account.move'].with_context(default_move_type='out_invoice', default_journal_id=journal.id).create({
-                'invoice_payment_ref': _('Sample invoice'),
+                'payment_reference': _('Sample invoice'),
                 'partner_id': partner.id,
                 'invoice_line_ids': [
                     (0, 0, {

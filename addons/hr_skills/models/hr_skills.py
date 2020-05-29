@@ -10,7 +10,7 @@ class Skill(models.Model):
     _description = "Skill"
 
     name = fields.Char(required=True)
-    skill_type_id = fields.Many2one('hr.skill.type')
+    skill_type_id = fields.Many2one('hr.skill.type', ondelete='cascade')
 
 
 class EmployeeSkill(models.Model):
@@ -47,7 +47,7 @@ class SkillLevel(models.Model):
     _description = "Skill Level"
     _order = "level_progress desc"
 
-    skill_type_id = fields.Many2one('hr.skill.type')
+    skill_type_id = fields.Many2one('hr.skill.type', ondelete='cascade')
     name = fields.Char(required=True)
     level_progress = fields.Integer(string="Progress", help="Progress from zero knowledge (0%) to fully mastered (100%).")
 
@@ -57,5 +57,5 @@ class SkillType(models.Model):
     _description = "Skill Type"
 
     name = fields.Char(required=True)
-    skill_ids = fields.One2many('hr.skill', 'skill_type_id', string="Skills", ondelete='cascade')
-    skill_level_ids = fields.One2many('hr.skill.level', 'skill_type_id', string="Levels", ondelete='cascade')
+    skill_ids = fields.One2many('hr.skill', 'skill_type_id', string="Skills")
+    skill_level_ids = fields.One2many('hr.skill.level', 'skill_type_id', string="Levels")

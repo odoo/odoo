@@ -4,7 +4,7 @@
 from odoo.tests import tagged
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestMailCommon
-from odoo.exceptions import AccessError, except_orm, ValidationError, UserError
+from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger, formataddr
 
 
@@ -39,10 +39,7 @@ class TestChannelAccessRights(TestMailCommon):
         self.group_public.with_user(self.user_public).read()
 
         # Read Pigs -> ko, restricted to employees
-        # TODO: Change the except_orm to Warning ( Because here it's call check_access_rule
-        # which still generate exception in except_orm.So we need to change all
-        # except_orm to warning in mail module.)
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.group_pigs.with_user(self.user_public).read()
 
         # Read a private group when being a member: ok
@@ -64,7 +61,6 @@ class TestChannelAccessRights(TestMailCommon):
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models', 'odoo.models.unlink')
     def test_access_rights_groups(self):
         # Employee read employee-based group: ok
-        # TODO Change the except_orm to Warning
         self.group_pigs.with_user(self.user_employee).read()
 
         # Employee can create a group
@@ -77,7 +73,7 @@ class TestChannelAccessRights(TestMailCommon):
         self.group_pigs.with_user(self.user_employee).unlink()
 
         # Employee cannot read a private group
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.group_private.with_user(self.user_employee).read()
 
         # Employee cannot write on private
@@ -210,6 +206,14 @@ class TestChannelModeration(TestMailCommon):
             'channel_partner_ids': [(4, cls.partner_employee.id)],
             'moderator_ids': [(4, cls.user_employee.id)],
         })
+
+        # ensure initial data
+        cls.user_employee_2 = mail_new_test_user(
+            cls.env, login='employee2', groups='base.group_user', company_id=cls.company_admin.id,
+            name='Enguerrand Employee2', notification_type='inbox', signature='--\nEnguerrand'
+        )
+        cls.partner_employee_2 = cls.user_employee_2.partner_id
+
         cls.user_portal = cls._create_portal_user()
 
     def test_moderator_consistency(self):
@@ -332,26 +336,26 @@ class TestChannelModeration(TestMailCommon):
 
     def test_user_is_moderator(self):
         self.assertTrue(self.user_employee.is_moderator)
-        self.assertFalse(self.user_admin.is_moderator)
+        self.assertFalse(self.user_employee_2.is_moderator)
         self.channel_1.write({
-            'channel_partner_ids': [(4, self.partner_admin.id)],
-            'moderator_ids': [(4, self.user_admin.id)],
+            'channel_partner_ids': [(4, self.partner_employee_2.id)],
+            'moderator_ids': [(4, self.user_employee_2.id)],
         })
-        self.assertTrue(self.user_admin.is_moderator)
+        self.assertTrue(self.user_employee_2.is_moderator)
 
     def test_user_moderation_counter(self):
-        self._add_messages(self.channel_1, 'B', moderation_status='pending_moderation', author=self.partner_admin)
-        self._add_messages(self.channel_1, 'B', moderation_status='accepted', author=self.partner_admin)
+        self._add_messages(self.channel_1, 'B', moderation_status='pending_moderation', author=self.partner_employee_2)
+        self._add_messages(self.channel_1, 'B', moderation_status='accepted', author=self.partner_employee_2)
         self._add_messages(self.channel_1, 'B', moderation_status='accepted', author=self.partner_employee)
         self._add_messages(self.channel_1, 'B', moderation_status='pending_moderation', author=self.partner_employee)
         self._add_messages(self.channel_1, 'B', moderation_status='accepted', author=self.partner_employee)
 
         self.assertEqual(self.user_employee.moderation_counter, 2)
-        self.assertEqual(self.user_admin.moderation_counter, 0)
+        self.assertEqual(self.user_employee_2.moderation_counter, 0)
 
         self.channel_1.write({
-            'channel_partner_ids': [(4, self.partner_admin.id)],
-            'moderator_ids': [(4, self.user_admin.id)]
+            'channel_partner_ids': [(4, self.partner_employee_2.id)],
+            'moderator_ids': [(4, self.user_employee_2.id)]
         })
         self.assertEqual(self.user_employee.moderation_counter, 2)
-        self.assertEqual(self.user_admin.moderation_counter, 0)
+        self.assertEqual(self.user_employee_2.moderation_counter, 0)

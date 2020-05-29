@@ -728,7 +728,7 @@ var MailManager =  AbstractService.extend({
                 if (
                     item.failure.isLinkedToDocument() &&
                     (item.failure.getDocumentModel() === failure.getDocumentModel()) &&
-                    (item.failure.getFailureType() === failure.getFailureType())
+                    (item.failure.getMessageType() === failure.getMessageType())
                 ) {
                     isSameDocument = item.failure.getDocumentID() === failure.getDocumentID();
                     return true;
@@ -1032,7 +1032,7 @@ var MailManager =  AbstractService.extend({
         this._rpc({
                 model: resModel,
                 method: 'get_formview_id',
-                args: [[resID], session.user_context],
+                args: [[resID], session.user_context.uid],
             })
             .then(function (viewID) {
                 self._redirectToDocument(resModel, resID, viewID);

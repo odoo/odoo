@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
+
 from odoo import api, fields, models, _
 
 
@@ -91,22 +93,30 @@ class Job(models.Model):
                 [("job_id", "=", job.id), ("stage_id", "=", job._get_first_stage().id)]
             )
 
-    def get_alias_model_name(self, vals):
-        return 'hr.applicant'
-
-    def get_alias_values(self):
-        values = super(Job, self).get_alias_values()
-        values['alias_defaults'] = {
-            'job_id': self.id,
-            'department_id': self.department_id.id,
-            'company_id': self.department_id.company_id.id if self.department_id else self.company_id.id
-        }
+    def _alias_get_creation_values(self):
+        values = super(Job, self)._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('hr.applicant').id
+        if self.id:
+            values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
+            defaults.update({
+                'job_id': self.id,
+                'department_id': self.department_id.id,
+                'company_id': self.department_id.company_id.id if self.department_id else self.company_id.id,
+            })
         return values
 
     @api.model
     def create(self, vals):
         vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(4, self.env.uid)]
-        return super(Job, self).create(vals)
+        new_job = super(Job, self).create(vals)
+        utm_linkedin = self.env.ref("utm.utm_source_linkedin", raise_if_not_found=False)
+        if utm_linkedin:
+            source_vals = {
+                'source_id': utm_linkedin.id,
+                'job_id': new_job.id,
+            }
+            self.env['hr.recruitment.source'].create(source_vals)
+        return new_job
 
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_job_new')

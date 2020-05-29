@@ -3,9 +3,10 @@
 
 import ast
 from datetime import timedelta
+from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError, ValidationError
+from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
 from odoo.tools.misc import format_date
 
 
@@ -18,6 +19,7 @@ class ProjectTaskType(models.Model):
         default_project_id = self.env.context.get('default_project_id')
         return [default_project_id] if default_project_id else None
 
+    active = fields.Boolean('Active', default=True)
     name = fields.Char(string='Stage Name', required=True, translate=True)
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
@@ -48,17 +50,47 @@ class ProjectTaskType(models.Model):
         help="Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
             " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
             " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n")
+    is_closed = fields.Boolean('Closing Stage', help="Tasks in this stage are considered as closed.")
+    disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning')
 
-    def unlink(self):
-        stages = self
-        default_project_id = self.env.context.get('default_project_id')
-        if default_project_id:
-            shared_stages = self.filtered(lambda x: len(x.project_ids) > 1 and default_project_id in x.project_ids.ids)
-            tasks = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', default_project_id), ('stage_id', 'in', self.ids)])
-            if shared_stages and not tasks:
-                shared_stages.write({'project_ids': [(3, default_project_id)]})
-                stages = self.filtered(lambda x: x not in shared_stages)
-        return super(ProjectTaskType, stages).unlink()
+    def unlink_wizard(self, stage_view=False):
+        self = self.with_context(active_test=False)
+        # retrieves all the projects with a least 1 task in that stage
+        # a task can be in a stage even if the project is not assigned to the stage
+        readgroup = self.with_context(active_test=False).env['project.task'].read_group([('stage_id', 'in', self.ids)], ['project_id'], ['project_id'])
+        project_ids = list(set([project['project_id'][0] for project in readgroup] + self.project_ids.ids))
+
+        wizard = self.with_context(project_ids=project_ids).env['project.task.type.delete.wizard'].create({
+            'project_ids': project_ids,
+            'stage_ids': self.ids
+        })
+
+        context = dict(self.env.context)
+        context['stage_view'] = stage_view
+        return {
+            'name': _('Delete Stage'),
+            'view_mode': 'form',
+            'res_model': 'project.task.type.delete.wizard',
+            'views': [(self.env.ref('project.view_project_task_type_delete_wizard').id, 'form')],
+            'type': 'ir.actions.act_window',
+            'res_id': wizard.id,
+            'target': 'new',
+            'context': context,
+        }
+
+    def write(self, vals):
+        if 'active' in vals and not vals['active']:
+            self.env['project.task'].search([('stage_id', 'in', self.ids)]).write({'active': False})
+        return super(ProjectTaskType, self).write(vals)
+
+    @api.depends('project_ids', 'project_ids.rating_active')
+    def _compute_disabled_rating_warning(self):
+        for stage in self:
+            disabled_projects = stage.project_ids.filtered(lambda p: not p.rating_active)
+            if disabled_projects:
+                stage.disabled_rating_warning = '\n'.join('- %s' % p.name for p in disabled_projects)
+            else:
+                stage.disabled_rating_warning = False
 
 
 class Project(models.Model):
@@ -68,14 +100,6 @@ class Project(models.Model):
     _order = "sequence, name, id"
     _rating_satisfaction_days = False  # takes all existing ratings
     _check_company_auto = True
-
-    def get_alias_model_name(self, vals):
-        return vals.get('alias_model', 'project.task')
-
-    def get_alias_values(self):
-        values = super(Project, self).get_alias_values()
-        values['alias_defaults'] = {'project_id': self.id}
-        return values
 
     def _compute_attached_docs_count(self):
         Attachment = self.env['ir.attachment']
@@ -89,7 +113,7 @@ class Project(models.Model):
             ])
 
     def _compute_task_count(self):
-        task_data = self.env['project.task'].read_group([('project_id', 'in', self.ids), '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)], ['project_id'], ['project_id'])
+        task_data = self.env['project.task'].read_group([('project_id', 'in', self.ids), '|', '&', ('stage_id.is_closed', '=', False), ('stage_id.fold', '=', False), ('stage_id', '=', False)], ['project_id'], ['project_id'])
         result = dict((data['project_id'][0], data['project_id_count']) for data in task_data)
         for project in self:
             project.task_count = result.get(project.id, 0)
@@ -132,6 +156,10 @@ class Project(models.Model):
                     Create a new project</p>''')
             })
             action_data = action.read()[0]
+
+            action_config = self.env.ref('project.open_view_project_all_config', False)
+            if action_config:
+                action_config.sudo().write({'help': action.help})
         # Reload the dashboard
         return action_data
 
@@ -154,11 +182,6 @@ class Project(models.Model):
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
-    def _get_default_rating_status(self):
-        if self.user_has_groups('project.group_project_rating'):
-            return 'stage'
-        return 'no'
-
     name = fields.Char("Name", index=True, required=True, tracking=True)
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
@@ -177,7 +200,7 @@ class Project(models.Model):
         string='Members')
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', string='Show Project on dashboard',
         help="Whether this project should be displayed on your dashboard.")
-    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Label used for the tasks of the project.")
+    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Label used for the tasks of the project.", translate=True)
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
@@ -216,33 +239,37 @@ class Project(models.Model):
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
     subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', ondelete="restrict",
         help="Project in which sub-tasks of the current project will be created. It can be the current project itself.")
-    allow_subtasks = fields.Boolean('Sub-tasks', compute='_compute_allow_subtasks')
+    allow_subtasks = fields.Boolean('Sub-tasks')
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
-    rating_status = fields.Selection([
-        ('stage', 'Rating when changing stage'),
-        ('periodic', 'Periodical Rating'),
-        ('no', 'No rating')], string='Customer Ratings', default=_get_default_rating_status, required=True,
+    rating_active = fields.Boolean('Customer Ratings', default=True)
+    rating_status = fields.Selection(
+        [('stage', 'Rating when changing stage'),
+         ('periodic', 'Periodical Rating')
+        ], 'Customer Ratings Status', default="stage", required=True,
         help="How to get customer feedback?\n"
-                 "- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
-                 "- Periodical Rating: email will be sent periodically.\n\n"
-                 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.")
+             "- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
+             "- Periodical Rating: email will be sent periodically.\n\n"
+             "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.")
     rating_status_period = fields.Selection([
-        ('daily', 'Daily'), ('weekly', 'Weekly'), ('bimonthly', 'Twice a Month'),
-        ('monthly', 'Once a Month'), ('quarterly', 'Quarterly'), ('yearly', 'Yearly')
-    ], 'Rating Frequency')
-
-    portal_show_rating = fields.Boolean('Rating visible publicly', copy=False)
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('bimonthly', 'Twice a Month'),
+        ('monthly', 'Once a Month'),
+        ('quarterly', 'Quarterly'),
+        ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
     ]
 
-    def _compute_allow_subtasks(self):
-        subtask_enabled = self.user_has_groups('project.group_subtask_project')
-        for project in self:
-            project.allow_subtasks = subtask_enabled
+    @api.model
+    def default_get(self, *args, **kwargs):
+        defaults = super().default_get(*args, **kwargs)
+        if 'allow_subtasks' not in defaults:
+            defaults['allow_subtasks'] = self.env.user.has_group('project.group_subtask_project')
+        return defaults
 
     @api.depends('allowed_internal_user_ids', 'allowed_portal_user_ids')
     def _compute_allowed_users(self):
@@ -352,6 +379,22 @@ class Project(models.Model):
 
         return res
 
+    def action_unlink(self):
+        wizard = self.env['project.delete.wizard'].create({
+            'project_ids': self.ids
+        })
+
+        return {
+            'name': _('Confirmation'),
+            'view_mode': 'form',
+            'res_model': 'project.delete.wizard',
+            'views': [(self.env.ref('project.project_delete_wizard_form').id, 'form')],
+            'type': 'ir.actions.act_window',
+            'res_id': wizard.id,
+            'target': 'new',
+            'context': self.env.context,
+        }
+
     def unlink(self):
         # Check project is empty
         for project in self.with_context(active_test=False):
@@ -380,6 +423,14 @@ class Project(models.Model):
         """ Unsubscribe from all tasks when unsubscribing from a project """
         self.mapped('tasks').message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
         return super(Project, self).message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
+
+    def _alias_get_creation_values(self):
+        values = super(Project, self)._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('project.task').id
+        if self.id:
+            values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
+            defaults['project_id'] = self.id
+        return values
 
     # ---------------------------------------------------
     #  Actions
@@ -410,14 +461,7 @@ class Project(models.Model):
         return action
 
     def action_view_all_rating(self):
-        """ return the action to see all the rating of the project, and activate default filters """
-        if self.portal_show_rating:
-            return {
-                'type': 'ir.actions.act_url',
-                'name': "Redirect to the Website Projcet Rating Page",
-                'target': 'self',
-                'url': "/project/rating/%s" % (self.id,)
-            }
+        """ return the action to see all the rating of the project and activate default filters"""
         action = self.env['ir.actions.act_window'].for_xml_id('project', 'rating_rating_action_view_project_rating')
         action['name'] = _('Ratings of %s') % (self.name,)
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
@@ -476,7 +520,7 @@ class Task(models.Model):
         project_id = self.env.context.get('default_project_id')
         if not project_id:
             return False
-        return self.stage_find(project_id, [('fold', '=', False)])
+        return self.stage_find(project_id, [('fold', '=', False), ('is_closed', '=', False)])
 
     @api.model
     def _default_company_id(self):
@@ -507,9 +551,9 @@ class Task(models.Model):
         domain="[('project_ids', '=', project_id)]", copy=False)
     tag_ids = fields.Many2many('project.tags', string='Tags')
     kanban_state = fields.Selection([
-        ('normal', 'Grey'),
-        ('done', 'Green'),
-        ('blocked', 'Red')], string='Kanban State',
+        ('normal', 'In Progress'),
+        ('done', 'Ready'),
+        ('blocked', 'Blocked')], string='Kanban State',
         copy=False, default='normal', required=True)
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True)
     create_date = fields.Datetime("Created On", readonly=True, index=True)
@@ -517,7 +561,6 @@ class Task(models.Model):
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
     date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
-    date_deadline_formatted = fields.Char(compute='_compute_date_deadline_formatted')
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         index=True,
         copy=False,
@@ -525,8 +568,8 @@ class Task(models.Model):
     project_id = fields.Many2one('project.project', string='Project',
         compute='_compute_project_id', store=True, readonly=False,
         index=True, tracking=True, check_company=True, change_default=True)
-    planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',tracking=True)
-    subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
+    planned_hours = fields.Float("Initially Planned Hours", help='Time planned to achieve this task (including its sub-tasks).', tracking=True)
+    subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours', help="Sum of the planned hours of all the sub-tasks linked to this task. Usually less or equal to the initially planned hours of this task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
         default=lambda self: self.env.uid,
@@ -551,6 +594,7 @@ class Task(models.Model):
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True, related_sudo=False)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True, related_sudo=False)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True, related_sudo=False)
+    is_closed = fields.Boolean(related="stage_id.is_closed", string="Closing Stage", readonly=True, related_sudo=False)
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", context={'active_test': False})
     subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
@@ -580,11 +624,6 @@ class Task(models.Model):
             if portal_users:
                 user_names = ', '.join(portal_users[:10].mapped('name'))
                 raise ValidationError(_("The project visibility setting doesn't allow portal users to see the project's tasks. (%s)") % user_names)
-
-    @api.depends('date_deadline')
-    def _compute_date_deadline_formatted(self):
-        for task in self:
-            task.date_deadline_formatted = format_date(self.env, task.date_deadline) if task.date_deadline else None
 
     def _compute_attachment_ids(self):
         for task in self:
@@ -675,7 +714,7 @@ class Task(models.Model):
                 self.partner_id = self.project_id.partner_id
             # find stage
             if self.project_id not in self.stage_id.project_ids:
-                self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
+                self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False), ('is_closed', '=', False)])
             # keep multi company consistency
             self.company_id = self.project_id.company_id
         else:
@@ -754,6 +793,7 @@ class Task(models.Model):
     def create(self, vals):
         # context: no_log, because subtype already handle this
         context = dict(self.env.context)
+        stage_id = vals.get('stage_id') or context.get('default_stage_id') or False
         # for default stage
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
@@ -761,8 +801,8 @@ class Task(models.Model):
         if vals.get('user_id'):
             vals['date_assign'] = fields.Datetime.now()
         # Stage change: Update date_end if folded stage and date_last_stage_update
-        if vals.get('stage_id'):
-            vals.update(self.update_date_end(vals['stage_id']))
+        if stage_id:
+            vals.update(self.update_date_end(stage_id))
             vals['date_last_stage_update'] = fields.Datetime.now()
         task = super(Task, self.with_context(context)).create(vals)
         return task
@@ -790,7 +830,7 @@ class Task(models.Model):
 
     def update_date_end(self, stage_id):
         project_task_type = self.env['project.task.type'].browse(stage_id)
-        if project_task_type.fold:
+        if project_task_type.fold or project_task_type.is_closed:
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
 
@@ -853,11 +893,12 @@ class Task(models.Model):
         self.ensure_one()
 
         project_user_group_id = self.env.ref('project.group_project_user').id
-        new_group = (
-            'group_project_user',
-            lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'],
-            {},
-        )
+
+        group_func = lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups']
+        if self.project_id.privacy_visibility == 'followers':
+            allowed_user_ids = self.project_id.allowed_internal_user_ids.partner_id.ids
+            group_func = lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'] and pdata['id'] in allowed_user_ids
+        new_group = ('group_project_user', group_func, {})
 
         if not self.user_id and not self.stage_id.fold:
             take_action = self._notify_get_action_link('assign')
@@ -866,9 +907,17 @@ class Task(models.Model):
 
         groups = [new_group] + groups
 
+        if self.project_id.privacy_visibility == 'portal':
+            allowed_user_ids = self.project_id.allowed_portal_user_ids.partner_id.ids
+            groups.insert(0, (
+                'allowed_portal_users',
+                lambda pdata: pdata['type'] == 'portal' and pdata['id'] in allowed_user_ids,
+                {}
+            ))
+
         for group_name, group_method, group_data in groups:
-            if group_name != 'customer':
-                group_data['has_button_access'] = True
+            if group_name in ('customer', 'portal_customer', 'user'):
+                group_data['has_button_access'] = False
 
         return groups
 
@@ -943,6 +992,11 @@ class Task(models.Model):
         return headers
 
     def _message_post_after_hook(self, message, msg_vals):
+        if message.attachment_ids and not self.displayed_image_id:
+            image_attachments = message.attachment_ids.filtered(lambda a: a.mimetype == 'image')
+            if image_attachments:
+                self.displayed_image_id = image_attachments[0]
+
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -958,11 +1012,17 @@ class Task(models.Model):
     def action_assign_to_me(self):
         self.write({'user_id': self.env.user.id})
 
-    def _get_all_subtasks(self):
+    # If depth == 1, return only direct children
+    # If depth == 3, return children to third generation
+    # If depth <= 0, return all children without depth limit
+    def _get_all_subtasks(self, depth=0):
         children = self.mapped('child_ids')
         if not children:
             return self.env['project.task']
-        return children + children._get_all_subtasks()
+        if depth == 1:
+            return children
+        return children + children._get_all_subtasks(depth - 1)
+
     def action_open_parent_task(self):
         return {
             'name': _('Parent Task'),
@@ -1023,8 +1083,11 @@ class ProjectTags(models.Model):
     _name = "project.tags"
     _description = "Project Tags"
 
+    def _get_default_color(self):
+        return randint(1, 11)
+
     name = fields.Char('Tag Name', required=True)
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', default=_get_default_color)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists!"),

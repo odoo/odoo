@@ -9,10 +9,9 @@ import random
 import re
 import threading
 from ast import literal_eval
-from base64 import b64encode
 from datetime import datetime
 
-from odoo import api, fields, models, tools, _, SUPERUSER_ID
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -45,6 +44,16 @@ class MassMailing(models.Model):
     _rec_name = "subject"
 
     @api.model
+    def default_get(self, fields):
+        vals = super(MassMailing, self).default_get(fields)
+        if 'contact_list_ids' in fields and not vals.get('contact_list_ids') and vals.get('mailing_model_id'):
+            if vals.get('mailing_model_id') == self.env['ir.model']._get('mailing.list').id:
+                mailing_list = self.env['mailing.list'].search([], limit=2)
+                if len(mailing_list) == 1:
+                    vals['contact_list_ids'] = [(6, 0, [mailing_list.id])]
+        return vals
+
+    @api.model
     def _get_default_mail_server_id(self):
         server_id = self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mail_server_id')
         try:
@@ -65,14 +74,13 @@ class MassMailing(models.Model):
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
-    campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign')
+    campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign', index=True)
     source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='cascade',
                                 help="This is the link source, e.g. Search Engine, another domain, or name of email list")
     medium_id = fields.Many2one(
         'utm.medium', string='Medium',
         compute='_compute_medium_id', readonly=False, store=True,
         help="UTM Medium: delivery method (email, sms, ...)")
-    clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of Clicks")
     state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
         string='Status', required=True, tracking=True, copy=False, default='draft', group_expand='_group_expand_states')
     color = fields.Integer(string='Color Index')
@@ -126,6 +134,7 @@ class MassMailing(models.Model):
     opened_ratio = fields.Integer(compute="_compute_statistics", string='Opened Ratio')
     replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
     bounced_ratio = fields.Integer(compute="_compute_statistics", string='Bounced Ratio')
+    clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of Clicks")
     next_departure = fields.Datetime(compute="_compute_next_departure", string='Scheduled date')
 
     def _compute_total(self):
@@ -315,6 +324,9 @@ class MassMailing(models.Model):
     def action_view_traces_failed(self):
         return self._action_view_traces_filtered('failed')
 
+    def action_view_traces_sent(self):
+        return self._action_view_traces_filtered('sent')
+
     def _action_view_traces_filtered(self, view_filter):
         action = self.env.ref('mass_mailing.mailing_trace_action').read()[0]
         action['name'] = _('%s Traces') % (self.name)
@@ -323,8 +335,16 @@ class MassMailing(models.Model):
         action['context'][filter_key] = True
         return action
 
-    def action_view_sent(self):
-        return self._action_view_documents_filtered('sent')
+    def action_view_clicked(self):
+        model_name = self.env['ir.model']._get('link.tracker').display_name
+        return {
+            'name': model_name,
+            'type': 'ir.actions.act_window',
+            'view_mode': 'tree',
+            'res_model': 'link.tracker',
+            'domain': [('mass_mailing_id.id', '=', self.id)],
+            'context': dict(self._context, create=False)
+        }
 
     def action_view_opened(self):
         return self._action_view_documents_filtered('opened')
@@ -335,14 +355,11 @@ class MassMailing(models.Model):
     def action_view_bounced(self):
         return self._action_view_documents_filtered('bounced')
 
-    def action_view_clicked(self):
-        return self._action_view_documents_filtered('clicked')
-
     def action_view_delivered(self):
         return self._action_view_documents_filtered('delivered')
 
     def _action_view_documents_filtered(self, view_filter):
-        if view_filter in ('sent', 'opened', 'replied', 'bounced', 'clicked'):
+        if view_filter in ('opened', 'replied', 'bounced'):
             opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat[view_filter])
         elif view_filter == ('delivered'):
             opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.sent and not stat.bounced)

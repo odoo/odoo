@@ -16,13 +16,13 @@ class LunchOrder(models.Model):
     topping_ids_2 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 2', domain=[('topping_category', '=', 2)])
     topping_ids_3 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 3', domain=[('topping_category', '=', 3)])
     product_id = fields.Many2one('lunch.product', string="Product", required=True)
-    category_id = fields.Many2one('lunch.product.category', string='Product Category',
-                                  related='product_id.category_id', readonly=True, store=True)
+    category_id = fields.Many2one(
+        string='Product Category', related='product_id.category_id', store=True)
     date = fields.Date('Order Date', required=True, readonly=True,
                        states={'new': [('readonly', False)]},
                        default=fields.Date.context_today)
-    supplier_id = fields.Many2one('lunch.supplier', string='Vendor', related='product_id.supplier_id',
-                               readonly=True, store=True, index=True)
+    supplier_id = fields.Many2one(
+        string='Vendor', related='product_id.supplier_id', store=True, index=True)
     user_id = fields.Many2one('res.users', 'User', readonly=True,
                               states={'new': [('readonly', False)]},
                               default=lambda self: self.env.uid)
@@ -36,7 +36,7 @@ class LunchOrder(models.Model):
                               ('cancelled', 'Cancelled')],
                              'Status', readonly=True, index=True, default='new')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
-    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
+    currency_id = fields.Many2one(related='company_id.currency_id', store=True)
     quantity = fields.Float('Quantity', required=True, default=1)
 
     display_toppings = fields.Text('Extras', compute='_compute_display_toppings', store=True)
@@ -55,15 +55,7 @@ class LunchOrder(models.Model):
     available_toppings_2 = fields.Boolean(help='Are extras available for this product', compute='_compute_available_toppings')
     available_toppings_3 = fields.Boolean(help='Are extras available for this product', compute='_compute_available_toppings')
 
-    # YTI TODO Try to remove this brol
-    edit = fields.Boolean('Currently in edit mode', compute='_compute_edit')
-
-    def _compute_edit(self):
-        value = bool(self._context.get('active_id', False))
-        for line in self:
-            line.edit = value
-
-    @api.depends('product_id')
+    @api.depends('category_id')
     def _compute_available_toppings(self):
         for line in self:
             line.available_toppings_1 = bool(line.env['lunch.topping'].search_count([('category_id', '=', line.category_id.id), ('topping_category', '=', 1)]))
@@ -73,7 +65,6 @@ class LunchOrder(models.Model):
     def init(self):
         self._cr.execute("""CREATE INDEX IF NOT EXISTS lunch_order_user_product_date ON %s (user_id, product_id, date)"""
             % self._table)
-
 
     def _extract_toppings(self, values):
         """

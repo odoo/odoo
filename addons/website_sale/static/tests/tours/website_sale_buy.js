@@ -79,13 +79,13 @@ tour.register('shop_buy_product', {
             // Leave /shop/confirmation to prevent RPC loop to /shop/payment/get_status.
             // The RPC could be handled in python while the tour is killed (and the session), leading to crashes
             run: function () {
-                window.location.href = '/aboutus'; // Redirect in JS to avoid the RPC loop (20x1sec)
+                window.location.href = '/contactus'; // Redirect in JS to avoid the RPC loop (20x1sec)
             },
             timeout: 30000,
         },
         {
             content: "wait page loaded",
-            trigger: 'h3:contains("Great products for great people")',
+            trigger: 'h1:contains("Contact us")',
             run: function () {}, // it's a check
         },
     ]

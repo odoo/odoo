@@ -25,9 +25,6 @@ access_account_invoice_report,account.invoice.report,model_account_invoice_repor
 access_account_incoterms_all,account.incoterms all,model_account_incoterms,,1,0,0,0
 access_account_incoterms_manager,account.incoterms manager,model_account_incoterms,account.group_account_manager,1,1,1,1
 
-access_account_fiscal_year_readonly,account.fiscal.year.user,model_account_fiscal_year,account.group_account_readonly,1,0,0,0
-access_account_fiscal_year_manager,account.fiscal.year.manager,model_account_fiscal_year,account.group_account_manager,1,1,1,1
-
 access_account_fiscal_position_product_manager,account.fiscal.position account.manager,model_account_fiscal_position,account.group_account_manager,1,1,1,1
 access_account_fiscal_position_tax_product_manager,account.fiscal.position.tax account.manager,model_account_fiscal_position_tax,account.group_account_manager,1,1,1,1
 access_account_fiscal_position_account_product_manager,account.fiscal.position account.manager,model_account_fiscal_position_account,account.group_account_manager,1,1,1,1
@@ -135,7 +132,11 @@ access_account_common_report,access.account.common.report,model_account_common_r
 access_account_common_journal_report,access.account.common.journal.report,model_account_common_journal_report,account.group_account_user,1,1,1,0
 access_account_print_journal,access.account.print.journal,model_account_print_journal,account.group_account_user,1,1,1,0
 access_account_financial_year_op,access.account.financial.year.op,model_account_financial_year_op,account.group_account_manager,1,1,1,0
-access_account_setup_bank_manual_config,access.account.setup.bank.manual.config,model_account_setup_bank_manual_config,account.group_account_user,1,1,1,0
+access_account_setup_bank_manual_config,access.account.setup.bank.manual.config,model_account_setup_bank_manual_config,account.group_account_manager,1,1,1,0
 access_tax_adjustments_wizard,access.tax.adjustments.wizard,model_tax_adjustments_wizard,account.group_account_user,1,1,1,0
 access_account_invoice_send,access.account.invoice.send,model_account_invoice_send,account.group_account_invoice,1,1,1,0
 access_account_transfer_wizard,access.account.transfer.wizard,model_account_transfer_wizard,account.group_account_user,1,1,1,0
+
+access_account_analytic_default,account.analytic.default,model_account_analytic_default,account.group_account_readonly,1,0,0,0
+access_account_analytic_default_analytic,account.analytic.default analytic,model_account_analytic_default,analytic.group_analytic_accounting,1,0,0,0
+access_account_analytic_default_invoice,account.analytic.default invoice,model_account_analytic_default,account.group_account_invoice,1,1,1,1

@@ -65,7 +65,7 @@ class L10nInPaymentReport(models.AbstractModel):
             tax.amount AS tax_rate,
             am.partner_id,
             am.amount_total AS payment_amount,
-            ap.journal_id,
+            am.journal_id,
             aml.currency_id,
             (CASE WHEN ps.l10n_in_tin IS NOT NULL
                 THEN concat(ps.l10n_in_tin,'-',ps.name)
@@ -92,7 +92,7 @@ class L10nInPaymentReport(models.AbstractModel):
                     ELSE c.account_purchase_tax_id END)
             JOIN res_partner p ON p.id = aml.partner_id
             LEFT JOIN res_country_state ps ON ps.id = p.state_id
-            LEFT JOIN res_partner cp ON cp.id = c.partner_id
+            LEFT JOIN res_partner cp ON cp.id = COALESCE(aj.l10n_in_gstin_partner_id, c.partner_id)
             LEFT JOIN res_country_state cps ON cps.id = cp.state_id
             """
 
@@ -137,14 +137,14 @@ class AdvancesPaymentReport(models.Model):
     def _select(self):
         select_str = super(AdvancesPaymentReport, self)._select()
         select_str += """,
-            ap.payment_date as date,
+            am.date as date,
             (SELECT sum(amount) FROM account_partial_reconcile AS apr
                 WHERE (apr.credit_move_id = aml.id OR apr.debit_move_id = aml.id)
-                AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date_maturity, 'MM-YYYY'))
+                AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date, 'MM-YYYY'))
             ) AS reconcile_amount,
             (am.amount_total - (SELECT (CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END) FROM account_partial_reconcile AS apr
                 WHERE (apr.credit_move_id = aml.id OR apr.debit_move_id = aml.id)
-                AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date_maturity, 'MM-YYYY'))
+                AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date, 'MM-YYYY'))
             )) AS amount"""
         return select_str
 
@@ -191,6 +191,6 @@ class L10nInAdvancesPaymentAdjustmentReport(models.Model):
     def _where(self):
         where_str = super(L10nInAdvancesPaymentAdjustmentReport, self)._where()
         where_str += """
-            AND (apr.max_date > aml.date_maturity)
+            AND (apr.max_date > aml.date)
         """
         return where_str

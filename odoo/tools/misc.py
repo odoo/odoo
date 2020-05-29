@@ -8,6 +8,8 @@ Miscellaneous tools used by OpenERP.
 import cProfile
 import collections
 import datetime
+import hmac as hmac_lib
+import hashlib
 import io
 import os
 import pickle as pickle_
@@ -1215,9 +1217,14 @@ def get_lang(env, lang_code=False):
     :return res.lang: the first lang found that is installed on the system.
     """
     langs = [code for code, _ in env['res.lang'].get_installed()]
-    for code in [lang_code, env.context.get('lang'), env.user.company_id.partner_id.lang, langs[0]]:
-        if code in langs:
-            return env['res.lang']._lang_get(code)
+    lang = langs[0]
+    if lang_code and lang_code in langs:
+        lang = lang_code
+    elif env.context.get('lang') in langs:
+        lang = env.context.get('lang')
+    elif env.user.company_id.partner_id.lang in langs:
+        lang = env.user.company_id.partner_id.lang
+    return env['res.lang']._lang_get(lang)
 
 
 def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False, currency_obj=False):
@@ -1507,3 +1514,42 @@ def get_diff(data_from, data_to, custom_style=False):
         numlines=3,
     )
     return handle_style(diff, custom_style)
+
+
+def traverse_containers(val, type_):
+    """ Yields atoms filtered by specified type_ (or type tuple), traverses
+    through standard containers (non-string mappings or sequences) *unless*
+    they're selected by the type filter
+    """
+    if isinstance(val, type_):
+        yield val
+    elif isinstance(val, (str, bytes)):
+        return
+    elif isinstance(val, Mapping):
+        for k, v in val.items():
+            yield from traverse_containers(k, type_)
+            yield from traverse_containers(v, type_)
+    elif isinstance(val, collections.abc.Sequence):
+        for v in val:
+            yield from traverse_containers(v, type_)
+
+
+def hmac(env, scope, message, hash_function=hashlib.sha256):
+    """Compute HMAC with `database.secret` config parameter as key.
+
+    :param env: sudo environment to use for retrieving config parameter
+    :param message: message to authenticate
+    :param scope: scope of the authentication, to have different signature for the same
+        message in different usage
+    :param hash_function: hash function to use for HMAC (default: SHA-256)
+    """
+    if not scope:
+        raise ValueError('Non-empty scope required')
+
+    secret = env['ir.config_parameter'].get_param('database.secret')
+    message = repr((scope, message))
+    return hmac_lib.new(
+        secret.encode(),
+        message.encode(),
+        hash_function,
+    ).hexdigest()

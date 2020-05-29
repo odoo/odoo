@@ -117,10 +117,10 @@ class TestPickShip(TestStockCommon):
 
         # Now partially transfer the ship
         picking_client.move_lines[0].move_line_ids[0].qty_done = 5
-        picking_client._action_done() # no new in order to create backorder
+        picking_client._action_done()  # no new in order to create backorder
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_client.id)])
-        self.assertEqual(backorder.state, 'assigned', 'Backorder should be started')
+        self.assertEqual(backorder.state, 'waiting', 'Backorder should be waiting for reservation')
 
     def test_mto_moves_transfer(self):
         """
@@ -291,8 +291,8 @@ class TestPickShip(TestStockCommon):
         # create a backorder
         picking_pick._action_done()
         picking_pick_backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_pick.id)])
-        self.assertEqual(picking_pick_backorder.state, 'assigned')
-        self.assertEqual(picking_pick_backorder.move_line_ids.product_qty, 5.0)
+        self.assertEqual(picking_pick_backorder.state, 'confirmed')
+        self.assertEqual(picking_pick_backorder.move_lines.product_qty, 5.0)
 
         self.assertEqual(picking_client.state, 'assigned')
 
@@ -771,10 +771,13 @@ class TestSinglePicking(TestStockCommon):
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 1
         delivery_order._action_done()
         self.assertNotEqual(delivery_order.date_done, False)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 1.0)
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
+        self.assertEqual(backorder.state, 'confirmed')
+        backorder.action_assign()
         self.assertEqual(backorder.state, 'assigned')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
 
     def test_backorder_2(self):
         """ Check the good behavior of creating a backorder for a partially available stock move.
@@ -2613,23 +2616,25 @@ class TestRoutes(TestStockCommon):
             ('product_id', '=', product_a.id),
             ('state', '=', 'confirmed')
         ])
+        # Get back pack and ship pickings.
+        picking_pack = first_move.move_dest_ids.picking_id
+        picking_ship = first_move.move_dest_ids.move_dest_ids.picking_id
+        self.assertEqual(len(picking_pack.message_ids), 1)
+        self.assertEqual(len(picking_ship.message_ids), 1)
 
         # Change the schedule date on the pick.
         first_move.picking_id.scheduled_date += timedelta(days=2)
 
         # No activity should be created on the pack.
-        activity = first_move.move_dest_ids.picking_id.activity_ids  # PACK
-        self.assertFalse(activity)
+        self.assertEqual(len(picking_pack.message_ids), 1)
 
         # An activity is created on the ship.
-        activity = first_move.move_dest_ids.move_dest_ids.picking_id.activity_ids  # SHIP
-        self.assertTrue(activity, '')
-        self.assertTrue('has been automatically' in activity.note)
+        self.assertEqual(len(picking_ship.message_ids), 2)
+        self.assertTrue('has been automatically' in picking_ship.message_ids[0].body)
 
         # Change second time the schedule date on the pick.
         first_move.picking_id.scheduled_date += timedelta(days=2)
-        activity = first_move.move_dest_ids.move_dest_ids.picking_id.activity_ids  # SHIP
-        self.assertEqual(len(activity), 1)
+        self.assertEqual(len(picking_ship.message_ids), 2)
 
     def test_delay_alert_2(self):
         """ On a pick ship scenario, two pick linked to a ship. The delay alert is set on the ship rule?
@@ -2696,10 +2701,10 @@ class TestRoutes(TestStockCommon):
 
         picking_pick_1.scheduled_date += timedelta(days=2)
         picking_pick_2.scheduled_date += timedelta(days=2)
-        activity = picking_ship.activity_ids
-        self.assertEqual(len(activity), 2, 'not enough activity created')
-        self.assertTrue(picking_pick_1.name in activity[0].note + activity[1].note, 'Wrong activity message')
-        self.assertTrue(picking_pick_2.name in activity[0].note + activity[1].note, 'Wrong activity message')
+        messages = picking_ship.message_ids
+        self.assertEqual(len(messages), 3, 'not enough messages logged')
+        self.assertTrue(picking_pick_1.name in messages[0].body + messages[1].body, 'Wrong message')
+        self.assertTrue(picking_pick_2.name in messages[0].body + messages[1].body, 'Wrong message')
 
     def test_delay_alert_3(self):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)

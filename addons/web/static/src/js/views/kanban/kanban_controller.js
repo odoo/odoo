@@ -34,9 +34,6 @@ var KanbanController = BasicController.extend({
         column_toggle_fold: '_onToggleColumn',
         kanban_column_records_toggle_active: '_onToggleActiveRecords',
     }),
-    events: _.extend({}, BasicController.prototype.events, {
-        click: '_onClick',
-    }),
     /**
      * @override
      * @param {Object} params
@@ -203,6 +200,22 @@ var KanbanController = BasicController.extend({
         var self = this;
         return this.model.resequence(this.modelName, ids, column_id);
     },
+    /**
+     * @override
+     */
+    _shouldBounceOnClick(element) {
+        const state = this.model.get(this.handle, {raw: true});
+        if (!state.count) {
+            const classesList = [
+                'o_kanban_view',
+                'o_kanban_group',
+                'o_column_quick_create',
+                'o_view_nocontent_smiling_face'
+            ];
+            return classesList.some(c => element.classList.contains(c));
+        }
+        return false;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -226,7 +239,10 @@ var KanbanController = BasicController.extend({
             }).then(function () {
                 return self.update({}, {reload: false});
             }).then(function () {
-                self.renderer.quickCreateToggleFold();
+                let quickCreateFolded = self.renderer.quickCreate.folded;
+                if (ev.data.foldQuickCreate ? !quickCreateFolded : quickCreateFolded) {
+                    self.renderer.quickCreateToggleFold();
+                }
                 self.renderer.trigger_up("quick_create_column_created");
             });
         });
@@ -327,23 +343,6 @@ var KanbanController = BasicController.extend({
         switch(ev.keyCode) {
             case $.ui.keyCode.DOWN:
                 this.$('.o_kanban_record:first').focus();
-        }
-    },
-    /**
-     * Bounce the 'Create' button.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     **/
-    _onClick: function (ev) {
-        var state = this.model.get(this.handle, {raw: true});
-        if (!state.count && this.buttons) {
-            var classesList = ['o_kanban_view', 'o_kanban_group', 'o_column_quick_create', 'o_view_nocontent_smiling_face'];
-            var $target = $(ev.target);
-            var hasClassList = _.map(classesList, function(klass){ return $target.hasClass(klass) });
-            if (_.some(hasClassList)) {
-                this.$buttons.find('.o-kanban-button-new').odooBounce();
-            }
         }
     },
     /**
@@ -503,7 +502,9 @@ var KanbanController = BasicController.extend({
               this.model.actionUnarchive(recordIds, column.db_id);
             prom.then(function (dbID) {
                 var data = self.model.get(dbID);
-                self.renderer.updateColumn(dbID, data);
+                if (data) {  // Could be null if a wizard is returned for example
+                    self.renderer.updateColumn(dbID, data);
+                }
             });
         }
     },

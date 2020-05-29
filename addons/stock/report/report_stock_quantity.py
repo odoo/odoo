@@ -28,12 +28,12 @@ class ReportStockQuantity(models.Model):
 CREATE or REPLACE VIEW report_stock_quantity AS (
 SELECT
     m.id,
-    product_id,
+    m.product_id,
     CASE
         WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN 'out'
         WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN 'in'
     END AS state,
-    date_expected::date AS date,
+    m.date_expected::date AS date,
     CASE
         WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -product_qty
         WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN product_qty
@@ -60,10 +60,10 @@ WHERE
 UNION
 SELECT
     -q.id as id,
-    product_id,
+    q.product_id,
     'forecast' as state,
     date.*::date,
-    quantity as product_qty,
+    q.quantity as product_qty,
     q.company_id,
     wh.id as warehouse_id
 FROM
@@ -73,21 +73,21 @@ FROM
 LEFT JOIN stock_location l on (l.id=q.location_id)
 LEFT JOIN stock_warehouse wh ON l.parent_path like concat('%/', wh.view_location_id, '/%')
 WHERE
-    l.usage = 'internal' AND
-    wh IS NOT NULL
+    (l.usage = 'internal' AND wh.id IS NOT NULL) OR
+    l.usage = 'transit'
 UNION
 SELECT
     m.id,
-    product_id,
+    m.product_id,
     'forecast' as state,
     GENERATE_SERIES(
     CASE
         WHEN m.state = 'done' THEN (now() at time zone 'utc')::date - interval '3month'
-        ELSE date_expected::date
+        ELSE m.date_expected::date
     END,
     CASE
         WHEN m.state != 'done' THEN (now() at time zone 'utc')::date + interval '3 month'
-        ELSE date::date - interval '1 day'
+        ELSE m.date::date - interval '1 day'
     END, '1 day'::interval)::date date,
     CASE
         WHEN ((whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit') AND m.state = 'done' THEN product_qty

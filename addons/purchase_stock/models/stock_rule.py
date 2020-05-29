@@ -50,11 +50,15 @@ class StockRule(models.Model):
             procurement_date_planned = fields.Datetime.from_string(procurement.values['date_planned'])
             schedule_date = (procurement_date_planned - relativedelta(days=procurement.company_id.po_lead))
 
-            supplier = procurement.product_id._select_seller(
-                partner_id=procurement.values.get("supplier_id"),
-                quantity=procurement.product_qty,
-                date=schedule_date.date(),
-                uom_id=procurement.product_uom)
+            supplier = False
+            if procurement.values.get('supplierinfo_id'):
+                supplier = procurement.values['supplierinfo_id']
+            else:
+                supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
+                    partner_id=procurement.values.get("supplierinfo_name"),
+                    quantity=procurement.product_qty,
+                    date=schedule_date.date(),
+                    uom_id=procurement.product_uom)
 
             if not supplier:
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.') % (procurement.product_id.display_name)
@@ -92,7 +96,9 @@ class StockRule(models.Model):
                 vals = rules[0]._prepare_purchase_order(company_id, origins, [p.values for p in procurements])
                 # The company_id is the same for all procurements since
                 # _make_po_get_domain add the company in the domain.
-                po = self.env['purchase.order'].with_user(SUPERUSER_ID).with_company(company_id).sudo().create(vals)
+                # We use SUPERUSER_ID since we don't want the current user to be follower of the PO.
+                # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
+                po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
             else:
                 # If a purchase order is found, adapt its `origin` field.
                 if po.origin:
@@ -145,11 +151,11 @@ class StockRule(models.Model):
         buy_rule.ensure_one()
         supplier_delay = product._prepare_sellers()[0].delay
         if supplier_delay:
-            delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Vendor Lead Time'), supplier_delay, _('day(s)'))
+            delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Vendor Lead Time'), supplier_delay, _('day(s)'))
         security_delay = buy_rule.picking_type_id.company_id.po_lead
-        delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Purchase Security Lead Time'), security_delay, _('day(s)'))
+        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Purchase Security Lead Time'), security_delay, _('day(s)'))
         days_to_purchase = buy_rule.company_id.days_to_purchase
-        delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Days to Purchase'), days_to_purchase, _('day(s)'))
+        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Days to Purchase'), days_to_purchase, _('day(s)'))
         return delay + supplier_delay + security_delay + days_to_purchase, delay_description
 
     @api.model

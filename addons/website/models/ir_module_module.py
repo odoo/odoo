@@ -162,6 +162,8 @@ class IrModuleModule(models.Model):
                         # at update, ignore active field
                         if 'active' in rec_data:
                             rec_data.pop('active')
+                        if model_name == 'ir.ui.view' and (find.arch_updated or find.arch == rec_data['arch']):
+                            rec_data.pop('arch')
                         find.update(rec_data)
                         self._post_copy(rec, find)
                 else:
@@ -380,7 +382,7 @@ class IrModuleModule(models.Model):
     def update_theme_images(self):
         IrAttachment = self.env['ir.attachment']
         existing_urls = IrAttachment.search_read([['res_model', '=', self._name], ['type', '=', 'url']], ['url'])
-        existing_urls = [url_wrapped['url'] for url_wrapped in existing_urls]
+        existing_urls = {url_wrapped['url'] for url_wrapped in existing_urls}
 
         themes = self.env['ir.module.module'].with_context(active_test=False).search([
             ('category_id', 'child_of', self.env.ref('base.module_category_theme').id),
@@ -390,7 +392,7 @@ class IrModuleModule(models.Model):
             terp = self.get_module_info(theme.name)
             images = terp.get('images', [])
             for image in images:
-                image_path = os.path.join(theme.name, image)
+                image_path = '/' + os.path.join(theme.name, image)
                 if image_path not in existing_urls:
                     image_name = os.path.basename(image_path)
                     IrAttachment.create({

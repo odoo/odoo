@@ -3,7 +3,7 @@
 
 import datetime
 
-from odoo import api, models, fields
+from odoo import api, models, fields, tools
 
 BLACKLIST_MAX_BOUNCED_LIMIT = 5
 
@@ -17,10 +17,14 @@ class MailThread(models.AbstractModel):
         """ Override to update the parent mailing traces. The parent is found
         by using the References header of the incoming message and looking for
         matching message_id in mailing.trace. """
-        if message.get('References') and routes:
-            message_ids = [x.strip() for x in message['References'].split()]
-            self.env['mailing.trace'].set_opened(mail_message_ids=message_ids)
-            self.env['mailing.trace'].set_replied(mail_message_ids=message_ids)
+        if routes:
+            # even if 'reply_to' in ref (cfr mail/mail_thread) that indicates a new thread redirection
+            # (aka bypass alias configuration in gateway) consider it as a reply for statistics purpose
+            thread_references = message_dict['references'] or message_dict['in_reply_to']
+            msg_references = tools.mail_header_msgid_re.findall(thread_references)
+            if msg_references:
+                self.env['mailing.trace'].set_opened(mail_message_ids=msg_references)
+                self.env['mailing.trace'].set_replied(mail_message_ids=msg_references)
         return super(MailThread, self)._message_route_process(message, message_dict, routes)
 
     def message_post_with_template(self, template_id, **kwargs):
@@ -58,3 +62,26 @@ class MailThread(models.AbstractModel):
                     blacklist_rec = self.env['mail.blacklist'].sudo()._add(bounced_email)
                     blacklist_rec._message_log(
                         body='This email has been automatically blacklisted because of too much bounced.')
+
+    @api.model
+    def message_new(self, msg_dict, custom_values=None):
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
+        """
+        defaults = {}
+
+        if issubclass(type(self), self.pool['utm.mixin']):
+            thread_references = msg_dict.get('references', '') or msg_dict.get('in_reply_to', '')
+            msg_references = tools.mail_header_msgid_re.findall(thread_references)
+            if msg_references:
+                traces = self.env['mailing.trace'].search([('message_id', 'in', msg_references)], limit=1)
+                if traces:
+                    defaults['campaign_id'] = traces.campaign_id.id
+                    defaults['source_id'] = traces.mass_mailing_id.source_id.id
+                    defaults['medium_id'] = traces.mass_mailing_id.medium_id.id
+
+        if custom_values:
+            defaults.update(custom_values)
+
+        return super(MailThread, self).message_new(msg_dict, custom_values=defaults)

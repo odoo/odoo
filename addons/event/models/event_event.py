@@ -32,7 +32,7 @@ class EventType(models.Model):
         'event.type.ticket', 'event_type_id',
         string='Tickets', compute='_compute_event_type_ticket_ids',
         readonly=False, store=True)
-    tag_ids = fields.Many2many('event.tag', string="Tags", copy=True)
+    tag_ids = fields.Many2many('event.tag', string="Tags")
     # registration
     has_seats_limitation = fields.Boolean('Limited Seats')
     seats_max = fields.Integer(
@@ -118,13 +118,12 @@ class EventEvent(models.Model):
         default=lambda self: self.env.company.partner_id,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     event_type_id = fields.Many2one('event.type', string='Template', ondelete='set null')
-    color = fields.Integer('Kanban Color Index')
     event_mail_ids = fields.One2many(
         'event.mail', 'event_id', string='Mail Schedule', copy=True,
         compute='_compute_from_event_type', readonly=False, store=True)
     tag_ids = fields.Many2many(
         'event.tag', string="Tags", readonly=False,
-        copy=True, store=True, compute="_compute_from_event_type")
+        store=True, compute="_compute_from_event_type")
     # Kanban fields
     kanban_state = fields.Selection([('normal', 'In Progress'), ('done', 'Done'), ('blocked', 'Blocked')], default='normal')
     kanban_state_label = fields.Char(
@@ -190,8 +189,7 @@ class EventEvent(models.Model):
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one(
-        'res.country', 'Country', related='address_id.country_id',
-        copy=True, readonly=False, store=True)
+        'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
     # badge fields
     badge_front = fields.Html(string='Badge Front')
     badge_back = fields.Html(string='Badge Back')
@@ -267,8 +265,8 @@ class EventEvent(models.Model):
         """ Compute the start sale date of an event. Currently lowest starting sale
         date of tickets if they are used, of False. """
         for event in self:
-            start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date]
-            event.start_sale_date = min(start_dates) if start_dates else False
+            start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if not ticket.is_expired]
+            event.start_sale_date = min(start_dates) if start_dates and all(start_dates) else False
 
     @api.depends('event_ticket_ids.sale_available')
     def _compute_event_registrations_sold_out(self):
@@ -498,3 +496,13 @@ class EventEvent(models.Model):
 
             result[event.id] = cal.serialize().encode('utf-8')
         return result
+
+    @api.autovacuum
+    def _gc_mark_events_done(self):
+        """ move every ended events in the next 'ended stage' """
+        ended_events = self.env['event.event'].search([
+            ('date_end', '<', fields.Datetime.now()),
+            ('stage_id.pipe_end', '=', False),
+        ])
+        if ended_events:
+            ended_events.action_set_done()

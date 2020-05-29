@@ -25,8 +25,17 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="group_send_reminder" model="res.groups">
+        <field name="name">Send an automatic reminder email to confirm delivery</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
 </data>
 <data noupdate="1">
+    <record model="res.groups" id="base.group_user">
+        <field name="implied_ids" eval="[(4, ref('purchase.group_send_reminder'))]"/>
+    </record>
+
     <record id="base.default_user" model="res.users">
         <field name="groups_id" eval="[(4,ref('purchase.group_purchase_manager'))]"/>
     </record>

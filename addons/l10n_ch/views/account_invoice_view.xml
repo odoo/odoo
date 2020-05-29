@@ -6,7 +6,7 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='invoice_sent']" position="after">
+                <xpath expr="//field[@name='is_move_sent']" position="after">
                     <field name="l10n_ch_isr_sent" invisible="1"/>
                     <field name="l10n_ch_currency_name" invisible="1" readonly="1"/>
                 </xpath>
@@ -38,6 +38,25 @@
                             ('state', '!=', 'posted'),
                             ('payment_state', 'not in', ('not_paid', 'partial')),
                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        groups="base.group_user"
+                        />
+                    <button
+                        name="print_ch_qr_bill"
+                        string="Print QR-bill"
+                        type="object"
+                        attrs="{'invisible':['|', ('state', '!=', 'posted'),
+                                             '|', ('l10n_ch_isr_sent', '=', True),
+                                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        groups="base.group_user"
+                        class="oe_highlight"
+                        />
+                    <button
+                        name="print_ch_qr_bill"
+                        string="Print QR-bill"
+                        type="object"
+                        attrs="{'invisible':['|', ('state', '!=', 'posted'),
+                                             '|', ('l10n_ch_isr_sent', '=', False),
+                                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
                         groups="base.group_user"
                         />
                 </xpath>

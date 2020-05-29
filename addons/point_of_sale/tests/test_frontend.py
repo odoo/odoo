@@ -30,12 +30,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                                                  'reconcile': True})
         self.env.company.account_default_pos_receivable_account_id = account_receivable
 
-        self.env['ir.property'].set_default(
-            'property_account_receivable_id',
-            'res.partner',
-            account_receivable,
-            main_company,
-        )
+        self.env['ir.property']._set_default('property_account_receivable_id', 'res.partner', account_receivable, main_company)
 
         cash_journal = journal_obj.create({
             'name': 'Cash Test',
@@ -51,6 +46,15 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         tip = self.env.ref('point_of_sale.product_product_tip')
         (all_pos_product - discount - tip)._write({'active': False})
 
+        # In DESKS categ: Desk Pad
+        pos_categ_desks = env.ref('point_of_sale.pos_category_desks')
+
+        # In DESKS categ: Whiteboard Pen
+        pos_categ_misc = env.ref('point_of_sale.pos_category_miscellaneous')
+
+        # In CHAIR categ: Letter Tray
+        pos_categ_chairs = env.ref('point_of_sale.pos_category_chairs')
+
         # test an extra price on an attribute
         pear = env['product.product'].create({
             'name': 'Whiteboard Pen',
@@ -59,6 +63,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
             'taxes_id': False,
             'weight': 0.01,
             'to_weight': True,
+            'pos_categ_id': pos_categ_misc.id,
         })
         wall_shelf = env['product.product'].create({
             'name': 'Wall Shelf Unit',
@@ -89,12 +94,14 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
+            'pos_categ_id': pos_categ_desks.id,
         })
         letter_tray = env['product.product'].create({
             'name': 'Letter Tray',
             'available_in_pos': True,
             'list_price': 4.80,
             'taxes_id': False,
+            'pos_categ_id': pos_categ_chairs.id,
         })
         desk_organizer = env['product.product'].create({
             'name': 'Desk Organizer',
@@ -388,12 +395,11 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         # Change the default sale pricelist of customers,
         # so the js tests can expect deterministically this pricelist when selecting a customer.
-        field = env['ir.model.fields']._get('res.partner', 'property_product_pricelist')
-        env['ir.property'].search([
-            ('name', '=', 'property_product_pricelist'),
-            ('fields_id', '=', field.id),
-            ('res_id', '=', False)
-        ]).write({'value_reference': 'product.pricelist,%s' % public_pricelist.id})
+        env['ir.property']._set_default(
+            "property_product_pricelist",
+            "res.partner",
+            public_pricelist,
+        )
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -409,9 +415,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         # this you end up with js, css but no qweb.
         self.env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
 
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_pricelist', login="admin")
-
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_basic_order', login="admin")
+        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_pricelist', login="admin", step_delay=50)
+        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_basic_order', login="admin", step_delay=50)
+        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ProductScreenTour', login="admin", step_delay=50)
+        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour', login="admin", step_delay=50)
+        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="admin", step_delay=50)
+        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="admin", step_delay=50)
 
         for order in self.env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))

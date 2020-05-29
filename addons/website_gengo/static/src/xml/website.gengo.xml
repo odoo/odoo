@@ -6,7 +6,7 @@
     <a role="button" class="btn btn-danger d-none gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a>
     <a role="button" class="btn btn-link gengo_info" data-action="translation_gengo_info">Count Words</a>
 </t>
-<t t-extend="web_editor.TranslatorInfoDialog">
+<t t-extend="website.TranslatorInfoDialog">
     <t t-jquery=".oe_translate_examples" t-operation="replace">
         <ul class="oe_translate_examples">
             <li style="background:#ffffb6;">

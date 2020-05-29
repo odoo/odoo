@@ -6,6 +6,11 @@
     position: relative;
     max-width:100%;
 
+    .row {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
     .o_dashboard_action {
         cursor: pointer;
     }
@@ -46,4 +51,10 @@
             }
         }
     }
+}
+
+.o_purchase_dashboard ~ .o_view_nocontent {
+    // To prevent overlapping from inherited values
+    position: relative;
+    width: 100%;
 }

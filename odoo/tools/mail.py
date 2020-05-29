@@ -14,6 +14,7 @@ import time
 from email.utils import getaddresses
 from lxml import etree
 from werkzeug import urls
+import idna
 
 import odoo
 from odoo.loglevels import ustr
@@ -25,7 +26,9 @@ _logger = logging.getLogger(__name__)
 # HTML Sanitizer
 #----------------------------------------------------------
 
-tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "iframe", "base", "object", "embed"]
+tags_to_kill = ['base', 'embed', 'frame', 'head', 'iframe', 'link', 'meta',
+                'noscript', 'object', 'script', 'style', 'title']
+
 tags_to_remove = ['html', 'body']
 
 # allow new semantic HTML5 tags
@@ -159,11 +162,6 @@ class _Cleaner(clean.Cleaner):
                 el.attrib['style'] = '; '.join('%s:%s' % (key, val) for (key, val) in valid_styles.items())
             else:
                 del el.attrib['style']
-
-    def allow_element(self, el):
-        if el.tag == 'object' and el.get('type') == "image/svg+xml":
-            return True
-        return super(_Cleaner, self).allow_element(el)
 
 
 def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, sanitize_form=True, strip_style=False, strip_classes=False):
@@ -412,7 +410,7 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
     """
     html = ustr(html)
     if plaintext and preserve:
-        content = u'\n<pre>%s</pre>\n' % ustr(content)
+        content = u'\n<pre>%s</pre>\n' % misc.html_escape(ustr(content))
     elif plaintext:
         content = '\n%s\n' % plaintext2html(content, container_tag)
     else:
@@ -546,12 +544,14 @@ def decode_message_header(message, header, separator=' '):
 def formataddr(pair, charset='utf-8'):
     """Pretty format a 2-tuple of the form (realname, email_address).
 
-    Set the charset to ascii to get a RFC-2822 compliant email.
-
-    The email address is considered valid and is left unmodified.
-
     If the first element of pair is falsy then only the email address
     is returned.
+
+    Set the charset to ascii to get a RFC-2822 compliant email. The
+    realname will be base64 encoded (if necessary) and the domain part
+    of the email will be punycode encoded (if necessary). The local part
+    is left unchanged thus require the SMTPUTF8 extension when there are
+    non-ascii characters.
 
     >>> formataddr(('John Doe', 'johndoe@example.com'))
     '"John Doe" <johndoe@example.com>'
@@ -560,21 +560,26 @@ def formataddr(pair, charset='utf-8'):
     'johndoe@example.com'
     """
     name, address = pair
-    address.encode('ascii')
+    local, _, domain = address.rpartition('@')
+
+    try:
+        domain.encode(charset)
+    except UnicodeEncodeError:
+        # rfc5890 - Internationalized Domain Names for Applications (IDNA)
+        domain = idna.encode(domain).decode('ascii')
+
     if name:
         try:
             name.encode(charset)
         except UnicodeEncodeError:
             # charset mismatch, encode as utf-8/base64
             # rfc2047 - MIME Message Header Extensions for Non-ASCII Text
-            return "=?utf-8?b?{name}?= <{addr}>".format(
-                name=base64.b64encode(name.encode('utf-8')).decode('ascii'),
-                addr=address)
+            name = base64.b64encode(name.encode('utf-8')).decode('ascii')
+            return f"=?utf-8?b?{name}?= <{local}@{domain}>"
         else:
             # ascii name, escape it if needed
             # rfc2822 - Internet Message Format
             #   #section-3.4 - Address Specification
-            return '"{name}" <{addr}>'.format(
-                name=email_addr_escapes_re.sub(r'\\\g<0>', name),
-                addr=address)
-    return address
+            name = email_addr_escapes_re.sub(r'\\\g<0>', name)
+            return f'"{name}" <{local}@{domain}>'
+    return f"{local}@{domain}"

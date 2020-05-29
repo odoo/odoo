@@ -25,7 +25,9 @@
         <script type="text/javascript" src="/website/static/tests/tours/restricted_editor.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/dashboard_tour.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/specific_website_editor.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/public_user_editor.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/website_navbar_menu.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/snippet_version.js"/>
     </xpath>
 </template>
 
@@ -44,7 +46,7 @@
     </xpath>
 </template>
 
-<template id="qunit_suite" inherit_id="web.qunit_suite">
+<template id="qunit_suite" inherit_id="web.qunit_suite_tests">
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/tests/website_tests.js"/>
     </xpath>
@@ -76,9 +78,11 @@
         <script type="text/javascript" src="/website/static/lib/jstz.min.js"/>
         <script type="text/javascript" src="/website/static/src/js/utils.js"/>
 
+        <script type="text/javascript" src="/web/static/src/js/core/browser_detection.js"/>
+        <script type="text/javascript" src="/web/static/src/js/chrome/keyboard_navigation_mixin.js"/>
+
         <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/compatibility.js"/>
-        <script type="text/javascript" src="/website/static/src/js/content/lazy_template_call.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/menu.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/snippets.animation.js"/>
 
@@ -104,7 +108,7 @@
     </xpath>
 </template>
 
-<template id="website.compiled_assets_wysiwyg" name="Website Editor Assets (used in website editor)">
+<template id="website.compiled_assets_wysiwyg" name="Website Editor Assets (used in website editor)" groups="website.group_website_publisher">
     <t t-call-assets="website.assets_wysiwyg"/>
 </template>
 

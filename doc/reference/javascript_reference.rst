@@ -1570,6 +1570,15 @@ order.
 
         <field name="int_value" options='{"type": "number", "step": 100}'/>
 
+    - format: should the number be formatted. (true by default)
+
+    By default, numbers are formatted according to locale parameters.
+        This option will prevent the field's value from being formatted.
+
+    .. code-block:: xml
+
+        <field name="int_value" options='{"format": false}'/>
+
 - float (FieldFloat)
     This is the default field type for fields of type *float*.
 
@@ -1601,6 +1610,15 @@ order.
     .. code-block:: xml
 
         <field name="int_value" options='{"type": "number", "step": 0.1}'/>
+
+    - format: should the number be formatted. (true by default)
+
+    By default, numbers are formatted according to locale parameters.
+        This option will prevent the field's value from being formatted.
+
+    .. code-block:: xml
+
+        <field name="int_value" options='{"format": false}'/>
 
 - float_time (FieldFloatTime)
     The goal of this widget is to display properly a float value that represents
@@ -1668,7 +1686,7 @@ order.
         <field name="datetimefield" options='{"datepicker": {"daysOfWeekDisabled": [0, 6]}}'/>
 
 - daterange (FieldDateRange)
-    This widget allow user to select start and end date into single picker.
+    This widget allows the user to select start and end date into a single picker.
 
     - Supported field types: *date*, *datetime*
 
@@ -1683,6 +1701,13 @@ order.
     .. code-block:: xml
 
         <field name="start_date" widget="daterange" options='{"related_end_date": "end_date"}'/>
+
+- remaining_days (RemainingDays)
+    This widget can be used on date and datetime fields. In readonly, it displays
+    the delta (in days) between the value of the field and today. It edit, it
+    behaves like a regular date(time) widget.
+
+    - Supported field types: *date*, *datetime*
 
 - monetary (FieldMonetary)
     This is the default field type for fields of type 'monetary'. It is used to
@@ -1743,8 +1768,8 @@ order.
     Options:
 
     - website_path: (default:false) by default, the widget forces (if not already
-    the case) the href value to begin with http:// except if this option is set
-    to true, thus allowing redirections to the database's own website.
+      the case) the href value to begin with http:// except if this option is set
+      to true, thus allowing redirections to the database's own website.
 
     - Supported field types: *char*
 
@@ -2010,6 +2035,19 @@ order.
 
     - Supported field types: *char, text*
 
+- badge (FieldBadge)
+    Displays the value inside a bootstrap badge pill.
+
+    - Supported field types: *char*, *selection*, *many2one*
+
+    By default, the badge has a lightgrey background, but it can be customized
+    by using the decoration-X mechanism. For instance, to display a red badge
+    under a given condition:
+
+    .. code-block:: xml
+
+        <field name="foo" widget"badge" decoration-danger="state == 'cancel'"/>
+
 Relational fields
 -----------------
 
@@ -2100,6 +2138,27 @@ Relational fields
     it will fallback to regular many2one (FieldMany2One)
 
     - Supported field types: *many2one*
+
+- many2one_avatar (Many2OneAvatar)
+    This widget is only supported on many2one fields pointing to a model which
+    inherits from 'image.mixin'. In readonly, it displays the image of the
+    related record next to its display_name. Note that the display_name isn't a
+    clickable link in this case. In edit, it behaves exactly like the regular
+    many2one.
+
+    - Supported field types: *many2one*
+
+- many2one_avatar_user (Many2OneAvatarUser)
+    This widget is a specialization of the Many2OneAvatar. When the avatar is
+    clicked, we open a chat window with the corresponding user. This widget can
+    only be set on many2one fields pointing to the 'res.users' model.
+
+    - Supported field types: *many2one* (pointing to 'res.users')
+
+- many2one_avatar_employee (Many2OneAvatarEmployee)
+    Same as Many2OneAvatarUser, but for many2one fields pointing to 'hr.employee'.
+
+    - Supported field types: *many2one* (pointing to 'hr.employee')
 
 - kanban.many2one (KanbanFieldMany2One)
     Default widget for many2one fields (in kanban view). We need to disable all
@@ -2250,16 +2309,12 @@ in the action registry.
 
     .. code-block:: javascript
 
-        var ControlPanelMixin = require('web.ControlPanelMixin');
         var AbstractAction = require('web.AbstractAction');
 
-        var ClientAction = AbstractAction.extend(ControlPanelMixin, {
+        var ClientAction = AbstractAction.extend({
+            hasControlPanel: true,
             ...
         });
-
-    Do not add the controlpanel mixin if you do not need it.  Note that some
-    code is needed to interact with the control panel (via the
-    ``update_control_panel`` method given by the mixin).
 
 - Registering the client action:
     As usual, we need to make the web client aware of the mapping between
@@ -2284,51 +2339,66 @@ in the action registry.
         </record>
 
 
-Using the control panel mixin
------------------------------
+Using the control panel
+-----------------------
 
-By default, the AbstractAction class does not include the control panel mixin.
-This means that a client action does not display a control panel.  In order to
+By default, the client action does not display a control panel.  In order to
 do that, several steps should be done.
 
-- add ControlPanelMixin in the widget:
+- Set the *hasControlPanel* to *true*.
+    In the widget code:
 
     .. code-block:: javascript
 
-        var ControlPanelMixin = require('web.ControlPanelMixin');
-
-        var MyClientAction = AbstractAction.extend(ControlPanelMixin, {
+        var MyClientAction = AbstractAction.extend({
+            hasControlPanel: true,
+            loadControlPanel: true, // default: false
             ...
         });
 
-- call the method *update_control_panel* whenever we need to update the control
-  panel. For example:
+    .. warning:: 
+        when the ``loadControlPanel`` is set to true, the client action will automatically get the content of a search view or a control panel view. 
+        In this case, a model name should be specified like this:
+        
+        .. code-block:: javascript
+
+            init: function (parent, action, options) {
+                ...
+                this.controlPanelParams.modelName = 'model.name';
+                ...
+            }
+
+- Call the method *updateControlPanel* whenever we need to update the control panel.
+    For example:
 
     .. code-block:: javascript
 
-        var SomeClientAction = Widget.extend(ControlPanelMixin, {
+        var SomeClientAction = Widget.extend({
+            hasControlPanel: true,
             ...
             start: function () {
                 this._renderButtons();
-                this._updateControlPanel();
+                this._update_control_panel();
                 ...
             },
             do_show: function () {
                  ...
-                 this._updateControlPanel();
+                 this._update_control_panel();
             },
             _renderButtons: function () {
                 this.$buttons = $(QWeb.render('SomeTemplate.Buttons'));
                 this.$buttons.on('click', ...);
             },
-            _updateControlPanel: function () {
-                this.update_control_panel({
+            _update_control_panel: function () {
+                this.updateControlPanel({
                     cp_content: {
                        $buttons: this.$buttons,
                     },
-             });
+                });
+            }
 
-For more information, look into the *control_panel.js* file.
+The ``updateControlPanel`` is the main method to customize the content in controlpanel. 
+For more information, look into the `control_panel_renderer.js <https://github.com/odoo/odoo/blob/13.0/addons/web/static/src/js/views/control_panel/control_panel_renderer.js#L130>`_ file.
 
 .. _.appendTo():
     https://api.jquery.com/appendTo/

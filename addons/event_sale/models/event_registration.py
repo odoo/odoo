@@ -48,7 +48,7 @@ class EventRegistration(models.Model):
                     self.env['sale.order.line'].browse(vals['sale_order_line_id'])
                 )
                 vals.update(so_line_vals)
-        registrations = super(EventRegistration, self).create(vals)
+        registrations = super(EventRegistration, self).create(vals_list)
         for registration in registrations:
             if registration.sale_order_id:
                 registration.message_post_with_view(
@@ -91,7 +91,7 @@ class EventRegistration(models.Model):
                 'new_ticket_name': new_event_ticket.name
             }
             user_id = registration.event_id.user_id.id or registration.sale_order_id.user_id.id or fallback_user_id
-            registration.sale_order_id.activity_schedule_with_view(
+            registration.sale_order_id._activity_schedule_with_view(
                 'mail.mail_activity_data_warning',
                 user_id=user_id,
                 views_or_xmlid='event_sale.event_ticket_id_change_exception',

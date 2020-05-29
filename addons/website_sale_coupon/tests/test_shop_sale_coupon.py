@@ -60,7 +60,7 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'taxes_id': False,
         })
 
-        self.env['sale.coupon.program'].create({
+        self.env['coupon.program'].create({
             'name': "Buy 3 Small Cabinets, get one for free",
             'promo_code_usage': 'no_code_needed',
             'discount_apply_on': 'on_order',
@@ -72,7 +72,7 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'discount_line_product_id': free_large_cabinet.id
         })
 
-        self.env['sale.coupon.program'].create({
+        self.env['coupon.program'].create({
             'name': "Code for 10% on orders",
             'promo_code_usage': 'code_needed',
             'promo_code': 'testcode',
@@ -92,7 +92,7 @@ class TestWebsiteSaleCoupon(TransactionCase):
 
     def setUp(self):
         super(TestWebsiteSaleCoupon, self).setUp()
-        program = self.env['sale.coupon.program'].create({
+        program = self.env['coupon.program'].create({
             'name': '10% TEST Discount',
             'promo_code_usage': 'code_needed',
             'discount_apply_on': 'on_order',
@@ -101,7 +101,7 @@ class TestWebsiteSaleCoupon(TransactionCase):
             'program_type': 'coupon_program',
         })
 
-        self.env['sale.coupon.generate'].with_context(active_id=program.id).create({}).generate_coupon()
+        self.env['coupon.generate.wizard'].with_context(active_id=program.id).create({}).generate_coupon()
         self.coupon = program.coupon_ids[0]
 
         self.steve = self.env['res.partner'].create({
@@ -138,7 +138,7 @@ class TestWebsiteSaleCoupon(TransactionCase):
         self.assertEqual(self.coupon.state, 'used')
 
         # 3. Test recent order -> Should not be removed
-        order._garbage_collector()
+        order._gc_abandoned_coupons()
 
         self.assertEqual(len(order.applied_coupon_ids), 1, "The coupon shouldn't have been removed from the order no more than 4 days")
         self.assertEqual(self.coupon.state, 'used', "Should not have been changed")
@@ -149,14 +149,14 @@ class TestWebsiteSaleCoupon(TransactionCase):
         order.flush()
         query = """UPDATE %s SET write_date = %%s WHERE id = %%s""" % (order._table,)
         self.env.cr.execute(query, (fields.Datetime.to_string(fields.datetime.now() - timedelta(days=4, hours=2)), order.id))
-        order._garbage_collector()
+        order._gc_abandoned_coupons()
 
         self.assertEqual(len(order.applied_coupon_ids), 1, "The coupon shouldn't have been removed from the order the order is 4 days old but icp validity is 5 days")
         self.assertEqual(self.coupon.state, 'used', "Should not have been changed (2)")
 
         # 5. Test order with no ICP and older then 4 default days -> Should be removed
         icp_validity.unlink()
-        order._garbage_collector()
+        order._gc_abandoned_coupons()
 
         self.assertEqual(len(order.applied_coupon_ids), 0, "The coupon should've been removed from the order as more than 4 days")
         self.assertEqual(self.coupon.state, 'new', "Should have been reset.")

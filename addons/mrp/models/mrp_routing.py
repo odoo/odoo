@@ -46,16 +46,16 @@ class MrpRoutingWorkcenter(models.Model):
         index=True, ondelete='cascade', required=True,
         help="The routing contains all the Work Centers used and for how long. This will create work orders afterwards "
         "which alters the execution of the manufacturing order.")
-    note = fields.Text('Description')
     company_id = fields.Many2one(
         'res.company', 'Company',
         readonly=True, related='routing_id.company_id', store=True)
-    worksheet = fields.Binary('PDF')
     worksheet_type = fields.Selection([
-        ('pdf', 'PDF'), ('google_slide', 'Google Slide')],
+        ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
         string="Work Sheet", default="pdf",
         help="Defines if you want to use a PDF or a Google Slide as work sheet."
     )
+    note = fields.Text('Description', help="Text worksheet description")
+    worksheet = fields.Binary('PDF')
     worksheet_google_slide = fields.Char('Google Slide', help="Paste the url of your Google Slide. Make sure the access to the document is public.")
     time_mode = fields.Selection([
         ('auto', 'Compute based on real time'),

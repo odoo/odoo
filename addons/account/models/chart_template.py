@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
-from odoo.addons.account.models.account import TYPE_TAX_USE
+from odoo.addons.account.models.account_tax import TYPE_TAX_USE
 
 import logging
 
@@ -105,6 +105,7 @@ class AccountChartTemplate(models.Model):
         string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account.template',
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    account_journal_suspense_account_id = fields.Many2one('account.account.template', string='Journal Suspense Account')
     default_cash_difference_income_account_id = fields.Many2one('account.account.template', string="Cash Difference Income Account")
     default_cash_difference_expense_account_id = fields.Many2one('account.account.template', string="Cash Difference Expense Account")
     default_pos_receivable_account_id = fields.Many2one('account.account.template', string="PoS receivable account")
@@ -122,14 +123,14 @@ class AccountChartTemplate(models.Model):
     property_advance_tax_payment_account_id = fields.Many2one('account.account.template', string="Advance tax payment account")
 
     @api.model
-    def _prepare_transfer_account_template(self):
+    def _prepare_transfer_account_template(self, prefix=None):
         ''' Prepare values to create the transfer account that is an intermediary account used when moving money
         from a liquidity account to another.
 
         :return:    A dictionary of values to create a new account.account.
         '''
         digits = self.code_digits
-        prefix = self.transfer_account_code_prefix or ''
+        prefix = prefix or self.transfer_account_code_prefix or ''
         # Flatten the hierarchy of chart templates.
         chart_template = self
         chart_templates = self
@@ -154,6 +155,15 @@ class AccountChartTemplate(models.Model):
             'chart_template_id': self.id,
         }
 
+    @api.model
+    def _create_liquidity_journal_suspense_account(self, company, code_digits):
+        return self.env['account.account'].create({
+            'name': _("Bank Suspense Account"),
+            'code': self.env['account.account']._search_new_account_code(company, code_digits, company.transfer_account_code_prefix or ''),
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': company.id,
+        })
+
     def try_loading(self, company=False):
         """ Installs this chart of accounts for the current company if not chart
         of accounts had been created for it yet.
@@ -169,7 +179,6 @@ class AccountChartTemplate(models.Model):
             for template in self:
                 template.with_context(default_company_id=company.id)._load(15.0, 15.0, company)
 
-    try_loading_for_current_company = try_loading
 
     def _load(self, sale_tax_rate, purchase_tax_rate, company):
         """ Installs this chart of accounts on the current company, replacing
@@ -198,9 +207,9 @@ class AccountChartTemplate(models.Model):
             existing_journals = self.env['account.journal'].search([('company_id', '=', company.id)])
             if existing_journals:
                 prop_values.extend(['account.journal,%s' % (journal_id,) for journal_id in existing_journals.ids])
-            accounting_props = self.env['ir.property'].search([('value_reference', 'in', prop_values)])
-            if accounting_props:
-                accounting_props.sudo().unlink()
+            self.env['ir.property'].sudo().search(
+                [('value_reference', 'in', prop_values)]
+            ).unlink()
 
             # delete account, journal, tax, fiscal position and reconciliation model
             models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.move', 'account.journal', 'account.group']
@@ -239,7 +248,11 @@ class AccountChartTemplate(models.Model):
         company.write({
             'default_cash_difference_income_account_id': acc_template_ref.get(self.default_cash_difference_income_account_id.id, False),
             'default_cash_difference_expense_account_id': acc_template_ref.get(self.default_cash_difference_expense_account_id.id, False),
+            'account_journal_suspense_account_id': acc_template_ref.get(self.account_journal_suspense_account_id.id),
         })
+
+        if not company.account_journal_suspense_account_id:
+            company.account_journal_suspense_account_id = self._create_liquidity_journal_suspense_account(company, self.code_digits)
 
         # Set default PoS receivable account in company
         default_pos_receivable = self.default_pos_receivable_account_id.id
@@ -333,18 +346,10 @@ class AccountChartTemplate(models.Model):
                 'type': acc['account_type'],
                 'company_id': company.id,
                 'currency_id': acc.get('currency_id', self.env['res.currency']).id,
-                'sequence': 10
+                'sequence': 10,
             })
 
         return bank_journals
-
-    def get_countries_posting_at_bank_rec(self):
-        """ Returns the list of the country codes of the countries for which, by default,
-        payments made on bank journals should be creating draft account.move objects,
-        which get in turn posted when their payment gets reconciled with a bank statement line.
-        This function is an extension hook for localization modules.
-        """
-        return []
 
     @api.model
     def _get_default_bank_journals_data(self):
@@ -458,34 +463,22 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         PropertyObj = self.env['ir.property']
         todo_list = [
-            ('property_account_receivable_id', 'res.partner', 'account.account'),
-            ('property_account_payable_id', 'res.partner', 'account.account'),
-            ('property_account_expense_categ_id', 'product.category', 'account.account'),
-            ('property_account_income_categ_id', 'product.category', 'account.account'),
-            ('property_account_expense_id', 'product.template', 'account.account'),
-            ('property_account_income_id', 'product.template', 'account.account'),
-            ('property_tax_payable_account_id', 'account.tax.group', 'account.account'),
-            ('property_tax_receivable_account_id', 'account.tax.group', 'account.account'),
-            ('property_advance_tax_payment_account_id', 'account.tax.group', 'account.account'),
+            ('property_account_receivable_id', 'res.partner'),
+            ('property_account_payable_id', 'res.partner'),
+            ('property_account_expense_categ_id', 'product.category'),
+            ('property_account_income_categ_id', 'product.category'),
+            ('property_account_expense_id', 'product.template'),
+            ('property_account_income_id', 'product.template'),
+            ('property_tax_payable_account_id', 'account.tax.group'),
+            ('property_tax_receivable_account_id', 'account.tax.group'),
+            ('property_advance_tax_payment_account_id', 'account.tax.group'),
         ]
-        for record in todo_list:
-            account = getattr(self, record[0])
-            value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
+        for field, model in todo_list:
+            account = self[field]
+            value = acc_template_ref[account.id] if account else False
             if value:
-                field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
-                vals = {
-                    'name': record[0],
-                    'company_id': company.id,
-                    'fields_id': field.id,
-                    'value': value,
-                }
-                properties = PropertyObj.search([('name', '=', record[0]), ('company_id', '=', company.id)])
-                if properties:
-                    #the property exist: modify it
-                    properties.write(vals)
-                else:
-                    #create the property
-                    PropertyObj.create(vals)
+                PropertyObj._set_default(field, model, value, company=company)
+
         stock_properties = [
             'property_stock_account_input_categ_id',
             'property_stock_account_output_categ_id',

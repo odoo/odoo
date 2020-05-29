@@ -46,7 +46,7 @@ class MercuryTransaction(models.Model):
         data['memo'] = "Odoo " + service.common.exp_version()['server_version']
 
     def _do_request(self, template, data):
-        xml_transaction = self.env.ref(template).render(data).decode()
+        xml_transaction = self.env.ref(template)._render(data).decode()
 
         if not data['merchant_id'] or not data['merchant_pwd']:
             return "not setup"
@@ -114,8 +114,8 @@ class MercuryTransaction(models.Model):
 
     # One time (the ones we use) Vantiv tokens are required to be
     # deleted after 6 months
-    @api.model
-    def cleanup_old_tokens(self):
+    @api.autovacuum
+    def _gc_old_tokens(self):
         expired_creation_date = (date.today() - timedelta(days=6 * 30)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         for order in self.env['pos.order'].search([('create_date', '<', expired_creation_date)]):
