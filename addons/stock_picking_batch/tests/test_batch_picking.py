@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
@@ -58,11 +60,87 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': self.customer_location.id,
         })
 
+        self.picking_client_3 = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out,
+            'company_id': self.env.company.id,
+        })
+
+        self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': self.picking_client_3.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
         self.batch = self.env['stock.picking.batch'].create({
             'name': 'Batch 1',
             'company_id': self.env.company.id,
             'picking_ids': [(4, self.picking_client_1.id), (4, self.picking_client_2.id)]
         })
+
+    def test_batch_scheduled_date(self):
+        """ Test to make sure the correct scheduled date is set for both a batch and its pickings.
+        Setting a batch's scheduled date manually has different behavior from when it is automatically
+        set/updated via compute.
+        """
+
+        now = datetime.now().replace(microsecond=0)
+        self.batch.scheduled_date = now
+
+        # TODO: this test cannot currently handle the onchange scheduled_date logic because of test form
+        # view not handling the M2M widget assigned to picking_ids (O2M). Hopefully if this changes then
+        # commented parts of this test can be used later.
+
+
+        # manually set batch scheduled date => picking's scheduled dates auto update to match (onchange logic test)
+        # with Form(self.batch) as batch_form:
+            # batch_form.scheduled_date = now - timedelta(days=1)
+            # batch_form.save()
+        # self.assertEqual(self.batch.scheduled_date, self.picking_client_1.scheduled_date)
+        # self.assertEqual(self.batch.scheduled_date, self.picking_client_2.scheduled_date)
+
+        picking1_scheduled_date = now - timedelta(days=2)
+        picking2_scheduled_date = now - timedelta(days=3)
+        picking3_scheduled_date = now - timedelta(days=4)
+
+        # manually update picking scheduled dates => batch's scheduled date auto update to match lowest value
+        self.picking_client_1.scheduled_date = picking1_scheduled_date
+        self.picking_client_2.scheduled_date = picking2_scheduled_date
+        self.assertEqual(self.batch.scheduled_date, self.picking_client_2.scheduled_date)
+        # but individual pickings keep original scheduled dates
+        self.assertEqual(self.picking_client_1.scheduled_date, picking1_scheduled_date)
+        self.assertEqual(self.picking_client_2.scheduled_date, picking2_scheduled_date)
+
+        # add a new picking with an earlier scheduled date => batch's scheduled date should auto-update
+        self.picking_client_3.scheduled_date = picking3_scheduled_date
+        self.batch.write({'picking_ids': [(4, self.picking_client_3.id)]})
+        self.assertEqual(self.batch.scheduled_date, self.picking_client_3.scheduled_date)
+
+        # remove that picking and batch scheduled date should auto-update to next min date
+        self.batch.write({'picking_ids': [(3, self.picking_client_3.id)]})
+        self.assertEqual(self.batch.scheduled_date, self.picking_client_2.scheduled_date)
+
+        # directly add new picking with an earlier scheduled date => batch's scheduled date auto updates to match,
+        # but existing pickings do not (onchange logic test)
+        # with Form(self.batch) as batch_form:
+        #     batch_form.picking_ids.add(self.picking_client_3)
+        #     batch_form.save()
+        # # individual pickings keep original scheduled dates
+        self.assertEqual(self.picking_client_1.scheduled_date, picking1_scheduled_date)
+        self.assertEqual(self.picking_client_2.scheduled_date, picking2_scheduled_date)
+        # self.assertEqual(self.batch.scheduled_date, self.picking_client_3.scheduled_date)
+        # self.batch.write({'picking_ids': [(3, self.picking_client_3.id)]})
+
+
+        # remove all pickings and batch scheduled date should default to none
+        self.batch.write({'picking_ids': [(3, self.picking_client_1.id)]})
+        self.batch.write({'picking_ids': [(3, self.picking_client_2.id)]})
+        self.assertEqual(self.batch.scheduled_date, False)
 
     def test_simple_batch_with_manual_qty_done(self):
         """ Test a simple batch picking with all quantity for picking available.
