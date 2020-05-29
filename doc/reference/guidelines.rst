@@ -837,6 +837,7 @@ in the code, it will not work to translate field values, such as Product names,
 etc. This must be done instead using the translate flag on the corresponding
 field.
 
+The method accepts optional positional or named parameter
 The rule is very simple: calls to the underscore method should always be in
 the form ``_('literal string')`` and nothing else:
 
@@ -846,18 +847,22 @@ the form ``_('literal string')`` and nothing else:
     error = _('This record is locked!')
 
     # good: strings with formatting patterns included
-    error = _('Record %s cannot be modified!') % record
+    error = _('Record %s cannot be modified!', record)
 
     # ok too: multi-line literal strings
     error = _("""This is a bad multiline example
-                 about record %s!""") % record
+                 about record %s!""", record)
     error = _('Record %s cannot be modified' \
-              'after being validated!') % record
+              'after being validated!', record)
 
     # bad: tries to translate after string formatting
     #      (pay attention to brackets!)
     # This does NOT work and messes up the translations!
     error = _('Record %s cannot be modified!' % record)
+
+    # bad: formatting outside of translation
+    # This won't benefit from fallback mechanism in case of bad translation
+    error = _('Record %s cannot be modified!') % record
 
     # bad: dynamic string, string concatenation, etc are forbidden!
     # This does NOT work and messes up the translations!
@@ -869,32 +874,31 @@ the form ``_('literal string')`` and nothing else:
     # and the following will of course not work as already explained:
     error = _("Product %s is out of stock!" % product.name)
 
-    # bad: field values are automatically translated by the framework
-    # This is useless and will not work the way you think:
-    error = _("Product %s is not available!") % _(product.name)
-    # and the following will of course not work as already explained:
-    error = _("Product %s is not available!" % product.name)
-
     # Instead you can do the following and everything will be translated,
     # including the product name if its field definition has the
     # translate flag properly set:
-    error = _("Product %s is not available!") % product.name
+    error = _("Product %s is not available!", product.name)
 
 
 Also, keep in mind that translators will have to work with the literal values
 that are passed to the underscore function, so please try to make them easy to
 understand and keep spurious characters and formatting to a minimum. Translators
-must be aware that formatting patterns such as %s or %d, newlines, etc. need
-to be preserved, but it's important to use these in a sensible and obvious manner:
+must be aware that formatting patterns such as ``%s`` or ``%d``, newlines, etc.
+need to be preserved, but it's important to use these in a sensible and obvious
+manner:
 
 .. code-block:: python
 
     # Bad: makes the translations hard to work with
     error = "'" + question + _("' \nPlease enter an integer value ")
 
-    # Better (pay attention to position of the brackets too!)
+    # Ok (pay attention to position of the brackets too!)
     error = _("Answer to question %s is not valid.\n" \
-              "Please enter an integer value.") % question
+              "Please enter an integer value.", question)
+
+    # Better
+    error = _("Answer to question %(title)s is not valid.\n" \
+              "Please enter an integer value.", title=question)
 
 In general in Odoo, when manipulating strings, prefer ``%`` over ``.format()``
 (when only one variable to replace in a string), and prefer ``%(varname)`` instead
