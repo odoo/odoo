@@ -50,10 +50,12 @@ class TestWebsitePerformance(UtilPerf):
         super().setUpClass()
         cls.page, cls.menu = cls._create_page_with_menu('/sql_page')
 
-    def _create_page_with_menu(self, url):
+    
+    @classmethod
+    def _create_page_with_menu(cls, url):
         name = url[1:]
-        website = self.env['website'].browse(1)
-        page = self.env['website.page'].create({
+        website = cls.env['website'].browse(1)
+        page = cls.env['website.page'].create({
             'url': url,
             'name': name,
             'type': 'qweb',
@@ -67,7 +69,7 @@ class TestWebsitePerformance(UtilPerf):
             'website_id': website.id,
             'track': False,
         })
-        menu = self.env['website.menu'].create({
+        menu = cls.env['website.menu'].create({
             'name': name,
             'url': url,
             'page_id': page.id,
