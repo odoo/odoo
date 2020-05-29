@@ -11,14 +11,15 @@ import odoo.tests
 
 class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
-    def setUp(self):
-        super().setUp()
-        env = self.env(user=self.env.ref('base.user_admin'))
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        env = cls.env(user=cls.env.ref('base.user_admin'))
 
         journal_obj = env['account.journal']
         account_obj = env['account.account']
         main_company = env.ref('base.main_company')
-        self.main_pos_config = env.ref('point_of_sale.pos_config_main')
+        cls.main_pos_config = env.ref('point_of_sale.pos_config_main')
 
         env['res.partner'].create({
             'name': 'Deco Addict',
@@ -28,9 +29,9 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                                                  'name': 'Account Receivable - Test',
                                                  'user_type_id': env.ref('account.data_account_type_receivable').id,
                                                  'reconcile': True})
-        self.env.company.account_default_pos_receivable_account_id = account_receivable
+        cls.env.company.account_default_pos_receivable_account_id = account_receivable
 
-        self.env['ir.property']._set_default('property_account_receivable_id', 'res.partner', account_receivable, main_company)
+        cls.env['ir.property']._set_default('property_account_receivable_id', 'res.partner', account_receivable, main_company)
 
         cash_journal = journal_obj.create({
             'name': 'Cash Test',
@@ -41,9 +42,9 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         })
 
         # Archive all existing product to avoid noise during the tours
-        all_pos_product = self.env['product.product'].search([('available_in_pos', '=', True)])
-        discount = self.env.ref('point_of_sale.product_product_consumable')
-        tip = self.env.ref('point_of_sale.product_product_tip')
+        all_pos_product = cls.env['product.product'].search([('available_in_pos', '=', True)])
+        discount = cls.env.ref('point_of_sale.product_product_consumable')
+        tip = cls.env.ref('point_of_sale.product_product_tip')
         (all_pos_product - discount - tip)._write({'active': False})
 
         # In DESKS categ: Desk Pad
@@ -341,13 +342,13 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         excluded_pricelist = env['product.pricelist'].create({
             'name': 'Not loaded'
         })
-        res_partner_18 = self.env['res.partner'].create({
+        res_partner_18 = cls.env['res.partner'].create({
             'name': 'Lumber Inc',
             'is_company': True,
         })
         res_partner_18.property_product_pricelist = excluded_pricelist
 
-        partner = self.env['res.partner'].create({
+        partner = cls.env['res.partner'].create({
             'name': 'TEST PARTNER',
             'email': 'test@partner.com',
         })
@@ -371,7 +372,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         letter_tray.taxes_id = [(6, 0, [src_tax.id])]
 
-        self.main_pos_config.write({
+        cls.main_pos_config.write({
             'tax_regime_selection': True,
             'fiscal_position_ids': [(0, 0, {
                                             'name': "FP-POS-2M",
