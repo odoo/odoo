@@ -178,6 +178,13 @@ class MailActivity(models.Model):
     # access
     can_write = fields.Boolean(compute='_compute_can_write', help='Technical field to hide buttons if the current user has no access.')
 
+    def name_get(self):
+        res = []
+        for record in self:
+            name = record.summary or record.activity_type_id.display_name
+            res.append((record.id, name))
+        return res
+
     @api.onchange('previous_activity_type_id')
     def _compute_has_recommended_activities(self):
         for record in self:
