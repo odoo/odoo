@@ -38,8 +38,8 @@ class TestMatrixCommon(common.HttpCase):
         cls.matrix_template = cls.env['product.template'].create({
             'name': "Matrix",
             'type': "consu",
-            'uom_id': cls.ref("uom.product_uom_unit"),
-            'uom_po_id': cls.ref("uom.product_uom_unit"),
+            'uom_id': cls.env.ref("uom.product_uom_unit").id,
+            'uom_po_id': cls.env.ref("uom.product_uom_unit").id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': attribute.id,
                 'value_ids': [(6, 0, attribute.value_ids.ids)]
