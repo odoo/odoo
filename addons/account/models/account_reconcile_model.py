@@ -264,12 +264,9 @@ class AccountReconcileModel(models.Model):
         new_aml_dicts = []
         if residual_balance is None:
             residual_balance = balance
-
-        if line_currency.is_zero(residual_balance):
-            # No writeoff needs to be done for a full reconciliation
-            return []
-
         for line in self.line_ids:
+            if not line.account_id or float_is_zero(residual_balance, precision_rounding=line_currency.rounding):
+                continue
 
             if line.amount_type == 'percentage':
                 line_balance = residual_balance * (line.amount / 100.0)
@@ -292,6 +289,7 @@ class AccountReconcileModel(models.Model):
             }
             new_aml_dicts.append(writeoff_line)
 
+            residual_balance -= line_balance
             if line.tax_ids:
                 writeoff_line['tax_ids'] = [(6, None, line.tax_ids.ids)]
                 tax = line.tax_ids
