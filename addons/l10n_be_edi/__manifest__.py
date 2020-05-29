@@ -11,8 +11,9 @@ invoices. The UBL standard became the `ISO/IEC 19845
 (cf the `official announce <http://www.prweb.com/releases/2016/01/prweb13186919.htm>`_).
 Belgian e-invoicing uses the UBL 2.0 using the e-fff protocol.
     """,
-    'depends': ['account', 'l10n_be', 'account_facturx'],
+    'depends': ['l10n_be', 'account_edi'],
     'data': [
+        'data/account_edi_data.xml'
     ],
     'installable': True,
     'auto_install': True,

@@ -25,8 +25,11 @@ class TestUBL(common.TransactionCase):
             'res_model': 'account.move',
         })
 
+        invoice_count = len(self.env['account.move'].search([]))
+
         invoice.message_post(attachment_ids=[attachment_id.id])
 
+        self.assertEqual(len(self.env['account.move'].search([])), invoice_count)
         self.assertEqual(invoice.amount_total, 666.50)
         self.assertEqual(invoice.amount_tax, 115.67)
         self.assertEqual(invoice.partner_id, self.partner_id)
