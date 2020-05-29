@@ -447,6 +447,7 @@ var ListController = BasicController.extend({
                             keepWidths: true,
                             selectedRecords: [],
                         });
+                        this._updateSelectionBox();
                         this.renderer.focusCell(recordId, node);
                         resolve(!Object.keys(changes).length);
                     })
