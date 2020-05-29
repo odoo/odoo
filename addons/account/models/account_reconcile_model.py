@@ -262,14 +262,11 @@ class AccountReconcileModel(models.Model):
         if self.rule_type == 'invoice_matching' and (not self.match_total_amount or (self.match_total_amount_param == 100)):
             return []
 
-        line_currency = st_line.foreign_currency_id or st_line.currency_id
-        if line_currency.is_zero(residual_balance):
-            # No writeoff needs to be done for a full reconciliation
-            return []
-
         lines_vals_list = []
 
         for line in self.line_ids:
+            if not line.account_id or st_line.company_currency_id.is_zero(residual_balance):
+                return []
 
             if line.amount_type == 'percentage':
                 balance = residual_balance * (line.amount / 100.0)
@@ -294,6 +291,8 @@ class AccountReconcileModel(models.Model):
                 'reconcile_model_id': self.id,
             }
             lines_vals_list.append(writeoff_line)
+
+            residual_balance -= balance
 
             if line.tax_ids:
                 writeoff_line['tax_ids'] = [(6, None, line.tax_ids.ids)]
