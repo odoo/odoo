@@ -7,7 +7,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="create_date" string="Date" />
+                            <field name="date" string="Date" />
                             <field name="product_id" />
                             <field name="stock_move_id" attrs="{'invisible': [('stock_move_id', '=', False)]}" />
                         </group>
@@ -41,9 +41,9 @@
         <field name="name">stock.valuation.layer.tree</field>
         <field name="model">stock.valuation.layer</field>
         <field name="arch" type="xml">
-            <tree default_order="create_date desc, id desc" create="0"
+            <tree default_order="date desc, id desc" create="0"
                   import="0" js_class="inventory_report_list">
-                <field name="create_date" string="Date" />
+                <field name="date" string="Date" />
                 <field name="product_id" />
                 <field name="quantity" />
                 <field name="uom_id" groups="uom.group_uom" />

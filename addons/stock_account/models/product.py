@@ -107,7 +107,7 @@ class ProductProduct(models.Model):
         ]
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
-            domain.append(('create_date', '<=', to_date))
+            domain.append(('date', '<=', to_date))
         groups = self.env['stock.valuation.layer'].read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
         products = self.browse()
         for group in groups:
@@ -136,6 +136,7 @@ class ProductProduct(models.Model):
             'value': unit_cost * quantity,
             'unit_cost': unit_cost,
             'quantity': quantity,
+            'date': self._context.get('force_period_date', fields.Date.context_today(self))
         }
         if self.cost_method in ('average', 'fifo'):
             vals['remaining_qty'] = quantity

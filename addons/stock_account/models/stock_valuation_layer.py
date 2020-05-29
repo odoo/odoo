@@ -14,6 +14,7 @@ class StockValuationLayer(models.Model):
     _rec_name = 'product_id'
 
     active = fields.Boolean(related='product_id.active')
+    date = fields.Datetime(required=True, default=fields.Date.context_today)
     company_id = fields.Many2one('res.company', 'Company', readonly=True, required=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True, required=True, check_company=True)
     categ_id = fields.Many2one('product.category', related='product_id.categ_id')
@@ -34,6 +35,6 @@ class StockValuationLayer(models.Model):
     def init(self):
         tools.create_index(
             self._cr, 'stock_valuation_layer_index',
-            self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'create_date']
+            self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'date']
         )
 
