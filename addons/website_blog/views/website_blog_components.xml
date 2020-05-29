@@ -30,18 +30,16 @@
 <template id="tags_list" name="Tags List">
     <t t-if="tags">
         <div t-if="not hide_title and categ_title" class="text-muted mb-1 h6" t-esc="categ_title"/>
-        <div class="tags_list">
-            <t t-foreach="tags" t-as="tag">
-                <t t-if="tag.post_ids">
-                    <span t-if="dismissibleBtn and tag.id in active_tag_ids" class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
-                        <i class="fa fa-tag mr-2 text-muted"/>
-                        <t t-esc="tag.name"/>
-                        <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 one_tag" t-attf-data-query="#{blog_url(tag=None)}" t-attf-data-tags_list="#{tags_list(active_tag_ids, tag.id)}" t-attf-rel="#{len(active_tag_ids) and 'nofollow' or ''}">&#215;</a>
-                    </span>
-                    <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-data-query="#{blog_url(tag=None)}" t-attf-data-tags_list="#{tags_list(active_tag_ids, tag.id)}" t-attf-class="badge mb-2 mw-100 text-truncate #{tag.id in active_tag_ids and 'badge-primary' or 'border'} one_tag" t-attf-rel="#{len(active_tag_ids) and 'nofollow' or ''}" t-esc="tag.name"/>
-                </t>
+        <t t-foreach="tags" t-as="tag">
+            <t t-if="tag.post_ids">
+                <span t-if="dismissibleBtn and tag.id in active_tag_ids" class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
+                    <i class="fa fa-tag mr-2 text-muted"/>
+                    <t t-esc="tag.name"/>
+                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link" t-attf-rel="#{len(active_tag_ids) and 'nofollow' or ''}">&#215;</a>
+                </span>
+                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate #{tag.id in active_tag_ids and 'badge-primary' or 'border'} post_link" t-attf-rel="#{len(active_tag_ids) and 'nofollow' or ''}" t-esc="tag.name"/>
             </t>
-        </div>
+        </t>
     </t>
 </template>
 
@@ -232,9 +230,9 @@ Display a sidebar beside the post content.
                 <a role="menuitem" t-attf-href="/web#view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{menu or main_object.env.ref('website.menu_website_configuration').id}"
                     title='Edit in backend' id="edit-in-backend">Edit</a>
             </div>
-            <div class="h5 tags_list">
+            <div class="h5">
                 <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                    <a class="badge border one_tag" t-attf-href="#{blog_url(tag=one_tag.id)}" t-attf-data-query="#{blog_url(tag=None)}" t-attf-data-tags_list="#{one_tag.id}" t-esc="one_tag.name"/>
+                    <a class="badge border post_link" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
                 </t>
             </div>
         </div>

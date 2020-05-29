@@ -20,7 +20,6 @@
 
         <script type="text/javascript" src="/website_blog/static/src/js/contentshare.js"/>
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"/>
-        <script type="text/javascript" src="/website_blog/static/src/js/tags_list.js"/>
     </xpath>
 </template>
 
@@ -292,9 +291,7 @@ list of filtered posts (by date or tag).
         <div t-if="len(blogs) > 1">in <a t-attf-href="#{blog_url(blog=blog_post.blog_id)}"><b t-field="blog.name"/></a></div>
         <div t-if="len(blog_post.tag_ids) > 0">#
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <span class="tags_list">
-                    <a class="badge border mr-1 one_tag" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-attf-data-query="#{blog_url(tag=None)}" t-attf-data-tags_list="#{one_tag.id}"  t-esc="one_tag.name"/>
-                </span>
+                <a class="badge border mr-1 post_link" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
             </t>
         </div>
     </div>
