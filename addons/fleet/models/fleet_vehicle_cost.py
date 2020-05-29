@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 class FleetVehicleLogContract(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _name = 'fleet.vehicle.log.contract'
-    _description = 'Contract information on a vehicle'
+    _description = 'Vehicle Contract'
     _order = 'state desc,expiration_date'
 
     def compute_next_year_date(self, strdate):
