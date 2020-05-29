@@ -12,20 +12,21 @@ _logger = logging.getLogger(__name__)
 @tagged('post_install', '-at_install', '-standard', 'external')
 class TestPingenSend(HttpCase):
 
-    def setUp(self):
-        super(TestPingenSend, self).setUp()
-        self.pingen_url = "https://stage-api.pingen.com/document/upload/token/30fc3947dbea4792eb12548b41ec8117/"
-        self.sample_invoice = self.create_invoice()
-        self.sample_invoice.partner_id.vat = "BE000000000"
-        self.letter = self.env['snailmail.letter'].create({
-            'partner_id': self.sample_invoice.partner_id.id,
+    @classmethod
+    def setUpClass(cls):
+        super(TestPingenSend, cls).setUpClass()
+        cls.pingen_url = "https://stage-api.pingen.com/document/upload/token/30fc3947dbea4792eb12548b41ec8117/"
+        cls.sample_invoice = cls.create_invoice()
+        cls.sample_invoice.partner_id.vat = "BE000000000"
+        cls.letter = cls.env['snailmail.letter'].create({
+            'partner_id': cls.sample_invoice.partner_id.id,
             'model': 'account.move',
-            'res_id': self.sample_invoice.id,
-            'user_id': self.env.user.id,
-            'company_id': self.sample_invoice.company_id.id,
-            'report_template': self.env.ref('account.account_invoices').id
+            'res_id': cls.sample_invoice.id,
+            'user_id': cls.env.user.id,
+            'company_id': cls.sample_invoice.company_id.id,
+            'report_template': cls.env.ref('account.account_invoices').id
         })
-        self.data = {
+        cls.data = {
             'data': json.dumps({
                 'speed': 1,
                 'color': 1,
