@@ -47,7 +47,14 @@ class Project(models.Model):
         default=_default_timesheet_product_id)
 
     _sql_constraints = [
-        ('timesheet_product_required_if_billable_and_timesheets', "CHECK((allow_billable = 't' AND allow_timesheets = 't' AND timesheet_product_id IS NOT NULL) OR (allow_billable = 'f') OR (allow_timesheets = 'f'))", 'The timesheet product is required when the task can be billed and timesheets are allowed.'),
+        ('timesheet_product_required_if_billable_and_timesheets', """
+            CHECK(
+                (allow_billable = 't' AND allow_timesheets = 't' AND timesheet_product_id IS NOT NULL)
+                OR (allow_billable = 'f')
+                OR (allow_timesheets = 'f')
+                OR (allow_billable IS NULL)
+                OR (allow_timesheets IS NULL)
+            )""", 'The timesheet product is required when the task can be billed and timesheets are allowed.'),
     ]
 
     @api.depends('billable_type', 'allow_billable', 'sale_order_id', 'partner_id')
@@ -87,16 +94,6 @@ class Project(models.Model):
                 project.timesheet_product_id = False
             elif not project.timesheet_product_id:
                 project.timesheet_product_id = default_product
-
-    @api.depends('allow_billable')
-    def _compute_allow_billable(self):
-        """ In order to keep task billable type as 'task_rate' using sale_timesheet usual flow.
-            (see _compute_billable_type method in sale_timesheet)
-        """
-        self.filtered(lambda p: p.allow_billable).update({
-            'sale_order_id': False,
-            'sale_line_employee_ids': False,
-        })
 
     @api.constrains('sale_line_id', 'billable_type')
     def _check_sale_line_type(self):
