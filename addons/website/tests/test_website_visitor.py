@@ -4,12 +4,13 @@ from datetime import datetime, timedelta
 
 @tests.tagged('-at_install', 'post_install')
 class WebsiteVisitorTests(tests.HttpCase):
-    def setUp(self):
-        super(WebsiteVisitorTests, self).setUp()
-        Page = self.env['website.page']
-        View = self.env['ir.ui.view']
-        self.Visitor = self.env['website.visitor']
-        self.Track = self.env['website.track']
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        Page = cls.env['website.page']
+        View = cls.env['ir.ui.view']
+        cls.Visitor = cls.env['website.visitor']
+        cls.Track = cls.env['website.track']
         untracked_view = View.create({
             'name': 'Base',
             'type': 'qweb',
@@ -32,7 +33,7 @@ class WebsiteVisitorTests(tests.HttpCase):
             'key': 'test.base_view',
             'track': True,
         })
-        [self.untracked_view, self.tracked_view] = Page.create([
+        [cls.untracked_view, cls.tracked_view] = Page.create([
             {
                 'view_id': untracked_view.id,
                 'url': '/untracked_view',

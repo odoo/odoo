@@ -45,9 +45,10 @@ class TestStandardPerformance(UtilPerf):
 
 class TestWebsitePerformance(UtilPerf):
 
-    def setUp(self):
-        super().setUp()
-        self.page, self.menu = self._create_page_with_menu('/sql_page')
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.page, cls.menu = cls._create_page_with_menu('/sql_page')
 
     def _create_page_with_menu(self, url):
         name = url[1:]

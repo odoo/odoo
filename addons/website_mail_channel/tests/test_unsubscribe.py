@@ -6,17 +6,18 @@ from odoo.tools.misc import mute_logger, ustr
 
 @tagged('-at_install', 'post_install')
 class TestConfirmUnsubscribe(common.HttpCase):
-    def setUp(self):
-        super(TestConfirmUnsubscribe, self).setUp()
-        self.partner = self.env['res.partner'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner = cls.env['res.partner'].create({
             'name': 'Bob',
             'email': 'bob@bob.bob'
         })
-        self.mailing_list = self.env['mail.channel'].create({
+        cls.mailing_list = cls.env['mail.channel'].create({
             'name': 'Test Mailing List',
             'public': 'public',
         })
-        self.token = self.mailing_list._generate_action_token(self.partner.id, action='unsubscribe')
+        cls.token = cls.mailing_list._generate_action_token(cls.partner.id, action='unsubscribe')
 
     def test_not_subscribed(self):
         """Test warning works"""

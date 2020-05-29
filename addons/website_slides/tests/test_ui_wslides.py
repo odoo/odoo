@@ -11,17 +11,18 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUser
 
 class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
     
-    def setUp(self):
-        super(TestUICommon, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # Load pdf and img contents
         pdf_path = get_module_resource('website_slides', 'static', 'src', 'img', 'presentation.pdf')
         pdf_content = base64.b64encode(open(pdf_path, "rb").read())
         img_path = get_module_resource('website_slides', 'static', 'src', 'img', 'slide_demo_gardening_1.jpg')
         img_content = base64.b64encode(open(img_path, "rb").read())
 
-        self.env['slide.channel'].create({
+        cls.env['slide.channel'].create({
             'name': 'Basics of Gardening - Test',
-            'user_id': self.env.ref('base.user_admin').id,
+            'user_id': cls.env.ref('base.user_admin').id,
             'enroll': 'public',
             'channel_type': 'training',
             'allow_comment': True,

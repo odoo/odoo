@@ -6,18 +6,19 @@ from odoo.tests import HttpCase, tagged
 @tagged('post_install', '-at_install')
 class TestSitemap(HttpCase):
 
-    def setUp(self):
-        super(TestSitemap, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.cats = self.env['product.public.category'].create([{
+        cls.cats = cls.env['product.public.category'].create([{
             'name': 'Level 0',
         }, {
             'name': 'Level 1',
         }, {
             'name': 'Level 2',
         }])
-        self.cats[2].parent_id = self.cats[1].id
-        self.cats[1].parent_id = self.cats[0].id
+        cls.cats[2].parent_id = cls.cats[1].id
+        cls.cats[1].parent_id = cls.cats[0].id
 
     def test_01_shop_route_sitemap(self):
         resp = self.url_open('/sitemap.xml')

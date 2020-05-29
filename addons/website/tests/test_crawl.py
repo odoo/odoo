@@ -24,17 +24,18 @@ class Crawler(HttpCaseWithUserDemo):
     starting the crawl
     """
 
-    def setUp(self):
-        super(Crawler, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        if hasattr(self.env['res.partner'], 'grade_id'):
+        if hasattr(cls.env['res.partner'], 'grade_id'):
             # Create at least one published parter, so that /partners doesn't
             # return a 404
-            grade = self.env['res.partner.grade'].create({
+            grade = cls.env['res.partner.grade'].create({
                 'name': 'A test grade',
                 'website_published': True,
             })
-            self.env['res.partner'].create({
+            cls.env['res.partner'].create({
                 'name': 'A Company for /partners',
                 'is_company': True,
                 'grade_id': grade.id,

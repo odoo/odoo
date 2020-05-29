@@ -7,13 +7,14 @@ from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 
 @tests.tagged('post_install', '-at_install')
 class TestLivechatUI(tests.HttpCase, TestLivechatCommon):
-    def setUp(self):
-        super(TestLivechatUI, self).setUp()
-        self.visitor_tour = self.env['website.visitor'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.visitor_tour = cls.env['website.visitor'].create({
             'name': 'Visitor Tour',
-            'website_id': self.env.ref('website.default_website').id,
+            'website_id': cls.env.ref('website.default_website').id,
         })
-        self.target_visitor = self.visitor_tour
+        cls.target_visitor = cls.visitor_tour
 
     def test_complete_rating_flow_ui(self):
         self.start_tour("/", 'website_livechat_complete_flow_tour')

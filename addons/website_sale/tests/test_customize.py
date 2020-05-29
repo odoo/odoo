@@ -9,42 +9,43 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
-    def setUp(self):
-        super(TestUi, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # create a template
-        product_template = self.env['product.template'].create({
+        product_template = cls.env['product.template'].create({
             'name': 'Test Product',
             'is_published': True,
             'list_price': 750,
         })
 
-        tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 10})
+        tax = cls.env['account.tax'].create({'name': "Test tax", 'amount': 10})
         product_template.taxes_id = tax
 
-        product_attribute = self.env['product.attribute'].create({
+        product_attribute = cls.env['product.attribute'].create({
             'name': 'Legs',
             'sequence': 10,
         })
-        product_attribute_value_1 = self.env['product.attribute.value'].create({
+        product_attribute_value_1 = cls.env['product.attribute.value'].create({
             'name': 'Steel - Test',
             'attribute_id': product_attribute.id,
             'sequence': 1,
         })
-        product_attribute_value_2 = self.env['product.attribute.value'].create({
+        product_attribute_value_2 = cls.env['product.attribute.value'].create({
             'name': 'Aluminium',
             'attribute_id': product_attribute.id,
             'sequence': 2,
         })
 
         # set attribute and attribute values on the template
-        self.env['product.template.attribute.line'].create([{
+        cls.env['product.template.attribute.line'].create([{
             'attribute_id': product_attribute.id,
             'product_tmpl_id': product_template.id,
             'value_ids': [(6, 0, [product_attribute_value_1.id, product_attribute_value_2.id])]
         }])
 
         # set a different price on the variants to differentiate them
-        product_template_attribute_values = self.env['product.template.attribute.value'] \
+        product_template_attribute_values = cls.env['product.template.attribute.value'] \
             .search([('product_tmpl_id', '=', product_template.id)])
 
         for ptav in product_template_attribute_values:

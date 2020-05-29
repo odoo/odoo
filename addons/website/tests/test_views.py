@@ -943,21 +943,22 @@ class TestCowViewSaving(common.TransactionCase):
 
 @tagged('-at_install', 'post_install')
 class Crawler(HttpCase):
-    def setUp(self):
-        super(Crawler, self).setUp()
-        View = self.env['ir.ui.view']
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        View = cls.env['ir.ui.view']
 
-        self.base_view = View.create({
+        cls.base_view = View.create({
             'name': 'Base',
             'type': 'qweb',
             'arch': '<div>base content</div>',
             'key': 'website.base_view',
         }).with_context(load_all_views=True)
 
-        self.inherit_view = View.create({
+        cls.inherit_view = View.create({
             'name': 'Extension',
             'mode': 'extension',
-            'inherit_id': self.base_view.id,
+            'inherit_id': cls.base_view.id,
             'arch': '<div position="inside">, extended content</div>',
             'key': 'website.extension_view',
         })

@@ -25,11 +25,12 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
         find = re.search(r'<input.*type="hidden".*name="view_id".*value="([0-9]+)?"', response.text)
         return find and find.group(1)
 
-    def setUp(self):
-        super(TestWebsiteResetViews, self).setUp()
-        self.Website = self.env['website']
-        self.View = self.env['ir.ui.view']
-        self.test_view = self.Website.viewref('test_website.test_view')
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Website = cls.env['website']
+        cls.View = cls.env['ir.ui.view']
+        cls.test_view = cls.Website.viewref('test_website.test_view')
 
     @mute_logger('odoo.addons.http_routing.models.ir_http')
     def test_01_reset_specific_page_view(self):

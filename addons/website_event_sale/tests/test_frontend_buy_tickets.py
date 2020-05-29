@@ -12,45 +12,46 @@ from odoo.fields import Datetime
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo):
 
-    def setUp(self):
-        super().setUp()
-        self.event_2 = self.env['event.event'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.event_2 = cls.env['event.event'].create({
             'name': 'Conference for Architects TEST',
-            'user_id': self.env.ref('base.user_admin').id,
+            'user_id': cls.env.ref('base.user_admin').id,
             'date_begin': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 07:00:00'),
             'date_end': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 16:30:00'),
         })
 
-        self.env['event.event.ticket'].create([{
+        cls.env['event.event.ticket'].create([{
             'name': 'Standard',
-            'event_id': self.event_2.id,
-            'product_id': self.env.ref('event_sale.product_product_event').id,
+            'event_id': cls.event_2.id,
+            'product_id': cls.env.ref('event_sale.product_product_event').id,
             'start_sale_date': (Datetime.today() - timedelta(days=5)).strftime('%Y-%m-%d 07:00:00'),
             'end_sale_date': (Datetime.today() + timedelta(90)).strftime('%Y-%m-%d'),
             'price': 1000.0,
         }, {
             'name': 'VIP',
-            'event_id': self.event_2.id,
-            'product_id': self.env.ref('event_sale.product_product_event').id,
+            'event_id': cls.event_2.id,
+            'product_id': cls.env.ref('event_sale.product_product_event').id,
             'end_sale_date': (Datetime.today() + timedelta(90)).strftime('%Y-%m-%d'),
             'price': 1500.0,
         }])
 
         # flush event to ensure having tickets available in the tests
-        self.event_2.flush()
+        cls.event_2.flush()
 
-        (self.env.ref('base.partner_admin') + self.partner_demo).write({
+        (cls.env.ref('base.partner_admin') + cls.partner_demo).write({
             'street': '215 Vine St',
             'city': 'Scranton',
             'zip': '18503',
-            'country_id': self.env.ref('base.us').id,
-            'state_id': self.env.ref('base.state_us_39').id,
+            'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env.ref('base.state_us_39').id,
             'phone': '+1 555-555-5555',
             'email': 'admin@yourcompany.example.com',
         })
 
-        cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
-        self.env.ref('payment.payment_acquirer_transfer').journal_id = cash_journal
+        cash_journal = cls.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
+        cls.env.ref('payment.payment_acquirer_transfer').journal_id = cash_journal
 
     def test_admin(self):
         # Seen that:

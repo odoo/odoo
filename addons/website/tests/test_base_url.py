@@ -7,17 +7,19 @@ import odoo.tests
 
 
 class TestUrlCommon(odoo.tests.HttpCase):
-    def setUp(self):
-        super(TestUrlCommon, self).setUp()
-        self.domain = 'http://' + odoo.tests.HOST
-        self.website = self.env['website'].create({
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.domain = 'http://' + odoo.tests.HOST
+        cls.website = cls.env['website'].create({
             'name': 'test base url',
-            'domain': self.domain,
+            'domain': cls.domain,
         })
 
-        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
-        self.website.language_ids = self.env.ref('base.lang_en') + lang_fr
-        self.website.default_lang_id = self.env.ref('base.lang_en')
+        lang_fr = cls.env['res.lang']._activate_lang('fr_FR')
+        cls.website.language_ids = cls.env.ref('base.lang_en') + lang_fr
+        cls.website.default_lang_id = cls.env.ref('base.lang_en')
 
     def _assertCanonical(self, url, canonical_url):
         res = self.url_open(url)

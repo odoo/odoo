@@ -198,10 +198,11 @@ class TestPage(common.TransactionCase):
 
 @tagged('-at_install', 'post_install')
 class WithContext(HttpCase):
-    def setUp(self):
-        super().setUp()
-        Page = self.env['website.page']
-        View = self.env['ir.ui.view']
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        Page = cls.env['website.page']
+        View = cls.env['ir.ui.view']
         base_view = View.create({
             'name': 'Base',
             'type': 'qweb',
@@ -212,7 +213,7 @@ class WithContext(HttpCase):
                     </t>''',
             'key': 'test.base_view',
         })
-        self.page = Page.create({
+        cls.page = Page.create({
             'view_id': base_view.id,
             'url': '/page_1',
             'is_published': True,

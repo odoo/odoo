@@ -8,15 +8,16 @@ from odoo.tests import HttpCase, tagged
 
 @tagged('-at_install', 'post_install')
 class TestLangUrl(HttpCase):
-    def setUp(self):
-        super(TestLangUrl, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Simulate multi lang without loading translations
-        self.website = self.env.ref('website.default_website')
-        self.lang_fr = self.env['res.lang']._activate_lang('fr_FR')
-        self.lang_fr.write({'url_code': 'fr'})
-        self.website.language_ids = self.env.ref('base.lang_en') + self.lang_fr
-        self.website.default_lang_id = self.env.ref('base.lang_en')
+        cls.website = cls.env.ref('website.default_website')
+        cls.lang_fr = cls.env['res.lang']._activate_lang('fr_FR')
+        cls.lang_fr.write({'url_code': 'fr'})
+        cls.website.language_ids = cls.env.ref('base.lang_en') + cls.lang_fr
+        cls.website.default_lang_id = cls.env.ref('base.lang_en')
 
     def test_01_url_lang(self):
         with MockRequest(self.env, website=self.website):

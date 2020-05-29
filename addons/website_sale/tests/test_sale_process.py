@@ -12,55 +12,56 @@ from odoo.addons.website.tools import MockRequest
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo):
 
-    def setUp(self):
-        super(TestUi, self).setUp()
-        product_product_7 = self.env['product.product'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        product_product_7 = cls.env['product.product'].create({
             'name': 'Storage Box',
             'standard_price': 70.0,
             'list_price': 79.0,
             'website_published': True,
         })
-        self.product_attribute_1 = self.env['product.attribute'].create({
+        cls.product_attribute_1 = cls.env['product.attribute'].create({
             'name': 'Legs',
             'sequence': 10,
         })
-        product_attribute_value_1 = self.env['product.attribute.value'].create({
+        product_attribute_value_1 = cls.env['product.attribute.value'].create({
             'name': 'Steel',
-            'attribute_id': self.product_attribute_1.id,
+            'attribute_id': cls.product_attribute_1.id,
             'sequence': 1,
         })
-        product_attribute_value_2 = self.env['product.attribute.value'].create({
+        product_attribute_value_2 = cls.env['product.attribute.value'].create({
             'name': 'Aluminium',
-            'attribute_id': self.product_attribute_1.id,
+            'attribute_id': cls.product_attribute_1.id,
             'sequence': 2,
         })
-        self.product_product_11_product_template = self.env['product.template'].create({
+        cls.product_product_11_product_template = cls.env['product.template'].create({
             'name': 'Conference Chair (CONFIG)',
             'list_price': 16.50,
             'accessory_product_ids': [(4, product_product_7.id)],
         })
-        self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': self.product_product_11_product_template.id,
-            'attribute_id': self.product_attribute_1.id,
+        cls.env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.product_product_11_product_template.id,
+            'attribute_id': cls.product_attribute_1.id,
             'value_ids': [(4, product_attribute_value_1.id), (4, product_attribute_value_2.id)],
         })
 
-        self.product_product_1_product_template = self.env['product.template'].create({
+        cls.product_product_1_product_template = cls.env['product.template'].create({
             'name': 'Chair floor protection',
             'list_price': 12.0,
         })
-        self.product_product_11_product_template.optional_product_ids = [(6, 0, [self.product_product_1_product_template.id])]
+        cls.product_product_11_product_template.optional_product_ids = [(6, 0, [cls.product_product_1_product_template.id])]
 
-        cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
-        self.env.ref('payment.payment_acquirer_transfer').journal_id = cash_journal
+        cash_journal = cls.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
+        cls.env.ref('payment.payment_acquirer_transfer').journal_id = cash_journal
 
         # Avoid Shipping/Billing address page
-        (self.env.ref('base.partner_admin') + self.partner_demo).write({
+        (cls.env.ref('base.partner_admin') + cls.partner_demo).write({
             'street': '215 Vine St',
             'city': 'Scranton',
             'zip': '18503',
-            'country_id': self.env.ref('base.us').id,
-            'state_id': self.env.ref('base.state_us_39').id,
+            'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env.ref('base.state_us_39').id,
             'phone': '+1 555-555-5555',
             'email': 'admin@yourcompany.example.com',
         })
