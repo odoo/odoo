@@ -416,6 +416,10 @@ class Lead(models.Model):
             if vals.get('website'):
                 vals['website'] = self.env['res.partner']._clean_website(vals['website'])
         leads = super(Lead, self).create(vals_list)
+
+        for (lead, lead_values) in zip(leads, vals_list):
+            if any(field in ['active', 'stage_id'] for field in lead_values):
+                lead._handle_won_lost(lead_values)
         return leads
 
     def write(self, vals):
