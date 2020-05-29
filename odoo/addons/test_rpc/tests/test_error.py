@@ -8,13 +8,14 @@ from odoo.tools.misc import mute_logger
 
 @tagged('-at_install', 'post_install')
 class TestError(common.HttpCase):
-    def setUp(self):
-        super(TestError, self).setUp()
-        uid = self.ref("base.user_admin")
-        self.rpc = partial(self.xmlrpc_object.execute, common.get_db_name(), uid, "admin")
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        uid = cls.ref("base.user_admin")
+        cls.rpc = partial(cls.xmlrpc_object.execute, common.get_db_name(), uid, "admin")
 
         # Reset the admin's lang to avoid breaking tests due to admin not in English
-        self.rpc("res.users", "write", [uid], {"lang": False})
+        cls.rpc("res.users", "write", [uid], {"lang": False})
 
     def test_01_create(self):
         """ Create: mandatory field not provided """
