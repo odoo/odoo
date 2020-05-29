@@ -25,15 +25,16 @@
                     <t t-call="website.layout">
                         <div id="wrap">
                             <div class="oe_structure">
-                                <section class="s_title pt24 pb24" data-vcss="001" data-snippet="s_title">
+                                <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                                    <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
                                     <div class="container">
                                         <h1>Contact us</h1>
                                     </div>
                                 </section>
                             </div>
-                            <div class="container mt-2">
+                            <div class="container mt-4 mb-5">
                                 <div class="row">
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-7 col-xl-6 mr-lg-auto">
                                         <div class="oe_structure">
                                             <section class="s_text_block" data-snippet="s_text_block">
                                                 <div class="container">
@@ -52,7 +53,7 @@
                                             <a role="button" t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary" id="o_contact_mail">Send us an email</a>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-4 mt-4 mt-lg-0">
                                         <t t-call="website.company_description"/>
                                     </div>
                                 </div>
