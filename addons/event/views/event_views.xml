@@ -275,7 +275,7 @@
                     <field name="name"/>
                     <field name="address_id" readonly="1"/>
                     <field name="organizer_id" readonly="1" optional="hide"/>
-                    <field name="user_id" readonly="1"/>
+                    <field name="user_id" readonly="1" widget="many2one_avatar_user"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                     <field name="date_begin" readonly="1" widget="date"/>
                     <field name="date_end" readonly="1" widget="date"/>

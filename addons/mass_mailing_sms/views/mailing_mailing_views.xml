@@ -188,10 +188,15 @@
             <tree string="SMS Marketing">
                 <field name="subject"/>
                 <field name="mailing_type" invisible="1"/>
+                <field name="mailing_model_id" string="Recipients"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="schedule_date" string="Scheduled" widget="remaining_days"/>
+                <field name="sent_date" widget="date"/>
+                <field name="state" decoration-info="state == 'draft' or state == 'in_queue'" decoration-success="state == 'sending' or state == 'done'" widget="badge"/>
+                <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
                 <field name="sent"/>
                 <field name="clicked"/>
                 <field name="bounced"/>
-                <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
             </tree>
         </field>
     </record>
