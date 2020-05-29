@@ -83,4 +83,5 @@ class MrpProduction(models.Model):
         context = literal_eval(action['context'])
         context.update(self.env.context)
         context['no_at_date'] = True
+        context['search_default_group_by_product_id'] = False
         return dict(action, domain=domain, context=context)
