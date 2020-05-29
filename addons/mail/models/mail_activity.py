@@ -346,6 +346,14 @@ class MailActivity(models.Model):
         return super(MailActivity, self.sudo()).unlink()
 
     @api.multi
+    def name_get(self):
+        res = []
+        for record in self:
+            name = record.summary or record.activity_type_id.display_name
+            res.append((record.id, name))
+        return res
+
+    @api.multi
     def action_notify(self):
         body_template = self.env.ref('mail.message_activity_assigned')
         for activity in self:
