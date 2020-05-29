@@ -24,7 +24,6 @@ Two algorithms are suggested:
     """,
     'depends': ['account', 'l10n_be'],
     'data': [
-        'data/mail_template_data.xml',
     ],
     'auto_install': True,
 }
