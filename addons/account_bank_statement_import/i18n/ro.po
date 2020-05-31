@@ -3,16 +3,18 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2017
 # Iulian Cutui <iulian.cutui@gmail.com>, 2017
-# Cozmin Candea <office@terrabit.ro>, 2017
+# Cozmin Candea <office@terrabit.ro>, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2018
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:14+0000\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +32,7 @@ msgstr "%dtranzacții au fost deja importate și au fost ignorate."
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:241
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
-msgstr ""
+msgstr "O tranzacție a fost deja importată și ignorată"
 
 #. module: account_bank_statement_import
 #: sql_constraint:account.bank.statement.line:0
@@ -71,12 +73,12 @@ msgstr "Obiecte deja importate"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr ""
+msgstr "Cel puțin o intrare"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "Cel puțin o ieșire"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:78
@@ -93,7 +95,7 @@ msgstr "Cont bancar"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_statements_source
 msgid "Bank Feeds"
-msgstr ""
+msgstr "Feed-uri bancare"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -181,6 +183,8 @@ msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
 msgstr ""
+"Nu a putut avea sens fișierul dat.\n"
+"Ați instalat modulul pentru a suporta acest tip de fișier?"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
@@ -217,7 +221,7 @@ msgstr "Metode debit"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr ""
+msgstr "Secvență dedicată notelor de credit"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
@@ -260,6 +264,8 @@ msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
 msgstr ""
+"Obțineți extrasele bancare în format electronic de la banca dvs. și "
+"selectați-le aici."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
@@ -304,7 +310,7 @@ msgstr "Importă extrase bancare"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line_unique_import_id
 msgid "Import ID"
-msgstr ""
+msgstr "Import ID"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
@@ -349,7 +355,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr ""
+msgstr "Panou de bord Kanban"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard_graph
@@ -394,6 +400,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"Manual: Plătiți factura prin numerar sau orice altă metodă în afara Odoo.\n"
+"Cec: plătiți factura prin cec și imprimați-o de la Odoo.\n"
+"Transfer de credit SEPA: plătiți factura dintr-un fișier de transfer de credit SEPA pe care îl trimiteți băncii dvs. Activați această opțiune din setări."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
@@ -429,6 +438,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Selectați „Vânzare” pentru jurnale de facturi clienți.\n"
+"Selectați „Cumpărare” pentru jurnale de facturi furnizor.\n"
+"Selectați „Cash” sau „Bank” pentru jurnale utilizate în plățile clienților sau vânzătorilor.\n"
+"Selectați „General” pentru jurnale de operațiuni diverse."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -443,7 +456,7 @@ msgstr "Secvență"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_active
 msgid "Set active to false to hide the Journal without removing it."
-msgstr ""
+msgstr "Setați activ pe fals pentru a ascunde jurnalul fără a-l elimina."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
@@ -474,6 +487,8 @@ msgstr ""
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
 msgstr ""
+" Contul bancar definit în extras(%s) nu este la fel cu cel al jurnalului "
+"(%s)."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:163
@@ -547,6 +562,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
+"Folosit pentru a înregistra  pierderile atunci când soldul final al unei "
+"case de marcat diferă de ceea ce calculează sistemul"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
@@ -554,11 +571,14 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
+"Folosit pentru a înregistra profitul atunci când soldul final al unei case "
+"de marcat diferă de ceea ce calculează sistemul"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
 msgstr ""
+"Alege dacă acest jurnal ar trebui să fie afișat pe tabloul de bord sau nu"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:233
@@ -573,6 +593,8 @@ msgid ""
 "You have to set a Default Debit Account and a Default Credit Account for the"
 " journal: %s"
 msgstr ""
+"Trebuie să setați un cont de debit implicit și un cont de credit implicit "
+"pentru jurnal: %s"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view

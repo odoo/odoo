@@ -10,8 +10,8 @@
 # Cozmin Candea <office@terrabit.ro>, 2018
 # Sorin Trifu <sorin.trifu@bizconsulting.ro>, 2018
 # Martin Trigaux, 2019
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1261,6 +1261,7 @@ msgstr "O mișcare de pe linia selectată a fost deja reconciliată."
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
 msgstr ""
+"O linie de extras de cont a fost deja reconciliată cu o mutare a contului."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -1406,7 +1407,7 @@ msgstr "Reprezentare Conturi"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Account Move Reversal"
-msgstr ""
+msgstr "Reversarea mutării contului"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_acc_name
@@ -2326,12 +2327,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr ""
+msgstr "Cel puțin o intrare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "Cel puțin o ieșire"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2499,7 +2500,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_statements_source
 msgid "Bank Feeds"
-msgstr ""
+msgstr "Feed-uri bancare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_yodlee
@@ -4173,7 +4174,7 @@ msgstr "Decembrie"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr ""
+msgstr "Secvență dedicată notelor de credit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_credit_account_id
@@ -4281,7 +4282,7 @@ msgstr "Descriere în factură"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_destination_account_id
 msgid "Destination Account"
-msgstr ""
+msgstr "Cont destinație"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_auto_apply
@@ -4929,13 +4930,13 @@ msgstr "An fiscal"
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_fiscalyear_last_day
 #: model:ir.model.fields,field_description:account.field_res_company_fiscalyear_last_day
 msgid "Fiscalyear Last Day"
-msgstr ""
+msgstr "An Fiscal ziua trecută "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_fiscalyear_last_month
 #: model:ir.model.fields,field_description:account.field_res_company_fiscalyear_last_month
 msgid "Fiscalyear Last Month"
-msgstr ""
+msgstr "An fiscal luna trecută "
 
 #. module: account
 #: selection:account.reconcile.model,amount_type:0
@@ -5730,6 +5731,8 @@ msgid ""
 "Intermediary account used when moving money from a liquidity account to "
 "another"
 msgstr ""
+"Cont intermediar utilizat la mutarea banilor dintr-un cont de lichiditate în"
+" altul"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_narration
@@ -6283,7 +6286,7 @@ msgstr "Justificare"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr ""
+msgstr "Panou de bord Kanban"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard_graph
@@ -6812,6 +6815,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"Manual: Plătiți factura prin numerar sau orice altă metodă în afara Odoo.\n"
+"Cec: plătiți factura prin cec și imprimați-o de la Odoo.\n"
+"Transfer de credit SEPA: plătiți factura dintr-un fișier de transfer de credit SEPA pe care îl trimiteți băncii dvs. Activați această opțiune din setări."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6952,7 +6958,7 @@ msgstr "Diverse operații"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:164
 #, python-format
 msgid "Modify models"
-msgstr ""
+msgstr "Modificați modelele"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -7823,7 +7829,7 @@ msgstr "Jurnal plată"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Payment Matching"
-msgstr ""
+msgstr "Potrivirea plății"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
@@ -8184,6 +8190,8 @@ msgstr "Păstrați semnul soldului"
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr ""
+"Presetat pentru a crea intrări în jurnal în timpul unei potriviri de facturi"
+" și plăți"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -8995,6 +9003,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Selectați „Vânzare” pentru jurnale de facturi clienți.\n"
+"Selectați „Cumpărare” pentru jurnale de facturi furnizor.\n"
+"Selectați „Cash” sau „Bank” pentru jurnale utilizate în plățile clienților sau vânzătorilor.\n"
+"Selectați „General” pentru jurnale de operațiuni diverse."
 
 #. module: account
 #. openerp-web
@@ -9109,7 +9121,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_active
 msgid "Set active to false to hide the Journal without removing it."
-msgstr ""
+msgstr "Setați activ pe fals pentru a ascunde jurnalul fără a-l elimina."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_active
@@ -10789,7 +10801,7 @@ msgstr "Subtotal tranzacții"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_transfer_account_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_transfer_account_id
 msgid "Transfer Account"
-msgstr ""
+msgstr "Cont de transfer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_destination_journal_id
@@ -11079,6 +11091,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
+"Folosit pentru a înregistra  pierderile atunci când soldul final al unei "
+"case de marcat diferă de ceea ce calculează sistemul"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_profit_account_id
@@ -11086,6 +11100,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
+"Folosit pentru a înregistra profitul atunci când soldul final al unei case "
+"de marcat diferă de ceea ce calculează sistemul"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_line_company_currency_id
@@ -11314,6 +11330,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal_show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
 msgstr ""
+"Alege dacă acest jurnal ar trebui să fie afișat pe tabloul de bord sau nu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report_amount_currency
