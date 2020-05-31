@@ -20,18 +20,18 @@
 # Ediz Duman <neps1192@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Levent Karakaş <levent@mektup.at>, 2020
-# Murat Kaplan <muratk@projetgrup.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Umur Akın <umura@projetgrup.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"POT-Creation-Date: 2020-05-26 06:05+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2020\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -158,11 +158,6 @@ msgstr "%s (yuvarlama)"
 #, python-format
 msgid "%s is not a stored field"
 msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "&amp;nbsp;<span>on</span>"
-msgstr "&amp;nbsp;<span>üzerinden</span>"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -6395,7 +6390,6 @@ msgstr "Yevmiye"
 #: code:addons/account/models/account_bank_statement.py:0
 #: code:addons/account/static/src/js/mail_activity.js:0
 #: model:ir.actions.act_window,name:account.action_move_journal_line
-#: model:ir.model,name:account.model_account_move
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6414,6 +6408,7 @@ msgstr "Tarihe Göre Yevmiye Kayıtları"
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/mail_activity.js:0
+#: model:ir.model,name:account.model_account_move
 #: model:ir.model.fields,field_description:account.field_account_move_line__move_id
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__entry
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7048,11 +7043,6 @@ msgid "Mail Activity Type"
 msgstr "Mail Aktivite Tipi"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mailing_list_ids
-msgid "Mailing List"
-msgstr "E-Posta Grubu"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_journal__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_move__message_main_attachment_id
@@ -7146,21 +7136,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_difference_handling__reconcile
 msgid "Mark invoice as fully paid"
 msgstr "Fatura tamamen ödenmiş olarak işaretle"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_id
-msgid "Mass Mailing"
-msgstr "Toplu E-Posta"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__campaign_id
-msgid "Mass Mailing Campaign"
-msgstr "Toplu Postalama Kampanya"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_name
-msgid "Mass Mailing Name"
-msgstr "Toplu Posta Adı"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -13319,12 +13294,6 @@ msgid ""
 msgstr "Yazarkasa yevmiyenizde bir 'İç Transfer Hesabı' tanımlamanız gerekir."
 
 #. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid "You must first define an opening move."
-msgstr "İlk önce bir açılış hareketini tanımlamanız gerekir."
-
-#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
@@ -13496,6 +13465,11 @@ msgstr "bu ayın"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "sonraki ayın"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "açık"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

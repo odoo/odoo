@@ -72,20 +72,20 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # WK Leong <zsdicky@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # liAnGjiA <liangjia@qq.com>, 2020
 # liulixia <liu.lixia@elico-corp.com>, 2020
-# guohuadeng <guohuadeng@hotmail.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
 # Felix Yang/杨孟泽 <felixyangsh@aliyun.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"POT-Creation-Date: 2020-05-26 06:05+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Felix Yang/杨孟泽 <felixyangsh@aliyun.com>, 2020\n"
+"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -200,11 +200,6 @@ msgstr "%s (四舍五入)"
 #, python-format
 msgid "%s is not a stored field"
 msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "&amp;nbsp;<span>on</span>"
-msgstr "&amp;nbsp;<span>在</span>"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -6253,7 +6248,6 @@ msgstr "日记账"
 #: code:addons/account/models/account_bank_statement.py:0
 #: code:addons/account/static/src/js/mail_activity.js:0
 #: model:ir.actions.act_window,name:account.action_move_journal_line
-#: model:ir.model,name:account.model_account_move
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6272,6 +6266,7 @@ msgstr "‎日记账分录 "
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/mail_activity.js:0
+#: model:ir.model,name:account.model_account_move
 #: model:ir.model.fields,field_description:account.field_account_move_line__move_id
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__entry
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6894,11 +6889,6 @@ msgid "Mail Activity Type"
 msgstr "邮件活动类型"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mailing_list_ids
-msgid "Mailing List"
-msgstr "邮件列表"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_journal__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_move__message_main_attachment_id
@@ -6993,21 +6983,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_difference_handling__reconcile
 msgid "Mark invoice as fully paid"
 msgstr "标识这个发票全部付款"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_id
-msgid "Mass Mailing"
-msgstr "群发邮件"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__campaign_id
-msgid "Mass Mailing Campaign"
-msgstr "群发邮件营销"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_name
-msgid "Mass Mailing Name"
-msgstr "群发邮件标题"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -7307,7 +7282,7 @@ msgstr "没有提供附件"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "No default debit and credit account defined on journal %s (ids: %s)."
-msgstr ""
+msgstr "没有在日记帐上定义的默认借记和贷记帐户 %s (ids: %s)."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -7387,6 +7362,7 @@ msgstr "没有到期"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "未付款"
 
@@ -12799,7 +12775,7 @@ msgstr "您无法验证总金额为负的发票。 您应该创建一个信用�
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr ""
+msgstr "您没有发布发票的访问权限"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12819,12 +12795,6 @@ msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
 msgstr "您应该已经在出纳机日记账上定义了一个 '内部转账科目' ！"
-
-#. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid "You must first define an opening move."
-msgstr "您必须首先定义一个打开动作。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12985,6 +12955,11 @@ msgstr "当月"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "下月"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "on"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

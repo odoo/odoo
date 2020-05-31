@@ -65,7 +65,7 @@
 # lcaodoo <lca@odoo.com>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Alexandra Jubert <aju@odoo.com>, 2020
-# Jonathan <jcs@odoo.com>, 2020
+# Jonathan Castillo <jcs@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
 # Priscilla Sanchez <prs@odoo.com>, 2020
@@ -78,7 +78,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"POT-Creation-Date: 2020-05-26 05:48+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
 "Last-Translator: Vallen Delobel <edv@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -6884,11 +6884,6 @@ msgid "channel."
 msgstr "canal."
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
-msgid "created"
-msgstr "créé"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__days
 msgid "days"
 msgstr "jours"
@@ -6932,19 +6927,19 @@ msgid "from"
 msgstr "de"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
-msgid "from:"
-msgstr "de="
-
-#. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
 msgid "general"
 msgstr "général"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
-msgid "has been"
-msgstr "a été"
+msgid "has been created from:"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
+msgid "has been modified from:"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_alias_mixin.py:0
@@ -6976,11 +6971,6 @@ msgstr ""
 #, python-format
 msgid "model %s does not accept document creation"
 msgstr "Le modèle %s n'accepte pas la création de documents"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
-msgid "modified"
-msgstr "modifié"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__months

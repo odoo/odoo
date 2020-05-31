@@ -33,7 +33,6 @@
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
 # 黎伟杰 <674416404@qq.com>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
 # Lisa Zhang <lzh@odoo.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
@@ -44,6 +43,7 @@
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -51,7 +51,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: Jeanphy <hzh0292@qq.com>, 2020\n"
+"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1633,7 +1633,7 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
-msgstr ""
+msgstr "财政状况是用来调整税收和特殊账户的。 客户或销售订单/发票。默认值来自客户”。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -1798,7 +1798,7 @@ msgstr "如果我们在服务器存储你的支付信息,订阅支付将自动�
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
-msgstr ""
+msgstr "如果更改价格表，则只会影响新添加的行。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2172,7 +2172,7 @@ msgstr "毛利"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr ""
+msgstr "发送的报价"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -2433,7 +2433,7 @@ msgstr "仅整型数值是合法的。"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
-msgstr ""
+msgstr "只有草稿订单可以标记为直接发送"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
@@ -3722,6 +3722,9 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"下列产品不限于本公司%s，因为它们已在其他公司的报价或销售订单中使用:\n"
+"%s\n"
+"你可以将这些产品存档，然后根据公司的限制重新创建它们，或者将它们作为共享产品保留。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -3753,13 +3756,13 @@ msgstr "订单未处于需要客户签名的状态。"
 msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
-msgstr ""
+msgstr "尽管来自收购人(%s)的回应:订单全部是%r，但是收购者用%r回答。"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "订单数量已更新"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference

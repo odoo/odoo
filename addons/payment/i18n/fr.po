@@ -32,7 +32,7 @@
 # Lucas Deliege <lud@odoo.com>, 2019
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
-# Jonathan <jcs@odoo.com>, 2019
+# Jonathan Castillo <jcs@odoo.com>, 2019
 # gdp Odoo <gdp@odoo.com>, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
 # Vincent Luba <vincent@biz-4-africa.com>, 2019
@@ -1209,6 +1209,13 @@ msgstr "Nom du jeton de paiement"
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__save_token__none
 msgid "Never"
 msgstr "Jamais"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid ""
+"This partner has no email, which may cause issues with some payment "
+"acquirers. Setting an email for this partner is advised."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0

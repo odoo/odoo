@@ -10,7 +10,7 @@
 # KingOPl Slav <87slava13@gmail.com>, 2017
 # Denis Trepalin <zekarious@gmail.com>, 2017
 # Mekan Bash <tmbashimov@gmail.com>, 2017
-# Andrey Skabelin, 2017
+# 40e94dbc62066987ac8b4d130a3128f2_58cfc08, 2017
 # Evgeny <transingularity@gmail.com>, 2017
 # Василий Коробатов <boxat@mail.ru>, 2017
 # Артём Инжиянц <artem.inzhyyants@gmail.com>, 2017
@@ -40,17 +40,17 @@
 # Алексей Хомяков <alexey.homyakov@gmail.com>, 2020
 # jerome hanke <jhk@odoo.com>, 2020
 # Максим Дронь <dronmax@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # Анищук Сергей <anishukserg@gmail.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"POT-Creation-Date: 2020-05-26 06:05+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Анищук Сергей <anishukserg@gmail.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -166,11 +166,6 @@ msgstr "%s(округление)"
 #, python-format
 msgid "%s is not a stored field"
 msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "&amp;nbsp;<span>on</span>"
-msgstr "&amp; Nbsp; <span>на</span>"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -6364,7 +6359,6 @@ msgstr "Журнал"
 #: code:addons/account/models/account_bank_statement.py:0
 #: code:addons/account/static/src/js/mail_activity.js:0
 #: model:ir.actions.act_window,name:account.action_move_journal_line
-#: model:ir.model,name:account.model_account_move
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6383,6 +6377,7 @@ msgstr "Записи журнала по дате"
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/mail_activity.js:0
+#: model:ir.model,name:account.model_account_move
 #: model:ir.model.fields,field_description:account.field_account_move_line__move_id
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__entry
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7014,11 +7009,6 @@ msgid "Mail Activity Type"
 msgstr "Тип почтовой действия"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mailing_list_ids
-msgid "Mailing List"
-msgstr "Список рассылки"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_journal__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_move__message_main_attachment_id
@@ -7118,21 +7108,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_difference_handling__reconcile
 msgid "Mark invoice as fully paid"
 msgstr "Отметить счет-фактуру как полностью оплаченную"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_id
-msgid "Mass Mailing"
-msgstr "Массовая рассылка"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__campaign_id
-msgid "Mass Mailing Campaign"
-msgstr "Кампания по массовой рассылке писем"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_name
-msgid "Mass Mailing Name"
-msgstr "Название массовой рассылки"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -13160,12 +13135,6 @@ msgstr ""
 "аппарата."
 
 #. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid "You must first define an opening move."
-msgstr "Сначала нужно определить начальное движение."
-
-#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
@@ -13337,6 +13306,11 @@ msgstr "текущего месяца"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "в следующем месяце"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "на"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

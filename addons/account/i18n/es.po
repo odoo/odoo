@@ -8,12 +8,12 @@
 # David Perez <david@closemarketing.es>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Glen Sojo <inactive+glen.sojo@transifex.com>, 2016
+# b7db2840ea95169a8b66b2e8c18d323d_52caf48 <e188a842d22a1f8229ec8e1ab8414c94_389188>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Martin Mendoza del Solar <martin@mendozadelsolar.com>, 2016
 # Alexander Freiman <ajfreiman@gmail.com>, 2016
 # Luis Miguel Limache leon <luislimache@gmail.com>, 2016
-# José Antonio Cuello <inactive+Yopli2k@transifex.com>, 2017
+# b3f3300d6588d364d534a46dbff68ebb_f82c93d <25ccc199032c6e11a5e1ece329556b43_531019>, 2017
 # Carles Antoli <carlesantoli@hotmail.com>, 2017
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
 # Diego de la Torre <diego.delatorreh@gmail.com>, 2017
@@ -87,21 +87,21 @@
 # Juventino Villegas <2tino480@gmail.com>, 2020
 # cristobal jose espinoza <gregor59@gmail.com>, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
-# Alejandro <amatos@gmail.com>, 2020
-# Martin Trigaux, 2020
+# Alejandro Matos <amatos@gmail.com>, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Sergio Hevia <sah@talleresbernesga.com>, 2020
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2020
 # Erick Herrera <erick.herrera@jarsa.com.mx>, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"POT-Creation-Date: 2020-05-26 06:05+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -226,11 +226,6 @@ msgstr "%s (de redondeo)"
 #, python-format
 msgid "%s is not a stored field"
 msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "&amp;nbsp;<span>on</span>"
-msgstr "&amp;nbsp;<span>en</span>"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -6505,7 +6500,6 @@ msgstr "Diario"
 #: code:addons/account/models/account_bank_statement.py:0
 #: code:addons/account/static/src/js/mail_activity.js:0
 #: model:ir.actions.act_window,name:account.action_move_journal_line
-#: model:ir.model,name:account.model_account_move
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6524,6 +6518,7 @@ msgstr "Asientos contables por fecha"
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/mail_activity.js:0
+#: model:ir.model,name:account.model_account_move
 #: model:ir.model.fields,field_description:account.field_account_move_line__move_id
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__entry
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7160,11 +7155,6 @@ msgid "Mail Activity Type"
 msgstr "Tipo de actividad del correo electrónico"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mailing_list_ids
-msgid "Mailing List"
-msgstr "Lista de correo"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_journal__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_move__message_main_attachment_id
@@ -7258,21 +7248,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_difference_handling__reconcile
 msgid "Mark invoice as fully paid"
 msgstr "Marcar la factura como totalmente pagada"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_id
-msgid "Mass Mailing"
-msgstr "Correo masivo"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__campaign_id
-msgid "Mass Mailing Campaign"
-msgstr "Campaña de envío masivo"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_name
-msgid "Mass Mailing Name"
-msgstr "Correo masivo"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -13500,12 +13475,6 @@ msgstr ""
 "registradora."
 
 #. module: account
-#: code:addons/account/models/account.py:0
-#, python-format
-msgid "You must first define an opening move."
-msgstr "Debe primero definir un movimiento de apertura. "
-
-#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
@@ -13675,6 +13644,11 @@ msgstr "De este mes"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "Del mes siguiente"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "de"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
