@@ -13,6 +13,8 @@
 # Martin Trigaux, 2020
 # Stefan Stieranka <stieranka@itec.sk>, 2020
 # Jan Prokop, 2020
+# Peter Dovicovic <dovicovic@gmail.com>, 2020
+# Michal Matus <misko.matus@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Jan Prokop, 2020\n"
+"Last-Translator: Michal Matus <misko.matus@gmail.com>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +92,7 @@ msgstr "%s (kópia)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%s (rounding)"
-msgstr ""
+msgstr "%s (zaokrúhlene)"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -112,12 +114,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr "-> Zosúladiť"
+msgstr "-> Rekonciliácia"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> Zobraziť čiastočne zosúladené vstupy"
+msgstr "-> Zobraziť čiastočne rekonciliované vstupy"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -296,6 +298,8 @@ msgid ""
 "<span attrs=\"{'invisible':[('reconciled_invoices_count','&gt;',1)]}\">Invoice</span>\n"
 "                                <span attrs=\"{'invisible':[('reconciled_invoices_count','&lt;=',1)]}\">Invoices</span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('reconciled_invoices_count','&gt;',1)]}\">Faktúra</span>\n"
+"                                <span attrs=\"{'invisible':[('reconciled_invoices_count','&lt;=',1)]}\">Faktúry</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -317,7 +321,7 @@ msgid ""
 msgstr ""
 "<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
 "check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/><span "
-"class=\"d-none d-md-inline\"> Platené</span></span>"
+"class=\"d-none d-md-inline\"> Zaplatené</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -603,7 +607,7 @@ msgstr "<span>Jednotková cena</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload Bills</span>"
-msgstr ""
+msgstr "<span>Nahrať faktúry</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -641,7 +645,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">Obchodník</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
@@ -1402,7 +1406,7 @@ msgstr "Aktivity"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Označenie výnimky v aktivite"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_state
@@ -5376,7 +5380,7 @@ msgstr "Ikona"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona indikujúca výnimočnú aktivitu."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -9131,7 +9135,7 @@ msgstr "SEPA QR kód"
 #: model:ir.model.fields,field_description:account.field_account_move__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Chyba doručenia SMS"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -9154,7 +9158,7 @@ msgstr "Predaj"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Sales Person"
-msgstr ""
+msgstr "Obchodník"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__type__out_receipt
@@ -11724,7 +11728,7 @@ msgstr "Názov typu"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Typ výnimočnej aktivity na zázname."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
