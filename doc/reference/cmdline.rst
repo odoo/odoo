@@ -8,6 +8,19 @@ Command-line interface: odoo-bin
 
 .. _reference/cmdline/server:
 
+.. warning:: some commands are not listed here. To print all of them, use :option:`--help`
+
+Testing only
+============
+
+.. program:: odoo-bin
+
+.. option:: --stop-after-init   
+
+    stop the server after its initialization. 
+    Use it to print help, for updating modules, testing commands, scaffolding, etc.
+
+
 Running the server
 ==================
 
