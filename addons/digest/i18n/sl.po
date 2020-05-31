@@ -7,7 +7,6 @@
 # laznikd <laznik@mentis.si>, 2019
 # matjaz k <matjaz@mentis.si>, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
-# Tadej Lupšina <tadej@hbs.si>, 2019
 # Jasmina Macur <jasmina@hbs.si>, 2019
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
 # 
@@ -220,12 +219,12 @@ msgstr ""
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
 msgid "Authorized Group"
-msgstr "Avtorizirana skupina"
+msgstr "Pooblaščena skupina"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__available_fields
 msgid "Available Fields"
-msgstr ""
+msgstr "Razpoložljiva polja"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
@@ -240,7 +239,7 @@ msgstr "Uredi nastavitve"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Configure Digest Emails"
-msgstr "Nastavi preneseno e-pošto"
+msgstr "Nastavi e-poštne povzetke"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected
@@ -276,23 +275,23 @@ msgstr "Valuta"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Deactivate for everyone"
-msgstr "Izklopite za vse"
+msgstr "Onemogoči za vse"
 
 #. module: digest
 #: selection:digest.digest,state:0
 msgid "Deactivated"
-msgstr ""
+msgstr "Onemogočeno"
 
 #. module: digest
 #: model:ir.model,name:digest.model_digest_digest
 msgid "Digest"
-msgstr "Prenesena"
+msgstr "Povzemanje"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_id
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Digest Email"
-msgstr "Prenesena e-pošta"
+msgstr "E-poštni povzetek"
 
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_digest_action
@@ -302,17 +301,17 @@ msgstr "Prenesena e-pošta"
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_emails
 #: model:ir.ui.menu,name:digest.digest_menu
 msgid "Digest Emails"
-msgstr "Prenešena e-pošta"
+msgstr "E-poštni povzetki"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "Digest Subscriptions"
-msgstr ""
+msgstr "Naročnine na povzemanje"
 
 #. module: digest
 #: model:ir.model,name:digest.model_digest_tip
 msgid "Digest Tips"
-msgstr ""
+msgstr "Priporočila za povzemanje"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
@@ -338,7 +337,7 @@ msgstr "Združi po"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "How to customize your digest?"
-msgstr "Kako prilagoditi svojo zbirko?"
+msgstr "Kako prilagoditi svoje povzetke?"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
@@ -349,33 +348,33 @@ msgstr "ID"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "In order to build your customized digest, follow these steps:"
-msgstr "Če želite sestaviti zbirko po meri, sledite tem korakom:"
+msgstr "Če želite sestaviti povzetek po meri, sledite tem korakom:"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__is_subscribed
 msgid "Is user subscribed"
-msgstr ""
+msgstr "Je uporabnik naročen"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
 msgid "KPI Digest"
-msgstr ""
+msgstr "Ključni kazalniki povzetka"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "KPIs"
-msgstr ""
+msgstr "Ključni kazalniki "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total_value
 msgid "Kpi Mail Message Total Value"
-msgstr ""
+msgstr "Ključni kazalniki skupna vrednost sporočila"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected_value
 msgid "Kpi Res Users Connected Value"
-msgstr ""
+msgstr "Ključni kazalniki povezana vrednost z uporabniki"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest____last_update
@@ -416,6 +415,8 @@ msgid ""
 "New users are automatically added as recipient of the following digest "
 "email."
 msgstr ""
+"Novi uporabniki se samodejno dodajo kot prejemniki naslednjega povzetka "
+"e-pošte."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
@@ -497,7 +498,7 @@ msgstr "Tedensko"
 #. module: digest
 #: model:digest.digest,name:digest.digest_digest_default
 msgid "Weekly Digest"
-msgstr ""
+msgstr "Tedensko povzemanje"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
@@ -538,7 +539,7 @@ msgid ""
 msgstr ""
 "najprej ustvarite logično polje imenovano\n"
 "                                                <code>kpi_myfield</code>\n"
-"                                                in ga prikaži na kartici KPI;"
+"                                                in ga prikažite v zavihku ključnih kazalnikov;"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -548,8 +549,8 @@ msgid ""
 "                                                that will compute your customized KPI."
 msgstr ""
 "nato ustvarite izračunano polje imenovano\n"
-"                                                <code>kpi_myfield_value</code>\n"
-"                                                ,ki bo izračunal vaš prilagojen KPI."
+"                                                <code>kpi_myfield_value</code>,\n"
+"                                                ki bo obdelalo vaše prilagojene ključne kazalnike."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -558,6 +559,6 @@ msgid ""
 "                                                <code>digest</code>\n"
 "                                                object:"
 msgstr ""
-"ustvariti morate 2 polja na\n"
-"                                                <code>prenešenem</code>\n"
+"ustvariti morate 2 polji na\n"
+"                                                <code>povzetem</code>\n"
 "                                                objektu:"
