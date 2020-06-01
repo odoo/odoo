@@ -48,6 +48,7 @@ const ChartWidget = publicWidget.Widget.extend({
                 },
                 tooltips: {
                     enabled: this.el.dataset.tooltipDisplay === 'true',
+                    position: 'custom',
                 },
                 title: {
                     display: !!this.el.dataset.title,
@@ -80,18 +81,30 @@ const ChartWidget = publicWidget.Widget.extend({
                 },
             };
         } else {
+            // For extending the range of the axis while maintaining the auto
+            // fit behavior
+            const beforeBuildTicks = (scale) => {
+                scale.min = parseInt(this.el.dataset.ticksMin) || scale.min;
+                scale.max = parseInt(this.el.dataset.ticksMax) || scale.max;
+            };
             chartData.options.scales = {
                 xAxes: [{
                     stacked: this.el.dataset.stacked === 'true',
                     ticks: {
                         beginAtZero: true
                     },
+                    // Maintaining the gap between two values on
+                    // vertical/horizontally axis
+                    beforeBuildTicks: beforeBuildTicks,
                 }],
                 yAxes: [{
                     stacked: this.el.dataset.stacked === 'true',
                     ticks: {
                         beginAtZero: true
                     },
+                    // Maintaining the gap between two values on
+                    // vertical/horizontally axis
+                    beforeBuildTicks: beforeBuildTicks,
                 }],
             };
         }
@@ -104,6 +117,7 @@ const ChartWidget = publicWidget.Widget.extend({
         }
 
         const canvas = this.el.querySelector('canvas');
+        window.Chart.Tooltip.positioners.custom = (elements, eventPosition) => eventPosition;
         this.chart = new window.Chart(canvas, chartData);
         return this._super.apply(this, arguments);
     },
