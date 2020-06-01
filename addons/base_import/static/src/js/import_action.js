@@ -415,7 +415,8 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
 
             var $thing = $();
             var bind = function (d) {};
-            if (session.debug) {
+            if (true) { // if (session.debug) {
+                // Alterado pela Multidados para Liberar a função abaixo mesmo sem Debug
                 $thing = $(QWeb.render('ImportView.create_record_option')).insertAfter(v).hide();
                 bind = function (data) {
                     switch (data.type) {
