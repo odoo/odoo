@@ -22,5 +22,5 @@ class TestAccountDocumentLayout(HttpCase):
                 'report_type': 'qweb-html',
             })
             # runbot needs +1071 compared to local
-            with self.assertQueryCount(__system__=3647):
+            with self.assertQueryCount(__system__=3659):
                 self.start_tour("/web", 'account_render_report', login='admin', timeout=200)

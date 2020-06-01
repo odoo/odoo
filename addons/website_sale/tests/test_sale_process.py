@@ -66,7 +66,7 @@ class TestUi(HttpCaseWithUserDemo):
         })
 
     def test_01_admin_shop_tour(self):
-        with self.assertQueryCount(__system__=5346):
+        with self.assertQueryCount(__system__=5356):
             self.start_tour("/", 'shop', login="admin")
 
     def test_02_admin_checkout(self):

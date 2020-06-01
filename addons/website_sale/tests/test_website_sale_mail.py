@@ -28,5 +28,5 @@ class TestWebsiteSaleMail(HttpCase):
         MailMail = odoo.addons.mail.models.mail_mail.MailMail
 
         with patch.object(MailMail, 'unlink', lambda self: None):
-            with self.assertQueryCount(__system__=5853):
+            with self.assertQueryCount(__system__=5876):
                 self.start_tour("/", 'shop_mail', login="admin")

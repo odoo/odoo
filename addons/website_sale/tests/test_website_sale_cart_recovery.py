@@ -16,7 +16,7 @@ class TestWebsiteSaleCartRecovery(HttpCaseWithUserPortal):
             'website_published': True,
         })
 
-        with self.assertQueryCount(__system__=5050):
+        with self.assertQueryCount(__system__=5062):
             self.start_tour("/", 'shop_cart_recovery', login="portal")
 
 

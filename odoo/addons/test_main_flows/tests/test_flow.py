@@ -65,7 +65,7 @@ class BaseTestUi(odoo.tests.HttpCase):
             'refund_sequence': True,
         })
 
-        with self.assertQueryCount(__system__=23293):
+        with self.assertQueryCount(__system__=23363):
             self.start_tour("/web", 'main_flow_tour', login="admin", timeout=180)
 
 @odoo.tests.tagged('post_install', '-at_install')

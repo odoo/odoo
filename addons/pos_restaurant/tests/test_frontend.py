@@ -174,5 +174,5 @@ class TestFrontend(odoo.tests.HttpCase):
             self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour', login="admin", step_delay=50)
         with self.assertQueryCount(admin=2210):
             self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'ControlButtonsTour', login="admin", step_delay=50)
-        with self.assertQueryCount(admin=2053):
+        with self.assertQueryCount(admin=2060):
             self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'FloorScreenTour', login="admin", step_delay=50)

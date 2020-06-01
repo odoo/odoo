@@ -38,6 +38,6 @@ class TestUiTranslation(odoo.tests.HttpCase):
         # is rollbacked at insert and a new cursor is opened, can not test that
         # the message is translated (_load_module_terms is also) rollbacked.
         # Test individually the external id and loading of translation.
-        with self.assertQueryCount(__system__=3140):
+        with self.assertQueryCount(__system__=3155):
             self.start_tour("/web#action=test_new_api.action_categories",
                 'sql_constaint', login="admin")

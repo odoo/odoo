@@ -163,7 +163,7 @@ class TestUi(odoo.tests.HttpCase):
         })
         with self.assertQueryCount(__system__=1779):
             self.start_tour("/?fw=%s" % website_default.id, "generic_website_editor", login='admin')
-        with self.assertQueryCount(__system__=1673):
+        with self.assertQueryCount(__system__=1675):
             self.start_tour("/?fw=%s" % new_website.id, "specific_website_editor", login='admin')
 
     def test_06_public_user_editor(self):

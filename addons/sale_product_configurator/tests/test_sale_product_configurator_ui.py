@@ -106,7 +106,7 @@ class TestUi(odoo.tests.HttpCase):
         # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that
         self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
 
-        with self.assertQueryCount(__system__=4006):
+        with self.assertQueryCount(__system__=4022):
             self.start_tour("/web", 'sale_product_configurator_tour', login="admin")
 
     def test_02_product_configurator_advanced(self):
@@ -168,14 +168,14 @@ class TestUi(odoo.tests.HttpCase):
             'value_ids': [(6, 0, product_attribute.value_ids.ids)],
         } for product_attribute in product_attributes])
 
-        with self.assertQueryCount(__system__=4129):
+        with self.assertQueryCount(__system__=4130):
             self.start_tour("/web", 'sale_product_configurator_advanced_tour', login="admin")
 
     def test_03_product_configurator_edition(self):
         # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that
         self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
 
-        with self.assertQueryCount(__system__=4192):
+        with self.assertQueryCount(__system__=4207):
             self.start_tour("/web", 'sale_product_configurator_edition_tour', login="admin")
 
     def test_04_product_configurator_single_custom_value(self):
@@ -211,7 +211,7 @@ class TestUi(odoo.tests.HttpCase):
             'value_ids': [(6, 0, [product_attribute_values[0].id])]
         }])
 
-        with self.assertQueryCount(__system__=3622):
+        with self.assertQueryCount(__system__=3652):
             self.start_tour("/web", 'sale_product_configurator_single_custom_attribute_tour', login="admin")
 
     def test_05_product_configurator_pricelist(self):
@@ -252,7 +252,7 @@ class TestUi(odoo.tests.HttpCase):
                 'compute_price': 'formula',
             })
 
-        with self.assertQueryCount(__system__=4441):
+        with self.assertQueryCount(__system__=4470):
             self.start_tour("/web", 'sale_product_configurator_pricelist_tour', login="admin")
 
     def test_06_product_configurator_optional_products(self):

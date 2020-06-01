@@ -142,7 +142,7 @@ class TestUiSession(HttpCase):
         # PART 1 : CREATE SESSION
         # =======================
 
-        with self.assertQueryCount(__system__=3214):
+        with self.assertQueryCount(__system__=3229):
             self.start_tour('/web', 'test_survey_session_create_tour', login='admin')
 
         # tricky part: we only take into account answers created after the session_start_time
@@ -206,7 +206,7 @@ class TestUiSession(HttpCase):
         attendee_3.save_lines(timed_scored_choice_question,
             [timed_scored_choice_answer_2.id])
 
-        with self.assertQueryCount(__system__=1909):
+        with self.assertQueryCount(__system__=1924):
             self.start_tour('/web', 'test_survey_session_manage_tour', login='admin')
 
         self.assertFalse(bool(survey_session.session_state))

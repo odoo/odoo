@@ -13,5 +13,5 @@ class TestUi(HttpCase):
     @tools.mute_logger('odoo.http')
     def test_01_point_of_sale_tour(self):
 
-        with self.assertQueryCount(__system__=2385):
+        with self.assertQueryCount(__system__=2400):
             self.start_tour("/web", 'point_of_sale_tour', login="admin")
