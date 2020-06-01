@@ -96,8 +96,9 @@ var Tip = Widget.extend({
         core.bus.on("resize", this, _.debounce(function () {
             if (this.tip_opened) {
                 this._to_bubble_mode(true);
+            } else {
+                this._reposition();
             }
-            this._reposition();
         }, 500));
 
         return this._super.apply(this, arguments);
@@ -211,15 +212,17 @@ var Tip = Widget.extend({
             // important to only remove/add the class when necessary to not
             // notify a DOM mutation which could retrigger this function.
             const $oldLocation = this.$el.parent();
-            if (!$location.is($oldLocation)) {
-                $oldLocation.removeClass('o_tooltip_parent');
-                const cssPosition = $location.css("position");
-                if (cssPosition === "static" || cssPosition === "relative") {
-                    $location.addClass("o_tooltip_parent");
+            if (!this.tip_opened) {
+                if (!$location.is($oldLocation)) {
+                    $oldLocation.removeClass('o_tooltip_parent');
+                    const cssPosition = $location.css("position");
+                    if (cssPosition === "static" || cssPosition === "relative") {
+                        $location.addClass("o_tooltip_parent");
+                    }
+                    this.$el.appendTo($location);
                 }
-                this.$el.appendTo($location);
+                this._reposition();
             }
-            this._reposition();
         }
     },
     _get_ideal_location: function ($anchor = this.$anchor) {
