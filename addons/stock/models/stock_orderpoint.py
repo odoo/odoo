@@ -105,6 +105,15 @@ class StockWarehouseOrderpoint(models.Model):
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
+    
+    @api.onchange('product_min_qty', 'product_max_qty')
+    def _onchange_product_qty(self):
+        # It doesn't make sens to have Max quantity below than Min quantity.
+        # The scheduler use max(product_min_qty, product_max_qty), but for user
+        # it can be source of misunderstanding.
+        self.ensure_one()
+        if self.product_max_qty < self.product_min_qty:
+            self.product_max_qty = self.product_min_qty
 
     @api.depends('warehouse_id')
     def _compute_allowed_location_ids(self):
