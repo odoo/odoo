@@ -191,6 +191,21 @@ var KanbanModel = BasicModel.extend({
         return this._super(params);
     },
     /**
+     * 
+     */
+    loadActiveFilter(groupID, searchQuery, activeFilter) {
+        const group = this.localData[groupID];
+        if (activeFilter) {
+            const activeFilterDomain = [[group.progressBarValues.field, '=', activeFilter], ['id', 'not in', group.res_ids]];
+            searchQuery.domain = searchQuery.domain.concat(activeFilterDomain);
+        }
+        var offset = group.loadMoreOffset + group.limit;
+        return this.reload(group.id, {
+            domain: searchQuery.domain,
+            loadMoreOffset: offset,
+        });
+    },
+    /**
      * Load more records in a group.
      *
      * @param {string} groupID localID of the group

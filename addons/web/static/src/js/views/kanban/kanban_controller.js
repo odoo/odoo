@@ -34,6 +34,7 @@ var KanbanController = BasicController.extend({
         kanban_load_more: '_onLoadMore',
         column_toggle_fold: '_onToggleColumn',
         kanban_column_records_toggle_active: '_onToggleActiveRecords',
+        load_active_filter: '_onLoadActiveFilter'
     }),
     /**
      * @override
@@ -72,6 +73,13 @@ var KanbanController = BasicController.extend({
             this.$buttons.appendTo($node);
         }
     },
+    // reload(params) {
+    //     const searchQuery = this._controlPanelModel.getQuery();
+    //     if (params && params.activeFilter) {
+    //         debugger;
+    //     }
+    //     return this._super.apply(this, arguments);
+    // },
     /**
      * In grouped mode, set 'Create' button as btn-secondary if there is no column
      * (except if we can't create new columns)
@@ -385,6 +393,20 @@ var KanbanController = BasicController.extend({
         this.model
             .deleteRecords([column.db_id], relatedModelName)
             .then(this.update.bind(this, {}, {}));
+    },
+    /**
+     * @private
+     * * @param {OdooEvent} ev
+     */
+    async _onLoadActiveFilter(ev) {
+        const columnID = ev.data.columnID;
+        const filter = ev.data.activeFilter;
+        const searchQuery = this._controlPanelModel.getQuery();
+        const dbID = await this.model.loadActiveFilter(columnID, searchQuery, filter);
+        debugger;
+        var data = this.model.get(dbID);
+        this.renderer.updateColumn(dbID, data);
+        ev.data.callback();
     },
     /**
      * @private

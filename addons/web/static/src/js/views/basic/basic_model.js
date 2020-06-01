@@ -4841,6 +4841,7 @@ var BasicModel = AbstractModel.extend({
      * @returns {Promise<string>} resolves to the id of the resource
      */
     _reload: function (id, options) {
+        debugger;
         options = options || {};
         var element = this.localData[id];
 
