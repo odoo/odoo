@@ -49,17 +49,17 @@ publicWidget.registry.eventSponsors = publicWidget.Widget.extend({
                         id: 0,
                         url: '#',
                         partner_name: 'Sponsor 1',
-                        sponsor_type_id: (1, 'Gold')
+                        sponsor_type_id: [1, 'Gold']
                     }, {
                         id: 0,
                         url: '#',
                         partner_name: 'Sponsor 2',
-                        sponsor_type_id: (2, 'Silver')
+                        sponsor_type_id: [2, 'Silver']
                     }, {
                         id: 0,
                         url: '#',
                         partner_name: 'Sponsor 3',
-                        sponsor_type_id: (3, 'Bronze')
+                        sponsor_type_id: [3, 'Bronze']
                     }]
             }
             return sponsors;

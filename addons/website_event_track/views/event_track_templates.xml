@@ -14,7 +14,8 @@
     <xpath expr="//div[@id='wrap']" position="inside">
         <t t-if="event.sponsor_ids">
             <t t-call="website_event_track.s_sponsors">
-                <t t-set="object" t-value="event"/>
+                <t t-set="res_id" t-value="event.id"/>
+                <t t-set="res_model" t-value="'event.event'"/>
             </t>
         </t>
     </xpath>
