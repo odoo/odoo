@@ -4,6 +4,7 @@
 from random import randint
 
 from odoo import api, fields, models
+from odoo.tools.mail import is_html_empty
 from odoo.tools.translate import _, html_translate
 from odoo.addons.http_routing.models.ir_http import slug
 from datetime import timedelta
@@ -59,7 +60,9 @@ class Track(models.Model):
     partner_phone = fields.Char(
         string='Phone', compute='_compute_partner_info',
         readonly=False, store=True, tracking=30)
-    partner_biography = fields.Html(string='Biography')
+    partner_biography = fields.Html(
+        string='Biography', compute='_compute_partner_biography',
+        readonly=False, store=True)
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     stage_id = fields.Many2one(
         'event.track.stage', string='Stage', ondelete='restrict',
@@ -86,7 +89,9 @@ class Track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Image("Image", max_width=128, max_height=128)
+    image = fields.Image(
+        max_width=128, max_height=128,
+        compute='_compute_image', readonly=False, store=True)
 
     @api.depends('name')
     def _compute_website_url(self):
@@ -103,6 +108,12 @@ class Track(models.Model):
                 track.partner_email = track.partner_id.email
                 track.partner_phone = track.partner_id.phone
 
+    @api.depends('partner_id')
+    def _compute_partner_biography(self):
+        for track in self:
+            if track.partner_id and is_html_empty(track.partner_biography):
+                track.partner_biography = track.partner_id.website_description
+
     @api.depends('date', 'duration')
     def _compute_end_date(self):
         for track in self:
@@ -111,6 +122,12 @@ class Track(models.Model):
                 track.date_end = track.date + delta
             else:
                 track.date_end = False
+
+    @api.depends('partner_id')
+    def _compute_image(self):
+        for track in self:
+            if track.partner_id and not track.image:
+                track.image = track.partner_id.image_128
 
     @api.model_create_multi
     def create(self, vals_list):
