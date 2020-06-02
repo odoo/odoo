@@ -10320,6 +10320,95 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test("Date in evaluation context works with date field", async function (assert) {
+        assert.expect(11);
+
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        const unpatchDate = testUtils.mock.patchDate(1997, 0, 9, 12, 0, 0);
+        testUtils.mock.patch(BasicModel, {
+            _getEvalContext() {
+                const evalContext = this._super(...arguments);
+                assert.ok(dateRegex.test(evalContext.today));
+                assert.strictEqual(evalContext.current_date, evalContext.today);
+                return evalContext;
+            },
+        });
+
+        this.data.foo.fields.birthday = { string: "Birthday", type: 'date' };
+        this.data.foo.records[0].birthday = "1997-01-08";
+        this.data.foo.records[1].birthday = "1997-01-09";
+        this.data.foo.records[2].birthday = "1997-01-10";
+
+        const list = await createView({
+            arch: `
+                <tree>
+                    <field name="birthday" decoration-danger="birthday > today"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.containsOnce(list, ".o_data_row .text-danger");
+
+        list.destroy();
+        unpatchDate();
+        testUtils.mock.unpatch(BasicModel);
+    });
+
+    QUnit.test("Datetime in evaluation context works with datetime field", async function (assert) {
+        assert.expect(6);
+
+        const datetimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+        const unpatchDate = testUtils.mock.patchDate(1997, 0, 9, 12, 0, 0);
+        testUtils.mock.patch(BasicModel, {
+            _getEvalContext() {
+                const evalContext = this._super(...arguments);
+                assert.ok(datetimeRegex.test(evalContext.now));
+                return evalContext;
+            },
+        });
+
+        /**
+         * Returns "1997-01-DD HH:MM:00" with D, H and M holding current UTC values
+         * from patched date + (deltaMinutes) minutes.
+         * This is done to allow testing from any timezone since UTC values are
+         * calculated with the offset of the current browser.
+         */
+        function dateStringDelta(deltaMinutes) {
+            const d = new Date(Date.now() + 1000 * 60 * deltaMinutes);
+            return `1997-01-${
+                String(d.getUTCDate()).padStart(2, '0')
+            } ${
+                String(d.getUTCHours()).padStart(2, '0')
+            }:${
+                String(d.getUTCMinutes()).padStart(2, '0')
+            }:00`;
+        }
+
+        // "datetime" field may collide with "datetime" object in context
+        this.data.foo.fields.birthday = { string: "Birthday", type: 'datetime' };
+        this.data.foo.records[0].birthday = dateStringDelta(-30);
+        this.data.foo.records[1].birthday = dateStringDelta(0);
+        this.data.foo.records[2].birthday = dateStringDelta(+30);
+
+        const list = await createView({
+            arch: `
+                <tree>
+                    <field name="birthday" decoration-danger="birthday > now"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.containsOnce(list, ".o_data_row .text-danger");
+
+        list.destroy();
+        unpatchDate();
+        testUtils.mock.unpatch(BasicModel);
+    });
 });
 
 });
