@@ -2722,7 +2722,7 @@ class AccountMoveLine(models.Model):
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
         check_company=True,
         tracking=True)
-    account_internal_type = fields.Selection(related='account_id.user_type_id.type', string="Internal Type", store=True, readonly=True)
+    account_internal_type = fields.Selection(related='account_id.user_type_id.type', string="Internal Type", readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
     sequence = fields.Integer(default=10)
     name = fields.Text(string='Label', tracking=True)
