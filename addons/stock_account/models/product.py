@@ -437,6 +437,62 @@ class ProductProduct(models.Model):
             vacuum_svl.stock_move_id._account_entry_move(
                 vacuum_svl.quantity, vacuum_svl.description, vacuum_svl.id, vacuum_svl.value
             )
+            # Create the related expense entry
+            self._create_fifo_vacuum_anglo_saxon_expense_entry(vacuum_svl, svl_to_vacuum)
+
+    def _create_fifo_vacuum_anglo_saxon_expense_entry(self, vacuum_svl, svl_to_vacuum):
+        """ When product is delivered and invoiced while you don't have units in stock anymore, there are chances of that
+            product getting undervalued/overvalued. So, we should nevertheless take into account the fact that the product has
+            already been delivered and invoiced to the customer by posting the value difference in the expense account also.
+            Consider the below case where product is getting undervalued:
+
+            You bought 8 units @ 10$ -> You have a stock valuation of 8 units, unit cost 10.
+            Then you deliver 10 units of the product.
+            You assumed the missing 2 should go out at a value of 10$ but you are not sure yet as it hasn't been bought in Odoo yet.
+            Afterwards, you buy missing 2 units of the same product at 12$ instead of expected 10$.
+            In case the product has been undervalued when delivered without stock, the vacuum entry is the following one (this entry already takes place):
+
+            Account                         | Debit   | Credit
+            ===================================================
+            Stock Valuation                 | 0.00     | 4.00
+            Stock Interim (Delivered)       | 4.00     | 0.00
+
+            So, on delivering product with different price, We should create additional journal items like:
+            Account                         | Debit    | Credit
+            ===================================================
+            Stock Interim (Delivered)       | 0.00     | 4.00
+            Expenses Revaluation            | 4.00     | 0.00
+        """
+        if not vacuum_svl.company_id.anglo_saxon_accounting or not svl_to_vacuum.stock_move_id._is_out():
+            return False
+        AccountMove = self.env['account.move'].sudo()
+        account_move_lines = svl_to_vacuum.account_move_id.line_ids
+        # Find related customer invoice where product is delivered while you don't have units in stock anymore
+        reconciled_line_ids = list(set(account_move_lines._reconciled_lines()) - set(account_move_lines.ids))
+        account_move = AccountMove.search([('line_ids','in', reconciled_line_ids)], limit=1)
+        # If delivered quantity is not invoiced then no need to create this entry
+        if not account_move:
+            return False
+        accounts = svl_to_vacuum.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=account_move.fiscal_position_id)
+        if not accounts.get('stock_output') or not accounts.get('expense'):
+            return False
+        description = "Expenses %s" % (vacuum_svl.description)
+        move_lines = vacuum_svl.stock_move_id._prepare_account_move_line(
+            vacuum_svl.quantity, vacuum_svl.value * -1,
+            accounts['stock_output'].id, accounts['expense'].id,
+            description)
+        new_account_move = AccountMove.sudo().create({
+            'journal_id': accounts['stock_journal'].id,
+            'line_ids': move_lines,
+            'date': self._context.get('force_period_date', fields.Date.context_today(self)),
+            'ref': description,
+            'stock_move_id': vacuum_svl.stock_move_id.id,
+            'move_type': 'entry',
+        })
+        new_account_move.post()
+        to_reconcile_account_move_lines = vacuum_svl.account_move_id.line_ids.filtered(lambda l: not l.reconciled and l.account_id == accounts['stock_output'] and l.account_id.reconcile)
+        to_reconcile_account_move_lines += new_account_move.line_ids.filtered(lambda l: not l.reconciled and l.account_id == accounts['stock_output'] and l.account_id.reconcile)
+        return to_reconcile_account_move_lines.reconcile()
 
     @api.model
     def _svl_empty_stock(self, description, product_category=None, product_template=None):
