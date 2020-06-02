@@ -549,3 +549,123 @@ Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
     $ odoo_bin scaffold my_module /addons/
 
 This will create module *my_module* in directory */addons/*.
+
+
+Cloc
+====
+
+.. program:: odoo-bin cloc
+
+Odoo Cloc is a tool to count the number of relevant lines written in
+python, javascript or xml. This can be used as a rough metric for pricing
+maintenance of customizations.
+
+It has two modes of operation, either by providing a path:
+
+.. option:: --path PATH, -p PATH
+
+Or by providing the name of a database:
+
+.. option:: --database DATABASE, -d DATABASE
+
+The addons path should be provided as well
+
+.. code-block:: console
+
+    $ odoo-bin cloc --addons-path=dirs -d database
+
+In the latter mode, only the custom code is accounted for.
+You can also use a configuration file -c configuration.conf instead of the addons-path
+
+.. code-block:: console
+
+    $ odoo-bin cloc -c configuration.conf -d database
+
+both mode can be used simultaneously to count the line for a given folder
+in addition of the lines in the given database.
+
+.. code-block:: console
+
+    $ odoo-bin cloc --addons-path=dirs -d database -p module_path
+
+
+The verbose option show the details per files.
+
+
+.. option:: --verbose, -v
+
+
+Which files Odoo Cloc counts ?
+------------------------------
+
+Database mode
+'''''''''''''
+
+Odoo Cloc counts the lines in each file of non standard installed modules in a
+given database. In addition, it counts the python line from server action and
+custom computed field stored directly in the database, in other words, not defined
+in any module or defined in an importable module.
+
+Some files are excluded from the count by default
+
+- The manifest (\_\_manifest__.py or \_\_openerp__.py)
+- The content of the folder static/lib
+- The tests defined in folder tests and static/tests
+- The xml files declared in demo or demo_xml section of the manifest
+
+Finally, it's possible to define in each module a list of files to ignore
+with the directive "cloc_exclude" in the manifest.
+
+.. code-block:: python
+
+    "cloc_exclude": [
+        "lib/common.py", # exclude a single file
+        "data/\*.xml", # exclude all xml file in a specific folder
+        "example/\*\*/\*", # exclude all file in the folder and its subfolder
+    ]
+
+The syntax "\*\*/\*" can be used to ignore a complete module. In that case,
+the module will not be covered by the maintenance service.
+
+For more information about the syntax,
+see `glob <https://docs.python.org/3.6/library/pathlib.html#pathlib.Path.glob>`_
+
+
+
+Path mode
+'''''''''
+
+Odoo Cloc counts as described in database mode if a manifest file is present in
+the given folder. Otherwise, it counts all files.
+
+
+How does cloc make the difference between standard and custom module ?
+----------------------------------------------------------------------
+
+Odoo Cloc uses the following heuristic: If the module is in the same addons path as
+the modules base, web or web_enterprise then the module is considered as standard.
+
+Therefore, we strongly advise to have your custom module in a separate addons_folder
+
+
+Error Handling
+--------------
+
+Some file cannot be counted by Odoo Cloc.
+Those file are reported at the end of the output.
+
+Max file size exceeded
+''''''''''''''''''''''
+
+Odoo Cloc rejects any file bigger than 25MB. Usually source files are smaller
+than 1 MB, if you have that kind of file reported, it's probably
+- a generated xml file that contains lot of data, exclude it in the manifest
+- a javascript library that should be placed in static/lib
+
+Syntax Error
+''''''''''''
+
+Odoo Cloc cannot count the lines of code of a python file with a wrong syntax. If
+your module contains such files, either the file should be fixed otherwise the
+module will not work. If the module works with those files, they are not used and
+therefore should be removed from the module or at least excluded from the count.
