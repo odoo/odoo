@@ -51,9 +51,8 @@
         amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
         from ${object.company_id.name}. 
         <br/><br/>
-        % set datetime = object.date_planned or object.expected_date
-        % if datetime:
-            The receipt is expected for <strong>${format_date(datetime)}</strong>.
+        % if object.date_planned:
+            The receipt is expected for <strong>${format_date(object.date_planned)}</strong>.
             <br/><br/>
             Could you please acknowledge the receipt of this order?
         % endif
@@ -84,9 +83,8 @@
             <strong>(${object.partner_ref})</strong>
         % endif 
         is expected for 
-        % set datetime = object.date_planned or object.expected_date
-        % if datetime:
-            <strong>${format_date(datetime)}</strong>.
+        % if object.date_planned:
+            <strong>${format_date(object.date_planned)}</strong>.
         % endif
         Could you please confirm it will be delivered on time?
     </p>

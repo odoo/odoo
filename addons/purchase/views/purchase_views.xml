@@ -187,7 +187,6 @@
                             <div name="date_planned_and_confirmation">
                                 <div name="date_planned_div" class="o_row">
                                     <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve', 'purchase'))]}"/>
-                                    <span name='expected_date_span' class="text-muted" attrs="{'invisible': ['|', ('expected_date', '=', False), ('date_planned', '!=', False)]}">Per line, first on <field name="expected_date" widget="date"/></span>
                                     <field name="mail_reminder_confirmed" invisible="1"/>
                                     <span class="text-muted" attrs="{'invisible': [('mail_reminder_confirmed', '=', False)]}">(confirmed by vendor)</span>
                                 </div>
