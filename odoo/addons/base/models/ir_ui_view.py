@@ -1290,7 +1290,7 @@ actual arch.
                 for group in expr.replace('!', '').split(','):
                     # further improvement: add all groups to name_manager in
                     # order to batch check them at the end
-                    if not self.env['ir.model.data'].xmlid_to_res_id(group.strip(), raise_if_not_found=False):
+                    if not re.match('base\.l10n_[a-z]{2}$', group) and not self.env['ir.model.data'].xmlid_to_res_id(group.strip(), raise_if_not_found=False):
                         msg = _("The group %r defined in view does not exist!") % group
                         self.handle_view_error(msg, raise_exception=False)
 
