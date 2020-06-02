@@ -19,7 +19,7 @@ var Notification = Widget.extend({
         'mouseenter': '_onMouseEnter',
         'mouseleave': '_onMouseLeave',
     },
-    _autoCloseDelay: 2500,
+    _autoCloseDelay: 4000,
     _animation: true,
 
     /**
