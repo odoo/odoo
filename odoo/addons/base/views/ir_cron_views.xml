@@ -39,6 +39,7 @@
                 <tree string="Scheduled Actions" decoration-muted="(not active)">
                     <field name="priority"/>
                     <field name="name"/>
+                    <field name="model_id"/>
                     <field name="nextcall"/>
                     <field name="interval_number"/>
                     <field name="interval_type"/>
@@ -66,6 +67,7 @@
                 <search string="Scheduled Actions">
                     <field name="name" string="Scheduled Action"/>
                     <field name="user_id"/>
+                    <field name="model_id"/>
                     <field name="nextcall"/>
                     <field name="active"/>
                     <separator/>
@@ -75,6 +77,7 @@
                     <group expand="0" string="Group By">
                         <filter string="User" name="user" domain="[]" context="{'group_by': 'user_id'}"/>
                         <filter string="Execution" name="execution" domain="[]" context="{'group_by': 'nextcall'}" />
+                        <filter string="Model" name="groupby_model_id" domain="[]" context="{'group_by': 'model_id'}"/>
                     </group>
                 </search>
             </field>
