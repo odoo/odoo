@@ -447,6 +447,8 @@ class HrExpense(models.Model):
 
         move_line_values_by_expense = self._get_account_move_line_values()
 
+        move_to_keep_draft = self.env['account.move']
+
         for expense in self:
             company_currency = expense.company_id.currency_id
             different_currency = expense.currency_id != company_currency
@@ -475,7 +477,7 @@ class HrExpense(models.Model):
                     'partner_type': 'supplier',
                     'journal_id': journal.id,
                     'payment_date': expense.date,
-                    'state': 'reconciled',
+                    'state': 'draft',
                     'currency_id': expense.currency_id.id if different_currency else journal_currency.id,
                     'amount': abs(total_amount_currency) if different_currency else abs(total_amount),
                     'name': expense.name,
@@ -487,10 +489,18 @@ class HrExpense(models.Model):
             expense.sheet_id.write({'account_move_id': move.id})
 
             if expense.payment_mode == 'company_account':
+                if journal.post_at == 'pay_val':
+                    payment.state = 'reconciled'
+                elif journal.post_at == 'bank_rec':
+                    payment.state = 'posted'
+                    move_to_keep_draft |= move
+
                 expense.sheet_id.paid_expense_sheets()
 
         # post the moves
         for move in move_group_by_sheet.values():
+            if move in move_to_keep_draft:
+                continue
             move.post()
 
         return move_group_by_sheet

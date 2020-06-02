@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo import fields
 
 
 @tagged('post_install', '-at_install')
-class TestAccountDebitNote(InvoiceTestCommon):
+class TestAccountDebitNote(AccountTestInvoicingCommon):
 
     def test_00_debit_note_out_invoice(self):
         """ Debit Note of a regular Customer Invoice"""

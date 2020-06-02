@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
 from odoo import fields
@@ -7,11 +7,11 @@ from odoo.exceptions import ValidationError, UserError
 
 
 @tagged('post_install', '-at_install')
-class TestAccountMove(InvoiceTestCommon):
+class TestAccountMove(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestAccountMove, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         tax_repartition_line = cls.company_data['default_tax_sale'].invoice_repartition_line_ids\
             .filtered(lambda line: line.repartition_type == 'tax')
