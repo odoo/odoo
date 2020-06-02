@@ -923,7 +923,7 @@ QUnit.test('list activity widget with no activity', async function (assert) {
         session: {uid: 2},
     });
 
-    assert.containsOnce(list, '.o_mail_activity .o_activity_color_default');
+    assert.containsOnce(list, '.o_mail_activity .o_activity_color_default.fa-clock-o');
     assert.strictEqual(list.$('.o_activity_summary').text(), '');
 
     assert.verifySteps(['/web/dataset/search_read']);
@@ -938,6 +938,7 @@ QUnit.test('list activity widget with activities', async function (assert) {
     this.data.partner.records[0].activity_state = 'today';
     this.data.partner.records[0].activity_summary = 'Call with Al';
     this.data.partner.records[0].activity_type_id = 3;
+    this.data.partner.records[0].activity_type_icon = 'fa-phone';
 
     this.data.partner.records.push({
         id: 44,
@@ -959,11 +960,11 @@ QUnit.test('list activity widget with activities', async function (assert) {
     });
 
     const $firstRow = list.$('.o_data_row:first');
-    assert.containsOnce($firstRow, '.o_mail_activity .o_activity_color_today');
+    assert.containsOnce($firstRow, '.o_mail_activity .o_activity_color_today.fa-phone');
     assert.strictEqual($firstRow.find('.o_activity_summary').text(), 'Call with Al');
 
     const $secondRow = list.$('.o_data_row:nth(1)');
-    assert.containsOnce($secondRow, '.o_mail_activity .o_activity_color_planned');
+    assert.containsOnce($secondRow, '.o_mail_activity .o_activity_color_planned.fa-clock-o');
     assert.strictEqual($secondRow.find('.o_activity_summary').text(), 'Type 2');
 
     assert.verifySteps(['/web/dataset/search_read']);

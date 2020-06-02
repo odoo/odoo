@@ -68,6 +68,7 @@
             </div>
             <div class="o_activity_title_entry mt-1" t-if="log.state != 'today'">
                 <span class="fa fa-clock-o fa-fw mr-2 text-center text-muted" role="img" aria-label="Deadline" title="Deadline"/>
+                <small t-if="log.user_id[0] !== session.uid and log.mail_template_ids" class="mr-1"><t t-esc="log.user_id[1]"/> -</small>
                 <small t-att-title="log.date_deadline"><t t-esc="log.label_delay" /></small>
             </div>
             <t t-if="log.mail_template_ids">
@@ -81,10 +82,6 @@
                     </small>
                 </div>
             </t>
-            <div t-if="log.user_id[0] != session.uid and log.mail_template_ids" class="o_activity_title_entry">
-                <span class="fa fa-user fa-fw mr-2 text-center text-muted" role="img" aria-label="User" title="User"/>
-                <span><t t-esc="log.user_id[1]" /></span>
-            </div>
         </div>
         <div t-if="log.can_write" class="flex-grow-1 text-right">
             <t t-if="log.activity_category === 'upload_file'">
