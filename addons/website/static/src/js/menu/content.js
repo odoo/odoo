@@ -95,6 +95,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             args: [this.page_id],
         }).then(function (page) {
             page.url = _.str.startsWith(page.url, '/') ? page.url.substring(1) : page.url;
+            page.hasSingleGroup = page.group_id !== undefined;
             self.page = page;
         }));
 
@@ -115,9 +116,9 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             this.$('.show_visibility_password').addClass('d-none');
         }
         if (this.page.visibility !== 'restricted_group') {
-            this.$('.show_visibility_group').addClass('d-none');
+            this.$('.show_group_id').addClass('d-none');
         }
-        this.autocompleteWithGroups(this.$('#visibility_group'));
+        this.autocompleteWithGroups(this.$('#group_id'));
 
         defs.push(this._getPageDependencies(this.page_id)
         .then(function (dependencies) {
@@ -236,9 +237,11 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             redirect_type: this.$('#redirect_type').val(),
             website_indexed: this.$('#is_indexed').prop('checked'),
             visibility: this.$('#visibility').val(),
-            visibility_group: this.$('#visibility').val() === 'restricted_group' ? this.$('#visibility_group').data('group-id') : false,
             date_publish: datePublish,
         };
+        if (this.page.hasSingleGroup && this.$('#visibility').val() === 'restricted_group') {
+            params['group_id'] = this.$('#group_id').data('group-id');
+        }
         if (this.$('#visibility').val() === 'password') {
             var field_pwd = $('#visibility_password');
             if (!field_pwd.get(0).reportValidity()) {
@@ -418,7 +421,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      */
     _onVisibilityChanged: function (ev) {
         this.$('.show_visibility_password').toggleClass('d-none', ev.target.value !== 'password');
-        this.$('.show_visibility_group').toggleClass('d-none', ev.target.value !== 'restricted_group');
+        this.$('.show_group_id').toggleClass('d-none', ev.target.value !== 'restricted_group');
         this.$('#visibility_password').attr('required', ev.target.value === 'password');
     },
     /**
@@ -427,7 +430,8 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
     _onPasswordClicked: function (ev) {
         ev.target.value = '';
         this._onPasswordChanged();
-    },    /**
+    },
+    /**
      * @private
      */
     _onPasswordChanged: function () {

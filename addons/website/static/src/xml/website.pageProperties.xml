@@ -156,10 +156,17 @@
                                    t-att-value='widget.page.visibility_password'
                                    t-att-required="widget.page.visibility == 'password' ? 'required' : None"
                                    class="form-control show_visibility_password"/>
-                            <div class="ml-1 input-group-prepend show_visibility_group">
-                                <div class="input-group-text"><i class="fa fa-group"></i></div>
-                            </div>
-                            <input type="text" class="form-control show_visibility_group" id="visibility_group" t-att-value="widget.page.visibility_group ? widget.page.visibility_group[1] : ''" t-att-data-group-id='widget.page.visibility_group ? widget.page.visibility_group[0] : 0' />
+                            <t t-if="widget.page.hasSingleGroup">
+                                <div class="ml-1 input-group-prepend show_group_id">
+                                    <div class="input-group-text"><i class="fa fa-group"></i></div>
+                                </div>
+                                <t t-set="group" t-value="widget.page.group_id"/>
+                                <input type="text" class="form-control show_group_id" id="group_id" t-att-value="group ? group[1] : ''" t-att-data-group-id='group ? group[0] : 0' />
+                            </t>
+                            <t t-else="">
+                                <t t-set='groups_tooltip'>More than one group has been set on the view.</t>
+                                <a class="show_group_id btn btn-link mx-auto" href="/web#model=ir.ui.view&amp;id=681" t-att-title='groups_tooltip'>Discard &amp; Edit in backend</a>
+                            </t>
                         </div>
                     </div>
                 </div>

@@ -280,14 +280,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         // should be attached if not given, the tooltip is attached on the
         // widget's $el
         $node = $node.length ? $node : widget.$el;
-        $node.tooltip({
-            title: function () {
-                return qweb.render('WidgetLabel.tooltip', {
-                    debug: config.isDebug(),
-                    widget: widget,
-                });
-            }
-        });
+        $node.tooltip(this._getTooltipOptions(widget));
     },
     /**
      * Does the necessary DOM updates to match the given modifiers data. The
@@ -412,6 +405,22 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      */
     _getRecord: function (recordId) {
         return null;
+    },
+    /**
+     * Get the options for the tooltip. This allow to change this options in another module.
+     * @param widget
+     * @return {{}}
+     * @private
+     */
+    _getTooltipOptions: function (widget) {
+        return {
+            title: function () {
+                return qweb.render('WidgetLabel.tooltip', {
+                    debug: config.isDebug(),
+                    widget: widget,
+                });
+            }
+        };
     },
     /**
      * @private

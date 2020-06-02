@@ -636,6 +636,13 @@ const SelectUserValueWidget = UserValueWidget.extend({
         }
 
         this.menuTogglerEl = document.createElement('we-toggler');
+        this.icon = this.el.dataset.icon || false;
+        if (this.icon) {
+            this.el.classList.add('o_we_icon_select');
+            const iconEl = document.createElement('i');
+            iconEl.classList.add('fa', 'fa-fw', this.icon);
+            this.menuTogglerEl.appendChild(iconEl);
+        }
         this.containerEl.appendChild(this.menuTogglerEl);
 
         this.menuEl = document.createElement('we-select-menu');
@@ -710,8 +717,17 @@ const SelectUserValueWidget = UserValueWidget.extend({
      */
     _updateUI: async function () {
         await this._super(...arguments);
+
+        if (this.icon) {
+            return;
+        }
+
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
-        this.menuTogglerEl.textContent = activeWidget ? activeWidget.el.textContent : "/";
+        let value = "/";
+        if (activeWidget) {
+            value = activeWidget.el.dataset.selectLabel || activeWidget.el.textContent;
+        }
+        this.menuTogglerEl.textContent = value;
     },
 
     //--------------------------------------------------------------------------
@@ -2018,6 +2034,8 @@ const SnippetOptionWidget = Widget.extend({
         const uiFragment = document.createDocumentFragment();
         ($xml || this.$originalUIElements).clone(true).appendTo(uiFragment);
 
+        await this._renderCustomXML(uiFragment);
+
         // Build layouting components first
         uiFragment.querySelectorAll('we-row').forEach(el => {
             const infos = this._extraInfoFromDescriptionElement(el);
@@ -2027,7 +2045,6 @@ const SnippetOptionWidget = Widget.extend({
         });
 
         // Load widgets
-        await this._renderCustomXML(uiFragment);
         await this._renderXMLWidgets(uiFragment);
         await this._renderCustomWidgets(uiFragment);
 

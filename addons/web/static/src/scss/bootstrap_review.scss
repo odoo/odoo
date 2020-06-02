@@ -94,3 +94,38 @@
 .input-group .form-control {
     height: initial;
 }
+
+// Review $link-decoration behavior
+@if $link-decoration and $link-decoration != none {
+    .btn:not(.btn-link), .nav-link, .dropdown-item, .page-link, .breadcrumb-item > a, .badge, .fa {
+        &, &:hover, &:focus {
+            text-decoration: none;
+        }
+    }
+}
+
+// Generating bootstrap color buttons was disabled (see import_bootstrap.scss).
+// We do it ourself here with a tweak: we introduce btn-fill-* (working as the
+// normal btn-* classes (in opposition to btn-outline-* classes). We then map
+// the btn-* classes to either btn-fill-* or btn-outline-* classes depending on
+// the configuration.
+@each $color, $value in $theme-colors {
+    .btn-fill-#{$color} {
+        @include button-variant($value, $value);
+    }
+}
+@each $color, $value in $theme-colors {
+    .btn-outline-#{$color} {
+        @include button-outline-variant($value);
+    }
+}
+$o-btn-outline-defaults: () !default;
+@each $color, $value in $theme-colors {
+    .btn-#{$color} {
+        @if index($o-btn-outline-defaults, $color) {
+            @extend .btn-outline-#{$color};
+        } @else {
+            @extend .btn-fill-#{$color};
+        }
+    }
+}

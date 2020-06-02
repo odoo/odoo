@@ -459,42 +459,40 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3">Size</label>
-                    <div class="col-md-9">
-                        <select name="link_style_size" class="form-control link-style">
-                            <option value="sm">Small</option>
-                            <option value="" selected="selected">Medium</option>
-                            <option value="lg">Large</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-form-label col-md-3">Style</label>
-                    <div class="col-md-9">
-                        <select name="link_style_shape" class="form-control link-style">
-                            <option value="" selected="selected">Default</option>
-                            <option value="outline">Outline</option>
-                            <option value="rounded-circle">Rounded</option>
-                            <option value="outline,rounded-circle">Outline-Rounded</option>
-                            <option value="flat">Flat</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-form-label col-md-3">Color</label>
-                    <div class="col-md-9">
-                        <div class="o_link_dialog_color">
-                            <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-link text-center" data-color="">
-                                <span>L</span>
-                                <input class="d-none link-style" name="link_style_color" type="radio" value=""/>
-                                <i class="fa"/>
+                    <label class="col-form-label col-md-3">Type</label>
+                    <div class="col-md-9 d-flex align-items-center">
+                        <t t-foreach="widget.colorsData" t-as="colorData">
+                            <label role="button" class="m-0 mr-2">
+                                <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData.type"/>
+                                <span t-esc="colorData.label"
+                                        t-attf-class="o_btn_preview btn btn-sm btn-#{colorData.btnPreview} #{colorData.type ? '' : 'px-0'}"/>
                             </label>
-                            <t t-foreach="['alpha', 'beta', 'gamma', 'delta', 'epsilon', 'primary', 'secondary', 'success', 'info', 'warning', 'danger']" t-as="color">
-                                <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}" t-attf-aria-label="Color for #{color}" t-attf-title="Color for #{color}">
-                                    <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="color"/>
-                                    <i class="fa"/>
-                                </label>
-                            </t>
+                        </t>
+                    </div>
+                </div>
+                <div id="o_link_dialog_button_opts_collapse" class="collapse">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3">Size</label>
+                        <div class="col-md-9">
+                            <select name="link_style_size" class="form-control link-style">
+                                <option value="sm">Small</option>
+                                <option value="" selected="selected">Medium</option>
+                                <option value="lg">Large</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3">Style</label>
+                        <div class="col-md-9">
+                            <select name="link_style_shape" class="form-control link-style">
+                                <option value="" selected="selected">Default</option>
+                                <option value="rounded-circle">Default + Rounded</option>
+                                <option value="outline">Outline</option>
+                                <option value="outline,rounded-circle">Outline + Rounded</option>
+                                <option value="fill">Fill</option>
+                                <option value="fill,rounded-circle">Fill + Rounded</option>
+                                <option value="flat">Flat</option>
+                            </select>
                         </div>
                     </div>
                 </div>

@@ -7,26 +7,21 @@
             <field name="name">SampleDoc.doc</field>
         </record>
 
-        <!-- Create mailing lists -->
-        <record id="mass_mail_list_2" model="mailing.list">
-            <field name="name">Imported Contacts</field>
-        </record>
-
         <!-- Create Contacts -->
         <record id="mass_mail_contact_1" model="mailing.contact">
             <field name="name">Aristide Antario</field>
             <field name="email">aa@example.com</field>
-            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_list_2')])]"/>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
         </record>
         <record id="mass_mail_contact_2" model="mailing.contact">
             <field name="name">Beverly Bridge</field>
             <field name="email">bb@example.com</field>
-            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_list_2')])]"/>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
         </record>
         <record id="mass_mail_contact_3" model="mailing.contact">
             <field name="name">Carol Cartridge</field>
             <field name="email">cc@example.com</field>
-            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_list_2')])]"/>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
         </record>
         <record id="mass_mail_contact_4" model="mailing.contact">
             <field name="name">David Dawson</field>
@@ -35,12 +30,12 @@
         <record id="mass_mail_contact_5" model="mailing.contact">
             <field name="name">Elsa Ericson</field>
             <field name="email">ee@example.com</field>
-            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_list_2')])]"/>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
         </record>
 
         <!-- Create Opt-out Records -->
         <record id="mass_mail_contact_list_rel_1" model="mailing.contact.subscription">
-            <field name="list_id" ref="mass_mailing.mass_mail_list_2"/>
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
             <field name="contact_id" ref="mass_mailing.mass_mail_contact_4"/>
             <field name="opt_out">True</field>
         </record>

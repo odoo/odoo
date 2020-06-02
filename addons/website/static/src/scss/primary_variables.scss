@@ -47,11 +47,15 @@ $o-theme-figcaption-opacity: 0.6;
 $o-base-website-values-palette: (
     'logo-height': null, // Default to navbar height (see portal)
     'header-font-size': null, // Default to BS (normal font-size)
+    'font-size-base': 1rem, // Need a set value as the value is used in bootstrap_overridden files
+    'link-underline': 'hover', // 'never' / 'hover' / 'always'
     'font-number': 1,
     'headings-font-number': 1,
     'navbar-font-number': 1,
     'buttons-font-number': 1,
     'google-fonts': null,
+    'btn-primary-outline': false,
+    'btn-secondary-outline': false,
     'header-template': 'logo_menu',
     'footer-template': 'products_contacts_about_us',
 );
@@ -67,6 +71,15 @@ $o-user-website-values: () !default;
 //------------------------------------------------------------------------------
 // Fonts
 //------------------------------------------------------------------------------
+
+// Those are BS values, except BS hardcodes them inside the $hx-font-size
+// variables directly and don't make them customizable.
+$o-theme-h1-font-size-multiplier: 2.5 !default;
+$o-theme-h2-font-size-multiplier: 2 !default;
+$o-theme-h3-font-size-multiplier: 1.75 !default;
+$o-theme-h4-font-size-multiplier: 1.5 !default;
+$o-theme-h5-font-size-multiplier: 1.25 !default;
+$o-theme-h6-font-size-multiplier: 1 !default;
 
 $o-theme-fonts: (
     ('Roboto', sans-serif),
@@ -92,3 +105,8 @@ $o-theme-font-names: (
     'Noto Serif',
     'Arvo',
 ) !default;
+
+// TODO improve this: we should not have multiple lists regarding fonts but
+// instead a unique map: 'name' -> 'config', with config containing the font
+// properties configuration + basic info (url, font-family).
+$o-theme-font-configs: () !default;
