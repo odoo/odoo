@@ -254,6 +254,67 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('server action with display_in_controlpanel should be shown as button in list view', async function (assert) {
+        assert.expect(7);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: {hasActionMenus: true},
+            arch: '<tree><field name="foo"/></tree>',
+            toolbar: {
+                action: [{
+                    model_name: 'foo',
+                    name: 'Server Action',
+                    type: 'ir.actions.server',
+                    usage: 'ir_actions_server',
+                }, {
+                    model_name: 'foo',
+                    name: 'Button Action',
+                    type: 'ir.actions.server',
+                    usage: 'ir_actions_server',
+                    display_in_controlpanel: true
+                }],
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/action/load') {
+                    return Promise.resolve({
+                        name: "Post Payments",
+                        type: "ir.actions.server",
+                        usage: "ir_actions_server",
+                        model_name: "account.payment",
+                    });
+                }
+                return this._super(...arguments);
+            },
+            intercepts: {
+                do_action: function (event) {
+                    assert.strictEqual(event.data.action.type, 'ir.actions.server',
+                        "should trigger ir.actions.server do_action");
+                }
+            },
+        });
+
+        assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus');
+
+        await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
+
+        assert.containsOnce(list, '.o_list_action_button', 'List view contains one server action button');
+        assert.strictEqual(list.$('.o_list_action_button').text(), 'Button Action', 'Button name should be the action name');
+        assert.containsOnce(list, '.o_cp_action_menus');
+
+        await testUtils.dom.click(list.$('.o_cp_action_menus button'));
+
+        assert.containsN(list, '.o_cp_action_menus ul li', 2);
+        assert.strictEqual(list.$('.o_cp_action_menus ul li').text(), "DeleteServer Action",
+            'Delete and Server Action should be there in the Action dropdown');
+
+        await testUtils.dom.click(list.$('.o_list_action_button'));
+
+        list.destroy();
+    });
+
     QUnit.test('export button in list view', async function (assert) {
         assert.expect(5);
 
@@ -1716,6 +1777,45 @@ QUnit.module('Views', {
         assert.containsNone(list, '.o_data_row .o_list_record_selector input:checked',
             "no records should be selected");
 
+        list.destroy();
+    });
+
+    QUnit.test('server action button should be removed after multi record edition', async function (assert) {
+        assert.expect(4);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: {hasActionMenus: true},
+            arch: '<tree multi_edit="1"><field name="foo"/><field name="bar"/></tree>',
+            toolbar: {
+                action: [{
+                    model_name: 'foo',
+                    name: 'Button Action',
+                    type: 'ir.actions.server',
+                    usage: 'ir_actions_server',
+                    display_in_controlpanel: true
+                }],
+            },
+        });
+
+        assert.containsN(list, '.o_data_row', 4, "there should be 4 records");
+
+        // select all records
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box',
+            "list selection box should be displayed");
+        assert.containsN(list, '.o_data_row .o_list_record_selector input:checked', 4,
+            "all 4 records should be selected");
+
+        // edit selected records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'foo');
+        await testUtils.dom.click($('.modal-dialog button.btn-primary'));
+
+        assert.containsNone(list, '.o_list_action_button',
+            'List view should not contain server action button after saving record');
         list.destroy();
     });
 

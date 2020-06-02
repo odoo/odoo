@@ -42,8 +42,9 @@ odoo.define('web.ActionMenus', function (require) {
                 action => Object.assign({ key: `action-${action.description}` }, action)
             );
             // Action based actions
-            const actionActions = this.props.items.action || [];
             const relateActions = this.props.items.relate || [];
+            const actionActions = (this.props.items.action || [])
+                .filter((action) => !action.display_in_controlpanel || this.env.view.type !== 'list');
             const formattedActions = [...actionActions, ...relateActions].map(
                 action => ({ action, description: action.name, key: action.id })
             );
@@ -67,6 +68,20 @@ odoo.define('web.ActionMenus', function (require) {
                 action => ({ action, description: action.name, key: action.id })
             );
             return printItems;
+        }
+
+        //--------------------------------------------------------------------------
+        // Public
+        //--------------------------------------------------------------------------
+
+        /**
+         * Perform the action for the button clicked
+         * it will be called from list view action buttons
+         *
+         * @param {Object} action
+         */
+        executeAction(action) {
+            return this._executeAction(action);
         }
 
         //---------------------------------------------------------------------

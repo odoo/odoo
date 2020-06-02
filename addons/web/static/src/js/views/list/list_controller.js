@@ -7,6 +7,7 @@ odoo.define('web.ListController', function (require) {
  * and bind all extra buttons/pager in the control panel.
  */
 
+const config = require('web.config');
 var core = require('web.core');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
@@ -127,6 +128,12 @@ var ListController = BasicController.extend({
             this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
         }
+        const actionButtons = !config.device.isMobile &&
+            this.toolbarActions.action &&
+            this.toolbarActions.action.filter((action) => action.display_in_controlpanel);
+        if (actionButtons) {
+            this.$actionButtons = this._generateActionButtons(actionButtons);
+        }
         if ($node) {
             this.$buttons.appendTo($node);
         }
@@ -174,6 +181,7 @@ var ListController = BasicController.extend({
             }
         }
         this._updateSelectionBox();
+        this._updateActionButtons();
     },
 
     //--------------------------------------------------------------------------
@@ -344,6 +352,23 @@ var ListController = BasicController.extend({
             },
         });
     },
+    _generateActionButtons: function (actions) {
+        const $buttons = [];
+        actions.forEach((action) => {
+            const $button = $('<button>', {
+                class: 'btn btn-secondary o_list_action_button',
+                type: 'button',
+                text: action.name
+            });
+            $button.on('click', async (ev) => {
+                const controlPanel = this._controlPanelWrapper.componentRef.comp;
+                const actionMenus = controlPanel.contentRefs.actionMenus.comp;
+                await actionMenus.executeAction(action);
+            });
+            $buttons.push($button);
+        });
+        return $buttons;
+    },
     /**
      * @returns {DataExport} the export dialog widget
      * @private
@@ -450,6 +475,7 @@ var ListController = BasicController.extend({
                             selectedRecords: [],
                         });
                         this._updateSelectionBox();
+                        this._updateActionButtons();
                         this.renderer.focusCell(recordId, node);
                         resolve(!Object.keys(changes).length);
                     })
@@ -576,6 +602,20 @@ var ListController = BasicController.extend({
         await this._super(...arguments);
         this._toggleCreateButton();
         this.updateButtons('readonly');
+    },
+    /**
+     * When records are selected, action buttons are displayed (next
+     * to the selection box), it allows user to perform action in batch
+     *
+     * @private
+     */
+    _updateActionButtons() {
+        if (this.$('.o_list_action_button').length) {
+            this.$('.o_list_action_button').remove();
+        }
+        if (this.selectedRecords.length) {
+            this.$buttons.append(this.$actionButtons);
+        }
     },
     /**
      * When records are selected, a box is displayed in the control panel (next
@@ -814,6 +854,7 @@ var ListController = BasicController.extend({
         ev.preventDefault();
         this.isDomainSelected = true;
         this._updateSelectionBox();
+        this._updateActionButtons();
         this._updateControlPanel();
     },
     /**
@@ -829,6 +870,7 @@ var ListController = BasicController.extend({
         this.isDomainSelected = false;
         this.$('.o_list_export_xlsx').toggle(!this.selectedRecords.length);
         this._updateSelectionBox();
+        this._updateActionButtons();
         this._updateControlPanel();
     },
     /**

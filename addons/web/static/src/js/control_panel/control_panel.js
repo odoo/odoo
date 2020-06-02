@@ -121,6 +121,7 @@ odoo.define('web.ControlPanel', function (require) {
                 pager: useRef('pager'),
                 searchView: useRef('searchView'),
                 searchViewButtons: useRef('searchViewButtons'),
+                actionMenus: useRef('actionMenus'),
             };
 
             this.fields = this._formatFields(this.props.fields);
