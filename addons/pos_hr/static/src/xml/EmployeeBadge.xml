@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="EmployeeBadge" owl="1">
-        <div class="oe_status" t-on-mouseover="state.isMouseOver = true" t-on-mouseout="state.isMouseOver = false">
-            <span class="username" t-att-class="{ highlight: state.isMouseOver }">
+        <div class="oe_status" t-on-mouseenter="onMouseEnter" t-on-mouseleave="onMouseLeave">
+            <span class="username" t-att-class="{ highlight: state.isMouseEnter }">
                 <t t-esc="text" />
             </span>
         </div>
