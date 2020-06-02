@@ -74,7 +74,7 @@ models.Orderline = models.Orderline.extend({
     set_quantity: function (quantity, keep_price) {
         var current_quantity = this.get_quantity();
         var new_quantity = parseFloat(quantity) || 0;
-        if (this.pos.is_french_country() && new_quantity <= current_quantity && !this.reward_id && !(new_quantity === 0 && current_quantity === 1 && this.isLastLine())) {
+        if (this.pos.is_french_country() && new_quantity < current_quantity && !this.reward_id && !(new_quantity === 0 && current_quantity === 1 && this.isLastLine())) {
             var quantity_to_decrease = current_quantity - new_quantity;
             this.pos.gui.show_popup("number", {
                 'title': _t("Decrease the quantity by"),
