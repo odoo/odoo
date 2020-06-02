@@ -69,6 +69,24 @@ class ProductTemplate(models.Model):
                 product.invoice_policy = 'delivery'
                 product.service_type = 'manual' if policy == 'delivered_manual' else 'timesheet'
 
+    def write(self, vals):
+        # timesheet product can't be archived, unless with a force: true arg is present
+        # (useful to archive anyway for tests)
+        if 'active' in vals and not vals['active']:
+            time_product = self.env.ref('sale_timesheet.time_product')
+            if time_product.product_tmpl_id in self:
+                if 'force' in vals and vals['force']:
+                    del vals['force']
+                else:
+                    raise ValidationError(_('The "%s" product cannot be archived') % time_product.name)
+        return super(ProductTemplate, self).write(vals)
+
+    def unlink(self):
+        time_product = self.env.ref('sale_timesheet.time_product')
+        if time_product.product_tmpl_id in self:
+            raise ValidationError(_('The "%s" product cannot be deleted') % time_product.name)
+        return super(ProductTemplate, self).unlink()
+
     @api.constrains('project_id', 'project_template_id')
     def _check_project_and_template(self):
         """ NOTE 'service_tracking' should be in decorator parameters but since ORM check constraints twice (one after setting

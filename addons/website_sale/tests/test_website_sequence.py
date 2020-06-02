@@ -14,7 +14,11 @@ class TestWebsiteSequence(odoo.tests.TransactionCase):
         # if stock is installed we can't archive since there is orderpoints
         if hasattr(self.env['product.product'], 'orderpoint_ids'):
             product_templates.mapped('product_variant_ids.orderpoint_ids').write({'active': False})
-        product_templates.write({'active': False})
+
+        # Service on Timesheet can't be archived nor deleted (TASK ID 2221046)
+        # So we use the force arg to bypass the rule. Only valid in testing.
+        product_templates.write({'active': False, 'force': True})
+
         self.p1, self.p2, self.p3, self.p4 = ProductTemplate.create([{
             'name': 'First Product',
             'website_sequence': 100,
