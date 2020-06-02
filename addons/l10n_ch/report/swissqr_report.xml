@@ -44,11 +44,19 @@
                             <span class="swissqr_text content" t-field="o.company_id.city"/><br/>
 
                             <span class="swissqr_text title">Reference</span><br/>
+<<<<<<< HEAD
                             <t t-if="o.partner_bank_id.currency_id.name == 'EUR'">
                                 <span class="swissqr_text content" t-field="o.partner_bank_id.bank_id.l10n_ch_postal_eur"/><br/>
                             </t>
                             <t t-if="o.partner_bank_id.currency_id.name == 'CHF'">
                                 <span class="swissqr_text content" t-field="o.partner_bank_id.bank_id.l10n_ch_postal_chf"/><br/>
+=======
+                            <t t-if="o.invoice_partner_bank_id.currency_id.name == 'EUR'">
+                                <span class="swissqr_text content" t-field="o.invoice_partner_bank_id.l10n_ch_isr_subscription_eur"/><br/>
+                            </t>
+                            <t t-if="o.invoice_partner_bank_id.currency_id.name == 'CHF'">
+                                <span class="swissqr_text content" t-field="o.invoice_partner_bank_id.l10n_ch_isr_subscription_chf"/><br/>
+>>>>>>> 80205cb2d8b... temp
                             </t>
 
                             <span class="swissqr_text title">Payable by</span><br/>
