@@ -1466,9 +1466,10 @@
         constructor(config = {}) {
             super();
             this.h = h;
-            // recursiveTemplates contains sub templates called with t-call, but which
-            // ends up in recursive situations.  This is very similar to the slot situation,
-            // as in we need to propagate the scope.
+            // subTemplates are stored in two objects: a (local) mapping from a name to an
+            // id, and a (global) mapping from an id to the compiled function.  This is
+            // necessary to ensure that global templates can be called with more than one
+            // QWeb instance.
             this.subTemplates = {};
             this.isUpdating = false;
             this.templates = Object.create(QWeb.TEMPLATES);
@@ -2046,6 +2047,7 @@
     // are meant to be used by the t-slot directive.
     QWeb.slots = {};
     QWeb.nextSlotId = 1;
+    QWeb.subTemplates = {};
 
     const parser = new DOMParser();
     function htmlToVDOM(html) {
@@ -2068,7 +2070,11 @@
         for (let c of node.childNodes) {
             children.push(htmlToVNode(c));
         }
-        return h(node.tagName, { attrs }, children);
+        const vnode = h(node.tagName, { attrs }, children);
+        if (vnode.sel === "svg") {
+            addNS(vnode.data, vnode.children, vnode.sel);
+        }
+        return vnode;
     }
 
     /**
@@ -2283,10 +2289,12 @@
             }
             // Step 2: compile target template in sub templates
             // ------------------------------------------------
-            if (!qweb.subTemplates[subTemplate]) {
-                qweb.subTemplates[subTemplate] = true;
+            let subId = qweb.subTemplates[subTemplate];
+            if (!subId) {
+                subId = QWeb.nextId++;
+                qweb.subTemplates[subTemplate] = subId;
                 const subTemplateFn = qweb._compile(subTemplate, nodeTemplate.elem, ctx, true);
-                qweb.subTemplates[subTemplate] = subTemplateFn;
+                QWeb.subTemplates[subId] = subTemplateFn;
             }
             // Step 3: compile t-call body if necessary
             // ------------------------------------------------
@@ -2322,13 +2330,13 @@
             const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
             const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}, key: ${key}})`;
             if (ctx.parentNode) {
-                ctx.addLine(`this.subTemplates['${subTemplate}'].call(this, ${callingScope}, ${extra});`);
+                ctx.addLine(`this.constructor.subTemplates['${subId}'].call(this, ${callingScope}, ${extra});`);
             }
             else {
                 // this is a t-call with no parentnode, we need to extract the result
                 ctx.rootContext.shouldDefineResult = true;
                 ctx.addLine(`result = []`);
-                ctx.addLine(`this.subTemplates['${subTemplate}'].call(this, ${callingScope}, ${extra});`);
+                ctx.addLine(`this.constructor.subTemplates['${subId}'].call(this, ${callingScope}, ${extra});`);
                 ctx.addLine(`result = result[0]`);
             }
             // Step 5: restore previous scope
@@ -5187,9 +5195,9 @@
     exports.useState = useState$1;
     exports.utils = utils;
 
-    exports.__info__.version = '1.0.8';
-    exports.__info__.date = '2020-05-18T07:34:23.796Z';
-    exports.__info__.hash = '4b961cb';
+    exports.__info__.version = '1.0.9';
+    exports.__info__.date = '2020-06-09T06:36:43.187Z';
+    exports.__info__.hash = 'c5a2f52';
     exports.__info__.url = 'https://github.com/odoo/owl';
 
 }(this.owl = this.owl || {}));
