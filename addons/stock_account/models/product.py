@@ -136,7 +136,7 @@ class ProductProduct(models.Model):
             'value': unit_cost * quantity,
             'unit_cost': unit_cost,
             'quantity': quantity,
-            'date': self._context.get('force_period_date', fields.Date.context_today(self))
+            'date': self._context.get('force_period_date', fields.Datetime.now(self))
         }
         if self.cost_method in ('average', 'fifo'):
             vals['remaining_qty'] = quantity

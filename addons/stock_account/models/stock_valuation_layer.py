@@ -14,7 +14,7 @@ class StockValuationLayer(models.Model):
     _rec_name = 'product_id'
 
     active = fields.Boolean(related='product_id.active')
-    date = fields.Datetime(required=True, default=fields.Date.context_today)
+    date = fields.Datetime(required=True, default=fields.Datetime.now)
     company_id = fields.Many2one('res.company', 'Company', readonly=True, required=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True, required=True, check_company=True)
     categ_id = fields.Many2one('product.category', related='product_id.categ_id')

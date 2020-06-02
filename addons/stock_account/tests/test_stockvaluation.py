@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from odoo.exceptions import UserError
-from odoo.fields import Datetime
+from odoo.fields import Datetime, Date
 from odoo.tests.common import Form, SavepointCase
 
 
@@ -103,6 +103,24 @@ class TestStockValuation(SavepointCase):
             ('account_id', '=', self.stock_valuation_account.id),
         ], order='date, id')
 
+    def _create_inventory(self, accounting_date=False):
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Test inventory 1',
+            'product_ids': [(4, self.product1.id)],
+            'prefill_counted_quantity': 'zero',
+            'location_ids': [(4, self.stock_location.id)],
+            'accounting_date': accounting_date
+        })
+        inventory.action_start()
+        inventory.line_ids = [(0, 0, {
+                'product_id': self.product1.id,
+                'product_uom_id': self.uom_unit.id,
+                'product_qty': 1,
+                'location_id': self.stock_location.id,
+            })]
+        inventory.action_validate()
+        return inventory
+
     def test_realtime(self):
         """ Stock moves update stock value with product x cost price,
         price change updates the stock value based on current stock level.
@@ -129,6 +147,26 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(price_change_aml.debit, 10)
         self.assertEqual(price_change_aml.ref, 'prda')
         self.assertEqual(price_change_aml.product_id, self.product1)
+    
+    def test_realtime_inventory_1(self):
+        self.product1._change_standard_price(5.0, self.expense_account.id)
+        inventory = self._create_inventory()
+
+        moves = inventory.move_ids
+        valuations = moves.mapped('stock_valuation_layer_ids')
+        self.assertEqual(len(valuations), 1)
+        self.assertEqual(Date.to_string(valuations.create_date), Date.to_string(valuations.date))
+
+    def test_realtime_inventory_2(self):
+        date = Datetime.now() - timedelta(days=8)
+        self.product1._change_standard_price(5.0, self.expense_account.id)
+        inventory = self._create_inventory(date)
+
+        moves = inventory.move_ids
+        valuations = moves.mapped('stock_valuation_layer_ids')
+        self.assertEqual(len(valuations), 1)
+        self.assertNotEqual(Date.to_string(valuations.create_date), Date.to_string(valuations.date))
+        self.assertEqual(Date.to_string(date), Date.to_string(valuations.date))
 
     def test_fifo_perpetual_1(self):
         self.product1.categ_id.property_cost_method = 'fifo'
@@ -3124,7 +3162,7 @@ class TestStockValuation(SavepointCase):
         move1.move_line_ids.qty_done = 10
         move1._action_done()
         move1.date = date2
-        move1.stock_valuation_layer_ids._write({'create_date': date2})
+        move1.stock_valuation_layer_ids._write({'date': date2})
 
         self.assertEqual(self.product1.quantity_svl, 10)
         self.assertEqual(self.product1.value_svl, 100)
@@ -3143,7 +3181,7 @@ class TestStockValuation(SavepointCase):
         move2.move_line_ids.qty_done = 20
         move2._action_done()
         move2.date = date3
-        move2.stock_valuation_layer_ids._write({'create_date': date3})
+        move2.stock_valuation_layer_ids._write({'date': date3})
 
         self.assertEqual(self.product1.quantity_svl, 30)
         self.assertEqual(self.product1.value_svl, 300)
@@ -3162,14 +3200,14 @@ class TestStockValuation(SavepointCase):
         move3.move_line_ids.qty_done = 15
         move3._action_done()
         move3.date = date4
-        move3.stock_valuation_layer_ids._write({'create_date': date4})
+        move3.stock_valuation_layer_ids._write({'date': date4})
 
         self.assertEqual(self.product1.quantity_svl, 15)
         self.assertEqual(self.product1.value_svl, 150)
 
         # set the standard price to 5
         self.product1._change_standard_price(5, self.expense_account.id)
-        self.product1.stock_valuation_layer_ids.sorted()[-1]._write({'create_date': date5})
+        self.product1.stock_valuation_layer_ids.sorted()[-1]._write({'date': date5})
 
         self.assertEqual(self.product1.quantity_svl, 15)
         self.assertEqual(self.product1.value_svl, 75)
@@ -3188,14 +3226,14 @@ class TestStockValuation(SavepointCase):
         move4.move_line_ids.qty_done = 20
         move4._action_done()
         move4.date = date6
-        move4.stock_valuation_layer_ids._write({'create_date': date6})
+        move4.stock_valuation_layer_ids._write({'date': date6})
 
         self.assertEqual(self.product1.quantity_svl, -5)
         self.assertEqual(self.product1.value_svl, -25)
 
         # set the standard price to 7.5
         self.product1._change_standard_price(7.5, self.expense_account.id)
-        self.product1.stock_valuation_layer_ids.sorted()[-1]._write({'create_date': date7})
+        self.product1.stock_valuation_layer_ids.sorted()[-1]._write({'date': date7})
 
         # receive 100
         move5 = self.env['stock.move'].create({
@@ -3211,7 +3249,7 @@ class TestStockValuation(SavepointCase):
         move5.move_line_ids.qty_done = 100
         move5._action_done()
         move5.date = date8
-        move5.stock_valuation_layer_ids._write({'create_date': date8})
+        move5.stock_valuation_layer_ids._write({'date': date8})
 
         self.assertEqual(self.product1.quantity_svl, 95)
         self.assertEqual(self.product1.value_svl, 712.5)
@@ -3288,7 +3326,7 @@ class TestStockValuation(SavepointCase):
         move1.move_line_ids.qty_done = 10
         move1._action_done()
         move1.date = date1
-        move1.stock_valuation_layer_ids._write({'create_date': date1})
+        move1.stock_valuation_layer_ids._write({'date': date1})
 
         self.assertEqual(self.product1.quantity_svl, 10)
         self.assertEqual(self.product1.value_svl, 100)
@@ -3308,7 +3346,7 @@ class TestStockValuation(SavepointCase):
         move2.move_line_ids.qty_done = 10
         move2._action_done()
         move2.date = date2
-        move2.stock_valuation_layer_ids._write({'create_date': date2})
+        move2.stock_valuation_layer_ids._write({'date': date2})
 
         self.assertAlmostEqual(self.product1.quantity_svl, 20)
         self.assertEqual(self.product1.value_svl, 220)
@@ -3327,7 +3365,7 @@ class TestStockValuation(SavepointCase):
         move3.move_line_ids.qty_done = 15
         move3._action_done()
         move3.date = date3
-        move3.stock_valuation_layer_ids._write({'create_date': date3})
+        move3.stock_valuation_layer_ids._write({'date': date3})
 
         self.assertAlmostEqual(self.product1.quantity_svl, 5.0)
         self.assertEqual(self.product1.value_svl, 60)
@@ -3346,7 +3384,7 @@ class TestStockValuation(SavepointCase):
         move4.move_line_ids.qty_done = 20
         move4._action_done()
         move4.date = date4
-        move4.stock_valuation_layer_ids._write({'create_date': date4})
+        move4.stock_valuation_layer_ids._write({'date': date4})
 
         self.assertAlmostEqual(self.product1.quantity_svl, -15.0)
         self.assertEqual(self.product1.value_svl, -180)
@@ -3366,10 +3404,10 @@ class TestStockValuation(SavepointCase):
         move5.move_line_ids.qty_done = 100
         move5._action_done()
         move5.date = date5
-        move5.stock_valuation_layer_ids._write({'create_date': date5})
+        move5.stock_valuation_layer_ids._write({'date': date5})
 
         # the vacuum ran
-        move4.stock_valuation_layer_ids.sorted()[-1]._write({'create_date': date6})
+        move4.stock_valuation_layer_ids.sorted()[-1]._write({'date': date6})
 
         self.assertEqual(self.product1.quantity_svl, 85)
         self.assertEqual(self.product1.value_svl, 1275)
@@ -3417,7 +3455,7 @@ class TestStockValuation(SavepointCase):
         move1.move_line_ids.qty_done = 10
         move1._action_done()
         move1.date = date1
-        move1.stock_valuation_layer_ids._write({'create_date': date1})
+        move1.stock_valuation_layer_ids._write({'date': date1})
 
         self.assertAlmostEqual(self.product1.quantity_svl, 10.0)
         self.assertEqual(self.product1.value_svl, 100)
@@ -3437,7 +3475,7 @@ class TestStockValuation(SavepointCase):
         move2.move_line_ids.qty_done = 10
         move2._action_done()
         move2.date = date2
-        move2.stock_valuation_layer_ids._write({'create_date': date2})
+        move2.stock_valuation_layer_ids._write({'date': date2})
 
         self.assertAlmostEqual(self.product1.quantity_svl, 20.0)
         self.assertEqual(self.product1.value_svl, 250)
@@ -3456,7 +3494,7 @@ class TestStockValuation(SavepointCase):
         move3.move_line_ids.qty_done = 30
         move3._action_done()
         move3.date = date3
-        move3.stock_valuation_layer_ids._write({'create_date': date3})
+        move3.stock_valuation_layer_ids._write({'date': date3})
 
         self.assertAlmostEqual(self.product1.quantity_svl, -10.0)
         self.assertEqual(self.product1.value_svl, -150)
@@ -3476,8 +3514,8 @@ class TestStockValuation(SavepointCase):
         move4.move_line_ids.qty_done = 10
         move4._action_done()
         move4.date = date4
-        move3.stock_valuation_layer_ids.sorted()[-1]._write({'create_date': date4})
-        move4.stock_valuation_layer_ids._write({'create_date': date4})
+        move3.stock_valuation_layer_ids.sorted()[-1]._write({'date': date4})
+        move4.stock_valuation_layer_ids._write({'date': date4})
 
         self.assertAlmostEqual(self.product1.quantity_svl, 0.0)
         self.assertEqual(self.product1.value_svl, 0)
@@ -3497,7 +3535,7 @@ class TestStockValuation(SavepointCase):
         move5.move_line_ids.qty_done = 10
         move5._action_done()
         move5.date = date5
-        move5.stock_valuation_layer_ids._write({'create_date': date5})
+        move5.stock_valuation_layer_ids._write({'date': date5})
 
         self.assertAlmostEqual(self.product1.quantity_svl, 10.0)
         self.assertEqual(self.product1.value_svl, 100)
@@ -3589,7 +3627,7 @@ class TestStockValuation(SavepointCase):
         move1.move_line_ids.qty_done = 10.0
         move1._action_done()
         move1.date = date1
-        move1.stock_valuation_layer_ids._write({'create_date': date1})
+        move1.stock_valuation_layer_ids._write({'date': date1})
 
         move2 = self.env['stock.move'].create({
             'name': 'Sell 5 units',
@@ -3604,7 +3642,7 @@ class TestStockValuation(SavepointCase):
         move2.move_line_ids.qty_done = 5.0
         move2._action_done()
         move2.date = date2
-        move2.stock_valuation_layer_ids._write({'create_date': date2})
+        move2.stock_valuation_layer_ids._write({'date': date2})
 
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).quantity_svl, 10)
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).value_svl, 100)
