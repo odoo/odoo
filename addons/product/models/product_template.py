@@ -546,6 +546,7 @@ class ProductTemplate(models.Model):
         variants_to_activate = Product
         variants_to_unlink = Product
 
+        max_variants_to_create = int(self.env['ir.config_parameter'].sudo().get_param('product.max_variants_to_create', 1000))
         for tmpl_id in self:
             lines_without_no_variants = tmpl_id.valid_product_template_attribute_line_ids._without_no_variant_attributes()
 
@@ -594,7 +595,7 @@ class ProductTemplate(models.Model):
                             'product_template_attribute_value_ids': [(6, 0, combination.ids)],
                             'active': tmpl_id.active,
                         })
-                        if len(current_variants_to_create) > 1000:
+                        if len(current_variants_to_create) > max_variants_to_create:
                             raise UserError(_(
                                 'The number of variants to generate is too high. '
                                 'You should either not generate variants for each combination or generate them on demand from the sales order. '
