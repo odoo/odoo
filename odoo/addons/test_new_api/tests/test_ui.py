@@ -17,7 +17,7 @@ class TestUi(HttpCaseWithUserDemo):
         # the default, but doesn't account for the fact that it could
         # "fall off" into the "o_extra_menu_items" section if the window is
         # too small or there are too many items preceding it in the tests menu
-        with self.assertQueryCount(__system__=5058):
+        with self.assertQueryCount(__system__=5073):
             self.start_tour("/web#action=test_new_api.action_discussions",
                 'widget_x2many', step_delay=100, login="admin", timeout=120)
 
