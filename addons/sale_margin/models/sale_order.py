@@ -25,6 +25,12 @@ class SaleOrderLine(models.Model):
             line = line.with_company(line.company_id)
             product = line.product_id
             product_cost = product.standard_price
+            if not product_cost:
+                # If the standard_price is 0
+                # Avoid unnecessary computations
+                # and currency conversions
+                line.purchase_price = 0.0
+                continue
             fro_cur = product.cost_currency_id
             to_cur = line.currency_id or line.order_id.currency_id
             if line.product_uom and line.product_uom != product.uom_id:
@@ -38,7 +44,7 @@ class SaleOrderLine(models.Model):
                 company=line.company_id or self.env.company,
                 date=line.order_id.date_order or fields.Date.today(),
                 round=False,
-            ) if to_cur else product_cost
+            ) if to_cur and product_cost else product_cost
             # The pricelist may not have been set, therefore no conversion
             # is needed because we don't know the target currency..
 
@@ -46,7 +52,7 @@ class SaleOrderLine(models.Model):
     def _compute_margin(self):
         for line in self:
             line.margin = line.price_subtotal - (line.purchase_price * line.product_uom_qty)
-            line.margin_percent = line.price_subtotal  and line.margin/line.price_subtotal
+            line.margin_percent = line.price_subtotal and line.margin/line.price_subtotal
 
 
 class SaleOrder(models.Model):
