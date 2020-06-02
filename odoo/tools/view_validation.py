@@ -36,6 +36,8 @@ def _get_attrs_symbols():
         'datetime',
         'relativedelta',
         'current_date',
+        'today',
+        'now',
         'abs',
         'len',
         'bool',
