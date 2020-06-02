@@ -26,3 +26,14 @@ class test_inherits(common.TransactionCase):
         pallet = self.env.ref('test_inherits.pallet_a')
         pallet.write({'name': 'C'})
         self.assertEqual(pallet.name, 'C')
+
+    def test_create_3_levels_inherits_default_fields(self):
+        """ Check that creating an inherits on 3 levels doesn't override
+        parent's values """
+        unit = self.env.ref('test_inherits.unit_a')
+        unit.state = 'b'
+        self.env['test.pallet'].with_context(default_state='a').create({
+            'name': 'Pallet B',
+            'unit_id': unit.id,
+        })
+        self.assertEqual(unit.state, 'b')
