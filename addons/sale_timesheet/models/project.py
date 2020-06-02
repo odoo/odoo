@@ -246,7 +246,7 @@ class ProjectTask(models.Model):
     @api.depends('timesheet_ids')
     def _compute_has_multi_sol(self):
         for task in self:
-            task.has_multi_sol = task.timesheet_ids.so_line != task.sale_line_id
+            task.has_multi_sol = task.timesheet_ids and task.timesheet_ids.so_line != task.sale_line_id
 
     @api.onchange('project_id')
     def _onchange_project(self):
