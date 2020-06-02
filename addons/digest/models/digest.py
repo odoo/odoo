@@ -80,6 +80,10 @@ class Digest(models.Model):
         vals['next_run_date'] = date.today() + relativedelta(days=3)
         return super(Digest, self).create(vals)
 
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
+
     def action_subscribe(self):
         if self.env.user not in self.user_ids:
             self.sudo().user_ids |= self.env.user
@@ -100,6 +104,20 @@ class Digest(models.Model):
                 subject = '%s: %s' % (user.company_id.name, digest.name)
                 digest.template_id.with_context(user=user).send_mail(digest.id, force_send=True, raise_exception=True, email_values={'email_to': user.email, 'subject': subject})
             digest.next_run_date = digest._get_next_run_date()
+
+
+    @api.model
+    def _cron_send_digest_email(self):
+        digests = self.search([('next_run_date', '<=', fields.Date.today()), ('state', '=', 'activated')])
+        for digest in digests:
+            try:
+                digest.action_send()
+            except MailDeliveryException as e:
+                _logger.warning('MailDeliveryException while sending digest %d. Digest is now scheduled for next cron update.')
+
+    # ------------------------------------------------------------
+    # KPIS
+    # ------------------------------------------------------------
 
     def compute_kpis(self, company, user):
         self.ensure_one()
@@ -176,6 +194,10 @@ class Digest(models.Model):
                 (start_date + relativedelta(months=-2), start_date + relativedelta(months=-1))),
         }
 
+    # ------------------------------------------------------------
+    # FORMATTING / TOOLS
+    # ------------------------------------------------------------
+
     def _get_margin_value(self, value, previous_value=0.0):
         margin = 0.0
         if (value != previous_value) and (value != 0.0 and previous_value != 0.0):
@@ -193,12 +215,3 @@ class Digest(models.Model):
                 return "%3.2f%s%s" % (amount, unit, suffix)
             amount /= 1000.0
         return "%.2f%s%s" % (amount, 'T', suffix)
-
-    @api.model
-    def _cron_send_digest_email(self):
-        digests = self.search([('next_run_date', '<=', fields.Date.today()), ('state', '=', 'activated')])
-        for digest in digests:
-            try:
-                digest.action_send()
-            except MailDeliveryException as e:
-                _logger.warning('MailDeliveryException while sending digest %d. Digest is now scheduled for next cron update.')
