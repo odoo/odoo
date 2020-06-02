@@ -105,6 +105,9 @@ class ResPartner(models.Model):
         """ Get a signup token related to the partner if signup is enabled.
             If the partner already has a user, get the login parameter.
         """
+        if not self.env.user.has_group('base.group_user') and not self.env.is_admin():
+            raise exceptions.AccessDenied()
+
         res = defaultdict(dict)
 
         allow_signup = self.env['res.users']._get_signup_invitation_scope() == 'b2c'
