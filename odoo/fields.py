@@ -323,7 +323,7 @@ class Field(MetaField('DummyField', (object,), {})):
             if not (attrs['store'] and not attrs.get('readonly', True)):
                 attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
-            attrs['pre_compute'] = attrs.get('pre_compute', False)
+            attrs['pre_compute'] = attrs.get('pre_compute', model._pre_compute)
         if attrs.get('related'):
             # by default, related fields are not stored, computed in superuser
             # mode, not copied and readonly
@@ -331,7 +331,7 @@ class Field(MetaField('DummyField', (object,), {})):
             attrs['compute_sudo'] = attrs.get('compute_sudo', attrs.get('related_sudo', True))
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', True)
-            attrs['pre_compute'] = attrs.get('pre_compute', False)
+            attrs['pre_compute'] = attrs.get('pre_compute', model._pre_compute)
         if attrs.get('company_dependent'):
             # by default, company-dependent fields are not stored, not computed
             # in superuser mode and not copied

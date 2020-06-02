@@ -330,6 +330,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     consistency on the relational fields having ``check_company=True``
     as attribute.
     """
+    _pre_compute = False
 
     # default values for _transient_vacuum()
     _transient_max_count = lazy_classproperty(lambda _: config.get('osv_memory_count_limit'))
