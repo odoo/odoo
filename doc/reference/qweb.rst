@@ -223,9 +223,9 @@ exists in 3 different forms:
 
     will be rendered as::
 
-        <li class="row even">1</li>
-        <li class="row odd">2</li>
-        <li class="row even">3</li>
+        <li class="row odd">1</li>
+        <li class="row even">2</li>
+        <li class="row odd">3</li>
 :samp:`t-att=mapping`
     if the parameter is a mapping, each (key, value) pair generates a new
     attribute and its value::
