@@ -36,7 +36,7 @@ PortalComposer.include({
         this.options = _.defaults(this.options, {
             'default_message': false,
             'default_message_id': false,
-            'default_rating_value': false,
+            'default_rating_value': 0.0,
             'force_submit_url': false,
         });
         // star input widget
