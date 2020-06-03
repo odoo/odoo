@@ -59,7 +59,7 @@ class OdooPdfFileReader(PdfFileReader):
     # OVERRIDE of PdfFileReader to add the management of multiple embedded files.
 
     def getAttachments(self):
-        if "/Names" not in self.trailer["/Root"]:
+        if "/Names" not in self.trailer["/Root"] or "/EmbeddedFiles" not in self.trailer["/Root"]["/Names"] or "/Names" not in self.trailer["/Root"]["/Names"]["/EmbeddedFiles"]:
             return []
         for i in range(0, len(self.trailer["/Root"]["/Names"]["/EmbeddedFiles"]["/Names"]), 2):
             attachment = self.trailer["/Root"]["/Names"]["/EmbeddedFiles"]["/Names"][i+1].getObject()
