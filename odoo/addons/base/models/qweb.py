@@ -1063,13 +1063,43 @@ class QWeb(object):
         body = []
         if el.text is not None:
             body.append(self._append(ast.Str(pycompat.to_text(el.text))))
-        if el.getchildren():
-            for item in el:
-                # ignore comments & processing instructions
-                if isinstance(item, etree._Comment):
-                    continue
-                body.extend(self._compile_node(item, options))
-                body.extend(self._compile_tail(item))
+
+        # group children between "trivial" (no dynamic attributes, no namespaces
+        # and no children) and non-trivial
+        for trivial, items in itertools.groupby(
+            (c for c in el if not isinstance(c, etree._Comment)),
+            key=lambda c: not len(c) and not c.nsmap and self._is_static_node(c, options)
+        ):
+            if not trivial:
+                for item in items:
+                    body.extend(self._compile_node(item, options))
+                    body.extend(self._compile_tail(item))
+            else:
+                # the trivial children can be directly rendered to a single AST
+                # node (for the entire group) in one shot, which cuts down on
+                # the size of the AST as well as the codegen complexity
+                gallop = []
+                for item in items:
+                    if item.tag == 't':
+                        if item.text:
+                            gallop.append(item.text)
+                        continue
+
+                    attrib = self._post_processing_att(item.tag, item.attrib, options) if item.attrib else {}
+                    gallop.append('<')
+                    gallop.append(item.tag)
+                    gallop.extend(f' {name}="{escape(value)}"' for name, value in attrib.items())
+                    if item.tag in self._void_elements:
+                        gallop.append('/>')
+                        gallop.append(item.text or '')
+                    else:
+                        gallop.append('>')
+                        gallop.append(item.text or '')
+                        gallop.append(f'</{item.tag}>')
+                    if item.tail:
+                        gallop.append(item.tail)
+                body.append(self._append(ast.Str(''.join(gallop))))
+
         return body
 
     def _compile_directive_else(self, el, options):
