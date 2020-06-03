@@ -3,16 +3,33 @@ $yiq-contrasted-threshold: false !default;
 
 // Automatically update bootstrap colors map (unused by BS itself)
 $colors: () !default;
-$colors: map-merge($o-color-palette, $colors);
+@each $name, $color in $o-color-palette {
+    $colors: map-merge(('#{$name}': o-color($color)), $colors);
+}
+
+$o-btn-bg-colors: () !default;
+$o-btn-bg-colors: map-merge((
+    'primary': o-color('o-cc1-btn-primary'),
+    'secondary': o-color('o-cc1-btn-secondary'),
+), $o-btn-bg-colors);
+$o-btn-border-colors: () !default;
+$o-btn-border-colors: map-merge((
+    'primary': o-color('o-cc1-btn-primary-border'),
+    'secondary': o-color('o-cc1-btn-secondary-border'),
+), $o-btn-border-colors);
 
 // Automatically extend bootstrap to create theme background/text/button classes
 $theme-colors: () !default;
-$theme-colors: map-merge($o-theme-color-palette, $theme-colors);
+@each $name, $color in $o-theme-color-palette {
+    $theme-colors: map-merge(('#{$name}': o-color($color)), $theme-colors);
+}
 
 // Automatically extend bootstrap gray palette (the theme palette is supposed to
 // at least declare white and black)
 $grays: () !default;
-$grays: map-merge($o-gray-color-palette, $grays);
+@each $name, $color in $o-gray-color-palette {
+    $grays: map-merge(('#{$name}': o-color($color)), $grays);
+}
 
 // Bootstrap use standard variables to define individual colors which are then
 // placed into a map which is then used to get the value of each individual
@@ -55,3 +72,5 @@ $gray-700: gray('700') !default;
 $gray-800: gray('800') !default;
 $gray-900: gray('900') !default;
 $black: gray('black') !default;
+
+$o-color-system-initialized: true;

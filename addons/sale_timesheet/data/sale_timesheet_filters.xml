@@ -13,16 +13,4 @@
         }</field>
     </record>
 
-    <record id="ir_filter_project_profitability_report_manager_and_product" model="ir.filters">
-        <field name="name">Product by Customer</field>
-        <field name="model_id">project.profitability.report</field>
-        <field name="user_id" eval="False"/>
-        <field name="context">{
-        	'group_by': ['partner_id', 'product_id'],
-        	'graph_measure': 'amount_untaxed_to_invoice',
-        	'graph_mode': 'bar',
-        	'graph_groupbys': ['partner_id', 'product_id']
-        }</field>
-    </record>
-
 </odoo>

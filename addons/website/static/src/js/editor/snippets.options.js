@@ -5,8 +5,9 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-const wUtils = require('website.utils');
+const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
+const wUtils = require('website.utils');
 require('website.s_popup_options');
 
 var _t = core._t;
@@ -259,6 +260,33 @@ options.Class.include({
     /**
      * @override
      */
+    async _checkIfWidgetsUpdateNeedReload(widgets) {
+        const needReload = await this._super(...arguments);
+        if (needReload) {
+            return needReload;
+        }
+        for (const widget of widgets) {
+            const methodsNames = widget.getMethodsNames();
+            if (!methodsNames.includes('customizeWebsiteViews')
+                    && !methodsNames.includes('customizeWebsiteVariable')
+                    && !methodsNames.includes('customizeWebsiteColor')) {
+                continue;
+            }
+            let paramsReload = false;
+            if (widget.getMethodsParams('customizeWebsiteViews').reload
+                    || widget.getMethodsParams('customizeWebsiteVariable').reload
+                    || widget.getMethodsParams('customizeWebsiteColor').reload) {
+                paramsReload = true;
+            }
+            if (paramsReload || config.isDebug('assets')) {
+                return (config.isDebug('assets') ? _t("It appears you are in debug=assets mode, all theme customization options require a page reload in this mode.") : true);
+            }
+        }
+        return false;
+    },
+    /**
+     * @override
+     */
     _computeWidgetState: async function (methodName, params) {
         switch (methodName) {
             case 'customizeWebsiteViews': {
@@ -338,29 +366,22 @@ options.Class.include({
         const colorType = params.colorType ? (params.colorType + '_') : '';
         const url = `${baseURL}user_${colorType}color_palette.scss`;
 
-        if (!ColorpickerWidget.isCSSColor(color)) {
-            const style = window.getComputedStyle(document.documentElement);
-            color = style.getPropertyValue('--' + color).trim();
-            color = ColorpickerWidget.normalizeCSSColor(color);
+        if (color) {
+            if (weUtils.isColorCombinationName(color)) {
+                color = parseInt(color);
+            } else if (!ColorpickerWidget.isCSSColor(color)) {
+                color = `'${color}'`;
+            }
         }
-        const colors = {};
-        colors[params.color] = color;
-        if (params.color === 'alpha') {
-            colors['beta'] = null;
-            colors['gamma'] = null;
-            colors['delta'] = null;
-            colors['epsilon'] = null;
-        }
-
-        return this._makeSCSSCusto(url, colors);
+        return this._makeSCSSCusto(url, {[params.color]: color});
     },
     /**
      * @private
      */
     _customizeWebsiteVariable: async function (value, params) {
-        const values = {};
-        values[params.variable] = value;
-        return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values);
+        return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', {
+            [params.variable]: value,
+        });
     },
     /**
      * @private
@@ -477,62 +498,6 @@ options.Class.include({
     //--------------------------------------------------------------------------
 
     /**
-     * @override
-     */
-    _onUserValueUpdate: async function (ev) {
-        const _super = this._super.bind(this);
-
-        // First check if the updated widget or any of the widgets it will
-        // trigger uses one of the 'customizeWebsite...' methods. If so, check
-        // if any one of them will require a reload. If it is the case, warns
-        // the user and ask if he agrees to save its current changes. If not,
-        // just do nothing. If yes, save the current changes and continue.
-        let requiresReload = false;
-        if (!ev.data.previewMode && !ev.data.isSimulatedEvent) {
-            const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
-            const widgets = [ev.data.widget].concat(linkedWidgets);
-
-            for (const widget of widgets) {
-                const methodsNames = widget.getMethodsNames();
-                if (!methodsNames.includes('customizeWebsiteViews')
-                        && !methodsNames.includes('customizeWebsiteVariable')
-                        && !methodsNames.includes('customizeWebsiteColor')) {
-                    continue;
-                }
-                let paramsReload = false;
-                if (widget.getMethodsParams('customizeWebsiteViews').reload
-                        || widget.getMethodsParams('customizeWebsiteVariable').reload
-                        || widget.getMethodsParams('customizeWebsiteColor').reload) {
-                    paramsReload = true;
-                }
-                if (paramsReload || config.isDebug('assets')) {
-                    requiresReload = true;
-                    break;
-                }
-            }
-            if (requiresReload) {
-                const save = await new Promise(resolve => {
-                    Dialog.confirm(this, _t("This change needs to reload the page, this will save all your changes and reload the page, are you sure you want to proceed?") +
-                        (config.isDebug('assets') ? _t(" It appears you are in debug=assets mode, all theme customization options require a page reload in this mode.") : ''), {
-                        confirm_callback: () => resolve(true),
-                        cancel_callback: () => resolve(false),
-                    });
-                });
-                if (!save) {
-                    return;
-                }
-            }
-        }
-
-        await _super(...arguments);
-
-        if (requiresReload) {
-            this.trigger_up('request_save', {
-                reloadEditor: true,
-            });
-        }
-    },
-    /**
      * @private
      * @param {OdooEvent} ev
      */
@@ -622,19 +587,32 @@ options.registry.background.include({
 });
 
 options.registry.Theme = options.Class.extend({
+    events: {
+        'click .o_color_combinations_edition we-toggler': '_onCCTogglerClick',
+        // FIXME investigate why using 'click' does not work *anymore* but those
+        // foldable areas will be made more robust and standard with the new UI.
+        'mouseup .o_cc_subheadings_toggler_icon': '_onCCHeadingsTogglerClick',
+    },
+
     /**
      * @override
      */
     start: async function () {
-        // The normal configuration of Odoo is to have two colors named 'alpha'
-        // and 'beta' which generate their own BS CSS classes but which are also
-        // used as 'primary' and 'secondary' BS values (to customize standard BS
-        // used in Odoo). However, some themes are still going against that
-        // system and do not link alpha-primary and beta-secondary at all.
+        // Checks for support of the old color system
         const style = window.getComputedStyle(document.documentElement);
-        this._alphaEqualsPrimary = style.getPropertyValue('--is-alpha-primary').trim() == 'true';
-        this._betaEqualsSecondary = style.getPropertyValue('--is-beta-secondary').trim() == 'true';
+        const supportOldColorSystem = style.getPropertyValue('--support-13-0-color-system').trim() === 'true';
+        const hasCustomizedOldColorSystem = style.getPropertyValue('--has-customized-13-0-color-system').trim() === 'true';
+        this._showOldColorSystemWarning = supportOldColorSystem && hasCustomizedOldColorSystem;
+
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    updateUIVisibility: async function () {
+        await this._super(...arguments);
+        const oldColorSystemEl = this.el.querySelector('.o_old_color_system_warning');
+        oldColorSystemEl.classList.toggle('d-none', !this._showOldColorSystemWarning);
     },
 
     //--------------------------------------------------------------------------
@@ -748,7 +726,7 @@ options.registry.Theme = options.Class.extend({
      */
     switchTheme: async function (previewMode, widgetValue, params) {
         const save = await new Promise(resolve => {
-            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed?"), {
+            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."), {
                 confirm_callback: () => resolve(true),
                 cancel_callback: () => resolve(false),
             });
@@ -769,32 +747,31 @@ options.registry.Theme = options.Class.extend({
     /**
      * @override
      */
+    async _checkIfWidgetsUpdateNeedWarning(widgets) {
+        const warningMessage = await this._super(...arguments);
+        if (warningMessage) {
+            return warningMessage;
+        }
+        for (const widget of widgets) {
+            if (widget.getMethodsNames().includes('customizeWebsiteVariable')
+                    && widget.getMethodsParams('customizeWebsiteVariable').variable === 'color-palettes-number') {
+                const style = window.getComputedStyle(document.documentElement);
+                const hasCustomizedColors = style.getPropertyValue('--has-customized-colors').trim();
+                if (hasCustomizedColors && hasCustomizedColors !== 'false') {
+                    return _t("Changing the color palette will reset all your color customizations, are you sure you want to proceed?");
+                }
+            }
+        }
+        return '';
+    },
+    /**
+     * @override
+     */
     _computeWidgetState: async function (methodName, params) {
         if (methodName === 'customizeBodyBg') {
             const bgURL = $('#wrapwrap').css('background-image');
             const srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
             return bgURL && bgURL.replace(srcValueWrapper, '') || '';
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    _computeWidgetVisibility: async function (widgetName, params) {
-        if (widgetName === 'theme_color_suggestions') {
-            return false;
-        }
-        if (widgetName === 'primary_color_opt' || widgetName === 'alpha_as_extra_color_opt') {
-            return !this._alphaEqualsPrimary;
-        }
-        if (widgetName === 'secondary_color_opt' || widgetName === 'beta_as_extra_color_opt') {
-            return !this._betaEqualsSecondary;
-        }
-        if (widgetName === 'alpha_as_primary_color_opt') {
-            return this._alphaEqualsPrimary;
-        }
-        if (widgetName === 'beta_as_secondary_color_opt') {
-            return this._betaEqualsSecondary;
         }
         return this._super(...arguments);
     },
@@ -825,6 +802,94 @@ options.registry.Theme = options.Class.extend({
             useWorker: false,
         });
         return aceEditor;
+    },
+    /**
+     * @override
+     */
+    async _renderOriginalXML($xml) {
+        const uiFragment = await this._super(...arguments);
+
+        uiFragment.querySelectorAll('.o_cc_subheadings_toggler').forEach(headingsEl => {
+            const togglerEl = document.createElement('span');
+            togglerEl.classList.add('o_cc_subheadings_toggler_icon', 'o_we_fold_icon', 'fa', 'fa-caret-down');
+            togglerEl.setAttribute('role', 'button');
+            const titleEl = headingsEl.querySelector('we-title');
+            titleEl.insertBefore(togglerEl, titleEl.firstChild);
+        });
+        uiFragment.querySelectorAll('.o_cc_subheadings_collapse').forEach(subheadingsEl => {
+            subheadingsEl.classList.add('d-none');
+        });
+
+        return uiFragment;
+    },
+    /**
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        const paletteSelectorEl = uiFragment.querySelector('[data-variable="color-palettes-number"]');
+        const style = window.getComputedStyle(document.documentElement);
+        const nbPalettes = parseInt(style.getPropertyValue('--number-of-color-palettes'));
+        for (let i = 1; i <= nbPalettes; i++) {
+            const btnEl = document.createElement('we-button');
+            btnEl.classList.add('o_palette_color_preview_button');
+            btnEl.dataset.customizeWebsiteVariable = i;
+            for (let c = 1; c <= 5; c++) {
+                const colorPreviewEl = document.createElement('span');
+                colorPreviewEl.classList.add('o_palette_color_preview');
+                const color = style.getPropertyValue(`--o-palette-${i}-o-color-${c}`).trim();
+                colorPreviewEl.style.backgroundColor = color;
+                btnEl.appendChild(colorPreviewEl);
+            }
+            paletteSelectorEl.appendChild(btnEl);
+        }
+
+        const ccEl = uiFragment.querySelector('.o_color_combinations_edition');
+        for (let i = 1; i <= 5; i++) {
+            const togglerEl = document.createElement('we-toggler');
+            togglerEl.classList.add('pt-0', 'pb-0', 'pl-0');
+            const divEl = document.createElement('div');
+            divEl.classList.add('o_we_cc_preview_container');
+            const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
+            ccPreviewEl.classList.add('p-1', 'text-center', `o_cc${i}`);
+            divEl.appendChild(ccPreviewEl);
+            togglerEl.appendChild(divEl);
+            ccEl.appendChild(togglerEl);
+
+            const collapseEl = document.createElement('we-collapse');
+            const editionEl = $(qweb.render('website.color_combination_edition', {number: i}))[0];
+            collapseEl.appendChild(editionEl);
+            ccEl.appendChild(collapseEl);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onCCTogglerClick(ev) {
+        const ccTogglerEls = this.el.querySelectorAll('.o_color_combinations_edition we-toggler');
+        for (const el of ccTogglerEls) {
+            if (el !== ev.currentTarget) {
+                el.classList.remove('active');
+            }
+        }
+        ev.currentTarget.classList.toggle('active');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onCCHeadingsTogglerClick(ev) {
+        const togglerEl = ev.currentTarget;
+        const collapseEl = togglerEl.closest('we-collapse').querySelector('.o_cc_subheadings_collapse');
+        const show = togglerEl.classList.contains('fa-caret-down');
+        togglerEl.classList.toggle('fa-caret-down', !show);
+        togglerEl.classList.toggle('fa-caret-up', show);
+        collapseEl.classList.toggle('d-none', !show);
     },
 });
 
@@ -1833,8 +1898,8 @@ options.registry.CoverProperties = options.Class.extend({
         });
         const color = colorPickerWidget._value;
         const isCSSColor = ColorpickerWidget.isCSSColor(color);
-        this.$target[0].dataset.bgColorClass = isCSSColor ? '' : 'bg-' + color;
-        this.$target[0].dataset.bgColorStyle = isCSSColor ? `background-color:${color};` : '';
+        this.$target[0].dataset.bgColorClass = isCSSColor ? '' : weUtils.computeColorClasses([color])[0];
+        this.$target[0].dataset.bgColorStyle = isCSSColor ? `background-color: ${color};` : '';
     },
 
     //--------------------------------------------------------------------------

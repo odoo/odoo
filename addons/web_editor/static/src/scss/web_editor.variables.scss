@@ -2,6 +2,8 @@
 /// This files regroups the variables and mixins which are specific to the editor.
 ///
 
+$o-support-13-0-color-system: false !default;
+
 $o-we-font-family: Roboto, 'Montserrat', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
 
 $o-we-font-size: 13px;
@@ -249,6 +251,7 @@ $o-we-toolbar-height: 32px;
 
         &.btn-primary {
             @include button-variant($o-brand-primary, $o-brand-primary);
+            color: white;
         }
         &.btn-secondary {
             @include button-variant($o-we-bg-color, $o-we-bg-color);
@@ -260,15 +263,19 @@ $o-we-toolbar-height: 32px;
         }
         &.btn-success {
             @include button-variant($o-we-color-success, $o-we-color-success);
+            color: white;
         }
         &.btn-info {
             @include button-variant($o-we-color-info, $o-we-color-info);
+            color: white;
         }
         &.btn-warning {
             @include button-variant($o-we-color-warning, $o-we-color-warning);
+            color: $o-we-color-divider;
         }
         &.btn-danger {
             @include button-variant($o-we-color-danger, $o-we-color-danger);
+            color: $o-we-color-divider;
         }
     }
 }
@@ -310,21 +317,41 @@ $o-we-toolbar-height: 32px;
 // palette once selected to ensure it works.
 
 // Colors
-$o-base-color-palette: () !default;
+$o-base-color-palette: (
+    'o-color-1': transparent,
+    'o-color-2': transparent,
+    'o-color-3': transparent,
+    'o-color-4': transparent,
+    'o-color-5': transparent,
+) !default;
 $o-color-palettes: (
-    (),
+    (
+        'o-color-1': scale-color($o-enterprise-primary-color, $saturation: -50%, $lightness: 20%),
+        'o-color-2': scale-color($o-enterprise-color, $saturation: -50%),
+        'o-color-3': #F6F6F6,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #383E45,
+    ),
+    (
+        'o-color-1': #337ab7,
+        'o-color-2': #e9ecef,
+        'o-color-3': #F8F9FA,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #343a40,
+
+        'menu': 2,
+        'footer': 2,
+        'copyright': 5,
+    ),
 ) !default;
 $o-color-palette-number: 1 !default;
 
 // Theme colors
-$o-base-theme-color-palette: (
-    'alpha': white,
-    'beta': white,
-    'gamma': white,
-    'delta': white,
-    'epsilon': white,
-) !default;
+$o-base-theme-color-palette: () !default;
 $o-theme-color-palettes: (
+    // alpha -> epsilon are old color names kept for compatibility.
+    // They should not be used in the code base anymore and ideally they will
+    // not generate any classes for >= 13.4 databases.
     (
         'alpha': $o-enterprise-primary-color,
         'beta': $o-enterprise-color,
@@ -338,7 +365,7 @@ $o-theme-color-palette-number: 1 !default;
 // Greyscale transparent colours
 
 // Note: BS values are forced by default in every palette as the values can
-// be used in bootstrap_overridden.scss files through the palette-gray function.
+// be used in bootstrap_overridden.scss files through the o-color function.
 // Also, all of the gray colors generates bg- classes in Odoo so black and white
 // are added for the same reason.
 
@@ -365,11 +392,74 @@ $o-transparent-grays: (
     'white-75': rgba(white, 0.75),
     'white-85': rgba(white, 0.85),
 ) !default;
-$o-gray-color-palettes: (
-    (),
-) !default;
+$o-gray-color-palettes: () !default;
 $o-gray-color-palette-number: 1 !default;
+
+// Color combinations
+$o-base-color-combination: (
+    'bg': 'white',
+    'text': null, // Default to better contrast with the 'bg'
+    'headings': null, // Default to 'text'
+    'h2': null, // Default to 'h(x-1)'
+    'h3': null,
+    'h4': null,
+    'h5': null,
+    'h6': null,
+    'link': null, // Default to BS 'primary' (= first odoo color)
+    'btn-primary': null, // Default to BS 'primary' (= first odoo color)
+    'btn-primary-border': null, // Default to 'btn-primary'
+    'btn-secondary': null, // Default to BS 'secondary' (= second odoo color)
+    'btn-secondary-border': null, // Default to 'btn-secondary'
+);
+$o-color-combinations-presets: (
+    (
+        (
+            'bg': 'o-color-4',
+        ),
+        (
+            'bg': 'o-color-3',
+            'headings': 'o-color-1',
+        ),
+        (
+            'bg': 'o-color-2',
+            'btn-secondary': 'o-color-3',
+        ),
+        (
+            'bg': 'o-color-1',
+            'link': 'o-color-5',
+            'btn-primary': 'o-color-5',
+            'btn-secondary': 'o-color-3',
+        ),
+        (
+            'bg': 'o-color-5',
+            'headings': 'o-color-4',
+            'btn-secondary': 'o-color-3',
+        ),
+    ),
+) !default;
+$o-color-combinations-preset-number: 1;
 
 // Translations
 $o-we-content-to-translate-color: rgb(255, 255, 90) !default;
 $o-we-translated-content-color: rgb(120, 215, 110) !default;
+
+// We allow snippets to be colored and elements like card and columns to be
+// colored as well. We need components targeted by those colored classes to
+// use the deepest coloring element config. We only allow here for this to
+// work for one level of nesting. Note: snippets which can contain other
+// snippets will have problem because of this; this is a limitation of the
+// system until a better solution is found.
+$o-color-extras-nesting-selector: '&, .o_colored_level &';
+
+// Apply colors according to the given identifier. Can either be a preset
+// number, a color name or a css color.
+@mixin o-apply-colors($identifier, $background: $body-bg) {
+    $-related-color: o-related-color($identifier, $max-recursions: 10);
+    @if type-of($-related-color) == 'number' {
+        // This is a preset to be applied, just extend it. This should probably
+        // be avoided and use the class in XML if possible.
+        @extend .o_cc#{$-related-color};
+    } @else {
+        @include o-bg-color(o-color($-related-color), $background: $background);
+    }
+}

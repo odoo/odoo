@@ -2,31 +2,39 @@
 // Color system
 //
 
-// Bootstrap default for $yiq-text-light and $yiq-text-dark are $white and
-// $gray-900. What we want to do is use the user text color as light or dark
-// depending on its contrast. Themes should be careful if they decide to
-// override those values. This would be simplified by giving the user the choice
-// for its dark *and* light text colors.
-$-light: if(palette-gray('white') != null, palette-gray('white'), #FFFFFF);
-$-dark: if(palette-gray('900') != null, palette-gray('900'), #212529);
-$-text: if(palette-color('text') != null, palette-color('text'), $-dark);
-$-is-light: (o-get-most-contrast($-text, $-light, $-dark, palette-color('body'), $cross-mix: false) == $-dark);
-$yiq-text-light: if($-is-light, palette-color('text'), null) !default;
-$yiq-text-dark: if($-is-light, null, palette-color('text')) !default;
+// Use auto threshold for yiq colors
+// Note: also need to be defined here so that color-yiq below works
+$yiq-contrasted-threshold: false !default;
+
+// Customize the light and dark text colors for use in our YIQ color contrast function.
+$yiq-text-dark: o-color('900') !default;
+$yiq-text-light: o-color('white') !default;
 
 // Body
 //
 // Settings for the `<body>` element.
 
-$body-bg: palette-color('body') !default;
-$body-color: palette-color('text') !default;
+$body-bg: if($o-theme-layout == 'full', o-color('o-cc1-bg'), o-color('body')) !default;
+$body-color: o-color('o-cc1-text') or color-yiq(o-color('o-cc1-bg')) !default;
 
 // Links
 //
 // Style anchor elements.
 
+$link-color: o-color('o-cc1-link') !default;
 $link-decoration: if(o-website-value('link-underline') == 'always', underline, none) !default;
 $link-hover-decoration: if(o-website-value('link-underline') != 'never', underline, none) !default;
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+// Note: for the 'active' color, color preset edition is not really flexible but
+// this could come in a future update.
+$component-active-bg: o-color('o-cc1-btn-primary') !default;
+@if $component-active-bg {
+    $component-active-color: color-yiq($component-active-bg) !default;
+}
 
 // Fonts
 //
@@ -44,7 +52,9 @@ $h5-font-size: $font-size-base * $o-theme-h5-font-size-multiplier !default;
 $h6-font-size: $font-size-base * $o-theme-h6-font-size-multiplier !default;
 
 $headings-font-family: $o-theme-headings-font !default;
-$headings-color: palette-color('h1') !default;
+$headings-color: o-color('o-cc1-headings') !default;
+
+$text-muted: mute-color($body-color) !default;
 
 // Jumbotron
 

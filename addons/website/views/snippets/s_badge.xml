@@ -2,17 +2,19 @@
 <odoo>
 
 <template name="Badge" id="s_badge">
-    <span class="s_badge badge bg-gamma o_animable" data-name="Badge">
+    <span class="s_badge badge badge-secondary o_animable" data-name="Badge">
         <i class="fa fa-1x fa-fw fa-folder o_not-animable"/>Category
     </span>
 </template>
 
 <template id="s_badge_options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@id='so_main_colorpicker']" position="attributes">
-        <attribute name="data-selector" separator="," add=".s_badge"/>
-    </xpath>
-    <xpath expr="//div[@id='so_content_addition']" position="attributes">
-        <attribute name="data-selector" separator="," add=".s_badge"/>
+    <xpath expr="//div[@id='so_main_colorpicker']" position="after">
+        <div data-selector=".s_badge">
+            <we-colorpicker string="Color" data-name="badge_colorpicker_opt"
+                data-select-style="true"
+                data-css-property="background-color"
+                data-color-prefix="badge-"/>
+        </div>
     </xpath>
 </template>
 

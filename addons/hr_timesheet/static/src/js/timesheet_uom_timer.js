@@ -2,6 +2,7 @@ odoo.define('hr_timesheet.timesheet_uom_timer', function (require) {
 "use strict";
 
 const fieldRegistry = require('web.field_registry');
+const fieldUtils = require('web.field_utils');
 const TimesheetUom = require('hr_timesheet.timesheet_uom');
 const { _lt } = require('web.core');
 const session = require('web.session');
@@ -16,8 +17,8 @@ const FieldTimesheetTimeTimer = TimesheetUom.FieldTimesheetTime.extend({
         this.isTimerRunning = this.record.data.is_timer_running;
     },
 
-    _render: function () {
-        this._super.apply(this, arguments);
+    _render: async function () {
+        await this._super.apply(this, arguments);
         const my_timesheets = this.record.getContext().my_timesheet_display_timer;
         const display_timer = this.record.data.display_timer;
         if (my_timesheets && display_timer) {
@@ -98,6 +99,26 @@ if (widgetName === 'float_toggle') {
         ) || TimesheetUom.FieldTimesheetFactor;
 }
 fieldRegistry.add('timesheet_uom_timer', FieldTimesheetUom);
+
+// bind the formatter and parser method, and tweak the options
+const _tweak_options = function(options) {
+    if (!_.contains(options, 'factor')) {
+        options.factor = session.timesheet_uom_factor;
+    }
+    return options;
+};
+
+fieldUtils.format.timesheet_uom_timer = function(value, field, options) {
+    options = _tweak_options(options || {});
+    const formatter = fieldUtils.format[FieldTimesheetUom.prototype.formatType];
+    return formatter(value, field, options);
+};
+
+fieldUtils.parse.timesheet_uom_timer = function(value, field, options) {
+    options = _tweak_options(options || {});
+    const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
+    return parser(value, field, options);
+};
 
 
 return {

@@ -25,9 +25,8 @@ $-font-numbers: (
     // customized by themes, the user or anything else (so there is no file to
     // parse to get them). Those will be printed here as CSS variables.
 
-    // 0) does this theme enforce primary = alpha or secondary = beta
-    --is-alpha-primary: #{$-is-alpha-primary};
-    --is-beta-secondary: #{$-is-beta-secondary};
+    --support-13-0-color-system: #{$o-support-13-0-color-system};
+    --has-customized-13-0-color-system: #{$o-has-customized-13-0-color-system};
 
     // 1) Handle default values
     --header-font-size: #{$font-size-base};
@@ -42,25 +41,15 @@ $-font-numbers: (
     }
 
     // 5) Use final value used by the theme
-    $-h1-color: if($headings-color == inherit or not $headings-color, $body-color, $headings-color);
-    $-h2-color: if(color('h2'), color('h2'), $-h1-color);
-    $-h3-color: if(color('h3'), color('h3'), $-h2-color);
-    $-h4-color: if(color('h4'), color('h4'), $-h3-color);
-    $-h5-color: if(color('h5'), color('h5'), $-h4-color);
-    $-h6-color: if(color('h6'), color('h6'), $-h5-color);
-
     --body: #{$body-bg};
-    --text: #{$body-color};
-    --h1: #{$-h1-color};
-    --h2: #{$-h2-color};
-    --h3: #{$-h3-color};
-    --h4: #{$-h4-color};
-    --h5: #{$-h5-color};
-    --h6: #{$-h6-color};
 
     --logo-height: #{$o-theme-navbar-logo-height};
     --fixed-logo-height: #{$o-theme-navbar-fixed-logo-height};
     --number-of-fonts: #{length($o-theme-fonts)};
+
+    --number-of-color-palettes: #{length($o-color-palettes) - 1}; // -1 since the last one is the user customized one
+    --color-palettes-number: #{$o-original-color-palette-number};
+    --has-customized-colors: #{$o-has-customized-colors};
 
     // 6) Get list of colorpalette custom colors
     $custom-colors: ();
@@ -82,7 +71,7 @@ $-font-numbers: (
         }
 
         #wrap {
-            background-color: $white;
+            background-color: o-color('o-cc1-bg');
         }
     }
 }
@@ -107,11 +96,9 @@ $-font-numbers: (
     // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
     // Note: this only works because navbar-light is defined before navbar-dark,
     // we may want to use a safest way when possible.
-    @if color('menu') {
-        background-color: color('menu') !important;
-        @if (color-yiq(color('menu')) != $yiq-text-dark) {
-            @extend .navbar-dark;
-        }
+    @include o-apply-colors('menu');
+    @if (color-yiq(o-color('menu')) != $yiq-text-dark) {
+        @extend .navbar-dark;
     }
 }
 
@@ -141,24 +128,26 @@ $-header-nav-link-height: $nav-link-height;
 }
 
 .o_footer {
-    @if color('footer') {
-        @include o-bg-color(color('footer'));
+    @include o-apply-colors('footer');
+
+    .o_footer_copyright {
+        @include o-apply-colors('copyright', $background: o-color('footer'));
     }
 }
 h2, h3, h4, h5, h6 {
-    color: color('h2');
+    color: color('o-cc1-h2');
 }
 h3, h4, h5, h6 {
-    color: color('h3');
+    color: color('o-cc1-h3');
 }
 h4, h5, h6 {
-    color: color('h4');
+    color: color('o-cc1-h4');
 }
 h5, h6 {
-    color: color('h5');
+    color: color('o-cc1-h5');
 }
 h6 {
-    color: color('h6');
+    color: color('o-cc1-h6');
 }
 .btn {
     @if ($o-theme-buttons-font != $o-theme-font) {
@@ -884,7 +873,7 @@ header {
 
 // Copyright
 .o_footer_copyright {
-    padding: 8px;
+
     .js_language_selector {
         display: inline-block;
     }

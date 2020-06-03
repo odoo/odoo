@@ -739,7 +739,11 @@ const SelectUserValueWidget = UserValueWidget.extend({
      *
      * @private
      */
-    _onClick: function () {
+    _onClick: function (ev) {
+        if (ev.target.closest('[role="button"]')) {
+            return;
+        }
+
         if (!this.menuTogglerEl.classList.contains('active')) {
             this.trigger_up('user_value_widget_opening');
             this.menuTogglerEl.classList.add('active');
@@ -1058,9 +1062,18 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             return this._customColorValue;
         }
         let value = this._super(...arguments);
-        if (value && this.options.dataAttributes.hasOwnProperty('cssCompatible') &&
-            !ColorpickerWidget.isCSSColor(value)) {
-            value = `var(--${value})`;
+        if (value) {
+            const useCssColor = this.options.dataAttributes.hasOwnProperty('useCssColor');
+            const cssCompatible = this.options.dataAttributes.hasOwnProperty('cssCompatible');
+            if ((useCssColor || cssCompatible) && !ColorpickerWidget.isCSSColor(value)) {
+                if (useCssColor) {
+                    const style = window.getComputedStyle(document.documentElement);
+                    value = style.getPropertyValue(`--${value}`).trim();
+                    value = ColorpickerWidget.normalizeCSSColor(value);
+                } else {
+                    value = `var(--${value})`;
+                }
+            }
         }
         return value;
     },
@@ -1086,10 +1099,14 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @returns {Promise}
      */
     _renderColorPalette: function () {
-        const options = {};
-        options.selectedColor = this._value;
+        const options = {
+            selectedColor: this._value,
+        };
         if (this.options.dataAttributes.excluded) {
             options.excluded = this.options.dataAttributes.excluded.replace(/ /g, '').split(',');
+        }
+        if (this.options.dataAttributes.withCombinations) {
+            options.withCombinations = !!this.options.dataAttributes.withCombinations;
         }
         const oldColorPalette = this.colorPalette;
         this.colorPalette = new ColorPaletteWidget(this, options);
@@ -1108,14 +1125,17 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     _updateUI: async function (color) {
         await this._super(...arguments);
 
-        this.colorPreviewEl.classList.remove(...this.colorPalette.getColorNames().map(c => 'bg-' + c));
+        const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
+        this.colorPreviewEl.classList.remove(...classes);
         this.colorPreviewEl.style.removeProperty('background-color');
 
         if (this._value) {
             if (ColorpickerWidget.isCSSColor(this._value)) {
                 this.colorPreviewEl.style.backgroundColor = this._value;
+            } else if (weUtils.isColorCombinationName(this._value)) {
+                this.colorPreviewEl.classList.add('o_cc', `o_cc${this._value}`);
             } else {
-                this.colorPreviewEl.classList.add('bg-' + this._value);
+                this.colorPreviewEl.classList.add(`bg-${this._value}`);
             }
         }
 
@@ -1631,9 +1651,15 @@ const SnippetOptionWidget = Widget.extend({
         // other potential color names (to remove) and if we know about a prefix
         // (otherwise we suppose that we should use the actual related color).
         if (params.colorNames && params.colorPrefix) {
-            const classes = params.colorNames.map(c => params.colorPrefix + c);
+            const classes = weUtils.computeColorClasses(params.colorNames, params.colorPrefix);
             this.$target[0].classList.remove(...classes);
 
+            if (weUtils.isColorCombinationName(widgetValue)) {
+                // Those are the special color combinations classes. Just have
+                // to add it (and adding the potential extra class) then leave.
+                this.$target[0].classList.add('o_cc', `o_cc${widgetValue}`, params.extraClass);
+                return;
+            }
             if (params.colorNames.includes(widgetValue)) {
                 const originalCSSValue = window.getComputedStyle(this.$target[0])[cssProps[0]];
                 const className = params.colorPrefix + widgetValue;
@@ -1872,6 +1898,29 @@ const SnippetOptionWidget = Widget.extend({
 
     /**
      * @private
+     * @param {UserValueWidget[]} widgets
+     * @returns {Promise<string>}
+     */
+    async _checkIfWidgetsUpdateNeedWarning(widgets) {
+        const messages = [];
+        for (const widget of widgets) {
+            const message = widget.getMethodsParams().warnMessage;
+            if (message) {
+                messages.push(message);
+            }
+        }
+        return messages.join(' ');
+    },
+    /**
+     * @private
+     * @param {UserValueWidget[]} widgets
+     * @returns {Promise<boolean|string>}
+     */
+    async _checkIfWidgetsUpdateNeedReload(widgets) {
+        return false;
+    },
+    /**
+     * @private
      * @returns {Promise<boolean>|boolean}
      */
     _computeVisibility: async function () {
@@ -1924,7 +1973,8 @@ const SnippetOptionWidget = Widget.extend({
             case 'selectStyle': {
                 if (params.colorPrefix && params.colorNames) {
                     for (const c of params.colorNames) {
-                        if (this.$target[0].classList.contains(params.colorPrefix + c)) {
+                        const className = weUtils.computeColorClasses([c], params.colorPrefix)[0];
+                        if (this.$target[0].classList.contains(className)) {
                             return c;
                         }
                     }
@@ -2191,6 +2241,44 @@ const SnippetOptionWidget = Widget.extend({
         const widget = ev.data.widget;
         const previewMode = ev.data.previewMode;
 
+        // First check if the updated widget or any of the widgets it triggers
+        // will require a reload or a confirmation choice by the user. If it is
+        // the case, warn the user and potentially ask if he agrees to save its
+        // current changes. If not, just do nothing.
+        let requiresReload = false;
+        if (!ev.data.previewMode && !ev.data.isSimulatedEvent) {
+            const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
+            const widgets = [ev.data.widget].concat(linkedWidgets);
+
+            const warnMessage = await this._checkIfWidgetsUpdateNeedWarning(widgets);
+            if (warnMessage) {
+                const okWarning = await new Promise(resolve => {
+                    Dialog.confirm(this, warnMessage, {
+                        confirm_callback: () => resolve(true),
+                        cancel_callback: () => resolve(false),
+                    });
+                });
+                if (!okWarning) {
+                    return;
+                }
+            }
+
+            const reloadMessage = await this._checkIfWidgetsUpdateNeedReload(widgets);
+            requiresReload = !!reloadMessage;
+            if (requiresReload) {
+                const save = await new Promise(resolve => {
+                    Dialog.confirm(this, _t("This change needs to reload the page, this will save all your changes and reload the page, are you sure you want to proceed?") + ' '
+                            + (typeof reloadMessage === 'string' ? reloadMessage : ''), {
+                        confirm_callback: () => resolve(true),
+                        cancel_callback: () => resolve(false),
+                    });
+                });
+                if (!save) {
+                    return;
+                }
+            }
+        }
+
         // Ask a mutexed snippet update according to the widget value change
         const shouldRecordUndo = (!previewMode && !ev.data.isSimulatedEvent);
         this.trigger_up('snippet_edition_request', {exec: async () => {
@@ -2267,11 +2355,55 @@ const SnippetOptionWidget = Widget.extend({
             linkedWidget.notifyValueChange(previewMode, true);
             i++;
         }
+
+        if (requiresReload) {
+            this.trigger_up('request_save', {
+                reloadEditor: true,
+            });
+        }
     },
 });
 const registry = {};
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+/**
+ * Marks color levels of any element that may get or has a color classes. This
+ * is done for the specific main colorpicker option so that those are marked on
+ * snippet drop (so that base snippet definition do not need to care about that)
+ * and on first focus (for compatibility).
+ */
+registry.MainColorpicker = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        this._markColorLevel();
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    onBuilt: function () {
+        this._markColorLevel();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds a specific class indicating the element is colored so that nested
+     * color classes work (we support one-level). Removing it is not useful,
+     * technically the class can be added on anything that *may* receive a color
+     * class: this does not come with any CSS rule.
+     *
+     * @private
+     */
+    _markColorLevel: function () {
+        this.$target.addClass('o_colored_level');
+    },
+});
 
 registry.sizing = SnippetOptionWidget.extend({
     /**

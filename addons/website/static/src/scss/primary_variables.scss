@@ -6,15 +6,9 @@ $o-theme-layout: 'full';
 
 $o-base-color-palette: map-merge($o-base-color-palette, (
     'body': $o-portal-default-body-bg,
-    'menu': #F8F9FA, // BS gray-100
-    'footer': #F8F9FA, // BS gray-100
-    'text': null, // Default to bootstrap
-    'h1': null, // Default to text
-    'h2': null, // Default to h1
-    'h3': null, // Default to h2
-    'h4': null, // Default to h3
-    'h5': null, // Default to h4
-    'h6': null, // Default to h5
+    'menu': 1, // o_cc1
+    'footer': 5, // o_cc5
+    'copyright': 'black-15',
 ));
 
 // By default, all user color palette values are null. Each null value is
@@ -40,6 +34,208 @@ $o-social-colors: (
 
 $o-theme-figcaption-opacity: 0.6;
 
+$o-theme-generic-color-palettes: (
+    (
+        'o-color-1': #984c46,
+        'o-color-2': #23323b,
+        'o-color-3': #eceae4,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #16121f,
+
+        'menu': 3,
+        'footer': 3,
+    ),
+    (
+        'o-color-1': #B99932,
+        'o-color-2': #DED1C1,
+        'o-color-3': #F5F5F5,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #373737,
+
+        'menu': 5,
+        'copyright': 4,
+    ),
+    (
+        'o-color-1': #f8882f,
+        'o-color-2': #6a7c8f,
+        'o-color-3': #fdf8ef,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #212c39,
+    ),
+    (
+        'o-color-1': #6E7993,
+        'o-color-2': #96848C,
+        'o-color-3': #8F9AA2,
+        'o-color-4': #D5D5D5,
+        'o-color-5': #313347,
+
+        'menu': 5,
+    ),
+    (
+        'o-color-1': #F7CF41,
+        'o-color-2': #1A2930,
+        'o-color-3': #989898,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #0B1612,
+
+        'menu': 3,
+        'footer': 3,
+    ),
+    (
+        'o-color-1': #45859A,
+        'o-color-2': #B57D4D,
+        'o-color-3': #F5F5F5,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #10273C,
+
+        'menu': 2,
+        'footer': 2,
+        'copyright': 5,
+    ),
+    (
+        'o-color-1': #1a547a,
+        'o-color-2': #ddc76a,
+        'o-color-3': #D6E6F1,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #2b3442,
+
+        'o-cc5-link': 'o-color-4',
+        'o-cc5-text': #9b9ba0,
+
+        'menu': 5,
+        'footer': 5,
+        'copyright': 3,
+    ),
+    (
+        'o-color-1': #763240,
+        'o-color-2': #C19F7F,
+        'o-color-3': #FFFFFF,
+        'o-color-4': #EAEAEA,
+        'o-color-5': #2F2F2F,
+
+        'o-cc4-headings': 'o-color-3',
+        'o-cc4-link': 'o-color-3',
+        'o-cc4-text': rgba(#fff, .8),
+
+        'o-cc5-headings': 'o-color-3',
+        'o-cc5-link': 'o-color-3',
+        'o-cc5-text': rgba(#fff, .8),
+
+        'footer': 1,
+        'copyright': 4,
+    ),
+    (
+        'o-color-1': #4DC5C1,
+        'o-color-2': #EC576B,
+        'o-color-3': #E5E337,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #000000,
+
+        'menu': 5,
+    ),
+    (
+        'o-color-1': #b56355,
+        'o-color-2': #6ba17a,
+        'o-color-3': #ebe6ea,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #343733,
+
+        'footer': 2,
+    ),
+    (
+        'o-color-1': #01ACAB,
+        'o-color-2': #FEDC3D,
+        'o-color-3': #FAE8E0,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #000000,
+
+        'footer': 1,
+    ),
+    (
+        'o-color-1': #926190,
+        'o-color-2': #F3E0CD,
+        'o-color-3': #F9EFE9,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #291528,
+
+        'o-cc4-headings': 'o-color-4',
+        'o-cc4-link': 'o-color-4',
+        'o-cc4-text': rgba(#fff, .8),
+
+        'o-cc5-headings': 'o-color-4',
+        'o-cc5-link': 'o-color-4',
+        'o-cc5-text': rgba(#fff, .6),
+    ),
+    (
+        'o-color-1': #478FA2,
+        'o-color-2': #CECECE,
+        'o-color-3': #E8E9E9,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #173F54,
+
+        'footer': 1,
+        'copyright': 1,
+    ),
+    (
+        'o-color-1': #3CC37C,
+        'o-color-2': #E9C893,
+        'o-color-3': #F5F5F5,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #1F3A2A,
+
+        'footer': 1,
+        'copyright': 5,
+    ),
+    (
+        'o-color-1': #01524B,
+        'o-color-2': #1993A3,
+        'o-color-3': #dddde6,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #011D1B,
+
+        'o-cc4-btn-primary': 'o-color-4',
+        'o-cc4-link': 'o-color-4',
+        'o-cc4-text': rgba(#fff, .8),
+
+        'o-cc5-btn-primary': 'o-color-4',
+        'o-cc5-link': 'o-color-4',
+        'o-cc5-text': rgba(#fff, .6),
+
+        'footer': 2,
+        'copyright': 5,
+    ),
+    (
+        'o-color-1': #464D77,
+        'o-color-2': #36827f,
+        'o-color-3': #f2f0ec,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #22263c,
+
+        'o-cc4-btn-primary': 'o-color-4',
+        'o-cc4-link': 'o-color-4',
+        'o-cc4-text': rgba(#fff, .8),
+
+        'o-cc5-btn-primary': 'o-color-4',
+        'o-cc5-btn-secondary': #d6d4d0,
+        'o-cc5-link': 'o-color-4',
+        'o-cc5-text': rgba(#fff, .6),
+
+        'menu': 2,
+        'footer': 2,
+        'copyright': 5,
+    ),
+    (
+        'o-color-1': #4717f6,
+        'o-color-2': #A43ACB,
+        'o-color-3': #FAFAFA,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #0F0A19,
+
+        'menu': 5,
+        'footer': 5,
+    ),
+);
+
 //------------------------------------------------------------------------------
 // Website customizations
 //------------------------------------------------------------------------------
@@ -53,6 +249,7 @@ $o-base-website-values-palette: (
     'headings-font-number': 1,
     'navbar-font-number': 1,
     'buttons-font-number': 1,
+    'color-palettes-number': null, // Default to the individual variables for each color palette type
     'google-fonts': null,
     'btn-primary-outline': false,
     'btn-secondary-outline': false,
@@ -60,7 +257,13 @@ $o-base-website-values-palette: (
     'footer-template': 'products_contacts_about_us',
 );
 $o-website-values-palettes: (
-    (),
+    (
+        'header-font-size': 1rem,
+        'font-size-base': 0.875rem,
+        'headings-font-number': 7,
+        'navbar-font-number': 7,
+        'buttons-font-number': 7,
+    ),
 ) !default;
 $o-website-values-palette-number: 1 !default;
 
@@ -88,6 +291,7 @@ $o-theme-fonts: (
     ('Raleway', sans-serif),
     ('Noto Serif', serif),
     ('Arvo', Times, serif),
+    ('Gothic A1', sans-serif),
 ) !default;
 $o-theme-font-urls: (
     'Roboto:300,300i,400,400i,700,700i',
@@ -96,6 +300,7 @@ $o-theme-font-urls: (
     'Raleway:300,300i,400,400i,700,700i',
     'Noto+Serif:300,300i,400,400i,700,700i',
     'Arvo:300,300i,400,400i,700,700i',
+    'Gothic+A1:300,300i,500,500i,700,700i',
 ) !default;
 $o-theme-font-names: (
     'Roboto',
@@ -104,6 +309,7 @@ $o-theme-font-names: (
     'Raleway',
     'Noto Serif',
     'Arvo',
+    'Gothic A1',
 ) !default;
 
 // TODO improve this: we should not have multiple lists regarding fonts but

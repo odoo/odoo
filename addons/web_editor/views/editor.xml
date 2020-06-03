@@ -120,6 +120,12 @@
     </xpath>
 </template>
 
+<template id="_assets_13_0_color_system_support_primary_variables" inherit_id="web_editor._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/13_0_color_system_support_primary_variables.scss"/>
+    </xpath>
+</template>
+
 <template id="_assets_secondary_variables" inherit_id="web._assets_secondary_variables">
     <xpath expr="//link" position="before">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/secondary_variables.scss"/>
@@ -212,11 +218,7 @@
 <template id="web_editor.colorpicker" name="Color-Picker" groups="base.group_user">
     <colorpicker>
         <div class="o_colorpicker_section" data-name="theme">
-            <button data-color="alpha"></button>
-            <button data-color="beta"></button>
-            <button data-color="gamma"></button>
-            <button data-color="delta"></button>
-            <button data-color="epsilon"></button>
+            <button t-foreach="5" t-as="i" t-attf-data-color="o-color-#{i + 1}"></button>
         </div>
         <div class="o_colorpicker_section" data-name="common">
             <button data-color="black"></button>

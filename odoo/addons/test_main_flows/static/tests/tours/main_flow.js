@@ -884,7 +884,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
 },
 tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the_flow.project")')),
 {
-    trigger: '.oe_button_box .oe_stat_button:has(span:contains("Timesheets"))',
+    trigger: '.oe_button_box .oe_stat_button:has(span:contains("Recorded"))',
     extra_trigger: '.o_form_readonly',
     content: _t('See Timesheets'),
     position: 'bottom',

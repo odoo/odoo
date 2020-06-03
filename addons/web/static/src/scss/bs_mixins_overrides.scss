@@ -14,19 +14,40 @@ $enable-deprecation-messages: false !default;
     @return o-get-most-contrast($color, $light, $dark, $background, $threshold, $cross-mix);
 }
 
-@mixin o-bg-color($color, $text-color: null, $with-muted: true) {
+@function mute-color($color) {
+    @return scale-color($color, $alpha: -30%);
+}
+
+// This placeholder regroups the rules that will apply on all elements with a
+// bg-* class (see o-bg-color, bg-variant). The optimized-css way would be to
+// have a common class for them all.
+%o-bg-color-component-color-reset {
+    h1, h2, h3, h4, h5, h6 {
+        color: inherit;
+    }
+}
+
+$o-yiq-min-opacity-threshold: 0.3 !default;
+$o-color-extras-nesting-selector: '&' !default;
+
+@mixin o-bg-color($color, $text-color: null, $with-extras: true, $important: true, $yiq-min-opacity-threshold: $o-yiq-min-opacity-threshold, $background: $body-bg, $nesting-selector: $o-color-extras-nesting-selector) {
     @if ($color) {
-        $-yiq-color: if($text-color, $text-color, color-yiq($color));
-        background-color: $color !important;
+        $-yiq-threshold-met: alpha($color) > $yiq-min-opacity-threshold;
+
+        $-yiq-color: if($text-color, $text-color, if($-yiq-threshold-met, color-yiq($color, $background: $background), null));
+        background-color: $color#{if($important, ' !important', '')};
         color: $-yiq-color; // not important so that text utilities still work
 
-        @if ($with-muted) {
-            .text-muted {
-                color: rgba($-yiq-color, 0.4) !important;
+        @if $with-extras and $-yiq-threshold-met {
+            #{$nesting-selector} {
+                @extend %o-bg-color-component-color-reset;
+
+                .text-muted {
+                    // Always important since the basic BS rule is important
+                    color: mute-color($-yiq-color) !important;
+                }
             }
         }
-
-        @include o-bg-color-extension($color, $text-color, $with-muted);
     }
 }
 

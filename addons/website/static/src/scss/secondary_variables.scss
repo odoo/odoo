@@ -24,7 +24,7 @@
 // By default, most website palette values are null. Each null value is
 // automatically replaced with corresponsing values in chosen default values
 // palette.
-$-website-values-default: nth($o-website-values-palettes, $o-website-values-palette-number);
+$-website-values-default: if($o-website-values-palette-number <= length($o-website-values-palettes), nth($o-website-values-palettes, $o-website-values-palette-number), ());
 $-actual-user-website-values-palette: map-merge($-website-values-default, o-map-omit($o-user-website-values));
 // Default font selection + User font selection have been merged, now need to
 // add the right associated font config while still forcing any user override
@@ -44,27 +44,48 @@ $o-website-values: map-merge($o-base-website-values-palette, o-map-omit($o-websi
 // Colors
 //------------------------------------------------------------------------------
 
+// First change the palette number to the actual user choice if any.
+$-color-palettes-number: o-website-value('color-palettes-number');
+@if $-color-palettes-number {
+    $o-color-palette-number: $-color-palettes-number;
+    $o-theme-color-palette-number: $-color-palettes-number;
+    $o-gray-color-palette-number: $-color-palettes-number;
+}
+
+$o-has-customized-13-0-color-system:
+    not not (map-get($o-user-theme-color-palette, 'primary')
+    or map-get($o-user-theme-color-palette, 'secondary')
+    or map-get($o-user-theme-color-palette, 'alpha')
+    or map-get($o-user-theme-color-palette, 'beta')
+    or map-get($o-user-theme-color-palette, 'gamma')
+    or map-get($o-user-theme-color-palette, 'delta')
+    or map-get($o-user-theme-color-palette, 'epsilon'));
+
+$o-has-customized-colors:
+    not not (length(map-keys(o-map-omit($o-user-color-palette))) > 0
+    or map-get($o-user-theme-color-palette, 'success')
+    or map-get($o-user-theme-color-palette, 'info')
+    or map-get($o-user-theme-color-palette, 'warning')
+    or map-get($o-user-theme-color-palette, 'danger'));
+
 // Color palette
 // -------------
+
+// Add generic color palettes
+$o-color-palettes: join($o-color-palettes, $o-theme-generic-color-palettes);
 
 // By default, most user color palette values are null. Each null value is
 // automatically replaced with corresponsing colors in chosen default color
 // palette.
-$-palette-default: nth($o-color-palettes, $o-color-palette-number);
+$-palette-default: if($o-color-palette-number <= length($o-color-palettes), nth($o-color-palettes, $o-color-palette-number), ());
 $-actual-user-color-palette: map-merge($-palette-default, o-map-omit($o-user-color-palette));
 $o-color-palettes: append($o-color-palettes, $-actual-user-color-palette);
 
 // Theme color palette
 // -------------------
 
-// Proper themes have to enforce primary = alpha and secondary = beta.
-// Exceptions to this rule are made for compatibility reasons
-$-palette-default: nth($o-theme-color-palettes, $o-theme-color-palette-number);
-
-// Generate default theme color scheme if alpha is set
-$-is-alpha-primary: not map-has-key($-palette-default, 'primary');
-$-is-beta-secondary: not map-has-key($-palette-default, 'secondary');
-
+// alpha -> epsilon colors are from the old color system, this is kept for
+// compatibility: Generate default theme color scheme if alpha is set
 $-alpha: map-get($o-user-theme-color-palette, 'alpha');
 @if ($-alpha) {
     $o-user-theme-color-palette: map-merge((
@@ -78,13 +99,22 @@ $-alpha: map-get($o-user-theme-color-palette, 'alpha');
 // By default, all user theme color palette values are null. Each null value is
 // automatically replaced with corresponsing colors in chosen default theme
 // color palette.
+$-palette-default: if($o-theme-color-palette-number <= length($o-theme-color-palettes), nth($o-theme-color-palettes, $o-theme-color-palette-number), ());
 $-actual-user-theme-color-palette: map-merge($-palette-default, o-map-omit($o-user-theme-color-palette));
+// Always remove the primary/secondary which were customizable in some theme
+// in Odoo <= 13.3. The customer can always rechoose the right color in the
+// Odoo color system as the first two ones are mapped to primary/secondary.
+$-actual-user-theme-color-palette: map-remove($-actual-user-theme-color-palette,
+    'primary',
+    'secondary'
+);
 $o-theme-color-palettes: append($o-theme-color-palettes, $-actual-user-theme-color-palette);
 
 // ---
 
 // Enable last color and theme color palettes, which are now the user customized
 // color palettes.
+$o-original-color-palette-number: $o-color-palette-number;
 $o-color-palette-number: length($o-color-palettes);
 $o-theme-color-palette-number: length($o-theme-color-palettes);
 

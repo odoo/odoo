@@ -60,7 +60,6 @@
                     <button name="action_get_attachment_view" string="Attachments" type="object" icon="fa-paperclip" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="state" optional="show" readonly="1" decoration-info="state == 'draft'" decoration-success="state in ['reported', 'approved', 'done']" decoration-danger="state in 'refused'" widget="badge"/>
-                    <field name="activity_exception_decoration"  widget="activity_exception"/>
                 </tree>
             </field>
         </record>
@@ -413,24 +412,6 @@
             <field name="act_window_id" ref="hr_expense_product"/>
         </record>
 
-
-
-        <record id="action_approved_expense" model="ir.actions.act_window">
-            <field name="name">Employee Expenses</field>
-            <field name="res_model">hr.expense</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="view_id" ref="view_expenses_tree"/>
-            <field name="domain">[]</field>
-            <field name="context">{"search_default_approved": 1}</field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_empty_folder">
-                No approved employee expenses
-              </p><p>
-                From here the accountant will be able to approve as well as refuse the expenses which are verified by the HR Manager.
-              </p>
-            </field>
-        </record>
-
         <record id="action_unsubmitted_expense" model="ir.actions.act_window">
             <field name="name">Unreported Expenses</field>
             <field name="res_model">hr.expense</field>
@@ -444,16 +425,6 @@
               </p><p>
                 From here the accountant will be able to approve as well as refuse the expenses which are verified by the HR Manager.
               </p>
-            </field>
-        </record>
-
-        <record id="hr_expense_action" model="ir.actions.act_window">
-            <field name="name">Expenses Analysis</field>
-            <field name="res_model">hr.expense</field>
-            <field name="view_mode">graph,pivot</field>
-            <field name="context">{
-                'search_default_approved': 1,
-                }
             </field>
         </record>
 
@@ -474,7 +445,6 @@
                     <field name="state" optional="show" decoration-info="state == 'draft'" decoration-success="state in ['submit', 'approve', 'post', 'done']" decoration-danger="state == 'cancel'" widget="badge"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="message_unread" invisible="1"/>
-                    <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
         </record>
@@ -667,7 +637,7 @@
                     <separator />
                     <filter domain="[('state', '=', 'submit')]" string="To Approve" name="submitted" help="Confirmed Expenses"/>
                     <filter domain="[('state', '=', 'approve')]" string="To Post" name="to_post" help="Approved Expenses"/>
-                    <filter domain="['|', ('state', '=', 'approve'), ('state', '=', 'post')]" string="To Pay" name="approved" help="Expenses to Invoice"/>
+                    <filter domain="[('state', '=', 'post')]" string="To Pay" name="approved" help="Expenses to Invoice"/>
                     <filter domain="[('state', '=', 'cancel')]" string="Refused" name="canceled"/>
                     <separator/>
                     <filter domain="[('employee_id.active', '=', False)]" string="Former Employees" name="inactive" groups="hr_expense.group_hr_expense_user,hr_expense.group_hr_expense_manager"/>
@@ -832,22 +802,6 @@
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_to_post': 1}</field>
-            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
-            <field name="view_id" ref="view_hr_expense_sheet_tree"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new expense
-              </p><p>
-                Once you have created your expense, submit it to your manager who will validate it.
-              </p>
-            </field>
-        </record>
-
-        <record id="action_request_to_pay_expense_sheet" model="ir.actions.act_window">
-            <field name="name">Reports to Pay</field>
-            <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="context">{'search_default_approved': 1}</field>
             <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="view_id" ref="view_hr_expense_sheet_tree"/>
             <field name="help" type="html">

@@ -12,11 +12,11 @@ const COLOR_PICKER_TEMPLATE = `
     <t t-name="web_editor.colorpicker">
         <colorpicker>
             <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">
-                <button data-color="alpha"/>
-                <button data-color="beta"/>
-                <button data-color="gamma"/>
-                <button data-color="delta"/>
-                <button data-color="epsilon"/>
+                <button data-color="o-color-1"/>
+                <button data-color="o-color-2"/>
+                <button data-color="o-color-3"/>
+                <button data-color="o-color-4"/>
+                <button data-color="o-color-5"/>
             </div>
             <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="fa fa-eye-slash">
                 <button class="o_btn_transparent"/>

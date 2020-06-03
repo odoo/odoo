@@ -43,11 +43,38 @@
 
     <!-- options -->
     <div t-name="web_editor.snippet.option.colorpicker" class="colorpicker">
-
-        <div class="o_colorpicker_sections">
-            <div class="tab-content o_colorpicker_section_tabs"/>
+        <div class="d-flex px-1">
+            <button t-if="widget.withCombinations" type="button" class="btn flex-grow-1 o_we_colorpicker_switch_pane_btn active" data-target="color-combinations">Combinations</button>
+            <button type="button" t-attf-class="btn flex-grow-1 o_we_colorpicker_switch_pane_btn #{widget.withCombinations ? '' : 'active'}" data-target="theme-colors">Custom</button>
+            <button t-if="widget.resetButton" type="button" class="btn flex-grow-1 o_we_color_btn o_colorpicker_reset">
+                <t t-if="widget.withCombinations">None</t>
+                <t t-else="">Reset</t>
+            </button>
         </div>
+        <div t-attf-class="o_colorpicker_sections #{widget.withCombinations ? '' : 'd-none'} px-1" data-color-tab="color-combinations">
+            <!-- List all Presets -->
+            <t t-foreach="5" t-as="i">
+                <t t-call="web_editor.colorpalette.combination.btn">
+                    <t t-set="number" t-value="i + 1"/>
+                </t>
+            </t>
+        </div>
+        <div t-attf-class="o_colorpicker_sections #{widget.withCombinations ? 'd-none' : ''} p-1" data-color-tab="theme-colors"/>
     </div>
+    <t t-name="web_editor.colorpalette.combination.btn">
+        <button type="button" class="o_we_color_btn o_we_color_combination_btn o_we_cc_preview_container"
+                t-att-data-color="number" t-attf-title="Preset #{number}">
+            <t t-call="web_editor.color.combination.preview"/>
+        </button>
+    </t>
+    <t t-name="web_editor.color.combination.preview">
+        <div class="o_we_cc_preview_wrapper d-flex justify-content-between align-items-end">
+            <h1 class="o_we_color_combination_btn_title">Title</h1>
+            <p class="o_we_color_combination_btn_text flex-grow-1">Text</p>
+            <span class="o_we_color_combination_btn_btn btn btn-sm btn-primary o_btn_preview mr-1"><small>Button</small></span>
+            <span class="o_we_color_combination_btn_btn btn btn-sm btn-secondary o_btn_preview"><small>Button</small></span>
+        </div>
+    </t>
 
     <t t-name="web_editor.many2one.button">
         <div class="btn-group">

@@ -201,7 +201,7 @@ QUnit.module('web_editor', {}, function () {
             assert.ok($field.find('.note-back-color-preview').hasClass('show'),
                 "should display the color picker");
 
-            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button[style="background-color:#00FFFF;"]'));
+            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview .o_we_color_btn[style="background-color:#00FFFF;"]'));
 
             assert.ok(!$field.find('.note-back-color-preview').hasClass('show'),
                 "should close the color picker");
@@ -227,10 +227,10 @@ QUnit.module('web_editor', {}, function () {
             // text is selected
 
             await openColorpicker('.note-toolbar .note-back-color-preview');
-            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button.bg-gamma'));
+            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview .o_we_color_btn.bg-o-color-3'));
 
             assert.strictEqual($field.find('.note-editable').html(),
-                '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font style="" class="bg-gamma">oto&nbsp;</font><font class="bg-gamma" style="">to</font>to</p><p>tata</p>',
+                '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font style="" class="bg-o-color-3">oto&nbsp;</font><font class="bg-o-color-3" style="">to</font>to</p><p>tata</p>',
                 "should have rendered the field correctly in edit");
 
             form.destroy();
@@ -361,7 +361,7 @@ QUnit.module('web_editor', {}, function () {
                 mockRPC: function (route, args) {
                     if (args.method === "write") {
                         assert.strictEqual(args.args[1].body,
-                            '<p>t<font class="bg-gamma">oto toto&nbsp;</font>toto</p><p>tata</p>',
+                            '<p>t<font class="bg-o-color-3">oto toto&nbsp;</font>toto</p><p>tata</p>',
                             "should save the content");
 
                     }
@@ -386,7 +386,7 @@ QUnit.module('web_editor', {}, function () {
             }
 
             await openColorpicker('.note-toolbar .note-back-color-preview');
-            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button.bg-gamma'));
+            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview .o_we_color_btn.bg-o-color-3'));
 
             await testUtils.form.clickSave(form);
 

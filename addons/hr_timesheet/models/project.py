@@ -24,6 +24,10 @@ class Project(models.Model):
         help="Use a timer to record timesheets on tasks")
 
     timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
+    timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
+    total_timesheet_time = fields.Integer(
+        compute='_compute_total_timesheet_time',
+        help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.")
 
     _sql_constraints = [
         ('timer_only_when_timesheet', "CHECK((allow_timesheets = 'f' AND allow_timesheet_timer = 'f') OR (allow_timesheets = 't'))", 'The timesheet timer can only be activated on project allowing timesheets.'),
@@ -44,6 +48,18 @@ class Project(models.Model):
     def _compute_allow_timesheet_timer(self):
         for project in self:
             project.allow_timesheet_timer = project.allow_timesheets
+
+    @api.depends('timesheet_ids')
+    def _compute_total_timesheet_time(self):
+        for project in self:
+            total_time = 0.0
+            for timesheet in project.timesheet_ids:
+                # Timesheets may be stored in a different unit of measure, so first
+                # we convert all of them to the reference unit
+                total_time += timesheet.unit_amount * timesheet.product_uom_id.factor_inv
+            # Now convert to the proper unit of measure set in the settings
+            total_time *= project.timesheet_encode_uom_id.factor
+            project.total_timesheet_time = int(round(total_time))
 
     @api.model
     def name_create(self, name):

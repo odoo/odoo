@@ -124,6 +124,10 @@
     <xpath expr="//header" position="attributes">
         <attribute name="data-name">Header</attribute>
     </xpath>
+    <xpath expr="//header/nav" position="attributes">
+        <!-- Background now controlled by css configuration, using color combinations -->
+        <attribute name="class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
+    </xpath>
     <xpath expr="//header//ul[@id='top_menu']" position="attributes">
         <attribute name="class" separator=" " add="o_menu_loading"/>
     </xpath>
@@ -144,6 +148,13 @@
 
     <xpath expr="//footer" position="attributes">
         <attribute name="data-name">Footer</attribute>
+        <!-- Background now controlled by css configuration, using color combinations -->
+        <attribute name="class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
+        <attribute name="data-name">Copyright</attribute>
+        <!-- Background now controlled by css configuration, using color combinations -->
+        <attribute name="class" add="o_colored_level o_cc" separator=" "/>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]//span[@t-field='res_company.name']" position="after">
         <t t-call="website.language_selector"/>
@@ -573,7 +584,7 @@
          t-att-data-use_text_align="use_text_align"
          t-att-data-res-model="request.env.user.has_group('website.group_website_publisher') and _record._name"
          t-att-data-res-id="request.env.user.has_group('website.group_website_publisher') and _record.id"
-         t-attf-class="o_record_cover_container d-flex flex-column h-100 #{_cp.get('background_color_class')} #{use_size and _cp.get('resize_class')} #{use_text_align and _cp.get('text_align_class')} #{additionnal_classes}">
+         t-attf-class="o_record_cover_container d-flex flex-column h-100 o_colored_level o_cc #{_cp.get('background_color_class')} #{use_size and _cp.get('resize_class')} #{use_text_align and _cp.get('text_align_class')} #{additionnal_classes}">
         <div t-attf-class="o_record_cover_component o_record_cover_image #{snippet_autofocus and 'o_we_snippet_autofocus'}" t-attf-style="background-image: #{_cp.get('background-image')};"/>
         <div t-if="use_filters" t-attf-class="o_record_cover_component o_record_cover_filter oe_black" t-attf-style="opacity: #{_cp.get('opacity', 0.0)};"/>
         <t t-raw="0"/>

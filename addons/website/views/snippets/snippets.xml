@@ -216,6 +216,13 @@
     <div data-js="Carousel"
         data-selector="section"
         data-target="> .carousel">
+         <!-- Dedicated colorpicker so that there is not 3 level of
+              o_colored_level. Use inline-style color for the same reason. -->
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"
+            data-css-compatible="true"/>
         <we-select string="Transition">
             <we-button data-select-class="slide">Slide</we-button>
             <we-button data-select-class="carousel-fade slide">Fade</we-button>
@@ -315,13 +322,15 @@
 
     <!-- Background Color -->
     <div id="so_main_colorpicker"
+         data-js="MainColorpicker"
          data-selector="section, .carousel-item, section .row > div, .o_record_cover_container"
-         data-exclude=".parallax, .o_gallery .carousel-item, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
+         data-exclude=".parallax, .o_gallery .carousel-item, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div, .s_carousel_wrapper, .s_tabs .oe_structure > *, footer .oe_structure > *, .o_mega_menu .row > div">
         <we-colorpicker string="Background Color"
             data-name="bg_color_opt"
             data-select-style="true"
             data-css-property="background-color"
             data-color-prefix="bg-"
+            data-with-combinations="true"
             data-dependencies="!cover_background_opt"/>
     </div>
 
@@ -389,7 +398,9 @@
          data-no-check="true"
          groups="website.group_website_designer">
         <we-checkbox string="Show Sign In" data-customize-website-views="portal.portal_show_sign_in" data-reload="/"/>
-        <we-colorpicker string="Background Color" data-customize-website-color="" data-color="menu"/>
+        <we-colorpicker string="Colors"
+                        data-customize-website-color="" data-color="menu"
+                        data-with-combinations="true"/>
         <we-checkbox id="option_header_shadow" string="Shadow"
                      data-customize-website-views="website.header_shadow"
                      data-select-class="shadow"
@@ -498,7 +509,9 @@
     <div data-selector="#wrapwrap > footer"
          data-no-check="true"
          groups="website.group_website_designer">
-        <we-colorpicker string="Background" data-customize-website-color="" data-color="footer"/>
+        <we-colorpicker string="Colors"
+                        data-customize-website-color="" data-color="footer"
+                        data-with-combinations="true"/>
         <we-select string="Footer Template" data-variable="footer-template" data-reload="/">
             <we-button id="option_template_footer_products_contacts_about_us"
                        data-customize-website-views="website.footer_custom"
@@ -525,6 +538,14 @@
                        data-customize-website-variable="address_logo"
                        string="Address - Logo"/>
         </we-select>
+    </div>
+
+    <div data-selector=".o_footer_copyright"
+         data-no-check="true"
+         groups="website.group_website_designer">
+        <we-colorpicker string="Colors"
+                        data-customize-website-color="" data-color="copyright"
+                        data-with-combinations="true"/>
     </div>
 
     <!-- Anchor Name -->
@@ -630,29 +651,35 @@
     <!-- Theme options -->
     <div data-js="Theme" data-selector="theme" data-no-check="true">
         <we-button class="o_we_primary_btn" data-switch-theme="" data-no-preview="true">Switch Theme</we-button>
-        <we-row string="Main Colors">
-            <we-colorpicker data-name="primary_color_opt" title="Primary" data-customize-website-color="" data-color-type="theme" data-color="primary"/>
-            <we-colorpicker data-name="alpha_as_primary_color_opt" data-customize-website-color="" data-color-type="theme" data-color="alpha"
-                title="Changing this color will regenerate the default theme color scheme"/>
-            <we-colorpicker data-name="secondary_color_opt" title="Secondary" data-customize-website-color="" data-color-type="theme" data-color="secondary"/>
-            <we-colorpicker data-name="beta_as_secondary_color_opt" title="Secondary" data-customize-website-color="" data-color-type="theme" data-color="beta"/>
+        <we-alert class="o_old_color_system_warning d-none">
+            It appears your website is still using the old color system of
+            Odoo 13.0 in some places. We made sure it is still working but
+            we recommend you to try to use the new color system, which is
+            still customizable.
+        </we-alert>
+        <we-row string="Theme colors" class="o_we_fw">
+            <we-colorpicker data-name="color_1_opt" title="Primary"
+                            data-customize-website-color="" data-color="o-color-1"
+                            data-use-css-color="true"/>
+            <we-colorpicker data-name="color_2_opt" title="Secondary"
+                            data-customize-website-color="" data-color="o-color-2"
+                            data-use-css-color="true"/>
+            <we-colorpicker data-customize-website-color="" data-color="o-color-3"
+                            data-use-css-color="true"/>
+            <we-colorpicker data-customize-website-color="" data-color="o-color-4"
+                            data-use-css-color="true"/>
+            <we-colorpicker data-customize-website-color="" data-color="o-color-5"
+                            data-use-css-color="true"/>
+            <we-select class="ml-auto" data-icon="fa-lightbulb-o" data-variable="color-palettes-number"/>
         </we-row>
-        <we-row string="Extra Colors">
-            <we-colorpicker data-name="alpha_as_extra_color_opt" data-customize-website-color="" data-color-type="theme" data-color="alpha"
-                title="Changing this color will regenerate the default theme color scheme"/>
-            <we-colorpicker data-name="beta_as_extra_color_opt" data-customize-website-color="" data-color-type="theme" data-color="beta"/>
-            <we-colorpicker data-customize-website-color="" data-color-type="theme" data-color="gamma"/>
-            <we-colorpicker data-customize-website-color="" data-color-type="theme" data-color="delta"/>
-            <we-colorpicker data-customize-website-color="" data-color-type="theme" data-color="epsilon"/>
-        </we-row>
+        <div class="o_color_combinations_edition"/>
         <we-row string="Status Colors">
             <we-colorpicker title="Success" data-customize-website-color="" data-color-type="theme" data-color="success"/>
             <we-colorpicker title="Info" data-customize-website-color="" data-color-type="theme" data-color="info"/>
             <we-colorpicker title="Warning" data-customize-website-color="" data-color-type="theme" data-color="warning"/>
             <we-colorpicker title="Error" data-customize-website-color="" data-color-type="theme" data-color="danger"/>
         </we-row>
-        <we-row string="Texts">
-            <we-colorpicker data-customize-website-color="" data-color="text"/>
+        <we-row string="Typography">
             <we-fontfamilypicker data-variable="font-number"/>
             <we-input data-customize-website-variable="null" data-variable="font-size-base" data-unit="px" data-save-unit="rem"/>
         </we-row>
@@ -661,17 +688,7 @@
             <we-button data-customize-website-variable="hover">On Hover</we-button>
             <we-button data-customize-website-variable="always">Always</we-button>
         </we-select>
-        <we-row string="Headings">
-            <we-colorpicker data-customize-website-color="" data-color="h1"/>
-            <we-fontfamilypicker data-variable="headings-font-number"/>
-        </we-row>
-        <we-row string="Sub-Headings">
-            <we-colorpicker title="Headings 2" data-customize-website-color="" data-color="h2"/>
-            <we-colorpicker title="Headings 3" data-customize-website-color="" data-color="h3"/>
-            <we-colorpicker title="Headings 4" data-customize-website-color="" data-color="h4"/>
-            <we-colorpicker title="Headings 5" data-customize-website-color="" data-color="h5"/>
-            <we-colorpicker title="Headings 6" data-customize-website-color="" data-color="h6"/>
-        </we-row>
+        <we-fontfamilypicker string="Headings" data-variable="headings-font-number"/>
         <we-fontfamilypicker string="Buttons Font" data-variable="buttons-font-number"/>
         <we-select string="Main Buttons" data-variable="btn-primary-outline">
             <we-button data-customize-website-variable="false">Fill</we-button>
@@ -681,19 +698,19 @@
             <we-button data-customize-website-variable="false">Fill</we-button>
             <we-button data-customize-website-variable="true">Outline</we-button>
         </we-select>
+        <we-select string="Layout">
+            <we-button data-customize-website-views="" data-name="layout_full_opt">Full</we-button>
+            <we-button data-customize-website-views="website.option_layout_boxed_variables" id="option_layout_boxed">Boxed</we-button>
+        </we-select>
         <we-row string="Background">
-            <we-colorpicker title="Body" data-customize-website-color="" data-color="body"/>
-            <we-select>
+            <we-colorpicker data-name="body_bg_color_opt" data-dependencies="!layout_full_opt" data-customize-website-color="" data-color="body"/>
+            <we-select data-name="body_bg_type_opt">
                 <we-button data-name="no_background_opt" data-customize-website-views="">None</we-button>
                 <we-button data-customize-website-views="website.option_custom_body_image">Image</we-button>
                 <we-button data-customize-website-views="website.option_custom_body_image, website.option_custom_body_pattern">Pattern</we-button>
             </we-select>
-            <we-imagepicker data-dependencies="!no_background_opt" data-customize-body-bg=""/>
+            <we-imagepicker data-name="body_bg_image_opt" data-dependencies="!no_background_opt" data-customize-body-bg=""/>
         </we-row>
-        <we-select string="Layout">
-            <we-button data-customize-website-views="">Full</we-button>
-            <we-button data-customize-website-views="website.option_layout_boxed_variables" id="option_layout_boxed">Boxed</we-button>
-        </we-select>
         <we-row string="Code Injection" title="Enter code that will be added into every page of your site">
             <we-button data-no-preview="true" data-open-custom-code-dialog="head">&amp;lt;head&amp;gt;</we-button>
             <we-button data-no-preview="true" data-open-custom-code-dialog="footer">&amp;lt;/body&amp;gt;</we-button>

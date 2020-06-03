@@ -193,7 +193,7 @@
                 </div>
                 <div class="col-6 text-right mb4">
                     <h4 class="mt0" t-field="company.report_header"/>
-                    <div name="company_address" class="mb4">
+                    <div name="company_address" class="float-right mb4">
                         <span class="company_address" t-field="company.partner_id"
                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
                     </div>
@@ -203,7 +203,10 @@
         </div>
 
         <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
+            <div class="pt-5">
+                <!-- This div ensures that the address is not cropped by the header. -->
+                <t t-call="web.address_layout"/>
+            </div>
             <t t-raw="0"/>
         </div>
 
@@ -292,7 +295,10 @@
         </div>
 
         <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
+            <div class="pt-5">
+                <!-- This div ensures that the address is not cropped by the header. -->
+                <t t-call="web.address_layout"/>
+            </div>
             <t t-raw="0"/>
         </div>
 
