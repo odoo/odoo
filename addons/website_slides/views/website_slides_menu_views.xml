@@ -20,7 +20,7 @@
         id="website_slides_menu_configuration"
         parent="website_slides_menu_root"
         sequence="99"/>
-    
+
     <!-- Courses sub-menu -->
     <menuitem name="Courses"
         id="website_slides_menu_courses_courses"
@@ -32,10 +32,18 @@
         parent="website_slides_menu_courses"
         sequence="2"
         action="slide_slide_action"/>
+
+    <menuitem name="Quizzes"
+              id="website_slides_menu_quizzes_content"
+              parent="website_slides_menu_courses"
+              sequence="3"
+              action="slide_question_action"
+              groups="base.group_no_one"/>
+
     <menuitem name="Reviews"
         id="website_slides_menu_courses_reviews"
         parent="website_slides_menu_courses"
-        sequence="3"
+        sequence="4"
         action="rating_rating_action_slide_channel"/>
 
     <!-- Reporting sub-menu -->

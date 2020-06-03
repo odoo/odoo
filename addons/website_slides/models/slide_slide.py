@@ -40,12 +40,19 @@ class SlidePartnerRelation(models.Model):
         completed = res.filtered('completed')
         if completed:
             completed._set_completed_callback()
+
+        self.slide_id.question_ids._recompute_attempts_count()
+
         return res
 
     def write(self, values):
         res = super(SlidePartnerRelation, self).write(values)
         if values.get('completed'):
             self._set_completed_callback()
+
+        if values.get('quiz_attempts_count'):
+            self.slide_id.question_ids._recompute_attempts_count()
+
         return res
 
     def _set_completed_callback(self):

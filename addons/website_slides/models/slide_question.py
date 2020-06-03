@@ -16,9 +16,10 @@ class SlideQuestion(models.Model):
     slide_id = fields.Many2one('slide.slide', string="Content", required=True)
     answer_ids = fields.One2many('slide.answer', 'question_id', string="Answer")
     # statistics
-    attempts_count = fields.Integer(compute='_compute_statistics', groups='website_slides.group_website_slides_officer')
+    attempts_count = fields.Integer("Attempts", groups='website_slides.group_website_slides_officer', default=0)
     attempts_avg = fields.Float(compute="_compute_statistics", digits=(6, 2), groups='website_slides.group_website_slides_officer')
     done_count = fields.Integer(compute="_compute_statistics", groups='website_slides.group_website_slides_officer')
+    active = fields.Boolean(default=True, tracking=1)
 
     @api.constrains('answer_ids')
     def _check_answers_integrity(self):
@@ -29,7 +30,7 @@ class SlideQuestion(models.Model):
                 raise ValidationError(_('Question "%s" must have 1 correct answer and at least 1 invalid answer', question.question))
 
     @api.depends('slide_id')
-    def _compute_statistics(self):
+    def _get_statistics(self):
         slide_partners = self.env['slide.slide.partner'].sudo().search([('slide_id', 'in', self.slide_id.ids)])
         slide_stats = dict((s.slide_id.id, dict({'attempts_count': 0, 'attempts_unique': 0, 'done_count': 0})) for s in slide_partners)
 
@@ -39,11 +40,28 @@ class SlideQuestion(models.Model):
             if slide_partner.completed:
                 slide_stats[slide_partner.slide_id.id]['done_count'] += 1
 
+        computed = {}
         for question in self:
             stats = slide_stats.get(question.slide_id.id)
-            question.attempts_count = stats.get('attempts_count', 0) if stats else 0
-            question.attempts_avg = stats.get('attempts_count', 0) / stats.get('attempts_unique', 1) if stats else 0
-            question.done_count = stats.get('done_count', 0) if stats else 0
+            computed[question.slide_id.id] = {
+                'attempts_count': stats.get('attempts_count', 0) if stats else 0,
+                'attempts_avg': stats.get('attempts_count', 0) / stats.get('attempts_unique', 1) if stats else 0,
+                'done_count': stats.get('done_count', 0) if stats else 0
+            }
+        return computed
+
+    @api.depends('slide_id')
+    def _recompute_attempts_count(self):
+        stats = self._get_statistics()
+        for question in self:
+            question.write({'attempts_count': stats.get(question.slide.id).get('attempts_count')})
+
+    @api.depends('slide_id')
+    def _compute_statistics(self):
+        stats = self._get_statistics()
+        for question in self:
+            question.attempts_avg = stats.get(question.slide_id.id).get('attempts_avg')
+            question.done_count = stats.get(question.slide_id.id).get('done_count')
 
 
 class SlideAnswer(models.Model):

@@ -181,3 +181,11 @@ class TestSlideStatistics(common.SlidesCase):
         self.assertEqual(category.total_slides, 1, 'The first category should contain 1 slide')
         self.assertEqual(other_category.total_slides, 1, 'The other category should contain 1 slide')
         self.assertEqual(self.channel.total_slides, 3, 'The channel should still contain 3 slides')
+
+    @users('user_officer')
+    def test_question_attempts_count(self):
+        self.assertEqual(self.question_1.attempts_count, 0, "Question should start with 0 attempts")
+        self.slide_3.with_user(self.user_officer)._action_set_quiz_done()
+        self.slide_3.with_user(self.user_officer).action_set_completed()
+        self.slide_3.with_user(self.user_officer).action_set_viewed(quiz_attempts_inc=True)
+        self.assertEqual(self.question_1.attempts_count, 1, "Question should count 1 attempts")
