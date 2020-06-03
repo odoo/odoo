@@ -172,10 +172,9 @@ class TestCreatePicking(common.TestProductCommon):
         picking.move_lines.quantity_done = 100.0
         picking.button_validate()
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 100.0, 'Wrong quantity in stock.')
-
-        customer_move._action_assign()
-        self.assertEqual(customer_move.state, 'assigned', 'Reservation should work with the new quantity provided by the PO.')
+        # mts move will be automatically assigned
+        self.assertEqual(customer_move.state, 'assigned', 'Automatically assigned due to the incoming move makes it available.')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 0.0, 'Wrong quantity in stock.')
 
     def test_03_uom(self):
         """ Buy a dozen of products stocked in units. Check that the quantities on the purchase order
