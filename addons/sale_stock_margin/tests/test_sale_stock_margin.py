@@ -24,6 +24,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'price_unit': price_unit,
             'product_id': product.id,
             'product_uom_qty': quantity,
+            'discount': 0.0,
         })
 
     def _create_product(self):
