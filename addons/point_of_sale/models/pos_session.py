@@ -634,6 +634,7 @@ class PosSession(models.Model):
     def _get_split_receivable_vals(self, payment, amount, amount_converted):
         partial_vals = {
             'account_id': payment.payment_method_id.receivable_account_id.id,
+            'exclude_from_invoice_tab': True,
             'move_id': self.move_id.id,
             'partner_id': self.env["res.partner"]._find_accounting_partner(payment.partner_id).id,
             'name': '%s - %s' % (self.name, payment.payment_method_id.name),
@@ -643,6 +644,7 @@ class PosSession(models.Model):
     def _get_combine_receivable_vals(self, payment_method, amount, amount_converted):
         partial_vals = {
             'account_id': payment_method.receivable_account_id.id,
+            'exclude_from_invoice_tab': True,
             'move_id': self.move_id.id,
             'name': '%s - %s' % (self.name, payment_method.name)
         }
@@ -651,6 +653,7 @@ class PosSession(models.Model):
     def _get_invoice_receivable_vals(self, account_id, amount, amount_converted):
         partial_vals = {
             'account_id': account_id,
+            'exclude_from_invoice_tab': True,
             'move_id': self.move_id.id,
             'name': 'From invoiced orders'
         }
@@ -668,10 +671,25 @@ class PosSession(models.Model):
             .mapped('invoice_repartition_line_ids' if sign == 1 else 'refund_repartition_line_ids')\
             .filtered(lambda line: line.repartition_type == 'base')\
             .tag_ids
+
+        # We get the prices total and subtotal since those can be used in reports
+        prices = self.env['account.move.line']._get_price_total_and_subtotal_model(
+            amount,
+            1.0,
+            0.0,
+            self.currency_id,
+            self.env['product.product'],
+            self.env['res.partner'],
+            applied_taxes,
+            'other',
+        )
         partial_vals = {
             'name': name,
             'account_id': account_id,
+            'exclude_from_invoice_tab': False,
             'move_id': self.move_id.id,
+            'price_subtotal': prices.get('price_subtotal', amount),
+            'price_total': prices.get('price_total', amount),
             'tax_ids': [(6, 0, tax_ids)],
             'tag_ids': [(6, 0, base_tags.ids)],
         }
@@ -683,6 +701,7 @@ class PosSession(models.Model):
         partial_args = {
             'name': tax.name,
             'account_id': account_id,
+            'exclude_from_invoice_tab': True,
             'move_id': self.move_id.id,
             'tax_base_amount': abs(base_amount_converted),
             'tax_repartition_line_id': repartition_line_id,
@@ -691,11 +710,11 @@ class PosSession(models.Model):
         return self._debit_amounts(partial_args, amount, amount_converted)
 
     def _get_stock_expense_vals(self, exp_account, amount, amount_converted):
-        partial_args = {'account_id': exp_account.id, 'move_id': self.move_id.id}
+        partial_args = {'account_id': exp_account.id, 'exclude_from_invoice_tab': True, 'move_id': self.move_id.id}
         return self._debit_amounts(partial_args, amount, amount_converted, force_company_currency=True)
 
     def _get_stock_output_vals(self, out_account, amount, amount_converted):
-        partial_args = {'account_id': out_account.id, 'move_id': self.move_id.id}
+        partial_args = {'account_id': out_account.id, 'exclude_from_invoice_tab': True, 'move_id': self.move_id.id}
         return self._credit_amounts(partial_args, amount, amount_converted, force_company_currency=True)
 
     def _get_statement_line_vals(self, statement, receivable_account, amount):
