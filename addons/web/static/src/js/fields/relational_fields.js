@@ -600,7 +600,7 @@ var FieldMany2One = AbstractField.extend({
                     });
                 }
                 // create and edit ...
-                if (self.can_create && !self.nodeOptions.no_create_edit) {
+                if (self.can_create && !self.nodeOptions.no_create_edit && search_val.length > 0) {
                     var createAndEditAction = function () {
                         // Clear the value in case the user clicks on discard
                         self.$('input').val('');
@@ -616,7 +616,13 @@ var FieldMany2One = AbstractField.extend({
                         label: _t("No results to show..."),
                     });
                 }
-
+                if (!self.value && !search_val.length && self.can_create
+                    && (!self.nodeOptions.no_quick_create || !self.nodeOptions.no_create_edit)) {
+                    values.push({
+                        label: _t("Start typing..."),
+                        classname: 'o_m2o_start_typing',
+                    });
+                }
                 resolve(values);
             });
         });
