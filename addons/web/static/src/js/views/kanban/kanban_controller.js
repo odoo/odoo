@@ -403,7 +403,6 @@ var KanbanController = BasicController.extend({
         const filter = ev.data.activeFilter;
         const searchQuery = this._controlPanelModel.getQuery();
         const dbID = await this.model.loadActiveFilter(columnID, searchQuery, filter);
-        debugger;
         var data = this.model.get(dbID);
         this.renderer.updateColumn(dbID, data);
         ev.data.callback();
