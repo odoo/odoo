@@ -883,6 +883,7 @@
                                     <span>This entry has been generated through the Invoicing app, before installing Accounting. Its balance has been imported separately.</span>
                                 </div>
                                 <field name="line_ids"
+                                       mode="tree,kanban"
                                        context="{'default_move_type': context.get('default_move_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}"
                                        attrs="{'invisible': [('payment_state', '=', 'invoicing_legacy'), ('move_type', '!=', 'entry')]}">
                                     <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">
@@ -968,6 +969,29 @@
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
                                         <field name="account_internal_type" invisible="1"/>
                                     </tree>
+                                    <!-- kanban view for mobile -->
+                                    <kanban class="o_kanban_mobile">
+                                        <field name="date_maturity"/>
+                                        <field name="move_id"/>
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_kanban_global_click">
+                                                    <div class="row mb4">
+                                                        <strong class="col-6">
+                                                            <span t-esc="record.move_id.value"/>
+                                                        </strong>
+                                                        <strong class="col-6 text-right">
+                                                            <span t-esc="record.date_maturity.value"/>
+                                                        </strong>
+                                                        <div class="col-10">
+                                                            <span t-esc="record.name.value"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
                                     <!-- Form view to cover mobile use -->
                                     <form>
                                       <group>
