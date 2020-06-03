@@ -17,6 +17,9 @@
             <field name="model">product.category</field>
             <field name="inherit_id" ref="account.view_category_property_form"/>
             <field name="arch" type="xml">
+                <group name="account_property" position="attributes">
+                    <attribute name="attrs">{'invisible':[('property_valuation', '=', 'manual_periodic')]}</attribute>
+                </group>
                 <group name="account_property" position="inside">
                     <group name="account_stock_property" string="Account Stock Properties" groups="account.group_account_readonly">
                         <field name="property_stock_valuation_account_id" options="{'no_create': True}" attrs="{'required':[('property_valuation', '=', 'real_time')]}"/>
