@@ -11,6 +11,7 @@ var AbstractRenderer = require('web.AbstractRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
+const session = require('web.session');
 const utils = require('web.utils');
 var widgetRegistry = require('web.widget_registry');
 
@@ -18,6 +19,7 @@ const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 const FieldWrapper = require('web.FieldWrapper');
 
 var qweb = core.qweb;
+const _t = core._t;
 
 var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
     custom_events: {
@@ -415,10 +417,14 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
     _getTooltipOptions: function (widget) {
         return {
             title: function () {
-                return qweb.render('WidgetLabel.tooltip', {
-                    debug: config.isDebug(),
-                    widget: widget,
-                });
+                let help = widget.attrs.help || widget.field.help || '';
+                if (session.display_switch_company_menu && widget.field.company_dependent) {
+                    help += (help ? '\n\n' : '') + _t('Values set here are company-specific.');
+                }
+                const debug = config.isDebug();
+                if (help || debug) {
+                    return qweb.render('WidgetLabel.tooltip', { debug, help, widget });
+                }
             }
         };
     },
