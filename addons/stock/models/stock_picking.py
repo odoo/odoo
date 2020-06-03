@@ -4,6 +4,7 @@
 import json
 import time
 from ast import literal_eval
+from collections import defaultdict
 from datetime import date
 from itertools import groupby
 from operator import itemgetter
@@ -680,6 +681,20 @@ class Picking(models.Model):
         package_level_done.write({'is_done': False})
         moves._action_assign()
         package_level_done.write({'is_done': True})
+
+        # run scheduler for moves are not fully reserved
+        orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
+        for move in moves:
+            orderpoint = self.env['stock.warehouse.orderpoint'].search([
+                ('product_id', '=', move.product_id.id),
+                ('trigger', '=', 'auto'),
+                ('location_id', 'parent_of', move.location_id.id),
+            ], limit=1)
+            if orderpoint:
+                orderpoints_by_company[move.company_id] |= orderpoint
+        for company, orderpoints in orderpoints_by_company.items():
+            orderpoints._procure_orderpoint_confirm(company_id=company, raise_user_error=False)
+
         return True
 
     def action_cancel(self):
@@ -728,6 +743,16 @@ class Picking(models.Model):
                     todo_moves |= new_move
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
         self.write({'date_done': fields.Datetime.now()})
+
+        # if incoming moves make other confirmed/partially_available moves available, assign them
+        done_incoming_moves = self.filtered(lambda p: p.picking_type_id.code == 'incoming').move_lines.filtered(lambda m: m.state == 'done')
+        domains = []
+        for move in done_incoming_moves:
+            domains.append([('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)])
+        static_domain = [('state', 'in', ['confirmed', 'partially_available']), ('procure_method', '=', 'make_to_stock')]
+        moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]))
+        moves_to_reserve._action_assign()
+
         self._send_confirmation_email()
         return True
 
