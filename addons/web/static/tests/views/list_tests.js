@@ -559,6 +559,19 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('field with nolabel has no title', async function (assert) {
+        assert.expect(1);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo" nolabel="1"/></tree>',
+        });
+        assert.strictEqual(list.$('thead tr:first th:eq(1)').text(), "");
+        list.destroy();
+    });
+
     QUnit.test('field titles are not escaped', async function (assert) {
         assert.expect(2);
 
@@ -3203,6 +3216,39 @@ QUnit.module('Views', {
             "record 3 should be first");
         assert.ok(list.$('tbody tr:eq(3) td:contains(blip)').length,
             "record 1 should be first");
+
+        list.destroy();
+    });
+
+    QUnit.test('do not sort records when clicking on header with nolabel', async function (assert) {
+        assert.expect(6);
+
+        this.data.foo.fields.foo.sortable = true;
+
+        let nbSearchRead = 0;
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo" nolabel="1"/><field name="int_field"/></tree>',
+            mockRPC: function (route) {
+                if (route === '/web/dataset/search_read') {
+                    nbSearchRead++;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(nbSearchRead, 1, "should have done one search_read");
+        assert.strictEqual(list.$('.o_data_cell').text(), "yop10blip9gnap17blip-4");
+
+        await testUtils.dom.click(list.$('thead th[data-name="int_field"]'));
+        assert.strictEqual(nbSearchRead, 2, "should have done one other search_read");
+        assert.strictEqual(list.$('.o_data_cell').text(), "blip-4blip9yop10gnap17");
+
+        await testUtils.dom.click(list.$('thead th[data-name="foo"]'));
+        assert.strictEqual(nbSearchRead, 2, "shouldn't have done anymore search_read");
+        assert.strictEqual(list.$('.o_data_cell').text(), "blip-4blip9yop10gnap17");
 
         list.destroy();
     });
