@@ -296,5 +296,14 @@
         </record>
 
     </data>
+
+    <data>
+        <!--Put outside the noupdate block as it was reintroduced in 12.0 by a fix;
+            we want module update to create it-->
+        <record id="tag_nl_34" model="account.account.tag">
+            <field name="name">Voorbelasting (BTW) bis</field>
+            <field name="applicability">taxes</field>
+        </record>
+    </data>
 </odoo>
 
