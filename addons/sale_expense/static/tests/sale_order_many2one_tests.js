@@ -70,8 +70,8 @@ QUnit.module('sale_expense', {
         });
         var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
         await testUtils.fields.many2one.clickOpenDropdown('sale_order_id');
-        assert.containsN($dropdown, 'li:not(.o_m2o_dropdown_option)', 8, 'autocomplete should contains 8 suggestions');
-        assert.containsN($dropdown, 'li.o_m2o_dropdown_option', 1, 'autocomplete should contain only one option');
+        assert.containsN($dropdown, 'li:not(.o_m2o_dropdown_option)', 9);
+        assert.containsNone($dropdown, 'li.o_m2o_dropdown_option');
         assert.containsNone($dropdown, 'li.o_m2o_dropdown_option:contains("Search More...")', "Should not display the 'Search More... option'");
         form.destroy();
     });

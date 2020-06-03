@@ -264,7 +264,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('O2M with parented m2o and domain on parent.m2o', async function (assert) {
-            assert.expect(3);
+            assert.expect(4);
 
             /* records in an o2m can have a m2o pointing to themselves
                 * in that case, a domain evaluation on that field followed by name_search
@@ -299,8 +299,7 @@ QUnit.module('fields', {}, function () {
 
             await testUtils.dom.click(form.$('.o_field_x2many_list[name=turtles] .o_field_x2many_list_row_add a'));
 
-            await testUtils.fields.many2one.clickOpenDropdown('parent_id');
-            await testUtils.fields.many2one.clickHighlightedItem('parent_id');
+            await testUtils.fields.many2one.createAndEdit('parent_id');
 
             var $modal = $('.modal-content');
 
@@ -8131,8 +8130,7 @@ QUnit.module('fields', {}, function () {
             assert.containsOnce(form, '.o_selected_row',
                 "should have create a new row in edition");
 
-            await testUtils.fields.many2one.clickOpenDropdown('turtle_trululu');
-            await testUtils.fields.many2one.clickItem('turtle_trululu','Create and Edit...');
+            await testUtils.fields.many2one.createAndEdit('turtle_trululu', "ABC");
 
             assert.strictEqual($('.modal .o_form_view').length, 1,
                 "should have opened a form view in a dialog");

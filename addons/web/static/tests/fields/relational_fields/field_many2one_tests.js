@@ -625,8 +625,7 @@ QUnit.module('fields', {}, function () {
 
             assert.strictEqual(document.activeElement, input, "Input should be focused when activated");
 
-            await testUtils.fields.many2one.clickOpenDropdown('trululu');
-            await testUtils.fields.many2one.clickItem('trululu', 'Create');
+            await testUtils.fields.many2one.createAndEdit('trululu', "ABC");
 
             // At this point, if the focus is correctly registered by the m2o, there
             // should be only one modal (the "Create" one) and none for saving changes.
@@ -667,8 +666,78 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('empty many2one field', async function (assert) {
+            assert.expect(4);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form string="Partners">
+                        <sheet>
+                            <group>
+                                <field name="trululu"/>
+                            </group>
+                        </sheet>
+                    </form>`,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            const $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+            await testUtils.fields.many2one.clickOpenDropdown('trululu');
+            assert.containsNone($dropdown, 'li.o_m2o_dropdown_option',
+                'autocomplete should not contains dropdown options');
+            assert.containsOnce($dropdown, 'li.o_m2o_start_typing',
+                'autocomplete should contains start typing option');
+
+            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="trululu"] input'),
+                'abc', 'keydown');
+            await testUtils.nextTick();
+            assert.containsN($dropdown, 'li.o_m2o_dropdown_option', 2,
+                'autocomplete should contains 2 dropdown options');
+            assert.containsNone($dropdown, 'li.o_m2o_start_typing',
+                'autocomplete should not contains start typing option');
+
+            form.destroy();
+        });
+
+        QUnit.test('empty many2one field with node options', async function (assert) {
+            assert.expect(2);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="trululu" options="{'no_create_edit': 1}"/>
+                            <field name="product_id" options="{'no_create_edit': 1, 'no_quick_create': 1}"/>
+                        </group>
+                    </sheet>
+                </form>`,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            const $dropdownTrululu = form.$('.o_field_many2one[name="trululu"] input').autocomplete('widget');
+            const $dropdownProduct = form.$('.o_field_many2one[name="product_id"] input').autocomplete('widget');
+            await testUtils.fields.many2one.clickOpenDropdown('trululu');
+            assert.containsOnce($dropdownTrululu, 'li.o_m2o_start_typing',
+                'autocomplete should contains start typing option');
+
+            await testUtils.fields.many2one.clickOpenDropdown('product_id');
+            assert.containsNone($dropdownProduct, 'li.o_m2o_start_typing',
+                'autocomplete should contains start typing option');
+
+            form.destroy();
+        });
+
         QUnit.test('many2one in edit mode', async function (assert) {
-            assert.expect(16);
+            assert.expect(17);
 
             // create 10 partners to have the 'Search More' option in the autocomplete dropdown
             for (var i = 0; i < 10; i++) {
@@ -716,9 +785,11 @@ QUnit.module('fields', {}, function () {
             assert.ok($dropdown.is(':visible'),
                 'clicking on the m2o input should open the dropdown if it is not open yet');
             assert.strictEqual($dropdown.find('li:not(.o_m2o_dropdown_option)').length, 7,
-                'autocomplete should contains 7 suggestions');
-            assert.strictEqual($dropdown.find('li.o_m2o_dropdown_option').length, 2,
-                'autocomplete should contain "Search More" and Create and Edit..."');
+                'autocomplete should contains 8 suggestions');
+            assert.strictEqual($dropdown.find('li.o_m2o_dropdown_option').length, 1,
+                'autocomplete should contain "Search More"');
+            assert.containsNone($dropdown, 'li.o_m2o_start_typing',
+                'autocomplete should not contains start typing option if value is available');
 
             await testUtils.fields.many2one.clickOpenDropdown('trululu');
             assert.ok(!$dropdown.is(':visible'),
@@ -808,9 +879,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            // click on 'Create and Edit' in m2o dropdown
-            await testUtils.fields.many2one.clickOpenDropdown('product_id');
-            await testUtils.fields.many2one.clickItem('product_id', 'Create and Edit');
+            await testUtils.fields.many2one.createAndEdit('product_id', "ABC");
             assert.containsOnce(document.body, '.modal .o_form_view');
 
             // quick create 'new value'
@@ -891,8 +960,8 @@ QUnit.module('fields', {}, function () {
 
             await testUtils.fields.many2one.clickOpenDropdown('trululu');
             assert.isVisible($dropdown);
-            assert.containsN($dropdown, 'li:not(.o_m2o_dropdown_option)', 3,
-                'autocomplete should contains 3 suggestions');
+            assert.containsN($dropdown, 'li:not(.o_m2o_dropdown_option)', 4,
+                'autocomplete should contains 4 suggestions');
 
             // search with leading spaces
             form.$('.o_field_many2one input').val('   first').trigger('keydown').trigger('keyup');

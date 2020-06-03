@@ -1314,8 +1314,7 @@ QUnit.module('fields', {}, function () {
           });
           await testUtils.form.clickEdit(form);
 
-          await testUtils.fields.many2one.clickOpenDropdown('timmy');
-          await testUtils.fields.many2one.clickItem('timmy','Create and Edit');
+          await testUtils.fields.many2one.createAndEdit('timmy',"Ralts");
           assert.containsOnce($(document), '.modal .o_form_view', "should have opened the modal");
 
           // Create multiple records with save & new
@@ -1454,8 +1453,8 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.many2one.clickOpenDropdown('partner_ids');
 
             const $dropdown1 = form.$('.o_field_many2one input').autocomplete('widget');
-            assert.containsOnce($dropdown1, 'li.o_m2o_dropdown_option:contains(Create and Edit...)',
-                'autocomplete should contain Create and Edit...');
+            assert.containsOnce($dropdown1, 'li.o_m2o_start_typing:contains(Start typing...)',
+                'autocomplete should contain Start typing...');
 
             await testUtils.fields.many2one.clickItem('partner_ids', 'Search More');
 
@@ -1468,7 +1467,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
                 'Something that does not exist', 'keydown');
             // await testUtils.nextTick();
-            assert.containsN($dropdown1, 'li.o_m2o_dropdown_option', 2,
+            assert.containsN(form.$('.o_field_many2one input').autocomplete('widget'), 'li.o_m2o_dropdown_option', 2,
                 'autocomplete should contain Create and Create and Edit... options');
 
             // set turtle_bar false -> create and delete actions are no longer available
