@@ -725,13 +725,13 @@ class expression(object):
                         doms.insert(0, OR_OPERATOR)
                     doms += [AND_OPERATOR, ('parent_left', '<', rec.parent_right), ('parent_left', '>=', rec.parent_left)]
                 if prefix:
-                    return [(left, 'in', left_model.search(doms).ids)]
+                    return [(left, 'in', left_model.search(doms, order='id').ids)]
                 return doms
             else:
                 parent_name = parent or left_model._parent_name
                 child_ids = set(ids)
                 while ids:
-                    ids = left_model.search([(parent_name, 'in', ids)]).ids
+                    ids = left_model.search([(parent_name, 'in', ids)], order='id').ids
                     child_ids.update(ids)
                 return [(left, 'in', list(child_ids))]
 
@@ -746,7 +746,7 @@ class expression(object):
                         doms.insert(0, OR_OPERATOR)
                     doms += [AND_OPERATOR, ('parent_right', '>', rec.parent_left), ('parent_left', '<=',  rec.parent_left)]
                 if prefix:
-                    return [(left, 'in', left_model.search(doms).ids)]
+                    return [(left, 'in', left_model.search(doms, order='id').ids)]
                 return doms
             else:
                 parent_name = parent or left_model._parent_name
@@ -869,13 +869,13 @@ class expression(object):
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
 
             elif len(path) > 1 and field.store and field.type == 'many2one':
-                right_ids = comodel.with_context(active_test=False).search([('.'.join(path[1:]), operator, right)]).ids
+                right_ids = comodel.with_context(active_test=False).search([('.'.join(path[1:]), operator, right)], order='id').ids
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
             # Making search easier when there is a left operand as one2many or many2many
             elif len(path) > 1 and field.store and field.type in ('many2many', 'one2many'):
-                right_ids = comodel.search([('.'.join(path[1:]), operator, right)]).ids
+                right_ids = comodel.search([('.'.join(path[1:]), operator, right)], order='id').ids
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
@@ -891,7 +891,7 @@ class expression(object):
                 else:
                     # Let the field generate a domain.
                     if len(path) > 1:
-                        right = comodel.search([('.'.join(path[1:]), operator, right)]).ids
+                        right = comodel.search([('.'.join(path[1:]), operator, right)], order='id').ids
                         operator = 'in'
                     domain = field.determine_domain(model, operator, right)
 
@@ -935,8 +935,7 @@ class expression(object):
                         else:
                             ids2 = [right]
                         if ids2 and is_integer_m2o and domain:
-                            ids2 = comodel.search([('id', 'in', ids2)] + domain).ids
-
+                            ids2 = comodel.search([('id', 'in', ids2)] + domain, order='id').ids
                     if not ids2:
                         if operator in ['like', 'ilike', 'in', '=']:
                             #no result found with given search criteria
@@ -969,7 +968,7 @@ class expression(object):
                         comodel_domain = [(field.inverse_name, '!=', False)]
                         if is_integer_m2o and domain:
                             comodel_domain += domain
-                        recs = comodel.search(comodel_domain).sudo().with_context(prefetch_fields=False)
+                        recs = comodel.search(comodel_domain, order='id').sudo().with_context(prefetch_fields=False)
                         ids1 = recs.mapped(field.inverse_name)
                         if not is_integer_m2o:
                             ids1 = ids1.ids
@@ -981,7 +980,7 @@ class expression(object):
                 if operator in HIERARCHY_FUNCS:
                     ids2 = to_ids(right, comodel)
                     dom = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
-                    ids2 = comodel.search(dom).ids
+                    ids2 = comodel.search(dom, order='id').ids
                     if comodel == model:
                         push(create_substitution_leaf(leaf, ('id', 'in', ids2), model))
                     else:
