@@ -189,6 +189,9 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
                             <page string="Options">
                                 <group class="o_label_nowrap">
                                     <field name="users_can_go_back" string="User can come back in the previous page"/>
@@ -332,6 +335,8 @@
                         <div class="oe_title" style="width: 100%;">
                             <label for="title" class="oe_edit_only"/>
                             <h1><field name="title" placeholder="Page Title"/></h1>
+                            <label for="description" string="Description"/>
+                            <field name="description"/>
                         </div>
                         <field name="question_ids" nolabel="1" mode="tree" context="{'default_page_id': active_id}">
                             <tree>
@@ -490,6 +495,9 @@
                                         <field name="value" string="Rows"/>
                                     </tree>
                                 </field>
+                            </page>
+                            <page string="Description">
+                                <field name="description"/>
                             </page>
                             <page string="Options">
                                 <group string="Constraints">
