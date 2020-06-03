@@ -114,7 +114,12 @@ class SaleOrderLine(models.Model):
         event_ticket_lines = self.filtered('event_ticket_id')
         for line in event_ticket_lines:
             line.discount = 0.0
-            line.price_unit = line.event_ticket_id.price
+            company = line.event_id.company_id or line.env.company.id
+            currency = company.currency_id
+            line.price_unit = currency._convert(
+                line.event_ticket_id.price, line.order_id.currency_id,
+                line.order_id.company_id or line.env.company.id,
+                line.order_id.date_order or fields.Date.today())
         super(SaleOrderLine, self-event_ticket_lines)._compute_price_unit()
 
     @api.depends('product_id', 'product_custom_attribute_value_ids', 'product_no_variant_attribute_value_ids', 'event_ticket_id')

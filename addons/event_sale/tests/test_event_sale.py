@@ -50,12 +50,15 @@ class TestEventSale(TestEventSaleCommon):
                     'event_ticket_id': ticket1.id,
                     'product_id': ticket1.product_id.id,
                     'product_uom_qty': TICKET1_COUNT,
+                    'tax_id': None,
                 }), (0, 0, {
                     'event_id': self.event_0.id,
                     'event_ticket_id': ticket2.id,
                     'product_id': ticket2.product_id.id,
                     'product_uom_qty': TICKET2_COUNT,
                     'price_unit': 50,
+                    'discount': 0.0,
+                    'tax_id': None,
                 })
             ]
         })
@@ -140,7 +143,7 @@ class TestEventSale(TestEventSaleCommon):
         # ADDING MANUAL LINES ON SO
         # ------------------------------------------------------------
 
-        ticket2_line.write({'product_uom_qty': 3})
+        ticket2_line.write({'product_uom_qty': 3, 'price_unit': 50.0, 'discount': 0.0})
         editor_action = customer_so.action_confirm()
         self.assertEqual(customer_so.state, 'sale')
         self.assertEqual(customer_so.amount_untaxed, TICKET1_COUNT * 10 + (TICKET2_COUNT + 2) * 50)
