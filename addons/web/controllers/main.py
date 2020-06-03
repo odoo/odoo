@@ -901,7 +901,7 @@ class Home(http.Controller):
                     values['error'] = e.args[0]
         else:
             if 'error' in request.params and request.params.get('error') == 'access':
-                values['error'] = _('Only employee can access this database. Please contact the administrator.')
+                values['error'] = _('Only employees can access this database. Please contact the administrator.')
 
         if 'login' not in values and request.session.get('auth_login'):
             values['login'] = request.session.get('auth_login')
