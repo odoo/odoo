@@ -108,9 +108,9 @@ class SaleOrderOption(models.Model):
     _order = 'sequence, id'
     _check_company_auto = True
 
-    order_id = fields.Many2one('sale.order', 'Sales Order Reference', ondelete='cascade', index=True)
-    company_id = fields.Many2one('res.company', related='order_id.company_id', store=True)
-    currency_id = fields.Many2one('res.currency', related='order_id.currency_id', store=True)
+    order_id = fields.Many2one('sale.order', 'Sales Order Reference', required=True, ondelete='cascade', index=True)
+    company_id = fields.Many2one(related='order_id.company_id', store=True)
+    currency_id = fields.Many2one(related='order_id.currency_id', store=True)
 
     name = fields.Text('Description', compute="_compute_name", store=True, readonly=False)
     product_id = fields.Many2one(
@@ -151,13 +151,41 @@ class SaleOrderOption(models.Model):
     # TODO dependency on pricelist and compute discount on it also for the option lines.
     @api.depends('product_id', 'company_id', 'quantity', 'uom_id')
     def _compute_price_unit(self):
+        discount_enabled = self.user_has_groups("product.group_discount_per_so_line")
         for option in self:
-            option = option.with_company(option.company_id)
-            if option.order_id.pricelist_id:
-                option.price_unit = option.order_id.pricelist_id.get_product_price(
-                    option.product_id, option.quantity,
-                    option.order_id.partner_id, uom_id=option.uom_id.id)
-                option.discount = 0.0
+            if option.order_id.pricelist_id and option.product_id and option.uom_id:
+                option = option.with_context(
+                    partner_id=option.order_id.partner_id.id,
+                    quantity=option.quantity,
+                    date=option.order_id.date_order or fields.Date.today(),
+                    pricelist=option.order_id.pricelist_id.id,
+                    uom=option.uom_id.id
+                ).with_company(option.company_id)
+                product = option.product_id
+                discount = 0.0
+                price, rule_id = option.order_id.pricelist_id.get_product_price_rule(
+                    product, option.quantity, option.order_id.partner_id
+                )
+                if discount_enabled and option.order_id.pricelist_id.discount_policy == "without_discount":
+                    new_list_price, currency = option.env["sale.order.line"]._get_real_price_currency(
+                        product, rule_id, option.quantity, option.uom_id, option.order_id.pricelist_id.id
+                    )
+                    if new_list_price != 0:
+                        if option.currency_id != currency:
+                            # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
+                            new_list_price = currency._convert(
+                                from_amount=new_list_price,
+                                to_currency=option.currency_id,
+                                company=option.env.company,
+                                date=option.order_id.date_order or fields.Date.today())
+                        disc = (new_list_price - price) / new_list_price * 100
+                        if (disc > 0 and new_list_price > 0) or (disc < 0 and new_list_price < 0):
+                            discount = disc
+                        price = new_list_price
+                option.price_unit = price
+                # option.env['account.tax']._fix_tax_included_price_company(
+                #     price, product.taxes_id, option.tax_id, option.env.company)
+                option.discount = discount or option.discount
             else:
                 option.price_unit = 0.0
                 option.discount = 0.0
@@ -165,8 +193,8 @@ class SaleOrderOption(models.Model):
     @api.depends('product_id')
     def _compute_product_information(self):
         for option in self:
-            option.product_uom = option.product_id.uom_id  # if category different else option.product_uom ?
-            option.product_uom_qty = 1.0
+            option.uom_id = option.product_id.uom_id  # if category different else option.uom_id ?
+            option.quantity = 1.0
 
     @api.depends('product_id')
     def _compute_name(self):

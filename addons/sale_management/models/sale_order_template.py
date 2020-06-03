@@ -30,6 +30,7 @@ class SaleOrderTemplate(models.Model):
     active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
     company_id = fields.Many2one('res.company', string='Company')
 
+    # VFE TODO compute
     @api.onchange('sale_order_template_line_ids', 'sale_order_template_option_ids')
     def _onchange_template_line_ids(self):
         companies = self.mapped('sale_order_template_option_ids.product_id.company_id') | self.mapped('sale_order_template_line_ids.product_id.company_id')
@@ -95,7 +96,7 @@ class SaleOrderTemplateLine(models.Model):
     sale_order_template_id = fields.Many2one(
         'sale.order.template', 'Quotation Template Reference',
         required=True, ondelete='cascade', index=True)
-    company_id = fields.Many2one('res.company', related='sale_order_template_id.company_id', store=True, index=True)
+    company_id = fields.Many2one(related='sale_order_template_id.company_id', store=True, index=True)
 
     name = fields.Text(
         'Description', translate=True,
@@ -113,7 +114,6 @@ class SaleOrderTemplateLine(models.Model):
         domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
 
-
     display_type = fields.Selection([
         ('line_section', "Section"),
         ('line_note', "Note")], help="Technical field for UX purpose.")
@@ -122,7 +122,7 @@ class SaleOrderTemplateLine(models.Model):
     def _compute_product_information(self):
         for line in self:
             line.product_uom = line.product_id.uom_id  # if category different else line.product_uom ?
-            line.product_uom_qty = 1.0 # VFE TODO do we really want to reset qty whenever the product_id is changed ?
+            line.product_uom_qty = line.product_uom_qty or 1.0
 
     @api.depends('product_id', 'company_id')
     def _compute_name(self):
@@ -155,7 +155,7 @@ class SaleOrderTemplateLine(models.Model):
         return {
             'display_type': self.display_type,
             'name': self.name,
-            'product_uom_qty': self.product_uom_qty,
+            'product_uom_qty': self.product_uom_qty or 1.0,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
         }
@@ -201,4 +201,5 @@ class SaleOrderTemplateOption(models.Model):
             'name': self.name,
             'quantity': self.quantity,
             'uom_id': self.uom_id.id,
+            'quantity': self.quantity,
         }

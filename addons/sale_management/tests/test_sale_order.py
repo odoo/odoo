@@ -220,10 +220,11 @@ class TestSaleOrder(TestCommonSaleNoChart):
         the discount is computed according to the price list.
         """
 
+        self.env.user.groups_id += self.env.ref('product.group_discount_per_so_line')
+
         self.sale_order.write({
             'pricelist_id': self.discount_excluded_price_list.id,
             'sale_order_template_id': self.quotation_template_no_discount.id,
-            'payment_term_id': False,
         })
         self.sale_order.onchange_sale_order_template_id()
 
