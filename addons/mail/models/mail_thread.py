@@ -1652,6 +1652,8 @@ class MailThread(models.AbstractModel):
         if res_id is None and self.ids:
             res_id = self.ids[0]
         followers = self.env['res.partner']
+
+        record = None
         if res_model and res_id:
             record = self.env[res_model].browse(res_id)
             if hasattr(record, 'message_partner_ids'):
@@ -1686,16 +1688,43 @@ class MailThread(models.AbstractModel):
                     # if no match with addr-spec, attempt substring match within name-addr pair
                     partners = Users.search([('email', 'ilike', email_brackets)], limit=1).mapped('partner_id')
                 partner_id = partners.id
-            # third try: check in partners
+
             if not partner_id:
-                # exact, case-insensitive match
-                partners = Partner.search([('email', '=ilike', email_address)], limit=1)
-                if not partners:
-                    # if no match with addr-spec, attempt substring match within name-addr pair
-                    partners = Partner.search([('email', 'ilike', email_brackets)], limit=1)
-                partner_id = partners.id
+                # third try: check partners of record if present, else simply check partners
+                if record and res_model == 'sale.order':
+                    if record.partner_id and record.partner_id.email == email_address:
+                        partner_id = record.partner_id.id
+                    elif record.partner_invoice_id and record.partner_invoice_id.email == email_address:
+                        partner_id = record.partner_invoice_id.id
+                    elif record.partner_shipping_id and record.partner_shipping_id.email == email_address:
+                        partner_id = record.partner_shipping_id.id
+                    else:
+                        partners = Partner.search([('email', '=ilike', email_address), ('company_id', '=', record.company_id.id)], limit=1)
+                        if not partners:
+                            # if no match with addr-spec, attempt substring match within name-addr pair
+                            partners = Partner.search([('email', 'ilike', email_brackets), ('company_id', '=', record.company_id.id)], limit=1)
+
+                        # repeat with empty company_id
+                        if not partners:
+                            partners = Partner.search([('email', '=ilike', email_address), ('company_id', '=', False)], limit=1)
+                        if not partners:
+                            # if no match with addr-spec, attempt substring match within name-addr pair
+                            partners = Partner.search([('email', 'ilike', email_brackets), ('company_id', '=', False)], limit=1)
+
+                        if partners:
+                            partner_id = partners.id
+                else:
+                    # forth try: check in partners
+                    # exact, case-insensitive match
+                    partners = Partner.search([('email', '=ilike', email_address)], limit=1)
+                    if not partners:
+                        # if no match with addr-spec, attempt substring match within name-addr pair
+                        partners = Partner.search([('email', 'ilike', email_brackets)], limit=1)
+                    partner_id = partners.id
+
             if not partner_id and force_create:
                 partner_id = self.env['res.partner'].name_create(contact)[0]
+
             partner_ids.append(partner_id)
         return partner_ids
 
