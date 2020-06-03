@@ -80,7 +80,7 @@
         <field name="arch" type="xml">
           <field name="partner_id" position="replace">
             <field name="is_quantity_copy" invisible="1"/>
-            <field name="partner_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]" attrs="{'readonly': ['|', ('is_quantity_copy', '=', 'none'), ('state', 'in', ['purchase', 'done', 'cancel'])]}" force_save="1"/>
+            <field name="partner_id" widget="res_partner_many2one" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0, 'show_vat': True}" domain="[('supplier','=',True)]" attrs="{'readonly': ['|', ('is_quantity_copy', '=', 'none'), ('state', 'in', ['purchase', 'done', 'cancel'])]}" force_save="1" placeholder="Name, TIN, Email, or Reference"/>
             </field>
             <field name="partner_ref" position="after">
                 <field name="requisition_id"
