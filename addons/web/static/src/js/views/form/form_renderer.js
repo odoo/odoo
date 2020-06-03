@@ -836,13 +836,6 @@ var FormRenderer = BasicRenderer.extend({
             for: this._getIDForLabel(fieldName),
             text: text,
         });
-        const field = this.state.fields[fieldName];
-        if (field && field.company_dependent) {
-            $result.append($('<span>', {
-                class: 'fa fa-sm fa-building-o ml-2',
-                title: _t("Values set here are company-specific"),
-            }));
-        }
         if (node.tag === 'label') {
             this._handleAttributes($result, node);
         }
@@ -1032,9 +1025,7 @@ var FormRenderer = BasicRenderer.extend({
             var $widgets = self.$('.o_field_widget[name=' + widget.name + ']');
             var $label = idForLabel ? self.$('.o_form_label[for=' + idForLabel + ']') : $();
             $label = $label.eq($widgets.index(widget.$el));
-            if (config.isDebug() || widget.attrs.help || widget.field.help) {
-                self._addFieldTooltip(widget, $label);
-            }
+            self._addFieldTooltip(widget, $label);
             if (widget.attrs.widget === 'upgrade_boolean') {
                 // this widget needs a reference to its $label to be correctly
                 // rendered
