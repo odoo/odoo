@@ -954,7 +954,7 @@ class Lead(models.Model):
         :return: dictionary of values to give at res_partner.create()
         """
         email_split = tools.email_split(self.email_from)
-        return {
+        res = {
             'name': partner_name,
             'user_id': self.env.context.get('default_user_id') or self.user_id.id,
             'comment': self.description,
@@ -975,6 +975,9 @@ class Lead(models.Model):
             'is_company': is_company,
             'type': 'contact'
         }
+        if self.lang_id:
+            res['lang'] = self.lang_id.code
+        return res
 
     def _create_lead_partner(self):
         """ Create a partner from lead data
