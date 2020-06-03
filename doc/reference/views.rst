@@ -1480,6 +1480,9 @@ Possible children elements of the list view are:
         ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
         (``font-style: italic``), or any `bootstrap contextual color`_ (``danger``,
         ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
+    ``nolabel``
+        if set to "1", the column header will remain empty. Also, the column
+        won't be sortable.
 
     .. note::
 
