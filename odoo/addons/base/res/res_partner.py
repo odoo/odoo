@@ -625,7 +625,7 @@ class Partner(models.Model):
             a name, the name will have the email value.
             If 'force_email' key in context: must find the email address. """
         default_type = self._context.get('default_type')
-        if default_type and default_type not in self._fields['type'].selection:
+        if default_type and default_type not in self._fields['type'].get_values(self.env):
             context = dict(self._context)
             context.pop('default_type')
             self = self.with_context(context)
