@@ -613,45 +613,53 @@ class PosConfig(models.Model):
     # is installed, or if POS is installed on database having companies that already have
     # a localisation installed
     @api.model
-    def post_install_pos_localisation(self):
-        self.assign_payment_journals()
-        self.generate_pos_journal()
-
-    @api.model
-    def assign_payment_journals(self, companies=False):
+    def post_install_pos_localisation(self, companies=False):
         self = self.sudo()
         if not companies:
             companies = self.env['res.company'].search([])
-        for company in companies:
-            if company.chart_template_id:
-                cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
-                pos_receivable_account = company.account_default_pos_receivable_account_id
-                payment_methods = self.env['pos.payment.method']
-                if cash_journal:
-                    payment_methods |= payment_methods.create({
-                        'name': _('Cash'),
-                        'receivable_account_id': pos_receivable_account.id,
-                        'is_cash_count': True,
-                        'cash_journal_id': cash_journal.id,
-                        'company_id': company.id,
-                    })
+        for company in companies.filtered('chart_template_id'):
+            pos_configs = self.search([('company_id', '=', company.id)])
+            pos_configs.setup_defaults(company)
+
+    def setup_defaults(self, company):
+        """Extend this method to customize the existing pos.config of the company during the installation
+        of a localisation.
+        
+        :param self pos.config: pos.config records present in the company during the installation of localisation.
+        :param company res.company: the single company where the pos.config defaults will be setup.
+        """
+        self.assign_payment_journals(company)
+        self.generate_pos_journal(company)
+
+    def assign_payment_journals(self, company):
+        for pos_config in self:
+            if pos_config.payment_method_ids:
+                continue
+            cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
+            pos_receivable_account = company.account_default_pos_receivable_account_id
+            payment_methods = self.env['pos.payment.method']
+            if cash_journal:
                 payment_methods |= payment_methods.create({
-                    'name': _('Bank'),
+                    'name': _('Cash'),
                     'receivable_account_id': pos_receivable_account.id,
-                    'is_cash_count': False,
+                    'is_cash_count': True,
+                    'cash_journal_id': cash_journal.id,
                     'company_id': company.id,
                 })
-                existing_pos_config = self.env['pos.config'].search([('company_id', '=', company.id), ('payment_method_ids', '=', False)])
-                existing_pos_config.write({'payment_method_ids': [(6, 0, payment_methods.ids)]})
+            payment_methods |= payment_methods.create({
+                'name': _('Bank'),
+                'receivable_account_id': pos_receivable_account.id,
+                'is_cash_count': False,
+                'company_id': company.id,
+            })
+            pos_config.write({'payment_method_ids': [(6, 0, payment_methods.ids)]})
 
-    @api.model
-    def generate_pos_journal(self, companies=False):
-        self = self.sudo()
-        if not companies:
-            companies = self.env['res.company'].search([])
-        for company in companies:
+    def generate_pos_journal(self, company):
+        for pos_config in self:
+            if pos_config.journal_id:
+                continue
             pos_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'POSS')])
-            if company.chart_template_id and not pos_journal:
+            if not pos_journal:
                 pos_journal = self.env['account.journal'].create({
                     'type': 'sale',
                     'name': 'Point of Sale',
@@ -659,5 +667,4 @@ class PosConfig(models.Model):
                     'company_id': company.id,
                     'sequence': 20
                 })
-                existing_pos_config = self.env['pos.config'].search([('company_id', '=', company.id), ('journal_id', '=', False)])
-                existing_pos_config.write({'journal_id': pos_journal.id})
+            pos_config.write({'journal_id': pos_journal.id})
