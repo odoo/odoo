@@ -85,6 +85,8 @@
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
+                    <filter name="filter_date" date="date"/>
+                    <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"

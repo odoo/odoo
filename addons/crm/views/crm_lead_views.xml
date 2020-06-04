@@ -542,7 +542,8 @@
                     <filter string="Lost" name="lost"
                             domain="['&amp;', ('probability', '=', 0), ('active', '=', False)]"/>
                     <separator/>
-                    <filter string="Creation Date" name="creation_date" date="create_date"/>
+                    <filter string="Creation Date" name="filter_creation_date" date="create_date" default_period="this_month"/>
+                    <filter name="filter_date_closed" date="date_closed"/>
                     <separator/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
