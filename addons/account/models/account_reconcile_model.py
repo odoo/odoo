@@ -659,14 +659,18 @@ class AccountReconcileModel(models.Model):
             return False
 
         # Match total residual amount.
+        line_residual = statement_line.currency_id and statement_line.amount_currency or statement_line.amount
+        line_currency = statement_line.currency_id or statement_line.journal_id.currency_id or statement_line.company_id.currency_id
         total_residual = 0.0
         for aml in candidates:
             if aml['account_internal_type'] == 'liquidity':
-                total_residual += aml['aml_currency_id'] and aml['aml_amount_currency'] or aml['aml_balance']
+                partial_residual = aml['aml_currency_id'] and aml['aml_amount_currency'] or aml['aml_balance']
             else:
-                total_residual += aml['aml_currency_id'] and aml['aml_amount_residual_currency'] or aml['aml_amount_residual']
-        line_residual = statement_line.currency_id and statement_line.amount_currency or statement_line.amount
-        line_currency = statement_line.currency_id or statement_line.journal_id.currency_id or statement_line.company_id.currency_id
+                partial_residual = aml['aml_currency_id'] and aml['aml_amount_residual_currency'] or aml['aml_amount_residual']
+            partial_currency = aml['aml_currency_id'] and self.env['res.currency'].browse(aml['aml_currency_id']) or self.company_id.currency_id
+            if partial_currency != line_currency:
+                partial_residual = partial_currency._convert(partial_residual, line_currency, self.company_id, aml['aml_date_maturity'])
+            total_residual += partial_residual
 
         # Statement line amount is equal to the total residual.
         if float_is_zero(total_residual - line_residual, precision_rounding=line_currency.rounding):
