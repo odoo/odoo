@@ -796,35 +796,30 @@ class AccountReconcileModel(models.Model):
         if not candidates:
             return False
 
+        reconciliation_overview, open_balance_vals = statement_line._prepare_reconciliation([{
+            'currency_id': aml['aml_currency_id'],
+            'amount_residual': aml['aml_amount_residual'],
+            'amount_residual_currency': aml['aml_amount_residual_currency'],
+        } for aml in candidates])
+
         # Match total residual amount.
         line_currency = statement_line.foreign_currency_id or statement_line.currency_id
+        line_residual = statement_line.amount_residual
+        line_residual_after_reconciliation = line_residual
 
-        candidate_currencies = set(candidate['aml_currency_id'] or statement_line.company_currency_id.id for candidate in candidates)
-        if candidate_currencies != {line_currency.id}:
-            # We don't apply any automatic match based on residual amount if candidates have differenct currencies
-            return False
-
-        total_residual = 0.0
-        for aml in candidates:
-            if aml['account_internal_type'] == 'liquidity':
-                total_residual += aml['aml_currency_id'] and aml['aml_amount_currency'] or aml['aml_balance']
+        for reconciliation_vals in reconciliation_overview:
+            line_vals = reconciliation_vals['line_vals']
+            if line_vals['currency_id']:
+                line_residual_after_reconciliation -= line_vals['amount_currency']
             else:
-                total_residual += aml['aml_currency_id'] and aml['aml_amount_residual_currency'] or aml['aml_amount_residual']
+                line_residual_after_reconciliation -= line_vals['debit'] - line_vals['credit']
 
         # Statement line amount is equal to the total residual.
-        if float_is_zero(total_residual + statement_line.amount_residual, precision_rounding=line_currency.rounding):
+        if line_currency.is_zero(line_residual_after_reconciliation):
             return True
 
-        line_residual_to_compare = abs(statement_line.amount_residual)
-        total_residual_to_compare = abs(total_residual)
-
-        if line_residual_to_compare > total_residual_to_compare:
-            amount_percentage = (total_residual_to_compare / line_residual_to_compare) * 100
-        elif total_residual:
-            amount_percentage = (line_residual_to_compare / total_residual_to_compare) * 100 if total_residual_to_compare else 0.0
-        else:
-            return False
-        return amount_percentage >= self.match_total_amount_param
+        reconciled_percentage = (abs(line_residual) - abs(line_residual_after_reconciliation)) / abs(line_residual) * 100
+        return reconciled_percentage >= self.match_total_amount_param
 
     def _filter_candidates(self, candidates, aml_ids_to_exclude, reconciled_amls_ids):
         """ Sorts reconciliation candidates by priority and filters them so that only
