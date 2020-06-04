@@ -208,8 +208,9 @@ def download_drivers(auto=True):
             resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto})
             if resp.data:
                 subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+                drivers_path = Path.home() / 'odoo/addons/hw_drivers/drivers'
                 zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
-                zip_file.extractall(get_resource_path('hw_drivers', 'drivers'))
+                zip_file.extractall(drivers_path)
                 subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
                 subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
         except Exception as e:
