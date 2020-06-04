@@ -799,7 +799,7 @@ class Module(models.Model):
                     content = response.content
                 except Exception:
                     _logger.exception('Failed to fetch module %s', module_name)
-                    raise UserError(_('The `%s` module appears to be unavailable at the moment, please try again later.') % module_name)
+                    raise UserError(_('The `%s` module appears to be unavailable at the moment, please try again later.', module_name))
                 else:
                     zipfile.ZipFile(io.BytesIO(content)).extractall(tmp)
                     assert os.path.isdir(os.path.join(tmp, module_name))

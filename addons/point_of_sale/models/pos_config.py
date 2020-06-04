@@ -459,7 +459,7 @@ class PosConfig(models.Model):
     def create(self, values):
         IrSequence = self.env['ir.sequence'].sudo()
         val = {
-            'name': _('POS Order %s') % values['name'],
+            'name': _('POS Order %s', values['name']),
             'padding': 4,
             'prefix': "%s/" % values['name'],
             'code': "pos.order",
@@ -468,7 +468,7 @@ class PosConfig(models.Model):
         # force sequence_id field to new pos.order sequence
         values['sequence_id'] = IrSequence.create(val).id
 
-        val.update(name=_('POS order line %s') % values['name'], code='pos.order.line')
+        val.update(name=_('POS order line %s', values['name']), code='pos.order.line')
         values['sequence_line_id'] = IrSequence.create(val).id
         pos_config = super(PosConfig, self).create(values)
         pos_config.sudo()._check_modules_to_install()

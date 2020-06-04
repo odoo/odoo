@@ -96,7 +96,7 @@ class SequenceMixin(models.AbstractModel):
         """
         self.ensure_one()
         if self._sequence_field not in self._fields or not self._fields[self._sequence_field].store:
-            raise ValidationError(_('%s is not a stored field') % self._sequence_field)
+            raise ValidationError(_('%s is not a stored field', self._sequence_field))
         where_string, param = self._get_last_sequence_domain(relaxed)
         if self.id or self.id.origin:
             where_string += " AND id != %(id)s "

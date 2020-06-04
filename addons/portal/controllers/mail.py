@@ -111,7 +111,7 @@ class PortalChatter(http.Controller):
             try:
                 CustomerPortal._document_check_access(self, 'ir.attachment', attachment_id, access_token)
             except (AccessError, MissingError):
-                raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.") % attachment_id)
+                raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.", attachment_id))
 
     @http.route(['/mail/chatter_post'], type='http', methods=['POST'], auth='public', website=True)
     def portal_chatter_post(self, res_model, res_id, message, redirect=None, attachment_ids='', attachment_tokens='', **kw):

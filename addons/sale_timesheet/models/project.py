@@ -110,7 +110,7 @@ class Project(models.Model):
             return self.action_view_timesheet_plan()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Timesheets of %s') % self.name,
+            'name': _('Timesheets of %s', self.name),
             'domain': [('project_id', '!=', False)],
             'res_model': 'account.analytic.line',
             'view_id': False,

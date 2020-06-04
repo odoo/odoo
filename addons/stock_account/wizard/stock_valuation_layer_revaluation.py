@@ -118,7 +118,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
         move_vals = {
             'journal_id': self.account_journal_id.id or accounts['stock_journal'].id,
             'company_id': self.company_id.id,
-            'ref': _("Revaluation of %s") % product_id.display_name,
+            'ref': _("Revaluation of %s", product_id.display_name),
             'stock_valuation_layer_ids': [(6, None, [revaluation_svl.id])],
             'date': self.date or fields.Date.today(),
             'move_type': 'entry',

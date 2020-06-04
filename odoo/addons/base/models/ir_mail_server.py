@@ -115,7 +115,7 @@ class IrMailServer(models.Model):
                 # let UserErrors (messages) bubble up
                 raise e
             except Exception as e:
-                raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s") % ustr(e))
+                raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s", ustr(e)))
             finally:
                 try:
                     if smtp:
@@ -437,7 +437,7 @@ class IrMailServer(models.Model):
             raise
         except Exception as e:
             params = (ustr(smtp_server), e.__class__.__name__, ustr(e))
-            msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % params
+            msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s", *params)
             _logger.info(msg)
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id

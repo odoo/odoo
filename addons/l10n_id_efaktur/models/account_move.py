@@ -102,7 +102,7 @@ class AccountMove(models.Model):
         """Reset E-Faktur, so it can be use for other invoice."""
         for move in self:
             if move.l10n_id_attachment_id:
-                raise UserError(_('You have already generated the tax report for this document: %s') % move.name)
+                raise UserError(_('You have already generated the tax report for this document: %s', move.name))
             self.env['l10n_id_efaktur.efaktur.range'].push_number(move.company_id.id, move.l10n_id_tax_number[3:])
             move.message_post(
                 body='e-Faktur Reset: %s ' % (move.l10n_id_tax_number),

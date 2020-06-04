@@ -316,7 +316,7 @@ class MailRenderMixin(models.AbstractModel):
                 render_result = template.render(variables)
             except Exception as e:
                 _logger.info("Failed to render template : %s" % e, exc_info=True)
-                raise UserError(_("Failed to render template : %s") % e)
+                raise UserError(_("Failed to render template : %s", e))
             if render_result == u"False":
                 render_result = u""
             results[record.id] = render_result

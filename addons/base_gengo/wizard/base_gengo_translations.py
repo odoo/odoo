@@ -91,7 +91,7 @@ class BaseGengoTranslations(models.TransientModel):
             return (True, gengo)
         except Exception as e:
             _logger.exception('Gengo connection failed')
-            return (False, _("Gengo connection failed with this message:\n``%s``") % e)
+            return (False, _("Gengo connection failed with this message:\n``%s``", e))
 
     def act_update(self):
         '''

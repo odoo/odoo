@@ -142,7 +142,7 @@ class SerialDriver(Driver):
                     self._take_measure()
                     time.sleep(self._protocol.newMeasureDelay)
         except Exception:
-            msg = _('Error while reading %s') % self.device_name
+            msg = _('Error while reading %s', self.device_name)
             _logger.exception(msg)
             self._status = {'status': self.STATUS_ERROR, 'message_title': msg, 'message_body': traceback.format_exc()}
             self._push_status()

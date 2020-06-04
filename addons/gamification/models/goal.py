@@ -430,7 +430,7 @@ class Goal(models.Model):
         if self.computation_mode == 'manually':
             # open a wizard window to update the value manually
             action = {
-                'name': _("Update %s") % self.definition_id.name,
+                'name': _("Update %s", self.definition_id.name),
                 'id': self.id,
                 'type': 'ir.actions.act_window',
                 'views': [[False, 'form']],

@@ -363,7 +363,7 @@ class PosOrder(models.Model):
             total = float_round(self.amount_total, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
 
         if not float_is_zero(total - self.amount_paid, precision_rounding=self.currency_id.rounding):
-            raise UserError(_("Order %s is not fully paid.") % self.name)
+            raise UserError(_("Order %s is not fully paid.", self.name))
 
         self.write({'state': 'paid'})
 
@@ -479,7 +479,7 @@ class PosOrder(models.Model):
             # order. It can be the same session, or if it has been closed the new one that has been opened.
             current_session = order.session_id.config_id.current_session_id
             if not current_session:
-                raise UserError(_('To return product(s), you need to open a session in the POS %s') % order.session_id.config_id.display_name)
+                raise UserError(_('To return product(s), you need to open a session in the POS %s', order.session_id.config_id.display_name))
             refund_order = order.copy({
                 'name': order.name + _(' REFUND'),
                 'session_id': current_session.id,
@@ -533,7 +533,7 @@ class PosOrder(models.Model):
             'mimetype': 'image/jpeg',
         })
         mail_values = {
-            'subject': _('Receipt %s') % name,
+            'subject': _('Receipt %s', name),
             'body_html': message,
             'author_id': self.env.user.partner_id.id,
             'email_from': self.env.company.email or self.env.user.email_formatted,

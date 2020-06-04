@@ -230,7 +230,7 @@ class IrModel(models.Model):
             order_fields = RE_ORDER_FIELDS.findall(model.order)
             for field in order_fields:
                 if field not in stored_fields:
-                    raise ValidationError(_("Unable to order by %s: fields used for ordering must be present on the model and stored.") % field)
+                    raise ValidationError(_("Unable to order by %s: fields used for ordering must be present on the model and stored.", field))
 
     _sql_constraints = [
         ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
@@ -286,7 +286,7 @@ class IrModel(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG):
             for model in self:
                 if model.state != 'manual':
-                    raise UserError(_("Model '%s' contains module data and cannot be removed.") % model.name)
+                    raise UserError(_("Model '%s' contains module data and cannot be removed.", model.name))
                 # prevent screwing up fields that depend on these models' fields
                 model.field_id._prepare_update()
 
@@ -649,7 +649,7 @@ class IrModelFields(models.Model):
             if self.relation not in self.env:
                 return {
                     'warning': {
-                        'title': _('Model %s does not exist') % self.relation,
+                        'title': _('Model %s does not exist', self.relation),
                         'message': _('Please specify a valid model for the object relation'),
                     }
                 }
@@ -676,7 +676,7 @@ class IrModelFields(models.Model):
                         return
                 return {'warning': {
                     'title': _("Warning"),
-                    'message': _("The table %r if used for other, possibly incompatible fields.") % self.relation_table,
+                    'message': _("The table %r if used for other, possibly incompatible fields.", self.relation_table),
                 }}
 
     @api.onchange('required', 'ttype', 'on_delete')
@@ -791,7 +791,7 @@ class IrModelFields(models.Model):
                 raise UserError("\n".join([
                     _("Cannot rename/delete fields that are still present in views:"),
                     _("Fields: %s") % ", ".join(str(f) for f in fields),
-                    _("View: %s") % view.name,
+                    _("View: %s", view.name),
                 ]))
             else:
                 # uninstall mode
@@ -866,7 +866,7 @@ class IrModelFields(models.Model):
 
         if vals.get('state', 'manual') == 'manual':
             if vals.get('relation') and not self.env['ir.model'].search([('model', '=', vals['relation'])]):
-                raise UserError(_("Model %s does not exist!") % vals['relation'])
+                raise UserError(_("Model %s does not exist!", vals['relation']))
 
             if vals.get('ttype') == 'one2many':
                 if not self.search([('model_id', '=', vals['relation']), ('name', '=', vals['relation_field']), ('ttype', '=', 'many2one')]):

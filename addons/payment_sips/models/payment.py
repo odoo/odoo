@@ -159,7 +159,7 @@ class TxSips(models.Model):
 
         payment_tx = self.search([('reference', '=', reference)])
         if not payment_tx or len(payment_tx) > 1:
-            error_msg = _('Sips: received data for reference %s') % reference
+            error_msg = _('Sips: received data for reference %s', reference)
             if not payment_tx:
                 error_msg += _('; no order found')
             else:

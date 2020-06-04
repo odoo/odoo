@@ -436,7 +436,7 @@ class ProductTemplate(models.Model):
         if default is None:
             default = {}
         if 'name' not in default:
-            default['name'] = _("%s (copy)") % self.name
+            default['name'] = _("%s (copy)", self.name)
         return super(ProductTemplate, self).copy(default=default)
 
     def name_get(self):

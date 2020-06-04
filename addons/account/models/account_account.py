@@ -42,7 +42,7 @@ class AccountAccount(models.Model):
     def _check_reconcile(self):
         for account in self:
             if account.internal_type in ('receivable', 'payable') and account.reconcile == False:
-                raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)') % account.code)
+                raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)', account.code))
 
     @api.constrains('user_type_id')
     def _check_user_type_id(self):
@@ -52,7 +52,7 @@ class AccountAccount(models.Model):
             if res.get('company_id_count', 0) >= 2:
                 account_unaffected_earnings = self.search([('company_id', '=', res['company_id'][0]),
                                                            ('user_type_id', '=', data_unaffected_earnings.id)])
-                raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)') % [a.code for a in account_unaffected_earnings])
+                raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
     name = fields.Char(string="Account Name", required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
@@ -445,7 +445,7 @@ class AccountAccount(models.Model):
         if partner_prop_acc:
             account_name = partner_prop_acc.get_by_record().display_name
             raise UserError(
-                _('You cannot remove/deactivate the account %s which is set on a customer or vendor.') % account_name
+                _('You cannot remove/deactivate the account %s which is set on a customer or vendor.', account_name)
             )
         return super(AccountAccount, self).unlink()
 

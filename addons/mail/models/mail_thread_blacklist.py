@@ -93,9 +93,9 @@ class MailBlackListMixin(models.AbstractModel):
 
     def _assert_primary_email(self):
         if not hasattr(self, "_primary_email") or not isinstance(self._primary_email, str):
-            raise UserError(_('Invalid primary email field on model %s') % self._name)
+            raise UserError(_('Invalid primary email field on model %s', self._name))
         if self._primary_email not in self._fields or self._fields[self._primary_email].type != 'char':
-            raise UserError(_('Invalid primary email field on model %s') % self._name)
+            raise UserError(_('Invalid primary email field on model %s', self._name))
 
     def _message_receive_bounce(self, email, partner):
         """ Override of mail.thread generic method. Purpose is to increment the

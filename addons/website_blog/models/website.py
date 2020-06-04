@@ -26,7 +26,7 @@ class Website(models.Model):
             dep[page_key] = []
         for p in posts:
             dep[page_key].append({
-                'text': _('Blog Post <b>%s</b> seems to have a link to this page !') % p.name,
+                'text': _('Blog Post <b>%s</b> seems to have a link to this page !', p.name),
                 'item': p.name,
                 'link': p.website_url,
             })
@@ -51,7 +51,7 @@ class Website(models.Model):
             dep[page_key] = []
         for p in posts:
             dep[page_key].append({
-                'text': _('Blog Post <b>%s</b> seems to be calling this file !') % p.name,
+                'text': _('Blog Post <b>%s</b> seems to be calling this file !', p.name),
                 'item': p.name,
                 'link': p.website_url,
             })

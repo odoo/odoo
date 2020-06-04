@@ -28,7 +28,7 @@ class pos_session(models.Model):
         date_today = datetime.utcnow()
         session_start = Datetime.from_string(self.start_at)
         if not date_today - timedelta(hours=24) <= session_start:
-            raise UserError(_("This session has been opened another day. To comply with the French law, you should close sessions on a daily basis. Please close session %s and open a new one.") % self.name)
+            raise UserError(_("This session has been opened another day. To comply with the French law, you should close sessions on a daily basis. Please close session %s and open a new one.", self.name))
         return True
 
     def open_frontend_cb(self):

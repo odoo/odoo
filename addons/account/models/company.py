@@ -537,7 +537,7 @@ class ResCompany(models.Model):
             hash_corrupted = False
             for move in moves:
                 if move.inalterable_hash != move._compute_hash(previous_hash=previous_hash):
-                    rslt.update({'msg_cover': _('Corrupted data on journal entry with id %s.') % move.id})
+                    rslt.update({'msg_cover': _('Corrupted data on journal entry with id %s.', move.id)})
                     results_by_journal['results'].append(rslt)
                     hash_corrupted = True
                     break

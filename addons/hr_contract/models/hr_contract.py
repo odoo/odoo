@@ -144,7 +144,7 @@ class Contract(models.Model):
         for contract in contracts:
             contract.activity_schedule(
                 'mail.mail_activity_data_todo', contract.date_end,
-                _("The contract of %s is about to expire.") % contract.employee_id.name,
+                _("The contract of %s is about to expire.", contract.employee_id.name),
                 user_id=contract.hr_responsible_id.id or self.env.uid)
 
         contracts.write({'kanban_state': 'blocked'})

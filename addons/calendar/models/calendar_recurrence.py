@@ -127,9 +127,9 @@ class RecurrenceRule(models.Model):
             every = _("Every %s %s, ") % (recurrence.interval, period)
 
             if recurrence.end_type == 'count':
-                end = _("for %s events") % recurrence.count
+                end = _("for %s events", recurrence.count)
             elif recurrence.end_type == 'end_date':
-                end = _("until %s") % recurrence.until
+                end = _("until %s", recurrence.until)
             else:
                 end = ''
 
@@ -142,7 +142,7 @@ class RecurrenceRule(models.Model):
                     weekday_label = dict(BYDAY_SELECTION)[recurrence.byday]
                     on = _("on the %(position)s %(weekday)s, ") % {'position': recurrence.byday, 'weekday': weekday_label}
                 else:
-                    on = _("day %s, ") % recurrence.day
+                    on = _("day %s, ", recurrence.day)
             else:
                 on = ''
             recurrence.name = every + on + end
