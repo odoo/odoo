@@ -150,12 +150,11 @@ return AbstractModel.extend({
 
         const { range, rangeDescription, comparisonRange, comparisonRangeDescription, fieldName } = this.chart.timeRanges;
         if (range) {
-            this.chart.domains = [this.chart.domain.concat(range)];
-            this.chart.origins = [rangeDescription];
-            if (comparisonRange) {
-                this.chart.domains.push(this.chart.domain.concat(comparisonRange));
-                this.chart.origins.push(comparisonRangeDescription);
-            }
+            this.chart.domains = [
+                this.chart.domain.concat(range),
+                this.chart.domain.concat(comparisonRange),
+            ];
+            this.chart.origins = [rangeDescription, comparisonRangeDescription];
             const groupBys = this.chart.processedGroupBy.map(function (gb) {
                 return gb.split(":")[0];
             });

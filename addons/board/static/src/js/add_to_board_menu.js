@@ -56,9 +56,8 @@ odoo.define('board.AddToBoardMenu', function (require) {
                 orderedBy: searchQuery.orderedBy,
             });
             if (searchQuery.timeRanges && searchQuery.timeRanges.hasOwnProperty('fieldName')) {
-                const { fieldName: field, range, comparisonRange } = searchQuery.timeRanges;
                 context.add({
-                    time_ranges : { field, range, comparisonRange },
+                    comparison: searchQuery.timeRanges,
                 });
             }
             let controllerQueryParams;
