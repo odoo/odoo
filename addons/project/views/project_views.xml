@@ -873,7 +873,8 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date_deadline" string="Tasks" mode="month" color="user_id" event_limit="5" hide_time="true">
+                <calendar date_start="date_deadline" string="Tasks" mode="month" color="user_id" event_limit="5"
+                          hide_time="true" quick_add="False" js_class="project_calendar">
                     <field name="user_id" avatar_field="image_128" filters="1"/>
                     <field name="date_deadline"/>
                     <field name="project_id"/>
