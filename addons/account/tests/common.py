@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import logging
-import time
-
 from odoo import fields
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.exceptions import ValidationError
 from odoo.tests.common import SavepointCase, HttpCase, tagged, Form
 
+import time
 import logging
+
+from contextlib import contextmanager
+from unittest.mock import patch
 
 _logger = logging.getLogger(__name__)
 
@@ -906,6 +905,23 @@ class AccountTestInvoicingCommon(SavepointCase):
                 }),
             ],
         })
+
+    @contextmanager
+    def mocked_today(self, forced_today):
+        ''' Helper to make easily a python "with statement" mocking the "today" date.
+        :param forced_today:    The expected "today" date as a str or Date object.
+        :return:                An object to be used like 'with self.mocked_today(<today>):'.
+        '''
+
+        if isinstance(forced_today, str):
+            forced_today = fields.Date.from_string(forced_today)
+
+        def today(*args, **kwargs):
+            return forced_today
+
+        with patch.object(fields.Date, 'today', today):
+            with patch.object(fields.Date, 'context_today', today):
+                yield
 
     @classmethod
     def init_invoice(cls, move_type, partner=None, invoice_date=None):
