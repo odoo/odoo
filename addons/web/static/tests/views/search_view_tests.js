@@ -802,6 +802,77 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.module('Search View Rendering');
+
+    QUnit.test('fields and filters with groups/invisible attribute are not always rendered but activable as search default', function (assert) {
+        assert.expect(15);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        var controlPanel = actionManager.controlPanel;
+
+        this.archs['partner,10,search'] =
+            "<search>" +
+                "<field name=\"display_name\" string=\"Foo B\" invisible=\"1\"/>" +
+                "<field name=\"foo\" string=\"Foo A\"/>" +
+                "<filter name=\"filterA\" string=\"FA\" domain=\"[]\"/>" +
+                "<filter name=\"filterB\" string=\"FB\" domain=\"[]\" invisible=\"1\"/>" +
+                "<filter name=\"filterC\" string=\"FC\" invisible=\"not context.get('show_filterC')\"/>" +
+                "<filter name=\"groupByA\" string=\"GA\" context=\"{'group_by': 'date_field:day'}\"/>" +
+                "<filter name=\"groupByB\" string=\"GB\" context=\"{'group_by': 'date_field:day'}\" invisible=\"1\"/>" +
+            "</search>"
+        this.data.partner.fields['display_name'] = {string: "Displayed name", type: 'char'};
+        this.actions[0].search_view_id = [10, 'search'];
+        this.actions[0].context = {
+            search_default_display_name: 'value',
+            search_default_filterB: true,
+            search_default_groupByB: true,
+            show_filterC: true,
+        };
+
+        actionManager.doAction(1);
+
+        // default filters/fields should be activated even if invisible
+        assert.strictEqual(controlPanel.$('.o_searchview_facet').length, 3);
+
+        controlPanel.$('span.fa-filter').click();
+        assert.strictEqual(controlPanel.$('.o_menu_item a:contains("FA")').length, 1);
+        assert.strictEqual(controlPanel.$('.o_menu_item a:contains("FB")').length, 0);
+        assert.strictEqual(controlPanel.$('.o_menu_item a:contains("FC")').length, 1);
+        // default filter should be activated even if invisible
+        assert.strictEqual(controlPanel.$('.o_searchview_facet .o_facet_values:contains(FB)').length, 1);
+
+        controlPanel.$('button span.fa-bars').click();
+        assert.strictEqual(controlPanel.$('.o_menu_item a:contains("GA")').length, 1);
+        assert.strictEqual(controlPanel.$('.o_menu_item a:contains("GB")').length, 0);
+        // default filter should be activated even if invisible
+        assert.strictEqual(controlPanel.$('.o_searchview_facet .o_facet_values:contains(GB)').length, 1);
+
+        assert.strictEqual(controlPanel.$('.o_searchview_facet').eq(0).text().replace(/[\s\t]+/g, ""), "FooBvalue");
+
+        // 'a' key to filter nothing on bar
+        controlPanel.$('.o_searchview_input').val('a');
+        controlPanel.$('.o_searchview_input').trigger($.Event('keypress', { which: 65, keyCode: 65 }));
+        // the only items in autocomplete menu should be FooA: a, Filter on: FA, Groupby: GA
+        assert.strictEqual(controlPanel.$('div.o_searchview_autocomplete').text().replace(/[\s\t]+/g, ""), "SearchFooAfor:AFilteron:FAGroupby:GA");
+        controlPanel.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
+
+        // The items in the Filters menu and the Group By menu should be the same as before
+        controlPanel.$('span.fa-filter').click();
+        assert.strictEqual(controlPanel.$('.o_menu_item a:contains("FA")').length, 1);
+        assert.strictEqual(controlPanel.$('.o_menu_item a:contains("FB")').length, 0);
+        assert.strictEqual(controlPanel.$('.o_menu_item a:contains("FC")').length, 1);
+
+        controlPanel.$('button span.fa-bars').click();
+        assert.strictEqual(controlPanel.$('.o_menu_item a:contains("GA")').length, 1);
+        assert.strictEqual(controlPanel.$('.o_menu_item a:contains("GB")').length, 0);
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Favorites Menu');
 
     QUnit.test('dynamic filters are saved dynamic', function (assert) {
