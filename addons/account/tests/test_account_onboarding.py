@@ -13,6 +13,12 @@ class TestAccountDocumentLayout(HttpCase):
         if not tools.config["without_demo"]:
             report_layout = self.env.ref('web.report_layout_standard')
             main_company = self.env.ref('base.main_company')
+
+            # Tour can't be run if the setup if not the generic one.
+            generic_coa = self.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
+            if not main_company.chart_template_id or main_company.chart_template_id != generic_coa:
+                self.skipTest("Test render account document layout skipped: generic coa not found.")
+
             main_company.write({
                 'primary_color': '#123456',
                 'secondary_color': '#789101',
