@@ -243,7 +243,7 @@ SNAILMAIL_COUNTRIES = {
     "VE": "Venezuela",
     "VG": "Virgin Islands british",
     "VI": "Virgin Islands",
-    "VN": "Viet Nam",
+    "VN": "Vietnam",
     "VU": "Vanuatu",
     "WF": "Wallis and Futuna Islands",
     "WS": "Western Samoa",
