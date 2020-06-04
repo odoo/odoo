@@ -31,7 +31,7 @@ _logger = logging.getLogger(__name__)
 # used to notify web client that these translations should be loaded in the UI
 WEB_TRANSLATION_COMMENT = "openerp-web"
 
-SKIPPED_ELEMENTS = ('script', 'style', 'title')
+SKIPPED_ELEMENTS = ('script', 'link', 'head', 'meta', 'style', 'title')
 
 _LOCALE2WIN32 = {
     'af_ZA': 'Afrikaans_South Africa',

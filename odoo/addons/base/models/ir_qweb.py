@@ -310,7 +310,7 @@ class IrQWeb(models.AbstractModel, QWeb):
             rendering_bundle=True)
 
         options['website_id'] = self.env.context.get('website_id')
-        IrQweb = self.env['ir.qweb'].with_context(options)
+        IrQweb = self.env['ir.qweb'].with_context(options, lang=None)
 
         def can_aggregate(url):
             return not urls.url_parse(url).scheme and not urls.url_parse(url).netloc and not url.startswith('/web/content')
