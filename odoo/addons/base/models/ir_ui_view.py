@@ -1678,6 +1678,11 @@ actual arch.
                         if vnames:
                             name_manager.must_have_fields(vnames, f"context ({expr})")
 
+            elif attr == "options":
+                for key, val_ast in get_dict_asts(expr).items():
+                    if key == "currency_field":
+                        name_manager.must_have_field(val_ast.s, "%s.%s %s" % (attr, key, expr))
+
             elif attr == 'groups':
                 for group in expr.replace('!', '').split(','):
                     # further improvement: add all groups to name_manager in
@@ -1721,6 +1726,17 @@ actual arch.
             elif attr == 'group':
                 msg = "attribute 'group' is not valid.  Did you mean 'groups'?"
                 self._log_view_warning(msg, node)
+
+            elif attr == "widget" and expr == "monetary" and node.tag == "field":
+                field = name_manager.Model._fields.get(node.get("name"))
+                if field and field.type == "monetary":
+                    # If the field is a monetary
+                    # the currency should be the field one
+                    name_manager.must_have_field(field.currency_field or "currency_id", "missing currency_field for monetary widget of %s" % field.name)
+                elif field and field.type == "float" and "currency_field" not in node.get('options', ""):
+                    # If a float field is specified as monetary
+                    # without a "currency_field" options, currency_id is necessary as fallback currency
+                    name_manager.must_have_field("currency_id", "monetary widget of field '%s'" % field.name)
 
     def _validate_classes(self, node, expr):
         """ Validate the classes present on node. """
