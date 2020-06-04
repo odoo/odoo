@@ -511,7 +511,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             return;
         }
         // Add Action select
-        const firstOption = uiFragment.querySelector(':first-child');
+        const firstOption = uiFragment.childNodes[0];
         uiFragment.insertBefore(this.selectActionEl.cloneNode(true), firstOption);
 
         // Add Action related options
