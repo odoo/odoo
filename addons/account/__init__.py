@@ -48,6 +48,8 @@ def _auto_install_l10n(cr, registry):
             module_list.append('base_vat')
         if country_code == 'MX':
             module_list.append('l10n_mx_edi')
+        if country_code == 'AU':
+            module_list.append('account_reports_cash_basis')
 
         # SEPA zone countries will be using SEPA
         sepa_zone = env.ref('base.sepa_zone', raise_if_not_found=False)
