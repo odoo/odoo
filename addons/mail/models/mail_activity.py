@@ -294,7 +294,7 @@ class MailActivity(models.Model):
         assigned user should be able to at least read the document. We therefore
         raise an UserError if the assigned user has no access to the document. """
         for activity in self:
-            model = self.env[activity.res_model].with_user(activity.user_id)
+            model = self.env[activity.res_model].with_user(activity.user_id).with_context(allowed_company_ids=activity.user_id.company_ids.ids)
             try:
                 model.check_access_rights('read')
             except exceptions.AccessError:
