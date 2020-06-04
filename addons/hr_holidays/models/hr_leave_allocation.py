@@ -162,7 +162,9 @@ class HolidaysAllocation(models.Model):
             Method called by the cron task in order to increment the number_of_days when
             necessary.
         """
-        today = fields.Date.from_string(fields.Date.today())
+
+        # Get the current date to determine the start and end of the accrual period
+        today = datetime.combine(fields.Date.today(), time(0, 0, 0))
 
         holidays = self.search(
             [('allocation_type', '=', 'accrual'), ('employee_id.active', '=', True), ('state', '=', 'validate'),
@@ -176,9 +178,6 @@ class HolidaysAllocation(models.Model):
 
                 # Check when the employee has been created
                 start_date = datetime.combine(holiday.employee_id._get_date_start_work(), time(0,0,0))
-
-                # Get the current date to determine the start and end of the accrual period
-                today = datetime.combine(fields.Date.today(), time(0, 0, 0))
 
                 # Find the correct accrual plan line that fits the employee worked time
                 line = False
@@ -272,12 +271,15 @@ class HolidaysAllocation(models.Model):
                     prorata = 1
 
                     if line.frequency == 'per hours worked':
-                        next = today + relativedelta(days=1)
-                        worked = holiday.employee_id._get_work_days_data(today - relativedelta(days=1), today, domain=[
-                            ('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
-                        left = holiday.employee_id._get_leave_days_data(today - relativedelta(days=1), today, domain=[
-                            ('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
-                        prorata = worked / (left + worked) if worked else 0
+                        if holiday.holiday_status_id and holiday.holiday_status_id.work_entry_type_id and holiday.holiday_status_id.work_entry_type_id.leave_right :
+                            next = today + relativedelta(days=1)
+                            worked = holiday.employee_id._get_work_days_data(today - relativedelta(days=1), today, domain=[
+                                ('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
+                            left = holiday.employee_id._get_leave_days_data(today - relativedelta(days=1), today, domain=[
+                                ('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
+                            prorata = worked / (left + worked) if worked else 0
+                        else :
+                            continue
 
                     # Calculate the pro rata of worked days for period in which the employee has been created
                     if next and previous:

@@ -15,9 +15,9 @@ class AccrualPlan(models.Model):
     _description = "Accrual Plan"
 
     name = fields.Char('Accrual Plan', required=True)
-    line_ids = fields.Many2many(
-        'hr.accrual.plan.line',
-        string='Lines')
+    line_ids = fields.One2many(
+        'hr.accrual.plan.line', 'plan_id',
+        string='Accrual Plan Lines')
     company_id = fields.Many2one('res.company', string='Company',
                                  required=True, readonly=True, default=lambda self: self.env.company)
 
@@ -27,17 +27,19 @@ class AccrualPlanLine(models.Model):
     _description = "Accrual Plan Line"
     _order = 'sequence'
 
+    plan_id = fields.Many2one('hr.accrual.plan', "Accrual Plan")
+
     # Order
     sequence = fields.Integer('Level', default=1)
 
     # Period of time after which the line start
-    start_count = fields.Float("Start after", required=True, default=0)
+    start_count = fields.Float("Start after", required=True, default=0, help="This field determines the number for the interval of time before the accrual plan starts.")
     start_type = fields.Selection(
-        [('days', 'days'), ('months', 'months'), ('years', 'years')], default='days', string=" ")
+        [('days', 'day(s)'), ('months', 'month(s)'), ('years', 'year(s)')], default='days', string=" ", help="This field determines the unit for the interval of time.")
 
     # Hours incrementation
-    added_hours = fields.Float("Hours", required=True)
-    maximum_hours = fields.Float('Maximum')
+    added_hours = fields.Float("Hours", required=True, help="The number of hours that will be incremented for every period")
+    maximum_hours = fields.Float('Maximum accrual hours', help="The maximum allocated hours. The hours above this limit will not be added")
 
     # Frequency of incrementation
     frequency = fields.Selection([
@@ -51,13 +53,14 @@ class AccrualPlanLine(models.Model):
         ('yearly', 'yearly'),
         ('anniversary', 'anniversary'),
         ('per hours worked', 'per hour worked')
-    ], default='per hours worked')
+    ], default='per hours worked', 
+    help="Per hours worked: Time off are accrualed only if this is mentionned on Work Entry (see field 'Work entry type' on related Time Off type. If 'Keep Time Off Right' is selected; the wrok entry is considered.")
 
     # Optionnal fields depending on the frequency
     period_weekday = fields.Selection(string="Day of week",
                                       selection=[('mon', 'monday'), ('tue', 'tuesday'), (
                                           'wed', 'wednesday'), ('thu', 'thursday'), ('fri', 'friday'), ('sat', 'saturday'), ('sun', 'sunday')],
-                                      default='monday')
+                                      default='mon')
     period_weekday_number = fields.Integer(string="Day of week in number", compute="_compute_period_weekday_number")
     period_even_or_odd_week = fields.Selection(
         '_even_or_odd_week', default='odd')
