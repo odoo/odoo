@@ -6,8 +6,13 @@
         <field name="inherit_id" ref="l10n_ch.isr_partner_bank_form"/>
         <field name="arch" type="xml">
             <field name="l10n_ch_isr_subscription_eur" position="after">
-                  <field name="l10n_ch_isrb_id_number"/>
+                  <field name="l10n_ch_isrb_id_number" attrs="{'invisible': [('l10n_ch_show_subscription', '=', False)]}"/>
             </field>
+
+            <!-- remove l10n_ch_postal from view when the account is current company -->
+            <label for="l10n_ch_postal" position="replace"/>
+            <xpath expr="//field[@name='l10n_ch_postal' and @nolabel='1']" position="replace"/>
         </field>
     </record>
+
 </odoo>
