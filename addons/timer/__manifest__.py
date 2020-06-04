@@ -21,6 +21,7 @@ It adds a timer to a view for time recording purpose
         'views/assets.xml',
     ],
     'demo': [],
+    'qweb': ['static/src/xml/timer_toggle_botton.xml'],
     'installable': True,
     'application': False,
     'auto_install': False,

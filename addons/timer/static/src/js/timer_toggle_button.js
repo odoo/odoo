@@ -1,80 +1,65 @@
 odoo.define('timer.timer_toggle_button', function (require) {
-"use strict";
+    "use strict";
 
-const fieldRegistry = require('web.field_registry');
-const { FieldToggleBoolean } = require("web.basic_fields");
-const { _lt } = require('web.core');
+    const { xml } = owl.tags;
+    const fieldRegistryOwl = require('web.field_registry_owl');
+    const { FieldBoolean } = require('web.basic_fields_owl');
+    const { _lt } = require('web.core');
 
-/**
- * The TimerToggleButton is used to display correctly the button
- * to start or stop a timer for a timesheet in kanban, list and grid
- * views.
- */
-const TimerToggleButton = FieldToggleBoolean.extend({
     /**
-     * @override
-     * @private
+     * The TimerToggleButton is used to display correctly the button
+     * to start or stop a timer for a timesheet in kanban, list and grid
+     * views.
      */
-    _render: function () {
-        // When the is_timer_running field is false, then the button is used to start the timer
-        const title = this.value ? _lt('Stop') : _lt('Play');
-        const name = this.value ? 'action_timer_stop' : 'action_timer_start';
-        const label = this.value ? _lt('Stop') : _lt('Start');
+    class TimerToggleButton extends FieldBoolean {
+        /**
+         * @override
+         * @private
+         */
+        constructor() {
+            super(...arguments);
+            this._lt = _lt;
+        }
 
-        this.$('i')
-            .addClass('fa')
-            .toggleClass('fa-stop-circle o-timer-stop-button', this.value)
-            .toggleClass('fa-play-circle o-timer-play-button', !this.value)
-            .attr('title', title);
+        /**
+         * Toggle the button
+         *
+         * When the user click on this button,
+         *  -   the action "action_timer_start" is called
+         *      into the account.analytic.line model,
+         *      if the value of is_timer_running field is set on false.
+         *  -   the action "action_timer_stop" is called
+         *      into the account.analytic.line model,
+         *      if the value of is_timer_running field is set on true.
+         * Then we change the value of the is_timer_running.
+         * @override
+         * @private
+         * @param {MouseEvent} event
+         */
+        async _onToggleButton(ev) {
+            const context = this.record.getContext();
+            const prevent_deletion = this.attrs.options && this.attrs.options.prevent_deletion || false;
+            ev.stopPropagation();
+            const result = await this.env.services.rpc({
+                model: this.model,
+                method: this.value ? 'action_timer_stop' : 'action_timer_start',
+                context: Object.assign({}, context, {prevent_deletion: prevent_deletion}),
+                args: [this.resId]
+            });
 
-        this.$el.addClass('o-timer-button');
-        this.$el.attr('title', title);
-        this.$el.attr('name', name);
-        this.$el.attr('aria-label', label);
-        this.$el.attr('aria-pressed', this.value);
-        this.$el.attr('type', 'button');
-        this.$el.attr('role', 'button');
-    },
-    /**
-     * Toggle the button
-     *
-     * When the user click on this button,
-     *  -   the action "action_timer_start" is called
-     *      into the account.analytic.line model,
-     *      if the value of is_timer_running field is set on false.
-     *  -   the action "action_timer_stop" is called
-     *      into the account.analytic.line model,
-     *      if the value of is_timer_running field is set on true.
-     * Then we change the value of the is_timer_running.
-     * @override
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onToggleButton: async function (event) {
-        const context = this.record.getContext();
-        const prevent_deletion = this.attrs.options && this.attrs.options.prevent_deletion || false;
-        event.stopPropagation();
-        const result = await this._rpc({
-            model: this.model,
-            method: this._getActionButton(),
-            context: $.extend({}, context, {prevent_deletion: prevent_deletion}),
-            args: [this.res_id]
-        });
+            this.trigger('timer_changed', {
+                id: this.resId,
+                is_timer_running: !this.value
+            });
 
-        this.trigger_up('timer_changed', {
-            id: this.res_id,
-            is_timer_running: !this.value
-        });
-
-        this._setValue(!this.value);
-    },
-    _getActionButton: function () {
-        return this.value ? 'action_timer_stop' : 'action_timer_start';
+            this._setValue(!this.value);
+        }
     }
-});
 
-fieldRegistry.add('timer_toggle_button', TimerToggleButton);
+    TimerToggleButton.template = 'timerToggleButton';
 
-return TimerToggleButton;
+    fieldRegistryOwl.add('timer_toggle_button', TimerToggleButton);
+
+    return TimerToggleButton;
 
 });

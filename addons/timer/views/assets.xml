@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
+	<data>
     <template id="assets_backend" name="timer assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <link type="text/scss" href="/timer/static/src/scss/timer_button.scss" rel="stylesheet"/>
@@ -8,4 +9,11 @@
             <script type="text/javascript" src="/timer/static/src/js/timer_toggle_button.js"/>
         </xpath>
     </template>
+
+    <template id="qunit_suite" name="timer assets" inherit_id="web.qunit_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/timer/static/tests/timer_field_tests.js"></script>
+        </xpath>
+    </template>
+</data>
 </odoo>
