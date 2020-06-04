@@ -136,10 +136,10 @@ odoo.define('web.searchUtils', function (require) {
 
     // Search bar
     const FACET_ICONS = {
-        filter: 'fa-filter',
-        groupBy: 'fa-bars',
-        favorite: 'fa-star',
-        timeRange: 'fa-calendar',
+        filter: 'fa fa-filter',
+        groupBy: 'fa fa-bars',
+        favorite: 'fa fa-star',
+        timeRange: 'fa fa-calendar',
     };
 
     return {

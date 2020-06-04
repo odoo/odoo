@@ -160,7 +160,7 @@
             t-on-click="state.open = !state.open"
             t-on-keydown="_onButtonKeydown"
             >
-            <i t-if="props.icon" t-att-class="props.icon"/>
+            <i t-if="icon" t-att-class="icon"/>
             <span class="o_dropdown_title" t-esc="title"/>
             <i t-if="displayCaret" t-attf-class="o_dropdown_caret fa fa-caret-{{ state.open ? 'down' : 'right' }}"/>
             <i t-elif="displayChevron" t-attf-class="fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
@@ -575,7 +575,7 @@
             t-on-keydown="_onFacetKeydown(facet, facet_index)"
             >
             <span t-if="facet.title" class="o_searchview_facet_label" t-esc="facet.title"/>
-            <span t-else="" t-attf-class="o_searchview_facet_label fa {{ facet.icon }}"/>
+            <span t-else="" t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
             <div class="o_facet_values">
                 <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
                     <span t-if="!facetValue_first" class="o_facet_values_sep" t-esc="facet.separator"/>
