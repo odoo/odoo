@@ -78,6 +78,9 @@
                 <separator/>
                 <filter string="Invoices" name="invoice" domain="['|', ('move_type','=','out_invoice'),('move_type','=','in_invoice')]"/>
                 <filter string="Credit Notes" name="creditnote" domain="['|', ('move_type','=','out_refund'),('move_type','=','in_refund')]"/>
+                <separator/>
+                <filter name="filter_invoice_date" date="invoice_date"/>
+                <filter name="invoice_date_due" date="invoice_date_due"/>
                 <field name="partner_id" operator="child_of"/>
                 <field name="invoice_user_id" />
                 <field name="product_id" />

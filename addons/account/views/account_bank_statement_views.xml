@@ -102,6 +102,8 @@
                     <field name="date"/>
                     <filter string="Draft" name="draft" domain="[('state','=','open')]"/>
                     <filter string="Confirmed" name="confirmed" domain="[('state','=','confirm')]"/>
+                    <separator/>
+                    <filter name="filter_date" date="date"/>
                     <field name="journal_id" domain="[('type', '=', 'bank')]" />
                     <group expand="0" string="Group By">
                         <filter string="Journal" name="journal" context="{'group_by': 'journal_id'}"/>

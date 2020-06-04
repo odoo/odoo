@@ -12,6 +12,8 @@
                             domain="[('user_id', '=', uid)]"
                             help="Mailings that are assigned to me"/>
                     <separator/>
+                    <filter name="filter_sent_date" date="sent_date"/>
+                    <separator/>
                     <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>

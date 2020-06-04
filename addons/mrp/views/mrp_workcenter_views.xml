@@ -518,6 +518,7 @@
                 <filter name="performance" string="Performance Losses" domain="[('loss_type','=','performance')]"/>
                 <filter name="quality" string="Quality Losses" domain="[('loss_type','=','quality')]"/>
                 <filter name="productive" string="Fully Productive" domain="[('loss_type','=','productive')]"/>
+                <filter name="filter_date_start" string="Date" date="date_start"/>
                 <separator/>
                 <group expand='0' string='Group by...'>
                     <filter string="User" name="user" context="{'group_by': 'create_uid'}"/>

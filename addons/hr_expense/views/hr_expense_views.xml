@@ -640,6 +640,8 @@
                     <filter domain="[('state', '=', 'post')]" string="To Pay" name="approved" help="Expenses to Invoice"/>
                     <filter domain="[('state', '=', 'cancel')]" string="Refused" name="canceled"/>
                     <separator/>
+                    <filter string="Date" name="filter_accounting_date" date="accounting_date"/>
+                    <separator/>
                     <filter domain="[('employee_id.active', '=', False)]" string="Former Employees" name="inactive" groups="hr_expense.group_hr_expense_user,hr_expense.group_hr_expense_manager"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"

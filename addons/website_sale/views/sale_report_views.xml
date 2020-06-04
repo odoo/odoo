@@ -12,6 +12,8 @@
                 <field name="country_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <filter string="Confirmed Orders" name="confirmed" domain="[('state', 'in', ['sale', 'done'])]"/>
+                <separator/>
+                <filter name="filter_date" date="date" default_period="this_month"/>
                 <group expand="0" string="Group By">
                     <filter string="Website" name="groupby_website" context="{'group_by':'website_id'}" groups="website.group_multi_website"/>
                     <filter string="Product" name="groupby_product" context="{'group_by':'product_id'}"/>
