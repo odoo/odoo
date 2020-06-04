@@ -377,7 +377,7 @@ class AccountMove(models.Model):
                 if p.invoice_warn != 'block' and p.parent_id and p.parent_id.invoice_warn == 'block':
                     p = p.parent_id
                 warning = {
-                    'title': _("Warning for %s") % p.name,
+                    'title': _("Warning for %s", p.name),
                     'message': p.invoice_warn_msg
                 }
                 if p.invoice_warn == 'block':
@@ -758,7 +758,7 @@ class AccountMove(models.Model):
                     return
 
                 rounding_line_vals.update({
-                    'name': _('%s (rounding)') % biggest_tax_line.name,
+                    'name': _('%s (rounding)', biggest_tax_line.name),
                     'account_id': biggest_tax_line.account_id.id,
                     'tax_repartition_line_id': biggest_tax_line.tax_repartition_line_id.id,
                     'tax_exigible': biggest_tax_line.tax_exigible,
@@ -1582,9 +1582,9 @@ class AccountMove(models.Model):
             lock_date = move.company_id._get_user_fiscal_lock_date()
             if move.date <= lock_date:
                 if self.user_has_groups('account.group_account_manager'):
-                    message = _("You cannot add/modify entries prior to and inclusive of the lock date %s.") % format_date(self.env, lock_date)
+                    message = _("You cannot add/modify entries prior to and inclusive of the lock date %s.", format_date(self.env, lock_date))
                 else:
-                    message = _("You cannot add/modify entries prior to and inclusive of the lock date %s. Check the company settings or ask someone with the 'Adviser' role") % format_date(self.env, lock_date)
+                    message = _("You cannot add/modify entries prior to and inclusive of the lock date %s. Check the company settings or ask someone with the 'Adviser' role", format_date(self.env, lock_date))
                 raise UserError(message)
         return True
 
@@ -2284,7 +2284,7 @@ class AccountMove(models.Model):
                 raise UserError(_('You need to add a line before posting.'))
             if move.auto_post and move.date > fields.Date.today():
                 date_msg = move.date.strftime(get_lang(self.env).date_format)
-                raise UserError(_("This move is configured to be auto-posted on %s") % date_msg)
+                raise UserError(_("This move is configured to be auto-posted on %s", date_msg))
 
             if not move.partner_id:
                 if move.is_sale_document():
@@ -3466,9 +3466,9 @@ class AccountMoveLine(models.Model):
             control_type_failed = journal.type_control_ids and account.user_type_id not in journal.type_control_ids
             control_account_failed = journal.account_control_ids and account not in journal.account_control_ids
             if control_journal_failed:
-                raise UserError(_('You cannot use this account (%s) in this journal, check the field \'Allowed Journals\' on the related account.') % account.display_name)
+                raise UserError(_('You cannot use this account (%s) in this journal, check the field \'Allowed Journals\' on the related account.', account.display_name))
             if control_type_failed or control_account_failed:
-                raise UserError(_('You cannot use this account (%s) in this journal, check the section \'Control-Access\' under tab \'Advanced Settings\' on the related journal.') % account.display_name)
+                raise UserError(_('You cannot use this account (%s) in this journal, check the section \'Control-Access\' under tab \'Advanced Settings\' on the related journal.', account.display_name))
 
     @api.constrains('account_id', 'tax_ids', 'tax_line_id', 'reconciled')
     def _check_off_balance(self):

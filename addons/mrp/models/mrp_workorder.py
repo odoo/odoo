@@ -751,7 +751,7 @@ class MrpWorkorder(models.Model):
                     qty_done += line.product_uom_id._compute_quantity(line.qty_done, move.product_uom)
                 rounding = move.product_uom_id.rounding
                 if float_compare(qty_done, move.product_uom_qty, precision_rounding=rounding) != 0:
-                    raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % move.product_id.name)
+                    raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.', move.product_id.name))
 
     def _check_sn_uniqueness(self):
         """ Alert the user if the serial number as already been produced """
@@ -763,4 +763,4 @@ class MrpWorkorder(models.Model):
                 ('state', '=', 'done')
             ])
             if sml:
-                raise UserError(_('This serial number for product %s has already been produced') % self.product_id.name)
+                raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))

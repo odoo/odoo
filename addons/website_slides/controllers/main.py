@@ -993,7 +993,7 @@ class WebsiteSlides(WebsiteProfile):
             return preview
         existing_slide = Slide.search([('channel_id', '=', int(data['channel_id'])), ('document_id', '=', document_id)], limit=1)
         if existing_slide:
-            preview['error'] = _('This video already exists in this channel on the following slide: %s') % existing_slide.name
+            preview['error'] = _('This video already exists in this channel on the following slide: %s', existing_slide.name)
             return preview
         values = Slide._parse_document_url(data['url'], only_preview_fields=True)
         if values.get('error'):
@@ -1051,7 +1051,7 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': e.args[0]}
         except Exception as e:
             _logger.error(e)
-            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
+            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s', e)}
 
         # ensure correct ordering by re sequencing slides in front-end (backend should be ok thanks to list view)
         channel._resequence_slides(slide, force_category=category)

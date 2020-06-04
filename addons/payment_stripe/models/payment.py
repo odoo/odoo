@@ -82,7 +82,7 @@ class PaymentAcquirerStripe(models.Model):
             except HTTPError:
                 _logger.error(resp.text)
                 stripe_error = resp.json().get('error', {}).get('message', '')
-                error_msg = " " + (_("Stripe gave us the following info about the problem: '%s'") % stripe_error)
+                error_msg = " " + (_("Stripe gave us the following info about the problem: '%s'", stripe_error))
                 raise ValidationError(error_msg)
         return resp.json()
 
@@ -249,7 +249,7 @@ class PaymentTransactionStripe(models.Model):
 
         tx = self.search([('reference', '=', reference)])
         if not tx:
-            error_msg = (_('Stripe: no order found for reference %s') % reference)
+            error_msg = _('Stripe: no order found for reference %s', reference)
             _logger.error(error_msg)
             raise ValidationError(error_msg)
         elif len(tx) > 1:

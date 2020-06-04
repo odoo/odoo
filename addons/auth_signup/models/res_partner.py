@@ -143,11 +143,11 @@ class ResPartner(models.Model):
         partner = self.search([('signup_token', '=', token)], limit=1)
         if not partner:
             if raise_exception:
-                raise exceptions.UserError(_("Signup token '%s' is not valid") % token)
+                raise exceptions.UserError(_("Signup token '%s' is not valid", token))
             return False
         if check_validity and not partner.signup_valid:
             if raise_exception:
-                raise exceptions.UserError(_("Signup token '%s' is no longer valid") % token)
+                raise exceptions.UserError(_("Signup token '%s' is no longer valid", token))
             return False
         return partner
 

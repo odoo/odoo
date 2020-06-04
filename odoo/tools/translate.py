@@ -555,7 +555,7 @@ def TranslationFileReader(source, fileformat='po'):
     if fileformat == 'po':
         return PoFileReader(source)
     _logger.info('Bad file format: %s', fileformat)
-    raise Exception(_('Bad file format: %s') % fileformat)
+    raise Exception(_('Bad file format: %s', fileformat))
 
 class CSVFileReader:
     def __init__(self, source):

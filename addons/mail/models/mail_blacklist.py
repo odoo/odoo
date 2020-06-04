@@ -28,7 +28,7 @@ class MailBlackList(models.Model):
         for value in values:
             email = tools.email_normalize(value.get('email'))
             if not email:
-                raise UserError(_('Invalid email address %r') % value['email'])
+                raise UserError(_('Invalid email address %r', value['email']))
             if email in all_emails:
                 continue
             all_emails.append(email)

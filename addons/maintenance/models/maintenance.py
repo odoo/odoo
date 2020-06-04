@@ -223,7 +223,7 @@ class MaintenanceEquipment(models.Model):
     def _create_new_request(self, date):
         self.ensure_one()
         self.env['maintenance.request'].create({
-            'name': _('Preventive Maintenance - %s') % self.name,
+            'name': _('Preventive Maintenance - %s', self.name),
             'request_date': date,
             'schedule_date': date,
             'category_id': self.category_id.id,

@@ -449,7 +449,7 @@ class SaleOrder(models.Model):
             lines_to_update.append((1, line.id, {'price_unit': price_unit}))
         self.update({'order_line': lines_to_update})
         self.show_update_pricelist = False
-        self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ") % self.pricelist_id.display_name)
+        self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ", self.pricelist_id.display_name))
 
     @api.model
     def create(self, vals):
@@ -1595,7 +1595,7 @@ class SaleOrderLine(models.Model):
         result = {}
         warning = {}
         if product.sale_line_warn != 'no-message':
-            title = _("Warning for %s") % product.name
+            title = _("Warning for %s", product.name)
             message = product.sale_line_warn_msg
             warning['title'] = title
             warning['message'] = message

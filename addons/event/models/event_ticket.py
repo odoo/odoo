@@ -51,7 +51,7 @@ class EventTicket(models.Model):
     def default_get(self, fields):
         res = super(EventTicket, self).default_get(fields)
         if 'name' in fields and (not res.get('name') or res['name'] == _('Registration')) and self.env.context.get('default_event_name'):
-            res['name'] = _('Registration for %s') % self.env.context['default_event_name']
+            res['name'] = _('Registration for %s', self.env.context['default_event_name'])
         return res
 
     # description

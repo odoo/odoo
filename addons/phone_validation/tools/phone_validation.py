@@ -20,9 +20,9 @@ try:
             raise UserError(_('Unable to parse %s.: %s') % (number, str(e)))
 
         if not phonenumbers.is_possible_number(phone_nbr):
-            raise UserError(_('Impossible number %s: probably invalid number of digits.') % number)
+            raise UserError(_('Impossible number %s: probably invalid number of digits.', number))
         if not phonenumbers.is_valid_number(phone_nbr):
-            raise UserError(_('Invalid number %s: probably incorrect prefix.') % number)
+            raise UserError(_('Invalid number %s: probably incorrect prefix.', number))
 
         return phone_nbr
 

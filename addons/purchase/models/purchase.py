@@ -284,7 +284,7 @@ class PurchaseOrder(models.Model):
             # Block if partner only has warning but parent company is blocked
             if partner.purchase_warn != 'block' and partner.parent_id and partner.parent_id.purchase_warn == 'block':
                 partner = partner.parent_id
-            title = _("Warning for %s") % partner.name
+            title = _("Warning for %s", partner.name)
             message = partner.purchase_warn_msg
             warning = {
                 'title': title,
@@ -721,7 +721,7 @@ class PurchaseOrder(models.Model):
     def _compose_note(self, updated_dates):
         """Helper method for creating log note when user update scheduled date
         on portal website."""
-        note = _('<p> %s modified receipt dates for the following products:</p>') % self.partner_id.name
+        note = _('<p> %s modified receipt dates for the following products:</p>', self.partner_id.name)
         for line, date in updated_dates:
             note += _('<p> &nbsp; - %s from %s to %s </p>') % (line.product_id.display_name, line.date_planned, date)
         return note
@@ -980,7 +980,7 @@ class PurchaseOrderLine(models.Model):
         product_info = self.product_id
 
         if product_info.purchase_line_warn != 'no-message':
-            title = _("Warning for %s") % product_info.name
+            title = _("Warning for %s", product_info.name)
             message = product_info.purchase_line_warn_msg
             warning['title'] = title
             warning['message'] = message

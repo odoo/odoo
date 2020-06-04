@@ -67,7 +67,7 @@ class AccountPartialReconcile(models.Model):
     def _check_required_computed_currencies(self):
         bad_partials = self.filtered(lambda partial: not partial.debit_currency_id or not partial.credit_currency_id)
         if bad_partials:
-            raise ValidationError(_("Missing foreign currencies on partials having ids: %s") % bad_partials.ids)
+            raise ValidationError(_("Missing foreign currencies on partials having ids: %s", bad_partials.ids))
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
