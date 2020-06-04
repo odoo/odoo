@@ -1256,6 +1256,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if fname in self._fields:
                 field = self._fields[fname]
                 value = field.convert_to_cache(value, self, validate=False)
+
+                if field.type == 'one2many':
+                    # if the inverse field is already set on records, we remove then.
+                    value = self.env[field.comodel_name].sudo().browse(value).filtered(
+                        lambda x: not x[field.inverse_name]).ids
+
                 defaults[fname] = field.convert_to_write(value, self)
 
         # add default values for inherited fields
