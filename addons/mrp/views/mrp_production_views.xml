@@ -64,7 +64,7 @@
                     <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('qty_producing', '=', 0)]}" string="Backorder" type="object" class="oe_highlight"/>
                     <button name="button_mark_done" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
                     <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm" type="object" class="oe_highlight"/>
-                    <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object" class="oe_highlight"/>
+                    <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object"/>
                     <button name="button_plan" attrs="{'invisible': ['|', '|', ('state', 'not in', ('confirmed', 'progress')), ('workorder_ids', '=', []), ('is_planned', '=', True)]}" type="object" string="Plan" class="oe_highlight"/>
                     <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', '|', ('state', '!=', 'planned'), ('date_planned_start', '=', False), ('date_planned_finished', '=', False)]}"/>
                     <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
