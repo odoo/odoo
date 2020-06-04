@@ -79,6 +79,7 @@ class Repair(models.Model):
         'product.pricelist', 'Pricelist',
         default=lambda self: self.env['product.pricelist'].search([('company_id', 'in', [self.env.company.id, False])], limit=1).id,
         help='Pricelist of the selected partner.', check_company=True)
+    currency_id = fields.Many2one(related='pricelist_id.currency_id')
     partner_invoice_id = fields.Many2one('res.partner', 'Invoicing Address', check_company=True)
     invoice_method = fields.Selection([
         ("none", "No Invoice"),
@@ -602,6 +603,8 @@ class RepairLine(models.Model):
         index=True, ondelete='cascade', check_company=True)
     company_id = fields.Many2one(
         related='repair_id.company_id', store=True, index=True)
+    currency_id = fields.Many2one(
+        related='repair_id.currency_id')
     type = fields.Selection([
         ('add', 'Add'),
         ('remove', 'Remove')], 'Type', required=True)
@@ -737,6 +740,8 @@ class RepairFee(models.Model):
         index=True, ondelete='cascade', required=True)
     company_id = fields.Many2one(
         related="repair_id.company_id", index=True, store=True)
+    currency_id = fields.Many2one(
+        related="repair_id.currency_id")
     name = fields.Text('Description', index=True, required=True)
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
