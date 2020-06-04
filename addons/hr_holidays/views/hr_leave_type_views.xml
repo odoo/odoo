@@ -20,13 +20,11 @@
         <field name="model">hr.leave.type</field>
         <field name="arch" type="xml">
             <form string="Time Off Type">
+                <header>
+                    <button name="action_set_accrual_plan" type="object" string="Set accrual plan" class="oe_highlight"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="object" name="action_set_accrual_plan" icon="fa-archive">
-                                <div>
-                                <span class="o_stat_text">Set accrual plan</span>
-                            </div>
-                        </button>
                         <button class="oe_stat_button" type="object" name="action_see_days_allocated" icon="fa-archive" attrs="{'invisible': [('allocation_type', '=', 'no')]}">
                             <div class="o_stat_info">
                                 <field name="group_days_allocation"/>

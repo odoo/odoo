@@ -1,26 +1,60 @@
 <odoo>
-    <record id="edit_accrual_plan_form" model="ir.ui.view">
+    <record id="hr_accrual_plan_view_form" model="ir.ui.view">
         <field name="name">hr.accrual.plan.form</field>
         <field name="model">hr.accrual.plan</field>
         <field name="arch" type="xml">
             <form string="Accrual Plan">
                 <sheet>
                     <div class="oe_title">
-                    <label for="name"/>
                         <h1>
-                            <field name="name" placeholder="Accrual plan name"/>
+                            <field name="name" placeholder="Accrual plan"/>
                         </h1>
                     </div>
                     <group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                        <label for="line_ids"/>
+                        <field name="line_ids"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_accrual_plan_view_tree" model="ir.ui.view">
+        <field name="name">hr.accrual.plan.tree</field>
+        <field name="model">hr.accrual.plan</field>
+        <field name="arch" type="xml">
+            <tree string="Accrual Plan">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hr_accrual_plan" model="ir.actions.act_window">
+        <field name="name">Accrual Plan</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.accrual.plan</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+
+    <record id="hr_accrual_plan_line_view_form" model="ir.ui.view">
+        <field name="name">hr.accrual.plan.line.form</field>
+        <field name="model">hr.accrual.plan.line</field>
+        <field name="arch" type="xml">
+            <form string="Accrual Plan Line">
+                <sheet>
+                    <group>
                         <div style="font-weight:bold;">
-                            Start <field name="start_after_count" class="oe_inline"/> <field name="start_after_type"  class="oe_inline"/> after start date <br/>
-                       
-                            Add <field name="added_hours" class="oe_inline"/> hours of time off <field name="frequency" class="oe_inline"/> 
+                            Start <field name="start_count" class="oe_inline"/> <field name="start_type"  class="oe_inline"/> after start date <br/>
+
+                            Add <field name="added_hours" class="oe_inline"/> hours of time off <field name="frequency" class="oe_inline"/>
                             <span attrs="{'invisible': [('frequency', '!=', 'weekly'),('frequency', '!=', 'every other week')]}">
                                 on <field name="period_weekday" class="oe_inline"/>
                             </span>
                             <span attrs="{'invisible': [('frequency', '!=', 'every other week')]}">
-                                Which <field name="period_weekday" class="oe_inline" readonly="1"/>s ? 
+                                Which ones ?
                             </span>
                             <span attrs="{'invisible': [('frequency', '!=', 'every other week')]}">
                                 <field name="period_even_or_odd_week"  class="oe_inline"/>
@@ -56,33 +90,26 @@
                            <label for="allow_negative_hours"><b>Allow negative hours :</b></label> <field name="allow_negative_hours"/><br/>
                              Carryover <field name="carryover_type"  class="oe_inline"/>
                             <field name="carryover_amount"  class="oe_inline" attrs="{'invisible': [('carryover_type', '!=', 'until')]}"/>
-                        
                         </div>
                     </group>
-                        
                 </sheet>
             </form>
         </field>
     </record>
-    
-     <record id="view_accrual_plan_tree" model="ir.ui.view">
-        <field name="name">hr.accrual.plan.tree</field>
-        <field name="model">hr.accrual.plan</field>
-        <field name="arch" type="xml">
-            <tree string="Accrual Plan">
-                <field name="sequence" widget="handle"/>
-                <field name="name"/>
 
+    <record id="view_accrual_plan_line_view_tree" model="ir.ui.view">
+        <field name="name">hr.accrual.plan.line.tree</field>
+        <field name="model">hr.accrual.plan.line</field>
+        <field name="arch" type="xml">
+            <tree string="Accrual Plan Line">
+                <field name="start_count"/>
+                <field name="start_type"/>
+                <field name="added_hours"/>
+                <field name="frequency"/>
+                <field name="maximum_hours"/>
+                <field name="allow_negative_hours"/>
+                <field name="carryover_type"/>
             </tree>
         </field>
     </record>
-
-    <record id="open_view_accrual_plan" model="ir.actions.act_window">
-        <field name="name">Accrual Plan</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">hr.accrual.plan</field>
-        <field name="view_mode">tree,kanban,form</field>
-    </record>
-
-
 </odoo>

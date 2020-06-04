@@ -379,6 +379,4 @@ class HolidaysType(models.Model):
 
     def action_set_accrual_plan(self):
         self.ensure_one()
-        action = self.env.ref('hr_holidays.open_view_accrual_plan').read()[0]
-        # TO DO : breadcrumbs
-        return action
+        return self.env.ref('hr_holidays.action_hr_accrual_plan').read()[0]
