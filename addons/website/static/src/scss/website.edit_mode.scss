@@ -166,3 +166,9 @@ body.editor_enable.editor_has_snippets {
         top: var(--o-we-toolbar-height) !important;
     }
 }
+
+.editor_enable {
+    @include o-offcanvas-transitions('all', $-edit-mode: true);
+    @include o-offcanvas-layouts('all', $-edit-mode: true);
+    @include o-header-layouts('all', $-transition-duration: .2s,  $-edit-mode: true);
+}

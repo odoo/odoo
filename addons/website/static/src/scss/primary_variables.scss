@@ -260,6 +260,7 @@ $o-base-website-values-palette: (
     'preheader-template': null, // null, 'magazine', 'icons' or 'image'
     'preheader-height': 1vw, // Only used in 'image' preheader-template
     'header-template': 'logo_menu',
+    'offcanvas-type': 'right',
     'footer-template': 'products_contacts_about_us',
     'footer-scrolltop': false,
 );
@@ -323,3 +324,159 @@ $o-theme-font-names: (
 // instead a unique map: 'name' -> 'config', with config containing the font
 // properties configuration + basic info (url, font-family).
 $o-theme-font-configs: () !default;
+
+
+// Header layouts
+// ===============================
+
+// Offcanvas Transitions Definition
+@mixin o-offcanvas-transition-default() {
+    #top_menu_collapse.collapsing #top_menu {
+        transform: translateX(100%);
+    }
+
+    #top_menu_collapse.show #top_menu {
+        transform: translateX(0);
+    }
+}
+@mixin o-offcanvas-transition-left($-edit-mode: false) {
+    .o_hamburger_menu_left {
+        #top_menu_collapse.collapsing #top_menu {
+            transform: translateX(-100%);
+        }
+
+        #top_menu_collapse.show #top_menu {
+            transform: if($-edit-mode, translateX($o-we-sidebar-width), translateX(0));
+        }
+    }
+}
+@mixin o-offcanvas-transition-full($-edit-mode: false) {
+    .o_hamburger_menu_full {
+        #top_menu_collapse.collapsing #top_menu {
+            transform: translateY(-100%);
+        }
+
+        #top_menu_collapse.show #top_menu {
+            transform: translateY(0);
+        }
+    }
+}
+
+// Offcanvas Layouts Definition
+@mixin o-offcanvas-layout-default() {
+    #top_menu_container {
+        flex-direction: inherit;
+    }
+
+    #top_menu_collapse {
+        flex-direction: row-reverse;
+    }
+
+    .o_offcanvas_menu_backdrop {
+        background-image: linear-gradient(-90deg, currentColor 20%, transparent);
+    }
+}
+@mixin o-offcanvas-layout-full($-edit-mode: false) {
+    #top_menu_container.o_hamburger_menu_full #top_menu {
+        width: if($-edit-mode, calc(100% - #{$o-we-sidebar-width}), 100%);
+        max-width: none;
+
+        .o_offcanvas_menu_backdrop {
+            display: none;
+        }
+
+        .o_offcanvas_menu_toggler {
+            max-width: 90%;
+        }
+    }
+}
+@mixin o-offcanvas-layout-left() {
+    #top_menu_container.o_hamburger_menu_left {
+        flex-direction: row-reverse;
+
+        #top_menu_collapse {
+            flex-direction: row;
+        }
+
+        .o_offcanvas_menu_backdrop {
+            background-image: linear-gradient(90deg, currentColor 20%, transparent);
+        }
+
+        .navbar-brand.logo {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
+
+// Header Layouts Definition
+@mixin o-header-layout-hamburger($-transition-duration) {
+    .o_hamburger_menu #top_menu_container {
+        transition: padding $-transition-duration;
+    }
+
+    header:not(.o_header_is_scrolled) .o_hamburger_menu {
+        #top_menu_container {
+            padding-top: $spacer*0.5;
+            padding-bottom: $spacer*0.5;
+        }
+    }
+}
+@mixin o-header-layout-vertical($-transition-duration) {
+    .o_vertical_menu {
+        .navbar-brand, .navbar-brand img, #top_menu_container {
+            transition: all $-transition-duration;
+        }
+    }
+
+    header:not(.o_header_is_scrolled) .o_vertical_menu {
+        #top_menu_container {
+            padding-top: $spacer*0.5;
+            padding-bottom: $spacer*0.5;
+        }
+
+        .navbar-brand {
+            margin-bottom: $spacer;
+        }
+    }
+}
+
+@mixin o-offcanvas-transitions($type, $-edit-mode: false) {
+    @if $type == 'full' {
+        @include o-offcanvas-transition-full($-edit-mode);
+    } @else if $type == 'left' {
+        @include o-offcanvas-transition-left($-edit-mode);
+    } @else if $type == 'all' {
+        @include o-offcanvas-transition-default();
+        @include o-offcanvas-transition-full($-edit-mode);
+        @include o-offcanvas-transition-left($-edit-mode);
+    } @else {
+        @include o-offcanvas-transition-default();
+    }
+}
+
+@mixin o-offcanvas-layouts($type, $-edit-mode: false) {
+    @if $type == 'full' {
+        @include o-offcanvas-layout-default();
+        @include o-offcanvas-layout-full($-edit-mode);
+    } @else if $type == 'left' {
+        @include o-offcanvas-layout-left();
+    } @else if $type == 'all' {
+        @include o-offcanvas-layout-default();
+        @include o-offcanvas-layout-full($-edit-mode);
+        @include o-offcanvas-layout-left();
+    } @else {
+        @include o-offcanvas-layout-default();
+    }
+}
+
+@mixin o-header-layouts($type, $-transition-duration, $-edit-mode: false) {
+    @if $type == 'header_hamburger' {
+        @include o-header-layout-hamburger($-transition-duration);
+    } @else if $type == 'vertical' {
+        @include o-header-layout-vertical($-transition-duration);
+    } @else if $type == 'all' {
+        @include o-header-layout-hamburger($-transition-duration);
+        @include o-header-layout-vertical($-transition-duration);
+    }
+}

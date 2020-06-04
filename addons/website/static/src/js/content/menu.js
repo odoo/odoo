@@ -376,7 +376,7 @@ publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         var defs = [this._super.apply(this, arguments)];
-        this.noAutohide = this.$el.closest('.o_no_autohide_menu').length;
+        this.noAutohide = this.$el.closest('.o_no_autohide_menu').length || this.$el.find('> .o_hanburger_menu').length;
         if (!this.noAutohide) {
             var $navbar = this.$el.closest('.navbar');
             defs.push(wUtils.onceAllImagesLoaded($navbar));

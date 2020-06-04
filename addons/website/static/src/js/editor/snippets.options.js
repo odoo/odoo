@@ -1518,6 +1518,23 @@ options.registry.collapse = options.Class.extend({
     },
 });
 
+options.registry.headerTemplates = options.Class.extend({
+    /**
+     * @override
+     */
+    selectClass: async function (previewMode, widgetValue, params) {
+        await this._super(...arguments);
+
+        // Close collapse immediatly, in any circumstance
+        this.$('#top_menu_collapse').removeClass('show');
+
+        // Open collapse if hamburger_menu is active only
+        setTimeout(() => {
+            $('.o_hamburger_menu #top_menu_collapse').collapse('show');
+        }, 0);
+    },
+});
+
 options.registry.topMenuTransparency = options.Class.extend({
 
     //--------------------------------------------------------------------------

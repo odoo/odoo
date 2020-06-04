@@ -722,8 +722,77 @@ table.table_desc tr td {
 
 $-transition-duration: 200ms;
 
+// Replace BTS navbar collapse with odoo's hamburger offcanvas design (top menu only)
+#top_menu_collapse.collapsing, #top_menu_collapse.show {
+    @include o-position-absolute(0, 0, 0, 0);
+    position: fixed;
+    display: flex;
+    align-items: stretch;
+    z-index: $zindex-sticky;
+    transition: none;
+    transform: none;
+
+    .o_offcanvas_menu_backdrop {
+        @include o-position-absolute(0, 0, 0, 0);
+        opacity: .2;
+        cursor: pointer;
+    }
+
+    #top_menu {
+        overflow: auto;
+        flex-wrap: nowrap;
+        max-width: 560px;
+        background-color: o-color('menu');
+        transition: transform $-transition-duration cubic-bezier(.694, .0482, .335, 1);
+
+        .nav-item, .o_offcanvas_logo {
+            padding-left: $grid-gutter-width;
+            padding-right: $grid-gutter-width;
+        }
+
+        .nav-item, .dropdown-menu {
+            text-align: inherit;
+        }
+
+        // Open all dropdowns
+        .dropdown {
+            &-toggle {
+                padding-bottom: $nav-link-padding-y*0.5;
+
+                &:after {content: none; }
+            }
+            &-menu {
+                display: block;
+                padding-top:0;
+                border: 0;
+                background: inherit;
+                color: inherit;
+            }
+            &-item {
+                padding-left: .5em;
+                padding-right: .5em;
+            }
+        }
+
+        // o_extra_menu_items should be active for this layout :(
+        .o_extra_menu_items.dropdown {
+            > a {display: none; }
+            a { padding: 0; }
+        }
+    }
+
+    .o_connected_user header:not(.o_header_is_scrolled) &,
+    .o_connected_user header.o_header_affixed & {
+        padding-top: $o-navbar-height
+    }
+}
+
+@include o-offcanvas-transitions(o-website-value('offcanvas-type'));
+@include o-offcanvas-layouts(o-website-value('offcanvas-type'));
+@include o-header-layouts(o-website-value('header-template'), $-transition-duration);
+
 // Affixed Header
-.o_header_affixed {
+header#top.o_header_affixed {
     display: block;
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
@@ -734,14 +803,6 @@ $-transition-duration: 200ms;
         transition: transform $-transition-duration;
     }
 
-    .navbar-collapse {
-        @if o-website-value('header-template') != 'logo_hamburger' {
-            max-height: 70vh;
-        }
-        &.show {
-            overflow-y: auto;
-        }
-    }
     &.o_header_is_scrolled {
         .navbar-brand {
             font-size: $o-theme-navbar-fixed-logo-height / $line-height-base;
@@ -750,11 +811,12 @@ $-transition-duration: 200ms;
                 height: $o-theme-navbar-fixed-logo-height;
             }
         }
-        @include media-breakpoint-up(md) {
-            @if (index(('menu_logo_below', 'logo_menu_below'), o-website-value('header-template'))) != null {
+        @if o-website-value('header-template') == 'vertical' {
+            @include media-breakpoint-up(md) {
                 .navbar-brand {
                     font-size: 0px;
                     opacity: 0;
+
                     img {
                         height: 0px;
                     }
@@ -787,89 +849,6 @@ $-transition-duration: 200ms;
             padding: 0;
             border: none;
             box-shadow: none;
-        }
-    }
-}
-
-// Header templates
-header {
-    &:not(.o_header_no_transition) {
-        .navbar-brand {
-            transition: font-size $-transition-duration, opacity $-transition-duration ease-out;
-
-            img {
-                transition: height $-transition-duration;
-            }
-        }
-    }
-
-    @include media-breakpoint-up(md) {
-        // Allow to center the logo, ignoring the toggler space
-        .o_navbar_toggler_container {
-            flex: 0 0 0;
-            min-width: 0;
-        }
-    }
-    @if index(('hamburger_logo', 'logo_hamburger'), o-website-value('header-template')) {
-        .navbar-brand {
-            text-align: center;
-        }
-        .navbar-brand, .logo img {
-            margin: auto;
-        }
-        .navbar-nav {
-            margin-top: $spacer / 2;
-        }
-        @if o-website-value('header-template') == 'logo_hamburger' {
-            .o_navbar_toggler_container {
-                direction: rtl;
-            }
-            &:not(.o_header_is_scrolled) .container {
-                padding-top: $spacer;
-                padding-bottom: $spacer;
-            }
-            .container {
-                transition: padding 200ms;
-
-                #top_menu.navbar-nav {
-                    height: 90vh;
-                    padding-top : 10vh;
-                }
-                .dropdown-menu {
-                    text-align: center;
-                }
-            }
-        }
-    } @else if index(('logo_menu_below', 'menu_logo_below'), o-website-value('header-template')) {
-        .navbar-brand {
-            text-align: center;
-        }
-        .navbar-expand-md {
-            > .container {
-                flex-wrap: wrap;
-            }
-            .navbar-collapse {
-                flex-basis: 100%;
-            }
-        }
-        .navbar-brand, #top_menu.navbar-nav, .logo img {
-            margin: auto;
-        }
-        .navbar-brand {
-            @include media-breakpoint-up(md) {
-                @if o-website-value('header-template') == 'menu_logo_below' {
-                    margin-top: $navbar-padding-y;
-                } @else {
-                    margin-bottom: $navbar-padding-y;
-                }
-            }
-        }
-        @if o-website-value('header-template') == 'menu_logo_below' {
-            .navbar-collapse {
-                @include media-breakpoint-up(md) {
-                    order: -1;
-                }
-            }
         }
     }
 }
