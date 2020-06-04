@@ -196,7 +196,7 @@ class PosConfig(models.Model):
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
     start_category = fields.Boolean("Start Category", default=False)
     limit_categories = fields.Boolean("Restrict Product Categories")
-    module_account = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale.')
+    module_account = fields.Boolean(string='Invoicing', default=True, help='Enables invoice generation from the Point of Sale.')
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_loyalty = fields.Boolean("Loyalty Program")
@@ -630,6 +630,7 @@ class PosConfig(models.Model):
         """
         self.assign_payment_journals(company)
         self.generate_pos_journal(company)
+        self.setup_invoice_journal(company)
 
     def assign_payment_journals(self, company):
         for pos_config in self:
@@ -668,3 +669,11 @@ class PosConfig(models.Model):
                     'sequence': 20
                 })
             pos_config.write({'journal_id': pos_journal.id})
+
+    def setup_invoice_journal(self, company):
+        for pos_config in self:
+            invoice_journal_id = pos_config.invoice_journal_id or self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', company.id)], limit=1)
+            if invoice_journal_id:
+                pos_config.write({'invoice_journal_id': invoice_journal_id.id})
+            else:
+                pos_config.write({'module_account': False})
