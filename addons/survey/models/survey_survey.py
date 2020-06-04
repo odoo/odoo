@@ -128,8 +128,8 @@ class Survey(models.Model):
     #   - If the certification badge is set, show certification_badge_id_dummy in 'no create' mode.
     #       So it can be edited but not removed or replaced.
     certification_give_badge = fields.Boolean('Give Badge', compute='_compute_certification_give_badge',
-                                              readonly=False, store=True)
-    certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge')
+                                              readonly=False, store=True, copy=False)
+    certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge', copy=False)
     certification_badge_id_dummy = fields.Many2one(related='certification_badge_id', string='Certification Badge ')
     # live sessions
     session_state = fields.Selection([
@@ -166,8 +166,6 @@ class Survey(models.Model):
         ('attempts_limit_check', "CHECK( (is_attempts_limited=False) OR (attempts_limit is not null AND attempts_limit > 0) )",
             'The attempts limit needs to be a positive number if the survey has a limited number of attempts.'),
         ('badge_uniq', 'unique (certification_badge_id)', "The badge for each survey should be unique!"),
-        ('give_badge_check', "CHECK(certification_give_badge=False OR (certification_give_badge=True AND certification_badge_id is not null))",
-            'Certification badge must be configured if Give Badge is set.'),
     ]
 
     def _compute_users_can_signup(self):
@@ -1011,6 +1009,9 @@ class Survey(models.Model):
 
     def _create_certification_badge_trigger(self):
         self.ensure_one()
+        if not self.certification_badge_id:
+            raise ValueError(_('Certification Badge is not configured for the survey %(survey_name)s', survey_name=self.title))
+
         goal = self.env['gamification.goal.definition'].create({
             'name': self.title,
             'description': _("%s certification passed", self.title),

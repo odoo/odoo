@@ -121,7 +121,8 @@
                                             icon="fa-external-link"  target="_blank" class="btn-link pt-0"/>
                                     </div>
                                     <field name="certification_give_badge" attrs="{'invisible': ['|', ('certification', '=', False), ('users_login_required', '=', False)]}" />
-                                    <field name="certification_badge_id" attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '!=', False)]}"
+                                    <field name="certification_badge_id"
+                                           attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '!=', False)], 'required': [('certification_give_badge', '=', True)]}"
                                            domain="[('survey_id', '=', active_id), ('survey_id', '!=', False)]"
                                            context="{'default_name': title,
                                                    'default_description': 'Congratulations, you have succeeded this certification',
