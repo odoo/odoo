@@ -441,7 +441,7 @@ actual arch.
         # if in uninstall mode and has children views, emulate an ondelete cascade
         if self.env.context.get('_force_unlink', False) and self.mapped('inherit_children_ids'):
             self.mapped('inherit_children_ids').unlink()
-        super(View, self).unlink()
+        return super(View, self).unlink()
 
     @api.multi
     def toggle(self):
