@@ -65,6 +65,8 @@
                 <separator/>
                 <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="hr_holidays.group_hr_holidays_user"/>
                 <separator/>
+                <filter name="filter_date_from" date="date_from"/>
+                <separator/>
                 <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
                 <separator/>
                 <filter name="year" string="Active Time Off"

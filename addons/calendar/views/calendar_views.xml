@@ -282,6 +282,8 @@
                 <!-- TODO clean this filter and context key -->
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <separator/>
+                <filter string="Date" name="filter_start_date" date="start_date"/>
+                <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="responsible" domain="[]" context="{'group_by': 'user_id'}"/>

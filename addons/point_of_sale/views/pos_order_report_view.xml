@@ -34,6 +34,8 @@
                     <separator/>
                     <filter string="Invoiced" name="invoiced" domain="[('state','=',('invoiced'))]"/>
                     <filter string="Not Invoiced" name="not_invoiced" domain="[('state','=',('paid'))]"/>
+                    <separator/>
+                    <filter name="filter_date" date="date"/>
                     <field name="config_id"/>
                     <field name="partner_id"/>
                     <field name="product_id"/>

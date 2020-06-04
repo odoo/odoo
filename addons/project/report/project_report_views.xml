@@ -39,6 +39,9 @@
                     <field name="stage_id"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
+                    <filter name="filter_date_deadline" date="date_deadline"/>
+                    <filter name="filter_date_assign" date="date_assign"/>
+                    <filter name="filter_date_last_stage_update" date="date_last_stage_update"/>
                     <group expand="0" string="Extended Filters">
                         <field name="priority"/>
                         <field name="company_id" groups="base.group_multi_company"/>

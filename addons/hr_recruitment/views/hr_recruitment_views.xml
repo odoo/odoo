@@ -201,6 +201,9 @@
                 <filter string="Ready for Next Stage" name="done" domain="[('kanban_state', '=', 'done')]"/>
                 <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
                 <separator/>
+                <filter string="Creation Date" name="filter_create" date="create_date"/>
+                <filter string="Last Stage Update" name="filter_date_last_stage_update" date="date_last_stage_update"/>
+                <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                 <separator/>
                 <filter string="Archived / Refused" name="inactive" domain="[('active', '=', False)]"/>

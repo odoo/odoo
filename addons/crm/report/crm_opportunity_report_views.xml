@@ -72,7 +72,7 @@
                     <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="user_id" string="Salesperson"/>
                     <separator/>
-                    <filter string="Creation Date" name="filter_create_date" date="create_date"/>
+                    <filter string="Creation Date" name="filter_create_date" date="create_date" default_period="this_year"/>
                     <filter string="Expected Closing" name="filter_date_deadline" date="date_deadline"/>
                     <filter string="Date Closed" name="date_closed_filter" date="date_closed"/>
                     <group expand="0" string="Extended Filters">

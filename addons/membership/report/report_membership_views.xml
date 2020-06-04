@@ -8,6 +8,8 @@
                 <search string="Membership">
                     <filter string="Forecast" name="forecast" context="{'waiting_invoiced_totpending_visible':0}" help="This will display waiting, invoiced and total pending columns"/>
                     <filter string="Revenue Done" name="Revenue" context="{'paid_old_totearned_visible':0}" help="This will display paid, old and total earned columns"/>
+                    <separator/>
+                    <filter name="filter_start_date" date="start_date"/>
                     <field name="partner_id"/>
                     <field name="membership_id"/>
                     <field name="user_id"/>

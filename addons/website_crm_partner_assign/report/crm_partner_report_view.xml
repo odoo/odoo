@@ -11,6 +11,8 @@
                     <field name="user_id"/>
                     <field name="grade_id"/>
                     <field name="activation"/>
+                    <filter name="filter_date_partnership" date="date_partnership"/>
+                    <filter name="filter_date_review" date="date_review"/>
                     <group  expand="1" string="Group By">
                         <filter string="Salesperson" name="user"
                             context="{'group_by':'user_id'}" />
