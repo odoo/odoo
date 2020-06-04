@@ -88,10 +88,9 @@ class StatusController(http.Controller):
                 helpers.add_credential(db_uuid, enterprise_code)
             try:
                 subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, '', token, 'noreboot'])
-                helpers.check_certificate()
                 m.send_alldevices()
-                m.load_drivers()
                 image = get_resource_path('hw_drivers', 'static/img', 'True.jpg')
+                helpers.odoo_restart(3)
             except subprocess.CalledProcessError as e:
                 _logger.error('A error encountered : %s ' % e.output)
         if os.path.isfile(image):

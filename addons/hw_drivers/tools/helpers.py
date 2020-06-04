@@ -12,6 +12,8 @@ import logging
 import os
 import subprocess
 import zipfile
+from threading import Thread
+import time
 
 from odoo import _
 from odoo.modules.module import get_resource_path
@@ -21,6 +23,18 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # Helper
 #----------------------------------------------------------
+
+class IoTRestart(Thread):
+    """
+    Thread to restart odoo server in IoT Box when we must return a answer before
+    """
+    def __init__(self, delay):
+        Thread.__init__(self)
+        self.delay = delay
+
+    def run(self):
+        time.sleep(self.delay)
+        subprocess.check_call(["sudo", "service", "odoo", "restart"])
 
 def access_point():
     return get_ip() == '10.11.12.1'
@@ -216,6 +230,10 @@ def download_drivers(auto=True):
         except Exception as e:
             _logger.error('Could not reach configured server')
             _logger.error('A error encountered : %s ' % e)
+
+def odoo_restart(delay):
+    IR = IoTRestart(delay)
+    IR.start()
 
 def read_file_first_line(filename):
     path = Path.home() / filename
