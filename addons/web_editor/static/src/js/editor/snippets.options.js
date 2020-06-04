@@ -4406,7 +4406,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         this.trigger_up('block_preview_overlays');
 
         // Create empty clone of $target with same display size, make it draggable and give it a tooltip.
-        this.$bgDragger = this.$target.clone().empty();
+        this.$bgDragger = this.$target.clone().empty().removeClass('o_editable');
         // Some CSS child selector rules will not be applied since the clone has a different container from $target.
         // The background-attachment property should be the same in both $target & $bgDragger, this will keep the
         // preview more "wysiwyg" instead of getting different result when bg position saved (e.g. parallax snippet)
