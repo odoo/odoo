@@ -19,4 +19,5 @@ E-invoice implementation
     'demo': [
         'data/account_invoice_demo.xml',
     ],
+    'auto_install': True,
 }

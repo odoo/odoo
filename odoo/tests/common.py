@@ -1151,6 +1151,10 @@ class HttpCase(TransactionCase):
             self._logger.info('remaining requests')
             odoo.tools.misc.dumpstacks()
 
+    def logout(self, keep_db=True):
+        self.session.logout(keep_db=True)
+        odoo.http.root.session_store.save(self.session)
+
     def authenticate(self, user, password):
         # stay non-authenticated
         if user is None:

@@ -9,7 +9,6 @@
 # roye w <159820@qq.com>, 2019
 # 老窦 北京 <2662059195@qq.com>, 2019
 # 湘子 南 <1360857908@qq.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2019
 # Fisher <fisher@kdomi.com>, 2019
 # xu xiaohu <xu.xiaohu@gmail.com>, 2019
@@ -28,6 +27,7 @@
 # as co02 <asco02@163.com>, 2020
 # Dong <dong@freshoo.cn>, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
+"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -362,7 +362,7 @@ msgstr "科目表模版"
 msgid ""
 "Account used as counterpart of the income account in the accounting entry "
 "representing the pos sales."
-msgstr "帐户用作代表销售额的会计分录中的收入帐户的对应方。"
+msgstr "账户用作代表销售额的会计分录中的收入账户的对应方。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -540,7 +540,7 @@ msgstr "已为此销售点打开其他会话。"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Archived"
-msgstr "已归档"
+msgstr "已停用"
 
 #. module: point_of_sale
 #. openerp-web
@@ -582,7 +582,7 @@ msgstr "自动打开收银箱。"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid "Available PoS Product Categories"
-msgstr "可用PoS产品类别"
+msgstr "可用PoS品类"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -593,7 +593,7 @@ msgstr "可用价格表"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Available Product Categories"
-msgstr "可用产品类别"
+msgstr "可用品类"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__available_in_pos
@@ -808,7 +808,7 @@ msgstr "收银员"
 msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
-msgstr "用于在触摸屏幕上浏览你的产品类别"
+msgstr "用于在触摸屏幕上浏览你的品类"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1165,7 +1165,7 @@ msgstr "新增PoS配置"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
 msgid "Create a new product variant"
-msgstr "创建新产品变体"
+msgstr "创建新单品Sku"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__create_uid
@@ -1546,7 +1546,7 @@ msgstr "显示名称"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Display pictures of product categories"
-msgstr "显示产品类别的图片"
+msgstr "显示品类的图片"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/digest.py:0
@@ -3091,12 +3091,12 @@ msgstr "POS 订单"
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Product Categories"
-msgstr "PoS产品类别"
+msgstr "PoS品类"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
-msgstr "PoS产品类别"
+msgstr "PoS品类"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -3251,7 +3251,7 @@ msgstr "POS单明细"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "Pos Product Categories"
-msgstr "POS产品类别"
+msgstr "POS品类"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
@@ -3433,7 +3433,7 @@ msgstr "产品"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_categ_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Product Category"
-msgstr "产品类别"
+msgstr "品类"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3443,7 +3443,7 @@ msgstr "产品价格"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "Product Product Categories"
-msgstr "产品产品类别"
+msgstr "产品品类"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_qty
@@ -3454,7 +3454,7 @@ msgstr "产品数量"
 #: model:ir.model,name:point_of_sale.model_product_template
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_tmpl_id
 msgid "Product Template"
-msgstr "产品模板"
+msgstr "产品"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_uom_uom
@@ -3475,7 +3475,7 @@ msgstr "产品计量单位 类别"
 #: model:ir.actions.act_window,name:point_of_sale.product_product_action
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_action_product_product
 msgid "Product Variants"
-msgstr "产品变体"
+msgstr "单品Sku"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4064,7 +4064,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Start selling from a default product category"
-msgstr "从默认产品类别开始销售"
+msgstr "从默认品类开始销售"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -4397,7 +4397,7 @@ msgstr "将要使用的物理POS。"
 msgid ""
 "The point of sale will display this product category by default. If no "
 "category is specified, all available products will be shown."
-msgstr "销售点将默认显示此产品类别。"
+msgstr "销售点将默认显示此品类。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids

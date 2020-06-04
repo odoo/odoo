@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, RedirectWarning
+from odoo.exceptions import UserError, RedirectWarning, ValidationError
 from dateutil.relativedelta import relativedelta
 from lxml import etree
 import logging
@@ -34,6 +34,13 @@ class AccountMove(models.Model):
         " different type if required.")
     l10n_ar_afip_service_start = fields.Date(string='AFIP Service Start Date', readonly=True, states={'draft': [('readonly', False)]})
     l10n_ar_afip_service_end = fields.Date(string='AFIP Service End Date', readonly=True, states={'draft': [('readonly', False)]})
+
+    @api.constrains('type', 'journal_id', 'l10n_latam_use_documents')
+    def _check_moves_use_documents(self):
+        """ Do not let to create not invoices entries in journals that use documents """
+        not_invoices = self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and x.journal_id.type in ['sale', 'purchase'] and x.l10n_latam_use_documents and not x.is_invoice())
+        if not_invoices:
+            raise ValidationError(_("The selected Journal can't be used in this transaction, please select one that doesn't use documents as these are just for Invoices."))
 
     def _get_afip_invoice_concepts(self):
         """ Return the list of values of the selection field. """

@@ -3146,7 +3146,15 @@ class AccountMoveLine(models.Model):
             currency = record.company_id.currency_id
             audit_str = ''
             for tag in record.tag_ids:
-                tag_amount = (tag.tax_negate and -1 or 1) * (record.move_id.is_inbound() and -1 or 1) * record.balance
+
+                # In case of cash basis entries, we need to consider the original invoice, not the current move
+                if record.move_id.tax_cash_basis_rec_id:
+                    reconciled_amls = record.move_id.tax_cash_basis_rec_id.debit_move_id + record.move_id.tax_cash_basis_rec_id.credit_move_id
+                    invoice_aml = reconciled_amls.filtered(lambda x: x.journal_id.type in ('sale', 'purchase')) # To exclude the payment
+                else:
+                    invoice_aml = record
+
+                tag_amount = (tag.tax_negate and -1 or 1) * (invoice_aml.move_id.is_inbound() and -1 or 1) * record.balance
 
                 if tag.tax_report_line_ids:
                     #Then, the tag comes from a report line, and hence has a + or - sign (also in its name)
@@ -4325,7 +4333,7 @@ class AccountPartialReconcile(models.Model):
                                 'tax_exigible': True,
                                 'tax_ids': [(6, 0, [tax.id])],
                                 'move_id': newly_created_move.id,
-                                'currency_id': self.currency_id.id,
+                                'currency_id': line.currency_id.id,
                                 'amount_currency': line.currency_id.round(line.amount_currency * amount / line.balance) if line.currency_id and line.balance else 0.0,
                                 'partner_id': line.partner_id.id,
                                 'journal_id': newly_created_move.journal_id.id,
@@ -4340,7 +4348,7 @@ class AccountPartialReconcile(models.Model):
                                 'account_id': account_id.id,
                                 'tax_exigible': True,
                                 'move_id': newly_created_move.id,
-                                'currency_id': self.currency_id.id,
+                                'currency_id': line.currency_id.id,
                                 'amount_currency': line.currency_id.round(-line.amount_currency * amount / line.balance) if line.currency_id and line.balance else 0.0,
                                 'partner_id': line.partner_id.id,
                                 'journal_id': newly_created_move.journal_id.id,
