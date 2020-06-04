@@ -98,7 +98,7 @@
                 <field name="employee_id"/>
                 <field name="department_id"/>
             </xpath>
-            <xpath expr="//field[@name='owner_user_id']" position='replace'>
+            <xpath expr="//templates//field[@name='owner_user_id']" position='replace'>
                 <field name="employee_id" widget="many2one_avatar_employee"/>
             </xpath>
             <div t-if="record.serial_no.raw_value" position='after'>
