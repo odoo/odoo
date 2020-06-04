@@ -62,6 +62,14 @@ odoo.define('web.DropdownMenu', function (require) {
         }
 
         /**
+         * Can be overriden to force an icon on an inheriting class.
+         * @returns {string} Font Awesome icon class
+         */
+        get icon() {
+            return this.props.icon;
+        }
+
+        /**
          * Meant to be overriden to provide the list of items to display.
          * @returns {Object[]}
          */

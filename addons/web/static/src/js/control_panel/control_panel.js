@@ -3,13 +3,13 @@ odoo.define('web.ControlPanel', function (require) {
 
     const ActionMenus = require('web.ActionMenus');
     const ControlPanelModel = require('web.ControlPanelModel');
+    const ComparisonMenu = require('web.ComparisonMenu');
     const FavoriteMenu = require('web.FavoriteMenu');
     const FilterMenu = require('web.FilterMenu');
     const GroupByMenu = require('web.GroupByMenu');
     const patchMixin = require('web.patchMixin');
     const Pager = require('web.Pager');
     const SearchBar = require('web.SearchBar');
-    const TimeRangeMenu = require('web.TimeRangeMenu');
     const { useModel } = require('web.model');
 
     const { Component, hooks } = owl;
@@ -191,7 +191,7 @@ odoo.define('web.ControlPanel', function (require) {
     ControlPanel.components = {
         SearchBar,
         ActionMenus, Pager,
-        FilterMenu, GroupByMenu, TimeRangeMenu, FavoriteMenu,
+        ComparisonMenu, FilterMenu, GroupByMenu, FavoriteMenu,
     };
     ControlPanel.defaultProps = {
         breadcrumbs: [],

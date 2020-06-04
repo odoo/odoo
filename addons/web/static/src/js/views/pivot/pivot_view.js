@@ -30,7 +30,7 @@ odoo.define('web.PivotView', function (require) {
             Renderer: PivotRenderer,
         }),
         viewType: 'pivot',
-        searchMenuTypes: ['filter', 'groupBy', 'timeRange', 'favorite'],
+        searchMenuTypes: ['filter', 'groupBy', 'comparison', 'favorite'],
 
         /**
          * @override
