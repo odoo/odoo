@@ -19,7 +19,9 @@ class Lang(models.Model):
     @api.model
     @tools.ormcache_context(keys=("website_id",))
     def get_available(self):
-        """ Return the available languages as a list of (code, name) sorted by name. """
+        """ Return the available languages as a list of (code, name) sorted by
+            name.
+        """
         website = ir_http.get_request_website()
         if website:
             return sorted([(lang.code, lang.url_code, lang.name) for lang in request.website.language_ids])
