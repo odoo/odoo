@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import unittest
 from odoo.tests import tagged
-from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 # noinspection PyUnresolvedReferences
 from ..models.account_move \
@@ -9,15 +9,15 @@ from ..models.account_move \
 
 
 @tagged('standard', 'at_install')
-class PaymentReferenceTest(InvoiceTestCommon):
+class PaymentReferenceTest(AccountTestInvoicingCommon):
     """
     All references validated with the reference calculator by Nordea Bank
     http://www.nordea.fi/en/corporate-customers/payments/invoicing-and-payments/reference-number-calculator.html
     """
 
     @classmethod
-    def setUpClass(cls):
-        super(PaymentReferenceTest, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref='l10n_if.fi_chart_template'):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.invoice = cls.init_invoice('out_invoice')
 

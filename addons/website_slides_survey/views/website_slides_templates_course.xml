@@ -7,7 +7,7 @@
             </xpath>
 
             <xpath expr="//div[@id='courseMainTabContent']//div[@id='home']/t" position="before">
-                <t t-set="first_slide" t-value="channel.slide_ids[0] if len(channel.slide_ids) > 0 else None"/>
+                <t t-set="first_slide" t-value="channel.slide_content_ids[0] if len(channel.slide_content_ids) > 0 else None"/>
                 <div t-if="channel.nbr_certification > 0 and channel.is_member and channel.completion == 0" class="alert alert-success d-flex align-items-center justify-content-between flex-wrap">
                     <div>Begin your <b>certification</b> today!</div>
 

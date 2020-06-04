@@ -821,15 +821,26 @@ class Cache(object):
 
     def get_records(self, model, field):
         """ Return the records of ``model`` that have a value for ``field``. """
-        ids = list(self._data[field])
+        field_cache = self._data[field]
+        if field.depends_context:
+            key = field.cache_key(model.env)
+            ids = [id_ for id_, value in field_cache.items() if key in value]
+        else:
+            ids = list(field_cache)
         return model.browse(ids)
 
     def get_missing_ids(self, records, field):
         """ Return the ids of ``records`` that have no value for ``field``. """
         field_cache = self._data[field]
-        for record_id in records._ids:
-            if record_id not in field_cache:
-                yield record_id
+        if field.depends_context:
+            key = field.cache_key(records.env)
+            for record_id in records._ids:
+                if key not in field_cache.get(record_id, ()):
+                    yield record_id
+        else:
+            for record_id in records._ids:
+                if record_id not in field_cache:
+                    yield record_id
 
     def invalidate(self, spec=None):
         """ Invalidate the cache, partially or totally depending on ``spec``. """

@@ -121,7 +121,11 @@ class ProcurementGroup(models.Model):
         """
         procurements_without_kit = []
         for procurement in procurements:
-            bom_kit = self.env['mrp.bom']._bom_find(product=procurement.product_id, bom_type='phantom')
+            bom_kit = self.env['mrp.bom']._bom_find(
+                product=procurement.product_id,
+                company_id=procurement.company_id.id,
+                bom_type='phantom',
+            )
             if bom_kit:
                 order_qty = procurement.product_uom._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
                 qty_to_produce = (order_qty / bom_kit.product_qty)

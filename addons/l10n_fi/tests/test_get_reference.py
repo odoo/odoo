@@ -1,14 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class InvoiceGetReferenceTest(InvoiceTestCommon):
+class InvoiceGetReferenceTest(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(InvoiceGetReferenceTest, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref='l10n_fi.fi_chart_template'):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.invoice = cls.init_invoice('out_invoice')
 

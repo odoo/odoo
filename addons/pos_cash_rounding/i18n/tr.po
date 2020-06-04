@@ -48,12 +48,13 @@ msgstr "Nakit yuvarlama"
 #: code:addons/pos_cash_rounding/models/pos_config.py:0
 #, python-format
 msgid "Cash rounding strategy must be: 'Add a rounding line'"
-msgstr ""
+msgstr "Nakit yuvarlama yöntemi şöyle olmalıdır: 'Bir yuvarlama satırı ekle'"
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_config_view_form_inherit_cash_rounding
 msgid "Define the smallest coinage of the currency used to pay"
 msgstr ""
+"Ödemek için kullanılan para biriminin en küçük bozuk parasını tanımlayın"
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
@@ -70,7 +71,7 @@ msgstr "Zarar Hesabı"
 #. module: pos_cash_rounding
 #: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
-msgstr ""
+msgstr "Yalnızca nakitte yuvarlamayı uygula"
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
@@ -102,7 +103,7 @@ msgstr "Kar Hesabı"
 #: code:addons/pos_cash_rounding/static/src/xml/pos.xml:0
 #, python-format
 msgid "ROUNDED"
-msgstr ""
+msgstr "YUVARLATILMIŞ"
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_config_view_form_inherit_cash_rounding
@@ -115,6 +116,8 @@ msgid ""
 "The Point of Sale only support the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
+"Satış Noktası yalnızca \"Add a rounding line\" yuvarlama yöntemini "
+"destekler."
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_order_view_form_inherit_cash_rounding
@@ -128,3 +131,5 @@ msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
 msgstr ""
+"Bir pos oturumu kullanarak zaten açıkken nakit yuvarlama yapılandırmasını "
+"değiştirmenize izin verilmez."

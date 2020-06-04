@@ -520,6 +520,9 @@ class Repair(models.Model):
                 # quant is created in operation.location_id.
                 move._set_quantity_done(operation.product_uom_qty)
 
+                if operation.lot_id:
+                    move.move_line_ids.lot_id = operation.lot_id
+
                 moves |= move
                 operation.write({'move_id': move.id, 'state': 'done'})
             move = Move.create({
