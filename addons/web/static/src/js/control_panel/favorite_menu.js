@@ -3,6 +3,7 @@ odoo.define('web.FavoriteMenu', function (require) {
 
     const Dialog = require('web.OwlDialog');
     const DropdownMenu = require('web.DropdownMenu');
+    const { FACET_ICONS } = require("web.searchUtils");
     const Registry = require('web.Registry');
     const { useModel } = require('web.model');
 
@@ -28,6 +29,13 @@ odoo.define('web.FavoriteMenu', function (require) {
         //---------------------------------------------------------------------
         // Getters
         //---------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        get icon() {
+            return FACET_ICONS.favorite;
+        }
 
         /**
          * @override
@@ -92,9 +100,6 @@ odoo.define('web.FavoriteMenu', function (require) {
 
     FavoriteMenu.components = Object.assign({}, DropdownMenu.components, {
         Dialog,
-    });
-    FavoriteMenu.defaultProps = Object.assign({}, DropdownMenu.defaultProps, {
-        icon: 'fa fa-star',
     });
     FavoriteMenu.template = 'web.FavoriteMenu';
 
