@@ -611,11 +611,20 @@ class AccountBankStatementLine(models.Model):
         and 'move_line' will be used to create the counterpart of an existing account.move.line to which
         the newly created journal item will be reconciled.
         :param counterpart_vals:    A python dictionary containing:
-            'balance':              Optional amount to consider during the reconciliation. If a foreign currency is set on the
-                                    counterpart line in the same foreign currency as the statement line, then this amount is
-                                    considered as the amount in foreign currency. If not specified, the full balance is took.
-                                    This value must be provided if move_line is not.
-            **kwargs:               Additional values that need to land on the account.move.line to create.
+            'balance':                  Optional amount to consider during the reconciliation. If a foreign currency is set on the
+                                        counterpart line in the same foreign currency as the statement line, then this amount is
+                                        considered as the amount in foreign currency. If not specified, the full balance is took.
+                                        This value must be provided if move_line is not.
+            'amount_residual':          The residual amount to reconcile expressed in the company's currency.
+                                        /!\ This value should be equivalent to move_line.amount_residual except we want
+                                        to avoid browsing the record when the only thing we need in an overview of the
+                                        reconciliation, for example in the reconciliation widget.
+            'amount_residual_currency': The residual amount to reconcile expressed in the foreign's currency.
+                                        Using this key doesn't make sense without passing 'currency_id' in vals.
+                                        /!\ This value should be equivalent to move_line.amount_residual_currency except
+                                        we want to avoid browsing the record when the only thing we need in an overview
+                                        of the reconciliation, for example in the reconciliation widget.
+            **kwargs:                   Additional values that need to land on the account.move.line to create.
         :param move_line:           An optional account.move.line move_line representing the counterpart line to reconcile.
         :return:                    The values to create a new account.move.line move_line.
         '''
@@ -626,6 +635,12 @@ class AccountBankStatementLine(models.Model):
         company_currency = journal.company_id.currency_id
         journal_currency = journal.currency_id if journal.currency_id != company_currency else False
         statement_line_rate = self.amount_currency / (self.amount or 1.0)
+
+        balance_to_reconcile = counterpart_vals.pop('balance', None)
+        amount_residual = -counterpart_vals.pop('amount_residual', move_line.amount_residual if move_line else 0.0) \
+            if balance_to_reconcile is None else balance_to_reconcile
+        amount_residual_currency = -counterpart_vals.pop('amount_residual_currency', move_line.amount_residual_currency if move_line else 0.0)\
+            if balance_to_reconcile is None else balance_to_reconcile
 
         if 'currency_id' in counterpart_vals:
             currency_id = counterpart_vals['currency_id']
@@ -648,7 +663,7 @@ class AccountBankStatementLine(models.Model):
                     # There is also a foreign currency set on the journal so the journal item to create will
                     # use the foreign currency set on the statement line.
 
-                    amount_currency = counterpart_vals.pop('balance', -move_line.amount_residual_currency if move_line else 0.0)
+                    amount_currency = amount_residual_currency
                     balance = journal_currency._convert(amount_currency / statement_line_rate, company_currency, journal.company_id, self.date)
 
                 elif currency_id == journal_currency.id and self.foreign_currency_id == company_currency:
@@ -657,7 +672,7 @@ class AccountBankStatementLine(models.Model):
                     # There is also a foreign currency set on the statement line that is the same as the company one.
                     # Then, the journal item to create will use the company's currency.
 
-                    amount_currency = counterpart_vals.pop('balance', -move_line.amount_residual_currency if move_line else 0.0)
+                    amount_currency = amount_residual_currency
                     balance = amount_currency * statement_line_rate
                     currency_id = False
                     amount_currency = 0.0
@@ -668,7 +683,7 @@ class AccountBankStatementLine(models.Model):
                     # There is also a foreign currency set on the statement line.
                     # The residual amount will be convert to the foreign currency set on the statement line.
 
-                    amount_currency = counterpart_vals.pop('balance', -move_line.amount_residual_currency if move_line else 0.0)
+                    amount_currency = amount_residual_currency
                     balance = journal_currency._convert(amount_currency, company_currency, journal.company_id, self.date)
                     amount_currency *= statement_line_rate
                     currency_id = self.foreign_currency_id.id
@@ -678,7 +693,7 @@ class AccountBankStatementLine(models.Model):
                     # Whatever the currency set on the journal item passed as parameter, the counterpart line
                     # will be expressed in the foreign currency set on the statement line.
 
-                    balance = counterpart_vals.pop('balance', -move_line.amount_residual if move_line else 0.0)
+                    balance = amount_residual
                     amount_currency = company_currency._convert(balance, journal_currency, journal.company_id, self.date)
                     amount_currency *= statement_line_rate
                     currency_id = self.foreign_currency_id.id
@@ -690,10 +705,10 @@ class AccountBankStatementLine(models.Model):
                 # and is used as conversion rate between the company's currency and the foreign currency.
 
                 if currency_id == self.foreign_currency_id.id:
-                    amount_currency = counterpart_vals.pop('balance', -move_line.amount_residual_currency if move_line else 0.0)
+                    amount_currency = amount_residual_currency
                     balance = amount_currency / statement_line_rate
                 else:
-                    balance = counterpart_vals.pop('balance', -move_line.amount_residual if move_line else 0.0)
+                    balance = amount_residual
                     amount_currency = balance * statement_line_rate
                     currency_id = self.foreign_currency_id.id
 
@@ -703,10 +718,10 @@ class AccountBankStatementLine(models.Model):
                 # Everything will be expressed in the journal's currency.
 
                 if currency_id == journal_currency.id:
-                    amount_currency = counterpart_vals.pop('balance', -move_line.amount_residual_currency if move_line else 0.0)
+                    amount_currency = amount_residual_currency
                     balance = journal_currency._convert(amount_currency, company_currency, journal.company_id, self.date)
                 else:
-                    balance = counterpart_vals.pop('balance', -move_line.amount_residual if move_line else 0.0)
+                    balance = amount_residual
                     amount_currency = company_currency._convert(balance, journal_currency, journal.company_id, self.date)
                     currency_id = journal_currency.id
 
@@ -715,12 +730,12 @@ class AccountBankStatementLine(models.Model):
                 # Only a foreign currency set on the counterpart line.
                 # Ignore it and record the line using the company's currency.
 
-                balance = counterpart_vals.pop('balance', -move_line.amount_residual if move_line else 0.0)
+                balance = amount_residual
                 amount_currency = 0.0
                 currency_id = False
 
         else:
-            balance = counterpart_vals.pop('balance', -move_line.amount_residual if move_line else 0.0)
+            balance = amount_residual
 
             if self.foreign_currency_id and journal_currency:
 
