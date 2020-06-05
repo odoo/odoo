@@ -7706,7 +7706,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('check if the view destroys all widgets and instances', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var instanceNumber = 0;
         await testUtils.mock.patch(mixins.ParentedMixin, {
@@ -7766,21 +7766,10 @@ QUnit.module('Views', {
         };
 
         var form = await createView(params);
-        form.destroy();
-
-        var initialInstanceNumber = instanceNumber;
-        instanceNumber = 0;
-
-        form = await createView(params);
-
-        // call destroy function of controller to ensure that it correctly destroys everything
-        form.__destroy();
-
-        // + 4 (parent)
-        assert.strictEqual(instanceNumber, initialInstanceNumber + 1,
-            "every widget must be destroyed exept the parent");
+        assert.ok(instanceNumber > 0);
 
         form.destroy();
+        assert.strictEqual(instanceNumber, 0);
 
         await testUtils.mock.unpatch(mixins.ParentedMixin);
     });
