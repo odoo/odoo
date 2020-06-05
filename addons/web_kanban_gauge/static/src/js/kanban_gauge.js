@@ -1,13 +1,15 @@
 odoo.define('web_kanban_gauge.widget', function (require) {
 "use strict";
 
-var AbstractField = require('web.AbstractField');
-var core = require('web.core');
-var field_registry = require('web.field_registry');
-var utils = require('web.utils');
+const AbstractFieldOwl = require('web.AbstractFieldOwl');
+const ajax = require('web.ajax');
+const core = require('web.core');
+const fieldRegistryOwl = require('web.field_registry_owl');
+const utils = require('web.utils');
 
-var _t = core._t;
+const { xml } = owl.tags;
 
+const _t = core._t;
 /**
  * options
  *
@@ -25,70 +27,62 @@ var _t = core._t;
  * - style: custom style
  */
 
-var GaugeWidget = AbstractField.extend({
-    className: "oe_gauge",
-    jsLibs: [
-        '/web/static/lib/Chart/Chart.js',
-    ],
+class GaugeWidget extends AbstractFieldOwl {
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    async willStart() {
+        await ajax.loadJS('/web/static/lib/Chart/Chart.js');
+    }
 
-    /**
-     * @override
-     * @private
-     */
-    _render: function () {
+    mounted() {
         // current value
-        var val = this.value;
-        if (_.isArray(JSON.parse(val))) {
+        let val = this.value;
+        if (Array.isArray(JSON.parse(val))) {
             val = JSON.parse(val);
         }
-        var gauge_value = _.isArray(val) && val.length ? val[val.length-1].value : val;
+        let gauge_value = Array.isArray(val) && val.length ? val[val.length-1].value : val;
         if (this.nodeOptions.gauge_value_field) {
             gauge_value = this.recordData[this.nodeOptions.gauge_value_field];
         }
 
         // max_value
-        var max_value = this.nodeOptions.max_value || 100;
+        let max_value = this.nodeOptions.max_value || 100;
         if (this.nodeOptions.max_field) {
             max_value = this.recordData[this.nodeOptions.max_field];
         }
         max_value = Math.max(gauge_value, max_value);
 
         // label
-        var label = this.nodeOptions.label || "";
+        let label = this.nodeOptions.label || "";
         if (this.nodeOptions.label_field) {
             label = this.recordData[this.nodeOptions.label_field];
         }
 
         // title
-        var title = this.nodeOptions.title || this.field.string;
+        const title = this.nodeOptions.title || this.field.string;
 
-        var maxLabel = max_value;
+        let maxLabel = max_value;
         if (gauge_value === 0 && max_value === 0) {
             max_value = 1;
             maxLabel = 0;
         }
-		var config = {
-			type: 'doughnut',
-			data: {
-				datasets: [{
-					data: [
+        const config = {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [
                         gauge_value,
                         max_value - gauge_value
-					],
-					backgroundColor: [
+                    ],
+                    backgroundColor: [
                         "#1f77b4", "#dddddd"
-					],
-					label: title
-				}],
-			},
-			options: {
-				circumference: Math.PI,
-				rotation: -Math.PI,
-				responsive: true,
+                    ],
+                    label: title
+                }],
+            },
+            options: {
+                circumference: Math.PI,
+                rotation: -Math.PI,
+                responsive: true,
                 tooltips: {
                     displayColors: false,
                     callbacks: {
@@ -100,11 +94,11 @@ var GaugeWidget = AbstractField.extend({
                         },
                     },
                 },
-				title: {
-					display: true,
-					text: title,
+                title: {
+                    display: true,
+                    text: title,
                     padding: 4,
-				},
+                },
                 layout: {
                     padding: {
                         bottom: 5
@@ -113,23 +107,28 @@ var GaugeWidget = AbstractField.extend({
                 maintainAspectRatio: false,
                 cutoutPercentage: 70,
             }
-		};
-        this.$canvas = $('<canvas/>');
-        this.$el.empty();
-        this.$el.append(this.$canvas);
-        this.$el.attr('style', this.nodeOptions.style);
-        this.$el.css({position: 'relative'});
-        var context = this.$canvas[0].getContext('2d');
+        };
+
+        this.canvas = document.createElement("canvas");
+        this.el.innerHTML = '';
+        this.el.append(this.canvas);
+        this.el.style = this.nodeOptions.style;
+        this.el.style.position = 'relative';
+        const context = this.canvas.getContext('2d');
         this.chart = new Chart(context, config);
 
-        var humanValue = utils.human_number(gauge_value, 1);
-        var $value = $('<span class="o_gauge_value">').text(humanValue);
-        $value.css({'text-align': 'center', position: 'absolute', left: 0, right: 0, bottom: '6px', 'font-weight': 'bold'});
-        this.$el.append($value);
-    },
-});
+        const humanValue = utils.human_number(gauge_value, 1);
+        const value = document.createElement('span');
+        value.classList.add('o_gauge_value');
+        value.textContent = humanValue;
+        Object.assign(value.style, {'text-align': 'center', position: 'absolute', left: 0, right: 0, bottom: '6px', 'font-weight': 'bold'});
+        this.el.append(value);
+    }
+};
 
-field_registry.add("gauge", GaugeWidget);
+GaugeWidget.template = xml`<div class="oe_gauge"/>`;
+
+fieldRegistryOwl.add("gauge", GaugeWidget);
 
 return GaugeWidget;
 
