@@ -988,16 +988,19 @@ class Channel(models.Model):
             all_channel_partners = self.env['mail.channel.partner'].with_context(active_test=False)
             channel_partners = all_channel_partners.search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
             msg = _("You are in a private conversation with <b>@%s</b>.") % (channel_partners[0].partner_id.name if channel_partners else _('Anonymous'))
-        msg += _("""<br><br>
-            Type <b>@username</b> to mention someone, and grab his attention.<br>
-            Type <b>#channel</b> to mention a channel.<br>
-            Type <b>/command</b> to execute a command.<br>
-            Type <b>:shortcut</b> to insert a canned response in your message.<br>""")
+        msg += self._execute_command_help_message_extra()
 
         self._send_transient_message(partner, msg)
 
     def _define_command_leave(self):
         return {'help': _("Leave this channel")}
+
+    def _execute_command_help_message_extra(self):
+        msg = _("""<br><br>
+            Type <b>@username</b> to mention someone, and grab his attention.<br>
+            Type <b>#channel</b> to mention a channel.<br>
+            Type <b>/command</b> to execute a command.<br>""")
+        return msg
 
     def _execute_command_leave(self, **kwargs):
         if self.channel_type == 'channel':

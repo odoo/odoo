@@ -159,6 +159,10 @@ class MailChannel(models.Model):
             'help': _('See 15 last visited pages')
         }
 
+    def _execute_command_help_message_extra(self):
+        msg = super(MailChannel, self)._execute_command_help_message_extra()
+        return msg + _("Type <b>:shortcut</b> to insert a canned response in your message.<br>")
+
     def _execute_command_history(self, **kwargs):
         notification = []
         notification_values = {
