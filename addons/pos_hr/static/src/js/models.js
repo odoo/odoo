@@ -6,30 +6,21 @@ var models = require('point_of_sale.models');
 models.load_models([{
     model:  'hr.employee',
     fields: ['name', 'id', 'user_id'],
-    domain: function(self){ return [['company_id', '=', self.config.company_id[0]]]; },
+    domain: function(self){ return [['company_id', '=', self.config.company_id[0]], '|', ['user_id', '=', self.user.id], ['id', 'in', self.config.employee_ids]]; },
     loaded: function(self, employees) {
         if (self.config.module_pos_hr) {
-            // TODO jcb: this can be optimized by fetching only the hr.employee records in config.employee_ids
-            if (self.config.employee_ids.length > 0) {
-                self.employees = employees.filter(function(employee) {
-                    return self.config.employee_ids.includes(employee.id) || employee.user_id[0] === self.user.id;
-                });
-            } else {
-                self.employees = employees;
-            }
-            self.employees.forEach(function(employee) {
-                var hasUser = self.users.some(function(user) {
-                    if (user.id === employee.user_id[0]) {
-                        employee.role = user.role;
-                        self.get_cashier().id = employee.id;
-                        return true;
-                    }
-                    return false;
-                });
-                if (!hasUser) {
-                    employee.role = 'cashier';
+            self.employees = employees;
+            const currentCashier = self.get_cashier();
+            for (let employee of self.employees) {
+                const user = self.users.find(user => user.id === employee.user_id[0]);
+                employee.role = user ? user.role : 'cashier';
+                // When loading res.users, the current user is set as cashier.
+                // We need to reset that using the employee record of the user
+                // for consistency.
+                if (user && user.id === currentCashier.id) {
+                    self.set_cashier(employee);
                 }
-            });
+            }
         }
     }
 }]);

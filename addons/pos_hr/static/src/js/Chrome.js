@@ -13,9 +13,15 @@ odoo.define('pos_hr.chrome', function (require) {
                 }
             }
             get headerButtonIsShown() {
-                return this.env.pos.config.module_pos_hr
-                    ? this.env.pos.get('cashier').role == 'manager'
-                    : true;
+                if (this.env.pos.config.module_pos_hr) {
+                    const currentCashier = this.env.pos.get_cashier();
+                    return (
+                        currentCashier.user_id[0] === this.env.pos.session.uid ||
+                        currentCashier.role === 'manager'
+                    );
+                } else {
+                    return true;
+                }
             }
         };
 
