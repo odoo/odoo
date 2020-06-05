@@ -2619,6 +2619,67 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+
+    QUnit.test("Reload categories with counters when filter values are selected", async function (assert) {
+        assert.expect(10);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+            services: this.services,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="category_id" enable_counters="1"/>
+                            <field name="state" select="multi" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+        });
+
+        assert.verifySteps([
+            'search_panel_select_range',
+            "search_panel_select_multi_range",
+            '/web/dataset/search_read'
+        ]);
+
+        assert.deepEqual(getCounters(kanban), [
+            1, 3, // category counts (in order)
+            1, 1, 2 // filter counts
+        ]);
+
+        await testUtils.dom.click(kanban.el.querySelector('.o_search_panel_filter_value input'));
+
+        assert.deepEqual(getCounters(kanban), [
+            1, // category counts (for silver: 0 is not displayed)
+            1, 1, 2 // filter counts
+        ]);
+
+        assert.verifySteps([
+            'search_panel_select_range',
+            '/web/dataset/search_read',
+            "search_panel_select_multi_range"
+        ]);
+
+        kanban.destroy();
+    });
+
     QUnit.test("many2one: select one, expand, hierarchize, counters", async function (assert) {
         assert.expect(5);
 
