@@ -161,7 +161,7 @@ class WebsiteBlog(http.Controller):
             # redirect get tag-1,tag-2 -> get tag-1
             tags = tag.split(',')
             if len(tags) > 1:
-                url = QueryURL('', ['blog', 'tag'], blog=blog, tag=tags[0], date_begin=date_begin, date_end=date_end)()
+                url = QueryURL('' if blog else '/blog', ['blog', 'tag'], blog=blog, tag=tags[0], date_begin=date_begin, date_end=date_end)()
                 return request.redirect(url, code=302)
 
         values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page)
