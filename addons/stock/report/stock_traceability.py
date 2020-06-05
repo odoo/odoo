@@ -121,7 +121,7 @@ class MrpStockReport(models.TransientModel):
         data = [{
             'level': level,
             'unfoldable': unfoldable,
-            'date': format_datetime(self.env, move_line.move_id.date, tz=False, dt_format=False),
+            'date': move_line.move_id.date,
             'parent_id': parent_id,
             'is_used': bool(is_used),
             'usage': self._get_usage(move_line),
@@ -156,7 +156,7 @@ class MrpStockReport(models.TransientModel):
                 'res_model': data.get('res_model', False),
                 'columns': [data.get('reference_id', False),
                             data.get('product_id', False),
-                            data.get('date', False),
+                            format_datetime(self.env, data.get('date', False), tz=False, dt_format=False),
                             data.get('lot_name', False),
                             data.get('location_source', False),
                             data.get('location_destination', False),
