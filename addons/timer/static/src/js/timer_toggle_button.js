@@ -52,12 +52,11 @@ const TimerToggleButton = FieldToggleBoolean.extend({
      */
     _onToggleButton: async function (event) {
         const context = this.record.getContext();
-        const prevent_deletion = this.attrs.options && this.attrs.options.prevent_deletion || false;
         event.stopPropagation();
         const result = await this._rpc({
             model: this.model,
             method: this._getActionButton(),
-            context: $.extend({}, context, {prevent_deletion: prevent_deletion}),
+            context: context,
             args: [this.res_id]
         });
 

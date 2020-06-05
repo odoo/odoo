@@ -114,7 +114,7 @@ class SaleOrderLine(models.Model):
 
     def _timesheet_create_project(self):
         project = super()._timesheet_create_project()
-        project.write({'allow_timesheets': True, 'allow_timesheet_timer': True})
+        project.write({'allow_timesheets': True})
         return project
 
     def _recompute_qty_to_invoice(self, date):
