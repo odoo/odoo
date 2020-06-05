@@ -199,7 +199,7 @@ class PurchaseOrder(models.Model):
         self = self.with_context(ctx)
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
-            if new_po.date_planned:
+            if new_po.date_planned and not line.display_type:
                 line.date_planned = new_po.date_planned
             elif line.product_id:
                 seller = line.product_id._select_seller(

@@ -709,7 +709,7 @@ class account_payment(models.Model):
         moves = self.mapped('move_line_ids.move_id')
         moves.filtered(lambda move: move.state == 'posted').button_draft()
         moves.with_context(force_delete=True).unlink()
-        self.write({'state': 'draft'})
+        self.write({'state': 'draft', 'invoice_ids': False})
 
     def _get_invoice_payment_amount(self, inv):
         """
