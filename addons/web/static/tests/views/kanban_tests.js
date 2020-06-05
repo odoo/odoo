@@ -40,12 +40,14 @@ QUnit.module('Views', {
                     datetime: {string: "Datetime Field", type: 'datetime'},
                     image: {string: "Image", type: "binary"},
                     displayed_image_id: {string: "cover", type: "many2one", relation: "ir.attachment"},
+                    currency_id: {string: "Currency", type: "many2one", relation: "currency", default: 1},
+                    salary: {string: "Monetary field", type: "monetary"},
                 },
                 records: [
-                    {id: 1, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: [], 'image': 'R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA=='},
-                    {id: 2, bar: true, foo: "blip", int_field: 9, qux: 13, product_id: 5, state: "def", category_ids: [6]},
-                    {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3, product_id: 3, state: "ghi", category_ids: [7]},
-                    {id: 4, bar: false, foo: "blip", int_field: -4, qux: 9, product_id: 5, state: "ghi", category_ids: []},
+                    {id: 1, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: [], 'image': 'R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==', salary: 1750, currency_id: 1},
+                    {id: 2, bar: true, foo: "blip", int_field: 9, qux: 13, product_id: 5, state: "def", category_ids: [6], salary: 1500, currency_id: 1},
+                    {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3, product_id: 3, state: "ghi", category_ids: [7], salary: 2000, currency_id: 2},
+                    {id: 4, bar: false, foo: "blip", int_field: -4, qux: 9, product_id: 5, state: "ghi", category_ids: [], salary: 2222, currency_id: 1},
                 ]
             },
             product: {
@@ -79,6 +81,20 @@ QUnit.module('Views', {
                     {id: 1, name: "1.png", mimetype: 'image/png', res_model: 'partner', res_id: 1},
                     {id: 2, name: "2.png", mimetype: 'image/png', res_model: 'partner', res_id: 2},
                 ]
+            },
+            'currency': {
+                fields: {
+                    symbol: {string: "Symbol", type: "char"},
+                    position: {
+                        string: "Position",
+                        type: "selection",
+                        selection: [['after', 'A'], ['before', 'B']],
+                    },
+                },
+                records: [
+                    {id: 1, display_name: "USD", symbol: '$', position: 'before'},
+                    {id: 2, display_name: "EUR", symbol: '€', position: 'after'},
+                ],
             },
         };
     },
@@ -6104,6 +6120,32 @@ QUnit.module('Views', {
 
         assert.containsOnce(kanban.el.querySelector('.o_kanban_record'),
             'div.custom-checkbox.o_field_boolean');
+        kanban.destroy();
+    });
+
+    QUnit.test('kanban view with monetary and currency fields without widget', async function (assert) {
+        assert.expect(1);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <field name="currency_id"/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="salary"/></div>
+                    </t></templates>
+                </kanban>`,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        const kanbanRecords = kanban.el.querySelectorAll('.o_kanban_record:not(.o_kanban_ghost)');
+        assert.deepEqual([...kanbanRecords].map(r => r.innerText),
+            ['$ 1750.00', '$ 1500.00', '2000.00 €', '$ 2222.00']);
+
         kanban.destroy();
     });
 });
