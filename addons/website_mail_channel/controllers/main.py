@@ -44,9 +44,12 @@ class MailGroup(http.Controller):
 
         # compute statistics
         month_date = datetime.today() - relativedelta.relativedelta(months=1)
-        messages = request.env['mail.message'].read_group(
-            [('model', '=', 'mail.channel'), ('date', '>=', fields.Datetime.to_string(month_date)), ('message_type', '!=', 'notification')],
-            [], ['res_id'])
+        messages = request.env['mail.message'].read_group([
+            ('model', '=', 'mail.channel'),
+            ('date', '>=', fields.Datetime.to_string(month_date)),
+            ('message_type', '!=', 'notification'),
+            ('res_id', 'in', groups.ids),
+        ], ['res_id'], ['res_id'])
         message_data = dict((message['res_id'], message['res_id_count']) for message in messages)
 
         group_data = dict(
