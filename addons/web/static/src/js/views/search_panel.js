@@ -406,6 +406,7 @@ const SearchPanel = Widget.extend({
                         category_domain: this._getCategoryDomain(category.id),
                         enable_counters: enableCounters,
                         expand,
+                        filter_domain: this._getFilterDomain(),
                         hierarchize,
                         limit,
                         search_domain: this.searchDomain,
@@ -643,10 +644,9 @@ const SearchPanel = Widget.extend({
      * the searchPanel and the reloading of the data.
      *
      * @private
-     * @param {Object} [reloadOptions={}]
      */
-    _notifyDomainUpdated(reloadOptions = {}) {
-        this.reloadOptions = reloadOptions;
+    _notifyDomainUpdated() {
+        this.reloadOptions = { shouldFetchCategories: true };
         this.trigger_up('search_panel_domain_updated', {
             domain: this.getDomain(),
         });
@@ -744,7 +744,7 @@ const SearchPanel = Widget.extend({
         if (hasChanged) {
             const storageKey = this._getLocalStorageKey(category);
             this.call('local_storage', 'setItem', storageKey, valueId);
-            this._notifyDomainUpdated({ shouldFetchCategories: true });
+            this._notifyDomainUpdated();
         } else {
             this._render();
         }
