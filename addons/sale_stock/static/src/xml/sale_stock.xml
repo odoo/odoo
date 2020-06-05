@@ -1,6 +1,6 @@
 <templates>
     <div t-name="sale_stock.qtyAtDate">
-        <div t-att-class="!widget.data.display_qty_widget ? 'd-none' : ''">
+        <div t-att-class="!widget.data.display_qty_widget ? 'invisible' : ''">
             <t t-if="widget.data.virtual_available_at_date &lt; widget.data.qty_to_deliver and !widget.data.is_mto">
                 <a tabindex="0" class="fa fa-info-circle text-danger"/>
             </t>
