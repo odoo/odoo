@@ -672,10 +672,47 @@ class AccountPayment(models.Model):
 
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
+<<<<<<< HEAD
             line_ids_commands = [
                 (1, liquidity_lines.id, line_vals_list[0]),
                 (1, counterpart_lines.id, line_vals_list[1]),
             ]
+=======
+    def action_draft(self):
+        moves = self.mapped('move_line_ids.move_id')
+        moves.filtered(lambda move: move.state == 'posted').button_draft()
+        moves.with_context(force_delete=True).unlink()
+        self.write({'state': 'draft', 'invoice_ids': False})
+
+    def _get_invoice_payment_amount(self, inv):
+        """
+        Computes the amount covered by the current payment in the given invoice.
+
+        :param inv: an invoice object
+        :returns: the amount covered by the payment in the invoice
+        """
+        self.ensure_one()
+        return sum([
+            data['amount']
+            for data in inv._get_reconciled_info_JSON_values()
+            if data['account_payment_id'] == self.id
+        ])
+
+class payment_register(models.TransientModel):
+    _name = 'account.payment.register'
+    _description = 'Register Payment'
+
+    payment_date = fields.Date(required=True, default=fields.Date.context_today)
+    journal_id = fields.Many2one('account.journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
+    payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', required=True,
+                                        help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+                                        "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
+                                        "Check: Pay bill by check and print it from Odoo.\n"
+                                        "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
+                                        "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed ")
+    invoice_ids = fields.Many2many('account.move', 'account_invoice_payment_rel_transient', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True)
+    group_payment = fields.Boolean(help="Only one payment will be created by partner (bank)/ currency.")
+>>>>>>> 44582606212... temp
 
             for line in writeoff_lines:
                 line_ids_commands.append((2, line.id))
