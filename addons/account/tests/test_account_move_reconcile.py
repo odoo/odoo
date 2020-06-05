@@ -20,7 +20,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         # ==== Multi-currency setup ====
 
-        cls.currency_data_2 = cls.setup_multi_currency_data(default_values={
+        cls.currency_data_2 = cls.setup_multi_currency_data(cls, default_values={
             'name': 'Diamond',
             'symbol': '💎',
             'currency_unit_label': 'Diamond',

@@ -15,7 +15,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         cls.receivable_account = cls.company_data['default_account_receivable']
         cls.payable_account = cls.company_data['default_account_payable']
 
-        cls.currency_data_2 = cls.setup_multi_currency_data(default_values={
+        cls.currency_data_2 = cls.setup_multi_currency_data(cls, default_values={
             'name': 'Stars',
             'symbol': '☆',
             'currency_unit_label': 'Stars',

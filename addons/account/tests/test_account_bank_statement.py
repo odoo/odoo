@@ -258,13 +258,13 @@ class TestAccountBankStatementCommon(AccountTestInvoicingCommon):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
         # We need a third currency as you could have a company's currency != journal's currency !=
-        cls.currency_data_2 = cls.setup_multi_currency_data(default_values={
+        cls.currency_data_2 = cls.setup_multi_currency_data(cls, default_values={
             'name': 'Dark Chocolate Coin',
             'symbol': '🍫',
             'currency_unit_label': 'Dark Choco',
             'currency_subunit_label': 'Dark Cacao Powder',
         }, rate2016=6.0, rate2017=4.0)
-        cls.currency_data_3 = cls.setup_multi_currency_data(default_values={
+        cls.currency_data_3 = cls.setup_multi_currency_data(cls, default_values={
             'name': 'Black Chocolate Coin',
             'symbol': '🍫',
             'currency_unit_label': 'Black Choco',

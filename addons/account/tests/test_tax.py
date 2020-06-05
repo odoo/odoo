@@ -13,7 +13,7 @@ class TestTaxCommon(AccountTestInvoicingCommon):
         # Setup another company having a rounding of 1.0.
         cls.currency_data['currency'].rounding = 1.0
         cls.currency_no_decimal = cls.currency_data['currency']
-        cls.company_data_2 = cls.setup_company_data('company_2', currency_id=cls.currency_no_decimal.id)
+        cls.company_data_2 = cls.setup_company_data(cls, 'company_2', currency_id=cls.currency_no_decimal.id)
         cls.env.user.company_id = cls.company_data['company']
 
         cls.fixed_tax = cls.env['account.tax'].create({

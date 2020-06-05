@@ -12,7 +12,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        cls.currency_data_2 = cls.setup_multi_currency_data({
+        cls.currency_data_2 = cls.setup_multi_currency_data(cls, default_values={
             'name': 'Dark Chocolate Coin',
             'symbol': '🍫',
             'currency_unit_label': 'Dark Choco',
