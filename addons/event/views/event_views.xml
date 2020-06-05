@@ -72,9 +72,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" >
-                                <label for="tag_ids" string="Tags"/>
-                                <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_right_pane">
+                                    <label for="tag_ids" string="Tags"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                                </div>
                             </div>
                         </div>
                         <h2>Attendees</h2>

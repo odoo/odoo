@@ -166,7 +166,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 07:00:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
-        <field name="event_type_id" ref="event_type_data_online"/>
+        <field name="event_type_id" ref="event_type_data_conference"/>
         <field name="address_id" ref="event.res_partner_location_2"/>
         <field name="seats_limited">True</field>
         <field name="seats_max">200</field>
