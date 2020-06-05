@@ -273,6 +273,19 @@ class View(models.Model):
 
         return [(view.arch, view.id) for view in inheriting_views]
 
+    def _get_inheriting_view_archer(self, view_id, model):
+        if not self._context.get('website_id'):
+            return super(View, self)._get_inheriting_view_archer(view_id, model)
+
+        # bail to recursive version in order to get the mess above
+        # TODO: is there a clean way to implement as a CTE/RCTE?
+        return self._get_inheriting_view_recursive(view_id, model)
+
+    def _get_inheriting_view_recursive(self, view_id, model):
+        for specs, view_id in self.get_inheriting_views_arch(view_id, model):
+            yield specs, view_id
+            yield from self._get_inheriting_view_recursive(view_id, model)
+
     @api.model
     @tools.ormcache_context('self.env.uid', 'self.env.su', 'xml_id', keys=('website_id',))
     def get_view_id(self, xml_id):

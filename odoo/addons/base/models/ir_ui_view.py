@@ -679,14 +679,73 @@ actual arch.
         """
         if root_id is None:
             root_id = source_id
-        sql_inherit = self.get_inheriting_views_arch(source_id, model)
-        for (specs, view_id) in sql_inherit:
+        sql_inherit = self._get_inheriting_view_archer(source_id, model)
+        for specs, view_id in sql_inherit:
             specs_tree = etree.fromstring(specs.encode('utf-8'))
             if self._context.get('inherit_branding'):
                 self.inherit_branding(specs_tree, view_id, root_id)
             source = self.apply_inheritance_specs(source, specs_tree, view_id)
-            source = self.apply_view_inheritance(source, view_id, model, root_id=root_id)
         return source
+
+    def _get_inheriting_view_archer(self, source_id, model):
+        self.flush()
+        self.check_access_rights('read')
+        domain = self._get_inheriting_views_arch_domain(source_id, model)
+
+        # replace inherit_id segment by TRUE as we'll do the filtering in the
+        # RCTE, not in the base CTE
+        for i in range(len(domain)):
+            if domain[i][0] == 'inherit_id':
+                domain[i] = (1, '=', 1)
+                break
+
+        additional_where, additional_params = 'false', []
+        if self.pool._init and not self._context.get('load_all_views'):
+            if self.env.context.get('check_view_ids'):
+                q = self._where_calc(
+                    domain + [('id', 'in', self.env.context['check_view_ids'])]
+                )
+                self._apply_ir_rules(q, 'read')
+                _, additional_where, additional_params = q.get_sql()
+
+            modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
+            domain += [('model_ids.module', 'in', modules)]
+
+        query = self._where_calc(domain)
+        self._apply_ir_rules(query, 'read')
+        from_clause, where_clause, where_clause_params = query.get_sql()
+
+        # delegate to older version if debug / arch_fs?
+        self.env.cr.execute("""
+        WITH RECURSIVE descendants AS (
+            SELECT id, inherit_id, array[(priority, id)] AS ordering
+              FROM views v
+             WHERE inherit_id = %s
+        UNION ALL
+            SELECT v.id, v.inherit_id, d.ordering || (v.priority, v.id) AS ordering
+              FROM views v
+              JOIN descendants d ON d.id = v.inherit_id
+        ), views AS (
+            SELECT DISTINCT ON ({views}.id) {views}.id, {views}.inherit_id, {views}.priority
+              FROM {tables}
+         LEFT JOIN ir_ui_view_group_rel vg ON vg.view_id = id
+             WHERE (({cond}) OR ({additional}))
+               AND (vg.view_id IS NULL OR vg.group_id = any(%s))
+        )
+        SELECT id FROM descendants ORDER BY ordering
+        """.format(
+            views=query._get_alias_mapping()['ir_ui_view'],
+            tables=from_clause,
+            cond=where_clause,
+            additional=additional_where
+        ), [
+            source_id,
+            *where_clause_params,
+            *additional_params,
+            self.env.user.groups_id.ids,
+        ])
+        for view in self.browse(it for [it] in self.env.cr.fetchall()).sudo():
+            yield view.arch, view.id
 
     def read_combined(self, fields=None):
         """
