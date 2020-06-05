@@ -21,7 +21,7 @@ class TestUi(odoo.tests.HttpCase):
 
         admin = self.env.ref('base.user_admin')
 
-        # Tour can't be runned if the setup if not the generic one.
+        # Tour can't be run if the setup if not the generic one.
         generic_coa = self.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
         if not admin.company_id.chart_template_id or admin.company_id.chart_template_id != generic_coa:
             _logger.info("Tour bank_statement_reconciliation skipped: generic coa not found.")

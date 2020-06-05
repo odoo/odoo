@@ -14,11 +14,17 @@ class TestUi(tests.HttpCase):
     def test_01_portal_attachment(self):
         """Test the portal chatter attachment route."""
 
+        partner = self.env['res.partner'].create({'name': 'Test partner'})
+
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         # For this test we need a parent document with an access_token field
         # (in this case from portal.mixin) and also inheriting mail.thread.
         invoice = self.env['account.move'].with_context(tracking_disable=True).create({
-            'name': 'a record with an access_token field',
+            'type': 'out_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'partner_id': partner.id,
+            'invoice_line_ids': [(0, 0, {'name': 'aaaa', 'price_unit': 100.0})],
         })
 
         # Test public user can't create attachment without token of document
