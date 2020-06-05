@@ -26,7 +26,7 @@ QUnit.module('KeyboardNavigationMixin', function () {
                 return this._super(...arguments);
             },
         });
-        var parent = testUtils.createParent({});
+        var parent = await testUtils.createParent({});
         var w = new KeyboardWidget(parent);
         await w.appendTo($target);
 
@@ -67,7 +67,7 @@ QUnit.module('KeyboardNavigationMixin', function () {
                 return this._super(...arguments);
             },
         });
-        var parent = testUtils.createParent({});
+        var parent = await testUtils.createParent({});
         var w = new KeyboardWidget(parent);
         await w.appendTo($target);
 
