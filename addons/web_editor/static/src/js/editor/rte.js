@@ -510,18 +510,11 @@ var RTEWidget = Widget.extend({
                     // new rejection with all relevant info
                     var id = _.uniqueId('carlos_danger_');
                     $el.addClass('o_dirty oe_carlos_danger ' + id);
-                    var html = Boolean(response.data.name);
-                    if (html) {
-                        var msg = $('<div/>', {text: response.message.data.message}).html();
-                        var data = msg.substring(3, msg.length  -2).split(/', u'/);
-                        response.message.data.message = '<b>' + data[0] + '</b>' + data[1];
-                    }
                     $('.o_editable.' + id)
                         .removeClass(id)
                         .popover({
-                            html: html,
                             trigger: 'hover',
-                            content: response.message.data.message,
+                            content: response.message.data.message || '',
                             placement: 'auto top',
                         })
                         .popover('show');
