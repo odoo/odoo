@@ -12,6 +12,20 @@ from odoo.addons.http_routing.models.ir_http import url_for
 _logger = logging.getLogger(__name__)
 
 
+class EcomExtraFields(models.Model):
+    _name = 'ecom.extra.field'
+    _description = 'E-Commerce Extra Info Shown'
+
+    website_id = fields.Many2one('website')
+    sequence = fields.Integer(default=10)
+    field_id = fields.Many2one(
+        'ir.model.fields',
+        domain=[('model_id.model', '=', 'product.template')]
+    )
+    label = fields.Char(related='field_id.field_description')
+    name = fields.Char(related='field_id.name')
+
+
 class Website(models.Model):
     _inherit = 'website'
 
@@ -47,6 +61,8 @@ class Website(models.Model):
 
     shop_ppg = fields.Integer(default=20, string="Number of products in the grid on the shop")
     shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
+
+    ecommerce_field_ids = fields.One2many('ecom.extra.field', 'website_id', string='E-Commerce Extra Fields')
 
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
