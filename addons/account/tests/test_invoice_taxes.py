@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.addons.account.tests.common import AccountTestCommon
-from odoo.tests.common import Form
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestInvoiceTaxes(AccountTestCommon, SavepointCaseWithUserDemo):
+class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestInvoiceTaxes, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
+        cls.company_data['company'].country_id = cls.env.ref('base.us')
 
         cls.percent_tax_1 = cls.env['account.tax'].create({
             'name': '21%',
@@ -50,19 +49,16 @@ class TestInvoiceTaxes(AccountTestCommon, SavepointCaseWithUserDemo):
 
         :param taxes_per_line: A list of tuple (price_unit, account.tax recordset)
         '''
-        self_ctx = self.env['account.move'].with_context(default_type=inv_type)
-        invoice_form = Form(self_ctx)
-        invoice_form.partner_id = self.partner_demo
-
-        for amount, taxes in taxes_per_line:
-            with invoice_form.invoice_line_ids.new() as invoice_line_form:
-                invoice_line_form.name = 'xxxx'
-                invoice_line_form.quantity = 1
-                invoice_line_form.price_unit = amount
-                invoice_line_form.tax_ids.clear()
-                for tax in taxes:
-                    invoice_line_form.tax_ids.add(tax)
-        return invoice_form.save()
+        return self.env['account.move'].create({
+            'type': inv_type,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'xxxx',
+                'quantity': 1,
+                'price_unit': amount,
+                'tax_ids': [(6, 0, taxes.ids)],
+            }) for amount, taxes in taxes_per_line],
+        })
 
     def test_one_tax_per_line(self):
         ''' Test:
@@ -143,7 +139,7 @@ class TestInvoiceTaxes(AccountTestCommon, SavepointCaseWithUserDemo):
         return self.env['account.account.tag'].create({
             'name': tag_name,
             'applicability': 'taxes',
-            'country_id': self.env.company.country_id.id,
+            'country_id': self.company_data['company'].country_id.id,
         })
 
     def test_tax_repartition(self):
